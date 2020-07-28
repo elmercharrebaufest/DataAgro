@@ -269,6 +269,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             try
             {
+                logger.Debug("Eliminar Cupo en STOP  inicio: " + cupo.CupoSap??"");
                 var resultado = new Resultado();
                 HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -297,10 +298,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                         var model = JsonConvert.DeserializeObject<dynamic>(jObject["data"].ToString());
                         if (model == null)
                         {
+                            logger.Debug("Eliminar Cupo Stop ok: ", jObject["data"].ToString());
                             return resultado;
                         }
                         else
                         {
+                            logger.Debug("Error al Modificar en STOP  " + cupo.CupoSap);
                             resultado.Error("", "Error al Modificar en STOP");
                             return resultado;
                         }
@@ -308,6 +311,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     else
                     {
                         ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                        logger.Debug("Error al Modificar en STOP  " + cupo.CupoSap);
                         logger.Debug(error.ToJson());
                         resultado.Error(error.errorCode, error.userMessage);
                         return resultado;
@@ -315,6 +319,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 else
                 {
+                    logger.Debug("Error al Modificar en STOP  " + cupo.CupoSap);
                     cupo.EstadoCupoId = estado;
                     repositorio.GuardarCambios();
                     resultado.Error("", "Cupo con CTG");
@@ -323,13 +328,14 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-
+                logger.Debug("Error Eliminar Cupo en STOP  : " + cupo.CupoSap ?? "");
                 logger.Error(e.Message);
                 throw e;
             }
         }
         public List<RespuestaCupoStop> ConsultarCuposDiarios()
         {
+            logger.Debug("Iniciando consulta ConsultarCuposDiarios");
             var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
             if (datosConfiguracion.ConexionConsultaStop.HasValue && datosConfiguracion.ConexionConsultaStop.Value)
             {
@@ -339,119 +345,78 @@ namespace Molinos.DataAgro.Agent.Helpers
                     client.BaseAddress = new Uri(urlStop);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //logger.Debug("Iniciando consulta");
                     var fechas = repositorio.Listar<Cupo, DateTime>(x => x.FechaIngreso, x => x.EstadoCupoId != 4 && x.EstadoCupoId != 5 && x.EstadoCupoId != 8 && !x.Centro.Acopio);
-                    var token = ObtenerToken(datosConfiguracion.ClaveStop);
-                    var listaCupos = new ConsultaCuposStop() { results = new List<RespuestaCupoStop>() };
-                    //logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
-                    CultureInfo provider = CultureInfo.InvariantCulture;
+                    ConsultaCuposStop listaCuposStop;
 
-                    foreach (var fecha in fechas)
-                    {
-                        HttpResponseMessage response = client.PostAsJsonAsync(
-                               $"v1.1.0/t/{token.Data}/1/f/{fecha.ToString("yyyy-MM-dd")}", new { }).Result;
-                        response.EnsureSuccessStatusCode();
-                        var res = response.Content.ReadAsAsync<dynamic>().Result;
-                        var jObject = JObject.Parse(res.ToString());
-                        ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-                        //logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
-                        if (!respuesta.isError)
-                        {
-                            ConsultaCuposStop model = JsonConvert.DeserializeObject<ConsultaCuposStop>(jObject["data"].ToString());
-                            listaCupos.results.AddRange(model.results);
-                            //logger.Debug(model.results.Count);
-                            //if (model.results.Count > 0)
-                            //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
-                        }
-                        else
-                        {
-                            ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                            logger.Debug(error.ToJson());
-                        }
-                    }
+                    listaCuposStop = ObtenerDatosDeStop(datosConfiguracion, client, fechas);
 
-                    listaCupos.results = listaCupos.results.ToList();
-                    IList<Cupo> actualizarCupos = null;
-                    List<int> cuposCambioStop = new List<int>();
-                    while (listaCupos.results.Count > 0)
-                    {
-                        var index = listaCupos.results.Count >= 50 ? 50 : listaCupos.results.Count;
-                        var lista = listaCupos.results.Take(index).ToList();
-                        listaCupos.results.RemoveRange(0, index);
-                        var cuposActualizados = lista.ToDictionary(x => x.idCupoTerminal);
-                        actualizarCupos = repositorio.Listar<Cupo>(x => cuposActualizados.Keys.Contains(x.CupoSap));
-                        foreach (var cupo in actualizarCupos)
-                        {
-                            if (cupo.CupoStop == null)
-                            {
-                                cupo.CupoStop = cuposActualizados[cupo.CupoSap].idCupo;
-                                cupo.CreacionStop = cuposActualizados[cupo.CupoSap].creado;
-
-                            }
-                            if (cupo.EstadoCupoId != cuposActualizados[cupo.CupoSap].idCupoEstado ||
-                                cupo.EstadoPlanta != cuposActualizados[cupo.CupoSap].estadoEnPlanta ||
-                            (cupo.CTGFechaDesde != (!String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Desde) ? DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null)) ||
-                            (cupo.CTGFechaHasta != (!String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta) ? DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null)) ||
-                            cupo.RemitenteComercial != cuposActualizados[cupo.CupoSap].cuitRemComercial ||
-                            cupo.CorredorComprador != cuposActualizados[cupo.CupoSap].cuitCorredorCAfip ||
-                            cupo.CorredorVendedor != cuposActualizados[cupo.CupoSap].cuitCorredorVAfip ||
-                            cupo.MercadoATermino != cuposActualizados[cupo.CupoSap].cuitMercadoATerminoAfip ||
-                            cupo.Cosecha != cuposActualizados[cupo.CupoSap].cosecha ||
-                            cupo.IntermediarioFlete != cuposActualizados[cupo.CupoSap].cuitIntermediarioFleteAfip ||
-                            cupo.Transportista != cuposActualizados[cupo.CupoSap].cuitTransportistaAfip ||
-                            cupo.Chofer != cuposActualizados[cupo.CupoSap].cuitChoferAfip ||
-                            cupo.Km != cuposActualizados[cupo.CupoSap].kmRecorrer ||
-                            cupo.Peso != cuposActualizados[cupo.CupoSap].pesoNetoEstimado ||
-                            cupo.CartaPorte != cuposActualizados[cupo.CupoSap].cartaPorte ||
-                            cupo.CTG != cuposActualizados[cupo.CupoSap].ctg ||
-                            cupo.CuitOrigen != cuposActualizados[cupo.CupoSap].cuitOrigen ||
-                            cupo.CuitOrigenAfip != cuposActualizados[cupo.CupoSap].cuitOrigenAfip ||
-                            cupo.CodLocalidadOrigen != cuposActualizados[cupo.CupoSap].codLocalidadOrigen ||
-                            cupo.NroEstablecimientoOrigen != cuposActualizados[cupo.CupoSap].nroEstablecimientoOrigen
-                                )
-                            {
-                                cuposCambioStop.Add(cupo.Id);
-                            }
-                            cupo.EstadoPlanta = cuposActualizados[cupo.CupoSap].estadoEnPlanta;
-                            //logger.Debug("CTGFechaDesde: ." + cuposActualizados[cupo.CupoSap].fechaCTG_Desde);
-                            //logger.Debug("CTGFechaHasta" + cuposActualizados[cupo.CupoSap].fechaCTG_Hasta);
-                            cupo.CTGFechaDesde = !String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Desde) ?
-                                DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null;
-                            cupo.CTGFechaHasta = !String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta) ?
-                                DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null;
-                            cupo.RemitenteComercial = cuposActualizados[cupo.CupoSap].cuitRemComercial;
-                            cupo.CorredorComprador = cuposActualizados[cupo.CupoSap].cuitCorredorCAfip;
-                            cupo.CorredorVendedor = cuposActualizados[cupo.CupoSap].cuitCorredorVAfip;
-                            cupo.MercadoATermino = cuposActualizados[cupo.CupoSap].cuitMercadoATerminoAfip;
-                            cupo.Cosecha = cuposActualizados[cupo.CupoSap].cosecha;
-                            cupo.IntermediarioFlete = cuposActualizados[cupo.CupoSap].cuitIntermediarioFleteAfip;
-                            cupo.Transportista = cuposActualizados[cupo.CupoSap].cuitTransportistaAfip;
-                            cupo.Chofer = cuposActualizados[cupo.CupoSap].cuitChoferAfip;
-                            cupo.Km = cuposActualizados[cupo.CupoSap].kmRecorrer;
-                            cupo.Peso = cuposActualizados[cupo.CupoSap].pesoNetoEstimado;
-                            cupo.CartaPorte = cuposActualizados[cupo.CupoSap].cartaPorte;
-                            cupo.CTG = cuposActualizados[cupo.CupoSap].ctg;
-                            cupo.CuitOrigen = cuposActualizados[cupo.CupoSap].cuitOrigen;
-                            cupo.CuitOrigenAfip = cuposActualizados[cupo.CupoSap].cuitOrigenAfip;
-                            cupo.CodLocalidadOrigen = cuposActualizados[cupo.CupoSap].codLocalidadOrigen;
-                            cupo.NroEstablecimientoOrigen = cuposActualizados[cupo.CupoSap].nroEstablecimientoOrigen;
-                            cupo.EstadoCupoId = cuposActualizados[cupo.CupoSap].idCupoEstado;
-                        }
-                    }
+                    IEnumerable<Cupo> actualizarCupos = listaCuposStop.results.Select(cupo=> new Cupo {
+                        EstadoPlanta = cupo.estadoEnPlanta,
+                        CTGFechaDesde = !String.IsNullOrEmpty(cupo.fechaCTG_Desde) ?DateTime.ParseExact(cupo.fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        CTGFechaHasta = !String.IsNullOrEmpty(cupo.fechaCTG_Hasta) ?DateTime.ParseExact(cupo.fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        RemitenteComercial = cupo.cuitRemComercial,
+                        CorredorComprador = cupo.cuitCorredorCAfip,
+                        CorredorVendedor = cupo.cuitCorredorVAfip,
+                        MercadoATermino = cupo.cuitMercadoATerminoAfip,
+                        Cosecha = cupo.cosecha,
+                        IntermediarioFlete = cupo.cuitIntermediarioFleteAfip,
+                        Transportista = cupo.cuitTransportistaAfip,
+                        Chofer = cupo.cuitChoferAfip,
+                        Km = cupo.kmRecorrer,
+                        Peso = cupo.pesoNetoEstimado,
+                        CartaPorte = cupo.cartaPorte,
+                        CTG = cupo.ctg,
+                        CuitOrigen = cupo.cuitOrigen,
+                        CuitOrigenAfip = cupo.cuitOrigenAfip,
+                        CodLocalidadOrigen = cupo.codLocalidadOrigen,
+                        NroEstablecimientoOrigen = cupo.nroEstablecimientoOrigen,
+                        EstadoCupoId = cupo.idCupoEstado,
+                        CupoSap = cupo.idCupoTerminal,
+                        CupoStop = cupo.idCupo,
+                        CreacionStop = cupo.creado
+                    });
+                    var columnas = new List<KeyValuePair<string, string>> {
+                        new KeyValuePair<string, string> ("EstadoPlanta", "EstadoPlanta"),
+                        new KeyValuePair<string, string> ("CTGFechaDesde", "CTGFechaDesde"),
+                        new KeyValuePair<string, string> ("CTGFechaHasta", "CTGFechaHasta"),
+                        new KeyValuePair<string, string> ("RemitenteComercial", "RemitenteComercial"),
+                        new KeyValuePair<string, string> ("CorredorComprador", "CorredorComprador"),
+                        new KeyValuePair<string, string> ("CorredorVendedor", "CorredorVendedor"),
+                        new KeyValuePair<string, string> ("MercadoATermino", "MercadoATermino"),
+                        new KeyValuePair<string, string> ("Cosecha", "Cosecha"),
+                        new KeyValuePair<string, string> ("IntermediarioFlete", "IntermediarioFlete"),
+                        new KeyValuePair<string, string> ("Transportista", "Transportista"),
+                        new KeyValuePair<string, string> ("Chofer", "Chofer"),
+                        new KeyValuePair<string, string> ("Km", "Km"),
+                        new KeyValuePair<string, string> ("Peso", "Peso"),
+                        new KeyValuePair<string, string> ("CartaPorte", "CartaPorte"),
+                        new KeyValuePair<string, string> ("CTG", "CTG"),
+                        new KeyValuePair<string, string> ("CuitOrigen", "CuitOrigen"),
+                        new KeyValuePair<string, string> ("CuitOrigenAfip", "CuitOrigenAfip"),
+                        new KeyValuePair<string, string> ("NroEstablecimientoOrigen", "NroEstablecimientoOrigen"),
+                        new KeyValuePair<string, string> ("EstadoCupoId", "EstadoCupoId"),
+                        new KeyValuePair<string, string> ("CupoSap", "CupoSap"),
+                        new KeyValuePair<string, string> ("CupoStop", "CupoStop"),
+                        new KeyValuePair<string, string> ("CreacionStop", "CreacionStop"),
+                    };
+                    string where = " where T.EstadoCupoId <> 4 and T.EstadoCupoId <> 5 and T.EstadoCupoId <> 8 ";
+                    repositorio.ActualizarTodos(actualizarCupos, columnas, "CupoSap",where);
+                    
                     repositorio.GuardarCambios();
 
 
-                    var cupoManager = cupoManagerInj();
-                    if (cuposCambioStop.Count() > 0)
-                    {
-                        logger.Debug("cupos actualizados por stop: " + string.Join(", ", cuposCambioStop));
-                    }
-                    foreach (var cupoId in cuposCambioStop)
-                    {
-                        logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoId), TipoAccionLogDataAgro.Modificar);
-                    }
+                    //var cupoManager = cupoManagerInj();
+                    //if (cuposCambioStop.Count() > 0)
+                    //{
+                    //    logger.Debug("cupos actualizados por stop: " + string.Join(", ", cuposCambioStop));
+                    //}
+                    //foreach (var cupoId in cuposCambioStop)
+                    //{
+                    //    logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoId), TipoAccionLogDataAgro.Modificar);
+                    //}
+                    logger.Debug("Fin consulta ConsultarCuposDiarios");
 
-                    return listaCupos.results;
+                    return listaCuposStop.results;
                 }
                 catch (Exception e)
                 {
@@ -464,6 +429,41 @@ namespace Molinos.DataAgro.Agent.Helpers
                 return new List<RespuestaCupoStop>();
             }
         }
+
+        private ConsultaCuposStop  ObtenerDatosDeStop(Configuracion datosConfiguracion, HttpClient client, List<DateTime> fechas)
+        {
+            CultureInfo provider;
+            var token = ObtenerToken(datosConfiguracion.ClaveStop);
+            var listaCupos = new ConsultaCuposStop() { results = new List<RespuestaCupoStop>() };
+            //logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
+            provider = CultureInfo.InvariantCulture;
+            foreach (var fecha in fechas)
+            {
+                HttpResponseMessage response = client.PostAsJsonAsync(
+                       $"v1.1.0/t/{token.Data}/1/f/{fecha.ToString("yyyy-MM-dd")}", new { }).Result;
+                response.EnsureSuccessStatusCode();
+                var res = response.Content.ReadAsAsync<dynamic>().Result;
+                var jObject = JObject.Parse(res.ToString());
+                ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+                //logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
+                if (!respuesta.isError)
+                {
+                    ConsultaCuposStop model = JsonConvert.DeserializeObject<ConsultaCuposStop>(jObject["data"].ToString());
+                    listaCupos.results.AddRange(model.results);
+                    //logger.Debug(model.results.Count);
+                    //if (model.results.Count > 0)
+                    //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
+                }
+                else
+                {
+                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                    logger.Debug(error.ToJson());
+                }
+            }
+
+            return listaCupos;
+        }
+
         public void ModificarCupo(Cupo cupo)
         {
             HttpClient client = new HttpClient();

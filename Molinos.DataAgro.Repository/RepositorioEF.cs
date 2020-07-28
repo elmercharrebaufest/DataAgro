@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Repository
     public class RepositorioEF : IRepositorio
     {
         private const int SqlFkError = 547;
-        
+
         private readonly DbContext context;
 
         public RepositorioEF(DbContext context)
@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Repository
             context.Entry(entity).State = EntityState.Unchanged;
             return entity;
         }
-        
+
         public TEntidad Obtener<TEntidad>(Expression<Func<TEntidad, bool>> filtro) where TEntidad : class
         {
             return Set<TEntidad>().FirstOrDefault(filtro);
@@ -109,7 +109,7 @@ namespace Molinos.DataAgro.Repository
             {
                 resultado = resultado.Include(i);
             }
-            
+
             return ListarQueryable(resultado, filtro, orden, direccionOrden, maxResultados).ToList();
         }
 
@@ -177,13 +177,13 @@ namespace Molinos.DataAgro.Repository
             }
         }
 
-        public virtual void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null) where TEntidad : class
+        public virtual void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null, string columnaJoin = "Id",string where = "") where TEntidad : class
         {
             var enumerable = items as IList<TEntidad> ?? items.ToList();
             if (enumerable.Any())
             {
                 var dataTable = enumerable.ToDataTable(false, properties);
-                context.SqlBulkUpdate(dataTable, dataTable.TableName);
+                context.SqlBulkUpdate(dataTable, dataTable.TableName, columnaJoin, where);
             }
         }
 
@@ -226,7 +226,8 @@ namespace Molinos.DataAgro.Repository
 
         public int GuardarCambios()
         {
-            try {
+            try
+            {
                 return context.SaveChanges();
             }
             catch (DataException e)
@@ -244,7 +245,7 @@ namespace Molinos.DataAgro.Repository
         private int ObtenerCodigoError(DataException e)
         {
             var code = 0;
-            if(e.InnerException != null)
+            if (e.InnerException != null)
             {
                 if (e.InnerException.InnerException is SqlException sqlEx)
                 {
@@ -348,7 +349,7 @@ namespace Molinos.DataAgro.Repository
             return resultado;
         }
 
-        public void MigrarReporteCompraNetPosicionCompras( )
+        public void MigrarReporteCompraNetPosicionCompras()
         {
             context.Database.SqlQuery<int>(@"
                     begin 

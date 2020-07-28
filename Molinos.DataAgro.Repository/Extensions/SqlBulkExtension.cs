@@ -22,14 +22,16 @@ namespace Molinos.DataAgro.Repository
                 copy.WriteToServer(dataTable);
             }
         }
-        
-        public static void SqlBulkUpdate(this DbContext session, DataTable dataTable, string tableName)
+
+        public static void SqlBulkUpdate(this DbContext session, DataTable dataTable, string tableName, string columnaJoin = "Id", string where = "")
         {
             var conn = (SqlConnection)session.Database.Connection;
             using (SqlCommand command = new SqlCommand(string.Empty, conn))
             {
+                command.Connection.Open();
                 var setColumns = string.Empty;
                 var idType = string.Empty;
+                string columnasParaLaTemporal = "";
                 for (var i = 0; i < dataTable.Columns.Count; i++)
                 {
                     var column = dataTable.Columns[i];
@@ -38,9 +40,11 @@ namespace Molinos.DataAgro.Repository
                         if (setColumns != string.Empty)
                         {
                             setColumns += ",";
+                            columnasParaLaTemporal += ","; 
                         }
 
                         setColumns += "T." + column.ColumnName + " = Temp." + column.ColumnName;
+                        columnasParaLaTemporal += column.ColumnName;
                     }
                     else
                     {
@@ -48,22 +52,30 @@ namespace Molinos.DataAgro.Repository
                     }
                 }
 
-                command.CommandText = string.Format(@"Select top 0 * Into #TmpTable{0} From {0};
-                                                    ALTER TABLE #TmpTable{0} DROP COLUMN Id;
-                                                    ALTER TABLE #TmpTable{0} ADD Id {1} NOT NULL;                                                  
-                                                    ALTER TABLE #TmpTable{0} DROP COLUMN Rowguid;
+               
+                if (idType != string.Empty)
+                {
+                    command.CommandText = string.Format(@"Select top 0 {2} Into ##TmpTable{0} From {0};
+                                                    ALTER TABLE ##TmpTable{0} DROP COLUMN Id;
+                                                   ALTER TABLE ##TmpTable{0} ADD Id {1} NOT NULL;                                                     
+                ", tableName, idType, columnasParaLaTemporal);
+                }
+                else
+                {
+                    command.CommandText = string.Format(@"Select top 0 {2} Into ##TmpTable{0} From {0};                                                    
                                                     
-                ", tableName, idType);
+                ", tableName, idType, columnasParaLaTemporal);
+                }
                 //Creating temp table on database
                 command.ExecuteNonQuery();
 
-                session.SqlBulkInsert(dataTable, "#TmpTable" + tableName);
+                session.SqlBulkInsert(dataTable, "##TmpTable" + tableName);
 
                 // Updating destination table, and dropping temp table
                 command.CommandTimeout = 300;
-                command.CommandText = string.Format(@"UPDATE T SET {1} FROM {0} T INNER JOIN #TmpTable{0} Temp ON Temp.Id = T.Id;
-                                                      DROP TABLE #TmpTable{0};
-                ", tableName, setColumns);
+                command.CommandText = string.Format(@"UPDATE T SET {1} FROM {0} T INNER JOIN ##TmpTable{0} Temp ON Temp.{2} = T.{2} {3};
+                                                      DROP TABLE ##TmpTable{0};
+                ", tableName, setColumns, columnaJoin,where);
                 command.ExecuteNonQuery();
             }
         }

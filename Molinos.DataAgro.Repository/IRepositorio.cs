@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Repository
 
         TEntidad Obtener<TEntidad>(IEnumerable<Expression<Func<TEntidad, object>>> includes, Expression<Func<TEntidad, bool>> condicion) where TEntidad : class;
 
-        TEntidad ObtenerPrimero<TEntidad>(Expression<Func<TEntidad, bool>> condicion) where TEntidad : class; 
+        TEntidad ObtenerPrimero<TEntidad>(Expression<Func<TEntidad, bool>> condicion) where TEntidad : class;
 
         TProyeccion Obtener<TEntidad, TProyeccion>(Expression<Func<TEntidad, bool>> filtro, Expression<Func<TEntidad, TProyeccion>> proyeccion)
             where TEntidad : class;
@@ -105,7 +105,7 @@ namespace Molinos.DataAgro.Repository
         TEntidad Agregar<TEntidad>(TEntidad entidad) where TEntidad : class;
         void AgregarTodos<TEntidad>(IEnumerable<TEntidad> entidades, List<KeyValuePair<string, string>> properties = null) where TEntidad : class;
 
-        void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null) where TEntidad : class;
+        void ActualizarTodos<TEntidad>(IEnumerable<TEntidad> items, List<KeyValuePair<string, string>> properties = null, string columnaJoin = "Id", string where  ="") where TEntidad : class;
 
         /// <summary>
         /// Remueve una entidad del repositorio

@@ -17,9 +17,17 @@
 });
 
 function Filtrar() {
-    var grid = $('#grid').data('kendoGrid');
-    let currentFilters = TraerFiltrosConValores();
-    grid.dataSource.filter(currentFilters.filter);
+    var clase = $("#Clase").val();
+    if (clase == "Negocio") {
+        FiltrarNegocio();
+    } else if (clase == "Cupo") {
+        FiltrarCupo();
+    } else {
+        var grid = $('#grid').data('kendoGrid');
+        let currentFilters = TraerFiltrosConValores();
+        grid.dataSource.filter(currentFilters.filter);
+    }
+    
 }
 
 
@@ -188,7 +196,6 @@ function FiltrarNegocio() {
             var valoresEnValor = valorBuscado.split(" ");
             for (var i = 0; i < valoresEnValor.length; i++) {
                 filtrosContratosSap.push(valoresEnValor[i].padStart(10, '0'));
-            //filtrosContratosSap.push(valorBuscado.padStart(10, '0'));
             }
         }
     });
@@ -197,7 +204,8 @@ function FiltrarNegocio() {
         return;
     }
     if (filtrosContratosSap.length == 0) {
-        MensErr("No ingreso contratos");
+        let currentFilters = TraerFiltrosConValores();
+        grid.dataSource.filter(currentFilters.filter);
         return;
     }
     var result = MSExecuteOnServer('/LogDataAgro/ObtenerNegociosId', { contratosSap: filtrosContratosSap });//2647187
@@ -215,8 +223,8 @@ function FiltrarNegocio() {
 
 
     } else {
-        MensErr("No encontraron contratos");
-        return;
+        let currentFilters = TraerFiltrosConValores();
+        grid.dataSource.filter(currentFilters.filter);
     }
 
 
@@ -228,7 +236,8 @@ function FiltrarCupo() {
 
     var filtrosSap = $("#CupoSAPId").val();
     if (filtrosSap.length == 0) {
-        MensErr("Ingrese un dato para hacer la busuqeda");
+        let currentFilters = TraerFiltrosConValores();
+        grid.dataSource.filter(currentFilters.filter);
         return;
     }
     var filtrosCuposSap = new Array();
@@ -251,8 +260,8 @@ function FiltrarCupo() {
 
 
     } else {
-        MensErr("No encontraron contratos");
-        return;
+        let currentFilters = TraerFiltrosConValores();
+        grid.dataSource.filter(currentFilters.filter);
     }
 
 

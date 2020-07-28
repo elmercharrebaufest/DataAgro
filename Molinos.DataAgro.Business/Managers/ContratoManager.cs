@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Business.Managers
             IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
             ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
             IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
-            IMailManager mailManager, IStatusContratoAgent status, 
+            IMailManager mailManager, IStatusContratoAgent status,
             ILogDataAgroManager logDataAgroManager, IValidarDocProcPagoAgent validarPagoAgente)
         {
             this.logger = logger;
@@ -625,8 +625,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             var centro = repositorio.Obtener<Centro>(x => x.Id == oParam.DestinoId);
 
-            if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 
-                && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))               
+            if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7
+                && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))
                 )
             {
                 oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
@@ -917,7 +917,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("El contrato " + oContrato.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
 
             }
-            var tipoDeLog = (oContratoSave.Id == 0) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar;
+            var tipoDeLog = (oContratoSave.Id == 0 || string.IsNullOrEmpty(oContratoSave.ContratoSAP)) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar;
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipoDeLog, oContratoSave.GetType());
             if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
@@ -2235,7 +2235,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaOperacionFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.Fecha),
-                MotivoOperacionAnterior = DbFunctions.TruncateTime(x.Fecha) != hoy? "Acuerdo " + x.Id:"",
+                MotivoOperacionAnterior = DbFunctions.TruncateTime(x.Fecha) != hoy ? "Acuerdo " + x.Id : "",
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDesde),
@@ -2245,7 +2245,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.Fecha),
-                FechaCiertaFormateado = x.FechaCierta.HasValue ?  SqlFunctions.DateName("day", x.FechaCierta).Trim() + "-" +
+                FechaCiertaFormateado = x.FechaCierta.HasValue ? SqlFunctions.DateName("day", x.FechaCierta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaCierta.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaCierta) : "",
                 TipoNegocioId = x.Precio > 0 ? 2 : 1,
@@ -2588,7 +2588,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
 
                         oContrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
-                        
+
                         var res = modificarContratoAgent.Modificar(oContrato, oContratoSave);
                         if (res.Contains("Error"))
                         {
@@ -2617,7 +2617,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var json = repositorio.Listar<NegocioHistorico>(x => x.NegocioId == contratoId).LastOrDefault().Datos;
                 var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
-                var contrato = repositorio.Obtener<Contrato>(contratoId);             
+                var contrato = repositorio.Obtener<Contrato>(contratoId);
                 var res = modificarContratoAgent.Modificar(contrato, contratoSave);
 
                 if (res.Contains("Error"))
@@ -2715,7 +2715,7 @@ namespace Molinos.DataAgro.Business.Managers
             var lista = new List<string>();
             var email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
-           
+
             lista.Add(email);
 
             var emailComerciales = "";
@@ -2723,7 +2723,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var corredoresComerciales = mobjComercialManager.ListarComercialesCorredor();
                 corredoresComerciales.Remove(contrato.Comercial);
-                logger.Debug("Enviando mail a " + string.Join(", ", corredoresComerciales.Select(x=> x.IdActiveDirectory)));
+                logger.Debug("Enviando mail a " + string.Join(", ", corredoresComerciales.Select(x => x.IdActiveDirectory)));
                 foreach (Comercial corredorComercialCopia in corredoresComerciales)
                 {
                     try
@@ -3463,7 +3463,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Estado_Contrato = x.Estado.Descripcion,
                 Importe_Sustentable = x.ImporteSustentable,
                 Moneda_Sustentable = x.MonedaSustentableId,
-                Fecha_DolarizadoFormateado = x.FechaDolarizado.HasValue? x.FechaDolarizado.Value.ToString("dd-MM-yyyy") : "",
+                Fecha_DolarizadoFormateado = x.FechaDolarizado.HasValue ? x.FechaDolarizado.Value.ToString("dd-MM-yyyy") : "",
                 Dolarizado = x.Dolarizado,
 
                 Dias_Pesificado = x.DiasPesificado,
@@ -3516,7 +3516,7 @@ namespace Molinos.DataAgro.Business.Managers
                     TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
                     TipoPeriodoDBId = y.TipoPeriodoDBId
                 }).ToList() : new List<DescuentoBonificacionDto>(),
-                Calidades = x.Calidad!= null? x.Calidad.Select(y => new CalidadDto
+                Calidades = x.Calidad != null ? x.Calidad.Select(y => new CalidadDto
                 {
                     Id = y.Id,
                     CalidadEspecialDesc = y.CalidadEspecial.Descripcion,
@@ -3524,8 +3524,8 @@ namespace Molinos.DataAgro.Business.Managers
                     PorcentajeDesde = y.PorcentajeDesde,
                     PorcentajeHasta = y.PorcentajeHasta,
                     Valor = y.Valor,
-                }).ToList():new List<CalidadDto>(),
-                AperturaPrecios = x.AperturaPrecio!=null ? x.AperturaPrecio.Select(y => new AperturaPrecioDto
+                }).ToList() : new List<CalidadDto>(),
+                AperturaPrecios = x.AperturaPrecio != null ? x.AperturaPrecio.Select(y => new AperturaPrecioDto
                 {
                     contratoId = y.NegocioId,
                     Id = y.Id,
@@ -3534,11 +3534,11 @@ namespace Molinos.DataAgro.Business.Managers
                     Importe = y.Importe,
                     MonedaId = y.MonedaId,
                     Porcentaje = y.Porcentaje
-                }).ToList() :new List<AperturaPrecioDto>(),
+                }).ToList() : new List<AperturaPrecioDto>(),
                 PreciosPactados = x.PrecioPactado != null ? x.PrecioPactado.Select(y => new PrecioPactadosDto
                 {
                     ContratoId = y.ContratoId,
-                    FechaDesde = y.FechaDesde.HasValue ?  y.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
+                    FechaDesde = y.FechaDesde.HasValue ? y.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
                     FechaHasta = y.FechaHasta.HasValue ? y.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
                     Id = y.Id,
                     ImportePactado = y.ImportePactado,
@@ -3574,7 +3574,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;                        
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                     }
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
@@ -3592,8 +3592,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             }
             return oEntityErrors;
-        } 
+        }
 
-           
+
     }
 }
