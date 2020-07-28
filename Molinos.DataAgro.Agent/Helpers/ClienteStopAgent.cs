@@ -372,7 +372,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     listaCupos.results = listaCupos.results.ToList();
                     IList<Cupo> actualizarCupos = null;
-                    List<int> cuposCambioEstado = new List<int>();
+                    List<int> cuposCambioStop = new List<int>();
                     while (listaCupos.results.Count > 0)
                     {
                         var index = listaCupos.results.Count >= 50 ? 50 : listaCupos.results.Count;
@@ -390,27 +390,27 @@ namespace Molinos.DataAgro.Agent.Helpers
                             }
                             if (cupo.EstadoCupoId != cuposActualizados[cupo.CupoSap].idCupoEstado ||
                                 cupo.EstadoPlanta != cuposActualizados[cupo.CupoSap].estadoEnPlanta ||
-                            (cupo.CTGFechaDesde != (!String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Desde) ? DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null))||
+                            (cupo.CTGFechaDesde != (!String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Desde) ? DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null)) ||
                             (cupo.CTGFechaHasta != (!String.IsNullOrEmpty(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta) ? DateTime.ParseExact(cuposActualizados[cupo.CupoSap].fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", provider) : (DateTime?)null)) ||
-                            cupo.RemitenteComercial != cuposActualizados[cupo.CupoSap].cuitRemComercial||
-                            cupo.CorredorComprador != cuposActualizados[cupo.CupoSap].cuitCorredorCAfip||
-                            cupo.CorredorVendedor != cuposActualizados[cupo.CupoSap].cuitCorredorVAfip||
-                            cupo.MercadoATermino != cuposActualizados[cupo.CupoSap].cuitMercadoATerminoAfip||
-                            cupo.Cosecha != cuposActualizados[cupo.CupoSap].cosecha||
-                            cupo.IntermediarioFlete != cuposActualizados[cupo.CupoSap].cuitIntermediarioFleteAfip||
-                            cupo.Transportista != cuposActualizados[cupo.CupoSap].cuitTransportistaAfip||
-                            cupo.Chofer != cuposActualizados[cupo.CupoSap].cuitChoferAfip||
-                            cupo.Km != cuposActualizados[cupo.CupoSap].kmRecorrer||
-                            cupo.Peso != cuposActualizados[cupo.CupoSap].pesoNetoEstimado||
-                            cupo.CartaPorte != cuposActualizados[cupo.CupoSap].cartaPorte||
-                            cupo.CTG != cuposActualizados[cupo.CupoSap].ctg||
-                            cupo.CuitOrigen != cuposActualizados[cupo.CupoSap].cuitOrigen||
-                            cupo.CuitOrigenAfip != cuposActualizados[cupo.CupoSap].cuitOrigenAfip||
-                            cupo.CodLocalidadOrigen != cuposActualizados[cupo.CupoSap].codLocalidadOrigen||
+                            cupo.RemitenteComercial != cuposActualizados[cupo.CupoSap].cuitRemComercial ||
+                            cupo.CorredorComprador != cuposActualizados[cupo.CupoSap].cuitCorredorCAfip ||
+                            cupo.CorredorVendedor != cuposActualizados[cupo.CupoSap].cuitCorredorVAfip ||
+                            cupo.MercadoATermino != cuposActualizados[cupo.CupoSap].cuitMercadoATerminoAfip ||
+                            cupo.Cosecha != cuposActualizados[cupo.CupoSap].cosecha ||
+                            cupo.IntermediarioFlete != cuposActualizados[cupo.CupoSap].cuitIntermediarioFleteAfip ||
+                            cupo.Transportista != cuposActualizados[cupo.CupoSap].cuitTransportistaAfip ||
+                            cupo.Chofer != cuposActualizados[cupo.CupoSap].cuitChoferAfip ||
+                            cupo.Km != cuposActualizados[cupo.CupoSap].kmRecorrer ||
+                            cupo.Peso != cuposActualizados[cupo.CupoSap].pesoNetoEstimado ||
+                            cupo.CartaPorte != cuposActualizados[cupo.CupoSap].cartaPorte ||
+                            cupo.CTG != cuposActualizados[cupo.CupoSap].ctg ||
+                            cupo.CuitOrigen != cuposActualizados[cupo.CupoSap].cuitOrigen ||
+                            cupo.CuitOrigenAfip != cuposActualizados[cupo.CupoSap].cuitOrigenAfip ||
+                            cupo.CodLocalidadOrigen != cuposActualizados[cupo.CupoSap].codLocalidadOrigen ||
                             cupo.NroEstablecimientoOrigen != cuposActualizados[cupo.CupoSap].nroEstablecimientoOrigen
                                 )
                             {
-                                cuposCambioEstado.Add(cupo.Id);
+                                cuposCambioStop.Add(cupo.Id);
                             }
                             cupo.EstadoPlanta = cuposActualizados[cupo.CupoSap].estadoEnPlanta;
                             //logger.Debug("CTGFechaDesde: ." + cuposActualizados[cupo.CupoSap].fechaCTG_Desde);
@@ -439,14 +439,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                     repositorio.GuardarCambios();
-                    if (actualizarCupos != null)
+
+
+                    var cupoManager = cupoManagerInj();
+                    if (cuposCambioStop.Count() > 0)
                     {
-                        var cupoManager = cupoManagerInj();
-                        foreach (var cupoId in cuposCambioEstado)
-                        {
-                            logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoId), TipoAccionLogDataAgro.Modificar);
-                        }
+                        logger.Debug("cupos actualizados por stop: " + string.Join(", ", cuposCambioStop));
                     }
+                    foreach (var cupoId in cuposCambioStop)
+                    {
+                        logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoId), TipoAccionLogDataAgro.Modificar);
+                    }
+
                     return listaCupos.results;
                 }
                 catch (Exception e)
