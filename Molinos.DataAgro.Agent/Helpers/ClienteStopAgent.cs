@@ -457,7 +457,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 else
                 {
                     ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                    logger.Debug(error.ToJson());
+                    logger.Debug(error.ToJson() + " fecha: " + fecha.ToString());
                 }
             }
 

@@ -290,7 +290,7 @@ namespace Molinos.DataAgro.Business.Managers
                             return nuevoResultado;
                         }
                         var resultadoStop = clienteStopAgent.EliminarCupo(cupoSap);
-                        if (nuevoResultado.HayError)
+                        if (resultadoStop.HayError)
                         {
                             foreach (var e in resultadoStop.Errores)
                             {

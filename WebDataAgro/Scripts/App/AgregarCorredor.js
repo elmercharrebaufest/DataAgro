@@ -468,12 +468,20 @@ function GrabarCorredor(nuevoCorredor) {
                         }
                     }],
                     onhide: function (dialogRef) {
-                        window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + result.ProveedorId;
+                        if (result.Errores[0].Source == "SISA") {
+                            window.location.href = window.location.origin + "/Proveedor/Detalle?ProveedorId=" + result.ProveedorId;
+                        } else {
+                            window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + result.ProveedorId;
+                        }
                     }
                 });
                 
                 setTimeout(function () {
-                    window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + result.ProveedorId;
+                    if (result.Errores[0].Source == "SISA") {
+                        window.location.href = window.location.origin + "/Proveedor/Detalle?ProveedorId=" + result.ProveedorId;
+                    } else {
+                        window.location.href = window.location.origin + "/Proveedor/Agregar?ProveedorId=" + result.ProveedorId;
+                    }
                 }, 5000);
                 
             } else {
