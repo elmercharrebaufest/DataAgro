@@ -32,11 +32,11 @@ namespace WebDataAgro.Controllers
         private IComercialManager mobComercialManager;
         private IReportesManager mobjreportesManager;
         private IProvinciaManager mobjProvinciaManager;
-        //-----------------------------------------------------
-        //  Constructor
-        //-----------------------------------------------------
 
-        public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager, ICampañaManager oCampañaManager, IComercialManager oComercialManager, IReportesManager oReportesManager, ILocalidadManager oLocalidadManager, IProvinciaManager oProvinciaManager)
+        public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager,
+            ICampañaManager oCampañaManager, IComercialManager oComercialManager, 
+            IReportesManager oReportesManager, ILocalidadManager oLocalidadManager, 
+            IProvinciaManager oProvinciaManager)
         {
 
             mobjProveedorManager = oProveedorManager;
@@ -163,12 +163,12 @@ namespace WebDataAgro.Controllers
         public ActionResult TraerProveedor(int ProveedorId)
         {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            var data = mobjProveedorManager.TraerProveedor(ProveedorId, GlobalVariables.IdActiveDirectory, equipo);
             return new JsonResult()
             {
-                Data = mobjProveedorManager.TraerProveedor(ProveedorId, GlobalVariables.IdActiveDirectory, equipo),
+                Data = data,
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
         public ActionResult Iniciliazar(int proveedorId)
@@ -557,6 +557,7 @@ namespace WebDataAgro.Controllers
             }
             return campos;
         }
+
 
     }
 }

@@ -115,8 +115,19 @@
     </div>
     <div class="col-lg-3 contenedor-principal-campanas">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="pill" href="#Compras" class="contenedor-principal-campanas-titulo">Compras</a></li>
-            <li><a data-toggle="pill" href="#Objetivos" class="contenedor-principal-campanas-titulo">Objetivos</a></li>
+            <li class="active"><a data-toggle="pill" href="#Compras" class="contenedor-principal-campanas-titulo">Compra</a></li>
+            <li><a data-toggle="pill" href="#Objetivos" class="contenedor-principal-campanas-titulo">Objetivo</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <strong>Detalle</strong><b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li hidden id="mostrarSoja"><a data-toggle="pill" href="#Soja" >Soja  <strong id="sojaCampania"></strong></a></li>
+                    <li hidden id="mostrarMaiz"><a data-toggle="pill" href="#Maiz" >Maíz <strong id="maizCampania"></strong></a></li>
+                    <li hidden id="mostrarTrigo"><a data-toggle="pill" href="#Trigo">Trigo <strong id="trigoCampania"></strong></a></li>                    
+                    <li hidden id="mostrarGir"><a data-toggle="pill" href="#Girasol">Girasol <strong id="girCampania"></strong></a></li>
+                </ul>
+            </li>
         </ul>
         <div class="tab-content">
             <div id="Compras" class="tab-pane fade in active">
@@ -132,7 +143,7 @@
             <div id="Objetivos" class="tab-pane fade in">
                 <div class="contenedor-principal-campanas-subtitulo">
                     Objetivo granos (TNs)
-                    
+
                     <button class="ajax-editar-link fa fa-plus btn btn-color col-12 col-md abrirModalLimite links-grid @(PermisosHelper.Is(PermisosDataAgro.VisualizarHedge) ? "" : "hide")" data-toggle="modal" data-target="#objetivo-modal"></button>
 
                     <button class="ajax-editar-link fa fa-eye btn btn-color col-12 col-md abrirModalLimite links-grid" data-toggle="modal" data-target="#objetivo-detalle-modal"></button>
@@ -140,7 +151,175 @@
 
                     </div>
                 </div>
-                
+
+            </div>
+            <div id="Soja" class="tab-pane fade in">
+                <div class="">
+                    <table class="table table-bordered table-responsive-md table-striped text-center tabla">
+                        <thead>
+                            <tr>
+                                <th>Situación</th>
+                                <th>Con Corredor</th>
+                                <th>Directo Acopiador</th>
+                                <th>Directo Productor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-soja" data-template="div-tabla-soja" data-bind="source:Soja" type="text/x-kendo-template">
+                        </tbody>
+                    </table>
+                    <script id="div-tabla-soja" type="text/x-kendo-template">
+                        <tr> 
+                            <td>Compras con Precio</td>
+                            <td>#: ConCorredor.ComprasConPrecio#</td>
+                            <td>#: DirectoAcopiador.ComprasConPrecio#</td>
+                            <td>#: DirectoProductor.ComprasConPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>Recibido Sin Precio</td>
+                            <td>#: ConCorredor.RecibidoSinPrecio#</td>
+                            <td>#: DirectoAcopiador.RecibidoSinPrecio#</td>
+                            <td>#: DirectoProductor.RecibidoSinPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>A recibir A fijar</td>
+                            <td>#: ConCorredor.ARecibirAFijar#</td>
+                            <td>#: DirectoAcopiador.ARecibirAFijar#</td>
+                            <td>#: DirectoProductor.ARecibirAFijar#</td>
+                        </tr>
+                        <tr>
+                            <td>Fasón Fas</td>
+                            <td>#: ConCorredor.FasonFas#</td>
+                            <td>#: DirectoAcopiador.FasonFas#</td>
+                            <td>#: DirectoProductor.FasonFas#</td>
+                        </tr>
+                    </script>
+                </div>
+            </div>
+            <div id="Maiz" class="tab-pane fade in">
+                <div class="">
+                    <table class="table table-bordered table-responsive-md table-striped text-center tabla">
+                        <thead>
+                            <tr>                               
+                                <th>Situación</th>
+                                <th>Con Corredor</th>
+                                <th>Directo Acopiador</th>
+                                <th>Directo Productor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-maiz" data-template="div-tabla-maiz" data-bind="source:Maiz" type="text/x-kendo-template">
+                        </tbody>
+                    </table>
+                    <script id="div-tabla-maiz" type="text/x-kendo-template">
+                        <tr>
+                            <td>Compras con Precio</td>
+                            <td>#: ConCorredor.ComprasConPrecio#</td>
+                            <td>#: DirectoAcopiador.ComprasConPrecio#</td>
+                            <td>#: DirectoProductor.ComprasConPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>Recibido Sin Precio</td>
+                            <td>#: ConCorredor.RecibidoSinPrecio#</td>
+                            <td>#: DirectoAcopiador.RecibidoSinPrecio#</td>
+                            <td>#: DirectoProductor.RecibidoSinPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>A recibir A fijar</td>
+                            <td>#: ConCorredor.ARecibirAFijar#</td>
+                            <td>#: DirectoAcopiador.ARecibirAFijar#</td>
+                            <td>#: DirectoProductor.ARecibirAFijar#</td>
+                        </tr>
+                        <tr>
+                            <td>Fasón Fas</td>
+                            <td>#: ConCorredor.FasonFas#</td>
+                            <td>#: DirectoAcopiador.FasonFas#</td>
+                            <td>#: DirectoProductor.FasonFas#</td>
+                        </tr>
+                    </script>
+                </div>
+            </div>
+            <div id="Trigo" class="tab-pane fade in">
+                <div class="">
+                    <table class="table table-bordered table-responsive-md table-striped text-center tabla">
+                        <thead>
+                            <tr>                                
+                                <th>Situación</th>
+                                <th>Con Corredor</th>
+                                <th>Directo Acopiador</th>
+                                <th>Directo Productor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-tri" data-template="div-tabla-tri" data-bind="source:Trigo" type="text/x-kendo-template">
+                        </tbody>
+                    </table>
+                    <script id="div-tabla-tri" type="text/x-kendo-template">
+                        <tr>
+                            <td>Compras con Precio</td>
+                            <td>#: ConCorredor.ComprasConPrecio#</td>
+                            <td>#: DirectoAcopiador.ComprasConPrecio#</td>
+                            <td>#: DirectoProductor.ComprasConPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>Recibido Sin Precio</td>
+                            <td>#: ConCorredor.RecibidoSinPrecio#</td>
+                            <td>#: DirectoAcopiador.RecibidoSinPrecio#</td>
+                            <td>#: DirectoProductor.RecibidoSinPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>A recibir A fijar</td>
+                            <td>#: ConCorredor.ARecibirAFijar#</td>
+                            <td>#: DirectoAcopiador.ARecibirAFijar#</td>
+                            <td>#: DirectoProductor.ARecibirAFijar#</td>
+                        </tr>
+                        <tr>
+                            <td>Fasón Fas</td>
+                            <td>#: ConCorredor.FasonFas#</td>
+                            <td>#: DirectoAcopiador.FasonFas#</td>
+                            <td>#: DirectoProductor.FasonFas#</td>
+                        </tr>
+                    </script>
+                </div>
+            </div>
+            <div id="Girasol" class="tab-pane fade in">
+                <div class="">
+                    <table class="table table-bordered table-responsive-md table-striped text-center tabla">
+                        <thead>
+                            <tr>                                
+                                <th>Situación</th>
+                                <th>Con Corredor</th>
+                                <th>Directo Acopiador</th>
+                                <th>Directo Productor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-gi" data-template="div-tabla-gi" data-bind="source:Girasol" type="text/x-kendo-template">
+                        </tbody>
+                    </table>
+                    <script id="div-tabla-gi" type="text/x-kendo-template">
+                        <tr>
+                            <td>Compras con Precio</td>
+                            <td>#: ConCorredor.ComprasConPrecio#</td>
+                            <td>#: DirectoAcopiador.ComprasConPrecio#</td>
+                            <td>#: DirectoProductor.ComprasConPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>Recibido Sin Precio</td>
+                            <td>#: ConCorredor.RecibidoSinPrecio#</td>
+                            <td>#: DirectoAcopiador.RecibidoSinPrecio#</td>
+                            <td>#: DirectoProductor.RecibidoSinPrecio#</td>
+                        </tr>
+                        <tr>
+                            <td>A recibir A fijar</td>
+                            <td>#: ConCorredor.ARecibirAFijar#</td>
+                            <td>#: DirectoAcopiador.ARecibirAFijar#</td>
+                            <td>#: DirectoProductor.ARecibirAFijar#</td>
+                        </tr>
+                        <tr>
+                            <td>Fasón Fas</td>
+                            <td>#: ConCorredor.FasonFas#</td>
+                            <td>#: DirectoAcopiador.FasonFas#</td>
+                            <td>#: DirectoProductor.FasonFas#</td>
+                        </tr>
+                    </script>
+                </div>
             </div>
         </div>
     </div>
@@ -271,6 +450,21 @@
         </div>
     </div>
 </div>
+
+<style>
+    td {
+        /*padding: 0px !important;*/
+        font-size: 10px !important;
+    }
+
+    th {
+        text-align: center !important;
+        font-size: 10px !important;
+    }
+    #sojaCampania, #trigoCampania, #girCampania, #maizCampania{
+        font-weight: bold;
+    }
+</style>
 
 @Html.Partial("~/Views/Shared/_PleaseWait.cshtml")
 @Html.Partial("ModalObjetivo")

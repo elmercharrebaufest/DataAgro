@@ -12,9 +12,10 @@
 	[ToneladaFijada]               FLOAT      NULL,
 	[ClaseDoc]       VARCHAR(MAX)        NULL, 
 	[Clasificacion]       VARCHAR(MAX)        NULL, 
-    [CampanaMateriaDetalleId]       INT        NULL,    
+    [CampanaMaterialDetalleId]       INT        NULL,    
     [ComercialId]             INT        NULL,
     CONSTRAINT [PK_CampanaMaterialDetallePorMes] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_CampanaMaterialDetallePorMes_CampanaMaterialDetalle] FOREIGN KEY ([CampanaMateriaDetalleId]) REFERENCES [dbo].[CampanaMaterialDetalle] ([Id])
+    CONSTRAINT [FK_CampanaMaterialDetallePorMes_CampanaMaterialDetalle] FOREIGN KEY ([CampanaMaterialDetalleId]) REFERENCES [dbo].[CampanaMaterialDetalle] ([Id]),
+	CONSTRAINT [FK_CampanaMaterialDetallePorMes_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId])
 );
 

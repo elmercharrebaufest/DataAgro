@@ -226,7 +226,10 @@ namespace Molinos.DataAgro.Entities.Dto
         {
 
         }
+        public List<CompraDto> CompraDetalle { get; set; }
 
+        public List<String> Material { get; set; }
+        public List<String> Campanias { get; set; }
     }
 
     public class RptProveedorInfo

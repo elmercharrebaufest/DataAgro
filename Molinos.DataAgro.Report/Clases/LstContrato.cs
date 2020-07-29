@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Report
             {
                 var query = oDatos.Select(x => new ContratoExcel
                 {
-                    Fecha = x.Fecha,
+                    Carga = x.Fecha,
                     Comercial = x.Comercial,
                     Grano = x.Material,
                     Tipo = x.TipoNegocio,

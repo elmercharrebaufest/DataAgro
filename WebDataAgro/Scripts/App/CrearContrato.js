@@ -1097,6 +1097,11 @@ function InicializarElementos() {
         dataValueField: "Id",
         change: function () {
             $("#porcentajeDePagoId").data("kendoNumericTextBox").value(100);
+            if (this.value() == "") {         
+                $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
+                
+            }
+            
             //if (this.value() == "" && ($("#tipoId").val() == "6")) {               
             //    $("#chequeElectronicoId").show();
             //}

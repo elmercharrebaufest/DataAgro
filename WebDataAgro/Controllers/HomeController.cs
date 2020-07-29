@@ -67,7 +67,7 @@ namespace WebDataAgro.Controllers
             model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, equipo);
             model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, equipo);
             model.Datos = mobjHomeManager.TraerInfoIniciales(equipo);
-
+            model.Detalle = mobjHomeManager.TraerTodoCompraDetalle(equipo);
             if (result != null)
             {
                 model.Contactos = result;

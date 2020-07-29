@@ -1045,6 +1045,8 @@ function armarContacto() {
     if (basico[0].GrupoSegmentacion === "Corredores") {
         armarDetalleCorredor(datos);
     }
+
+    ArmarTablaCompra(result.CompraDetalle, result.Material, result.Campanias);
 }
 
 function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {

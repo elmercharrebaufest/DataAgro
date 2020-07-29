@@ -66,5 +66,9 @@ namespace Molinos.DataAgro.Interfaces
         int ObtenerIdProveedorPorCuit(string cuit);
 
         Proveedor ObtenerEmailProveedorPorCuit(string cuit);
+
+        List<CampanaMaterialDetallePorMesDto> BuscarDatosTablaCompras();
+
+        List<CompraDto> TraerTodoCompra(int proveedorId, List<int> equipo);
     }
 }

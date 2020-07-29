@@ -2722,7 +2722,7 @@ namespace Molinos.DataAgro.Business.Managers
             var lista = new List<string>();
             var email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
-
+            logger.Debug("Enviando mail a Comercial " + email);
             lista.Add(email);
 
             var emailComerciales = "";
@@ -2736,8 +2736,10 @@ namespace Molinos.DataAgro.Business.Managers
                     try
                     {
                         emailComerciales = mailManager.GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
+                        logger.Debug("Mail encontrado para " + emailComerciales + "  " + corredorComercialCopia.IdActiveDirectory);
                         if (!String.IsNullOrEmpty(emailComerciales))
                         {
+
                             lista.Add(emailComerciales);
                         }
                     }

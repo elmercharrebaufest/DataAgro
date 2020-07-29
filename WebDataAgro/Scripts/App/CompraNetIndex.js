@@ -1635,9 +1635,21 @@ function ObtenerDatosModalBorrarPreAnular() {
     }
 }
 function AnularContratoPreAnulado() {
+    //var motivoRechazo = $("#motivo-rechazoPreanular").val();
+    //var objConfirmado = {};
+    //objConfirmado.MotivoRechazo = motivoRechazo;
+    //if (motivoRechazo == null || motivoRechazo == "" || motivoRechazo == undefined) {
+    //    MensErr("Ingrese un motivo de rechazo");
+    //    return;
+    //} else {
+    //    if (motivoRechazo.length > 1000) {
+    //        MensErr("El motivo de rechazo es demasiado largo.");
+    //        return;
+    //    }
+    //}
     var result;
     var id = $("#contratoModalBorrar").val();
-    result = MSExecuteOnServer('/CompraNet/AnularContratoPreAnulado', { contratoId: id });
+    result = MSExecuteOnServer('/CompraNet/AnularContratoPreAnulado', { contratoId: id/*, motivoRechazo*/});
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -2301,7 +2313,7 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     //} else {
     //    $("#motivo-rechazo").hide();
     //}
-    $("#motivo-rechazo").show();
+    //$("#motivo-rechazoPreanular").show();
     $("#tipoNegocioModalBorrar").val(tipoNegocio);
 
     $("#modalBorrarPreanulado").modal('show');
@@ -2488,10 +2500,10 @@ function compararReconfirmacion() {
     table += "</tr>";
     table += "<tr>";
     table += '<td>';
-    table += '<span> CANTIDAD: ' + kendo.toString(contrato.Cantidad, "n") + '</span><br/>';
+    table += '<span> CANTIDAD (Kg): ' + kendo.toString(contrato.Cantidad, "n0") + '</span><br/>';
     table += '</td>';
     table += '<td>';
-    table += '<span> CANTIDAD: ' + (contrato.Cantidad != contratoSave.Cantidad ? "<strong>" + kendo.toString(contratoSave.Cantidad, "n") + "</strong>" : kendo.toString(contratoSave.Cantidad, "n")) + '</span><br/>';
+    table += '<span> CANTIDAD (Kg): ' + (contrato.Cantidad != contratoSave.Cantidad ? "<strong>" + kendo.toString(contratoSave.Cantidad, "n0") + "</strong>" : kendo.toString(contratoSave.Cantidad, "n0")) + '</span><br/>';
     table += '</td>';
     table += "</tr>";
 

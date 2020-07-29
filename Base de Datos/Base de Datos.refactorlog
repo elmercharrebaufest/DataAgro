@@ -392,4 +392,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Fecha" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="e2f55531-54f4-46de-955b-b06aa961cbb5" ChangeDateTime="07/24/2020 14:32:14">
+    <Property Name="ElementName" Value="[dbo].[CampanaMaterialDetallePorMes].[CampanaMateriaDetalleId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CampanaMaterialDetallePorMes]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CampanaMaterialDetalleId" />
+  </Operation>
 </Operations>

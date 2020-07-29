@@ -43,7 +43,10 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock = new Mock<IReportesManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
-            target = new ProveedorController(proveedorManagerMock.Object, homeManagerMock.Object, campanaManagerMock.Object, comercialManagerMock.Object, reportesManagerMock.Object, localidadManagerMock.Object, provinciaManagerMock.Object);
+            target = new ProveedorController(proveedorManagerMock.Object, 
+                homeManagerMock.Object, campanaManagerMock.Object, 
+                comercialManagerMock.Object, reportesManagerMock.Object, 
+                localidadManagerMock.Object, provinciaManagerMock.Object);
         }
 
         [Test]
@@ -121,7 +124,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             proveedorManagerMock.Verify(x => x.TraerProveedor(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ActividadTraerPorProveedores\":null,\"BasicoProveedorTraerPorProveedores\":null,\"ContactosComercialesTraerPorProveedores\":null,\"CampoProduccionAcopioPorProveedores\":null,\"Acopio\":null,\"AcopioMaterialPorProveedores\":null,\"ActividadHistoriaTraerPorProveedores\":null,\"DatosContacto\":null,\"Historial\":null,\"CanalesDeOperacion\":null,\"ProveedorDestinatario\":null,\"ProveedorCondicion\":null,\"ProveedorCampoDetalle\":null,\"ObjetivosTraerPorProveedorId\":null,\"ProveedorCorredor\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ActividadTraerPorProveedores\":null,\"BasicoProveedorTraerPorProveedores\":null,\"ContactosComercialesTraerPorProveedores\":null,\"CampoProduccionAcopioPorProveedores\":null,\"Acopio\":null,\"AcopioMaterialPorProveedores\":null,\"ActividadHistoriaTraerPorProveedores\":null,\"DatosContacto\":null,\"Historial\":null,\"CanalesDeOperacion\":null,\"ProveedorDestinatario\":null,\"ProveedorCondicion\":null,\"ProveedorCampoDetalle\":null,\"ObjetivosTraerPorProveedorId\":null,\"ProveedorCorredor\":null,\"CompraDetalle\":null,\"Material\":null,\"Campanias\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

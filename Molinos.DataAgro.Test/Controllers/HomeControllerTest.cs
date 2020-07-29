@@ -109,7 +109,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 come = new List<ComercialQry>(),
                 zona = new List<ZonaQry>()
             });
-
+            homeManagerMock.Setup(x => x.TraerTodoCompraDetalle(GlobalVariables.EquipoReal)).Returns(new List<CompraDto>());
             var result = target.Inicializar();
             Assert.NotNull(result);
             homeManagerMock.Verify(x => x.TraerBusquedaContacto(It.IsAny<oParamBusqueda>(), It.IsAny<int>(), It.IsAny<List<int>>()), Times.Once);
@@ -117,7 +117,7 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock.Verify(x => x.TraerInfoIniciales(It.IsAny<List<int>>()), Times.Once);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Contactos\":{\"Contactos\":null,\"TotalContactos\":0,\"TotalPotencialContactos\":0,\"TotalOperandoContactos\":0,\"TotalNoOperandoContactos\":0,\"TotalBajaContactos\":0,\"TotalSinInteresContactos\":0},\"Campaña\":null,\"Objetivo\":null,\"Datos\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Contactos\":{\"Contactos\":null,\"TotalContactos\":0,\"TotalPotencialContactos\":0,\"TotalOperandoContactos\":0,\"TotalNoOperandoContactos\":0,\"TotalBajaContactos\":0,\"TotalSinInteresContactos\":0},\"Campaña\":null,\"Objetivo\":null,\"Datos\":null,\"Detalle\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);        
         }
 

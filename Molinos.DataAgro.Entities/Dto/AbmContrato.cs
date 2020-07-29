@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class ContratoExcel
     {
-        public DateTime? Fecha { get; set; }
+        public DateTime? Carga { get; set; }
         public string Comercial { get; set; }
         public string Grano { get; set; }
         public string Tipo { get; set; }

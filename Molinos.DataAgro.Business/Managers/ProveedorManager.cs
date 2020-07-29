@@ -113,6 +113,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }, x => x.ProveedorId == ProveedorId);
 
                 res.ProveedorCorredor = ListarProveedorCorredor(ProveedorId);
+                res.CompraDetalle = TraerTodoCompra(ProveedorId, equipo);
+                res.Material = res.CompraDetalle.Select(x => x.Material).Distinct().ToList();
+                res.Campanias = res.CompraDetalle.Select(x => x.Campana).Distinct().ToList();
             }
             catch (Exception ex)
             {
@@ -3181,5 +3184,74 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
         }
+
+        public List<CampanaMaterialDetallePorMesDto> BuscarDatosTablaCompras()
+        {
+            return repositorio.Listar<CampanaMaterialDetallePorMes, CampanaMaterialDetallePorMesDto>(x => new CampanaMaterialDetallePorMesDto {
+                ClaseDoc = x.ClaseDoc,
+                Clasificacion = x.Clasificacion,
+                ComercialId = x.ComercialId,
+                Contrato = x.Contrato,
+                Fecha = x.Fecha,
+                MaterialId = x.CampanaMaterialDetalle.MaterialId,
+                PendienteAFijar = x.PendienteAFijar,
+                PendienteAplicar = x.PendienteAplicar,
+                ToneladaAmpliada = x.ToneladaAmpliada,
+                ToneladaAnulada = x.ToneladaAnulada,
+                ToneladaAplicada = x.ToneladaAplicada,
+                ToneladaContrato = x.ToneladaContrato,
+                CorredorCuit = x.CorredorCuit,
+                ProveedorId = x.CampanaMaterialDetalle.ProveedorId,
+                ToneladaFijada = x.ToneladaFijada,
+                CampanaId = x.CampanaMaterialDetalle.CampanaId
+                
+            });
+        }
+        
+        public List<CompraDto> TraerTodoCompra(int proveedorId, List<int> equipo)
+        {
+
+            var compraDto = new List<CompraDto>();
+            var compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
+            x.CampanaMaterialDetalle.ProveedorId == proveedorId && equipo.Contains(x.ComercialId.Value));
+
+            var grupoCompras = compras.GroupBy(x=>new { x.CampanaMaterialDetalle.CampanaId, x.CampanaMaterialDetalle.MaterialId });
+            foreach(var c in grupoCompras)
+            {
+                var detalle = new CompraDto
+                {
+                    Campana = c.Select(x=>x.CampanaMaterialDetalle.Campana.Descripcion).FirstOrDefault(),
+                    Material = c.Select(x => x.CampanaMaterialDetalle.Material.Descripcion).FirstOrDefault(),
+                    ConCorredor = new CompraDetalleDto
+                    {
+                        ComprasConPrecio = c.Where(x => x.CorredorCuit != null  && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
+                        RecibidoSinPrecio = c.Where(x => x.CorredorCuit != null && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
+                        ARecibirAFijar = c.Where(x => x.CorredorCuit != null && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),                        
+                        FasonFas = c.Where(x => x.CorredorCuit != null && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
+                    },         
+                    DirectoAcopiador = new CompraDetalleDto
+                    {
+                        ComprasConPrecio = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "ACOPIADOR"  && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
+                        RecibidoSinPrecio = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
+                        ARecibirAFijar = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),                        
+                        FasonFas = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
+
+                    },
+                    DirectoProductor = new CompraDetalleDto
+                    {
+                        ComprasConPrecio = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "PRODUCTOR" && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
+                        RecibidoSinPrecio = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "PRODUCTOR"&& x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
+                        ARecibirAFijar = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),
+                        FasonFas = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
+                    }
+
+                };
+                compraDto.Add(detalle);
+            }
+            return compraDto;
+        }
+
+
+
     }
 }

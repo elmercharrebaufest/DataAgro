@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -993,6 +993,7 @@
     <Content Include="Scripts\App\Filtros.js" />
     <Content Include="Scripts\App\CupoDisponibilidad.js" />
     <Content Include="Scripts\App\LogDataAgro.js" />
+    <Content Include="Scripts\App\TablaCompra.js" />
     <Content Include="Scripts\App\ReporteProveedores.js" />
     <Content Include="Scripts\App\reporteRangoConfirmacionAutomatica.js" />
     <Content Include="Scripts\App\SugerenciaCupo.js" />
@@ -2698,6 +2699,7 @@
     <Content Include="Views\Cupo\ModalRechazarCupoConMotivo.cshtml" />
     <Content Include="Views\ReporteRangoConfirmacionAutomatica\Index.cshtml" />
     <Content Include="Views\LogDataAgro\_MostrarDiferenciasTabla.cshtml" />
+    <Content Include="Views\Proveedor\TablaCompra.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

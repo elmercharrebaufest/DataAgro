@@ -16,6 +16,8 @@
 <link rel="stylesheet" href="~/Content/proveedorDetalleResponsive.css" />
 <script type="text/javascript" src="~/Scripts/App/proveedorDetalle.js"></script>
 <script type="text/javascript" src="~/Scripts/App/detalleCorredor.js"></script>
+<script type="text/javascript" src="~/Scripts/App/TablaCompra.js"></script>
+
 
 <div class="container" id="detalle">
     <div class="detalle-contacto-header">
@@ -154,451 +156,466 @@
                 <a class="exportar-contactos" id="ExportarPdf"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar como PDF</span></a>
                 <a class="exportar-contactos" id="Imprimir"><img src="~/Content/Images/imprimir.png" /> <span>Imprimir</span></a>
             </div>
-            <div class="row margen-propio">
-                <div class="wd70p campañagrafico">
-                    <div class="titulo-campaña">
-                        Operaciones cerradas en campaña
+
+
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active"><a data-target="#method" data-toggle="tab">Gráfico</a></li>
+                <li><a data-target="#payment" data-toggle="tab">Detalle</a></li>
+
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="method">
+                    <div class="row margen-propio">
+                        <div class="wd70p campañagrafico">
+                            <div class="titulo-campaña">
+                                Operaciones cerradas en campaña
+                            </div>
+                            <div class="img-campaña">
+                                <div id="chart"></div>
+                            </div>
+                        </div>
+                        <div class="wd30p campañalistado">
+                            <div class="titulo-campaña">
+                                Total granos comprados  (TNs)
+                            </div>
+                            <div class="contenedor-principal-campanas-grupo">
+                            </div>
+                        </div>
                     </div>
-                    <div class="img-campaña">
-                        <div id="chart"></div>
+                </div>
+
+                <div class="tab-pane ex1" id="payment">
+                    @Html.Partial("TablaCompra")
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="row bordertopbottom">
+                        <div class="wizard-header-contenedor-grupo">
+                            <div class="wizard-header-contenedor whc-selected" id="contacto">
+                                Datos contacto
+                            </div>
+                            <div class="wizard-header-contenedor noCorredor" id="produccion">
+                                Producción
+                            </div>
+                            <div class="wizard-header-contenedor noCorredor" id="almacenamiento">
+                                Almacenamiento
+                            </div>
+                            <div class="wizard-header-contenedor noCorredor" id="establecimiento">
+                                Establecimiento
+                            </div>
+                            @if (PermisosHelper.Is(PermisosDataAgro.AgendaComercial))
+                            {
+                                <div class="wizard-header-contenedor noCorredor" id="agenda">
+                                    Agenda
+                                </div>
+                            }
+                            @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosProveedor))
+                            {
+                                <div class="align-right wizardeditar">
+                                    <a onclick="editarProveedor(ProveedorId)"><img style="width:16px;height:16px;" src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc" id="editar-Proveedor"> Editar</span></a>
+                                </div>
+                            }
+                            <div class="wizard-header-contenedor" id="proveedoresCorredor" style="display:none;">
+                                Proveedores
+                            </div>
+
+
+                        </div>
                     </div>
                 </div>
-                <div class="wd30p campañalistado">
-                    <div class="titulo-campaña">
-                        Total granos comprados  (TNs)
-                    </div>
-                    <div class="contenedor-principal-campanas-grupo">
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-lg-12">
-                <div class="row bordertopbottom">
-                    <div class="wizard-header-contenedor-grupo">
-                        <div class="wizard-header-contenedor whc-selected" id="contacto">
-                            Datos contacto
-                        </div>
-                        <div class="wizard-header-contenedor noCorredor" id="produccion">
-                            Producción
-                        </div>
-                        <div class="wizard-header-contenedor noCorredor" id="almacenamiento">
-                            Almacenamiento
-                        </div>
-                        <div class="wizard-header-contenedor noCorredor" id="establecimiento">
-                            Establecimiento
-                        </div>
-                        @if (PermisosHelper.Is(PermisosDataAgro.AgendaComercial))
-                        {
-                            <div class="wizard-header-contenedor noCorredor" id="agenda">
-                                Agenda
-                            </div>
-                        }
-                        @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosProveedor))
-                        {
-                            <div class="align-right wizardeditar">
-                                <a onclick="editarProveedor(ProveedorId)"><img style="width:16px;height:16px;" src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc" id="editar-Proveedor"> Editar</span></a>
-                            </div>
-                        }
-                        <div class="wizard-header-contenedor" id="proveedoresCorredor" style="display:none;">
-                            Proveedores
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-
-            <div id="datos-contacto">
-                <div class="wd65p">
-                    <div class="datos-contacto-titular">
-                        <span>Datos Contacto</span>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="label-contacto">
-                                Domicilio Actividad
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div id="daco-domact" class="value-contacto">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="noCorredor">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="label-contacto">
-                                    Canales de operación
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div id="daco-caope" class="value-contacto">
-
-                                </div>
-                            </div>
+                <div id="datos-contacto">
+                    <div class="wd65p">
+                        <div class="datos-contacto-titular">
+                            <span>Datos Contacto</span>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="label-contacto">
-                                    Entrega a
+                                    Domicilio Actividad
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <div id="daco-enta" class="value-contacto">
+                                <div id="daco-domact" class="value-contacto">
 
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="label-contacto">
-                                    Condiciones preferentes
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div id="daco-condpre" class="value-contacto">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="label-contacto">
-                                    Área de influencia
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div id="daco-arin" class="value-contacto">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="label-contacto">
-                                    Intermediario
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div id="daco-inte" class="value-contacto">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="label-contacto">
-                                Comentarios
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div id="daco-come" class="value-contacto">
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="datos-contacto-titular">
-                        <span>CompraNet</span>
-                    </div>
-                    <div class="datos-produccion-cap-prod-editor-contenedor" style="text-align:left">
-                        <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
-                            <div class="row noCorredor">
-                                <div class="col-lg-6 ">
+                        <div class="noCorredor">
+                            <div class="row">
+                                <div class="col-lg-6">
                                     <div class="label-contacto">
-                                        Clasificación
+                                        Canales de operación
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div id="daco-clascomnet" class="value-contacto">
+                                    <div id="daco-caope" class="value-contacto">
+
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="label-contacto">
-                                        Tipo de Boleto
+                                        Entrega a
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div id="daco-bolecomnet" class="value-contacto">
+                                    <div id="daco-enta" class="value-contacto">
+
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="label-contacto">
-                                        Bolsa
+                                        Condiciones preferentes
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div id="daco-bolscomnet" class="value-contacto">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row noCorredor">
-                                <div class="col-lg-6">
-                                    <div class="label-contacto">
-                                        Provincia
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div id="daco-provcomnet" class="value-contacto">
+                                    <div id="daco-condpre" class="value-contacto">
+
                                     </div>
                                 </div>
                             </div>
-                            <div class="row noCorredor">
+                            <div class="row">
                                 <div class="col-lg-6">
                                     <div class="label-contacto">
-                                        Localidad
+                                        Área de influencia
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div id="daco-loccomnet" class="value-contacto">
+                                    <div id="daco-arin" class="value-contacto">
+
                                     </div>
                                 </div>
                             </div>
-                            <div id="rowConsignatario" class="row">
+                            <div class="row">
                                 <div class="col-lg-6">
                                     <div class="label-contacto">
-                                        Consignatario
+                                        Intermediario
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div id="daco-consigcomnet" class="value-contacto">
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="rowPlanCanje" class="row">
-                                <div class="col-lg-6">
-                                    <div class="label-contacto">
-                                        Plan Canje
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div id="daco-planCanjecomnet" class="value-contacto">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row noCorredor">
-                                <div class="col-lg-6">
-                                    <div class="label-contacto">
-                                        Comisión %
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div id="daco-comisioncomnet" class="value-contacto">
+                                    <div id="daco-inte" class="value-contacto">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="wd35p">
 
-                    <div class="datos-contacto-titular contacto-titular-comerciales noCorredor">
-                        <span>Contactos comerciales</span>
-                    </div>
-                    <div class="contenedor-grupo-contactos-comerciales">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="label-contacto">
+                                    Comentarios
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div id="daco-come" class="value-contacto">
 
-                    </div>
-
-                </div>
-            </div>
-            <div id="datos-produccion">
-                <div class="col-lg-12">
-                    <div class="row bordertopbottom">
-                        <div class="wizard-header-contenedor-grupo">
-                            <div class="wizard-header-contenedor whc-selected" id="16-17">Campaña 16-17</div>
-                            <div class="wizard-header-contenedor" id="15-16">Campaña 15-16</div>
-                            <div class="wizard-header-contenedor" id="14-15">Campaña 14-15</div>
-                            <div class="wizard-header-contenedor" id="19-20">Campaña 19-20</div>
-                            <div class="wizard-header-contenedor" id="20-21">Campaña 20-21</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div id="campana16-17"></div>
-                <div id="campana15-16"></div>
-                <div id="campana14-15"></div>
-                <div id="campana19-20"></div>
-                <div id="campana20-21"></div>
-            </div>
-            <div id="datos-almacenamiento">
-                <div class="col-lg-12">
-                    <div class="row bordertopbottom">
-                        <div class="wizard-header-contenedor-grupo">
-                            <div class="wizard-header-contenedor whc-selected" id="a16-17">Campaña 16-17</div>
-                            <div class="wizard-header-contenedor" id="a15-16">Campaña 15-16</div>
-                            <div class="wizard-header-contenedor" id="a14-15">Campaña 14-15</div>
-                            <div class="wizard-header-contenedor" id="a19-20">Campaña 19-20</div>
-                            <div class="wizard-header-contenedor" id="a20-21">Campaña 20-21</div>
-                        </div>
-                    </div>
-                </div>
-                <div id="acampana16-17"></div>
-                <div id="acampana15-16"></div>
-                <div id="acampana14-15"></div>
-                <div id="acampana19-20"></div>
-                <div id="acampana20-21"></div>
-            </div>
-            <div id="datos-establecimiento" class="col-lg-12">
-               
-            </div>
-            <div id="datos-proveedorescorredor">
-                <div class="col-lg-12">
-                    <div class="wizard-header-contenedor-grupo">
-                        <div class="proveedores-corredor">
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="datos-agenda">
-                <div class="row datos-contacto-titulares">
-                    <div class="wd30p">
                         <div class="datos-contacto-titular">
-                            <span>Próximas actividades</span>
+                            <span>CompraNet</span>
+                        </div>
+                        <div class="datos-produccion-cap-prod-editor-contenedor" style="text-align:left">
+                            <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
+                                <div class="row noCorredor">
+                                    <div class="col-lg-6 ">
+                                        <div class="label-contacto">
+                                            Clasificación
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="daco-clascomnet" class="value-contacto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="label-contacto">
+                                            Tipo de Boleto
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="daco-bolecomnet" class="value-contacto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="label-contacto">
+                                            Bolsa
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="daco-bolscomnet" class="value-contacto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row noCorredor">
+                                    <div class="col-lg-6">
+                                        <div class="label-contacto">
+                                            Provincia
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="daco-provcomnet" class="value-contacto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row noCorredor">
+                                    <div class="col-lg-6">
+                                        <div class="label-contacto">
+                                            Localidad
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="daco-loccomnet" class="value-contacto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="rowConsignatario" class="row">
+                                    <div class="col-lg-6">
+                                        <div class="label-contacto">
+                                            Consignatario
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="daco-consigcomnet" class="value-contacto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="rowPlanCanje" class="row">
+                                    <div class="col-lg-6">
+                                        <div class="label-contacto">
+                                            Plan Canje
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="daco-planCanjecomnet" class="value-contacto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row noCorredor">
+                                    <div class="col-lg-6">
+                                        <div class="label-contacto">
+                                            Comisión %
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div id="daco-comisioncomnet" class="value-contacto">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="wd70p">
-                        <div class="datos-contacto-titular">
-                            <span>Agenda</span>
+                    <div class="wd35p">
+
+                        <div class="datos-contacto-titular contacto-titular-comerciales noCorredor">
+                            <span>Contactos comerciales</span>
+                        </div>
+                        <div class="contenedor-grupo-contactos-comerciales">
+
+                        </div>
+
+                    </div>
+                </div>
+                <div id="datos-produccion">
+                    <div class="col-lg-12">
+                        <div class="row bordertopbottom">
+                            <div class="wizard-header-contenedor-grupo">
+                                <div class="wizard-header-contenedor whc-selected" id="16-17">Campaña 16-17</div>
+                                <div class="wizard-header-contenedor" id="15-16">Campaña 15-16</div>
+                                <div class="wizard-header-contenedor" id="14-15">Campaña 14-15</div>
+                                <div class="wizard-header-contenedor" id="19-20">Campaña 19-20</div>
+                                <div class="wizard-header-contenedor" id="20-21">Campaña 20-21</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="campana16-17"></div>
+                    <div id="campana15-16"></div>
+                    <div id="campana14-15"></div>
+                    <div id="campana19-20"></div>
+                    <div id="campana20-21"></div>
+                </div>
+                <div id="datos-almacenamiento">
+                    <div class="col-lg-12">
+                        <div class="row bordertopbottom">
+                            <div class="wizard-header-contenedor-grupo">
+                                <div class="wizard-header-contenedor whc-selected" id="a16-17">Campaña 16-17</div>
+                                <div class="wizard-header-contenedor" id="a15-16">Campaña 15-16</div>
+                                <div class="wizard-header-contenedor" id="a14-15">Campaña 14-15</div>
+                                <div class="wizard-header-contenedor" id="a19-20">Campaña 19-20</div>
+                                <div class="wizard-header-contenedor" id="a20-21">Campaña 20-21</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="acampana16-17"></div>
+                    <div id="acampana15-16"></div>
+                    <div id="acampana14-15"></div>
+                    <div id="acampana19-20"></div>
+                    <div id="acampana20-21"></div>
+                </div>
+                <div id="datos-establecimiento" class="col-lg-12">
+
+                </div>
+                <div id="datos-proveedorescorredor">
+                    <div class="col-lg-12">
+                        <div class="wizard-header-contenedor-grupo">
+                            <div class="proveedores-corredor">
+
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="proximas-actividades-contenedor">
-
-                </div>
-                <div class="agenda-contenedor">
-                    <div class="agenda-contenedor-agregar">
-                        Agregar actividad
-                    </div>
-                    <input type="hidden" id="actividadId" />
-                    <input type="hidden" id="fechaHoraActividad" />
-                    <div class="agenda-contenedor-agregar-campo">
-                        <div class="agenda-contenedor-agregar-campo-label">
-                            Tipo de actividad
+                <div id="datos-agenda">
+                    <div class="row datos-contacto-titulares">
+                        <div class="wd30p">
+                            <div class="datos-contacto-titular">
+                                <span>Próximas actividades</span>
+                            </div>
                         </div>
-                        <div class="agenda-contenedor-agregar-campo-input campo-tipoactividad">
-
+                        <div class="wd70p">
+                            <div class="datos-contacto-titular">
+                                <span>Agenda</span>
+                            </div>
                         </div>
                     </div>
+                    <div class="proximas-actividades-contenedor">
 
-
-                    <div class="agenda-contenedor-agregar-campo">
-                        <div class="agenda-contenedor-agregar-campo-label">
-                            Detalle Actividad
+                    </div>
+                    <div class="agenda-contenedor">
+                        <div class="agenda-contenedor-agregar">
+                            Agregar actividad
                         </div>
-                        <div class="agenda-contenedor-agregar-campo-input">
-                            <textarea id="detalle-actividad">
+                        <input type="hidden" id="actividadId" />
+                        <input type="hidden" id="fechaHoraActividad" />
+                        <div class="agenda-contenedor-agregar-campo">
+                            <div class="agenda-contenedor-agregar-campo-label">
+                                Tipo de actividad
+                            </div>
+                            <div class="agenda-contenedor-agregar-campo-input campo-tipoactividad">
+
+                            </div>
+                        </div>
+
+
+                        <div class="agenda-contenedor-agregar-campo">
+                            <div class="agenda-contenedor-agregar-campo-label">
+                                Detalle Actividad
+                            </div>
+                            <div class="agenda-contenedor-agregar-campo-input">
+                                <textarea id="detalle-actividad">
 
                             </textarea>
-                        </div>
-                    </div>
-                    <div class="agenda-contenedor-agregar-campo">
-                        <div class="agenda-contenedor-agregar-campo-label">
-                            Contacto
-                        </div>
-                        <div class="agenda-contenedor-agregar-campo-input campo-contactocomercial">
-
-                        </div>
-                    </div>
-
-                    <div class="agenda-contenedor-agregar titulo-recordatorio">
-                        Recordatorio
-                    </div>
-                    <div class="agenda-contenedor-agregar-campo campoasunto">
-                        <div class="agenda-contenedor-agregar-campo-label">
-                            Asunto
-                        </div>
-                        <div class="agenda-contenedor-agregar-campo-input">
-                            <input id="agendaAsunto" type="text" />
-                        </div>
-                    </div>
-                    <div class="agenda-contenedor-agregar-campo campofechadesde">
-                        <div class="agenda-contenedor-agregar-campo-label">
-                            Fecha Desde
-                        </div>
-                        <div class="agenda-contenedor-agregar-campo-input">
-                            <div class="agenda-contenedor-recordatorio-fechayhora">
-                                <div class="agenda-contenedor-recordatorio-fecha">
-                                    <input id="datepicker" />
-                                </div>
-                                <div class="agenda-contenedor-recordatorio-hora">
-                                    <input id="timepicker" />
-                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="agenda-contenedor-agregar-campo campofechahasta">
-                        <div class="agenda-contenedor-agregar-campo-label">
-                            Fecha Hasta
+                        <div class="agenda-contenedor-agregar-campo">
+                            <div class="agenda-contenedor-agregar-campo-label">
+                                Contacto
+                            </div>
+                            <div class="agenda-contenedor-agregar-campo-input campo-contactocomercial">
+
+                            </div>
                         </div>
-                        <div class="agenda-contenedor-agregar-campo-input">
-                            <div class="agenda-contenedor-recordatorio-fechayhora">
-                                <div class="agenda-contenedor-recordatorio-fecha">
-                                    <input id="datepicker-hasta" />
-                                </div>
-                                <div class="agenda-contenedor-recordatorio-hora">
-                                    <input id="timepicker-hasta" />
+
+                        <div class="agenda-contenedor-agregar titulo-recordatorio">
+                            Recordatorio
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo campoasunto">
+                            <div class="agenda-contenedor-agregar-campo-label">
+                                Asunto
+                            </div>
+                            <div class="agenda-contenedor-agregar-campo-input">
+                                <input id="agendaAsunto" type="text" />
+                            </div>
+                        </div>
+                        <div class="agenda-contenedor-agregar-campo campofechadesde">
+                            <div class="agenda-contenedor-agregar-campo-label">
+                                Fecha Desde
+                            </div>
+                            <div class="agenda-contenedor-agregar-campo-input">
+                                <div class="agenda-contenedor-recordatorio-fechayhora">
+                                    <div class="agenda-contenedor-recordatorio-fecha">
+                                        <input id="datepicker" />
+                                    </div>
+                                    <div class="agenda-contenedor-recordatorio-hora">
+                                        <input id="timepicker" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="agenda-contenedor-agregar-campo campofechahasta">
+                            <div class="agenda-contenedor-agregar-campo-label">
+                                Fecha Hasta
+                            </div>
+                            <div class="agenda-contenedor-agregar-campo-input">
+                                <div class="agenda-contenedor-recordatorio-fechayhora">
+                                    <div class="agenda-contenedor-recordatorio-fecha">
+                                        <input id="datepicker-hasta" />
+                                    </div>
+                                    <div class="agenda-contenedor-recordatorio-hora">
+                                        <input id="timepicker-hasta" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="linea-separador-agenda"></div>
-                    @if (ViewBag.MostrarEditar == true)
-                    {
-                        <div class="guardar-agenda" id="guardarAgendaId">
-                            Guardar
-                        </div>
-                    }
-                </div>
-                <div class="filtro-agenda">
-                    <div class="filtro-agenda-titulo">
-                        Filtrar por
+                        <div class="linea-separador-agenda"></div>
+                        @if (ViewBag.MostrarEditar == true)
+                        {
+                            <div class="guardar-agenda" id="guardarAgendaId">
+                                Guardar
+                            </div>
+                        }
                     </div>
-                    <form id="form-filtro-agenda">
-                        <div class="filtro-agenda-campo">
-                            <div class="filtro-agenda-campo-label">
-                                Palabra clave
-                            </div>
-                            <div class="filtro-agenda-campo-input">
-                                <input type="text" id="palabra-clave" />
-                            </div>
+                    <div class="filtro-agenda">
+                        <div class="filtro-agenda-titulo">
+                            Filtrar por
                         </div>
-                        <div class="filtro-agenda-campo">
-                            <div class="filtro-agenda-campo-label">
-                                Tipo de Actividad
+                        <form id="form-filtro-agenda">
+                            <div class="filtro-agenda-campo">
+                                <div class="filtro-agenda-campo-label">
+                                    Palabra clave
+                                </div>
+                                <div class="filtro-agenda-campo-input">
+                                    <input type="text" id="palabra-clave" />
+                                </div>
                             </div>
-                            <div class="filtro-agenda-campo-input">
-                                <label for="tipo-act-Todas"><input type="checkbox" value="0" name="Todas" id="tipo-act-Todas" /> <b>Todas</b></label>
-                                <label for="tipo-act-Llamada"><input type="checkbox" value="1" name="Llamada" id="tipo-act-Llamada" /> Llamada</label>
-                                <label for="tipo-act-Reunion-personal"><input type="checkbox" value="2" name="Reunion-personal" id="tipo-act-Reunion-personal" /> Agenda</label>
-                                <label for="tipo-act-Evento-Molinos"><input type="checkbox" value="3" name="Evento-Molinos" id="tipo-act-Evento-Molinos" /> Tareas</label>
-                                <label for="tipo-act-Mail-chat"><input type="checkbox" value="4" name="Mail-chat" id="tipo-act-Mail-chat" /> Mail</label>
-                                <label for="tipo-act-Cierre-de-operaciones"><input type="checkbox" value="5" name="Cierre-de-operaciones" id="tipo-act-Cierre-de-operaciones" />Chat</label>
+                            <div class="filtro-agenda-campo">
+                                <div class="filtro-agenda-campo-label">
+                                    Tipo de Actividad
+                                </div>
+                                <div class="filtro-agenda-campo-input">
+                                    <label for="tipo-act-Todas"><input type="checkbox" value="0" name="Todas" id="tipo-act-Todas" /> <b>Todas</b></label>
+                                    <label for="tipo-act-Llamada"><input type="checkbox" value="1" name="Llamada" id="tipo-act-Llamada" /> Llamada</label>
+                                    <label for="tipo-act-Reunion-personal"><input type="checkbox" value="2" name="Reunion-personal" id="tipo-act-Reunion-personal" /> Agenda</label>
+                                    <label for="tipo-act-Evento-Molinos"><input type="checkbox" value="3" name="Evento-Molinos" id="tipo-act-Evento-Molinos" /> Tareas</label>
+                                    <label for="tipo-act-Mail-chat"><input type="checkbox" value="4" name="Mail-chat" id="tipo-act-Mail-chat" /> Mail</label>
+                                    <label for="tipo-act-Cierre-de-operaciones"><input type="checkbox" value="5" name="Cierre-de-operaciones" id="tipo-act-Cierre-de-operaciones" />Chat</label>
+                                </div>
                             </div>
+                        </form>
+                    </div>
+                    <div class="historial-actividad">
+                        <div class="datos-contacto-titular">
+                            <span>Historial actividad</span>
                         </div>
-                    </form>
-                </div>
-                <div class="historial-actividad">
-                    <div class="datos-contacto-titular">
-                        <span>Historial actividad</span>
-                    </div>
-                    <div class="historial-actividad-ultimocontacto">
-                        <em>Último contacto <span class="actividad-ultimo-contacto">hoy</span></em>
-                    </div>
-                    <div class="historial-actividad-grupo-contenedor">
+                        <div class="historial-actividad-ultimocontacto">
+                            <em>Último contacto <span class="actividad-ultimo-contacto">hoy</span></em>
+                        </div>
+                        <div class="historial-actividad-grupo-contenedor">
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
-</div>
+    @Html.Partial("~/Views/Shared/_PleaseWait.cshtml")
 
-@Html.Partial("~/Views/Shared/_PleaseWait.cshtml")

@@ -396,6 +396,58 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+        public List<CompraDto> TraerTodoCompraDetalle(List<int> equipo)
+        {
+            var material = repositorio.Listar<Material>();
+            var compraDto = new List<CompraDto>();
+            foreach (var mat in material)
+            {
+                var compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x => 
+                equipo.Contains(x.ComercialId.Value)
+                && mat.MaterialId== x.CampanaMaterialDetalle.MaterialId 
+                && mat.CampañaId == x.CampanaMaterialDetalle.CampanaId);
+                var grupoCompras = compras.GroupBy(x => new { x.CampanaMaterialDetalle.CampanaId, x.CampanaMaterialDetalle.MaterialId });
+                foreach (var c in grupoCompras)
+                {
+                    var detalle = new CompraDto
+                    {
+                        Campana = c.Select(x => x.CampanaMaterialDetalle.Campana.Descripcion).FirstOrDefault(),
+                        Material = c.Select(x => x.CampanaMaterialDetalle.Material.Descripcion).FirstOrDefault(),
+                        ConCorredor = new CompraDetalleDto
+                        {
+                            ComprasConPrecio = c.Where(x => x.CorredorCuit != null && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
+                            RecibidoSinPrecio = c.Where(x => x.CorredorCuit != null && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
+                            ARecibirAFijar = c.Where(x => x.CorredorCuit != null && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),
+                            FasonFas = c.Where(x => x.CorredorCuit != null && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
+                        },
+                        DirectoAcopiador = new CompraDetalleDto
+                        {
+                            ComprasConPrecio = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "ACOPIADOR" && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
+                            RecibidoSinPrecio = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
+                            ARecibirAFijar = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),
+                            FasonFas = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
+
+                        },
+                        DirectoProductor = new CompraDetalleDto
+                        {
+                            ComprasConPrecio = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "PRODUCTOR" && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
+                            RecibidoSinPrecio = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
+                            ARecibirAFijar = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),
+                            FasonFas = c.Where(x => x.CorredorCuit == null && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
+                        }
+
+                    };
+                    if (detalle.ConCorredor.ARecibirAFijar + detalle.ConCorredor.ComprasConPrecio + detalle.ConCorredor.FasonFas + detalle.ConCorredor.RecibidoSinPrecio
+                        + detalle.DirectoAcopiador.ARecibirAFijar + detalle.DirectoAcopiador.ComprasConPrecio + detalle.DirectoAcopiador.FasonFas + detalle.DirectoAcopiador.RecibidoSinPrecio
+                        + detalle.DirectoProductor.ARecibirAFijar + detalle.DirectoProductor.ComprasConPrecio + detalle.DirectoProductor.FasonFas + detalle.DirectoProductor.RecibidoSinPrecio
+                        > 0)
+                    {
+                        compraDto.Add(detalle);
+                    }
+                }
+            }
+            return compraDto;
+        }
         
     }
     public class FakeHome
@@ -403,6 +455,8 @@ namespace Molinos.DataAgro.Business.Managers
         public int Id { set; get; }
         public string Nombre { set; get; }
     }
+
+
 
 
 }

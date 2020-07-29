@@ -41,10 +41,10 @@ namespace Molinos.DataAgro.Agent
         public List<CompraAgentDto> ComprarIniciales(List<string> CUIT, string UsuarioComercial)
         {
 
-            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            {
-                UsuarioComercial = ConfigurationManager.AppSettings["SapPruebaUser"];
-            }
+            //if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
+            //{
+            //    UsuarioComercial = ConfigurationManager.AppSettings["SapPruebaUser"];
+            //}
             SI_ZMPWS_DATAAGRO_DATOS_COMPRASClient agent = new SI_ZMPWS_DATAAGRO_DATOS_COMPRASClient();
 
             agent.ClientCredentials.UserName.UserName = UserSap;

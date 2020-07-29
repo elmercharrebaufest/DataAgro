@@ -162,7 +162,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
-
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             var result = target.TraerProveedor(1, "a", new List<int>() { 1, 2, 3 });
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<TraerDatosBasicosProveedor>()), Times.Once);
@@ -247,7 +279,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
-
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             var result = target.TraerProveedor(1, "a", new List<int>() { 1, 2, 3 });
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<TraerDatosBasicosProveedor>()), Times.Once);
@@ -321,8 +385,41 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             var result = target.TraerProveedor(1, "a", new List<int>() { 1, 2, 3 });
-
+            
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<TraerDatosBasicosProveedor>()), Times.Once);
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<ConsultaActividadHistoriaTraerPorProveedorId>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
@@ -394,6 +491,42 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1                         
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
+
+
             var result = target.TraerProveedor(1, "a", new List<int>() { 1, 2, 3 });
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<TraerDatosBasicosProveedor>()), Times.Once);
@@ -467,7 +600,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
-
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             var result = target.TraerProveedor(1, "a", new List<int>() { 1, 2, 3 });
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<TraerDatosBasicosProveedor>()), Times.Once);
@@ -623,6 +788,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             //para pasar el logDataA
 
 
@@ -1020,6 +1218,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             //para pasar el logDataA
 
             //validar proveedor
@@ -1311,6 +1542,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             //para pasar el logDataA
 
 
@@ -1412,6 +1676,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             //para pasar el logDataA
 
 
@@ -1606,7 +1903,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
-
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             var result = target.UpdateProveedor(proveedor, "a", new List<int>() { 1, 2, 3 }, 1);
 
             repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
@@ -1724,7 +2053,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Condicion>() { new Condicion() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ProveedorDestinatario, Destinatario>>>(), It.IsAny<Expression<Func<ProveedorDestinatario, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<Destinatario>() { new Destinatario() });
-
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             //para pasar el logDataA
 
 
@@ -1961,7 +2322,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
-
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             var result = target.UpdateProveedor(proveedor, "a", new List<int>() { 1, 2, 3 }, 1);
 
             repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
@@ -2161,7 +2554,39 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
               .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
-
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             //para pasar el logDataA
 
 
@@ -2314,6 +2739,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
 
             var result = target.UpdateCorredor(corredor, "a", new List<int>() { 1, 2, 3 }, 1);
 
@@ -2427,6 +2885,39 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CorredorProveedor, ProveedorCorredorDto>>>(), It.IsAny<Expression<Func<CorredorProveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+            .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
+                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
+                     CampanaId = 1,
+                     MaterialId = 2,
+                     ProveedorId = 1,
+                     Material = new Material
+                     {
+                         Descripcion = "Soja",
+                         MaterialId = 1,
+                         CampañaId = 1
+                     },
+                     Campana = new Campaña
+                     {
+                         Descripcion = "11",
+                         CampañaId = 1
+                     }
+                 },
+                 ClaseDoc = "as",
+                 Clasificacion = "PRODUCTOR",
+                 ComercialId = 1,
+                 CorredorCuit = "2321123",
+                 PendienteAFijar = 1,
+                 PendienteAplicar = 1,
+                 ToneladaAmpliada = 0,
+                 ToneladaAnulada = 1,
+                 ToneladaAplicada = 3,
+                 ToneladaContrato = 2,
+                 ToneladaFijada = 2,
+                 Fecha = DateTime.Now,
+                 CampanaMaterialDetalleId = 1,
+                 Contrato = "11233"
+             } });
             //para pasar el logDataA
 
 

@@ -6,6 +6,7 @@ var filtro = {};
 var pagina = 1;
 var visualiza;
 
+var datosCompra;
 
 var checkear = function (el, nam) {
     var str = "." + $(el).attr('class');
@@ -39,7 +40,45 @@ function MostrarTooltip(e) {
 function InicializarDatos() {
     var result = MSExecuteOnServer('/Home/Inicializar');
 
+    datosCompra = result.Detalle;
+    viewModel = kendo.observable({
+        Soja: [],
+        Trigo: [],
+        Maiz: [],
+        Girasol: []
+    });
 
+    kendo.bind($("#tabla-soja"), viewModel);
+    kendo.bind($("#tabla-tri"), viewModel);
+    kendo.bind($("#tabla-maiz"), viewModel);
+    kendo.bind($("#tabla-gi"), viewModel);
+    var soja = datosCompra.filter(function (x) { return (x.Material == "Soja") });
+    var maiz = datosCompra.filter(function (x) { return (x.Material == "Trigo") })
+    var trigo = datosCompra.filter(function (x) { return (x.Material == "Maiz") })
+    var girasol = datosCompra.filter(function (x) { return (x.Material == "Girasol") });
+
+    if (soja.length > 0) {
+        $("#mostrarSoja").show();     
+        $("#sojaCampania").text(soja[0].Campana);      
+    }  
+    if (maiz.length > 0) {
+        $("#mostrarMaiz").show();
+        $("#maizCampania").text(soja[0].Campana);
+    }  
+    if (trigo.length > 0) {
+        $("#mostrarTrigo").show();
+        $("#trigoCampania").text(soja[0].Campana);
+    }  
+    if (girasol.length > 0) {
+        $("#mostrarGir").show();
+        $("#girCampania").text(soja[0].Campana);
+    }  
+    viewModel.set("Soja", soja);
+    viewModel.set("Trigo", trigo);
+    viewModel.set("Maiz", maiz);
+    viewModel.set("Girasol", girasol);
+
+    ArmarTablaCompraDetalle(result.Detalle);
     pagina = 1;
     $(".lista-contactos-general").empty();
 
@@ -1008,5 +1047,17 @@ function EliminarObjetivo(id) {
         else {
             Actualizar();
         }
+    }
+}
+
+function ArmarTablaCompraDetalle(result) {
+  
+    function FiltrarCampos() {
+
+        var filtrado = result.filter(function (x) { return (x.Material == $('#MaterialId').val() || $('#MaterialId').val() == "Todos") && (x.Campana == $('#CampaniaId').val() || $('#CampaniaId').val() == "Todas") })
+        viewModel.set("Soja", datosCompra);
+        viewModel.set("Trigo", datosCompra);
+        viewModel.set("Maiz", datosCompra);
+        viewModel.set("Girasol", datosCompra);
     }
 }

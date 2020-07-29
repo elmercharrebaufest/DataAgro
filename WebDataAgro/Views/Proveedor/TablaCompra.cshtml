@@ -1,0 +1,79 @@
+﻿
+    <div id="panel" class="table-editable table-responsive">
+        <div>
+            <div class="col-md-2 col-xs-6 col-md-offset-8">
+                <select id="MaterialId" class="form-control" onchange="FiltrarCampos()">
+                </select>
+            </div>
+            <div class="col-md-2 col-xs-6">
+                <select id="CampaniaId" class="form-control" onchange="FiltrarCampos()">
+                </select>
+            </div>
+        </div>
+        <br />
+        <br />
+        <table class="table table-bordered table-responsive-md table-striped text-center tabla">
+            <thead>
+                <tr>
+                    <th>Grano</th>
+                    <th>Campaña</th>
+                    <th>Situación</th>
+                    <th>Con Corredor</th>
+                    <th>Directo Acopiador</th>
+                    <th>Directo Productor</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-compra" data-template="div-tablas-compras" data-bind="source:Compra" type="text/x-kendo-template">
+            </tbody>
+        </table>
+        <script id="div-tablas-compras" type="text/x-kendo-template">
+            <tr>
+                <td rowspan="4" style="white-space: pre-line">
+                    #: Material#
+                </td>
+                <td rowspan="4" style="white-space: pre-line">
+                    #: Campana#
+                </td>
+
+                <td>Compras con Precio</td>
+                <td>#: ConCorredor.ComprasConPrecio#</td>
+                <td>#: DirectoAcopiador.ComprasConPrecio#</td>
+                <td>#: DirectoProductor.ComprasConPrecio#</td>
+            </tr>
+            <tr>
+                <td>Recibido Sin Precio</td>
+                <td>#: ConCorredor.RecibidoSinPrecio#</td>
+                <td>#: DirectoAcopiador.RecibidoSinPrecio#</td>
+                <td>#: DirectoProductor.RecibidoSinPrecio#</td>
+            </tr>
+            <tr>
+                <td>A recibir A fijar</td>
+                <td>#: ConCorredor.ARecibirAFijar#</td>
+                <td>#: DirectoAcopiador.ARecibirAFijar#</td>
+                <td>#: DirectoProductor.ARecibirAFijar#</td>
+            </tr>
+            <tr>
+                <td>Fasón Fas</td>
+                <td>#: ConCorredor.FasonFas#</td>
+                <td>#: DirectoAcopiador.FasonFas#</td>
+                <td>#: DirectoProductor.FasonFas#</td>
+            </tr>
+        </script>
+    </div>
+
+<style>
+    div.ex1 {
+        width: 100%;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    td {
+        padding: 0px !important;
+    }
+
+    th {
+        text-align: center !important;
+    }
+</style>
+

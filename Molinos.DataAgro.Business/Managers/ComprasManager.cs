@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var a = new List<string>();
 
-            var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT,x=> x.CUIT == "30711160163").Distinct();
+            var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT).Distinct();
             var oComercial = repositorio.Listar<Comercial>();
 
             List<ComprasIniciales> listProve = new List<ComprasIniciales>();
@@ -215,7 +215,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     contadorActualizacion++;
                                     foreach (var ii in jj)
                                     {
-                                        var fechaDetalle = DateTime.ParseExact(ii.FECHA, "yyyy-MM-ddTHH:mm:ss", provider); 
+                                        var fechaDetalle = DateTime.ParseExact(ii.FECHA, "yyyy-MM-dd", provider); 
                                         var campaniaMaterialMes = histActual.Where(x => x.CampanaMaterialDetalleId == campaniaMaterial.Id && x.Fecha.Month == fechaDetalle.Month && x.Fecha.Year == fechaDetalle.Year && x.ComercialId == ComercialId).FirstOrDefault();
                                         if (campaniaMaterialMes != null)
                                         {
@@ -224,7 +224,7 @@ namespace Molinos.DataAgro.Business.Managers
                                             campaniaMaterialMes.ToneladaAmpliada = (double)ii.TN_AMPLIADAS;
                                             campaniaMaterialMes.ToneladaAnulada = (double)ii.TN_ANULADAS;
                                             campaniaMaterialMes.ToneladaAplicada = (double)ii.TN_APLICADAS;
-                                            campaniaMaterialMes.ToneladaContrato = (double)ii.PEND_FIJAR;
+                                            campaniaMaterialMes.ToneladaContrato = (double)ii.TN_CONTRATO;
                                             campaniaMaterialMes.ToneladaFijada = (double)ii.TN_FIJADAS;
                                             campaniaMaterialMes.ClaseDoc = ii.CLASE_DOC;
                                             campaniaMaterialMes.Clasificacion = ii.CLASIFICACION;
@@ -234,17 +234,18 @@ namespace Molinos.DataAgro.Business.Managers
                                             campaniaMaterialPorMes.Add(new CampanaMaterialDetallePorMes()
                                             {
                                                 Fecha = fechaDetalle,
-                                                PendienteAFijar = campaniaMaterialMes.PendienteAFijar, 
-                                                PendienteAplicar= campaniaMaterialMes.PendienteAplicar,
-                                                ToneladaAmpliada= campaniaMaterialMes.ToneladaAmpliada,
-                                                ToneladaAnulada = campaniaMaterialMes.ToneladaAnulada, 
-                                                ToneladaAplicada= campaniaMaterialMes.ToneladaAplicada,
-                                                ToneladaContrato = campaniaMaterialMes.ToneladaContrato,
-                                                ToneladaFijada = campaniaMaterialMes.ToneladaFijada,
-                                                ClaseDoc =  campaniaMaterialMes.ClaseDoc,
-                                                Clasificacion = campaniaMaterialMes.Clasificacion,
-                                                CampanaMaterialDetalleId = campaniaMaterial.Id,                                               
-                                                ComercialId = ComercialId
+                                                PendienteAFijar = (double)ii.PEND_FIJAR, 
+                                                PendienteAplicar= (double)ii.PEND_APLICAR,
+                                                ToneladaAmpliada= (double)ii.TN_AMPLIADAS,
+                                                ToneladaAnulada = (double)ii.TN_ANULADAS, 
+                                                ToneladaAplicada= (double)ii.TN_APLICADAS,
+                                                ToneladaContrato = (double)ii.TN_CONTRATO,
+                                                ToneladaFijada = (double)ii.TN_FIJADAS,
+                                                ClaseDoc = ii.CLASE_DOC,
+                                                Clasificacion = ii.CLASIFICACION,                                              
+                                                ComercialId = ComercialId,
+                                                CampanaMaterialDetalleId = campaniaMaterial.Id
+                                                 
                                             });
                                         }
                                     }
