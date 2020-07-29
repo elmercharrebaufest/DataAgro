@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Interfaces
         string ValidarStatus(int contratoId);
         GrabarContratoResult PreAnularContrato(int contratoId);
         GrabarContratoResult RechazarPreAnularContrato(int contratoId);
-        GrabarContratoResult ReconfirmarFinalizado(int contratoId);
+        GrabarContratoResult ReconfirmarFinalizado(int contratoId, string mailComercial);
         GrabarContratoResult AnularContratoPreAnulado(int contratoId, string idActiveDirectory);
         List<BasicoContrato> CompararNegocioReconfirmado(int contratoId);
         bool DiferenciaEnCalidades(int contratoId);

@@ -859,7 +859,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.ReconfirmarFinalizado(contratoId),
+                Data = mobjContratoManager.ReconfirmarFinalizado(contratoId, GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
         }

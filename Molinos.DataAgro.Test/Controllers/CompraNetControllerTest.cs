@@ -1089,12 +1089,12 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void ReconfirmarFinalizadoTest()
         {
-            contratoManagerMock.Setup(x => x.ReconfirmarFinalizado(It.IsAny<int>())).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
+            contratoManagerMock.Setup(x => x.ReconfirmarFinalizado(It.IsAny<int>(), It.IsAny<string>())).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.ReconfirmarFinalizado(It.IsAny<int>());
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            contratoManagerMock.Verify(x => x.ReconfirmarFinalizado(It.IsAny<int>()), Times.Once);
+            contratoManagerMock.Verify(x => x.ReconfirmarFinalizado(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);

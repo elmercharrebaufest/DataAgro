@@ -2617,7 +2617,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return error;
         }
-        public GrabarContratoResult ReconfirmarFinalizado(int contratoId)
+        public GrabarContratoResult ReconfirmarFinalizado(int contratoId, string comercialRegistrado)
         {
             var error = new GrabarContratoResult();
             try
@@ -2638,7 +2638,7 @@ namespace Molinos.DataAgro.Business.Managers
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
 
-                    EnviarMail(contrato, contratoSave);
+                    EnviarMail(contrato, contratoSave, comercialRegistrado);
                 }
             }
             catch (Exception e)
@@ -2717,14 +2717,20 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        private void EnviarMail(Contrato contrato, Contrato contratoSave)
+        private void EnviarMail(Contrato contrato, Contrato contratoSave, string comercial)
         {
             var lista = new List<string>();
-            var email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
+            var email = "";
+            if (contrato.Comercial.IdActiveDirectory != comercial)
+            {
+                email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
+                lista.Add(email);
+            }
+            var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(comercial);
+            lista.Add(comercialRegistrado);            
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
             logger.Debug("Enviando mail a Comercial " + email);
-            lista.Add(email);
-
+            logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             var emailComerciales = "";
             if (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
             {
