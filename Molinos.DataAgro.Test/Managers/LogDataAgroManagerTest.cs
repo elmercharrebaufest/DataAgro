@@ -48,6 +48,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void LogCambiosDataAgroNegocioOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<LogDataAgro>());
             var respuesta = target.LogCambiosDataAgro(new BasicoContrato { Id = 1 }, TipoAccionLogDataAgro.Modificar, typeof(Fason));
 
             Assert.AreEqual(respuesta, 1);
@@ -59,6 +61,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void LogCambiosDataAgroCupoOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<LogDataAgro>());
             var respuesta = target.LogCambiosDataAgro(new CupoDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);
@@ -69,6 +73,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void LogCambiosDataAgroProveedorOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<LogDataAgro>());
             var respuesta = target.LogCambiosDataAgro(new StoredPorProveedorResult(), TipoAccionLogDataAgro.Modificar, 1);
 
             Assert.AreEqual(respuesta, 1);
@@ -120,6 +126,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void LogCambiosDataAgroRangoConfirmacionAutomaticaOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<LogDataAgro>());
             var respuesta = target.LogCambiosDataAgro(new RangoConfirmacionAutomaticaDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);
@@ -130,6 +138,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void LogCambiosDataAgroPrecioMoaOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<LogDataAgro>());
             var respuesta = target.LogCambiosDataAgro(new PrecioMoaDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);
@@ -139,6 +149,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void LogCambiosDataAgroHabilitacionFijacionOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<LogDataAgro>());
             var respuesta = target.LogCambiosDataAgro(new HabilitacionFijacionDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);
@@ -148,6 +160,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void LogCambiosDataAgroHabilitacionPizarraOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<LogDataAgro>());
             var respuesta = target.LogCambiosDataAgro(new HabilitacionPizarraDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);

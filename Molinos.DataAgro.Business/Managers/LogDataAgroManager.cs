@@ -129,30 +129,71 @@ namespace Molinos.DataAgro.Business.Managers
                 PreserveReferencesHandling = PreserveReferencesHandling.None,
                 Formatting = Formatting.Indented,
             });
-
-            try
+            var logAgregado = new LogDataAgro
             {
-                var logAgregado = new LogDataAgro
+                Usuario = usuarioComercial,
+                Fecha = DateTime.Now,
+                DatoModificado = jsonObjeto,
+                Clase = clase,
+                Tipo = cambios.GetType().Name,
+                AccionRealizada = tipoDeAccion.ToString(),
+                ClaseId = id,
+                Descripcion = descripcion,
+            };
+            if (hayCambios(logAgregado))
+            {
+                try
                 {
-                    Usuario = usuarioComercial,
-                    Fecha = DateTime.Now,
-                    DatoModificado = jsonObjeto,
-                    Clase = clase,
-                    Tipo = cambios.GetType().Name,
-                    AccionRealizada = tipoDeAccion.ToString(),
-                    ClaseId = id,
-                    Descripcion = descripcion,
-                };
-                repositorio.Agregar<LogDataAgro>(logAgregado);
 
-                return repositorio.GuardarCambios();
+                    repositorio.Agregar<LogDataAgro>(logAgregado);
+
+                    return repositorio.GuardarCambios();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"{cambios.GetType().Name} Guardado, error en LogDataAgro. {e.Message}", e);
+
+                }
             }
-            catch (Exception e)
+            else
             {
-                throw new Exception($"{cambios.GetType().Name} Guardado, error en LogDataAgro. {e.Message}", e);
-
+                return 1;
             }
+
         }
+
+        private bool hayCambios(LogDataAgro logActual)
+        {
+            LogDataAgroDto logAnterior = repositorio.Listar<LogDataAgro>(x => x.ClaseId == logActual.ClaseId && logActual.Clase == x.Clase)
+                   .OrderByDescending(x => x.Id)
+                   .Select(x => new LogDataAgroDto
+                   {
+                       Id = x.Id,
+                       Usuario = x.Usuario,
+                       Fecha = x.Fecha,
+                       Clase = x.Clase,
+                       AccionRealizada = x.AccionRealizada,
+                       DatoModificado = x.DatoModificado,
+                       ClaseId = x.ClaseId,
+                   }).LastOrDefault();
+
+            if (logAnterior==null)            
+                return true;
+
+            var logDtoActual = new LogDataAgroDto
+            {
+                Id = logActual.Id,
+                Usuario = logActual.Usuario,
+                Fecha = logActual.Fecha,
+                Clase = logActual.Clase,
+                AccionRealizada = logActual.AccionRealizada,
+                DatoModificado = logActual.DatoModificado,
+                ClaseId = logActual.ClaseId,
+            };
+            List<DatoModificadosLogDataAgroDto> cambiados = BuscaraCambios(logAnterior, logDtoActual);
+            return cambiados.Count() > 0;
+        }
+
         public DataSourceResult ListarDatosLogDataAgro(DataSourceRequest request, List<int> equipo)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodosLogsDataAgro(request, equipo));
@@ -195,7 +236,18 @@ namespace Molinos.DataAgro.Business.Managers
             //}
             if (logAnterior == logActual)
                 logAnterior = null;
+            List<DatoModificadosLogDataAgroDto> cambiados = BuscaraCambios(logAnterior, logActual);
 
+            return new DatosModificadosLogDataAgroDto
+            {
+                LogActual = logActual,
+                LogAnterior = logAnterior,
+                CamposCambiados = cambiados
+            };
+        }
+
+        private List<DatoModificadosLogDataAgroDto> BuscaraCambios(LogDataAgroDto logAnterior, LogDataAgroDto logActual)
+        {
             var jActual = JToken.Parse(logActual.DatoModificado);
             var jAnterior = JToken.Parse(logAnterior == null ? "{}" : logAnterior.DatoModificado);
             var jdp = new JsonDiffPatch();
@@ -299,14 +351,9 @@ namespace Molinos.DataAgro.Business.Managers
                 ArmarListaCrear(jActual, cambiados, "");
             }
 
-
-            return new DatosModificadosLogDataAgroDto
-            {
-                LogActual = logActual,
-                LogAnterior = logAnterior,
-                CamposCambiados = cambiados
-            };
+            return cambiados;
         }
+
         private void ArmarListaModificar(JToken diffResult, List<DatoModificadosLogDataAgroDto> cambiados, string campoNombre, LogDataAgroDto logActual)
         {
             foreach (var item in diffResult)
@@ -402,7 +449,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         void AgregarItem(List<DatoModificadosLogDataAgroDto> cambiados, LogDataAgroDto logActual, JToken item, string campo)
         {
-            
+
             var Anterior = BuscaFechaYFormatea(((JContainer)((JProperty)item).First).First.ToString());
             var Actual = BuscaFechaYFormatea(((JContainer)((JProperty)item).First).Last.ToString());
             if (((JContainer)((JProperty)item).First).Count() == 1)
@@ -632,7 +679,7 @@ namespace Molinos.DataAgro.Business.Managers
             Regex formato2 = new Regex("[0-9]{4}-[0-1]?[0-9]-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}"); //2020-06-30T00:00:00
             Regex formato3 = new Regex("[0-9]{4}-[0-1]?[0-9]-[0-9]{2} T[0-9]{2}:[0-9]{2}:[0-9]{2}"); //2020-08-02 T00:00:00
             double number = 0;
-            if (double.TryParse(s,out number))
+            if (double.TryParse(s, out number))
             {
                 s = string.Format("{0:#,0.00}", number);
             }

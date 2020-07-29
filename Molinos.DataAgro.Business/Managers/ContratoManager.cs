@@ -1250,6 +1250,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public GrabarContratoResult BorrarContrato(Contrato oContrato)
         {
+             var tipoAccion = TipoAccionLogDataAgro.Eliminar;
             var oEntityErrors = new GrabarContratoResult();
             if (string.IsNullOrEmpty(oContrato.MotivoRechazo) || string.IsNullOrWhiteSpace(oContrato.MotivoRechazo))
             {
@@ -1269,10 +1270,12 @@ namespace Molinos.DataAgro.Business.Managers
                         if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
                         {
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                             tipoAccion = TipoAccionLogDataAgro.Crear;
                         }
                         else
                         {
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                             tipoAccion = TipoAccionLogDataAgro.Modificar;
                         }
                     }
                     else
@@ -1280,6 +1283,8 @@ namespace Molinos.DataAgro.Business.Managers
                         var historico = oContratoSave.NegocioHistorico.LastOrDefault();
                         if (historico != null)
                         {
+                            tipoAccion = TipoAccionLogDataAgro.Crear;
+
                             Contrato contratoOriginal = JsonConvert.DeserializeObject<Contrato>(historico.Datos);
                             oContratoSave.MaterialId = contratoOriginal.MaterialId;
                             oContratoSave.TipoNegocioId = contratoOriginal.TipoNegocioId;
@@ -1433,6 +1438,7 @@ namespace Molinos.DataAgro.Business.Managers
                         else
                         {
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+                            tipoAccion = TipoAccionLogDataAgro.Eliminar;
                         }
                     }
 
@@ -1441,6 +1447,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
+                    tipoAccion = TipoAccionLogDataAgro.Eliminar;
                 }
 
                 repositorio.GuardarCambios();
