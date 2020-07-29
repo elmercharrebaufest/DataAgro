@@ -1283,7 +1283,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var historico = oContratoSave.NegocioHistorico.LastOrDefault();
                         if (historico != null)
                         {
-                            tipoAccion = TipoAccionLogDataAgro.Crear;
+                            tipoAccion = TipoAccionLogDataAgro.Modificar;
 
                             Contrato contratoOriginal = JsonConvert.DeserializeObject<Contrato>(historico.Datos);
                             oContratoSave.MaterialId = contratoOriginal.MaterialId;
