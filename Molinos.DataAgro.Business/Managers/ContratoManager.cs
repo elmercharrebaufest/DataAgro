@@ -502,6 +502,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
+            if (oParam.DolarizadoExpress.HasValue && oParam.DolarizadoExpress.Value && !oParam.FechaDolarizado.HasValue)
+            {
+                oErrorMessages.Error("DolarizadoExpress", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
+            }
 
             if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value == 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId)))
             {
@@ -1451,7 +1455,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
+                logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipoAccion , oContratoSave.GetType());
 
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
                 try

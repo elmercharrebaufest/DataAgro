@@ -27,5 +27,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ProveedorId { get; set; }
         public int MaterialId { get; set; }
         public int CampanaId { get; set; }
+        public string Comercial { get; set; }
+        public string Material { get; set; }
+        public string Proveedor { get; set; }
+        public string Campana { get; set; }
     }
 }

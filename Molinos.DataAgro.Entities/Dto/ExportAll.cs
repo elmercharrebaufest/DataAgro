@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CampoDetalleAll> establecimiento { get; set; }
         public List<AgendaAll> agenda { get; set; }
         public List<ComprasAll> compras { get; set; }
+        public List<CompraCampanaActualDto> CompraCampanaActual { get; set; }
 
         public ExportAll()
         {

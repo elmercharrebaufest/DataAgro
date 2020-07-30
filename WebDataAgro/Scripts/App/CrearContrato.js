@@ -1578,13 +1578,22 @@ function InicializarElementos() {
     $("#dolarizadoId").click(function () {
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
-
+            $("#dolarizadoExpressId").prop("checked", false);
             $("#pesificadoId").prop("checked", false);
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
         }
         else {
-            $("#dolarizadoDiv").hide();
+            $("#dolarizadoFechaId").val("");
+        }
+    });
+
+    $("#dolarizadoExpressId").click(function () {
+        if ($(this).is(':checked')) {
+            $("#dolarizadoDiv").show();
+            $("#dolarizadoId").prop("checked", false);
+        }
+        else {         
             $("#dolarizadoFechaId").val("");
         }
     });

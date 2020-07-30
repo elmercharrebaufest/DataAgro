@@ -123,6 +123,7 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
+    <Compile Include="Dto\CompraCampanaActualDto.cs" />
     <Compile Include="Dto\CompraDetalleDto.cs" />
     <Compile Include="Dto\CompraDto.cs" />
     <Compile Include="Dto\ContratoSAP.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Dto\ResultadoValidarProveedorComercial.cs" />
     <Compile Include="Dto\SugerenciaNoAceptada.cs" />
     <Compile Include="Dto\ReporteCompraNetModel.cs" />
+    <Compile Include="Dto\TodoCompraDto.cs" />
     <Compile Include="Dto\TokenDto.cs" />
     <Compile Include="Dto\AbmZona.cs" />
     <Compile Include="Dto\AbmZonaCupo.cs" />

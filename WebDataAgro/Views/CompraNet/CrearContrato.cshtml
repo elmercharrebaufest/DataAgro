@@ -598,7 +598,11 @@
                     <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div class="col-md-4 col-sm-9">
+            <div id="dolarizadoExpressDiv" class="noAcuerdo col-xs-2" hidden>
+                <label>Dolarizado Express</label>
+                <input id="dolarizadoExpressId" class="campo-input-input" name="dolarizadoExpress" type="checkbox">
+            </div>
+            <div class="col-md-2 col-sm-9">
                 <div id="dolarizadoDiv" hidden>
                     <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="width: 100%" />
                     <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
@@ -737,10 +741,6 @@
                 <div class="w30" style="display:inline-grid">
                     <select id="monedaAjusteComisionId" data-bind="source: PrecioMonedaCombo, value: Parametros.monedaAjusteComisionId" style="width:100%;"></select>
                 </div>
-            </div>
-            <div id="dolarizadoExpressDiv" class="noAcuerdo col-xs-2" hidden>
-                <label>Dolarizado Express</label>
-                <input id="dolarizadoExpressId" class="campo-input-input" name="dolarizadoExpress" type="checkbox">
             </div>
         </div>
            

@@ -353,7 +353,7 @@ namespace Molinos.DataAgro.Business.Managers
                 exp.compras = repositorio.SelStore<ComprasAll>("DataAgro_ExportAll_Compras", 0, idsStr);
 
                 exp.establecimiento = repositorio.ListarConsulta(new TraerExportarAllEstablecimientos(exp.contacto.Select(x => x.Cuit).ToList()));
-
+                exp.CompraCampanaActual = this.TraerTodoCompraCampanaActual(equipo);
                 return exp;
             }
             else
@@ -448,7 +448,31 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return compraDto;
         }
-        
+
+        public List<CompraCampanaActualDto> TraerTodoCompraCampanaActual(List<int> equipo)
+        {
+            return repositorio.Listar<CampanaMaterialDetallePorMes, CompraCampanaActualDto>(x => new CompraCampanaActualDto()
+            {
+                Fecha = x.Fecha,
+                Contrato = x.Contrato,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,               
+                RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
+                CorredorCuit = x.CorredorCuit,                
+                Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                Campana = x.CampanaMaterialDetalle.Campana.Descripcion,
+                ClaseDoc = x.ClaseDoc,
+                Clasificacion = x.Clasificacion,                                     
+                PendienteAFijar = x.PendienteAFijar,
+                PendienteAplicar = x.PendienteAplicar,
+                ToneladaAmpliada = x.ToneladaAmpliada,
+                ToneladaAnulada = x.ToneladaAnulada,
+                ToneladaAplicada = x.ToneladaAplicada,
+                ToneladaContrato = x.ToneladaContrato,
+                ToneladaFijada = x.ToneladaFijada,
+                
+            }, x => equipo.Contains(x.ComercialId.Value)
+            && x.CampanaMaterialDetalle.Material.CampañaId == x.CampanaMaterialDetalle.CampanaId);                        
+        }
     }
     public class FakeHome
     {

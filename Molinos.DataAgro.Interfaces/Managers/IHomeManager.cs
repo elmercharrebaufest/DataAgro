@@ -27,6 +27,7 @@ namespace Molinos.DataAgro.Interfaces
         List<int> ListarTodosLosComercialesConMismaZona(int comercialId);
         GrabarPostItResult GuardarPostIt(PostIt post);
         List<CompraDto> TraerTodoCompraDetalle(List<int> equipo);
+        List<CompraCampanaActualDto> TraerTodoCompraCampanaActual(List<int> equipo);
 
     }
 }
