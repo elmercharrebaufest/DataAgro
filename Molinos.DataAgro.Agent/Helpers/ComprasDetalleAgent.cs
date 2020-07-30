@@ -1,7 +1,10 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.ComprasDetalle;
 using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,12 +15,14 @@ namespace Molinos.DataAgro.Agent
     public class ComprasDetalleAgent : IComprasDetalleAgent
     {
         private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
 
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
-        public ComprasDetalleAgent(ILogger logger)
+        public ComprasDetalleAgent(ILogger logger, IRepositorio repositorio)
         {
             this.logger = logger;
+            this.repositorio = repositorio;
         }
         public List<CompraDetalleAgentDto> Comprar(string CUIT, string UsuarioComercial)
         {
@@ -60,7 +65,14 @@ namespace Molinos.DataAgro.Agent
                 agent.ClientCredentials.UserName.Password = PassSap;
 
                 var rq = new Z_MPRFC_DATOS_COMPRAS_DETALLE() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = UsuarioComercial };
-
+                var log = new Log
+                {
+                    Fecha = DateTime.Now,
+                    Xml = rq.ToXml()
+                };
+                var logId = repositorio.Agregar(log);
+                repositorio.GuardarCambios();
+                logger.Debug(rq.ToXml());
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE(rq);
                 if (devolucion.EX_SALIDA != null)
                 {
