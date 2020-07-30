@@ -165,23 +165,16 @@ namespace Molinos.DataAgro.Business.Managers
 
             List<ComprasIniciales> listProve = new List<ComprasIniciales>();
             ComprasIniciales comp = null;
-            if (string.IsNullOrEmpty(comercialUsurarioAD))
+            if (!string.IsNullOrEmpty(comercialUsurarioAD))
             {
-                foreach (var comercial in oComercial)
-                {
-                    comp = new ComprasIniciales();
-                    comp.CUIT.AddRange(oProveedor);
-
-                    comp.UsuarioDirectory = comercial.IdActiveDirectory;
-                    listProve.Add(comp);
-                }
+                oComercial = oComercial.Where(x => x.IdActiveDirectory == comercialUsurarioAD).ToList();
             }
-            else
+            foreach (var comercial in oComercial)
             {
                 comp = new ComprasIniciales();
                 comp.CUIT.AddRange(oProveedor);
 
-                comp.UsuarioDirectory = comercialUsurarioAD;
+                comp.UsuarioDirectory = comercial.IdActiveDirectory;
                 listProve.Add(comp);
             }
 
