@@ -1855,7 +1855,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
-    if (status == "11") {
+    if (status == "11" || status == "7") {
         $("#mostrar").show();
     } else {
         $("#mostrar").hide();
