@@ -156,7 +156,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public void ActualizarComprasDetalle()
+        public void ActualizarComprasDetalle(string comercialUsurarioAD)
         {
             var a = new List<string>();
 
@@ -165,14 +165,26 @@ namespace Molinos.DataAgro.Business.Managers
 
             List<ComprasIniciales> listProve = new List<ComprasIniciales>();
             ComprasIniciales comp = null;
-            foreach (var comercial in oComercial)
+            if (string.IsNullOrEmpty(comercialUsurarioAD))
+            {
+                foreach (var comercial in oComercial)
+                {
+                    comp = new ComprasIniciales();
+                    comp.CUIT.AddRange(oProveedor);
+
+                    comp.UsuarioDirectory = comercial.IdActiveDirectory;
+                    listProve.Add(comp);
+                }
+            }
+            else
             {
                 comp = new ComprasIniciales();
                 comp.CUIT.AddRange(oProveedor);
 
-                comp.UsuarioDirectory = comercial.IdActiveDirectory;
+                comp.UsuarioDirectory = comercialUsurarioAD;
                 listProve.Add(comp);
             }
+
 
             ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);
             ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);// fix para que grabe los CampañaMaterialPorMes        
@@ -215,7 +227,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     contadorActualizacion++;
                                     foreach (var ii in jj)
                                     {
-                                        var fechaDetalle = DateTime.ParseExact(ii.FECHA, "yyyy-MM-dd", provider); 
+                                        var fechaDetalle = DateTime.ParseExact(ii.FECHA, "yyyy-MM-dd", provider);
                                         var campaniaMaterialMes = histActual.Where(x => x.CampanaMaterialDetalleId == campaniaMaterial.Id && x.Fecha.Month == fechaDetalle.Month && x.Fecha.Year == fechaDetalle.Year && x.ComercialId == ComercialId).FirstOrDefault();
                                         if (campaniaMaterialMes != null)
                                         {
@@ -234,18 +246,18 @@ namespace Molinos.DataAgro.Business.Managers
                                             campaniaMaterialPorMes.Add(new CampanaMaterialDetallePorMes()
                                             {
                                                 Fecha = fechaDetalle,
-                                                PendienteAFijar = (double)ii.PEND_FIJAR, 
-                                                PendienteAplicar= (double)ii.PEND_APLICAR,
-                                                ToneladaAmpliada= (double)ii.TN_AMPLIADAS,
-                                                ToneladaAnulada = (double)ii.TN_ANULADAS, 
-                                                ToneladaAplicada= (double)ii.TN_APLICADAS,
+                                                PendienteAFijar = (double)ii.PEND_FIJAR,
+                                                PendienteAplicar = (double)ii.PEND_APLICAR,
+                                                ToneladaAmpliada = (double)ii.TN_AMPLIADAS,
+                                                ToneladaAnulada = (double)ii.TN_ANULADAS,
+                                                ToneladaAplicada = (double)ii.TN_APLICADAS,
                                                 ToneladaContrato = (double)ii.TN_CONTRATO,
                                                 ToneladaFijada = (double)ii.TN_FIJADAS,
                                                 ClaseDoc = ii.CLASE_DOC,
-                                                Clasificacion = ii.CLASIFICACION,                                              
+                                                Clasificacion = ii.CLASIFICACION,
                                                 ComercialId = ComercialId,
                                                 CampanaMaterialDetalleId = campaniaMaterial.Id
-                                                 
+
                                             });
                                         }
                                     }

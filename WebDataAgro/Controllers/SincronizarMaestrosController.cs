@@ -17,9 +17,9 @@ namespace WebDataAgro.Controllers
         private readonly IEstadoProveedorManager estadoProveedorManager;
         private readonly ISISAManager sisaManager;
         private readonly ILogger logger;
-        private readonly IComprasManager comprasManager;        
+        private readonly IComprasManager comprasManager;
 
-        public SincronizarMaestrosController(ILogger log, IComprasManager comprasManager, IRG2300Manager rG2300Manager, IFacacopManager facacopManager, IEstadoProveedorManager estadoProveedorManager, ISISAManager sisaManager )
+        public SincronizarMaestrosController(ILogger log, IComprasManager comprasManager, IRG2300Manager rG2300Manager, IFacacopManager facacopManager, IEstadoProveedorManager estadoProveedorManager, ISISAManager sisaManager)
         {
             this.logger = log;
             this.comprasManager = comprasManager;
@@ -98,7 +98,7 @@ namespace WebDataAgro.Controllers
             logger.Info($"ProcessRg2300 - Lineas INSERTADAS: {lista.Count}");
             return Content("ok");
         }
-        
+
         public ActionResult ProcessSisa()
         {
 
@@ -160,7 +160,7 @@ namespace WebDataAgro.Controllers
                     }
                 }
             }
-        objReader.Close();
+            objReader.Close();
             logger.Info($"ProcessSisa - Lineas leidas: {lista.Count}");
             int lineas = 0;
             try
@@ -246,10 +246,10 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
-        public ActionResult ProcessComprasDetalle()
+        public ActionResult ProcessComprasDetalle(string comercialUsurarioAD = "")
         {
             logger.Info($"ProcessCompras - Iniciando");
-            comprasManager.ActualizarComprasDetalle();
+            comprasManager.ActualizarComprasDetalle(comercialUsurarioAD);
             logger.Info($"ProcessCompras - Finalizado");
             return Content("ok");
         }

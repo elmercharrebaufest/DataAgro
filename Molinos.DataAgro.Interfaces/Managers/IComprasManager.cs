@@ -5,6 +5,6 @@
         void ActualizarComprasAyer();
 
         void ActualizarCompras();
-        void ActualizarComprasDetalle();
+        void ActualizarComprasDetalle(string comercialUsurarioAD);
     }
 }
