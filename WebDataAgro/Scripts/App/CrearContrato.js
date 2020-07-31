@@ -240,6 +240,13 @@ function InicializarElementos() {
                 $("#contCorredorId").val("");
                 $("#contCorredorDiv").hide();
                 $("#pagoDirectoDiv").hide();
+                if (!$("#dolarizadoId").is(":checked")) {
+                    $("#dolarizadoExpressId").prop("disabled", false);
+                   
+                }
+            }else {         
+                $("#dolarizadoExpressId").prop("checked", false);  
+                $("#dolarizadoExpressId").prop("disabled", true);
             }
             $("#buscadorProveedor").val("");
             $("#contratoId").val("");
@@ -1576,14 +1583,18 @@ function InicializarElementos() {
     });
 
     $("#dolarizadoId").click(function () {
+
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
-            $("#dolarizadoExpressId").prop("checked", false);
-            $("#pesificadoId").prop("checked", false);
+            $("#dolarizadoExpressId").prop("checked", false);         
+            $("#pesificadoId").prop("checked", false);            
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
         }
         else {
+            if ($("#buscadorCorredor").val() == "") {
+                $("#dolarizadoExpressId").prop("disabled", false);
+            }
             $("#dolarizadoFechaId").val("");
         }
     });
@@ -3192,6 +3203,8 @@ function CargarDatosEditar(contrato, hijo) {
     //}
     if (contrato.DolarizadoExpress == true) {
         $("#dolarizadoExpressId").prop("checked", true);
+        $("#dolarizadoDiv").show();
+        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
 
     } else {
         $("#dolarizadoExpressId").prop("checked", false);

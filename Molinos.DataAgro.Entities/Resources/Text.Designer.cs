@@ -997,6 +997,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ExportAll Compra Detalle.
+        /// </summary>
+        public static string ExportAllCompras {
+            get {
+                return ResourceManager.GetString("ExportAllCompras", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Febrero.
         /// </summary>
         public static string February {
@@ -1906,6 +1915,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Visualizar_SugerenciaDeCupos {
             get {
                 return ResourceManager.GetString("Visualizar_SugerenciaDeCupos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Compras.
+        /// </summary>
+        public static string VisualizarCompras {
+            get {
+                return ResourceManager.GetString("VisualizarCompras", resourceCulture);
             }
         }
     }

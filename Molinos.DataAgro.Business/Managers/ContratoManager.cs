@@ -2736,10 +2736,14 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Enviando mail a Comercial " + email);
             logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             var emailComerciales = "";
-            if (PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
+
+            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)) && x.ComercialId == contrato.ComercialCreadorId) != null ? true : false;
+            logger.Debug("Usuario tiene permiso " + tienePermiso);
+            if (tienePermiso)
             {
                 var corredoresComerciales = mobjComercialManager.ListarComercialesCorredor();
                 corredoresComerciales.Remove(contrato.Comercial);
+                corredoresComerciales.Remove(contrato.ComercialCreador);
                 logger.Debug("Enviando mail a " + string.Join(", ", corredoresComerciales.Select(x => x.IdActiveDirectory)));
                 foreach (Comercial corredorComercialCopia in corredoresComerciales)
                 {

@@ -257,8 +257,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
-                string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : "";
-                string pagoDiferidoString = contrato.FechaDolarizado != null ? "X" : "";
+                string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : "";                
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
                 string especialString = contrato.Calidad != null && contrato.Calidad.Count > 0 ? "4" : "1";
@@ -371,7 +370,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "",
                             MONEDA = contrato.MonedaId,
                             NO_INFORMAR_SIO = noInformaSioString,
-                            PAGO_DIFERIDO = pagoDiferidoString,
+                            PAGO_DIFERIDO = contrato.Dolarizado == true ? "X" : "",
                             MATERIAL = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo),
                             PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
                             PRECIO_PIZARRA = contrato.Precio,

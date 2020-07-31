@@ -733,4 +733,10 @@
   <data name="Error_Negocio" xml:space="preserve">
     <value>Debe agregar un negocio</value>
   </data>
+  <data name="VisualizarCompras" xml:space="preserve">
+    <value>Visualizar Compras</value>
+  </data>
+  <data name="ExportAllCompras" xml:space="preserve">
+    <value>ExportAll Compra Detalle</value>
+  </data>
 </root>
