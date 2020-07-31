@@ -16,5 +16,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Apellido { get; set; }
         public string Nombres { get; set; }
         public string Mail { get; set; }
+        public List<string> ProveedorMails { get; set; }
+        public int? ProveedorId { get; set; }
+        public string ProveedorRazonSocial { get; set; }
     }
 }

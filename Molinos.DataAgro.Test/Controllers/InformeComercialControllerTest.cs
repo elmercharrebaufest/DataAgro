@@ -139,7 +139,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Errores = new List<ErrorMessage>() { }
             });
             informeComercialManagerMock.Setup(x => x.GenerarInformeComercial(informeComercial, 1)).Returns(rtaInforme);
-            var result = target.Listar(informeComercial);
+            var result = target.Listar(informeComercial,null);
 
             homeManagerMock.Verify(x => x.TraerIdComercial(It.IsAny<string>()), Times.Once);
             informeComercialManagerMock.Verify(x => x.GrabarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>()), Times.Once);

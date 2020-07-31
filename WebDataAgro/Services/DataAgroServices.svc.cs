@@ -532,10 +532,32 @@ namespace WebDataAgro.Services
         public ResultadoValidarProveedorComercial ValidarProveedorComercial(string cuit)
         {
             ResultadoValidarProveedorComercial resultado = new ResultadoValidarProveedorComercial();
-            var existe = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
-            if (existe != null)
+            var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
+            if (proveedor != null)
             {
-                var provCom = existe.ProveedorComercialAsociados.FirstOrDefault();
+                resultado.ProveedorMails = new List<string>();
+                if (!string.IsNullOrEmpty(proveedor.Email1))
+                    resultado.ProveedorMails.Add(proveedor.Email1);
+                if (!string.IsNullOrEmpty(proveedor.Email2))
+                    resultado.ProveedorMails.Add(proveedor.Email2);
+                if (!string.IsNullOrEmpty(proveedor.Email3))
+                    resultado.ProveedorMails.Add(proveedor.Email3);
+                if (!string.IsNullOrEmpty(proveedor.Email4))
+                    resultado.ProveedorMails.Add(proveedor.Email4);
+                var contactos = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == proveedor.ProveedorId);
+                foreach (var contacto in contactos)
+                {
+                    if (!string.IsNullOrEmpty(contacto.Email1))
+                        resultado.ProveedorMails.Add(contacto.Email1);
+                    if (!string.IsNullOrEmpty(contacto.Email2))
+                        resultado.ProveedorMails.Add(contacto.Email2);
+                    if (!string.IsNullOrEmpty(contacto.Email3))
+                        resultado.ProveedorMails.Add(contacto.Email3);
+                }
+                resultado.ProveedorMails = resultado.ProveedorMails.Distinct().ToList();
+                resultado.ProveedorId = proveedor.ProveedorId;
+                resultado.ProveedorRazonSocial = proveedor.RazonSocial;
+                var provCom = proveedor.ProveedorComercialAsociados.FirstOrDefault();
                 if (provCom != null)
                 {
                     resultado.Apellido = provCom.Comercial.Apellido;
