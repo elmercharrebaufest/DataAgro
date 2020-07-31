@@ -156,11 +156,15 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public void ActualizarComprasDetalle(string comercialUsurarioAD)
+        public void ActualizarComprasDetalle(string comercialUsurarioAD, string cuit)
         {
             var a = new List<string>();
-
+            
             var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT).Distinct();
+            if (!string.IsNullOrEmpty(cuit))
+            {
+                oProveedor = oProveedor.Where(x => x == cuit);
+            }
             var oComercial = repositorio.Listar<Comercial>();
 
             List<ComprasIniciales> listProve = new List<ComprasIniciales>();
@@ -180,7 +184,7 @@ namespace Molinos.DataAgro.Business.Managers
 
 
             ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);
-            ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);// fix para que grabe los CampañaMaterialPorMes        
+            //ActualizarComprasDetalleProveedorIniciales(listProve, oComercial);// fix para que grabe los CampañaMaterialPorMes        
         }
         private void ActualizarComprasDetalleProveedorIniciales(List<ComprasIniciales> listProve, List<Comercial> oComercial)
         {

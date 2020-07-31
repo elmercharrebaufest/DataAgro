@@ -246,10 +246,10 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
-        public ActionResult ProcessComprasDetalle(string comercialUsurarioAD = "")
+        public ActionResult ProcessComprasDetalle(string comercialUsurarioAD = "", string cuit="")
         {
             logger.Info($"ProcessCompras - Iniciando");
-            comprasManager.ActualizarComprasDetalle(comercialUsurarioAD);
+            comprasManager.ActualizarComprasDetalle(comercialUsurarioAD, cuit);
             logger.Info($"ProcessCompras - Finalizado");
             return Content("ok");
         }
