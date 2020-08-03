@@ -1258,7 +1258,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EnviarMailPendienteOk()
         {
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Returns(new List<AvisoContratoDto>() { new AvisoContratoDto {
                     ContratoId = 1,
                 RazonSocial = "ALA",
@@ -1269,6 +1269,8 @@ namespace Molinos.DataAgro.Test.Managers
                 ComercialCreadorAD = "pari",
                 NombreApellido = "si eme"
               } });
+
+
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, ComercialDto>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
              .Returns(new List<ComercialDto>() {
@@ -1282,7 +1284,7 @@ namespace Molinos.DataAgro.Test.Managers
               }});
             mailManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("mparisi@baufest.com");
 
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, string>>>()))
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, string>>>()))
                 .Returns("marcos ignacio");
 
             ConfigurationManager.AppSettings["CredentialUserName"] = "dataagro.baufest@gmail.com";
@@ -1293,14 +1295,14 @@ namespace Molinos.DataAgro.Test.Managers
 
             //FALTA -> Preguntar a Ale
             target.EnviarMailPendiente();
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
 
         }
 
         [Test]
         public void EnviarMailPendienteError()
         {
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Returns(new List<AvisoContratoDto>() { new AvisoContratoDto {
                     ContratoId = 1,
                 RazonSocial = "ALA",
@@ -1312,6 +1314,7 @@ namespace Molinos.DataAgro.Test.Managers
                 NombreApellido = "si eme"
               } });
 
+
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, ComercialDto>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
              .Returns(new List<ComercialDto>() {
                  new ComercialDto {
@@ -1320,7 +1323,7 @@ namespace Molinos.DataAgro.Test.Managers
               }});
             mailManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Throws(new Exception("Error GetEmailUserActiveDirectory"));
 
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, string>>>()))
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, string>>>()))
                 .Returns("marcos ignacio");
 
             ConfigurationManager.AppSettings["CredentialUserName"] = "dataagro.baufest@gmail.com";
@@ -1331,7 +1334,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             //FALTA -> Preguntar a Ale
             target.EnviarMailPendiente();
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
 
         }
 

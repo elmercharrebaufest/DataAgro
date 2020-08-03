@@ -84,7 +84,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
                         Sustentable = (contrato is Contrato) && (contrato as Contrato).ImporteSustentable != null && (contrato as Contrato).ImporteSustentable > 0,
-                        DolarizadoValor = contrato.Dolarizado.HasValue ? (contrato.Dolarizado.Value ? "Si" : "No") : "",
+                        Dolarizado = contrato.Dolarizado.Value,
                         Pesificado = contrato.DiasPesificado != null,
                         Negocio = contrato is ContratoAcuerdo ?contrato.Id.ToString() :(contrato is FijacionDePrecioContrato && contrato.EstadoId == (int)EnumEstadoContrato.Finalizado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                         DestinoId = contrato.DestinoId,
@@ -146,10 +146,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PorcentajeDePago = contrato is Contrato ? (contrato as Contrato).PorcentajeDePago : null,
                         FechaOperacion = DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion),
                         MotivoOperacionAnterior = (contrato is Contrato) ? (contrato as Contrato).MotivoOperacionAnterior : "",
-
                         UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido: "Automática",
                         FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion :(DateTime?)null,
-                        DolarizadoExpressValor = contrato.DolarizadoExpress.HasValue ? (contrato.DolarizadoExpress.Value ? "Si" : "No") : "",
                         //ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
                         DolarizadoExpress = contrato.DolarizadoExpress.Value
 
