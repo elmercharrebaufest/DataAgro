@@ -1839,7 +1839,7 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnviarMailPendiente()
         {
             var hoy = DateTime.Now.Date;
-            var contratosPendientes = repositorio.Listar<Contrato, AvisoContratoDto>(x => new AvisoContratoDto
+            var contratosPendientes = repositorio.Listar<Negocio, AvisoContratoDto>(x => new AvisoContratoDto
             {
                 ContratoId = x.Id,
                 RazonSocial = x.Proveedor.RazonSocial,
@@ -1849,7 +1849,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDb = x.Fecha,
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
-            }, x => (x.EstadoId == 1 || x.EstadoId == 3) && x.Fecha < hoy);
+            }, x => (x.EstadoId == 1 || x.EstadoId == 3) && x.Fecha < hoy && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3));
             var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory }, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
             var mailComercialesMesa = new List<string>();
             foreach (var mesa in comercialesMesa)

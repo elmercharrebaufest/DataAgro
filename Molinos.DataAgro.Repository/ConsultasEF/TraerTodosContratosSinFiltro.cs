@@ -84,7 +84,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
                         Sustentable = (contrato is Contrato) && (contrato as Contrato).ImporteSustentable != null && (contrato as Contrato).ImporteSustentable > 0,
-                        Dolarizado = (contrato is Contrato) && (contrato as Contrato).FechaDolarizado != null,
+                        DolarizadoValor = contrato.Dolarizado.HasValue ? (contrato.Dolarizado.Value ? "Si" : "No") : "",
                         Pesificado = contrato.DiasPesificado != null,
                         Negocio = contrato is ContratoAcuerdo ?contrato.Id.ToString() :(contrato is FijacionDePrecioContrato && contrato.EstadoId == (int)EnumEstadoContrato.Finalizado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                         DestinoId = contrato.DestinoId,

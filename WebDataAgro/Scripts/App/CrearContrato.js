@@ -242,7 +242,8 @@ function InicializarElementos() {
                 $("#pagoDirectoDiv").hide();
                 if (!$("#dolarizadoId").is(":checked")) {
                     $("#dolarizadoExpressId").prop("disabled", false);
-                   
+                    $("#dolarizadoDiv").hide();
+                    $("#dolarizadoFechaId").val("");                   
                 }
             }else {         
                 $("#dolarizadoExpressId").prop("checked", false);  
@@ -858,8 +859,7 @@ function InicializarElementos() {
                 $("#dolarizadoDiv").hide();
                 $("#pagoDiferidoDiv").show();
                 $("#dolarizadoId").prop("checked", false);
-                $("#dolarizadoFechaId").data("kendoDatePicker").value("");
-               
+                $("#dolarizadoFechaId").data("kendoDatePicker").value("");               
                 $("#dolarizadoExpressDiv").hide();
                 $("#dolarizadoExpressId").prop("checked", false);           
             } else if ($("#precioMonedaId").val() === "USDM " && ($("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
