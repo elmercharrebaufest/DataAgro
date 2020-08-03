@@ -62,6 +62,10 @@ namespace Molinos.DataAgro.Business.Managers
             string descripcion = "";
             cambios.Historial = null;//no registrar el historial de compras
             cambios.ActividadHistoriaTraerPorProveedores = null;//notificaciones
+            cambios.CompraDetalle = null;//no registrar el historial de compras
+            cambios.Material = null;//no registrar el historial de compras
+            cambios.Campanias = null;//no registrar el historial de compras
+
             if (cambios.BasicoProveedorTraerPorProveedores != null && cambios.BasicoProveedorTraerPorProveedores.Count > 1)
             {
                 cambios.BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> { cambios.BasicoProveedorTraerPorProveedores.FirstOrDefault() };
@@ -140,8 +144,20 @@ namespace Molinos.DataAgro.Business.Managers
                 ClaseId = id,
                 Descripcion = descripcion,
             };
-            if (hayCambios(logAgregado))
+            if (hayCambios(logAgregado) || tipoDeAccion == TipoAccionLogDataAgro.Eliminar)
             {
+                if (!hayCambios(logAgregado) && tipoDeAccion == TipoAccionLogDataAgro.Eliminar)
+                {
+                    T obj = (T)Activator.CreateInstance(typeof(T));
+                    string jsonObjeto2 = JsonConvert.SerializeObject(obj, new JsonSerializerSettings()
+                    {
+                        ContractResolver = resolver,
+                        ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                        PreserveReferencesHandling = PreserveReferencesHandling.None,
+                        Formatting = Formatting.Indented,
+                    });
+                    logAgregado.DatoModificado = jsonObjeto2;
+                }
                 try
                 {
 
@@ -597,26 +613,28 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(RangoConfirmacionAutomaticaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica", cambios.Id.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica", cambios.TipoNegocio.ToString() +" - " + cambios.Material);
         }
 
         public int LogCambiosDataAgro(PrecioMoaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "PrecioMoa", cambios.Id.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "PrecioMoa", cambios.Material.ToString());
         }
         public int LogCambiosDataAgro(HabilitacionFijacionDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Habilitacion Fijacion", cambios.Id.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Habilitacion Fijacion", cambios.Material.ToString());
         }
 
         public int LogCambiosDataAgro(HabilitacionPizarraDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPizarra", cambios.Id.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPizarra", cambios.Material);
         }
 
 
         public string AddSpacesToSentence(string text, char limite)
         {
+            text = text.Replace("anio", "año");
+            text = text.Replace("Anio", "Año");
             text = text.Replace("Descuentos", "Descuentos y Bonificaciones");
             text = text.Replace("TipoDBDesc", "TipoDto y Bonif");
             text = text.Replace("TipoPeriodoDBDesc", "TipoPeriodoDto y Bonif");
@@ -710,7 +728,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             }
 
-
+            if (s== "1/1/0001 00:00:00")
+            {
+                s = "";
+            }
             return s;
         }
 

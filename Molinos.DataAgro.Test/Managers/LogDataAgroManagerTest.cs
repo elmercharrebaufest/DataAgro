@@ -128,7 +128,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                            .Returns(new List<LogDataAgro>());
-            var respuesta = target.LogCambiosDataAgro(new RangoConfirmacionAutomaticaDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
+            var respuesta = target.LogCambiosDataAgro(new RangoConfirmacionAutomaticaDto { Id = 1, TipoNegocio = "", Material = "" }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
@@ -140,7 +140,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                            .Returns(new List<LogDataAgro>());
-            var respuesta = target.LogCambiosDataAgro(new PrecioMoaDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
+            var respuesta = target.LogCambiosDataAgro(new PrecioMoaDto { Id = 1, Material = "" }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
@@ -151,7 +151,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<LogDataAgro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                            .Returns(new List<LogDataAgro>());
-            var respuesta = target.LogCambiosDataAgro(new HabilitacionFijacionDto { Id = 1 }, TipoAccionLogDataAgro.Modificar);
+            var respuesta = target.LogCambiosDataAgro(new HabilitacionFijacionDto { Id = 1, Material = "" }, TipoAccionLogDataAgro.Modificar);
 
             Assert.AreEqual(respuesta, 1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once());
