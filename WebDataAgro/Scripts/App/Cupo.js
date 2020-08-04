@@ -160,9 +160,12 @@ function InicializarCuposIndex() {
 
     $("#gridCupo").kendoGrid({
         dataSource: ds,
-        dataBound: function () {
+        dataBound: function () {           
             $("td:has(div.statusexterno)").attr('id', 'border-turquoise');
             var grid = $("#gridCupo").data("kendoGrid");
+            if (externo) {
+                grid.hideColumn("ZonaCupo");
+            }  
             var view = grid.dataSource.view();
             for (var i = 0; i < view.length; i++) {
                 if (view[i].FleteProcedencia) {
@@ -184,7 +187,7 @@ function InicializarCuposIndex() {
         columns: [
             { selectable: true },
             {
-                field: "FechaIngreso", title: "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate,
+                field: "FechaIngreso", title: externo ? "Fecha de Cupo": "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate,
                 template: function (dataItem) {
                     if (dataItem.UsuarioCreador != null) {
                         return '<div class="statusexterno "></div>' + kendo.toString(dataItem.FechaIngreso, "dd/MM/yyyy");
@@ -246,7 +249,7 @@ function InicializarCuposIndex() {
             {
                 field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
             },
-            { field: "Observaciones", type: "string", width: 150 },
+            { field: "Observaciones", type: "string", width: 150, hidden: externo },
             { field: "Comercial", type: "string", width: 150, filterable: { ui: createMultiSelectComercial } },
             { field: "EstadoOrden", type: "number", hidden: true },
             {

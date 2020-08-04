@@ -80,6 +80,9 @@ function InicializarCuposIndex() {
         dataSource: ds,
         dataBound: function () {
             var grid = $("#grid").data("kendoGrid");
+            if (externo) {
+                grid.hideColumn("ZonaCupo");
+            }  
             var view = grid.dataSource.view();
             for (var i = 0; i < view.length; i++) {
                 if (view[i].FleteProcedencia) {
@@ -92,21 +95,21 @@ function InicializarCuposIndex() {
         },
         columns: [
             {
-                field: "FechaIngreso", title: "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate, template: function (dataItem) {
+                field: "FechaIngreso", title: externo ? "Fecha de Cupo" : "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate, template: function (dataItem) {
 
                     if (dataItem.UsuarioCreador != null || externo) {
                         return '<div class="statusexterno "></div>' + kendo.toString(dataItem.FechaIngreso, "dd/MM/yyyy");
                     }
                     return '<div class=" "></div>' + kendo.toString(dataItem.FechaIngreso, "dd/MM/yyyy");
                 }
-             },
+            },
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             { field: "Material", type: "string", width: 150 },
             { field: "Proveedor", type: "string", width: 150 },
             { field: "Destinatario", type: "string", width: 150 },
             { field: "Centro", title: "Planta", type: "string", width: 150 },
             { field: "Calidad", type: "string", width: 150 },
-            { field: "ZonaCupo", title: "Zona", type: "string", width: 150 },
+            { field: "ZonaCupo", title: "Zona", type: "string", width: 150},
             { field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; } },
             { field: "CupoStop", title: "Cupo STOP", type: "string", width: 150 },
             {
@@ -138,7 +141,7 @@ function InicializarCuposIndex() {
                 }
             },
             { field: "Comercial", type: "string", width: 150 },
-            { field: "Observaciones", type: "string", width: 150 },
+            { field: "Observaciones", type: "string", width: 150, hidden: externo },
             { field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "Hora", title: "Hora", type: "date", width: 150 },
             { field: "EstadoPlanta", title: "Estado en Planta",type: "string", width: 150 },

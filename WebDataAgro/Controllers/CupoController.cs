@@ -221,6 +221,10 @@ namespace WebDataAgro.Controllers
         private void CargarViewBag()
         {
             var centros = centroManager.TraerTodoCentro();
+            if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+            {
+                centros.Centro = centros.Centro.Where(x => x.CodigoSap == "1029" || x.CodigoSap == "1600").ToList();
+            }
             var listaCentro = new List<SelectListItem>();
             foreach (var i in centros.Centro)
             {
@@ -252,7 +256,7 @@ namespace WebDataAgro.Controllers
                 });
             }
             ViewBag.Material = listaMaterial.OrderBy(x => x.Value);
-            var zona = zonaCupoManager.TraerTodoZonaCupo();
+            var zona = zonaCupoManager.TraerTodoZonaCupo();           
             var listaZona = new List<SelectListItem>() { new SelectListItem { Value = "0", Text = "Seleccione Zona", Selected = false } };
             var comercial = comercialManager.TraerComercial(GlobalVariables.ComercialId);
             foreach (var i in zona.ZonaCupo)

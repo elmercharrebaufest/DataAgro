@@ -58,7 +58,15 @@
         <div class="float-left">
             <span id="crearCupo" class="btnAzul btn-block @(altaCupo?"":"hide")" type="button">
                 <i class="fa fa-file-o"></i>
-                Crear Nuevo Cupo
+                @if (externo)
+                {
+                    <span>Solicitar Nuevo Cupo</span>
+                }
+                else
+                {
+                    <span>Crear Nuevo Cupo</span>
+                }
+
             </span>
         </div>
         @if (!externo)
