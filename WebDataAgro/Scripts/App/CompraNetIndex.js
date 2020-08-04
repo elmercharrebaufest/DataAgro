@@ -2514,22 +2514,22 @@ function compararReconfirmacion() {
 
     if (contrato.StandardCalidadId == 7) {
         table += '<td>';
-        table += '<span> CALIDAD GRADO 2 </span><br/>';
+        table += '<span> CALIDAD: GRADO 2 </span><br/>';
         table += '</td>';
     }
     else if (contrato.TrigoEspecial == true) {
         table += '<td>';
-        table += '<span> CALIDAD ESPECIAL </span><br/>';
+        table += '<span> CALIDAD: ESPECIAL </span><br/>';
         table += '</td>';
     }
     else if (contrato.StandardCalidadId == 1 || contrato.StandardCalidadId == 4 || contrato.StandardCalidadId == 5) {
         table += '<td>';
-        table += '<span> CALIDAD C&AacuteMARA </span><br/>';
+        table += '<span> CALIDAD: C&AacuteMARA </span><br/>';
         table += '</td>';
     }
     else if (contrato.StandardCalidadId == 3) {
         table += '<td>';
-        table += '<span> CALIDAD F&AacuteBRICA </span><br/>';
+        table += '<span> CALIDAD: F&AacuteBRICA </span><br/>';
         table += '</td>';
     }
     if (contrato.Calidades.length > 0 && contrato.StandardCalidadId != 7) {
@@ -2546,22 +2546,22 @@ function compararReconfirmacion() {
 
     if (contratoSave.StandardCalidadId == 7) {
         table += '<td>';
-        table += '<span>' + (result ? "<strong>CALIDAD GRADO 2 </strong>" : "CALIDAD GRADO 2" ) +"</span><br/>";
+        table += '<span>' + (result ? "<strong>CALIDAD: GRADO 2 </strong>" : "CALIDAD: GRADO 2" ) +"</span><br/>";
         table += '</td>';
     }
     else if (contratoSave.TrigoEspecial == true) {
         table += '<td>';
-        table += '<span>' + (result ? "<strong>CALIDAD ESPECIAL  </strong>" : "CALIDAD ESPECIAL " ) +"</span><br/>" ;
+        table += '<span>' + (result ? "<strong>CALIDAD: ESPECIAL  </strong>" : "CALIDAD: ESPECIAL " ) +"</span><br/>" ;
         table += '</td>';
     }
     else if (contratoSave.StandardCalidadId == 1 || contratoSave.StandardCalidadId == 4 || contratoSave.StandardCalidadId == 5) {
         table += '<td>';
-        table += '<span>' + (result ? "<strong>CALIDAD C&AacuteMARA</strong>" : "CALIDAD C&AacuteMARA") + "</span><br/>";
+        table += '<span>' + (result ? "<strong>CALIDAD: C&AacuteMARA</strong>" : "CALIDAD: C&AacuteMARA") + "</span><br/>";
         table += '</td>';
     }
     else if (contratoSave.StandardCalidadId == 3) {
         table += '<td>';
-        table += '<span>' + (result ? "<strong>CALIDAD F&AacuteBRICA</strong>  </span><br/>" : "CALIDAD F&AacuteBRICA") + "</span><br/>";
+        table += '<span>' + (result ? "<strong>CALIDAD: F&AacuteBRICA</strong>  </span><br/>" : "CALIDAD: F&AacuteBRICA") + "</span><br/>";
         table += '</td>';
     }
     if (contratoSave.Calidades.length > 0 && contratoSave.StandardCalidadId != 7) {

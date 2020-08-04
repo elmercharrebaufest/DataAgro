@@ -260,7 +260,7 @@ namespace WebDataAgro.Services
                 contrato.DesdeFijacion = !string.IsNullOrEmpty(contratoSAP.FeDesdeFij) ? DateTime.ParseExact(contratoSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
                 contrato.DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento;
                 contrato.PagoDiferido = contratoSAP.DiasDiferimiento > 0;
-                contrato.Dolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite);
+                contrato.Dolarizado = contratoSAP.DolarizadoExpress == "X" ? false : !string.IsNullOrEmpty(contratoSAP.FechaLimite);
                 contrato.EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null;
                 contrato.FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
                 contrato.FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -294,6 +294,8 @@ namespace WebDataAgro.Services
                 contrato.PrecioAjusteComision = contratoSAP.PrecioAjusteComision;
                 contrato.MonedaAjusteComisionId = contratoSAP.MonedaAjusteComisionId;
                 //contrato.ChequeElectronico = contratoSAP.ChequeElectronico == "X";
+              
+                contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
 
                 if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
                 {

@@ -3588,9 +3588,10 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.CodigoSap && x.EstadoId == (int)EnumEstadoContrato.Finalizado);
             if (oContratoSave != null)
             {
+                double cantidadContrato = double.TryParse(contrato.Cantidad, out cantidadContrato) ? cantidadContrato : 0;
                 try
                 {
-                    var cantidadKg = oContratoSave.Cantidad - contrato.Cantidad;
+                    var cantidadKg = oContratoSave.Cantidad - cantidadContrato;
                     if (cantidadKg > 0)
                     {
                         oContratoSave.Cantidad = cantidadKg;

@@ -77,6 +77,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaAjusteComisionId { get; set; }
 
         public string ChequeElectronico { get; set; }
+        public string DolarizadoExpress { get; set; }
     }
 
     public class CalidadSAP
