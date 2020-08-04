@@ -159,7 +159,7 @@ namespace Molinos.DataAgro.Business.Managers
         public void ActualizarComprasDetalle(string comercialUsurarioAD, string cuit)
         {
             var a = new List<string>();
-            
+
             var oProveedor = repositorio.Listar<Proveedor, string>(x => x.CUIT).Distinct();
             if (!string.IsNullOrEmpty(cuit))
             {
@@ -175,8 +175,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
             foreach (var comercial in oComercial)
             {
+                var oProveedorComercial = repositorio.Listar<ProveedorComercial, string>(x => x.Proveedor.CUIT, x => x.ComercialId == comercial.ComercialId).Distinct();
+                if (!string.IsNullOrEmpty(cuit))
+                {
+                    oProveedorComercial = oProveedorComercial.Where(x => x == cuit);
+                }
                 comp = new ComprasIniciales();
-                comp.CUIT.AddRange(oProveedor);
+                comp.CUIT.AddRange(oProveedorComercial);
 
                 comp.UsuarioDirectory = comercial.IdActiveDirectory;
                 listProve.Add(comp);
