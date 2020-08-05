@@ -12,7 +12,7 @@
 
 <h3 id="titulo">@ViewBag.Titulo</h3>
 <script src="~/Scripts/jquery.mask.js"></script>
-<script src="~/Scripts/App/CrearCupo.js"></script>
+<script src="~/Scripts/App/CrearCupoExterno.js"></script>
 
 <script>
  fecha = @Model.FechaEntrega.ToString("dd-MM-yyyy");
@@ -58,29 +58,13 @@
         </div>*@
         @Html.HiddenFor(x => x.Proveedor)
         @Html.HiddenFor(x => x.ZonaId)
-        <div>
+        <div hidden>
             <div class="col-sm-2">
                 <label>Planta</label>
             </div>
             <div class="col-sm-4">
                 @Html.DropDownListFor(x => x.PlantaId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control", @id = "planta" })
                 @Html.HiddenFor(x => x.PlantaId)
-            </div>
-        </div>
-        <div>
-            <div class="col-sm-2 ">
-                <label>Fecha Entrega</label>
-            </div>
-            <div class="col-sm-4">
-                <div id="fechaDiv">
-                    <div class="col-xs-6 noLeftPadding">
-                        @Html.TextBoxFor(x => x.FechaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaEntrega" })
-                    </div>
-                    @Html.HiddenFor(x => x.FechaEntrega)
-                    <div class="col-xs-6 noRightPadding">
-                        @Html.TextBoxFor(x => x.FechaHastaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaHasta" })
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -106,49 +90,69 @@
         </div>
 
     </div>
-        <div class="row">
-            <div>
-                <div class="col-sm-2">
-                    <label>Cantidad</label>
-                </div>
-                <div class="col-sm-4 ">
-                    @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @placeholder = "SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
-                </div>
-            </div>
-            <div>
-
-                @*<div class="col-sm-2 ">
-            <label>Zona</label>
-        </div>*@
-
-                @*<div class="col-sm-4">
-            <div>
-                @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control", @id = "zona" })
-                @Html.HiddenFor(x => x.ZonaId)
-            </div>
-        </div>*@
-            </div>
-        </div>
-        <div class="row">
-            <div>
-                <div class="col-sm-2 noRightPadding">
-                    <label>Flete procedencia/Acarreo </label>
-                </div>
-                <div class="col-sm-4 ">
-                    @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
-                </div>
-            </div>
-        </div>
-        <div class="row">
+    <div class="row">
+        <div>
             <div class="col-sm-2">
-                <label>Fasón/Préstamo devolución</label>
+                <label>Cantidad</label>
             </div>
-            <div class="col-sm-4">
-                <span style="height:34px"></span>
-                @Html.CheckBoxFor(x => x.FasonId, new { @id = "fason" })
-                @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
+            <div class="col-sm-4 ">
+                @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @placeholder = "SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
             </div>
         </div>
+        <div class="col-sm-2 ">
+            <label>Fecha Entrega</label>
+        </div>
+        <div class="col-sm-4">
+            <div id="fechaDiv">
+                <div class="col-xs-6 noLeftPadding">
+                    @Html.TextBoxFor(x => x.FechaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaEntrega" })
+                </div>
+                @Html.HiddenFor(x => x.FechaEntrega)
+                <div class="col-xs-6 noRightPadding">
+                    @Html.TextBoxFor(x => x.FechaHastaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaHasta" })
+                </div>
+            </div>
+        </div>
+        
+        <div>
+
+            @*<div class="col-sm-2 ">
+                <label>Zona</label>
+            </div>*@
+
+            @*<div class="col-sm-4">
+                <div>
+                    @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control", @id = "zona" })
+                    @Html.HiddenFor(x => x.ZonaId)
+                </div>
+            </div>*@
+        </div>
+    </div>
+    <div class="row">
+        <div>
+            <div class="col-sm-2 noRightPadding">
+                <label>Flete procedencia/Acarreo </label>
+            </div>
+            <div class="col-sm-1 ">
+                @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <label>Fasón/Préstamo devolución</label>
+        </div>
+        <div class="col-sm-1">
+            <span style="height:34px"></span>
+            @Html.CheckBoxFor(x => x.FasonId, new { @id = "fason" })
+            @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
+        </div>
+        <div class="col-sm-2">
+            <label>Sustentable/Calidad Especial</label>
+        </div>
+        <div class="col-sm-1">
+            <input id="sustentableId" class="campo-input-input" name="sustentableId" type="checkbox">
+
+        </div>
+    </div>
     </div>
     <br />
     <div class="row">

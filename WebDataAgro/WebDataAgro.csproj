@@ -988,6 +988,7 @@
     <Content Include="Scripts\App\AbmFormula.js" />
     <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
+    <Content Include="Scripts\App\CrearCupoExterno.js" />
     <Content Include="Scripts\App\HabilitacionCupo.js" />
     <Content Include="Scripts\App\ConfiguracionEspacioDinamico.js" />
     <Content Include="Scripts\App\Filtros.js" />

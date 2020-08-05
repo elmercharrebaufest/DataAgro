@@ -411,6 +411,11 @@
                     <label id="lblPizarra">Pizarra</label>
                     <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
                 </span>
+                <div id="pagoDirectoDiv" hidden style="float:right;" class="noAcuerdo">
+                    <label>Pago dir. Vend.</label>
+                    <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>
             </div>
             <div id="pagoDiferidoFijacionDiv" class="pagoFijacion hide-fijacion noAcuerdo ampliar">
                 <label style="width:100px">Pago diferido</label>
@@ -424,11 +429,7 @@
                 <label>Vía de Pago</label>
                 <input id="chequeElectronico"  class="campo-input-input" name="chequeElectronico" type="checkbox">
             </div>*@
-            <div id="pagoDirectoDiv" hidden style="float:right;" class="noAcuerdo">
-                <label>Pago dir. Vend.</label>
-                <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
-                <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
-            </div>
+            
         </div>
         <div class="col-sm-2 espacioPrecioMoneda" hidden></div>
         <div class="col-xs-12 col-sm-5 col-md-4 required-box-parent espacioPrecioMoneda" hidden></div>
