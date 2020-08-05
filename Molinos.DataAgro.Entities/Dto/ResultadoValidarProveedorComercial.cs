@@ -19,5 +19,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<string> ProveedorMails { get; set; }
         public int? ProveedorId { get; set; }
         public string ProveedorRazonSocial { get; set; }
+        public bool Operable { get; set; }
     }
 }

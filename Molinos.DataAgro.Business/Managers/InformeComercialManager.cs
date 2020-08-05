@@ -40,10 +40,103 @@ namespace Molinos.DataAgro.Business
             return query;
         }
 
-        public InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory)
+        public InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios)
         {
             var oEntityErrors = new InformeResult();
             InformeComercial inf = new InformeComercial();
+            // si de MOA Operaciones generan un nuevo informe para un proveedor nuevo
+            if (nuevosCampos != null || nuevosAcopios != null)
+            {
+                var materiales = repositorio.Listar<Material, int>(x => x.MaterialId);
+                var campañas = repositorio.Listar<Campaña, int>(x => x.CampañaId);
+                var localidades = repositorio.Listar<Localidad, int>(x => x.LocalidadId);
+
+                if (nuevosCampos != null)
+                {
+                    if (nuevosCampos.Any(a => !materiales.Contains(a.MaterialId)))
+                    {
+                        oEntityErrors.Errores.Add(new ErrorMessage("No se pudo encontrar el material seleccionado"));
+                    }
+                    if (nuevosCampos.Any(a => !campañas.Contains(a.CampañaId)))
+                    {
+                        oEntityErrors.Errores.Add(new ErrorMessage("No se pudo encontrar la campaña seleccionada"));
+                    }
+                    if (nuevosCampos.Any(a => !localidades.Contains(a.LocalidadId)))
+                    {
+                        oEntityErrors.Errores.Add(new ErrorMessage("No se pudo encontrar la Localidad seleccionada"));
+                    }
+                }
+                if (nuevosAcopios != null)
+                {
+                    if (nuevosAcopios.Any(a => !campañas.Contains(a.CampañaId)))
+                    {
+                        oEntityErrors.Errores.Add(new ErrorMessage("No se pudo encontrar la campaña seleccionada"));
+                    }
+                    if (nuevosAcopios.Any(a => !localidades.Contains(a.LocalidadId)))
+                    {
+                        oEntityErrors.Errores.Add(new ErrorMessage("No se pudo encontrar la Localidad seleccionada"));
+                    }
+                }
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
+                else
+                {
+                    if (nuevosCampos != null)
+                    {
+                        foreach (var item in nuevosCampos)
+                        {
+                            Campo campo = new Campo
+                            {
+                                LocalidadId = item.LocalidadId,
+                                ArrendaPropia = item.ArrendaPropia ? 1 : 0,
+                                HabilitadoSojaSustentable = false,
+                                ProveedorId = informe.ProveedorId,
+                                NroItem = 1,
+                                KMZfile = null,
+                                KMZnombre = null
+                            };
+                            CampoMaterial campoMaterial = new CampoMaterial
+                            {
+                                Campo = campo,
+                                CampañaId = item.CampañaId,
+                                Hectareas = item.Hectareas,
+                                MaterialId = item.MaterialId,
+                                Toneladas = item.Toneladas,
+                                NroItem = 1
+                            };
+                            repositorio.Agregar(campoMaterial);
+                        }
+                    }
+                    if (nuevosAcopios != null)
+                    {
+                        foreach (var item in nuevosAcopios)
+                        {
+                            Acopio acopio = new Acopio
+                            {
+                                LocalidadId = item.LocalidadId,
+                                ProveedorId = informe.ProveedorId,
+                                NroItem = 1,
+                                KMZfile = null,
+                                KMZnombre = null
+                            };
+                            AcopioCampaña acopioCampaña = new AcopioCampaña
+                            {
+                                Acopio = acopio,
+                                CampañaId = item.CampañaId,
+                                HasArrendadas = !item.ArrendaPropia,
+                                Toneladas = item.Toneladas,
+                                NroItem = 1
+                            };
+                            repositorio.Agregar(acopioCampaña);
+                        }
+                    }
+
+                    repositorio.GuardarCambios();
+                }
+            }
+
             if (informe.InformeComercialId > 0)
             {
                 var produccion = repositorio.Listar<InformeComercialProduccion>(x => x.InformeComercial.InformeComercialId == informe.InformeComercialId);
@@ -437,7 +530,7 @@ namespace Molinos.DataAgro.Business
             {
                 var proveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == cuit, x => x.ProveedorId);
 
-                var Mat = repositorio.Obtener<Material, CampaniaMaterialSAP>(x=>x.Codigo == Material, z => new CampaniaMaterialSAP { MaterialId = z.MaterialId, CampaniaId = z.CampañaId });
+                var Mat = repositorio.Obtener<Material, CampaniaMaterialSAP>(x => x.Codigo == Material, z => new CampaniaMaterialSAP { MaterialId = z.MaterialId, CampaniaId = z.CampañaId });
 
                 var oInformeComercialProduccionSave = repositorio.Obtener<InformeComercialProduccion>(x => x.InformeComercial.EstadoId == (int)EnumEstadoInforme.Enviado && x.InformeComercial.ProveedorId == proveedorId
                     && x.InformeComercial.CampañaId == Mat.CampaniaId && x.MaterialId == Mat.MaterialId);

@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         List<InformeComercialMaterialDisponible> TraerInformeComercial(int ProveedorId);
 
-        InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory);
+        InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios);
 
         RptInformeComercialInfo GenerarInformeComercial(ParamInformeComercial informe,int InformeId);
 

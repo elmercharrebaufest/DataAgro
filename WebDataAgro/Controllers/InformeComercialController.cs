@@ -90,7 +90,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> Listar(ParamInformeComercial oParam, int? ComercialId)
+        public async Task<ActionResult> Listar(ParamInformeComercial oParam, int? ComercialId, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios)
         {
             var model = new ReportesModel();
             if (!ComercialId.HasValue)
@@ -98,7 +98,7 @@ namespace WebDataAgro.Controllers
                 ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             }
 
-            var entityError = mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId.Value);
+            var entityError = mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId.Value, nuevosCampos, nuevosAcopios);
 
             if (!entityError.HayErrores)
             {
