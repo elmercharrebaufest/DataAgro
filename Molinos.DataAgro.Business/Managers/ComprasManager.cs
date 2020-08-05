@@ -175,13 +175,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
             foreach (var comercial in oComercial)
             {
-                var oProveedorComercial = repositorio.Listar<ProveedorComercial, string>(x => x.Proveedor.CUIT, x => x.ComercialId == comercial.ComercialId).Distinct();
-                if (!string.IsNullOrEmpty(cuit))
-                {
-                    oProveedorComercial = oProveedorComercial.Where(x => x == cuit);
-                }
+                //var oProveedorComercial = repositorio.Listar<ProveedorComercial, string>(x => x.Proveedor.CUIT, x => x.ComercialId == comercial.ComercialId).Distinct();
+                //if (!string.IsNullOrEmpty(cuit))
+                //{
+                //    oProveedorComercial = oProveedorComercial.Where(x => x == cuit);
+                //}
                 comp = new ComprasIniciales();
-                comp.CUIT.AddRange(oProveedorComercial);
+                comp.CUIT.AddRange(oProveedor);
 
                 comp.UsuarioDirectory = comercial.IdActiveDirectory;
                 listProve.Add(comp);
