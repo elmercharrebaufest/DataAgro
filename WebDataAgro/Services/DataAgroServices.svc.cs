@@ -537,7 +537,7 @@ namespace WebDataAgro.Services
             var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
             if (proveedor != null)
             {
-                var existeEnSISA = repositorio.Existe<SISA>(x => x.CBU == cuit);
+                var existeEnSISA = repositorio.Existe<SISA>(x => x.CUIT == cuit);
                 resultado.Operable = existeEnSISA;
                 resultado.ProveedorMails = new List<string>();
                 if (!string.IsNullOrEmpty(proveedor.Email1))
