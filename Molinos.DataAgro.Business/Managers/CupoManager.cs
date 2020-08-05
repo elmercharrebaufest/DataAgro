@@ -1835,6 +1835,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (errorSap.HayError)
             {
                 error.Errores.AddRange(errorSap.Errores);
+                return error;
             }
             cupoSave.CupoSap = listaCupos[0];
             cupoSave.EstadoCupoId = 1;
