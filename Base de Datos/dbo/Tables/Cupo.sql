@@ -22,7 +22,7 @@
     [TipoNegocioId] INT NULL , 
     [ConfiguracionEspacioDinamicoId] INT NULL, 
     [NegocioId] INT NULL, 
-    [UsuarioCreador] varchar(20) NULL, 
+    [UsuarioCreador] varchar(100) NULL, 
     [MotivoRechazo] VARCHAR(MAX) NULL, 
     [EstadoPlanta] NVARCHAR(MAX) NULL, 
     [CartaPorte] NVARCHAR(MAX) NULL, 
