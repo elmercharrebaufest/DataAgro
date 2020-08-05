@@ -215,10 +215,25 @@ namespace Molinos.DataAgro.Business.Managers
                         var ComercialId = oComercial.FirstOrDefault(x => x.IdActiveDirectory.ToLower().Trim() == item.UsuarioDirectory.ToLower().Trim()).ComercialId;
                         foreach (var jj in listHistorial)
                         {
+
+                            if (!proveedores.Any(a => a.Key == jj.Key.VENDEDOR))
+                            {
+                                logger.Debug("El cuit " + jj.Key.VENDEDOR + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory);
+                                continue;
+                            }
+                            if (!materiales.Any(a => a.Key == jj.Key.MATERIAL))
+                            {
+                                logger.Debug("El material " + jj.Key.MATERIAL + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory);
+                                continue;
+                            }
+                            if (!campanias.Any(a => a.Key == jj.Key.COSECHA))
+                            {
+                                logger.Debug("La COSECHA " + jj.Key.COSECHA + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory);
+                                continue;
+                            }
                             var proveedoresId = proveedores[jj.Key.VENDEDOR];
                             var materialId = materiales[jj.Key.MATERIAL].MaterialId;
                             var campaniaId = campanias[jj.Key.COSECHA].CampañaId;
-
                             foreach (var proveedor in proveedoresId)
                             {
                                 int proveedorId = proveedor.ProveedorId;
@@ -276,6 +291,10 @@ namespace Molinos.DataAgro.Business.Managers
                                         });
                                 }
                             }
+
+
+
+
                         }
                     }
                 }

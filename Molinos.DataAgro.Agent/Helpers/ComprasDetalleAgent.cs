@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Agent
                 //};
                 //var logId = repositorio.Agregar(log);
                 //repositorio.GuardarCambios();
-                logger.Debug(rq.ToXml());
+                //logger.Debug(rq.ToXml());
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE(rq);
                 if (devolucion.EX_SALIDA != null)
                 {
