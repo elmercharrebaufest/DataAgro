@@ -193,7 +193,7 @@ namespace Molinos.DataAgro.Business.Managers
                        ClaseId = x.ClaseId,
                    }).LastOrDefault();
 
-            if (logAnterior==null)            
+            if (logAnterior == null)
                 return true;
 
             var logDtoActual = new LogDataAgroDto
@@ -613,7 +613,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(RangoConfirmacionAutomaticaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica", cambios.TipoNegocio.ToString() +" - " + cambios.Material);
+            var resolver = new IgnorePropertiesResolver(new[] { "PrecioMinimo", "PrecioMaximo", "Moneda" });
+
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica", cambios.TipoNegocio.ToString() + " - " + cambios.Material, resolver);
         }
 
         public int LogCambiosDataAgro(PrecioMoaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
@@ -728,7 +730,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             }
 
-            if (s== "1/1/0001 00:00:00")
+            if (s == "1/1/0001 00:00:00")
             {
                 s = "";
             }

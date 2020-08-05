@@ -26,8 +26,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? UsuarioCreadorId { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreador { get; set; }
+
+        public string PrecioMinimoMoneda { get { return string.Format("{0:#,0.00}", PrecioMinimo) + " " + Moneda; } }
+        public string PrecioMaximoMoneda { get { return string.Format("{0:#,0.00}", PrecioMaximo) + " " + Moneda; } }
     }
 }
-   
-
-

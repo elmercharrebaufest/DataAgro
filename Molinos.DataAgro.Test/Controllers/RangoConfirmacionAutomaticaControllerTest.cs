@@ -110,7 +110,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null,\"PrecioMinimoMoneda\":\"1,00 \",\"PrecioMaximoMoneda\":\"1,00 \"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -131,7 +131,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null,\"PrecioMinimoMoneda\":\"1,00 \",\"PrecioMaximoMoneda\":\"1,00 \"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -153,7 +153,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Rango\":{\"Id\":1,\"PrecioMinimo\":1,\"PrecioMaximo\":1,\"Material\":null,\"MaterialId\":1,\"Moneda\":null,\"MonedaId\":\"A\",\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"ZonaId\":0,\"Zona\":null,\"Cantidad\":null,\"DesdeMes\":null,\"DesdeAnio\":null,\"HastaMes\":null,\"HastaAnio\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"UsuarioCreadorId\":null,\"FechaCreacion\":null,\"UsuarioCreador\":null,\"PrecioMinimoMoneda\":\"1,00 \",\"PrecioMaximoMoneda\":\"1,00 \"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
