@@ -30,12 +30,7 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
-
-        private readonly IMaterialManager mobjMaterialManager;
-        private readonly ITipoNegocioManager mobjTipoNegocioManager;
-        private readonly ICampañaManager mobjCampaniaManager;
-        private readonly IProvinciaManager mobjProvinciaManager;
-        private readonly ILocalidadManager mobjLocalidadManager;
+        
         private readonly IProveedorManager mobjProveedorManager;
         private readonly IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
@@ -43,54 +38,43 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IContratoAcuerdoManager contratoAcuerdoManager;
         private readonly IFinalizarContratoAgent oFinalizarContratoAgent;
         private readonly IDiasHabilesAgent oDiasHabilesAgent;
-        private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IEliminarContratoAgent oEliminarContratoAgent;
-        private readonly IConfiguracionManager configuracionManager;
         private readonly ICapacidadProductivaAgent capacidadProductiva;
         private readonly IAltaTempranaAgent altaTempranaAgent;
-        private readonly IDiasHabilesAgent diasHabilesAgent;
         private readonly IModificarContratoAgent modificarContratoAgent;
         private readonly IMailManager mailManager;
         private readonly IStatusContratoAgent status;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IValidarDocProcPagoAgent validarPagoAgente;
 
-        public ContratoManager(ILogger logger, IRepositorio repositorio,
-            IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
-            ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager,
-            ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager,
+        public ContratoManager(ILogger logger, IRepositorio repositorio, 
+            IProveedorManager oMSProveedorManager,
             IComercialManager oMSComercialManager,
             IPushNotificationManager oMSNotification,
             IDiferencialManager diferencialManager,
             IContratoAcuerdoManager contratoAcuerdoManager,
             IFinalizarContratoAgent oFinalizarContratoAgent,
             IDiasHabilesAgent oDiasHabilesAgent,
-            IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
-            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
-            ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
-            IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
-            IMailManager mailManager, IStatusContratoAgent status,
-            ILogDataAgroManager logDataAgroManager, IValidarDocProcPagoAgent validarPagoAgente)
+            IEliminarContratoAgent oEliminarContratoAgent, 
+            ICapacidadProductivaAgent capacidadProductiva, 
+            IAltaTempranaAgent altaTempranaAgent,
+            IModificarContratoAgent modificarContratoAgent,
+            IMailManager mailManager, IStatusContratoAgent status, 
+            ILogDataAgroManager logDataAgroManager, 
+            IValidarDocProcPagoAgent validarPagoAgente)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-            mobjMaterialManager = oMSMaterialManager;
-            mobjCampaniaManager = oMSCampaniaManager;
-            mobjProvinciaManager = oMSProvinciaManager;
-            mobjLocalidadManager = oMSLocalidadManager;
+           
             mobjProveedorManager = oMSProveedorManager;
-            mobjComercialManager = oMSComercialManager;
-            mobjTipoNegocioManager = oMSTipoNegocioManager;
+            mobjComercialManager = oMSComercialManager;            
             mobjNotification = oMSNotification;
             this.diferencialManager = diferencialManager;
             this.contratoAcuerdoManager = contratoAcuerdoManager;
             this.oFinalizarContratoAgent = oFinalizarContratoAgent;
-            this.oDiasHabilesAgent = oDiasHabilesAgent;
-            this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
+            this.oDiasHabilesAgent = oDiasHabilesAgent;           
             this.oEliminarContratoAgent = oEliminarContratoAgent;
-            this.configuracionManager = configuracionManager;
             this.altaTempranaAgent = altaTempranaAgent;
-            this.diasHabilesAgent = diasHabilesAgent;
             this.modificarContratoAgent = modificarContratoAgent;
             this.mailManager = mailManager;
             this.capacidadProductiva = capacidadProductiva;
@@ -567,30 +551,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("TipoAgenteCompraId", "Debe seleccionar el agente de compra.");
                 }
-            }
-
-            if (!validacionesMinimas)
-            {
-                if (oParam.TipoAgenteCompraId != null)
-                {
-                    if (oParam.CaratulaMAT == null)
-                    {
-                        oErrorMessages.Error("CaratulaMAT", "Debe completar Caratula MAT.");
-                    }
-                    if (oParam.PrecioAjusteComision == null)
-                    {
-                        oErrorMessages.Error("PrecioAjusteComision", "Debe completar Precio Ajuste Comisión.");
-                    }
-                    if (oParam.MonedaAjusteComisionId == null)
-                    {
-                        oErrorMessages.Error("MonedaAjusteComisionId", "Debe completar Moneda Ajuste Comisión.");
-                    }
-                }
-                if (oParam.TipoAgenteCompraId == null && (oParam.CaratulaMAT != null || oParam.PrecioAjusteComision != null || oParam.MonedaAjusteComisionId != null || oParam.CaratulaExtension != null))
-                {
-                    oErrorMessages.Error("TipoAgenteCompraId", "Debe seleccionar el agente de compra.");
-                }
-            }
+            }            
 
             if (!validacionesMinimas)
             {
@@ -602,7 +563,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (oParam.FechaOperacion < DateTime.Now.Date)
                     {
-                        var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
+                        var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil();
 
                         if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
                         {
@@ -1153,7 +1114,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
-                var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
+                var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil();
 
                 if (oContratoSave.Fecha < diaAnterior)
                 {
@@ -2374,7 +2335,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoAgenteCompraId = x.TipoAgenteCompraId,
                 //ChequeElectronico = x.ChequeElectronico
             });
-            var dia = diasHabilesAgent.UltimoDiaHabil();
+            var dia = oDiasHabilesAgent.UltimoDiaHabil();
             if (contrato.Fecha < dia)
             {
                 return new BasicoContrato();
@@ -3306,102 +3267,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
                 Expression<Func<Contrato, BasicoContrato>> proyeccion = x => new BasicoContrato
                 {
-
-                    ContratoId = x.Id,
-                    ProveedorId = x.ProveedorId ?? 0,
-                    Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
-                    Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
-                    ComercialId = x.ComercialId,
-                    FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
-                                                SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
-                                                SqlFunctions.DateName("year", x.FechaDesde),
-                    FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
-                                                SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
-                                                SqlFunctions.DateName("year", x.FechaHasta),
-                    FechaFormateado = SqlFunctions.DateName("day", x.Fecha).Trim() + "-" +
-                                                SqlFunctions.StringConvert((double)x.Fecha.Month).TrimStart() + "-" +
-                                                SqlFunctions.DateName("year", x.Fecha),
-                    TipoNegocioId = x.TipoNegocioId,
-                    MaterialId = x.MaterialId,
+                    
                     Cantidad = x.Cantidad,
-                    Ampliaciones = x.Ampliaciones,
-                    Precio = x.Precio,
-                    MonedaId = x.MonedaId,
-                    CampanaId = x.CampanaId ?? 0,
-                    ProvinciaId = x.ProvinciaId,
-                    Provincia = x.Provincia.Nombre,
-                    LocalidadId = x.LocalidadId,
-                    Localidad = x.Localidad.Nombre,
-                    ContratoSAP = x.ContratoSAP,
-                    Base = x.Base,
-                    Observacion = x.Observacion,
-                    Estado = x.EstadoId,
-                    Estado_Contrato = x.Estado.Descripcion,
-                    Importe_Sustentable = x.ImporteSustentable,
-                    Moneda_Sustentable = x.MonedaSustentableId,
-                    Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
-                                                SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
-                                                SqlFunctions.DateName("year", x.FechaDolarizado) : "",
-                    Dolarizado = x.Dolarizado,
-
-                    Dias_Pesificado = x.DiasPesificado,
-                    NoInformaSIO = x.NoInformaSio,
-                    TrigoEspecial = x.TrigoEspecial,
-                    ClasificacionId = x.ClasificacionId,
-                    DestinoId = x.DestinoId,
-                    PlanCanje = x.PlanCanje,
-                    Consignatario = x.Consignatario,
-                    CantidadCamiones = x.CantidadCamiones,
-                    BoletoId = x.BoletoId,
-                    BolsaId = x.BolsaId,
-                    DesdeFijacionFormateado = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
-                                                SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
-                                                SqlFunctions.DateName("year", x.DesdeFijacion) : "",
-                    HastaFijacionFormateado = x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
-                                                SqlFunctions.StringConvert((double)x.HastaFijacion.Value.Month).TrimStart() + "-" +
-                                                SqlFunctions.DateName("year", x.HastaFijacion) : "",
-                    CondicionFijacion = x.CondicionFijacionId,
-                    CD = x.CD,
-                    Warrant = x.Warrant,
-                    PagoDirectoVendedor = x.PagoDirectoVendedor,
-                    EstablecimientoPropio = x.EstablecimientoPropio,
-                    MercsDeposito = x.MercsDeposito,
-                    PorcentajeComision = x.PorcentajeComision,
-                    ContratoCorredor = x.ContratoCorredor,
-                    ContratoVendedor = x.ContratoVendedor,
-                    SelCargoMOA = x.SelCargoMOA,
-                    SelCargoVendedor = x.SelCargoVendedor,
-                    Madre = x.Madre,
-                    EsFason = x.EsFason,
-                    ContratoMadre = x.ContratoMadre,
-                    Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
+                    Precio = x.Precio,                   
                     StandardCalidadId = x.StandardDeCalidadId,
-                    StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
-                    PagoDiferido = x.PagoDiferido,
-                    ZonaId = x.ZonaId,
-                    ZonaDescripcion = x.Zona.Descripcion,
-                    Compensacion = x.Compensacion,
-                    NivelTarifaId = x.NivelTarifaId,
-                    TarifaFlete = x.TarifaFlete,
-                    Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
-                    {
-                        ContratoId = y.ContratoId,
-                        FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
-                                               SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
-                                               SqlFunctions.DateName("year", y.FechaDesde) : "",
-                        FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
-                                               SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
-                                               SqlFunctions.DateName("year", y.FechaHasta) : "",
-                        Importe = y.Importe,
-                        MonedaId = y.MonedaId,
-                        Moneda = y.MonedaId,
-                        Id = y.Id,
-                        Porcentaje = y.Porcentaje,
-                        TipoDBDesc = y.TipoDB.Descripcion,
-                        TipoDBId = y.TipoDBId,
-                        TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
-                        TipoPeriodoDBId = y.TipoPeriodoDBId
-                    }).ToList(),
+                    StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,                    
                     Calidades = x.Calidad.Select(y => new CalidadDto
                     {
                         Id = y.Id,
@@ -3410,35 +3280,8 @@ namespace Molinos.DataAgro.Business.Managers
                         PorcentajeDesde = y.PorcentajeDesde,
                         PorcentajeHasta = y.PorcentajeHasta,
                         Valor = y.Valor,
-                    }).ToList(),
-                    AperturaPrecios = x.AperturaPrecio.Select(y => new AperturaPrecioDto
-                    {
-                        contratoId = y.NegocioId,
-                        Id = y.Id,
-                        ConceptoAperturaPrecio = y.ConceptoAperturaPrecio.Descripcion,
-                        ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
-                        Importe = y.Importe,
-                        MonedaId = y.MonedaId,
-                        Porcentaje = y.Porcentaje
-                    }).ToList(),
-                    PreciosPactados = x.PrecioPactado.Select(y => new PrecioPactadosDto
-                    {
-                        ContratoId = y.ContratoId,
-                        FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
-                                               SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
-                                               SqlFunctions.DateName("year", y.FechaDesde) : "",
-                        FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
-                                               SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
-                                               SqlFunctions.DateName("year", y.FechaHasta) : "",
-                        Id = y.Id,
-                        ImportePactado = y.ImportePactado,
-                        MonedaImportePactadoDesc = y.MonedaImportePactado.Descripcion,
-                        MonedaImportePactadoId = y.MonedaImportePactadoId,
-                        MonedaPactadoDesc = y.MonedaPactado.Descripcion,
-                        MonedaPactadoId = y.MonedaPactadoId,
-                        Porcentaje = y.Porcentaje,
-                        Precio = y.Precio
-                    }).ToList()
+                    }).ToList(),                
+                  
                 };
                 var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, proyeccion);
                 var basicoSave = TransformarABasicoContrato(contratoSave);
@@ -3458,87 +3301,12 @@ namespace Molinos.DataAgro.Business.Managers
         private BasicoContrato TransformarABasicoContrato(Contrato x)
         {
             return new BasicoContrato
-            {
-
-                ContratoId = x.Id,
-                ProveedorId = x.ProveedorId ?? 0,
-                Proveedor = x.Proveedor == null ? "" : x.Proveedor.RazonSocial + " " + "(" + x.Proveedor.CUIT + ")",
-                Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial + " " + "(" + x.Corredor.CUIT + ")",
-                ComercialId = x.ComercialId,
-                FechaDesdeFormateado = x.FechaDesde.ToString("dd-MM-yyyy"),
-                FechaHastaFormateado = x.FechaHasta.ToString("dd-MM-yyyy"),
-                FechaFormateado = x.Fecha.ToString("dd-MM-yyyy"),
-                TipoNegocioId = x.TipoNegocioId,
-                MaterialId = x.MaterialId,
-                Cantidad = x.Cantidad,
-                Ampliaciones = x.Ampliaciones,
-                Precio = x.Precio,
-                MonedaId = x.MonedaId,
-                CampanaId = x.CampanaId ?? 0,
-                ProvinciaId = x.ProvinciaId,
-                Provincia = x.Provincia.Nombre,
-                LocalidadId = x.LocalidadId,
-                Localidad = x.Localidad.Nombre,
-                ContratoSAP = x.ContratoSAP,
-                Base = x.Base,
-                Observacion = x.Observacion,
-                Estado = x.EstadoId,
-                Estado_Contrato = x.Estado.Descripcion,
-                Importe_Sustentable = x.ImporteSustentable,
-                Moneda_Sustentable = x.MonedaSustentableId,
-                Fecha_DolarizadoFormateado = x.FechaDolarizado.HasValue ? x.FechaDolarizado.Value.ToString("dd-MM-yyyy") : "",
-                Dolarizado = x.Dolarizado,
-
-                Dias_Pesificado = x.DiasPesificado,
-                NoInformaSIO = x.NoInformaSio,
-                TrigoEspecial = x.TrigoEspecial,
-                ClasificacionId = x.ClasificacionId,
-                DestinoId = x.DestinoId,
-                PlanCanje = x.PlanCanje,
-                Consignatario = x.Consignatario,
-                CantidadCamiones = x.CantidadCamiones,
-                BoletoId = x.BoletoId,
-                BolsaId = x.BolsaId,
-                DesdeFijacionFormateado = x.DesdeFijacion.HasValue ? x.DesdeFijacion.Value.ToString("dd-MM-yyyy") : "",
-                HastaFijacionFormateado = x.HastaFijacion.HasValue ? x.HastaFijacion.Value.ToString("dd-MM-yyyy") : "",
-                CondicionFijacion = x.CondicionFijacionId,
-                CD = x.CD,
-                Warrant = x.Warrant,
-                PagoDirectoVendedor = x.PagoDirectoVendedor,
-                EstablecimientoPropio = x.EstablecimientoPropio,
-                MercsDeposito = x.MercsDeposito,
-                PorcentajeComision = x.PorcentajeComision,
-                ContratoCorredor = x.ContratoCorredor,
-                ContratoVendedor = x.ContratoVendedor,
-                SelCargoMOA = x.SelCargoMOA,
-                SelCargoVendedor = x.SelCargoVendedor,
-                Madre = x.Madre,
-                EsFason = x.EsFason,
-                ContratoMadre = x.ContratoMadre,
-                Pizarra = x.Pizarra.HasValue ? x.Pizarra.Value : false,
+            {               
+                Cantidad = x.Cantidad,               
+                Precio = x.Precio,                
                 StandardCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
-                PagoDiferido = x.PagoDiferido,
-                ZonaId = x.ZonaId,
-                ZonaDescripcion = x.Zona != null ? x.Zona.Descripcion : "",
-                Compensacion = x.Compensacion,
-                NivelTarifaId = x.NivelTarifaId,
-                TarifaFlete = x.TarifaFlete,
-                Descuentos = x.Descuentos != null ? x.Descuentos.Select(y => new DescuentoBonificacionDto
-                {
-                    ContratoId = y.ContratoId,
-                    FechaDesde = y.FechaDesde.HasValue ? y.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
-                    FechaHasta = y.FechaHasta.HasValue ? y.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
-                    Importe = y.Importe,
-                    MonedaId = y.MonedaId,
-                    Moneda = y.MonedaId,
-                    Id = y.Id,
-                    Porcentaje = y.Porcentaje,
-                    TipoDBDesc = y.TipoDB.Descripcion,
-                    TipoDBId = y.TipoDBId,
-                    TipoPeriodoDBDesc = y.TipoPeriodoDB.Descripcion,
-                    TipoPeriodoDBId = y.TipoPeriodoDBId
-                }).ToList() : new List<DescuentoBonificacionDto>(),
+               
                 Calidades = x.Calidad != null ? x.Calidad.Select(y => new CalidadDto
                 {
                     Id = y.Id,
@@ -3547,31 +3315,7 @@ namespace Molinos.DataAgro.Business.Managers
                     PorcentajeDesde = y.PorcentajeDesde,
                     PorcentajeHasta = y.PorcentajeHasta,
                     Valor = y.Valor,
-                }).ToList() : new List<CalidadDto>(),
-                AperturaPrecios = x.AperturaPrecio != null ? x.AperturaPrecio.Select(y => new AperturaPrecioDto
-                {
-                    contratoId = y.NegocioId,
-                    Id = y.Id,
-                    ConceptoAperturaPrecio = y.ConceptoAperturaPrecio.Descripcion,
-                    ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
-                    Importe = y.Importe,
-                    MonedaId = y.MonedaId,
-                    Porcentaje = y.Porcentaje
-                }).ToList() : new List<AperturaPrecioDto>(),
-                PreciosPactados = x.PrecioPactado != null ? x.PrecioPactado.Select(y => new PrecioPactadosDto
-                {
-                    ContratoId = y.ContratoId,
-                    FechaDesde = y.FechaDesde.HasValue ? y.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
-                    FechaHasta = y.FechaHasta.HasValue ? y.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
-                    Id = y.Id,
-                    ImportePactado = y.ImportePactado,
-                    MonedaImportePactadoDesc = y.MonedaImportePactado.Descripcion,
-                    MonedaImportePactadoId = y.MonedaImportePactadoId,
-                    MonedaPactadoDesc = y.MonedaPactado.Descripcion,
-                    MonedaPactadoId = y.MonedaPactadoId,
-                    Porcentaje = y.Porcentaje,
-                    Precio = y.Precio
-                }).ToList() : new List<PrecioPactadosDto>()
+                }).ToList() : new List<CalidadDto>()                
             };
         }
 
@@ -3585,21 +3329,25 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado AnularContratoSAP(ContratoSAP contrato)
         {
             var oEntityErrors = new Resultado();
-            var oContratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.CodigoSap && x.EstadoId == (int)EnumEstadoContrato.Finalizado);
+            var codigo = contrato.CodigoSap.PadLeft(10, '0');
+            var oContratoSave = repositorio.ObtenerMayor<Contrato, int>(x => x.ContratoSAP == codigo, x => x.Id);
             if (oContratoSave != null)
             {
                 double cantidadContrato = double.TryParse(contrato.Cantidad, out cantidadContrato) ? cantidadContrato : 0;
                 try
-                {
-                    var cantidadKg = oContratoSave.Cantidad - cantidadContrato;
-                    if (cantidadKg > 0)
-                    {
-                        oContratoSave.Cantidad = cantidadKg;
-                    }
-                    else
+                {   
+                    var cantidadKg = (double)oContratoSave.Cantidad + cantidadContrato;
+                   
+                    if(cantidadKg <= 0)
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                     }
+                    else
+                    {
+                        oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                        oContratoSave.Cantidad = cantidadKg;
+                    }
+
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
                 }
