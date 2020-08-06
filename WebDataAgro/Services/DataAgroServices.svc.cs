@@ -537,8 +537,9 @@ namespace WebDataAgro.Services
             var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
             if (proveedor != null)
             {
-                var existeEnSISA = repositorio.Existe<SISA>(x => x.CUIT == cuit);
-                resultado.Operable = existeEnSISA;
+                var existeEnSISA = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
+                resultado.ProveedorOperable = existeEnSISA != null;
+                resultado.ProveedorCBU = existeEnSISA != null ? (existeEnSISA.CBU ?? "") : "";
                 resultado.ProveedorMails = new List<string>();
                 if (!string.IsNullOrEmpty(proveedor.Email1))
                     resultado.ProveedorMails.Add(proveedor.Email1);
@@ -569,7 +570,7 @@ namespace WebDataAgro.Services
                     resultado.Nombres = provCom.Comercial.Nombres;
                     try
                     {
-                    resultado.Mail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
+                        resultado.Mail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
 
                     }
                     catch (Exception)
