@@ -3328,17 +3328,29 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public Resultado AnularContratoSAP(ContratoSAP contrato)
         {
+            logger.Debug("Inicializar AnularContratoSAP");
+
             var oEntityErrors = new Resultado();
             var codigo = contrato.CodigoSap.PadLeft(10, '0');
             var oContratoSave = repositorio.ObtenerMayor<Contrato, int>(x => x.ContratoSAP == codigo, x => x.Id);
+
+            string jsonObjeto = JsonConvert.SerializeObject(contrato, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                PreserveReferencesHandling = PreserveReferencesHandling.None,
+                Formatting = Formatting.Indented,
+            });
+            logger.Debug("Campos a editar: " + jsonObjeto);
+
             if (oContratoSave != null)
             {
+                logger.Debug("Contrato: " + oContratoSave.ContratoSAP);
                 double cantidadContrato = double.TryParse(contrato.Cantidad, out cantidadContrato) ? cantidadContrato : 0;
                 try
                 {   
                     var cantidadKg = (double)oContratoSave.Cantidad + cantidadContrato;
-                   
-                    if(cantidadKg <= 0)
+                    var tipo = TipoAccionLogDataAgro.Eliminar;
+                    if (cantidadKg <= 0)
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                     }
@@ -3346,13 +3358,15 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                         oContratoSave.Cantidad = cantidadKg;
+                        tipo = TipoAccionLogDataAgro.Crear;
                     }
 
-                    repositorio.GuardarCambios();
-                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
+                   repositorio.GuardarCambios();
+                   logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipo, oContratoSave.GetType());
                 }
                 catch (Exception e)
                 {
+                    logger.Error("Error Anular ContratoSap");
                     logger.Error(e);
                     oEntityErrors.Error("", e.Message);
 
