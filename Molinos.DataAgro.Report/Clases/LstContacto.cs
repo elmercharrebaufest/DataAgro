@@ -564,9 +564,6 @@ namespace Molinos.DataAgro.Report
             workSheet8.Cells[1, 11].Value = "Has. Totales";
             workSheet8.Column(11).AutoFit();
 
-            if (PermisosHelper.Is(PermisosDataAgro.ExportAllCompras))
-            {
-
                 var compraCampanaActual = oDatos.CompraCampanaActual;
 
                 var workSheet9 = excel.Workbook.Worksheets.Add("Detalle Soja");
@@ -688,17 +685,17 @@ namespace Molinos.DataAgro.Report
                 }
 
                 j = 1;
-                while (workSheet12.Cells[1, j].Value != null)
-                {
-                    workSheet12.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            while (workSheet12.Cells[1, j].Value != null)
+            {
+                workSheet12.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 
-                    workSheet12.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                workSheet12.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
 
-                    workSheet12.Cells[1, j].Style.Font.Bold = true;
+                workSheet12.Cells[1, j].Style.Font.Bold = true;
 
-                    j++;
-                }
+                j++;
             }
+           
 
             var identif = Varios.GetIdentif();
 

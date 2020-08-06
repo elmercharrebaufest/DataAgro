@@ -130,6 +130,14 @@
     </div>
     <div class="row">
         <div>
+            <div class="col-sm-2">
+                <label>Fasón/Préstamo devolución</label>
+            </div>
+            <div class="col-sm-4">
+                <span style="height:34px"></span>
+                @Html.CheckBoxFor(x => x.FasonId, new { @id = "fason" })
+                @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
+            </div>
             <div class="col-sm-2 noRightPadding">
                 <label>Flete procedencia/Acarreo </label>
             </div>
@@ -137,14 +145,7 @@
                 @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
             </div>
         </div>
-        <div class="col-sm-2">
-            <label>Fasón/Préstamo devolución</label>
-        </div>
-        <div class="col-sm-1">
-            <span style="height:34px"></span>
-            @Html.CheckBoxFor(x => x.FasonId, new { @id = "fason" })
-            @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
-        </div>
+        
         <div class="col-sm-2">
             <label>Sustentable/Calidad Especial</label>
         </div>

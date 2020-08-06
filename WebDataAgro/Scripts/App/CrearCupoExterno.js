@@ -12,6 +12,7 @@ $(document).ready(function () {
     $.unblockUI();
     checkFason();
     checkSoja();
+    checkFleteProcedencia();
 });
 $(document).submit(function () {
     BlockUi("Grabando...");
@@ -105,6 +106,11 @@ function InicializarCargaCupos() {
     $("#fason").click(function () {
         checkFason();
     });
+
+    $("#flete").click(function () {
+        checkFleteProcedencia();
+    });
+
     $("#material").change(function () {
         checkSoja();
     });
@@ -223,6 +229,8 @@ function InicializarCargaCupos() {
 function checkFason() {
     if ($("#fason").is(':checked')) {
         $("#cuit").show();
+        $("#flete").prop('checked', false);
+        
     }
     else {
         $("#cuit").hide("hidden");
@@ -237,7 +245,14 @@ function checkSoja() {
         $("#calidadDiv").show();
     }
 }
+function checkFleteProcedencia(){
+    if ($("#flete").is(':checked')) {
+        $("#cuit").hide();
+        $("#cuit").val("");
+        $("#fason").prop('checked', false);
 
+    }
+}
 function cuposCreados(error, lista) {
     $(document).ready(function () {
         var listaError = JSON.parse(error);

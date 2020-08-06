@@ -157,14 +157,12 @@
                 <a class="exportar-contactos" id="Imprimir"><img src="~/Content/Images/imprimir.png" /> <span>Imprimir</span></a>
             </div>
 
-            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCompras))
-            {
                 <ul class="nav nav-tabs" id="myTab">
                     <li class="active"><a data-target="#method" data-toggle="tab">Gráfico</a></li>
                     <li><a data-target="#payment" data-toggle="tab">Detalle</a></li>
 
                 </ul>
-            }
+           
 
         <div class="tab-content">
             <div class="tab-pane active" id="method">
@@ -185,13 +183,11 @@
                         </div>
                     </div>
                 </div>
+            </div>          
+            <div class="tab-pane ex1" id="payment">
+                @Html.Partial("TablaCompra")
             </div>
-            @if (PermisosHelper.Is(PermisosDataAgro.VisualizarCompras))
-            {
-                <div class="tab-pane ex1" id="payment">
-                    @Html.Partial("TablaCompra")
-                </div>
-            }
+          
 
 
             <div class="col-lg-12">
