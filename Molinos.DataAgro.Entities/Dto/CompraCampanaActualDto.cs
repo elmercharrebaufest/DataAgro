@@ -10,7 +10,8 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public DateTime Fecha { get; set; }
         public string Contrato { get; set; }       
-        public string Comercial { get; set; }        
+        public string Comercial { get; set; }
+        public string Cuit { get; set; }
         public string RazonSocial { get; set; }
         public string CorredorCuit { get; set; }
         public string Material { get; set; }
@@ -23,7 +24,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public double ToneladaContrato { get; set; }
         public double ToneladaFijada { get; set; }
         public string ClaseDoc { get; set; }
-        public string Clasificacion { get; set; }   
-       
+        public string Clasificacion { get; set; }
+        
     }
 }

@@ -455,7 +455,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Fecha = x.Fecha,
                 Contrato = x.Contrato,
-                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,               
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,     
+                Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
                 RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                 CorredorCuit = x.CorredorCuit,                
                 Material = x.CampanaMaterialDetalle.Material.Descripcion,
@@ -470,8 +471,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ToneladaContrato = x.ToneladaContrato,
                 ToneladaFijada = x.ToneladaFijada,
                 
-            }, x => equipo.Contains(x.ComercialId.Value)
-            && x.CampanaMaterialDetalle.Material.CampañaId == x.CampanaMaterialDetalle.CampanaId);                        
+            }, x => equipo.Contains(x.ComercialId.Value));                        
         }
     }
     public class FakeHome

@@ -257,6 +257,8 @@ namespace Molinos.DataAgro.Business.Managers
                                             campaniaMaterialMes.ToneladaFijada = (double)ii.TN_FIJADAS;
                                             campaniaMaterialMes.ClaseDoc = ii.CLASE_DOC;
                                             campaniaMaterialMes.Clasificacion = ii.CLASIFICACION;
+                                            campaniaMaterialMes.Contrato = ii.CONTRATO;
+                                            campaniaMaterialMes.CorredorCuit = ii.CORREDOR;
                                         }
                                         else
                                         {
@@ -272,6 +274,8 @@ namespace Molinos.DataAgro.Business.Managers
                                                 ToneladaFijada = (double)ii.TN_FIJADAS,
                                                 ClaseDoc = ii.CLASE_DOC,
                                                 Clasificacion = ii.CLASIFICACION,
+                                                Contrato = ii.CONTRATO,
+                                                CorredorCuit = ii.CORREDOR,
                                                 ComercialId = ComercialId,
                                                 CampanaMaterialDetalleId = campaniaMaterial.Id
 
