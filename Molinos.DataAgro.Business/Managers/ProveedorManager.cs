@@ -3246,7 +3246,13 @@ namespace Molinos.DataAgro.Business.Managers
                     }
 
                 };
-                compraDto.Add(detalle);
+                if (detalle.ConCorredor.ARecibirAFijar + detalle.ConCorredor.ComprasConPrecio + detalle.ConCorredor.FasonFas + detalle.ConCorredor.RecibidoSinPrecio
+                       + detalle.DirectoAcopiador.ARecibirAFijar + detalle.DirectoAcopiador.ComprasConPrecio + detalle.DirectoAcopiador.FasonFas + detalle.DirectoAcopiador.RecibidoSinPrecio
+                       + detalle.DirectoProductor.ARecibirAFijar + detalle.DirectoProductor.ComprasConPrecio + detalle.DirectoProductor.FasonFas + detalle.DirectoProductor.RecibidoSinPrecio
+                       > 0)
+                {
+                    compraDto.Add(detalle);
+                }
             }
             return compraDto.OrderBy(x=> x.Material).ThenByDescending(x=> x.Campana).ToList();
         }
