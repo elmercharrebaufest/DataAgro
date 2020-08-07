@@ -93,7 +93,7 @@ function InicializarDatos() {
     viewModel.set("Maiz", maiz);
     viewModel.set("Girasol", girasol);
 
-    ArmarTablaCompraDetalle(result.Detalle);
+    ArmarTablaCompraDetalle();
     pagina = 1;
     $(".lista-contactos-general").empty();
 
@@ -1065,17 +1065,14 @@ function EliminarObjetivo(id) {
     }
 }
 
-function ArmarTablaCompraDetalle(result) {
-  
-    function FiltrarCampos() {
+function ArmarTablaCompraDetalle() {
 
-        var filtrado = result.filter(function (x) { return (x.Material == $('#MaterialId').val() || $('#MaterialId').val() == "Todos") && (x.Campana == $('#CampaniaId').val() || $('#CampaniaId').val() == "Todas") })
+   var filtrado = datosCompra.filter(function (x) { return (x.Material == $('#MaterialId').val() || $('#MaterialId').val() == "Todos") && (x.Campana == $('#CampaniaId').val() || $('#CampaniaId').val() == "Todas") })
       
-        viewModel.set("Soja", datosCompra);
-        viewModel.set("Trigo", datosCompra);
-        viewModel.set("Maiz", datosCompra);
-        viewModel.set("Girasol", datosCompra);
-    }
+        viewModel.set("Soja", filtrado);
+        viewModel.set("Trigo", filtrado);
+        viewModel.set("Maiz", filtrado);
+        viewModel.set("Girasol", filtrado);   
 }
 
 

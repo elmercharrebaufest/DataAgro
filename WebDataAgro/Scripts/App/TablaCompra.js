@@ -22,7 +22,7 @@ function ArmarTablaCompra(result, materiales, campanias) {
         datosCompra[i].DirectoProductor.FasonFas = kendo.toString(datosCompra[i].DirectoProductor.FasonFas, "n0")
     }
     kendo.bind($("#tabla-compra"), viewModel);
-    viewModel.set("Compra", datosCompra);
+    viewModel.set("Compra", datosCompra.sort());
 
     var material = '<option> Todos </option>';
     var campania = '<option> Todas </option>';
