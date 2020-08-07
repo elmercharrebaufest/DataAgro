@@ -92,8 +92,7 @@ function InicializarDatos() {
     viewModel.set("Trigo", trigo);
     viewModel.set("Maiz", maiz);
     viewModel.set("Girasol", girasol);
-
-    ArmarTablaCompraDetalle();
+    BorrarFilasVacias();
     pagina = 1;
     $(".lista-contactos-general").empty();
 
@@ -1065,14 +1064,41 @@ function EliminarObjetivo(id) {
     }
 }
 
-function ArmarTablaCompraDetalle() {
 
-   var filtrado = datosCompra.filter(function (x) { return (x.Material == $('#MaterialId').val() || $('#MaterialId').val() == "Todos") && (x.Campana == $('#CampaniaId').val() || $('#CampaniaId').val() == "Todas") })
-      
-        viewModel.set("Soja", filtrado);
-        viewModel.set("Trigo", filtrado);
-        viewModel.set("Maiz", filtrado);
-        viewModel.set("Girasol", filtrado);   
+function BorrarFilasVacias() {
+    var $filasEncabezado = $("#tablaTrigo tr:not('.encabezado')");
+    var nColumnas = $("#tablaTrigo tr:last td").length;
+    Remover($filasEncabezado, nColumnas);
+    $filasEncabezado = $("#tablaSoja tr:not('.encabezado')");
+    nColumnas = $("#tablaSoja tr:last td").length;
+    Remover($filasEncabezado, nColumnas);
+    $filasEncabezado = $("#tablaGi tr:not('.encabezado')");
+    nColumnas = $("#tablaGi tr:last td").length;
+    Remover($filasEncabezado, nColumnas);
+    $filasEncabezado = $("#tablaMaiz tr:not('.encabezado')");
+    nColumnas = $("#tablaMaiz tr:last td").length;
+    Remover($filasEncabezado, nColumnas);
+
+}
+
+function Remover($filasEncabezado, nColumnas) {
+    var totales = [];
+    var borrar = 0;
+    for (var i = 1; i < nColumnas; i++) {
+        totales.push(0);
+    }
+
+    $filasEncabezado.each(function () {
+        var valorFila = 0
+        $(this).find('td').each(function (i) {
+            if (i != 0) {
+                valorFila += parseInt($(this).context.innerText);
+            }
+        });
+        if (valorFila == 0) {
+            $(this).remove();
+        }
+    });
 }
 
 

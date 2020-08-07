@@ -59,11 +59,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Tipos_Negocios")]
         VerTodosTiposNegocios = 211,
         [Display(ResourceType = typeof(Text), Name = "Lista_Comercial")]
-        ListaComercial = 212,
-        [Display(ResourceType = typeof(Text), Name = "VisualizarCompras")]
-        VisualizarCompras = 213,
-        [Display(ResourceType = typeof(Text), Name = "ExportAllCompras")]
-        ExportAllCompras = 214,
+        ListaComercial = 212,       
 
         //CompraNet
         [Display(ResourceType = typeof(Text), Name = "Visualizar_CompraNet")]

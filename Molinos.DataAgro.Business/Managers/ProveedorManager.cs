@@ -3248,7 +3248,7 @@ namespace Molinos.DataAgro.Business.Managers
                 };
                 compraDto.Add(detalle);
             }
-            return compraDto;
+            return compraDto.OrderBy(x=> x.Material).ThenByDescending(x=> x.Campana).ToList();
         }
 
 

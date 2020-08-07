@@ -22,8 +22,8 @@ function ArmarTablaCompra(result, materiales, campanias) {
         datosCompra[i].DirectoProductor.FasonFas = kendo.toString(datosCompra[i].DirectoProductor.FasonFas, "n0")
     }
     kendo.bind($("#tabla-compra"), viewModel);
-    viewModel.set("Compra", datosCompra.sort());
-
+    viewModel.set("Compra", datosCompra);
+    //BorrarFilasVacias();
     var material = '<option> Todos </option>';
     var campania = '<option> Todas </option>';
 
@@ -52,4 +52,31 @@ function FiltrarCampos() {
     
     var filtrado = datosCompra.filter(function (x) { return (x.Material == $('#MaterialId').val() || $('#MaterialId').val() == "Todos") && (x.Campana == $('#CampaniaId').val() || $('#CampaniaId').val() == "Todas" ) })
     viewModel.set("Compra", filtrado);
+    //BorrarFilasVacias();
+}
+
+function BorrarFilasVacias() {
+    var $filasEncabezado = $("#tabla tr:not('.encabezado')");
+    var nColumnas = $("#tabla tr:last td").length;
+    //Remover($filasEncabezado, nColumnas);   
+
+}
+
+function Remover($filasEncabezado, nColumnas) {
+    var totales = [];
+    for (var i = 1; i < nColumnas; i++) {
+        totales.push(0);
+    }
+
+    $filasEncabezado.each(function () {
+        var valorFila = 0
+        $(this).find('td').each(function (i) {
+            if (i != 0) {
+                valorFila += parseInt($(this).context.innerText);
+            }
+        });
+        if (valorFila == 0) {
+            $(this).remove();
+        }
+    });
 }
