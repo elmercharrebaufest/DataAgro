@@ -45,6 +45,11 @@ function ArmarTablaCompra(result, materiales, campanias) {
     $('#CampaniaId').append(
         campania
     );   
+    $('.Maiz td').css('background-color', 'cornsilk');
+    $('.Trigo td').css('background-color', 'cornsilk');
+    $('.Soja td').css('background-color', 'lightcyan');
+    $('.Girasol td').css('background-color', 'lightcyan');
+    
    
 }
 

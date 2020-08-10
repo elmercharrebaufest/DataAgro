@@ -161,13 +161,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var cuitCorredor = oParam.CorredorId.HasValue ? mobjProveedorManager.TraerCuit(oParam.CorredorId.Value) : "";
             var cuitProveedor = mobjProveedorManager.TraerCuit(oParam.ProveedorId ?? 0);
-            var listaContrato = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId, "", oParam.Id);
             if (string.IsNullOrEmpty(oParam.ContratoSAP))
             {
                 oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
                 return oErrorMessages;
             }
-            var fijacion = listaContrato.FirstOrDefault(x => x.ContratoId == oParam.ContratoSAP.TrimStart('0'));
+            var fijacion = oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId, oParam.ContratoSAP, oParam.Id).FirstOrDefault();
             if (fijacion == null)
             {
                 oErrorMessages.Error("ContratoId", "El Contrato no existe");

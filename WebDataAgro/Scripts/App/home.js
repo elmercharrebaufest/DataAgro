@@ -68,8 +68,8 @@ function InicializarDatos() {
     kendo.bind($("#tabla-maiz"), viewModel);
     kendo.bind($("#tabla-gi"), viewModel);
     var soja = datosCompra.filter(function (x) { return (x.Material == "Soja") });
-    var maiz = datosCompra.filter(function (x) { return (x.Material == "Trigo") })
-    var trigo = datosCompra.filter(function (x) { return (x.Material == "Maiz") })
+    var maiz = datosCompra.filter(function (x) { return (x.Material == "Maiz") })
+    var trigo = datosCompra.filter(function (x) { return (x.Material == "Trigo") })
     var girasol = datosCompra.filter(function (x) { return (x.Material == "Girasol") });
 
     if (soja.length > 0) {
@@ -78,15 +78,15 @@ function InicializarDatos() {
     }  
     if (maiz.length > 0) {
         $("#mostrarMaiz").show();
-        $("#maizCampania").text(soja[0].Campana);
+        $("#maizCampania").text(maiz[0].Campana);
     }  
     if (trigo.length > 0) {
         $("#mostrarTrigo").show();
-        $("#trigoCampania").text(soja[0].Campana);
+        $("#trigoCampania").text(trigo[0].Campana);
     }  
     if (girasol.length > 0) {
         $("#mostrarGir").show();
-        $("#girCampania").text(soja[0].Campana);
+        $("#girCampania").text(girasol[0].Campana);
     }  
     viewModel.set("Soja", soja);
     viewModel.set("Trigo", trigo);

@@ -105,13 +105,17 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "";
             htmlBody += "En el presente mail, se detalla los Negocios creados con fecha anterior a la actual: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            htmlBody += "<tr>" + th + "Material" + "</td>" +
+            htmlBody += "<tr>" +
+                    th + "Contrato" + "</td>" +
+                    th + "Material" + "</td>" +
                     th + "Fecha de Carga" + "</td>" +
                     th + "Fecha de Operacion" + "</td>" +
                     th + "Comercial" + "</td>" +
+                    th + "Corredor" + "</td>" +
                     th + "Proveedor" + "</td>" +
                     th + "Tipo" + "</td>" +
                     th + "Estado:" + "</td>" +
+                    th + "Motivo:" + "</td>" +
                     "</tr>";
 
             foreach (var c in contratos)
@@ -128,29 +132,35 @@ namespace Molinos.DataAgro.Business.Managers
                     style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
                     style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
                 }
-                logger.Debug($"cupo numero: {c.Id}");
+                logger.Debug($"contrato numero: {c.Id}");
                 linea += 1;
                 if (linea % 2 == 0)
                 {
                     htmlBody += "<tr>" +
-                        "<td " + style1 + c.Material.Descripcion + "</td>" +
+                        "<td " + style1 + c.ContratoSAP + "</td>" +                       
+                        "<td " + style1 + c.Material.Descripcion + "</td>" +                        
                          "<td " + style1 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
+                          (c.Corredor != null ? "<td " + style1 + c.Corredor.RazonSocial + "</td>" : "<td> </td>") +
                          "<td " + style1 + c.Proveedor.RazonSocial + "</td>" +
                          "<td " + style1 + c.TipoNegocio.Descripcion + "</td>" +
-                         "<td " + style1 + c.Estado.Descripcion + "</td></ tr>";
+                         "<td " + style1 + c.Estado.Descripcion + "</td>" +
+                         "<td " + style1 + c.MotivoOperacionAnterior + "</td> </tr> ";
                 }
                 else
                 {
                     htmlBody += "<tr>" +
+                         "<td " + style2 + c.ContratoSAP + "</td>" +
                          "<td " + style2 + c.Material.Descripcion + "</td>" +
                          "<td " + style2 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
+                         ( c.Corredor != null ? "<td " + style2 + c.Corredor.RazonSocial + "</td>" : "<td> </td>" )+
                          "<td " + style2 + c.Proveedor.RazonSocial + "</td>" +
                          "<td " + style2 + c.TipoNegocio.Descripcion + "</td>" +
-                         "<td " + style2 + c.Estado.Descripcion + "</td></ tr>";
+                         "<td " + style2 + c.Estado.Descripcion + "</td>" +
+                         "<td " + style2 + c.MotivoOperacionAnterior + "</td> </tr> ";
                 }
             }
 
