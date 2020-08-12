@@ -15,7 +15,7 @@ var checkear = function (el, nam) {
 };
 
 $(document).ready(function () {
-    kendo.culture("es-AR");
+   
     CrearObjetivo();
     InicializarDatos();
     armarFunciones();
@@ -41,7 +41,7 @@ function MostrarTooltip(e) {
 }
 function InicializarDatos() {
     var result = MSExecuteOnServer('/Home/Inicializar');
-
+    kendo.culture("es-AR");
     datosCompra = result.Detalle;
     viewModel = kendo.observable({
         Soja: [],
