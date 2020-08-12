@@ -245,7 +245,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     foreach (var ii in jj)
                                     {
                                         var fechaDetalle = DateTime.ParseExact(ii.FECHA, "yyyy-MM-dd", provider);
-                                        var campaniaMaterialMes = histActual.Where(x => x.CampanaMaterialDetalleId == campaniaMaterial.Id && /*x.Fecha.Month == fechaDetalle.Month && x.Fecha.Year == fechaDetalle.Year &&*/ x.ComercialId == ComercialId).FirstOrDefault();
+                                        var campaniaMaterialMes = histActual.Where(x => x.CampanaMaterialDetalleId == campaniaMaterial.Id && x.Contrato == ii.CONTRATO && x.ComercialId == ComercialId).FirstOrDefault();
                                         if (campaniaMaterialMes != null)
                                         {
                                             campaniaMaterialMes.PendienteAFijar = (double)ii.PEND_FIJAR;
@@ -286,13 +286,19 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 else
                                 {
-                                    campaniasMaterial.Add(
-                                        new CampanaMaterialDetalle()
-                                        {
-                                            CampanaId = campaniaId,
-                                            ProveedorId = proveedorId,
-                                            MaterialId = materialId
-                                        });
+                                    var campaniaMaterialNueva = campaniasMaterial.Where(x => x.CampanaId == campaniaId && x.ProveedorId == proveedorId && x.MaterialId == materialId).FirstOrDefault();
+
+                                    if (campaniaMaterialNueva == null)
+                                    {
+                                        campaniasMaterial.Add(
+                                            new CampanaMaterialDetalle()
+                                            {
+                                                CampanaId = campaniaId,
+                                                ProveedorId = proveedorId,
+                                                MaterialId = materialId
+                                            });
+                                    }
+
                                 }
                             }
 
