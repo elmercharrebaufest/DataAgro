@@ -15,6 +15,7 @@ var checkear = function (el, nam) {
 };
 
 $(document).ready(function () {
+    kendo.culture("es-AR");
     CrearObjetivo();
     InicializarDatos();
     armarFunciones();
@@ -25,7 +26,7 @@ $(document).ready(function () {
     $("#GuardarCambios").hide();
     armarCarouselHome();
     $('[data-toggle="tooltip"]').tooltip();
-    kendo.culture("es-AR");
+    
     
 });
 function MostrarTooltip(e) {
