@@ -1,7 +1,7 @@
 ﻿
 var datosCompra;
 
-function ArmarTablaCompra(result, materiales, campanias) {
+function ArmarTablaCompra(result, materiales, campanias) {  
     datosCompra = result;
     viewModel = kendo.observable({
         Compra: []
@@ -23,19 +23,19 @@ function ArmarTablaCompra(result, materiales, campanias) {
     }
     kendo.bind($("#tabla-compra"), viewModel);
     viewModel.set("Compra", datosCompra);
-    //BorrarFilasVacias();
+    BorrarFilasVacias();
     var material = '<option> Todos </option>';
     var campania = '<option> Todas </option>';
 
     if (materiales.length > 0) {
         for (var i = 0; i < materiales.length; i++) {
-            material += '<option> '+materiales[i] +' </option>'
+            material += '<option> ' + materiales[i] + ' </option>'
         }
     }
     $('#MaterialId').append(
         material
-    ); 
-
+    );
+  
     if (campanias.length > 0) {
         for (var j = 0; j < campanias.length; j++) {
             campania += '<option>' + campanias[j] + ' </option>'
@@ -44,44 +44,63 @@ function ArmarTablaCompra(result, materiales, campanias) {
 
     $('#CampaniaId').append(
         campania
-    );   
+    );
     $('.Maiz td').css('background-color', 'cornsilk');
     $('.Trigo td').css('background-color', 'cornsilk');
     $('.Soja td').css('background-color', 'lightcyan');
     $('.Girasol td').css('background-color', 'lightcyan');
-    
-   
+
+
 }
 
 function FiltrarCampos() {
-    
-    var filtrado = datosCompra.filter(function (x) { return (x.Material == $('#MaterialId').val() || $('#MaterialId').val() == "Todos") && (x.Campana == $('#CampaniaId').val() || $('#CampaniaId').val() == "Todas" ) })
+
+    var filtrado = datosCompra.filter(function (x) { return (x.Material == $('#MaterialId').val() || $('#MaterialId').val() == "Todos") && (x.Campana == $('#CampaniaId').val() || $('#CampaniaId').val() == "Todas") })
     viewModel.set("Compra", filtrado);
-    //BorrarFilasVacias();
+    BorrarFilasVacias();
+    $('.Maiz td').css('background-color', 'cornsilk');
+    $('.Trigo td').css('background-color', 'cornsilk');
+    $('.Soja td').css('background-color', 'lightcyan');
+    $('.Girasol td').css('background-color', 'lightcyan');
 }
 
 function BorrarFilasVacias() {
     var $filasEncabezado = $("#tabla tr:not('.encabezado')");
-    var nColumnas = $("#tabla tr:last td").length;
-    //Remover($filasEncabezado, nColumnas);   
+    Remover($filasEncabezado);
 
 }
 
-function Remover($filasEncabezado, nColumnas) {
-    var totales = [];
-    for (var i = 1; i < nColumnas; i++) {
-        totales.push(0);
-    }
-
+function Remover($filasEncabezado) {
+    var listaMateriales = new Array();
     $filasEncabezado.each(function () {
         var valorFila = 0
         $(this).find('td').each(function (i) {
-            if (i != 0) {
+            if (i != 0 && i != 1 && i != 2) {
                 valorFila += parseInt($(this).context.innerText);
             }
         });
+        var material = $(this)[0].getAttribute('data-material');
+        listaMateriales.push(material);
         if (valorFila == 0) {
             $(this).remove();
         }
     });
+
+    listaMateriales = listaMateriales.filter((v, i, a) => a.indexOf(v) === i);
+    for (var i = 0; i < listaMateriales.length; i++) {
+        var material = listaMateriales[i];
+        var count = $(".Material." + material).length;
+        for (var j = 0; j < count; j++) {
+            if (j == 0) {
+                $(".Material." + material)[j].setAttribute('rowspan', count);
+                $(".Campana." + material)[j].setAttribute('rowspan', count);
+            } else {
+                $(".Material." + material)[1].remove();
+                $(".Campana." + material)[1].remove();
+            }
+
+        }
+    }
+
+
 }

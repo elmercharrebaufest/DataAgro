@@ -245,7 +245,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     foreach (var ii in jj)
                                     {
                                         var fechaDetalle = DateTime.ParseExact(ii.FECHA, "yyyy-MM-dd", provider);
-                                        var campaniaMaterialMes = histActual.Where(x => x.CampanaMaterialDetalleId == campaniaMaterial.Id && x.Fecha.Month == fechaDetalle.Month && x.Fecha.Year == fechaDetalle.Year && x.ComercialId == ComercialId).FirstOrDefault();
+                                        var campaniaMaterialMes = histActual.Where(x => x.CampanaMaterialDetalleId == campaniaMaterial.Id && /*x.Fecha.Month == fechaDetalle.Month && x.Fecha.Year == fechaDetalle.Year &&*/ x.ComercialId == ComercialId).FirstOrDefault();
                                         if (campaniaMaterialMes != null)
                                         {
                                             campaniaMaterialMes.PendienteAFijar = (double)ii.PEND_FIJAR;

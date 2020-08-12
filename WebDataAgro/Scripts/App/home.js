@@ -25,6 +25,7 @@ $(document).ready(function () {
     $("#GuardarCambios").hide();
     armarCarouselHome();
     $('[data-toggle="tooltip"]').tooltip();
+    kendo.culture("es-AR");
     
 });
 function MostrarTooltip(e) {
@@ -1066,28 +1067,18 @@ function EliminarObjetivo(id) {
 
 
 function BorrarFilasVacias() {
-    var $filasEncabezado = $("#tablaTrigo tr:not('.encabezado')");
-    var nColumnas = $("#tablaTrigo tr:last td").length;
-    Remover($filasEncabezado, nColumnas);
-    $filasEncabezado = $("#tablaSoja tr:not('.encabezado')");
-    nColumnas = $("#tablaSoja tr:last td").length;
-    Remover($filasEncabezado, nColumnas);
-    $filasEncabezado = $("#tablaGi tr:not('.encabezado')");
-    nColumnas = $("#tablaGi tr:last td").length;
-    Remover($filasEncabezado, nColumnas);
-    $filasEncabezado = $("#tablaMaiz tr:not('.encabezado')");
-    nColumnas = $("#tablaMaiz tr:last td").length;
-    Remover($filasEncabezado, nColumnas);
-
+    var $filasEncabezado = $("#tablaTrigo tr:not('.encabezado')");   
+    Remover($filasEncabezado);
+    $filasEncabezado = $("#tablaSoja tr:not('.encabezado')"); 
+    Remover($filasEncabezado);
+    $filasEncabezado = $("#tablaGi tr:not('.encabezado')");    
+    Remover($filasEncabezado);
+    $filasEncabezado = $("#tablaMaiz tr:not('.encabezado')");    
+    Remover($filasEncabezado);
 }
 
-function Remover($filasEncabezado, nColumnas) {
-    var totales = [];
-    var borrar = 0;
-    for (var i = 1; i < nColumnas; i++) {
-        totales.push(0);
-    }
-
+function Remover($filasEncabezado) {
+  
     $filasEncabezado.each(function () {
         var valorFila = 0
         $(this).find('td').each(function (i) {

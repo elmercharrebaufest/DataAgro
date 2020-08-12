@@ -3267,7 +3267,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
                 Expression<Func<Contrato, BasicoContrato>> proyeccion = x => new BasicoContrato
                 {
-                    
+                    MonedaId = x.MonedaId,
                     Cantidad = x.Cantidad,
                     Precio = x.Precio,                   
                     StandardCalidadId = x.StandardDeCalidadId,
@@ -3303,7 +3303,8 @@ namespace Molinos.DataAgro.Business.Managers
             return new BasicoContrato
             {               
                 Cantidad = x.Cantidad,               
-                Precio = x.Precio,                
+                Precio = x.Precio,    
+                MonedaId = x.MonedaId,
                 StandardCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                

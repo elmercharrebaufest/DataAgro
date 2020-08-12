@@ -115,7 +115,7 @@ namespace Molinos.DataAgro.Business.Managers
                 res.ProveedorCorredor = ListarProveedorCorredor(ProveedorId);
                 res.CompraDetalle = TraerTodoCompra(ProveedorId, equipo);
                 res.Material = res.CompraDetalle.Select(x => x.Material).Distinct().ToList();
-                res.Campanias = res.CompraDetalle.Select(x => x.Campana).Distinct().ToList();
+                res.Campanias = res.CompraDetalle.OrderByDescending(x => x.Campana).Select(x => x.Campana).Distinct().ToList();
             }
             catch (Exception ex)
             {
