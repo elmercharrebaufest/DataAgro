@@ -142,7 +142,7 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style1 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
-                          (c.Corredor != null ? "<td " + style1 + c.Corredor.RazonSocial + "</td>" : "<td> </td>") +
+                          (c.Corredor != null ? "<td " + style1 + c.Corredor.RazonSocial + "</td>" : "<td " + style1 + "</td>") +
                          "<td " + style1 + c.Proveedor.RazonSocial + "</td>" +
                          "<td " + style1 + c.TipoNegocio.Descripcion + "</td>" +
                          "<td " + style1 + c.Estado.Descripcion + "</td>" +
@@ -156,7 +156,7 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style2 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
-                         ( c.Corredor != null ? "<td " + style2 + c.Corredor.RazonSocial + "</td>" : "<td> </td>" )+
+                         ( c.Corredor != null ? "<td " + style2 + c.Corredor.RazonSocial + "</td>" : "<td " + style2 + "</td>") +
                          "<td " + style2 + c.Proveedor.RazonSocial + "</td>" +
                          "<td " + style2 + c.TipoNegocio.Descripcion + "</td>" +
                          "<td " + style2 + c.Estado.Descripcion + "</td>" +
