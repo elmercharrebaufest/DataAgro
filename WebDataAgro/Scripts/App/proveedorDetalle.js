@@ -14,6 +14,16 @@ $(document).ready(function () {
     modificarHeader();
     armarContacto();
     armarEstilosyFuncionesDetalle();
+
+    $("#Grafico").click(function () {
+        $("#grano").show();
+        $("#campaña").show();
+    });
+    $("#Detalle").click(function () {
+        $("#grano").hide();
+        $("#campaña").hide();
+    });
+
     //armarEstilosyFuncionesEditable();
     InicializarDatos();
     $("#Imprimir").click(function () {

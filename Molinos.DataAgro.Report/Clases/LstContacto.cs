@@ -564,19 +564,19 @@ namespace Molinos.DataAgro.Report
             workSheet8.Cells[1, 11].Value = "Has. Totales";
             workSheet8.Column(11).AutoFit();
 
-                var compraCampanaActual = oDatos.CompraCampanaActual;
+           var compraCampanaActual = oDatos.CompraCampanaActual;
 
-                var workSheet9 = excel.Workbook.Worksheets.Add("Detalle Soja");
-                workSheet9.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Soja").ToList(), true);
+           var workSheet9 = excel.Workbook.Worksheets.Add("Detalle Soja");
+           workSheet9.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Soja").ToList(), true);
 
-                var workSheet10 = excel.Workbook.Worksheets.Add("Detalle Maíz");
-                workSheet10.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Maiz").ToList(), true);
+           var workSheet10 = excel.Workbook.Worksheets.Add("Detalle Maíz");
+           workSheet10.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Maiz").ToList(), true);
 
-                var workSheet11 = excel.Workbook.Worksheets.Add("Detalle Girasol");
-                workSheet11.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Girasol").ToList(), true);
+           var workSheet11 = excel.Workbook.Worksheets.Add("Detalle Girasol");
+           workSheet11.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Girasol").ToList(), true);
 
-                var workSheet12 = excel.Workbook.Worksheets.Add("Detalle Trigo");
-                workSheet12.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Trigo").ToList(), true);
+           var workSheet12 = excel.Workbook.Worksheets.Add("Detalle Trigo");
+           workSheet12.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Trigo").ToList(), true);
 
                 //Compra Soja
 
@@ -695,7 +695,325 @@ namespace Molinos.DataAgro.Report
 
                 j++;
             }
-           
+
+            var situacion = oDatos.Situacion;
+            var situacionSoja = situacion.Where(x => x.Material == "Soja").ToList();
+
+
+            if (situacionSoja.Select(x => x.ConCorredor).Count() > 0)
+            {
+                //Situacion Soja
+                var campanaSoja = situacionSoja.Count() > 0 ? situacionSoja.Select(x => x.Campana).FirstOrDefault() : "";
+                var workSheet13 = excel.Workbook.Worksheets.Add("Situación Soja " + campanaSoja);
+                workSheet13.Cells[1, 1].Value = "Corredor";
+                workSheet13.Cells[2, 1].LoadFromCollection(situacionSoja.Select(x => x.ConCorredor), true);
+                workSheet13.Cells[2, 1].Value = "Compras con Precio";
+                workSheet13.Cells[2, 2].Value = "Recibido sin Precio";
+                workSheet13.Cells[2, 3].Value = "A recibir a Fijar";
+                workSheet13.Cells[2, 4].Value = "Fason Fas";
+
+                workSheet13.Cells[5, 1].Value = "Directo Acopiador";
+                workSheet13.Cells[6, 1].LoadFromCollection(situacionSoja.Select(x => x.DirectoAcopiador), true);
+                workSheet13.Cells[6, 1].Value = "Compras con Precio";
+                workSheet13.Cells[6, 2].Value = "Recibido sin Precio";
+                workSheet13.Cells[6, 3].Value = "A recibir a Fijar";
+                workSheet13.Cells[6, 4].Value = "Fason Fas";
+
+                workSheet13.Cells[9, 1].Value = "Directo Productor";
+                workSheet13.Cells[10, 1].LoadFromCollection(situacionSoja.Select(x => x.DirectoProductor), true);
+                workSheet13.Cells[10, 1].Value = "Compras con Precio";
+                workSheet13.Cells[10, 2].Value = "Recibido sin Precio";
+                workSheet13.Cells[10, 3].Value = "A recibir a Fijar";
+                workSheet13.Cells[10, 4].Value = "Fason Fas";
+
+                if (situacionSoja.Count > 0)
+                {
+                    oPropRow = situacionSoja[0].GetType().GetProperties();
+
+                    cantColumns = oPropRow.Count();
+
+                    for (int i = 1; i <= cantColumns; i++)
+                    {
+                        workSheet13.Column(i).AutoFit();
+                    };
+                }
+
+                j = 1;
+                while (workSheet13.Cells[2, j].Value != null)
+                {
+                    workSheet13.Cells[2, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                    workSheet13.Cells[2, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                    workSheet13.Cells[2, j].Style.Font.Bold = true;
+
+                    workSheet13.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                    workSheet13.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                    workSheet13.Cells[1, j].Style.Font.Bold = true;
+
+                    workSheet13.Cells[5, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                    workSheet13.Cells[5, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                    workSheet13.Cells[5, j].Style.Font.Bold = true;
+
+                    workSheet13.Cells[9, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                    workSheet13.Cells[9, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                    workSheet13.Cells[9, j].Style.Font.Bold = true;
+                    j++;
+                }
+                j = 1;
+                while (workSheet13.Cells[6, j].Value != null)
+                {
+                    workSheet13.Cells[6, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                    workSheet13.Cells[6, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                    workSheet13.Cells[6, j].Style.Font.Bold = true;
+                    j++;
+                }
+
+                j = 1;
+                while (workSheet13.Cells[10, j].Value != null)
+                {
+                    workSheet13.Cells[10, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                    workSheet13.Cells[10, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                    workSheet13.Cells[10, j].Style.Font.Bold = true;
+                    j++;
+                }
+            }
+            //Situacion Maiz
+            var situacionMaiz = situacion.Where(x => x.Material == "Maiz").ToList();
+
+            if (situacionMaiz.Count > 0)
+            {
+                var campanaMaiz = situacionMaiz.Count() > 0 ? situacionMaiz.Select(x => x.Campana).FirstOrDefault() : "";
+                var workSheet14 = excel.Workbook.Worksheets.Add("Situación Maíz " + campanaMaiz);
+
+                workSheet14.Cells[1, 1].Value = "Corredor";
+                workSheet14.Cells[2, 1].LoadFromCollection(situacionMaiz.Select(x => x.ConCorredor), true);
+                workSheet14.Cells[2, 1].Value = "Compras con Precio";
+                workSheet14.Cells[2, 2].Value = "Recibido sin Precio";
+                workSheet14.Cells[2, 3].Value = "A recibir a Fijar";
+                workSheet14.Cells[2, 4].Value = "Fason Fas";
+
+                workSheet14.Cells[5, 1].Value = "Directo Acopiador";
+                workSheet14.Cells[6, 1].LoadFromCollection(situacionMaiz.Select(x => x.DirectoAcopiador), true);
+                workSheet14.Cells[6, 1].Value = "Compras con Precio";
+                workSheet14.Cells[6, 2].Value = "Recibido sin Precio";
+                workSheet14.Cells[6, 3].Value = "A recibir a Fijar";
+                workSheet14.Cells[6, 4].Value = "Fason Fas";
+
+                workSheet14.Cells[9, 1].Value = "Directo Productor";
+                workSheet14.Cells[10, 1].LoadFromCollection(situacionMaiz.Select(x => x.DirectoProductor), true);
+                workSheet14.Cells[10, 1].Value = "Compras con Precio";
+                workSheet14.Cells[10, 2].Value = "Recibido sin Precio";
+                workSheet14.Cells[10, 3].Value = "A recibir a Fijar";
+                workSheet14.Cells[10, 4].Value = "Fason Fas";
+
+                if (situacionMaiz.Count > 0)
+                {
+                    oPropRow = situacionMaiz[0].GetType().GetProperties();
+
+                    cantColumns = oPropRow.Count();
+
+                    for (int i = 1; i <= cantColumns; i++)
+                    {
+                        workSheet14.Column(i).AutoFit();
+                    };
+                }
+
+                j = 1;
+                while (workSheet14.Cells[2, j].Value != null)
+                {
+                    workSheet14.Cells[2, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet14.Cells[2, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet14.Cells[2, j].Style.Font.Bold = true;
+                    workSheet14.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet14.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet14.Cells[1, j].Style.Font.Bold = true;
+                    workSheet14.Cells[5, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet14.Cells[5, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet14.Cells[5, j].Style.Font.Bold = true;
+                    workSheet14.Cells[9, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet14.Cells[9, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet14.Cells[9, j].Style.Font.Bold = true;
+                    j++;
+                }
+                j = 1;
+                while (workSheet14.Cells[6, j].Value != null)
+                {
+                    workSheet14.Cells[6, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet14.Cells[6, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet14.Cells[6, j].Style.Font.Bold = true;
+                    j++;
+                }
+
+                j = 1;
+                while (workSheet14.Cells[10, j].Value != null)
+                {
+                    workSheet14.Cells[10, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet14.Cells[10, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet14.Cells[10, j].Style.Font.Bold = true;
+                    j++;
+                }
+            }                
+            //Situacion Girasol
+            var situacionGi = situacion.Where(x => x.Material == "Girasol").ToList();
+            if (situacionGi.Count > 0)
+            {
+                var campanaGi = situacionGi.Count() > 0 ? situacionGi.Select(x => x.Campana).FirstOrDefault() : "";
+                var workSheet15 = excel.Workbook.Worksheets.Add("Situación Girasol " + campanaGi);
+
+                workSheet15.Cells[1, 1].Value = "Corredor";
+                workSheet15.Cells[2, 1].LoadFromCollection(situacionGi.Select(x => x.ConCorredor), true);
+                workSheet15.Cells[2, 1].Value = "Compras con Precio";
+                workSheet15.Cells[2, 2].Value = "Recibido sin Precio";
+                workSheet15.Cells[2, 3].Value = "A recibir a Fijar";
+                workSheet15.Cells[2, 4].Value = "Fason Fas";
+
+                workSheet15.Cells[5, 1].Value = "Directo Acopiador";
+                workSheet15.Cells[6, 1].LoadFromCollection(situacionGi.Select(x => x.DirectoAcopiador), true);
+                workSheet15.Cells[6, 1].Value = "Compras con Precio";
+                workSheet15.Cells[6, 2].Value = "Recibido sin Precio";
+                workSheet15.Cells[6, 3].Value = "A recibir a Fijar";
+                workSheet15.Cells[6, 4].Value = "Fason Fas";
+
+                workSheet15.Cells[9, 1].Value = "Directo Productor";
+                workSheet15.Cells[10, 1].LoadFromCollection(situacionGi.Select(x => x.DirectoProductor), true);
+                workSheet15.Cells[10, 1].Value = "Compras con Precio";
+                workSheet15.Cells[10, 2].Value = "Recibido sin Precio";
+                workSheet15.Cells[10, 3].Value = "A recibir a Fijar";
+                workSheet15.Cells[10, 4].Value = "Fason Fas";
+
+                if (situacionGi.Count > 0)
+                {
+                    oPropRow = situacionGi[0].GetType().GetProperties();
+
+                    cantColumns = oPropRow.Count();
+
+                    for (int i = 1; i <= cantColumns; i++)
+                    {
+                        workSheet15.Column(i).AutoFit();
+                    };
+                }
+
+                j = 1;
+                while (workSheet15.Cells[2, j].Value != null)
+                {
+                    workSheet15.Cells[2, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet15.Cells[2, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet15.Cells[2, j].Style.Font.Bold = true;
+                    workSheet15.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet15.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet15.Cells[1, j].Style.Font.Bold = true;
+                    workSheet15.Cells[5, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet15.Cells[5, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet15.Cells[5, j].Style.Font.Bold = true;
+                    workSheet15.Cells[9, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet15.Cells[9, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet15.Cells[9, j].Style.Font.Bold = true;
+                    j++;
+                }
+                j = 1;
+                while (workSheet15.Cells[6, j].Value != null)
+                {
+                    workSheet15.Cells[6, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet15.Cells[6, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet15.Cells[6, j].Style.Font.Bold = true;
+                    j++;
+                }
+
+                j = 1;
+                while (workSheet15.Cells[10, j].Value != null)
+                {
+                    workSheet15.Cells[10, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet15.Cells[10, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet15.Cells[10, j].Style.Font.Bold = true;
+                    j++;
+                }
+            }
+
+            //Situacion Trigo
+            var situacionTrigo = situacion.Where(x => x.Material == "Trigo").ToList();
+            
+            if(situacionTrigo.Select(x => x.ConCorredor).Count() > 0) {
+                var campanaTrigo = situacionTrigo.Count() > 0 ? situacionTrigo.Select(x => x.Campana).FirstOrDefault() : "";
+                var workSheet16 = excel.Workbook.Worksheets.Add("Situación Trigo " + campanaTrigo);
+                workSheet16.Cells[1, 1].Value = "Corredor";
+                workSheet16.Cells[2, 1].LoadFromCollection(situacionTrigo.Select(x => x.ConCorredor), true);
+                workSheet16.Cells[2, 1].Value = "Compras con Precio";
+                workSheet16.Cells[2, 2].Value = "Recibido sin Precio";
+                workSheet16.Cells[2, 3].Value = "A recibir a Fijar";
+                workSheet16.Cells[2, 4].Value = "Fason Fas";
+                workSheet16.Cells[5, 1].Value = "Directo Acopiador";
+                workSheet16.Cells[6, 1].LoadFromCollection(situacionTrigo.Select(x => x.DirectoAcopiador), true);
+                workSheet16.Cells[6, 1].Value = "Compras con Precio";
+                workSheet16.Cells[6, 2].Value = "Recibido sin Precio";
+                workSheet16.Cells[6, 3].Value = "A recibir a Fijar";
+                workSheet16.Cells[6, 4].Value = "Fason Fas";
+                workSheet16.Cells[9, 1].Value = "Directo Productor";
+                workSheet16.Cells[10, 1].LoadFromCollection(situacionTrigo.Select(x => x.DirectoProductor), true);
+                workSheet16.Cells[10, 1].Value = "Compras con Precio";
+                workSheet16.Cells[10, 2].Value = "Recibido sin Precio";
+                workSheet16.Cells[10, 3].Value = "A recibir a Fijar";
+                workSheet16.Cells[10, 4].Value = "Fason Fas";
+
+                if (situacionTrigo.Count > 0)
+                {
+                    oPropRow = situacionTrigo[0].GetType().GetProperties();
+
+                    cantColumns = oPropRow.Count();
+
+                    for (int i = 1; i <= cantColumns; i++)
+                    {
+                        workSheet16.Column(i).AutoFit();
+                    };
+                }
+
+                j = 1;
+                while (workSheet16.Cells[2, j].Value != null)
+                {
+                    workSheet16.Cells[2, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet16.Cells[2, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet16.Cells[2, j].Style.Font.Bold = true;
+                    workSheet16.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet16.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet16.Cells[1, j].Style.Font.Bold = true;
+                    workSheet16.Cells[5, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet16.Cells[5, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet16.Cells[5, j].Style.Font.Bold = true;
+                    workSheet16.Cells[9, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet16.Cells[9, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet16.Cells[9, j].Style.Font.Bold = true;
+                    j++;
+                }
+                j = 1;
+                while (workSheet16.Cells[6, j].Value != null)
+                {
+                    workSheet16.Cells[6, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet16.Cells[6, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet16.Cells[6, j].Style.Font.Bold = true;
+                    j++;
+                }
+
+                j = 1;
+                while (workSheet16.Cells[10, j].Value != null)
+                {
+                    workSheet16.Cells[10, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet16.Cells[10, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet16.Cells[10, j].Style.Font.Bold = true;
+                    j++;
+                }
+
+            }
+
 
             var identif = Varios.GetIdentif();
 

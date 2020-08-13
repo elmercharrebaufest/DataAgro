@@ -3224,22 +3224,22 @@ namespace Molinos.DataAgro.Business.Managers
                     Material = c.Select(x => x.CampanaMaterialDetalle.Material.Descripcion).FirstOrDefault(),
                     ConCorredor = new CompraDetalleDto
                     {
-                        ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
+                        ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) + c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
                         ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),                        
                         FasonFas = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
                     },         
                     DirectoAcopiador = new CompraDetalleDto
                     {
-                        ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "ACOPIADOR"  && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
-                        RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),                        
-                        FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "ACOPIADOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
+                        ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) + c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
+                        RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
+                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),                        
+                        FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
 
                     },
                     DirectoProductor = new CompraDetalleDto
                     {
-                        ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && (x.ClaseDoc == "ZFJ$" || x.ClaseDoc == "ZHIJ")).Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada + x.ToneladaFijada),
+                        ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) + c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR"&& x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaAplicada - x.ToneladaFijada),
                         ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
