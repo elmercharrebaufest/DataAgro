@@ -123,11 +123,14 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
+    <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
     <Compile Include="Dto\CompraCampanaActualDto.cs" />
     <Compile Include="Dto\CompraDetalleDto.cs" />
     <Compile Include="Dto\CompraDto.cs" />
     <Compile Include="Dto\ContratoSAP.cs" />
     <Compile Include="Dto\CompraDetalleAgentDto.cs" />
+    <Compile Include="Dto\ListaCompraDetalleDto.cs" />
+    
     <Compile Include="Dto\MaterialHabilitadoDto.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />

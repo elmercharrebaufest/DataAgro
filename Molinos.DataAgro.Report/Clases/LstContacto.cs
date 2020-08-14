@@ -698,33 +698,48 @@ namespace Molinos.DataAgro.Report
 
             var situacion = oDatos.Situacion;
             var situacionSoja = situacion.Where(x => x.Material == "Soja").ToList();
-
-
-            if (situacionSoja.Select(x => x.ConCorredor).Count() > 0)
+            //Situacion Soja
+            if (situacionSoja.Count() > 0)
             {
-                //Situacion Soja
                 var campanaSoja = situacionSoja.Count() > 0 ? situacionSoja.Select(x => x.Campana).FirstOrDefault() : "";
                 var workSheet13 = excel.Workbook.Worksheets.Add("Situación Soja " + campanaSoja);
-                workSheet13.Cells[1, 1].Value = "Corredor";
-                workSheet13.Cells[2, 1].LoadFromCollection(situacionSoja.Select(x => x.ConCorredor), true);
-                workSheet13.Cells[2, 1].Value = "Compras con Precio";
-                workSheet13.Cells[2, 2].Value = "Recibido sin Precio";
-                workSheet13.Cells[2, 3].Value = "A recibir a Fijar";
-                workSheet13.Cells[2, 4].Value = "Fason Fas";
 
-                workSheet13.Cells[5, 1].Value = "Directo Acopiador";
-                workSheet13.Cells[6, 1].LoadFromCollection(situacionSoja.Select(x => x.DirectoAcopiador), true);
-                workSheet13.Cells[6, 1].Value = "Compras con Precio";
-                workSheet13.Cells[6, 2].Value = "Recibido sin Precio";
-                workSheet13.Cells[6, 3].Value = "A recibir a Fijar";
-                workSheet13.Cells[6, 4].Value = "Fason Fas";
+                var SojaComprasConPrecioCorredor = situacionSoja.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList();
+                var SojaComprasConPrecioAcopiador = situacionSoja.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList();
+                var SojaComprasConPrecioProductor = situacionSoja.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList();
+                var SojaRecibidoSinPrecioCorredor = situacionSoja.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var SojaRecibidoSinPrecioAcopiador = situacionSoja.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var SojaRecibidoSinPrecioProductor = situacionSoja.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var SojaARecibirAFijarCorredor = situacionSoja.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList();
+                var SojaARecibirAFijarAcopiador = situacionSoja.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList();
+                var SojaARecibirAFijarProductor = situacionSoja.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList();
+                var SojaFasonFasConPrecioCorredor = situacionSoja.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList();
+                var SojaFasonFasAcopiador = situacionSoja.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList();
+                var SojaFasonFasProductor = situacionSoja.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList();
 
-                workSheet13.Cells[9, 1].Value = "Directo Productor";
-                workSheet13.Cells[10, 1].LoadFromCollection(situacionSoja.Select(x => x.DirectoProductor), true);
-                workSheet13.Cells[10, 1].Value = "Compras con Precio";
-                workSheet13.Cells[10, 2].Value = "Recibido sin Precio";
-                workSheet13.Cells[10, 3].Value = "A recibir a Fijar";
-                workSheet13.Cells[10, 4].Value = "Fason Fas";
+                workSheet13.Cells[1, 1].LoadFromCollection(
+                SojaComprasConPrecioCorredor
+                .Union(SojaComprasConPrecioAcopiador)
+                .Union(SojaComprasConPrecioProductor)
+                .Union(SojaRecibidoSinPrecioCorredor)
+                .Union(SojaRecibidoSinPrecioAcopiador)
+                .Union(SojaRecibidoSinPrecioProductor)
+                .Union(SojaARecibirAFijarCorredor)
+                .Union(SojaARecibirAFijarAcopiador)
+                .Union(SojaARecibirAFijarProductor)
+                .Union(SojaFasonFasConPrecioCorredor)
+                .Union(SojaFasonFasAcopiador)
+                .Union(SojaFasonFasProductor)
+                , true);
+                j = 1;
+                while (workSheet13.Cells[1, j].Value != null)
+                {
+                    workSheet13.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet13.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet13.Cells[1, j].Style.Font.Bold = true;
+
+                    j++;
+                }
 
                 if (situacionSoja.Count > 0)
                 {
@@ -737,85 +752,50 @@ namespace Molinos.DataAgro.Report
                         workSheet13.Column(i).AutoFit();
                     };
                 }
-
-                j = 1;
-                while (workSheet13.Cells[2, j].Value != null)
-                {
-                    workSheet13.Cells[2, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet13.Cells[2, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet13.Cells[2, j].Style.Font.Bold = true;
-
-                    workSheet13.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet13.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet13.Cells[1, j].Style.Font.Bold = true;
-
-                    workSheet13.Cells[5, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet13.Cells[5, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet13.Cells[5, j].Style.Font.Bold = true;
-
-                    workSheet13.Cells[9, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet13.Cells[9, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet13.Cells[9, j].Style.Font.Bold = true;
-                    j++;
-                }
-                j = 1;
-                while (workSheet13.Cells[6, j].Value != null)
-                {
-                    workSheet13.Cells[6, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet13.Cells[6, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet13.Cells[6, j].Style.Font.Bold = true;
-                    j++;
-                }
-
-                j = 1;
-                while (workSheet13.Cells[10, j].Value != null)
-                {
-                    workSheet13.Cells[10, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet13.Cells[10, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet13.Cells[10, j].Style.Font.Bold = true;
-                    j++;
-                }
             }
-            //Situacion Maiz
             var situacionMaiz = situacion.Where(x => x.Material == "Maiz").ToList();
-
-            if (situacionMaiz.Count > 0)
+            //Situacion Maiz
+            if (situacionMaiz.Count() > 0)
             {
                 var campanaMaiz = situacionMaiz.Count() > 0 ? situacionMaiz.Select(x => x.Campana).FirstOrDefault() : "";
-                var workSheet14 = excel.Workbook.Worksheets.Add("Situación Maíz " + campanaMaiz);
+                var workSheet14 = excel.Workbook.Worksheets.Add("Situación Maiz " + campanaMaiz);
 
-                workSheet14.Cells[1, 1].Value = "Corredor";
-                workSheet14.Cells[2, 1].LoadFromCollection(situacionMaiz.Select(x => x.ConCorredor), true);
-                workSheet14.Cells[2, 1].Value = "Compras con Precio";
-                workSheet14.Cells[2, 2].Value = "Recibido sin Precio";
-                workSheet14.Cells[2, 3].Value = "A recibir a Fijar";
-                workSheet14.Cells[2, 4].Value = "Fason Fas";
+                var MaizComprasConPrecioCorredor = situacionMaiz.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList();
+                var MaizComprasConPrecioAcopiador = situacionMaiz.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList();
+                var MaizRecibidoSinPrecioCorredor = situacionMaiz.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var MaizComprasConPrecioProductor = situacionMaiz.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList();
+                var MaizRecibidoSinPrecioAcopiador = situacionMaiz.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var MaizRecibidoSinPrecioProductor = situacionMaiz.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var MaizARecibirAFijarCorredor = situacionMaiz.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList();
+                var MaizARecibirAFijarAcopiador = situacionMaiz.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList();
+                var MaizARecibirAFijarProductor = situacionMaiz.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList();
+                var MaizFasonFasConPrecioCorredor = situacionMaiz.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList();
+                var MaizFasonFasAcopiador = situacionMaiz.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList();
+                var MaizFasonFasProductor = situacionMaiz.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList();
 
-                workSheet14.Cells[5, 1].Value = "Directo Acopiador";
-                workSheet14.Cells[6, 1].LoadFromCollection(situacionMaiz.Select(x => x.DirectoAcopiador), true);
-                workSheet14.Cells[6, 1].Value = "Compras con Precio";
-                workSheet14.Cells[6, 2].Value = "Recibido sin Precio";
-                workSheet14.Cells[6, 3].Value = "A recibir a Fijar";
-                workSheet14.Cells[6, 4].Value = "Fason Fas";
+                workSheet14.Cells[1, 1].LoadFromCollection(
+                MaizComprasConPrecioCorredor
+                .Union(MaizComprasConPrecioAcopiador)
+                .Union(MaizComprasConPrecioProductor)
+                .Union(MaizRecibidoSinPrecioCorredor)
+                .Union(MaizRecibidoSinPrecioAcopiador)
+                .Union(MaizRecibidoSinPrecioProductor)
+                .Union(MaizARecibirAFijarCorredor)
+                .Union(MaizARecibirAFijarAcopiador)
+                .Union(MaizARecibirAFijarProductor)
+                .Union(MaizFasonFasConPrecioCorredor)
+                .Union(MaizFasonFasAcopiador)
+                .Union(MaizFasonFasProductor)
+                , true);
+                j = 1;
+                while (workSheet14.Cells[1, j].Value != null)
+                {
+                    workSheet14.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet14.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet14.Cells[1, j].Style.Font.Bold = true;
 
-                workSheet14.Cells[9, 1].Value = "Directo Productor";
-                workSheet14.Cells[10, 1].LoadFromCollection(situacionMaiz.Select(x => x.DirectoProductor), true);
-                workSheet14.Cells[10, 1].Value = "Compras con Precio";
-                workSheet14.Cells[10, 2].Value = "Recibido sin Precio";
-                workSheet14.Cells[10, 3].Value = "A recibir a Fijar";
-                workSheet14.Cells[10, 4].Value = "Fason Fas";
+                    j++;
+                }
 
                 if (situacionMaiz.Count > 0)
                 {
@@ -828,73 +808,54 @@ namespace Molinos.DataAgro.Report
                         workSheet14.Column(i).AutoFit();
                     };
                 }
-
-                j = 1;
-                while (workSheet14.Cells[2, j].Value != null)
-                {
-                    workSheet14.Cells[2, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet14.Cells[2, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet14.Cells[2, j].Style.Font.Bold = true;
-                    workSheet14.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet14.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet14.Cells[1, j].Style.Font.Bold = true;
-                    workSheet14.Cells[5, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet14.Cells[5, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet14.Cells[5, j].Style.Font.Bold = true;
-                    workSheet14.Cells[9, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet14.Cells[9, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet14.Cells[9, j].Style.Font.Bold = true;
-                    j++;
-                }
-                j = 1;
-                while (workSheet14.Cells[6, j].Value != null)
-                {
-                    workSheet14.Cells[6, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet14.Cells[6, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet14.Cells[6, j].Style.Font.Bold = true;
-                    j++;
-                }
-
-                j = 1;
-                while (workSheet14.Cells[10, j].Value != null)
-                {
-                    workSheet14.Cells[10, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet14.Cells[10, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet14.Cells[10, j].Style.Font.Bold = true;
-                    j++;
-                }
-            }                
+            }
+            var situacionGirasol = situacion.Where(x => x.Material == "Girasol").ToList();
             //Situacion Girasol
-            var situacionGi = situacion.Where(x => x.Material == "Girasol").ToList();
-            if (situacionGi.Count > 0)
+            if (situacionGirasol.Count() > 0)
             {
-                var campanaGi = situacionGi.Count() > 0 ? situacionGi.Select(x => x.Campana).FirstOrDefault() : "";
-                var workSheet15 = excel.Workbook.Worksheets.Add("Situación Girasol " + campanaGi);
+                var campanaGirasol = situacionGirasol.Count() > 0 ? situacionGirasol.Select(x => x.Campana).FirstOrDefault() : "";
+                var workSheet15 = excel.Workbook.Worksheets.Add("Situación Girasol " + campanaGirasol);
 
-                workSheet15.Cells[1, 1].Value = "Corredor";
-                workSheet15.Cells[2, 1].LoadFromCollection(situacionGi.Select(x => x.ConCorredor), true);
-                workSheet15.Cells[2, 1].Value = "Compras con Precio";
-                workSheet15.Cells[2, 2].Value = "Recibido sin Precio";
-                workSheet15.Cells[2, 3].Value = "A recibir a Fijar";
-                workSheet15.Cells[2, 4].Value = "Fason Fas";
+                var GirasolComprasConPrecioCorredor = situacionGirasol.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList();
+                var GirasolComprasConPrecioAcopiador = situacionGirasol.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList();
+                var GirasolRecibidoSinPrecioCorredor = situacionGirasol.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var GirasolComprasConPrecioProductor = situacionGirasol.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList();
+                var GirasolRecibidoSinPrecioAcopiador = situacionGirasol.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var GirasolRecibidoSinPrecioProductor = situacionGirasol.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var GirasolARecibirAFijarCorredor = situacionGirasol.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList();
+                var GirasolARecibirAFijarAcopiador = situacionGirasol.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList();
+                var GirasolARecibirAFijarProductor = situacionGirasol.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList();
+                var GirasolFasonFasConPrecioCorredor = situacionGirasol.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList();
+                var GirasolFasonFasAcopiador = situacionGirasol.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList();
+                var GirasolFasonFasProductor = situacionGirasol.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList();
 
-                workSheet15.Cells[5, 1].Value = "Directo Acopiador";
-                workSheet15.Cells[6, 1].LoadFromCollection(situacionGi.Select(x => x.DirectoAcopiador), true);
-                workSheet15.Cells[6, 1].Value = "Compras con Precio";
-                workSheet15.Cells[6, 2].Value = "Recibido sin Precio";
-                workSheet15.Cells[6, 3].Value = "A recibir a Fijar";
-                workSheet15.Cells[6, 4].Value = "Fason Fas";
-
-                workSheet15.Cells[9, 1].Value = "Directo Productor";
-                workSheet15.Cells[10, 1].LoadFromCollection(situacionGi.Select(x => x.DirectoProductor), true);
-                workSheet15.Cells[10, 1].Value = "Compras con Precio";
-                workSheet15.Cells[10, 2].Value = "Recibido sin Precio";
-                workSheet15.Cells[10, 3].Value = "A recibir a Fijar";
-                workSheet15.Cells[10, 4].Value = "Fason Fas";
-
-                if (situacionGi.Count > 0)
+                workSheet15.Cells[1, 1].LoadFromCollection(
+                GirasolComprasConPrecioCorredor
+                .Union(GirasolComprasConPrecioAcopiador)
+                .Union(GirasolComprasConPrecioProductor)
+                .Union(GirasolRecibidoSinPrecioCorredor)
+                .Union(GirasolRecibidoSinPrecioAcopiador)
+                .Union(GirasolRecibidoSinPrecioProductor)
+                .Union(GirasolARecibirAFijarCorredor)
+                .Union(GirasolARecibirAFijarAcopiador)
+                .Union(GirasolARecibirAFijarProductor)
+                .Union(GirasolFasonFasConPrecioCorredor)
+                .Union(GirasolFasonFasAcopiador)
+                .Union(GirasolFasonFasProductor)
+                , true);
+                j = 1;
+                while (workSheet15.Cells[1, j].Value != null)
                 {
-                    oPropRow = situacionGi[0].GetType().GetProperties();
+                    workSheet15.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet15.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet15.Cells[1, j].Style.Font.Bold = true;
+
+                    j++;
+                }
+
+                if (situacionGirasol.Count > 0)
+                {
+                    oPropRow = situacionGirasol[0].GetType().GetProperties();
 
                     cantColumns = oPropRow.Count();
 
@@ -903,67 +864,51 @@ namespace Molinos.DataAgro.Report
                         workSheet15.Column(i).AutoFit();
                     };
                 }
-
-                j = 1;
-                while (workSheet15.Cells[2, j].Value != null)
-                {
-                    workSheet15.Cells[2, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet15.Cells[2, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet15.Cells[2, j].Style.Font.Bold = true;
-                    workSheet15.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet15.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet15.Cells[1, j].Style.Font.Bold = true;
-                    workSheet15.Cells[5, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet15.Cells[5, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet15.Cells[5, j].Style.Font.Bold = true;
-                    workSheet15.Cells[9, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet15.Cells[9, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet15.Cells[9, j].Style.Font.Bold = true;
-                    j++;
-                }
-                j = 1;
-                while (workSheet15.Cells[6, j].Value != null)
-                {
-                    workSheet15.Cells[6, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet15.Cells[6, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet15.Cells[6, j].Style.Font.Bold = true;
-                    j++;
-                }
-
-                j = 1;
-                while (workSheet15.Cells[10, j].Value != null)
-                {
-                    workSheet15.Cells[10, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet15.Cells[10, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet15.Cells[10, j].Style.Font.Bold = true;
-                    j++;
-                }
             }
 
-            //Situacion Trigo
             var situacionTrigo = situacion.Where(x => x.Material == "Trigo").ToList();
-            
-            if(situacionTrigo.Select(x => x.ConCorredor).Count() > 0) {
+            //Situacion Trigo
+            if (situacionTrigo.Count() > 0)
+            {
                 var campanaTrigo = situacionTrigo.Count() > 0 ? situacionTrigo.Select(x => x.Campana).FirstOrDefault() : "";
                 var workSheet16 = excel.Workbook.Worksheets.Add("Situación Trigo " + campanaTrigo);
-                workSheet16.Cells[1, 1].Value = "Corredor";
-                workSheet16.Cells[2, 1].LoadFromCollection(situacionTrigo.Select(x => x.ConCorredor), true);
-                workSheet16.Cells[2, 1].Value = "Compras con Precio";
-                workSheet16.Cells[2, 2].Value = "Recibido sin Precio";
-                workSheet16.Cells[2, 3].Value = "A recibir a Fijar";
-                workSheet16.Cells[2, 4].Value = "Fason Fas";
-                workSheet16.Cells[5, 1].Value = "Directo Acopiador";
-                workSheet16.Cells[6, 1].LoadFromCollection(situacionTrigo.Select(x => x.DirectoAcopiador), true);
-                workSheet16.Cells[6, 1].Value = "Compras con Precio";
-                workSheet16.Cells[6, 2].Value = "Recibido sin Precio";
-                workSheet16.Cells[6, 3].Value = "A recibir a Fijar";
-                workSheet16.Cells[6, 4].Value = "Fason Fas";
-                workSheet16.Cells[9, 1].Value = "Directo Productor";
-                workSheet16.Cells[10, 1].LoadFromCollection(situacionTrigo.Select(x => x.DirectoProductor), true);
-                workSheet16.Cells[10, 1].Value = "Compras con Precio";
-                workSheet16.Cells[10, 2].Value = "Recibido sin Precio";
-                workSheet16.Cells[10, 3].Value = "A recibir a Fijar";
-                workSheet16.Cells[10, 4].Value = "Fason Fas";
+
+                var TrigoComprasConPrecioCorredor = situacionTrigo.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList();
+                var TrigoComprasConPrecioAcopiador = situacionTrigo.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList();
+                var TrigoRecibidoSinPrecioCorredor = situacionTrigo.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var TrigoComprasConPrecioProductor = situacionTrigo.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList();
+                var TrigoRecibidoSinPrecioAcopiador = situacionTrigo.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var TrigoRecibidoSinPrecioProductor = situacionTrigo.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+                var TrigoARecibirAFijarCorredor = situacionTrigo.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList();
+                var TrigoARecibirAFijarAcopiador = situacionTrigo.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList();
+                var TrigoARecibirAFijarProductor = situacionTrigo.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList();
+                var TrigoFasonFasConPrecioCorredor = situacionTrigo.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList();
+                var TrigoFasonFasAcopiador = situacionTrigo.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList();
+                var TrigoFasonFasProductor = situacionTrigo.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList();
+
+                workSheet16.Cells[1, 1].LoadFromCollection(
+                TrigoComprasConPrecioCorredor
+                .Union(TrigoComprasConPrecioAcopiador)
+                .Union(TrigoComprasConPrecioProductor)
+                .Union(TrigoRecibidoSinPrecioCorredor)
+                .Union(TrigoRecibidoSinPrecioAcopiador)
+                .Union(TrigoRecibidoSinPrecioProductor)
+                .Union(TrigoARecibirAFijarCorredor)
+                .Union(TrigoARecibirAFijarAcopiador)
+                .Union(TrigoARecibirAFijarProductor)
+                .Union(TrigoFasonFasConPrecioCorredor)
+                .Union(TrigoFasonFasAcopiador)
+                .Union(TrigoFasonFasProductor)
+                , true);
+                j = 1;
+                while (workSheet16.Cells[1, j].Value != null)
+                {
+                    workSheet16.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    workSheet16.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+                    workSheet16.Cells[1, j].Style.Font.Bold = true;
+
+                    j++;
+                }
 
                 if (situacionTrigo.Count > 0)
                 {
@@ -976,45 +921,7 @@ namespace Molinos.DataAgro.Report
                         workSheet16.Column(i).AutoFit();
                     };
                 }
-
-                j = 1;
-                while (workSheet16.Cells[2, j].Value != null)
-                {
-                    workSheet16.Cells[2, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet16.Cells[2, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet16.Cells[2, j].Style.Font.Bold = true;
-                    workSheet16.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet16.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet16.Cells[1, j].Style.Font.Bold = true;
-                    workSheet16.Cells[5, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet16.Cells[5, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet16.Cells[5, j].Style.Font.Bold = true;
-                    workSheet16.Cells[9, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet16.Cells[9, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet16.Cells[9, j].Style.Font.Bold = true;
-                    j++;
-                }
-                j = 1;
-                while (workSheet16.Cells[6, j].Value != null)
-                {
-                    workSheet16.Cells[6, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet16.Cells[6, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet16.Cells[6, j].Style.Font.Bold = true;
-                    j++;
-                }
-
-                j = 1;
-                while (workSheet16.Cells[10, j].Value != null)
-                {
-                    workSheet16.Cells[10, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet16.Cells[10, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet16.Cells[10, j].Style.Font.Bold = true;
-                    j++;
-                }
-
             }
-
-
             var identif = Varios.GetIdentif();
 
             using (MemoryStream ms = new MemoryStream())
