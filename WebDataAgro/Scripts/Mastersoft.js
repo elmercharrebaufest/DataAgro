@@ -83,6 +83,7 @@ function MSExecuteOnServerAsync(url, datos, fncallback, iswait) {
     }
 
     $.ajax({
+        timeout: 600000,
         async: true,
         url: MSGetUrl(url),
         type: 'POST',
