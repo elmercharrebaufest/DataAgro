@@ -706,17 +706,17 @@ namespace Molinos.DataAgro.Report
                 List<CampanaMaterialDetallePorMeseExcelDto> lista = new List<CampanaMaterialDetallePorMeseExcelDto>();
 
                 lista.AddRange( situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList());
-                lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList());
+                //lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList());
 
                 workSheet13.Cells[1, 1].LoadFromCollection(
                 lista
