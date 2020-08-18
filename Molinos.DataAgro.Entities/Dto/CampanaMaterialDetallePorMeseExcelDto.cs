@@ -16,6 +16,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Contrato { get; set; }
 
         public double Tn { get; set; }
-        
+        public string Campaña { get; set; }
+
+        public string Material { get; set; }
     }
 }

@@ -419,7 +419,7 @@ namespace Molinos.DataAgro.Business.Managers
                         ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) + 
                         c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),
+                        ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF" && x.ToneladaAplicada != 0).Sum(x => x.PendienteAFijar),
                         FasonFas = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
                     },
                     DirectoAcopiador = new CompraDetalleDto
@@ -427,7 +427,7 @@ namespace Molinos.DataAgro.Business.Managers
                         ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) + 
                         c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada)<0?0: x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),
+                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.ToneladaAplicada != 0).Sum(x => x.PendienteAFijar),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
 
                     },
@@ -436,7 +436,7 @@ namespace Molinos.DataAgro.Business.Managers
                         ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) + 
                         c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.PendienteAFijar),
+                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.ToneladaAplicada != 0).Sum(x => x.PendienteAFijar),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
                     }
 
@@ -453,40 +453,43 @@ namespace Molinos.DataAgro.Business.Managers
         }
 
         public List<CompraDto> TraerTodoCompraDetalleExcel(List<int> equipo)
-        {
-            var material = repositorio.Listar<Material>();
+        {         
             var compraDto = new List<CompraDto>();
-            foreach (var mat in material)
+            var compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
+                equipo.Contains(x.ComercialId.Value));
+            var grupoCompras = compras.GroupBy(x => new { x.CampanaMaterialDetalle.CampanaId, x.CampanaMaterialDetalle.MaterialId });
+
+            foreach (var c in grupoCompras)
             {
-                var c = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
-                equipo.Contains(x.ComercialId.Value)
-                && mat.MaterialId == x.CampanaMaterialDetalle.MaterialId
-                && mat.CampañaId == x.CampanaMaterialDetalle.CampanaId);
                 var detalle = new CompraDto
                 {
-                    Campana = c.Select(x => x.CampanaMaterialDetalle.Campana.Descripcion).FirstOrDefault(),
-                    Material = c.Select(x => x.CampanaMaterialDetalle.Material.Descripcion).FirstOrDefault(),
 
                     ListaConCorredor = new ListaCompraDetalleDto
                     {
                         ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF").Union(c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF"))
-                        .Select(x=> new CampanaMaterialDetallePorMeseExcelDto {
+                        .Select(x => new CampanaMaterialDetallePorMeseExcelDto
+                        {
                             Situacion = "Compras Con Precio",
                             Clasificacion = "CORREDOR",
                             Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
-                            RazonSocial =x.CampanaMaterialDetalle.Proveedor.RazonSocial,
+                            RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
-                            Tn = x.ClaseDoc != "ZPAF" ? x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada : x.ToneladaFijada
+                            Tn = x.ClaseDoc != "ZPAF" ? x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada : x.ToneladaFijada,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
-                        RecibidoSinPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Select(x=> new CampanaMaterialDetallePorMeseExcelDto {
+                        RecibidoSinPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Select(x => new CampanaMaterialDetallePorMeseExcelDto
+                        {
                             Situacion = "Recibido Sin Precio",
-                            Clasificacion = "CORREDOR",                           
+                            Clasificacion = "CORREDOR",
                             Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
-                            RazonSocial =x.CampanaMaterialDetalle.Proveedor.RazonSocial,
+                            RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
                             Tn = x.ToneladaAplicada - x.ToneladaFijada < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
-                        ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Select(x => new CampanaMaterialDetallePorMeseExcelDto
+                        ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF" && x.ToneladaAplicada != 0).Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
                             Situacion = "A Recibir a Fijar",
                             Clasificacion = "CORREDOR",
@@ -494,6 +497,8 @@ namespace Molinos.DataAgro.Business.Managers
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
                             Tn = x.PendienteAFijar,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
                         FasonFas = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZFAZ").Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
@@ -503,6 +508,8 @@ namespace Molinos.DataAgro.Business.Managers
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
                             Tn = x.ToneladaContrato,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
                     },
                     ListaDirectoAcopiador = new ListaCompraDetalleDto
@@ -510,11 +517,13 @@ namespace Molinos.DataAgro.Business.Managers
                         ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF").Union(c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF")).Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
                             Situacion = "Compras Con Precio",
-                            Clasificacion = x.Clasificacion,                          
+                            Clasificacion = x.Clasificacion,
                             Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
-                            Tn = x.ClaseDoc != "ZPAF" ? x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada : x.ToneladaFijada
+                            Tn = x.ClaseDoc != "ZPAF" ? x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada : x.ToneladaFijada,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
                         RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
@@ -524,8 +533,10 @@ namespace Molinos.DataAgro.Business.Managers
                             Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Tn = x.ToneladaAplicada - x.ToneladaFijada < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
-                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Select(x => new CampanaMaterialDetallePorMeseExcelDto
+                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.ToneladaAplicada != 0).Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
                             Situacion = "A Recibir a Fijar",
                             Clasificacion = x.Clasificacion,
@@ -533,15 +544,19 @@ namespace Molinos.DataAgro.Business.Managers
                             Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Tn = x.PendienteAFijar,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
                             Situacion = "Fasón Fas",
-                            Clasificacion = x.Clasificacion,                           
+                            Clasificacion = x.Clasificacion,
                             Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
                             Tn = x.ToneladaContrato,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
                     },
                     ListaDirectoProductor = new ListaCompraDetalleDto
@@ -549,22 +564,26 @@ namespace Molinos.DataAgro.Business.Managers
                         ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc != "ZPAF").Union(c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF")).Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
                             Situacion = "Compras Con Precio",
-                            Clasificacion = x.Clasificacion,                         
+                            Clasificacion = x.Clasificacion,
                             Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
-                            Tn = x.ClaseDoc != "ZPAF" ? x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada : x.ToneladaFijada
+                            Tn = x.ClaseDoc != "ZPAF" ? x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada : x.ToneladaFijada,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
                         RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
                             Situacion = "Recibido Sin Precio",
-                            Clasificacion = x.Clasificacion,                           
+                            Clasificacion = x.Clasificacion,
                             Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
                             Tn = x.ToneladaAplicada - x.ToneladaFijada < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
-                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Select(x => new CampanaMaterialDetallePorMeseExcelDto
+                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.ToneladaAplicada != 0).Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
                             Situacion = "A Recibir a Fijar",
                             Clasificacion = x.Clasificacion,
@@ -572,6 +591,8 @@ namespace Molinos.DataAgro.Business.Managers
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
                             Tn = x.PendienteAFijar,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Select(x => new CampanaMaterialDetallePorMeseExcelDto
                         {
@@ -581,11 +602,13 @@ namespace Molinos.DataAgro.Business.Managers
                             RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                             Contrato = x.Contrato,
                             Tn = x.ToneladaContrato,
+                            Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                            Campaña = x.CampanaMaterialDetalle.Campana.Descripcion,
                         }).ToList(),
                     }
 
                 };
-                    compraDto.Add(detalle);               
+                compraDto.Add(detalle);
             }
             return compraDto;
         }
