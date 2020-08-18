@@ -31,5 +31,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Material { get; set; }
         public string Proveedor { get; set; }
         public string Campana { get; set; }
+        public string CUIT { get; set; }
     }
 }
