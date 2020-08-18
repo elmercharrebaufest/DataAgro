@@ -28,7 +28,7 @@ namespace WebDataAgro.Controllers
         //  Constructor
         //-----------------------------------------------------
 
-        public HomeController(IComercialManager comercialManager, IReportesManager reportesManager, 
+        public HomeController(IComercialManager comercialManager, IReportesManager reportesManager,
             IHomeManager homeManager, IObjetivoManager objetivoManager, ILogger logger)
         {
             this.comercialManager = comercialManager;
@@ -65,7 +65,7 @@ namespace WebDataAgro.Controllers
                 ComercialId = GlobalVariables.ComercialId,
                 Equipo = GlobalVariables.Equipo
             };
-            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId): GlobalVariables.Equipo;
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
             var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, equipo);
            
             model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, equipo);
@@ -149,7 +149,7 @@ namespace WebDataAgro.Controllers
         {
             var model = new ReportesModel();
             filtro.ComercialId = GlobalVariables.ComercialId;
-            filtro.Equipo =  PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
+            filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
 
 
             var datos = mobjHomeManager.ExportarContactos(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
@@ -184,34 +184,27 @@ namespace WebDataAgro.Controllers
         public ActionResult ExportarAll(oParamBusqueda filtro)
         {
             var model = new ReportesModel();
-            logger.Debug("GlobalVariables: " +JsonConvert.SerializeObject(filtro, new JsonSerializerSettings()
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
-                PreserveReferencesHandling = PreserveReferencesHandling.None,
-                Formatting = Formatting.Indented,
-            }));
-            filtro.ComercialId = GlobalVariables.ComercialId;           
-            logger.Debug("GlobalVariables: " + filtro.ComercialId);
+
+            filtro.ComercialId = GlobalVariables.ComercialId;
             filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
-           
             filtro.Estado = null;
             try
             {
-            
-            var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
 
-            var oLstContacto = new LstContacto(reportesManager);
+                var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
 
-            var identif = oLstContacto.GenerarExcelExportAll(datos);
+                var oLstContacto = new LstContacto(reportesManager);
 
-            model.DownloadKey = Util.GetDownloadKey(identif);
+                var identif = oLstContacto.GenerarExcelExportAll(datos);
+
+                model.DownloadKey = Util.GetDownloadKey(identif);
             }
             catch (Exception e)
             {
                 logger.Error(e.Message);
                 throw;
             }
-            return Json(model);
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Error()
@@ -279,7 +272,7 @@ namespace WebDataAgro.Controllers
         public ActionResult TraerObjetivos()
         {
             var model = new ResultIniContactoModel();
-            var equipo= PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, equipo);
 
             return new JsonResult()
