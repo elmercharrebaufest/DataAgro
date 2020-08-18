@@ -354,7 +354,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 exp.establecimiento = repositorio.ListarConsulta(new TraerExportarAllEstablecimientos(exp.contacto.Select(x => x.Cuit).ToList()));
                 exp.CompraCampanaActual = this.TraerTodoCompraCampanaActual(equipo);
-                exp.Situacion = this.TraerTodoCompraDetalleExcel(equipo);
+                //exp.Situacion = this.TraerTodoCompraDetalleExcel(equipo);
                 return exp;
             }
             else

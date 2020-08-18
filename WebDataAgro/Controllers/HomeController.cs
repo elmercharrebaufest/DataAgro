@@ -185,20 +185,23 @@ namespace WebDataAgro.Controllers
         {
             logger.Info("inicio export all");
             var model = new ReportesModel();
+            logger.Info("export all new ");
 
             filtro.ComercialId = GlobalVariables.ComercialId;
             filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
             filtro.Estado = null;
+            logger.Info("inicio export try");
             try
             {
-
+                logger.Info("inicio export datos");
                 var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
-
+                logger.Info("inicio export oLstContacto");
                 var oLstContacto = new LstContacto(reportesManager);
-
+                logger.Info("inicio export idnetif");
                 var identif = oLstContacto.GenerarExcelExportAll(datos);
-
+                logger.Info("inicio export download");
                 model.DownloadKey = Util.GetDownloadKey(identif);
+                logger.Info("inicio export fin try");
             }
             catch (Exception e)
             {
