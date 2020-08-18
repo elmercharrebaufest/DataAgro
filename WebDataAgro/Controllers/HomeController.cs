@@ -195,6 +195,9 @@ namespace WebDataAgro.Controllers
             filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
            
             filtro.Estado = null;
+            try
+            {
+            
             var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
 
             var oLstContacto = new LstContacto(reportesManager);
@@ -202,7 +205,12 @@ namespace WebDataAgro.Controllers
             var identif = oLstContacto.GenerarExcelExportAll(datos);
 
             model.DownloadKey = Util.GetDownloadKey(identif);
-
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+                throw;
+            }
             return Json(model);
         }
 
