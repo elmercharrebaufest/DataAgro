@@ -1,9 +1,11 @@
-﻿using Microsoft.Web.Mvc;
+﻿using Autofac.Extras.NLog;
+using Microsoft.Web.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report;
+using Newtonsoft.Json;
 using System;
 using System.IdentityModel.Services;
 using System.Web.Mvc;
@@ -19,19 +21,21 @@ namespace WebDataAgro.Controllers
     {
         private readonly IHomeManager mobjHomeManager;
         private readonly IObjetivoManager objetivoManager;
+        private readonly ILogger logger;
         private readonly IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
-
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
-        public HomeController(IComercialManager comercialManager, IReportesManager reportesManager, IHomeManager homeManager, IObjetivoManager objetivoManager)
+        public HomeController(IComercialManager comercialManager, IReportesManager reportesManager, 
+            IHomeManager homeManager, IObjetivoManager objetivoManager, ILogger logger)
         {
             this.comercialManager = comercialManager;
             this.reportesManager = reportesManager;
             this.mobjHomeManager = homeManager;
             this.objetivoManager = objetivoManager;
+            this.logger = logger;
         }
 
 
@@ -180,9 +184,16 @@ namespace WebDataAgro.Controllers
         public ActionResult ExportarAll(oParamBusqueda filtro)
         {
             var model = new ReportesModel();
-            filtro.ComercialId = GlobalVariables.ComercialId;
+            logger.Debug("GlobalVariables: " +JsonConvert.SerializeObject(filtro, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                PreserveReferencesHandling = PreserveReferencesHandling.None,
+                Formatting = Formatting.Indented,
+            }));
+            filtro.ComercialId = GlobalVariables.ComercialId;           
+            logger.Debug("GlobalVariables: " + filtro.ComercialId);
             filtro.Equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
-
+           
             filtro.Estado = null;
             var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
 
