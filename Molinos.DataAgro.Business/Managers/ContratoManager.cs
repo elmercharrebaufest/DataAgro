@@ -3354,6 +3354,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (cantidadKg <= 0)
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                        oContratoSave.Cantidad = cantidadKg;
                     }
                     else
                     {
