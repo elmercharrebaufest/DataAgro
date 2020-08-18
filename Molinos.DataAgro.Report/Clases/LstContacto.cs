@@ -703,32 +703,35 @@ namespace Molinos.DataAgro.Report
 
                 var workSheet13 = excel.Workbook.Worksheets.Add("Situación Compra");
 
-                var ComprasConPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList();
-                var ComprasConPrecioAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList();
-                var ComprasConPrecioProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList();
-                var RecibidoSinPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList();
-                var RecibidoSinPrecioAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList();
-                var RecibidoSinPrecioProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList();
-                var ARecibirAFijarCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList();
-                var ARecibirAFijarAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList();
-                var ARecibirAFijarProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList();
-                var FasonFasConPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList();
-                var FasonFasAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList();
-                var FasonFasProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList();
+                List<CampanaMaterialDetallePorMeseExcelDto> lista = new List<CampanaMaterialDetallePorMeseExcelDto>();
+
+                lista.AddRange( situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList());
+                lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList());
 
                 workSheet13.Cells[1, 1].LoadFromCollection(
-                ComprasConPrecioCorredor
-                .Union(ComprasConPrecioAcopiador)
-                .Union(ComprasConPrecioProductor)
-                .Union(RecibidoSinPrecioCorredor)
-                .Union(RecibidoSinPrecioAcopiador)
-                .Union(RecibidoSinPrecioProductor)
-                .Union(ARecibirAFijarCorredor)
-                .Union(ARecibirAFijarAcopiador)
-                .Union(ARecibirAFijarProductor)
-                .Union(FasonFasConPrecioCorredor)
-                .Union(FasonFasAcopiador)
-                .Union(FasonFasProductor)
+                lista
+                    //ComprasConPrecioCorredor
+                //.Union(ComprasConPrecioAcopiador)
+                //.Union(ComprasConPrecioProductor)
+                //.Union(RecibidoSinPrecioCorredor)
+                //.Union(RecibidoSinPrecioAcopiador)
+                //.Union(RecibidoSinPrecioProductor)
+                //.Union(ARecibirAFijarCorredor)
+                //.Union(ARecibirAFijarAcopiador)
+                //.Union(ARecibirAFijarProductor)
+                //.Union(FasonFasConPrecioCorredor)
+                //.Union(FasonFasAcopiador)
+                //.Union(FasonFasProductor)
                 , true);
                 j = 1;
                 while (workSheet13.Cells[1, j].Value != null)

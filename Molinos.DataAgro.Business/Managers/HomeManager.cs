@@ -454,12 +454,10 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<CompraDto> TraerTodoCompraDetalleExcel(List<int> equipo)
         {
-            logger.Info("TraerTodoCompraDetalleExcel inicio "  + DateTime.Now.ToString("hh:mm:ss") );
             var compraDto = new List<CompraDto>();
             var compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
                 equipo.Contains(x.ComercialId.Value)).ToList();
             //var grupoCompras = compras.GroupBy(x => new { x.CampanaMaterialDetalle.CampanaId, x.CampanaMaterialDetalle.MaterialId });
-            logger.Info("TraerTodoCompraDetalleExcel inicio 2 " + DateTime.Now.ToString("hh:mm:ss") + " cantidad " + compras.Count());
             //foreach (var c in compras)
             //{
                 var detalle = new CompraDto
@@ -611,7 +609,6 @@ namespace Molinos.DataAgro.Business.Managers
                 };
                 compraDto.Add(detalle);
             //}
-            logger.Info("TraerTodoCompraDetalleExcel fin " + DateTime.Now.ToString("hh:mm:ss"));
             return compraDto;
         }
 
