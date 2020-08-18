@@ -454,13 +454,16 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<CompraDto> TraerTodoCompraDetalleExcel(List<int> equipo)
         {
+            logger.Info("TraerTodoCompraDetalleExcel get data");
             var compraDto = new List<CompraDto>();
             var compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
                 equipo.Contains(x.ComercialId.Value)).ToList();
+            logger.Info("TraerTodoCompraDetalleExcel get data" + compras.Count());
+
             //var grupoCompras = compras.GroupBy(x => new { x.CampanaMaterialDetalle.CampanaId, x.CampanaMaterialDetalle.MaterialId });
             //foreach (var c in compras)
             //{
-                var detalle = new CompraDto
+            var detalle = new CompraDto
                 {
 
                     ListaConCorredor = new ListaCompraDetalleDto
@@ -609,6 +612,8 @@ namespace Molinos.DataAgro.Business.Managers
                 };
                 compraDto.Add(detalle);
             //}
+            logger.Info("TraerTodoCompraDetalleExcel get data fin");
+
             return compraDto;
         }
 

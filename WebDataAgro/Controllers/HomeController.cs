@@ -192,6 +192,7 @@ namespace WebDataAgro.Controllers
             try
             {
                 var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
+                logger.Info("inicio export idnetif");
                 var oLstContacto = new LstContacto(reportesManager);
                 logger.Info("inicio export idnetif");
                 var identif = oLstContacto.GenerarExcelExportAll(datos);
