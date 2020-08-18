@@ -698,60 +698,60 @@ namespace Molinos.DataAgro.Report
 
             var situacion = oDatos.Situacion;
             //Situacion Soja
-            if (situacion.Count() > 0)
-            {
+            //if (situacion.Count() > 0)
+            //{
                
-                var workSheet13 = excel.Workbook.Worksheets.Add("Situación Compra");
+            //    var workSheet13 = excel.Workbook.Worksheets.Add("Situación Compra");
 
-                var ComprasConPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList();
-                var ComprasConPrecioAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList();
-                var ComprasConPrecioProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList();
-                var RecibidoSinPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList();
-                var RecibidoSinPrecioAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList();
-                var RecibidoSinPrecioProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList();
-                var ARecibirAFijarCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList();
-                var ARecibirAFijarAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList();
-                var ARecibirAFijarProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList();
-                var FasonFasConPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList();
-                var FasonFasAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList();
-                var FasonFasProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList();
+            //    var ComprasConPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList();
+            //    var ComprasConPrecioAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList();
+            //    var ComprasConPrecioProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList();
+            //    var RecibidoSinPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+            //    var RecibidoSinPrecioAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList();
+            //    var RecibidoSinPrecioProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList();
+            //    var ARecibirAFijarCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList();
+            //    var ARecibirAFijarAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList();
+            //    var ARecibirAFijarProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList();
+            //    var FasonFasConPrecioCorredor = situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList();
+            //    var FasonFasAcopiador = situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList();
+            //    var FasonFasProductor = situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList();
 
-                workSheet13.Cells[1, 1].LoadFromCollection(
-                ComprasConPrecioCorredor
-                .Union(ComprasConPrecioAcopiador)
-                .Union(ComprasConPrecioProductor)
-                .Union(RecibidoSinPrecioCorredor)
-                .Union(RecibidoSinPrecioAcopiador)
-                .Union(RecibidoSinPrecioProductor)
-                .Union(ARecibirAFijarCorredor)
-                .Union(ARecibirAFijarAcopiador)
-                .Union(ARecibirAFijarProductor)
-                .Union(FasonFasConPrecioCorredor)
-                .Union(FasonFasAcopiador)
-                .Union(FasonFasProductor)
-                , true);
-                j = 1;
-                while (workSheet13.Cells[1, j].Value != null)
-                {
-                    workSheet13.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                    workSheet13.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-                    workSheet13.Cells[1, j].Style.Font.Bold = true;
+            //    workSheet13.Cells[1, 1].LoadFromCollection(
+            //    ComprasConPrecioCorredor
+            //    .Union(ComprasConPrecioAcopiador)
+            //    .Union(ComprasConPrecioProductor)
+            //    .Union(RecibidoSinPrecioCorredor)
+            //    .Union(RecibidoSinPrecioAcopiador)
+            //    .Union(RecibidoSinPrecioProductor)
+            //    .Union(ARecibirAFijarCorredor)
+            //    .Union(ARecibirAFijarAcopiador)
+            //    .Union(ARecibirAFijarProductor)
+            //    .Union(FasonFasConPrecioCorredor)
+            //    .Union(FasonFasAcopiador)
+            //    .Union(FasonFasProductor)
+            //    , true);
+            //    j = 1;
+            //    while (workSheet13.Cells[1, j].Value != null)
+            //    {
+            //        workSheet13.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            //        workSheet13.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+            //        workSheet13.Cells[1, j].Style.Font.Bold = true;
 
-                    j++;
-                }
+            //        j++;
+            //    }
 
-                if (situacion.Count > 0)
-                {
-                    oPropRow = situacion[0].GetType().GetProperties();
+            //    if (situacion.Count > 0)
+            //    {
+            //        oPropRow = situacion[0].GetType().GetProperties();
 
-                    cantColumns = oPropRow.Count();
+            //        cantColumns = oPropRow.Count();
 
-                    for (int i = 1; i <= cantColumns; i++)
-                    {
-                        workSheet13.Column(i).AutoFit();
-                    };
-                }
-            }
+            //        for (int i = 1; i <= cantColumns; i++)
+            //        {
+            //            workSheet13.Column(i).AutoFit();
+            //        };
+            //    }
+            //}
 
             var identif = Varios.GetIdentif();
 

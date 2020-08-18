@@ -183,6 +183,7 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.DescargaExportAllComercial, PermisosDataAgro.DescargaExportAllVisualizador)]
         public ActionResult ExportarAll(oParamBusqueda filtro)
         {
+            logger.Info("inicio export all");
             var model = new ReportesModel();
 
             filtro.ComercialId = GlobalVariables.ComercialId;
@@ -204,6 +205,7 @@ namespace WebDataAgro.Controllers
                 logger.Error(e.Message);
                 throw;
             }
+            logger.Info("fin export all");
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
