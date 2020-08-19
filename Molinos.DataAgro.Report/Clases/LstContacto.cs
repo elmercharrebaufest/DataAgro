@@ -166,7 +166,7 @@ namespace Molinos.DataAgro.Report
             var workSheet8 = excel.Workbook.Worksheets.Add("Establecimiento");
 
             workSheet8.Cells[1, 1].LoadFromCollection(oDatos.establecimiento, true);
-           
+
             var oPropRow = oColumnas.GetType().GetProperties();
 
             var cantColumns = oPropRow.Count();
@@ -564,127 +564,127 @@ namespace Molinos.DataAgro.Report
             workSheet8.Cells[1, 11].Value = "Has. Totales";
             workSheet8.Column(11).AutoFit();
 
-           var compraCampanaActual = oDatos.CompraCampanaActual;
+            var compraCampanaActual = oDatos.CompraCampanaActual;
 
-           var workSheet9 = excel.Workbook.Worksheets.Add("Detalle Soja");
-           workSheet9.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Soja").ToList(), true);
+            var workSheet9 = excel.Workbook.Worksheets.Add("Detalle Soja");
+            workSheet9.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Soja").ToList(), true);
 
-           var workSheet10 = excel.Workbook.Worksheets.Add("Detalle Maíz");
-           workSheet10.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Maiz").ToList(), true);
+            var workSheet10 = excel.Workbook.Worksheets.Add("Detalle Maíz");
+            workSheet10.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Maiz").ToList(), true);
 
-           var workSheet11 = excel.Workbook.Worksheets.Add("Detalle Girasol");
-           workSheet11.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Girasol").ToList(), true);
+            var workSheet11 = excel.Workbook.Worksheets.Add("Detalle Girasol");
+            workSheet11.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Girasol").ToList(), true);
 
-           var workSheet12 = excel.Workbook.Worksheets.Add("Detalle Trigo");
-           workSheet12.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Trigo").ToList(), true);
+            var workSheet12 = excel.Workbook.Worksheets.Add("Detalle Trigo");
+            workSheet12.Cells[1, 1].LoadFromCollection(compraCampanaActual.Where(x => x.Material == "Trigo").ToList(), true);
 
-                //Compra Soja
+            //Compra Soja
 
-                if (compraCampanaActual.Count > 0)
+            if (compraCampanaActual.Count > 0)
+            {
+                oPropRow = compraCampanaActual[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
                 {
-                    oPropRow = compraCampanaActual[0].GetType().GetProperties();
-
-                    cantColumns = oPropRow.Count();
-
-                    for (int i = 1; i <= cantColumns; i++)
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
-                        if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
-                        {
-                            workSheet9.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                        workSheet9.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-                        }
-                        workSheet9.Column(i).AutoFit();
-                    };
-                }
+                    }
+                    workSheet9.Column(i).AutoFit();
+                };
+            }
 
-                j = 1;
-                while (workSheet9.Cells[1, j].Value != null)
+            j = 1;
+            while (workSheet9.Cells[1, j].Value != null)
+            {
+                workSheet9.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet9.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet9.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+            //Maiz
+            if (compraCampanaActual.Count > 0)
+            {
+                oPropRow = compraCampanaActual[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
                 {
-                    workSheet9.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet9.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet9.Cells[1, j].Style.Font.Bold = true;
-
-                    j++;
-                }
-                //Maiz
-                if (compraCampanaActual.Count > 0)
-                {
-                    oPropRow = compraCampanaActual[0].GetType().GetProperties();
-
-                    cantColumns = oPropRow.Count();
-
-                    for (int i = 1; i <= cantColumns; i++)
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
-                        if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
-                        {
-                            workSheet10.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                        workSheet10.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-                        }
-                        workSheet10.Column(i).AutoFit();
-                    };
-                }
+                    }
+                    workSheet10.Column(i).AutoFit();
+                };
+            }
 
-                j = 1;
-                while (workSheet10.Cells[1, j].Value != null)
+            j = 1;
+            while (workSheet10.Cells[1, j].Value != null)
+            {
+                workSheet10.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet10.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet10.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+
+            if (compraCampanaActual.Count > 0)
+            {
+                oPropRow = compraCampanaActual[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
                 {
-                    workSheet10.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet10.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet10.Cells[1, j].Style.Font.Bold = true;
-
-                    j++;
-                }
-
-                if (compraCampanaActual.Count > 0)
-                {
-                    oPropRow = compraCampanaActual[0].GetType().GetProperties();
-
-                    cantColumns = oPropRow.Count();
-
-                    for (int i = 1; i <= cantColumns; i++)
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
-                        if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
-                        {
-                            workSheet11.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                        workSheet11.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-                        }
-                        workSheet11.Column(i).AutoFit();
-                    };
-                }
+                    }
+                    workSheet11.Column(i).AutoFit();
+                };
+            }
 
-                j = 1;
-                while (workSheet11.Cells[1, j].Value != null)
+            j = 1;
+            while (workSheet11.Cells[1, j].Value != null)
+            {
+                workSheet11.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet11.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet11.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+
+            if (compraCampanaActual.Count > 0)
+            {
+                oPropRow = compraCampanaActual[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
                 {
-                    workSheet11.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                    workSheet11.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
-
-                    workSheet11.Cells[1, j].Style.Font.Bold = true;
-
-                    j++;
-                }
-
-                if (compraCampanaActual.Count > 0)
-                {
-                    oPropRow = compraCampanaActual[0].GetType().GetProperties();
-
-                    cantColumns = oPropRow.Count();
-
-                    for (int i = 1; i <= cantColumns; i++)
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
                     {
-                        if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
-                        {
-                            workSheet12.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                        workSheet12.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
 
-                        }
-                        workSheet12.Column(i).AutoFit();
-                    };
-                }
+                    }
+                    workSheet12.Column(i).AutoFit();
+                };
+            }
 
-                j = 1;
+            j = 1;
             while (workSheet12.Cells[1, j].Value != null)
             {
                 workSheet12.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -697,42 +697,13 @@ namespace Molinos.DataAgro.Report
             }
 
             var situacion = oDatos.Situacion;
-            //Situacion Soja
+
             if (situacion.Count() > 0)
             {
 
                 var workSheet13 = excel.Workbook.Worksheets.Add("Situación Compra");
 
-                List<CampanaMaterialDetallePorMeseExcelDto> lista = new List<CampanaMaterialDetallePorMeseExcelDto>();
-
-                lista.AddRange( situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ComprasConPrecio).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ComprasConPrecio).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ComprasConPrecio).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.RecibidoSinPrecio).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.RecibidoSinPrecio).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.RecibidoSinPrecio).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.ARecibirAFijar).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.ARecibirAFijar).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.ARecibirAFijar).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaConCorredor).SelectMany(x => x.FasonFas).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaDirectoAcopiador).SelectMany(x => x.FasonFas).ToList());
-                //lista.AddRange(situacion.Select(x => x.ListaDirectoProductor).SelectMany(x => x.FasonFas).ToList());
-
-                workSheet13.Cells[1, 1].LoadFromCollection(
-                lista
-                    //ComprasConPrecioCorredor
-                //.Union(ComprasConPrecioAcopiador)
-                //.Union(ComprasConPrecioProductor)
-                //.Union(RecibidoSinPrecioCorredor)
-                //.Union(RecibidoSinPrecioAcopiador)
-                //.Union(RecibidoSinPrecioProductor)
-                //.Union(ARecibirAFijarCorredor)
-                //.Union(ARecibirAFijarAcopiador)
-                //.Union(ARecibirAFijarProductor)
-                //.Union(FasonFasConPrecioCorredor)
-                //.Union(FasonFasAcopiador)
-                //.Union(FasonFasProductor)
-                , true);
+                workSheet13.Cells[1, 1].LoadFromCollection(situacion, true);
                 j = 1;
                 while (workSheet13.Cells[1, j].Value != null)
                 {

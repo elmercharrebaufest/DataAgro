@@ -16,7 +16,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<ComprasAll> compras { get; set; }
         public List<CompraCampanaActualDto> CompraCampanaActual { get; set; }
 
-        public List<CompraDto> Situacion { get; set; }
+        public List<CampanaMaterialDetallePorMeseExcelDto> Situacion { get; set; }
 
         public ExportAll()
         {
