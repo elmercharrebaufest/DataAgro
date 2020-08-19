@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public class CampanaMaterialDetallePorMeseExcelDto
+    public class CampanaMaterialDetallePorMeseExcelDto : ICloneable
     {
         public string Situacion { get; set; }
         public string Clasificacion { get; set; }
@@ -19,5 +19,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Campaña { get; set; }
 
         public string Material { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

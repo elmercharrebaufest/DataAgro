@@ -412,7 +412,7 @@ namespace Molinos.DataAgro.Business.Managers
             foreach (var mat in material)
             {
                 var c = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
-                equipo.Contains(x.ComercialId.Value) 
+                equipo.Contains(x.ComercialId.Value)
                 && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId)
                 && mat.MaterialId == x.CampanaMaterialDetalle.MaterialId
                 && mat.CampañaId == x.CampanaMaterialDetalle.CampanaId);
@@ -496,9 +496,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Proveedor = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                 CUIT = x.CampanaMaterialDetalle.Proveedor.CUIT,
             }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId));
-                        
+
             List<CampanaMaterialDetallePorMeseExcelDto> campanaMaterialDetallePorMeseExcelDtos = new List<CampanaMaterialDetallePorMeseExcelDto>();
-            
+
             foreach (var x in compras)
             {
                 CampanaMaterialDetallePorMeseExcelDto itemDto = new CampanaMaterialDetallePorMeseExcelDto();
@@ -513,32 +513,40 @@ namespace Molinos.DataAgro.Business.Managers
                     (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc != "ZPAF") || (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF")
                     )
                 {
-                    itemDto.Situacion = "Compras Con Precio";
-                    itemDto.Tn = x.ClaseDoc != "ZPAF" ? x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada : x.ToneladaFijada;
-                    campanaMaterialDetallePorMeseExcelDtos.Add(itemDto);
+                    CampanaMaterialDetallePorMeseExcelDto cloned = (CampanaMaterialDetallePorMeseExcelDto)itemDto.Clone();
+                    cloned.Situacion = "Compras Con Precio";
+                    cloned.Tn = x.ClaseDoc != "ZPAF" ? x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada : x.ToneladaFijada;
+                    if (cloned.Tn != 0)
+                        campanaMaterialDetallePorMeseExcelDtos.Add(cloned);
                 }
                 if (x.ClaseDoc == "ZPAF")
                 {
-                    itemDto.Situacion = "Recibido Sin Precio";
-                    itemDto.Tn = x.ToneladaAplicada - x.ToneladaFijada < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada;
-                    campanaMaterialDetallePorMeseExcelDtos.Add(itemDto);
+                    CampanaMaterialDetallePorMeseExcelDto cloned = (CampanaMaterialDetallePorMeseExcelDto)itemDto.Clone();
+                    cloned.Situacion = "Recibido Sin Precio";
+                    cloned.Tn = x.ToneladaAplicada - x.ToneladaFijada < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada;
+                    if (cloned.Tn != 0)
+                        campanaMaterialDetallePorMeseExcelDtos.Add(cloned);
                 }
                 if (x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0)
                 {
-                    itemDto.Situacion = "A Recibir a Fijar";
-                    itemDto.Tn = x.PendienteAFijar;
-                    campanaMaterialDetallePorMeseExcelDtos.Add(itemDto);
+                    CampanaMaterialDetallePorMeseExcelDto cloned = (CampanaMaterialDetallePorMeseExcelDto)itemDto.Clone();
+                    cloned.Situacion = "A Recibir a Fijar";
+                    cloned.Tn = x.PendienteAFijar;
+                    if (cloned.Tn != 0)
+                        campanaMaterialDetallePorMeseExcelDtos.Add(cloned);
                 }
                 if (x.ClaseDoc == "ZFAZ")
                 {
-                    itemDto.Situacion = "Fasón Fas";
-                    itemDto.Tn = x.ToneladaContrato;
-                    campanaMaterialDetallePorMeseExcelDtos.Add(itemDto);
+                    CampanaMaterialDetallePorMeseExcelDto cloned = (CampanaMaterialDetallePorMeseExcelDto)itemDto.Clone();
+                    cloned.Situacion = "Fasón Fas";
+                    cloned.Tn = x.ToneladaContrato;
+                    if (cloned.Tn != 0)
+                        campanaMaterialDetallePorMeseExcelDtos.Add(cloned);
                 }
 
             }
 
-            
+
             return campanaMaterialDetallePorMeseExcelDtos;
         }
         public List<CompraCampanaActualDto> TraerTodoCompraCampanaActual(List<int> equipo)
