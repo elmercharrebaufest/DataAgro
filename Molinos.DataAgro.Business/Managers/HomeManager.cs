@@ -551,6 +551,14 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<CompraCampanaActualDto> TraerTodoCompraCampanaActual(List<int> equipo)
         {
+            var proveedorIds = new List<int>();
+            var proveedores = repositorio.Listar<Proveedor>().ToList();
+            var cuits = proveedores.Select(x => x.CUIT).Distinct().ToList();
+            foreach (var cuit in cuits)
+            {
+                var provid = proveedores.Where(x => x.CUIT == cuit).First().ProveedorId;
+                proveedorIds.Add(provid);
+            }
             return repositorio.Listar<CampanaMaterialDetallePorMes, CompraCampanaActualDto>(x => new CompraCampanaActualDto()
             {
                 Fecha = x.Fecha,
@@ -570,7 +578,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ToneladaContrato = x.ToneladaContrato,
                 ToneladaFijada = x.ToneladaFijada,
 
-            }, x => equipo.Contains(x.ComercialId.Value));
+            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId));
         }
     }
     public class FakeHome
