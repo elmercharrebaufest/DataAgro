@@ -502,7 +502,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CampanaMaterialDetallePorMeseExcelDto itemDto = new CampanaMaterialDetallePorMeseExcelDto();
                 itemDto.Material = x.Material;
                 itemDto.Campaña = x.Campana;
-                itemDto.Cuit = x.Proveedor;
+                itemDto.Cuit = x.CUIT;
                 itemDto.RazonSocial = x.Proveedor;
                 itemDto.Contrato = x.Contrato;
                 itemDto.Clasificacion = !String.IsNullOrEmpty(x.CorredorCuit) ? "CORREDOR" : x.Clasificacion;
