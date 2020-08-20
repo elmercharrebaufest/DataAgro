@@ -247,18 +247,6 @@
         AABJRU5ErkJgggs=
 </value>
   </data>
-  <data name="label30.Text" xml:space="preserve">
-    <value>(marcar con una x) :    (     )  Equipamiento propio
-                                    (     )  Alquilado
-                                    (     )  Propio y alquilado
-                                    (     )  Otros: </value>
-  </data>
-  <data name="label32.Text" xml:space="preserve">
-    <value>(marcar con una x) :    (     )  Personal propio
-                                    (     )  Personal contratado
-                                    (     )  Personal propio y contratado
-                                    (     )  Otros:</value>
-  </data>
   <metadata name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
