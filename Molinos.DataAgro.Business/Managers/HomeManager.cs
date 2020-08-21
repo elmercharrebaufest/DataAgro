@@ -495,7 +495,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Campana = x.CampanaMaterialDetalle.Campana.Descripcion,
                 Proveedor = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
                 CUIT = x.CampanaMaterialDetalle.Proveedor.CUIT,
-            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId));
+                RazonSocialCorredor = x.Corredor != null ? x.Corredor.RazonSocial : ""
+            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId)); 
 
             List<CampanaMaterialDetallePorMeseExcelDto> campanaMaterialDetallePorMeseExcelDtos = new List<CampanaMaterialDetallePorMeseExcelDto>();
 
@@ -507,6 +508,8 @@ namespace Molinos.DataAgro.Business.Managers
                 itemDto.Cuit = x.CUIT;
                 itemDto.RazonSocial = x.Proveedor;
                 itemDto.Contrato = x.Contrato;
+                itemDto.CorredorCuit = x.CorredorCuit;
+                itemDto.RazonSocialCorredor = x.RazonSocialCorredor;
                 itemDto.Clasificacion = !String.IsNullOrEmpty(x.CorredorCuit) ? "CORREDOR" : x.Clasificacion;
                 if (((!String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF") || (!String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF")) ||
                     (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF") || (String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF") ||

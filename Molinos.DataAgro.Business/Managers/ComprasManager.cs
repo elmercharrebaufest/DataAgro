@@ -134,7 +134,12 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 else
                                 {
-                                    campaniasMaterial.Add(new CampañaMaterial() { CampañaId = campaniaId, NroItem = 1, ProveedorId = proveedorId, MaterialId = materialId, ToneladasCompradas = jj.Sum(x => (double)x.TN_COMPRADAS) });
+                                    campaniasMaterial.Add(new CampañaMaterial() {
+                                        CampañaId = campaniaId,
+                                        NroItem = 1,
+                                        ProveedorId = proveedorId,
+                                        MaterialId = materialId,
+                                        ToneladasCompradas = jj.Sum(x => (double)x.TN_COMPRADAS) });
                                 }
                             }
                         }
@@ -259,6 +264,8 @@ namespace Molinos.DataAgro.Business.Managers
                                             campaniaMaterialMes.Clasificacion = ii.CLASIFICACION;
                                             campaniaMaterialMes.Contrato = ii.CONTRATO;
                                             campaniaMaterialMes.CorredorCuit = ii.CORREDOR;
+                                            campaniaMaterialMes.CorredorId = !string.IsNullOrEmpty(ii.CORREDOR) ? repositorio.Obtener<Proveedor, int>(
+                                                x => x.CUIT == ii.CORREDOR, x => x.ProveedorId) : (int?)null;
                                         }
                                         else
                                         {
@@ -277,9 +284,11 @@ namespace Molinos.DataAgro.Business.Managers
                                                 Contrato = ii.CONTRATO,
                                                 CorredorCuit = ii.CORREDOR,
                                                 ComercialId = ComercialId,
-                                                CampanaMaterialDetalleId = campaniaMaterial.Id
+                                                CampanaMaterialDetalleId = campaniaMaterial.Id,
+                                                CorredorId = !string.IsNullOrEmpty(ii.CORREDOR) ? repositorio.Obtener<Proveedor, int>(
+                                                x => x.CUIT == ii.CORREDOR, x => x.ProveedorId) : (int?)null,
 
-                                            });
+                                        });
                                         }
                                     }
 

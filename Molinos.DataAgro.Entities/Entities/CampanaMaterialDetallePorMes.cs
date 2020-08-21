@@ -23,11 +23,13 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Clasificacion { get; set; }
         public int? CampanaMaterialDetalleId { get; set; }
         public int? ComercialId { get; set; }
-
+        public int? CorredorId { get; set; }
         [ForeignKey("CampanaMaterialDetalleId")]
         public virtual CampanaMaterialDetalle CampanaMaterialDetalle { get; set; }
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; }
+        [ForeignKey("CorredorId")]
+        public virtual Proveedor Corredor{ get; set; }
 
     }    
 }

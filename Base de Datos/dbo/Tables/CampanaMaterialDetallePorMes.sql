@@ -14,7 +14,9 @@
 	[Clasificacion]       VARCHAR(MAX)        NULL, 
     [CampanaMaterialDetalleId]       INT        NULL,    
     [ComercialId]             INT        NULL,
+    [CorredorId] INT NULL, 
     CONSTRAINT [PK_CampanaMaterialDetallePorMes] PRIMARY KEY CLUSTERED ([Id] ASC),
+    CONSTRAINT [FK_CampanaMaterialDetallePorMes_Contacto] FOREIGN KEY ([CorredorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),
     CONSTRAINT [FK_CampanaMaterialDetallePorMes_CampanaMaterialDetalle] FOREIGN KEY ([CampanaMaterialDetalleId]) REFERENCES [dbo].[CampanaMaterialDetalle] ([Id]),
 	CONSTRAINT [FK_CampanaMaterialDetallePorMes_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId])
 );
