@@ -3360,7 +3360,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
                         oContratoSave.Cantidad = cantidadKg;
-                        tipo = TipoAccionLogDataAgro.Crear;
+                        tipo = TipoAccionLogDataAgro.Modificar;
                     }
 
                    repositorio.GuardarCambios();

@@ -886,8 +886,8 @@ function armarContacto() {
                 grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].Partido = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].Partido || acopiomaterial[i].Partido;
                 grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].Nombre = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].Nombre || acopiomaterial[i].Nombre;
 
-                grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZnombre = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZnombre || acopiomaterial[i].KMZnombre;
-                grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZfile = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].Id].KMZfile || acopiomaterial[i].KMZfile;
+                grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].KMZnombre = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].KMZnombre || acopiomaterial[i].KMZnombre;
+                grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].KMZfile = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].KMZfile || acopiomaterial[i].KMZfile;
 
                 grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].GranosAlmacenamiento = grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].GranosAlmacenamiento || [];
                 grupoacopio[acopiomaterial[i].Campaña]["Acopio" + acopiomaterial[i].AcopioId].GranosAlmacenamiento.push({

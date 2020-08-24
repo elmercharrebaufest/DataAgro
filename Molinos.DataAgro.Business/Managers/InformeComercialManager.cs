@@ -113,14 +113,14 @@ namespace Molinos.DataAgro.Business
                     {
                         foreach (var item in nuevosAcopios)
                         {
-                            Acopio acopio = new Acopio
+                            Acopio acopio = repositorio.Agregar(new Acopio
                             {
                                 LocalidadId = item.LocalidadId,
                                 ProveedorId = informe.ProveedorId,
                                 NroItem = 1,
                                 KMZfile = null,
                                 KMZnombre = null
-                            };
+                            });
                             AcopioCampaña acopioCampaña = new AcopioCampaña
                             {
                                 Acopio = acopio,
@@ -130,6 +130,16 @@ namespace Molinos.DataAgro.Business
                                 NroItem = 1
                             };
                             repositorio.Agregar(acopioCampaña);
+
+                            AcopioMaterial acopioMaterial = new AcopioMaterial
+                            {
+                                Acopio = acopio,
+                                CampañaId = item.CampañaId,
+                                MaterialId = item.MaterialId,
+                                NroItem = 1,
+                                Toneladas = item.Toneladas
+                            };
+                            repositorio.Agregar(acopioMaterial);
                         }
                     }
 

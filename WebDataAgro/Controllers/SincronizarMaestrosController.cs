@@ -246,12 +246,17 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
-        public ActionResult ProcessComprasDetalle(string comercialUsurarioAD = "", string cuit="")
+        static readonly object _lockProcessComprasDetalle = new object();
+        public ActionResult ProcessComprasDetalle(string comercialUsurarioAD = "", string cuit = "")
         {
-            logger.Info($"ProcessCompras - Iniciando");
-            comprasManager.ActualizarComprasDetalle(comercialUsurarioAD, cuit);
-            logger.Info($"ProcessCompras - Finalizado");
-            return Content("ok");
+            lock (_lockProcessComprasDetalle)
+            {
+                logger.Info($"ProcessComprasDetalle - Iniciando");
+                comprasManager.ActualizarComprasDetalle(comercialUsurarioAD, cuit);
+                logger.Info($"ProcessComprasDetalle - Finalizado");
+                return Content("ok");
+            }
+
         }
     }
 }

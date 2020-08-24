@@ -240,6 +240,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int LocalidadId { get; set; }
         public bool ArrendaPropia { get; set; }
         public int CampañaId { get; set; }
+        public int MaterialId { get; set; }
     }
 
 }
