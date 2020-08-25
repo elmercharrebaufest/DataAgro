@@ -147,10 +147,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FechaOperacion = DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion),
                         MotivoOperacionAnterior = (contrato is Contrato) ? (contrato as Contrato).MotivoOperacionAnterior : "",
                         UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido: "Automática",
-                        FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion :(DateTime?)null,
-                        //ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
-                        DolarizadoExpress = contrato.DolarizadoExpress.Value
-
+                        FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion :(DateTime?)null,                     
+                        ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
+                        DolarizadoExpress = contrato.DolarizadoExpress.Value,
+                        PagoCBU = contrato.PagoCBU
                     };
 
                 return queryNegocios;
@@ -273,8 +273,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         OcultarEnTablero = fijac.OcultarEnTablero,
                         EsFason = false,
                         UsuarioConfirmador = fijac.EstadoId == 1 ? "" : fijac.ComercialConfirmador != null ? fijac.ComercialConfirmador.Nombres + " " + fijac.ComercialConfirmador.Apellido : "Automática",
-                        FechaConfirmacion = fijac.FechaConfirmacion != null ? fijac.FechaConfirmacion : (DateTime?)null
-
+                        FechaConfirmacion = fijac.FechaConfirmacion != null ? fijac.FechaConfirmacion : (DateTime?)null,
+                        ChequeElectronicoValor = fijac.ChequeElectronico.HasValue ? (fijac.ChequeElectronico.Value ? "Si" : "No") : "",
+                        PagoCBU = fijac.PagoCBU
                     };
                 return queryFijacion;
             }

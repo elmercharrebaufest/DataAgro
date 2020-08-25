@@ -684,7 +684,7 @@ namespace Molinos.DataAgro.Report
                 };
             }
 
-            j = 1;
+                j = 1;
             while (workSheet12.Cells[1, j].Value != null)
             {
                 workSheet12.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;

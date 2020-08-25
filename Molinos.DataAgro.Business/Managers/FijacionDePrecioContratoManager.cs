@@ -249,16 +249,16 @@ namespace Molinos.DataAgro.Business.Managers
             if (oFijacionDePrecio.Id != 0)
             {
                 oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.Id);
-                //if (oFijacionDePrecio.ChequeElectronico != oFijacionDePrecioSave.ChequeElectronico && oFijacionDePrecio.ChequeElectronico.Value)
-                //{
-                //    var result = validarPagoAgente.ValidarEstado("", oFijacionDePrecio.FijacionSAP);
-                //    if (result != "Ok")
-                //    {
-                //        oEntityErrors.Error("", result);
-                //        return oEntityErrors;
-                //    }
-                //}
-                if (oFijacionDePrecioSave.EstadoId == 5 || oFijacionDePrecioSave.EstadoId == 6)
+                if ((oFijacionDePrecio.ChequeElectronico != oFijacionDePrecioSave.ChequeElectronico && oFijacionDePrecio.ChequeElectronico.Value) || oFijacionDePrecioSave.PagoCBU != oFijacionDePrecio.PagoCBU)
+                {
+                    var result = validarPagoAgente.ValidarEstado("", oFijacionDePrecio.FijacionSAP);
+                    if (result != "Ok")
+                    {
+                        oEntityErrors.Error("", result);
+                        return oEntityErrors;
+                    }
+                }
+                if (oFijacionDePrecioSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
                     return oEntityErrors;
@@ -301,7 +301,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.DiasPesificado = oFijacionDePrecio.DiasPesificado;
                 oFijacionDePrecioSave.PagoDiferidoContrato = oFijacionDePrecio.PagoDiferidoContrato;
                 oFijacionDePrecioSave.DestinoId = oFijacionDePrecio.DestinoId;
-                //oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
+                oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
+                oFijacionDePrecioSave.PagoCBU = oFijacionDePrecio.PagoCBU;
 
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -783,8 +784,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDesde = fijac.FechaDesde,
                 FechaHasta = fijac.FechaHasta,
                 Fecha = fijac.Fecha,
-                //ChequeElectronico = fijac.ChequeElectronico
-
+                ChequeElectronico = fijac.ChequeElectronico,
+                PagoCBU = fijac.PagoCBU
+                
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)

@@ -11,6 +11,7 @@
             <xsd:element name="IM_APERTURA" type="rfc:ZMPTT7960" />
             <xsd:element name="IM_CONTRATO" type="rfc:char10" />
             <xsd:element minOccurs="0" name="IM_CORREDOR" type="rfc:char16" />
+            <xsd:element minOccurs="0" name="IM_CUENTA_MRP" type="rfc:char60" />
             <xsd:element name="IM_DIAS_DIFERIM" type="rfc:numeric3" />
             <xsd:element name="IM_FECHA" type="rfc:date10" />
             <xsd:element name="IM_KILOS" type="rfc:quantum13.3" />
@@ -19,6 +20,7 @@
             <xsd:element name="IM_PAGO_DIF_ARP" type="rfc:char1" />
             <xsd:element name="IM_PRECIO" type="rfc:curr11.2" />
             <xsd:element name="IM_PROVEEDOR" type="rfc:char16" />
+            <xsd:element minOccurs="0" name="IM_ZLSCH" type="rfc:char10" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -62,6 +64,11 @@
         <xsd:restriction base="xsd:decimal">
           <xsd:totalDigits value="11" />
           <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char60">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="60" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="quantum13.3">

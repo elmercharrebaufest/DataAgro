@@ -42,6 +42,7 @@ namespace Molinos.DataAgro.Interfaces
         List<CupoDto> ListarCupo(string cupoSap);
 
         List<BasicoContrato> TraerNegocioConCupoDisponible(string proveedorCuit, int material, int centro, string filtro, DateTime desde, DateTime hasta);
+        Resultado AltaCupoSAP(Cupo cupoSAP);
     }
 
 }

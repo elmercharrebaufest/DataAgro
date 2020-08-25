@@ -97,14 +97,14 @@ function ObtenerFechaHasta(fechaBase) {
 
 function InicializarElementos() {
     kendo.culture("es-AR");
-    $('[data-toggle="popover"]').popover(); 
+    $('[data-toggle="popover"]').popover();
     $(".datos-adicionales").hide();
     $(".datos-boleto").hide();
     $(".datos-establecimiento").hide();
     $(".datos-topesplazos").hide();
     $(".datos-calidades").hide();
     $(".datos-descuentos").hide();
-    $(".ocultar").hide();   
+    $(".ocultar").hide();
     $("#buscadorProveedor").click(function () {
         SetearComisionCorredor();
         $("#buscadorProveedor").data("kendoAutoComplete").value("");
@@ -128,6 +128,8 @@ function InicializarElementos() {
             $("#contratoId").val("");
             $(".datoscontrato").hide();
             $("#datosContrato").hide();
+            $("#pagoCbuInput").val("");
+            $("#pagoCbu").val("");
             InicializarBordesRojos();
         },
         select: function (e) {
@@ -243,18 +245,30 @@ function InicializarElementos() {
                 if (!$("#dolarizadoId").is(":checked")) {
                     $("#dolarizadoExpressId").prop("disabled", false);
                     $("#dolarizadoDiv").hide();
-                    $("#dolarizadoFechaId").val("");                   
+                    $("#dolarizadoFechaId").val("");
                 }
                 if (!$("#dolarizadoExpressId").is(":checked")) {
-                    $("#dolarizadoId").prop("disabled", false);           
+                    $("#dolarizadoId").prop("disabled", false);
                     $("#dolarizadoDiv").hide();
                     $("#dolarizadoFechaId").val("");
                 }
-            }else {         
-                $("#dolarizadoExpressId").prop("checked", false);  
+                if ($("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
+                    $("#pagoDirectoDiv").hide();
+                    $("#pagoCbuDiv").show();
+                    if ($("#tipoId").val() == "6" || $("#tipoId").val() == "3") {
+                        $("#pagoCbuId").show();
+                        $("#pagoCbuDiv").hide();
+                    }
+                }
+            } else {
+                $("#dolarizadoExpressId").prop("checked", false);
                 $("#dolarizadoExpressId").prop("disabled", true);
                 $("#dolarizadoId").prop("checked", false);
                 $("#dolarizadoId").prop("disabled", true);
+                $("#pagoCbuDiv").hide();
+                $("#pagoCbu").val("");
+                $("#pagoCbuId").hide();
+                $("#pagoCbuInput").val("");
             }
             $("#buscadorProveedor").val("");
             $("#contratoId").val("");
@@ -323,9 +337,9 @@ function InicializarElementos() {
             ' - KG APLICADOS SIN FIJAR : #: data.RecibidoSinFijar# - KG PENDIENTES A FIJAR: #: data.KilosPendiente# ' +
             ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong>' +
             ' #if(data.Calidad == true){ #<i style="z-index:10005 !important;" value="true" data-html="true" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="<i><strong>' +
-            '#for(var cal = 0; cal < data.Calidades.length; cal++){# ' +            
-            ' ${data.Calidades[cal].CalidadEspecialDesc} ${data.Calidades[cal].Valor} <br /> '+
-            ' #if(data.Calidades[cal].PorcentajeDesde != null && data.Calidades[cal].PorcentajeHasta != null) {' + 
+            '#for(var cal = 0; cal < data.Calidades.length; cal++){# ' +
+            ' ${data.Calidades[cal].CalidadEspecialDesc} ${data.Calidades[cal].Valor} <br /> ' +
+            ' #if(data.Calidades[cal].PorcentajeDesde != null && data.Calidades[cal].PorcentajeHasta != null) {' +
             '  # <li>Porc. Desde #:data.Calidades[cal].PorcentajeDesde# % Hasta #:data.Calidades[cal].PorcentajeHasta# %</li> <br /> # }' +
             ' }# </strong><i>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></i># }else { } # </p > ',
         dataBound: function () {
@@ -537,7 +551,7 @@ function InicializarElementos() {
             $(".contratoAFijar").hide();
             $(".contratoAPrecio").hide();
             $("#pagosDiv").hide();
-            $("#fechaCiertaDiv").hide();             
+            $("#fechaCiertaDiv").hide();
             $(".contratoMadreDiv").hide();
             $("#contMadreId").val("");
             $("#madreId").prop("checked", false);
@@ -564,7 +578,10 @@ function InicializarElementos() {
             $("#ocultarAperturaMoneda").addClass("w100");
             $("#corredorDiv").show();
             $("#cargarCantidadPendienteFijar").hide();
-            //$("#chequeElectronicoDiv").hide();
+            $("#chequeElectronicoDiv").hide();
+            $("#chequeElectronicoId").hide();
+            $("#pagoCbuId").hide();
+            $("#pagoCbuDiv").hide();
             $("#dolarizadoExpressDiv").hide();
             $("#baseDiv").hide();
             $("#pizarraDiv").hide();
@@ -603,7 +620,8 @@ function InicializarElementos() {
                 $("#mercsDepositoDiv").hide();
                 $("#guardarBtn").empty();
                 $("#guardarBtn").append("Guardar Fijacion");
-                //$("#chequeElectronicoId").show();
+                $("#chequeElectronicoId").show();
+                $("#pagoCbuId").show();
                 RemoverFondosGrises();
                 $("#boton-ampliar").hide();
                 $("#pizarraDiv").show();
@@ -616,7 +634,7 @@ function InicializarElementos() {
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
                 $('#pagoDirectoDiv').hide();
-                
+
 
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
 
@@ -661,8 +679,8 @@ function InicializarElementos() {
                 $("#pizarraDiv").prop("checked", false);
             } else if (this.value() == 6) {
                 $("#boton-ampliar").hide();
-                $(".noAcuerdo").hide();                
-                $(".acuerdo").show();            
+                $(".noAcuerdo").hide();
+                $(".acuerdo").show();
                 RemoverFondosGrises();
                 $("#guardarBtn").empty();
                 $("#guardarBtn").append("Guardar Acuerdo");
@@ -671,8 +689,8 @@ function InicializarElementos() {
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
-                $("#pizarraDiv").prop("checked", false);  
-            
+                $("#pizarraDiv").prop("checked", false);
+
             } else {
                 $("#fechasDiv").show();
                 $("#fechaDesdeDiv").show();
@@ -746,7 +764,10 @@ function InicializarElementos() {
                     $("#ocultarAperturaBtn").show();
                     $("#ocultarAperturaMoneda").removeClass("w100");
                     $("#ocultarAperturaMoneda").addClass("w70");
-                    //$("#chequeElectronicoDiv").show();
+                    $("#chequeElectronicoDiv").show();
+                    $("#chequeElectronicoId").hide();
+                    $("#pagoCbuDiv").show();
+                    $("#pagoCbuId").hide();
                     if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
                 }
                 if ($("#boton-ampliar").text() == "+ AMPLIAR") {
@@ -759,9 +780,9 @@ function InicializarElementos() {
                 var precioRojo = $("#precioId").hasClass("required-box-parent") ? $("#precioId") : $("#precioId").parent().parent();
                 $("#precioId").data("kendoNumericTextBox").value("");
                 $("#precioId").trigger('change');
-                precioRojo.removeClass("required-border");   
-                
-                
+                precioRojo.removeClass("required-border");
+
+
             }
         }
     });
@@ -811,10 +832,10 @@ function InicializarElementos() {
     });
     $("#CheckFijacion").click(function () {
         if ($(this).is(':checked')) {
-            $("#cantidadId").data("kendoNumericTextBox").value($("#kgspendientescontrato").text());            
+            $("#cantidadId").data("kendoNumericTextBox").value($("#kgspendientescontrato").text());
         }
     });
-   
+
     $("#material").kendoDropDownList({
         optionLabel: "SELECCIONE UN MATERIAL...",
         dataTextField: "Descripcion",
@@ -866,9 +887,9 @@ function InicializarElementos() {
                 $("#dolarizadoDiv").hide();
                 $("#pagoDiferidoDiv").show();
                 $("#dolarizadoId").prop("checked", false);
-                $("#dolarizadoFechaId").data("kendoDatePicker").value("");               
+                $("#dolarizadoFechaId").data("kendoDatePicker").value("");
                 $("#dolarizadoExpressDiv").hide();
-                $("#dolarizadoExpressId").prop("checked", false);           
+                $("#dolarizadoExpressId").prop("checked", false);
             } else if ($("#precioMonedaId").val() === "USDM " && ($("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
                 $("#pagoDiferidoDiv").hide();
                 $("#pesificadoDiv").hide();
@@ -883,7 +904,7 @@ function InicializarElementos() {
                     $("#dolarizadoDiv").hide();
                     $("#dolarizadoExpressId").prop("checked", false);
                 }
-            } 
+            }
             if ($("#tipoId").val() === "3") {
                 CalcularPrecioTotalApertura();
             }
@@ -1040,9 +1061,9 @@ function InicializarElementos() {
                     $("#dolarizadoExpressId").prop("checked", false);
                     $("#dolarizadoDiv").hide();
                     $("#dolarizadoFechaId").val("");
-                    
-                }               
-                
+
+                }
+
             } else {
                 $("#pagoDolarizadoDiv").hide();
                 $("#dolarizadoId").prop("checked", false);
@@ -1121,23 +1142,27 @@ function InicializarElementos() {
         dataValueField: "Id",
         change: function () {
             $("#porcentajeDePagoId").data("kendoNumericTextBox").value(100);
-            if (this.value() == "") {         
+            if (this.value() == "") {
                 $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
-                
+                if ($("#tipoId").val() == "6") {
+                    $("#chequeElectronicoId").show();
+                    $("#pagoCbuId").show();
+                }
             }
-            
-            //if (this.value() == "" && ($("#tipoId").val() == "6")) {               
-            //    $("#chequeElectronicoId").show();
-            //}
-            //if (this.value() == "" && ($("#tipoId").val() == "2")) {
-            //    $("#chequeElectronicoDiv").show();
-            //}
-            //if (this.value() >= 1) {
-            //    $("#chequeElectronicoInput").prop("checked", false);
-            //    $("#chequeElectronicoDiv").hide();
-            //    $("#chequeElectronico").prop("checked", false);
-            //    $("#chequeElectronicoId").hide();
-            //}
+            if (this.value() == "" && ($("#tipoId").val() == "2")) {
+                $("#chequeElectronicoDiv").show();
+                $("#pagoCbuDiv").show();
+            }
+            if (this.value() >= 1) {
+                $("#chequeElectronicoInput").prop("checked", false);
+                $("#chequeElectronicoDiv").hide();
+                $("#pagoCbuDiv").hide();
+                $("#chequeElectronico").prop("checked", false);
+                $("#chequeElectronicoId").hide();
+                $("#pagoCbuId").hide();
+                $("#pagoCbu").val("");
+                $("#pagoCbuInput").val("");
+            }
             if (this.value() == 1) {
                 $("#boletoNingunoId").prop("checked", false);
                 $("#boletoNingunoId").click();
@@ -1350,15 +1375,20 @@ function InicializarElementos() {
         min: 0,
         change: function () {
             if ($("#tipoId").val() == "6") {
+                $("#fechaCiertaAcuerdoDiv").show();
+                if ($("#AgenteCompraId").val() == "") {
+                    $("#chequeElectronicoId").show();
+                    $("#pagoCbuId").show();
+                }
                 if ($("#precioId").val() != "" && $("#precioId").val() != "0") {
                     $("#fechaCiertaAcuerdoDiv").show();
                 } else {
                     $("#fechaCiertaAcuerdo").data("kendoDatePicker").value("");
                     $("#fechaCiertaAcuerdoDiv").hide();
                 }
-                               
-            }           
-            
+
+            }
+
         }
     });
 
@@ -1472,7 +1502,7 @@ function InicializarElementos() {
             var dia = hoy.getDate();
             hoy = new Date(anio, mes, dia);
             const diffTime = Math.abs(hoy - this.value());
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             if (this.value() < hoy) {
                 $("#fechaOperacionMotivoDiv").show();
                 if (diffDays > 1) {
@@ -1600,11 +1630,11 @@ function InicializarElementos() {
     });
 
     $("#dolarizadoId").click(function () {
-
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
-            $("#dolarizadoExpressId").prop("checked", false);         
-            $("#pesificadoId").prop("checked", false);            
+            $("#dolarizadoExpressId").prop("checked", false);
+            $("#pesificadoId").prop("checked", false);
+            $("#chequeElectronicoDiv").show();
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
         }
@@ -1620,23 +1650,48 @@ function InicializarElementos() {
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
             $("#dolarizadoId").prop("checked", false);
+            $("#chequeElectronicoInput").prop("checked", false);
+            $("#chequeElectronicoDiv").hide();
+            $("#pagoCbu").prop("checked", false);
+            $("#pagoCbuDiv").hide();
+
         }
-        else {         
+        else {
             $("#dolarizadoFechaId").val("");
+            if (!$("#compensacionId").is(":checked")) {
+                $("#pagoCbuDiv").show();
+                if (!$("#pagoDirectoId").is(":checked")) {
+                    $("#chequeElectronicoDiv").show();
+                }
+            }
         }
     });
 
     $("#pesificadoId").click(function () {
+
         if ($(this).is(':checked')) {
             $("#pesificadoDiv").show();
 
             $("#dolarizadoId").prop("checked", false);
             $("#dolarizadoDiv").hide();
             $("#dolarizadoFechaId").val("");
+
+
+            $("#fechaCiertaAcuerdoDiv").hide();
+            $("#fechaCiertaAcuerdo").val("");
+            $("#fechaCiertaDiv").hide();
+            $("#fechaCiertaId").val("");
         }
         else {
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+
+            if ($("#tipoId").val() == "2") {
+                $("#fechaCiertaDiv").show();
+
+            } else {
+                $("#fechaCiertaAcuerdoDiv").show();
+            }
         }
     });
 
@@ -1644,11 +1699,23 @@ function InicializarElementos() {
         if ($(this).is(':checked')) {
             $("#diasDiferidoFijacionDiv").removeClass("hide-fijacion");
             $("#diasDiferidoFijacionDiv").addClass("inline-fijacion");
+
+            $("#fechaCiertaAcuerdoDiv").hide();
+            $("#fechaCiertaAcuerdo").val("");
+            $("#fechaCiertaDiv").hide();
+            $("#fechaCiertaId").val("");
         }
         else {
             $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
             $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
             $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
+
+            if ($("#tipoId").val() == "2") {
+                $("#fechaCiertaDiv").show();
+
+            } else {
+                $("#fechaCiertaAcuerdoDiv").show();
+            }
         }
     });
 
@@ -1722,8 +1789,25 @@ function InicializarElementos() {
         return !((element.Importe == 0 || element.Importe == undefined) && (element.Porcentaje == 0 || element.Porcentaje === undefined));
     };
     $("#pagoDirectoId").click(function () {
+        if ($(this).is(':checked')) {
+            if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
+                $("#chequeElectronicoId").hide();
+                $("#chequeElectronico").prop("checked", false);
+            }
+            $("#chequeElectronicoDiv").hide();
+            $("#chequeElectronicoInput").prop("checked", false);
+        } else {
+            if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
+                $("#chequeElectronicoId").show();
+            } if (!$("#compensacionId").is(":checked")) {
+                $("#chequeElectronicoDiv").show();
+            }
+
+        }
         $("#CDId").prop("checked", false);
         $("#WarrantId").prop("checked", false);
+
+
     });
 
     $("#establecimientoPropioId").click(function () {
@@ -1755,7 +1839,7 @@ function InicializarElementos() {
                 $(".contratoAPrecio").show();
                 $("#pagosDiv").show();
             }
-               //else if ($('#tipoId').val() == 6) {
+            //else if ($('#tipoId').val() == 6) {
             //    $(".contratoAFijar").hide();
             //    $(".contratoAPrecio").hide();
             //    $("#pagosDiv").hide();
@@ -1885,7 +1969,7 @@ function InicializarElementos() {
     $("#pizarraId").click(ClickEnPizarra);
 
     InicializarAperturaDePrecios();
-    
+
     $("#ImporteDescuentoId").kendoNumericTextBox({
         culture: "es-AR",
         spinners: false,
@@ -1969,7 +2053,98 @@ function InicializarElementos() {
         }
     });
     $("#agregarPrecioPactado").click(AgregarPrecioPactado);
-   
+
+
+    $("#pagoCbu").kendoAutoComplete({
+        template: '<p class="buscar-nomb">#: data.Pago#</p>',
+        dataTextField: "Pago",
+        dataValueField: "Pago",
+        autoWidth: true,
+        filter: "contains",
+        change: function () {
+            if ($("#pagoCbu").val() == "" && !$("#compensacionId").is(":checked") && !$("#dolarizadoExpressId").is(":checked")) {
+                $("#chequeElectronicoDiv").show();
+            } else {
+                $("#chequeElectronicoDiv").hide();
+                $("#chequeElectronicoInput").prop("checked", false);
+
+            }
+        },
+        //select: function (e) {
+        //    $("#pagoCbu").val(e.dataItem.Pago);
+        //},
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/CompraNet/ObtenerListaDeCbu"
+                },
+                parameterMap: function (data, type) {
+                    var cuitProv = $("#buscadorProveedor").val().split('(');
+                    if (cuitProv[1] != null) {
+                        var cuitP = cuitProv[1].split(')');
+                    }
+                    else {
+                        cuitP = cuitProv;
+                    }
+                    return { cuitProveedor: cuitP[0], filtro: $('#pagoCbu').val() };
+                }
+            }
+
+        }
+    });
+    $('#pagoCbu').click(function (e) {
+        $('#pagoCbu').val("");
+        $("#pagoCbu").data("kendoAutoComplete").search("");
+    });
+
+
+    $("#pagoCbuInput").kendoAutoComplete({
+        template: '<p class="buscar-nomb">#: data.Pago#</p>',
+        type: 'text',
+        dataTextField: "Pago",
+        dataValueField: "Pago",
+        autoWidth: true,
+        filter: "contains",
+        change: function () {
+            if ($("#pagoCbuInput").val() == "") {
+                $("#chequeElectronicoId").show();
+            } else {
+                $("#chequeElectronicoId").hide();
+                $("#chequeElectronico").prop("checked", false);
+            }
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/CompraNet/ObtenerListaDeCbu"
+                },
+                parameterMap: function (data, type) {
+                    var cuitProv = $("#buscadorProveedor").val().split('(');
+                    if (cuitProv[1] != null) {
+                        var cuitP = cuitProv[1].split(')');
+                    }
+                    else {
+                        cuitP = cuitProv;
+                    }
+                    return { cuitProveedor: cuitP[0], filtro: $('#pagoCbuInput').val() };
+                }
+            }
+
+        }
+    });
+    $('#pagoCbuInput').click(function (e) {
+        $('#pagoCbuInput').val("");
+        $("#pagoCbuInput").data("kendoAutoComplete").search("");
+    });
+
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -2529,8 +2704,10 @@ function ObtenerDatos() {
     obj.MercsDeposito = $("#mercsDepositoId").is(":checked") ? true : false;
     obj.NivelTarifaId = $("#NivelTarifaId").val();
     obj.TarifaFlete = $("#TarifaFleteId").val();
-    //obj.ChequeElectronico = $("#tipoId").val() == "2" ? $("#chequeElectronicoInput").is(":checked") ? true : false :$("#chequeElectronico").is(":checked") ? true : false;
+    obj.ChequeElectronico = $("#tipoId").val() == "2" ? $("#chequeElectronicoInput").is(":checked") ? true : false : $("#chequeElectronico").is(":checked") ? true : false;
     obj.DolarizadoExpress = $("#dolarizadoExpressId").is(":checked") ? true : false;
+    obj.PagoCBU = $("#tipoId").val() == "2" ? $("#pagoCbu").val() : $("#pagoCbuInput").val();
+
     if ($("#boletoConfirmaId").is(':checked')) {
         obj.BoletoId = 1;
         obj.BolsaId = $("#bolsaConfirmaId").val();
@@ -2603,12 +2780,12 @@ function ObtenerDatos() {
     if ($("#hijoId").is(":checked")) {
         obj.Madre = false;
     } else {
-        if (obj.TipoNegocioId == 2 ) {
+        if (obj.TipoNegocioId == 2) {
             obj.FechaCierta = $("#fechaCiertaId").val();
         }
         if (obj.TipoNegocioId == 6) {
             obj.FechaCierta = $("#fechaCiertaAcuerdo").val();
-            
+
         }
     } if ($("#fasonIdCheck").is(":checked")) {
         obj.EsFason = true;
@@ -3057,7 +3234,7 @@ function CargarDatosEditar(contrato, hijo) {
                 $("#noInformaSioId").attr("disabled", true);
             }
         }
-        
+
     } else {
         $("#motivoOperacionAnteriorId").val("");
         $("#fechaOperacionMotivoDiv").hide();
@@ -3066,7 +3243,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
     $("#fechaHastaId").val(FormatearFecha(formatearFecha(contrato.FechaHastaFormateado)));
     $("#fechaCiertaId").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
-    $("#fechaCiertaAcuerdo").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));    
+    $("#fechaCiertaAcuerdo").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
     if (!hijo) {
@@ -3210,22 +3387,30 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $("#WarrantId").prop("checked", false);
     }
-    //if (contrato.ChequeElectronico == true) {
-    //    $("#chequeElectronico").prop("checked", true);
-    //    $("#chequeElectronicoInput").prop("checked", true);
-        
-    //} else {
-    //    $("#chequeElectronico").prop("checked", false);
-    //    $("#chequeElectronicoInput").prop("checked", false);
-    //}
+    if (contrato.ChequeElectronico == true) {
+        $("#chequeElectronico").prop("checked", true);
+        $("#chequeElectronicoInput").prop("checked", true);
+
+    } else {
+        $("#chequeElectronico").prop("checked", false);
+        $("#chequeElectronicoInput").prop("checked", false);
+    }
     if (contrato.DolarizadoExpress == true) {
-        $("#dolarizadoExpressId").prop("checked", true);
         $("#dolarizadoDiv").show();
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
+        $("#dolarizadoExpressId").prop("checked", true);
+        $("#chequeElectronicoDiv").hide();
+        $("#pagoCbuDiv").hide();
+
 
     } else {
         $("#dolarizadoExpressId").prop("checked", false);
     }
+
+    $("#pagoCbu").val(contrato.PagoCBU);
+
+
+    $("#pagoCbuInput").val(contrato.PagoCBU);
 
 
 
@@ -3381,8 +3566,26 @@ function CargarDatosEditar(contrato, hijo) {
         $("#material").data("kendoDropDownList").enable(false);
         $("#fechaOperacionId").data("kendoDatePicker").enable(false);
         $(".copia-contratos").hide();
-        $("#contrato-modificado").html("<h3>CONTRATO " + contrato.ContratoSAP.replace('000', '') + "</h3>");
+        if (!contrato.TipoNegocioId == 3) {
+            $("#contrato-modificado").html("<h3>CONTRATO " + contrato.ContratoSAP.replace('000', '') + "</h3>");
+        }
+
     }
+    if (contrato.Estado == 5 && contrato.TipoNegocioId == 3) {
+        $("#buscadorCorredor").data("kendoAutoComplete").enable(false);
+        $("#buscadorProveedor").data("kendoAutoComplete").enable(false);
+        $("#contratoId").data("kendoAutoComplete").enable(false);
+        $("#cantidadId").data("kendoNumericTextBox").enable(false);
+        $("#precioId").data("kendoNumericTextBox").enable(false);
+        $("#precioMonedaId").data("kendoDropDownList").enable(false);
+        $("#aperturaPrecioBtn").attr("disabled", true);
+        $("#diasDiferidoId").attr("disabled", true);
+        $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(false);
+        $("#comercialFijacionId").data("kendoDropDownList").enable(false);
+        //$("#pagoCbuInput").data("kendoAutoComplete").enable(false);
+
+    }
+
     if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 2) {
 
         $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
@@ -3405,11 +3608,11 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.TipoNegocioId == 6) {
         $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
         if (contrato.Precio != null) {
-        $("#fechaCiertaAcuerdoDiv").show();   
+            $("#fechaCiertaAcuerdoDiv").show();
 
         }
     }
- 
+
 }
 
 function LimpiarApertura() {
@@ -3594,7 +3797,7 @@ function InicializarAperturaDePrecios() {
     $("#precioId").change(function () {
         var total = CalcularPrecioTotalApertura();
         $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
-        
+
         SetearValoresMaximosApertura();
         if ($("#tipoId").data("kendoDropDownList").value() == "6") {
             if ($("#precioId").val() == "" || $("#precioId").val() == "0") {
@@ -3631,7 +3834,7 @@ function InicializarAperturaDePrecios() {
         }
 
     });
-    
+
     $("#aperturaPrecioImporteFinancieroId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
@@ -3967,31 +4170,41 @@ function CalcularNetoFijacionConDescuentos() {
     }
 }
 function HayCompensacion() {
-    //if (!$("#compensacionId").is(":checked")){
-    //    $("#chequeElectronicoDiv").show();
-    //}
-    //else {
-    //    $("#chequeElectronicoInput").prop("checked", false);
-    //    $("#chequeElectronicoDiv").hide();
-    //}
+    if (!$("#compensacionId").is(":checked")) {
+        if (!$("#pagoDirectoId").is(":checked")) {
+            $("#chequeElectronicoDiv").show();
+        }
+        if ($("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
+            $("#pagoCbuDiv").show();
+        }
+
+    }
+    else {
+        $("#chequeElectronicoInput").prop("checked", false);
+        $("#chequeElectronicoDiv").hide();
+        $("#pagoCbuDiv").hide();
+    }
 }
 
-//function ClickPagoDirecto() {
-//    if (!$("#pagoDirectoId").is(":checked")) {
-//        //$("#chequeElectronicoDiv").show();
-//        $("#dolarizadoExpressDiv").hide();
-//        $("#dolarizadoExpressId").prop("checked", false);
-//    }
-//    else {
-//        //$("#chequeElectronicoInput").prop("checked", false);
-//        //$("#chequeElectronicoDiv").hide();
-//        if ($("#clasificacion").val() == "1" && $("#precioMonedaId").data("kendoDropDownList").value() == "USDM ") {
-//            $("#dolarizadoExpressDiv").show();
-//        }
-        
-        
-//    }
-//}
+function HayChequeElectronicoAmpliar() {
+    if (!$("#chequeElectronicoInput").is(":checked") && $("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "") {
+        $("#pagoCbuDiv").show();
+    } else {
+        $("#pagoCbuDiv").hide();
+        $("#pagoCbu").val("");
+    }
+}
+
+function HayChequeElectronicoOtros() {
+
+    if (!$("#chequeElectronico").is(":checked") && $("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "") {
+        $("#pagoCbuId").show();
+    } else {
+        $("#pagoCbuId").hide();
+        $("#pagoCbuInput").val("");
+    }
+}
+
 
 
 

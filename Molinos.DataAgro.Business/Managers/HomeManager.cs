@@ -498,11 +498,11 @@ namespace Molinos.DataAgro.Business.Managers
                 RazonSocialCorredor = x.Corredor != null ? x.Corredor.RazonSocial : ""
             }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId)); 
 
-            List<CampanaMaterialDetallePorMeseExcelDto> campanaMaterialDetallePorMeseExcelDtos = new List<CampanaMaterialDetallePorMeseExcelDto>();
+            var campanaMaterialDetallePorMeseExcelDtos = new List<CampanaMaterialDetallePorMeseExcelDto>();
 
             foreach (var x in compras)
             {
-                CampanaMaterialDetallePorMeseExcelDto itemDto = new CampanaMaterialDetallePorMeseExcelDto();
+                var itemDto = new CampanaMaterialDetallePorMeseExcelDto();
                 itemDto.Material = x.Material;
                 itemDto.Campaña = x.Campana;
                 itemDto.Cuit = x.CUIT;

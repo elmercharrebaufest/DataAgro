@@ -63,7 +63,9 @@ namespace WebDataAgro.Controllers
             IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager,
             ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager,
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
-            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, IOperadorManager oOperadorManager, INegocioManager oNegocioManager, ITipoDeCambioAgent tipoDeCambioAgent)
+            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, 
+            IOperadorManager oOperadorManager, INegocioManager oNegocioManager, 
+            ITipoDeCambioAgent tipoDeCambioAgent)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -83,6 +85,7 @@ namespace WebDataAgro.Controllers
             mobjNegocioManager = oNegocioManager;
             this.configuracionInternaManager = configuracionInternaManager;
             this.tipoDeCambioAgent = tipoDeCambioAgent;
+           
         }
 
         //-----------------------------------------------------
@@ -864,11 +867,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult PreAnularContrato(int contratoId)
+        public ActionResult PreAnularContrato(int contratoId, string motivo)
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.PreAnularContrato(contratoId),
+                Data = mobjContratoManager.PreAnularContrato(contratoId, motivo),
                 MaxJsonLength = Int32.MaxValue
             };
 
@@ -883,11 +886,11 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public ActionResult RechazarPreAnularContrato(int contratoId)
+        public ActionResult RechazarPreAnularContrato(int contratoId, string motivoRechazo)
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.RechazarPreAnularContrato(contratoId),
+                Data = mobjContratoManager.RechazarPreAnularContrato(contratoId, motivoRechazo),
                 MaxJsonLength = Int32.MaxValue
             };
 
@@ -906,7 +909,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ValidarCalidades(int contratoId)
         {
-            
+
             var validarCalidad = mobjContratoManager.DiferenciaEnCalidades(contratoId);
             return new JsonResult()
             {
@@ -915,8 +918,14 @@ namespace WebDataAgro.Controllers
             };
 
         }
-
-
+        public ActionResult ObtenerListaDeCbu(string cuitProveedor, string filtro)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.ListarCBU(cuitProveedor, filtro),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
 
     }
 }

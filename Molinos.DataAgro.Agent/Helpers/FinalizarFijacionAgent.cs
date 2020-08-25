@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
                                 IMPORTE = apertura.Importe,
                                 MONEDA = fijacion.Moneda != null && apertura.Porcentaje == 0 ? fijacion.Moneda.MonedaId : null,
-                                PORC = apertura.Porcentaje
+                                PORC = apertura.Porcentaje                                
                             });
                         }
                     }
@@ -78,7 +78,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_APERTURA = listaApertura.ToArray(),
                         IM_PAGO_DIF_ARP = fijacion.PagoDiferido.HasValue && fijacion.PagoDiferido.Value ? "X" : "",
                         IM_DIAS_DIFERIM = fijacion.DiasPesificado.HasValue ? fijacion.DiasPesificado.Value.ToString() : "",
-                        IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd")
+                        IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd"),
+                        IM_ZLSCH = fijacion.ChequeElectronico == true ? "=" : "",
+                        IM_CUENTA_MRP = fijacion.PagoCBU
+                        
                     };
                     logger.Debug(rq.ToXml());
 

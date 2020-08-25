@@ -121,6 +121,8 @@
   <ItemGroup>
     <Compile Include="Agent\IComprasDetalleAgent.cs" />
     <Compile Include="Agent\ICriterioCDWarrantAgent.cs" />
+    <Compile Include="Agent\IListaCBUProveedorAgent.cs" />
+    <Compile Include="Agent\IModificarFijacionAgent.cs" />
     <Compile Include="Agent\IValidarDocProcPagoAgent.cs" />
     <Compile Include="Agent\IStatusContratoAgent.cs" />
     <Compile Include="Agent\ICapacidadProductivaAgent.cs" />

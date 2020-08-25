@@ -131,6 +131,7 @@
     <Compile Include="Dto\CompraDetalleAgentDto.cs" />
     <Compile Include="Dto\ListaCompraDetalleDto.cs" />
     
+    <Compile Include="Dto\PagoCBUDto.cs" />
     <Compile Include="Dto\MaterialHabilitadoDto.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />
     <Compile Include="Dto\AbmCanalOperacion.cs" />

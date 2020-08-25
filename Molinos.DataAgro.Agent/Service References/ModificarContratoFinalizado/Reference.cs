@@ -627,6 +627,10 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         
         private string fECHA_CREACIONField;
         
+        private string cUENTA_MRPField;
+        
+        private string zLSCHField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -1452,6 +1456,30 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
             set {
                 this.fECHA_CREACIONField = value;
                 this.RaisePropertyChanged("FECHA_CREACION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=69)]
+        public string CUENTA_MRP {
+            get {
+                return this.cUENTA_MRPField;
+            }
+            set {
+                this.cUENTA_MRPField = value;
+                this.RaisePropertyChanged("CUENTA_MRP");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=70)]
+        public string ZLSCH {
+            get {
+                return this.zLSCHField;
+            }
+            set {
+                this.zLSCHField = value;
+                this.RaisePropertyChanged("ZLSCH");
             }
         }
         

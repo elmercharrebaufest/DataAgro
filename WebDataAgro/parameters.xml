@@ -254,5 +254,24 @@
                            /endpoint[@name='HTTP_Port20']
                            /@address" />
   </parameter>
+
+  <parameter name="HTTP_Port21 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port21']
+                           /@address" />
+  </parameter>
+  <parameter name="HTTP_Port22 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port22']
+                           /@address" />
+  </parameter>
+  <parameter name="HTTP_Port23 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port23']
+                           /@address" />
+  </parameter>
   
 </parameters>

@@ -30,7 +30,14 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
-        
+
+
+
+        private readonly IMaterialManager mobjMaterialManager;
+        private readonly ITipoNegocioManager mobjTipoNegocioManager;
+        private readonly ICampañaManager mobjCampaniaManager;
+        private readonly IProvinciaManager mobjProvinciaManager;
+        private readonly ILocalidadManager mobjLocalidadManager;
         private readonly IProveedorManager mobjProveedorManager;
         private readonly IComercialManager mobjComercialManager;
         private readonly IPushNotificationManager mobjNotification;
@@ -38,49 +45,68 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IContratoAcuerdoManager contratoAcuerdoManager;
         private readonly IFinalizarContratoAgent oFinalizarContratoAgent;
         private readonly IDiasHabilesAgent oDiasHabilesAgent;
+        private readonly IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent;
         private readonly IEliminarContratoAgent oEliminarContratoAgent;
+        private readonly IConfiguracionManager configuracionManager;
         private readonly ICapacidadProductivaAgent capacidadProductiva;
         private readonly IAltaTempranaAgent altaTempranaAgent;
+        private readonly IDiasHabilesAgent diasHabilesAgent;
         private readonly IModificarContratoAgent modificarContratoAgent;
         private readonly IMailManager mailManager;
         private readonly IStatusContratoAgent status;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IValidarDocProcPagoAgent validarPagoAgente;
+        private readonly IListaCBUProveedorAgent cbuAgent;
+        private readonly IModificarFijacionAgent modificarFijacionAgent;
 
-        public ContratoManager(ILogger logger, IRepositorio repositorio, 
-            IProveedorManager oMSProveedorManager,
+
+
+        public ContratoManager(ILogger logger, IRepositorio repositorio,
+            IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
+            ICampañaManager oMSCampaniaManager, IProvinciaManager oMSProvinciaManager,
+            ILocalidadManager oMSLocalidadManager, IProveedorManager oMSProveedorManager,
             IComercialManager oMSComercialManager,
             IPushNotificationManager oMSNotification,
             IDiferencialManager diferencialManager,
             IContratoAcuerdoManager contratoAcuerdoManager,
             IFinalizarContratoAgent oFinalizarContratoAgent,
             IDiasHabilesAgent oDiasHabilesAgent,
-            IEliminarContratoAgent oEliminarContratoAgent, 
-            ICapacidadProductivaAgent capacidadProductiva, 
-            IAltaTempranaAgent altaTempranaAgent,
-            IModificarContratoAgent modificarContratoAgent,
-            IMailManager mailManager, IStatusContratoAgent status, 
-            ILogDataAgroManager logDataAgroManager, 
-            IValidarDocProcPagoAgent validarPagoAgente)
+            IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
+            IEliminarContratoAgent oEliminarContratoAgent, IConfiguracionManager configuracionManager,
+            ICapacidadProductivaAgent capacidadProductiva, IAltaTempranaAgent altaTempranaAgent,
+            IDiasHabilesAgent diasHabilesAgent, IModificarContratoAgent modificarContratoAgent,
+            IMailManager mailManager, IStatusContratoAgent status,
+            ILogDataAgroManager logDataAgroManager,
+            IValidarDocProcPagoAgent validarPagoAgente,
+            IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
-           
+            mobjMaterialManager = oMSMaterialManager;
+            mobjCampaniaManager = oMSCampaniaManager;
+            mobjProvinciaManager = oMSProvinciaManager;
+            mobjLocalidadManager = oMSLocalidadManager;
             mobjProveedorManager = oMSProveedorManager;
-            mobjComercialManager = oMSComercialManager;            
+            mobjComercialManager = oMSComercialManager;
+            mobjTipoNegocioManager = oMSTipoNegocioManager;
             mobjNotification = oMSNotification;
             this.diferencialManager = diferencialManager;
             this.contratoAcuerdoManager = contratoAcuerdoManager;
             this.oFinalizarContratoAgent = oFinalizarContratoAgent;
-            this.oDiasHabilesAgent = oDiasHabilesAgent;           
+            this.oDiasHabilesAgent = oDiasHabilesAgent;
+            this.oRelacionCorredorProveedorAgent = oRelacionCorredorProveedorAgent;
             this.oEliminarContratoAgent = oEliminarContratoAgent;
+            this.configuracionManager = configuracionManager;
             this.altaTempranaAgent = altaTempranaAgent;
+            this.diasHabilesAgent = diasHabilesAgent;
             this.modificarContratoAgent = modificarContratoAgent;
             this.mailManager = mailManager;
             this.capacidadProductiva = capacidadProductiva;
             this.status = status;
             this.logDataAgroManager = logDataAgroManager;
             this.validarPagoAgente = validarPagoAgente;
+            this.cbuAgent = cbuAgent;
+            this.modificarFijacionAgent = modificarFijacionAgent;
         }
 
         public DatosIniContrato TraerDatosCombo()
@@ -596,6 +622,25 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
             }
+
+            if (oParam.PagoCBU != null)
+            {
+                var existePago = ListarCBU(proveedor.CUIT, oParam.PagoCBU);
+                var validarPagoCbu = false;
+                foreach (var item in existePago)
+                {
+                    if (item.Pago == oParam.PagoCBU)
+                    {
+                        validarPagoCbu = true;
+                    }
+                }
+                if (!validarPagoCbu)
+                {
+                    oErrorMessages.Error("PagoCbu", "El cbu ingresado no es válido");
+                }
+
+            }
+
             return oErrorMessages;
         }
 
@@ -772,8 +817,9 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
             oContratoSave.FechaOperacion = oContrato.FechaOperacion;
             oContratoSave.MotivoOperacionAnterior = oContrato.MotivoOperacionAnterior;
-            //oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
+            oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
             oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
+            oContratoSave.PagoCBU = oContrato.PagoCBU;
             if (oContratoSave.PrecioPactado != null)
             {
                 foreach (var precio in preciosExistentes)
@@ -1006,17 +1052,25 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
-        public GrabarContratoResult PreAnularContrato(int contratoId)
+        public GrabarContratoResult PreAnularContrato(int contratoId, string motivo)
         {
             var oEntityErrors = new GrabarContratoResult();
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
+
+            if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
+
             var res = status.ValidarEstado(oContratoSave.ContratoSAP);
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado) && String.IsNullOrEmpty(res))
             {
                 try
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
+                    oContratoSave.MotivoRechazo = motivo;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
 
@@ -1036,17 +1090,22 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
 
         }
-        public GrabarContratoResult RechazarPreAnularContrato(int contratoId)
+        public GrabarContratoResult RechazarPreAnularContrato(int contratoId, string motivo)
         {
             var oEntityErrors = new GrabarContratoResult();
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
-
+            if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
             {
                 try
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                    oContratoSave.MotivoRechazo = motivo;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
 
@@ -1066,7 +1125,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
 
-            var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(contratoId);           
             var res = status.ValidarEstado(oContratoSave.ContratoSAP);
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && String.IsNullOrEmpty(res))
@@ -1315,6 +1374,9 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.FechaCierta = contratoOriginal.FechaCierta;
                             oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
                             oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
+                            oContratoSave.PagoCBU = oContrato.PagoCBU;
+                            oContratoSave.ChequeElectronico = oContratoSave.ChequeElectronico;
+                            oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
 
 
                             if (oContratoSave.PrecioPactado != null)
@@ -1569,8 +1631,6 @@ namespace Molinos.DataAgro.Business.Managers
                     }).ToList()
                 });
         }
-
-
         public DatosContratoDto TraerDatosDeContratoAcuerdo(int contratoId)
         {
             return repositorio.Obtener<ContratoAcuerdo, DatosContratoDto>(x => x.Id == contratoId,
@@ -1606,7 +1666,6 @@ namespace Molinos.DataAgro.Business.Managers
                         TipoPeriodoDBDesc = desc.TipoPeriodoDB.Descripcion,
                         TipoPeriodoDBId = desc.TipoPeriodoDBId
                     }).ToList(),
-                    //Precios = x.PrecioPactado.Select(y=>new PrecioPactadosDto()).ToList()
                     Precios = x.PrecioPactado.Select(y => new PrecioPactadosDto
                     {
                         ContratoId = y.ContratoId,
@@ -1712,11 +1771,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     ContratoId = y.ContratoId,
                     FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", y.FechaDesde) : "",
+                                          SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                          SqlFunctions.DateName("year", y.FechaDesde) : "",
                     FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", y.FechaHasta) : "",
+                                          SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                          SqlFunctions.DateName("year", y.FechaHasta) : "",
                     Importe = y.Importe,
                     MonedaId = y.MonedaId,
                     Moneda = y.MonedaId,
@@ -1791,8 +1850,9 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaOperacion),
                 MotivoOperacionAnterior = x.MotivoOperacionAnterior,
-                //ChequeElectronico = x.ChequeElectronico,
-                DolarizadoExpress = x.DolarizadoExpress
+                ChequeElectronico = x.ChequeElectronico,
+                DolarizadoExpress = x.DolarizadoExpress,
+                PagoCBU = x.PagoCBU
             });
             return contrato;
         }
@@ -2271,11 +2331,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     ContratoId = y.ContratoId,
                     FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", y.FechaDesde) : "",
+                                            SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                                            SqlFunctions.DateName("year", y.FechaDesde) : "",
                     FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", y.FechaHasta) : "",
+                                            SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                                            SqlFunctions.DateName("year", y.FechaHasta) : "",
                     Importe = y.Importe,
                     MonedaId = y.MonedaId,
                     Moneda = y.MonedaId,
@@ -2333,7 +2393,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Precio = y.Precio
                 }).ToList(),
                 TipoAgenteCompraId = x.TipoAgenteCompraId,
-                //ChequeElectronico = x.ChequeElectronico
+                ChequeElectronico = x.ChequeElectronico,
+                PagoCBU = x.PagoCBU
             });
             var dia = oDiasHabilesAgent.UltimoDiaHabil();
             if (contrato.Fecha < dia)
@@ -2477,8 +2538,9 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.CaratulaExtension = contrato.CaratulaExtension;
             contratoSave.PrecioAjusteComision = contrato.PrecioAjusteComision;
             contratoSave.MonedaAjusteComisionId = contrato.MonedaAjusteComisionId;
-            //contratoSave.ChequeElectronico = contrato.ChequeElectronico;
+            contratoSave.ChequeElectronico = contrato.ChequeElectronico;
             contratoSave.DolarizadoExpress = contrato.DolarizadoExpress;
+            contratoSave.PagoCBU = contrato.PagoCBU;
 
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
@@ -2530,15 +2592,15 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Error("", "El contrato no se puede modificar");
                     return error;
                 }
-                //if (oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value)
-                //{
-                //    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
-                //    if (result != "Ok")
-                //    {
-                //        error.Error("", result);
-                //        return error;
-                //    }
-                //}
+                if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
+                {
+                    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
+                    if (result != "Ok")
+                    {
+                        error.Error("", result);
+                        return error;
+                    }
+                }
                 if (oContrato.EstadoId != 11)
                 {
                     if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3) || ValidarCalidadModificada(oContrato, oContratoSave))
@@ -2961,56 +3023,8 @@ namespace Molinos.DataAgro.Business.Managers
                     htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
                 }
             }
-            var modificado =
-                    //contratoSave.CD != oContrato.CD ||
-                    //contratoSave.Compensacion != oContrato.Compensacion ||
-                    //contratoSave.EstablecimientoPropio != oContrato.EstablecimientoPropio ||
-                    //contratoSave.Sustentable != oContrato.Sustentable ||
-                    //contratoSave.CorredorId != oContrato.CorredorId ||
-                    //contratoSave.ContratoCorredor != oContrato.ContratoCorredor ||
-                    //contratoSave.ContratoVendedor != oContrato.ContratoVendedor ||
-                    //contratoSave.DestinoId != oContrato.DestinoId ||
-                    //contratoSave.DiasPesificado != oContrato.DiasPesificado ||
-                    //contratoSave.Dolarizado != oContrato.Dolarizado ||
-                    //contratoSave.ImporteSustentable != oContrato.ImporteSustentable ||
-                    //contratoSave.FechaDolarizado != oContrato.FechaDolarizado ||
-                    //contratoSave.Warrant != oContrato.Warrant ||
-                    //contratoSave.MercsDeposito != oContrato.MercsDeposito ||
-                    //contratoSave.TrigoEspecial != oContrato.TrigoEspecial ||
-                    //contratoSave.PlanCanje != oContrato.PlanCanje ||
-                    //contratoSave.SelCargoMOA != oContrato.SelCargoMOA ||
-                    //contratoSave.SelCargoVendedor != oContrato.SelCargoVendedor ||
-                    //contratoSave.TarifaFlete != oContrato.TarifaFlete ||
-                    //contratoSave.NivelTarifaId != oContrato.NivelTarifaId ||
-                    //contratoSave.Observacion != oContrato.Observacion ||
-                    //contratoSave.FechaCierta != oContrato.FechaCierta ||
-                    ValidarCalidadModificada(oContrato, contratoSave);
+            var modificado = ValidarCalidadModificada(oContrato, contratoSave);
 
-            //var descuentosGenerales = new List<DescuentoBonificacion>();
-            //var descuentos = new List<DescuentoBonificacion>();
-            //if (oContrato.Descuentos != null)
-            //{
-            //    descuentosGenerales = oContrato.Descuentos.ToList();
-            //    descuentos = oContrato.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList();
-            //}
-            //if ((descuentos == null && contratoSave.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
-            //    descuentos != null && descuentos.Count != contratoSave.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count)
-            //{
-            //    modificado = true;
-            //}
-            //else
-            //{
-            //    foreach (var descBon in contratoSave.Descuentos.ToList())
-            //    {
-            //        if (!descuentos.Any(x => x.TipoPeriodoDBId == descBon.TipoPeriodoDBId
-            //         && x.Importe == descBon.Importe && x.MonedaId == descBon.MonedaId
-            //         && x.Porcentaje == descBon.Porcentaje && x.TipoDBId == descBon.TipoDBId))
-            //        {
-            //            modificado = true;
-            //            break;
-            //        }
-            //    }
-            //}
             if (modificado)
             {
                 htmlBody += "<tr>" + th1 + "OBSERVACIÓN</th>" + TdCambio(ref linea);
@@ -3179,6 +3193,18 @@ namespace Molinos.DataAgro.Business.Managers
             if (oContrato.FechaCierta.HasValue)
             {
                 htmlBody += "Fecha Cierta: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
+            }
+            if (oContrato.DolarizadoExpress.Value)
+            {
+                htmlBody += "A pesificar en mes en curso y enviar mail a Notificaciones diferido: Notificacionesdiferido@molinosagro.com.ar hasta las 13 hs <br />";
+            }
+            if (oContrato.ChequeElectronico.Value)
+            {
+                htmlBody += "Pago con Echeq <br />";
+            }
+            if (oContrato.PagoCBU != null)
+            {
+                htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
             }
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
@@ -3382,6 +3408,159 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
+        public List<PagoCBUDto> ListarCBU(string cuitProveedor, string filtro)
+        {
+            return cbuAgent.ListarCBU(cuitProveedor, filtro);
+        }
 
+        public Resultado AltaContratoSAP(Contrato contratoSap, bool validacionesMinimas)
+        {
+            var error = new Resultado();
+            logger.Debug("Alta contrato en BD DataAgro: " + contratoSap.Id);
+            var contrato = new Contrato();
+            try
+            {
+
+                Validar(contratoSap, error, validacionesMinimas);
+
+                if (error.Errores.Count > 0)
+                {
+                    return error;
+                }
+                contrato.MaterialId = contratoSap.MaterialId;
+                contrato.Cantidad = contratoSap.Cantidad;
+                contrato.Precio = contratoSap.Precio;
+                contrato.FechaEntrega = contratoSap.FechaEntrega;
+                contrato.CampanaId = contratoSap.CampanaId;
+                contrato.FechaDesde = contratoSap.FechaDesde;
+                contrato.FechaHasta = contratoSap.FechaHasta;
+                contrato.ProveedorId = contratoSap.ProveedorId;
+                contrato.MonedaId = contratoSap.MonedaId;
+                contrato.GrupoCompra = contratoSap.GrupoCompra;
+                contrato.LocalidadId = contratoSap.LocalidadId;
+                contrato.ProvinciaId = contratoSap.ProvinciaId;
+                contrato.Base = contratoSap.Base;
+                contrato.ImporteSustentable = contratoSap.ImporteSustentable;
+                contrato.MonedaSustentableId = contratoSap.MonedaSustentableId;
+                contrato.FechaDolarizado = contratoSap.FechaDolarizado;
+                contrato.Dolarizado = contratoSap.Dolarizado;
+                contrato.DiasPesificado = contratoSap.DiasPesificado;
+                contrato.PagoDiferido = contratoSap.PagoDiferido;
+                contrato.NoInformaSio = contratoSap.NoInformaSio;
+                contrato.TrigoEspecial = contratoSap.TrigoEspecial;
+                contrato.Ampliaciones = contratoSap.Ampliaciones;
+                contrato.Observacion = contratoSap.Observacion;
+                contrato.DestinoId = contratoSap.DestinoId;
+                contrato.CantidadCamiones = contratoSap.CantidadCamiones;
+                contrato.Consignatario = contratoSap.Consignatario;
+                contrato.PlanCanje = contratoSap.PlanCanje;
+                contrato.CondicionFijacionId = contratoSap.CondicionFijacionId;
+                contrato.CD = contratoSap.CD;
+                contrato.Warrant = contratoSap.Warrant;
+                contrato.PagoDirectoVendedor = contratoSap.PagoDirectoVendedor;
+                contrato.EstablecimientoPropio = contratoSap.EstablecimientoPropio != null ? contratoSap.EstablecimientoPropio : null;
+                contrato.ClasificacionId = contratoSap.ClasificacionId;
+                contrato.CantidadCamiones = contratoSap.CantidadCamiones;
+                contrato.BoletoId = contratoSap.BoletoId;
+                contrato.BolsaId = contratoSap.BolsaId == 0 ? null : contratoSap.BolsaId;
+                contrato.DesdeFijacion = contratoSap.DesdeFijacion;
+                contrato.HastaFijacion = contratoSap.HastaFijacion;
+                contrato.MercsDeposito = contratoSap.MercsDeposito;
+                contrato.CorredorId = contratoSap.CorredorId;
+                contrato.PorcentajeComision = contratoSap.PorcentajeComision;
+                contrato.ContratoVendedor = contratoSap.ContratoVendedor;
+                contrato.ContratoCorredor = contratoSap.ContratoCorredor;
+                contrato.SelCargoVendedor = contratoSap.SelCargoVendedor;
+                contrato.SelCargoMOA = contratoSap.SelCargoMOA;
+                contrato.ContratoMadre = contratoSap.ContratoMadre?.PadLeft(10, '0');
+                contrato.PrecioNeto = contratoSap.PrecioNeto;
+                contrato.StandardDeCalidadId = contratoSap.StandardDeCalidadId;
+                contrato.Pizarra = contratoSap.Pizarra;
+                contrato.PagoDiferido = contratoSap.PagoDiferido;
+                contrato.ZonaId = contratoSap.ZonaId;
+                contrato.Compensacion = contratoSap.Compensacion;
+                contrato.TarifaFlete = contratoSap.TarifaFlete;
+                contrato.NivelTarifaId = contratoSap.NivelTarifaId == 0 ? null : contratoSap.NivelTarifaId;
+                contrato.FechaCierta = contratoSap.FechaCierta;
+                contrato.EstadoId = contratoSap.EstadoId;
+                contrato.TipoAgenteCompraId = contratoSap.TipoAgenteCompraId;
+                contrato.CaratulaMAT = contratoSap.CaratulaMAT;
+                contrato.CaratulaExtension = contratoSap.CaratulaExtension;
+                contrato.PrecioAjusteComision = contratoSap.PrecioAjusteComision;
+                contrato.MonedaAjusteComisionId = contratoSap.MonedaAjusteComisionId;
+                contrato.ChequeElectronico = contratoSap.ChequeElectronico;
+                contrato.DolarizadoExpress = contratoSap.DolarizadoExpress;
+                contrato.Calidad = contratoSap.Calidad;
+                contrato.Descuentos = contratoSap.Descuentos;
+                contrato.AperturaPrecio = contratoSap.AperturaPrecio;
+                contrato.PrecioPactado = contratoSap.PrecioPactado;
+                contrato.PorcentajeDePago = contratoSap.PorcentajeDePago;
+                contrato.FechaOperacion = contratoSap.FechaOperacion;
+                contrato.Fecha = DateTime.Now;
+                contrato.TipoNegocioId = contratoSap.TipoNegocioId;
+                contrato.ContratoSAP = contratoSap.ContratoSAP;
+                contrato.UsuarioId = contratoSap.UsuarioId;
+                repositorio.Agregar(contrato);
+                repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+            }
+            return error;
+        }
+
+        public GrabarFijacionResult ActualizarFijacion(FijacionDePrecioContrato oContrato)
+        {
+            var error = new GrabarFijacionResult();
+            try
+            {
+                var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.Id);
+                oContrato.ContratoSAP = oContratoSave.ContratoSAP;
+
+
+
+                if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
+                {
+                    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
+                    if (result != "Ok")
+                    {
+                        error.Error("", result);
+                        return error;
+                    }
+                }
+                oContrato.ContratoSAP = repositorio.Obtener<FijacionDePrecioContrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
+                var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
+                if (res.Contains("Error"))
+                {
+                    error.Error("SAP", res);
+                    return error;
+                }
+
+
+
+                logger.Debug("Actualizando contrato en BD DataAgro: " + oContrato.Id);
+
+
+
+                if (oContratoSave == null || oContrato.Id == 0)
+                {
+                    error.Error("Contrato", "No existe contrato en DataAgro");
+                }
+                oContratoSave.PagoCBU = oContrato.PagoCBU;
+                repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContrato.GetType());
+
+
+
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                error.Error("", e.Message + ".");
+            }
+            return error;
+        }
     }
 }

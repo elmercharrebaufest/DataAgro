@@ -356,7 +356,9 @@ namespace Molinos.DataAgro.Test.Managers
                 Posicion = "",
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
-                AperturaPrecio = new List<AperturaPrecio> { }
+                AperturaPrecio = new List<AperturaPrecio> { },
+                ChequeElectronico = true,
+                PagoCBU = "1"
             };
             var fijacionSave = new FijacionDePrecioContrato
             {
@@ -368,7 +370,9 @@ namespace Molinos.DataAgro.Test.Managers
                 ComercialId = 1,
                 ContratoSAP = "1234",
                 CampanaId = 1,
-                EstadoId = (int)EnumEstadoContrato.Finalizado
+                EstadoId = (int)EnumEstadoContrato.Finalizado,
+                ChequeElectronico = false,
+                PagoCBU = "2"
             };
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
@@ -383,6 +387,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
              .Returns(new List<AperturaPrecio>());
 
+                       
             var result = target.GrabarFijacionDePrecio(fijacion);
 
             repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Never);

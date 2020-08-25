@@ -165,6 +165,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int CantidadMaximaCupo { get; set; }
         public bool? ChequeElectronico { get; set; }
         public bool? DolarizadoExpress { get; set; }
+        public string DolarizadoExpressValor { get; set; }
         public string PagoCBU { get; set; }
     }
 

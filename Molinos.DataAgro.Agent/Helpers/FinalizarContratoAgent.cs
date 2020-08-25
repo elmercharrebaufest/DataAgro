@@ -190,7 +190,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "",
                         MONEDA = contrato.Moneda?.MonedaId,
                         NO_INFORMAR_SIO = noInformaSioString,
-                        PAGO_DIFERIDO = contrato.Dolarizado == true ? "X": "",
+                        PAGO_DIFERIDO = contrato.Dolarizado == true ? "X" : "",
                         MATERIAL = contrato.Material.Codigo,
                         PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
                         PRECIO_PIZARRA = contrato.Precio,
@@ -242,15 +242,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                         FLETE_TARIFA = contrato.TarifaFlete ?? 0,
                         FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
                         PORCPARCIAL = contrato.PorcentajeDePago ?? (decimal)97.5,
-                        AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1? "9952569841" :"",
+                        AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "",
                         CARATULA = contrato.CaratulaMAT,
                         CARATULA_EXT = contrato.CaratulaExtension,
-                        PRECIO_COM_MAT = contrato.PrecioAjusteComision??0,
+                        PRECIO_COM_MAT = contrato.PrecioAjusteComision ?? 0,
                         MONEDA_COM_MAT = contrato.MonedaAjusteComisionId,
                         FECHA_CREACION = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
                         repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
-                        //ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
-                        DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : ""
+                        ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
+                        DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
+                        CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : ""
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

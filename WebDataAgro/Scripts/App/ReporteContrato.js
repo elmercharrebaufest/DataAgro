@@ -250,7 +250,19 @@ function CreateGridInformeCompraNet() {
                     }
                 ]
             },
+            {
+                field: "Dolarizado Express", columns: [
+                    { field: "DolarizadoExpress", title: "Dolar. Express", template: function (dataItem) { return dataItem.DolarizadoExpress ? "Si" : "No"; } },
+                    {
+                        field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
+                            return dataItem.DolarizadoExpress ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
+
+                        }
+                    }
+                ]
+            },
             { field: "ChequeElectronicoValor", type: "string", title: "Cheque Electrónico" },
+            { field: "PagoCBU", type: "string", title: "Pago Cbu" },
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];            

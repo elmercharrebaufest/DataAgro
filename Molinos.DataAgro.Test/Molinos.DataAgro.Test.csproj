@@ -179,6 +179,7 @@
     <Compile Include="Managers\ConfiguracionInternaManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionManagerTest.cs" />
     <Compile Include="Managers\LogDataAgroManagerTest.cs" />
+    <Compile Include="Managers\HomeManagerTest.cs" />
     <Compile Include="Managers\NegocioManagerTest.cs" />
     <Compile Include="Managers\EstadioManagerTest.cs" />
     <Compile Include="Managers\CupoManagerTest.cs" />

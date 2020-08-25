@@ -26,12 +26,12 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult GrabarAmpliacionContrato(Contrato oContrato);
 
         List<DescuentoBonificacionDto> TraerDescuentosPorContrato(int contratoId);
-        List<CalidadDto> TraerCalidadesPorContrato(int contratoId,int acuerdoId); 
-        DatosContratoDto TraerDatosDeContrato(int contratoId); 
-         BasicoContrato TraerContrato(int contratoId);
+        List<CalidadDto> TraerCalidadesPorContrato(int contratoId, int acuerdoId);
+        DatosContratoDto TraerDatosDeContrato(int contratoId);
+        BasicoContrato TraerContrato(int contratoId);
 
         void EnviarMailPendiente();
-       
+
         void FinalizacionAutomatica(string idActiveDirectory);
         void BorradoAutomatico();
         List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo);
@@ -52,13 +52,17 @@ namespace Molinos.DataAgro.Interfaces
         List<ContratoIdDto> TraerContratosSAP(string desde, string hasta);
         RangoPrecioDto ObtenerRangoDePrecios(int materialId, string monedaId);
         string ValidarStatus(int contratoId);
-        GrabarContratoResult PreAnularContrato(int contratoId);
-        GrabarContratoResult RechazarPreAnularContrato(int contratoId);
+        GrabarContratoResult PreAnularContrato(int contratoId, string motivo);
+        GrabarContratoResult RechazarPreAnularContrato(int contratoId, string motivoRechazo);
         GrabarContratoResult ReconfirmarFinalizado(int contratoId, string mailComercial);
         GrabarContratoResult AnularContratoPreAnulado(int contratoId, string idActiveDirectory);
         List<BasicoContrato> CompararNegocioReconfirmado(int contratoId);
         bool DiferenciaEnCalidades(int contratoId);
         Resultado AnularContratoSAP(ContratoSAP contrato);
         DatosContratoDto TraerDatosDeContratoAcuerdo(int contratoId);
+        List<PagoCBUDto> ListarCBU(string cuitProveedor, string filtro);
+        GrabarFijacionResult ActualizarFijacion(FijacionDePrecioContrato oContrato);
+
+        Resultado AltaContratoSAP(Contrato contratoSap, bool validacionesMinimas);
     }
 }

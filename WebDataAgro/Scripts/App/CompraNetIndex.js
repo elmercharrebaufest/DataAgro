@@ -197,7 +197,7 @@ function cambiarMarca(id, ocultar) {
     recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
-    if (modificaFinalizados && dataItem.ContratoId) {
+    if (modificaFinalizados && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId)) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
@@ -355,7 +355,9 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.PorcentajeDePago + "'" + ',' +
         "'" + dataItem.TipoAgenteCompraId + "'" + ',' +
         "'" + formatearFecha(dataItem.FechaOperacion) + "'" + ',' +
-        "'" + dataItem.MotivoOperacionAnterior + "'" +
+       "'" + dataItem.MotivoOperacionAnterior + "'" + ',' +
+        "'" + dataItem.PagoCBU + "'" + ',' +
+        "'" + dataItem.ChequeElectronicoValor + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -394,7 +396,7 @@ function botonBorrarPreanulado(dataItem, icono) {
 }
 
 function botonPreAnular(dataItem, icono) {
-    if (preanular) {
+    if (preanular && dataItem.ContratoId) {
         return '<button data-toggle="tooltip" title="PreAnular" onclick="ModalPreAnular(' +          
             "'" + dataItem.ContratoId + "'" + ',' +  
             "'" + dataItem.Proveedor + "'" +
@@ -945,7 +947,7 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
-                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId) && !dataItem.FijacionDePrecioContratoId) {
+                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId || dataItem.FijacionDePrecioContratoId)) {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
@@ -1611,10 +1613,19 @@ function Confirmar(confirmarContratoFijacion) {
     }
 }
 function ObtenerDatosModalPreAnular() {
-    
+    var motivo = $("#motivo-rechazoNegocio").val();
+    if (motivo == null || motivo == "" || motivo == undefined) {
+        MensErr("Ingrese un motivo de solicitud");
+        return;
+    } else {
+        if (motivo.length > 1000) {
+            MensErr("El motivo de rechazo es demasiado largo.");
+            return;
+        }
+    }
     var result;
     var id = $("#contratoModalAnular").val();
-    result = MSExecuteOnServer('/CompraNet/PreAnularContrato', { contratoId: id });
+    result = MSExecuteOnServer('/CompraNet/PreAnularContrato', { contratoId: id , motivo});
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -1623,10 +1634,21 @@ function ObtenerDatosModalPreAnular() {
     }
 }
 function ObtenerDatosModalBorrarPreAnular() {
-
+    var motivoRechazo = $("#motivo-rechazoSolictud").val();
+    var objConfirmado = {};
+    objConfirmado.MotivoRechazo = motivoRechazo;
+    if (motivoRechazo == null || motivoRechazo == "" || motivoRechazo == undefined) {
+        MensErr("Ingrese un motivo de rechazo");
+        return;
+    } else {
+        if (motivoRechazo.length > 1000) {
+            MensErr("El motivo de rechazo es demasiado largo.");
+            return;
+        }
+    }
     var result;
     var id = $("#contratoModalBorrar").val();
-    result = MSExecuteOnServer('/CompraNet/RechazarPreAnularContrato', { contratoId: id });
+    result = MSExecuteOnServer('/CompraNet/RechazarPreAnularContrato', { contratoId: id, motivoRechazo});
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -1634,22 +1656,10 @@ function ObtenerDatosModalBorrarPreAnular() {
         recargarGrilla();
     }
 }
-function AnularContratoPreAnulado() {
-    //var motivoRechazo = $("#motivo-rechazoPreanular").val();
-    //var objConfirmado = {};
-    //objConfirmado.MotivoRechazo = motivoRechazo;
-    //if (motivoRechazo == null || motivoRechazo == "" || motivoRechazo == undefined) {
-    //    MensErr("Ingrese un motivo de rechazo");
-    //    return;
-    //} else {
-    //    if (motivoRechazo.length > 1000) {
-    //        MensErr("El motivo de rechazo es demasiado largo.");
-    //        return;
-    //    }
-    //}
+function AnularContratoPreAnulado() {  
     var result;
     var id = $("#contratoModalBorrar").val();
-    result = MSExecuteOnServer('/CompraNet/AnularContratoPreAnulado', { contratoId: id/*, motivoRechazo*/});
+    result = MSExecuteOnServer('/CompraNet/AnularContratoPreAnulado', { contratoId: id});
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -1851,7 +1861,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
-    compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior) {
+    compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque,) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -1996,7 +2006,19 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#visualizar_FechaCierta").text(fechaCierta);
         $("#FechaCiertaVisualizar").show();
     }
-   
+    if (cheque != "null" && cheque == 'Si') {        
+        $("#chequeElectronico").show();
+    } else {
+        $("#chequeElectronico").hide();
+    }
+
+    if (pagoCbu != "null") {
+        $("#pago").text(pagoCbu);
+        $("#PagoCbu").show();
+    } else {
+        $("#PagoCbu").hide();
+    }
+
     if (porcentajeDePago == "null") {
         $("#porcentajeDePagoDivVisualizar").hide();
     } else {
@@ -2098,6 +2120,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         };
         viewModel.CalidadesVisualizar.push(calidadKendo);
     });
+    if (calidadesDto != null && calidadesDto.length > 0) {
+        $("#calidadesDivVisualizar").show();
+    } else {
+        $("#calidadesDivVisualizar").hide();
+
+    }
     var iteracionesPrecio = viewModel.PreciosVisualizar.length;
     for (var k = 0; k < iteracionesPrecio; k++) {
         viewModel.PreciosVisualizar.pop();

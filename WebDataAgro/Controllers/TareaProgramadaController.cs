@@ -38,15 +38,23 @@ namespace WebDataAgro.Controllers
                 var tasks = ObtenerCarpetaDeTasks(ts).EnumerateTasks();
                 if (tasks != null)
                 {
-                    model.Datos = tasks.Select(x => new TaskModel
+                    try
                     {
-                        Name = x.Name,
-                        LastRunTime = x.LastRunTime,
-                        NextRunTime = x.NextRunTime,
-                        RepeticionEnMinutos = x.Definition.Triggers.Any() ? (int)x.Definition.Triggers.First().Repetition.Interval.TotalMinutes : 0,
-                        ActionURL = x.Definition.Actions.Any() ? Regex.Match(((ExecAction)x.Definition.Actions.First()).Arguments,
+                        model.Datos = tasks.Select(x => new TaskModel
+                        {
+                            Name = x.Name,
+                            LastRunTime = x.LastRunTime,
+                            NextRunTime = x.NextRunTime,
+                            RepeticionEnMinutos = x.Definition.Triggers.Any() ? (int)x.Definition.Triggers.First().Repetition.Interval.TotalMinutes : 0,
+                            ActionURL = x.Definition.Actions.Any() ? Regex.Match(((ExecAction)x.Definition.Actions.First()).Arguments,
                             @"-command {Invoke-WebRequest (.+) -UseDefaultCredential", RegexOptions.Singleline).Groups[1].Value : ""
-                    }).ToList();
+                        }).ToList();
+                    }
+                    catch (Exception)
+                    {
+                        model.Datos = new System.Collections.Generic.List<TaskModel>();
+                    }
+                    
                 }
             }
 

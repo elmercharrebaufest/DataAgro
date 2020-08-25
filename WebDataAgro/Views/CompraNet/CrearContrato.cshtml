@@ -289,7 +289,7 @@
     <div class="row">
         <div class="col-sm-2" data-toggle="tooltip" data-placement="top" id="cantidadTooltip">
 
-            <label>Cantidad (Kg.)</label> 
+            <label>Cantidad (Kg.)</label>
         </div>
         <div class="col-sm-5 col-md-4 required-box-parent">
             <input id="cantidadId" class="required-box" style="width:100%" />
@@ -373,7 +373,7 @@
                 <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
                 <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-xs-4 col-md-5 noPadding" style="float:right; display:inline-flex;">
+            <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
                 <div class="w70" id="ocultarAperturaMoneda">
                     <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
                     <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
@@ -417,7 +417,7 @@
                     <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div id="pagoDiferidoFijacionDiv" class="pagoFijacion hide-fijacion noAcuerdo ampliar">
+            <div id="pagoDiferidoFijacionDiv" class="pagoFijacion hide-fijacion noAcuerdo ampliar esFijacion">
                 <label style="width:100px">Pago diferido</label>
                 <input id="diasDiferidoId" class="campo-input-input" data-bind="checked:Parametros.diasDiferidoId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errdiasDiferidoId" src="~/Content/Images/error.png" style="display:none" />
@@ -425,11 +425,12 @@
                     <input id="diasDiferidoFijacionId" placeholder="Días" />
                 </div>
             </div>
-            @*<div id="chequeElectronicoId" style="float:right" hidden>
-                <label>Vía de Pago</label>
-                <input id="chequeElectronico"  class="campo-input-input" name="chequeElectronico" type="checkbox">
-            </div>*@
-            
+
+            <div id="chequeElectronicoId" class="acuerdo" style="float:right" hidden>
+                <label>Echeq</label>
+                <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
+            </div>
+
         </div>
         <div class="col-sm-2 espacioPrecioMoneda" hidden></div>
         <div class="col-xs-12 col-sm-5 col-md-4 required-box-parent espacioPrecioMoneda" hidden></div>
@@ -538,6 +539,14 @@
         <div class="col-sm-5 col-md-4">
             <select id="comercialFijacionId" data-bind="source: ComercialCombo, value: Parametros.comercialId, disabled: isControlDisabled"></select>
             <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
+        </div>
+    </div>
+    <div class="row acuerdo" id="pagoCbuId" hidden>
+        <div class="col-sm-2">
+            <label>Pago CBU</label>
+        </div>
+        <div class="col-sm-10 col-md-4">
+            <input type="text" class="k-textbox" style="width:100%" id="pagoCbuInput" />
         </div>
     </div>
 
@@ -676,10 +685,11 @@
                 <label style="width:120px">Compensación</label>
                 <input id="compensacionId" class="campo-input-input" data-bind="checked:Parametros.compensacionId, disabled: isControlDisabled" type="checkbox" onclick="HayCompensacion()" />
             </div>
-            @*<div id="chequeElectronicoDiv">
-                <label>Vía de Pago</label>
-                <input id="chequeElectronicoInput" class="campo-input-input" name="chequeElectronicoInput" type="checkbox">
-            </div>*@
+            <div class="col-sm-2 " id="chequeElectronicoDiv">
+                <label>Echeq</label>
+                <input id="chequeElectronicoInput" class="campo-input-input" name="chequeElectronicoInput" type="checkbox" onclick="HayChequeElectronicoAmpliar()">
+            </div>
+
         </div>
 
         <div class="row ocultar noAcuerdo">
@@ -744,8 +754,16 @@
                 </div>
             </div>
         </div>
-           
-        
+        <div class="row" id="pagoCbuDiv">
+            <div class="col-sm-2">
+                <label>Pago CBU</label>
+            </div>
+            <div class="col-sm-10 col-md-4">
+                <input type="text" class="k-textbox" style="width:100%" id="pagoCbu" />
+            </div>
+        </div>
+
+
     </div>
 
     <div class="noFason noAgente noAcuerdo ampliar">

@@ -92,6 +92,7 @@
     [FechaConfirmacion] DATETIME NULL, 
     [ChequeElectronico] BIT NULL, 
     [DolarizadoExpress] BIT NULL, 
+    [PagoCBU] NVARCHAR(500) NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  

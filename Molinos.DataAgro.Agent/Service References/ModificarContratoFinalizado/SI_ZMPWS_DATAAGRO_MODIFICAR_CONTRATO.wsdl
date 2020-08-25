@@ -41,6 +41,11 @@
           <xsd:fractionDigits value="2" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char60">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="60" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="cuky5">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="5" />
@@ -234,6 +239,8 @@
           <xsd:element name="PRECIO_COM_MAT" type="rfc:curr11.2" />
           <xsd:element name="PORCPARCIAL" type="rfc:decimal5.2" />
           <xsd:element name="FECHA_CREACION" type="rfc:date10" />
+          <xsd:element name="CUENTA_MRP" type="rfc:char60" />
+          <xsd:element name="ZLSCH" type="rfc:char10" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

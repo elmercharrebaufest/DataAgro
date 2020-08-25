@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaEntrega { get; set; }
         public string FechaHasta { get; set; }
         public string FechaLimite { get; set; }
+        public string FechaOperacion { get; set; }
         public string GrupoCompras { get; set; }
         public string Moneda { get; set; }
         public string NoInformaSio { get; set; }
@@ -64,6 +65,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FeDesdeFij { get; set; }
         public string FeHastaFij { get; set; }
         public string ContratoCorredor { get; set; }
+        public string TipoNegocio { get; set; }
+
+        public string Comercial { get; set; }
 
         public List<CalidadSAP> Calidad { get; set; }
         public List<DescuentoBonificacionSap> DescuentoBonificaciones { get; set; }
@@ -75,9 +79,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CaratulaExtension { get; set; }
         public decimal? PrecioAjusteComision { get; set; }
         public string MonedaAjusteComisionId { get; set; }
-
-        public string ChequeElectronico { get; set; }
         public string DolarizadoExpress { get; set; }
+        public string ZLSCH { get; set; }
+        public string CUENTA_MRP { get; set; }
     }
 
     public class CalidadSAP

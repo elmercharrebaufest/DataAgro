@@ -83,6 +83,8 @@
   <ItemGroup>
     <Compile Include="Helpers\ComprasDetalleAgent.cs" />
     <Compile Include="Helpers\CriterioCDWarrantAgent.cs" />
+    <Compile Include="Helpers\ListaCBUProveedorAgent.cs" />
+    <Compile Include="Helpers\ModificarFijacionAgent.cs" />
     <Compile Include="Helpers\ValidarDocProcPagoAgent.cs" />
     <Compile Include="Helpers\StatusContratoAgent.cs" />
     <Compile Include="Helpers\ClienteStopAgent.cs" />
@@ -122,6 +124,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ListaCBUProveedor\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ModificarFijacion\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -258,6 +265,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ListaCBUProveedor\SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDOR.wsdl" />
+    <None Include="Service References\ModificarFijacion\Molinos.DataAgro.Agent.ModificarFijacion.SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ModificarFijacion\Molinos.DataAgro.Agent.ModificarFijacion.Z_MPRFC_MODIFICAR_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ModificarFijacion\SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION.wsdl" />
     <None Include="Service References\PrecioPizarra\Molinos.DataAgro.Agent.PrecioPizarra.SI_ZMPWS_DATAAGRO_PRECIO_PIZARRAResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -399,6 +413,7 @@
     <WCFMetadataStorage Include="Service References\ComprasDetalle\" />
     <WCFMetadataStorage Include="Service References\DisponibilidadCupos\" />
     <WCFMetadataStorage Include="Service References\ListaCBUProveedor\" />
+    <WCFMetadataStorage Include="Service References\ModificarFijacion\" />
     <WCFMetadataStorage Include="Service References\PrecioPizarra\" />
     <WCFMetadataStorage Include="Service References\AltaTempranaNosisBolsaRuca\" />
     <WCFMetadataStorage Include="Service References\AnulacionContratos\" />
@@ -705,6 +720,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ValidarDocProcPago\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarFijacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarFijacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ModificarFijacion\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

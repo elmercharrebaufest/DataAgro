@@ -24,11 +24,6 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Text;
 
-
-
-
-
-
 namespace Molinos.DataAgro.Business.Managers
 {
     public class CupoManager : ICupoManager
@@ -1489,26 +1484,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var sugerenciasProveedorFecha = sugerenciaTodosLosProveedores.Where(a => a.FechaSugerida == fechaProveedor.Fecha && a.ProveedorId == detalle.ProveedorId).ToList();
                     var totalDeCuposIngresadosEnPantalla = fechaProveedor.CantidadSugerencia;
                     var totalDeCuposEnSugerenciasExistentes = sugerenciasProveedorFecha.Sum(x => x.CantidadDeCupos);
-                    //if (sugerenciasProveedorFecha.Count() <= 0)//tendria que generar solicitud en lugar de sugerencia
-                    //{
-
-                    //    var nuevaSugerencia = new SugerenciaCupo
-                    //    {
-                    //        FechaSugerida = fechaProveedor.Fecha,
-                    //        CantidadDeCupos = fechaProveedor.CantidadSugerencia,
-                    //        ProveedorId = detalle.ProveedorId,
-                    //        CentroId = centro,
-                    //        MaterialId = materialId,
-                    //        ComercialId = detalle.ComercialId,
-                    //        ZonaCupoId = repositorio.Obtener<ZonaCupo, int>(x => x.Descripcion == comercial.GrupoDeCompras.Descripcion, x => x.Id),
-                    //        Puntuaciones = "",
-                    //        StandardDeCalidad = "",
-                    //        TipoNegocioId = 7
-                    //    };
-                    //    sugerenciasProveedorFecha.Add(nuevaSugerencia);
-                    //    repositorio.Agregar(nuevaSugerencia);
-                    //}
-
+                  
                     foreach (var s in sugerenciasProveedorFecha)
                     {
 
@@ -1951,6 +1927,38 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return negociosSugeridos;
+        }
+
+        public Resultado AltaCupoSAP(Cupo cupoSAP)
+        {
+            Resultado resultado = new Resultado();
+            try
+            {          
+            var cupoSave = new Cupo
+            {
+                FechaIngreso = cupoSAP.FechaIngreso,
+                MaterialId = cupoSAP.MaterialId,
+                ProveedorId = cupoSAP.ProveedorId,
+                CentroId = cupoSAP.CentroId,
+                ZonaCupoId = cupoSAP.ZonaCupoId,
+                Observaciones = cupoSAP.Observaciones,
+                Destinatario = cupoSAP.Destinatario,
+                FleteProcedencia = cupoSAP.FleteProcedencia,
+                Calidad = cupoSAP.Calidad,
+                CupoSap = cupoSAP.CupoSap,
+                EstadoCupoId = cupoSAP.EstadoCupoId,
+                FechaGeneracion = DateTime.Now
+            };
+            repositorio.Agregar(cupoSave);
+            repositorio.GuardarCambios();
+            logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id), TipoAccionLogDataAgro.Crear);
+
+            }
+            catch (Exception e)
+            {
+                logger.Error(e.Message);
+            }
+            return resultado;
         }
     }
 }

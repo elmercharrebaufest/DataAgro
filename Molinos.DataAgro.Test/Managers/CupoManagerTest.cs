@@ -627,5 +627,82 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count());
         }
+        [Test]
+        public void TraerTodoLosEstadosTest()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<EstadoCupo, EstadoCupoDto>>>(), It.IsAny<Expression<Func<EstadoCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<EstadoCupoDto>());
+            var result = target.TraerTodoLosEstados();
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<EstadoCupo, EstadoCupoDto>>>(), It.IsAny<Expression<Func<EstadoCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            Assert.IsNotNull(result);
+
+        }
+        [Test]
+        public void AltaCupoSAPOk()
+        {
+            var cupoSave = new Cupo
+            {
+                FechaIngreso = DateTime.Now,
+                MaterialId = 1,
+                ProveedorId = 1,
+                CentroId = 1,
+                ZonaCupoId = 1,
+                Observaciones = "",
+                Destinatario = "",
+                FleteProcedencia = true,
+                Calidad = "",
+                CupoSap = "MOL",
+                EstadoCupoId = 1
+            };
+            repositorioMock.Setup(x => x.Agregar(It.IsAny<Cupo>()));
+            repositorioMock.Setup(x => x.GuardarCambios());
+
+            var resultado = target.AltaCupoSAP(cupoSave);
+
+            Assert.IsNotNull(resultado);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<Cupo>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
+        [Test]
+        public void ActualizarCupoSAPOk()
+        {
+            var cupoSave = new Cupo
+            {
+                FechaIngreso = DateTime.Now,
+                MaterialId = 1,
+                ProveedorId = 1,
+                CentroId = 1,
+                ZonaCupoId = 1,
+                Observaciones = "",
+                Destinatario = "",
+                FleteProcedencia = true,
+                Calidad = "",
+                CupoSap = "MOL",
+                EstadoCupoId = 1
+            };
+            repositorioMock.Setup(x => x.GuardarCambios());
+            repositorioMock.Setup(y => y.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo() { CupoSap = "Mol", EstadoCupoId = 1 });
+
+            var resultado = target.ActualizarCupoSAP(cupoSave);
+
+            Assert.IsNotNull(resultado);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
+        [Test]
+
+        public void AceptarCupo()
+        {
+            repositorioMock.Setup(y => y.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo() { CupoSap = "Mol", EstadoCupoId = 1});
+            crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>())).Returns(new List<string>() { "MOL"});
+
+            repositorioMock.Setup(x => x.GuardarCambios());
+
+            var resultado = target.AceptarCupo(new Cupo() { CupoSap = "Mol", EstadoCupoId = 1, Id = 1});
+
+            Assert.IsNotNull(resultado);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
     }
 }
