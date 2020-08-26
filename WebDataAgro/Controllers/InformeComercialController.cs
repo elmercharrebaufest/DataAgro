@@ -90,7 +90,8 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public async Task<ActionResult> Listar(ParamInformeComercial oParam, int? ComercialId, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios)
+        public async Task<ActionResult> Listar(ParamInformeComercial oParam, int? ComercialId, List<NuevoProduccion> nuevosCampos,
+            List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId)
         {
             var model = new ReportesModel();
             if (!ComercialId.HasValue)
@@ -98,7 +99,8 @@ namespace WebDataAgro.Controllers
                 ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             }
 
-            var entityError = mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId.Value, nuevosCampos, nuevosAcopios);
+            var entityError = mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId.Value, nuevosCampos, nuevosAcopios, 
+                contactoComercial, direccion, codigoPostal, localidadId);
 
             if (!entityError.HayErrores)
             {

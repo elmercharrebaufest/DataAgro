@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces
@@ -7,13 +8,14 @@ namespace Molinos.DataAgro.Interfaces
     {
         List<InformeComercialMaterialDisponible> TraerInformeComercial(int ProveedorId);
 
-        InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios);
+        InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios, 
+            ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId);
 
-        RptInformeComercialInfo GenerarInformeComercial(ParamInformeComercial informe,int InformeId);
+        RptInformeComercialInfo GenerarInformeComercial(ParamInformeComercial informe, int InformeId);
 
         List<ReportesList> ListarReportes(ParamReportesIC oParam, List<int> equipo);
 
-        List<InformeList> TraerInformesGenerados() ;
+        List<InformeList> TraerInformesGenerados();
 
         List<ResultCapacidadProductiva> TraerCapacidadProductiva(string proveedores);
 

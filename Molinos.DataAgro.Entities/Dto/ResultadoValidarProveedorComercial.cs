@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -13,13 +14,19 @@ namespace Molinos.DataAgro.Entities.Dto
         
         public bool HayError { get; set; }
         public int ComercialId { get; set; }
-        public string Apellido { get; set; }
-        public string Nombres { get; set; }
-        public string Mail { get; set; }
+        public string ComercialApellido { get; set; }
+        public string ComercialNombres { get; set; }
+        public string ComercialMail { get; set; }
         public List<string> ProveedorMails { get; set; }
         public int? ProveedorId { get; set; }
         public string ProveedorRazonSocial { get; set; }
         public bool ProveedorOperable { get; set; }
         public string ProveedorCBU { get; set; }
+        public string ProveedorClasificacion { get; set; }
+        public string ProveedorSISAEstadoCuit { get; set; }       
+        public string ProveedorSISASituacionCategoria { get; set; }
+        public string ProveedorSISACodCategoria { get; set; }
+        public bool ProveedorOperando { get; set; }
+        public DateTime? ProveedorUltimaOperacion { get; set; }
     }
 }

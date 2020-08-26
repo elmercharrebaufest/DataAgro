@@ -614,6 +614,10 @@ namespace WebDataAgro.Services
                 var existeEnSISA = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
                 resultado.ProveedorOperable = existeEnSISA != null;
                 resultado.ProveedorCBU = existeEnSISA != null ? (existeEnSISA.CBU ?? "") : "";
+                resultado.ProveedorSISAEstadoCuit = existeEnSISA != null ? existeEnSISA.EstadoCuit.ToString() : "";
+                resultado.ProveedorSISASituacionCategoria = existeEnSISA != null ? existeEnSISA.SituacionCategoria.ToString() : "";
+                resultado.ProveedorSISACodCategoria = existeEnSISA != null ? existeEnSISA.CodCategoria.ToString() : "";
+
                 resultado.ProveedorMails = new List<string>();
                 if (!string.IsNullOrEmpty(proveedor.Email1))
                     resultado.ProveedorMails.Add(proveedor.Email1);
@@ -636,15 +640,23 @@ namespace WebDataAgro.Services
                 resultado.ProveedorMails = resultado.ProveedorMails.Distinct().ToList();
                 resultado.ProveedorId = proveedor.ProveedorId;
                 resultado.ProveedorRazonSocial = proveedor.RazonSocial;
+                resultado.ProveedorClasificacion = proveedor.ClasificacionCompraNet.Descripcion;
+                Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == proveedor.ProveedorId, x => x.Fecha);
+                if (negocio != null)
+                {
+                    resultado.ProveedorOperando = true;
+                    resultado.ProveedorUltimaOperacion = negocio.Fecha;
+                }
+
                 var provCom = proveedor.ProveedorComercialAsociados.FirstOrDefault();
                 if (provCom != null)
                 {
-                    resultado.Apellido = provCom.Comercial.Apellido;
+                    resultado.ComercialApellido = provCom.Comercial.Apellido;
                     resultado.ComercialId = provCom.Comercial.ComercialId;
-                    resultado.Nombres = provCom.Comercial.Nombres;
+                    resultado.ComercialNombres = provCom.Comercial.Nombres;
                     try
                     {
-                        resultado.Mail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
+                        resultado.ComercialMail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
 
                     }
                     catch (Exception)

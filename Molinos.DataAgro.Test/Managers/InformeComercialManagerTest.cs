@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
             var nuevoCampo = new List<NuevoProduccion> { new NuevoProduccion { ArrendaPropia = false, CampañaId = 1, Hectareas = 1, LocalidadId = 1, MaterialId = 1, Toneladas = 1 } };
             var nuevoAcopio = new List<NuevoAcopio> { new NuevoAcopio { ArrendaPropia = false, CampañaId = 1, LocalidadId = 1, Toneladas = 1 } };
-
+            var nuevoContactoComercial = new ContactoComercial { Apellido = "a", Nombres = "a", Puesto = "q", Telefono1 = "q" };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<InformeComercialProduccion>() { new InformeComercialProduccion { MaterialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercialAlmacenamiento, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -92,14 +92,26 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.ListarConsulta(It.IsAny<TraerInformeComercialAlmacenamiento>()))
                             .Returns(new List<InformeComercialAlmacenamientoDto>() { new InformeComercialAlmacenamientoDto() });
 
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, int>>>(),It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, int>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<int>() { 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campaña, int>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<int>() { 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Localidad, int>>>(), It.IsAny<Expression<Func<Localidad, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<int>() { 1 });
-           
-            var result = target.GrabarInformeComercial(param, 1, nuevoCampo, nuevoAcopio);
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                     .Returns(new List<CampoMaterial>() );
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoMaterial, Campo>>>(), It.IsAny<Expression<Func<CampoMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<Campo>() );
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioCampaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                    .Returns(new List<AcopioCampaña>());
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                    .Returns(new List<AcopioMaterial>());
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioCampaña, Acopio>>>(), It.IsAny<Expression<Func<AcopioCampaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<Acopio>());
+            repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
+                            .Returns(new Proveedor());
+            var result = target.GrabarInformeComercial(param, 1, nuevoCampo, nuevoAcopio, nuevoContactoComercial, "1", "1", 1599);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Remover(It.IsAny<List<InformeComercialProduccion>>()), Times.Once);

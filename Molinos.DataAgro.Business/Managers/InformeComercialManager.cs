@@ -40,7 +40,8 @@ namespace Molinos.DataAgro.Business
             return query;
         }
 
-        public InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios)
+        public InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos,
+            List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId)
         {
             var oEntityErrors = new InformeResult();
             InformeComercial inf = new InformeComercial();
@@ -77,12 +78,33 @@ namespace Molinos.DataAgro.Business
                         oEntityErrors.Errores.Add(new ErrorMessage("No se pudo encontrar la Localidad seleccionada"));
                     }
                 }
+                if (string.IsNullOrWhiteSpace(direccion) || string.IsNullOrWhiteSpace(codigoPostal) || localidadId == null)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("No completo la direccion"));
+                }
+                if (string.IsNullOrWhiteSpace(codigoPostal))
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("No completo el codigo postal"));
+                }
+                if (localidadId == null)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("No completo la localidad"));
+                }
+                if (contactoComercial == null || string.IsNullOrWhiteSpace(contactoComercial.Apellido) || string.IsNullOrWhiteSpace(contactoComercial.Nombres)
+                    || string.IsNullOrWhiteSpace(contactoComercial.Puesto) || string.IsNullOrWhiteSpace(contactoComercial.Telefono1))
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage("No completo los campos de Contacto"));
+                }
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
                 }
                 else
                 {
+                    var camposMaterial = repositorio.Listar<CampoMaterial>(x => x.Campo.ProveedorId == informe.ProveedorId && x.CampañaId == informe.CampañaId);
+                    var campos = repositorio.Listar<CampoMaterial,Campo>(x=>x.Campo,x => x.Campo.ProveedorId == informe.ProveedorId && x.CampañaId == informe.CampañaId);
+                    repositorio.RemoverTodos(camposMaterial);
+                    repositorio.RemoverTodos(campos);
                     if (nuevosCampos != null)
                     {
                         foreach (var item in nuevosCampos)
@@ -109,6 +131,12 @@ namespace Molinos.DataAgro.Business
                             repositorio.Agregar(campoMaterial);
                         }
                     }
+                    var acopiosCampaña = repositorio.Listar<AcopioCampaña>(x => x.Acopio.ProveedorId == informe.ProveedorId && x.CampañaId == informe.CampañaId);
+                    var acopiosMaterial = repositorio.Listar<AcopioMaterial>(x => x.Acopio.ProveedorId == informe.ProveedorId && x.CampañaId == informe.CampañaId);
+                    var acopios = repositorio.Listar<AcopioCampaña, Acopio>(x => x.Acopio, x => x.Acopio.ProveedorId == informe.ProveedorId && x.CampañaId == informe.CampañaId);
+                    repositorio.RemoverTodos(acopiosCampaña);
+                    repositorio.RemoverTodos(acopiosMaterial);
+                    repositorio.RemoverTodos(acopios);
                     if (nuevosAcopios != null)
                     {
                         foreach (var item in nuevosAcopios)
@@ -132,6 +160,14 @@ namespace Molinos.DataAgro.Business
                             repositorio.Agregar(acopioCampaña);
                         }
                     }
+                    var oProveedor = repositorio.Obtener<Proveedor>(informe.ProveedorId);
+                    oProveedor.LocalidadId = localidadId;
+                    oProveedor.Direccion = direccion;
+                    oProveedor.CodigoPostal = codigoPostal;
+
+                    var contactos = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == informe.ProveedorId);
+                    repositorio.RemoverTodos(contactos);
+                    repositorio.Agregar(contactoComercial);
 
                     repositorio.GuardarCambios();
                 }
