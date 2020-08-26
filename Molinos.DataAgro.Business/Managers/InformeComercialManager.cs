@@ -43,14 +43,6 @@ namespace Molinos.DataAgro.Business
         public InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos,
             List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId)
         {
-            logger.Info("GrabarInformeComercial informe" + informe.ToJson());
-            logger.Info("GrabarInformeComercial nuevosCampos" + nuevosCampos.ToJson());
-            logger.Info("GrabarInformeComercial nuevosAcopios" + nuevosAcopios.ToJson());
-            logger.Info("GrabarInformeComercial contactoComercial" + contactoComercial.ToJson());
-            logger.Info("GrabarInformeComercial direccion" + direccion ?? "");
-            logger.Info("GrabarInformeComercial codigoPostal" + codigoPostal ?? "");
-            logger.Info("GrabarInformeComercial localidadId" + localidadId ?? "");
-
             var oEntityErrors = new InformeResult();
             InformeComercial inf = new InformeComercial();
             // si de MOA Operaciones generan un nuevo informe para un proveedor nuevo
@@ -175,6 +167,7 @@ namespace Molinos.DataAgro.Business
                     oProveedor.Telefono1 = contactoComercial.Telefono1;
                     oProveedor.Email1 = string.IsNullOrWhiteSpace(oProveedor.Email1) ? contactoComercial.Email1 : oProveedor.Email1;
 
+                    contactoComercial.ProveedorId = oProveedor.ProveedorId;
                     var contactos = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == informe.ProveedorId);
                     repositorio.RemoverTodos(contactos);
                     repositorio.Agregar(contactoComercial);
