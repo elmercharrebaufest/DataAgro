@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Interfaces
         int LogCambiosDataAgro(HabilitacionPizarraDto habilitacionPizarraDto, TipoAccionLogDataAgro tipoDeAccion);
         int LogCambiosDataAgro(PrecioMoaDto precioMoaDto, TipoAccionLogDataAgro tipoDeAccion);
         string AddSpacesToSentence(string text, char v);
-        string BuscaFechaYFormatea(string text);
+        string BuscaFechaYFormatea(string text, string campo);
         List<int> ObtenerNegociosId(List<string> contratosSap);
         List<int> ObtenerCuposId(List<string> cupoSap);
     }

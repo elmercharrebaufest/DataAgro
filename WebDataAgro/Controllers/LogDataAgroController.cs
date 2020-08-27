@@ -223,14 +223,14 @@ namespace WebDataAgro.Controllers
             if (diffLine.Text != null)
             {
                 //diffLine.Text = diffLine.Text.Replace("\"", "").Replace("_", "");
-                diffLine.Text = logDataAgroManager.BuscaFechaYFormatea(diffLine.Text);
+                diffLine.Text = logDataAgroManager.BuscaFechaYFormatea(diffLine.Text,"");
                 diffLine.Text = logDataAgroManager.AddSpacesToSentence(diffLine.Text, ':');
 
                 foreach (var character in diffLine.SubPieces)
                 {
                     if (character.Text != null)
                     {
-                        character.Text = logDataAgroManager.BuscaFechaYFormatea(character.Text);
+                        character.Text = logDataAgroManager.BuscaFechaYFormatea(character.Text,"");
                         character.Text = logDataAgroManager.AddSpacesToSentence(character.Text, ':');
                     }
 
