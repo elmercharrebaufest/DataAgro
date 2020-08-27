@@ -523,6 +523,7 @@ namespace WebDataAgro.Services
                 }
                 Resultado resultado = cupoManager.AltaCupoSAP(cupo);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+                oEntityErrors.CupoSapId = cupo != null ? cupo.Id.ToString() : "";
 
             }
             catch (Exception ex)
@@ -888,6 +889,7 @@ namespace WebDataAgro.Services
 
                 var resultado = contratoManager.AltaContratoSAP(contrato, true);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+                oEntityErrors.ContratoId = contrato != null? contrato.Id.ToString(): "";
             }
             catch (Exception ex)
             {

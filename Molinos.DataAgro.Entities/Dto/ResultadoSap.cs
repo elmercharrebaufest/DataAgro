@@ -12,5 +12,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<ErrorMessage> ListaErrores { get; set; }
         
         public bool HayError { get; set; }
+
+        public string ContratoId { get; set; }
+        public string CupoSapId { get; set; }
     }
 }
