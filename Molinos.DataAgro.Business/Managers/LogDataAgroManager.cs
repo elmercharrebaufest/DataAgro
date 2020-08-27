@@ -684,7 +684,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string BuscaFechaYFormatea(string s, string campo)
         {
-            List<string> contratosap = new List<string> { "Contrato SAP", "ContratoSAP" };
+            List<string> contratosap = new List<string> { "Contrato SAP", "ContratoSAP", "Contrato Vendedor", "ContratoVendedor" };
             if (contratosap.Contains(campo))
             {
                return s.TrimStart('0');
