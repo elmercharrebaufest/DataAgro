@@ -641,7 +641,7 @@ function InicializarElementos() {
                 if (viewModel.AperturaPrecio.length > 0) {
                     viewModel.AperturaPrecio[2].Porcentaje = 0;
                     $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
-                    if ($("#precioId").val() > 0) {
+                    if (Number($("#precioId").val().replace(',', '.')) > 0) {
                         GuardarAperturaDePrecio();
                     }
 
@@ -3555,7 +3555,7 @@ function CargarDatosEditar(contrato, hijo) {
 
         }
         InicializarEditarContratoApertura();
-        if ($("#precioId").val() > 0) {
+        if (Number($("#precioId").val().replace(',', '.')) > 0) {
             GuardarAperturaDePrecio();
         }
 
@@ -3914,7 +3914,7 @@ function CalcularPrecioTotalApertura() {
     var bonificacion = Number($("#precioId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
     var precioOriginal = Number($("#precioId").val().replace(',', '.'));
 
-    if ((ImporteSobrePrecio != 0 || PorcentajeSobrePrecio > 0) && $("#precioId").val() > 0) {
+    if ((ImporteSobrePrecio != 0 || PorcentajeSobrePrecio > 0) && Number($("#precioId").val().replace(',', '.')) > 0) {
         precioOriginal = CalcularNetoFijacionConDescuentos();
     } else {
         var porcentajeComision = Math.min(Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')), $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").max());
@@ -4155,7 +4155,7 @@ function CalcularNetoFijacionConDescuentos() {
             }
         }
         var costoFinanciero = Math.min(Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')), Number($("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").max()));
-        var precioN = parseFloat($("#precioId").val());
+        var precioN = Number($("#precioId").val().replace(',', '.'));
         console.log("precio base:", precioN);
         console.log("costoFinanciero", costoFinanciero);
         console.log("ImporteSobrePrecio", ImporteSobrePrecio);
