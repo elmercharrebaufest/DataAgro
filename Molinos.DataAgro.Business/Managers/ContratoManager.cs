@@ -3488,7 +3488,8 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.CaratulaExtension = contratoSap.CaratulaExtension;
                 contrato.PrecioAjusteComision = contratoSap.PrecioAjusteComision;
                 contrato.MonedaAjusteComisionId = contratoSap.MonedaAjusteComisionId;
-                contrato.ChequeElectronico = contratoSap.ChequeElectronico;
+                //contrato.ChequeElectronico = contratoSap.ChequeElectronico;
+                //contrato.PagoCBU = contratoSap.PagoCBU;
                 contrato.DolarizadoExpress = contratoSap.DolarizadoExpress;
                 contrato.Calidad = contratoSap.Calidad;
                 contrato.Descuentos = contratoSap.Descuentos;
