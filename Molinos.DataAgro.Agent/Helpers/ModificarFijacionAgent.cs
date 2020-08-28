@@ -39,9 +39,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var rq = new Z_MPRFC_MODIFICAR_FIJACION
                 {
                     IM_CONTRATO = contrato.ContratoSAP,
-                    IM_FIJACION = contrato.FijacionSAP,
-                    IM_ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
-                    IM_CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : ""
+                    //IM_FIJACION = contrato.FijacionSAP,
+                    //IM_ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
+                    //IM_CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : ""
                 };               
 
                 logger.Debug(rq.ToXml());

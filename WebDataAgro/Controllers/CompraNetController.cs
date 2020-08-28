@@ -886,11 +886,11 @@ namespace WebDataAgro.Controllers
         }
 
 
-        public ActionResult RechazarPreAnularContrato(int contratoId, string motivoRechazo)
+        public ActionResult RechazarPreAnularContrato(int contratoId/*, string motivoRechazo*/)
         {
             return new JsonResult()
             {
-                Data = mobjContratoManager.RechazarPreAnularContrato(contratoId, motivoRechazo),
+                Data = mobjContratoManager.RechazarPreAnularContrato(contratoId/*, motivoRechazo*/),
                 MaxJsonLength = Int32.MaxValue
             };
 

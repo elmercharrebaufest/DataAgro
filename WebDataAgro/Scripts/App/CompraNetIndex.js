@@ -197,7 +197,7 @@ function cambiarMarca(id, ocultar) {
     recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
-    if (modificaFinalizados && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId)) {
+    if (modificaFinalizados && (dataItem.ContratoId /*|| dataItem.FijacionDePrecioContratoId*/)) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
@@ -388,7 +388,8 @@ function botonBorrarPreanulado(dataItem, icono) {
             "'" + dataItem.FasonId + "'" + ',' +
             "'" + dataItem.AgenteId + "'" + ',' +
             "'" + dataItem.AcuerdoId + "'" + ',' +
-            "'" + dataItem.Estado + "'" +
+            "'" + dataItem.Estado + "'" + ',' +
+            "'" + dataItem.Rechazo + "'" + 
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else {
         return '<div></div>';
@@ -947,7 +948,7 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
-                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId || dataItem.FijacionDePrecioContratoId)) {
+                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId /*|| dataItem.FijacionDePrecioContratoId*/)) {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
@@ -1634,21 +1635,21 @@ function ObtenerDatosModalPreAnular() {
     }
 }
 function ObtenerDatosModalBorrarPreAnular() {
-    var motivoRechazo = $("#motivo-rechazoSolictud").val();
-    var objConfirmado = {};
-    objConfirmado.MotivoRechazo = motivoRechazo;
-    if (motivoRechazo == null || motivoRechazo == "" || motivoRechazo == undefined) {
-        MensErr("Ingrese un motivo de rechazo");
-        return;
-    } else {
-        if (motivoRechazo.length > 1000) {
-            MensErr("El motivo de rechazo es demasiado largo.");
-            return;
-        }
-    }
+    //var motivoRechazo = $("#motivo-rechazoSolictud").val();
+    //var objConfirmado = {};
+    //objConfirmado.MotivoRechazo = motivoRechazo;
+    //if (motivoRechazo == null || motivoRechazo == "" || motivoRechazo == undefined) {
+    //    MensErr("Ingrese un motivo de rechazo");
+    //    return;
+    //} else {
+    //    if (motivoRechazo.length > 1000) {
+    //        MensErr("El motivo de rechazo es demasiado largo.");
+    //        return;
+    //    }
+    //}
     var result;
     var id = $("#contratoModalBorrar").val();
-    result = MSExecuteOnServer('/CompraNet/RechazarPreAnularContrato', { contratoId: id, motivoRechazo});
+    result = MSExecuteOnServer('/CompraNet/RechazarPreAnularContrato', { contratoId: id/*, motivoRechazo*/});
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -2315,7 +2316,7 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fas
     $("#modalBorrar").modal('show');
 }
 
-function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId, acuerdoId, estado) {
+function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId, acuerdoId, estado, Rechazo) {
     $("#proveedor_a_borrarPreanular").text(proveedor);
     $("#proveedorBorrarDivVisualizar").show();
     $("#agenteBorrarDivVisualizar").hide();
@@ -2343,7 +2344,12 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     //}
     //$("#motivo-rechazoPreanular").show();
     $("#tipoNegocioModalBorrar").val(tipoNegocio);
-
+    if (Rechazo != "") {
+        $("#div-motivo-rechazoSolictud").show();
+        $("#motivo-rechazoSolictud").html(Rechazo);
+    } else {
+        $("#div-motivo-rechazoSolictud").hide();
+    }
     $("#modalBorrarPreanulado").modal('show');
 }
 

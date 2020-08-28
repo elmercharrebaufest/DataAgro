@@ -623,23 +623,23 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
             }
 
-            if (oParam.PagoCBU != null)
-            {
-                var existePago = ListarCBU(proveedor.CUIT, oParam.PagoCBU);
-                var validarPagoCbu = false;
-                foreach (var item in existePago)
-                {
-                    if (item.Pago == oParam.PagoCBU)
-                    {
-                        validarPagoCbu = true;
-                    }
-                }
-                if (!validarPagoCbu)
-                {
-                    oErrorMessages.Error("PagoCbu", "El cbu ingresado no es válido");
-                }
+            //if (oParam.PagoCBU != null)
+            //{
+            //    var existePago = ListarCBU(proveedor.CUIT, oParam.PagoCBU);
+            //    var validarPagoCbu = false;
+            //    foreach (var item in existePago)
+            //    {
+            //        if (item.Pago == oParam.PagoCBU)
+            //        {
+            //            validarPagoCbu = true;
+            //        }
+            //    }
+            //    if (!validarPagoCbu)
+            //    {
+            //        oErrorMessages.Error("PagoCbu", "El cbu ingresado no es válido");
+            //    }
 
-            }
+            //}
 
             return oErrorMessages;
         }
@@ -817,9 +817,9 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
             oContratoSave.FechaOperacion = oContrato.FechaOperacion;
             oContratoSave.MotivoOperacionAnterior = oContrato.MotivoOperacionAnterior;
-            oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
+            //oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
             oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
-            oContratoSave.PagoCBU = oContrato.PagoCBU;
+            //oContratoSave.PagoCBU = oContrato.PagoCBU;
             if (oContratoSave.PrecioPactado != null)
             {
                 foreach (var precio in preciosExistentes)
@@ -1090,22 +1090,22 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
 
         }
-        public GrabarContratoResult RechazarPreAnularContrato(int contratoId, string motivo)
+        public GrabarContratoResult RechazarPreAnularContrato(int contratoId/*, string motivo*/)
         {
             var oEntityErrors = new GrabarContratoResult();
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
-            if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
-            {
-                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
-                return oEntityErrors;
-            }
+            //if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
+            //{
+            //    oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+            //    return oEntityErrors;
+            //}
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
             {
                 try
                 {
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
-                    oContratoSave.MotivoRechazo = motivo;
+                    //oContratoSave.MotivoRechazo = motivo;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
 
@@ -1374,8 +1374,8 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.FechaCierta = contratoOriginal.FechaCierta;
                             oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
                             oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
-                            oContratoSave.PagoCBU = oContrato.PagoCBU;
-                            oContratoSave.ChequeElectronico = oContratoSave.ChequeElectronico;
+                            //oContratoSave.PagoCBU = oContrato.PagoCBU;
+                            //oContratoSave.ChequeElectronico = oContratoSave.ChequeElectronico;
                             oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
 
 
@@ -1850,9 +1850,9 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaOperacion),
                 MotivoOperacionAnterior = x.MotivoOperacionAnterior,
-                ChequeElectronico = x.ChequeElectronico,
+                //ChequeElectronico = x.ChequeElectronico,
                 DolarizadoExpress = x.DolarizadoExpress,
-                PagoCBU = x.PagoCBU
+                //PagoCBU = x.PagoCBU
             });
             return contrato;
         }
@@ -2393,8 +2393,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Precio = y.Precio
                 }).ToList(),
                 TipoAgenteCompraId = x.TipoAgenteCompraId,
-                ChequeElectronico = x.ChequeElectronico,
-                PagoCBU = x.PagoCBU
+                //ChequeElectronico = x.ChequeElectronico,
+                //PagoCBU = x.PagoCBU
             });
             var dia = oDiasHabilesAgent.UltimoDiaHabil();
             if (contrato.Fecha < dia)
@@ -2538,9 +2538,9 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.CaratulaExtension = contrato.CaratulaExtension;
             contratoSave.PrecioAjusteComision = contrato.PrecioAjusteComision;
             contratoSave.MonedaAjusteComisionId = contrato.MonedaAjusteComisionId;
-            contratoSave.ChequeElectronico = contrato.ChequeElectronico;
+            //contratoSave.ChequeElectronico = contrato.ChequeElectronico;
             contratoSave.DolarizadoExpress = contrato.DolarizadoExpress;
-            contratoSave.PagoCBU = contrato.PagoCBU;
+            //contratoSave.PagoCBU = contrato.PagoCBU;
 
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
@@ -2592,15 +2592,15 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Error("", "El contrato no se puede modificar");
                     return error;
                 }
-                if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
-                {
-                    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
-                    if (result != "Ok")
-                    {
-                        error.Error("", result);
-                        return error;
-                    }
-                }
+                //if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
+                //{
+                //    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
+                //    if (result != "Ok")
+                //    {
+                //        error.Error("", result);
+                //        return error;
+                //    }
+                //}
                 if (oContrato.EstadoId != 11)
                 {
                     if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3) || ValidarCalidadModificada(oContrato, oContratoSave))
@@ -3198,14 +3198,14 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "A pesificar en mes en curso y enviar mail a Notificaciones diferido: Notificacionesdiferido@molinosagro.com.ar hasta las 13 hs <br />";
             }
-            if (oContrato.ChequeElectronico.Value)
-            {
-                htmlBody += "Pago con Echeq <br />";
-            }
-            if (oContrato.PagoCBU != null)
-            {
-                htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
-            }
+            //if (oContrato.ChequeElectronico.Value)
+            //{
+            //    htmlBody += "Pago con Echeq <br />";
+            //}
+            //if (oContrato.PagoCBU != null)
+            //{
+            //    htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
+            //}
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br /><br /> En el caso que sea necesario, comuníquese con  " + oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
@@ -3522,38 +3522,31 @@ namespace Molinos.DataAgro.Business.Managers
 
 
 
-                if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
-                {
-                    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
-                    if (result != "Ok")
-                    {
-                        error.Error("", result);
-                        return error;
-                    }
-                }
+                //if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
+                //{
+                //    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
+                //    if (result != "Ok")
+                //    {
+                //        error.Error("", result);
+                //        return error;
+                //    }
+                //}
                 oContrato.ContratoSAP = repositorio.Obtener<FijacionDePrecioContrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
-                var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
-                if (res.Contains("Error"))
-                {
-                    error.Error("SAP", res);
-                    return error;
-                }
-
-
-
+                //var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
+                //if (res.Contains("Error"))
+                //{
+                //    error.Error("SAP", res);
+                //    return error;
+                //}
                 logger.Debug("Actualizando contrato en BD DataAgro: " + oContrato.Id);
-
-
 
                 if (oContratoSave == null || oContrato.Id == 0)
                 {
                     error.Error("Contrato", "No existe contrato en DataAgro");
                 }
-                oContratoSave.PagoCBU = oContrato.PagoCBU;
+                //oContratoSave.PagoCBU = oContrato.PagoCBU;
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContrato.GetType());
-
-
 
             }
             catch (Exception e)

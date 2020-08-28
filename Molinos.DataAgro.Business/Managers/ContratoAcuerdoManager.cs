@@ -285,8 +285,8 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.PagoDiferido = oContratoAcuerdo.PagoDiferido;
                 objContratoAcuerdo.Dolarizado = oContratoAcuerdo.Dolarizado;
                 objContratoAcuerdo.FechaDolarizado = oContratoAcuerdo.FechaDolarizado;
-                objContratoAcuerdo.ChequeElectronico = oContratoAcuerdo.ChequeElectronico;
-                objContratoAcuerdo.PagoCBU = oContratoAcuerdo.PagoCBU;
+                //objContratoAcuerdo.ChequeElectronico = oContratoAcuerdo.ChequeElectronico;
+                //objContratoAcuerdo.PagoCBU = oContratoAcuerdo.PagoCBU;
 
                 objContratoAcuerdo.TipoNegocioId = oContratoAcuerdo.TipoNegocioId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;

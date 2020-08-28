@@ -1553,13 +1553,29 @@ function InicializarElementos() {
     $("#fechaCiertaId").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () {
+            if ($("#fechaCiertaId").val() == "") {
+                $("#pagoDiferidoDiv").show();
+                
+            } else {
+                $("#pagoDiferidoDiv").hide();
+            }            
+        }
     });
     $("#fechaCiertaAcuerdo").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () {
+            if ($("#fechaCiertaId").val() == "") {
+                $("#pagoDiferidoDiv").show();
+            } else {
+                $("#pagoDiferidoDiv").hide();
+            }
+        }
     });
+
     $("#fechaDesdeId").val(date);
     $("#fechaOperacionId").val(date);
 

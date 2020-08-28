@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Interfaces
         RangoPrecioDto ObtenerRangoDePrecios(int materialId, string monedaId);
         string ValidarStatus(int contratoId);
         GrabarContratoResult PreAnularContrato(int contratoId, string motivo);
-        GrabarContratoResult RechazarPreAnularContrato(int contratoId, string motivoRechazo);
+        GrabarContratoResult RechazarPreAnularContrato(int contratoId/*, string motivoRechazo*/);
         GrabarContratoResult ReconfirmarFinalizado(int contratoId, string mailComercial);
         GrabarContratoResult AnularContratoPreAnulado(int contratoId, string idActiveDirectory);
         List<BasicoContrato> CompararNegocioReconfirmado(int contratoId);
