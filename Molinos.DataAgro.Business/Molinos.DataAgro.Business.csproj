@@ -160,6 +160,7 @@
     <Compile Include="Managers\HabilitacionCupoManager.cs" />
     <Compile Include="Managers\ConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\ConfiguracionInternaManager.cs" />
+    <Compile Include="Managers\HttpContextManager.cs" />
     <Compile Include="Managers\LogDataAgroManager.cs" />
     <Compile Include="Managers\NegocioManager.cs" />
     <Compile Include="Managers\UsuarioManager.cs" />

@@ -29,10 +29,11 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailManager mailManager;
         private readonly ILogger logger;
         private readonly ILogDataAgroManager logDataAgroManager;
+        private readonly IHttpContextManager httpContextManager;
 
         public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
             IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent,
-            IMailManager mailManager, ILogDataAgroManager logDataAgroManager)
+            IMailManager mailManager, ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager)
         {
             this.logger = logger;
             mobComercial = oComercial;
@@ -41,6 +42,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailManager = mailManager;
             this.repositorio = repositorio;
             this.logDataAgroManager = logDataAgroManager;
+            this.httpContextManager = httpContextManager;
         }
 
         public StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string actividadId)
@@ -384,7 +386,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
             }
         }
-        public void EnviarEmail(Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar)
+        public Resultado EnviarEmail(Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string idActiveDirectory, bool? eliminar)
         {
             try
             {
@@ -421,7 +423,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     logger.Debug($"El contrato {oContrato.Id} no tiene ContactoComercial para el proveedor {oContrato.ProveedorId} ni email comercial");
-                    return;
+                    return new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = $"El contrato {oContrato.Id} no tiene ContactoComercial para el proveedor {oContrato.ProveedorId} ni email comercial" } } };
                 }
                 var mailCreador = "";
                 try { mailCreador = mailManager.GetEmailUserActiveDirectory(oContrato.ComercialCreador.IdActiveDirectory); } catch (Exception e) { logger.Error(e); }
@@ -447,8 +449,8 @@ namespace Molinos.DataAgro.Business.Managers
                         catch (Exception e) { logger.Error(e); }
                     }
                 }
-
-                oMensaje.AlternateViews.Add(CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, objDescuento, objCalidad, emailComercial, eliminar));
+                string pathImagen = httpContextManager.ObtenerPathLogoMail();
+                oMensaje.AlternateViews.Add(CuerpoMailContrato(pathImagen, oContrato, objDescuento, objCalidad, emailComercial, eliminar));
                 var subject = "";
 
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
@@ -491,13 +493,15 @@ namespace Molinos.DataAgro.Business.Managers
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
 
                 oCliente.Send(oMensaje);
+                return new Resultado();
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
+                return new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = ex.Message } } };
             }
         }
-        public void EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory)
+        public Resultado EnviarEmailFijacion(FijacionDePrecioContrato oFijacionDePrecioContrato, string idActiveDirectory)
         {
             try
             {
@@ -534,7 +538,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     logger.Debug($"La fijación {oFijacionDePrecioContrato.ContratoId} no tiene ContactoComercial para el proveedor {oFijacionDePrecioContrato.ProveedorId} ni email comercial");
-                    return;
+                    return new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = $"La fijación {oFijacionDePrecioContrato.ContratoId} no tiene ContactoComercial para el proveedor {oFijacionDePrecioContrato.ProveedorId} ni email comercial" } } };
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
                 var emailComerciales = "";
@@ -553,7 +557,9 @@ namespace Molinos.DataAgro.Business.Managers
                         catch (Exception e) { logger.Error(e); }
                     }
                 }
-                oMensaje.AlternateViews.Add(CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oFijacionDePrecioContrato, emailComercial));
+                string pathImagen = httpContextManager.ObtenerPathLogoMail();
+
+                oMensaje.AlternateViews.Add(CuerpoMailFijacion(pathImagen, oFijacionDePrecioContrato, emailComercial));
                 var subject = "";
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                 {
@@ -593,10 +599,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                 oCliente.Send(oMensaje);
+
+                return new Resultado();
             }
             catch (Exception ex)
             {
                 logger.Error(ex);
+                return new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Message = ex.Message } } };
+
             }
         }
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)
@@ -3203,7 +3213,8 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<CampanaMaterialDetallePorMesDto> BuscarDatosTablaCompras()
         {
-            return repositorio.Listar<CampanaMaterialDetallePorMes, CampanaMaterialDetallePorMesDto>(x => new CampanaMaterialDetallePorMesDto {
+            return repositorio.Listar<CampanaMaterialDetallePorMes, CampanaMaterialDetallePorMesDto>(x => new CampanaMaterialDetallePorMesDto
+            {
                 ClaseDoc = x.ClaseDoc,
                 Clasificacion = x.Clasificacion,
                 ComercialId = x.ComercialId,
@@ -3220,10 +3231,10 @@ namespace Molinos.DataAgro.Business.Managers
                 ProveedorId = x.CampanaMaterialDetalle.ProveedorId,
                 ToneladaFijada = x.ToneladaFijada,
                 CampanaId = x.CampanaMaterialDetalle.CampanaId
-                
+
             });
         }
-        
+
         public List<CompraDto> TraerTodoCompra(int proveedorId, List<int> equipo)
         {
 
@@ -3231,35 +3242,35 @@ namespace Molinos.DataAgro.Business.Managers
             var compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
             x.CampanaMaterialDetalle.ProveedorId == proveedorId && equipo.Contains(x.ComercialId.Value));
 
-            var grupoCompras = compras.GroupBy(x=>new { x.CampanaMaterialDetalle.CampanaId, x.CampanaMaterialDetalle.MaterialId });
-            foreach(var c in grupoCompras)
+            var grupoCompras = compras.GroupBy(x => new { x.CampanaMaterialDetalle.CampanaId, x.CampanaMaterialDetalle.MaterialId });
+            foreach (var c in grupoCompras)
             {
                 var detalle = new CompraDto
                 {
-                    Campana = c.Select(x=>x.CampanaMaterialDetalle.Campana.Descripcion).FirstOrDefault(),
+                    Campana = c.Select(x => x.CampanaMaterialDetalle.Campana.Descripcion).FirstOrDefault(),
                     Material = c.Select(x => x.CampanaMaterialDetalle.Material.Descripcion).FirstOrDefault(),
                     ConCorredor = new CompraDetalleDto
                     {
-                        ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) 
+                        ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada)
                         + c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),                        
+                        ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),
                         FasonFas = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
-                    },         
+                    },
                     DirectoAcopiador = new CompraDetalleDto
                     {
-                        ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) + 
+                        ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) +
                         c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),                        
+                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
 
                     },
                     DirectoProductor = new CompraDetalleDto
                     {
-                        ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) + 
+                        ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) +
                         c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
-                        RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR"&& x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
+                        RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
                         ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
                     }
@@ -3273,7 +3284,7 @@ namespace Molinos.DataAgro.Business.Managers
                     compraDto.Add(detalle);
                 }
             }
-            return compraDto.OrderBy(x=> x.Material).ThenByDescending(x=> x.Campana).ToList();
+            return compraDto.OrderBy(x => x.Material).ThenByDescending(x => x.Campana).ToList();
         }
 
 

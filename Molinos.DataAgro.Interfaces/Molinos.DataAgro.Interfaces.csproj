@@ -154,6 +154,7 @@
     <Compile Include="Managers\IHabilitacionCupoManager.cs" />
     <Compile Include="Managers\IConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\IConfiguracionInternaManager.cs" />
+    <Compile Include="Managers\IHttpContextManager.cs" />
     <Compile Include="Managers\ILogDataAgroManager.cs" />
     <Compile Include="Managers\INegocioManager.cs" />
     <Compile Include="Managers\IUsuarioManager.cs" />

@@ -616,7 +616,7 @@ namespace WebDataAgro.Services
                 resultado.ProveedorOperable = existeEnSISA != null;
                 resultado.ProveedorCBU = existeEnSISA != null ? (existeEnSISA.CBU ?? "") : "";
                 resultado.ProveedorSISAEstadoCuit = existeEnSISA != null ? existeEnSISA.EstadoCuit.ToString() : "";
-                resultado.ProveedorSISASituacionCategoria = existeEnSISA != null ? existeEnSISA.SituacionCategoria.ToString() : "";
+                resultado.ProveedorSISASituacionCategoria = existeEnSISA != null ? (existeEnSISA.SituacionCategoria ?? "") : "";
                 resultado.ProveedorSISACodCategoria = existeEnSISA != null ? existeEnSISA.CodCategoria.ToString() : "";
 
                 resultado.ProveedorMails = new List<string>();
@@ -641,7 +641,7 @@ namespace WebDataAgro.Services
                 resultado.ProveedorMails = resultado.ProveedorMails.Distinct().ToList();
                 resultado.ProveedorId = proveedor.ProveedorId;
                 resultado.ProveedorRazonSocial = proveedor.RazonSocial;
-                resultado.ProveedorClasificacion = proveedor.ClasificacionCompraNet.Descripcion;
+                resultado.ProveedorClasificacion = proveedor.ClasificacionCompraNet == null ? "" : proveedor.ClasificacionCompraNet.Descripcion;
                 Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == proveedor.ProveedorId, x => x.Fecha);
                 if (negocio != null)
                 {
@@ -889,7 +889,7 @@ namespace WebDataAgro.Services
 
                 var resultado = contratoManager.AltaContratoSAP(contrato, true);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-                oEntityErrors.ContratoId = contrato != null? contrato.Id.ToString(): "";
+                oEntityErrors.ContratoId = contrato != null ? contrato.Id.ToString() : "";
             }
             catch (Exception ex)
             {

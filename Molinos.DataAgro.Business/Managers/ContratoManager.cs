@@ -58,8 +58,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IValidarDocProcPagoAgent validarPagoAgente;
         private readonly IListaCBUProveedorAgent cbuAgent;
         private readonly IModificarFijacionAgent modificarFijacionAgent;
-
-
+        private readonly IHttpContextManager httpContextManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -78,7 +77,8 @@ namespace Molinos.DataAgro.Business.Managers
             IMailManager mailManager, IStatusContratoAgent status,
             ILogDataAgroManager logDataAgroManager,
             IValidarDocProcPagoAgent validarPagoAgente,
-            IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent)
+            IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent,
+            IHttpContextManager httpContextManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -107,6 +107,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.validarPagoAgente = validarPagoAgente;
             this.cbuAgent = cbuAgent;
             this.modificarFijacionAgent = modificarFijacionAgent;
+            this.httpContextManager = httpContextManager;
         }
 
         public DatosIniContrato TraerDatosCombo()
@@ -1925,7 +1926,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
 
                         oMensaje.CC.Add(new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]));
-                        var rutaMolinos = System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png");
+                        var rutaMolinos = httpContextManager.ObtenerPathLogoMail();
                         oMensaje.AlternateViews.Add(CuerpoMailContrato(rutaMolinos, contratosPorCreador.ToList(), contratosPorCreador.Key));
                         oMensaje.Subject = "Negocios Pendientes CompraNet";
 
@@ -2182,7 +2183,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
 
-                oMensaje.AlternateViews.Add(CuerpoMailSIO(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), oContrato, idActiveDirectory));
+                oMensaje.AlternateViews.Add(CuerpoMailSIO(httpContextManager.ObtenerPathLogoMail(), oContrato, idActiveDirectory));
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                 {
                     oMensaje.Subject = "Anulacion de Contrato Molinos Agro S.A. - " + oContrato.Proveedor.RazonSocial;
@@ -2785,7 +2786,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var subject = "Modificación negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
-            mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContrato(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contrato, contratoSave));
+            mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), contrato, contratoSave));
         }
 
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, Contrato contratoSave)

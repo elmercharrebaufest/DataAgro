@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock = new Mock<IRepositorio>();
             comercialManagerMock = new Mock<IComercialManager>();
             tipoDeCambioMock = new Mock<ITipoDeCambioAgent>();
-            target = new ReportesManager(logger.Object, repositorioMock.Object,comercialManagerMock.Object, tipoDeCambioMock.Object);
+            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object);
             tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(null)).Returns(45);
         }
 
@@ -224,7 +224,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ResultAcopioMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""))
                 .Returns(new List<ResultAcopioMapaReportes>() { new ResultAcopioMapaReportes { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerCapacidadDeAcopioMapaExportacion(new ParamReportes(),new List<int>());
+            var result = target.TraerCapacidadDeAcopioMapaExportacion(new ParamReportes(), new List<int>());
 
             repositorioMock.Verify(x => x.SelStore<ResultAcopioMapaReportes>(It.IsAny<string>(), It.IsAny<int>(), null, null, null, null, null, ""), Times.Once);
             Assert.NotNull(result);
@@ -257,9 +257,9 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerObjetivosGaugeTest()
         {
             repositorioMock.Setup(y => y.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()))
-                .Returns(new List<ResultObjetivoGaugeReportes>() { new ResultObjetivoGaugeReportes { Cuit="1",Toneladas=1 } });
+                .Returns(new List<ResultObjetivoGaugeReportes>() { new ResultObjetivoGaugeReportes { Cuit = "1", Toneladas = 1 } });
 
-            var result = target.TraerObjetivosGauge(new ParamReportes(),new List<int>());
+            var result = target.TraerObjetivosGauge(new ParamReportes(), new List<int>());
 
             repositorioMock.Verify(x => x.SelStore<ResultObjetivoGaugeReportes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<int?>()), Times.Once);
             Assert.NotNull(result);
@@ -280,11 +280,11 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerDatosGrillaBDTest()
         {
             var fecha = new DateTime(2018, 10, 26);
-            var reporte = new ParamReportes { FechaDesde= fecha, FechaHasta= fecha, Mes=1, Segmentacion="a", Cosecha=1, Toneladas=1, Comercial= 1, ComercialActual=1, Grano=1 };
+            var reporte = new ParamReportes { FechaDesde = fecha, FechaHasta = fecha, Mes = 1, Segmentacion = "a", Cosecha = 1, Toneladas = 1, Comercial = 1, ComercialActual = 1, Grano = 1 };
             repositorioMock.Setup(y => y.SelStore<valoresGrilla>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<double>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
-                .Returns(new List<valoresGrilla>() { new valoresGrilla { Cuit="1",Toneladas = 1,Segmentación="a" } });
+                .Returns(new List<valoresGrilla>() { new valoresGrilla { Cuit = "1", Toneladas = 1, Segmentación = "a" } });
 
-            var result = target.TraerDatosGrillaBD(reporte,new List<int>());
+            var result = target.TraerDatosGrillaBD(reporte, new List<int>());
 
             repositorioMock.Verify(x => x.SelStore<valoresGrilla>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<double>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
@@ -293,7 +293,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerBasedeDatosTest()
         {
             var result = target.TraerBasedeDatos(new ParamReportes());
-            
+
             Assert.NotNull(result);
         }
         #region TransformarFiltros
@@ -302,7 +302,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var result = target.TransformarFiltros(new ParamReportes());
             Assert.NotNull(result);
-                        
+
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, string>>>()), Times.Never);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Provincia, bool>>>(), It.IsAny<Expression<Func<Provincia, string>>>()), Times.Never);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, string>>>()), Times.Never);
@@ -384,7 +384,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Toneladas = 2,
                 ComercialActual = 1
             };
-            
+
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, string>>>())).Returns("a");
 
             var result = target.TransformarFiltros(param);
@@ -623,7 +623,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new ToneladasGranoTipoDto { Material = "a", Total = 0 });
             var result = target.TraerToneladasGranoTipo(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 });
 
-            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerToneladasPorGrano>()),Times.Exactly(7));
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerToneladasPorGrano>()), Times.Exactly(7));
             Assert.NotNull(result);
             Assert.AreEqual(7, result.Count);
         }
@@ -646,23 +646,34 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var fecha = new DateTime(2018, 10, 26);
             var fecha1 = new DateTime(2018, 11, 16);
-            var fecha2= new DateTime(2018, 12, 26);
+            var fecha2 = new DateTime(2018, 12, 26);
+            var fecha3 = DateTime.Now.AddDays(312);
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha2 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha,Posicion = "02.2019" } });
+                .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha, Posicion = "02.2019" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<PosicionPorMaterial>() { new PosicionPorMaterial { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha2, FechaHasta = fecha2 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), DirOrden.Asc))
                 .Returns(new List<PrecioPizarra>());
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, BasicoContrato>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-             .Returns(new List<BasicoContrato>() { new BasicoContrato { Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha } });
+             .Returns(new List<BasicoContrato>() {
+                 new BasicoContrato { Fecha = fecha,EsFason = false, Id = 1, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha2,TipoNegocioId=3,ContratoSAP="1", Estado = 2,TrigoEspecial=true,MaterialId=1,ContratoAcuerdoId = null,OcultarEnTablero=false },
+                 new BasicoContrato { Fecha = fecha,EsFason=false, Id = 2, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha1,TipoNegocioId=3,StandardCalidadId =1, Estado = 2 ,MaterialId=1,ContratoAcuerdoId = null,OcultarEnTablero=false},
+                 new BasicoContrato { Fecha = fecha,EsFason=false, Id = 3, Precio = 1, Cantidad = 1, FechaDesde = fecha1, FechaHasta = fecha,TipoNegocioId=1, Estado = 2,MaterialId=1,StandardCalidadId=1,DestinoId=1,ContratoAcuerdoId= null,OcultarEnTablero=false },
+                 new BasicoContrato { Fecha = fecha,EsFason=false, Id = 3, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha1,TipoNegocioId=2, Estado = 2,MaterialId=1,StandardCalidadId=1,DestinoId=1,ContratoAcuerdoId= null,OcultarEnTablero=false },
+                 new BasicoContrato { Fecha = fecha,EsFason=false, Id = 3, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha2,TipoNegocioId=3, Estado = 2,MaterialId=1,StandardCalidadId=null,DestinoId=1,ContratoAcuerdoId= null,OcultarEnTablero=false },
+                 new BasicoContrato { Fecha = fecha,EsFason=false, Id = 3, Precio = 1, Cantidad = 1, FechaDesde = fecha3, FechaHasta = fecha,TipoNegocioId=4, Estado = 2,MaterialId=1,StandardCalidadId=1,DestinoId=1,ContratoAcuerdoId= null,OcultarEnTablero=false },
+                 new BasicoContrato { Fecha = fecha,EsFason=false, Id = 3, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha,TipoNegocioId=5, Estado = 2,MaterialId=1,StandardCalidadId=1,DestinoId=1,ContratoAcuerdoId= null,OcultarEnTablero=false },
+                 new BasicoContrato { Fecha = fecha,EsFason=false, Id = 3, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha,TipoNegocioId=6, Estado = 2,MaterialId=1,StandardCalidadId=1,DestinoId=1,ContratoAcuerdoId= null,OcultarEnTablero=false },
+                 new BasicoContrato { Fecha = fecha,EsFason=false, Id = 3, Precio = 1, Cantidad = 1, FechaDesde = fecha, FechaHasta = fecha,TipoNegocioId=1, Estado = 2,MaterialId=1,StandardCalidadId=1,DestinoId=1,ContratoAcuerdoId= null,OcultarEnTablero=false }
+             });
             //var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
-            repositorioMock.Setup(y=> y.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-             .Returns(new List<Negocio>() );
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
+             .Returns(new List<Negocio> { new Negocio { ContratoSAP = "1", StandardDeCalidadId = 4 } });
             var result = target.TraerPosicionCompras(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 });
 
             //repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(7));
@@ -692,7 +703,7 @@ namespace Molinos.DataAgro.Test.Managers
             var fecha1 = new DateTime(2018, 10, 28);
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<HedgeMaterial, HedgeMaterialDto>>>(), It.IsAny<Expression<Func<HedgeMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<HedgeMaterialDto>() { new HedgeMaterialDto { Id=1,Cantidad=1,Fecha=fecha,MaterialId=1 } });
+                .Returns(new List<HedgeMaterialDto>() { new HedgeMaterialDto { Id = 1, Cantidad = 1, Fecha = fecha, MaterialId = 1 } });
 
             var result = target.TraerTodosHedgeMaterial(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 });
 
@@ -705,7 +716,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var fecha = new DateTime(2018, 10, 26);
             var fecha1 = new DateTime(2018, 10, 28);
-            
+
             var result = target.TraerTodosHedgeMaterial(fecha, fecha1, new List<int>() { 1, 2, 3, 4, 5 });
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HedgeMaterial, HedgeMaterialDto>>>(), It.IsAny<Expression<Func<HedgeMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Never);
@@ -760,11 +771,11 @@ namespace Molinos.DataAgro.Test.Managers
                     new HedgeTC { Id = 1, Fecha = fecha, TipoCambio = 10, HedgePesos = 10 },
                     new HedgeTC { Id = 2, Fecha = fecha, TipoCambio = 20, HedgePesos = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<Contrato>() { new Contrato { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId= "ARP  ",CampanaId=1, EstadoId = 5, TipoNegocioId = 1,Material = mat, Precio = 1 } });
+                .Returns(new List<Contrato>() { new Contrato { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId = "ARP  ", CampanaId = 1, EstadoId = 5, TipoNegocioId = 1, Material = mat, Precio = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId = "ARP  ", CampanaId = 1, EstadoId = 5, Material = mat, Precio = 2 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<Fason>() { new Fason { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId = "ARP  ", CampanaId = 1, EstadoId = 5, Material = mat,Precio =2 } });
+                            .Returns(new List<Fason>() { new Fason { Id = 1, Cantidad = 5, Fecha = fecha, MaterialId = 1, MonedaId = "ARP  ", CampanaId = 1, EstadoId = 5, Material = mat, Precio = 2 } });
 
             var result = target.TraerTcPromedio(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 });
 
@@ -836,7 +847,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                             .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Cantidad = "1", TipoNegocio = "1",Fecha=fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
+                            .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
 
             var result = target.DetallePosicion(1, 1, 2018, fecha, fecha, 3, 1);
 
@@ -913,7 +924,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<DetalleAgenteDto>() {
                     new DetalleAgenteDto { Agente="1",Cantidad=1,Comercial="a",Fecha=fecha.ToShortDateString(),Material="a",Moneda="a",Operador="a",Posicion="01.2019",Precio="1"},
                     new DetalleAgenteDto { Agente="1",Cantidad=1,Comercial="a",Fecha=fecha.ToShortDateString(),Material="a",Moneda="a",Operador="a",Posicion="01.2019",Precio="1"}});
-            
+
             var result = target.DetalleAgente(fecha, new List<int>() { 1, 2, 3, 4, 5 });
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, DetalleAgenteDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -927,7 +938,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<TraerPosicionMaterialMes>()))
                 .Returns(new List<ExcelPosicionMaterialDto>() { });
 
-            var result = target.PosicionPorMaterial(fecha,fecha);
+            var result = target.PosicionPorMaterial(fecha, fecha);
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<TraerPosicionMaterialMes>()), Times.Once);
             Assert.NotNull(result);
@@ -945,14 +956,14 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Cantidad = "1", Precio = "1", PrecioNeto = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
-                            .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a",Precio="1",PrecioNeto="1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
+                            .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                             .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, DetalleContratoDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc))
                             .Returns(new List<DetalleContratoDto>() { new DetalleContratoDto { Contrato = "a", RazonSocial = "a", Cuit = "1", Comercial = "a", Precio = "1", PrecioNeto = "1", Cantidad = "1", TipoNegocio = "1", Fecha = fecha.ToShortDateString(), FechaDesde = fechadesde.ToShortDateString(), FechaHasta = fechahasta.ToShortDateString() } });
 
             var result = target.DetallePosicionModal(1, 1, 2018, fecha, fecha, 3, 1);
-            
+
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, DetalleContratoDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, DetalleContratoDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -998,16 +1009,16 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<PricingCampaniaDto>() { new PricingCampaniaDto { Id = 1, CampaniaId = 1, MaterialId = 1, Campania = "01.2019", Pricing = 1000, Material = "a" } });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Material, MaterialDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<MaterialDto>() { new MaterialDto { MaterialId=1, CampañaId=1,Campana="a",Descripcion="a"} });
+                            .Returns(new List<MaterialDto>() { new MaterialDto { MaterialId = 1, CampañaId = 1, Campana = "a", Descripcion = "a" } });
 
-            var result = target.TraerPricingCampania(fechaDesde, fechaHasta,new List<int> { 1,2,3,4,5}, 1);
+            var result = target.TraerPricingCampania(fechaDesde, fechaHasta, new List<int> { 1, 2, 3, 4, 5 }, 1);
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Material, MaterialDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()),Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AgenteCompra, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PricingCampaniaDto>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Material, MaterialDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count);
         }
