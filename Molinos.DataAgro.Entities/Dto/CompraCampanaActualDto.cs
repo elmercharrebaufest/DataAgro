@@ -17,6 +17,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Material { get; set; }
         public string Campana { get; set; }
         public double PendienteAFijar { get; set; }
+        public double PendienteAplicar { get; set; }
+
         public double ToneladaAmpliada { get; set; }
         public double ToneladaAnulada { get; set; }
         public double ToneladaAplicada { get; set; }
@@ -24,6 +26,5 @@ namespace Molinos.DataAgro.Entities.Dto
         public double ToneladaFijada { get; set; }
         public string ClaseDoc { get; set; }
         public string Clasificacion { get; set; }
-        
     }
 }

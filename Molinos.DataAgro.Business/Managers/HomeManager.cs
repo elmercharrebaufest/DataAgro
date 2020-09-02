@@ -428,7 +428,9 @@ namespace Molinos.DataAgro.Business.Managers
                         ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) +
                         c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),
+                        ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF" && x.PendienteAplicar > 0)
+                            .Sum(x => x.ToneladaFijada - x.ToneladaAplicada > 0 ?
+                            ((x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) < 0 ? 0 : x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) : x.PendienteAplicar),
                         FasonFas = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
                     },
                     DirectoAcopiador = new CompraDetalleDto
@@ -436,7 +438,9 @@ namespace Molinos.DataAgro.Business.Managers
                         ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) +
                         c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),
+                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.PendienteAplicar > 0)
+                            .Sum(x => x.ToneladaFijada - x.ToneladaAplicada > 0 ?
+                            ((x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) < 0 ? 0 : x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) : x.PendienteAplicar),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion != "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
 
                     },
@@ -445,7 +449,9 @@ namespace Molinos.DataAgro.Business.Managers
                         ComprasConPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada) +
                         c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
                         RecibidoSinPrecio = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
-                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),
+                        ARecibirAFijar = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZPAF" && x.PendienteAplicar > 0)
+                            .Sum(x => x.ToneladaFijada - x.ToneladaAplicada > 0 ?
+                            ((x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) < 0 ? 0 : x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) : x.PendienteAplicar),
                         FasonFas = c.Where(x => String.IsNullOrEmpty(x.CorredorCuit) && x.Clasificacion == "PRODUCTOR" && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
                     }
 
@@ -530,11 +536,11 @@ namespace Molinos.DataAgro.Business.Managers
                     if (cloned.Tn != 0)
                         campanaMaterialDetallePorMeseExcelDtos.Add(cloned);
                 }
-                if (x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0))
+                if (x.ClaseDoc == "ZPAF" && x.PendienteAplicar > 0)
                 {
                     CampanaMaterialDetallePorMeseExcelDto cloned = (CampanaMaterialDetallePorMeseExcelDto)itemDto.Clone();
                     cloned.Situacion = "A Recibir a Fijar";
-                    cloned.Tn = x.PendienteAFijar - x.ToneladaAplicada;
+                    cloned.Tn = x.ToneladaFijada - x.ToneladaAplicada > 0 ?((x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) < 0 ? 0 : x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) : x.PendienteAplicar;
                     if (cloned.Tn != 0)
                         campanaMaterialDetallePorMeseExcelDtos.Add(cloned);
                 }
@@ -580,6 +586,8 @@ namespace Molinos.DataAgro.Business.Managers
                 ToneladaAplicada = x.ToneladaAplicada,
                 ToneladaContrato = x.ToneladaContrato,
                 ToneladaFijada = x.ToneladaFijada,
+                PendienteAplicar = x.PendienteAplicar
+                
 
             }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId));
         }
