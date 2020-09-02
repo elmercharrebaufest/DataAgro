@@ -6,16 +6,22 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using Molinos.DataAgro.Test.Mock;
 using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 using System.Web.Script.Serialization;
 
@@ -63,6 +69,193 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
+
+        [Test]
+        public void BorrarAcuerdoSinMotivoError()
+        {
+            var acuerdoParaSerializar = new ContratoAcuerdo
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = 7 },
+                EstadoId = 7,
+                MotivoRechazo = "test",
+                MaterialId = 1,
+                TipoNegocioId = 1,
+                Cantidad = 10,
+                Precio = 100,
+                CampanaId = 1,
+                FechaDesde = DateTime.Now,
+                FechaHasta = DateTime.Now,
+                ProveedorId = 1,
+                MonedaId = " USD",
+                GrupoCompra = 1,
+                ComercialId = 1,
+                TrigoEspecial = false,
+                DestinoId = 1,
+                CondicionFijacionId = 1,
+                ComercialCreadorId = 1,
+                CorredorId = 1,
+                ContratoSAP = "00034343",      
+                PrecioPactado = new List<PrecioPactado>() {
+                     new PrecioPactado
+                     {
+                         Precio = 1000,
+                         ImportePactado = 100,
+                         ContratoId = 1,
+                         Id = 1,
+                         MonedaPactadoId = "usd",
+                         MonedaImportePactadoId = "USD"
+                     }
+                },
+                Calidad = new List<Calidad>()
+                {
+                    new Calidad
+                    {
+                        StandardDeCalidadId = 1,
+                        NegocioId = 1,
+                        Id = 1,
+                        CalidadEspecialId = 1,
+                        Valor = 10
+                    }
+                },
+                AperturaPrecio = new List<AperturaPrecio>()
+                {
+                    new AperturaPrecio()
+                    {
+                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
+                        Importe = 300
+                    },
+                    new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
+                }
+            };
+            var datos = JsonConvert.SerializeObject(acuerdoParaSerializar, new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            });
+            var acuerdo = new ContratoAcuerdo
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = 7 },
+                EstadoId = 7,
+                MotivoRechazo = "test",
+                NegocioHistorico = new List<NegocioHistorico>() { new NegocioHistorico
+                {
+                     Datos = datos
+                }
+                },
+                PrecioPactado = new List<PrecioPactado>() {
+                        new PrecioPactado
+                        {
+                            Precio = 1000,
+                            ImportePactado = 100,
+                            ContratoId = 1,
+                            Id = 1,
+                            MonedaPactadoId = "usd",
+                            MonedaImportePactadoId = "USD"
+                        }
+                },
+                Calidad = new List<Calidad>()
+                {
+                    new Calidad
+                    {
+                        StandardDeCalidadId = 1,
+                        NegocioId = 1,
+                        Id = 1,
+                        CalidadEspecialId = 1,
+                        Valor = 10
+                    }
+                },
+                  AperturaPrecio = new List<AperturaPrecio>()
+                {
+                    new AperturaPrecio()
+                    {
+                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
+                        Importe = 300
+                    },
+                    new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
+                }
+            };      
+            repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
+              .Returns(acuerdo);
+            repositorioMock.Setup(x => x.Obtener<EstadoContrato>(It.IsAny<int>()))
+                .Returns(new EstadoContrato { EstadoContratoId = 7 });
+            var resultado = target.BorrarAcuerdo(acuerdo);
+            Assert.That(!resultado.HayError);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+        [Test]
+        public void BorrarAcuerdoConAmpliacionesReconfirmar()
+        {           
+            var acuerdo = new ContratoAcuerdo
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = 7 },
+                EstadoId = 7,
+                MotivoRechazo = "test",                
+                Ampliaciones = 10
+            };
+            repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
+              .Returns(acuerdo);
+            repositorioMock.Setup(x => x.Obtener<EstadoContrato>(It.IsAny<int>()))
+                .Returns(new EstadoContrato { EstadoContratoId = 7 });
+            var resultado = target.BorrarAcuerdo(acuerdo);
+            Assert.That(!resultado.HayError);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+        [Test]
+        public void BorrarAcuerdoConAmpliacionesConfirmado()
+        {
+            var acuerdo = new ContratoAcuerdo
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = 2 },
+                EstadoId = 2,
+                MotivoRechazo = "test",
+                Ampliaciones = 10,
+            };
+            repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
+              .Returns(acuerdo);
+            repositorioMock.Setup(x => x.Obtener<EstadoContrato>(It.IsAny<int>()))
+                .Returns(new EstadoContrato { EstadoContratoId = 2 });
+            var resultado = target.BorrarAcuerdo(acuerdo);
+            Assert.That(!resultado.HayError);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
+        [Test]
+        public void BorrarAcuerdoConError()
+        {
+            var acuerdo = new ContratoAcuerdo
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = 8 },
+                EstadoId = 8,
+                MotivoRechazo = "test",
+                Ampliaciones = 10
+            };
+            repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
+              .Returns(acuerdo);
+            repositorioMock.Setup(x => x.Obtener<EstadoContrato>(It.IsAny<int>()))
+                .Returns(new EstadoContrato { EstadoContratoId = 8 });
+            var resultado = target.BorrarAcuerdo(acuerdo);
+            Assert.That(resultado.HayError);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+        }
+
+        [Test]
+        public void BorrarAcuerdoConEstadoReconfirmarTest()
+        {
+            var acuerdo = new ContratoAcuerdo
+            {
+                Id = 10,
+            };
+            var resultado = target.BorrarAcuerdo(acuerdo);
+            Assert.That(resultado.HayError);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+        }
+
         [Test]
         public void GrabarAcuerdoOkTest()
         {
@@ -76,10 +269,68 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 CampanaId = 1,
                 MonedaId = "a",
-                FechaHasta = new DateTime(2019, 08, 08)
+                TipoNegocioId = 2,
+                FechaDesde = new DateTime(2020,9,19),
+                FechaHasta = new DateTime(2020,9, 30),
+                PrecioPactado = new List<PrecioPactado>() {
+                        new PrecioPactado
+                        {
+                            Precio = 1000,
+                            ImportePactado = 100,
+                            ContratoId = 1,
+                            Id = 1,
+                            MonedaPactadoId = "usd",
+                            MonedaImportePactadoId = "USD"
+                        }
+                },
+                Calidad = new List<Calidad>()
+                {
+                    new Calidad
+                    {
+                        StandardDeCalidadId = 1,
+                        NegocioId = 1,
+                        Id = 1,
+                        CalidadEspecialId = 1,
+                        Valor = 10
+                    }
+                },
+                AperturaPrecio = new List<AperturaPrecio>()
+                {
+                    new AperturaPrecio()
+                    {
+                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
+                        Importe = 300
+                    },
+                    new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
+                }
             };
-
+            Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
+            new Claim(ClaimTypes.Role, PermisosDataAgro.NegociosConfirmados.ToString()) });
             repositorioMock.Setup(x => x.Agregar(It.IsAny<ContratoAcuerdo>()));
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
+              Returns(new List<RangoConfirmacionAutomatica>() {
+                  new RangoConfirmacionAutomatica
+                  {
+                    FechaDesde = DateTime.Now,
+                    FechaHasta = DateTime.Now,
+                    TipoNegocioId = 2,
+                    MaterialId = 1,
+                    MonedaId = "a",
+                    PrecioMinimo = 1,
+                    PrecioMaximo = 9,
+                    DesdeAnio = 2020,
+                    DesdeMes = 8,
+                    HastaAnio = 2021,
+                    HastaMes = 9
+
+                  }
+              });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>()))
+             .Returns(1);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, double>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<double>() { 10.0, 11.0 });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, double>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<double>() { 10.0, 11.0});
+
             var resultado = target.GrabarAcuerdo(acuerdo);
 
             Assert.That(!resultado.HayError);
@@ -107,6 +358,37 @@ namespace Molinos.DataAgro.Test.Managers
                         Id= 0
                     }
                 },
+                PrecioPactado = new List<PrecioPactado>() {
+                        new PrecioPactado
+                        {
+                            Precio = 1000,
+                            ImportePactado = 100,
+                            ContratoId = 1,
+                            Id = 1,
+                            MonedaPactadoId = "usd",
+                            MonedaImportePactadoId = "USD"
+                        }
+                },
+                Calidad = new List<Calidad>()
+                {
+                    new Calidad
+                    {
+                        StandardDeCalidadId = 1,
+                        NegocioId = 1,
+                        Id = 1,
+                        CalidadEspecialId = 1,
+                        Valor = 10
+                    }
+                },
+                AperturaPrecio = new List<AperturaPrecio>()
+                {
+                    new AperturaPrecio()
+                    {
+                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
+                        Importe = 300
+                    },
+                    new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
+                }
             };
 
             repositorioMock.Setup(x => x.Obtener<ContratoAcuerdo>(It.IsAny<int>()))

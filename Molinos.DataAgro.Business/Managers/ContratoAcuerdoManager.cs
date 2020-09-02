@@ -59,15 +59,9 @@ namespace Molinos.DataAgro.Business
                     {
                         if (oContratoSave.Ampliaciones > 0)
                         {
-                            oContratoSave.Ampliaciones = 0;
-                            if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
-                            {
-                                oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                            }
-                            else
-                            {
-                                oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
-                            }
+                            oContratoSave.Ampliaciones = 0;                            
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                           
                         }
                         else
                         {
@@ -109,7 +103,9 @@ namespace Molinos.DataAgro.Business
                                 oContratoSave.Dolarizado = contratoOriginal.Dolarizado;
                                 oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
                                 oContratoSave.CampanaId = contratoOriginal.CampanaId;
-
+                                oContratoSave.DolarizadoExpress = contratoOriginal.DolarizadoExpress;
+                                //oContratoSave.ChequeElectronico = contratoOriginal.ChequeElectronico;
+                                //oContratoSave.PagoCBU = contratoOriginal.PagoCBU;
 
 
                                 if (oContratoSave.PrecioPactado != null)

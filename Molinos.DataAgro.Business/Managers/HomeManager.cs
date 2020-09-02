@@ -540,7 +540,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     CampanaMaterialDetallePorMeseExcelDto cloned = (CampanaMaterialDetallePorMeseExcelDto)itemDto.Clone();
                     cloned.Situacion = "A Recibir a Fijar";
-                    cloned.Tn = x.ToneladaFijada - x.ToneladaAplicada > 0 ?((x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) < 0 ? 0 : x.PendienteAplicar - x.ToneladaFijada - x.ToneladaAplicada) : x.PendienteAplicar;
+                    cloned.Tn = x.ToneladaFijada - x.ToneladaAplicada > 0 ?((x.PendienteAplicar - (x.ToneladaFijada - x.ToneladaAplicada)) < 0 ? 0 : x.PendienteAplicar - (x.ToneladaFijada - x.ToneladaAplicada)) : x.PendienteAplicar;
                     if (cloned.Tn != 0)
                         campanaMaterialDetallePorMeseExcelDtos.Add(cloned);
                 }
