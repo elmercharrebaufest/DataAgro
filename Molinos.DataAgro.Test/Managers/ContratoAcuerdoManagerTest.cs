@@ -527,5 +527,24 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener<EstadoContrato>(It.IsAny<int>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
+        [Test]
+        public void AnularAcuerdosTest()
+        {
+            diasHabilesAgentMock.Setup(x => x.UltimoDiaHabil()).Returns(new DateTime(2020, 1, 10));
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<ContratoAcuerdo>()
+                {
+                    new ContratoAcuerdo
+                    {
+                        Cantidad = 10,
+                        EstadoId = 2,
+                        Id = 1,
+                        Fecha = new DateTime(2020, 1, 9)
+                    }                    
+                });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, double>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<double>() { 10.0, 11.0 });
+            target.AnularAcuerdos();
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
     }
 }

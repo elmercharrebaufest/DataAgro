@@ -105,5 +105,29 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(resultado);
             Assert.IsFalse(resultado.HayErrores);
         }
+        [Test]
+        public void TraerDatosInicialesTest()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialCombo>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<MaterialCombo>() { new MaterialCombo { MaterialId = 1, Descripcion = "1" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campaña, CampaniaCombo>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<CampaniaCombo>() { new CampaniaCombo { Descripcion = "1" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campaña, CampaniaTableroCombo>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                          .Returns(new List<CampaniaTableroCombo>() { new CampaniaTableroCombo { Descripcion = "1" } });
+            var res = target.TraerDatosIniciales();
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialCombo>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Campaña, CampaniaCombo>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Campaña, CampaniaTableroCombo>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+        }
+
+        [Test]
+        public void TraerTodoMaterialTest()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialIni>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<MaterialIni>() { new MaterialIni { MaterialId = 1, Descripcion = "1" } });
+            target.TraerTodoMaterial();
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialIni>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+        }
     }
 }

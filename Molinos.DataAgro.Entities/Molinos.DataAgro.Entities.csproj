@@ -289,7 +289,6 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\AdministracionCupo.cs" />
-    <Compile Include="Entities\CampanaMaterialDetalle.cs" />
     <Compile Include="Entities\CampanaMaterialDetallePorMes.cs" />
     <Compile Include="Entities\CampoDetalle.cs" />
     <Compile Include="Entities\CondicionPago.cs" />

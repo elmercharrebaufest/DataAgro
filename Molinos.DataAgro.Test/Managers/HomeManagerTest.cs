@@ -211,15 +211,13 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(),
                  It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<CampanaMaterialDetallePorMes>() {
                      new CampanaMaterialDetallePorMes { ComercialId = 1,
-                         CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                             Material = new Material{ Descripcion = "Soja"},
+                         
+                         Material = new Material{ Descripcion = "Soja"},
                              Proveedor = new Proveedor { RazonSocial = "Parisi", CUIT = "1234"},
                              Campana = new Campaña {Descripcion = "20-21"},
                              MaterialId = 1,
                              CampanaId = 1,
                              ProveedorId = 1,
-                             Id = 1
-                         },
                            ClaseDoc = "ZPAF",
                            Clasificacion = "ACOPIADOR",
                            Contrato = "2345",

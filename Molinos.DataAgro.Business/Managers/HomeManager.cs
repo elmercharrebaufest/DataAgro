@@ -413,15 +413,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var c = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
                 equipo.Contains(x.ComercialId.Value)
-                && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId)
-                && mat.MaterialId == x.CampanaMaterialDetalle.MaterialId
-                && mat.CampañaId == x.CampanaMaterialDetalle.CampanaId);
+                && proveedorIds.Contains(x.ProveedorId)
+                && mat.MaterialId == x.MaterialId
+                && mat.CampañaId == x.CampanaId);
 
 
                 var detalle = new CompraDto
                 {
-                    Campana = c.Select(x => x.CampanaMaterialDetalle.Campana.Descripcion).FirstOrDefault(),
-                    Material = c.Select(x => x.CampanaMaterialDetalle.Material.Descripcion).FirstOrDefault(),
+                    Campana = c.Select(x => x.Campana.Descripcion).FirstOrDefault(),
+                    Material = c.Select(x => x.Material.Descripcion).FirstOrDefault(),
 
                     ConCorredor = new CompraDetalleDto
                     {
@@ -486,8 +486,8 @@ namespace Molinos.DataAgro.Business.Managers
                 ComercialId = x.ComercialId,
                 Contrato = x.Contrato,
                 Fecha = x.Fecha,
-                MaterialId = x.CampanaMaterialDetalle.MaterialId,
-                Material = x.CampanaMaterialDetalle.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                Material = x.Material.Descripcion,
                 PendienteAFijar = x.PendienteAFijar,
                 PendienteAplicar = x.PendienteAplicar,
                 ToneladaAmpliada = x.ToneladaAmpliada,
@@ -495,14 +495,14 @@ namespace Molinos.DataAgro.Business.Managers
                 ToneladaAplicada = x.ToneladaAplicada,
                 ToneladaContrato = x.ToneladaContrato,
                 CorredorCuit = x.CorredorCuit,
-                ProveedorId = x.CampanaMaterialDetalle.ProveedorId,
+                ProveedorId = x.ProveedorId,
                 ToneladaFijada = x.ToneladaFijada,
-                CampanaId = x.CampanaMaterialDetalle.CampanaId,
-                Campana = x.CampanaMaterialDetalle.Campana.Descripcion,
-                Proveedor = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
-                CUIT = x.CampanaMaterialDetalle.Proveedor.CUIT,
+                CampanaId = x.CampanaId,
+                Campana = x.Campana.Descripcion,
+                Proveedor = x.Proveedor.RazonSocial,
+                CUIT = x.Proveedor.CUIT,
                 RazonSocialCorredor = x.Corredor != null ? x.Corredor.RazonSocial : ""
-            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId)); 
+            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.ProveedorId)); 
 
             var campanaMaterialDetallePorMeseExcelDtos = new List<CampanaMaterialDetallePorMeseExcelDto>();
 
@@ -573,11 +573,11 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = x.Fecha,
                 Contrato = x.Contrato,
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
-                Cuit = x.CampanaMaterialDetalle.Proveedor.CUIT,
-                RazonSocial = x.CampanaMaterialDetalle.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT,
+                RazonSocial = x.Proveedor.RazonSocial,
                 CorredorCuit = x.CorredorCuit,
-                Material = x.CampanaMaterialDetalle.Material.Descripcion,
-                Campana = x.CampanaMaterialDetalle.Campana.Descripcion,
+                Material = x.Material.Descripcion,
+                Campana = x.Campana.Descripcion,
                 ClaseDoc = x.ClaseDoc,
                 Clasificacion = x.Clasificacion,
                 PendienteAFijar = x.PendienteAFijar,
@@ -589,7 +589,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PendienteAplicar = x.PendienteAplicar
                 
 
-            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.CampanaMaterialDetalle.ProveedorId));
+            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.ProveedorId));
         }
     }
     public class FakeHome

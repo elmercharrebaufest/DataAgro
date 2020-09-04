@@ -3220,7 +3220,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ComercialId = x.ComercialId,
                 Contrato = x.Contrato,
                 Fecha = x.Fecha,
-                MaterialId = x.CampanaMaterialDetalle.MaterialId,
+                MaterialId = x.MaterialId,
                 PendienteAFijar = x.PendienteAFijar,
                 PendienteAplicar = x.PendienteAplicar,
                 ToneladaAmpliada = x.ToneladaAmpliada,
@@ -3228,9 +3228,9 @@ namespace Molinos.DataAgro.Business.Managers
                 ToneladaAplicada = x.ToneladaAplicada,
                 ToneladaContrato = x.ToneladaContrato,
                 CorredorCuit = x.CorredorCuit,
-                ProveedorId = x.CampanaMaterialDetalle.ProveedorId,
+                ProveedorId = x.ProveedorId,
                 ToneladaFijada = x.ToneladaFijada,
-                CampanaId = x.CampanaMaterialDetalle.CampanaId
+                CampanaId = x.CampanaId
 
             });
         }
@@ -3240,15 +3240,15 @@ namespace Molinos.DataAgro.Business.Managers
 
             var compraDto = new List<CompraDto>();
             var compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
-            x.CampanaMaterialDetalle.ProveedorId == proveedorId && equipo.Contains(x.ComercialId.Value));
+            x.ProveedorId == proveedorId && equipo.Contains(x.ComercialId.Value));
 
-            var grupoCompras = compras.GroupBy(x => new { x.CampanaMaterialDetalle.CampanaId, x.CampanaMaterialDetalle.MaterialId });
+            var grupoCompras = compras.GroupBy(x => new { x.CampanaId, x.MaterialId });
             foreach (var c in grupoCompras)
             {
                 var detalle = new CompraDto
                 {
-                    Campana = c.Select(x => x.CampanaMaterialDetalle.Campana.Descripcion).FirstOrDefault(),
-                    Material = c.Select(x => x.CampanaMaterialDetalle.Material.Descripcion).FirstOrDefault(),
+                    Campana = c.Select(x => x.Campana.Descripcion).FirstOrDefault(),
+                    Material = c.Select(x => x.Material.Descripcion).FirstOrDefault(),
                     ConCorredor = new CompraDetalleDto
                     {
                         ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF").Sum(x => x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada)

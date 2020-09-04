@@ -1,9 +1,12 @@
 ﻿using Autofac.Extras.NLog;
+using KendoGridBinder;
+using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -504,7 +507,40 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<NotificacionResearch, bool>>>(), It.IsAny<Expression<Func<NotificacionResearch, NotificacionResearchDto>>>()), Times.Once);
 
         }
+        [Test]
+        public void TraerAvanceSiembra()
+        {
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerAvanceSiembra>())).Returns(new KendoGrid<ResearchAvanceSiembraDto>(new List<ResearchAvanceSiembraDto>(), 1));
+            var res = target.TraerAvanceSiembra(It.IsAny<KendoGridMvcRequest>());
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerAvanceSiembra>()), Times.Once);
 
+        }
+
+        [Test]
+        public void TraerAvanceCosecha()
+        {
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerAvanceCosecha>())).Returns(new KendoGrid<ResearchAvanceCosechaDto>(new List<ResearchAvanceCosechaDto>(), 1));
+            var res = target.TraerAvanceCosecha(It.IsAny<KendoGridMvcRequest>());
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerAvanceCosecha>()), Times.Once);
+
+        }
+        [Test]
+        public void TraerSituacionCultivoParcial()
+        {
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerSituacionCultivoParcial>())).Returns(new KendoGrid<ResearchSituacionCultivoDto>(new List<ResearchSituacionCultivoDto>(), 1));
+            var res = target.TraerSituacionCultivoParcial(It.IsAny<KendoGridMvcRequest>());
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerSituacionCultivoParcial>()), Times.Once);
+
+        }
+
+        [Test]
+        public void TraerVentaStockTest()
+        {
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerVentaStock>())).Returns(new KendoGrid<ResearchVentaStockDto>(new List<ResearchVentaStockDto>(), 1));
+            var res = target.TraerVentaStock(It.IsAny<KendoGridMvcRequest>());
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerVentaStock>()), Times.Once);
+
+        }
 
     }
         

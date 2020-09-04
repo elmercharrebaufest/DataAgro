@@ -15,9 +15,14 @@
     [CampanaMaterialDetalleId]       INT        NULL,    
     [ComercialId]             INT        NULL,
     [CorredorId] INT NULL, 
+	[CampanaId]          INT        NOT NULL,
+    [ProveedorId]        INT        NOT NULL,
+    [MaterialId]         INT        NOT NULL,
     CONSTRAINT [PK_CampanaMaterialDetallePorMes] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_CampanaMaterialDetallePorMes_Contacto] FOREIGN KEY ([CorredorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),
-    CONSTRAINT [FK_CampanaMaterialDetallePorMes_CampanaMaterialDetalle] FOREIGN KEY ([CampanaMaterialDetalleId]) REFERENCES [dbo].[CampanaMaterialDetalle] ([Id]),
-	CONSTRAINT [FK_CampanaMaterialDetallePorMes_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId])
+	CONSTRAINT [FK_CampanaMaterialDetallePorMes_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]),
+	CONSTRAINT [FK_CampanaMaterialDetallePorMes_Campana] FOREIGN KEY ([CampanaId]) REFERENCES [dbo].[Campaña] ([CampañaId]),
+    CONSTRAINT [FK_CampanaMaterialDetallePorMes_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),
+    CONSTRAINT [FK_CampanaMaterialDetallePorMes_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId])
 );
 

@@ -178,22 +178,20 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
              .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
-                     MaterialId = 2,
-                     ProveedorId = 1,
-                     Material = new Material
-                     {
-                         Descripcion = "Soja",
-                         MaterialId = 1,
-                         CampañaId = 1
-                     },
-                     Campana = new Campaña
-                     {
-                         Descripcion = "11",
-                         CampañaId = 1
-                     }
-                 },
+                 CampanaId = 1,
+                MaterialId = 2,
+                ProveedorId = 1,
+                Material = new Material
+                {
+                    Descripcion = "Soja",
+                    MaterialId = 1,
+                    CampañaId = 1
+                },
+                Campana = new Campaña
+                {
+                    Descripcion = "11",
+                    CampañaId = 1
+                },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -295,8 +293,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
              .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -309,8 +306,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -401,8 +397,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
              .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -415,8 +410,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -508,8 +502,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
              .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -522,8 +515,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -616,8 +608,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
              .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -630,8 +621,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -804,8 +794,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -818,8 +807,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -1235,8 +1223,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -1249,8 +1236,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -1559,8 +1545,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -1573,8 +1558,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -1693,8 +1677,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -1707,8 +1690,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -1925,8 +1907,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -1939,8 +1920,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -2164,8 +2144,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -2178,8 +2157,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -2314,8 +2292,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Destinatario>() { new Destinatario() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -2328,8 +2305,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -2583,8 +2559,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -2597,8 +2572,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -2845,8 +2819,7 @@ namespace Molinos.DataAgro.Test.Managers
               .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -2859,8 +2832,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -3030,8 +3002,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -3044,8 +3015,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -3176,8 +3146,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -3190,8 +3159,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -3314,8 +3282,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ProveedorCorredorDto>() { new ProveedorCorredorDto() });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
             .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes() {
-                 CampanaMaterialDetalle = new CampanaMaterialDetalle{
-                     CampanaId = 1,
+                 CampanaId = 1,
                      MaterialId = 2,
                      ProveedorId = 1,
                      Material = new Material
@@ -3328,8 +3295,7 @@ namespace Molinos.DataAgro.Test.Managers
                      {
                          Descripcion = "11",
                          CampañaId = 1
-                     }
-                 },
+                     },
                  ClaseDoc = "as",
                  Clasificacion = "PRODUCTOR",
                  ComercialId = 1,
@@ -3756,7 +3722,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<CampoDetalle, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<CampoDetalle> { new CampoDetalle { ImportId = 1 }, new CampoDetalle { ImportId = 2 } });
 
-            target.ImportarEstablecimientos(new List<CampoDetalleDto> { new CampoDetalleDto { ImportId = 1 } ,new CampoDetalleDto { ImportId = 4 } }, new Resultado());
+            target.ImportarEstablecimientos(new List<CampoDetalleDto> { new CampoDetalleDto { ImportId = 1 }, new CampoDetalleDto { ImportId = 4 } }, new Resultado());
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampoDetalle, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(1));
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
