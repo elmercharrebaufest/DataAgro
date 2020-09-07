@@ -1523,10 +1523,10 @@ function InicializarElementos() {
             if (this.value() < hoy) {
                 $("#fechaOperacionMotivoDiv").show();
                 if (diffDays > 1) {
-                    $("#noInformaSioId").prop("checked", true);
+                    //$("#noInformaSioId").prop("checked", true);
                     $("#noInformaSioId").attr("disabled", true);
                 } else {
-                    $("#noInformaSioId").prop("checked", false);
+                    //$("#noInformaSioId").prop("checked", false);
                     $("#noInformaSioId").attr("disabled", false);
                 }
 
