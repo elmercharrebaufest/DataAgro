@@ -148,17 +148,20 @@ function ValidarContactoComercial() {
     }
     var email = $('#concom-email1').val();
     for (var i = 1; i <= 3; i++) {
-        email = $('#concom-email'+i).val();
+        email = $('#concom-email' + i).val();
         if (email && email !== "") {
             if (!validateEmail(email)) {
-                MensErr("El Email "+ i +" no es válido");
+                MensErr("El Email " + i + " no es válido");
                 return false;
             }
             var mail = email.split('@');
-            if (mail[1].toLowerCase().startsWith('molinosagro')) {
-                MensErr("El Email"+i+" no debe ser de MolinosAgro");
-                return false;
+            if (AmbientePruebas != "1") {
+                if (mail[1].toLowerCase().startsWith('molinosagro')) {
+                    MensErr("El Email" + i + " no debe ser de MolinosAgro");
+                    return false;
+                }
             }
+
         }
     }
     /*
