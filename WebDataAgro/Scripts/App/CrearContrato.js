@@ -1524,16 +1524,16 @@ function InicializarElementos() {
                 $("#fechaOperacionMotivoDiv").show();
                 if (diffDays > 1) {
                     //$("#noInformaSioId").prop("checked", true);
-                    $("#noInformaSioId").attr("disabled", true);
+                    //$("#noInformaSioId").attr("disabled", true);
                 } else {
                     //$("#noInformaSioId").prop("checked", false);
-                    $("#noInformaSioId").attr("disabled", false);
+                    //$("#noInformaSioId").attr("disabled", false);
                 }
 
             } else {
                 $("#fechaOperacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorId").val("");
-                $("#noInformaSioId").attr("disabled", false);
+                //$("#noInformaSioId").attr("disabled", false);
             }
         }
     });
@@ -3308,7 +3308,7 @@ function CargarDatosEditar(contrato, hijo) {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         if (fechaop < hoy) {
             if (Id > 0 && diffDays > 1) {
-                $("#noInformaSioId").attr("disabled", true);
+                //$("#noInformaSioId").attr("disabled", true);
             }
         }
 
