@@ -3416,7 +3416,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
             List<DescuentoBonificacion> objDescuento = new List<DescuentoBonificacion> { new DescuentoBonificacion { FechaDesde = DateTime.Now, FechaHasta = DateTime.Now, ContratoId = 1, Id = 1, Importe = 1, MonedaId = "ARS", Porcentaje = 1, TipoDBId = 1, TipoPeriodoDBId = 1, Moneda = new Moneda { Descripcion = "" }, TipoDB = new TipoDB { Descripcion = "" } } };
             List<Calidad> objCalidad = new List<Calidad> { new Calidad { CalidadEspecialId = 1, Id = 1, NegocioId = 1, PorcentajeDesde = 1, PorcentajeHasta = 1, StandardDeCalidadId = 1, Valor = 1, CalidadEspecial = new CalidadEspecial { Descripcion = "" } } };
-            string idActiveDirectory = "emartin";
+            string idActiveDirectory = "emartin1";
             bool? eliminar = true;
             ConfigurationManager.AppSettings["AmbientePruebas"] = "1";
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ContactoComercial, bool>>>()))
@@ -3507,7 +3507,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
             List<DescuentoBonificacion> objDescuento = new List<DescuentoBonificacion> { new DescuentoBonificacion { FechaDesde = DateTime.Now, FechaHasta = DateTime.Now, ContratoId = 1, Id = 1, Importe = 1, MonedaId = "ARS", Porcentaje = 1, TipoDBId = 1, TipoPeriodoDBId = 1, Moneda = new Moneda { Descripcion = "" }, TipoDB = new TipoDB { Descripcion = "" } } };
             List<Calidad> objCalidad = new List<Calidad> { new Calidad { CalidadEspecialId = 1, Id = 1, NegocioId = 1, PorcentajeDesde = 1, PorcentajeHasta = 1, StandardDeCalidadId = 1, Valor = 1, CalidadEspecial = new CalidadEspecial { Descripcion = "" } } };
-            string idActiveDirectory = "emartin";
+            string idActiveDirectory = "emartin1";
             bool? eliminar = false;
             ConfigurationManager.AppSettings["AmbientePruebas"] = "1";
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ContactoComercial, bool>>>()))
@@ -3637,7 +3637,7 @@ namespace Molinos.DataAgro.Test.Managers
                 PrecioNeto = 1,
 
             };
-            string idActiveDirectory = "emartin";
+            string idActiveDirectory = "emartin1";
             ConfigurationManager.AppSettings["AmbientePruebas"] = "1";
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ContactoComercial, bool>>>()))
                 .Returns(new ContactoComercial { Email1 = "dataagro.baufest@gmail.com" });

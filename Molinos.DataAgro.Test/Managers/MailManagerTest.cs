@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Test.Managers
             ConfigurationManager.AppSettings["UseDefaultCredentials"] = "S";
             ConfigurationManager.AppSettings["EnableSSL"] = "S";
             ConfigurationManager.AppSettings["CredentialPassword"] = "Hola1234";
-            Comercial desde = new Comercial { ComercialId = 1, IdActiveDirectory = "emartin", Apellido = "a", Nombres = "n" };
+            Comercial desde = new Comercial { ComercialId = 1, IdActiveDirectory = "emartin1", Apellido = "a", Nombres = "n" };
             List<Comercial> enviarA = new List<Comercial> { desde };
             string asunto = "prueba";
             string cuerpo = "prueba";
