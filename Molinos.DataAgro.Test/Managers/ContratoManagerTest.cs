@@ -419,6 +419,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MonedaId = "ARS ",
                 CampanaId = 1,
                 ComercialId = 70,
+                NoInformaSio = true,
                 EstablecimientoPropio = true,
                 BoletoId = 3,
                 StandardDeCalidadId = 1,
@@ -908,7 +909,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(28, resultado.ListaErrores.Count);
+            Assert.AreEqual(29, resultado.ListaErrores.Count);
         }
 
         [Test]
