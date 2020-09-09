@@ -51,18 +51,18 @@ function InicializarDatos() {
     });
     for (var i = 0; i < datosCompra.length; i++) {
 
-        datosCompra[i].ConCorredor.ComprasConPrecio = kendo.toString(datosCompra[i].ConCorredor.ComprasConPrecio, "n0")
-        datosCompra[i].DirectoAcopiador.ComprasConPrecio = kendo.toString(datosCompra[i].DirectoAcopiador.ComprasConPrecio, "n0")
-        datosCompra[i].DirectoProductor.ComprasConPrecio = kendo.toString(datosCompra[i].DirectoProductor.ComprasConPrecio, "n0")
-        datosCompra[i].ConCorredor.RecibidoSinPrecio = kendo.toString(datosCompra[i].ConCorredor.RecibidoSinPrecio, "n0")
-        datosCompra[i].DirectoAcopiador.RecibidoSinPrecio = kendo.toString(datosCompra[i].DirectoAcopiador.RecibidoSinPrecio, "n0")
-        datosCompra[i].DirectoProductor.RecibidoSinPrecio = kendo.toString(datosCompra[i].DirectoProductor.RecibidoSinPrecio, "n0")
-        datosCompra[i].ConCorredor.ARecibirAFijar = kendo.toString(datosCompra[i].ConCorredor.ARecibirAFijar, "n0")
-        datosCompra[i].DirectoAcopiador.ARecibirAFijar = kendo.toString(datosCompra[i].DirectoAcopiador.ARecibirAFijar, "n0")
-        datosCompra[i].DirectoProductor.ARecibirAFijar = kendo.toString(datosCompra[i].DirectoProductor.ARecibirAFijar, "n0")
-        datosCompra[i].ConCorredor.FasonFas = kendo.toString(datosCompra[i].ConCorredor.FasonFas, "n0")
-        datosCompra[i].DirectoAcopiador.FasonFas = kendo.toString(datosCompra[i].DirectoAcopiador.FasonFas, "n0")
-        datosCompra[i].DirectoProductor.FasonFas = kendo.toString(datosCompra[i].DirectoProductor.FasonFas, "n0")
+        datosCompra[i].ConCorredor.ComprasConPrecio = kendo.toString(datosCompra[i].ConCorredor.ComprasConPrecio, "n2")
+        datosCompra[i].DirectoAcopiador.ComprasConPrecio = kendo.toString(datosCompra[i].DirectoAcopiador.ComprasConPrecio, "n2")
+        datosCompra[i].DirectoProductor.ComprasConPrecio = kendo.toString(datosCompra[i].DirectoProductor.ComprasConPrecio, "n2")
+        datosCompra[i].ConCorredor.RecibidoSinPrecio = kendo.toString(datosCompra[i].ConCorredor.RecibidoSinPrecio, "n2")
+        datosCompra[i].DirectoAcopiador.RecibidoSinPrecio = kendo.toString(datosCompra[i].DirectoAcopiador.RecibidoSinPrecio, "n2")
+        datosCompra[i].DirectoProductor.RecibidoSinPrecio = kendo.toString(datosCompra[i].DirectoProductor.RecibidoSinPrecio, "n2")
+        datosCompra[i].ConCorredor.ARecibirAFijar = kendo.toString(datosCompra[i].ConCorredor.ARecibirAFijar, "n2")
+        datosCompra[i].DirectoAcopiador.ARecibirAFijar = kendo.toString(datosCompra[i].DirectoAcopiador.ARecibirAFijar, "n2")
+        datosCompra[i].DirectoProductor.ARecibirAFijar = kendo.toString(datosCompra[i].DirectoProductor.ARecibirAFijar, "n2")
+        datosCompra[i].ConCorredor.FasonFas = kendo.toString(datosCompra[i].ConCorredor.FasonFas, "n2")
+        datosCompra[i].DirectoAcopiador.FasonFas = kendo.toString(datosCompra[i].DirectoAcopiador.FasonFas, "n2")
+        datosCompra[i].DirectoProductor.FasonFas = kendo.toString(datosCompra[i].DirectoProductor.FasonFas, "n2")
     }
 
     kendo.bind($("#tabla-soja"), viewModel);
