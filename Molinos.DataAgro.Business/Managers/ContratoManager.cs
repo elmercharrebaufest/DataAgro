@@ -603,6 +603,10 @@ namespace Molinos.DataAgro.Business.Managers
                             oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                         }
 
+                        if (oParam.NoInformaSio == null || oParam.NoInformaSio == false)
+                        {
+                            oErrorMessages.Error("NoInformaSio", "Debe marcar No Informa SIO  si la Fecha Operacion es anterior al día de la fecha.");
+                        }
                     }
                     //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
                     //if (oParam.FechaOperacion.Date < fecha.Date && oParam.Id != 0)
