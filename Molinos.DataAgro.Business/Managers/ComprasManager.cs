@@ -224,17 +224,17 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             if (!proveedores.Any(a => a.Key == ii.VENDEDOR))
                             {
-                                logger.Debug("El cuit " + ii.VENDEDOR + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory);
+                                logger.Debug("El cuit " + ii.VENDEDOR + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory + " .Contrato:" + ii.CORREDOR + " .Vendedor:" + ii.VENDEDOR);
                                 continue;
                             }
                             if (!materiales.Any(a => a.Key == ii.MATERIAL))
                             {
-                                logger.Debug("El material " + ii.MATERIAL + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory);
+                                logger.Debug("El material " + ii.MATERIAL + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory + " .Contrato:" + ii.CORREDOR + " .Vendedor:" + ii.VENDEDOR);
                                 continue;
                             }
                             if (!campanias.Any(a => a.Key == ii.COSECHA))
                             {
-                                logger.Debug("La COSECHA " + ii.COSECHA + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory);
+                                logger.Debug("La COSECHA " + ii.COSECHA + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory + " .Contrato:" + ii.CORREDOR + " .Vendedor:" + ii.VENDEDOR);
                                 continue;
                             }
                             var proveedoresId = proveedores[ii.VENDEDOR];

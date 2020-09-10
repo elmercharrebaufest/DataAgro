@@ -624,7 +624,6 @@ function InicializarElementos() {
                 $("#pagoCbuId").show();
                 RemoverFondosGrises();
                 $("#boton-ampliar").hide();
-                $("#pizarraDiv").show();
                 $(".ampliar").hide();
                 $(".ampliar-fijacion").show();
                 $("#aperturaPrecioDiv").show();
@@ -635,7 +634,7 @@ function InicializarElementos() {
                 $("#ocultarAperturaMoneda").addClass("w70");
                 $('#pagoDirectoDiv').hide();
 
-
+                $("#pizarraDiv").show();
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
 
                 if (viewModel.AperturaPrecio.length > 0) {
