@@ -1064,12 +1064,12 @@ function InicializarElementos() {
                 $("#consignatarioDiv").hide();
                 $("#consignatarioId").prop("checked", false);
                 $("#planCanjeDiv").hide();
-                $("#planCanjeId").prop("checked", false);
-                if ($("#fechaCiertaId").val() == "") {
-                    $("#pagoDolarizadoDiv").show();
-                }              
-                if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " && $("#clasificacion").val() == "1" && $("#fechaCiertaId").val() == "") {
-                    $("#dolarizadoExpressDiv").show();
+                $("#planCanjeId").prop("checked", false);                            
+                if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " && $("#fechaCiertaId").val() == "") {
+                        $("#dolarizadoExpressDiv").show();
+                        $("#dolarizadoExpressId").attr("disabled", false);
+                        $("#pagoDolarizadoDiv").show();
+                        $("#dolarizadoId").attr("disabled", false);
                 } else {
                     $("#dolarizadoExpressDiv").hide();
                     $("#dolarizadoExpressId").prop("checked", false);
