@@ -207,6 +207,9 @@ namespace Molinos.DataAgro.Test.Managers
                  CampanaMaterialDetalleId = 1,
                  Contrato = "11233"
              } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, int?>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+               .Returns(new List<int?>() { 1 });
+
             var result = target.TraerProveedor(1, "a", new List<int>() { 1, 2, 3 });
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<TraerDatosBasicosProveedor>()), Times.Once);
@@ -216,7 +219,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampoProduccionAcopio>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, DatosContacto>>>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampañaMaterial, Material>>>(), It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampañaMaterialPorMes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ProveedorCanalOperacion, CanalOperacion>>>(), It.IsAny<Expression<Func<ProveedorCanalOperacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -331,7 +334,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampoProduccionAcopio>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, DatosContacto>>>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampañaMaterial, Material>>>(), It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampañaMaterialPorMes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ProveedorCanalOperacion, CanalOperacion>>>(), It.IsAny<Expression<Func<ProveedorCanalOperacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -435,7 +438,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampoProduccionAcopio>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, DatosContacto>>>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampañaMaterial, Material>>>(), It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampañaMaterialPorMes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ProveedorCanalOperacion, CanalOperacion>>>(), It.IsAny<Expression<Func<ProveedorCanalOperacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -542,7 +545,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampoProduccionAcopio>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, DatosContacto>>>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampañaMaterial, Material>>>(), It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampañaMaterialPorMes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ProveedorCanalOperacion, CanalOperacion>>>(), It.IsAny<Expression<Func<ProveedorCanalOperacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -646,7 +649,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampoProduccionAcopio>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, DatosContacto>>>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampañaMaterial, Material>>>(), It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.SelStore<CampañaMaterialPorMes>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ProveedorCanalOperacion, CanalOperacion>>>(), It.IsAny<Expression<Func<ProveedorCanalOperacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -847,7 +850,7 @@ namespace Molinos.DataAgro.Test.Managers
             var result = target.GrabarRecordatorio(actividad);
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Actividad, bool>>>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             Assert.NotNull(result);
@@ -1938,7 +1941,7 @@ namespace Molinos.DataAgro.Test.Managers
              } });
             var result = target.UpdateProveedor(proveedor, "a", new List<int>() { 1, 2, 3 }, 1);
 
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Estado, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -2175,7 +2178,7 @@ namespace Molinos.DataAgro.Test.Managers
              } });
             var result = target.UpdateProveedor(proveedor, "a", new List<int>() { 1, 2, 3 }, 1);
 
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Estado, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -2420,7 +2423,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var result = target.UpdateProveedor(proveedor, "a", new List<int>() { 1, 2, 3 }, 1);
 
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Estado, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -2590,7 +2593,7 @@ namespace Molinos.DataAgro.Test.Managers
              } });
             var result = target.UpdateProveedor(proveedor, "a", new List<int>() { 1, 2, 3 }, 1);
 
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Estado, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -3034,7 +3037,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var result = target.UpdateCorredor(corredor, "a", new List<int>() { 1, 2, 3 }, 1);
 
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Estado, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -3337,7 +3340,7 @@ namespace Molinos.DataAgro.Test.Managers
             var result = target.GrabarRecordatorio(actividad);
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Actividad, bool>>>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             Assert.NotNull(result);

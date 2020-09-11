@@ -3239,8 +3239,13 @@ namespace Molinos.DataAgro.Business.Managers
         {
 
             var compraDto = new List<CompraDto>();
+            Proveedor proveedor = repositorio.Obtener<Proveedor>(proveedorId);
+            var provedorIds = repositorio.Listar<Proveedor, int?>(a => a.ProveedorId, a => a.CUIT == proveedor.CUIT);
             var compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
-            x.ProveedorId == proveedorId && equipo.Contains(x.ComercialId.Value));
+                (x.ProveedorId == proveedorId || provedorIds.Contains(x.CorredorId))
+                && equipo.Contains(x.ComercialId.Value)
+
+            );
 
             var grupoCompras = compras.GroupBy(x => new { x.CampanaId, x.MaterialId });
             foreach (var c in grupoCompras)
@@ -3255,15 +3260,15 @@ namespace Molinos.DataAgro.Business.Managers
                         //+ c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
 
                         ComprasConPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc != "ZPAF").
-                        Sum(x => x.ToneladaAplicada > x.ToneladaContrato  ? 
-                        x.ToneladaAplicada + x.ToneladaAmpliada - x.ToneladaAnulada: 
+                        Sum(x => x.ToneladaAplicada > x.ToneladaContrato ?
+                        x.ToneladaAplicada + x.ToneladaAmpliada - x.ToneladaAnulada :
                         x.ToneladaContrato + x.ToneladaAmpliada - x.ToneladaAnulada)
                         + c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => x.ToneladaFijada),
 
                         RecibidoSinPrecio = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF").Sum(x => (x.ToneladaAplicada - x.ToneladaFijada) < 0 ? 0 : x.ToneladaAplicada - x.ToneladaFijada),
                         //ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF" && x.PendienteAplicar != 0 && (x.PendienteAFijar - x.ToneladaAplicada > 0)).Sum(x => x.PendienteAFijar - x.ToneladaAplicada),
                         ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZPAF" && x.PendienteAplicar > 0)
-                            .Sum(x => x.ToneladaFijada - x.ToneladaAplicada > 0 ? 
+                            .Sum(x => x.ToneladaFijada - x.ToneladaAplicada > 0 ?
                             ((x.PendienteAplicar - (x.ToneladaFijada - x.ToneladaAplicada)) < 0 ? 0 : x.PendienteAplicar - (x.ToneladaFijada - x.ToneladaAplicada)) : x.PendienteAplicar),
                         FasonFas = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)
                     },

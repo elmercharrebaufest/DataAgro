@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ComercialId { get; set; }
         public int? CorredorId { get; set; }
         public int CampanaId { get; set; }
-        public int ProveedorId { get; set; }
+        public int? ProveedorId { get; set; }
         public int MaterialId { get; set; }
         //[ForeignKey("CampanaMaterialDetalleId")]
         //public virtual CampanaMaterialDetalle CampanaMaterialDetalle { get; set; }

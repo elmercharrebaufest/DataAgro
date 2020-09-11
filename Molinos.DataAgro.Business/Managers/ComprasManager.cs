@@ -203,13 +203,13 @@ namespace Molinos.DataAgro.Business.Managers
 
             var histActual = repositorio.Listar<CampanaMaterialDetallePorMes>();
             var proveedores = repositorio.Listar<Proveedor, ProveedorBasicoDto>(x => new ProveedorBasicoDto { ProveedorId = x.ProveedorId, CUIT = x.CUIT }).GroupBy(x => x.CUIT.ToUpper().Trim()).ToDictionary(x => x.Key);
+            var corredores = repositorio.Listar<Proveedor, ProveedorBasicoDto>(x => new ProveedorBasicoDto { ProveedorId = x.ProveedorId, CUIT = x.CUIT }).ToList();
             var campanias = repositorio.Listar<Campaña, CampañaDto>(x => new CampañaDto { CampañaId = x.CampañaId, Descripcion = x.Descripcion }).ToDictionary(x => x.Descripcion.ToUpper().Trim());
             var materiales = repositorio.Listar<Material, MaterialBasicoDto>(x => new MaterialBasicoDto { MaterialId = x.MaterialId, Codigo = x.Codigo }).ToDictionary(x => x.Codigo.ToUpper().Trim());
             var campaniaMaterialPorMes = new List<CampanaMaterialDetallePorMes>();
 
             try
             {
-                var contadorActualizacion = 0;
 
                 foreach (var item in listProve)
                 {
@@ -219,14 +219,15 @@ namespace Molinos.DataAgro.Business.Managers
                     if (hist.Count > 0)
                     {
                         var ComercialId = oComercial.FirstOrDefault(x => x.IdActiveDirectory.ToLower().Trim() == item.UsuarioDirectory.ToLower().Trim()).ComercialId;
-
+                        
                         foreach (var ii in hist)
                         {
-                            if (!proveedores.Any(a => a.Key == ii.VENDEDOR))
-                            {
-                                logger.Debug("El cuit " + ii.VENDEDOR + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory + " .Contrato:" + ii.CONTRATO + " .Vendedor:" + ii.VENDEDOR);
-                                continue;
-                            }
+                            
+                            //if (!proveedores.Any(a => a.Key == ii.VENDEDOR))
+                            //{
+                            //    logger.Debug("El cuit Vendedor " + ii.VENDEDOR + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory + " .Contrato:" + ii.CONTRATO + " .Vendedor:" + ii.VENDEDOR);
+                            //    continue;
+                            //}
                             if (!materiales.Any(a => a.Key == ii.MATERIAL))
                             {
                                 logger.Debug("El material " + ii.MATERIAL + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory + " .Contrato:" + ii.CONTRATO + " .Vendedor:" + ii.VENDEDOR);
@@ -237,65 +238,134 @@ namespace Molinos.DataAgro.Business.Managers
                                 logger.Debug("La COSECHA " + ii.COSECHA + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory + " .Contrato:" + ii.CONTRATO + " .Vendedor:" + ii.VENDEDOR);
                                 continue;
                             }
-                            var proveedoresId = proveedores[ii.VENDEDOR];
+
+
                             var materialId = materiales[ii.MATERIAL].MaterialId;
                             var campaniaId = campanias[ii.COSECHA].CampañaId;
-
-                            foreach (var proveedorId in proveedoresId)
+                            var fechaDetalle = DateTime.ParseExact(ii.FECHA, "yyyy-MM-dd", provider);
+                            int? CorredorId = null;
+                            if (!string.IsNullOrWhiteSpace(ii.CORREDOR))
                             {
-                                var fechaDetalle = DateTime.ParseExact(ii.FECHA, "yyyy-MM-dd", provider);
-                                var campaniaMaterialMes = histActual.Where(x => x.Contrato == ii.CONTRATO && x.ProveedorId == proveedorId.ProveedorId).FirstOrDefault();
-                                if (campaniaMaterialMes != null)
+                                var corredor = corredores.Where(a => a.CUIT == ii.CORREDOR).FirstOrDefault();
+                                if (corredor != null && corredor.ProveedorId > 0)
                                 {
-                                    campaniaMaterialMes.PendienteAFijar = (double)ii.PEND_FIJAR;
-                                    campaniaMaterialMes.PendienteAplicar = (double)ii.PEND_APLICAR;
-                                    campaniaMaterialMes.ToneladaAmpliada = (double)ii.TN_AMPLIADAS;
-                                    campaniaMaterialMes.ToneladaAnulada = (double)ii.TN_ANULADAS;
-                                    campaniaMaterialMes.ToneladaAplicada = (double)ii.TN_APLICADAS;
-                                    campaniaMaterialMes.ToneladaContrato = (double)ii.TN_CONTRATO;
-                                    campaniaMaterialMes.ToneladaFijada = (double)ii.TN_FIJADAS;
-                                    campaniaMaterialMes.ClaseDoc = ii.CLASE_DOC;
-                                    campaniaMaterialMes.Clasificacion = ii.CLASIFICACION;
-                                    campaniaMaterialMes.Contrato = ii.CONTRATO;
-                                    campaniaMaterialMes.CorredorCuit = ii.CORREDOR;
-                                    campaniaMaterialMes.CorredorId = !string.IsNullOrEmpty(ii.CORREDOR) ? repositorio.Obtener<Proveedor, int>(
-                                        x => x.CUIT == ii.CORREDOR, x => x.ProveedorId) : (int?)null;
+                                    CorredorId = corredor.ProveedorId;
+                                }
+                            }
+                            if (proveedores.Any(a => a.Key == ii.VENDEDOR))
+                            {
+                                var proveedoresId = proveedores[ii.VENDEDOR];
+                                foreach (var proveedorId in proveedoresId)
+                                {
+                                    var campaniaMaterialMes = histActual.Where(x => x.Contrato == ii.CONTRATO && x.ProveedorId == proveedorId.ProveedorId).FirstOrDefault();
 
-                                    campaniaMaterialMes.CampanaId = campaniaId;
-                                    campaniaMaterialMes.ProveedorId = proveedorId.ProveedorId;
-                                    campaniaMaterialMes.MaterialId = materialId;
+                                    if (campaniaMaterialMes != null)
+                                    {
+                                        campaniaMaterialMes.PendienteAFijar = (double)ii.PEND_FIJAR;
+                                        campaniaMaterialMes.PendienteAplicar = (double)ii.PEND_APLICAR;
+                                        campaniaMaterialMes.ToneladaAmpliada = (double)ii.TN_AMPLIADAS;
+                                        campaniaMaterialMes.ToneladaAnulada = (double)ii.TN_ANULADAS;
+                                        campaniaMaterialMes.ToneladaAplicada = (double)ii.TN_APLICADAS;
+                                        campaniaMaterialMes.ToneladaContrato = (double)ii.TN_CONTRATO;
+                                        campaniaMaterialMes.ToneladaFijada = (double)ii.TN_FIJADAS;
+                                        campaniaMaterialMes.ClaseDoc = ii.CLASE_DOC;
+                                        campaniaMaterialMes.Clasificacion = ii.CLASIFICACION;
+                                        campaniaMaterialMes.Contrato = ii.CONTRATO;
+                                        campaniaMaterialMes.CorredorCuit = ii.CORREDOR;
+                                        campaniaMaterialMes.CorredorId = CorredorId;
+                                        campaniaMaterialMes.CampanaId = campaniaId;
+                                        campaniaMaterialMes.ProveedorId = proveedorId.ProveedorId;
+                                        campaniaMaterialMes.MaterialId = materialId;
+                                    }
+                                    else
+                                    {
+
+                                        campaniaMaterialPorMes.Add(new CampanaMaterialDetallePorMes()
+                                        {
+                                            Fecha = fechaDetalle,
+                                            PendienteAFijar = (double)ii.PEND_FIJAR,
+                                            PendienteAplicar = (double)ii.PEND_APLICAR,
+                                            ToneladaAmpliada = (double)ii.TN_AMPLIADAS,
+                                            ToneladaAnulada = (double)ii.TN_ANULADAS,
+                                            ToneladaAplicada = (double)ii.TN_APLICADAS,
+                                            ToneladaContrato = (double)ii.TN_CONTRATO,
+                                            ToneladaFijada = (double)ii.TN_FIJADAS,
+                                            ClaseDoc = ii.CLASE_DOC,
+                                            Clasificacion = ii.CLASIFICACION,
+                                            Contrato = ii.CONTRATO,
+                                            CorredorCuit = ii.CORREDOR,
+                                            ComercialId = ComercialId,
+                                            CorredorId = CorredorId,
+                                            CampanaId = campaniaId,
+                                            ProveedorId = proveedorId.ProveedorId,
+                                            MaterialId = materialId,
+
+                                        });
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (CorredorId == null)
+                                {
+                                    logger.Debug("El cuit Vendedor " + ii.VENDEDOR + " y el cuit Corredor " + ii.CORREDOR + " no existe en DataAgro. Comercial:" + item.UsuarioDirectory + " .Contrato:" + ii.CONTRATO + " .Vendedor:" + ii.VENDEDOR + " .Corredor:" + ii.CORREDOR);
+                                    continue;
                                 }
                                 else
                                 {
-                                    campaniaMaterialPorMes.Add(new CampanaMaterialDetallePorMes()
-                                    {
-                                        Fecha = fechaDetalle,
-                                        PendienteAFijar = (double)ii.PEND_FIJAR,
-                                        PendienteAplicar = (double)ii.PEND_APLICAR,
-                                        ToneladaAmpliada = (double)ii.TN_AMPLIADAS,
-                                        ToneladaAnulada = (double)ii.TN_ANULADAS,
-                                        ToneladaAplicada = (double)ii.TN_APLICADAS,
-                                        ToneladaContrato = (double)ii.TN_CONTRATO,
-                                        ToneladaFijada = (double)ii.TN_FIJADAS,
-                                        ClaseDoc = ii.CLASE_DOC,
-                                        Clasificacion = ii.CLASIFICACION,
-                                        Contrato = ii.CONTRATO,
-                                        CorredorCuit = ii.CORREDOR,
-                                        ComercialId = ComercialId,
-                                        CorredorId = !string.IsNullOrEmpty(ii.CORREDOR) ? repositorio.Obtener<Proveedor, int>(
-                                        x => x.CUIT == ii.CORREDOR, x => x.ProveedorId) : (int?)null,
-                                        CampanaId = campaniaId,
-                                        ProveedorId = proveedorId.ProveedorId,
-                                        MaterialId = materialId,
+                                    var campaniaMaterialMes = histActual.Where(x => x.Contrato == ii.CONTRATO ).FirstOrDefault();
 
-                                    });
+                                    if (campaniaMaterialMes != null)
+                                    {
+                                        campaniaMaterialMes.PendienteAFijar = (double)ii.PEND_FIJAR;
+                                        campaniaMaterialMes.PendienteAplicar = (double)ii.PEND_APLICAR;
+                                        campaniaMaterialMes.ToneladaAmpliada = (double)ii.TN_AMPLIADAS;
+                                        campaniaMaterialMes.ToneladaAnulada = (double)ii.TN_ANULADAS;
+                                        campaniaMaterialMes.ToneladaAplicada = (double)ii.TN_APLICADAS;
+                                        campaniaMaterialMes.ToneladaContrato = (double)ii.TN_CONTRATO;
+                                        campaniaMaterialMes.ToneladaFijada = (double)ii.TN_FIJADAS;
+                                        campaniaMaterialMes.ClaseDoc = ii.CLASE_DOC;
+                                        campaniaMaterialMes.Clasificacion = ii.CLASIFICACION;
+                                        campaniaMaterialMes.Contrato = ii.CONTRATO;
+                                        campaniaMaterialMes.CorredorCuit = ii.CORREDOR;
+                                        campaniaMaterialMes.CorredorId = CorredorId;
+                                        campaniaMaterialMes.CampanaId = campaniaId;
+                                        campaniaMaterialMes.ProveedorId = null;
+                                        campaniaMaterialMes.MaterialId = materialId;
+                                    }
+                                    else
+                                    {
+
+                                        campaniaMaterialPorMes.Add(new CampanaMaterialDetallePorMes()
+                                        {
+                                            Fecha = fechaDetalle,
+                                            PendienteAFijar = (double)ii.PEND_FIJAR,
+                                            PendienteAplicar = (double)ii.PEND_APLICAR,
+                                            ToneladaAmpliada = (double)ii.TN_AMPLIADAS,
+                                            ToneladaAnulada = (double)ii.TN_ANULADAS,
+                                            ToneladaAplicada = (double)ii.TN_APLICADAS,
+                                            ToneladaContrato = (double)ii.TN_CONTRATO,
+                                            ToneladaFijada = (double)ii.TN_FIJADAS,
+                                            ClaseDoc = ii.CLASE_DOC,
+                                            Clasificacion = ii.CLASIFICACION,
+                                            Contrato = ii.CONTRATO,
+                                            CorredorCuit = ii.CORREDOR,
+                                            ComercialId = ComercialId,
+                                            CorredorId = CorredorId,
+                                            CampanaId = campaniaId,
+                                            ProveedorId = null,
+                                            MaterialId = materialId,
+
+                                        });
+                                    }
                                 }
                             }
+
 
                         }
                     }
                 }
-                logger.Debug("Campos a actualizados compra detalle: " + contadorActualizacion);
+
                 logger.Debug("Nuevos CampanaMaterialDetalle por mes: " + campaniaMaterialPorMes.Count);
                 repositorio.AgregarTodos(campaniaMaterialPorMes);
 

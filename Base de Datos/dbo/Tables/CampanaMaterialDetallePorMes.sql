@@ -16,7 +16,7 @@
     [ComercialId]             INT        NULL,
     [CorredorId] INT NULL, 
 	[CampanaId]          INT        NOT NULL,
-    [ProveedorId]        INT        NOT NULL,
+    [ProveedorId]        INT        NULL,
     [MaterialId]         INT        NOT NULL,
     CONSTRAINT [PK_CampanaMaterialDetallePorMes] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_CampanaMaterialDetallePorMes_Contacto] FOREIGN KEY ([CorredorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),

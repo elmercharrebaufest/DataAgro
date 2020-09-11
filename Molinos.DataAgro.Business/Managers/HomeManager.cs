@@ -401,7 +401,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var material = repositorio.Listar<Material>();
             var compraDto = new List<CompraDto>();
-            var proveedorIds = new List<int>();
+            var proveedorIds = new List<int?>();
             var proveedores = repositorio.Listar<Proveedor>().ToList();
             var cuits = proveedores.Select(x => x.CUIT).Distinct().ToList();
             foreach (var cuit in cuits)
@@ -480,7 +480,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             logger.Info("TraerTodoCompraDetalleExcel get data");
             var compraDto = new List<CompraDto>();
-            var proveedorIds = new List<int>();
+            var proveedorIds = new List<int?>();
             var proveedores = repositorio.Listar<Proveedor>().ToList();
             var cuits = proveedores.Select(x => x.CUIT).Distinct().ToList();
             foreach (var cuit in cuits)
@@ -572,7 +572,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<CompraCampanaActualDto> TraerTodoCompraCampanaActual(List<int> equipo)
         {
-            var proveedorIds = new List<int>();
+            var proveedorIds = new List<int?>();
             var proveedores = repositorio.Listar<Proveedor>().ToList();
             var cuits = proveedores.Select(x => x.CUIT).Distinct().ToList();
             foreach (var cuit in cuits)
