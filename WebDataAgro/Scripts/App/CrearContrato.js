@@ -247,11 +247,11 @@ function InicializarElementos() {
                     $("#dolarizadoDiv").hide();
                     $("#dolarizadoFechaId").val("");
                 }
-                if (!$("#dolarizadoExpressId").is(":checked")) {
-                    $("#dolarizadoId").prop("disabled", false);
-                    $("#dolarizadoDiv").hide();
-                    $("#dolarizadoFechaId").val("");
-                }
+                //if (!$("#dolarizadoExpressId").is(":checked")) {
+                //    $("#dolarizadoId").prop("disabled", false);           
+                //    $("#dolarizadoDiv").hide();
+                //    $("#dolarizadoFechaId").val("");
+                //}
                 if ($("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
                     $("#pagoDirectoDiv").hide();
                     $("#pagoCbuDiv").show();
@@ -260,11 +260,9 @@ function InicializarElementos() {
                         $("#pagoCbuDiv").hide();
                     }
                 }
-            } else {
-                $("#dolarizadoExpressId").prop("checked", false);
-                $("#dolarizadoExpressId").prop("disabled", true);
-                $("#dolarizadoId").prop("checked", false);
-                $("#dolarizadoId").prop("disabled", true);
+            }else {         
+                $("#dolarizadoExpressId").prop("checked", false);  
+                $("#dolarizadoExpressId").prop("disabled", true);              
                 $("#pagoCbuDiv").hide();
                 $("#pagoCbu").val("");
                 $("#pagoCbuId").hide();
@@ -904,6 +902,8 @@ function InicializarElementos() {
                 $("#pesificadoDiv").hide();
                 if ($("#fechaCiertaId").val() == "") {
                     $("#pagoDolarizadoDiv").show();
+                    $("#dolarizadoDiv").hide();
+
                 }
                 $("#pesificadoId").prop("checked", false);
                 $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
@@ -912,7 +912,7 @@ function InicializarElementos() {
                     $("#dolarizadoExpressDiv").show();
                 } else {
                     $("#dolarizadoExpressDiv").hide();
-                    $("#dolarizadoDiv").hide();
+                    //$("#dolarizadoDiv").hide();
                     $("#dolarizadoExpressId").prop("checked", false);                    
                    
                 }
@@ -1069,11 +1069,11 @@ function InicializarElementos() {
                         $("#dolarizadoExpressDiv").show();
                         $("#dolarizadoExpressId").attr("disabled", false);
                         $("#pagoDolarizadoDiv").show();
-                        $("#dolarizadoId").attr("disabled", false);
+                        //$("#dolarizadoId").attr("disabled", false);
                 } else {
                     $("#dolarizadoExpressDiv").hide();
                     $("#dolarizadoExpressId").prop("checked", false);
-                    $("#dolarizadoDiv").hide();
+                    //$("#dolarizadoDiv").hide();
                     $("#dolarizadoFechaId").val("");
 
                 }
@@ -1082,10 +1082,10 @@ function InicializarElementos() {
                 if (!$("#pesificadoId").is(":checked")) {
                     $("#fechaCiertaDiv").show();
                 }
-                $("#pagoDolarizadoDiv").hide();
-                $("#dolarizadoId").prop("checked", false);
+                //$("#pagoDolarizadoDiv").hide();
+                //$("#dolarizadoId").prop("checked", false);
                 $("#consignatarioDiv").show();
-                $("#dolarizadoDiv").hide();
+                //$("#dolarizadoDiv").hide();
                 $("#dolarizadoFechaId").val("");
                 $("#planCanjeDiv").show();
                 $("#dolarizadoExpressDiv").hide();
