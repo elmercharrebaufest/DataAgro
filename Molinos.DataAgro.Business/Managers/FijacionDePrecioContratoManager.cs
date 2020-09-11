@@ -126,15 +126,15 @@ namespace Molinos.DataAgro.Business.Managers
         private GrabarContratoResult ValidarAmpliacionFijacion(FijacionDePrecioContrato fijacion, double ampliacion)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var aFijar = oContratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor != null ? fijacion.Corredor.CUIT : null , fijacion.MaterialId, fijacion.ContratoSAP.Remove(0,3), fijacion.Id);
-            double kgAplicados = aFijar.Count() > 0 &&  double.TryParse(aFijar.First().KilosAplicados, out kgAplicados) ? kgAplicados : 0;           
+            var aFijar = oContratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor != null ? fijacion.Corredor.CUIT : null, fijacion.MaterialId, fijacion.ContratoSAP.Remove(0, 3), fijacion.Id);
+            double kgAplicados = aFijar.Count() > 0 && double.TryParse(aFijar.First().KilosAplicados, out kgAplicados) ? kgAplicados : 0;
             double pendiente = aFijar.Count() > 0 && double.TryParse(aFijar.First().KilosPendiente, out pendiente) ? pendiente - kgAplicados : 0;
             if (pendiente <= ampliacion)
             {
                 oEntityErrors.Error("", "La ampliación supera la cantidad disponible");
             }
             return oEntityErrors;
-       }
+        }
         private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages)
         {
 
@@ -174,8 +174,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var cantidadContrato = fijacion.KilosPendiente;
-                if (double.Parse(cantidadContrato.Replace(".", "")) - oParam.Cantidad < 0)
+                double kilosContrato = 0;
+                if (oParam.Id > 0)
+                {
+                    kilosContrato = repositorio.Obtener<Negocio, double>(a => a.Id == oParam.Id, a => a.Cantidad);
+                }
+                var cantidadContrato = double.Parse(fijacion.KilosPendiente.Replace(".", "")) + kilosContrato;
+                if (cantidadContrato - oParam.Cantidad < 0)
                 {
                     oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
                 }
@@ -786,7 +791,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = fijac.Fecha,
                 //ChequeElectronico = fijac.ChequeElectronico,
                 //PagoCBU = fijac.PagoCBU
-                
+
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)

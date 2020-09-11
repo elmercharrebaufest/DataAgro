@@ -96,6 +96,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Grabar(Comercial oComercial, List<Rol> roles)
         {
+            oComercial.IdActiveDirectory = oComercial.IdActiveDirectory.ToUpper();
             var model = new AbmComercialResult();
             
             var entityErrors = mobjComercialManager.GrabarComercial(oComercial, roles);
