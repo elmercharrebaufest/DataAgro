@@ -242,10 +242,10 @@ function InicializarElementos() {
                 $("#contCorredorId").val("");
                 $("#contCorredorDiv").hide();
                 $("#pagoDirectoDiv").hide();
-                if (!$("#dolarizadoId").is(":checked")) {
-                    $("#dolarizadoExpressId").prop("disabled", false);
-                    $("#dolarizadoDiv").hide();
-                    $("#dolarizadoFechaId").val("");
+                if (!$("#dolarizadoId").is(":checked") && $("#precioMonedaId").val() == "USDM " && $("#fechaCiertaId").val() == "") {
+                    $("#dolarizadoExpressDiv").show();       
+                    $("#dolarizadoExpressId").prop("disabled", false);              
+
                 }
                 //if (!$("#dolarizadoExpressId").is(":checked")) {
                 //    $("#dolarizadoId").prop("disabled", false);           
@@ -1065,7 +1065,7 @@ function InicializarElementos() {
                 $("#consignatarioId").prop("checked", false);
                 $("#planCanjeDiv").hide();
                 $("#planCanjeId").prop("checked", false);                            
-                if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " && $("#fechaCiertaId").val() == "") {
+                if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " && $("#fechaCiertaId").val() == "" && $("#buscadorCorredor").val() == "") {
                         $("#dolarizadoExpressDiv").show();
                         $("#dolarizadoExpressId").attr("disabled", false);
                         $("#pagoDolarizadoDiv").show();
