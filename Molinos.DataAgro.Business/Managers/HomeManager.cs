@@ -413,7 +413,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var c = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
                 equipo.Contains(x.ComercialId.Value)
-                && proveedorIds.Contains(x.ProveedorId)
+                && (proveedorIds.Contains(x.ProveedorId) || proveedorIds.Contains(x.CorredorId))
                 && mat.MaterialId == x.MaterialId
                 && mat.CampañaId == x.CampanaId);
 
@@ -511,7 +511,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Proveedor = x.Proveedor.RazonSocial,
                 CUIT = x.Proveedor.CUIT,
                 RazonSocialCorredor = x.Corredor != null ? x.Corredor.RazonSocial : ""
-            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.ProveedorId)); 
+            }, x => equipo.Contains(x.ComercialId.Value) && (proveedorIds.Contains(x.ProveedorId) || proveedorIds.Contains(x.CorredorId))); 
 
             var campanaMaterialDetallePorMeseExcelDtos = new List<CampanaMaterialDetallePorMeseExcelDto>();
 
@@ -601,7 +601,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PendienteAplicar = x.PendienteAplicar
                 
 
-            }, x => equipo.Contains(x.ComercialId.Value) && proveedorIds.Contains(x.ProveedorId));
+            }, x => equipo.Contains(x.ComercialId.Value) && (proveedorIds.Contains(x.ProveedorId) || proveedorIds.Contains(x.CorredorId)));
         }
     }
     public class FakeHome
