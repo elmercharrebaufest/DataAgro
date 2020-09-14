@@ -2095,7 +2095,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerContratosPendientesOk()
         {
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, AvisoContratoDto>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                .Returns(new List<AvisoContratoDto>() { new AvisoContratoDto {
                     ContratoId = 1,
                 RazonSocial = "ALA",
