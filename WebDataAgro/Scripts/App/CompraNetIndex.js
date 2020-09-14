@@ -350,7 +350,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.NivelTarifa + "'" + ',' +
         "'" + dataItem.TarifaFlete + "'" + ',' +
         "'" + dataItem.Compensacion + "'" + ',' +
-        "'" + dataItem.Rechazo + "'" + ',' +
+        "'" + $.trim((dataItem.Rechazo == null ? "" : dataItem.Rechazo.replace(/\n+/g, ' ') )) + "'" + ',' +
         "'" + formatearFecha(dataItem.FechaCierta) + "'" + ',' +
         "'" + dataItem.PorcentajeDePago + "'" + ',' +
         "'" + dataItem.TipoAgenteCompraId + "'" + ',' +
@@ -389,7 +389,7 @@ function botonBorrarPreanulado(dataItem, icono) {
             "'" + dataItem.AgenteId + "'" + ',' +
             "'" + dataItem.AcuerdoId + "'" + ',' +
             "'" + dataItem.Estado + "'" + ',' +
-            "'" + dataItem.Rechazo + "'" + 
+            "'" + $.trim((dataItem.Rechazo == null ? "" : dataItem.Rechazo.replace(/\n+/g, ' ') )) + "'" + 
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else {
         return '<div></div>';

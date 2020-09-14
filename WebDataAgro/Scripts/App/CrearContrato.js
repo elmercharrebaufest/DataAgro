@@ -1065,15 +1065,19 @@ function InicializarElementos() {
                 $("#consignatarioId").prop("checked", false);
                 $("#planCanjeDiv").hide();
                 $("#planCanjeId").prop("checked", false);                            
-                if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " && $("#fechaCiertaId").val() == "" && $("#buscadorCorredor").val() == "") {
+                if ($("#fechaCiertaId").val() == "" && $("#buscadorCorredor").val() == "") {
+                    if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM ") {
                         $("#dolarizadoExpressDiv").show();
                         $("#dolarizadoExpressId").attr("disabled", false);
                         $("#pagoDolarizadoDiv").show();
-                        //$("#dolarizadoId").attr("disabled", false);
+                    }
+                    if ($("#tipoId").val() == "1") {
+                        $("#dolarizadoExpressDiv").show();
+                        $("#dolarizadoExpressId").attr("disabled", false);
+                    } 
                 } else {
                     $("#dolarizadoExpressDiv").hide();
-                    $("#dolarizadoExpressId").prop("checked", false);
-                    //$("#dolarizadoDiv").hide();
+                    $("#dolarizadoExpressId").prop("checked", false);                    
                     $("#dolarizadoFechaId").val("");
 
                 }
@@ -1086,6 +1090,7 @@ function InicializarElementos() {
                 //$("#dolarizadoId").prop("checked", false);
                 $("#consignatarioDiv").show();
                 //$("#dolarizadoDiv").hide();
+                $("#dolarizadoDiv").hide();
                 $("#dolarizadoFechaId").val("");
                 $("#planCanjeDiv").show();
                 $("#dolarizadoExpressDiv").hide();
