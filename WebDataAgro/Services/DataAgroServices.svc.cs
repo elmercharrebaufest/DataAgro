@@ -298,8 +298,8 @@ namespace WebDataAgro.Services
                 contrato.CaratulaExtension = contratoSAP.CaratulaExtension;
                 contrato.PrecioAjusteComision = contratoSAP.PrecioAjusteComision;
                 contrato.MonedaAjusteComisionId = contratoSAP.MonedaAjusteComisionId;
-                //contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
-                //contrato.PagoCBU = contratoSAP.CUENTA_MRP;
+                contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
+                contrato.PagoCBU = contratoSAP.CUENTA_MRP;
                 contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
 
 

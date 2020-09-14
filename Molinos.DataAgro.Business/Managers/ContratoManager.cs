@@ -2543,9 +2543,9 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.CaratulaExtension = contrato.CaratulaExtension;
             contratoSave.PrecioAjusteComision = contrato.PrecioAjusteComision;
             contratoSave.MonedaAjusteComisionId = contrato.MonedaAjusteComisionId;
-            //contratoSave.ChequeElectronico = contrato.ChequeElectronico;
+            contratoSave.ChequeElectronico = contrato.ChequeElectronico;
             contratoSave.DolarizadoExpress = contrato.DolarizadoExpress;
-            //contratoSave.PagoCBU = contrato.PagoCBU;
+            contratoSave.PagoCBU = contrato.PagoCBU;
 
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
