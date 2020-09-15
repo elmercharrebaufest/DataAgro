@@ -122,6 +122,7 @@
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
+    <Compile Include="Dto\AbmFechaFeriado.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
     <Compile Include="Dto\CompraCampanaActualDto.cs" />
@@ -130,7 +131,7 @@
     <Compile Include="Dto\ContratoSAP.cs" />
     <Compile Include="Dto\CompraDetalleAgentDto.cs" />
     <Compile Include="Dto\ListaCompraDetalleDto.cs" />
-    
+    <Compile Include="Dto\FechaFeriadoDto.cs" />
     <Compile Include="Dto\PagoCBUDto.cs" />
     <Compile Include="Dto\MaterialHabilitadoDto.cs" />
     <Compile Include="Dto\AbmAreaInfluencia.cs" />

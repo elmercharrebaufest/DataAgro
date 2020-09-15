@@ -739,4 +739,13 @@
   <data name="ExportAllCompras" xml:space="preserve">
     <value>ExportAll Compra Detalle</value>
   </data>
+  <data name="EnvioMailNegociosConDiaAnteriorFijacion" xml:space="preserve">
+    <value>Envio Mail a Negocios Con Dia Anterior en Fijaciones</value>
+  </data>
+  <data name="NegociosFechaMayorDiaAnteriorFijacion" xml:space="preserve">
+    <value>Crear Negocios con Fecha Mayor al Dia Anterior en Fijaciones</value>
+  </data>
+  <data name="Configuracion_Feriado" xml:space="preserve">
+    <value>Configuración Feriado</value>
+  </data>
 </root>

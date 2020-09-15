@@ -484,6 +484,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuración Feriado.
+        /// </summary>
+        public static string Configuracion_Feriado {
+            get {
+                return ResourceManager.GetString("Configuracion_Feriado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuración Logs.
         /// </summary>
         public static string Configuracion_Logs {

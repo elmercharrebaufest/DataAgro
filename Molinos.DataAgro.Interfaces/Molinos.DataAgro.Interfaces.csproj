@@ -156,6 +156,7 @@
     <Compile Include="Managers\IConfiguracionInternaManager.cs" />
     <Compile Include="Managers\IHttpContextManager.cs" />
     <Compile Include="Managers\ILogDataAgroManager.cs" />
+    <Compile Include="Managers\IFechaFeriadoManager.cs" />
     <Compile Include="Managers\INegocioManager.cs" />
     <Compile Include="Managers\IUsuarioManager.cs" />
     <Compile Include="Managers\ITokenManager.cs" />

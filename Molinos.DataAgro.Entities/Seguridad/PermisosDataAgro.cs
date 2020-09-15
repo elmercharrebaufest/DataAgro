@@ -184,7 +184,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         AdministracionProveedores = 517,
         [Display(ResourceType = typeof(Text), Name = "Administracion_Logs")]
         LogDataAgro = 518,
-
+        [Display(ResourceType = typeof(Text), Name = "Configuracion_Feriado")]
+        ConfiguracionFeriado = 519,
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]

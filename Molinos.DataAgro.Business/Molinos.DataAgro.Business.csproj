@@ -162,6 +162,7 @@
     <Compile Include="Managers\ConfiguracionInternaManager.cs" />
     <Compile Include="Managers\HttpContextManager.cs" />
     <Compile Include="Managers\LogDataAgroManager.cs" />
+    <Compile Include="Managers\FechaFeriadoManager.cs" />
     <Compile Include="Managers\NegocioManager.cs" />
     <Compile Include="Managers\UsuarioManager.cs" />
     <Compile Include="Managers\TokenManager.cs" />

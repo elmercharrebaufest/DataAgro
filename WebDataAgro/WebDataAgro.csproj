@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -217,6 +217,7 @@
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
+    <Compile Include="Controllers\FechaFeriadoController.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaController.cs" />
     <Compile Include="Controllers\HabilitacionCupoController.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoController.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="Helpers\Excel\IDataForExcel.cs" />
     <Compile Include="Helpers\ExtensionesUrl.cs" />
     <Compile Include="Models\HabilitacionCupoModel.cs" />
+    <Compile Include="Models\FechaFeriadoModel.cs" />
     <Compile Include="Models\SugerenciaModel.cs" />
     <Compile Include="Models\ActividadesModel.cs" />
     <Compile Include="Models\AgendaModel.cs" />
@@ -982,6 +984,7 @@
     </Content>
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
+    <Content Include="Scripts\App\AbmFechaFeriado.js" />
     <Content Include="Scripts\App\AdministracionCupoGrilla.js" />
     <Content Include="Scripts\App\AdministracionProveedor.js" />
     <Content Include="Scripts\App\AbmContratoAcuerdo.js" />
@@ -2701,6 +2704,7 @@
     <Content Include="Views\ReporteRangoConfirmacionAutomatica\Index.cshtml" />
     <Content Include="Views\LogDataAgro\_MostrarDiferenciasTabla.cshtml" />
     <Content Include="Views\Proveedor\TablaCompra.cshtml" />
+    <Content Include="Views\FechaFeriado\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

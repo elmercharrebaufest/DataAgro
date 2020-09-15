@@ -208,6 +208,9 @@ namespace WebDataAgro
                                           "~/Scripts/KendoExtensions.js",
                                           "~/Scripts/App/Filtros.js",
                                           "~/Scripts/App/LogDataAgro.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/AbmFechaFeriado").Include(
+                                      "~/Scripts/App/AbmFechaFeriado.js"));
             bundles.IgnoreList.Clear();
         }
     }

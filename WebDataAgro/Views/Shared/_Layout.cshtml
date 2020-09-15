@@ -457,6 +457,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionFeriado))
+                                {
+                                    <li>
+                                        <a href="~/FechaFeriado" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Feriados
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }
