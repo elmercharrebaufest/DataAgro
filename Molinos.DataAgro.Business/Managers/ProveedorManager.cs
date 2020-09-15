@@ -868,7 +868,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.DolarizadoExpress.Value)
             {
-                htmlBody += "A pesificar en mes en curso y enviar mail a Notificaciones diferido: materias.primas@molinosagro.com.ar hasta las 13 hs <br />";
+                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
             //if (oContrato.ChequeElectronico.Value)
             //{
