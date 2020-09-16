@@ -174,13 +174,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                double kilosContrato = 0;
-                if (oParam.Id > 0)
-                {
-                    kilosContrato = repositorio.Obtener<Negocio, double>(a => a.Id == oParam.Id, a => a.Cantidad);
-                }
-                var cantidadContrato = double.Parse(fijacion.KilosPendiente.Replace(".", "")) + kilosContrato;
-                if (cantidadContrato - oParam.Cantidad < 0)
+                //double kilosContrato = 0;
+                //if (oParam.Id > 0)
+                //{
+                //    kilosContrato = repositorio.Obtener<Negocio, double>(a => a.Id == oParam.Id, a => a.Cantidad);
+                //}
+                var KilosPendiente = double.Parse(fijacion.KilosPendiente.Replace(".", "")) /*+ kilosContrato*/;
+                if (KilosPendiente < oParam.Cantidad )
                 {
                     oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
                 }

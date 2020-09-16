@@ -42,7 +42,7 @@ namespace Molinos.DataAgro.Agent
                         var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad + (x.Ampliaciones ?? 0), x => x.ContratoSAP == id
                         && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
                         var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.Id == idFijacion && x.ContratoSAP == id, x => x.Cantidad + (x.Ampliaciones ?? 0)) : 0;
-                        
+
                         var contrato = repositorio.Obtener<Contrato, DatosFijacionDeContratoDto>(x => x.ContratoSAP == id && x.TipoNegocioId == 1, x => new DatosFijacionDeContratoDto()
                         {
                             ContratoId = id.ToString(),
@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Agent
                             Centro = x.DestinoId,
                             Color = x.HastaFijacion.HasValue && x.HastaFijacion.Value < hoy ? "Red" : "#26337b",
                             CentroDescripcion = x.Destino != null ? x.Destino.Descripcion : null,
-                            Calidades =x.Calidad.Select(y=> new CalidadDto
+                            Calidades = x.Calidad.Select(y => new CalidadDto
                             {
                                 PorcentajeDesde = y.PorcentajeDesde,
                                 PorcentajeHasta = y.PorcentajeHasta,
@@ -114,10 +114,10 @@ namespace Molinos.DataAgro.Agent
                     var calidadesEspeciales = repositorio.Listar<CalidadEspecial>();
                     foreach (var contrato in listaContratos)
                     {
-                        var cantidad = repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad +(x.Ampliaciones ?? 0), x => x.ContratoSAP == contrato.CONTRATO && x.Id != idFijacion
-                        && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
+                        var cantidad = repositorio.Listar<Negocio, double>(x => x.Cantidad + (x.Ampliaciones ?? 0), x => x.TipoNegocioId == 3 && x.ContratoSAP == contrato.CONTRATO && x.Id != idFijacion
+                          && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
                         var centro = repositorio.Obtener<Centro>(x => x.CodigoSap == contrato.CENTRO);
-                        var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<FijacionDePrecioContrato, double>(x => x.Id == idFijacion && x.ContratoSAP == contrato.CONTRATO, x => x.Cantidad + (x.Ampliaciones ?? 0)) : 0;
+                        //var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<Negocio, double>(x => x.TipoNegocioId == 3 && x.Id == idFijacion && x.ContratoSAP == contrato.CONTRATO, x => x.Cantidad + (x.Ampliaciones ?? 0)) : 0;
                         var calidades = new List<CalidadDto>();
                         foreach (var calidad in contrato.CALIDADES)
                         {
@@ -134,7 +134,7 @@ namespace Molinos.DataAgro.Agent
                         {
                             ContratoId = contrato.CONTRATO.TrimStart('0'),
                             KilosAplicados = ((double)contrato.KILOS_APLICADOS).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
-                            KilosPendiente = ((double)contrato.KILOS_PEND_FIJAR - (cantidad + cantidadFijacion)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            KilosPendiente = ((double)contrato.KILOS_PEND_FIJAR - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaHasta = DateTime.Parse(contrato.FECHA_HASTA).ToString("dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
                             KilosContrato = contrato.KILOS_CONTRATO.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
@@ -162,7 +162,7 @@ namespace Molinos.DataAgro.Agent
                             Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "#26337b",
                             Calidades = calidades
                         };
-                       
+
                         if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                         {
                             datosContratos.Add(contratoParaFijacion);
