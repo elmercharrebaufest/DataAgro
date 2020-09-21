@@ -789,13 +789,11 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)fijac.Contrato.HastaFijacion.Value.Month).TrimStart() + "/" +
                                            SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : "",
                     PagoDiferido = fijac.PagoDiferidoContrato,
-                }
-                ,
-
+                },
                 FechaDesde = fijac.FechaDesde,
                 FechaHasta = fijac.FechaHasta,
                 Fecha = fijac.Fecha,
-                FechaOperacion = fijac.FechaOperacion
+                FechaOperacion = fijac.FechaOperacion,
                 ChequeElectronico = fijac.ChequeElectronico,
                 PagoCBU = fijac.PagoCBU
                 
