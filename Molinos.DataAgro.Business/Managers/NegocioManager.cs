@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnvioMailNegociosConDiaAnterior()
         {
             DateTime hoy = DateTime.Now.Date;
-            var contratos = repositorio.Listar<Contrato>(x => DbFunctions.TruncateTime(x.Fecha) != DbFunctions.TruncateTime(x.FechaOperacion) && x.Fecha >= hoy);
+            var contratos = repositorio.Listar<Negocio>(x => DbFunctions.TruncateTime(x.Fecha) != DbFunctions.TruncateTime(x.FechaOperacion) && x.Fecha >= hoy);
             var lista = new List<string>();
             var listaJefes = new List<string>();
             if (contratos.Count > 0)
@@ -88,7 +88,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        private AlternateView CuerpoMailNegociosConDiaAnterior(string filePath, List<Contrato> contratos)
+        private AlternateView CuerpoMailNegociosConDiaAnterior(string filePath, List<Negocio> contratos)
         {
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
@@ -137,7 +137,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (linea % 2 == 0)
                 {
                     htmlBody += "<tr>" +
-                        "<td " + style1 + c.ContratoSAP + "</td>" +                       
+                        "<td " + style1 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +                       
                         "<td " + style1 + c.Material.Descripcion + "</td>" +                        
                          "<td " + style1 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
@@ -146,12 +146,12 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style1 + c.Proveedor.RazonSocial + "</td>" +
                          "<td " + style1 + c.TipoNegocio.Descripcion + "</td>" +
                          "<td " + style1 + c.Estado.Descripcion + "</td>" +
-                         "<td " + style1 + c.MotivoOperacionAnterior + "</td> </tr> ";
+                         "<td " + style1 + (c is Contrato ? (c as Contrato).MotivoOperacionAnterior : "") + "</td> </tr> ";
                 }
                 else
                 {
                     htmlBody += "<tr>" +
-                         "<td " + style2 + c.ContratoSAP + "</td>" +
+                         "<td " + style2 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +
                          "<td " + style2 + c.Material.Descripcion + "</td>" +
                          "<td " + style2 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style2 + c.Proveedor.RazonSocial + "</td>" +
                          "<td " + style2 + c.TipoNegocio.Descripcion + "</td>" +
                          "<td " + style2 + c.Estado.Descripcion + "</td>" +
-                         "<td " + style2 + c.MotivoOperacionAnterior + "</td> </tr> ";
+                         "<td " + style2 + (c is Contrato ? (c as Contrato).MotivoOperacionAnterior : "") + "</td> </tr> ";
                 }
             }
 

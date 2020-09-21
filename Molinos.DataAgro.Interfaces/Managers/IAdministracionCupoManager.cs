@@ -14,7 +14,9 @@ namespace Molinos.DataAgro.Interfaces
     {
         KendoGrid<AdministracionCupoDto> TraerTodaAdministracionCupo(KendoGridMvcRequest request);
         AdministracionCupoDto TraerAdministracionCupo(int id);      
-        Resultado CambiarEstadoRechazado(int idAdministracion);
+        Resultado CambiarEstadoRechazado(int idAdministracion, string idActiveDirectory);
+        CupoResult AceptarCupoExcedente(int administracionId, int cantidad, int cantidadFp, string idActiveDirectory);
+        void RechazarSolicitudesVencidas();
     }
 }
 

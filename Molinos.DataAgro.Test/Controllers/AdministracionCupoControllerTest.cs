@@ -81,11 +81,11 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void AceptarTest()
         {
-            cupoManagerMock.Setup(x => x.AceptarCupoExcedente(It.IsAny<int>())).Returns(new CupoResult());
-            var result = target.Aceptar(1);
+            administracionManagerMock.Setup(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
+            var result = target.Aceptar(1, 1 ,1);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            cupoManagerMock.Verify(x => x.AceptarCupoExcedente(It.IsAny<int>()), Times.Once);
+            administracionManagerMock.Verify(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
@@ -94,11 +94,11 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void RechazarTest()
         {
-            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>())).Returns(new CupoResult());
+            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
             var result = target.Rechazar(1);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>())).Returns(new CupoResult());
+            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);

@@ -119,7 +119,10 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NegociosFechaMayorDiaAnterior = 327,
         [Display(ResourceType = typeof(Text), Name = "Configuraciones_JefeEnvioMailNegociosConDiaAnterior")]
         JefeEnvioMailNegociosConDiaAnterior = 328,
-
+        [Display(ResourceType = typeof(Text), Name = "NegociosFechaMayorDiaAnteriorFijacion")]
+        NegociosFechaMayorDiaAnteriorFijacion = 329,
+        [Display(ResourceType = typeof(Text), Name = "EnvioMailNegociosConDiaAnteriorFijacion")]
+        EnvioMailNegociosConDiaAnteriorFijacion = 330,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

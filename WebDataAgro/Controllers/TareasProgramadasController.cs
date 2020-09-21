@@ -20,9 +20,12 @@ namespace WebDataAgro.Controllers
         private readonly IContratoAcuerdoManager contratoAcuerdoManager;
         private readonly IReportesManager reportesManager;
         private readonly INegocioManager negocioManager;
+        private readonly IAdministracionCupoManager administracionCupoManager;
+
 
         public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager, 
-            ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager, IReportesManager reportesManager, INegocioManager negocioManager)
+            ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager, 
+            IReportesManager reportesManager, INegocioManager negocioManager, IAdministracionCupoManager administracionCupoManager)
 
         {
             this.logger = logger;
@@ -32,6 +35,7 @@ namespace WebDataAgro.Controllers
             this.contratoAcuerdoManager = contratoAcuerdoManager;
             this.reportesManager = reportesManager;
             this.negocioManager = negocioManager;
+            this.administracionCupoManager = administracionCupoManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -117,6 +121,14 @@ namespace WebDataAgro.Controllers
             logger.Info($"EnvioMailNegociosConDiaAnterior - Iniciando");
             negocioManager.EnvioMailNegociosConDiaAnterior();
             logger.Info($"EnvioMailNegociosConDiaAnterior - Finalizado");
+            return Content("ok");
+        }
+
+        public ActionResult RechazarSolicitudesVencidas()
+        {
+            logger.Info($"RechazarSolicitudesVencidas - Iniciando");
+            administracionCupoManager.RechazarSolicitudesVencidas();
+            logger.Info($"RechazarSolicitudesVencidas - Finalizado");
             return Content("ok");
         }
 

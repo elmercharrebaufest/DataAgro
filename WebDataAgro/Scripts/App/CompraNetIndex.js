@@ -197,7 +197,7 @@ function cambiarMarca(id, ocultar) {
     recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
-    if (modificaFinalizados && (dataItem.ContratoId /*|| dataItem.FijacionDePrecioContratoId*/)) {
+    if (modificaFinalizados && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId)) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
@@ -948,7 +948,7 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
-                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId /*|| dataItem.FijacionDePrecioContratoId*/)) {
+                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId || dataItem.FijacionDePrecioContratoId)) {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +

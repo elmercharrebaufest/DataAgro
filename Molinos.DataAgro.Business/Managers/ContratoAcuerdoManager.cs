@@ -281,8 +281,8 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.PagoDiferido = oContratoAcuerdo.PagoDiferido;
                 objContratoAcuerdo.Dolarizado = oContratoAcuerdo.Dolarizado;
                 objContratoAcuerdo.FechaDolarizado = oContratoAcuerdo.FechaDolarizado;
-                //objContratoAcuerdo.ChequeElectronico = oContratoAcuerdo.ChequeElectronico;
-                //objContratoAcuerdo.PagoCBU = oContratoAcuerdo.PagoCBU;
+                objContratoAcuerdo.ChequeElectronico = oContratoAcuerdo.ChequeElectronico;
+                objContratoAcuerdo.PagoCBU = oContratoAcuerdo.PagoCBU;
 
                 objContratoAcuerdo.TipoNegocioId = oContratoAcuerdo.TipoNegocioId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
@@ -668,6 +668,8 @@ namespace Molinos.DataAgro.Business
                 FechaCiertaFormateado = x.FechaCierta.HasValue ? SqlFunctions.DateName("day", x.FechaCierta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaCierta.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaCierta) : "",
+                ChequeElectronico = x.ChequeElectronico,
+                PagoCBU = x.PagoCBU
             });
             return contrato;
         }

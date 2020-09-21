@@ -130,11 +130,11 @@
                     }
                     <tr>
                         <td><strong>Total</strong></td>
-                       
-                            @foreach (var d in dias)
-                            {
-                                <td>@noAceptadas.SelectMany(x=>x.Diacupo).Where(x=>x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
-                            }                        
+
+                        @foreach (var d in dias)
+                        {
+                            <td>@noAceptadas.SelectMany(x => x.Diacupo).Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
+                        }
                     </tr>
                 </tbody>
             </table>
@@ -166,12 +166,18 @@
         </div>
     </div>
 </div>
+@*Modal Aceptar*@
+@Html.Partial("ModalAceptarSolicitud")
 
+ @*Modal Rechazar*@
+@Html.Partial("ModalRechazarSolicitud")
 <style>
     #gridInformeCompraNet td {
         text-align: center !important;
     }
-
+    .modal-content{
+       padding: 7px 16px 52px 15px !important;
+    }
     .popover-content {
         color: dimgray;
         font-size: 9px !important;

@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces
@@ -24,6 +25,9 @@ namespace Molinos.DataAgro.Interfaces
         List<AperturaPrecioDto> TraerAperturaDePrecioPorFijacion(int fijacionId);
         void FinalizacionAutomatica(string idActiveDirectory);
         GrabarFijacionResult AprobarFijacion(int id);
+        GrabarFijacionResult ActualizarFijacion(FijacionDePrecioContrato oContrato);
+        List<DateTime> FechaFeriados();
+        DateTime UltimoDiaHabil();
     }
 }
 

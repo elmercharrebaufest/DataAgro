@@ -181,6 +181,7 @@
     <Compile Include="Managers\ConfiguracionEspacioDinamicoManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionInternaManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionManagerTest.cs" />
+    <Compile Include="Managers\AdministracionCupoManagerTest.cs" />
     <Compile Include="Managers\LogDataAgroManagerTest.cs" />
     <Compile Include="Managers\HomeManagerTest.cs" />
     <Compile Include="Managers\NegocioManagerTest.cs" />

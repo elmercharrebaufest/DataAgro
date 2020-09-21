@@ -36,6 +36,10 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IContratosParaFijacionAgent> contratosParaFijacionMock;
         private Mock<IMailManager> mailManagerMock;
         private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
+        private Mock<IDiasHabilesAgent> diasHabilesAgente;
+
+        private Mock<IModificarFijacionAgent> modificarFijacionAgentMock;
+
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -54,12 +58,14 @@ namespace Molinos.DataAgro.Test.Managers
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             validarPagoAgente = new Mock<IValidarDocProcPagoAgent>();
-            
+            diasHabilesAgente = new Mock<IDiasHabilesAgent>();
+            modificarFijacionAgentMock = new Mock<IModificarFijacionAgent>();
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
                 pushNotificacionManagerMock.Object, finalizarFijacionAgentMock.Object,
                 contratosParaFijacionMock.Object, relacionCorredorProveedorAgentMock.Object,
-                mailManagerMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object);
+                mailManagerMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object,
+                modificarFijacionAgentMock.Object,                diasHabilesAgente.Object);
         }
 
         [Test]
@@ -337,63 +343,63 @@ namespace Molinos.DataAgro.Test.Managers
         }
 
 
-        //[Test]
-        //public void UpdateFijacionDePrecioerrorEstado()
-        //{
+        [Test]
+        public void UpdateFijacionDePrecioerrorEstado()
+        {
 
-        //    var fijacion = new FijacionDePrecioContrato
-        //    {
-        //        Id = 1,
-        //        ProveedorId = 1,
-        //        MaterialId = 1,
-        //        Cantidad = 1,
-        //        Precio = 1,
-        //        MonedaId = "ARP  ",
-        //        ComercialId = 1,
-        //        ContratoSAP = "1234",
-        //        CampanaId = 1,
-        //        Fecha = DateTime.Now,
-        //        Posicion = "",
-        //        FechaDesde = DateTime.Now,
-        //        FechaHasta = DateTime.Now,
-        //        AperturaPrecio = new List<AperturaPrecio> { },
-        //        //ChequeElectronico = true,
-        //        //PagoCBU = "1"
-        //    };
-        //    var fijacionSave = new FijacionDePrecioContrato
-        //    {
-        //        ProveedorId = 1,
-        //        MaterialId = 1,
-        //        Cantidad = 1,
-        //        Precio = 2,
-        //        MonedaId = "ARP  ",
-        //        ComercialId = 1,
-        //        ContratoSAP = "1234",
-        //        CampanaId = 1,
-        //        EstadoId = (int)EnumEstadoContrato.Finalizado,
-        //        //ChequeElectronico = false,
-        //        //PagoCBU = "2"
-        //    };
+            var fijacion = new FijacionDePrecioContrato
+            {
+                Id = 1,
+                ProveedorId = 1,
+                MaterialId = 1,
+                Cantidad = 1,
+                Precio = 1,
+                MonedaId = "ARP  ",
+                ComercialId = 1,
+                ContratoSAP = "1234",
+                CampanaId = 1,
+                Fecha = DateTime.Now,
+                Posicion = "",
+                FechaDesde = DateTime.Now,
+                FechaHasta = DateTime.Now,
+                AperturaPrecio = new List<AperturaPrecio> { },
+                ChequeElectronico = true,
+                PagoCBU = "1"
+            };
+            var fijacionSave = new FijacionDePrecioContrato
+            {
+                ProveedorId = 1,
+                MaterialId = 1,
+                Cantidad = 1,
+                Precio = 2,
+                MonedaId = "ARP  ",
+                ComercialId = 1,
+                ContratoSAP = "1234",
+                CampanaId = 1,
+                EstadoId = (int)EnumEstadoContrato.Finalizado,
+                ChequeElectronico = false,
+                PagoCBU = "2"
+            };
 
-        //    repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-        //      .Returns(new List<RangoPrecio>() { new RangoPrecio { MonedaId = "AUS ", MaterialId = 2, PrecioMaximo = 20000, PrecioMinimo = 0 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+              .Returns(new List<RangoPrecio>() { new RangoPrecio { MonedaId = "AUS ", MaterialId = 2, PrecioMaximo = 20000, PrecioMinimo = 0 } });
 
-        //    repositorioMock.Setup(y => y.Obtener<Contrato, int>(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(0);
+            repositorioMock.Setup(y => y.Obtener<Contrato, int>(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(0);
 
-        //    repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
-        //    contratosParaFijacionMock.Setup(y => y.ObtenerContratos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
-        //       .Returns(new List<DatosFijacionDeContratoDto>() { new DatosFijacionDeContratoDto { ContratoId = "1234", KilosPendiente = "10", KilosContrato = "100", Calidad = true } });
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
+            contratosParaFijacionMock.Setup(y => y.ObtenerContratos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+               .Returns(new List<DatosFijacionDeContratoDto>() { new DatosFijacionDeContratoDto { ContratoId = "1234", KilosPendiente = "10", KilosContrato = "100", Calidad = true } });
 
-        //    repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-        //     .Returns(new List<AperturaPrecio>());
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+             .Returns(new List<AperturaPrecio>());
 
                        
-        //    var result = target.GrabarFijacionDePrecio(fijacion);
+            var result = target.GrabarFijacionDePrecio(fijacion);
 
-        //    repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Never);
-        //    repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-        //    Assert.That(result.HayError);
-        //}
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+            Assert.That(result.HayError);
+        }
 
 
         [Test]
@@ -820,5 +826,98 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
             finalizarFijacionAgentMock.Verify(y => y.Finalizar(It.IsAny<FijacionDePrecioContrato>()), Times.Once);
         }
+
+        [Test]
+        public void ModificarFijacionOk()
+        {
+            var contratoSave = new FijacionDePrecioContrato
+            {
+                ContratoSAP = "434343",
+                ChequeElectronico = false
+            };
+            var contrato = new FijacionDePrecioContrato
+            {
+                ContratoSAP = "434343",
+                ChequeElectronico = true,
+                Id = 1
+            };
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(contrato);
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()))
+                .Returns(new FijacionDePrecioContrato { ContratoSAP = "434343", Id = 1 });
+            validarPagoAgente.Setup(x => x.ValidarEstado(It.IsAny<String>(), It.IsAny<String>())).Returns("Ok");
+            modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<FijacionDePrecioContrato>())).Returns("Se actualizaron los datos correctamente");
+            var resultado = target.ActualizarFijacion(contrato);
+            Assert.IsNotNull(resultado);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+
+        }
+
+        [Test]
+        public void ModificarFijacionError()
+        {
+            var contratoSave = new FijacionDePrecioContrato
+            {
+                ContratoSAP = "434343",
+                ChequeElectronico = false
+            };
+            var contrato = new FijacionDePrecioContrato
+            {
+                ContratoSAP = "434343",
+                ChequeElectronico = true,
+                Id = 1
+            };
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(contrato);
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()))
+                .Returns(new FijacionDePrecioContrato { ContratoSAP = "434343", Id = 1 });
+            validarPagoAgente.Setup(x => x.ValidarEstado(It.IsAny<String>(), It.IsAny<String>())).Returns("Error");
+            var resultado = target.ActualizarFijacion(contrato);
+            Assert.IsNotNull(resultado);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+            modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<FijacionDePrecioContrato>())).Returns("Ok Sap");
+
+        }
+
+        [Test]
+        public void ModificarFijacionErrorSap()
+        {
+            var contratoSave = new FijacionDePrecioContrato
+            {
+                ContratoSAP = "434343",
+                ChequeElectronico = false
+            };
+            var contrato = new FijacionDePrecioContrato
+            {
+                ContratoSAP = "434343",
+                ChequeElectronico = false,
+                Id = 1
+            };
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(contrato);
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()))
+                .Returns(new FijacionDePrecioContrato { ContratoSAP = "434343", Id = 1 });
+            modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<FijacionDePrecioContrato>())).Returns("Error");
+            var resultado = target.ActualizarFijacion(contrato);
+            Assert.IsNotNull(resultado);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+        }
+
+        [Test]
+        public void FechaFeriadosTest()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FechaFeriado, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<FechaFeriado>() { new FechaFeriado { Feriado = DateTime.Now} });
+            var res = target.FechaFeriados();
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FechaFeriado, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
+            Assert.IsNotNull(res);
+        }
+
+        [Test]
+        public void UltimoDiaHabilTest()
+        {
+            diasHabilesAgente.Setup(x => x.UltimoDiaHabil()).Returns(DateTime.Now);
+            var res = target.UltimoDiaHabil();
+            diasHabilesAgente.Verify(x => x.UltimoDiaHabil(), Times.Once);
+            Assert.IsNotNull(res);
+        }
+
     }
 }

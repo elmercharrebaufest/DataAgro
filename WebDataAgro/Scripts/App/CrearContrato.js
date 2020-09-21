@@ -10,6 +10,7 @@ var AperturaPrecioPorcentajeDeComision;
 var ImporteSobrePrecio = 0;
 var MonedaSobrePrecio = "";
 var PorcentajeSobrePrecio = 0;
+var cargaFijacionAyer;
 $(document).ready(function () {
     $('#menuproveedor').hide();
     $('#rootwizard').bootstrapWizard({
@@ -97,7 +98,8 @@ function ObtenerFechaHasta(fechaBase) {
 
 function InicializarElementos() {
     kendo.culture("es-AR");
-    $('[data-toggle="popover"]').popover();
+    cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);
+    $('[data-toggle="popover"]').popover(); 
     $(".datos-adicionales").hide();
     $(".datos-boleto").hide();
     $(".datos-establecimiento").hide();
@@ -110,6 +112,7 @@ function InicializarElementos() {
         $("#buscadorProveedor").data("kendoAutoComplete").value("");
         $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
     });
+
 
 
     $("#buscadorProveedor").kendoAutoComplete({
@@ -583,6 +586,8 @@ function InicializarElementos() {
             $("#dolarizadoExpressDiv").hide();
             $("#baseDiv").hide();
             $("#pizarraDiv").hide();
+            $("#fechaFijacionDiv").hide();
+
             ImporteSobrePrecio = 0;
             MonedaSobrePrecio = "";
             PorcentajeSobrePrecio = 0;
@@ -591,7 +596,7 @@ function InicializarElementos() {
                 $("#fechasDiv").hide();
                 $("#fechaDesdeDiv").hide();
                 $("#fechaHastaDiv").hide();
-                $("#fechaCiertaDiv").hide();
+                $("#fechaCiertaDiv").hide();                
                 $("#campanaDiv").hide();
                 $("#procedenciaDiv").hide();
                 $("#clasificacionDiv").hide();
@@ -631,6 +636,9 @@ function InicializarElementos() {
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
                 $('#pagoDirectoDiv').hide();
+                $("#fechaFijacionDiv").show();
+                $("#fechaCiertaAcuerdoDiv").hide();                
+
 
                 $("#pizarraDiv").show();
                 if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
@@ -1626,10 +1634,46 @@ function InicializarElementos() {
         }
     });
 
+    $("#fechaFijacionId").kendoDatePicker({
+        value: date,
+        format: "dd-MM-yyyy",
+        max: new Date(),
+        disableDates: function (i) {
+            var lstFechas = FechaFeriado();
+            if (i && typeof i == 'object') {
+                i = kendo.toString(i, "dd-MM-yyyy");
+            }
+            if (lstFechas.includes(i)) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        month: {
+            // template for dates in month view
+            content: '# if (data.date.getDay() == 0 || data.date.getDay() == 6) { #' +
+                '<div class="disabledDay">#= data.value #</div>' +
+                '# } else { #' +
+                '#= data.value #' +
+                '# } #'
+        },
+        open: function (e) {
+            $(".disabledDay").parent().removeClass("k-link") //removing this class makes the day unselectable
+            $(".disabledDay").parent().removeAttr("href") //this removes the hyperlink styling
+        },
+    });
+    if (!cargaFijacionAyer) {
+        var diaHabil = MSExecuteOnServer('/CompraNet/UltimoDiaHabil');
+        diaHabil = diaHabil.replace(/[^0-9 +]/g, '');
+        $("#fechaFijacionId").data("kendoDatePicker").min(new Date(parseInt(diaHabil)));
+    }
+
     $("#fechaDesdeId").val(date);
     $("#fechaOperacionId").val(date);
-
     $("#fechaHastaId").val(datehasta);
+    $("#fechaFijacionId").val(date);
+
 
     $(".formulario-footer-guardar-contrato").click(function () {
         BlockUi('Guardando...');
@@ -1794,7 +1838,10 @@ function InicializarElementos() {
             if ($("#tipoId").val() == "2") {
                 $("#fechaCiertaDiv").show();
 
-            } else {
+            }
+
+            if ($("#tipoId").val() == "6") {
+
                 $("#fechaCiertaAcuerdoDiv").show();
             }
         }
@@ -2745,6 +2792,7 @@ function ObtenerDatos() {
     obj.FechaEntrega = $("#fechaHastaId").val();
     obj.CampanaId = $("#campanaId").val();
     obj.FechaDesde = $("#fechaDesdeId").val();
+    obj.Fecha = $("#fechaFijacionId").val();
     obj.FechaHasta = $("#fechaHastaId").val();
     obj.MonedaId = $("#precioMonedaId").val();
     if (obj.TipoNegocioId == "3" || obj.TipoNegocioId == "4") {
@@ -2934,6 +2982,10 @@ function ObtenerDatos() {
         obj.FechaOperacion = $("#fechaOperacionId").val();
         obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
     }
+    if (obj.TipoNegocioId == 3) {
+        obj.FechaOperacion = $("#fechaFijacionId").val();
+    }
+
     if (!error) {
         GrabarContrato(obj);
     } else {
@@ -3294,8 +3346,11 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.FechaOperacionFormateado != null) {
         $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
+        $("#fechaFijacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
+
     } else {
         $("#fechaOperacionId").val("");
+        $("#fechaFijacionId").val("");
 
     }
 
@@ -3471,8 +3526,9 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.ChequeElectronico == true) {
         $("#chequeElectronico").prop("checked", true);
         $("#chequeElectronicoInput").prop("checked", true);
-
-    } else {
+        $("#pagoCbuDiv").hide();
+        $("#pagoCbuId").hide();        
+    } else {              
         $("#chequeElectronico").prop("checked", false);
         $("#chequeElectronicoInput").prop("checked", false);
     }
@@ -3486,19 +3542,25 @@ function CargarDatosEditar(contrato, hijo) {
 
     } else {
         $("#dolarizadoExpressId").prop("checked", false);
+        //$("#dolarizadoDiv").hide();
     }
+    
 
     $("#pagoCbu").val(contrato.PagoCBU);
 
 
     $("#pagoCbuInput").val(contrato.PagoCBU);
 
-
+    if (contrato.PagoCBU != "" && contrato.PagoCBU != null) {
+        $("#pagoCbu").data("kendoAutoComplete").value(contrato.PagoCBU);
+        $("#pagoCbuInput").data("kendoAutoComplete").value(contrato.PagoCBU);        
+        $("#chequeElectronicoId").hide();
+        $("#chequeElectronicoDiv").hide();
+    } 
 
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
-
-
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
+
     if (contrato.TipoNegocioId == 3) {
         $("#contratoId").val(contrato.DatosFijacion.ContratoId);
         $("#datosContrato").show();
@@ -4285,7 +4347,31 @@ function HayChequeElectronicoOtros() {
         $("#pagoCbuInput").val("");
     }
 }
+function FechaFeriado() {
+    var fechaFeriado = MSExecuteOnServer('/CompraNet/FechaFeriados');
+    var fechas = [];
+    
+    for (var i = 0; i < fechaFeriado.length; i++) {
+        var src = fechaFeriado[i];
+        src = src.replace(/[^0-9 +]/g, '');
+        fechas.push(kendo.toString(new Date(parseInt(src)), "dd-MM-yyyy"));
+    }    
+    return fechas;  
+}
 
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 
 
 

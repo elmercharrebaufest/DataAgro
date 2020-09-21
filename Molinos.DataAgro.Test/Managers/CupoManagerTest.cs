@@ -45,6 +45,8 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ICriterioCDWarrantAgent> criterioCDWarrantAgentMock;
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
+        private Mock<IConfiguracionCupoManager> configuracionCupoManager;
+
         [SetUp]
         public void SetUp()
         {
@@ -61,10 +63,12 @@ namespace Molinos.DataAgro.Test.Managers
             criterioCDWarrantAgentMock = new Mock<ICriterioCDWarrantAgent>();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             comercialManagerMock = new Mock<IComercialManager>();
+            configuracionCupoManager = new Mock<IConfiguracionCupoManager>(); 
 
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
-                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object, logDataAgroManagerMock.Object, comercialManagerMock.Object);
+                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object, 
+                logDataAgroManagerMock.Object, comercialManagerMock.Object, configuracionCupoManager.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
@@ -80,6 +84,17 @@ namespace Molinos.DataAgro.Test.Managers
                 ZonaCupoId = 1,
                 FechaIngreso = new DateTime(2099, 11, 19)
             };
+            var configuracion = new ConfiguracionCupoDto()
+            { 
+                LimiteCupo = 100,
+                CentroId = 1,
+                CierreCupera = false
+
+            };
+            configuracionCupoManager.Setup(x => x.TraerTodaConfiguracionCupoPorDia(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(new List<ConfiguracionCupoDto>() {
+                    configuracion
+                });
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<Expression<Func<Cupo, CupoDto>>>()))
                 .Returns(new CupoDto { Id = 1 });
             repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(new Cupo { Id = 1 });
@@ -132,7 +147,17 @@ namespace Molinos.DataAgro.Test.Managers
                 CupoSap = "aa",
                 FechaIngreso = new DateTime(2019, 11, 19)
             };
+            var configuracion = new ConfiguracionCupoDto()
+            {
+                LimiteCupo = 100,
+                CentroId = 1,
+                CierreCupera = false
 
+            };
+            configuracionCupoManager.Setup(x => x.TraerTodaConfiguracionCupoPorDia(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(new List<ConfiguracionCupoDto>() {
+                    configuracion
+                });
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                 .Returns(new Proveedor { ProveedorId = 1 });
             repositorioMock.Setup(y => y.Obtener<Material>(It.IsAny<int>()))
@@ -380,6 +405,17 @@ namespace Molinos.DataAgro.Test.Managers
                     Puntuaciones = "{\"CriterioRaiz\":0.4}",
                     FechaSugerida = DateTime.Now.Date
                 }});
+            var configuracion = new ConfiguracionCupoDto()
+            {
+                LimiteCupo = 100,
+                CentroId = 1,
+                CierreCupera = false
+
+            };
+            configuracionCupoManager.Setup(x => x.TraerTodaConfiguracionCupoPorDia(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(new List<ConfiguracionCupoDto>() {
+                    configuracion
+                });
             //disponibilidad en planta
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<ConfiguracionCupo>() {new ConfiguracionCupo

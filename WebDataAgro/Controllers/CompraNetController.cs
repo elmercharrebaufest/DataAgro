@@ -110,6 +110,8 @@ namespace WebDataAgro.Controllers
             ViewBag.ComercialId = GlobalVariables.ComercialId;
             ViewBag.Id = id;
             ViewBag.TipoId = tipoId;
+            ViewBag.Contrato = mobjContratoManager.ObtenerSapContrato(id.HasValue ? id.Value : 0);
+            ViewBag.Fijacion = mobjContratoManager.ObtenerSapFijacion(id.HasValue ? id.Value : 0);
             ViewBag.Siguientes = siguientes;
             ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo = mobjConfiguracionManager.TraerConfiguraciones().ContratoAperturaPrecioPorcentajeDeComisionMaximo;
 
@@ -365,14 +367,23 @@ namespace WebDataAgro.Controllers
 
         public ActionResult GrabarFijacion(FijacionDePrecioContrato oParam)
         {
+            var model = new GrabarFijacionResult();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
                 oParam.ComercialId = mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId ?? 0);
                 oParam.UsuarioId = PermisosHelper.ObtenerUsuario();
             }
+            if(oParam.EstadoId == (int)EnumEstadoContrato.Finalizado)
+            {
+                model = mobjFijacionDePrecioContratoManager.ActualizarFijacion(oParam);
+            }
+            else
+            {
+                mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(oParam);
+            }
             return new JsonResult()
             {
-                Data = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(oParam),
+                Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -926,6 +937,24 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        public ActionResult FechaFeriados()
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.FechaFeriados(),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult UltimoDiaHabil()
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.UltimoDiaHabil(),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        
 
     }
 }

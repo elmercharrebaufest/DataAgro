@@ -3081,7 +3081,9 @@ namespace Molinos.DataAgro.Test.Managers
                 Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>(),
                 PrecioPactado = new List<PrecioPactado>(),
-                ContratoSAP = "23422343"
+                
+                ContratoSAP = "434343",
+                ChequeElectronico = true
             };
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
@@ -3707,30 +3709,46 @@ namespace Molinos.DataAgro.Test.Managers
 
 
 
-        //[Test]
-        //public void ModificarFijacionErrorSap()
-        //{
-        //    var contratoSave = new FijacionDePrecioContrato
-        //    {
-        //        ContratoSAP = "434343",
-        //        //ChequeElectronico = false
-        //    };
-        //    var contrato = new FijacionDePrecioContrato
-        //    {
-        //        ContratoSAP = "434343",
-        //        //ChequeElectronico = false,
-        //        Id = 1
-        //    };
-        //    repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(contrato);
-        //    repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()))
-        //        .Returns(new FijacionDePrecioContrato { ContratoSAP = "434343", Id = 1 });
-        //    modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<FijacionDePrecioContrato>())).Returns("Error");
-        //    var resultado = target.ActualizarFijacion(contrato);
-        //    Assert.IsNotNull(resultado);
-        //    repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+        [Test]
+        public void ModificarFijacionErrorSap()
+        {
+            var contratoSave = new FijacionDePrecioContrato
+            {
+                ContratoSAP = "434343",
+                ChequeElectronico = false
+            };
+            var contrato = new FijacionDePrecioContrato
+            {
+                ContratoSAP = "434343",
+                ChequeElectronico = false,
+                Id = 1
+            };
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(contrato);
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()))
+                .Returns(new FijacionDePrecioContrato { ContratoSAP = "434343", Id = 1 });
+            modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<FijacionDePrecioContrato>())).Returns("Error");
+            var resultado = target.ActualizarFijacion(contrato);
+            Assert.IsNotNull(resultado);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
 
-        //}
+        }
 
+        [Test]
+        public void ObtenerContratoTest()
+        {
+            repositorioMock.Setup(y => y.Obtener<Contrato, string>(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, string>>>())).Returns("0003456334");
+            var resultado = target.ObtenerSapContrato(It.IsAny<int>());
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+        }
+        [Test]
+        public void ObtenerFijacionTest()
+        {
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato, string>(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, string>>>())).Returns("3456");
+            var resultado = target.ObtenerSapFijacion(It.IsAny<int>());
+            Assert.IsNotNull(resultado);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+        }
         [Test]
         public void TraerContratosPorSapTest()
         {
@@ -3745,6 +3763,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
+
         [Test]
         public void TraerContratosAcuerdoTest()
         {

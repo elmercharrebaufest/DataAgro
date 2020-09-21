@@ -866,18 +866,18 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Fecha Cierta: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
             }
-            if (oContrato.DolarizadoExpress.Value)
+            if (oContrato.DolarizadoExpress == true )
             {
                 htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
-            //if (oContrato.ChequeElectronico.Value)
-            //{
-            //    htmlBody += "Pago con Echeq <br />";
-            //}
-            //if (oContrato.PagoCBU != null)
-            //{
-            //    htmlBody += "Pago con Cbu: " + oContrato.PagoCBU +" <br />";
-            //}
+            if (oContrato.ChequeElectronico == true)
+            {
+                htmlBody += "Pago con Echeq <br />";
+            }
+            if (oContrato.PagoCBU != null)
+            {
+                htmlBody += "Pago con Cbu: " + oContrato.PagoCBU +" <br />";
+            }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
@@ -943,19 +943,23 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "DÍAS DE DIFERIMIENTO: " + oFijacionDePrecioContrato.DiasPesificado.ToString() + "<br /> ";
             }
-            //if (oFijacionDePrecioContrato.ChequeElectronico.HasValue && oFijacionDePrecioContrato.ChequeElectronico.Value)
-            //{
-            //    htmlBody += "Pago con Echeq <br /> ";
-            //}
-            //if (oFijacionDePrecioContrato.PagoCBU != null)
-            //{
-            //    htmlBody += "Pago con Cbu: " + oFijacionDePrecioContrato.PagoCBU + " <br />";
-            //}
+            if (oFijacionDePrecioContrato.ChequeElectronico.HasValue && oFijacionDePrecioContrato.ChequeElectronico.Value)
+            {
+                htmlBody += "Pago con Echeq <br /> ";
+            }
+            if (oFijacionDePrecioContrato.PagoCBU != null)
+            {
+                htmlBody += "Pago con Cbu: " + oFijacionDePrecioContrato.PagoCBU + " <br />";
+            }
             //var conceptoApertura = oFijacionDePrecioContrato.AperturaPrecio;
             //if ((oFijacionDePrecioContrato.AperturaPrecio.Count >0 || oFijacionDePrecioContrato.AperturaPrecio != null) && oFijacionDePrecioContrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 1).Select(x => x.Importe).First() > 0)
             //{
             //    htmlBody += "COSTO FINANCIERO: " + conceptoApertura.Select(x => x.Importe).First().ToString()+ "<br />";
             //}
+            if (oFijacionDePrecioContrato.FechaOperacion != null)
+            {
+                htmlBody += "Fecha Operacion: " + oFijacionDePrecioContrato.FechaOperacion.ToShortDateString() + "<br /> ";
+            }
             var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP));
             if (contrato != null)
             {

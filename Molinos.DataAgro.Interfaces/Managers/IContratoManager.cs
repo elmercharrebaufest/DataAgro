@@ -61,8 +61,9 @@ namespace Molinos.DataAgro.Interfaces
         Resultado AnularContratoSAP(ContratoSAP contrato);
         DatosContratoDto TraerDatosDeContratoAcuerdo(int contratoId);
         List<PagoCBUDto> ListarCBU(string cuitProveedor, string filtro);
-        GrabarFijacionResult ActualizarFijacion(FijacionDePrecioContrato oContrato);
-
+        string ObtenerSapContrato(int contrato);
+        string ObtenerSapFijacion(int contrato);  
         Resultado AltaContratoSAP(Contrato contratoSap, bool validacionesMinimas);
+
     }
 }

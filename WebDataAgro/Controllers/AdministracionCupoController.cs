@@ -39,16 +39,16 @@ namespace WebDataAgro.Controllers
             ViewBag.Panel = cupoManager.Panel();
             ViewBag.Fechas = cupoManager.FechasComprendidas();
             ViewBag.SugerenciasNoAceptadas = cupoManager.SugerenciasNoAceptadas();
-            var model = administracionCupoManager.TraerTodaAdministracionCupo(request);
+            var model = administracionCupoManager.TraerTodaAdministracionCupo(request);            
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 
-        public JsonResult Aceptar(int administracionId)
+        public JsonResult Aceptar(int administracionId, int cantidadCupo, int cantidadFleteProcedencia)
         {
             CupoResult resultado = new CupoResult();
             if (administracionId != 0)
             {
-                resultado = cupoManager.AceptarCupoExcedente(administracionId);
+                resultado = administracionCupoManager.AceptarCupoExcedente(administracionId, cantidadCupo, cantidadFleteProcedencia, GlobalVariables.IdActiveDirectory);
             }
             else
             {
@@ -59,7 +59,7 @@ namespace WebDataAgro.Controllers
 
         public JsonResult Rechazar(int administracionId)
         {
-            var resultado = administracionCupoManager.CambiarEstadoRechazado(administracionId);
+            var resultado = administracionCupoManager.CambiarEstadoRechazado(administracionId, GlobalVariables.IdActiveDirectory);
             return Json(resultado);
         }
     }

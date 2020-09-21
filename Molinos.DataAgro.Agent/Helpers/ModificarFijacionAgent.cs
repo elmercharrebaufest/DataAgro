@@ -38,10 +38,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                
                 var rq = new Z_MPRFC_MODIFICAR_FIJACION
                 {
-                    IM_CONTRATO = contrato.ContratoSAP,
-                    //IM_FIJACION = contrato.FijacionSAP,
-                    //IM_ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
-                    //IM_CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : ""
+                    IM_CONTRATO = contratoGuardado.ContratoSAP,                   
+                    IM_ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
+                    IM_CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
+                    IM_FIJACION = contratoGuardado.FijacionSAP
                 };               
 
                 logger.Debug(rq.ToXml());
@@ -63,7 +63,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 repositorio.GuardarCambios();
 
                 logger.Debug(devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? "Respuesta SAP: " + devolucion.EX_MENSAJE : "OK SAP null");
-                return devolucion != null && !string.IsNullOrEmpty(devolucion.EX_MENSAJE) ? devolucion.EX_MENSAJE : "OK";
+                return devolucion.EX_MENSAJE;
             }
             catch (Exception e)
             {

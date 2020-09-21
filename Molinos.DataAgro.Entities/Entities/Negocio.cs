@@ -50,13 +50,14 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? TipoAgenteCompraId { get; set; }
 
         public int? UsuarioConfirmadorId { get; set; }
+        public DateTime FechaOperacion { get; set; } // FechaOperacion       
 
         public DateTime? FechaConfirmacion { get; set; }
         public DateTime? FechaCierta { get; set; }
         public bool? ChequeElectronico { get; set; }
         public bool? DolarizadoExpress { get; set; }
         public string PagoCBU { get; set; }
-
+        //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
         [ForeignKey("CondicionFijacionId")]

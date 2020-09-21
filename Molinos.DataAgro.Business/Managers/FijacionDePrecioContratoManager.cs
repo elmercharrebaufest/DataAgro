@@ -32,6 +32,9 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogger logger;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IValidarDocProcPagoAgent validarPagoAgente;
+        private readonly IModificarFijacionAgent modificarFijacionAgent;
+        private readonly IDiasHabilesAgent diasHabilesAgent;
+
 
         public FijacionDePrecioContratoManager(
             ILogger logger,
@@ -43,7 +46,7 @@ namespace Molinos.DataAgro.Business.Managers
             IContratosParaFijacionAgent oContratosParaFijacionAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
             IMailManager mailManager, ILogDataAgroManager logDataAgroManager,
-            IValidarDocProcPagoAgent validarPagoAgente)
+            IValidarDocProcPagoAgent validarPagoAgente, IModificarFijacionAgent modificarFijacionAgent, IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -56,6 +59,8 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailManager = mailManager;
             this.logDataAgroManager = logDataAgroManager;
             this.validarPagoAgente = validarPagoAgente;
+            this.diasHabilesAgent = diasHabilesAgent;
+            this.modificarFijacionAgent = modificarFijacionAgent;
         }
 
         //--------------------------------------------------
@@ -239,7 +244,6 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarFijacionResult GrabarFijacionDePrecio(FijacionDePrecioContrato oFijacionDePrecio)
         {
             var oEntityErrors = new GrabarFijacionResult();
-
             this.Validar(oFijacionDePrecio, oEntityErrors);
 
             if (oEntityErrors.HayErrores)
@@ -254,15 +258,15 @@ namespace Molinos.DataAgro.Business.Managers
             if (oFijacionDePrecio.Id != 0)
             {
                 oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.Id);
-                //if ((oFijacionDePrecio.ChequeElectronico != oFijacionDePrecioSave.ChequeElectronico && oFijacionDePrecio.ChequeElectronico.Value) || oFijacionDePrecioSave.PagoCBU != oFijacionDePrecio.PagoCBU)
-                //{
-                //    var result = validarPagoAgente.ValidarEstado("", oFijacionDePrecio.FijacionSAP);
-                //    if (result != "Ok")
-                //    {
-                //        oEntityErrors.Error("", result);
-                //        return oEntityErrors;
-                //    }
-                //}
+                if ((oFijacionDePrecio.ChequeElectronico != oFijacionDePrecioSave.ChequeElectronico && oFijacionDePrecio.ChequeElectronico.Value) || oFijacionDePrecioSave.PagoCBU != oFijacionDePrecio.PagoCBU)
+                {
+                    var result = validarPagoAgente.ValidarEstado(oFijacionDePrecioSave.ContratoSAP, oFijacionDePrecioSave.FijacionSAP);
+                    if (result != "Ok")
+                    {
+                        oEntityErrors.Error("", result);
+                        return oEntityErrors;
+                    }
+                }
                 if (oFijacionDePrecioSave.EstadoId == 6)
                 {
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
@@ -306,8 +310,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.DiasPesificado = oFijacionDePrecio.DiasPesificado;
                 oFijacionDePrecioSave.PagoDiferidoContrato = oFijacionDePrecio.PagoDiferidoContrato;
                 oFijacionDePrecioSave.DestinoId = oFijacionDePrecio.DestinoId;
-                //oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
-                //oFijacionDePrecioSave.PagoCBU = oFijacionDePrecio.PagoCBU;
+                oFijacionDePrecio.FechaOperacion = oFijacionDePrecio.FechaOperacion;
+                oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
+                oFijacionDePrecioSave.PagoCBU = oFijacionDePrecio.PagoCBU;
 
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -318,6 +323,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
+              
                 oFijacionDePrecio.ContratoSAP = oFijacionDePrecio.ContratoSAP.PadLeft(10, '0');
                 oFijacionDePrecio.Fecha = DateTime.Now;
                 if (oContratoId == 0)
@@ -590,7 +596,7 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.ContratoId = contratoOriginal.ContratoId;
                             oContratoSave.Posicion = contratoOriginal.Posicion;
                             oContratoSave.PagoDiferidoContrato = contratoOriginal.PagoDiferidoContrato;
-
+                            oContrato.FechaOperacion = contratoOriginal.FechaOperacion;
 
                             if (oContratoSave.AperturaPrecio != null)
                             {
@@ -789,9 +795,10 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDesde = fijac.FechaDesde,
                 FechaHasta = fijac.FechaHasta,
                 Fecha = fijac.Fecha,
-                //ChequeElectronico = fijac.ChequeElectronico,
-                //PagoCBU = fijac.PagoCBU
-
+                FechaOperacion = fijac.FechaOperacion
+                ChequeElectronico = fijac.ChequeElectronico,
+                PagoCBU = fijac.PagoCBU
+                
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
@@ -923,6 +930,60 @@ namespace Molinos.DataAgro.Business.Managers
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
             alternateView.LinkedResources.Add(res);
             return alternateView;
+        }
+        public GrabarFijacionResult ActualizarFijacion(FijacionDePrecioContrato oContrato)
+        {
+            var error = new GrabarFijacionResult();
+            try
+            {
+                var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.Id);
+                oContrato.ContratoSAP = oContratoSave.ContratoSAP;
+
+                if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
+                {
+                    var result = validarPagoAgente.ValidarEstado(oContratoSave.ContratoSAP, oContratoSave.FijacionSAP);
+                    if (result != "Ok")
+                    {
+                        error.Error("", result);
+                        return error;
+                    }
+                }
+                oContrato.ContratoSAP = repositorio.Obtener<FijacionDePrecioContrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
+                var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
+                if (res != "Se actualizaron los datos correctamente")
+                {
+                    error.Error("SAP", res);
+                     return error;
+                }
+
+                logger.Debug("Actualizando fijacion en BD DataAgro: " + oContrato.Id);
+
+                if (oContratoSave == null || oContrato.Id == 0)
+                {
+                    error.Error("Fijacion", "No existe contrato en DataAgro");
+                }
+                oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
+                oContratoSave.PagoCBU = oContrato.PagoCBU;
+                repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContrato.GetType());
+
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                error.Error("", e.Message + ".");
+            }
+            return error;
+        }
+
+        public List<DateTime> FechaFeriados()
+        {
+            return repositorio.Listar<FechaFeriado>().Select(x => x.Feriado).ToList();
+        }
+
+        public DateTime UltimoDiaHabil()
+        {
+            return diasHabilesAgent.UltimoDiaHabil();
         }
     }
 }

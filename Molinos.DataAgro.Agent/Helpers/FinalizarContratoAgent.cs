@@ -249,9 +249,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         MONEDA_COM_MAT = contrato.MonedaAjusteComisionId,
                         FECHA_CREACION = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
                         repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
-                        //ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
+                        ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
                         DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
-                        //CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : ""
+                        CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : ""
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {

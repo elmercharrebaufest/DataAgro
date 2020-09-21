@@ -17,7 +17,7 @@ namespace Molinos.DataAgro.Interfaces
         List<LimiteCupoDto> TraerLimites(int id);
         Resultado GrabarLimites(List<LimiteCupo> limite);
         ConfiguracionCupoDto TraerConfiguracionCupo(int id);
-        List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zona);
+        List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId);
     }
 }
 

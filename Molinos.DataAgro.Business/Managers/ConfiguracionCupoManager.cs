@@ -43,6 +43,7 @@ namespace Molinos.DataAgro.Business.Managers
                     cupoSave.CentroId = cupo.CentroId;
                     cupoSave.MaterialId = cupo.MaterialId;
                     cupoSave.LimiteCupo = cupo.LimiteCupo;
+                    cupoSave.CierreCupera = cupo.CierreCupera;
                 }
                 repositorio.GuardarCambios();
             }
@@ -153,11 +154,12 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = x.Fecha,
                 MaterialId = x.MaterialId,
                 CentroId = x.CentroId,
-                LimiteCupo = x.LimiteCupo
+                LimiteCupo = x.LimiteCupo,
+                CierreCupera = x.CierreCupera
             });
         }
 
-        public List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zona)
+        public List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zona, int material, int centro)
         {
             var hoy = DateTime.Today;
             var cantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaGeneracion) == hoy && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)).Count;
@@ -168,10 +170,10 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = x.ConfiguracionCupo.Fecha,
                 MaterialId = x.ConfiguracionCupo.MaterialId,
                 CentroId = x.ConfiguracionCupo.CentroId,
-                LimiteCupo = x.ConfiguracionCupo.LimiteCupo
-            }, x => x.ConfiguracionCupo.Fecha == hoy && x.ZonaCupoId == zona && (x.ConfiguracionCupo.LimiteCupo - cantidadCuposGenerados) >= 0 && x.ConfiguracionCupo.CierreCupera);
+                LimiteCupo = x.CantidadCupo - cantidadCuposGenerados,
+            }, x => DbFunctions.TruncateTime(x.ConfiguracionCupo.Fecha) == hoy && x.ZonaCupoId == zona && x.ConfiguracionCupo.CentroId == centro && x.ConfiguracionCupo.MaterialId == material && !x.ConfiguracionCupo.CierreCupera);
 
-            if (limitePorZona.Count() == 0)
+            if (limitePorZona.Count() == 0 )
             {
                 var limitePorCantidadCupo = repositorio.Listar<ConfiguracionCupo, ConfiguracionCupoDto>(x => new ConfiguracionCupoDto
                 {
@@ -180,7 +182,7 @@ namespace Molinos.DataAgro.Business.Managers
                     MaterialId = x.MaterialId,
                     CentroId = x.CentroId,
                     LimiteCupo = x.LimiteCupo
-                }, x => x.Fecha == hoy && (x.LimiteCupo - cantidadCuposGenerados) >= 0 && x.CierreCupera);
+                }, x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.MaterialId == material && x.CentroId == centro &&(x.LimiteCupo - cantidadCuposGenerados) >= 0 && !x.CierreCupera);
 
                 return limitePorCantidadCupo;
             }

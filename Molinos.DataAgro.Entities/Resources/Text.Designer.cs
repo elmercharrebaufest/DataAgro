@@ -853,6 +853,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Envio Mail a Negocios Con Dia Anterior en Fijaciones.
+        /// </summary>
+        public static string EnvioMailNegociosConDiaAnteriorFijacion {
+            get {
+                return ResourceManager.GetString("EnvioMailNegociosConDiaAnteriorFijacion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debe agregar cantidad de Cupos.
         /// </summary>
         public static string Error_CantidadCupoRequerido {
@@ -1371,6 +1380,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Moneda {
             get {
                 return ResourceManager.GetString("Moneda", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crear Negocios con Fecha Mayor al Dia Anterior en Fijaciones.
+        /// </summary>
+        public static string NegociosFechaMayorDiaAnteriorFijacion {
+            get {
+                return ResourceManager.GetString("NegociosFechaMayorDiaAnteriorFijacion", resourceCulture);
             }
         }
         

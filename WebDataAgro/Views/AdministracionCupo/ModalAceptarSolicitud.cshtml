@@ -1,0 +1,27 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalAceptarSolicitud" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="campo clearfix">
+                <div class="espaciolineas">¿Está seguro que desea aceptar la solicitud?</div>
+            </div>
+            <div id="solicitudId" hidden></div>
+            <div id="CantidadCupo" hidden></div>
+            <div id="CantidadCupoFlete" hidden></div>
+            <br />
+            <div class="col-xs-6 noPaddingRight">
+                <button type="button" id="rechazar" class="myBtn btnSubmit" onclick="AceptarSolicitud()" data-dismiss="modal">Si</button>
+            </div>
+            <div class="col-xs-6 noPaddingRight">
+                <button type="button" id="AceptarSolicitud" class="myBtn" data-dismiss="modal">No</button>
+            </div>
+        </div>
+        </div>
+        </div>
+</div>

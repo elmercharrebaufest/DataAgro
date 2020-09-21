@@ -326,7 +326,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             fijacionManagerMock.Verify(x => x.GrabarFijacionDePrecio(It.IsAny<FijacionDePrecioContrato>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"FijacionDePrecioContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"FijacionDePrecioContratoId\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1139,6 +1139,34 @@ namespace Molinos.DataAgro.Test.Controllers
             contratoManagerMock.Verify(x => x.DiferenciaEnCalidades(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":true,\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void FechaFeriadosTest()
+        {
+            fijacionManagerMock.Setup(x => x.FechaFeriados()).Returns(new List<DateTime>() { new DateTime(2020, 01, 20)});
+            var result = target.FechaFeriados();
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.FechaFeriados(), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[\"\\/Date(1579489200000)\\/\"],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void UltimoDiaHabilTest()
+        {
+            fijacionManagerMock.Setup(x => x.UltimoDiaHabil()).Returns(new DateTime(2020, 01, 20));
+            var result = target.UltimoDiaHabil();
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.UltimoDiaHabil(), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\\/Date(1579489200000)\\/\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

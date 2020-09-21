@@ -3,7 +3,8 @@ $(document).ready(function () {
     $('#menuproveedor').hide();
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
-    })
+    })  
+   
     CargarGrillaConfig();
     $('#CargaCupos').on('hidden.bs.modal', function () {
         $("#cuerpo-carga-cupos").empty();
@@ -45,6 +46,16 @@ function CargarGrillaConfig() {
     var classExterno = externo ? "hide" : "";
     $("#gridInformeCompraNet").kendoGrid({
         dataSource: ds,
+        parameterMap: function (options, operation) {
+
+            if (operation == "read") {
+                return JSON.stringify(options)
+            }
+            if (options.filter) {
+                KendoGrid_FixFilter(ds, options.filter);
+            }
+            return options;
+        },
         dataBound: function () {
             $("td:has(div.statuspendiente)").attr('id', 'border-orange');
             $("td:has(div.statusconfirmado)").attr('id', 'border-green');
@@ -54,6 +65,9 @@ function CargarGrillaConfig() {
             //{ selectable: true, width: "50px" },
             {
                 field: "Proveedor", type: "string", width: 150,
+                editable: function (dataItem) {
+                    return false;
+                },
                 headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
                 template: function (dataItem) {
                     if (dataItem.EstadoId == 3) {
@@ -67,13 +81,17 @@ function CargarGrillaConfig() {
                 filterable: { ui: createMultiSelectProveedor }
             },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                field: "Comercial", type: "string", title: "Comercial", width: 70, editable: function (dataItem) {
+                    return false;
+                }, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "Material", type: "string", filterable: {
+                field: "Material", type: "string", editable: function (dataItem) {
+                    return false;
+                }, filterable: {
                     multi: true, dataSource: [{
                         Material: "Maiz"
                     }, {
@@ -92,7 +110,9 @@ function CargarGrillaConfig() {
                 }, template: "#=Material#"
             },
             {
-                field: "Zona", title: "Zona", type: "string", width: 150,
+                field: "Zona", title: "Zona", type: "string", editable: function (dataItem) {
+                    return false;
+                }, width: 150,
                 filterable: {
                     multi: true,
 
@@ -113,12 +133,50 @@ function CargarGrillaConfig() {
                     }
                 },
             },
-            { field: "Centro", type: "string", title: "Destino", attributes: { "class": "mobile-xs mobile-md" } },
-            { field: "Fecha", title: "Fecha Sugerencia", type: "date", format: _DefaultDateTemplate },
-            { field: "CantidadCupo", title: "Cantidad Cupos" },
-            { field: "CantidadFleteProcedencia", title: "Cantidad Flete Procedencia" },
             {
-                field: "EstadoId", title: "Estado",
+                field: "Centro", type: "string", title: "Destino", editable: function (dataItem) {
+                    return false;
+                }, attributes: { "class": "mobile-xs mobile-md" } },
+            {
+                field: "Fecha", title: "Fecha Sugerencia", type: "date", editable: function (dataItem) {
+                    return false;
+                }, format: _DefaultDateTemplate },
+            {
+                field: "CantidadCupo", title: "Cantidad de Cupos", width: "110px",               
+                editor: function (container, options) {
+                    // create an input element
+                    var input = $("<input name='" + options.field + "'/>");
+                    // append it to the container
+                    input.appendTo(container);
+
+                    $("#CantidadCupo").val(options.model.CantidadCupo);
+                    // initialize a Kendo UI numeric text box and set max value
+                    input.kendoNumericTextBox({
+                        max: options.model.CantidadCupo,
+                        min: 0
+                    });
+                }
+            },
+            {
+                field: "CantidadFleteProcedencia", title: "Cantidad Flete Procedencia",
+                editor: function (container, options) {
+                // create an input element
+                var input = $("<input name='" + options.field + "'/>");
+                // append it to the container
+                input.appendTo(container);
+
+                    $("#CantidadCupoFlete").val(options.model.CantidadFleteProcedencia);
+                // initialize a Kendo UI numeric text box and set max value
+                input.kendoNumericTextBox({
+                    max: options.model.CantidadFleteProcedencia,
+                    min: 0
+                });
+            }
+            },
+            {
+                field: "EstadoId", title: "Estado", editable: function (dataItem) {
+                    return false;
+                },
                 filterable: {
                     multi: true,
 
@@ -145,6 +203,7 @@ function CargarGrillaConfig() {
                 }
             }      
         ],
+        editable: true,
         pageable: {
             messages: {
                 display: "{2} elementos",
@@ -199,6 +258,9 @@ function CargarGrillaConfig() {
             }
         }
     });
+    var fecha = new Date();
+    var grilla = $('#gridInformeCompraNet').data("kendoGrid");
+    addOrRemoveFilter(grilla, "Fecha", "gte", fecha);
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);
@@ -271,15 +333,35 @@ function CargarGrillaConfig() {
 }
 
 function botonAprobar(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Confirmar" onclick="AceptarSugerencia(' + dataItem.id + ')"><i class="fa ' + icono + '"></i></button>';
+    return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalAceptarSugerencia(' + dataItem.id + ')"><i class="fa ' + icono + '"></i></button>';
     
 }
 function botonBorrar(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Rechazar" onclick="RechazarSugerencia(' + dataItem.id +') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';   
+    return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalRechazarSugerencia(' + dataItem.id +') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';   
 }
 
-function AceptarSugerencia(id) {
-    result = MSExecuteOnServer('/AdministracionCupo/Aceptar', { administracionId: id });
+function ModalAceptarSugerencia(id) {
+    $("#modalAceptarSolicitud").modal("show");    
+    var grid = $("#gridInformeCompraNet").data("kendoGrid").dataSource.data();
+    var solicitudSeleccionada = grid.filter(function (x) { return (x.Id == id) });
+    $("#CantidadCupo").val(solicitudSeleccionada[0].CantidadCupo);
+    $("#CantidadCupoFlete").val(solicitudSeleccionada[0].CantidadFleteProcedencia);
+    $("#solicitudId").val(id);
+}
+function ModalRechazarSugerencia(id) {
+    $("#modalRechazarSolicitud").modal("show");
+    $("#solicitudId").val(id);
+
+}
+function AceptarSolicitud() {
+    var id = $("#solicitudId").val();
+
+    var cantidad = $("#CantidadCupo").val();
+    var cantidadFp = $("#CantidadCupoFlete").val();
+    if (cantidad == 0 && cantidadFp == 0) {
+        MensErr("La solicitud no se puede aceptar");
+    }
+    result = MSExecuteOnServer('/AdministracionCupo/Aceptar', { administracionId: id, cantidadCupo: cantidad, cantidadFleteProcedencia : cantidadFp });
 
     $.unblockUI();
     var errores = new Array();
@@ -299,7 +381,9 @@ function AceptarSugerencia(id) {
     }
 }
 
-function RechazarSugerencia(id) {
+
+function RechazarSolicitud() {
+    var id = $("#solicitudId").val();
     result = MSExecuteOnServer('/AdministracionCupo/Rechazar', { administracionId: id });
     var errores = new Array();
     for (var i = 0; i < result.length; i++) {

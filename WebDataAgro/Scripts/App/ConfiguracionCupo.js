@@ -240,7 +240,7 @@ function Editar(id) {
     var fecha = kendo.toString(kendo.parseDate(cupo.Fecha), "dd-MM-yyyy"); 
     $("#Fecha").val(fecha);
     $("#CantidadCupo").data("kendoNumericTextBox").value(cupo.LimiteCupo);
-    $("#CierreCupo").prop("checked", cupo.CierreCupo);
+    $("#CierreCupera").attr("checked", cupo.CierreCupera);
 }
 
 function LimpiarConfiguracion() {
@@ -250,4 +250,5 @@ function LimpiarConfiguracion() {
     var fecha = kendo.toString(kendo.parseDate(new Date()), "dd-MM-yyyy");
     $("#Fecha").val(fecha);
     $("#CantidadCupo").val("");
+
 }

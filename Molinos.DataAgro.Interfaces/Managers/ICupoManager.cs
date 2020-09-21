@@ -28,7 +28,6 @@ namespace Molinos.DataAgro.Interfaces
         IList<SugerenciaCupoDto> ObtenerSugerenciaCupoAgrupadasPorProveedor(int comercialId, int materialId, string centroId);
         SugerenciaCupoDto ObtenerSugerencia(int sugerenciaId);
         List<CupoResult> AceptarSugerenciaCupo(List<SugerenciaCupoDto> ids);
-        CupoResult AceptarCupoExcedente(int administracionId);
         CupoResult RechazarSugerenciaCupo(List<int> ids,string motivo);
         List<EstadoCupoDto> TraerTodoLosEstados();
         CupoResult ConfirmarSugerencia(List<ConfirmacionSugerenciaCupoDto> datosTabla, int materialId, string centroId);
@@ -43,6 +42,8 @@ namespace Molinos.DataAgro.Interfaces
 
         List<BasicoContrato> TraerNegocioConCupoDisponible(string proveedorCuit, int material, int centro, string filtro, DateTime desde, DateTime hasta);
         Resultado AltaCupoSAP(Cupo cupoSAP);
+        string Td(ref int linea, int largo = 1);
+        string Split(string str);
     }
 
 }

@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Criterios\ServicioCriterios.cs" />
+    <Compile Include="Managers\HttpContextManager.cs" />
     <Compile Include="Managers\AgendaManager.cs" />
     <Compile Include="Managers\AreaInfluenciaManager.cs" />
     <Compile Include="Managers\CampaniaActualManager.cs" />
@@ -160,7 +161,6 @@
     <Compile Include="Managers\HabilitacionCupoManager.cs" />
     <Compile Include="Managers\ConfiguracionEspacioDinamicoManager.cs" />
     <Compile Include="Managers\ConfiguracionInternaManager.cs" />
-    <Compile Include="Managers\HttpContextManager.cs" />
     <Compile Include="Managers\LogDataAgroManager.cs" />
     <Compile Include="Managers\FechaFeriadoManager.cs" />
     <Compile Include="Managers\NegocioManager.cs" />

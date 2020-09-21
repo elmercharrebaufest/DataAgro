@@ -2705,6 +2705,8 @@
     <Content Include="Views\LogDataAgro\_MostrarDiferenciasTabla.cshtml" />
     <Content Include="Views\Proveedor\TablaCompra.cshtml" />
     <Content Include="Views\FechaFeriado\Index.cshtml" />
+    <Content Include="Views\AdministracionCupo\ModalRechazarSolicitud.cshtml" />
+    <Content Include="Views\AdministracionCupo\ModalAceptarSolicitud.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
