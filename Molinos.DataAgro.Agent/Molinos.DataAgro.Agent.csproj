@@ -85,6 +85,7 @@
     <Compile Include="Helpers\CriterioCDWarrantAgent.cs" />
     <Compile Include="Helpers\ListaCBUProveedorAgent.cs" />
     <Compile Include="Helpers\ModificarFijacionAgent.cs" />
+    <Compile Include="Helpers\ServicioRepositorioScatoAgent.cs" />
     <Compile Include="Helpers\ValidarDocProcPagoAgent.cs" />
     <Compile Include="Helpers\StatusContratoAgent.cs" />
     <Compile Include="Helpers\ClienteStopAgent.cs" />
@@ -213,6 +214,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ScatoRepositorio\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\StatusContrato\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -237,6 +243,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\System.Diagnostics.EventLogEntry.datasource" />
     <None Include="Service References\ComprasDetalle\Molinos.DataAgro.Agent.ComprasDetalle.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -386,6 +393,1046 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\RiesgoComercial\SI_ZMPWS_DATAAGRO_RIESGO_COMERCIAL.wsdl" />
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ActividadConCargaAutomaticaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ActividadPorDispositivoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AdjuntoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AjusteDeCalidadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AjusteDeStockDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AjusteStockBinesDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AlmacenDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AnalisisDeCalidadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AnalisisObligatorioDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AnalisisPorCaracteristicaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AnalisisVagonDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AppPoolDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ArchivoDeMovimientosDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ArchivoINVFilaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AsignacionDeEstablecimientoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AsignacionDeRecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AsignacionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AutorizacionCamionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AutorizacionChoferDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.AutorizacionTiempoEnTransitoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.BajaCTGRetransmisionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.BalanzadaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.BalanzaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.BalanzaPuertoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.BalanzasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.BocaDestinoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.BodegaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CaladoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CalidadMaterialDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CalleDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CamaraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CampoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CaracteristicaConfiguracionDeTablaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CaracteristicaDeCalidadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CaracteristicaDeCalidadPorWorkflowDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CaracteristicasAnalizadasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CargaDeCupoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CargaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CartaDePorteRegistradaServicioMonsantoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CartaPorteDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CartaPorteResponseDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CartaPorteValidaResponseDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CasilleroDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CategoriaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CentroDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CentroInfoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ChoferDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ClienteDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ColaImpresionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ControlDeBalanzaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ControlDeBalanzaPesadaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ControlDeTiempoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ControlRecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ControlRecorridoLogActividadConsultaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ConversionCaracteristicaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ConversionCentroDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ConversionGrupoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ConversionMaterialDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CosechaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CuartelDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.CupoMobileDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DatosDeInstanciaAltaCTGDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DatosDeInstanciaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DatosDeWorkflowsDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DatosInstanciaWorkflowDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DatosRecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DescargaDeBinesDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DescargaUnidadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DescuentoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DestinatarioCTGDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DestinoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DistribucionDeAlmacenesDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DocumentoDeImpresionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DocumentoDeImpresionPorCentroDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.DocumentoExternoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.EmpresaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.EntregadorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.EnvioUrenportDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.EstablecimientoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.EstadisticasCaladoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.EstadoMaterialDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ExcepcionAlControlDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ExcepcionAlDescuentoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ExcepcionEnvioCamaraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ExportacionDeArchivosSelectObjDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ExportadorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.FirmaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.FormatoDeCampoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.FormatoDeImpresionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.FormatoDePapelDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.Formulario239RecorridoMaterialCentroDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.FotosDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.GraficoCamionesDiaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.GraficoCamionesHoraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.GraficoDePlantaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.GraficoEficienciaHidraulicasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.GraficoToneladasRangoDeDiasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HistoricoInhabilitacionCamionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HistoricoInhabilitacionChoferDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HojaDeRutaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HojaDeRutaYerbateraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HojaDeRutaYerbateraValidaResponseDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.HumedimetroDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ImpresionCartaPorteUrenportRecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ImpresionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ImpresionReciboMunicipalRecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ImpresoraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.InfoCaladoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.IngresoDeDatosDeExportacionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.InhabilitacionCamionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.InhabilitacionChoferDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.InstanciaWorkflowDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.KmPorProveedorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LectorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LetraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListadoCamionesDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListadoDeCalidadesDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListadoDePesadasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfActividadConCargaAutomaticaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfActividadPorDispositivoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfAjusteDeStockDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfAjusteStockBinesDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfAlmacenDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfAnalisisObligatorioDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfAnalisisPorCaracteristicaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfArchivoDeMovimientosDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfAsignacionDeRecorridoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfBalanzadaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfBalanzaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfBalanzaPuertoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfBocaDestinoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfBodegaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCaladoPorCaracteristicaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCalidadMaterialDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCalleDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCamaraDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCaracteristicaDeCalidadDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCaracteristicaDeCalidadPorWorkflowDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCargaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCasilleroDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCategoriaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCentroDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfChoferDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCiuAnuladoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfClienteDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConsultaCasilleroAntiguedadDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConsultaCasilleroDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConsultaCasilleroMuestraDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfControlDeTiempoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConversionCaracteristicaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConversionCentroDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConversionGrupoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConversionMaterialDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfConversionProcedenciaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfCosechaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfDestinoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfDocumentoDeImpresionDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfDocumentoDeImpresionPorCentroDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfDocumentoExternoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfEmpresaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfEntregadorDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfEnvioUrenportDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfEstablecimientoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfExcepcionAlControlDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfExcepcionAlDescuentoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfExcepcionEnvioCamaraDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfExportadorDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfFormatoDeImpresionDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfHumedimetroDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfImpresionDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfImpresoraDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfInhabilitacionCamionDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfInhabilitacionChoferDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfInstanciaWorkflowDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfKmPorProveedorDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfLiberacionDeCasillerosDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfLoteAuditoriaListaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfLoteBiotecnologiaListaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfLoteListaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMaterialDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMaterialPorWorkflowDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMaterialPuertoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMotivoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMotivoQuiebreBarreraDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMovimientoDeBinesDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMovimientoDeTercerosListaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMuestraEnvioACamaraAuditoriaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMuestraEnvioACamaraBiotecnoligiaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfMuestraEnvioACamaraDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfNirsDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfPermisoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfPesoMaximoPorTipoVehiculoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfProveedorDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfProveedorExcluidoIntactaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfPuestoDeTrabajoContingenciaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfPuestoDeTrabajoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfPuestosDeCargaDescargaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfRangosDeRedondeoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfReciboMunicipalDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfRecorridoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfReglaDeAnalisisObligatorioDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfReportePesadaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfReportePesadaSeisHorasDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfRolDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfStockDeEstablecimientoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfSuplenciaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTalonarioDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTaraContenedorDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTaraRomaneoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTarjetaBloqueadaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTarjetaRangoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTarjetaSupervisorDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTecnologiaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTipoComercialDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTipoComercialPorWfDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTipoDocumentoIdentidadDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTransaccionSAPDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTransmisionASapDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTransmisionBajaCtgDefinitivaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfTransportistaDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfUsuarioDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfVaporDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfVariedadPorVinedoDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfVinedoPropioDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ListaPaginadaOfVinedoTercerosDtoT7DPfI5_P.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LocalidadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LogActividadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LoteAuditoriaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LoteBiotecnologiaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.LoteDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MailAvisoStockDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MaterialDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MaterialIdYDescripcionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MaterialPorCentroDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MaterialPorWorkflowDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MaterialPuertoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MicroMuestrasPorCasilleroDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MotivoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MotivoHumedadManualDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MotivoQuiebreBarreraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MotivoReasignacionDeTarjetaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MovimientoDeBinesDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MovimientoDeTercerosListaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MuestraDeHumedadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MuestraEnvioACamaraBiotecnoligiaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MuestraEnvioACamaraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.MuestraEnvioACamaraYRecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.NirsDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.NotificacionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.NotificacionesDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ObservacionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OnccaEmitidasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OrdenCargaFasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OrdenCargaInternaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OrdenCargaInternaFasonDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OrdenDeCargaContenedorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OrdenDeDescargaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OrdenDeDescargaFasonDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OrdenEntrePlantasDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.OtroRecorridoDelChoferDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PagoConMercadoPagoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PaisDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PanelServerAppPoolDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PermisoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PesoMaximoPorTipoVehiculoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PesoVagonesDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PrecintoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ProveedorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ProveedorInfoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ProvinciaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PuestoDeTrabajoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.PuestosDeCargaDescargaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RangosDeRedondeoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ReasignacionDeTarjetaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ReciboMunicipalDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RecorridoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RegistroBalanzaPuertoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ReglaDeAnalisisObligatorioDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RemitoBodegaUvaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RemitoBodegaVinoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RemitoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ReportePesadaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.Resultado.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RolDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RomaneoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.RomaneoItemDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ServicioDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.StockDeEstablecimientoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.SubZonaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.SuplenciaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TalonarioDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TaraContenedorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TaraRomaneoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TarjetaBloqueadaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TarjetaRangoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TarjetaSupervisorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TecnologiaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TicketAccesoAfipDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoBinDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoComercialDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoComprobanteOnccaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoDeWorkflow.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoDocumentoIdentidadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoDocumentoIngreso.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TipoVehiculoBodegaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TransmisionASapDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TransmisionesCupoEnErrorDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TransmisionSapAModificarDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TransportistaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.TransportistaInfoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.UltimoEstadoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.UsuarioDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.UsuarioMatriculaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ValidarCupoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ValidarProximaAccionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ValidarProximaAccionPorPuestoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ValoresSapDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VaporDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VariedadDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VariedadPorVinedoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VehiculoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VerificarKilosDeclaradosPorFincaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VideoCamaraDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VinedoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VinedoPropioDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.VinedoTercerosDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.WorkflowDefinicionDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.WorkflowDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.WorkflowInfoDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\Molinos.DataAgro.Agent.ScatoRepositorio.ZonaDto.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio.wsdl" />
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio1.wsdl" />
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio10.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio11.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio12.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio13.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio14.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio15.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio5.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio8.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ScatoRepositorio\ServicioRepositorio9.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\StatusContrato\Molinos.DataAgro.Agent.StatusContrato.SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -430,6 +1477,7 @@
     <WCFMetadataStorage Include="Service References\ModificarCupos\" />
     <WCFMetadataStorage Include="Service References\RelacionCorredorProveedor\" />
     <WCFMetadataStorage Include="Service References\RiesgoComercial\" />
+    <WCFMetadataStorage Include="Service References\ScatoRepositorio\" />
     <WCFMetadataStorage Include="Service References\StatusContrato\" />
     <WCFMetadataStorage Include="Service References\TipoDeCambio\" />
     <WCFMetadataStorage Include="Service References\ValidarDocProcPago\" />
@@ -732,6 +1780,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ModificarFijacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ScatoRepositorio\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ScatoRepositorio\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ScatoRepositorio\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

@@ -42,12 +42,13 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IComercialManager comercialManager;
         private readonly IConfiguracionCupoManager configuracionCupoManager;
+        private readonly IServicioRepositorioScatoAgent servicioScato;
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
             IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios,
             IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
-            IComercialManager comercialManager, IConfiguracionCupoManager configuracionCupoManager)
+            IComercialManager comercialManager, IConfiguracionCupoManager configuracionCupoManager, IServicioRepositorioScatoAgent servicioScato)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -63,7 +64,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.logDataAgroManager = logDataAgroManager;
             this.comercialManager = comercialManager;
             this.configuracionCupoManager = configuracionCupoManager;
-
+            this.servicioScato = servicioScato;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
@@ -1907,6 +1908,13 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(e.Message);
             }
             return resultado;
+        }
+
+        public List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor)
+        {
+            var cosecha = repositorio.Obtener<Material, string>(x => x.MaterialId == 3, x => x.Campaña.Descripcion);
+            var establecimiento = servicioScato.ListarEstablecimientos(proveedor, cosecha);
+            return establecimiento;
         }
     }
 }

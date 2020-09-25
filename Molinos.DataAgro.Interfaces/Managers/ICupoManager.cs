@@ -44,6 +44,8 @@ namespace Molinos.DataAgro.Interfaces
         Resultado AltaCupoSAP(Cupo cupoSAP);
         string Td(ref int linea, int largo = 1);
         string Split(string str);
+
+        List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor);
     }
 
 }

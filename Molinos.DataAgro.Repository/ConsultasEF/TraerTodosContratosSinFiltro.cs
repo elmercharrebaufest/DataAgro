@@ -145,7 +145,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         EsFason = contrato is Contrato ? (contrato as Contrato).EsFason : false,
                         PorcentajeDePago = contrato is Contrato ? (contrato as Contrato).PorcentajeDePago : null,
                         FechaOperacion = DbFunctions.TruncateTime((contrato as Negocio).FechaOperacion),
-                        MotivoOperacionAnterior = (contrato is Contrato) ? (contrato as Contrato).MotivoOperacionAnterior : "",
+                        MotivoOperacionAnterior = contrato.MotivoOperacionAnterior,
                         UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido: "Automática",
                         FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion :(DateTime?)null,                     
                         ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
@@ -276,7 +276,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FechaConfirmacion = fijac.FechaConfirmacion != null ? fijac.FechaConfirmacion : (DateTime?)null,
                         FechaOperacion = DbFunctions.TruncateTime((fijac as Negocio).FechaOperacion),
                         ChequeElectronicoValor = fijac.ChequeElectronico.HasValue ? (fijac.ChequeElectronico.Value ? "Si" : "No") : "",
-                        PagoCBU = fijac.PagoCBU
+                        PagoCBU = fijac.PagoCBU, 
+                        MotivoOperacionAnterior = fijac.MotivoOperacionAnterior
                     };
                 return queryFijacion;
             }

@@ -11,13 +11,15 @@ $(document).ready(function () {
     InicializarCargaCupos();
     $.unblockUI();
     checkFason();
-    checkSoja();
+    checkSoja();  
+  
 });
 $(document).submit(function () {
     BlockUi("Grabando...");
 });
 
 function InicializarCargaCupos() {
+    copiarTablaEstablecimiento();
     $("#buscadorProveedor").click(function () {
         $("#buscadorProveedor").data("kendoAutoComplete").value("");
         $("#Proveedor").val("");
@@ -37,6 +39,7 @@ function InicializarCargaCupos() {
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
             }
+            MostrarVisualizarStock();
         },
         select: function (e) {
             $("#Proveedor").val(e.dataItem.Id);
@@ -100,8 +103,12 @@ function InicializarCargaCupos() {
     });
     $("#material").change(function () {
         checkSoja();
+        MostrarVisualizarStock();
     });
-
+    $("#planta").change(function () {
+        checkSoja();
+        MostrarVisualizarStock();
+    });
     if ($("#Id").val() != null && $("#Id").val() != "0") {
 
         $("#material").attr('disabled', 'disabled');
@@ -250,9 +257,7 @@ function cuposCreados(error, lista) {
 
 function avisoCuposCreados() {
     $(document).ready(function () {
-
-                window.location.href = window.location.origin + "/Cupo/";
-         
+       window.location.href = window.location.origin + "/Cupo/";         
     });
 }
 
@@ -329,4 +334,61 @@ function ActualizarCantidad(cantidadDias) {
             $('[name="Dias[' + i + '].Cantidad"]').data('kendoNumericTextBox').value(cantidadDias[i].Cantidad);
         }
     });
+}
+
+function copiarTablaEstablecimiento() {
+    var copiarEstablecimientos = document.getElementById("cargarDatosEstablecimiento").innerText;
+
+    var copy = function (e) {
+        e.preventDefault();
+        console.log('copy');
+
+        if (e.clipboardData) {
+            e.clipboardData.setData('text/plain', copiarEstablecimientos);
+        } else if (window.clipboardData) {
+            window.clipboardData.setData('Text', copiarEstablecimientos);
+        }
+    };
+    window.addEventListener('copy', copy);
+    document.execCommand('copy');
+    window.removeEventListener('copy', copy);
+}
+
+function VisualizarStock() {   
+
+    var cuitProv = $("#buscadorProveedor").val().split('(');
+    if (cuitProv[1] != null) {
+        var cuitP = cuitProv[1].split(')');
+    }
+    else {
+        cuitP = cuitProv;
+    }  
+    var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0] });
+
+    var table = "<tr>";   
+    table += '<th colspan = "2">Cosecha ' + result[0].Cosecha + '</th>';
+    table += "</tr>";
+    table += "<tr>"; 
+    table += "<th> Establecimiento</th>"
+    table += "<th> Cantidad (Kg)</th>"
+    table += "</tr>";
+    for (var i = 0; i < result.length; i++) {
+        table += "<tr>";   
+   
+        table += '<td>'+ result[i].Establecimiento +'</td>';   
+        table += '<td>' + kendo.toString(result[i].Cantidad, "n0") + '</td>';   
+        table += "</tr>";
+    }        
+
+    $("#cargarDatosEstablecimiento").html(table);
+    $("#modalEstablecimientos").modal("show");
+   
+}
+
+function MostrarVisualizarStock() {
+    if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "14" && $("#material").val() == "3") {
+        $("#stock").show();
+    } else {
+        $("#stock").hide();
+    }    
 }

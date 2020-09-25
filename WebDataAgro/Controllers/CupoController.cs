@@ -459,5 +459,14 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        public ActionResult TraerEstablecimientos(string cuitProveedor)
+        {
+            return new JsonResult()
+            {
+                Data = cupoManager.TraerEstablecimientos(cuitProveedor),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

@@ -586,8 +586,7 @@ function InicializarElementos() {
             $("#dolarizadoExpressDiv").hide();
             $("#baseDiv").hide();
             $("#pizarraDiv").hide();
-            $("#fechaFijacionDiv").hide();
-
+            $("#fechaFijacionDiv").hide();              
             ImporteSobrePrecio = 0;
             MonedaSobrePrecio = "";
             PorcentajeSobrePrecio = 0;
@@ -636,7 +635,7 @@ function InicializarElementos() {
                 $("#ocultarAperturaMoneda").removeClass("w100");
                 $("#ocultarAperturaMoneda").addClass("w70");
                 $('#pagoDirectoDiv').hide();
-                $("#fechaFijacionDiv").show();
+                $("#fechaFijacionDiv").show();              
                 $("#fechaCiertaAcuerdoDiv").hide();                
 
 
@@ -1647,6 +1646,30 @@ function InicializarElementos() {
                 return true;
             } else {
                 return false;
+            }
+        },
+        change: function() {
+            var hoy = new Date();
+            var anio = hoy.getFullYear();
+            var mes = hoy.getMonth();
+            var dia = hoy.getDate();
+            hoy = new Date(anio, mes, dia);
+            const diffTime = Math.abs(hoy - this.value());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (this.value() < hoy) {
+                $("#fechaFijacionMotivoDiv").show();   
+                if (diffDays > 1) {
+                    //$("#noInformaSioId").prop("checked", true);
+                    //$("#noInformaSioId").attr("disabled", true);
+                } else {
+                    //$("#noInformaSioId").prop("checked", false);
+                    //$("#noInformaSioId").attr("disabled", false);
+                }
+
+            } else {
+                $("#fechaFijacionMotivoDiv").hide();   
+                $("#motivoOperacionAnteriorFijacion").val("");
+                //$("#noInformaSioId").attr("disabled", false);
             }
         },
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
@@ -2984,6 +3007,7 @@ function ObtenerDatos() {
     }
     if (obj.TipoNegocioId == 3) {
         obj.FechaOperacion = $("#fechaFijacionId").val();
+        obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
     }
 
     if (!error) {
@@ -3355,25 +3379,32 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
-        $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
-        $("#fechaOperacionMotivoDiv").show();
-        var hoy = new Date();
-        var anio = hoy.getFullYear();
-        var mes = hoy.getMonth();
-        var dia = hoy.getDate();
-        hoy = new Date(anio, mes, dia);
-        var fechaop = new Date(parseInt(contrato.FechaOperacion.substr(6)));
-        const diffTime = Math.abs(hoy - fechaop);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (fechaop < hoy) {
-            if (Id > 0 && diffDays > 1) {
-                //$("#noInformaSioId").attr("disabled", true);
+        if (contrato.TipoNegocioId != 3) {
+            $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
+            $("#fechaOperacionMotivoDiv").show();
+            var hoy = new Date();
+            var anio = hoy.getFullYear();
+            var mes = hoy.getMonth();
+            var dia = hoy.getDate();
+            hoy = new Date(anio, mes, dia);
+            var fechaop = new Date(parseInt(contrato.FechaOperacion.substr(6)));
+            const diffTime = Math.abs(hoy - fechaop);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (fechaop < hoy) {
+                if (Id > 0 && diffDays > 1) {
+                    //$("#noInformaSioId").attr("disabled", true);
+                }
             }
-        }
-
+        } else {
+            $("#motivoOperacionAnteriorFijacion").val(contrato.MotivoOperacionAnterior);
+            $("#fechaFijacionMotivoDiv").show();
+        }      
+        
     } else {
         $("#motivoOperacionAnteriorId").val("");
         $("#fechaOperacionMotivoDiv").hide();
+        $("#motivoOperacionAnteriorFijacion").val("");
+        $("#fechaFijacionMotivoDiv").hide();
     }
 
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="7bc08562-2990-49e5-9d28-8b3ec1546f3d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ServicioRepositorio.wsdl" MetadataType="Wsdl" ID="ffcf2a7c-997a-4b83-9027-1be23a106865" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?wsdl" />
+    <MetadataFile FileName="ServicioRepositorio.xsd" MetadataType="Schema" ID="97ff55f8-377a-475e-a66f-14a7f71b4d39" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd6" />
+    <MetadataFile FileName="ServicioRepositorio1.xsd" MetadataType="Schema" ID="9b4405c4-b7ac-4fc2-803f-d224bbc1ffed" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd5" />
+    <MetadataFile FileName="ServicioRepositorio2.xsd" MetadataType="Schema" ID="765bc6aa-d352-407e-aee0-8c06a21fceb4" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd4" />
+    <MetadataFile FileName="ServicioRepositorio3.xsd" MetadataType="Schema" ID="e5682747-1326-47dc-841d-5227e2eaa0d1" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd3" />
+    <MetadataFile FileName="ServicioRepositorio4.xsd" MetadataType="Schema" ID="61964f26-8abd-47d0-bed1-4738e55eeb00" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd2" />
+    <MetadataFile FileName="ServicioRepositorio5.xsd" MetadataType="Schema" ID="b480a616-c5b3-4e0c-b631-a2fe50d6302f" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd1" />
+    <MetadataFile FileName="ServicioRepositorio6.xsd" MetadataType="Schema" ID="c4588123-04c9-4714-9c71-814cc8b9e8f0" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd0" />
+    <MetadataFile FileName="ServicioRepositorio7.xsd" MetadataType="Schema" ID="7ccdde85-2a8d-4545-aeec-d560756bc741" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd10" />
+    <MetadataFile FileName="ServicioRepositorio8.xsd" MetadataType="Schema" ID="e5e7ea75-45f4-4a04-ac66-386e78a8e9a7" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd14" />
+    <MetadataFile FileName="ServicioRepositorio9.xsd" MetadataType="Schema" ID="fa4e1716-6aeb-479b-b3a6-15b91f14a2de" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd7" />
+    <MetadataFile FileName="ServicioRepositorio10.xsd" MetadataType="Schema" ID="03cf8b23-22d7-408b-8f37-9b0e3d7ea78c" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd9" />
+    <MetadataFile FileName="ServicioRepositorio11.xsd" MetadataType="Schema" ID="274a7f26-c2cf-449d-a1d4-ff788063cbdb" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd8" />
+    <MetadataFile FileName="ServicioRepositorio12.xsd" MetadataType="Schema" ID="152715ec-dc6c-4b14-9d64-91ca398c6cdc" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd13" />
+    <MetadataFile FileName="ServicioRepositorio13.xsd" MetadataType="Schema" ID="6c961a82-33d3-4b41-8e88-7db34310fbdb" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd11" />
+    <MetadataFile FileName="ServicioRepositorio14.xsd" MetadataType="Schema" ID="bbaa5f83-d8df-43be-a5fe-5f93062eaf4d" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd15" />
+    <MetadataFile FileName="ServicioRepositorio15.xsd" MetadataType="Schema" ID="1fe709ec-5151-4339-a141-b80bbdca6afc" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd12" />
+    <MetadataFile FileName="ServicioRepositorio1.wsdl" MetadataType="Wsdl" ID="760f72b4-aa2b-4b75-86d1-fb491a0eb11b" SourceId="1" SourceUrl="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?wsdl=wsdl0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

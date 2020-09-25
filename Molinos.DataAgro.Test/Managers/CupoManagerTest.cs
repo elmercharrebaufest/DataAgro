@@ -46,6 +46,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IConfiguracionCupoManager> configuracionCupoManager;
+        private Mock<IServicioRepositorioScatoAgent> servicioScato;
 
         [SetUp]
         public void SetUp()
@@ -63,12 +64,13 @@ namespace Molinos.DataAgro.Test.Managers
             criterioCDWarrantAgentMock = new Mock<ICriterioCDWarrantAgent>();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             comercialManagerMock = new Mock<IComercialManager>();
-            configuracionCupoManager = new Mock<IConfiguracionCupoManager>(); 
+            configuracionCupoManager = new Mock<IConfiguracionCupoManager>();
+            servicioScato = new Mock<IServicioRepositorioScatoAgent>();
 
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
                 mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object, 
-                logDataAgroManagerMock.Object, comercialManagerMock.Object, configuracionCupoManager.Object);
+                logDataAgroManagerMock.Object, comercialManagerMock.Object, configuracionCupoManager.Object, servicioScato.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 

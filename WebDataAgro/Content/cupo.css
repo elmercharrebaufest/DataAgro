@@ -371,3 +371,27 @@ span.k-widget.k-numerictextbox.cantidad-masiva {
     color: #387941;
 }
 
+#cargarDatosEstablecimiento th {
+    text-align: center;
+    border: 1px solid #dddddd;
+}
+
+#cargarDatosEstablecimiento td {
+    text-align: center;
+    border-top: none;
+    border: 1px solid #dddddd;
+}
+
+#cargarDatosEstablecimiento th:first-of-type {
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+}
+
+#cargarDatosEstablecimiento {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+
+

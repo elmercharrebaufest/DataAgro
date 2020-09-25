@@ -1,0 +1,1732 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+  <xs:complexType name="ListaPaginadaOfBalanzadaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="BalanzadaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q1:ArrayOfBalanzadaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfBalanzadaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfBalanzadaDtoT7DPfI5_P" />
+  <xs:complexType name="Paginacion">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DireccionOrden" type="tns:DirOrden" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="OrdenarPor" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Paginacion" nillable="true" type="tns:Paginacion" />
+  <xs:simpleType name="DirOrden">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Asc" />
+      <xs:enumeration value="Desc" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="DirOrden" nillable="true" type="tns:DirOrden" />
+  <xs:complexType name="ListaPaginadaOfCargaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CargaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q2:ArrayOfCargaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCargaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCargaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfVaporDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="VaporDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q3:ArrayOfVaporDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfVaporDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfVaporDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfBodegaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="BodegaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q4:ArrayOfBodegaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfBodegaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfBodegaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMaterialPuertoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MaterialPuertoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q5:ArrayOfMaterialPuertoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMaterialPuertoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMaterialPuertoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfDestinoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="DestinoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q6:ArrayOfDestinoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfDestinoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfDestinoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfExportadorDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ExportadorDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q7="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q7:ArrayOfExportadorDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfExportadorDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfExportadorDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfReportePesadaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ReportePesadaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q8="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q8:ArrayOfReportePesadaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfReportePesadaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfReportePesadaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfReportePesadaSeisHorasDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ReportePesadaSeisHorasDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q9="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q9:ArrayOfReportePesadaSeisHorasDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfReportePesadaSeisHorasDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfReportePesadaSeisHorasDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCentroDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CentroDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q10="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q10:ArrayOfCentroDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCentroDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCentroDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfBalanzaPuertoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="BalanzaPuertoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q11="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q11:ArrayOfBalanzaPuertoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfBalanzaPuertoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfBalanzaPuertoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfNirsDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="NirsDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q12="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q12:ArrayOfNirsDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfNirsDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfNirsDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfReciboMunicipalDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ReciboMunicipalDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q13="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q13:ArrayOfReciboMunicipalDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfReciboMunicipalDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfReciboMunicipalDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfReglaDeAnalisisObligatorioDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ReglaDeAnalisisObligatorioDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q14="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q14:ArrayOfReglaDeAnalisisObligatorioDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfReglaDeAnalisisObligatorioDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfReglaDeAnalisisObligatorioDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfRecorridoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="RecorridoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q15="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q15:ArrayOfRecorridoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfRecorridoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfRecorridoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfClienteDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ClienteDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q16="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q16:ArrayOfClienteDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfClienteDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfClienteDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfLoteAuditoriaListaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="LoteAuditoriaListaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q17="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q17:ArrayOfLoteAuditoriaListaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfLoteAuditoriaListaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfLoteAuditoriaListaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfEstablecimientoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="EstablecimientoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q18="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q18:ArrayOfEstablecimientoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfEstablecimientoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfEstablecimientoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfEmpresaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="EmpresaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q19="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q19:ArrayOfEmpresaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfEmpresaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfEmpresaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTecnologiaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TecnologiaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q20="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q20:ArrayOfTecnologiaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTecnologiaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTecnologiaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfProveedorExcluidoIntactaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ProveedorExcluidoIntactaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q21="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q21:ArrayOfProveedorExcluidoIntactaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfProveedorExcluidoIntactaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfProveedorExcluidoIntactaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMuestraEnvioACamaraBiotecnoligiaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MuestraEnvioACamaraBiotecnoligiaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q22="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q22:ArrayOfMuestraEnvioACamaraBiotecnoligiaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMuestraEnvioACamaraBiotecnoligiaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMuestraEnvioACamaraBiotecnoligiaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMuestraEnvioACamaraAuditoriaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MuestraEnvioACamaraAuditoriaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q23="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q23:ArrayOfMuestraEnvioACamaraAuditoriaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMuestraEnvioACamaraAuditoriaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMuestraEnvioACamaraAuditoriaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMovimientoDeTercerosListaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MovimientoDeTercerosListaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q24="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q24:ArrayOfMovimientoDeTercerosListaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMovimientoDeTercerosListaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMovimientoDeTercerosListaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfPesoMaximoPorTipoVehiculoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="PesoMaximoPorTipoVehiculoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q25="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q25:ArrayOfPesoMaximoPorTipoVehiculoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfPesoMaximoPorTipoVehiculoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfPesoMaximoPorTipoVehiculoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfStockDeEstablecimientoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="StockDeEstablecimientoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q26="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q26:ArrayOfStockDeEstablecimientoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfStockDeEstablecimientoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfStockDeEstablecimientoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCosechaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CosechaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q27="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q27:ArrayOfCosechaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCosechaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCosechaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfExcepcionEnvioCamaraDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ExcepcionEnvioCamaraDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q28="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q28:ArrayOfExcepcionEnvioCamaraDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfExcepcionEnvioCamaraDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfExcepcionEnvioCamaraDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfRangosDeRedondeoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="RangosDeRedondeoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q29="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q29:ArrayOfRangosDeRedondeoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfRangosDeRedondeoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfRangosDeRedondeoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTaraContenedorDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TaraContenedorDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q30="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q30:ArrayOfTaraContenedorDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTaraContenedorDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTaraContenedorDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCalleDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CalleDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q31="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q31:ArrayOfCalleDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCalleDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCalleDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCalidadMaterialDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CalidadMaterialDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q32="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q32:ArrayOfCalidadMaterialDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCalidadMaterialDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCalidadMaterialDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTarjetaBloqueadaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TarjetaBloqueadaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q33="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q33:ArrayOfTarjetaBloqueadaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTarjetaBloqueadaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTarjetaBloqueadaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTarjetaRangoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TarjetaRangoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q34="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q34:ArrayOfTarjetaRangoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTarjetaRangoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTarjetaRangoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTarjetaSupervisorDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TarjetaSupervisorDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q35="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q35:ArrayOfTarjetaSupervisorDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTarjetaSupervisorDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTarjetaSupervisorDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfPuestosDeCargaDescargaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="PuestosDeCargaDescargaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q36="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q36:ArrayOfPuestosDeCargaDescargaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfPuestosDeCargaDescargaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfPuestosDeCargaDescargaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfPuestoDeTrabajoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="PuestoDeTrabajoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q37="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q37:ArrayOfPuestoDeTrabajoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfPuestoDeTrabajoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfPuestoDeTrabajoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfPuestoDeTrabajoContingenciaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="PuestoDeTrabajoContingenciaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q38="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q38:ArrayOfPuestoDeTrabajoContingenciaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfPuestoDeTrabajoContingenciaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfPuestoDeTrabajoContingenciaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfControlDeTiempoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ControlDeTiempoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q39="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q39:ArrayOfControlDeTiempoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfControlDeTiempoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfControlDeTiempoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfActividadPorDispositivoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ActividadPorDispositivoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q40="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q40:ArrayOfActividadPorDispositivoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfActividadPorDispositivoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfActividadPorDispositivoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMotivoQuiebreBarreraDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MotivoQuiebreBarreraDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q41="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q41:ArrayOfMotivoQuiebreBarreraDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMotivoQuiebreBarreraDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMotivoQuiebreBarreraDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfInstanciaWorkflowDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="InstanciaWorkflowDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q42="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q42:ArrayOfInstanciaWorkflowDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfInstanciaWorkflowDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfInstanciaWorkflowDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfAjusteDeStockDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="AjusteDeStockDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q43="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q43:ArrayOfAjusteDeStockDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfAjusteDeStockDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfAjusteDeStockDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfAjusteStockBinesDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="AjusteStockBinesDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q44="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q44:ArrayOfAjusteStockBinesDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfAjusteStockBinesDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfAjusteStockBinesDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMovimientoDeBinesDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MovimientoDeBinesDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q45="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q45:ArrayOfMovimientoDeBinesDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMovimientoDeBinesDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMovimientoDeBinesDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCiuAnuladoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CiuAnuladoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q46="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q46:ArrayOfCiuAnuladoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCiuAnuladoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCiuAnuladoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfVinedoPropioDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="VinedoPropioDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q47="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q47:ArrayOfVinedoPropioDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfVinedoPropioDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfVinedoPropioDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfVinedoTercerosDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="VinedoTercerosDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q48="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q48:ArrayOfVinedoTercerosDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfVinedoTercerosDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfVinedoTercerosDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfAsignacionDeRecorridoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="AsignacionDeRecorridoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q49="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q49:ArrayOfAsignacionDeRecorridoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfAsignacionDeRecorridoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfAsignacionDeRecorridoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfActividadConCargaAutomaticaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ActividadConCargaAutomaticaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q50="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q50:ArrayOfActividadConCargaAutomaticaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfActividadConCargaAutomaticaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfActividadConCargaAutomaticaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfEntregadorDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="EntregadorDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q51="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q51:ArrayOfEntregadorDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfEntregadorDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfEntregadorDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMuestraEnvioACamaraDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MuestraEnvioACamaraDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q52="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q52:ArrayOfMuestraEnvioACamaraDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMuestraEnvioACamaraDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMuestraEnvioACamaraDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfAnalisisPorCaracteristicaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="AnalisisPorCaracteristicaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q53="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q53:ArrayOfAnalisisPorCaracteristicaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfAnalisisPorCaracteristicaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfAnalisisPorCaracteristicaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTransaccionSAPDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TransaccionSAPDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q54="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q54:ArrayOfTransaccionSAPDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTransaccionSAPDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTransaccionSAPDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTransmisionASapDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TransmisionASapDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q55="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q55:ArrayOfTransmisionASapDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTransmisionASapDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTransmisionASapDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTransmisionBajaCtgDefinitivaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TransmisionBajaCtgDefinitivaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q56="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q56:ArrayOfTransmisionBajaCtgDefinitivaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTransmisionBajaCtgDefinitivaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTransmisionBajaCtgDefinitivaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfEnvioUrenportDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="EnvioUrenportDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q57="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q57:ArrayOfEnvioUrenportDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfEnvioUrenportDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfEnvioUrenportDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMaterialPorWorkflowDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MaterialPorWorkflowDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q58="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q58:ArrayOfMaterialPorWorkflowDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMaterialPorWorkflowDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMaterialPorWorkflowDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCaracteristicaDeCalidadPorWorkflowDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CaracteristicaDeCalidadPorWorkflowDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q59="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q59:ArrayOfCaracteristicaDeCalidadPorWorkflowDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCaracteristicaDeCalidadPorWorkflowDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCaracteristicaDeCalidadPorWorkflowDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfConversionMaterialDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ConversionMaterialDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q60="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q60:ArrayOfConversionMaterialDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfConversionMaterialDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfConversionMaterialDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfConversionCentroDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ConversionCentroDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q61="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q61:ArrayOfConversionCentroDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfConversionCentroDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfConversionCentroDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfConversionProcedenciaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ConversionProcedenciaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q62="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q62:ArrayOfConversionProcedenciaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfConversionProcedenciaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfConversionProcedenciaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfConversionGrupoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ConversionGrupoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q63="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q63:ArrayOfConversionGrupoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfConversionGrupoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfConversionGrupoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfConversionCaracteristicaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ConversionCaracteristicaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q64="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q64:ArrayOfConversionCaracteristicaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfConversionCaracteristicaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfConversionCaracteristicaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfImpresionDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ImpresionDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q65="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q65:ArrayOfImpresionDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfImpresionDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfImpresionDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfImpresoraDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ImpresoraDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q66="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q66:ArrayOfImpresoraDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfImpresoraDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfImpresoraDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfFormatoDeImpresionDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="FormatoDeImpresionDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q67="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q67:ArrayOfFormatoDeImpresionDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfFormatoDeImpresionDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfFormatoDeImpresionDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfDocumentoDeImpresionPorCentroDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="DocumentoDeImpresionPorCentroDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q68="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q68:ArrayOfDocumentoDeImpresionPorCentroDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfDocumentoDeImpresionPorCentroDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfDocumentoDeImpresionPorCentroDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfInhabilitacionCamionDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="InhabilitacionCamionDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q69="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q69:ArrayOfInhabilitacionCamionDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfInhabilitacionCamionDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfInhabilitacionCamionDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfBalanzaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="BalanzaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q70="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q70:ArrayOfBalanzaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfBalanzaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfBalanzaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCaracteristicaDeCalidadDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CaracteristicaDeCalidadDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q71="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q71:ArrayOfCaracteristicaDeCalidadDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCaracteristicaDeCalidadDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCaracteristicaDeCalidadDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMotivoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MotivoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q72="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q72:ArrayOfMotivoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMotivoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMotivoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfHumedimetroDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="HumedimetroDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q73="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q73:ArrayOfHumedimetroDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfHumedimetroDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfHumedimetroDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfBocaDestinoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="BocaDestinoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q74="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q74:ArrayOfBocaDestinoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfBocaDestinoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfBocaDestinoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCaladoPorCaracteristicaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CaladoPorCaracteristicaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q75="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q75:ArrayOfCaladoPorCaracteristicaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCaladoPorCaracteristicaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCaladoPorCaracteristicaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfRolDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="RolDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q76="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q76:ArrayOfRolDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfRolDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfRolDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfPermisoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="PermisoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q77="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q77:ArrayOfPermisoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfPermisoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfPermisoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfDocumentoDeImpresionDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="DocumentoDeImpresionDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q78="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q78:ArrayOfDocumentoDeImpresionDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfDocumentoDeImpresionDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfDocumentoDeImpresionDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfLoteListaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="LoteListaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q79="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q79:ArrayOfLoteListaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfLoteListaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfLoteListaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfLoteBiotecnologiaListaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="LoteBiotecnologiaListaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q80="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q80:ArrayOfLoteBiotecnologiaListaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfLoteBiotecnologiaListaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfLoteBiotecnologiaListaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfArchivoDeMovimientosDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ArchivoDeMovimientosDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q81="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q81:ArrayOfArchivoDeMovimientosDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfArchivoDeMovimientosDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfArchivoDeMovimientosDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfProveedorDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ProveedorDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q82="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q82:ArrayOfProveedorDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfProveedorDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfProveedorDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfUsuarioDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="UsuarioDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q83="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q83:ArrayOfUsuarioDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfUsuarioDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfUsuarioDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfAnalisisObligatorioDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="AnalisisObligatorioDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q84="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q84:ArrayOfAnalisisObligatorioDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfAnalisisObligatorioDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfAnalisisObligatorioDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfSuplenciaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="SuplenciaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q85="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q85:ArrayOfSuplenciaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfSuplenciaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfSuplenciaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTipoDocumentoIdentidadDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TipoDocumentoIdentidadDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q86="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q86:ArrayOfTipoDocumentoIdentidadDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTipoDocumentoIdentidadDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTipoDocumentoIdentidadDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfVariedadPorVinedoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="VariedadPorVinedoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q87="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q87:ArrayOfVariedadPorVinedoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfVariedadPorVinedoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfVariedadPorVinedoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfMaterialDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="MaterialDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q88="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q88:ArrayOfMaterialDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfMaterialDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfMaterialDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTaraRomaneoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TaraRomaneoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q89="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q89:ArrayOfTaraRomaneoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTaraRomaneoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTaraRomaneoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfAlmacenDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="AlmacenDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q90="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q90:ArrayOfAlmacenDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfAlmacenDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfAlmacenDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTalonarioDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TalonarioDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q91="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q91:ArrayOfTalonarioDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTalonarioDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTalonarioDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCamaraDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CamaraDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q92="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q92:ArrayOfCamaraDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCamaraDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCamaraDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCategoriaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CategoriaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q93="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q93:ArrayOfCategoriaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCategoriaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCategoriaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfCasilleroDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="CasilleroDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q94="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q94:ArrayOfCasilleroDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfCasilleroDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfCasilleroDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfLiberacionDeCasillerosDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="LiberacionDeCasillerosDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q95="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q95:ArrayOfLiberacionDeCasillerosDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfLiberacionDeCasillerosDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfLiberacionDeCasillerosDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfConsultaCasilleroAntiguedadDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ConsultaCasilleroAntiguedadDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q96="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q96:ArrayOfConsultaCasilleroAntiguedadDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfConsultaCasilleroAntiguedadDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfConsultaCasilleroAntiguedadDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfConsultaCasilleroDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ConsultaCasilleroDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q97="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q97:ArrayOfConsultaCasilleroDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfConsultaCasilleroDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfConsultaCasilleroDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfConsultaCasilleroMuestraDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ConsultaCasilleroMuestraDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q98="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q98:ArrayOfConsultaCasilleroMuestraDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfConsultaCasilleroMuestraDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfConsultaCasilleroMuestraDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfChoferDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ChoferDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q99="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q99:ArrayOfChoferDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfChoferDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfChoferDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfDocumentoExternoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="DocumentoExternoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q100="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q100:ArrayOfDocumentoExternoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfDocumentoExternoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfDocumentoExternoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTransportistaDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TransportistaDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q101="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q101:ArrayOfTransportistaDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTransportistaDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTransportistaDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfExcepcionAlControlDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ExcepcionAlControlDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q102="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q102:ArrayOfExcepcionAlControlDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfExcepcionAlControlDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfExcepcionAlControlDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfExcepcionAlDescuentoDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="ExcepcionAlDescuentoDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q103="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q103:ArrayOfExcepcionAlDescuentoDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfExcepcionAlDescuentoDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfExcepcionAlDescuentoDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfKmPorProveedorDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="KmPorProveedorDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q104="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q104:ArrayOfKmPorProveedorDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfKmPorProveedorDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfKmPorProveedorDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfInhabilitacionChoferDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="InhabilitacionChoferDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q105="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q105:ArrayOfInhabilitacionChoferDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfInhabilitacionChoferDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfInhabilitacionChoferDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTipoComercialDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TipoComercialDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q106="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q106:ArrayOfTipoComercialDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTipoComercialDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTipoComercialDtoT7DPfI5_P" />
+  <xs:complexType name="ListaPaginadaOfTipoComercialPorWfDtoT7DPfI5_P">
+    <xs:annotation>
+      <xs:appinfo>
+        <GenericType Name="ListaPaginadaOf{0}{#}" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Consultas" xmlns="http://schemas.microsoft.com/2003/10/Serialization/">
+          <GenericParameter Name="TipoComercialPorWfDto" Namespace="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" />
+        </GenericType>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element xmlns:q107="http://schemas.datacontract.org/2004/07/Molinos.Scato.Dominio.Dto" minOccurs="0" name="Items" nillable="true" type="q107:ArrayOfTipoComercialPorWfDto" />
+      <xs:element minOccurs="0" name="ItemsPorPagina" type="xs:int" />
+      <xs:element minOccurs="0" name="ItemsTotales" type="xs:int" />
+      <xs:element minOccurs="0" name="Pagina" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ListaPaginadaOfTipoComercialPorWfDtoT7DPfI5_P" nillable="true" type="tns:ListaPaginadaOfTipoComercialPorWfDtoT7DPfI5_P" />
+</xs:schema>

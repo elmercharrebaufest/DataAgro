@@ -191,7 +191,8 @@ namespace Molinos.DataAgro.Test.Managers
                 MonedaId = "ARP  ",
                 ComercialId = 1,
                 ContratoSAP = "1234",
-                CampanaId = 1
+                CampanaId = 1,
+                FechaOperacion = DateTime.Now
             };
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -238,7 +239,8 @@ namespace Molinos.DataAgro.Test.Managers
                 MonedaId = "ARP  ",
                 ComercialId = 1,
                 ContratoSAP = "1234",
-                CampanaId = 1
+                CampanaId = 1,
+                FechaOperacion = DateTime.Now
             };
 
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
@@ -291,7 +293,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Posicion = "",
                 FechaDesde = DateTime.Now,
                 FechaHasta = DateTime.Now,
-                AperturaPrecio = new List<AperturaPrecio> { }
+                AperturaPrecio = new List<AperturaPrecio> { },
+                FechaOperacion = DateTime.Now
             };
             var fijacionSave = new FijacionDePrecioContrato
             {
@@ -303,7 +306,8 @@ namespace Molinos.DataAgro.Test.Managers
                 ComercialId = 1,
                 ContratoSAP = "1234",
                 CampanaId = 1,
-                EstadoId = (int)EnumEstadoContrato.Confirmado
+                EstadoId = (int)EnumEstadoContrato.Confirmado,
+                FechaOperacion = DateTime.Now
             };
 
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));

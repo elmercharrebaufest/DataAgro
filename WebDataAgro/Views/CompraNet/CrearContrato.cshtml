@@ -169,7 +169,7 @@
             </div>
         </div>
     </div>
-
+   
     <div id="plazosYTopesFijacion" class="noFason noAgente acuerdo contratoAFijar contratoAPrecio">
         <div class="row ">
             <div class="contratoAFijar acuerdoSinPrecio">
@@ -252,6 +252,14 @@
                 <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
+            <div id="fechaFijacionMotivoDiv" style="display:none;">
+                <div class="col-sm-1">
+                    <label>Motivo</label>
+                </div>
+                <div class="col-sm-5 col-md-4">
+                    <textarea type="text" class="campo-input-text k-textbox" id="motivoOperacionAnteriorFijacion" rows="3" maxlength="100"></textarea>
+                </div>
+            </div>
 
         <div id="campanaDiv" class="fason acuerdo">
             <div class="col-sm-1" data-toggle="tooltip" data-placement="top" id="campanaTooltip">
@@ -421,19 +429,19 @@
 
         <div class="col-xs-10 col-sm-5 noFason noAgente  acuerdo ampliar-fijacion">
             @*<div class="ampliar">*@
-                <span id="baseDiv"  class="noAcuerdo ampliar">
-                    <label id="lblBase">Base</label>
-                    <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
-                </span>
-                <span id="pizarraDiv"  class="noAcuerdo ampliar">
-                    <label id="lblPizarra">Pizarra</label>
-                    <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
-                </span>
-                <div id="pagoDirectoDiv" hidden style="float:right;" class="noAcuerdo ampliar">
-                    <label>Pago dir. Vend.</label>
-                    <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
+            <span id="baseDiv" class="noAcuerdo ampliar">
+                <label id="lblBase">Base</label>
+                <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
+            </span>
+            <span id="pizarraDiv" class="noAcuerdo ampliar">
+                <label id="lblPizarra">Pizarra</label>
+                <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
+            </span>
+            <div id="pagoDirectoDiv" hidden style="float:right;" class="noAcuerdo ampliar">
+                <label>Pago dir. Vend.</label>
+                <input id="pagoDirectoId" class="campo-input-input" data-bind="checked:Parametros.pagoDirecto, disabled: isControlDisabled" type="checkbox" />
+                <img id="errpagoDirectoId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
             @*</div>*@
             <div id="pagoDiferidoFijacionDiv" class="pagoFijacion hide-fijacion noAcuerdo ampliar esFijacion">
                 <label style="width:100px">Pago diferido</label>

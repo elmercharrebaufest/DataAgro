@@ -4,6 +4,7 @@ using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
@@ -238,6 +239,22 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
+            if (oParam.FechaOperacion < DateTime.Now.Date)
+            {
+                var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
+
+                if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                {
+                    oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+
+                }
+
+                if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                {
+                    oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                }
+
+            }
             return oErrorMessages;
         }
 
@@ -310,9 +327,10 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.DiasPesificado = oFijacionDePrecio.DiasPesificado;
                 oFijacionDePrecioSave.PagoDiferidoContrato = oFijacionDePrecio.PagoDiferidoContrato;
                 oFijacionDePrecioSave.DestinoId = oFijacionDePrecio.DestinoId;
-                oFijacionDePrecio.FechaOperacion = oFijacionDePrecio.FechaOperacion;
+                oFijacionDePrecioSave.FechaOperacion = oFijacionDePrecio.FechaOperacion;
                 oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
                 oFijacionDePrecioSave.PagoCBU = oFijacionDePrecio.PagoCBU;
+                oFijacionDePrecioSave.MotivoOperacionAnterior = oFijacionDePrecio.MotivoOperacionAnterior;
 
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -795,8 +813,11 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = fijac.Fecha,
                 FechaOperacion = fijac.FechaOperacion,
                 ChequeElectronico = fijac.ChequeElectronico,
-                PagoCBU = fijac.PagoCBU
-                
+                PagoCBU = fijac.PagoCBU,
+                MotivoOperacionAnterior = fijac.MotivoOperacionAnterior,
+                FechaOperacionFormateado = SqlFunctions.DateName("day", fijac.FechaOperacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)fijac.FechaOperacion.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", fijac.FechaOperacion),
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
