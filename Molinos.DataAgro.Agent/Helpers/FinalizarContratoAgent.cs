@@ -26,6 +26,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public string Finalizar(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
+            logger.Debug("Finalizando Contrato Nro: " + contrato.Id);
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
                 var resp = "";
@@ -42,7 +43,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-                logger.Debug("Finalizando Contrato Nro: " + contrato.Id);
+                
                 var listaDescuentos = new List<ZMPES5290>();
                 foreach (var descBon in descuentoBonificacion)
                 {

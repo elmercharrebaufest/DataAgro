@@ -23,7 +23,6 @@ using System.Linq.Expressions;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
-
 namespace Molinos.DataAgro.Business.Managers
 {
     public class ContratoManager : IContratoManager
@@ -1183,7 +1182,7 @@ namespace Molinos.DataAgro.Business.Managers
         public GrabarContratoResult FinalizarContrato(int contratoId, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
-            var oContratoSave = repositorio.ObtenerNoTracking<Contrato>(a => a.Id == contratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(a => a.Id == contratoId);
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
@@ -1281,6 +1280,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oEntityErrors.Error("", "El contrato debe ser Confirmado");
                 }
+                logger.Debug(" Error Intentando finalizar el contrato " + contratoId + " estado: " + oContratoSave.EstadoId);
             }
             repositorio.GuardarCambios();
             return oEntityErrors;
