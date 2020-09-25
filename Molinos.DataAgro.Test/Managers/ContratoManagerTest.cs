@@ -1185,7 +1185,7 @@ namespace Molinos.DataAgro.Test.Managers
             }
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
 
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
+            repositorioMock.Setup(y => y.ObtenerNoTracking<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
             ConfigurationManager.AppSettings["ValorPruebaSap"] = "1";
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<AperturaPrecio>() { new AperturaPrecio { ConceptoAperturaPrecio = new ConceptoAperturaPrecio { CodigoSap = "FI", Descripcion = "FINANCIERO", Id = 1 } } });
@@ -1238,7 +1238,7 @@ namespace Molinos.DataAgro.Test.Managers
             }
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
             relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
+            repositorioMock.Setup(y => y.ObtenerNoTracking<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
             ConfigurationManager.AppSettings["ValorPruebaSap"] = "1";
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConceptoAperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { CodigoSap = "FI", Descripcion = "FINANCIERO", Id = 1 } });
@@ -1253,13 +1253,13 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void FinalizarContratoErrorEstado()
         {
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Finalizado });
+            repositorioMock.Setup(y => y.ObtenerNoTracking<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Finalizado });
             var resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
             Assert.That(resultado.HayError);
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Rechazado });
+            repositorioMock.Setup(y => y.ObtenerNoTracking<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Rechazado });
             resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
             Assert.That(resultado.HayError);
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Pendiente });
+            repositorioMock.Setup(y => y.ObtenerNoTracking<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(new Contrato() { EstadoId = (int)EnumEstadoContrato.Pendiente });
             resultado = target.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>());
             Assert.That(resultado.HayError);
 
@@ -1307,7 +1307,7 @@ namespace Molinos.DataAgro.Test.Managers
             }
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
 
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
+            repositorioMock.Setup(y => y.ObtenerNoTracking<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(oContrato);
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<DescuentoBonificacion, DescuentoBonificacionDto>>>(), It.IsAny<Expression<Func<DescuentoBonificacion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Throws(new Exception("Error generico"));
@@ -2000,16 +2000,14 @@ namespace Molinos.DataAgro.Test.Managers
             diasHabilesAgentMock.Setup(y => y.ObtenerDiasHabiles()).Returns(diasHabiles);
 
 
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
+            repositorioMock.Setup(y => y.ObtenerNoTracking<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
             ConfigurationManager.AppSettings["ValorPruebaSap"] = "1";
             relacionCorredorProveedorAgentMock.Setup(y => y.ObtenerRelacionCorredorProveedor(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<AperturaPrecio>() { new AperturaPrecio { ConceptoAperturaPrecio = new ConceptoAperturaPrecio { CodigoSap = "FI", Descripcion = "FINANCIERO", Id = 1 } } });
 
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-                .Returns(new List<Contrato>() {
-                    oContrato
-                 });
+            repositorioMock.Setup(y => y.Listar<Contrato, int>(It.IsAny<Expression<Func<Contrato, int>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                .Returns(new List<int>() { 1 });
 
             target.FinalizacionAutomatica(It.IsAny<string>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
@@ -2043,13 +2041,11 @@ namespace Molinos.DataAgro.Test.Managers
                 StandardDeCalidadId = 1,
                 EstadoId = (int)EnumEstadoContrato.Confirmado
             };
+            repositorioMock.Setup(y => y.ObtenerNoTracking<Contrato>(It.IsAny<Expression<Func<Contrato, bool>>>())).Throws(new Exception("Error obtener contrato"));
 
-            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Throws(new Exception("Error obtener contrato"));
 
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-                .Returns(new List<Contrato>() {
-                    oContrato
-                 });
+            repositorioMock.Setup(y => y.Listar<Contrato, int>(It.IsAny<Expression<Func<Contrato, int>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                .Returns(new List<int>() { 1 });
 
             target.FinalizacionAutomatica(It.IsAny<string>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
@@ -3081,7 +3077,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>(),
                 PrecioPactado = new List<PrecioPactado>(),
-                
+
                 ContratoSAP = "434343",
                 ChequeElectronico = true
             };
@@ -3513,7 +3509,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(contratoParaSerializar);
             modificarContratoAgentMock.Setup(x => x.Modificar(It.IsAny<Contrato>(), It.IsAny<Contrato>())).Returns("Ok");
             repositorioMock.Setup(x => x.GuardarCambios()).Verifiable();
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { ComercialId = 1, IdActiveDirectory = "bmelga@bf.com"});
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { ComercialId = 1, IdActiveDirectory = "bmelga@bf.com" });
             comercialManagerMock.Setup(x => x.ListarComercialesCorredor()).Returns(new List<Comercial>() { new Comercial { ComercialId = 2, IdActiveDirectory = "hernanbio@bf.com" } });
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
@@ -3775,7 +3771,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
             repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<DevolverContratosAcuerdo>())).Returns(new List<ContratoCopiar>() { contrato });
             var resultado = target.TraerContratosAcuerdo(It.IsAny<string>());
-            repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<DevolverContratosAcuerdo>()),Times.Once);
+            repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<DevolverContratosAcuerdo>()), Times.Once);
         }
         [Test]
         public void TraerTotalesPesosDolaresTest()
@@ -3804,10 +3800,10 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, DatosContratoDto>>>()))
               .Returns(new DatosContratoDto());
-              var resultado = target.TraerDatosDeContratoAcuerdo(It.IsAny<int>());
+            var resultado = target.TraerDatosDeContratoAcuerdo(It.IsAny<int>());
             repositorioMock.Verify(y => y.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, DatosContratoDto>>>()), Times.Once);
 
-        } 
+        }
 
         [Test]
         public void TraerContratosSAPTest()
@@ -3817,13 +3813,14 @@ namespace Molinos.DataAgro.Test.Managers
             var res = target.TraerContratosSAP(It.IsAny<string>(), It.IsAny<string>());
             repositorioMock.Verify(y => y.ObtenerMayor(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>(), It.IsAny<Expression<Func<Contrato, int>>>()), Times.Once);
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Contrato, ContratoIdDto>>>(), It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
-           
+
         }
         [Test]
         public void ValidarStatusTest()
         {
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, BasicoContrato>>>()))
-              .Returns(new BasicoContrato() {
+              .Returns(new BasicoContrato()
+              {
                   ContratoSAP = "23443",
                   Estado = 5
               });
@@ -3895,7 +3892,7 @@ namespace Molinos.DataAgro.Test.Managers
                 ContratoAcuerdoId = 1,
                 DolarizadoExpress = false,
                 Dolarizado = true,
-                StandardDeCalidad = new StandardDeCalidad { Descripcion = "aa"},
+                StandardDeCalidad = new StandardDeCalidad { Descripcion = "aa" },
                 PrecioPactado = new List<PrecioPactado>()
                 {
                     new PrecioPactado()
@@ -4007,7 +4004,7 @@ namespace Molinos.DataAgro.Test.Managers
                         CalidadEspecialId = 1,
                         PorcentajeDesde = 1,
                         PorcentajeHasta = 2,
-                        Valor = 1,                        
+                        Valor = 1,
 
                     }
                 },
@@ -4018,8 +4015,8 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, BasicoContrato>>>()), Times.Once);
 
         }
-       [Test]
-       public void DiferenciaEnCalidades()
+        [Test]
+        public void DiferenciaEnCalidades()
         {
             var contratoParaSerializar = new Contrato()
             {
@@ -4147,7 +4144,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Cantidad = "1000"
             };
             repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>()))
-                .Returns(new Contrato { ContratoSAP = "000454543", Cantidad = 10, EstadoId = 5});
+                .Returns(new Contrato { ContratoSAP = "000454543", Cantidad = 10, EstadoId = 5 });
             repositorioMock.Setup(x => x.GuardarCambios()).Verifiable();
             var res = target.AnularContratoSAP(contrato);
             repositorioMock.Verify(y => y.ObtenerMayor(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>()), Times.Once);
