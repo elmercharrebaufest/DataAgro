@@ -386,7 +386,7 @@ function VisualizarStock() {
 }
 
 function MostrarVisualizarStock() {
-    if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "14" && $("#material").val() == "3") {
+    if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
         $("#stock").show();
     } else {
         $("#stock").hide();

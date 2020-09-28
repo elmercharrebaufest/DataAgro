@@ -113,5 +113,14 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(resultado);
             Assert.IsFalse(resultado.HayErrores);
         }
+
+        [Test]
+        public void ObtenerCentroPorCodigoSapTest()
+        {
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, CentroDto>>>()))
+               .Returns(new CentroDto { Id = 1, CodigoSap = "1600" });
+            var resultado = target.ObtenerCentroPorCodigoSap("1600");            
+            Assert.NotNull(resultado);
+        }
     }
 }

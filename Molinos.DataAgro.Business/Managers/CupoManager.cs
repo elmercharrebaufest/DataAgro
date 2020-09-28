@@ -354,6 +354,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Calidad = x.Calidad,
                 Centro = x.Centro.Descripcion,
                 CentroId = x.CentroId,
+                CentroCodigo = x.Centro.CodigoSap,
                 ComercialId = x.ComercialId,
                 Destinatario = x.Destinatario,
                 Fason = x.Fason,

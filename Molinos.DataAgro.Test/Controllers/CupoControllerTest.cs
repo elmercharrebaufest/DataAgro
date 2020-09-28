@@ -47,7 +47,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 proveedorManagerMock.Object, cupoManagerMock.Object,
                 comercialManagerMock.Object, habilitacionManagerMock.Object);
             centroManagerMock.Setup(y => y.TraerTodoCentro())
-                .Returns(new ResultIniCentro { Centro = new List<CentroIni>() { new CentroIni { Id = 1, Descripcion = "a" } } });
+                .Returns(new ResultIniCentro { Centro = new List<CentroIni>() { new CentroIni { Id = 1, Descripcion = "a", CodigoSap = "1600" } } });
             materialManagerMock.Setup(y => y.TraerTodoMaterial())
                 .Returns(new ResultIniMaterial { Material = new List<MaterialIni>() { new MaterialIni { MaterialId = 1, Descripcion = "a" } } });
             zonaCupoManagerMock.Setup(y => y.TraerTodoZonaCupo())
@@ -72,6 +72,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CrearCupoNuevoTest()
         {
+         
             var result = target.CrearCupo(null, "") as ViewResult;
 
             Assert.NotNull(result);
@@ -94,7 +95,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Proveedor = 1,
                 Observacion = "",
                 ZonaId = 1,
-                PlantaId = 1,
+                PlantaId = "1600",
                 CuitId = "A",
                 Siguientes = ""
             };
@@ -111,8 +112,12 @@ namespace Molinos.DataAgro.Test.Controllers
                 ZonaCupoId = 1,
                 CentroId = 1,
                 Destinatario = "A",
-                CupoSap = "a"
+                CupoSap = "a",
+                CentroCodigo = "1600"
             });
+
+            centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
+
             var result = target.CrearCupo(1, "") as ViewResult;
 
             Assert.NotNull(result);
@@ -135,7 +140,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Proveedor = 1,
                 Observacion = "",
                 ZonaId = 1,
-                PlantaId = 1,
+                PlantaId = "1600",
                 CuitId = "A",
                 Siguientes = null
                 
@@ -144,6 +149,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 .Returns(new Resultado { Errores = new List<ErrorMessage>() });
             cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+            centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
             var result = target.CrearCupo(cupoModel) as ViewResult;
 
             Assert.NotNull(result);
@@ -166,7 +172,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Proveedor = 1,
                 Observacion = "",
                 ZonaId = 1,
-                PlantaId = 1,
+                PlantaId = "1600",
                 CuitId = "A",
                 Siguientes = null
             };
@@ -174,6 +180,8 @@ namespace Molinos.DataAgro.Test.Controllers
                 .Returns(new Resultado { Errores = new List<ErrorMessage>() });
             cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+            centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
+
             var result = (RedirectToRouteResult)target.CrearCupo(cupoModel);
 
             result.RouteValues["action"].Equals("Index");

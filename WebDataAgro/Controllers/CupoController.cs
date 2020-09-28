@@ -62,7 +62,8 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.AltaCupos, PermisosDataAgro.AltaCupo_Externo)]
         public ActionResult CrearCupo(int? id, string siguientes)
         {
-            ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado()); CargarViewBag();
+            ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());
+            CargarViewBag();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
                 return RedirectToAction("CrearCupoTercero");
@@ -91,7 +92,7 @@ namespace WebDataAgro.Controllers
                     Proveedor = cupo.ProveedorId,
                     Observacion = cupo.Observaciones,
                     ZonaId = cupo.ZonaCupoId,
-                    PlantaId = cupo.CentroId,
+                    PlantaId = cupo.CentroCodigo,
                     CuitId = cupo.Destinatario,
                     Siguientes = siguientes,
                     NegocioId = cupo.NegocioId
@@ -126,7 +127,7 @@ namespace WebDataAgro.Controllers
                     MaterialId = cupo.MaterialId,
                     Proveedor = cupo.ProveedorId,
                     Observacion = cupo.Observaciones,
-                    PlantaId = cupo.CentroId,
+                    PlantaId = cupo.CentroCodigo,
                     CuitId = cupo.Destinatario,
                     Siguientes = siguientes
                 };
@@ -231,7 +232,7 @@ namespace WebDataAgro.Controllers
                 listaCentro.Add(new SelectListItem
                 {
                     Text = i.Descripcion,
-                    Value = i.Id.ToString(),
+                    Value = i.CodigoSap.ToString(),
                     Selected = i.CodigoSap == "1029" ? true : false
                 });
             }
@@ -282,7 +283,7 @@ namespace WebDataAgro.Controllers
                 ProveedorId = cupo.Proveedor,
                 MaterialId = cupo.MaterialId,
                 FechaIngreso = cupo.FechaEntrega,
-                CentroId = cupo.PlantaId,
+                CentroId = centroManager.ObtenerCentroPorCodigoSap(cupo.PlantaId).Id,
                 FleteProcedencia = cupo.FleteAcarreo,
                 Calidad = cupo.CalidadId == 1 ? "Camara" : cupo.CalidadId == 2 ? "Fabrica" : "",
                 Observaciones = cupo.Observacion,

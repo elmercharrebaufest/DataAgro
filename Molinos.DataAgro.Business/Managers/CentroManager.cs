@@ -105,6 +105,10 @@ namespace Molinos.DataAgro.Business
             }
             return oEntityErrors;
         }
+        public CentroDto ObtenerCentroPorCodigoSap(string codigoSap)
+        {
+            return repositorio.Obtener<Centro, CentroDto>(x => x.CodigoSap == codigoSap, x => new CentroDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, Acopio = x.Acopio }) ?? new CentroDto();
+        }
     }
 }
 

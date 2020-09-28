@@ -16,7 +16,7 @@ namespace WebDataAgro.Models
         [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_ProveedorRequerido")]
         public int Proveedor { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_PlantaRequerido")]
-        public int PlantaId { get; set; }
+        public string PlantaId { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_MaterialRequerido")]
         public int MaterialId { get; set; }
 
