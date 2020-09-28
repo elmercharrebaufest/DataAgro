@@ -218,6 +218,7 @@
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
     <Compile Include="Controllers\FechaFeriadoController.cs" />
+    <Compile Include="Controllers\CartaDePresentacionController.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaController.cs" />
     <Compile Include="Controllers\HabilitacionCupoController.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoController.cs" />

@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\FechaFeriadoControllerTest.cs" />
+    <Compile Include="Controllers\CartaDePresentacionControllerTest.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaControllerTest.cs" />
     <Compile Include="Controllers\HabilitacionCupoControllerTest.cs" />
     <Compile Include="Controllers\CupoControllerTest.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Controllers\TareasProgramadasControllerTest.cs" />
     <Compile Include="Controllers\ZonaCupoControllerTest.cs" />
     <Compile Include="Managers\FechaFeriadoManagerTest.cs" />
+    <Compile Include="Managers\CartaDePresentacionManagerTest.cs" />
     <Compile Include="Managers\MailManagerTest.cs" />
     <Compile Include="Managers\CampañaManagerTest.cs" />
     <Compile Include="Managers\CampaniaMaterialManagerTest.cs" />
