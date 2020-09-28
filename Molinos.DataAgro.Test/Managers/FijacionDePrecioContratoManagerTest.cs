@@ -917,9 +917,9 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void UltimoDiaHabilTest()
         {
-            diasHabilesAgente.Setup(x => x.UltimoDiaHabil()).Returns(DateTime.Now);
+            diasHabilesAgente.Setup(x => x.UltimoDiaHabil(null)).Returns(DateTime.Now);
             var res = target.UltimoDiaHabil();
-            diasHabilesAgente.Verify(x => x.UltimoDiaHabil(), Times.Once);
+            diasHabilesAgente.Verify(x => x.UltimoDiaHabil(null), Times.Once);
             Assert.IsNotNull(res);
         }
 

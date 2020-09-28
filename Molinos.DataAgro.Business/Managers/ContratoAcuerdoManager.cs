@@ -815,7 +815,8 @@ namespace Molinos.DataAgro.Business
 
         public void AnularAcuerdos()
         {
-            var dia = diasHabilesAgent.UltimoDiaHabil();
+            Nullable<DateTime> fecha = null;
+            var dia = diasHabilesAgent.UltimoDiaHabil(fecha);
             var listaAcuerdo = repositorio.Listar<ContratoAcuerdo>(x => x.Fecha < dia && x.EstadoId == 2);
 
             foreach (var acuerdo in listaAcuerdo)
@@ -826,9 +827,7 @@ namespace Molinos.DataAgro.Business
                 logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(acuerdo.Id), TipoAccionLogDataAgro.Eliminar, acuerdo.GetType());
             }
 
-            repositorio.GuardarCambios();
-
-
+            repositorio.GuardarCambios();            
         }
     }
 }

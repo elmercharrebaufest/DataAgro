@@ -241,7 +241,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.FechaOperacion < DateTime.Now.Date)
             {
-                var diaAnterior = diasHabilesAgent.UltimoDiaHabil();
+                Nullable<DateTime> fecha = null;
+                var diaAnterior = diasHabilesAgent.UltimoDiaHabil(fecha);
 
                 if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
                 {
@@ -1002,7 +1003,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         public DateTime UltimoDiaHabil()
         {
-            return diasHabilesAgent.UltimoDiaHabil();
+            Nullable<DateTime> fecha = null;
+
+            return diasHabilesAgent.UltimoDiaHabil(fecha);
         }
     }
 }

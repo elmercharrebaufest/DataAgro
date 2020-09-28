@@ -44,7 +44,13 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "Fecha_Order", "GrupoCompra", "Estado_Order", "DesdeFijacionFormateado", "FechaCiertaFormateado", "FechaDesdeFormateado", "FechaFormateado", "FechaHastaFormateado", "FechaOperacionFormateado", "Fecha_DolarizadoFormateado", "HastaFijacionFormateado" });
             string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.Id.ToString() + " - " + cambios.ContratoSAP.TrimStart('0');
-            if (!string.IsNullOrEmpty(cambios.ContratoSAP))
+
+            if (cambios.DatosFijacion != null && !string.IsNullOrEmpty(cambios.DatosFijacion.ContratoId) && cambios.TipoNegocioId == 3)
+            {
+                descripcion = cambios.Id.ToString() + " - " + cambios.DatosFijacion.ContratoId.TrimStart('0');
+            }
+            if ((!string.IsNullOrEmpty(cambios.ContratoSAP)) || 
+                (cambios.DatosFijacion != null && !string.IsNullOrEmpty(cambios.DatosFijacion.ContratoId) && cambios.TipoNegocioId == 3))
             {
                 var tipo = cambios.GetType().Name;
                 var logs = repositorio.Listar<LogDataAgro>(x => x.ClaseId == cambios.Id && x.Tipo == tipo);
@@ -54,6 +60,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 repositorio.GuardarCambios();
             }
+            
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, resolver);
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)

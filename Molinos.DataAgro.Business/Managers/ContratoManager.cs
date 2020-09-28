@@ -587,26 +587,59 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    if (oParam.FechaOperacion < DateTime.Now.Date)
+                    if(oParam.Id > 0)
                     {
-                        var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil();
-
-                        if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                       var contrato = repositorio.Obtener<Negocio>(oParam.Id);
+                        if ((oParam.FechaOperacion != contrato.Fecha.Date && oParam.FechaOperacion < contrato.Fecha.Date))
                         {
-                            oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+                            
+                            var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(contrato.Fecha.Date);
 
+                            if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                            {
+                                oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+
+                            }
+
+                            if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                            {
+                                oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                            }
+
+                            if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior)
+                            {
+                                oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
+                            }
                         }
-
-                        if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                        if(oParam.FechaOperacion > contrato.Fecha.Date)
                         {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
-                        }
-
-                        if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior)
-                        {
-                            oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
+                            oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser mayor a " + contrato.Fecha.ToString("dd/MM/yyyy"));
                         }
                     }
+                    else
+                    {
+                        if (oParam.FechaOperacion < DateTime.Now.Date)
+                        {                           
+                            var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(null);
+
+                            if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                            {
+                                oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+
+                            }
+
+                            if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                            {
+                                oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                            }
+
+                            if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior)
+                            {
+                                oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
+                            }
+                        }
+                    }
+                   
                     //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
                     //if (oParam.FechaOperacion.Date < fecha.Date && oParam.Id != 0)
                     //{
@@ -1186,7 +1219,9 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
-                var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil();
+                Nullable<DateTime> fecha = null;
+
+                var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(fecha);
 
                 if (oContratoSave.Fecha < diaAnterior)
                 {
@@ -2412,7 +2447,9 @@ namespace Molinos.DataAgro.Business.Managers
                 ChequeElectronico = x.ChequeElectronico,
                 PagoCBU = x.PagoCBU
             });
-            var dia = oDiasHabilesAgent.UltimoDiaHabil();
+            Nullable<DateTime> fecha = null;
+
+            var dia = oDiasHabilesAgent.UltimoDiaHabil(fecha);
             if (contrato.Fecha < dia)
             {
                 return new BasicoContrato();

@@ -530,7 +530,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void AnularAcuerdosTest()
         {
-            diasHabilesAgentMock.Setup(x => x.UltimoDiaHabil()).Returns(new DateTime(2020, 1, 10));
+            diasHabilesAgentMock.Setup(x => x.UltimoDiaHabil(null)).Returns(new DateTime(2020, 1, 10));
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<ContratoAcuerdo>()
                 {

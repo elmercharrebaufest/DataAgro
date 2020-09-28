@@ -7,6 +7,6 @@ namespace Molinos.DataAgro.Interfaces
     public interface IDiasHabilesAgent
     {
         List<DateTime> ObtenerDiasHabiles();
-        DateTime UltimoDiaHabil();
+        DateTime UltimoDiaHabil(DateTime? fecha);
     }
 }
