@@ -80,8 +80,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_DIAS_DIFERIM = fijacion.DiasPesificado.HasValue ? fijacion.DiasPesificado.Value.ToString() : "",
                         IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd"),
                         IM_ZLSCH = fijacion.ChequeElectronico == true ? "=" : "",
-                        IM_CUENTA_MRP = fijacion.PagoCBU
-                        
+                        IM_CUENTA_MRP = fijacion.PagoCBU != null ? fijacion.PagoCBU.Split('-')[0] : "",
+
                     };
                     logger.Debug(rq.ToXml());
 
