@@ -28,7 +28,7 @@ namespace WebDataAgro.Controllers
         }
 
         public async Task<ActionResult> Generar(RptCartaDePresentacionInfo oParam, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios)
-        {
+        { 
             var model = new ReportesModel();
 
             var cartaDePresentacion = new LstCartaDePresentacion(reportesManager);

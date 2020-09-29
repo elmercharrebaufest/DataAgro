@@ -25,6 +25,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CartaDePresentacionAcopiadores> CapProduccion { get; set; }
         public List<CartaDePresentacionAcopiadores> CapAlmacenaje { get; set; }
         public string ToneladasTodo { get; set; }
+        public string TextoCompleto2 { get; set; }
+        public string TextoCompleto1 { get; set; }
 
         public RptCartaDePresentacionInfo()
         {

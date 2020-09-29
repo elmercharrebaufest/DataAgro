@@ -65,6 +65,8 @@ namespace Molinos.DataAgro.Business
                 {
                     informe.ToneladasTodo = "";
                 }
+                informe.TextoCompleto1 = informe.corredorRazonSocial+" , CUIT "+informe.corredorCuit+" en mi carácter de corredor registrado en la Bolsa de Cereales/Comercio de "+informe.corredorBolsa+", registro N° "+informe.corredorNroRegistro+", solicito a Molinos Agro S.A. tenga a bien considerar al siguiente vendedor para celebrar futuras operaciones de compraventa de cereales: "+informe.vendedorRazonSocial+", CUIT "+informe.vendedorCuit+" domicilio fiscal "+informe.vendedorDomicilioFiscal;
+                informe.TextoCompleto2 = "Destaco que "+informe.corredorRazonSocial+" ha tomado los recaudos necesarios a fin de verificar la identidad de las personas aquí indicadas, su existencia y demás datos personales, lo que surge del siguiente detalle, así como también el correcto cumplimiento de las condiciones comerciales y fiscales que los habilitan para operar con Molinos en la compraventa de granos y su capacidad productiva, económica y operativa.";
 
                 if (nuevosAcopios != null)
                 {

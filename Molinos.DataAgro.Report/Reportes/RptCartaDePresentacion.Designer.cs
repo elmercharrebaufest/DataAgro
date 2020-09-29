@@ -35,14 +35,10 @@
             this.label1 = new DataDynamics.ActiveReports.Label();
             this.picture1 = new DataDynamics.ActiveReports.Picture();
             this.detail = new DataDynamics.ActiveReports.Detail();
-            this.Label3 = new DataDynamics.ActiveReports.Label();
-            this.txtCalificacion = new DataDynamics.ActiveReports.TextBox();
-            this.textBox10 = new DataDynamics.ActiveReports.TextBox();
             this.SubRptCapacidadAlm = new DataDynamics.ActiveReports.SubReport();
             this.label38 = new DataDynamics.ActiveReports.Label();
             this.textBox3 = new DataDynamics.ActiveReports.TextBox();
             this.label14 = new DataDynamics.ActiveReports.Label();
-            this.textBox12 = new DataDynamics.ActiveReports.TextBox();
             this.textBox11 = new DataDynamics.ActiveReports.TextBox();
             this.label9 = new DataDynamics.ActiveReports.Label();
             this.label13 = new DataDynamics.ActiveReports.Label();
@@ -64,17 +60,6 @@
             this.label43 = new DataDynamics.ActiveReports.Label();
             this.label44 = new DataDynamics.ActiveReports.Label();
             this.label45 = new DataDynamics.ActiveReports.Label();
-            this.label8 = new DataDynamics.ActiveReports.Label();
-            this.label2 = new DataDynamics.ActiveReports.Label();
-            this.label17 = new DataDynamics.ActiveReports.Label();
-            this.textBox1 = new DataDynamics.ActiveReports.TextBox();
-            this.label20 = new DataDynamics.ActiveReports.Label();
-            this.label21 = new DataDynamics.ActiveReports.Label();
-            this.textBox2 = new DataDynamics.ActiveReports.TextBox();
-            this.label22 = new DataDynamics.ActiveReports.Label();
-            this.textBox4 = new DataDynamics.ActiveReports.TextBox();
-            this.label23 = new DataDynamics.ActiveReports.Label();
-            this.textBox6 = new DataDynamics.ActiveReports.TextBox();
             this.label5 = new DataDynamics.ActiveReports.Label();
             this.textBox7 = new DataDynamics.ActiveReports.TextBox();
             this.label6 = new DataDynamics.ActiveReports.Label();
@@ -94,7 +79,6 @@
             this.label25 = new DataDynamics.ActiveReports.Label();
             this.label26 = new DataDynamics.ActiveReports.Label();
             this.label27 = new DataDynamics.ActiveReports.Label();
-            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
             this.label28 = new DataDynamics.ActiveReports.Label();
             this.label29 = new DataDynamics.ActiveReports.Label();
             this.label30 = new DataDynamics.ActiveReports.Label();
@@ -102,15 +86,14 @@
             this.label33 = new DataDynamics.ActiveReports.Label();
             this.label34 = new DataDynamics.ActiveReports.Label();
             this.label35 = new DataDynamics.ActiveReports.Label();
+            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
+            this.textBox1 = new DataDynamics.ActiveReports.TextBox();
+            this.textBox2 = new DataDynamics.ActiveReports.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.label1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Label3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtCalificacion)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label38)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label14)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label13)).BeginInit();
@@ -131,17 +114,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.label43)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label44)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label45)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label17)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label20)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label21)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label22)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label23)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label6)).BeginInit();
@@ -168,6 +140,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.label33)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label34)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label35)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // pageHeader
@@ -205,14 +179,10 @@
             this.detail.CanShrink = true;
             this.detail.ColumnSpacing = 0F;
             this.detail.Controls.AddRange(new DataDynamics.ActiveReports.ARControl[] {
-            this.Label3,
-            this.txtCalificacion,
-            this.textBox10,
             this.SubRptCapacidadAlm,
             this.label38,
             this.textBox3,
             this.label14,
-            this.textBox12,
             this.textBox11,
             this.label9,
             this.label13,
@@ -234,17 +204,6 @@
             this.label43,
             this.label44,
             this.label45,
-            this.label8,
-            this.label2,
-            this.label17,
-            this.textBox1,
-            this.label20,
-            this.label21,
-            this.textBox2,
-            this.label22,
-            this.textBox4,
-            this.label23,
-            this.textBox6,
             this.label5,
             this.textBox7,
             this.label6,
@@ -270,43 +229,12 @@
             this.label31,
             this.label33,
             this.label34,
-            this.label35});
+            this.label35,
+            this.textBox1,
+            this.textBox2});
             this.detail.Height = 10.533F;
             this.detail.Name = "detail";
             this.detail.Format += new System.EventHandler(this.detail_Format);
-            // 
-            // Label3
-            // 
-            this.Label3.Height = 0.2F;
-            this.Label3.HyperLink = null;
-            this.Label3.Left = 4.088F;
-            this.Label3.Name = "Label3";
-            this.Label3.Style = "font-size: 9.75pt; font-weight: normal; vertical-align: top; ddo-char-set: 0";
-            this.Label3.Text = ",CUIT";
-            this.Label3.Top = 0.02F;
-            this.Label3.Width = 0.4129999F;
-            // 
-            // txtCalificacion
-            // 
-            this.txtCalificacion.DataField = "corredorCuit";
-            this.txtCalificacion.Height = 0.2F;
-            this.txtCalificacion.Left = 4.549F;
-            this.txtCalificacion.Name = "txtCalificacion";
-            this.txtCalificacion.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
-            this.txtCalificacion.Text = null;
-            this.txtCalificacion.Top = 0.02F;
-            this.txtCalificacion.Width = 0.9569999F;
-            // 
-            // textBox10
-            // 
-            this.textBox10.DataField = "corredorRazonSocial";
-            this.textBox10.Height = 0.2F;
-            this.textBox10.Left = 0.335F;
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
-            this.textBox10.Text = null;
-            this.textBox10.Top = 0.02F;
-            this.textBox10.Width = 3.700001F;
             // 
             // SubRptCapacidadAlm
             // 
@@ -358,17 +286,6 @@
             this.label14.Text = "CUIT Vendedor:";
             this.label14.Top = 1.384F;
             this.label14.Width = 1.758F;
-            // 
-            // textBox12
-            // 
-            this.textBox12.DataField = "corredorBolsa";
-            this.textBox12.Height = 0.2F;
-            this.textBox12.Left = 1.72F;
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
-            this.textBox12.Text = null;
-            this.textBox12.Top = 0.303F;
-            this.textBox12.Width = 2.08F;
             // 
             // textBox11
             // 
@@ -704,128 +621,6 @@
             this.label45.Top = 5.368001F;
             this.label45.Width = 0.72F;
             // 
-            // label8
-            // 
-            this.label8.Height = 0.2F;
-            this.label8.HyperLink = null;
-            this.label8.Left = 5.569F;
-            this.label8.Name = "label8";
-            this.label8.Style = "font-size: 9.75pt";
-            this.label8.Text = "en mi carácter de corredor registrado en la  Bolsa de ";
-            this.label8.Top = 0.03F;
-            this.label8.Width = 3.41F;
-            // 
-            // label2
-            // 
-            this.label2.Height = 0.2F;
-            this.label2.HyperLink = null;
-            this.label2.Left = 0.3350005F;
-            this.label2.Name = "label2";
-            this.label2.Style = "font-size: 9.75pt";
-            this.label2.Text = "Cereales/Comercio de ";
-            this.label2.Top = 0.313F;
-            this.label2.Width = 1.385F;
-            // 
-            // label17
-            // 
-            this.label17.Height = 0.2F;
-            this.label17.HyperLink = null;
-            this.label17.Left = 3.849F;
-            this.label17.Name = "label17";
-            this.label17.Style = "font-size: 9.75pt";
-            this.label17.Text = ", registro N°";
-            this.label17.Top = 0.313F;
-            this.label17.Width = 0.8160001F;
-            // 
-            // textBox1
-            // 
-            this.textBox1.DataField = "corredorNroRegistro";
-            this.textBox1.Height = 0.2F;
-            this.textBox1.Left = 4.658997F;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
-            this.textBox1.Text = null;
-            this.textBox1.Top = 0.3030001F;
-            this.textBox1.Width = 1.337999F;
-            // 
-            // label20
-            // 
-            this.label20.Height = 0.2F;
-            this.label20.HyperLink = null;
-            this.label20.Left = 5.996997F;
-            this.label20.Name = "label20";
-            this.label20.Style = "font-size: 9.75pt";
-            this.label20.Text = ", solicito a Molinos Agro S.A. tenga a bien";
-            this.label20.Top = 0.313F;
-            this.label20.Width = 2.982003F;
-            // 
-            // label21
-            // 
-            this.label21.Height = 0.2F;
-            this.label21.HyperLink = null;
-            this.label21.Left = 0.3350005F;
-            this.label21.Name = "label21";
-            this.label21.Style = "font-size: 9.75pt";
-            this.label21.Text = "considerar al siguiente vendedor para celebrar futuras operaciones de compraventa" +
-    " de cereales: ";
-            this.label21.Top = 0.5860001F;
-            this.label21.Width = 8.644F;
-            // 
-            // textBox2
-            // 
-            this.textBox2.DataField = "vendedorRazonSocial";
-            this.textBox2.Height = 0.2F;
-            this.textBox2.Left = 0.335F;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
-            this.textBox2.Text = null;
-            this.textBox2.Top = 0.8430001F;
-            this.textBox2.Width = 3.7F;
-            // 
-            // label22
-            // 
-            this.label22.Height = 0.2F;
-            this.label22.HyperLink = null;
-            this.label22.Left = 4.088F;
-            this.label22.Name = "label22";
-            this.label22.Style = "font-size: 9.75pt; font-weight: normal; vertical-align: top; ddo-char-set: 0";
-            this.label22.Text = ",CUIT";
-            this.label22.Top = 0.853F;
-            this.label22.Width = 0.4129998F;
-            // 
-            // textBox4
-            // 
-            this.textBox4.DataField = "vendedorCuit";
-            this.textBox4.Height = 0.2F;
-            this.textBox4.Left = 4.549F;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
-            this.textBox4.Text = null;
-            this.textBox4.Top = 0.8430001F;
-            this.textBox4.Width = 0.9569999F;
-            // 
-            // label23
-            // 
-            this.label23.Height = 0.2F;
-            this.label23.HyperLink = null;
-            this.label23.Left = 5.569F;
-            this.label23.Name = "label23";
-            this.label23.Style = "font-size: 9.75pt";
-            this.label23.Text = "domicilio fiscal";
-            this.label23.Top = 0.853F;
-            this.label23.Width = 0.9790002F;
-            // 
-            // textBox6
-            // 
-            this.textBox6.DataField = "vendedorDomicilioFiscal";
-            this.textBox6.Height = 0.2F;
-            this.textBox6.Left = 6.597F;
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
-            this.textBox6.Text = null;
-            this.textBox6.Top = 0.8430001F;
-            this.textBox6.Width = 2.382F;
-            // 
             // label5
             // 
             this.label5.Height = 0.2F;
@@ -1037,11 +832,6 @@
             this.label27.Top = 7.862F;
             this.label27.Width = 8.644F;
             // 
-            // pageFooter
-            // 
-            this.pageFooter.Height = 0F;
-            this.pageFooter.Name = "pageFooter";
-            // 
             // label28
             // 
             this.label28.Height = 0.2F;
@@ -1119,6 +909,33 @@
             this.label35.Top = 8.878F;
             this.label35.Width = 2.094F;
             // 
+            // pageFooter
+            // 
+            this.pageFooter.Height = 0F;
+            this.pageFooter.Name = "pageFooter";
+            // 
+            // textBox1
+            // 
+            this.textBox1.DataField = "TextoCompleto1";
+            this.textBox1.Height = 0.596F;
+            this.textBox1.Left = 0.156F;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
+            this.textBox1.Text = null;
+            this.textBox1.Top = 0F;
+            this.textBox1.Width = 8.858001F;
+            // 
+            // textBox2
+            // 
+            this.textBox2.DataField = "TextoCompleto2";
+            this.textBox2.Height = 0.5960001F;
+            this.textBox2.Left = 0.156F;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Style = "font-size: 9.75pt; vertical-align: bottom; ddo-char-set: 0";
+            this.textBox2.Text = null;
+            this.textBox2.Top = 0.6580001F;
+            this.textBox2.Width = 8.858001F;
+            // 
             // RptCartaDePresentacion
             // 
             this.MasterReport = false;
@@ -1145,13 +962,9 @@
             this.StyleSheet.Add(new DDCssLib.StyleSheetRule("font-size: 13pt; font-weight: bold", "Heading3", "Normal"));
             ((System.ComponentModel.ISupportInitialize)(this.label1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Label3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtCalificacion)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label38)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label14)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label13)).EndInit();
@@ -1172,17 +985,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.label43)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label44)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label45)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label17)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label20)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label21)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label22)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.label23)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.textBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label6)).EndInit();
@@ -1209,19 +1011,17 @@
             ((System.ComponentModel.ISupportInitialize)(this.label33)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label34)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label35)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
         #endregion
         private DataDynamics.ActiveReports.Label label1;
         private DataDynamics.ActiveReports.Picture picture1;
-        private DataDynamics.ActiveReports.Label Label3;
-        private DataDynamics.ActiveReports.TextBox txtCalificacion;
-        private DataDynamics.ActiveReports.TextBox textBox10;
         private DataDynamics.ActiveReports.Label label9;
         private DataDynamics.ActiveReports.TextBox textBox11;
         private DataDynamics.ActiveReports.Label label14;
-        private DataDynamics.ActiveReports.TextBox textBox12;
         private DataDynamics.ActiveReports.SubReport SubRptCapacidadAlm;
         private DataDynamics.ActiveReports.Label label38;
         private DataDynamics.ActiveReports.TextBox textBox3;
@@ -1245,17 +1045,6 @@
         private DataDynamics.ActiveReports.Label label43;
         private DataDynamics.ActiveReports.Label label44;
         private DataDynamics.ActiveReports.Label label45;
-        private DataDynamics.ActiveReports.Label label8;
-        private DataDynamics.ActiveReports.Label label2;
-        private DataDynamics.ActiveReports.Label label17;
-        private DataDynamics.ActiveReports.TextBox textBox1;
-        private DataDynamics.ActiveReports.Label label20;
-        private DataDynamics.ActiveReports.Label label21;
-        private DataDynamics.ActiveReports.TextBox textBox2;
-        private DataDynamics.ActiveReports.Label label22;
-        private DataDynamics.ActiveReports.TextBox textBox4;
-        private DataDynamics.ActiveReports.Label label23;
-        private DataDynamics.ActiveReports.TextBox textBox6;
         private DataDynamics.ActiveReports.Label label5;
         private DataDynamics.ActiveReports.TextBox textBox7;
         private DataDynamics.ActiveReports.Label label6;
@@ -1282,6 +1071,8 @@
         private DataDynamics.ActiveReports.Label label33;
         private DataDynamics.ActiveReports.Label label34;
         private DataDynamics.ActiveReports.Label label35;
+        private DataDynamics.ActiveReports.TextBox textBox1;
+        private DataDynamics.ActiveReports.TextBox textBox2;
     }
 }
 
