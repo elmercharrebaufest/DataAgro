@@ -3755,7 +3755,9 @@ function CargarDatosEditar(contrato, hijo) {
         $("#aperturaPrecioBtn").attr("disabled", true);
         $("#diasDiferidoId").attr("disabled", true);
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(false);
-        $("#comercialFijacionId").data("kendoDropDownList").enable(false);
+        $("#comercialFijacionId").data("kendoDropDownList").enable(false); 
+        $("#motivoOperacionAnteriorFijacion").attr("disabled", true);
+        $("#fechaFijacionId").data("kendoDatePicker").enable(false);
         //$("#pagoCbuInput").data("kendoAutoComplete").enable(false);
 
     }
