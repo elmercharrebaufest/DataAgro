@@ -20,5 +20,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Calidad { get; set; }
         //public string Comercial { get; set; }
         public string Borrado { get; set; }
+        public string Comercial { get; set; }
     }
 }

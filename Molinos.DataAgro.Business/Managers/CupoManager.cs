@@ -1883,21 +1883,22 @@ namespace Molinos.DataAgro.Business.Managers
         {
             Resultado resultado = new Resultado();
             try
-            {          
-            var cupoSave = new Cupo
             {
-                FechaIngreso = cupoSAP.FechaIngreso,
-                MaterialId = cupoSAP.MaterialId,
-                ProveedorId = cupoSAP.ProveedorId,
-                CentroId = cupoSAP.CentroId,
-                ZonaCupoId = cupoSAP.ZonaCupoId,
-                Observaciones = cupoSAP.Observaciones,
-                Destinatario = cupoSAP.Destinatario,
-                FleteProcedencia = cupoSAP.FleteProcedencia,
-                Calidad = cupoSAP.Calidad,
-                CupoSap = cupoSAP.CupoSap,
-                EstadoCupoId = cupoSAP.EstadoCupoId,
-                FechaGeneracion = DateTime.Now
+                var cupoSave = new Cupo
+                {
+                    FechaIngreso = cupoSAP.FechaIngreso,
+                    MaterialId = cupoSAP.MaterialId,
+                    ProveedorId = cupoSAP.ProveedorId,
+                    CentroId = cupoSAP.CentroId,
+                    ZonaCupoId = cupoSAP.ZonaCupoId,
+                    Observaciones = cupoSAP.Observaciones,
+                    Destinatario = cupoSAP.Destinatario,
+                    FleteProcedencia = cupoSAP.FleteProcedencia,
+                    Calidad = cupoSAP.Calidad,
+                    CupoSap = cupoSAP.CupoSap,
+                    EstadoCupoId = cupoSAP.EstadoCupoId,
+                    FechaGeneracion = DateTime.Now,
+                    ComercialId = cupoSAP.ComercialId
             };
             repositorio.Agregar(cupoSave);
             repositorio.GuardarCambios();
