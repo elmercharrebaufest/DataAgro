@@ -30,6 +30,7 @@ namespace WebDataAgro.Services
         private readonly IRepositorio repositorio;
         private readonly ICupoManager cupoManager;
         private readonly IMailManager mailManager;
+        private readonly IFijacionDePrecioContratoManager fijacionDePrecioContratoManager;
 
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
@@ -39,7 +40,7 @@ namespace WebDataAgro.Services
             IContratoManager contratoManager,
             IRepositorio repositorio,
             ICupoManager cupoManager,
-            IMailManager mailManager)
+            IMailManager mailManager, IFijacionDePrecioContratoManager fijacionDePrecioContratoManager)
         {
             this.logger = logger;
             this.riesgoComercial = riesgoComercial;
@@ -50,6 +51,7 @@ namespace WebDataAgro.Services
             this.repositorio = repositorio;
             this.cupoManager = cupoManager;
             this.mailManager = mailManager;
+            this.fijacionDePrecioContratoManager = fijacionDePrecioContratoManager;
         }
         #region Servicios de DataAgro
 
@@ -908,6 +910,95 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
+
+        public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)
+        {
+            //contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
+            //contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
+            //fijacionSAP.Apertura = fijacionSAP.Apertura ?? new List<AperturaPrecioSap>();
+            //fijacionSAP.Procedencia = fijacionSAP.Procedencia != null ? fijacionSAP.Procedencia.Trim() : fijacionSAP.Procedencia;
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("ActualizandoFijacion" + fijacionSAP.ToXml());
+                //var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == fijacionSAP.FijacionSAP, x => x.Id);
+
+                var fijacion = new FijacionDePrecioContrato();
+                fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
+                fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
+                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
+                //fijacion.ContratoSAP = fijacionSAP.ContratoSAP.PadLeft(10, '0');
+                //fijacion.ContratoId = fijarId != 0 ? fijarId : (int?)null;   
+                //fijacion.Precio = fijacionSAP.Precio;
+                //fijacion.Cantidad = (double)fijacionSAP.Cantidad;
+                //fijacion.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == fijacionSAP.Centro, x => x.Id);               
+                //fijacion.CorredorId = !string.IsNullOrEmpty(fijacionSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == fijacionSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
+                //fijacion.DesdeFijacion = !string.IsNullOrEmpty(fijacionSAP.FeDesdeFij) ? DateTime.ParseExact(fijacionSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+                //fijacion.DiasPesificado = fijacionSAP.DiasDiferimiento == 0 ? (int?)null : fijacionSAP.DiasDiferimiento;
+                //fijacion.PagoDiferido = fijacionSAP.DiasDiferimiento > 0;
+                //fijacion.Dolarizado = fijacionSAP.Dolarizado == "X" ? false : !string.IsNullOrEmpty(fijacionSAP.FechaLimite);
+                //fijacion.FechaDolarizado = !string.IsNullOrEmpty(fijacionSAP.FechaLimite) ? DateTime.ParseExact(fijacionSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+                //fijacion.FechaDesde = DateTime.ParseExact(fijacionSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //fijacion.FechaHasta = DateTime.ParseExact(fijacionSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //fijacion.HastaFijacion = !string.IsNullOrEmpty(fijacionSAP.FeHastaFij) ? DateTime.ParseExact(fijacionSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;            
+                //fijacion.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == fijacionSAP.Material, x => x.MaterialId);
+                //fijacion.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == fijacionSAP.Moneda, x => x.MonedaId);                
+                //fijacion.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == fijacionSAP.Cosecha, x => x.CampañaId);
+                //fijacion.PrecioNeto = fijacionSAP.PrecioNeto;
+                //fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);              
+                //fijacion.EstadoId = 5;
+                //fijacion.TipoAgenteCompraId = fijacionSAP.TipoAgenteCompraId == "9952569841" ? (int?)1 : null;   
+                //fijacion.DolarizadoExpress = fijacionSAP.Dolarizado == "X";
+                //fijacion.TipoNegocioId = 3;
+                //fijacion.ComercialId = 1;
+                //fijacion.Fecha = DateTime.Now;
+
+                //logger.Debug("Alta contrato Apertura");
+
+                //var aperturas = new List<AperturaPrecio>();
+                //var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
+                //if (fijacionSAP.Apertura != null && fijacionSAP.Apertura.Count > 0)
+                //{
+                //    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
+                //    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
+                //    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
+                //    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
+                //}
+                //foreach (var aper in fijacionSAP.Apertura ?? new List<AperturaPrecioSap>())
+                //{
+                //    var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
+
+                //    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
+                //    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
+                //    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
+                //}
+                //logger.Debug("ActualizandoContrato5");
+                //ValidarContrato(contrato, oEntityErrors);
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
+                var resultado = fijacionDePrecioContratoManager.ActualizarFijacionSap(fijacion);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
+                });
+                oEntityErrors.HayError = true;
+            }
+            logger.Debug("ActualizandoFijacion CONTRATOSAP:" + JsonConvert.SerializeObject(fijacionSAP));
+            logger.Debug("ActualizandoFijacion RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+
+
+        }
         #endregion
     }
-}
+    }

@@ -640,6 +640,8 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.ContratoId = contratoOriginal.ContratoId;
                             oContratoSave.Posicion = contratoOriginal.Posicion;
                             oContratoSave.PagoDiferidoContrato = contratoOriginal.PagoDiferidoContrato;
+                            oContratoSave.ChequeElectronico = contratoOriginal.ChequeElectronico;
+                            oContratoSave.PagoCBU = contratoOriginal.PagoCBU;
                             oContrato.FechaOperacion = contratoOriginal.FechaOperacion;
 
                             if (oContratoSave.AperturaPrecio != null)
@@ -1031,6 +1033,65 @@ namespace Molinos.DataAgro.Business.Managers
             Nullable<DateTime> fecha = null;
 
             return diasHabilesAgent.UltimoDiaHabil(fecha);
+        }
+
+        public Resultado ActualizarFijacionSap(FijacionDePrecioContrato fijacion)
+        {
+            var error = new Resultado();
+            try
+            {                     
+            logger.Debug("Actualizando contrato en BD DataAgro: " + fijacion.Id);
+            var contratoSave = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionSAP.Contains(fijacion.FijacionSAP));
+            if (contratoSave == null || contratoSave.Id == 0)
+            {
+                error.Error("Fijacion", "No existe la fijacion en DataAgro");
+            }
+            //this.Validar(fijacion, error);
+            if (error.Errores.Count > 0)
+            {
+                return error;
+            }
+            contratoSave.ChequeElectronico = fijacion.ChequeElectronico;
+            contratoSave.PagoCBU = fijacion.PagoCBU;
+                //contratoSave.Precio = fijacion.Precio;
+                //contratoSave.Cantidad = fijacion.Cantidad;
+                //contratoSave.Ampliaciones = fijacion.Ampliaciones;
+                //contratoSave.Observacion = fijacion.Observacion;
+                //contratoSave.ProveedorId = fijacion.ProveedorId;
+                //contratoSave.ComercialId = fijacion.ComercialId;
+                //contratoSave.ContratoId = fijacion.ContratoId;
+                //contratoSave.MonedaId = fijacion.MonedaId;
+                //contratoSave.MaterialId = fijacion.MaterialId;
+                //contratoSave.CorredorId = fijacion.CorredorId;
+                //contratoSave.ContratoSAP = fijacion.ContratoSAP.PadLeft(10, '0');
+                //contratoSave.CampanaId = fijacion.CampanaId;
+                //contratoSave.Posicion = fijacion.Posicion;
+                //contratoSave.TrigoEspecial = fijacion.TrigoEspecial;
+                //contratoSave.FechaDesde = fijacion.FechaDesde;
+                //contratoSave.FechaHasta = fijacion.FechaHasta;
+                //contratoSave.PrecioNeto = fijacion.PrecioNeto;
+                //contratoSave.Pizarra = fijacion.Pizarra;
+                //contratoSave.DiasPesificado = fijacion.DiasPesificado;
+                //contratoSave.PagoDiferidoContrato = fijacion.PagoDiferidoContrato;
+                //contratoSave.DestinoId = fijacion.DestinoId;
+                //contratoSave.FechaOperacion = fijacion.FechaOperacion;            
+                //contratoSave.MotivoOperacionAnterior = fijacion.MotivoOperacionAnterior;
+
+                //if (fijacion.AperturaPrecio != null)
+                //{
+                //    var aperturas = repositorio.Listar<AperturaPrecio>(x => x.NegocioId != null && x.NegocioId == contratoSave.Id);
+                //    repositorio.RemoverTodos(aperturas);
+                //    contratoSave.AperturaPrecio = fijacion.AperturaPrecio;
+                //}         
+
+            repositorio.GuardarCambios();            
+            }
+            catch (Exception e)
+            {
+
+                logger.Error("", e.Message);
+            }
+            return error;
         }
     }
 }

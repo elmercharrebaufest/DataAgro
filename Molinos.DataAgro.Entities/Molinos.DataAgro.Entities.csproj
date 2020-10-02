@@ -132,6 +132,7 @@
     <Compile Include="Dto\CompraDetalleAgentDto.cs" />
     <Compile Include="Dto\EstablecimientoStockDto.cs" />
     <Compile Include="Dto\CartaDePresentacion.cs" />
+    <Compile Include="Dto\FijacionSAPDto.cs" />
     <Compile Include="Dto\ListaCompraDetalleDto.cs" />
     <Compile Include="Dto\FechaFeriadoDto.cs" />
     <Compile Include="Dto\PagoCBUDto.cs" />

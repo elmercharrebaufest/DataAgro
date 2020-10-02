@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<IRepositorio> repositorioMock;
         private Mock<ICupoManager> cupoManagerMock;
         private Mock<IMailManager> mailManagerMock;
+        private Mock<IFijacionDePrecioContratoManager> fijacionManager;
 
 
         private JavaScriptSerializer serializer;
@@ -48,12 +49,12 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock = new Mock<IRepositorio>();
             cupoManagerMock = new Mock<ICupoManager>();
             mailManagerMock = new Mock<IMailManager>();
-
+            fijacionManager = new Mock<IFijacionDePrecioContratoManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new DataAgroServices(loggerMock.Object, riesgoComercialManagerMock.Object, campaniaAcutalManagerMock.Object,
                 camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, cupoManagerMock.Object
-                , mailManagerMock.Object);
+                ,mailManagerMock.Object, fijacionManager.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
