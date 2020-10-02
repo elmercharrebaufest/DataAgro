@@ -379,7 +379,7 @@ namespace WebDataAgro.Controllers
             }
             else
             {
-                mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(oParam);
+                model = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(oParam);
             }
             return new JsonResult()
             {
