@@ -41,13 +41,13 @@ namespace Molinos.DataAgro.Agent
         public DateTime UltimoDiaHabil(DateTime? fecha)
         {
 
-            var diaAnterior = fecha != null ? fecha.Value : new DateTime();
+            var diaAnterior = fecha != null ? fecha.Value.Date : DateTime.Now.Date;
             var diasHabiles = ObtenerDiasHabiles();
             for (var i = 1; i < diasHabiles.Count; i++)
             {
-                if (diasHabiles.Contains(DateTime.Now.Date.AddDays(-i)))
+                if (diasHabiles.Contains(diaAnterior.Date.AddDays(-i)))
                 {
-                    diaAnterior = DateTime.Today.AddDays(-i);
+                    diaAnterior = diaAnterior.AddDays(-i);
                     break;
                 }
             }
