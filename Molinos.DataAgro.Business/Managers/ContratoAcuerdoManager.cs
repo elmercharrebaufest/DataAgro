@@ -237,6 +237,7 @@ namespace Molinos.DataAgro.Business
             {
                 oContratoAcuerdo.Fecha = DateTime.Now;
                 oContratoAcuerdo.EstadoId = estado;
+                oContratoAcuerdo.FechaOperacion = DateTime.Now;
                 repositorio.Agregar(oContratoAcuerdo);
                 if (ConfirmacionAutomatica(oContratoAcuerdo))
                 {
@@ -299,6 +300,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.CondicionFijacionId = oContratoAcuerdo.CondicionFijacionId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
                 objContratoAcuerdo.FechaCierta = oContratoAcuerdo.FechaCierta;
+            
 
                 if (descuentosExistentes != null)
                 {

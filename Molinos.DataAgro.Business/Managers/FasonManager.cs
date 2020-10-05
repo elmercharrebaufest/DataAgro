@@ -161,7 +161,6 @@ namespace Molinos.DataAgro.Business.Managers
                 oFasonSave.FechaHasta = oFason.FechaHasta;
                 oFasonSave.TrigoEspecial = oFason.TrigoEspecial;
                 oFasonSave.ComercialCreadorId = oFason.ComercialCreadorId;
-
             }
             else
             {
@@ -172,6 +171,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oFason.Fecha = DateTime.Now;
                 oFason.EstadoId = estado;
+                oFason.FechaOperacion = DateTime.Now;
+
                 repositorio.Agregar(oFason);
             }
 

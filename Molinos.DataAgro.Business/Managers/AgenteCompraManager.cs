@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oAgenteSave.Posicion = oAgente.Posicion;
                 oAgenteSave.ComercialCreadorId = oAgente.ComercialCreadorId;
                 oAgenteSave.CampanaId = oAgente.CampanaId;
-
+               
 
 
             }
@@ -170,6 +170,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oAgente.Fecha = DateTime.Now;
                 oAgente.EstadoId = estado;
+                oAgente.FechaOperacion = DateTime.Now;
                 repositorio.Agregar(oAgente);
             }
 
