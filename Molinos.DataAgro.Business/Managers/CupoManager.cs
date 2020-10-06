@@ -84,133 +84,133 @@ namespace Molinos.DataAgro.Business.Managers
                 //}
                 if (!error.HayError)
                 {
-                cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
-                cupo.Centro = repositorio.Obtener<Centro>(cupo.CentroId);
-                cupo.Proveedor = repositorio.Obtener<Proveedor>(cupo.ProveedorId);
-                cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
+                    cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
+                    cupo.Centro = repositorio.Obtener<Centro>(cupo.CentroId);
+                    cupo.Proveedor = repositorio.Obtener<Proveedor>(cupo.ProveedorId);
+                    cupo.ZonaCupo = repositorio.Obtener<ZonaCupo>(cupo.ZonaCupoId);
 
-                if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
-                {
-                    cupo.UsuarioCreador = PermisosHelper.ObtenerUsuario();
-                    cupo.EstadoCupoId = 6;
-                }
-
-                if (cupo.Id == 0)
-                {
-                    foreach (var d in dias)
+                    if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
                     {
-                        if (d.Cantidad > 0)
-                        {
-                            if (d.Fecha < DateTime.Today)
-                            {
-                                error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
-                                continue;
-                            }
-                            cupo.FechaIngreso = d.Fecha;
-                            var listaCupos = new List<string>();
-                            var errorSap = new Resultado();
-                            var cuposConSap = new List<Cupo>();
-                            if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
-                            {
+                        cupo.UsuarioCreador = PermisosHelper.ObtenerUsuario();
+                        cupo.EstadoCupoId = 6;
+                    }
 
-                                try
+                    if (cupo.Id == 0)
+                    {
+                        foreach (var d in dias)
+                        {
+                            if (d.Cantidad > 0)
+                            {
+                                if (d.Fecha < DateTime.Today)
                                 {
-                                    listaCupos = crearCupoAgent.Crear(cupo, d.Cantidad.Value);
-                                }
-                                catch (Exception e)
-                                {
-                                    errorSap.Error("CantidadCuposSAP", cupo.FechaIngreso.ToShortDateString() + ": " + e.Message);
-                                }
-                                if (errorSap.HayError)
-                                {
-                                    error.Errores.AddRange(errorSap.Errores);
+                                    error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
                                     continue;
                                 }
-                                cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : 8;
-                                foreach (var cupoSap in listaCupos)
+                                cupo.FechaIngreso = d.Fecha;
+                                var listaCupos = new List<string>();
+                                var errorSap = new Resultado();
+                                var cuposConSap = new List<Cupo>();
+                                if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
                                 {
-                                    var nuevoCupo = (Cupo)cupo.Clone();
-                                    nuevoCupo.CupoSap = cupoSap;
-                                    cuposConSap.Add(nuevoCupo);
-                                }
 
-                                repositorio.AgregarTodos(cuposConSap);
-                                repositorio.GuardarCambios();
-
-                                foreach (var cupoNuevo in cuposConSap)
-                                {
-                                    if (cupo.Id == 0)
+                                    try
                                     {
-                                        var cupoConId = repositorio.Obtener<Cupo>(x => x.CupoSap == cupoNuevo.CupoSap);
-                                        logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoConId.Id), TipoAccionLogDataAgro.Crear);
+                                        listaCupos = crearCupoAgent.Crear(cupo, d.Cantidad.Value);
                                     }
+                                    catch (Exception e)
+                                    {
+                                        errorSap.Error("CantidadCuposSAP", cupo.FechaIngreso.ToShortDateString() + ": " + e.Message);
+                                    }
+                                    if (errorSap.HayError)
+                                    {
+                                        error.Errores.AddRange(errorSap.Errores);
+                                        continue;
+                                    }
+                                    cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : 8;
+                                    foreach (var cupoSap in listaCupos)
+                                    {
+                                        var nuevoCupo = (Cupo)cupo.Clone();
+                                        nuevoCupo.CupoSap = cupoSap;
+                                        cuposConSap.Add(nuevoCupo);
+                                    }
+
+                                    repositorio.AgregarTodos(cuposConSap);
+                                    repositorio.GuardarCambios();
+
+                                    foreach (var cupoNuevo in cuposConSap)
+                                    {
+                                        if (cupo.Id == 0)
+                                        {
+                                            var cupoConId = repositorio.Obtener<Cupo>(x => x.CupoSap == cupoNuevo.CupoSap);
+                                            logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoConId.Id), TipoAccionLogDataAgro.Crear);
+                                        }
+                                    }
+                                    if (listaCupos.Count < d.Cantidad.Value)
+                                    {
+                                        error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + d.Cantidad.Value + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
+                                    }
+                                    error.ListaCupos.AddRange(listaCupos);
                                 }
-                                if (listaCupos.Count < d.Cantidad.Value)
+                                else
                                 {
-                                    error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + d.Cantidad.Value + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
+                                    for (int i = 0; i < d.Cantidad.Value; i++)
+                                    {
+                                        var nuevoCupo = (Cupo)cupo.Clone();
+                                        cuposConSap.Add(nuevoCupo);
+                                    }
+                                    repositorio.AgregarTodos(cuposConSap);
+                                    repositorio.GuardarCambios();
                                 }
-                                error.ListaCupos.AddRange(listaCupos);
+
+                            }
+                        }
+                        if (error.ListaCupos.Count > 0)
+                        {
+
+                            EnviarEmail(cupo, error.ListaCupos);
+                        }
+                        return error;
+                    }
+                    else
+                    {
+                        var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+                        var cupoSave = repositorio.Obtener<Cupo>(cupo.Id);
+                        cupoSave.ProveedorId = cupo.ProveedorId;
+                        cupoSave.Proveedor = cupo.Proveedor;
+                        cupoSave.Calidad = cupo.Calidad;
+                        cupoSave.Observaciones = cupo.Observaciones;
+                        cupoSave.Destinatario = cupo.Destinatario;
+                        cupoSave.Fason = cupo.Fason;
+                        cupoSave.FleteProcedencia = cupo.FleteProcedencia;
+                        cupoSave.NegocioId = cupo.NegocioId;
+                        var res = modificarCupoAgent.Modificar(cupoSave);
+                        if (res != "Ok")
+                        {
+                            error.Error("SAP", $"Error al grabar en SAP: {res}");
+                        }
+                        if (!cupoSave.Centro.Acopio)
+                        {
+                            if (datosConfiguracion.ConexionABMStop.HasValue && datosConfiguracion.ConexionABMStop.Value)
+                            {
+                                if (cupoSave.CupoStop != null)
+                                {
+                                    clienteStopAgent.ModificarCupo(cupoSave);
+                                }
                             }
                             else
                             {
-                                for (int i = 0; i < d.Cantidad.Value; i++)
-                                {
-                                    var nuevoCupo = (Cupo)cupo.Clone();
-                                    cuposConSap.Add(nuevoCupo);
-                                }
-                                repositorio.AgregarTodos(cuposConSap);
-                                repositorio.GuardarCambios();
+                                error.Error("Stop", "Sin Conexión a Stop. Modificado en SAP");
                             }
-
                         }
-                    }
-                    if (error.ListaCupos.Count > 0)
-                    {
+                        repositorio.GuardarCambios();
+                        var asd = ObtenerCupo(cupoSave.Id);
+                        logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id), TipoAccionLogDataAgro.Modificar);
+                        return error;
 
-                        EnviarEmail(cupo, error.ListaCupos);
                     }
-                    return error;
                 }
-                else
-                {
-                    var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
-                    var cupoSave = repositorio.Obtener<Cupo>(cupo.Id);
-                    cupoSave.ProveedorId = cupo.ProveedorId;
-                    cupoSave.Proveedor = cupo.Proveedor;
-                    cupoSave.Calidad = cupo.Calidad;
-                    cupoSave.Observaciones = cupo.Observaciones;
-                    cupoSave.Destinatario = cupo.Destinatario;
-                    cupoSave.Fason = cupo.Fason;
-                    cupoSave.FleteProcedencia = cupo.FleteProcedencia;
-                    cupoSave.NegocioId = cupo.NegocioId;
-                    var res = modificarCupoAgent.Modificar(cupoSave);
-                    if (res != "Ok")
-                    {
-                        error.Error("SAP", $"Error al grabar en SAP: {res}");
-                    }
-                    if (!cupoSave.Centro.Acopio)
-                    {
-                        if (datosConfiguracion.ConexionABMStop.HasValue && datosConfiguracion.ConexionABMStop.Value)
-                        {
-                            if (cupoSave.CupoStop != null)
-                            {
-                                clienteStopAgent.ModificarCupo(cupoSave);
-                            }
-                        }
-                        else
-                        {
-                            error.Error("Stop", "Sin Conexión a Stop. Modificado en SAP");
-                        }
-                    }
-                    repositorio.GuardarCambios();
-                    var asd = ObtenerCupo(cupoSave.Id);
-                    logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id), TipoAccionLogDataAgro.Modificar);
-                    return error;
-
-                    }
+                return error;
             }
-             return error;
-        }
             catch (Exception e)
             {
                 logger.Error(e);
@@ -565,17 +565,17 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
 
-            if(cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
+            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
             {
                 htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
             }
-            if(cupo.Observaciones != null)
+            if (cupo.Observaciones != null)
             {
                 htmlBody += cupo.Observaciones + "<br />";
-            }            
+            }
             if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
             {
-                
+
                 if (cupo.MaterialId == 1)
                 {
                     htmlBody += "ESPECIAL<br />";
@@ -588,7 +588,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "SUSTENTABLE<br />";
                 }
-                
+
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
@@ -1168,7 +1168,7 @@ namespace Molinos.DataAgro.Business.Managers
             //    resultado.Add(validacionDisponibilidad);
             //}
             return resultado;
-        }    
+        }
 
         public List<DateTime> FechasComprendidas()
         {
@@ -1433,7 +1433,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var sugerenciasProveedorFecha = sugerenciaTodosLosProveedores.Where(a => a.FechaSugerida == fechaProveedor.Fecha && a.ProveedorId == detalle.ProveedorId).ToList();
                     var totalDeCuposIngresadosEnPantalla = fechaProveedor.CantidadSugerencia;
                     var totalDeCuposEnSugerenciasExistentes = sugerenciasProveedorFecha.Sum(x => x.CantidadDeCupos);
-                  
+
                     foreach (var s in sugerenciasProveedorFecha)
                     {
 
@@ -1449,7 +1449,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         var autorizacion = new AdministracionCupo()
                         {
-                            CantidadCupo =  totalDeCuposIngresadosEnPantalla - totalDeCuposEnSugerenciasExistentes - fechaProveedor.CantidadFleteProcedencia.Value >= 0 ?
+                            CantidadCupo = totalDeCuposIngresadosEnPantalla - totalDeCuposEnSugerenciasExistentes - fechaProveedor.CantidadFleteProcedencia.Value >= 0 ?
                             totalDeCuposIngresadosEnPantalla - totalDeCuposEnSugerenciasExistentes - fechaProveedor.CantidadFleteProcedencia.Value : 0,
                             ComercialId = detalle.ComercialId,
                             Fecha = fechaProveedor.Fecha,
@@ -1843,36 +1843,37 @@ namespace Molinos.DataAgro.Business.Managers
                 ZonaCupoSap = x.ZonaCupo.CodigoSap,
                 Acopio = x.Centro.Acopio,
             },
-            x => x.CupoSap.Contains(cupoSap),15);
+            x => x.CupoSap.Contains(cupoSap), 15);
         }
 
         public List<BasicoContrato> TraerNegocioConCupoDisponible(string proveedorCuit, int material, int centro, string filtro, DateTime desde, DateTime hasta)
         {
-           var negocio = repositorio.Listar<Negocio, BasicoContrato>(x=> new BasicoContrato {
+            var negocio = repositorio.Listar<Negocio, BasicoContrato>(x => new BasicoContrato
+            {
                 TipoNegocioId = x.TipoNegocioId,
                 TipoNegocio = x.TipoNegocio.Descripcion,
                 Negocio = x.ContratoSAP,
                 Cantidad = x.Cantidad,
                 Id = x.Id,
                 Fecha = x.Fecha
-           }, x => x.Proveedor.CUIT == proveedorCuit && x.MaterialId == material && x.EstadoId == 5 && x.DestinoId == centro && 
-           (x.FechaDesde <= desde && x.FechaHasta >= hasta) && 
-           (x is Contrato) && x.ContratoSAP.Contains(filtro), 15, "Fecha", Entities.Helpers.DirOrden.Desc);
+            }, x => x.Proveedor.CUIT == proveedorCuit && x.MaterialId == material && x.EstadoId == 5 && x.DestinoId == centro &&
+            (x.FechaDesde <= desde && x.FechaHasta >= hasta) &&
+            (x is Contrato) && x.ContratoSAP.Contains(filtro), 15, "Fecha", Entities.Helpers.DirOrden.Desc);
 
             var negociosSugeridos = new List<BasicoContrato>();
             for (int i = 0; i < negocio.Count(); i++)
             {
                 var n = negocio[i];
                 var cupoNegocio = repositorio.Contar<Cupo>(x => x.Negocio.ContratoSAP == n.Negocio);
-               
-                    var cantidad = n.Cantidad - (cupoNegocio*30000);
-                    if (cantidad > 0)
-                    {
-                    var cantidadMaxCupo = Math.Ceiling(cantidad/30000);
+
+                var cantidad = n.Cantidad - (cupoNegocio * 30000);
+                if (cantidad > 0)
+                {
+                    var cantidadMaxCupo = Math.Ceiling(cantidad / 30000);
                     n.CantidadMaximaCupo = (int)cantidadMaxCupo;
-                        negociosSugeridos.Add(n);
-                    }     
-                    
+                    negociosSugeridos.Add(n);
+                }
+
 
             }
 
@@ -1899,10 +1900,10 @@ namespace Molinos.DataAgro.Business.Managers
                     EstadoCupoId = cupoSAP.EstadoCupoId,
                     FechaGeneracion = DateTime.Now,
                     ComercialId = cupoSAP.ComercialId
-            };
-            repositorio.Agregar(cupoSave);
-            repositorio.GuardarCambios();
-            logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id), TipoAccionLogDataAgro.Crear);
+                };
+                repositorio.Agregar(cupoSave);
+                repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id), TipoAccionLogDataAgro.Crear);
 
             }
             catch (Exception e)
@@ -1915,8 +1916,17 @@ namespace Molinos.DataAgro.Business.Managers
         public List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor)
         {
             var cosecha = repositorio.Obtener<Material, string>(x => x.MaterialId == 3, x => x.Campaña.Descripcion);
-            var establecimiento = servicioScato.ListarEstablecimientos(proveedor, cosecha);
-            return establecimiento;
+            try
+            {
+                var establecimiento = servicioScato.ListarEstablecimientos(proveedor, cosecha);
+                return establecimiento;
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error al obtener establecimientos desde scato. Proveedor: " + proveedor + " ,cosecha: " + cosecha, e);
+                return new List<EstablecimientoStockDto>();
+            }
+
         }
     }
 }

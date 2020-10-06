@@ -4,7 +4,7 @@
 	[Fecha]					DATETIME			NOT NULL, 
 	[LimiteCupo]			INT					NOT NULL, 
 	[CentroId]				INT					NOT NULL, 
-    [CierreCupera] BIT NULL, 
+    [CierreCupera] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [PK_ConfiguracionCupo] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_ConfiguracionCupo_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId]),
 	CONSTRAINT [FK_ConfiguracionCupo_Centro] FOREIGN KEY ([CentroId]) REFERENCES [Centro]([Id])
