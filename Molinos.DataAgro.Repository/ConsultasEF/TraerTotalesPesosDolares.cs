@@ -59,7 +59,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Cantidad = Math.Round(contrato.Cantidad / 1000),
                     FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
                     FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
-                    Fecha = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion) : DbFunctions.TruncateTime(contrato.Fecha),                    
+                    Fecha = (contrato is Contrato || contrato is FijacionDePrecioContrato) ? DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion) : DbFunctions.TruncateTime(contrato.Fecha),                    
                     GrupoCompraDescripcion = contrato.GrupoDeCompras.Descripcion,
                     Estado_Contrato = contrato.Estado.Descripcion,
                     Ampliaciones = contrato.Ampliaciones,

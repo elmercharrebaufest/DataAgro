@@ -86,9 +86,9 @@
             this.label33 = new DataDynamics.ActiveReports.Label();
             this.label34 = new DataDynamics.ActiveReports.Label();
             this.label35 = new DataDynamics.ActiveReports.Label();
-            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
             this.textBox1 = new DataDynamics.ActiveReports.TextBox();
             this.textBox2 = new DataDynamics.ActiveReports.TextBox();
+            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
             ((System.ComponentModel.ISupportInitialize)(this.label1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label38)).BeginInit();
@@ -161,7 +161,7 @@
             this.label1.Name = "label1";
             this.label1.Style = "color: DarkGreen; font-family: Calibri; font-size: 20.25pt; font-style: italic; f" +
     "ont-weight: bold; ddo-char-set: 0";
-            this.label1.Text = "Carta de Precentación";
+            this.label1.Text = "Carta de Presentación";
             this.label1.Top = 0.219F;
             this.label1.Width = 3.315F;
             // 
@@ -909,11 +909,6 @@
             this.label35.Top = 8.878F;
             this.label35.Width = 2.094F;
             // 
-            // pageFooter
-            // 
-            this.pageFooter.Height = 0F;
-            this.pageFooter.Name = "pageFooter";
-            // 
             // textBox1
             // 
             this.textBox1.DataField = "TextoCompleto1";
@@ -935,6 +930,11 @@
             this.textBox2.Text = null;
             this.textBox2.Top = 0.6580001F;
             this.textBox2.Width = 8.858001F;
+            // 
+            // pageFooter
+            // 
+            this.pageFooter.Height = 0F;
+            this.pageFooter.Name = "pageFooter";
             // 
             // RptCartaDePresentacion
             // 
