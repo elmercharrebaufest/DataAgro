@@ -4,6 +4,7 @@ using GemBox.Email.Mime;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -207,10 +208,24 @@ namespace Molinos.DataAgro.Business
                         originalMessage = imap.GetMessage(imap.SearchMessageNumbers(search).Last());
                     }
                 }
-
+               var comercial = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailHedge)));
+                var lista = new List<GemBox.Email.MailAddress>();
+                var email = "";
+                foreach (var item in comercial)
+                {
+                    if (!String.IsNullOrEmpty(item))
+                    {
+                        email = this.GetEmailUserActiveDirectory(item);
+                        if (!String.IsNullOrEmpty(email))
+                        {
+                            lista.Add(new GemBox.Email.MailAddress(email));
+                        }
+                    }
+                }
+               
                 GemBox.Email.MailMessage replyMessage = new GemBox.Email.MailMessage(
                     originalMessage.From[0],
-                    originalMessage.To.ToArray());
+                   lista.ToArray());
                 replyMessage.MimeEntity.Headers.Add(
                     new Header(HeaderId.InReplyTo, originalMessage.Id));
                 replyMessage.MimeEntity.Headers.Add(

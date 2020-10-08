@@ -586,11 +586,11 @@ margin
 
             htmlBody += "Estimados,";
             htmlBody += "<br></br>";
-            htmlBody += "A continuación, se detallan las compras correspondientes al cierre del día.";
+            htmlBody += "A continuación se detallan las compras correspondientes al cierre del día.";
             htmlBody += "<br></br>";
             htmlBody += "Observaciones: " + (String.IsNullOrEmpty(observaciones) ? "Sin observaciones." : observaciones);
             htmlBody += "<br></br>";
-            htmlBody += "<br></br>";
+           
             if (hedgeMat)
             {
                 htmlBody += @"<table cellpadding='10' style='' id='HedgeMaterial'>

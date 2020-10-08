@@ -106,10 +106,10 @@ namespace Molinos.DataAgro.Business
 
                     if (cantidad > this.TraerDiferencial().DiferencialDefault)
                     {
-                        var cuerpo = this.GenerarCuerpoMailCierreDiaExcedidoCantidad();
+                        var cuerpo = hedgeManager.GenerarCuerpoMail("");
                         mailManager.ReenviarMailCierreDia("Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
-                                                            "Complemento Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
-                                                            this.GenerarCuerpoMailCierreDiaExcedidoCantidad());
+                                                            "Actualización Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
+                                                            cuerpo);
                     }
                 }
                 return new Resultado();
