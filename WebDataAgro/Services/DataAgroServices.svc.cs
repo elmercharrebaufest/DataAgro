@@ -172,7 +172,7 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
-                var contratoOriginal = repositorio.Obtener<Contrato, Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP, x => x);
+                var contratoOriginal = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP);
 
                 var calidades = new List<Calidad>();
                 var calEspecialList = repositorio.Listar<CalidadEspecial>();
@@ -300,8 +300,8 @@ namespace WebDataAgro.Services
                 contrato.CaratulaExtension = contratoSAP.CaratulaExtension;
                 contrato.PrecioAjusteComision = contratoSAP.PrecioAjusteComision;
                 contrato.MonedaAjusteComisionId = contratoSAP.MonedaAjusteComisionId;
-                //contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
-                //contrato.PagoCBU = contratoSAP.CUENTA_MRP;
+                contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
+                contrato.PagoCBU = contratoSAP.CUENTA_MRP;
                 contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
 
 
@@ -414,7 +414,7 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("Actualizando Cupo" + cupoSAP.ToXml());
-                var cupoOriginal = repositorio.Obtener<Cupo, Cupo>(x => x.CupoSap == cupoSAP.Codigo, x => x);
+                var cupoOriginal = repositorio.Obtener<Cupo>(x => x.CupoSap == cupoSAP.Codigo);
                 if (cupoOriginal == null || cupoOriginal.Id == 0)
                 {
                     oEntityErrors.ListaErrores.Add(new ErrorMessage { Source = "Codigo", Message = "No existe cupo " + (cupoSAP.Codigo ?? "") + " en DataAgro" });
