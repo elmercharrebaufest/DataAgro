@@ -27,7 +27,9 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IContratoAcuerdoManager> contratoAcuerdoManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
         private Mock<INegocioManager> negocioManagerMock;
-        private Mock<IAdministracionCupoManager> administracionManagerMock;
+        private Mock<IDiferencialManager> diferencialManagerMock;
+        private Mock<IAdministracionCupoManager> administracionCupoManagerMock;
+        private Mock<IHedgeManager> oHedgeManagerMock;
 
         private JavaScriptSerializer serializer;
 
@@ -43,12 +45,21 @@ namespace Molinos.DataAgro.Test.Controllers
             contratoAcuerdoManagerMock = new Mock<IContratoAcuerdoManager>();
             reportesManagerMock = new Mock<IReportesManager>();
             negocioManagerMock = new Mock<INegocioManager>();
-            administracionManagerMock = new Mock<IAdministracionCupoManager>();
+            administracionCupoManagerMock = new Mock<IAdministracionCupoManager>();            
+            oHedgeManagerMock = new Mock<IHedgeManager>();
+            diferencialManagerMock = new Mock<IDiferencialManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            target = new TareasProgramadasController(loggerMock.Object, contratoManagerMock.Object,
-                fijacionManagerMock.Object, cupoManagerMock.Object, contratoAcuerdoManagerMock.Object, 
-                reportesManagerMock.Object, negocioManagerMock.Object, administracionManagerMock.Object);
+            target = new TareasProgramadasController(loggerMock.Object,
+                                                     contratoManagerMock.Object,
+                                                     fijacionManagerMock.Object,
+                                                     cupoManagerMock.Object,
+                                                     contratoAcuerdoManagerMock.Object,
+                                                     reportesManagerMock.Object,
+                                                     negocioManagerMock.Object,
+                                                     administracionCupoManagerMock.Object,
+                                                     oHedgeManagerMock.Object,
+                                                     diferencialManagerMock.Object);
         }
 
         [Test]

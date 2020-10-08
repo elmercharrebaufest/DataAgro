@@ -8,6 +8,8 @@ using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 using System;
 using Molinos.DataAgro.Entities.Dto;
+using WebDataAgro.Helpers.Excel;
+using System.Linq;
 
 namespace WebDataAgro.Controllers
 {
@@ -21,11 +23,14 @@ namespace WebDataAgro.Controllers
         private readonly IReportesManager reportesManager;
         private readonly INegocioManager negocioManager;
         private readonly IAdministracionCupoManager administracionCupoManager;
+        private readonly IHedgeManager oHedgeManager;
+        private readonly IDiferencialManager diferencialManager;
 
 
         public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager, 
             ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager, 
-            IReportesManager reportesManager, INegocioManager negocioManager, IAdministracionCupoManager administracionCupoManager)
+            IReportesManager reportesManager, INegocioManager negocioManager, 
+            IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager)
 
         {
             this.logger = logger;
@@ -36,6 +41,8 @@ namespace WebDataAgro.Controllers
             this.reportesManager = reportesManager;
             this.negocioManager = negocioManager;
             this.administracionCupoManager = administracionCupoManager;
+            this.oHedgeManager = oHedgeManager;
+            this.diferencialManager = diferencialManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -132,5 +139,17 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
+
+        public ActionResult CerrarDia()
+        {
+            logger.Info($"CerrarDiaHedge - Iniciando");
+            var mailEnviar = ExcelReporteCompleto.GenerarExcel(oHedgeManager.ObtenerDatosReporte(), reportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true);
+
+            var diferencial = diferencialManager.TraerDiferencial();
+            var hoy = DateTime.Now.Date;
+            oHedgeManager.EnviarMail(GlobalVariables.ComercialId, hoy, oHedgeManager.GenerarCuerpoMail(""), mailEnviar);          
+            logger.Info($"CerrarDiaHedge - Finalizado");
+            return Content("ok");
+        }
     }
 }

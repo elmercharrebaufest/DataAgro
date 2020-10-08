@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces
@@ -17,5 +18,9 @@ namespace Molinos.DataAgro.Interfaces
         Resultado CerrarDia(int comercialId, byte[] archivo, string idActivedirectory,bool mail, string cuerpoMail, int diferencial);
         Resultado ReabrirDia(int comercialId, double? diferencial);
         Resultado Diferencial();
+        string GenerarCuerpoMail(string observaciones);
+        List<HedgeMaterialModel> TransformarAModel(List<HedgeMaterialDto> hedgeMat);
+        ReporteCompraNetModel ObtenerDatosReporte();
+        void EnviarMail(int comercialId, DateTime hoy, string cuerpoMail, byte[] archivo);
     }
 }
