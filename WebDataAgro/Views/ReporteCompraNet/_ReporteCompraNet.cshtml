@@ -626,13 +626,17 @@
                                     @totalPesos.ToString("N0")
                                 </a>
                             </th>
-                            <td class="@(pondPesos != 0 ? "" : "hide")"></td>
+                            <td class="@(pondPesos != 0 ? "" : "hide")">@(material.PosicionKilos.Count()>0 && material.PosicionKilos.Sum(x => x.PrecioPonderadoPesos)> 0 && material.PosicionKilos.Where(x => x.PrecioPonderadoPesos > 0).Count() > 0?
+                                        (material.PosicionKilos.Sum(x => x.PrecioPonderadoPesos) / material.PosicionKilos.Where(x => x.PrecioPonderadoPesos > 0).Count()).Value.ToString("N0"):"") </td>
                             <th class="@(totalDolares != 0 ? "" : "hide")">
                                 <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@material.Material.ToUpper()', '', '@String.Join(",", totalMaterialNeogcioIds)','', 'USDM ')">
                                     @totalDolares.ToString("N0")
                                 </a>
                             </th>
-                            <td class="@(totalDolares != 0 ? "" : "hide")"></td>
+                            <td class="@(totalDolares != 0 ? "" : "hide")">
+                                @(material.PosicionKilos.Count() > 0 && material.PosicionKilos.Sum(x => x.PrecioPonderadoDolares) > 0 && material.PosicionKilos.Where(x => x.PrecioPonderadoDolares > 0).Count() > 0?
+                          (material.PosicionKilos.Sum(x => x.PrecioPonderadoDolares) / material.PosicionKilos.Where(x => x.PrecioPonderadoDolares > 0).Count()).Value.ToString("N0") : "")
+                                                    </td>
                             <td></td>
                             <td>
                                 @{
