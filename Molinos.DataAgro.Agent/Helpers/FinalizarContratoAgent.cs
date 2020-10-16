@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-                
+
                 var listaDescuentos = new List<ZMPES5290>();
                 foreach (var descBon in descuentoBonificacion)
                 {
@@ -168,7 +168,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Apertura: " + contrato.AperturaPrecio);
                 var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
-                string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");             
+                string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
                 string especialString = calidad.Count > 0 ? "4" : "1";
@@ -195,7 +195,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         MATERIAL = contrato.Material.Codigo,
                         PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
                         PRECIO_PIZARRA = contrato.Precio,
-                        PRECIO = contrato.PrecioNeto ?? contrato.Precio,
+                        //PRECIO = contrato.PrecioNeto ?? contrato.Precio,
+                        PRECIO = (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio,
                         PROVEEDOR = contrato.Proveedor.CUIT,
                         PROVINCIA = contrato.ProvinciaId.ToString(),
                         SUSTENTABLE = sustentableString,
