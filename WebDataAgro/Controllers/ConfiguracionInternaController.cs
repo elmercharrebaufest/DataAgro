@@ -109,6 +109,8 @@ namespace WebDataAgro.Controllers
                 HastaVigencia = DateTime.Parse(configuracion.PizarraHasta),
                 MaterialId = configuracion.MaterialPizarra
             };
+            entidad.DesdeVigencia = new DateTime(entidad.Dia.Year, entidad.Dia.Month, entidad.Dia.Day, entidad.DesdeVigencia.Hour, entidad.DesdeVigencia.Minute, entidad.DesdeVigencia.Second);
+            entidad.HastaVigencia = new DateTime(entidad.Dia.Year, entidad.Dia.Month, entidad.Dia.Day, entidad.HastaVigencia.Hour, entidad.HastaVigencia.Minute, entidad.HastaVigencia.Second);
             return entidad;
         }
         private HabilitacionFijacion TransformarAEntidadFijacion(ConfiguracionInternaModel configuracion)
