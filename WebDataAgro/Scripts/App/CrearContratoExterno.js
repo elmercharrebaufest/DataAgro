@@ -1439,7 +1439,7 @@ function ObtenerDatos() {
     //obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
     obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
     //obj.AperturaPrecio = viewModel.AperturaPrecio;
-
+    obj.FechaOperacion = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
     GrabarContrato(obj);
 
 }
