@@ -29,6 +29,7 @@ namespace Molinos.DataAgro.Interfaces
         List<DateTime> FechaFeriados();
         DateTime UltimoDiaHabil();
         Resultado ActualizarFijacionSap(FijacionDePrecioContrato fijacion);
+        Resultado AltaFijacionSap(FijacionDePrecioContrato fijacion);
     }
 }
 

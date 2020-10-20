@@ -3566,57 +3566,57 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-        public GrabarFijacionResult ActualizarFijacion(FijacionDePrecioContrato oContrato)
-        {
-            var error = new GrabarFijacionResult();
-            try
-            {
-                var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.Id);
-                oContrato.ContratoSAP = oContratoSave.ContratoSAP;
+        //public GrabarFijacionResult ActualizarFijacion(FijacionDePrecioContrato oContrato)
+        //{
+        //    var error = new GrabarFijacionResult();
+        //    try
+        //    {
+        //        var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(oContrato.Id);
+        //        oContrato.ContratoSAP = oContratoSave.ContratoSAP;
 
 
 
-                if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
-                {
-                    var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
-                    if (result != "Ok")
-                    {
-                        error.Error("", result);
-                        return error;
-                    }
-                }
-                oContrato.ContratoSAP = repositorio.Obtener<FijacionDePrecioContrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
-                var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
-                if (res.Contains("Error"))
-                {
-                    error.Error("SAP", res);
-                    return error;
-                }
+        //        if ((oContrato.ChequeElectronico != oContratoSave.ChequeElectronico && oContrato.ChequeElectronico.Value) || oContratoSave.PagoCBU != oContrato.PagoCBU)
+        //        {
+        //            var result = validarPagoAgente.ValidarEstado(oContrato.ContratoSAP, "");
+        //            if (result != "Ok")
+        //            {
+        //                error.Error("", result);
+        //                return error;
+        //            }
+        //        }
+        //        oContrato.ContratoSAP = repositorio.Obtener<FijacionDePrecioContrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
+        //        var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
+        //        if (res.Contains("Error"))
+        //        {
+        //            error.Error("SAP", res);
+        //            return error;
+        //        }
 
 
 
-                logger.Debug("Actualizando contrato en BD DataAgro: " + oContrato.Id);
+        //        logger.Debug("Actualizando contrato en BD DataAgro: " + oContrato.Id);
 
 
 
-                if (oContratoSave == null || oContrato.Id == 0)
-                {
-                    error.Error("Contrato", "No existe contrato en DataAgro");
-                }
-                oContratoSave.PagoCBU = oContrato.PagoCBU;
-                repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContrato.GetType());
+        //        if (oContratoSave == null || oContrato.Id == 0)
+        //        {
+        //            error.Error("Contrato", "No existe contrato en DataAgro");
+        //        }
+        //        oContratoSave.PagoCBU = oContrato.PagoCBU;
+        //        repositorio.GuardarCambios();
+        //        logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContrato.GetType());
 
 
 
-            }
-            catch (Exception e)
-            {
-                logger.Error(e);
-                error.Error("", e.Message + ".");
-            }
-            return error;
-        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        logger.Error(e);
+        //        error.Error("", e.Message + ".");
+        //    }
+        //    return error;
+        //}
 
         public string ObtenerSapContrato(int id)
         {

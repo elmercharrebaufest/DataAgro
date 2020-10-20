@@ -999,6 +999,97 @@ namespace WebDataAgro.Services
 
 
         }
+
+        public ResultadoSap AltaFijacionSAP(FijacionSAPDto fijacionSAP)
+        {
+            //contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
+            //contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
+            fijacionSAP.Apertura = fijacionSAP.Apertura ?? new List<AperturaPrecioSap>();
+            //fijacionSAP.Procedencia = fijacionSAP.Procedencia != null ? fijacionSAP.Procedencia.Trim() : fijacionSAP.Procedencia;
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("AltaFijacion" + fijacionSAP.ToXml());
+                var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == fijacionSAP.ContratoSAP, x => x.Id);
+
+                var fijacion = new FijacionDePrecioContrato();
+                fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
+                fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
+                fijacion.TrigoEspecial = fijacionSAP.TrigoEspecial == "X";
+                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
+                fijacion.ContratoSAP = fijacionSAP.ContratoSAP.PadLeft(10, '0');
+                fijacion.ContratoId = fijarId != 0 ? fijarId : (int?)null;   
+                fijacion.Precio = fijacionSAP.Precio;
+                fijacion.Cantidad = (double)fijacionSAP.Cantidad;
+                fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
+                fijacion.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == fijacionSAP.Centro, x => x.Id);
+                fijacion.Pizarra = fijacionSAP.Precio == 0 ? true : false;
+                fijacion.Posicion = fijacionSAP.Posicion;
+                fijacion.CorredorId = !string.IsNullOrEmpty(fijacionSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == fijacionSAP.CuitCorredor, x => x.CorredorId) : (int?)null;               
+                fijacion.DiasPesificado = fijacionSAP.DiasDiferimiento == 0 ? (int?)null : fijacionSAP.DiasDiferimiento;
+                fijacion.PagoDiferido = fijacionSAP.DiasDiferimiento > 0;
+                fijacion.FechaOperacion = DateTime.ParseExact(fijacionSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.FechaHasta = DateTime.ParseExact(fijacionSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.FechaDesde = DateTime.ParseExact(fijacionSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == fijacionSAP.Material, x => x.MaterialId);
+                fijacion.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == fijacionSAP.Moneda, x => x.MonedaId);                
+                fijacion.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == fijacionSAP.Cosecha, x => x.CampañaId);
+                fijacion.PrecioNeto = fijacionSAP.PrecioNeto;
+                fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
+                fijacion.EstadoId = 5;
+                fijacion.FechaConfirmacion = DateTime.Now;
+                fijacion.TipoNegocioId = 3;
+                fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
+                fijacion.Fecha = DateTime.Now;
+                fijacion.Canje = fijacionSAP.Canje == "X" ? true : false;
+                logger.Debug("Alta fijacion Apertura");
+
+                var aperturas = new List<AperturaPrecio>();
+                var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
+                if (fijacionSAP.Apertura != null && fijacionSAP.Apertura.Count > 0)
+                {
+                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
+                }
+                foreach (var aper in fijacionSAP.Apertura ?? new List<AperturaPrecioSap>())
+                {
+                    var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
+
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
+                }
+                logger.Debug("ActualizandoContrato5");
+                //ValidarContrato(contrato, oEntityErrors);
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
+                var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+                oEntityErrors.FijacionId = fijacion != null ? fijacion.Id.ToString() : "";
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
+                });
+                oEntityErrors.HayError = true;
+            }
+            logger.Debug("AltaFijacion negocioSAP:" + JsonConvert.SerializeObject(fijacionSAP));
+            logger.Debug("AltaFijacion RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();           
+            return oEntityErrors;
+
+
+        }
+
         #endregion
     }
     }

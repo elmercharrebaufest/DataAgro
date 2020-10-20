@@ -3718,29 +3718,29 @@ namespace Molinos.DataAgro.Test.Managers
 
 
 
-        [Test]
-        public void ModificarFijacionErrorSap()
-        {
-            var contratoSave = new FijacionDePrecioContrato
-            {
-                ContratoSAP = "434343",
-                ChequeElectronico = false
-            };
-            var contrato = new FijacionDePrecioContrato
-            {
-                ContratoSAP = "434343",
-                ChequeElectronico = false,
-                Id = 1
-            };
-            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(contrato);
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()))
-                .Returns(new FijacionDePrecioContrato { ContratoSAP = "434343", Id = 1 });
-            modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<FijacionDePrecioContrato>())).Returns("Error");
-            var resultado = target.ActualizarFijacion(contrato);
-            Assert.IsNotNull(resultado);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+        //[Test]
+        //public void ModificarFijacionErrorSap()
+        //{
+        //    var contratoSave = new FijacionDePrecioContrato
+        //    {
+        //        ContratoSAP = "434343",
+        //        ChequeElectronico = false
+        //    };
+        //    var contrato = new FijacionDePrecioContrato
+        //    {
+        //        ContratoSAP = "434343",
+        //        ChequeElectronico = false,
+        //        Id = 1
+        //    };
+        //    repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(contrato);
+        //    repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()))
+        //        .Returns(new FijacionDePrecioContrato { ContratoSAP = "434343", Id = 1 });
+        //    modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<FijacionDePrecioContrato>())).Returns("Error");
+        //    var resultado = target.ActualizarFijacion(contrato);
+        //    Assert.IsNotNull(resultado);
+        //    repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
 
-        }
+        //}
 
         [Test]
         public void ObtenerContratoTest()

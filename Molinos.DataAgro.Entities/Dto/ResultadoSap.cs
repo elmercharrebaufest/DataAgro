@@ -15,5 +15,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public string ContratoId { get; set; }
         public string CupoSapId { get; set; }
+        public string FijacionId { get; set; }
+
     }
 }

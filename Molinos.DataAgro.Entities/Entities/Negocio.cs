@@ -59,6 +59,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public string PagoCBU { get; set; }
         public string MotivoOperacionAnterior { get; set; }
 
+     
+
+        public bool? Canje { get; set; }
+
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
