@@ -579,6 +579,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("TipoAgenteCompraId", "Debe seleccionar el agente de compra.");
                 }
             }
+            var contrato = repositorio.Obtener<Negocio>(oParam.Id);
 
             if (!validacionesMinimas)
             {
@@ -588,12 +589,11 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    if(oParam.Id > 0)
+                    if (oParam.Id > 0)
                     {
-                       var contrato = repositorio.Obtener<Negocio>(oParam.Id);
                         if ((oParam.FechaOperacion != contrato.Fecha.Date && oParam.FechaOperacion < contrato.Fecha.Date))
                         {
-                            
+
                             var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(contrato.Fecha.Date);
 
                             if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
@@ -612,7 +612,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
                             }
                         }
-                        if(oParam.FechaOperacion > contrato.Fecha.Date)
+                        if (oParam.FechaOperacion > contrato.Fecha.Date)
                         {
                             oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser mayor a " + contrato.Fecha.ToString("dd/MM/yyyy"));
                         }
@@ -620,7 +620,7 @@ namespace Molinos.DataAgro.Business.Managers
                     else
                     {
                         if (oParam.FechaOperacion < DateTime.Now.Date)
-                        {                           
+                        {
                             var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(null);
 
                             if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
@@ -640,7 +640,7 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                         }
                     }
-                   
+
                     //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
                     //if (oParam.FechaOperacion.Date < fecha.Date && oParam.Id != 0)
                     //{
@@ -677,6 +677,40 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("PagoCbu", "El cbu ingresado no es válido");
                 }
 
+            }
+            if (contrato != null)
+            {
+                if (contrato.DolarizadoTercero == true && oParam.Dolarizado != true && oParam.DolarizadoExpress != true)
+                {
+                    oErrorMessages.Error("Dolarizado", "Se debe comletar Dolarizado que marco el tercero.");
+                }
+                if (contrato.PagoDiferidoTercero == true && oParam.PagoDiferido != true)
+                {
+                    oErrorMessages.Error("Dolarizado", "Se debe comletar Pago Diferido que marco el tercero.");
+                }
+                if (contrato.CalidadTercero == true)
+                {
+                    if (oParam.MaterialId == 1 && oParam.StandardDeCalidadId == 2)
+                    {
+                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                    }
+                    if (oParam.MaterialId == 2 && oParam.StandardDeCalidadId == 7)
+                    {
+                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                    }
+                    if (oParam.MaterialId == 3 && oParam.StandardDeCalidadId == 3)
+                    {
+                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                    }
+                    if (oParam.MaterialId == 4 && oParam.StandardDeCalidadId == 5)
+                    {
+                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                    }
+                    if (oParam.MaterialId == 5 && oParam.StandardDeCalidadId == 5)
+                    {
+                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                    }
+                }
             }
 
             return oErrorMessages;
@@ -786,6 +820,10 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 oContratoSave.Fecha = hoy;
+                oContratoSave.CalidadTercero = oContrato.CalidadTercero;
+                oContratoSave.DolarizadoTercero = oContrato.DolarizadoTercero;
+                oContratoSave.ObservacionTercero = oContrato.ObservacionTercero;
+                oContratoSave.PagoDiferidoTercero = oContrato.PagoDiferidoTercero;
             }
             if (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue)
             {
@@ -867,6 +905,9 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
             oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
             oContratoSave.PagoCBU = oContrato.PagoCBU;
+            oContratoSave.ProveedorCreadorId = oContrato.ProveedorCreadorId;
+
+
             if (oContratoSave.PrecioPactado != null)
             {
                 foreach (var precio in preciosExistentes)
@@ -1902,7 +1943,11 @@ namespace Molinos.DataAgro.Business.Managers
                 MotivoOperacionAnterior = x.MotivoOperacionAnterior,
                 ChequeElectronico = x.ChequeElectronico,
                 DolarizadoExpress = x.DolarizadoExpress,
-                PagoCBU = x.PagoCBU
+                PagoCBU = x.PagoCBU,
+                CalidadTercero = x.CalidadTercero,
+                DolarizadoTercero = x.DolarizadoTercero,
+                PagoDiferidoTercero = x.PagoDiferidoTercero,
+                ObservacionTercero = x.ObservacionTercero,
             });
             return contrato;
         }
@@ -3628,6 +3673,108 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var fijacion = repositorio.Obtener<FijacionDePrecioContrato, string>(x => x.Id == id, x => x.FijacionSAP);
             return !String.IsNullOrEmpty(fijacion) ? fijacion : "";
+        }
+
+        public Resultado AprobarContrato(int id)
+        {
+            var oEntityErrors = new Resultado();
+            var contrato = repositorio.Obtener<Contrato>(id);
+
+            if (contrato.Estado.EstadoContratoId == (int)EnumEstadoContrato.PreAprobacion)
+            {
+                if (ConfirmacionAutomatica(contrato))
+                {
+                    contrato.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Confirmado);
+
+                }
+                else
+                {
+                    contrato.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
+                }
+                try
+                {
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
+
+
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", "El Contrato no se puede aprobar");
+            }
+
+            return oEntityErrors;
+        }
+
+        public GrabarContratoResult BorrarContratoPreAprobacion(int id, string motivo)
+        {
+            var oEntityErrors = new GrabarContratoResult();
+            if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
+            var oContratoSave = repositorio.Obtener<Contrato>(id);
+
+            if (oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.PreAprobacion)
+            {
+                oContratoSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Rechazado);
+                oContratoSave.MotivoRechazo = motivo;
+                try
+                {
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
+
+
+                    EnviarMailRechazo(oContratoSave);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", "El contrato no se puede rechazar");
+            }
+            return oEntityErrors;
+        }
+
+        private void EnviarMailRechazo(Contrato contrato)
+        {
+            var id = contrato.CorredorId.HasValue ? contrato.CorredorId : contrato.ProveedorId;
+            var enviarA = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == id && x.CompraNet == true);
+            var asunto = ConfigurationManager.AppSettings["AmbientePruebas"] != "1" ? "" : "Prueba - ";
+            asunto += "Rechazo Contrato Molinos Agro S.A. –  " + contrato.Proveedor.RazonSocial;
+            var copia = new List<string>() { contrato.Comercial.IdActiveDirectory, ConfigurationManager.AppSettings["CredentialUserName"] };
+            var vista = CuerpoMailRechazo(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contrato);
+            mailManager.EnviarMail(enviarA, asunto, "", copia, vista);
+        }
+        private AlternateView CuerpoMailRechazo(string filePath, Contrato fijacion)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            var mail = "";
+            try { mail = mailManager.GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error("No existe mail para el usuario en AD" + e.Message); }
+
+            var contacto = fijacion.Comercial != null ? fijacion.Comercial.Nombres + " " + fijacion.Comercial.Apellido + (!string.IsNullOrEmpty(mail) ? " (" + mail + ")." : ".") : "Mesa de Ayuda.";
+            var htmlBody = $"En el presente mail, se informa que el negocio generado con Molinos Agro S.A. ha sido rechazado <br />" +
+                $"Motivo: <br />  {fijacion.MotivoRechazo} <br />" +
+                $"Ante cualquier consulta contactarse con {contacto}" +
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            htmlBody += "<style> table, th, td{ }</style>";
+
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
         }
     }
 }

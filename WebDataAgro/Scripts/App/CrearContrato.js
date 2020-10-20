@@ -3909,7 +3909,24 @@ function CargarDatosEditar(contrato, hijo) {
             $("#fechaCiertaDiv").hide();
         }
     }
-
+    if (contrato.CalidadTercero == true || contrato.DolarizadoTercero == true || contrato.PagoDiferidoTercero == true || contrato.ObservacionTercero != null) {
+        $("#datosCargaTercero").show();
+        $("#visualizar_observacionTercero").text(contrato.ObservacionTercero);
+        var datosTercero = "";
+        if (contrato.CalidadTercero == true) {
+            datosTercero = datosTercero + '<strong style="float:left">Calidad: </strong><span> Si</span><br>';
+        }
+        if (contrato.DolarizadoTercero == true) {
+            datosTercero = datosTercero + '<strong style="float:left">Dolarizado: </strong><span> Si</span><br>';
+        }
+        if (contrato.PagoDiferidoTercero == true) {
+            datosTercero = datosTercero + '<strong style="float:left">Pago Diferido: </strong><span> Si</span><br>';
+        }
+        $("#visualizar_datosTercero").html(datosTercero);
+    } else {
+        $("#datosCargaTercero").hide();
+    }
+ 
 }
 
 function LimpiarApertura() {

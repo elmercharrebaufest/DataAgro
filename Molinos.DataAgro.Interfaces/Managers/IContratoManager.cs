@@ -64,6 +64,7 @@ namespace Molinos.DataAgro.Interfaces
         string ObtenerSapContrato(int contrato);
         string ObtenerSapFijacion(int contrato);  
         Resultado AltaContratoSAP(Contrato contratoSap, bool validacionesMinimas);
-
+        Resultado AprobarContrato(int id);
+        GrabarContratoResult BorrarContratoPreAprobacion(int id, string motivo);
     }
 }

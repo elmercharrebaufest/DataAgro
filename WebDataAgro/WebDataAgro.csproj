@@ -217,6 +217,7 @@
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
+    <Compile Include="Controllers\CompraNetTerceroController.cs" />
     <Compile Include="Controllers\FechaFeriadoController.cs" />
     <Compile Include="Controllers\CartaDePresentacionController.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaController.cs" />
@@ -271,6 +272,7 @@
     <Compile Include="Core\JsonNetValueProviderFactory.cs" />
     <Compile Include="Core\MyDateTimeBinder.cs" />
     <Compile Include="Core\Util.cs" />
+    <Compile Include="Filters\GZipOrDeflateAttribute.cs" />
     <Compile Include="Filters\CustomExceptionHandlerAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

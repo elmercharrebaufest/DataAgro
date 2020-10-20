@@ -954,7 +954,26 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        
+
+        public ActionResult AprobarContrato(int id)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.AprobarContrato(id),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult BorrarContratoPreAprobacion(int id, string motivoRechazo)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.BorrarContratoPreAprobacion(id, motivoRechazo),
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+
 
     }
 }

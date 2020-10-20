@@ -93,6 +93,10 @@
     [ChequeElectronico] BIT NULL, 
     [DolarizadoExpress] BIT NULL, 
     [PagoCBU] NVARCHAR(500) NULL, 
+    [DolarizadoTercero] BIT NULL, 
+    [PagoDiferidoTercero] BIT NULL, 
+    [CalidadTercero] BIT NULL, 
+    [ObservacionTercero]  NVARCHAR(MAX) NULL,
     
     [Canje] BIT NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),

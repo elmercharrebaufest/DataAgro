@@ -59,9 +59,17 @@ namespace Molinos.DataAgro.Entities.Entities
         public string PagoCBU { get; set; }
         public string MotivoOperacionAnterior { get; set; }
 
-     
+        public string ObservacionTercero { get; set; }
+        public bool? CalidadTercero { get; set; }
+        public bool? PagoDiferidoTercero { get; set; }
+        public bool? DolarizadoTercero { get; set; }
 
         public bool? Canje { get; set; }
+
+        public int? ProveedorCreadorId { get; set; }
+
+             
+
 
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
@@ -88,6 +96,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Centro Destino { get; set; }
         [ForeignKey("ComercialCreadorId")]
         public virtual Comercial ComercialCreador { get; set; }
+        [ForeignKey("ProveedorCreadorId")]
+        public virtual Proveedor ProveedorCreador { get; set; }
         [ForeignKey("CorredorId")]
         public virtual Proveedor Corredor { get; set; }
         [ForeignKey("FinDelDiaId")]

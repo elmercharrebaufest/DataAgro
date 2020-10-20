@@ -167,6 +167,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? DolarizadoExpress { get; set; }
         public string DolarizadoExpressValor { get; set; }
         public string PagoCBU { get; set; }
+        public string DolarizadoValor { get; set; }
+        public bool? CalidadTercero { get; set; }
+        public bool? DolarizadoTercero { get; set; }
+        public bool? PagoDiferidoTercero { get; set; }
+        public string ObservacionTercero { get; set; }
     }
 
     public class StoredPorContratoResult

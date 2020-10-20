@@ -150,7 +150,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion :(DateTime?)null,                     
                         ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
                         DolarizadoExpress = contrato.DolarizadoExpress.Value,
-                        PagoCBU = contrato.PagoCBU
+                        PagoCBU = contrato.PagoCBU,
+                        CalidadTercero = contrato.CalidadTercero,
+                        DolarizadoTercero = contrato.DolarizadoTercero,
+                        PagoDiferidoTercero = contrato.PagoDiferidoTercero,
+                        ObservacionTercero = contrato.ObservacionTercero,
                     };
 
                 return queryNegocios;
@@ -277,7 +281,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FechaOperacion = DbFunctions.TruncateTime((fijac as Negocio).FechaOperacion),
                         ChequeElectronicoValor = fijac.ChequeElectronico.HasValue ? (fijac.ChequeElectronico.Value ? "Si" : "No") : "",
                         PagoCBU = fijac.PagoCBU, 
-                        MotivoOperacionAnterior = fijac.MotivoOperacionAnterior
+                        MotivoOperacionAnterior = fijac.MotivoOperacionAnterior,
+                        CalidadTercero = fijac.CalidadTercero,
+                        DolarizadoTercero = fijac.DolarizadoTercero,
+                        PagoDiferidoTercero = fijac.PagoDiferidoTercero,
+                        ObservacionTercero = fijac.ObservacionTercero,
                     };
                 return queryFijacion;
             }

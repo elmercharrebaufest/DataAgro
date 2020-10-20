@@ -68,6 +68,17 @@
     <br />
     <div id="contrato-modificado"></div>
     <br />
+    <div id="datosCargaTercero" style="border:2px solid red; display:none;padding-left:10px;" class="row no-gutter">
+        <h4 style="font-weight:700;">Datos Cargados por el tercero</h4>
+        <div class="row marginCero clearfix campo col-xs-12 noPadding" id="visualizar_datosTercero">
+
+        </div>
+        <div class="row marginCero clearfix campo col-xs-12 noPadding">
+            <strong style="float:left">Observaci&oacute;n: </strong>
+            <span id="visualizar_observacionTercero"></span>
+        </div>
+    </div>
+    <br />
     <div class="proveedores row no-gutter noAgente">
         <div id="corredorDiv" class="noFason">
             <div class="col-sm-2">
@@ -169,7 +180,7 @@
             </div>
         </div>
     </div>
-   
+
     <div id="plazosYTopesFijacion" class="noFason noAgente acuerdo contratoAFijar contratoAPrecio">
         <div class="row ">
             <div class="contratoAFijar acuerdoSinPrecio">
@@ -252,14 +263,14 @@
                 <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-            <div id="fechaFijacionMotivoDiv" style="display:none;">
-                <div class="col-sm-1">
-                    <label>Motivo</label>
-                </div>
-                <div class="col-sm-5 col-md-4">
-                    <textarea type="text" class="campo-input-text k-textbox" id="motivoOperacionAnteriorFijacion" rows="3" maxlength="100"></textarea>
-                </div>
+        <div id="fechaFijacionMotivoDiv" style="display:none;">
+            <div class="col-sm-1">
+                <label>Motivo</label>
             </div>
+            <div class="col-sm-5 col-md-4">
+                <textarea type="text" class="campo-input-text k-textbox" id="motivoOperacionAnteriorFijacion" rows="3" maxlength="100"></textarea>
+            </div>
+        </div>
 
         <div id="campanaDiv" class="fason acuerdo">
             <div class="col-sm-1" data-toggle="tooltip" data-placement="top" id="campanaTooltip">
@@ -1013,15 +1024,16 @@
         z-index: 10005 !important;
         position: relative
     }
-    .disabledDay{ 
-      /* adding some CSS to match the normal days styling */
-      display: block;
-      overflow: hidden;
-      min-height: 22px;
-      line-height: 22px;
-      padding: 0 .45em 0 .1em;
-      cursor:default;
-      opacity: 0.5;
+
+    .disabledDay {
+        /* adding some CSS to match the normal days styling */
+        display: block;
+        overflow: hidden;
+        min-height: 22px;
+        line-height: 22px;
+        padding: 0 .45em 0 .1em;
+        cursor: default;
+        opacity: 0.5;
     }
 </style>
 <!-- Modal Apertura Precio-->

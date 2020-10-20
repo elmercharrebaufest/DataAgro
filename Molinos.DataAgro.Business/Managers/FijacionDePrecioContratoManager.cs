@@ -849,6 +849,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaOperacionFormateado = SqlFunctions.DateName("day", fijac.FechaOperacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)fijac.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.FechaOperacion),
+                ObservacionTercero = fijac.ObservacionTercero,
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
