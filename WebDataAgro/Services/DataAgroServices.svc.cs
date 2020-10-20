@@ -1089,7 +1089,25 @@ namespace WebDataAgro.Services
 
 
         }
-
+        public ResultadoSap AnularFijacionSAP(FijacionSAPDto fijacionSAP)
+        {
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("AnularFijacion");
+                var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(fijacionSAP);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message
+                });
+            }
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+        }
         #endregion
     }
     }

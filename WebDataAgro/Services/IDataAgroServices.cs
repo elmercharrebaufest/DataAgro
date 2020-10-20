@@ -44,6 +44,8 @@ namespace WebDataAgro.Services
         ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP);
         [OperationContract]
         ResultadoSap AltaFijacionSAP(FijacionSAPDto fijacionSAP);
+        [OperationContract]
+        ResultadoSap AnularFijacionSAP(FijacionSAPDto fijacionSAP);
         #endregion
     }
 }

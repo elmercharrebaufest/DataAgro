@@ -924,5 +924,123 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsNotNull(res);
         }
 
+
+        [Test]
+        public void AltaFijacionSapTestOk() {
+            var fijacion = new FijacionDePrecioContrato
+            {
+                Id = 1,
+               FijacionSAP = "22304948",
+               ChequeElectronico = null,
+               PagoCBU = "",
+               TrigoEspecial = null,
+               ContratoSAP = "000345433",
+               ContratoId = 1,
+               Precio = 1000,
+               Cantidad = 1000,
+               DestinoId = 1,
+               Pizarra = false,
+               Posicion = "0034",
+               PagoDiferido = false,
+               FechaOperacion = DateTime.Now,
+               FechaHasta = DateTime.Now,
+               FechaDesde = DateTime.Now,
+               ProveedorId = 1,
+               ComercialId = 1,
+               MaterialId  = 1,
+               CorredorId = 1,
+               DiasPesificado = null,
+               MonedaId = "ARP ",
+               CampanaId = 1,
+               PrecioNeto = 1000,
+               EstadoId = 1,
+               FechaConfirmacion = DateTime.Now,
+               TipoNegocioId = 3, 
+               ComercialCreadorId = 1,
+               Canje = true,
+               Fecha = DateTime.Now, 
+               AperturaPrecio = null
+            };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(new Contrato { Id = 1});
+            repositorioMock.Setup(y => y.Obtener<Negocio>(It.IsAny<int>())).Returns(new Negocio { Id = 1, Fecha = DateTime.Now });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                .Returns(new List<RangoPrecio>() { new RangoPrecio { Id = 1,  MaterialId = 1, PrecioMaximo = 10000, PrecioMinimo = 200, MonedaId = "ARP " } });
+            var fijacionSave = new FijacionDePrecioContrato
+            {
+                Id = 1,
+                EstadoId = (int)EnumEstadoContrato.Rechazado,
+                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Pendiente },
+                Comercial = new Comercial { ComercialId = 1 }
+            };
+
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<int>())).Returns(fijacionSave);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<double>() { 10000 });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()))
+                .Returns(new BasicoContrato()
+                {
+                    ContratoId = 1,
+                    DatosFijacion = new DatosFijacionDeContratoDto
+                    {
+                        ContratoId = "00011111",
+                        FechaDesde = "2019/10/30",
+                        FechaHasta = "2019/11/30",
+                        KilosAplicados = "1111",
+                        KilosPendiente = "1111"
+                    }
+                });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, AperturaPrecioDto>>>(), It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<AperturaPrecioDto>());
+            var resultado = target.AltaFijacionSap(fijacion) as Resultado;
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
+        [Test]
+        public void AltaFijacionSapTestError()
+        {
+            var fijacion = new FijacionDePrecioContrato
+            {
+                Id = 1,
+                FijacionSAP = "22304948",
+                ChequeElectronico = null,
+                PagoCBU = "",
+                TrigoEspecial = null,
+                ContratoSAP = "000345433",
+                ContratoId = 1,
+                Precio = 1000,
+                Cantidad = 1000,
+                DestinoId = 1,
+                Pizarra = false,
+                Posicion = "0034",
+                PagoDiferido = false,
+                FechaOperacion = DateTime.Now,
+                FechaHasta = DateTime.Now,
+                FechaDesde = DateTime.Now,
+                ProveedorId = 1,
+                ComercialId = 1,
+                MaterialId = 1,
+                CorredorId = 1,
+                DiasPesificado = null,
+                MonedaId = "ARP ",
+                CampanaId = 1,
+                PrecioNeto = 1000,
+                EstadoId = 1,
+                FechaConfirmacion = DateTime.Now,
+                TipoNegocioId = 3,
+                ComercialCreadorId = 1,
+                Canje = true,
+                Fecha = DateTime.Now,
+                AperturaPrecio = null
+            };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(new Contrato { Id = 0 });
+            repositorioMock.Setup(y => y.Obtener<Negocio>(It.IsAny<int>())).Returns(new Negocio { Id = 1, Fecha = DateTime.Now });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                .Returns(new List<RangoPrecio>() { new RangoPrecio { Id = 1, MaterialId = 1, PrecioMaximo = 10000, PrecioMinimo = 200, MonedaId = "ARP " } });
+           
+            var resultado = target.AltaFijacionSap(fijacion) as Resultado;
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+        }
     }
 }

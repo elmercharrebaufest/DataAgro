@@ -1162,6 +1162,49 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return error;
         }
+
+        public Resultado AnularFijacionSAP(FijacionSAPDto fijacion)
+        {
+            logger.Debug("Inicializar AnularContratoSAP");
+
+            var oEntityErrors = new Resultado();
+            var codigo = fijacion.FijacionSAP.PadLeft(10, '0');
+            var oFijacionSave = repositorio.ObtenerMayor<FijacionDePrecioContrato, int>(x => x.FijacionSAP == codigo, x => x.Id);
+
+            string jsonObjeto = JsonConvert.SerializeObject(fijacion, new JsonSerializerSettings()
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                PreserveReferencesHandling = PreserveReferencesHandling.None,
+                Formatting = Formatting.Indented,
+            });
+            logger.Debug("Campos a editar: " + jsonObjeto);
+
+            if (oFijacionSave != null)
+            {
+                logger.Debug("Fijacion: " + oFijacionSave.FijacionSAP);
+
+                try
+                {
+
+                    oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionSave.Id), TipoAccionLogDataAgro.Eliminar, oFijacionSave.GetType());
+                }
+                catch (Exception e)
+                {
+                    logger.Error("Error Anular FijacionSap");
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
+
+                }
+            }
+            else
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage("No existe la fijacion"));
+
+            }
+            return oEntityErrors;
+        }
     }
 }
 
