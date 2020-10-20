@@ -16,6 +16,7 @@
             <xsd:element name="EX_MENSAJE" type="rfc:char50" />
             <xsd:element name="EX_NOSIS" type="rfc:char2" />
             <xsd:element name="EX_PLAN_CANJE" type="rfc:char2" />
+            <xsd:element name="EX_PROVEEDOR_GRANOS" type="rfc:char2" />
             <xsd:element name="EX_RUCA" type="rfc:ZMPES5510" />
           </xsd:sequence>
         </xsd:complexType>

@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -57,7 +57,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -117,7 +117,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -191,7 +191,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -213,6 +213,8 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         private string eX_NOSISField;
         
         private string eX_PLAN_CANJEField;
+        
+        private string eX_PROVEEDOR_GRANOSField;
         
         private ZMPES5510 eX_RUCAField;
         
@@ -314,6 +316,18 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        public string EX_PROVEEDOR_GRANOS {
+            get {
+                return this.eX_PROVEEDOR_GRANOSField;
+            }
+            set {
+                this.eX_PROVEEDOR_GRANOSField = value;
+                this.RaisePropertyChanged("EX_PROVEEDOR_GRANOS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
         public ZMPES5510 EX_RUCA {
             get {
                 return this.eX_RUCAField;
