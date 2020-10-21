@@ -1083,39 +1083,8 @@ namespace Molinos.DataAgro.Business
             htmlBody += "A continuación se detallan las compras correspondientes al cierre del día.";
             htmlBody += "<br></br>";
             htmlBody += "Observaciones: " + (String.IsNullOrEmpty(observaciones) ? "Sin observaciones." : observaciones);
-            htmlBody += "<br></br>";
+            htmlBody += "<br></br>";          
            
-            if (hedgeMat)
-            {
-                htmlBody += @"<table class='hedge'>
-                     <thead>
-                    <tr>
-                        <th colspan='4'>HEDGE</th>
-                    </tr>
-                    <tr class='borde'>
-                        <th width='150'>Producto</th>
-                        <th>Disponible</th>
-                        <th>Forward</th>
-                        <th width='100'>New Crop</th>
-                    </tr>
-                    </thead>";
-
-                htmlBody += "<tbody>";
-                foreach (var mat in Model.HedgeMaterial)
-                {
-                    if (mat.Disponible != 0 || mat.Forward != 0 || mat.NewCrop != 0)
-                    {
-                        htmlBody += @"<tr>" +
-                                "<td>" + mat.MaterialDescripcion + "</td>" +
-                                "<td>" + mat.Disponible.ToString("N0") + "</td>" +
-                                "<td>" + mat.Forward.ToString("N0") + "</td>" +
-                                "<td>" + mat.NewCrop.ToString("N0") + "</td>" +
-                            "</tr>";
-                    }
-                }
-                htmlBody += @"</tbody>
-                    </table><br><br>";
-            }
 
             if (pricing)
             {
@@ -1441,6 +1410,37 @@ namespace Molinos.DataAgro.Business
             htmlBody += @"</tbody>
             </table><br><br>";
 
+            if (hedgeMat)
+            {
+                htmlBody += @"<table class='hedge'>
+                     <thead>
+                    <tr>
+                        <th colspan='4'>HEDGE</th>
+                    </tr>
+                    <tr class='borde'>
+                        <th width='150'>Producto</th>
+                        <th>Disponible</th>
+                        <th>Forward</th>
+                        <th width='100'>New Crop</th>
+                    </tr>
+                    </thead>";
+
+                htmlBody += "<tbody>";
+                foreach (var mat in Model.HedgeMaterial)
+                {
+                    if (mat.Disponible != 0 || mat.Forward != 0 || mat.NewCrop != 0)
+                    {
+                        htmlBody += @"<tr>" +
+                                "<td>" + mat.MaterialDescripcion + "</td>" +
+                                "<td>" + mat.Disponible.ToString("N0") + "</td>" +
+                                "<td>" + mat.Forward.ToString("N0") + "</td>" +
+                                "<td>" + mat.NewCrop.ToString("N0") + "</td>" +
+                            "</tr>";
+                    }
+                }
+                htmlBody += @"</tbody>
+                    </table><br><br>";
+            }
 
 
             htmlBody += "<br></br>";
