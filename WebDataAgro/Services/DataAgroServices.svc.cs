@@ -814,8 +814,8 @@ namespace WebDataAgro.Services
                 contrato.ChequeElectronico = contratoSAP.ZLSCH == "X";
                 contrato.PagoCBU = contratoSAP.CUENTA_MRP;
                 contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
-                contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
-                    contratoSAP.TipoNegocio == "MADRE" ? 1 :
+                contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 1 :
+                    contratoSAP.TipoNegocio == "MADRE" ? 2 : contratoSAP.TipoNegocio == "FASON" ? 1 :
                     repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
                 if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
                 {
