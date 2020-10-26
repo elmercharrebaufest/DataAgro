@@ -401,6 +401,10 @@ namespace WebDataAgro.Controllers
             }
             request.Sort = request.Sort.Concat(new[] { new Sort { Field = "Fecha_Order", Dir = "desc" } });
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            if (request.Filter != null && request.Filter.Filters != null && request.Filter.Filters.Any(x => x.Filters != null ? x.Filters.Any(y => y.Field != null ? y.Field.Contains("ContratoSAP") || y.Field.Contains("ContratoCorredor") : false) : false))
+            {
+                equipo = GlobalVariables.EquipoReal;
+            }
             var model = mobjContratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);
