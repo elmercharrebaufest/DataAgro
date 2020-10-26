@@ -209,6 +209,8 @@ namespace Molinos.DataAgro.Business
                     }
                 }
                var comercial = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailHedge)));
+                logger.Debug("comerciales " + comercial.ToJson());
+
                 var lista = new List<GemBox.Email.MailAddress>();
                 var email = "";
                 foreach (var item in comercial)

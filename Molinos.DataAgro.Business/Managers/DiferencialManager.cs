@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -99,17 +100,24 @@ namespace Molinos.DataAgro.Business
             {
                 if (hedgeManager.Dia() != null)
                 {
+                    logger.Debug("hedgeManager.Dia() "+ hedgeManager.Dia().ToJson());
                     var cantidad = repositorio.Listar<Contrato, double>(x => x.Cantidad,
                         x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(DateTime.Now)
                         && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
                         && x.FinDelDia == null).Sum();
+                    logger.Debug("cantidad "+ cantidad);
 
                     if (cantidad > this.TraerDiferencial().DiferencialDefault)
                     {
+                        logger.Debug("envia mail " );
                         var cuerpo = hedgeManager.GenerarCuerpoMail("");
+                        logger.Debug("GenerarCuerpoMail ");
+
                         mailManager.ReenviarMailCierreDia("Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
                                                             "Actualización Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
                                                             cuerpo);
+                        logger.Debug("ya envio ");
+
                     }
                 }
                 return new Resultado();
