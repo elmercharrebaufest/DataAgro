@@ -12,5 +12,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Material { get; set; }
         public DateTime DesdeVigencia { get; set; }
         public DateTime HastaVigencia { get; set; }
+        public string TipoNegocio { get; set; }
+        public int TipoNegocioId { get; set; }
+
     }
 }

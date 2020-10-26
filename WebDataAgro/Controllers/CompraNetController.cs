@@ -156,13 +156,13 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult InicializarContrato()
+        public ActionResult InicializarContrato(int? tipoNegocioId)
         {
             return new JsonResult()
             {
                 Data = new ContratoModel_prueba
                 {
-                    Datos = mobjContratoManager.TraerDatosCombo()
+                    Datos = mobjContratoManager.TraerDatosCombo(tipoNegocioId)
                 },
                 MaxJsonLength = Int32.MaxValue
             };

@@ -866,7 +866,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Fecha Cierta: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
             }
-            if (oContrato.DolarizadoExpress == true )
+            if (oContrato.DolarizadoExpress == true)
             {
                 htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
@@ -876,7 +876,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.PagoCBU != null)
             {
-                htmlBody += "Pago con Cbu: " + oContrato.PagoCBU +" <br />";
+                htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
@@ -1277,6 +1277,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Cupo = param.Cupo
                     };
                     repositorio.Agregar(contactoComercial);
+                    EnviarMailInvitacionMOAOperaciones(contactoComercial);
 
                     int cant = 1;
                     foreach (var interes in param.intereses)
@@ -1287,6 +1288,7 @@ namespace Molinos.DataAgro.Business.Managers
                             Interes = repositorio.Obtener<Interes>(interes),
                             NroItem = cant++,
                         });
+
                     }
                 }
             }
@@ -1998,7 +2000,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Cupo = can.Cupo
                             };
                             repositorio.Agregar(contacto);
-
+                            EnviarMailInvitacionMOAOperaciones(contacto);
                             var nroItem = 1;
                             foreach (var valor in can.intereses)
                             {
@@ -2087,6 +2089,44 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
+        private void EnviarMailInvitacionMOAOperaciones(ContactoComercial contacto)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(contacto.Email1))
+                {
+                    var cuerpo = CuerpoMailInvitacionMOAOperaciones(httpContextManager.ObtenerPathLogoMail(), contacto);
+                    mailManager.EnviarMail(new List<string> { contacto.Email1 }, "Ingreso a MOA Operaciones", "", null, cuerpo, null, null);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error("EnviarMailInvitacionMOAOperaciones");
+                logger.Error(e);
+            }
+
+
+        }
+
+        private AlternateView CuerpoMailInvitacionMOAOperaciones(String filePath, ContactoComercial contacto)
+        {
+            string urlMOA = ConfigurationManager.AppSettings["UrlBaseMOAOperaciones"].ToString();
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string htmlBody = "Estimado " + contacto.Nombres + " " + contacto.Apellido + "<br />";
+            htmlBody += "En el presente mail se notifica que ya puede ingresar a MOA Operaciones, la web de autogestion para operar con Molinos Agro S.A. <br /><br />  ";
+            htmlBody += "Puede ingresar haciendo click <a href='" + urlMOA + "'>aqui</<>";
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+
+            htmlBody += "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
         private GrabarProveedorResult UpdateProduccion(NuevoProveedor oParam)
         {
             var resultado = new GrabarProveedorResult();

@@ -33,6 +33,8 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<ILogger> logger;
+        private Mock<IFijacionDePrecioContratoManager> fijacionDePrecioContratoManagerMock;
+        private Mock<IConfiguracionInternaManager> configuracionInternaManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -42,20 +44,24 @@ namespace Molinos.DataAgro.Test.Controllers
             contratoManagerMock = new Mock<IContratoManager>();
             comercialManagerMock = new Mock<IComercialManager>();
             proveedorManagerMock = new Mock<IProveedorManager>();
+            fijacionDePrecioContratoManagerMock = new Mock<IFijacionDePrecioContratoManager>();
+            configuracionInternaManagerMock = new Mock<IConfiguracionInternaManager>();
+            //
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new CompraNetTerceroController(proveedorManagerMock.Object,
                contratoManagerMock.Object,
-                comercialManagerMock.Object, logger.Object);
+                comercialManagerMock.Object, logger.Object, fijacionDePrecioContratoManagerMock.Object, configuracionInternaManagerMock.Object);
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
         [Test]
-        public void GrabarContratoTest()
+        public void GrabarContratoAPrecioTestOk()
         {
             Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
             new Claim(ClaimTypes.Role, PermisosDataAgro.IngresoExterno.ToString()) });
-            var proveedor = new StoredPorProveedorResult {
+            var proveedor = new StoredPorProveedorResult
+            {
                 BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> {
                     new BasicoProveedor { CUIT = "201", RazonSocial = "A", ProveedorId = 1 }
                 }
@@ -85,6 +91,130 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":null,\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+        [Test]
+        public void GrabarContratoAFijarTestOk()
+        {
+            Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
+            new Claim(ClaimTypes.Role, PermisosDataAgro.IngresoExterno.ToString()) });
+            var proveedor = new StoredPorProveedorResult
+            {
+                BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> {
+                    new BasicoProveedor { CUIT = "201", RazonSocial = "A", ProveedorId = 1 }
+                }
+            };
 
+            comercialManagerMock.Setup(x => x.ComercialAsociado(It.IsAny<int>())).Returns(1);
+            comercialManagerMock.Setup(x => x.TraerComercial(It.IsAny<int>())).Returns(new ComercialDto { IdActiveDirectory = "a" });
+            proveedorManagerMock.Setup(x => x.TraerProveedor(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<int>>())).Returns(proveedor);
+            var result = target.GrabarContratoAFijar(
+                new Contrato()
+                {
+                    Base = false,
+                    NoInformaSio = false,
+                    TrigoEspecial = false,
+                    EsFason = false,
+                    ComercialId = 1,
+                    ProveedorId = 1,
+                    ProveedorCreadorId = 1,
+                    CorredorId = 1,
+                    GrupoCompra = 1
+
+                });
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":null,\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void ValidarDirectoTestOk()
+        {
+            Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
+            new Claim(ClaimTypes.Role, PermisosDataAgro.IngresoExterno.ToString()) });
+
+            proveedorManagerMock.Setup(x => x.ValidarDirecto(It.IsAny<string>())).Returns(true);
+
+            var result = target.ValidarDirecto("");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":true,\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void GrabarFijacionTestOk()
+        {
+            Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
+            new Claim(ClaimTypes.Role, PermisosDataAgro.IngresoExterno.ToString()) });
+            var proveedor = new StoredPorProveedorResult
+            {
+                BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> {
+                    new BasicoProveedor { CUIT = "201", RazonSocial = "A", ProveedorId = 1 }
+                }
+            };
+
+            comercialManagerMock.Setup(x => x.ComercialAsociado(It.IsAny<int>())).Returns(1);
+            comercialManagerMock.Setup(x => x.TraerComercial(It.IsAny<int>())).Returns(new ComercialDto { IdActiveDirectory = "a" });
+            proveedorManagerMock.Setup(x => x.TraerProveedor(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<int>>())).Returns(proveedor);
+            var result = target.GrabarFijacion(
+                new FijacionDePrecioContrato()
+                {
+                    TrigoEspecial = false,
+                    ComercialId = 1,
+                    ProveedorId = 1,
+                    ProveedorCreadorId = 1,
+                    CorredorId = 1,
+                    GrupoCompra = 1
+
+                });
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":null,\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void HabilitarPizarraTestOk()
+        {
+            Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
+            new Claim(ClaimTypes.Role, PermisosDataAgro.IngresoExterno.ToString()) });
+
+            configuracionInternaManagerMock.Setup(x => x.HabilitarPizarraExterno(It.IsAny<int>(), It.IsAny<int>())).Returns(new HabilitacionPizarraDto { Id = 1 });
+
+            var result = target.HabilitarPizarra(1, 1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+        }
+        [Test]
+        public void HabilitarCampañaTestOk()
+        {
+            Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
+            new Claim(ClaimTypes.Role, PermisosDataAgro.IngresoExterno.ToString()) });
+
+            configuracionInternaManagerMock.Setup(x => x.HabilitarCampañaExterno(It.IsAny<int>())).Returns(new List<HabilitacionCampañaDto> { new HabilitacionCampañaDto { Id = 1 } });
+
+            var result = target.HabilitarCampaña(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+        }
+
+        [Test]
+        public void TraerPrecioMoaTestOk()
+        {
+            Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
+            new Claim(ClaimTypes.Role, PermisosDataAgro.IngresoExterno.ToString()) });
+
+            configuracionInternaManagerMock.Setup(x => x.TraerPrecioCompraNet(It.IsAny<int>(), It.IsAny<int>())).Returns(new List<PrecioMoaCompraNetDto> { new PrecioMoaCompraNetDto { Id = 1 } });
+
+            var result = target.TraerPrecioMoa(1, 1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+        }
     }
 }

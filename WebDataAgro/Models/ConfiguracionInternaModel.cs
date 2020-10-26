@@ -21,18 +21,32 @@ namespace WebDataAgro.Models
         public string PizarraHasta { get; set; }
         public int MaterialPizarra { get; set; }
         public string FijacionDia { get; set; }
+        public int TipoNegocioId { get; set; }
+        public DateTime? DesdeEntrega { get; set; }
+        public DateTime? HastaEntrega { get; set; }
+        public DateTime? DesdeFijacion { get; set; }
+        public DateTime? HastaFijacion { get; set; }
         public int MaterialFijacionId { get; set; }
+        public int TipoNegocioIdPizarra { get; set; }
+        public DateTime? DesdeEntregaPizarra { get; set; }
+        public DateTime? HastaEntregaPizarra { get; set; }
+        public int MaterialCampañaId { get; set; }
+        public int CampañaId { get; set; }
+
         public Resultado ResultadoPrecio { get; set; }
         public Resultado ResultadoPizarra { get; set; }
         public Resultado ResultadoFijacion { get; set; }
+        public Resultado ResultadoCampaña { get; set; }
         public List<PrecioMoaDto> PrecioMoa { get; set; }
         public List<HabilitacionPizarraDto> HabilitacionPizarra { get; set; }
         public List<HabilitacionFijacionDto> HabilitacionFijacion { get; set; }
+        public List<HabilitacionCampañaDto> HabilitacionCampaña { get; set; }
         public ConfiguracionInternaModel()
         {
             PrecioMoa = new List<PrecioMoaDto>();
             HabilitacionFijacion = new List<HabilitacionFijacionDto>();
             HabilitacionPizarra = new List<HabilitacionPizarraDto>();
+            HabilitacionCampaña = new List<HabilitacionCampañaDto>();
         }
     }
 }

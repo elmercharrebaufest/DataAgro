@@ -24,20 +24,21 @@ namespace WebDataAgro.Controllers
     public class CompraNetTerceroController : Controller
     {
         private IContratoManager mobjContratoManager;
-
         private IComercialManager mobjComercialManager;
-
         private IProveedorManager mobjProveedorManager;
-
+        private IFijacionDePrecioContratoManager mobjFijacionDePrecioContratoManager;
         private ILogger mobjLogger;
+        private IConfiguracionInternaManager configuracionInternaManager;
 
         public CompraNetTerceroController(IProveedorManager oProveedorManager, IContratoManager oContratoManager,
-            IComercialManager oComercialManager, ILogger oLogger)
+            IComercialManager oComercialManager, ILogger oLogger, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, IConfiguracionInternaManager configuracionInternaManager)
         {
             mobjComercialManager = oComercialManager;
             mobjContratoManager = oContratoManager;
             mobjProveedorManager = oProveedorManager;
             mobjLogger = oLogger;
+            mobjFijacionDePrecioContratoManager = oFijacionDePrecioContratoManager;
+            this.configuracionInternaManager = configuracionInternaManager;
 
         }
 
@@ -149,6 +150,51 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = directo,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        [Autorizacion(PermisosDataAgro.NuevoNegocioExterno)]
+        public ActionResult GrabarFijacion(FijacionDePrecioContrato contrato)
+        {
+            var model = new GrabarFijacionResult();
+            contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
+            var comercial = mobjComercialManager.TraerComercial(contrato.ComercialId.Value);
+            var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+            contrato.UsuarioId = proveedor.RazonSocial;
+            model = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(contrato);
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult HabilitarPizarra(int material, int tiponegocio)
+        {
+            return new JsonResult()
+            {
+                Data = configuracionInternaManager.HabilitarPizarraExterno(material, tiponegocio),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult HabilitarCampaña(int material)
+        {
+            return new JsonResult()
+            {
+                Data = configuracionInternaManager.HabilitarCampañaExterno(material),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult TraerPrecioMoa(int material, int tiponegocio)
+        {
+            var data = configuracionInternaManager.TraerPrecioCompraNet(material, tiponegocio);
+            return new JsonResult()
+            {
+                Data = data,
                 MaxJsonLength = Int32.MaxValue
             };
         }

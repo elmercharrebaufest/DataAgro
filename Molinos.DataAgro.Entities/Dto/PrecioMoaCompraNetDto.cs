@@ -12,5 +12,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Material { get; set; }
         public bool Retirado { get; set; }
         public bool Pizarra { get; set; }
+        public DateTime? DesdeEntrega { get; set; }
+        public DateTime? HastaEntrega { get; set; }
+        public DateTime? DesdeFijacion { get; set; }
+        public DateTime? HastaFijacion { get; set; }
     }
 }

@@ -1,0 +1,31 @@
+﻿@model WebDataAgro.Models.ConfiguracionInternaModel
+
+    @using (Ajax.BeginForm("GuardarCampaña", null, new AjaxOptions { UpdateTargetId = "listaCampaña", InsertionMode = InsertionMode.Replace }, new { }))
+    {
+    <div id="form-Campaña">
+        
+        <div class="row-botones-material row" style="margin-top:10px;">
+            <div class="col-md-1">
+                <label>Material</label>
+            </div>
+            <div class="col-sm-3">
+                @Html.DropDownListFor(x => x.MaterialCampañaId, new SelectList(ViewBag.Material, "Value", "Text"), "Material", new { @class = "form-control" })
+            </div>
+            <div class="col-md-1">
+                <label>Campaña</label>
+            </div>
+            <div class="col-sm-3">
+                @Html.DropDownListFor(x => x.CampañaId, new SelectList(ViewBag.Campaña, "Value", "Text"), "Material", new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-3 col-md-offset-9">
+                <button type="submit" class="k-button k-button-icontext float-right">Guardar</button>
+            </div>
+        </div>
+    </div>
+    }
+<div id="listaCampaña">
+    @Html.Partial("_ListaCampaña", Model)
+</div>

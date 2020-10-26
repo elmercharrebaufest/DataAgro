@@ -23,5 +23,6 @@ namespace Molinos.DataAgro.Interfaces
         string BuscaFechaYFormatea(string text, string campo);
         List<int> ObtenerNegociosId(List<string> contratosSap);
         List<int> ObtenerCuposId(List<string> cupoSap);
+        int LogCambiosDataAgro(HabilitacionCampañaDto habilitacionCampañaDto, TipoAccionLogDataAgro tipo);
     }
 }

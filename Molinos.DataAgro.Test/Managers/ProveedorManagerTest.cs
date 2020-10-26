@@ -42,6 +42,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void SetUp()
         {
             ConfigurationManager.AppSettings["CredentialUserName"] = "dataagro.baufest@gmail.com";
+            ConfigurationManager.AppSettings["UrlBaseMOAOperaciones"] = "www.sitio.com";
             ConfigurationManager.AppSettings["SmtpServerPort"] = "587";
             ConfigurationManager.AppSettings["SmtpServer"] = "smtp.gmail.com";
             ConfigurationManager.AppSettings["UseDefaultCredentials"] = "S";
@@ -1162,11 +1163,11 @@ namespace Molinos.DataAgro.Test.Managers
                 contactocomercial = new List<ContactosComercial>() {
                     new ContactosComercial { intereses = new List<int> { 1, 2 },
                         telefonos = new List<Telefono> { new Telefono(), new Telefono(), new Telefono() },
-                        emails = new List<string>() { "", "", "" },
+                        emails = new List<string>() { "eee", "", "" },
                         CompraNet = false, Cupo = false },
                     new ContactosComercial { intereses = new List<int>(),
                         telefonos = new List<Telefono> { new Telefono(), new Telefono(), new Telefono() },
-                        emails = new List<string>() { "", "", "" },
+                        emails = new List<string>() { "eee", "", "" },
                         CompraNet = false, Cupo = false }
                 },
                 ProveedorCorredorId = 0,

@@ -2,33 +2,53 @@
 
     @using (Ajax.BeginForm("GuardarPizarra", null, new AjaxOptions { UpdateTargetId = "listaPizarra", InsertionMode = InsertionMode.Replace }, new { }))
     {
-        <div id="form-pizarra">
-            <div class="row-botones-material row">
-                <div class="col-md-2">
-                    <label>Día Vigencia</label>
-                </div>
-                <div class="col-md-2">
-                    @Html.TextBoxFor(m => m.DiaPizarra, new { @class = " form-control" })
-                </div>
-                <div class="col-md-2">
-                    @Html.TextBoxFor(m => m.PizarraDesde, new { @class = " form-control" })
-                </div>
-                <div class="col-md-2">
-                    @Html.TextBoxFor(m => m.PizarraHasta, new { @class = " form-control" })
-                </div>
-                <div class="col-md-1">
-                    <label>Material</label>
-                </div>
-                <div class="col-sm-3">
-                    @Html.DropDownListFor(x => x.MaterialPizarra, new SelectList(ViewBag.Material, "Value", "Text"), "Material", new { @class = "form-control" })
-                </div>
+    <div id="form-pizarra">
+        <div class="row-botones-material row"  style="margin-top:10px;">
+            <div class="col-md-2">
+                <label>Tipo Negocio</label>
             </div>
-            <div class="row" style="margin-top:10px;">
-                <div class="col-md-3 col-md-offset-9">
-                    <button type="submit" class="k-button k-button-icontext float-right">Guardar</button>
-                </div>
+            <div class="col-sm-3">
+                @Html.DropDownListFor(x => x.TipoNegocioIdPizarra, new SelectList(ViewBag.TipoNegocioPizarra, "Value", "Text"), "Tipo de Negocio", new { @class = "form-control" })
             </div>
         </div>
+        <div class="row-botones-material row"  style="margin-top:10px;">
+            <div class="col-md-2">
+                <label>Día Vigencia</label>
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.DiaPizarra, new { @class = " form-control" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.PizarraDesde, new { @class = " form-control" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.PizarraHasta, new { @class = " form-control" })
+            </div>
+            <div class="col-md-1">
+                <label>Material</label>
+            </div>
+            <div class="col-sm-3">
+                @Html.DropDownListFor(x => x.MaterialPizarra, new SelectList(ViewBag.Material, "Value", "Text"), "Material", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row-botones-material row"  style="margin-top:10px;" id="divEntregaPizarra">
+            <div class="col-md-2">
+                <label>Entrega Desde/Hasta</label>
+            </div>            
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.DesdeEntregaPizarra, new { @class = " form-control" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.HastaEntregaPizarra, new { @class = " form-control" })
+            </div>
+            
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-3 col-md-offset-9">
+                <button type="submit" class="k-button k-button-icontext float-right">Guardar</button>
+            </div>
+        </div>
+    </div>
     }
 <div id="listaPizarra">
     @Html.Partial("_ListaPizarra", Model)

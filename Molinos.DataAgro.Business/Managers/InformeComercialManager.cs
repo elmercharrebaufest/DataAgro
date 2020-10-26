@@ -169,8 +169,27 @@ namespace Molinos.DataAgro.Business
 
                     contactoComercial.ProveedorId = oProveedor.ProveedorId;
                     var contactos = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == informe.ProveedorId);
-                    repositorio.RemoverTodos(contactos);
-                    repositorio.Agregar(contactoComercial);
+                    //repositorio.RemoverTodos(contactos);
+                    if (contactos.Count > 0)
+                    {
+                        foreach (var item in contactos.Where(a=>a.Email1 != contactoComercial.Email1))
+                        {
+                            item.EsPrincipal = false;
+                        }
+                        foreach (var item in contactos.Where(a => a.Email1 == contactoComercial.Email1))
+                        {
+                            item.EsPrincipal = true;
+                            item.Apellido = contactoComercial.Apellido;
+                            item.Cargo = contactoComercial.Cargo;
+                            item.Nombres = contactoComercial.Nombres;
+                            item.Telefono1 = string.IsNullOrWhiteSpace(contactoComercial.Telefono1) ? item.Telefono1 : contactoComercial.Telefono1;
+                        }
+                    }
+                    else
+                    {
+                        contactoComercial.EsPrincipal = true;
+                        repositorio.Agregar(contactoComercial);
+                    }
 
                     repositorio.GuardarCambios();
                 }

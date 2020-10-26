@@ -4,7 +4,12 @@
     [DesdeVigencia]		    DATETIME NOT NULL,
     [HastaVigencia]		    DATETIME NOT NULL,    
     [MaterialId]              INT NOT NULL, 
+    [TipoNegocioId] INT NOT NULL DEFAULT 3, 
+    [DesdeEntrega] DATETIME NULL, 
+    [HastaEntrega] DATETIME NULL, 
     CONSTRAINT [PK_HabilitacionPizarra] PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT [FK_HabilitacionPizarra_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].Material ([MaterialId])
+    CONSTRAINT [FK_HabilitacionPizarra_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].Material ([MaterialId]),
+	CONSTRAINT [FK_HabilitacionPizarra_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [dbo].TipoNegocio ([TipoNegocioId])
+
 );
 

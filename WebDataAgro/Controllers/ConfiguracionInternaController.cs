@@ -17,12 +17,16 @@ namespace WebDataAgro.Controllers
         private readonly IConfiguracionInternaManager configuracionManager;
         private readonly IMaterialManager materialManager;
         private readonly IPrecioPizarraManager precioPizarraManager;
+        private readonly ICampañaManager campañaManager;
+        private readonly ITipoNegocioManager tipoNegocioManager;
 
-        public ConfiguracionInternaController(IConfiguracionInternaManager configuracionManager, IMaterialManager materialManager,IPrecioPizarraManager precioPizarraManager )
+        public ConfiguracionInternaController(IConfiguracionInternaManager configuracionManager, IMaterialManager materialManager, IPrecioPizarraManager precioPizarraManager, ICampañaManager campañaManager, ITipoNegocioManager tipoNegocioManager)
         {
             this.configuracionManager = configuracionManager;
             this.materialManager = materialManager;
             this.precioPizarraManager = precioPizarraManager;
+            this.campañaManager = campañaManager;
+            this.tipoNegocioManager = tipoNegocioManager;
         }
 
         [Autorizacion(PermisosDataAgro.ConfiguracionesInternas)]
@@ -35,11 +39,11 @@ namespace WebDataAgro.Controllers
         {
             var hoy = DateTime.Today;
             CargarViewBag();
-            return PartialView("_GrabarPrecioPartial",new ConfiguracionInternaModel
+            return PartialView("_GrabarPrecioPartial", new ConfiguracionInternaModel
             {
                 MonedaId = "ARP  ",
-                DesdeVigencia = hoy.ToShortDateString()+" 00:00",
-                HastaVigencia = hoy.ToShortDateString() + " 23:59",                
+                DesdeVigencia = hoy.ToShortDateString() + " 00:00",
+                HastaVigencia = hoy.ToShortDateString() + " 23:59",
                 PrecioMoa = configuracionManager.TraerPrecios()
             });
         }
@@ -68,11 +72,11 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult GuardarPrecio(ConfiguracionInternaModel configuracion)
         {
-            configuracion.ResultadoPrecio = configuracionManager.GrabarPrecio(TransformarAEntidadPrecio(configuracion));            
+            configuracion.ResultadoPrecio = configuracionManager.GrabarPrecio(TransformarAEntidadPrecio(configuracion));
             configuracion.PrecioMoa = configuracionManager.TraerPrecios();
             return PartialView("_ListaPrecio", configuracion);
         }
-       
+
         [HttpPost]
         public ActionResult GuardarPizarra(ConfiguracionInternaModel configuracion)
         {
@@ -83,20 +87,26 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult GuardarFijacion(ConfiguracionInternaModel configuracion)
         {
-            configuracion.ResultadoFijacion = configuracionManager.GrabarFijacion(TransformarAEntidadFijacion(configuracion));                   
+            configuracion.ResultadoFijacion = configuracionManager.GrabarFijacion(TransformarAEntidadFijacion(configuracion));
             configuracion.HabilitacionFijacion = configuracionManager.TraerFijaciones();
             return PartialView("_ListaFijacion", configuracion);
         }
+        
 
         private PrecioMoa TransformarAEntidadPrecio(ConfiguracionInternaModel configuracion)
         {
             var entidad = new PrecioMoa
             {
-               MaterialId = configuracion.MaterialId,
-               DesdeVigencia= DateTime.Parse( configuracion.DesdeVigencia),
-               HastaVigencia = DateTime.Parse(configuracion.HastaVigencia),
-               MonedaId =configuracion.MonedaId,
-               Precio= configuracion.Precio
+                MaterialId = configuracion.MaterialId,
+                DesdeVigencia = DateTime.Parse(configuracion.DesdeVigencia),
+                HastaVigencia = DateTime.Parse(configuracion.HastaVigencia),
+                MonedaId = configuracion.MonedaId,
+                Precio = configuracion.Precio,
+                TipoNegocioId = configuracion.TipoNegocioId,
+                DesdeEntrega = configuracion.DesdeEntrega,
+                HastaEntrega = configuracion.HastaEntrega,
+                DesdeFijacion = configuracion.DesdeFijacion,
+                HastaFijacion = configuracion.HastaFijacion,
             };
             return entidad;
         }
@@ -107,7 +117,10 @@ namespace WebDataAgro.Controllers
                 Dia = DateTime.Parse(configuracion.DiaPizarra),
                 DesdeVigencia = DateTime.Parse(configuracion.PizarraDesde),
                 HastaVigencia = DateTime.Parse(configuracion.PizarraHasta),
-                MaterialId = configuracion.MaterialPizarra
+                MaterialId = configuracion.MaterialPizarra,
+                TipoNegocioId = configuracion.TipoNegocioIdPizarra,
+                DesdeEntrega = configuracion.DesdeEntregaPizarra,
+                HastaEntrega = configuracion.HastaEntregaPizarra,
             };
             entidad.DesdeVigencia = new DateTime(entidad.Dia.Year, entidad.Dia.Month, entidad.Dia.Day, entidad.DesdeVigencia.Hour, entidad.DesdeVigencia.Minute, entidad.DesdeVigencia.Second);
             entidad.HastaVigencia = new DateTime(entidad.Dia.Year, entidad.Dia.Month, entidad.Dia.Day, entidad.HastaVigencia.Hour, entidad.HastaVigencia.Minute, entidad.HastaVigencia.Second);
@@ -117,8 +130,8 @@ namespace WebDataAgro.Controllers
         {
             var entidad = new HabilitacionFijacion
             {
-                Dia = DateTime.Parse(configuracion.FijacionDia ),
-                MaterialId= configuracion.MaterialFijacionId
+                Dia = DateTime.Parse(configuracion.FijacionDia),
+                MaterialId = configuracion.MaterialFijacionId
             };
             return entidad;
         }
@@ -139,9 +152,34 @@ namespace WebDataAgro.Controllers
                     {
                         Text = x.Descripcion,
                         Value = x.MonedaId.ToString(),
-                        Selected = x.Descripcion.Contains("ARP")? true : false
+                        Selected = x.Descripcion.Contains("ARP") ? true : false
                     }).OrderBy(x => x.Value);
             ViewBag.Moneda = MonedaListItems;
+            var tiponegocio = tipoNegocioManager.TraerTodoTipoNegocio().Where(a => a.TipoNegocioId == 1 || a.TipoNegocioId == 2 || a.TipoNegocioId == 3);
+            var tiponegociolist = tiponegocio.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.TipoNegocioId.ToString()
+                    }).OrderBy(x => x.Value);
+            ViewBag.TipoNegocio = tiponegociolist;
+
+            var tiponegociopizarralist = tiponegocio.Where(a=>a.TipoNegocioId == 3 || a.TipoNegocioId == 2).Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.TipoNegocioId.ToString()
+                    }).OrderBy(x => x.Value);
+            ViewBag.TipoNegocioPizarra = tiponegociopizarralist;
+
+            var campaña = campañaManager.TraerTodoCampania();
+            var campañaList = campaña.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.CampañaId.ToString()
+                    }).OrderBy(x => x.Value);
+            ViewBag.Campaña = campañaList;
         }
         public ActionResult EliminarPrecio(int id)
         {
@@ -167,5 +205,46 @@ namespace WebDataAgro.Controllers
                 HabilitacionFijacion = configuracionManager.TraerFijaciones()
             });
         }
+
+        [HttpPost]
+        public ActionResult GuardarCampaña(ConfiguracionInternaModel configuracion)
+        {
+            configuracion.ResultadoCampaña = configuracionManager.GrabarCampaña(TransformarAEntidadCampaña(configuracion));
+            configuracion.HabilitacionCampaña = configuracionManager.TraerCampaña();
+            return PartialView("_ListaCampaña", configuracion);
+        }
+        public ActionResult GrabarCampañaPartial()
+        {
+            var hoy = DateTime.Today;
+            CargarViewBag();
+            return PartialView("_GrabarCampañaPartial", new ConfiguracionInternaModel
+            {
+                //CampañaDesde = hoy.ToShortTimeString(),
+                //CampañaHasta = hoy.AddDays(1).AddMinutes(-1).ToShortTimeString(),
+                //DiaCampaña = hoy.ToShortDateString(),
+                HabilitacionCampaña = configuracionManager.TraerCampaña()
+            });
+        }
+
+        private HabilitacionCampaña TransformarAEntidadCampaña(ConfiguracionInternaModel configuracion)
+        {
+            var entidad = new HabilitacionCampaña
+            {
+                
+                MaterialId = configuracion.MaterialCampañaId,
+                CampañaId = configuracion.CampañaId,
+            };
+            return entidad;
+        }
+
+        public ActionResult EliminarCampaña(int id)
+        {
+            return PartialView("_ListaCampaña", new ConfiguracionInternaModel
+            {
+                ResultadoCampaña = configuracionManager.EliminarCampaña(id),
+                HabilitacionCampaña = configuracionManager.TraerCampaña()
+            });
+        }
+
     }
 }

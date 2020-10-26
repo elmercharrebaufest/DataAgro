@@ -22,6 +22,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CentroDescripcion { get; set; }
         public string ARecibirSinPrecio { get; set; }
         public string RecibidoSinFijar { get; set; }
+        public string Color { get; set; }
         public decimal ImporteAPrecio { get; set; }
         public decimal ImporteSobrePrecio { get; set; }
         public string MonedaAPrecio { get; set; }
@@ -34,8 +35,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CondicionPagoDescripcion { get; set; }
         public bool? ChequeElectronico { get; set; }
 
-        public List<CalidadDto> Calidades { get; set; } 
-        public string Color { get; set; }
+        public List<CalidadDto> Calidades { get; set; }
+        public int CampanaId { get; set; }
     }
 }
 

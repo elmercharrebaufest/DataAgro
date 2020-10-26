@@ -130,10 +130,11 @@
     <Compile Include="Dto\CompraDto.cs" />
     <Compile Include="Dto\ContratoSAP.cs" />
     <Compile Include="Dto\CompraDetalleAgentDto.cs" />
+    <Compile Include="Dto\ContratoTerceroDto.cs" />
     <Compile Include="Dto\EstablecimientoStockDto.cs" />
     <Compile Include="Dto\CartaDePresentacion.cs" />
     <Compile Include="Dto\FijacionSAPDto.cs" />
-    <Compile Include="Dto\ContratoTerceroDto.cs" />
+    <Compile Include="Dto\HabilitacionCampañaDto.cs" />
     <Compile Include="Dto\ListaCompraDetalleDto.cs" />
     <Compile Include="Dto\FechaFeriadoDto.cs" />
     <Compile Include="Dto\PagoCBUDto.cs" />
@@ -299,6 +300,7 @@
     <Compile Include="Entities\CondicionPago.cs" />
     <Compile Include="Entities\HabilitacionCupo.cs" />
     <Compile Include="Entities\CriterioCDWarrant.cs" />
+    <Compile Include="Entities\HabilitacionCampaña.cs" />
     <Compile Include="Entities\LogDataAgro.cs" />
     <Compile Include="Entities\NegocioHistorico.cs" />
     <Compile Include="Entities\PrecioPactado.cs" />

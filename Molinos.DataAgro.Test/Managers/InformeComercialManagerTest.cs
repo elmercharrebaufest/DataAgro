@@ -111,6 +111,8 @@ namespace Molinos.DataAgro.Test.Managers
                            .Returns(new List<Acopio>());
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                             .Returns(new Proveedor());
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                 .Returns(new List<ContactoComercial>());
             var result = target.GrabarInformeComercial(param, 1, nuevoCampo, nuevoAcopio, nuevoContactoComercial, "1", "1", 1599);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);

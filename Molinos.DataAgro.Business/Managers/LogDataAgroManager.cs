@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 descripcion = cambios.Id.ToString() + " - " + cambios.DatosFijacion.ContratoId.TrimStart('0');
             }
-            if ((!string.IsNullOrEmpty(cambios.ContratoSAP)) || 
+            if ((!string.IsNullOrEmpty(cambios.ContratoSAP)) ||
                 (cambios.DatosFijacion != null && !string.IsNullOrEmpty(cambios.DatosFijacion.ContratoId) && cambios.TipoNegocioId == 3))
             {
                 var tipo = cambios.GetType().Name;
@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 repositorio.GuardarCambios();
             }
-            
+
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, resolver);
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
@@ -660,7 +660,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(PrecioMoaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "PrecioMoa", cambios.Material.ToString());
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "PrecioMoa", cambios.TipoNegocio + " - " + cambios.Material);
         }
         public int LogCambiosDataAgro(HabilitacionFijacionDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
@@ -669,7 +669,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(HabilitacionPizarraDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPizarra", cambios.Material);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPizarra", cambios.TipoNegocio + " - " + cambios.Material);
         }
 
 
@@ -792,6 +792,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var cupos = repositorio.Listar<Cupo, int>(x => x.Id, x => cupoSap.Contains(x.CupoSap));
             return cupos;
+        }
+
+        public int LogCambiosDataAgro(HabilitacionCampañaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
+        {
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionCampaña", cambios.Campaña + " - " + cambios.Material);
         }
     }
 }

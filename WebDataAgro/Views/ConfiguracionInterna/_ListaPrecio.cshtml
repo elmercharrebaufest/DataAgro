@@ -29,6 +29,7 @@
         <div id="historialPrecio" class="collapse tabla-research">
             <table class="tabla-historial table">
                 <tr>
+                    <th>Tipo Negocio</th>
                     <th>Material</th>
                     <th>Precio</th>
                     <th>Moneda</th>
@@ -38,20 +39,21 @@
                 </tr>
                 @foreach (var pr in Model.PrecioMoa)
                 {
-                    <tr>
-                        <td>@Html.DisplayFor(model => pr.Material)</td>
-                        <td>@Html.DisplayFor(model => pr.Precio)</td>
-                        <td>@Html.DisplayFor(model => pr.MonedaId)</td>
-                        @{
-                            var fechaDesde = pr.DesdeVigencia.ToString("dd/MM/yyyy hh\\:mm tt");
-                            var fechaHasta = pr.HastaVigencia.ToString("dd/MM/yyyy hh\\:mm tt");
-                        }
-                        <td>@Html.DisplayFor(model => fechaDesde)</td>
-                        <td>@Html.DisplayFor(model => fechaHasta)</td>
-                        <td>
-                            @Ajax.ActionLink(" ", "EliminarPrecio", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaPrecio", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
-                        </td>
-                    </tr>
+            <tr>
+                <td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
+                <td>@Html.DisplayFor(model => pr.Material)</td>
+                <td>@Html.DisplayFor(model => pr.Precio)</td>
+                <td>@Html.DisplayFor(model => pr.MonedaId)</td>
+                @{
+                    var fechaDesde = pr.DesdeVigencia.ToString("dd/MM/yyyy hh\\:mm tt");
+                    var fechaHasta = pr.HastaVigencia.ToString("dd/MM/yyyy hh\\:mm tt");
+                }
+                <td>@Html.DisplayFor(model => fechaDesde)</td>
+                <td>@Html.DisplayFor(model => fechaHasta)</td>
+                <td>
+                    @Ajax.ActionLink(" ", "EliminarPrecio", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaPrecio", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
+                </td>
+            </tr>
                 }
             </table>
         </div>

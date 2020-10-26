@@ -202,6 +202,11 @@ namespace WebDataAgro.Controllers
                         Text = "HabilitacionPizarra",
                         Value = "HabilitacionPizarra",
                         Selected = false
+                    },new SelectListItem
+                    {
+                        Text = "HabilitacionCampaña",
+                        Value = "HabilitacionCampaña",
+                        Selected = false
                     },
             }.OrderBy(x => x.Text);
             ViewBag.Clase = clasesListItems;

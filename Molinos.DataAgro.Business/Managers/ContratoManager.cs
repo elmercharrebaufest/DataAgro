@@ -109,7 +109,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.httpContextManager = httpContextManager;
         }
 
-        public DatosIniContrato TraerDatosCombo()
+        public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
         {
             var datosCombo = new DatosIniContrato();
             var hoy = DateTime.Now;
@@ -118,20 +118,29 @@ namespace Molinos.DataAgro.Business.Managers
 
             datosCombo.loc = new List<LocalidadQry>();
 
-            datosCombo.campaña = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
             if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
+                datosCombo.campaña = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
                 datosCombo.material = repositorio.Listar<Material, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
                 datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
                    x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet)), 0, "Comercial");
             }
             else
             {
-                var listaMaterial = repositorio.Listar<HabilitacionPizarra, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
-                    x => x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy);
-                listaMaterial.AddRange(repositorio.Listar<PrecioMoa, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
-                    x => x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy));
+                datosCombo.campaña = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
+
+                var listaMaterial = repositorio.Listar<HabilitacionPizarra, MaterialQry>(
+                    x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
+                    x => x.DesdeVigencia <= hoy 
+                    && x.HastaVigencia >= hoy
+                    &&(tipoNegocioId ==null || x.TipoNegocioId == tipoNegocioId.Value)
+                    );
+
+                listaMaterial.AddRange(repositorio.Listar<PrecioMoa, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion  },
+                    x => x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy && (tipoNegocioId == null || x.TipoNegocioId == tipoNegocioId.Value)));
+
                 datosCombo.material = listaMaterial.GroupBy(y => y.MaterialId).Select(y => y.FirstOrDefault()).ToList();
+
                 datosCombo.comercial = repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry() { ComercialId = x.ComercialId, Comercial = x.Nombres + " " + x.Apellido },
                     x => x.Deshabilitado != true && x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet)), 0, "Comercial");
             }

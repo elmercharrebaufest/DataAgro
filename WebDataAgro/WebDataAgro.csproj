@@ -220,6 +220,7 @@
     <Compile Include="Controllers\CompraNetTerceroController.cs" />
     <Compile Include="Controllers\FechaFeriadoController.cs" />
     <Compile Include="Controllers\CartaDePresentacionController.cs" />
+    <Compile Include="Controllers\CampanaController.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaController.cs" />
     <Compile Include="Controllers\HabilitacionCupoController.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoController.cs" />
@@ -285,6 +286,7 @@
     <Compile Include="Helpers\Excel\ExcelResultBase.cs" />
     <Compile Include="Helpers\Excel\IDataForExcel.cs" />
     <Compile Include="Helpers\ExtensionesUrl.cs" />
+    <Compile Include="Models\CampanaModel.cs" />
     <Compile Include="Models\HabilitacionCupoModel.cs" />
     <Compile Include="Models\FechaFeriadoModel.cs" />
     <Compile Include="Models\SugerenciaModel.cs" />
@@ -2710,6 +2712,8 @@
     <Content Include="Views\FechaFeriado\Index.cshtml" />
     <Content Include="Views\AdministracionCupo\ModalRechazarSolicitud.cshtml" />
     <Content Include="Views\AdministracionCupo\ModalAceptarSolicitud.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_GrabarCampañaPartial.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_ListaCampaña.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

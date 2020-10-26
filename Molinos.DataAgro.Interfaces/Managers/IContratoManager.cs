@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult TraerTodosContratos(DataSourceRequest request, bool corredor, List<int> listComercialesId, List<int> corredoresComercial);
         DataSourceResult TraerContratosFiltrados(DataSourceRequest filtro, List<int> equipo);
 
-        DatosIniContrato TraerDatosCombo();
+        DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null);
 
         GrabarContratoResult GrabarContrato(Contrato oContrato);
 
@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Interfaces
         DatosContratoDto TraerDatosDeContratoAcuerdo(int contratoId);
         List<PagoCBUDto> ListarCBU(string cuitProveedor, string filtro);
         string ObtenerSapContrato(int contrato);
-        string ObtenerSapFijacion(int contrato);  
+        string ObtenerSapFijacion(int contrato);
         Resultado AltaContratoSAP(Contrato contratoSap, bool validacionesMinimas);
         Resultado AprobarContrato(int id);
         GrabarContratoResult BorrarContratoPreAprobacion(int id, string motivo);

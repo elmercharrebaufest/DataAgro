@@ -8,8 +8,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Id { get; set; }
         public int MaterialId { get; set; }
         public string Material { get; set; }
+        public int TipoNegocioId { get; set; }
+        public string TipoNegocio { get; set; }
         public DateTime Dia { get; set; }
         public DateTime DesdeVigencia { get; set; }
         public DateTime HastaVigencia { get; set; }
+
+        public DateTime? DesdeEntrega { get; set; }
+        public DateTime? HastaEntrega { get; set; }
     }
 }

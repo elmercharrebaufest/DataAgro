@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Business.Managers
                     return oEntityErrors;
                 }
             }
-            
+
 
             try
             {
@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        
+
         private Resultado ValidarPrecioPizarra(PrecioPizarra precioPizarra)
         {
             var precioMayorHasta = repositorio.ObtenerMayor<PrecioPizarra, DateTime>(x => x.MaterialId == precioPizarra.MaterialId, x => x.FechaHasta);
@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-       
+
         public List<PrecioPizarraDto> TraerTodoPrecioPizarra()
         {
             return repositorio.Listar<PrecioPizarra, PrecioPizarraDto>(x => new PrecioPizarraDto
@@ -100,7 +100,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Moneda = x.Moneda.Descripcion + "",
                 UnidadMedida = x.UnidadMedida
 
-            }) ;
+            });
         }
 
         public List<PrecioPizarraDto> TraerTodoPrecioPizarraPorMaterialYPizarra(int materialId, int pizarraId)
@@ -121,10 +121,10 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio,
                 MonedaId = x.MonedaId,
                 Moneda = x.Moneda.Descripcion + "",
-                UnidadMedida = x.UnidadMedida != null? x.UnidadMedida: "TON",
+                UnidadMedida = x.UnidadMedida != null ? x.UnidadMedida : "TON",
                 Fecha = x.FechaHasta
 
-            }, x => x.MaterialId == materialId && x.PizarraId == pizarraId,0, "Fecha",Entities.Helpers.DirOrden.Desc);
+            }, x => x.MaterialId == materialId && x.PizarraId == pizarraId, 0, "Fecha", Entities.Helpers.DirOrden.Desc);
         }
 
         public List<MonedaDto> TraerTodoMoneda()
@@ -163,7 +163,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.GuardarCambios();
                 result.Errores.Add(new ErrorMessage(200, "Se elimino correctamente"));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Error(e.Message);
                 result.Error("", e.Message);
