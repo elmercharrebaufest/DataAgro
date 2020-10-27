@@ -1126,6 +1126,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacionSave.Posicion = fijacion.Posicion;
                 fijacionSave.PagoDiferido = fijacion.PagoDiferido;
                 fijacionSave.FechaOperacion = fijacion.FechaOperacion;
+                fijacionSave.Fecha = fijacion.Fecha;
                 fijacionSave.FechaHasta = fijacion.FechaHasta;
                 fijacionSave.FechaDesde = fijacion.FechaDesde;
                 fijacionSave.ProveedorId = fijacion.ProveedorId;
@@ -1140,6 +1141,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacionSave.FechaConfirmacion = fijacion.FechaConfirmacion;
                 fijacionSave.TipoNegocioId = fijacion.TipoNegocioId;
                 fijacionSave.ComercialCreadorId = fijacion.ComercialCreadorId;
+                fijacionSave.ComercialId = fijacion.ComercialId;
                 fijacionSave.Canje = fijacion.Canje;
                 fijacionSave.Fecha = fijacion.Fecha;
                 if (fijacion.AperturaPrecio != null)

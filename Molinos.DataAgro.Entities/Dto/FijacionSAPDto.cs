@@ -39,5 +39,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public string FechaOperacion { get; set; }
         public string Canje { get; set; }
+        public string HORAACT { get; set; }
+        public string FechaCreacion { get; set; }
     }
 }

@@ -82,6 +82,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string DolarizadoExpress { get; set; }
         public string ZLSCH { get; set; }
         public string CUENTA_MRP { get; set; }
+        public string ComercialCreador { get; set; }
+        public string FechaCreacion { get; set; }
+        public string HORAACT { get; set; }
     }
 
     public class CalidadSAP

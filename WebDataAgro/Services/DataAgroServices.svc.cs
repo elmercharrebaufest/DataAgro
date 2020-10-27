@@ -783,8 +783,11 @@ namespace WebDataAgro.Services
                 contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.FechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
+                contrato.FechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);              
+                var hora = DateTime.ParseExact(contratoSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
+                TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
+                contrato.Fecha = DateTime.ParseExact(contratoSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                contrato.Fecha = contrato.Fecha.Add(time);
                 contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
                 contrato.LocalidadId = repositorio.Obtener<Localidad, int>(x => x.CodLocalidad == contratoSAP.Procedencia, x => x.LocalidadId);
 
@@ -865,12 +868,13 @@ namespace WebDataAgro.Services
                 contrato.Calidad = calidades;
                 contrato.AperturaPrecio = aperturas;
                 contrato.Descuentos = descuentos;
-                contrato.Fecha = DateTime.Now;
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == contratoSAP.Comercial);
                 contrato.GrupoCompra = comercial.GrupoDeComprasId;
                 contrato.UsuarioId = contratoSAP.Comercial;
                 contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
                 contrato.ComercialId = comercial.ComercialId;
+                contrato.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.ComercialCreador, x => x.ComercialId);
+                
                 if (!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaAPrecio))
                 {
                     contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")) });
@@ -1039,10 +1043,14 @@ namespace WebDataAgro.Services
                 fijacion.PrecioNeto = fijacionSAP.PrecioNeto;
                 fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
                 fijacion.EstadoId = 5;
-                fijacion.FechaConfirmacion = DateTime.Now;
                 fijacion.TipoNegocioId = 3;
+                fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
                 fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
-                fijacion.Fecha = DateTime.Now;
+                
+                var hora = DateTime.ParseExact(fijacionSAP.HORAACT, "HH:mm", CultureInfo.InvariantCulture);
+                TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
+                fijacion.Fecha = DateTime.ParseExact(fijacionSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.Fecha = fijacion.Fecha.Add(time);
                 fijacion.Canje = fijacionSAP.Canje == "X" ? true : false;
                 logger.Debug("Alta fijacion Apertura");
 

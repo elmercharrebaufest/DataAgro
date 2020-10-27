@@ -3605,10 +3605,12 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.PrecioPactado = contratoSap.PrecioPactado;
                 contrato.PorcentajeDePago = contratoSap.PorcentajeDePago;
                 contrato.FechaOperacion = contratoSap.FechaOperacion;
-                contrato.Fecha = DateTime.Now;
+                contrato.Fecha = contratoSap.Fecha;
                 contrato.TipoNegocioId = contratoSap.TipoNegocioId;
                 contrato.ContratoSAP = contratoSap.ContratoSAP;
                 contrato.UsuarioId = contratoSap.UsuarioId;
+                contrato.ComercialId = contratoSap.ComercialId;
+                contrato.ComercialCreadorId = contratoSap.ComercialCreadorId;
                 repositorio.Agregar(contrato);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
