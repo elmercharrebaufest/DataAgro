@@ -1088,19 +1088,32 @@ namespace Molinos.DataAgro.Business
 
             if (pricing)
             {
+                var p = new List<PricingCampaniaDto>();
+                foreach (var item in Model.PricingCampania)
+                {
+                    switch (item.Material)
+                    {
+                        case "Soja": item.Orden = 1; break;
+                        case "Maiz": item.Orden = 2; break;
+                        case "Trigo": item.Orden = 3; break;
+                        case "Girasol": item.Orden = 4; break;
+                        case "Girsol AO": item.Orden = 5; break;
+                    }
+                    p.Add(item);
+                }
                 htmlBody += @"<table class='pricing'>
                     <thead>
                     <tr>
                         <th>PRICING</th>
                         <th>CAMPAÑA</th>";               
-                htmlBody += Model.PricingCampania.Any(x => x.SanLorenzo > 0) ? "<th>SL</th>" : "";
-                htmlBody += Model.PricingCampania.Any(x => x.Acopio > 0) ? "<th>Acopios</th>" : "";
+                htmlBody += p.Any(x => x.SanLorenzo > 0) ? "<th>SL</th>" : "";
+                htmlBody += p.Any(x => x.Acopio > 0) ? "<th>Acopios</th>" : "";
                 htmlBody += "<th> TOTALES </th> ";
                 htmlBody += "</tr>";
                 htmlBody += "</thead>";
                 htmlBody += "<tbody>";
                 var par = 0;
-                foreach (var datos in Model.PricingCampania)
+                foreach (var datos in p.OrderBy(x => x.Orden.HasValue).ToList())
                 {
                     par += 1;
                     string sumaPricing;

@@ -144,8 +144,6 @@ namespace WebDataAgro.Controllers
         {
             logger.Info($"CerrarDiaHedge - Iniciando");
             var mailEnviar = ExcelReporteCompleto.GenerarExcel(oHedgeManager.ObtenerDatosReporte(), reportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true);
-
-            var diferencial = diferencialManager.TraerDiferencial();
             var hoy = DateTime.Now.Date;
             oHedgeManager.EnviarMail(GlobalVariables.ComercialId, hoy, oHedgeManager.GenerarCuerpoMail(""), mailEnviar);          
             logger.Info($"CerrarDiaHedge - Finalizado");
