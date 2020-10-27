@@ -1291,6 +1291,8 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private List<DetalleContratoDto> TraerDetallePosicion(List<int> negocios, string moneda)
         {
+            if (string.IsNullOrWhiteSpace(moneda))
+                moneda = "";
             var data = new List<DetalleContratoDto>();
             var contratos = repositorio.Listar<Contrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -1341,7 +1343,9 @@ namespace Molinos.DataAgro.Business.Managers
                 MercsDeposito = x.MercsDeposito == true ? "X" : "",
                 Pizarra = x.Pizarra
             },
-            x => negocios.Contains(x.Id));
+            x => negocios.Contains(x.Id) 
+                && (moneda == "" || x.MonedaId == moneda)
+            );
 
             if (contratos != null)
             {
