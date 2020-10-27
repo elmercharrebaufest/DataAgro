@@ -1162,12 +1162,12 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-        public Resultado AnularFijacionSAP(FijacionSAPDto fijacion)
+        public Resultado AnularFijacionSAP(FijacionSAP fijacion)
         {
             logger.Debug("Inicializar AnularContratoSAP");
 
             var oEntityErrors = new Resultado();
-            var codigo = fijacion.FijacionSAP.PadLeft(10, '0');
+            var codigo = fijacion.Fijacion.PadLeft(10, '0');
             var oFijacionSave = repositorio.ObtenerMayor<FijacionDePrecioContrato, int>(x => x.FijacionSAP == codigo, x => x.Id);
 
             string jsonObjeto = JsonConvert.SerializeObject(fijacion, new JsonSerializerSettings()

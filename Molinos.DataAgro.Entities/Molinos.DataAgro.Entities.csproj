@@ -133,6 +133,7 @@
     <Compile Include="Dto\ContratoTerceroDto.cs" />
     <Compile Include="Dto\EstablecimientoStockDto.cs" />
     <Compile Include="Dto\CartaDePresentacion.cs" />
+    <Compile Include="Dto\FijacionSAP.cs" />
     <Compile Include="Dto\FijacionSAPDto.cs" />
     <Compile Include="Dto\HabilitacionCampañaDto.cs" />
     <Compile Include="Dto\ListaCompraDetalleDto.cs" />

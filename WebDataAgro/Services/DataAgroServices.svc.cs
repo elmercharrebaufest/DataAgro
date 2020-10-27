@@ -1099,7 +1099,7 @@ namespace WebDataAgro.Services
 
 
         }
-        public ResultadoSap AnularFijacionSAP(FijacionSAPDto fijacionSAP)
+        public ResultadoSap AnularFijacionSAP(FijacionSAP fijacionSAP)
         {
             var oEntityErrors = new ResultadoSap();
             try

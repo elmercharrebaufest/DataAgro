@@ -30,7 +30,7 @@ namespace Molinos.DataAgro.Interfaces
         DateTime UltimoDiaHabil();
         Resultado ActualizarFijacionSap(FijacionDePrecioContrato fijacion);
         Resultado AltaFijacionSap(FijacionDePrecioContrato fijacion);
-        Resultado AnularFijacionSAP(FijacionSAPDto fijacion);
+        Resultado AnularFijacionSAP(FijacionSAP fijacion);
     }
 }
 
