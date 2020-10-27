@@ -2113,9 +2113,9 @@ namespace Molinos.DataAgro.Business.Managers
             string urlMOA = ConfigurationManager.AppSettings["UrlBaseMOAOperaciones"].ToString();
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
-            string htmlBody = "Estimado " + contacto.Nombres + " " + contacto.Apellido + "<br />";
+            string htmlBody = "Estimado " + contacto.Nombres.ToTitleCase() + " " + contacto.Apellido.ToTitleCase() + "<br />";
             htmlBody += "En el presente mail se notifica que ya puede ingresar a MOA Operaciones, la web de autogestion para operar con Molinos Agro S.A. <br /><br />  ";
-            htmlBody += "Puede ingresar haciendo click <a href='" + urlMOA + "'>aqui</<>";
+            htmlBody += "Puede ingresar haciendo click <a href='" + urlMOA + "'>aqui</a>";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
 
             htmlBody += "<br /> <br />  Saludos Cordiales" +
