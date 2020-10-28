@@ -20,6 +20,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public double Acopio { get; set; }
         public IEnumerable<int> AcopioIds { get; set; } = new List<int>();
         public int TipoNegocioId { get; set; }
-        public int? Orden { get; set; }
+        public int Orden { get; set; }
     }
 }

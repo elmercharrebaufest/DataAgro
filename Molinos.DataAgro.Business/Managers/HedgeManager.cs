@@ -1113,7 +1113,7 @@ namespace Molinos.DataAgro.Business
                 htmlBody += "</thead>";
                 htmlBody += "<tbody>";
                 var par = 0;
-                foreach (var datos in p.OrderBy(x => x.Orden.HasValue).ToList())
+                foreach (var datos in p.OrderBy(x => x.Orden).ToList())
                 {
                     par += 1;
                     string sumaPricing;
@@ -1203,7 +1203,22 @@ namespace Molinos.DataAgro.Business
 
                 htmlBody += "</tr> </thead>";
                 htmlBody += "<tbody>";
-                foreach (var toneladaPrecio in Model.ToneladasGranoTipo)
+                var toneladas = new List<ToneladasGranoTipoDto>();
+                foreach (var item in Model.ToneladasGranoTipo)
+                {
+                    switch (item.Material)
+                    {
+                        case "Soja": item.Orden = 1; break;
+                        case "Maiz": item.Orden = 2; break;
+                        case "Trigo": item.Orden = 3; break;
+                        case "Trigo Grado 2": item.Orden = 4; break;
+                        case "Trigo Calidad": item.Orden = 5; break;
+                        case "Girasol": item.Orden = 6; break;
+                        case "Girasol Alto Oleico": item.Orden = 7; break;
+                    }
+                    toneladas.Add(item);
+                }
+                foreach (var toneladaPrecio in toneladas.OrderBy(x => x.Orden).ToList())
                 {
                     var posicion = Model.PosicionCompras.Where(x => x.Material.ToLower() == toneladaPrecio.Material.ToLower());
                     var totalDisp = posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac + y.DispAFijar + y.DispAPrecio)).Sum() + toneladaPrecio.DispAgente;

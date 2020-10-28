@@ -29,6 +29,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<int> ListNewAgente { get; set; } = new List<int>();
         public List<int> ListDispAgente { get; set; } = new List<int>();
         public List<int> ListFrwAgente { get; set; } = new List<int>();
+        public int Orden { get; set; }
     }
 
     public class NegocioToneladasPosicionDto
