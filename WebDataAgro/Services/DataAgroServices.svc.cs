@@ -1047,7 +1047,7 @@ namespace WebDataAgro.Services
                 fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
                 fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
                 
-                var hora = DateTime.ParseExact(fijacionSAP.HORAACT, "HH:mm", CultureInfo.InvariantCulture);
+                var hora = DateTime.ParseExact(fijacionSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
                 TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
                 fijacion.Fecha = DateTime.ParseExact(fijacionSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 fijacion.Fecha = fijacion.Fecha.Add(time);
