@@ -690,6 +690,12 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("Alta ContratoSap" + contratoSAP.ToXml());
+                var c = contratoSAP.ContratoSAP.PadLeft(10, '0');
+                if (repositorio.Existe<Contrato>(x => x.ContratoSAP == c))
+                {
+                    oEntityErrors.ListaErrores.Add(new ErrorMessage("Contrato", "No existe el contrato en DataAgro"));
+                    return oEntityErrors;
+                }
                 var contrato = new Contrato();
 
                 var calidades = new List<Calidad>();
@@ -897,7 +903,8 @@ namespace WebDataAgro.Services
 
                 var resultado = contratoManager.AltaContratoSAP(contrato, true);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-                oEntityErrors.ContratoId = contrato != null ? contrato.Id.ToString() : "";
+                var idNuevo = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(contratoSAP.ContratoSAP), x=> x.Id);
+                oEntityErrors.ContratoId = idNuevo != 0 ? idNuevo.ToString() : "";
             }
             catch (Exception ex)
             {
@@ -1016,7 +1023,12 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("AltaFijacion" + fijacionSAP.ToXml());
-                var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == fijacionSAP.ContratoSAP, x => x.Id);
+                var f = fijacionSAP.FijacionSAP.PadLeft(10, '0');
+                if (repositorio.Existe<FijacionDePrecioContrato>(x => x.FijacionSAP == f)) {
+                    oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "No existe la fijacion en DataAgro"));
+                    return oEntityErrors;
+                }
+                var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == fijacionSAP.ContratoSAP.PadLeft(10, '0'), x => x.Id);
 
                 var fijacion = new FijacionDePrecioContrato();
                 fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
@@ -1071,14 +1083,14 @@ namespace WebDataAgro.Services
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
                 }
-                logger.Debug("ActualizandoContrato5");
-                //ValidarContrato(contrato, oEntityErrors);
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
                 }
+
                 var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+                var idFijacion = 
                 oEntityErrors.FijacionId = fijacion != null ? fijacion.Id.ToString() : "";
             }
             catch (Exception ex)

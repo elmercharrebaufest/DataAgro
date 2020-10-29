@@ -3617,7 +3617,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error(e.Message);
+                logger.Error("Error Alta Contrato Sap ");
+                logger.Error(e);
+
             }
             return error;
         }
