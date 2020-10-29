@@ -693,7 +693,7 @@ namespace WebDataAgro.Services
                 var c = contratoSAP.ContratoSAP.PadLeft(10, '0');
                 if (repositorio.Existe<Contrato>(x => x.ContratoSAP == c))
                 {
-                    oEntityErrors.ListaErrores.Add(new ErrorMessage("Contrato", "No existe el contrato en DataAgro"));
+                    oEntityErrors.ListaErrores.Add(new ErrorMessage("Contrato", "El contrato ya existe en DataAgro"));
                     return oEntityErrors;
                 }
                 var contrato = new Contrato();
@@ -1025,7 +1025,7 @@ namespace WebDataAgro.Services
                 logger.Debug("AltaFijacion" + fijacionSAP.ToXml());
                 var f = fijacionSAP.FijacionSAP.PadLeft(10, '0');
                 if (repositorio.Existe<FijacionDePrecioContrato>(x => x.FijacionSAP == f)) {
-                    oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "No existe la fijacion en DataAgro"));
+                    oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "la fijacion ya existe en DataAgro"));
                     return oEntityErrors;
                 }
                 var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == fijacionSAP.ContratoSAP.PadLeft(10, '0'), x => x.Id);
