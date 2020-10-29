@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ZLSCH { get; set; }
         public string CUENTA_MRP { get; set; }
       
-        public double Cantidad { get; set; } // Cantidad
+        public decimal Cantidad { get; set; } // Cantidad
         public decimal Precio { get; set; } // Precio      
         public string FechaDesde { get; set; } // FechaDesde
         public string FechaHasta { get; set; } // FechaHasta

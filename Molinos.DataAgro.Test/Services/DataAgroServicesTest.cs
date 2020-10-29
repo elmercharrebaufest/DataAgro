@@ -938,6 +938,42 @@ namespace Molinos.DataAgro.Test.Services
             Assert.AreEqual(result.ListaErrores.Count, 0);
 
         }
+
+        [Test]
+        public void AnularFijacionSAPOk()
+        {
+            var fijacionSap = new FijacionSAP
+            {                
+                Fijacion = "000332323",
+                
+            };           
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
+            fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap))
+           .Returns(new Resultado());
+            var result = target.AnularFijacionSAP(fijacionSap) as ResultadoSap;
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayError);
+            Assert.AreEqual(result.ListaErrores.Count, 0);
+
+        }
+
+        [Test]
+        public void AnularFijacionSAPError()
+        {
+            var fijacionSap = new FijacionSAP
+            {
+                Fijacion = "000332323",
+
+            };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
+            fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap))
+           .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
+            var result = target.AnularFijacionSAP(fijacionSap) as ResultadoSap;
+            Assert.NotNull(result);
+            Assert.IsTrue(result.HayError);
+            Assert.AreEqual(result.ListaErrores.Count, 1);
+
+        }
     }
 }
 
