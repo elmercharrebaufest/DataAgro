@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? DiasPesificado { get; set; } // Dias_Pesificado
         public string TrigoEspecial { get; set; } // TrigoEspecial
         public string ContratoSAP { get; set; }
-        public double? Ampliaciones { get; set; } // Cantidad
+        public decimal? Ampliaciones { get; set; } // Cantidad
         public string Observacion { get; set; }
         public string Pizarra { get; set; }
         public decimal? PrecioNeto { get; set; }
