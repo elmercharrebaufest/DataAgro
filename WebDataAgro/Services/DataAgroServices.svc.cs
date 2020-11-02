@@ -1090,7 +1090,6 @@ namespace WebDataAgro.Services
 
                 var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-                var idFijacion = 
                 oEntityErrors.FijacionId = fijacion != null ? fijacion.Id.ToString() : "";
             }
             catch (Exception ex)
