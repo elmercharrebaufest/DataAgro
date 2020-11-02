@@ -272,7 +272,7 @@ namespace Molinos.DataAgro.Business
                 //    client.Disconnect(true);
                 //}
                 EnviarMail(
-                    new List<string> { "emartin@baufest.com" },//replyMessage.To.Select(a => a.Name.ToString()).ToList(),
+                    replyMessage.To.Select(a => a.Name.ToString()).ToList(),
                     replyMessage.Subject,
                     "",
                     null,
