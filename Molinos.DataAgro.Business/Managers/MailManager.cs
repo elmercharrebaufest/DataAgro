@@ -219,7 +219,6 @@ namespace Molinos.DataAgro.Business
                     }
                     client.Disconnect(true);
                 }
-                logger.Debug("ReenviarMailCierreDia mail IMAP " + originalMessage.ToJson());
 
                 var comercial = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailHedge)));
                 logger.Debug("ReenviarMailCierreDia comerciales " + comercial.ToJson());
