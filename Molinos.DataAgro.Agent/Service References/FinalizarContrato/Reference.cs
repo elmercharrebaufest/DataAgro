@@ -543,6 +543,16 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private string zLSCHField;
         
+        private string pLANTA_DESTField;
+        
+        private string cANJEField;
+        
+        private string mONEDA_DEUDAField;
+        
+        private decimal mONTO_DEUDAField;
+        
+        private string dESC_INSUMOSField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -1392,6 +1402,66 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.zLSCHField = value;
                 this.RaisePropertyChanged("ZLSCH");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=71)]
+        public string PLANTA_DEST {
+            get {
+                return this.pLANTA_DESTField;
+            }
+            set {
+                this.pLANTA_DESTField = value;
+                this.RaisePropertyChanged("PLANTA_DEST");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=72)]
+        public string CANJE {
+            get {
+                return this.cANJEField;
+            }
+            set {
+                this.cANJEField = value;
+                this.RaisePropertyChanged("CANJE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=73)]
+        public string MONEDA_DEUDA {
+            get {
+                return this.mONEDA_DEUDAField;
+            }
+            set {
+                this.mONEDA_DEUDAField = value;
+                this.RaisePropertyChanged("MONEDA_DEUDA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=74)]
+        public decimal MONTO_DEUDA {
+            get {
+                return this.mONTO_DEUDAField;
+            }
+            set {
+                this.mONTO_DEUDAField = value;
+                this.RaisePropertyChanged("MONTO_DEUDA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=75)]
+        public string DESC_INSUMOS {
+            get {
+                return this.dESC_INSUMOSField;
+            }
+            set {
+                this.dESC_INSUMOSField = value;
+                this.RaisePropertyChanged("DESC_INSUMOS");
             }
         }
         

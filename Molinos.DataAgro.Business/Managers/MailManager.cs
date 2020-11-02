@@ -1,6 +1,9 @@
 ﻿using Autofac.Extras.NLog;
-using GemBox.Email.Imap;
-using GemBox.Email.Mime;
+using MailKit;
+//using GemBox.Email.Imap;
+//using GemBox.Email.Mime;
+using MailKit.Search;
+using MimeKit;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -112,7 +115,7 @@ namespace Molinos.DataAgro.Business
                     oMensaje.To.Add(mail);
                 }
             }
-            if(enviarA == null || enviarA.Count() == 0)
+            if (enviarA == null || enviarA.Count() == 0)
             {
                 oMensaje.To.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
             }
@@ -171,47 +174,57 @@ namespace Molinos.DataAgro.Business
                     try { copiaAstring.Add(GetEmailUserActiveDirectory(comercial.IdActiveDirectory)); } catch (Exception e) { logger.Error(e); }
                 }
             }
-            this.EnviarMail( enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
+            this.EnviarMail(enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
         }
         public void ReenviarMailCierreDia(string asuntoABuscar, string asuntoNuevoMail, string cuerpo)
         {
             try
             {
-                GemBox.Email.ComponentInfo.SetLicense("FREE-LIMITED-KEY");
-                GemBox.Email.MailMessage originalMessage;
-                ImapClient imap = default(ImapClient);
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["ImapServerPort"], out Condicion))
-                {
-                    imap = new ImapClient(ConfigurationManager.AppSettings["ImapServer"], int.Parse(ConfigurationManager.AppSettings["ImapServerPort"]));
-                }
-                else
-                {
-                    imap = new ImapClient(ConfigurationManager.AppSettings["ImapServer"]);
-                }
+                MimeMessage originalMessage = new MimeMessage();
+                UniqueId uid = new UniqueId();
 
-
-                using (imap)
+                using (var client = new MailKit.Net.Imap.ImapClient())
                 {
-                    imap.Connect();
-                    imap.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
-                    imap.SelectInbox();
+                    client.Connect(ConfigurationManager.AppSettings["ImapServer"], int.Parse(ConfigurationManager.AppSettings["ImapServerPort"]), true);
 
-                    string search = "SUBJECT \"" + asuntoNuevoMail + "\"";
+                    client.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
+
+                    // The Inbox folder is always available on all IMAP servers...
+                    var inbox = client.Inbox;
+                    inbox.Open(MailKit.FolderAccess.ReadOnly);
+
+                    Console.WriteLine("Total messages: {0}", inbox.Count);
+                    Console.WriteLine("Recent messages: {0}", inbox.Recent);
+
                     try
                     {
-                        originalMessage = imap.GetMessage(imap.SearchMessageNumbers(search).Last());
+                        var query = SearchQuery.SubjectContains(asuntoNuevoMail);
+
+                        uid = inbox.Search(query).LastOrDefault();
+                        if (uid.ToString() != "0")
+                        {
+                            originalMessage = inbox.GetMessage(uid);
+                        }
+                        else
+                        {
+                            query = SearchQuery.SubjectContains(asuntoABuscar);
+                            uid = inbox.Search(query).Last();
+                            originalMessage = inbox.GetMessage(uid);
+                        }
                     }
                     catch (Exception e)
                     {
-                        search = "SUBJECT \"" + asuntoABuscar + "\"";
-                        originalMessage = imap.GetMessage(imap.SearchMessageNumbers(search).Last());
+
                     }
+                    client.Disconnect(true);
                 }
-               var comercial = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailHedge)));
+
+                var comercial = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailHedge)));
                 logger.Debug("comerciales " + comercial.ToJson());
 
-                var lista = new List<GemBox.Email.MailAddress>();
+
+                var lista = new List<string>();
+
                 var email = "";
                 foreach (var item in comercial)
                 {
@@ -220,41 +233,37 @@ namespace Molinos.DataAgro.Business
                         email = this.GetEmailUserActiveDirectory(item);
                         if (!String.IsNullOrEmpty(email))
                         {
-                            lista.Add(new GemBox.Email.MailAddress(email));
+                            lista.Add(email);
                         }
                     }
                 }
-               
-                GemBox.Email.MailMessage replyMessage = new GemBox.Email.MailMessage(
-                    originalMessage.From[0],
-                   lista.ToArray());
-                replyMessage.MimeEntity.Headers.Add(
-                    new Header(HeaderId.InReplyTo, originalMessage.Id));
-                replyMessage.MimeEntity.Headers.Add(
-                    new Header(HeaderId.References, originalMessage.Id));
-                replyMessage.Subject = asuntoNuevoMail;
-                replyMessage.BodyHtml = cuerpo;
 
-                // Append original message text.
-                replyMessage.BodyHtml +=
-                    $"<div>{originalMessage.Date:G}, {originalMessage.From[0].Address} Escribió:</div>" +
-                    $"<blockquote>{originalMessage.BodyHtml}</blockquote>";
-                
-                // Send reply email.
-                GemBox.Email.Smtp.SmtpClient smtp;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                var replyMessage = new MimeMessage();
+                replyMessage.From.Add(new MailboxAddress(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialUserName"]));
+                foreach (var item in lista)
                 {
-                    smtp = new GemBox.Email.Smtp.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+                    replyMessage.To.Add(new MailboxAddress(item, item));
+
                 }
-                else
+
+                replyMessage.Subject = asuntoNuevoMail;
+                replyMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
                 {
-                    smtp = new GemBox.Email.Smtp.SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
-                }
-                using (smtp)
+                    Text = cuerpo +
+                        $"<div>{originalMessage.Date:G}, {originalMessage.From[0].Name} Escribió:</div>" +
+                        $"<blockquote>{originalMessage.HtmlBody}</blockquote>"
+                };
+
+                // Send reply email.               
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
-                    smtp.Connect();
-                    smtp.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
-                    smtp.SendMessage(replyMessage);
+                    client.Connect(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]), false);
+
+                    // Note: only needed if the SMTP server requires authentication
+                    client.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
+
+                    client.Send(replyMessage);
+                    client.Disconnect(true);
                 }
             }
             catch (Exception e)
@@ -287,7 +296,7 @@ namespace Molinos.DataAgro.Business
                     }
 
                 }
-            }            
+            }
             if (copia != null)
             {
                 foreach (var cc in copia)
@@ -295,7 +304,7 @@ namespace Molinos.DataAgro.Business
                     if (cc.Split('@').Length == 2)
                     {
                         copiaAstring.Add(cc);
-                    }                  
+                    }
 
                     else
                     {

@@ -253,7 +253,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
                         ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
                         DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
-                        CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : ""
+                        CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
+                        PLANTA_DEST = contrato.Destino.CodigoSap
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
