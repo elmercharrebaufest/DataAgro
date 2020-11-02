@@ -257,7 +257,7 @@ namespace Molinos.DataAgro.Business
                 // Send reply email.               
                 using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
-                    client.Connect(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]), false);
+                    client.Connect(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]), true);
 
                     // Note: only needed if the SMTP server requires authentication
                     client.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
