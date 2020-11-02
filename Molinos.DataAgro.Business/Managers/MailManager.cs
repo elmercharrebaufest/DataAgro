@@ -6,6 +6,7 @@ using MailKit.Search;
 using MimeKit;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Entities.Validations;
@@ -258,16 +259,19 @@ namespace Molinos.DataAgro.Business
 
                 logger.Debug("ReenviarMailCierreDia SMTP send mail");
                 // Send reply email.                 
-                using (var client = new MailKit.Net.Smtp.SmtpClient())
-                {
-                    client.Connect(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]), ConfigurationManager.AppSettings["EnableSSL"] == "S");
+                //using (var client = new MailKit.Net.Smtp.SmtpClient())
+                //{
+                //    client.Connect(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]), ConfigurationManager.AppSettings["EnableSSL"] == "S");
 
-                    // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
+                //    // Note: only needed if the SMTP server requires authentication
+                //    client.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
 
-                    client.Send(replyMessage);
-                    client.Disconnect(true);
-                }
+                //    client.Send(replyMessage);
+                //    client.Disconnect(true);
+                //}
+                MailMessage mensaje = MimeKitExtensions.ConvertToMailMessage(originalMessage);
+                EnviarMailClient(mensaje);
+
             }
             catch (Exception e)
             {
@@ -328,4 +332,5 @@ namespace Molinos.DataAgro.Business
         }
     }
 }
+
 
