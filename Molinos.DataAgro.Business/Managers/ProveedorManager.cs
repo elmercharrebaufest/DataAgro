@@ -2114,7 +2114,7 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "Estimado <b>" + contacto.Nombres.ToTitleCase() + " " + contacto.Apellido.ToTitleCase() + "</b><br /><br />";
-            htmlBody += "En el presente mail se notifica que ya puede comenzar a operar con "+ proveedor.basicos.RazonSocial + " ( "+ proveedor.basicos.cuit + " ) en MOA Operaciones, la web de autogestión para operar con Molinos Agro S.A. <br /><br />  ";
+            htmlBody += "En el presente mail se notifica que ya puede comenzar a operar con "+ proveedor.basicos.RazonSocial + " ( "+ proveedor.basicos.cuit + " ) en MOA Operaciones, la web de autogestión de Molinos Agro S.A. <br /><br />  ";
             htmlBody += "Ingrese haciendo click <a href='" + urlMOA + "'>aquí</a>";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
 
