@@ -44,8 +44,8 @@ namespace Molinos.DataAgro.Entities.Extensions
             {
                 var multipart = (MimeKit.Multipart)entity;
 
-                if (multipart.ContentType.Matches("multipart", "alternative"))
-                {
+                //if (multipart.ContentType.Matches("multipart", "alternative"))
+                //{
                     foreach (var part in multipart.OfType<MimeKit.MimePart>())
                     {
                         // clone the content
@@ -60,12 +60,12 @@ namespace Molinos.DataAgro.Entities.Extensions
 
                         message.AlternateViews.Add(view);
                     }
-                }
-                else
-                {
-                    foreach (var part in multipart)
-                        AddBodyPart(message, part);
-                }
+                //}
+                //else
+                //{
+                //    foreach (var part in multipart)
+                //        AddBodyPart(message, part);
+                //}
             }
             else
             {
@@ -96,7 +96,7 @@ namespace Molinos.DataAgro.Entities.Extensions
                 }
                 else
                 {
-                    message.IsBodyHtml = part.ContentType.Matches("text", "html");
+                    message.IsBodyHtml = true;// part.ContentType.Matches("text", "html");
                     message.Body = ((MimeKit.TextPart)part).Text;
                 }
             }

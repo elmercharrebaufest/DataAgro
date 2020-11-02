@@ -255,7 +255,9 @@ namespace Molinos.DataAgro.Business
                         $"<div>{originalMessage.Date:G}, {originalMessage.From[0].Name} Escribió:</div>" +
                         $"<blockquote>{originalMessage.HtmlBody}</blockquote>"
                 };
-
+                var Text = cuerpo +
+                        $"<div>{originalMessage.Date:G}, {originalMessage.From[0].Name} Escribió:</div>" +
+                        $"<blockquote>{originalMessage.HtmlBody}</blockquote>";
 
                 logger.Debug("ReenviarMailCierreDia SMTP send mail");
                 // Send reply email.                 
@@ -269,8 +271,17 @@ namespace Molinos.DataAgro.Business
                 //    client.Send(replyMessage);
                 //    client.Disconnect(true);
                 //}
-                MailMessage mensaje = MimeKitExtensions.ConvertToMailMessage(originalMessage);
-                EnviarMailClient(mensaje);
+                EnviarMail(
+                    new List<string> { "emartin@baufest.com" },//replyMessage.To.Select(a => a.Name.ToString()).ToList(),
+                    replyMessage.Subject,
+                    "",
+                    null,
+                    AlternateView.CreateAlternateViewFromString(Text, null, MediaTypeNames.Text.Html),
+                    null,null
+                    );
+
+                //MailMessage mensaje = MimeKitExtensions.ConvertToMailMessage(originalMessage);
+                //EnviarMailClient(mensaje);
 
             }
             catch (Exception e)
@@ -332,5 +343,4 @@ namespace Molinos.DataAgro.Business
         }
     }
 }
-
 
