@@ -1028,7 +1028,7 @@ namespace WebDataAgro.Services
                     oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "la fijacion ya existe en DataAgro"));
                     return oEntityErrors;
                 }
-                var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == fijacionSAP.ContratoSAP.PadLeft(10, '0'), x => x.Id);
+                var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == f, x => x.Id);
 
                 var fijacion = new FijacionDePrecioContrato();
                 fijacion.FijacionSAP = fijacionSAP.FijacionSAP;

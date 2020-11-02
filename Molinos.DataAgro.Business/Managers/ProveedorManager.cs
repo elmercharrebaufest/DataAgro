@@ -1277,7 +1277,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Cupo = param.Cupo
                     };
                     repositorio.Agregar(contactoComercial);
-                    EnviarMailInvitacionMOAOperaciones(contactoComercial);
+                    EnviarMailInvitacionMOAOperaciones(contactoComercial,oParam);
 
                     int cant = 1;
                     foreach (var interes in param.intereses)
@@ -2000,7 +2000,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Cupo = can.Cupo
                             };
                             repositorio.Agregar(contacto);
-                            EnviarMailInvitacionMOAOperaciones(contacto);
+                            EnviarMailInvitacionMOAOperaciones(contacto,oParam);
                             var nroItem = 1;
                             foreach (var valor in can.intereses)
                             {
@@ -2089,13 +2089,13 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        private void EnviarMailInvitacionMOAOperaciones(ContactoComercial contacto)
+        private void EnviarMailInvitacionMOAOperaciones(ContactoComercial contacto, NuevoProveedor proveedor)
         {
             try
             {
                 if (!string.IsNullOrWhiteSpace(contacto.Email1))
                 {
-                    var cuerpo = CuerpoMailInvitacionMOAOperaciones(httpContextManager.ObtenerPathLogoMail(), contacto);
+                    var cuerpo = CuerpoMailInvitacionMOAOperaciones(httpContextManager.ObtenerPathLogoMail(), contacto, proveedor);
                     mailManager.EnviarMail(new List<string> { contacto.Email1 }, "Ingreso a MOA Operaciones", "", null, cuerpo, null, null);
                 }
             }
@@ -2108,14 +2108,14 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        private AlternateView CuerpoMailInvitacionMOAOperaciones(String filePath, ContactoComercial contacto)
+        private AlternateView CuerpoMailInvitacionMOAOperaciones(String filePath, ContactoComercial contacto, NuevoProveedor proveedor)
         {
             string urlMOA = ConfigurationManager.AppSettings["UrlBaseMOAOperaciones"].ToString();
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
-            string htmlBody = "Estimado " + contacto.Nombres.ToTitleCase() + " " + contacto.Apellido.ToTitleCase() + "<br />";
-            htmlBody += "En el presente mail se notifica que ya puede ingresar a MOA Operaciones, la web de autogestion para operar con Molinos Agro S.A. <br /><br />  ";
-            htmlBody += "Puede ingresar haciendo click <a href='" + urlMOA + "'>aqui</a>";
+            string htmlBody = "Estimado <b>" + contacto.Nombres.ToTitleCase() + " " + contacto.Apellido.ToTitleCase() + "</b><br /><br />";
+            htmlBody += "En el presente mail se notifica que ya puede comenzar a operar con "+ proveedor.basicos.RazonSocial + " ( "+ proveedor.basicos.cuit + " ) en MOA Operaciones, la web de autogestión para operar con Molinos Agro S.A. <br /><br />  ";
+            htmlBody += "Ingrese haciendo click <a href='" + urlMOA + "'>aquí</a>";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
 
             htmlBody += "<br /> <br />  Saludos Cordiales" +
