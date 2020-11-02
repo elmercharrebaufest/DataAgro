@@ -183,6 +183,7 @@ namespace Molinos.DataAgro.Business
                 MimeMessage originalMessage = new MimeMessage();
                 UniqueId uid = new UniqueId();
 
+                logger.Debug("ReenviarMailCierreDia Obtener mail IMAP");
                 using (var client = new MailKit.Net.Imap.ImapClient())
                 {
                     client.Connect(ConfigurationManager.AppSettings["ImapServer"], int.Parse(ConfigurationManager.AppSettings["ImapServerPort"]), true);
@@ -218,9 +219,10 @@ namespace Molinos.DataAgro.Business
                     }
                     client.Disconnect(true);
                 }
+                logger.Debug("ReenviarMailCierreDia mail IMAP " + originalMessage.ToJson());
 
                 var comercial = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailHedge)));
-                logger.Debug("comerciales " + comercial.ToJson());
+                logger.Debug("ReenviarMailCierreDia comerciales " + comercial.ToJson());
 
 
                 var lista = new List<string>();
@@ -254,10 +256,12 @@ namespace Molinos.DataAgro.Business
                         $"<blockquote>{originalMessage.HtmlBody}</blockquote>"
                 };
 
-                // Send reply email.               
+
+                logger.Debug("ReenviarMailCierreDia SMTP send mail");
+                // Send reply email.                 
                 using (var client = new MailKit.Net.Smtp.SmtpClient())
                 {
-                    client.Connect(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]), true);
+                    client.Connect(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]), ConfigurationManager.AppSettings["EnableSSL"] == "S");
 
                     // Note: only needed if the SMTP server requires authentication
                     client.Authenticate(ConfigurationManager.AppSettings["CredentialUserName"], ConfigurationManager.AppSettings["CredentialPassword"]);
