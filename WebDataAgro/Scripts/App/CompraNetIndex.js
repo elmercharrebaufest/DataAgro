@@ -2246,7 +2246,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $(".rechazo").hide();
         $("#visualizar_rechazo").text("");
     }
-    if (ObservacionTercero == "") {
+    if (ObservacionTercero == "" || ObservacionTercero == "null") {
         ObservacionTercero = null;
     }
     if (CalidadTercero == "true" || DolarizadoTercero == "true" || PagoDiferidoTercero == "true" || ObservacionTercero != null) {
