@@ -436,7 +436,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FECHA_CREACION = fechaContrato.ToString("yyyy-MM-dd"),
                             ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
                             DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X":"",
-                            CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : ""
+                            CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
+                            PLANTA_DEST = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
+
                         }
                     }
                 };

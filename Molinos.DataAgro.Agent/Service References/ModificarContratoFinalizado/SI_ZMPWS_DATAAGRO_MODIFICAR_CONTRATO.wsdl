@@ -131,6 +131,11 @@
           <xsd:maxLength value="4" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char79">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="79" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char100">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="100" />
@@ -240,7 +245,12 @@
           <xsd:element name="PORCPARCIAL" type="rfc:decimal5.2" />
           <xsd:element name="FECHA_CREACION" type="rfc:date10" />
           <xsd:element name="CUENTA_MRP" type="rfc:char60" />
-          <xsd:element name="ZLSCH" type="rfc:char10" />
+          <xsd:element name="ZLSCH" type="rfc:char1" />
+          <xsd:element name="PLANTA_DEST" type="rfc:char4" />
+          <xsd:element name="CANJE" type="rfc:char1" />
+          <xsd:element name="MONEDA_DEUDA" type="rfc:cuky5" />
+          <xsd:element name="MONTO_DEUDA" type="rfc:curr13.2" />
+          <xsd:element name="DESC_INSUMOS" type="rfc:char79" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

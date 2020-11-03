@@ -1402,7 +1402,9 @@ namespace Molinos.DataAgro.Business.Managers
                 MercsDeposito = "",
                 Pizarra = x.Pizarra
             },
-             x => negocios.Contains(x.Id));
+             x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda)
+            );
 
             if (fijaciones != null)
             {
@@ -1457,7 +1459,9 @@ namespace Molinos.DataAgro.Business.Managers
                 MercsDeposito = "",
                 Pizarra = x.Pizarra
             },
-             x => negocios.Contains(x.Id));
+             x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda)
+            );
             if (fasones != null)
             {
                 data.AddRange(fasones);
@@ -1515,7 +1519,9 @@ namespace Molinos.DataAgro.Business.Managers
                 MercsDeposito = "",
                 Pizarra = x.Pizarra
             },
-             x => negocios.Contains(x.Id));
+             x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda)
+            );
 
 
             if (acuerdos != null)
@@ -1573,7 +1579,9 @@ namespace Molinos.DataAgro.Business.Managers
                 MercsDeposito = "",
                 Pizarra = x.Pizarra
             },
-            x => negocios.Contains(x.Id));
+            x => negocios.Contains(x.Id)
+                && (moneda == "" || x.MonedaId == moneda)
+            );
 
             if (agente != null)
             {
