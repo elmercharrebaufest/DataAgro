@@ -1087,7 +1087,7 @@ namespace WebDataAgro.Services
                 {
                     return oEntityErrors;
                 }
-
+                fijacion.AperturaPrecio = aperturas;
                 var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
                 oEntityErrors.FijacionId = fijacion != null ? fijacion.Id.ToString() : "";
