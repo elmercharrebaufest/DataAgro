@@ -438,13 +438,13 @@
         </div>
 
 
-        <div class="col-xs-10 col-sm-5 noFason noAgente  acuerdo ampliar-fijacion ampliar">
+        <div class="col-xs-10 col-sm-5 noFason noAgente  ampliar-fijacion ">
             @*<div class="ampliar">*@
             <span id="baseDiv" class="noAcuerdo ampliar">
                 <label id="lblBase">Base</label>
                 <input id="baseId" class="campo-input-input" data-bind="checked:Parametros.baseId, disabled: isControlDisabled" type="checkbox" />
             </span>
-            <span id="pizarraDiv" class="noAcuerdo ampliar">
+            <span id="pizarraDiv" class="noAcuerdo ampliar contratoAPrecio">
                 <label id="lblPizarra">Pizarra</label>
                 <input id="pizarraId" class="campo-input-input" data-bind="checked:Parametros.pizarraId, disabled: isControlDisabled" type="checkbox" />
             </span>
@@ -462,13 +462,13 @@
                     <input id="diasDiferidoFijacionId" placeholder="Días" />
                 </div>
             </div>
-
+        </div>
+        @*<div class="col-xs-10 col-sm-5 noFason noAgente acuerdo ampliar-fijacion ">
             <div id="chequeElectronicoId" class="acuerdo" style="float:right" hidden>
                 <label>Echeq</label>
                 <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
             </div>
-
-        </div>
+        </div>*@
         <div class="col-sm-2 espacioPrecioMoneda" hidden></div>
         <div class="col-xs-12 col-sm-5 col-md-4 required-box-parent espacioPrecioMoneda" hidden></div>
         <div class="col-sm-2" id="fasonEspecial" hidden>
@@ -485,6 +485,12 @@
         <div id="DivPrecioApertura" class="col-xs-12 col-sm-5 col-md-4 ">
             <div class="col-xs-12 col-md-12 noPadding">
                 <input id="precioTotalApertura" style="width:100%; margin:0" readonly />
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-5 noFason noAgente acuerdo ampliar-fijacion ">
+            <div id="chequeElectronicoId" class="acuerdo"  hidden>
+                <label>Echeq</label>
+                <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
             </div>
         </div>
     </div>
