@@ -1147,6 +1147,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacionSave.ComercialId = fijacion.ComercialId;
                 fijacionSave.Canje = fijacion.Canje;
                 fijacionSave.Fecha = fijacion.Fecha;
+                fijacionSave.GrupoCompra = fijacion.GrupoCompra;
 
                 if (fijacion.AperturaPrecio != null)
                 {

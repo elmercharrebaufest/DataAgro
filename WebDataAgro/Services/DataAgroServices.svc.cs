@@ -1024,10 +1024,10 @@ namespace WebDataAgro.Services
             {
                 logger.Debug("AltaFijacion" + fijacionSAP.ToXml());
                 var f = fijacionSAP.FijacionSAP.PadLeft(10, '0');
-                if (repositorio.Existe<FijacionDePrecioContrato>(x => x.FijacionSAP == f)) {
-                    oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "la fijacion ya existe en DataAgro"));
-                    return oEntityErrors;
-                }
+                //if (repositorio.Existe<FijacionDePrecioContrato>(x => x.FijacionSAP == f)) {
+                //    oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "la fijacion ya existe en DataAgro"));
+                //    return oEntityErrors;
+                //}
                 var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == f, x => x.Id);
 
                 var fijacion = new FijacionDePrecioContrato();
@@ -1041,7 +1041,8 @@ namespace WebDataAgro.Services
                 fijacion.Cantidad = (double)fijacionSAP.Cantidad;
                 fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
                 fijacion.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == fijacionSAP.Centro, x => x.Id);
-                fijacion.Pizarra = fijacionSAP.Precio == 0 ? true : false;
+                logger.Debug("Validacion Precio " + (fijacionSAP.Precio == 0));
+                fijacion.Pizarra = fijacionSAP.Pizarra == "X";
                 fijacion.Posicion = fijacionSAP.Posicion;
                 fijacion.CorredorId = !string.IsNullOrEmpty(fijacionSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == fijacionSAP.CuitCorredor, x => x.CorredorId) : (int?)null;               
                 fijacion.DiasPesificado = fijacionSAP.DiasDiferimiento == 0 ? (int?)null : fijacionSAP.DiasDiferimiento;
@@ -1056,9 +1057,10 @@ namespace WebDataAgro.Services
                 fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
                 fijacion.EstadoId = 5;
                 fijacion.TipoNegocioId = 3;
-                fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
+                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.Comercial);
+                fijacion.ComercialId = comercial.ComercialId;
                 fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
-                
+                fijacion.GrupoCompra = comercial.GrupoDeComprasId;
                 var hora = DateTime.ParseExact(fijacionSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
                 TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
                 fijacion.Fecha = DateTime.ParseExact(fijacionSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -1090,7 +1092,6 @@ namespace WebDataAgro.Services
                 fijacion.AperturaPrecio = aperturas;
                 var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-                oEntityErrors.FijacionId = fijacion != null ? fijacion.Id.ToString() : "";
             }
             catch (Exception ex)
             {
