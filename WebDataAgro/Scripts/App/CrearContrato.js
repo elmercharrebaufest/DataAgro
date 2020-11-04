@@ -408,7 +408,8 @@ function InicializarElementos() {
                 }
                 $('#porcentajeComisionDiv').show();
                 $('#contCorredorDiv').show();
-                if ($("#tipoId").val() != "3" && $("#tipoId").val() != "6") {
+                
+                if ($("#tipoId").val() != "3" && $("#tipoId").val() != "6" && $("#boton-ampliar").text() != "+ AMPLIAR") {
                     $('#pagoDirectoDiv').show();
                 }
             }
@@ -2106,7 +2107,10 @@ function InicializarElementos() {
                 $(".contratoAPrecio").show();
                 $("#pagosDiv").show();
             }
-            //else if ($('#tipoId').val() == 6) {
+            if ($("#buscadorCorredor").val() != "") {
+                $('#pagoDirectoDiv').show();
+            }
+               //else if ($('#tipoId').val() == 6) {
             //    $(".contratoAFijar").hide();
             //    $(".contratoAPrecio").hide();
             //    $("#pagosDiv").hide();
