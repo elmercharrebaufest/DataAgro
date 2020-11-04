@@ -3720,9 +3720,9 @@ function CargarDatosEditar(contrato, hijo) {
         $("#desdecontrato").text(contrato.DatosFijacion.FechaDesde);
         $("#hastacontrato").text(contrato.DatosFijacion.FechaHasta);
     } else {
-        if ($("#buscadorCorredor").val() != "") {
-            $("#pagoDirectoDiv").show();
-        }
+        //if ($("#buscadorCorredor").val() != "") {
+        //    $("#pagoDirectoDiv").show();
+        //}
     }
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);
