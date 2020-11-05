@@ -1582,6 +1582,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var p in cupos)
             {
+                logger.Debug("EnvioMailSinCtg ComercialId " + p.Key.ComercialId + " ProveedorId " + p.Key.ProveedorId);
                 var lista = new List<string>();
 
                 var comercial = repositorio.Obtener<Comercial>(p.Key.ComercialId);
