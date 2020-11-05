@@ -722,6 +722,10 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
+            if (oParam.Dolarizado != true && oParam.FechaDolarizado != null)
+            {
+                oErrorMessages.Error("Dolarizado", "Se debe comletar Dolarizado si selecciono Fecha de Dolarizado.");
+            }
             return oErrorMessages;
         }
 
