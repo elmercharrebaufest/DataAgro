@@ -85,6 +85,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ComercialCreador { get; set; }
         public string FechaCreacion { get; set; }
         public string HORAACT { get; set; }
+        public string FechaCierta { get; set; }
     }
 
     public class CalidadSAP

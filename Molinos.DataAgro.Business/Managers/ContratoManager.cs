@@ -441,13 +441,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("FechaDesdeHastaFijacion", "Fecha de Fijación inválida");
             }
-
-            var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId);
-            if (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2)
+            if (!validacionesMinimas)
             {
-                if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio < rangosPrecio.PrecioMinimo || oParam.Precio > rangosPrecio.PrecioMaximo))
+                var rangosPrecio = repositorio.Obtener<RangoPrecio>(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId);
+                if (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2)
                 {
-                    oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+                    if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio < rangosPrecio.PrecioMinimo || oParam.Precio > rangosPrecio.PrecioMaximo))
+                    {
+                        oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+                    }
                 }
             }
             if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
@@ -669,23 +671,25 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
             }
-
-            if (oParam.PagoCBU != null)
+            if (!validacionesMinimas)
             {
-                var existePago = ListarCBU(proveedor.CUIT, oParam.PagoCBU);
-                var validarPagoCbu = false;
-                foreach (var item in existePago)
+                if (oParam.PagoCBU != null)
                 {
-                    if (item.Pago == oParam.PagoCBU)
+                    var existePago = ListarCBU(proveedor.CUIT, oParam.PagoCBU);
+                    var validarPagoCbu = false;
+                    foreach (var item in existePago)
                     {
-                        validarPagoCbu = true;
+                        if (item.Pago == oParam.PagoCBU)
+                        {
+                            validarPagoCbu = true;
+                        }
                     }
-                }
-                if (!validarPagoCbu)
-                {
-                    oErrorMessages.Error("PagoCbu", "El cbu ingresado no es válido");
-                }
+                    if (!validarPagoCbu)
+                    {
+                        oErrorMessages.Error("PagoCbu", "El cbu ingresado no es válido");
+                    }
 
+                }
             }
             if (contrato != null)
             {
@@ -2650,9 +2654,10 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.CaratulaExtension = contrato.CaratulaExtension;
             contratoSave.PrecioAjusteComision = contrato.PrecioAjusteComision;
             contratoSave.MonedaAjusteComisionId = contrato.MonedaAjusteComisionId;
-            //contratoSave.ChequeElectronico = contrato.ChequeElectronico;
+            contratoSave.FechaCierta = contrato.FechaCierta;
+            contratoSave.ChequeElectronico = contrato.ChequeElectronico;
             contratoSave.DolarizadoExpress = contrato.DolarizadoExpress;
-            //contratoSave.PagoCBU = contrato.PagoCBU;
+            contratoSave.PagoCBU = contrato.PagoCBU;
 
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
@@ -3615,6 +3620,9 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.UsuarioId = contratoSap.UsuarioId;
                 contrato.ComercialId = contratoSap.ComercialId;
                 contrato.ComercialCreadorId = contratoSap.ComercialCreadorId;
+                contrato.EsFason = contratoSap.EsFason;
+                contrato.Madre = contratoSap.Madre;
+                contrato.FechaCierta = contratoSap.FechaCierta;
                 repositorio.Agregar(contrato);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());

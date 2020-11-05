@@ -208,10 +208,13 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
-            var rangosPrecio = repositorio.Listar<RangoPrecio>();
-            if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
+            if (validacionesMinimas)
             {
-                oErrorMessages.Error("Precio", "Precio fuera de Rango");
+                var rangosPrecio = repositorio.Listar<RangoPrecio>();
+                if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
+                {
+                    oErrorMessages.Error("Precio", "Precio fuera de Rango");
+                }
             }
             if (oParam.CampanaId == 0 || oParam.CampanaId == null)
             {

@@ -188,7 +188,7 @@ namespace WebDataAgro.Services
 
                 foreach (var desc in contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>())
                 {
-                    if (desc.TipoPeriodo != "I" && desc.TipoDescBon != "B")
+                    if (!(desc.TipoPeriodo == "I" && desc.TipoDescBon == "B") && !(desc.TipoPeriodo == "E" && desc.TipoDescBon == "A"))
                     {
                         var descuento = new DescuentoBonificacion
                         {
@@ -203,7 +203,7 @@ namespace WebDataAgro.Services
                         };
                         descuentos.Add(descuento);
                     }
-                    if (desc.TipoPeriodo != "E" && desc.TipoDescBon != "A")
+                    if (desc.TipoPeriodo == "E" && desc.TipoDescBon == "A")
                     {
                         var precio = new PrecioPactado
                         {
@@ -303,11 +303,16 @@ namespace WebDataAgro.Services
                 contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
                 contrato.PagoCBU = contratoSAP.CUENTA_MRP;
                 contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
+                contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
 
 
                 if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
                 {
                     contrato.StandardDeCalidadId = 3;
+                }
+                if (contratoSAP.Especial == "04" && contrato.MaterialId == 1)
+                {
+                    contrato.StandardDeCalidadId = 7;
                 }
                 contrato.Sustentable = contratoSAP.Sustentable == "X";
                 contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
@@ -712,7 +717,7 @@ namespace WebDataAgro.Services
 
                 foreach (var desc in contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>())
                 {
-                    if (desc.TipoPeriodo != "I" && desc.TipoDescBon != "B")
+                    if (!(desc.TipoPeriodo == "I" && desc.TipoDescBon == "B") && !(desc.TipoPeriodo == "E" && desc.TipoDescBon == "A"))
                     {
                         var descuento = new DescuentoBonificacion
                         {
@@ -722,11 +727,11 @@ namespace WebDataAgro.Services
                             Porcentaje = desc.PorcentajeDB,
                             MonedaId = desc.MonedaDB,
                             TipoDBId = tipoDescuentoList.FirstOrDefault(x => x.CodigoSap == desc.TipoDescBon).Id,
-                            TipoPeriodoDBId = tipoPeriodoList.FirstOrDefault(x => x.CodigoSap == desc.TipoPeriodo).Id
+                            TipoPeriodoDBId = tipoPeriodoList.FirstOrDefault(x => x.CodigoSap == desc.TipoPeriodo).Id                           
                         };
                         descuentos.Add(descuento);
                     }
-                    if (desc.TipoPeriodo != "E" && desc.TipoDescBon != "A")
+                    if (desc.TipoPeriodo == "E" && desc.TipoDescBon == "A")
                     {
                         var precio = new PrecioPactado
                         {
@@ -789,7 +794,9 @@ namespace WebDataAgro.Services
                 contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.FechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);              
+                contrato.FechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture); 
+                contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+
                 var hora = DateTime.ParseExact(contratoSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
                 TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
                 contrato.Fecha = DateTime.ParseExact(contratoSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -832,6 +839,10 @@ namespace WebDataAgro.Services
                 {
                     contrato.StandardDeCalidadId = 3;
                 }
+                if (contratoSAP.Especial == "04" && contrato.MaterialId == 1)
+                {
+                    contrato.StandardDeCalidadId = 7;
+                }
                 contrato.Sustentable = contratoSAP.Sustentable == "X";
                 contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
                 contrato.Warrant = contratoSAP.AutCg == "X";
@@ -871,9 +882,10 @@ namespace WebDataAgro.Services
 
                     calidades.Add(calidad);
                 }
+                contrato.Descuentos = descuentos;
                 contrato.Calidad = calidades;
                 contrato.AperturaPrecio = aperturas;
-                contrato.Descuentos = descuentos;
+                contrato.PrecioPactado = preciosPactados;
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == contratoSAP.Comercial);
                 contrato.GrupoCompra = comercial.GrupoDeComprasId;
                 contrato.UsuarioId = contratoSAP.Comercial;
@@ -888,11 +900,7 @@ namespace WebDataAgro.Services
                 if (!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaSPrecio))
                 {
                     contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")) });
-                }
-                contrato.Descuentos = descuentos;
-                contrato.Calidad = calidades;
-                contrato.AperturaPrecio = aperturas;
-                contrato.PrecioPactado = preciosPactados;
+                }               
 
                 logger.Debug("Validacion alta contrato");
                 ValidarContrato(contrato, oEntityErrors);
@@ -926,67 +934,14 @@ namespace WebDataAgro.Services
 
         public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)
         {
-            //contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
-            //contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
-            //fijacionSAP.Apertura = fijacionSAP.Apertura ?? new List<AperturaPrecioSap>();
-            //fijacionSAP.Procedencia = fijacionSAP.Procedencia != null ? fijacionSAP.Procedencia.Trim() : fijacionSAP.Procedencia;
             var oEntityErrors = new ResultadoSap();
             try
             {
                 logger.Debug("ActualizandoFijacion" + fijacionSAP.ToXml());
-                //var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == fijacionSAP.FijacionSAP, x => x.Id);
-
                 var fijacion = new FijacionDePrecioContrato();
                 fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
                 fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
-                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
-                //fijacion.ContratoSAP = fijacionSAP.ContratoSAP.PadLeft(10, '0');
-                //fijacion.ContratoId = fijarId != 0 ? fijarId : (int?)null;   
-                //fijacion.Precio = fijacionSAP.Precio;
-                //fijacion.Cantidad = (double)fijacionSAP.Cantidad;
-                //fijacion.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == fijacionSAP.Centro, x => x.Id);               
-                //fijacion.CorredorId = !string.IsNullOrEmpty(fijacionSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == fijacionSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
-                //fijacion.DesdeFijacion = !string.IsNullOrEmpty(fijacionSAP.FeDesdeFij) ? DateTime.ParseExact(fijacionSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                //fijacion.DiasPesificado = fijacionSAP.DiasDiferimiento == 0 ? (int?)null : fijacionSAP.DiasDiferimiento;
-                //fijacion.PagoDiferido = fijacionSAP.DiasDiferimiento > 0;
-                //fijacion.Dolarizado = fijacionSAP.Dolarizado == "X" ? false : !string.IsNullOrEmpty(fijacionSAP.FechaLimite);
-                //fijacion.FechaDolarizado = !string.IsNullOrEmpty(fijacionSAP.FechaLimite) ? DateTime.ParseExact(fijacionSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                //fijacion.FechaDesde = DateTime.ParseExact(fijacionSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //fijacion.FechaHasta = DateTime.ParseExact(fijacionSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //fijacion.HastaFijacion = !string.IsNullOrEmpty(fijacionSAP.FeHastaFij) ? DateTime.ParseExact(fijacionSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;            
-                //fijacion.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == fijacionSAP.Material, x => x.MaterialId);
-                //fijacion.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == fijacionSAP.Moneda, x => x.MonedaId);                
-                //fijacion.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == fijacionSAP.Cosecha, x => x.CampañaId);
-                //fijacion.PrecioNeto = fijacionSAP.PrecioNeto;
-                //fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);              
-                //fijacion.EstadoId = 5;
-                //fijacion.TipoAgenteCompraId = fijacionSAP.TipoAgenteCompraId == "9952569841" ? (int?)1 : null;   
-                //fijacion.DolarizadoExpress = fijacionSAP.Dolarizado == "X";
-                //fijacion.TipoNegocioId = 3;
-                //fijacion.ComercialId = 1;
-                //fijacion.Fecha = DateTime.Now;
-
-                //logger.Debug("Alta contrato Apertura");
-
-                //var aperturas = new List<AperturaPrecio>();
-                //var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
-                //if (fijacionSAP.Apertura != null && fijacionSAP.Apertura.Count > 0)
-                //{
-                //    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
-                //    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
-                //    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
-                //    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
-                //}
-                //foreach (var aper in fijacionSAP.Apertura ?? new List<AperturaPrecioSap>())
-                //{
-                //    var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
-
-                //    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
-                //    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
-                //    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
-                //}
-                //logger.Debug("ActualizandoContrato5");
-                //ValidarContrato(contrato, oEntityErrors);
+                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;               
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
