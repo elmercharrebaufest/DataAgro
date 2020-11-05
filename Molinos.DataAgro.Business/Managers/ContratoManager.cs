@@ -722,7 +722,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            if (oParam.Dolarizado != true && oParam.FechaDolarizado != null)
+            if (oParam.Dolarizado != true && oParam.DolarizadoExpress != true && oParam.FechaDolarizado != null)
             {
                 oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado si completó Fecha límite .");
             }
