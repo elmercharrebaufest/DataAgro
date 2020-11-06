@@ -382,11 +382,11 @@ namespace WebDataAgro.Services
 
                 if (!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaAPrecio))
                 {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")) });
+                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) });
                 }
                 if (!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaSPrecio))
                 {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")) });
+                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) });
                 }
                 logger.Debug("ActualizandoContrato5");
                 ValidarContrato(contrato, oEntityErrors);
@@ -830,8 +830,8 @@ namespace WebDataAgro.Services
                 contrato.ChequeElectronico = contratoSAP.ZLSCH == "X";
                 contrato.PagoCBU = contratoSAP.CUENTA_MRP;
                 contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
-                contrato.EsFason = contratoSAP.TipoNegocio == "FASON" ? true : false;
-                contrato.Madre = contratoSAP.TipoNegocio == "MADRE" ? true : false;
+                contrato.EsFason = contratoSAP.TipoNegocio == "FASON" ? true : (bool?)null;
+                contrato.Madre = contratoSAP.TipoNegocio == "MADRE" ? true : contratoSAP.TipoNegocio == "HIJO" ? false : (bool?)null;
                 contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
                     contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 :
                     repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
@@ -895,11 +895,11 @@ namespace WebDataAgro.Services
                 
                 if (!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaAPrecio))
                 {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")) });
+                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) });
                 }
                 if (!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaSPrecio))
                 {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")) });
+                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) });
                 }               
 
                 logger.Debug("Validacion alta contrato");
