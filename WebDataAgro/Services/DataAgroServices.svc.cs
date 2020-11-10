@@ -782,6 +782,7 @@ namespace WebDataAgro.Services
                 contrato.CondicionFijacionId = !string.IsNullOrEmpty(contratoSAP.CondFijacion) ? repositorio.Obtener<CondicionFijacion, int>(x => x.CodigoSap == contratoSAP.CondFijacion, x => x.Id) : (int?)null;
                 contrato.Consignatario = contratoSAP.Consignatario == "X";
                 contrato.ContratoCorredor = contratoSAP.ContrCorr;
+                //contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
                 contrato.ContratoMadre = contratoSAP.ContratoMadre;
                 contrato.ContratoVendedor = contratoSAP.ContrVend;
                 contrato.CorredorId = !string.IsNullOrEmpty(contratoSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == contratoSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
@@ -890,15 +891,16 @@ namespace WebDataAgro.Services
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == contratoSAP.Comercial);
                 contrato.GrupoCompra = comercial.GrupoDeComprasId;
                 contrato.UsuarioId = contratoSAP.Comercial;
-                contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
                 contrato.ComercialId = comercial.ComercialId;
                 contrato.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.ComercialCreador, x => x.ComercialId);
 
-                if (!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) || !string.IsNullOrEmpty(contratoSAP.ImporteAPrecio))
+                if ((!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) || !string.IsNullOrEmpty(contratoSAP.ImporteAPrecio)) 
+                    && (Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")) > 0 || Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) > 0))
                 {
                     contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) });
                 }
-                if (!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) || !string.IsNullOrEmpty(contratoSAP.ImporteSPrecio))
+                if ((!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) || !string.IsNullOrEmpty(contratoSAP.ImporteSPrecio))
+                    && (Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")) > 0 || Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) > 0))
                 {
                     contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) });
                 }
