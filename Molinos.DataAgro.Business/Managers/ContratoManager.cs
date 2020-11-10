@@ -372,6 +372,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
             }
 
+            if ((oParam.PrecioNeto == 0 || oParam.PrecioNeto == null) && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
+            {
+                oErrorMessages.Error("Precio", "El campo 'Precio Neto' no debe estar vacio");
+            }
+
             if ((oParam.LocalidadId == 0 || oParam.LocalidadId == null) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
                 oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacio");
