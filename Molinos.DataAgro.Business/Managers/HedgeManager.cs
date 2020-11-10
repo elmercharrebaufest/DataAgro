@@ -456,627 +456,7 @@ namespace Molinos.DataAgro.Business
             var pricing = Model.PricingCampania.Count != 0;
 
             var htmlBody = "";
-            htmlBody += @"<style>
-
-             table.verde {
-               font-family: Arial, Helvetica, sans-serif;
-               border: 2px solid #000000;
-               background-color: #FFFFFF;               
-               height: 200px;
-               text-align: center;
-               border-collapse: collapse;
-               width: 700px;               
-             }
-             table.verde td, table.verde tr {
-               border: 1px solid #000000;
-               padding: 4px 10px;
-             }
-             table.verde tbody td {
-               font-size: 15px;
-               color: #000000;
-             }
-             table.verde thead tr td {
-               font-size: 12px;
-               font-weight: bold;
-               color: #FFFFFF;
-               text-align: left;
-               border-left: 0px solid #D0E4F5;
-               background: #017940;
-               border-bottom: 0px solid #444444;
-              text-align:center;
-             }
-             table.verde thead tr:first-child {
-               border-left: none;
-             }
-             
-             table.verde tfoot td {
-               font-size: 19px;
-             }
-
-            table.hedge {
-               font-family: Arial, Helvetica, sans-serif;
-               border-bottom: 2px solid #070707;
-               border-top: 2px solid #070707;
-               border-left: 0px ;
-               border-right: 0px ;
-               background-color: #FFFFFF;
-               width: 350px;
-               height: 200px;
-               text-align: center;
-               border-collapse: collapse;
-               width:700px;
-             }
-             table.hedge td, table.hedge tr {
-               border-left: 0px solid #000000;  
-               border-right: 0px solid #000000;
-               border-top: 1px solid #000000;
-               border-bottom: 1px solid #000000;
-             
-               padding: 4px 4px;
-             }
-             table.hedge tbody td {
-               font-size: 15px;
-               border-left: 0px ;
-               border-right: 0px ;
-             }
-             table.hedge tr:nth-child(even) {
-               background: #DDDDDD;
-             }
-             table.hedge thead {
-               background: #008B8B;
-               border-bottom: 1px solid #008B8B;
-             }
-             table.hedge thead tr {
-               font-size: 12px;
-               font-weight: bold;
-               color: #FFFFFF;
-               text-align: center;
-               background: #008B8B;
-             }
-             table.hedge tfoot td {
-               font-size: 14px;
-             }
-
-
-             table.pricing {
-               font-family: Arial, Helvetica, sans-serif;
-               border-bottom: 2px solid #070707;
-               border-top: 2px solid #070707;
-               border-left: 0px ;
-               border-right: 0px ;
-               background-color: #FFFFFF;
-               width: 350px;
-               height: 200px;
-               text-align: center;
-               border-collapse: collapse;
-               width:700px;
-             }
-             table.pricing td, table.pricing tr {
-               border-left: 0px solid #000000;  
-               border-right: 0px solid #000000;
-               border-top: 1px solid #000000;
-               border-bottom: 1px solid #000000;
-             
-               padding: 4px 4px;
-             }
-             table.pricing tbody td {
-               font-size: 15px;
-               border-left: 0px ;
-               border-right: 0px ;
-             }
-             table.pricing tr:nth-child(even) {
-               background: #DDDDDD;
-             }
-             table.pricing thead {
-               background: #C71585;
-               border-bottom: 1px solid #C71585;
-             }
-             table.pricing thead tr {
-               font-size: 12px;
-               font-weight: bold;
-               color: #FFFFFF;
-               text-align: center;
-             }
-             table.pricing tfoot td {
-               font-size: 14px;
-             }
-
-             table.soja {
-             font-family: Arial, Helvetica, sans-serif;
-             border: 2px solid #000000;
-             width: 100%;
-             text-align: center;
-             border-collapse: collapse;
-           }
-           table.soja td {
-             border: 1px solid #000000;
-             padding: 4px 4px;
-           }
-           table.soja tbody td {
-             font-size: 15px;
-             color: #000000;
-             background: #FFF;
-           }
-          table.soja tbody tr{
-            background: #FFF;
-            }
-        table.soja tbody tr td{
-            background: #FFF;
-            }
-           table.soja thead tr  {
-             font-size: 12px;
-             font-weight: bold;
-             color: #050505;
-             text-align: center;
-             border-left: 0px solid #000000;
-             background: #99CC00;
-             border-bottom: 2px solid #000000;
-           }
-           table.soja thead td:first-child {
-             border-left: none;
-           }
            
-           table.soja tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #000000;
-             background: #99CC00;
-             
-           
-           }
-           table.soja tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-            background: #99CC00;
-           }
-           
-           table.maiz {
-             font-family: Arial, Helvetica, sans-serif;
-             border: 2px solid #000000;
-             width: 100%;
-             text-align: center;
-             border-collapse: collapse;
-           }
-           table.maiz td, table.maiz td {
-             border: 1px solid #000000;
-             padding: 4px 4px;
-           }
-           table.maiz tbody td {
-             font-size: 15px;
-             color: #000000;
-             background: #FFF;
-           }
-          table.maiz tbody tr{
-            background: #FFF;
-            }
-           table.maiz thead td {
-             font-size: 12px;
-             font-weight: bold;
-             color: #050505;
-             text-align: center;
-             border-left: 0px solid #000000;
-             background: #ffcc99;
-             border-bottom: 2px solid #000000;
-           }
-           table.maiz thead td:first-child {
-             border-left: none;
-           }
-           
-           table.maiz tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #000000;
-             background: #ffcc99;
-             
-           
-           }
-           table.maiz tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-            background: #ffcc99;
-           }
-           
-           
-           table.trigocalidad {
-             font-family: Arial, Helvetica, sans-serif;
-             border: 2px solid #000000;
-             width: 100%;
-             text-align: center;
-             border-collapse: collapse;
-           }
-           table.trigocalidad td, table.trigocalidad td {
-             border: 1px solid #000000;
-             padding: 4px 4px;
-           }
-           table.trigocalidad tbody td {
-             background: #FFF;
-             font-size: 15px;
-             color: #000000;
-           }
-          table.trigocalidad tbody tr{
-            background: #FFF;
-            }
-           table.trigocalidad thead td {
-             font-size: 12px;
-             font-weight: bold;
-             color: #050505;
-             text-align: center;
-             border-left: 0px solid #000000;
-             background: #99ccff;
-             border-bottom: 2px solid #000000;
-           }
-           table.trigocalidad thead td:first-child {
-             border-left: none;
-           }
-           
-           table.trigocalidad tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #000000;
-             background: #99ccff;
-             
-           
-           }
-           table.trigocalidad tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-            background: #99ccff;
-           }
-           
-           
-           table.trigogrado2 {
-             font-family: Arial, Helvetica, sans-serif;
-             border: 2px solid #000000;
-             width: 100%;
-             text-align: center;
-             border-collapse: collapse;
-           }
-           table.trigogrado2 td, table.trigogrado2 td {
-             border: 1px solid #000000;
-             padding: 4px 4px;
-           }
-           table.trigogrado2 tbody td {
-             font-size: 15px;
-             color: #000000;
-             background: #FFF;
-           }
-          table.trigogrado2 tbody tr{
-            background: #FFF;
-            }
-           table.trigogrado2 thead td {
-             font-size: 12px;
-             font-weight: bold;
-             color: #050505;
-             text-align: center;
-             border-left: 0px solid #000000;
-             background: #6ae6be;
-             border-bottom: 2px solid #000000;
-           }
-           table.trigogrado2 thead td:first-child {
-             border-left: none;
-           }
-           
-           table.trigogrado2 tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #000000;
-             background: #6ae6be;
-             
-           
-           }
-           table.trigogrado2 tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-             background: #6ae6be;
-           }
-           
-           
-           
-           
-           table.girasol {
-             font-family: Arial, Helvetica, sans-serif;
-             border: 2px solid #000000;
-             width: 100%;
-             text-align: center;
-             border-collapse: collapse;
-           }
-           table.girasol td, table.girasol td {
-             border: 1px solid #000000;
-             padding: 4px 4px;
-           }
-           table.girasol tbody td {
-             font-size: 15px;
-             color: #000000;
-             background: #FFF;
-           }
-
-          table.girasol tbody tr{
-            background: #FFF;
-            }
-           table.girasol thead td {
-             font-size: 12px;
-             font-weight: bold;
-             color: #050505;
-             text-align: center;
-             border-left: 0px solid #000000;
-             background: #d360d4;
-             border-bottom: 2px solid #000000;
-           }
-           table.girasol thead td:first-child {
-             border-left: none;
-           }
-           
-           table.girasol tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #000000;
-             background: #d360d4;  
-           
-           }
-           table.girasol tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-           }
-               table.agente {
-               font-family: Arial, Helvetica, sans-serif;
-               border-bottom: 2px solid #070707;
-               border-top: 2px solid #070707;
-               border-left: 0px ;
-               border-right: 0px ;
-               background-color: #FFFFFF;              
-               height: 200px;
-               text-align: center;
-               border-collapse: collapse;
-               width:100%;
-             }
-             table.agente td, table.agente tr {
-               border-left: 0px solid #000000;  
-               border-right: 0px solid #000000;
-               border-top: 1px solid #000000;
-               border-bottom: 1px solid #000000;             
-               padding: 4px 4px;
-             }
-             table.agente tbody td {
-               font-size: 15px;
-               border-left: 0px ;
-               border-right: 0px ;
-             }
-             table.agente thead {
-               background: #FFD700;
-               border-bottom: 1px solid #FFD700;
-             }
-             table.agente thead tr {
-               font-size: 12px;
-               font-weight: bold;
-               color: #000000;
-               text-align: center;
-               background: #FFD700;
-             }
-              table.agente tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #000000;
-           
-           }
-           table.agente tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-           }       
-           
-           
-           table.trigocámara {
-             font-family: Arial, Helvetica, sans-serif;
-             border: 2px solid #000000;
-             width: 100%;
-             text-align: center;
-             border-collapse: collapse;
-           }
-           table.trigocámara td, table.trigocámara td {
-             border: 1px solid #000000;
-             padding: 4px 4px;
-           }
-           table.trigocámara tbody td {
-             font-size: 15px;
-             color: #000000;
-             background: #FFF;
-           }
-
-          table.trigocámara tbody tr{
-            background: #FFF;
-            }
-           table.trigocámara thead td {
-             font-size: 12px;
-             font-weight: bold;
-             color: #050505;
-             text-align: center;
-             border-left: 0px solid #000000;
-             background: #9999FF;
-             border-bottom: 2px solid #000000;
-           }
-           table.trigocámara thead td:first-child {
-             border-left: none;
-           }
-           
-           table.trigocámara tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #000000;
-             background: #9999FF;
-             
-           
-           }
-           table.trigocámara tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-             background: #9999FF;
-           }          
-           
-           
-           table.girasolaltooleico {
-             font-family: Arial, Helvetica, sans-serif;
-             border: 2px solid #000000;
-             width: 100%;
-             text-align: center;
-             border-collapse: collapse;
-           }
-           table.girasolaltooleico td, table.girasolaltooleico td {
-             border: 1px solid #000000;
-             padding: 4px 4px;
-           }
-           table.girasolaltooleico tbody td {
-             font-size: 15px;
-             color: #000000;
-            
-           }
-          table.girasolaltooleico tbody tr{
-            background: #FFF;
-            }
-           table.girasolaltooleico thead td {
-             font-size: 12px;
-             font-weight: bold;
-             color: #050505;
-             text-align: center;
-             border-left: 0px solid #000000;
-             background: #f4c1f7;
-             border-bottom: 2px solid #000000;
-           }
-           table.girasolaltooleico thead td:first-child {
-             border-left: none;
-           }
-           
-           table.girasolaltooleico tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #000000;
-             background: #f4c1f7;  
-           
-           }
-           table.girasolaltooleico tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-             background: #f4c1f7;  
-           }
-         table.sojasustentable {
-               font-family: Arial, Helvetica, sans-serif;
-               border-bottom: 2px solid #070707;
-               border-top: 2px solid #070707;
-               border-left: 0px ;
-               border-right: 0px ;
-               background-color: #FFFFFF;              
-               height: 200px;
-               text-align: center;
-               border-collapse: collapse;
-               width:700px;
-             }
-             table.sojasustentable td, table.sojasustentable tr {
-               border-left: 0px solid #000000;  
-               border-right: 0px solid #000000;
-               border-top: 1px solid #000000;
-               border-bottom: 1px solid #000000;             
-               padding: 4px 4px;
-             }
-             table.sojasustentable tbody td {
-               font-size: 15px;
-               border-left: 0px ;
-               border-right: 0px ;
-             }
-             table.sojasustentable thead {
-               background: #017940;
-               border-bottom: 1px solid #017940;
-             }
-             table.sojasustentable thead tr {
-               font-size: 12px;
-               font-weight: bold;
-               color: #FFF;
-               text-align: center;
-               background: #017940;
-             }
-              table.sojasustentable tfoot {
-             font-size: 12px;
-             font-weight: bold;
-             color: #FFF;
-           
-           }
-           table.sojasustentable tfoot td {
-             font-size: 12px;
-             border-left: 0px;  
-             border-right: 0px;
-           }     
-
-           tr.msoja td, tr.mgirasolaltooleico, .mmaiz, .mgirasol, .mtrigocámara,.mtrigogrado2,.mtrigocalidad{           
-             font-weight: bold;
-            }
-            tr.msoja td{
-                 background: #99CC00 !important;
-            }
-            tr.mmaiz td {
-             background: #ffcc99 !important;
-            }
-            tr.mtrigocalidad td {
-             background: #99ccff !important;
-            }
-            tr.mtrigogrado2 td {
-             background: #6ae6be !important;
-            }
-            tr.mgirasol td {
-             background: #d360d4 !important;
-            }
-            tr.trigocámara td {
-             background: #9999FF !important;
-            }
-            tr.girasolaltooleico td {
-             background: #f4c1f7 !important;
-            }
-            tr.borde th{
-            border-top: solid #070707 1.4pt !important;
-            }   
-
-    table.precio {
-               font-family: Arial, Helvetica, sans-serif;
-               border-bottom: 2px solid #070707;
-               border-top: 2px solid #070707;
-               border-left: 0px ;
-               border-right: 0px ;
-               background-color: #FFFFFF;              
-               height: 200px;
-               text-align: center;
-               border-collapse: collapse;
-               width:700px;
-             }
-             table.precio td, table.precio tr {
-               border-left: 0px solid #000000;  
-               border-right: 0px solid #000000;
-               border-top: 1px solid #000000;
-               border-bottom: 1px solid #000000;             
-               padding: 4px 4px;
-
-             }
-             table.precio tbody td {
-               font-size: 15px;
-               border-left: 0px ;
-               border-right: 0px ;
-               background: #017940;
-  border-top: solid #070707 1.2pt !important;
-             }
-             table.precio thead tr {
-               font-size: 12px;
-               font-weight: bold;
-               color: #FFF;
-               text-align: center;
-               background: #017940;
-             }
-                table.precio tbody th{
-              border-top: solid #070707 1.2pt !important;
-                }
-        </style>";//style
 
             htmlBody += "Estimados,";
             htmlBody += "<br></br>";
@@ -1101,14 +481,14 @@ namespace Molinos.DataAgro.Business
                     }
                     p.Add(item);
                 }
-                htmlBody += @"<table class='pricing'>
-                    <thead>
-                    <tr>
-                        <th>PRICING</th>
-                        <th>CAMPAÑA</th>";               
-                htmlBody += p.Any(x => x.SanLorenzo > 0) ? "<th>SL</th>" : "";
-                htmlBody += p.Any(x => x.Acopio > 0) ? "<th>Acopios</th>" : "";
-                htmlBody += "<th> TOTALES </th> ";
+                htmlBody += @"<table class='pricing' style='font-family: Arial, Helvetica, sans-serif; border-bottom: 2px solid #070707;border-top: 2px solid #070707; border-left: 0px ; border-right: none !important; background-color: #FFFFFF;width: 350px;height: 200px;text-align: center;border-collapse: collapse; width:700px;'>
+                    <thead style='background: #C71585;border-bottom: 1px solid #C71585;'>
+                    <tr style= 'font-size: 12px;font-weight: bold;color: #FFFFFF;text-align: center; border-left: 0px;border-right: 0px !important; border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>
+                        <th style= 'border-left: 0px ;border-right: 0px !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>PRICING</th>
+                        <th style= 'border-left: 0px;border-right: 0px !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>CAMPAÑA</th>";               
+                htmlBody += p.Any(x => x.SanLorenzo > 0) ? "<th style= 'border-left: 0px; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>SL</th>" : "";
+                htmlBody += p.Any(x => x.Acopio > 0) ? "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>Acopios</th>" : "";
+                htmlBody += "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> TOTALES </th> ";
                 htmlBody += "</tr>";
                 htmlBody += "</thead>";
                 htmlBody += "<tbody>";
@@ -1153,53 +533,53 @@ namespace Molinos.DataAgro.Business
                             sumaPricing = "0";
                             break;
                     }
-                    var estilo = "style='background: #DDDDDD'";
+                    var estilo = "style='font-size: 15px;border-left: none !important; border-right: 0px !important; background: #DDDDDD;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'";
                     if ((par % 2) == 0)
                     {
-                        estilo = "style='background: #FFFFF'";
+                        estilo = "style='font-size: 15px;border-left: none !important; border-right: 0px !important; background: #FFFFF;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'";
                     }
                     htmlBody += @"<tr " + estilo + @">
-                            <td >" + datos.Material + @"</td>
-                            <td>" + datos.Campania + @"</td>";                           
+                            <td style= 'font-size: 15px; border-left: none !important; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;' >" + datos.Material + @"</td>
+                            <td style= 'font-size: 15px; border-left: none !important; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>" + datos.Campania + @"</td>";                           
 
-                    htmlBody +=  (Model.PricingCampania.Any(x => x.SanLorenzo > 0 && x.Id == datos.Id) ? "<td>" + datos.SanLorenzo.ToString("N0") + "</td>" : "");
-                    htmlBody +=  (Model.PricingCampania.Any(x => x.Acopio > 0 && x.Id == datos.Id) ? "<td>" + datos.Acopio.ToString("N0") + "</td>" : "");
-                    htmlBody += "<td> " + sumaPricing + "</td>";
+                    htmlBody +=  (Model.PricingCampania.Any(x => x.SanLorenzo > 0 && x.Id == datos.Id) ?  $"<td style= 'border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>" + datos.SanLorenzo.ToString("N0") + "</td>" : "");
+                    htmlBody +=  (Model.PricingCampania.Any(x => x.Acopio > 0 && x.Id == datos.Id) ?  $"<td style= 'border-left: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;border-right: none !important;'>" + datos.Acopio.ToString("N0") + "</td>" : "");
+                    htmlBody +=  $"<td style='font-size: 15px;border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> " + sumaPricing + "</td>";
                     htmlBody += "</tr>";
 
                 }
                 htmlBody += "</tbody></table> <br><br>";
             }
-
+            var estiloTdTrVerde = "border: 1px solid #000000; padding: 4px 10px; border-top: solid black 1.0pt !important; border-left: solid black 1.0pt !important; border-right: solid black 1.0pt !important;";
+            var head = "font-size: 12px; font-weight: bold;color: #FFFFFF;text-align: left; background: #017940;border-bottom: 0px solid #444444; text-align:center;  border-left: solid black 1.0pt !important; border-right: solid black 1.0pt !important; border-top: solid black 1.0pt !important;";
+            var tabla = "font-family: Arial, Helvetica, sans-serif;border: 2px solid #000000;background-color: #FFFFFF;height: 200px;text-align: center;border-collapse: collapse; width: 100%; ";
             if (disp + forw + newc != 0)
             {
-                htmlBody += @" <table class='verde'>
-                <thead>
-                    <tr>
-                        <td></td>";
-                htmlBody += (disp > 0) ? "<td style='text-aligne:center;' id='disponible'  colspan='" + disp + "'>DISPONIBLE</td>" +
-                    "<td id='disponibleTotal'  rowspan='2' colspan='2'>TOTAL DISPONIBLE</td>" : "";
-                htmlBody += (forw > 0) ? "<td id='forward' colspan='" + forw + "'>FORWARD</td>" +
-                        "<td id='forwardTotal' class=' rowspan='2' colspan='2'>TOTAL FORWARD</td>" : "";
-                htmlBody += (newc > 0) ? "<td style='text-aligne: center;' colspan='" + newc + "'>NEW CROP</td>" +
-                        "<td id='newCropTotal' rowspan='2'>TOTAL NEW CROP</td>" : "";
+                htmlBody += $@" <table class='verde' style='{tabla}'><thead>
+                    <tr style='{estiloTdTrVerde} {head}'><td style='{estiloTdTrVerde} {head}'></td>";
+                htmlBody += (disp > 0) ?  $"<td style=''" + estiloTdTrVerde + head + " text-aligne:center;' id='disponible'  colspan='" + disp + "'>DISPONIBLE</td>" +
+                    $"<td style='{estiloTdTrVerde} {head}' id='disponibleTotal'  rowspan='2' colspan='2'>TOTAL DISPONIBLE</td>" : "";
+                htmlBody += (forw > 0) ?  $"<td style='{estiloTdTrVerde} {head}' id='forward' colspan='" + forw + "'>FORWARD</td>" +
+                         $"<td style='{estiloTdTrVerde} {head}' id='forwardTotal' class=' rowspan='2' colspan='2'>TOTAL FORWARD</td>" : "";
+                htmlBody += (newc > 0) ?  $"<td style='style='{estiloTdTrVerde} {head}'text-aligne: center;' colspan='" + newc + "'>NEW CROP</td>" +
+                         $"<td style='{estiloTdTrVerde} {head}' id='newCropTotal' rowspan='2'>TOTAL NEW CROP</td>" : "";
                 htmlBody += "</tr>";
 
-                htmlBody += "<tr class='titulos'>";
-                htmlBody += "<td>PRODUCTO</td>";
-                htmlBody += dispAFijar ? "<td class='valores'>A Fijar</td>" : "";
-                htmlBody += dispAPrecio ? "<td class='valores'>A Precio</td>" : "";
-                htmlBody += dispFijacion ? "<td class='valores'>Fijación</td>" : "";
-                htmlBody += dispAgente ? "<td class='valores'>MAT</td>" : "";
-                //htmlBody += disp > 0 ? "<td class=''></td>" : "";
-                htmlBody += forwAPrecio ? "<td class='valores'>A Precio</td>" : "";
-                htmlBody += forwFijacion ? "<td class='valores'>Fijación</td>" : "";
-                htmlBody += forwAgente ? "td class='valores'>MAT</td>" : "";
-                //htmlBody += forw > 0 ? "<td class=''> </td>" : "";
-                htmlBody += newcAFijar ? "<td class='valores'>A Fijar</td>" : "";
-                htmlBody += newcAPrecio ? "<td class='valores'>A Precio</td>" : "";
-                htmlBody += newcFijacion ? "<td class='valores'>Fijación</td>" : "";
-                htmlBody += newcAgente ? "<td class='valores'>MAT</td>" : "";
+                htmlBody += $"<tr style='{estiloTdTrVerde} {head}' class='titulos'>";
+                htmlBody +=  $"<td style='{estiloTdTrVerde} {head}'>PRODUCTO</td>";
+                htmlBody += dispAFijar ?  $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Fijar</td>" : "";
+                htmlBody += dispAPrecio ?  $"<td style='{estiloTdTrVerde} {head}' class='valores'>A Precio</td>" : "";
+                htmlBody += dispFijacion ?  $"<td style='{estiloTdTrVerde} {head}' class='valores'>Fijación</td>" : "";
+                htmlBody += dispAgente ?  $"<td style='{estiloTdTrVerde} {head}' class='valores'>MAT</td>" : "";
+                //htmlBody += disp > 0 ?  $"<td class=''></td>" : "";
+                htmlBody += forwAPrecio ?  $"<td style='{estiloTdTrVerde} {head}' class='valores'>A Precio</td>" : "";
+                htmlBody += forwFijacion ?  $"<td style='{estiloTdTrVerde} {head}'class='valores'>Fijación</td>" : "";
+                htmlBody += forwAgente ? $"td style='{estiloTdTrVerde} {head}' class='valores'>MAT</td>" : "";
+                //htmlBody += forw > 0 ?  $"<td class=''> </td>" : "";
+                htmlBody += newcAFijar ?  $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Fijar</td>" : "";
+                htmlBody += newcAPrecio ?  $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Precio</td>" : "";
+                htmlBody += newcFijacion ?  $"<tdstyle='{estiloTdTrVerde} {head}' class='valores'>Fijación</td>" : "";
+                htmlBody += newcAgente ?  $"<tdstyle='{estiloTdTrVerde} {head}' class='valores'>MAT</td>" : "";
 
                 htmlBody += "</tr> </thead>";
                 htmlBody += "<tbody>";
@@ -1227,27 +607,27 @@ namespace Molinos.DataAgro.Business
 
                     if (totalDisp != 0 || totalForw != 0 || totalNewC != 0)
                     {
-                        htmlBody += @"<tr>";
-                        htmlBody += "<td>" + toneladaPrecio.Material + "</td>";
-                        htmlBody += dispAFijar ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += dispAPrecio ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += dispFijacion ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0")) + " </td>" : "";
-                        htmlBody += dispAgente ? "<td class=''>" + toneladaPrecio.DispAgente.ToString("N0") + " </td>" : "";
-                        htmlBody += disp > 0 ? "<td>" + totalDisp.ToString("N0") + " </td>" : "";
+                        htmlBody += $@"<tr  style='{estiloTdTrVerde} '>";
+                        htmlBody +=  $"<td style='{estiloTdTrVerde} '>" + toneladaPrecio.Material + "</td>";
+                        htmlBody += dispAFijar ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += dispAPrecio ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += dispFijacion ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0")) + " </td>" : "";
+                        htmlBody += dispAgente ?  $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.DispAgente.ToString("N0") + " </td>" : "";
+                        htmlBody += disp > 0 ?  $"<td style='{estiloTdTrVerde} '>" + totalDisp.ToString("N0") + " </td>" : "";
 
-                        htmlBody += disp > 0 ? "<td class=''></td>" : "";
-                        htmlBody += forwAFijar ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += forwAPrecio ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAPrecio)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += forwFijacion ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwFijac)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += forwAgente ? "<td class=''>" + toneladaPrecio.FrwAgente.ToString("N0") + "</td>" : "";
-                        htmlBody += forw > 0 ? "<td>" + totalForw.ToString("N0") + "</td>" : "";
+                        htmlBody += disp > 0 ?  $"<td style='{estiloTdTrVerde} ' class=''></td>" : "";
+                        htmlBody += forwAFijar ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += forwAPrecio ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAPrecio)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += forwFijacion ?  $"<td style='{estiloTdTrVerde} 'class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwFijac)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += forwAgente ?  $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.FrwAgente.ToString("N0") + "</td>" : "";
+                        htmlBody += forw > 0 ?  $"<td style='{estiloTdTrVerde} '>" + totalForw.ToString("N0") + "</td>" : "";
 
-                        htmlBody += forw > 0 ? "<td class=' '> </td>" : "";
-                        htmlBody += newcAFijar ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += newcAPrecio ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += newcFijacion ? "<td class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += newcAgente ? "<td class=''>" + toneladaPrecio.NewAgente.ToString("N0") + " </td>" : "";
-                        htmlBody += newc > 0 ? "<td>" + totalNewC.ToString("N0") + " </td>" : "";
+                        htmlBody += forw > 0 ?  $"<td style='{estiloTdTrVerde} ' class=' '> </td>" : "";
+                        htmlBody += newcAFijar ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += newcAPrecio ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += newcFijacion ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += newcAgente ?  $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.NewAgente.ToString("N0") + " </td>" : "";
+                        htmlBody += newc > 0 ?  $"<td style='{estiloTdTrVerde} '>" + totalNewC.ToString("N0") + " </td>" : "";
                         htmlBody += "</tr>";
                     }
                 }
@@ -1255,6 +635,12 @@ namespace Molinos.DataAgro.Business
                 htmlBody += "</table><br><br>";
             }
 
+            var tablaMaterial = "";
+            var td = "";
+            var bodyTdM = "";
+            var bodyTdFoot = "";
+            var theadTr = "";
+            var color = "";
 
             foreach (var material in Model.PosicionCompras)
             {
@@ -1277,70 +663,91 @@ namespace Molinos.DataAgro.Business
                 var pondPesos = material.PosicionKilos.Any(x => x.PrecioPonderadoPesos > 0) ? 1 : 0;
                 var pondDolares = material.PosicionKilos.Any(x => x.PrecioPonderadoDolares > 0) ? 1 : 0;
                 var pond = pondPesos + pondDolares;
+
+
+                var materialDesc = material.Material.Replace(" ", "").ToLower();
+                switch (materialDesc)
+                {
+                    case "soja": color = "background: #99CC00"; break;
+                    case "maiz": color = "background: #ffcc99"; break;
+                    case "trigocalidad": color = "background: #99ccff"; break;
+                    case "trigogrado2": color = "background: #6ae6be"; break;
+                    case "trigocámara": color = "background: #9999FF"; break;
+                    case "girasol": color = "background: #d360d4"; break;
+                    case "girasolaltooleico": color = "background: #f4c1f7"; break;
+
+                }
+              
+                tablaMaterial = "font-family: Arial, Helvetica, sans-serif; width: 100%; text-align: center; border-collapse: collapse;";
+                    td = "border: 1px solid #000000; padding: 4px 4px;";
+                    bodyTdM = "font-size: 15px; color: #000000;background: #FFF; border: 1px solid #000000;";
+                    bodyTdFoot = $"font-size: 15px; color: #000000; {color} ;font-weight: bold; border: 1px solid #000000;";                    
+                    theadTr = $"font-size: 15px;font-weight: bold;color: #050505;text-align: center;border-left: 0px; {color} ;border-bottom: 1px solid #000000;";
+                
                 if (suma > 0)
                 {
 
-                    htmlBody += @"<table id='" + material.Material.Replace(" ", "") + @"' class='" + material.Material.Replace(" ", "").ToLower() + @"'>
+                    htmlBody += $@"<table style='{tablaMaterial}' id='" + material.Material.Replace(" ", "") + @"' class='" + material.Material.Replace(" ", "").ToLower() + $@"'>
                      <thead>
-                        <tr><td colspan = '" + ((suma + pond) + 1) + "'> " + material.Material.ToUpper() + @" </td></tr>
-                        <tr>
-                            <td rowspan = '2'> Posición </td>";
-                    htmlBody += fix > 0 ? "<td colspan='" + fix + "'>Fix</td>" : "";
-                    htmlBody += aFijar > 0 ? "<td colspan = '" + aFijar + "'>A Fijar</td>" : "";
-                    htmlBody += aPrecio > 0 ? "<td colspan = '" + aPrecio + "'>A Precio</td>" : "";
-                    htmlBody += totalPesos != 0 ? "<td rowspan = '2'> Ton. $</td>" : "";
-                    htmlBody += pondPesos > 0 ? "<td rowspan = '2'>Precio $</td>" : "";
-                    htmlBody += totalDolares != 0 ? "<td rowspan = '2' class=''>Ton.USD</td>" : "";
-                    htmlBody += pondDolares > 0 ? "<td rowspan = '2'>Precio USD</td>" : "";
+                        <tr style='{theadTr}'><td style='{td}' colspan = '" + ((suma + pond) + 1) + "'> " + material.Material.ToUpper() + $@" </td></tr>
+                        <tr style='{theadTr}'>
+                            <td style='{td}' rowspan = '2'> Posición </td>";
+                    htmlBody += fix > 0 ? $"<td style='{td}' colspan='" + fix + "'>Fix</td>" : "";
+                    htmlBody += aFijar > 0 ? $"<td style='{td}' colspan = '" + aFijar + "'>A Fijar</td>" : "";
+                    htmlBody += aPrecio > 0 ? $"<td style='{td}' colspan = '" + aPrecio + "'>A Precio</td>" : "";
+                    htmlBody += totalPesos != 0 ? $"<td style='{td}' rowspan = '2'> Ton. $</td>" : "";
+                    htmlBody += pondPesos > 0 ? $"<td style='{td}' rowspan = '2'>Precio $</td>" : "";
+                    htmlBody += totalDolares != 0 ? $"<td style='{td}' rowspan = '2' class=''>Ton.USD</td>" : "";
+                    htmlBody += pondDolares > 0 ? $"<td style='{td}' rowspan = '2'>Precio USD</td>" : "";
 
                     htmlBody += "</tr>";
-                    htmlBody += "<tr class='titulosPosicion'>";
-                    htmlBody += dispFijacion ? "<td>Disponible</td>" : "";
-                    htmlBody += forwFijacion ? "<td>Forward</td>" : "";
-                    htmlBody += newcFijacion ? "<td>New Crop</td>" : "";
-                    htmlBody += dispAFijar ? "<td>Disponible</td>" : "";
-                    htmlBody += forwAFijar ? "<td>Forward</td>" : "";
-                    htmlBody += newcAFijar ? "<td>New Crop</td>" : "";
-                    htmlBody += dispAPrecio ? "<td>Disponible</td>" : "";
-                    htmlBody += forwAPrecio ? "<td>Forward</td>" : "";
-                    htmlBody += newcAPrecio ? "<td>New Crop</td>" : "";
+                    htmlBody += $"<tr style='{theadTr}' class='titulosPosicion'>";
+                    htmlBody += dispFijacion ? $"<td style='{td}'>Disponible</td>" : "";
+                    htmlBody += forwFijacion ? $"<td style='{td}'>Forward</td>" : "";
+                    htmlBody += newcFijacion ? $"<td style='{td}'>New Crop</td>" : "";
+                    htmlBody += dispAFijar ? $"<td style='{td}'>Disponible</td>" : "";
+                    htmlBody += forwAFijar ? $"<td style='{td}'>Forward</td>" : "";
+                    htmlBody += newcAFijar ? $"<td style='{td}'>New Crop</td>" : "";
+                    htmlBody += dispAPrecio ? $"<td style='{td}'>Disponible</td>" : "";
+                    htmlBody += forwAPrecio ? $"<td style='{td}'>Forward</td>" : "";
+                    htmlBody += newcAPrecio ? $"<td style='{td}'>New Crop</td>" : "";
                     htmlBody += "</tr></thead><tbody>";
 
                     foreach (var mes in material.PosicionKilos.OrderBy(x => x.Anio).ThenBy(x => x.Mes))
                     {
                         int mesActual = (int)((EnumMeses)Enum.Parse(typeof(EnumMeses), mes.Mes.ToString()));
-                        htmlBody += @"<tr>
-                        <td> " + mes.Mes + " - " + mes.Anio + "</td>";
-                        htmlBody += dispFijacion ? "<td>" + mes.DispFijac.ToString("N0") + "</td>" : "";
-                        htmlBody += forwFijacion ? "<td>" + mes.FrwFijac.ToString("N0") + "</td>" : "";
-                        htmlBody += newcFijacion ? "<td>" + mes.NewFijac.ToString("N0") + "</td>" : "";
-                        htmlBody += dispAFijar ? "<td>" + mes.DispAFijar.ToString("N0") + "</td>" : "";
-                        htmlBody += forwAFijar ? "<td>" + mes.FrwAFijar.ToString("N0") + "</td>" : "";
-                        htmlBody += newcAFijar ? "<td>" + mes.NewAFijar.ToString("N0") + "</td>" : "";
-                        htmlBody += dispAPrecio ? "<td>" + mes.DispAPrecio.ToString("N0") + "</td>" : "";
-                        htmlBody += forwAPrecio ? "<td>" + mes.FrwAPrecio.ToString("N0") + "</td>" : "";
-                        htmlBody += newcAPrecio ? "<td>" + mes.NewAPrecio.ToString("N0") + "</td>" : "";
-                        htmlBody += totalPesos != 0 ? "<td> " + (mes.KilosPesos.ToString("N0")) + "</td>" : "";
-                        htmlBody += pondPesos > 0 ? "<td> " + (mes.PrecioPonderadoPesos.Value.ToString("N0")) + "</td>" : "";
-                        htmlBody += totalDolares != 0 ? "<td> " + (mes.KilosDolares.ToString("N0")) + "</td>" : "";
-                        htmlBody += pondDolares > 0 ? "<td> " + (mes.PrecioPonderadoDolares.Value.ToString("N0")) + "</td>" : "";
+                        htmlBody += $@"<tr>
+                        <td style='{bodyTdM}'> " + mes.Mes + " - " + mes.Anio + "</td>";
+                        htmlBody += dispFijacion ? $"<td style='{bodyTdM}'>" + mes.DispFijac.ToString("N0") + "</td>" : "";
+                        htmlBody += forwFijacion ? $"<td  style='{bodyTdM}'>" + mes.FrwFijac.ToString("N0") + "</td>" : "";
+                        htmlBody += newcFijacion ? $"<td  style='{bodyTdM}'>" + mes.NewFijac.ToString("N0") + "</td>" : "";
+                        htmlBody += dispAFijar ? $"<td  style='{bodyTdM}'>" + mes.DispAFijar.ToString("N0") + "</td>" : "";
+                        htmlBody += forwAFijar ? $"<td  style='{bodyTdM}'>" + mes.FrwAFijar.ToString("N0") + "</td>" : "";
+                        htmlBody += newcAFijar ? $"<td  style='{bodyTdM}'>" + mes.NewAFijar.ToString("N0") + "</td>" : "";
+                        htmlBody += dispAPrecio ? $"<td  style='{bodyTdM}'>" + mes.DispAPrecio.ToString("N0") + "</td>" : "";
+                        htmlBody += forwAPrecio ? $"<td  style='{bodyTdM}'>" + mes.FrwAPrecio.ToString("N0") + "</td>" : "";
+                        htmlBody += newcAPrecio ? $"<td  style='{bodyTdM}'>" + mes.NewAPrecio.ToString("N0") + "</td>" : "";
+                        htmlBody += totalPesos != 0 ? $"<td  style='{bodyTdM}'> " + (mes.KilosPesos.ToString("N0")) + "</td>" : "";
+                        htmlBody += pondPesos > 0 ? $"<td  style='{bodyTdM}'> " + (mes.PrecioPonderadoPesos.Value.ToString("N0")) + "</td>" : "";
+                        htmlBody += totalDolares != 0 ? $"<td  style='{bodyTdM}'> " + (mes.KilosDolares.ToString("N0")) + "</td>" : "";
+                        htmlBody += pondDolares > 0 ? $"<td  style='{bodyTdM}'> " + (mes.PrecioPonderadoDolares.Value.ToString("N0")) + "</td>" : "";
                         htmlBody += "</tr>";
                     }
-                    htmlBody += @"<tr class='m" + material.Material.Replace(" ", "").ToLower() + @"'>
-                        <td>Total</td>";
-                    htmlBody += dispFijacion ? "<td>" + material.PosicionKilos.Sum(y => y.DispFijac).ToString("N0") + "</td>" : "";
-                    htmlBody += forwFijacion ? "<td>" + material.PosicionKilos.Sum(y => y.FrwFijac).ToString("N0") + "</td>" : "";
-                    htmlBody += newcFijacion ? "<td>" + material.PosicionKilos.Sum(y => y.NewFijac).ToString("N0") + "</td>" : "";
-                    htmlBody += dispAFijar ? "<td>" + material.PosicionKilos.Sum(y => y.DispAFijar).ToString("N0") + "</td>" : "";
-                    htmlBody += forwAFijar ? "<td>" + material.PosicionKilos.Sum(y => y.FrwAFijar).ToString("N0") + "</td>" : "";
-                    htmlBody += newcAFijar ? "<td>" + material.PosicionKilos.Sum(y => y.NewAFijar).ToString("N0") + "</td>" : "";
-                    htmlBody += dispAPrecio ? "<td>" + material.PosicionKilos.Sum(y => y.DispAPrecio).ToString("N0") + "</td>" : "";
-                    htmlBody += forwAPrecio ? "<td>" + material.PosicionKilos.Sum(y => y.FrwAPrecio).ToString("N0") + "</td>" : "";
-                    htmlBody += newcAPrecio ? "<td>" + material.PosicionKilos.Sum(y => y.NewAPrecio).ToString("N0") + "</td>" : "";
-                    htmlBody += totalPesos != 0 ? "<td >" + totalPesos.ToString("N0") + "</td>" : "";
-                    htmlBody += pondPesos > 0 ? "<td></td>" : "";
-                    htmlBody += totalDolares != 0 ? "<td >" + totalDolares.ToString("N0") + "</td>" : "";
-                    htmlBody += totalDolares != 0 ? "<td></td>" : "";
+                    htmlBody += @"<tr class='m" + material.Material.Replace(" ", "").ToLower() + $@"'>
+                        <td style='{bodyTdFoot}'>Total</td>";
+                    htmlBody += dispFijacion ? $"<td  style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.DispFijac).ToString("N0") + "</td>" : "";
+                    htmlBody += forwFijacion ? $"<td  style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.FrwFijac).ToString("N0") + "</td>" : "";
+                    htmlBody += newcFijacion ? $"<td  style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.NewFijac).ToString("N0") + "</td>" : "";
+                    htmlBody += dispAFijar ? $"<td  style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.DispAFijar).ToString("N0") + "</td>" : "";
+                    htmlBody += forwAFijar ? $"<td  style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.FrwAFijar).ToString("N0") + "</td>" : "";
+                    htmlBody += newcAFijar ? $"<td  style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.NewAFijar).ToString("N0") + "</td>" : "";
+                    htmlBody += dispAPrecio ? $"<td  style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.DispAPrecio).ToString("N0") + "</td>" : "";
+                    htmlBody += forwAPrecio ? $"<td  style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.FrwAPrecio).ToString("N0") + "</td>" : "";
+                    htmlBody += newcAPrecio ? $"<td style='{bodyTdFoot}'>" + material.PosicionKilos.Sum(y => y.NewAPrecio).ToString("N0") + "</td>" : "";
+                    htmlBody += totalPesos != 0 ? $"<td  style='{bodyTdFoot}'>" + totalPesos.ToString("N0") + "</td>" : "";
+                    htmlBody += pondPesos > 0 ? $"<td style='{bodyTdFoot}'></td>" : "";
+                    htmlBody += totalDolares != 0 ? $"<td  style='{bodyTdFoot}'>" + totalDolares.ToString("N0") + "</td>" : "";
+                    htmlBody += totalDolares != 0 ? $"<td style='{bodyTdFoot}'></td>" : "";
 
                     htmlBody += @"</tr>";
                     htmlBody += @"</tbody>                       
@@ -1349,33 +756,37 @@ namespace Molinos.DataAgro.Business
                 }
             }
 
+            var tableAgente = "font-family: Arial, Helvetica, sans-serif;border-bottom: 2px solid #070707;border-top: 2px solid #070707;border-left: 0px ;border-right: 0px ;background-color: #FFFFFF;width: 100%;height: 200px;text-align: center;border-collapse: collapse;";
+            var tableTdTrAgente = "border-left: 0px !important;border-right: 0px !important; border-top: 1px solid #000000;border-bottom: 1px solid #000000; padding: 4px 4px;";
+            var headTrAgente = "font-size: 12px; font-weight: bold;color: #000000;text-align: center; background: #FFD700; border-left: none !important;border-right: 0px !important;";
+            var bodyTdAgente = "font-size: 15px;border-left: 0px !important;  border-right: 0px !important;";
 
             if (Model.AgenteCompras.ListaAgenteCompras.Count() > 0)
             {
-                htmlBody += @"<table cellpadding='10' class='agente'>" +
+                htmlBody += $@"<table style='{tableAgente}' cellpadding='10' class='agente'>" +
                     "<thead>" +
-                    "<tr>" +
-                    "<th colspan = " + (Model.AgenteCompras.ListaOperadores.Count() + 4) + " > AGENTE DE COMPRA MAT </th>" +                   
-                    "</tr>" +
-                    "<tr class='borde'>" +
-                    "<th>Producto</th>" +
-                    "<th>Posición</th>" +
-                    "<th>Total</th>" +
-                    "<th>USD Pond.</th>";
+                    $"<tr style='{headTrAgente} {tableTdTrAgente}' >" +
+                    $"<td style='{headTrAgente} {tableTdTrAgente}' colspan = " + (Model.AgenteCompras.ListaOperadores.Count() + 4) + " > AGENTE DE COMPRA MAT </th>" +
+                    $"</tr>" +
+                    $"<tr  style='{headTrAgente} {tableTdTrAgente}' class='borde'>" +
+                    $"<td  style='{headTrAgente} {tableTdTrAgente}'>Producto</td>" +
+                    $"<td  style='{headTrAgente} {tableTdTrAgente}'>Posición</td>" +
+                    $"<td  style='{headTrAgente} {tableTdTrAgente}'>Total</td>" +
+                    $"<td  style='{headTrAgente} {tableTdTrAgente}'>USD Pond.</td>";
                 foreach (var op in Model.AgenteCompras.ListaOperadores)
                 {
-                    htmlBody += "<th>" + op.OperadorDesc + "</th>";
+                    htmlBody += $"<td style='{headTrAgente} {tableTdTrAgente}'>" + op.OperadorDesc + "</td>";
                 }
                 htmlBody += "</tr></thead><tbody>";
                 foreach (var agente in Model.AgenteCompras.ListaAgenteCompras)
                 {
                     var pos = agente.Posicion.Split('.');
 
-                    htmlBody += @"<tr>" +
-                                "<td>" + agente.MaterialDesc + "</td>" +
-                                "<td>" + ((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1]) + "</td>" +
-                                "<td>" + agente.Operador.Sum(x => x.Cantidad).ToString("N0") + "</td>" +
-                                "<td>" + agente.PrecioPonderado.ToString("N2") + "</td>";
+                    htmlBody += $@"<tr style='{tableTdTrAgente}'>" +
+                                $"<td style='{bodyTdAgente} {tableTdTrAgente}'>" + agente.MaterialDesc + "</td>" +
+                                $"<td style='{bodyTdAgente} {tableTdTrAgente}'>" + ((EnumMeses)Enum.ToObject(typeof(EnumMeses), Int32.Parse(pos[0])) + " - " + pos[1]) + "</td>" +
+                                $"<td style='{bodyTdAgente} {tableTdTrAgente}'>" + agente.Operador.Sum(x => x.Cantidad).ToString("N0") + "</td>" +
+                                $"<td style='{bodyTdAgente} {tableTdTrAgente}'>" + agente.PrecioPonderado.ToString("N2") + "</td>";
 
 
                     foreach (var op in Model.AgenteCompras.ListaOperadores)
@@ -1386,70 +797,81 @@ namespace Molinos.DataAgro.Business
 
                     htmlBody += "</tr>";
                 }
-                htmlBody += @"</tbody><tfoot><tr> 
-                 <td></td> 
-                 <td> Total </td>
-                 <td>" + Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Sum(y => y.Cantidad)).ToString("N0") + "</td> <td></td>";
+                htmlBody += $@"</tbody><tfoot><tr> 
+                 <td  style='{tableTdTrAgente}'></td> 
+                 <td  style=' {tableTdTrAgente}'> Total </td>
+                 <td  style='{tableTdTrAgente}'>" + Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Sum(y => y.Cantidad)).ToString("N0") + $"</td> <td style='{tableTdTrAgente}'></td>";
                 foreach (var op in Model.AgenteCompras.ListaOperadores)
                 {
                     var cantidad = Model.AgenteCompras.ListaAgenteCompras.Sum(x => x.Operador.Where(y => y.OperadorId == op.OperadorId).Sum(y => y.Cantidad));
-                    htmlBody += "<td>" + cantidad + "</td>";
+                    htmlBody += $"<td  style='{tableTdTrAgente}'>" + cantidad + "</td>";
                 }
-               htmlBody += "</tr></tfoot>";
-               htmlBody += @"</table><br><br>";
+                htmlBody += "</tr></tfoot>";
+                htmlBody += @"</table><br><br>";
             }
-            
-
+            var tableSoja = "font-family: Arial, Helvetica, sans-serif;border-bottom: 2px solid #070707;border-top: 2px solid #070707;border-left: 0px ;border-right: 0px ;background-color: #FFFFFF;width: 350px;height: 200px;text-align: center;border-collapse: collapse; width:700px;";
+            var tableTdTrSoja = "border-left: 0px !important;border-right: 0px !important; border-top: 1px solid #000000;border-bottom: 1px solid #000000; padding: 4px 4px;";
+            var headTrSoja = "font-size: 12px; font-weight: bold;color: #FFFFFF;text-align: center; background: #017940; border-left: none !important;border-right: 0px !important;";
+            var bodyTdSoja = "font-size: 15px;border-left: 0px !important;  border-right: 0px !important;";
 
             if (Model.SojaSustentable.Total > 0)
             {
-                htmlBody += "<table  class='sojasustentable'>";
-                htmlBody += "    <thead>";
-                htmlBody += "        <tr>";
-                htmlBody += "            <th colspan='3'>SOJA SUSTENTABLE</th>";
-                htmlBody += "        </tr>";
-                htmlBody += "        <tr class='borde'>";
-                htmlBody +=  "<th>A Precio</th>";
-                htmlBody +=  "<th>A Fijar</th>";
-                htmlBody += "            <th>Total</th>";
-                htmlBody += "        </tr></thead><tbody>";
-                htmlBody += "        <tr>";
-                htmlBody +="<td>" + Model.SojaSustentable.Precio.ToString("N0") + "</td>";
-                htmlBody += "<td>" + Model.SojaSustentable.Fijar.ToString("N0") + "</td>";
-                htmlBody += "            <td>" + Model.SojaSustentable.Total.ToString("N0") + "</td>";
-                htmlBody += "        </tr>";
-                htmlBody += "    </tbody>";
+                htmlBody += $"<table style='{tableSoja}'  class='sojasustentable'>";
+                htmlBody += "<thead>";
+                htmlBody += $"<tr style='{headTrSoja} {tableTdTrSoja}' >";
+                htmlBody += $"<th style='{headTrSoja} {tableTdTrSoja}'  colspan='3'>SOJA SUSTENTABLE</th>";
+                htmlBody += "</tr>";
+                htmlBody += $"<tr style='{headTrSoja} {tableTdTrSoja}' class='borde'>";
+                htmlBody += $"<th style='{headTrSoja} {tableTdTrSoja}'>A Precio</th>";
+                htmlBody += $"<th style='{headTrSoja} {tableTdTrSoja}'>A Fijar</th>";
+                htmlBody += $"<th style='{headTrSoja} {tableTdTrSoja}'>Total</th>";
+                htmlBody += "</tr></thead><tbody>";
+                htmlBody += "<tr>";
+                htmlBody += $"<td style='{bodyTdSoja} {tableTdTrSoja}'>" + Model.SojaSustentable.Precio.ToString("N0") + "</td>";
+                htmlBody += $"<td style='{bodyTdSoja} {tableTdTrSoja}'>" + Model.SojaSustentable.Fijar.ToString("N0") + "</td>";
+                htmlBody += $"<td style='{bodyTdSoja} {tableTdTrSoja}'>" + Model.SojaSustentable.Total.ToString("N0") + "</td>";
+                htmlBody += "</tr>";
+                htmlBody += "</tbody>";
                 htmlBody += "</table><br><br>";
             }
 
-            htmlBody += @"<table class='precio'>
+            var tablePrecio = "font-family: Arial, Helvetica, sans-serif; border-bottom: 2px solid #070707;border-top: 1px solid #070707;border-left: 0px; border-right: 0px; height: 200px; text-align: center; border-collapse: collapse; width:700px;";
+            var precioTdTr = "background: #017940; border-left: 0px !important; border-right: 0px !important; border-top: solid #070707 1.0pt;border-bottom: solid #070707 1.0pt; padding: 4px 4px; color: #FFFFFF !important; ";
+            var precioTbodyTh = "background: #FFFFFF !important; border-top: solid #070707 1.0pt !important; border-bottom: 1px solid #000000;color: #000000 !important; ";
+            var precioBodyTr = "font-size: 15px;border-left: 0px ; border-right: 0px; border-top: solid #070707 1.0pt !important;";
+            htmlBody += $@"<table style='{tablePrecio}' class='precio'>
                 <tbody>";
             foreach (var moneda in Model.PrecioCantidad)
             {
                 if (moneda.Cantidad > 0)
                 {
-                    htmlBody += "<tr>";
-                    htmlBody += "<td>" + moneda.Moneda + "</td>";
-                    htmlBody += "<th class='negrita'> " + moneda.Cantidad.Value.ToString("N2") + " </th>";
-                    htmlBody += "</tr>";
+                    htmlBody += $"<tr style='{precioBodyTr}'>";
+                    htmlBody += $"<td  style='{precioTdTr}'>" + moneda.Moneda + "</td>";
+                    htmlBody += $"<td style='{precioTbodyTh}' class='negrita'> " + moneda.Cantidad.Value.ToString("N2") + " </th>";
+                    htmlBody += $"</tr>";
                 }
 
             }
+
             htmlBody += @"</tbody>
             </table><br><br>";
 
+            var tableHedge = "font-family: Arial, Helvetica, sans-serif;border-bottom: 2px solid #070707;border-top: 2px solid #070707;border-left: 0px ;border-right: 0px ;background-color: #FFFFFF;width: 350px;height: 200px;text-align: center;border-collapse: collapse; width:700px;";
+            var tableTdTrHedge = "border-left: 0px !important;border-right: 0px !important; border-top: 1px solid #000000;border-bottom: 1px solid #000000; padding: 4px 4px;";
+            var headTr = "font-size: 12px; font-weight: bold;color: #FFFFFF;text-align: center; background: #008B8B; border-left: none !important;border-right: 0px !important;";
+            var bodyTd = "font-size: 15px;border-left: 0px !important;  border-right: 0px !important;";
             if (hedgeMat)
             {
-                htmlBody += @"<table class='hedge'>
-                     <thead>
-                    <tr>
-                        <th colspan='4'>HEDGE</th>
+                htmlBody += $@"<table class='hedge' style='{tableHedge}'>
+                     <thead style='background: #008B8B; border-bottom: 1px solid #008B8B;'>
+                    <tr style='{tableTdTrHedge} {headTr}'>
+                        <th style='{tableTdTrHedge}' colspan='4'>HEDGE</th>
                     </tr>
-                    <tr class='borde'>
-                        <th width='150'>Producto</th>
-                        <th>Disponible</th>
-                        <th>Forward</th>
-                        <th width='100'>New Crop</th>
+                    <tr style='{tableTdTrHedge} {headTr}' class='borde'>
+                        <th style='{tableTdTrHedge}' width='150'>Producto</th>
+                        <th style='{tableTdTrHedge}'>Disponible</th>
+                        <th style='{tableTdTrHedge}'>Forward</th>
+                        <th style='{tableTdTrHedge}' width='100'>New Crop</th>
                     </tr>
                     </thead>";
 
@@ -1458,11 +880,11 @@ namespace Molinos.DataAgro.Business
                 {
                     if (mat.Disponible != 0 || mat.Forward != 0 || mat.NewCrop != 0)
                     {
-                        htmlBody += @"<tr>" +
-                                "<td>" + mat.MaterialDescripcion + "</td>" +
-                                "<td>" + mat.Disponible.ToString("N0") + "</td>" +
-                                "<td>" + mat.Forward.ToString("N0") + "</td>" +
-                                "<td>" + mat.NewCrop.ToString("N0") + "</td>" +
+                        htmlBody += $@"<tr style='{tableTdTrHedge}'>" +
+                                 $"<td style='{tableTdTrHedge} {bodyTd}'>" + mat.MaterialDescripcion + "</td>" +
+                                 $"<td style='{tableTdTrHedge}  {bodyTd}'>" + mat.Disponible.ToString("N0") + "</td>" +
+                                 $"<td style='{tableTdTrHedge}  {bodyTd}'>" + mat.Forward.ToString("N0") + "</td>" +
+                                 $"<td style='{tableTdTrHedge}  {bodyTd}'>" + mat.NewCrop.ToString("N0") + "</td>" +
                             "</tr>";
                     }
                 }
