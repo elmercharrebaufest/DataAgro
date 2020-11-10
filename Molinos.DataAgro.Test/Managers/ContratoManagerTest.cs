@@ -291,6 +291,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Cantidad = 1,
                 Precio = 1000,
+                PrecioNeto = 1000,
                 TipoNegocioId = 2,
                 DestinoId = 1,
                 LocalidadId = 1,
@@ -348,6 +349,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Cantidad = 1,
                 Precio = 1000,
+                PrecioNeto = 1000,
                 TipoNegocioId = 2,
                 DestinoId = 1,
                 LocalidadId = 1,
@@ -408,6 +410,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Cantidad = 1,
                 Precio = 1000,
+                PrecioNeto = 1000,
                 TipoNegocioId = 2,
                 DestinoId = 1,
                 LocalidadId = 1,
@@ -486,6 +489,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Cantidad = 1,
                 Precio = 1000,
+                PrecioNeto = 1000,
                 TipoNegocioId = 2,
                 DestinoId = 1,
                 LocalidadId = 1,
@@ -914,7 +918,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             Assert.IsTrue(resultado.HayError);
-            Assert.AreEqual(28, resultado.ListaErrores.Count);
+            Assert.AreEqual(29, resultado.ListaErrores.Count);
         }
 
         [Test]
@@ -2623,6 +2627,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Cantidad = 1,
                 Precio = 1000,
+                PrecioNeto = 1000,
                 TipoNegocioId = 2,
                 DestinoId = 1,
                 LocalidadId = 1,
@@ -3011,6 +3016,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Cantidad = 1,
                 Precio = 1000,
+                PrecioNeto = 1000,
                 TipoNegocioId = 2,
                 DestinoId = 1,
                 LocalidadId = 1,
@@ -3139,6 +3145,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Cantidad = 1,
                 Precio = 1000,
+                PrecioNeto = 1000,
                 TipoNegocioId = 2,
                 DestinoId = 1,
                 LocalidadId = 1,
@@ -3605,6 +3612,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Cantidad = 1,
                 Precio = 1000,
+                PrecioNeto = 1000,
                 TipoNegocioId = 2,
                 DestinoId = 1,
                 LocalidadId = 1,
