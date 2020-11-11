@@ -466,9 +466,12 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " kg)");
                 }
             }
-            if (oParam.StandardDeCalidadId == 0 || oParam.StandardDeCalidadId == null)
+            if (!validacionesMinimas)
             {
-                oErrorMessages.Error("", "Debe seleccionar alguna Calidad");
+                if (oParam.StandardDeCalidadId == 0 || oParam.StandardDeCalidadId == null)
+                {
+                    oErrorMessages.Error("", "Debe seleccionar alguna Calidad");
+                }
             }
             if (oParam.MaterialId == 5 && (oParam.ZonaId == 0 || oParam.ZonaId == null))
             {
