@@ -4036,8 +4036,11 @@ function GuardarAperturaDePrecio() {
             }
         }
         var total = CalcularPrecioTotalApertura();
-        if (total <= 0 && ($("#tipoId").val() == 2 || $("#tipoId").val() == 3 || $("#tipoId").val() == 6) && !$("#pizarraId").is(':checked')) {
+        if (total <= 0 && ($("#tipoId").val() == 2 || $("#tipoId").val() == 3 || $("#tipoId").val() == 6) && !$("#pizarraId").is(':checked')) {            
             MensErr("El Precio Total no puede ser menor o igual a 0");
+            $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
+            $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(0);
+            CalcularPrecioTotalApertura();
         } else {
             InsertarAperturasViewModel(total);
         }

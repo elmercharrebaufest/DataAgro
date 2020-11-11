@@ -852,7 +852,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5)
                 && x.MaterialId == materialId
                 && x.TipoNegocioId == 4
-                && (calidad == null || (calidad == 7 && x.TrigoEspecial == true) || (calidad == 3 && x.TrigoEspecial == false))
+                && (calidad == null || (calidad == 7 && x.TrigoEspecial == true) || (calidad == 2 && x.TrigoEspecial == false))
                 && (centroId == 0 || centroId == 1)
             ).Select(x => new PosicionPorMaterial
             {
