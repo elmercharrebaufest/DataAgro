@@ -212,10 +212,9 @@ namespace WebDataAgro.Services
                             FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
                             ImportePactado = desc.Importe,
                             Porcentaje = desc.PorcentajeDB,
-                            MonedaPactadoId = desc.MonedaDB,
+                            MonedaPactadoId = desc.Moneda,
                             Precio = desc.Precio,
-                            MonedaImportePactadoId = desc.Moneda
-
+                            MonedaImportePactadoId = desc.MonedaDB
                         };
                         preciosPactados.Add(precio);
                     }
@@ -739,9 +738,9 @@ namespace WebDataAgro.Services
                             FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
                             ImportePactado = desc.Importe,
                             Porcentaje = desc.PorcentajeDB,
-                            MonedaPactadoId = desc.MonedaDB,
+                            MonedaPactadoId = desc.Moneda,
                             Precio = desc.Precio,
-                            MonedaImportePactadoId = desc.Moneda
+                            MonedaImportePactadoId = desc.MonedaDB
                         };
                         preciosPactados.Add(precio);
                     }
