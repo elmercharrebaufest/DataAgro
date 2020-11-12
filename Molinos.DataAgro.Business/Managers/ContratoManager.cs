@@ -131,12 +131,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var listaMaterial = repositorio.Listar<HabilitacionPizarra, MaterialQry>(
                     x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
-                    x => x.DesdeVigencia <= hoy 
+                    x => x.DesdeVigencia <= hoy
                     && x.HastaVigencia >= hoy
-                    &&(tipoNegocioId ==null || x.TipoNegocioId == tipoNegocioId.Value)
+                    && (tipoNegocioId == null || x.TipoNegocioId == tipoNegocioId.Value)
                     );
 
-                listaMaterial.AddRange(repositorio.Listar<PrecioMoa, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion  },
+                listaMaterial.AddRange(repositorio.Listar<PrecioMoa, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
                     x => x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy && (tipoNegocioId == null || x.TipoNegocioId == tipoNegocioId.Value)));
 
                 datosCombo.material = listaMaterial.GroupBy(y => y.MaterialId).Select(y => y.FirstOrDefault()).ToList();
@@ -341,10 +341,27 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacio");
             }
-            if (oParam.DestinoId == 0 || oParam.DestinoId == null)
+
+            if (!validacionesMinimas || (oParam.EsFason != true && validacionesMinimas))
             {
-                oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
+                if (oParam.DestinoId == 0 || oParam.DestinoId == null)
+                {
+                    oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
+                }
+                if (oParam.TipoNegocioId == 1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null))
+                {
+                    oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no debe estar vacio cuando el contrato es 'A FIJAR'");
+                }
+                if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9
+                    && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))
+                    )
+                {
+                    oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
+                }
             }
+
+
+
             if (oParam.ClasificacionId == 1)
             {
                 var centroCodigoSap = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
@@ -367,15 +384,24 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
                 }
             }
-            if (oParam.Precio == 0 && oParam.TipoNegocioId != 1 && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
+            if (!validacionesMinimas || (string.IsNullOrEmpty(oParam.ContratoMadre) && validacionesMinimas))
             {
-                oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
+                if (oParam.Precio == 0 && oParam.TipoNegocioId != 1 && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
+                {
+                    oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
+                }
+
+                if ((oParam.PrecioNeto == 0 || oParam.PrecioNeto == null) && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
+                {
+                    oErrorMessages.Error("Precio", "El campo 'Precio Neto' no debe estar vacio");
+                }
+
+                if ((string.IsNullOrEmpty(oParam.MonedaId) && oParam.TipoNegocioId != 1) && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
+                {
+                    oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
+                }
             }
 
-            if ((oParam.PrecioNeto == 0 || oParam.PrecioNeto == null) && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
-            {
-                oErrorMessages.Error("Precio", "El campo 'Precio Neto' no debe estar vacio");
-            }
 
             if ((oParam.LocalidadId == 0 || oParam.LocalidadId == null) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
@@ -405,10 +431,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacio");
             }
-            if ((string.IsNullOrEmpty(oParam.MonedaId) && oParam.TipoNegocioId != 1) && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
-            {
-                oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
-            }
+
             if (oParam.TipoNegocioId == 0)
             {
                 oErrorMessages.Error("TipoNegocioId", "El campo 'Tipo de Negocio' no debe estar vacio");
@@ -422,10 +445,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("EstablecimientoPropio", "El campo 'Establecimiento' no debe estar vacio cuando Provincia es Buenos Aires y es Productor");
             }
-            if (oParam.TipoNegocioId == 1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null))
-            {
-                oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no debe estar vacio cuando el contrato es 'A FIJAR'");
-            }
+
             if (oParam.BoletoId == 0 || oParam.BoletoId == null)
             {
                 oErrorMessages.Error("BoletoId", "Boleto no debe estar vacio");
@@ -673,12 +693,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var centro = repositorio.Obtener<Centro>(x => x.Id == oParam.DestinoId);
 
-            if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9
-                && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))
-                )
-            {
-                oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
-            }
+
             if (!validacionesMinimas)
             {
                 if (oParam.PagoCBU != null)
