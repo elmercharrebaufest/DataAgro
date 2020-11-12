@@ -55,13 +55,14 @@ namespace WebDataAgro.Controllers
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             contrato.UsuarioId = proveedor.RazonSocial;
             contrato.PorcentajeComision = proveedor.Comision;
+            contrato.PrecioNeto = contrato.Precio;
             if (contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision > 0)
             {
                 contrato.PrecioNeto = contrato.Precio + (contrato.Precio * contrato.PorcentajeComision.Value / 100);
                 contrato.AperturaPrecio = new List<AperturaPrecio>();
                 contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, MonedaId = null, Porcentaje = 0 });
                 contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = 1 });
+                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = contrato.PorcentajeComision.Value });
                 contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
             }
             if (contrato.ComercialId.HasValue)
