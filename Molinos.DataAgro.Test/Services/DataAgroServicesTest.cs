@@ -228,6 +228,9 @@ namespace Molinos.DataAgro.Test.Services
                 FechaDesde = "2020-10-01",
                 FechaEntrega = "2020-10-31",
                 FechaHasta = "2020-10-31",
+                FechaOperacion = "2020-10-31",
+                FechaCreacion = "2020-10-31",
+                HORAACT = "16:00:00",
                 Moneda = "USDM",
                 Material = "000000000019908017",
                 Precio = 240,
@@ -253,12 +256,16 @@ namespace Molinos.DataAgro.Test.Services
                 Apertura = new List<AperturaPrecioSap>(),
                 PrecioNeto = 240,
                 PorcentajeDePago = (decimal)97.50,
-                PrecioAjusteComision = 0
+                PrecioAjusteComision = 0,
+                Comercial = "bmelgarejo",
+                ComercialCreador = "bmelgarejo",
+                TipoNegocio = "MADRE"                
             };
             var contrato = new Contrato
             {
                 Id = 1,
-                AperturaPrecio = new List<AperturaPrecio>()
+                AperturaPrecio = new List<AperturaPrecio>(),
+                Comercial = new Comercial { GrupoDeComprasId = 1}
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(contrato);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CalidadEspecial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
@@ -271,6 +278,7 @@ namespace Molinos.DataAgro.Test.Services
                .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { Id = 1 } });
             informeComercialManagerMock.Setup(x => x.RespuestaDeSapCapacidadProductiva(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>()))
                 .Returns(new Resultado());
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { ComercialId = 1, GrupoDeComprasId = 1});
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, int>>>())).Returns(1);

@@ -173,220 +173,8 @@ namespace WebDataAgro.Services
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
                 var contratoOriginal = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP);
-
-                var calidades = new List<Calidad>();
-                var calEspecialList = repositorio.Listar<CalidadEspecial>();
-                var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
-
-
-                logger.Debug("ActualizandoContrato2");
-
-                var descuentos = new List<DescuentoBonificacion>();
-                var preciosPactados = new List<PrecioPactado>();
-                var tipoDescuentoList = repositorio.Listar<TipoDB>();
-                var tipoPeriodoList = repositorio.Listar<TipoPeriodoDB>();
-
-                foreach (var desc in contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>())
-                {
-                    if (!(desc.TipoPeriodo == "I" && desc.TipoDescBon == "B") && !(desc.TipoPeriodo == "E" && desc.TipoDescBon == "A"))
-                    {
-                        var descuento = new DescuentoBonificacion
-                        {
-                            ContratoId = contratoOriginal.Id,
-                            FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                            FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                            Importe = desc.Importe,
-                            Porcentaje = desc.PorcentajeDB,
-                            MonedaId = desc.MonedaDB,
-                            TipoDBId = tipoDescuentoList.FirstOrDefault(x => x.CodigoSap == desc.TipoDescBon).Id,
-                            TipoPeriodoDBId = tipoPeriodoList.FirstOrDefault(x => x.CodigoSap == desc.TipoPeriodo).Id
-                        };
-                        descuentos.Add(descuento);
-                    }
-                    if (desc.TipoPeriodo == "E" && desc.TipoDescBon == "A")
-                    {
-                        var precio = new PrecioPactado
-                        {
-                            ContratoId = contratoOriginal.Id,
-                            FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                            FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                            ImportePactado = desc.Importe,
-                            Porcentaje = desc.PorcentajeDB,
-                            MonedaPactadoId = desc.Moneda,
-                            Precio = desc.Precio,
-                            MonedaImportePactadoId = desc.MonedaDB
-                        };
-                        preciosPactados.Add(precio);
-                    }
-                }
-                logger.Debug("ActualizandoContrato3");
-
-                var aperturas = new List<AperturaPrecio>();
-                var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
-                //if (contratoSAP.Apertura != null && contratoSAP.Apertura.Count > 0)
-                //{
-                aperturas.Add(new AperturaPrecio { NegocioId = contratoOriginal.Id, ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
-                aperturas.Add(new AperturaPrecio { NegocioId = contratoOriginal.Id, ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
-                aperturas.Add(new AperturaPrecio { NegocioId = contratoOriginal.Id, ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
-                aperturas.Add(new AperturaPrecio { NegocioId = contratoOriginal.Id, ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
-                //}
-                foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
-                {
-                    var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
-
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
-                }
-
-                if (contratoOriginal.AperturaPrecio.Count() == 0 && !aperturas.Any(a => a.Importe != 0 || a.Porcentaje != 0))
-                {
-                    aperturas = new List<AperturaPrecio>();
-                }
-                logger.Debug("ActualizandoContrato4");
-
                 var contrato = new Contrato();
-
-                contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
-                contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : 3;
-                contrato.BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => contratoSAP.Bolsa.Contains(x.CodigoSap), x => x.Id);
-                contrato.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == contratoSAP.Cosecha, x => x.CampañaId);
-                contrato.Cantidad = (double)contratoSAP.Cantidad;
-                contrato.CantidadCamiones = contratoSAP.Camiones;
-                contrato.CD = contratoSAP.AurCd == "X";
-                contrato.ClasificacionId = repositorio.Obtener<ClasificacionCompraNet, int>(x => x.Descripcion == contratoSAP.Clasificacion, x => x.Id);
-                contrato.Compensacion = contratoSAP.Compensacion == "X";
-                contrato.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.Centro, x => x.Id);
-                contrato.CondicionFijacionId = !string.IsNullOrEmpty(contratoSAP.CondFijacion) ? repositorio.Obtener<CondicionFijacion, int>(x => x.CodigoSap == contratoSAP.CondFijacion, x => x.Id) : (int?)null;
-                contrato.Consignatario = contratoSAP.Consignatario == "X";
-                contrato.ContratoCorredor = contratoSAP.ContrCorr;
-                contrato.ContratoMadre = contratoSAP.ContratoMadre;
-                contrato.ContratoVendedor = contratoSAP.ContrVend;
-                contrato.CorredorId = !string.IsNullOrEmpty(contratoSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == contratoSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
-                contrato.DesdeFijacion = !string.IsNullOrEmpty(contratoSAP.FeDesdeFij) ? DateTime.ParseExact(contratoSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento;
-                contrato.PagoDiferido = contratoSAP.DiasDiferimiento > 0;
-                contrato.Dolarizado = contratoSAP.DolarizadoExpress == "X" ? false : !string.IsNullOrEmpty(contratoSAP.FechaLimite);
-                contrato.EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null;
-                contrato.FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
-                contrato.LocalidadId = repositorio.Obtener<Localidad, int>(x => x.CodLocalidad == contratoSAP.Procedencia, x => x.LocalidadId);
-
-                contrato.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == contratoSAP.Material, x => x.MaterialId);
-                contrato.MercsDeposito = contratoSAP.MercDescargada == "X";
-                contrato.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.Moneda, x => x.MonedaId);
-                contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
-                contrato.NivelTarifaId = !string.IsNullOrEmpty(contratoSAP.FleteNivel) ? repositorio.Obtener<NivelTarifa, int>(x => x.CodigoSap == contratoSAP.FleteNivel, x => x.Id) : (int?)null;
-                contrato.NoInformaSio = contratoSAP.NoInformaSio == "X";
-                contrato.Observacion = contratoSAP.ObservacionCal1;
-                contrato.PagoDirectoVendedor = contratoSAP.PagoDirVend == "X";
-                contrato.PlanCanje = contratoSAP.IndOpCanje == "X";
-                contrato.PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision;
-                contrato.Precio = contratoSAP.Precio;
-                contrato.PrecioNeto = contratoSAP.PrecioNeto;
-                contrato.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == contratoSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
-                contrato.ProvinciaId = contratoSAP.Provincia;
-                contrato.SelCargoMOA = contratoSAP.SelCargoMOA == "X";
-                contrato.SelCargoVendedor = contratoSAP.SelCargoVend == "X";
-                contrato.StandardDeCalidadId = string.IsNullOrEmpty(contratoSAP.Especial) ? (int?)null : repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
-                contrato.EstadoId = 5;
-                contrato.TipoAgenteCompraId = contratoSAP.TipoAgenteCompraId == "9952569841" ? (int?)1 : null;
-                contrato.CaratulaMAT = contratoSAP.CaratulaMAT;
-                contrato.CaratulaExtension = contratoSAP.CaratulaExtension;
-                contrato.PrecioAjusteComision = contratoSAP.PrecioAjusteComision;
-                contrato.MonedaAjusteComisionId = contratoSAP.MonedaAjusteComisionId;
-                contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
-                contrato.PagoCBU = contratoSAP.CUENTA_MRP;
-                contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
-                contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-
-
-                if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
-                {
-                    contrato.StandardDeCalidadId = 3;
-                }
-                if (contratoSAP.Especial == "04" && contrato.MaterialId == 1)
-                {
-                    contrato.StandardDeCalidadId = 7;
-                }
-                contrato.Sustentable = contratoSAP.Sustentable == "X";
-                contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
-                contrato.Warrant = contratoSAP.AutCg == "X";
-                contrato.ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : (int?)null;
-                contrato.PorcentajeDePago = contratoSAP.PorcentajeDePago ?? contratoOriginal.PorcentajeDePago ?? (decimal)97.5;
-                logger.Debug("ActualizandoContrato calidades");
-
-                foreach (var cal in contratoSAP.Calidad ?? new List<CalidadSAP>())
-                {
-                    var calidad = new Calidad
-                    {
-                        NegocioId = contratoOriginal.Id,
-                        CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo && x.MaterialId == contrato.MaterialId).Id,
-                        StandardDeCalidadId = contrato.StandardDeCalidadId ?? 1,
-                        Valor = cal.Valor,
-                        PorcentajeDesde = cal.PorcentajeDesde,
-                        PorcentajeHasta = cal.PorcentajeHasta
-                    };
-                    if (calidad.StandardDeCalidadId == 2)
-                    {
-                        if ((calidad.Valor == 0 && calidad.PorcentajeDesde == 1 && calidad.PorcentajeHasta == 1 && (calidad.CalidadEspecialId == 4 || calidad.CalidadEspecialId == 5)) || calidad.CalidadEspecialId == 10)
-                        {
-                            if (contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
-                            {
-                                calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeDesde;
-                                calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeHasta;
-                                calidad.Valor = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().Valor;
-                            }
-                            else
-                            {
-                                calidad.PorcentajeDesde = null;
-                                calidad.PorcentajeHasta = null;
-                                calidad.Valor = 2;
-                            }
-
-                        }
-                        else
-                        {
-                            if (calidad.CalidadEspecialId == 1 && calidad.PorcentajeHasta == 51)
-                            {
-                                calidad.PorcentajeHasta = 40;
-                            }
-                        }
-                    }
-                    else if (calidad.StandardDeCalidadId == 7)
-                    {
-                        if (contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
-                        {
-                            calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeDesde;
-                            calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeHasta;
-                            calidad.Valor = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().Valor;
-                        }
-
-                    }
-                    calidades.Add(calidad);
-                }
-                contrato.Calidad = calidades;
-                contrato.AperturaPrecio = aperturas;
-                contrato.Descuentos = descuentos;
-                contrato.TipoNegocioId = 3;
-                contrato.ComercialId = 1;
-                contrato.Fecha = DateTime.Now;
-                contrato.ZonaId = contrato.ZonaId ?? contratoOriginal.ZonaId;
-                contrato.GrupoCompra = contratoOriginal.GrupoCompra;
-                contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
-
-                if (!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaAPrecio))
-                {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) });
-                }
-                if (!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) && !string.IsNullOrEmpty(contratoSAP.MonedaSPrecio))
-                {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) });
-                }
+                CrearProyeccionContrato(contratoSAP, contrato, null, true);
                 logger.Debug("ActualizandoContrato5");
                 ValidarContrato(contrato, oEntityErrors);
                 if (oEntityErrors.HayError)
@@ -411,7 +199,464 @@ namespace WebDataAgro.Services
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
+        }      
+
+        public ResultadoSap AltaContratoSAP(ContratoSAPDto contratoSAP)
+        {
+            contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
+            contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
+            contratoSAP.Apertura = contratoSAP.Apertura ?? new List<AperturaPrecioSap>();
+            contratoSAP.Procedencia = contratoSAP.Procedencia != null ? contratoSAP.Procedencia.Trim() : contratoSAP.Procedencia;
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("Alta ContratoSap" + contratoSAP.ToXml());
+                var c = contratoSAP.ContratoSAP.PadLeft(10, '0');
+                if (repositorio.Existe<Contrato>(x => x.ContratoSAP == c))
+                {
+                    oEntityErrors.ListaErrores.Add(new ErrorMessage("Contrato", "El contrato ya existe en DataAgro"));
+                    return oEntityErrors;
+                }
+                var contrato = new Contrato();
+
+                CrearProyeccionContrato(contratoSAP, contrato, null, false);
+
+                logger.Debug("Validacion alta contrato");
+                ValidarContrato(contrato, oEntityErrors);
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
+
+                var resultado = contratoManager.AltaContratoSAP(contrato, true);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+                var idNuevo = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(contratoSAP.ContratoSAP), x => x.Id);
+                oEntityErrors.ContratoId = idNuevo != 0 ? idNuevo.ToString() : "";
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
+                });
+                oEntityErrors.HayError = true;
+            }
+            logger.Debug("Alta CONTRATOSAP:" + JsonConvert.SerializeObject(contratoSAP));
+            logger.Debug("Alta RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
         }
+
+        private void CrearProyeccionContrato(ContratoSAPDto contratoSAP, Contrato contrato, Contrato contratoOriginal, bool esActualizar)
+        {
+            var calidades = new List<Calidad>();
+            var calEspecialList = repositorio.Listar<CalidadEspecial>();
+            var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
+
+            contratoOriginal = contratoOriginal ?? new Contrato();
+            logger.Debug("Alta de descuentos");
+
+            var descuentos = new List<DescuentoBonificacion>();
+            var preciosPactados = new List<PrecioPactado>();
+            var tipoDescuentoList = repositorio.Listar<TipoDB>();
+            var tipoPeriodoList = repositorio.Listar<TipoPeriodoDB>();
+
+            foreach (var desc in contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>())
+            {
+                if (!(desc.TipoPeriodo == "I" && desc.TipoDescBon == "B") && !(desc.TipoPeriodo == "E" && desc.TipoDescBon == "A"))
+                {
+                    var descuento = new DescuentoBonificacion
+                    {
+                        ContratoId = esActualizar ? contratoOriginal.Id : 0,
+                        FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        Importe = desc.Importe,
+                        Porcentaje = desc.PorcentajeDB,
+                        MonedaId = desc.MonedaDB,
+                        TipoDBId = tipoDescuentoList.FirstOrDefault(x => x.CodigoSap == desc.TipoDescBon).Id,
+                        TipoPeriodoDBId = tipoPeriodoList.FirstOrDefault(x => x.CodigoSap == desc.TipoPeriodo).Id
+                    };
+                    descuentos.Add(descuento);
+                }
+                if (desc.TipoPeriodo == "E" && desc.TipoDescBon == "A")
+                {
+                    var precio = new PrecioPactado
+                    {
+                        ContratoId = esActualizar ? contratoOriginal.Id : 0,
+                        FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        ImportePactado = desc.Importe,
+                        Porcentaje = desc.PorcentajeDB,
+                        MonedaPactadoId = desc.Moneda,
+                        Precio = desc.Precio,
+                        MonedaImportePactadoId = desc.MonedaDB
+                    };
+                    preciosPactados.Add(precio);
+                }
+            }
+
+            logger.Debug("Alta contrato Apertura");
+
+            var aperturas = new List<AperturaPrecio>();
+            var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
+            if (contratoSAP.Apertura != null && contratoSAP.Apertura.Count > 0)
+            {
+                aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
+                aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
+                aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
+                aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
+            }
+            foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
+            {
+                var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
+
+                aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
+                aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
+                aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
+            }
+            if (esActualizar)
+            {
+                if (contratoOriginal.AperturaPrecio.Count() == 0 && !aperturas.Any(a => a.Importe != 0 || a.Porcentaje != 0))
+                {
+                    aperturas = new List<AperturaPrecio>();
+                }
+            }
+            logger.Debug("Alta de datos contrato");
+
+
+            contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
+            contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : 3;
+            contrato.BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => contratoSAP.Bolsa.Contains(x.CodigoSap), x => x.Id);
+            contrato.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == contratoSAP.Cosecha, x => x.CampañaId);
+            contrato.Cantidad = (double)contratoSAP.Cantidad;
+            contrato.CantidadCamiones = contratoSAP.Camiones;
+            contrato.CD = contratoSAP.AurCd == "X";
+            contrato.ClasificacionId = repositorio.Obtener<ClasificacionCompraNet, int>(x => x.Descripcion == contratoSAP.Clasificacion, x => x.Id);
+            contrato.Compensacion = contratoSAP.Compensacion == "X";
+            contrato.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.Centro, x => x.Id);
+            contrato.CondicionFijacionId = !string.IsNullOrEmpty(contratoSAP.CondFijacion) ? repositorio.Obtener<CondicionFijacion, int>(x => x.CodigoSap == contratoSAP.CondFijacion, x => x.Id) : (int?)null;
+            contrato.Consignatario = contratoSAP.Consignatario == "X";
+            contrato.ContratoCorredor = contratoSAP.ContrCorr;
+            //contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
+            contrato.ContratoMadre = contratoSAP.ContratoMadre;
+            contrato.ContratoVendedor = contratoSAP.ContrVend;
+            contrato.CorredorId = !string.IsNullOrEmpty(contratoSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == contratoSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
+            contrato.DesdeFijacion = !string.IsNullOrEmpty(contratoSAP.FeDesdeFij) ? DateTime.ParseExact(contratoSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+            contrato.DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento;
+            contrato.PagoDiferido = contratoSAP.DiasDiferimiento > 0;
+            contrato.Dolarizado = contratoSAP.DolarizadoExpress == "X" ? false : !string.IsNullOrEmpty(contratoSAP.FechaLimite);
+            contrato.EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null;
+            contrato.FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+            contrato.FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+            if (!esActualizar)
+            {
+                contrato.FechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            }
+            contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaCierta) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+            if (!esActualizar)
+            {
+                var hora = DateTime.ParseExact(contratoSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
+                TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
+                contrato.Fecha = DateTime.ParseExact(contratoSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                contrato.Fecha = contrato.Fecha.Add(time);
+            }
+            contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
+            contrato.LocalidadId = repositorio.Obtener<Localidad, int>(x => x.CodLocalidad == contratoSAP.Procedencia, x => x.LocalidadId);
+
+            contrato.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == contratoSAP.Material, x => x.MaterialId);
+            contrato.MercsDeposito = contratoSAP.MercDescargada == "X";
+            contrato.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.Moneda, x => x.MonedaId);
+            contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
+            contrato.NivelTarifaId = !string.IsNullOrEmpty(contratoSAP.FleteNivel) ? repositorio.Obtener<NivelTarifa, int>(x => x.CodigoSap == contratoSAP.FleteNivel, x => x.Id) : (int?)null;
+            contrato.NoInformaSio = contratoSAP.NoInformaSio == "X";
+            contrato.Observacion = contratoSAP.ObservacionCal1;
+            contrato.PagoDirectoVendedor = contratoSAP.PagoDirVend == "X";
+            contrato.PlanCanje = contratoSAP.IndOpCanje == "X";
+            contrato.PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision;
+            contrato.Precio = contratoSAP.Precio;
+            contrato.PrecioNeto = contratoSAP.PrecioNeto;
+            contrato.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == contratoSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
+            contrato.ProvinciaId = contratoSAP.Provincia;
+            contrato.SelCargoMOA = contratoSAP.SelCargoMOA == "X";
+            contrato.SelCargoVendedor = contratoSAP.SelCargoVend == "X";
+            contrato.StandardDeCalidadId = string.IsNullOrEmpty(contratoSAP.Especial) ? (int?)null : repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
+            contrato.EstadoId = 5;
+            contrato.TipoAgenteCompraId = contratoSAP.TipoAgenteCompraId == "9952569841" ? (int?)1 : null;
+            contrato.CaratulaMAT = contratoSAP.CaratulaMAT;
+            contrato.CaratulaExtension = contratoSAP.CaratulaExtension;
+            contrato.PrecioAjusteComision = contratoSAP.PrecioAjusteComision;
+            contrato.MonedaAjusteComisionId = contratoSAP.MonedaAjusteComisionId;
+            contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
+            contrato.PagoCBU = contratoSAP.CUENTA_MRP;
+            contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
+            if (!esActualizar)
+            {
+                contrato.EsFason = contratoSAP.TipoNegocio == "FASON" ? true : (bool?)null;
+                contrato.Madre = contratoSAP.TipoNegocio == "MADRE" ? true : contratoSAP.TipoNegocio == "HIJO" ? false : (bool?)null;
+                contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
+                    contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 :
+                    repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
+            }
+            if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
+            {
+                contrato.StandardDeCalidadId = 3;
+            }
+            if (contratoSAP.Especial == "04" && contrato.MaterialId == 1)
+            {
+                contrato.StandardDeCalidadId = 7;
+            }
+            contrato.Sustentable = contratoSAP.Sustentable == "X";
+            contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
+            contrato.Warrant = contratoSAP.AutCg == "X";
+
+            contrato.ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : contratoOriginal.ZonaId;
+
+            contrato.PorcentajeDePago = contratoSAP.PorcentajeDePago ?? contratoOriginal.PorcentajeDePago ?? (decimal)97.5;
+
+
+            logger.Debug("Alta Contrato calidades");
+
+            foreach (var cal in contratoSAP.Calidad ?? new List<CalidadSAP>())
+            {
+                var calidad = new Calidad
+                {
+                    NegocioId = esActualizar ? contratoOriginal.Id : 0,
+                    CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo && x.MaterialId == contrato.MaterialId).Id,
+                    StandardDeCalidadId = contrato.StandardDeCalidadId ?? 1,
+                    Valor = cal.Valor,
+                    PorcentajeDesde = cal.PorcentajeDesde,
+                    PorcentajeHasta = cal.PorcentajeHasta
+                };
+                if (calidad.StandardDeCalidadId == 2)
+                {
+                    if ((calidad.Valor == 0 && calidad.PorcentajeDesde == 1 && calidad.PorcentajeHasta == 1 && (calidad.CalidadEspecialId == 4 || calidad.CalidadEspecialId == 5)) || calidad.CalidadEspecialId == 10)
+                    {
+                        if (esActualizar)
+                        {
+                            if (contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
+                            {
+                                calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeDesde;
+                                calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().PorcentajeHasta;
+                                calidad.Valor = contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault().Valor;
+                            }
+                        }
+                        else
+                        {
+                            calidad.PorcentajeDesde = null;
+                            calidad.PorcentajeHasta = null;
+                            calidad.Valor = 2;
+                        }
+
+                    }
+                    else
+                    {
+                        if (calidad.CalidadEspecialId == 1 && calidad.PorcentajeHasta == 51)
+                        {
+                            calidad.PorcentajeHasta = 40;
+                        }
+                    }
+                }
+                else if (calidad.StandardDeCalidadId == 7)
+                {
+                    if (esActualizar)
+                    {
+                        if (contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
+                        {
+                            calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeDesde;
+                            calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeHasta;
+                            calidad.Valor = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().Valor;
+                        }
+                    }
+                }
+
+                calidades.Add(calidad);
+            }
+            contrato.Descuentos = descuentos;
+            contrato.Calidad = calidades;
+            contrato.AperturaPrecio = aperturas;
+            contrato.PrecioPactado = preciosPactados;
+            if (!esActualizar)
+            {
+                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == contratoSAP.Comercial);
+                contrato.GrupoCompra = comercial.GrupoDeComprasId;
+                contrato.ComercialId = comercial.ComercialId;
+                contrato.UsuarioId = contratoSAP.Comercial;
+                contrato.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.ComercialCreador, x => x.ComercialId);
+            }
+
+
+            if ((!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) || !string.IsNullOrEmpty(contratoSAP.ImporteAPrecio))
+                && (Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")) != 0 || Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) != 0))
+            {
+                contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) });
+            }
+            if ((!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) || !string.IsNullOrEmpty(contratoSAP.ImporteSPrecio))
+                && (Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")) != 0 || Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) != 0))
+            {
+                contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) });
+            }
+        }
+
+        public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)
+        {
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("ActualizandoFijacion" + fijacionSAP.ToXml());
+                var fijacion = new FijacionDePrecioContrato();
+                fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
+                fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
+                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
+                var resultado = fijacionDePrecioContratoManager.ActualizarFijacionSap(fijacion);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
+                });
+                oEntityErrors.HayError = true;
+            }
+            logger.Debug("ActualizandoFijacion CONTRATOSAP:" + JsonConvert.SerializeObject(fijacionSAP));
+            logger.Debug("ActualizandoFijacion RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+
+
+        }
+
+        public ResultadoSap AltaFijacionSAP(FijacionSAPDto fijacionSAP)
+        {
+            //contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
+            //contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
+            fijacionSAP.Apertura = fijacionSAP.Apertura ?? new List<AperturaPrecioSap>();
+            //fijacionSAP.Procedencia = fijacionSAP.Procedencia != null ? fijacionSAP.Procedencia.Trim() : fijacionSAP.Procedencia;
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("AltaFijacion" + fijacionSAP.ToXml());
+                var f = fijacionSAP.FijacionSAP.PadLeft(10, '0');
+                //if (repositorio.Existe<FijacionDePrecioContrato>(x => x.FijacionSAP == f)) {
+                //    oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "la fijacion ya existe en DataAgro"));
+                //    return oEntityErrors;
+                //}
+                var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == f, x => x.Id);
+
+                var fijacion = new FijacionDePrecioContrato();
+                fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
+                fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
+                fijacion.TrigoEspecial = fijacionSAP.TrigoEspecial == "X";
+                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
+                fijacion.ContratoSAP = fijacionSAP.ContratoSAP.PadLeft(10, '0');
+                fijacion.ContratoId = fijarId != 0 ? fijarId : (int?)null;
+                fijacion.Precio = fijacionSAP.Precio;
+                fijacion.Cantidad = (double)fijacionSAP.Cantidad;
+                fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
+                fijacion.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == fijacionSAP.Centro, x => x.Id);
+                logger.Debug("Validacion Precio " + (fijacionSAP.Precio == 0));
+                fijacion.Pizarra = fijacionSAP.Pizarra == "X";
+                fijacion.Posicion = fijacionSAP.Posicion;
+                fijacion.CorredorId = !string.IsNullOrEmpty(fijacionSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == fijacionSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
+                fijacion.DiasPesificado = fijacionSAP.DiasDiferimiento == 0 ? (int?)null : fijacionSAP.DiasDiferimiento;
+                fijacion.PagoDiferido = fijacionSAP.DiasDiferimiento > 0;
+                fijacion.FechaOperacion = DateTime.ParseExact(fijacionSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.FechaHasta = DateTime.ParseExact(fijacionSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.FechaDesde = DateTime.ParseExact(fijacionSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == fijacionSAP.Material, x => x.MaterialId);
+                fijacion.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == fijacionSAP.Moneda, x => x.MonedaId);
+                fijacion.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == fijacionSAP.Cosecha, x => x.CampañaId);
+                fijacion.PrecioNeto = fijacionSAP.PrecioNeto;
+                fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
+                fijacion.EstadoId = 5;
+                fijacion.TipoNegocioId = 3;
+                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.Comercial);
+                fijacion.ComercialId = comercial.ComercialId;
+                fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
+                fijacion.GrupoCompra = comercial.GrupoDeComprasId;
+                var hora = DateTime.ParseExact(fijacionSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
+                TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
+                fijacion.Fecha = DateTime.ParseExact(fijacionSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.Fecha = fijacion.Fecha.Add(time);
+                fijacion.Canje = fijacionSAP.Canje == "X" ? true : false;
+                logger.Debug("Alta fijacion Apertura");
+
+                var aperturas = new List<AperturaPrecio>();
+                var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
+                if (fijacionSAP.Apertura != null && fijacionSAP.Apertura.Count > 0)
+                {
+                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
+                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
+                }
+                foreach (var aper in fijacionSAP.Apertura ?? new List<AperturaPrecioSap>())
+                {
+                    var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
+
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
+                }
+                if (oEntityErrors.HayError)
+                {
+                    return oEntityErrors;
+                }
+                fijacion.AperturaPrecio = aperturas;
+                var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
+                });
+                oEntityErrors.HayError = true;
+            }
+            logger.Debug("AltaFijacion negocioSAP:" + JsonConvert.SerializeObject(fijacionSAP));
+            logger.Debug("AltaFijacion RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+
+
+        }
+        public ResultadoSap AnularFijacionSAP(FijacionSAP fijacionSAP)
+        {
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("AnularFijacion");
+                var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(fijacionSAP);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message
+                });
+            }
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+        }
+
         public ResultadoSap ActualizarCupoSAP(CupoSapDto cupoSAP)
         {
             var oEntityErrors = new ResultadoSap();
@@ -684,409 +929,9 @@ namespace WebDataAgro.Services
             resultado.HayError = resultado.ListaErrores.Count() > 0;
             return resultado;
         }
-        public ResultadoSap AltaContratoSAP(ContratoSAPDto contratoSAP)
-        {
-            contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
-            contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
-            contratoSAP.Apertura = contratoSAP.Apertura ?? new List<AperturaPrecioSap>();
-            contratoSAP.Procedencia = contratoSAP.Procedencia != null ? contratoSAP.Procedencia.Trim() : contratoSAP.Procedencia;
-            var oEntityErrors = new ResultadoSap();
-            try
-            {
-                logger.Debug("Alta ContratoSap" + contratoSAP.ToXml());
-                var c = contratoSAP.ContratoSAP.PadLeft(10, '0');
-                if (repositorio.Existe<Contrato>(x => x.ContratoSAP == c))
-                {
-                    oEntityErrors.ListaErrores.Add(new ErrorMessage("Contrato", "El contrato ya existe en DataAgro"));
-                    return oEntityErrors;
-                }
-                var contrato = new Contrato();
 
-                var calidades = new List<Calidad>();
-                var calEspecialList = repositorio.Listar<CalidadEspecial>();
-                var standardCalidadList = repositorio.Listar<StandardDeCalidad>();
-
-
-                logger.Debug("Alta de descuentos");
-
-                var descuentos = new List<DescuentoBonificacion>();
-                var preciosPactados = new List<PrecioPactado>();
-                var tipoDescuentoList = repositorio.Listar<TipoDB>();
-                var tipoPeriodoList = repositorio.Listar<TipoPeriodoDB>();
-
-                foreach (var desc in contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>())
-                {
-                    if (!(desc.TipoPeriodo == "I" && desc.TipoDescBon == "B") && !(desc.TipoPeriodo == "E" && desc.TipoDescBon == "A"))
-                    {
-                        var descuento = new DescuentoBonificacion
-                        {
-                            FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                            FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                            Importe = desc.Importe,
-                            Porcentaje = desc.PorcentajeDB,
-                            MonedaId = desc.MonedaDB,
-                            TipoDBId = tipoDescuentoList.FirstOrDefault(x => x.CodigoSap == desc.TipoDescBon).Id,
-                            TipoPeriodoDBId = tipoPeriodoList.FirstOrDefault(x => x.CodigoSap == desc.TipoPeriodo).Id
-                        };
-                        descuentos.Add(descuento);
-                    }
-                    if (desc.TipoPeriodo == "E" && desc.TipoDescBon == "A")
-                    {
-                        var precio = new PrecioPactado
-                        {
-                            FechaDesde = !string.IsNullOrEmpty(contratoSAP.FechaDesde) ? DateTime.ParseExact(desc.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                            FechaHasta = !string.IsNullOrEmpty(contratoSAP.FechaHasta) ? DateTime.ParseExact(desc.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null,
-                            ImportePactado = desc.Importe,
-                            Porcentaje = desc.PorcentajeDB,
-                            MonedaPactadoId = desc.Moneda,
-                            Precio = desc.Precio,
-                            MonedaImportePactadoId = desc.MonedaDB
-                        };
-                        preciosPactados.Add(precio);
-                    }
-                }
-
-                logger.Debug("Alta contrato Apertura");
-
-                var aperturas = new List<AperturaPrecio>();
-                var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
-                if (contratoSAP.Apertura != null && contratoSAP.Apertura.Count > 0)
-                {
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
-                }
-                foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
-                {
-                    var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
-
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
-                }
-                logger.Debug("Alta de datos contrato");
-
-
-                contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
-                contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : 3;
-                contrato.BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => contratoSAP.Bolsa.Contains(x.CodigoSap), x => x.Id);
-                contrato.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == contratoSAP.Cosecha, x => x.CampañaId);
-                contrato.Cantidad = (double)contratoSAP.Cantidad;
-                contrato.CantidadCamiones = contratoSAP.Camiones;
-                contrato.CD = contratoSAP.AurCd == "X";
-                contrato.ClasificacionId = repositorio.Obtener<ClasificacionCompraNet, int>(x => x.Descripcion == contratoSAP.Clasificacion, x => x.Id);
-                contrato.Compensacion = contratoSAP.Compensacion == "X";
-                contrato.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.Centro, x => x.Id);
-                contrato.CondicionFijacionId = !string.IsNullOrEmpty(contratoSAP.CondFijacion) ? repositorio.Obtener<CondicionFijacion, int>(x => x.CodigoSap == contratoSAP.CondFijacion, x => x.Id) : (int?)null;
-                contrato.Consignatario = contratoSAP.Consignatario == "X";
-                contrato.ContratoCorredor = contratoSAP.ContrCorr;
-                //contrato.ContratoCorredor = String.IsNullOrEmpty(contratoSAP.ContratoCorredor) ? null : contratoSAP.ContratoCorredor;
-                contrato.ContratoMadre = contratoSAP.ContratoMadre;
-                contrato.ContratoVendedor = contratoSAP.ContrVend;
-                contrato.CorredorId = !string.IsNullOrEmpty(contratoSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == contratoSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
-                contrato.DesdeFijacion = !string.IsNullOrEmpty(contratoSAP.FeDesdeFij) ? DateTime.ParseExact(contratoSAP.FeDesdeFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento;
-                contrato.PagoDiferido = contratoSAP.DiasDiferimiento > 0;
-                contrato.Dolarizado = contratoSAP.DolarizadoExpress == "X" ? false : !string.IsNullOrEmpty(contratoSAP.FechaLimite);
-                contrato.EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null;
-                contrato.FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-                contrato.FechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaCierta) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
-
-                var hora = DateTime.ParseExact(contratoSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
-                TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
-                contrato.Fecha = DateTime.ParseExact(contratoSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                contrato.Fecha = contrato.Fecha.Add(time);
-                contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
-                contrato.LocalidadId = repositorio.Obtener<Localidad, int>(x => x.CodLocalidad == contratoSAP.Procedencia, x => x.LocalidadId);
-
-                contrato.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == contratoSAP.Material, x => x.MaterialId);
-                contrato.MercsDeposito = contratoSAP.MercDescargada == "X";
-                contrato.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.Moneda, x => x.MonedaId);
-                contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
-                contrato.NivelTarifaId = !string.IsNullOrEmpty(contratoSAP.FleteNivel) ? repositorio.Obtener<NivelTarifa, int>(x => x.CodigoSap == contratoSAP.FleteNivel, x => x.Id) : (int?)null;
-                contrato.NoInformaSio = contratoSAP.NoInformaSio == "X";
-                contrato.Observacion = contratoSAP.ObservacionCal1;
-                contrato.PagoDirectoVendedor = contratoSAP.PagoDirVend == "X";
-                contrato.PlanCanje = contratoSAP.IndOpCanje == "X";
-                contrato.PorcentajeComision = contratoSAP.PorcComision == 0 ? (decimal?)null : contratoSAP.PorcComision;
-                contrato.Precio = contratoSAP.Precio;
-                contrato.PrecioNeto = contratoSAP.PrecioNeto;
-                contrato.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == contratoSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
-                contrato.ProvinciaId = contratoSAP.Provincia;
-                contrato.SelCargoMOA = contratoSAP.SelCargoMOA == "X";
-                contrato.SelCargoVendedor = contratoSAP.SelCargoVend == "X";
-                contrato.StandardDeCalidadId = string.IsNullOrEmpty(contratoSAP.Especial) ? (int?)null : repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
-                contrato.EstadoId = 5;
-                contrato.TipoAgenteCompraId = contratoSAP.TipoAgenteCompraId == "9952569841" ? (int?)1 : null;
-                contrato.CaratulaMAT = contratoSAP.CaratulaMAT;
-                contrato.CaratulaExtension = contratoSAP.CaratulaExtension;
-                contrato.PrecioAjusteComision = contratoSAP.PrecioAjusteComision;
-                contrato.MonedaAjusteComisionId = contratoSAP.MonedaAjusteComisionId;
-                contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
-                contrato.PagoCBU = contratoSAP.CUENTA_MRP;
-                contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
-                contrato.EsFason = contratoSAP.TipoNegocio == "FASON" ? true : (bool?)null;
-                contrato.Madre = contratoSAP.TipoNegocio == "MADRE" ? true : contratoSAP.TipoNegocio == "HIJO" ? false : (bool?)null;
-                contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
-                    contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 :
-                    repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
-                if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
-                {
-                    contrato.StandardDeCalidadId = 3;
-                }
-                if (contratoSAP.Especial == "04" && contrato.MaterialId == 1)
-                {
-                    contrato.StandardDeCalidadId = 7;
-                }
-                contrato.Sustentable = contratoSAP.Sustentable == "X";
-                contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
-                contrato.Warrant = contratoSAP.AutCg == "X";
-                contrato.ZonaId = !string.IsNullOrEmpty(contratoSAP.Zona) ? repositorio.Obtener<Zona, int>(x => x.CodigoSap == contratoSAP.Zona, x => x.Id) : (int?)null;
-                contrato.PorcentajeDePago = contratoSAP.PorcentajeDePago ?? (decimal)97.5;
-
-                logger.Debug("Alta Contrato calidades");
-
-                foreach (var cal in contratoSAP.Calidad ?? new List<CalidadSAP>())
-                {
-                    var calidad = new Calidad
-                    {
-
-                        CalidadEspecialId = calEspecialList.FirstOrDefault(x => x.CodigoSap == cal.Codigo && x.MaterialId == contrato.MaterialId).Id,
-                        StandardDeCalidadId = contrato.StandardDeCalidadId ?? 1,
-                        Valor = cal.Valor,
-                        PorcentajeDesde = cal.PorcentajeDesde,
-                        PorcentajeHasta = cal.PorcentajeHasta
-                    };
-                    if (calidad.StandardDeCalidadId == 2)
-                    {
-                        if ((calidad.Valor == 0 && calidad.PorcentajeDesde == 1 && calidad.PorcentajeHasta == 1 && (calidad.CalidadEspecialId == 4 || calidad.CalidadEspecialId == 5)) || calidad.CalidadEspecialId == 10)
-                        {
-                            calidad.PorcentajeDesde = null;
-                            calidad.PorcentajeHasta = null;
-                            calidad.Valor = 2;
-
-                        }
-                        else
-                        {
-                            if (calidad.CalidadEspecialId == 1 && calidad.PorcentajeHasta == 51)
-                            {
-                                calidad.PorcentajeHasta = 40;
-                            }
-                        }
-                    }
-
-                    calidades.Add(calidad);
-                }
-                contrato.Descuentos = descuentos;
-                contrato.Calidad = calidades;
-                contrato.AperturaPrecio = aperturas;
-                contrato.PrecioPactado = preciosPactados;
-                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == contratoSAP.Comercial);
-                contrato.GrupoCompra = comercial.GrupoDeComprasId;
-                contrato.UsuarioId = contratoSAP.Comercial;
-                contrato.ComercialId = comercial.ComercialId;
-                contrato.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.ComercialCreador, x => x.ComercialId);
-
-                if ((!string.IsNullOrEmpty(contratoSAP.PorcAPrecio) || !string.IsNullOrEmpty(contratoSAP.ImporteAPrecio)) 
-                    && (Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")) > 0 || Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) > 0))
-                {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 2, MonedaId = contratoSAP.MonedaAPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcAPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteAPrecio.Replace(",", "").Replace(".", ",")) });
-                }
-                if ((!string.IsNullOrEmpty(contratoSAP.PorcSPrecio) || !string.IsNullOrEmpty(contratoSAP.ImporteSPrecio))
-                    && (Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")) > 0 || Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) > 0))
-                {
-                    contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) });
-                }
-
-                logger.Debug("Validacion alta contrato");
-                ValidarContrato(contrato, oEntityErrors);
-                if (oEntityErrors.HayError)
-                {
-                    return oEntityErrors;
-                }
-
-                var resultado = contratoManager.AltaContratoSAP(contrato, true);
-                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-                var idNuevo = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP.Contains(contratoSAP.ContratoSAP), x => x.Id);
-                oEntityErrors.ContratoId = idNuevo != 0 ? idNuevo.ToString() : "";
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-
-                oEntityErrors.ListaErrores.Add(new ErrorMessage()
-                {
-                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
-                });
-                oEntityErrors.HayError = true;
-            }
-            logger.Debug("Alta CONTRATOSAP:" + JsonConvert.SerializeObject(contratoSAP));
-            logger.Debug("Alta RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
-
-            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
-            return oEntityErrors;
-        }
-
-
-        public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)
-        {
-            var oEntityErrors = new ResultadoSap();
-            try
-            {
-                logger.Debug("ActualizandoFijacion" + fijacionSAP.ToXml());
-                var fijacion = new FijacionDePrecioContrato();
-                fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
-                fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
-                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
-                if (oEntityErrors.HayError)
-                {
-                    return oEntityErrors;
-                }
-                var resultado = fijacionDePrecioContratoManager.ActualizarFijacionSap(fijacion);
-                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-
-                oEntityErrors.ListaErrores.Add(new ErrorMessage()
-                {
-                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
-                });
-                oEntityErrors.HayError = true;
-            }
-            logger.Debug("ActualizandoFijacion CONTRATOSAP:" + JsonConvert.SerializeObject(fijacionSAP));
-            logger.Debug("ActualizandoFijacion RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
-
-            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
-            return oEntityErrors;
-
-
-        }
-
-        public ResultadoSap AltaFijacionSAP(FijacionSAPDto fijacionSAP)
-        {
-            //contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
-            //contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
-            fijacionSAP.Apertura = fijacionSAP.Apertura ?? new List<AperturaPrecioSap>();
-            //fijacionSAP.Procedencia = fijacionSAP.Procedencia != null ? fijacionSAP.Procedencia.Trim() : fijacionSAP.Procedencia;
-            var oEntityErrors = new ResultadoSap();
-            try
-            {
-                logger.Debug("AltaFijacion" + fijacionSAP.ToXml());
-                var f = fijacionSAP.FijacionSAP.PadLeft(10, '0');
-                //if (repositorio.Existe<FijacionDePrecioContrato>(x => x.FijacionSAP == f)) {
-                //    oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "la fijacion ya existe en DataAgro"));
-                //    return oEntityErrors;
-                //}
-                var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == f, x => x.Id);
-
-                var fijacion = new FijacionDePrecioContrato();
-                fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
-                fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
-                fijacion.TrigoEspecial = fijacionSAP.TrigoEspecial == "X";
-                fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
-                fijacion.ContratoSAP = fijacionSAP.ContratoSAP.PadLeft(10, '0');
-                fijacion.ContratoId = fijarId != 0 ? fijarId : (int?)null;
-                fijacion.Precio = fijacionSAP.Precio;
-                fijacion.Cantidad = (double)fijacionSAP.Cantidad;
-                fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
-                fijacion.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == fijacionSAP.Centro, x => x.Id);
-                logger.Debug("Validacion Precio " + (fijacionSAP.Precio == 0));
-                fijacion.Pizarra = fijacionSAP.Pizarra == "X";
-                fijacion.Posicion = fijacionSAP.Posicion;
-                fijacion.CorredorId = !string.IsNullOrEmpty(fijacionSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == fijacionSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
-                fijacion.DiasPesificado = fijacionSAP.DiasDiferimiento == 0 ? (int?)null : fijacionSAP.DiasDiferimiento;
-                fijacion.PagoDiferido = fijacionSAP.DiasDiferimiento > 0;
-                fijacion.FechaOperacion = DateTime.ParseExact(fijacionSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                fijacion.FechaHasta = DateTime.ParseExact(fijacionSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                fijacion.FechaDesde = DateTime.ParseExact(fijacionSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                fijacion.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == fijacionSAP.Material, x => x.MaterialId);
-                fijacion.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == fijacionSAP.Moneda, x => x.MonedaId);
-                fijacion.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == fijacionSAP.Cosecha, x => x.CampañaId);
-                fijacion.PrecioNeto = fijacionSAP.PrecioNeto;
-                fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
-                fijacion.EstadoId = 5;
-                fijacion.TipoNegocioId = 3;
-                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.Comercial);
-                fijacion.ComercialId = comercial.ComercialId;
-                fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
-                fijacion.GrupoCompra = comercial.GrupoDeComprasId;
-                var hora = DateTime.ParseExact(fijacionSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
-                TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
-                fijacion.Fecha = DateTime.ParseExact(fijacionSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                fijacion.Fecha = fijacion.Fecha.Add(time);
-                fijacion.Canje = fijacionSAP.Canje == "X" ? true : false;
-                logger.Debug("Alta fijacion Apertura");
-
-                var aperturas = new List<AperturaPrecio>();
-                var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
-                if (fijacionSAP.Apertura != null && fijacionSAP.Apertura.Count > 0)
-                {
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
-                }
-                foreach (var aper in fijacionSAP.Apertura ?? new List<AperturaPrecioSap>())
-                {
-                    var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
-
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
-                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
-                }
-                if (oEntityErrors.HayError)
-                {
-                    return oEntityErrors;
-                }
-                fijacion.AperturaPrecio = aperturas;
-                var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion);
-                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-
-                oEntityErrors.ListaErrores.Add(new ErrorMessage()
-                {
-                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
-                });
-                oEntityErrors.HayError = true;
-            }
-            logger.Debug("AltaFijacion negocioSAP:" + JsonConvert.SerializeObject(fijacionSAP));
-            logger.Debug("AltaFijacion RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
-
-            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
-            return oEntityErrors;
-
-
-        }
-        public ResultadoSap AnularFijacionSAP(FijacionSAP fijacionSAP)
-        {
-            var oEntityErrors = new ResultadoSap();
-            try
-            {
-                logger.Debug("AnularFijacion");
-                var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(fijacionSAP);
-                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-            }
-            catch (Exception ex)
-            {
-                oEntityErrors.ListaErrores.Add(new ErrorMessage()
-                {
-                    Message = ex.Message
-                });
-            }
-            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
-            return oEntityErrors;
-        }
         #endregion
     }
+
+
 }
