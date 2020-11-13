@@ -821,7 +821,7 @@ namespace WebDataAgro.Services
                 contrato.ProvinciaId = contratoSAP.Provincia;
                 contrato.SelCargoMOA = contratoSAP.SelCargoMOA == "X";
                 contrato.SelCargoVendedor = contratoSAP.SelCargoVend == "X";
-                contrato.StandardDeCalidadId = repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
+                contrato.StandardDeCalidadId = string.IsNullOrEmpty(contratoSAP.Especial) ? (int?)null : repositorio.Obtener<StandardDeCalidad, int>(x => contratoSAP.Especial.Contains(x.CodigoSap), x => x.Id);
                 contrato.EstadoId = 5;
                 contrato.TipoAgenteCompraId = contratoSAP.TipoAgenteCompraId == "9952569841" ? (int?)1 : null;
                 contrato.CaratulaMAT = contratoSAP.CaratulaMAT;

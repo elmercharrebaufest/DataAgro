@@ -278,11 +278,14 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("ProveedorId", "Proveedor No Operable por ser Apócrifo");
             }
 
-            if (oParam.CorredorId != null)
+            if (!validacionesMinimas)
             {
-                if (!repositorio.Existe<CorredorProveedor>(x => x.CorredorId == oParam.CorredorId && x.ProveedorId == oParam.ProveedorId))
+                if (oParam.CorredorId != null)
                 {
-                    oErrorMessages.Error("Corredor", "El Proveedor no pertenece al Corredor seleccionado");
+                    if (!repositorio.Existe<CorredorProveedor>(x => x.CorredorId == oParam.CorredorId && x.ProveedorId == oParam.ProveedorId))
+                    {
+                        oErrorMessages.Error("Corredor", "El Proveedor no pertenece al Corredor seleccionado");
+                    }
                 }
             }
             var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
