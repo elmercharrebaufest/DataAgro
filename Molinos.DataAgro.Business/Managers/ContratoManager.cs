@@ -1052,7 +1052,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
 
-            if (ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date)
+            if (oContrato.EstadoId < (int)EnumEstadoContrato.PreAprobacion && ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date)
             {
                 oContratoSave.FechaConfirmacion = DateTime.Now;
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;

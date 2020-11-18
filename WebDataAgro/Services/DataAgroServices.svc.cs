@@ -199,7 +199,7 @@ namespace WebDataAgro.Services
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
-        }      
+        }
 
         public ResultadoSap AltaContratoSAP(ContratoSAPDto contratoSAP)
         {
@@ -859,75 +859,87 @@ namespace WebDataAgro.Services
 
         public ResultadoValidarProveedorComercial ValidarProveedorComercial(string cuit)
         {
-            ResultadoValidarProveedorComercial resultado = new ResultadoValidarProveedorComercial();
-            var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
-            if (proveedor != null)
+            try
             {
-                var existeEnSISA = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
-                resultado.ProveedorOperable = existeEnSISA != null;
-                resultado.ProveedorCBU = existeEnSISA != null ? (existeEnSISA.CBU ?? "") : "";
-                resultado.ProveedorSISAEstadoCuit = existeEnSISA != null ? existeEnSISA.EstadoCuit.ToString() : "";
-                resultado.ProveedorSISASituacionCategoria = existeEnSISA != null ? (existeEnSISA.SituacionCategoria ?? "") : "";
-                resultado.ProveedorSISACodCategoria = existeEnSISA != null ? existeEnSISA.CodCategoria.ToString() : "";
+                logger.Debug("ValidarProveedorComercial " + cuit);
+                ResultadoValidarProveedorComercial resultado = new ResultadoValidarProveedorComercial();
+                var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
+                if (proveedor != null)
+                {
+                    var existeEnSISA = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
+                    resultado.ProveedorOperable = existeEnSISA != null;
+                    resultado.ProveedorCBU = existeEnSISA != null ? (existeEnSISA.CBU ?? "") : "";
+                    resultado.ProveedorSISAEstadoCuit = existeEnSISA != null ? existeEnSISA.EstadoCuit.ToString() : "";
+                    resultado.ProveedorSISASituacionCategoria = existeEnSISA != null ? (existeEnSISA.SituacionCategoria ?? "") : "";
+                    resultado.ProveedorSISACodCategoria = existeEnSISA != null ? existeEnSISA.CodCategoria.ToString() : "";
 
-                resultado.ProveedorMails = new List<string>();
-                if (!string.IsNullOrEmpty(proveedor.Email1))
-                    resultado.ProveedorMails.Add(proveedor.Email1);
-                if (!string.IsNullOrEmpty(proveedor.Email2))
-                    resultado.ProveedorMails.Add(proveedor.Email2);
-                if (!string.IsNullOrEmpty(proveedor.Email3))
-                    resultado.ProveedorMails.Add(proveedor.Email3);
-                if (!string.IsNullOrEmpty(proveedor.Email4))
-                    resultado.ProveedorMails.Add(proveedor.Email4);
-                var contactos = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == proveedor.ProveedorId);
-                foreach (var contacto in contactos)
-                {
-                    if (!string.IsNullOrEmpty(contacto.Email1))
-                        resultado.ProveedorMails.Add(contacto.Email1);
-                    if (!string.IsNullOrEmpty(contacto.Email2))
-                        resultado.ProveedorMails.Add(contacto.Email2);
-                    if (!string.IsNullOrEmpty(contacto.Email3))
-                        resultado.ProveedorMails.Add(contacto.Email3);
-                }
-                resultado.ProveedorMails = resultado.ProveedorMails.Distinct().ToList();
-                resultado.ProveedorId = proveedor.ProveedorId;
-                resultado.ProveedorRazonSocial = proveedor.RazonSocial;
-                resultado.ProveedorClasificacion = proveedor.ClasificacionCompraNet == null ? "" : proveedor.ClasificacionCompraNet.Descripcion;
-                Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == proveedor.ProveedorId, x => x.Fecha);
-                if (negocio != null)
-                {
-                    resultado.ProveedorOperando = true;
-                    resultado.ProveedorUltimaOperacion = negocio.Fecha;
-                }
-
-                var provCom = proveedor.ProveedorComercialAsociados.FirstOrDefault();
-                if (provCom != null)
-                {
-                    resultado.ComercialApellido = provCom.Comercial.Apellido;
-                    resultado.ComercialId = provCom.Comercial.ComercialId;
-                    resultado.ComercialNombres = provCom.Comercial.Nombres;
-                    try
+                    resultado.ProveedorMails = new List<string>();
+                    if (!string.IsNullOrEmpty(proveedor.Email1))
+                        resultado.ProveedorMails.Add(proveedor.Email1);
+                    if (!string.IsNullOrEmpty(proveedor.Email2))
+                        resultado.ProveedorMails.Add(proveedor.Email2);
+                    if (!string.IsNullOrEmpty(proveedor.Email3))
+                        resultado.ProveedorMails.Add(proveedor.Email3);
+                    if (!string.IsNullOrEmpty(proveedor.Email4))
+                        resultado.ProveedorMails.Add(proveedor.Email4);
+                    var contactos = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == proveedor.ProveedorId);
+                    foreach (var contacto in contactos)
                     {
-                        resultado.ComercialMail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
-
+                        if (!string.IsNullOrEmpty(contacto.Email1))
+                            resultado.ProveedorMails.Add(contacto.Email1);
+                        if (!string.IsNullOrEmpty(contacto.Email2))
+                            resultado.ProveedorMails.Add(contacto.Email2);
+                        if (!string.IsNullOrEmpty(contacto.Email3))
+                            resultado.ProveedorMails.Add(contacto.Email3);
                     }
-                    catch (Exception)
+                    resultado.ProveedorMails = resultado.ProveedorMails.Distinct().ToList();
+                    resultado.ProveedorId = proveedor.ProveedorId;
+                    resultado.ProveedorRazonSocial = proveedor.RazonSocial;
+                    resultado.ProveedorClasificacion = proveedor.ClasificacionCompraNet == null ? "" : proveedor.ClasificacionCompraNet.Descripcion;
+                    Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == proveedor.ProveedorId, x => x.Fecha);
+                    if (negocio != null)
                     {
+                        resultado.ProveedorOperando = true;
+                        resultado.ProveedorUltimaOperacion = negocio.Fecha;
+                    }
+
+                    var provCom = proveedor.ProveedorComercialAsociados.FirstOrDefault();
+                    if (provCom != null)
+                    {
+                        resultado.ComercialApellido = provCom.Comercial.Apellido;
+                        resultado.ComercialId = provCom.Comercial.ComercialId;
+                        resultado.ComercialNombres = provCom.Comercial.Nombres;
+                        try
+                        {
+                            resultado.ComercialMail = mailManager.GetEmailUserActiveDirectory(provCom.Comercial.IdActiveDirectory);
+
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    else
+                    {
+                        resultado.ListaErrores.Add(new ErrorMessage("El cuit no tiene ninguno comercial asociado"));
                     }
                 }
                 else
                 {
-                    resultado.ListaErrores.Add(new ErrorMessage("El cuit no tiene ninguno comercial asociado"));
+                    resultado.ListaErrores.Add(new ErrorMessage("No se encontro el cuit"));
                 }
+
+
+                resultado.HayError = resultado.ListaErrores.Count() > 0;
+                logger.Debug("ValidarProveedorComercial resultado" + resultado.ToJson());
+
+                return resultado;
             }
-            else
+            catch (Exception e)
             {
-                resultado.ListaErrores.Add(new ErrorMessage("No se encontro el cuit"));
+                logger.Debug(e);
+                throw;
             }
 
-
-            resultado.HayError = resultado.ListaErrores.Count() > 0;
-            return resultado;
         }
 
         #endregion

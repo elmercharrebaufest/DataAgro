@@ -28,6 +28,7 @@
   
   <setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
   <setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9001/" />
+  <setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
 
 
   <setParameter name="HTTP_Port Service Endpoint Address"  value="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS&amp;interfaceNamespace=namespace%3Adataagro" />
