@@ -418,7 +418,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //{
                     //    logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoId), TipoAccionLogDataAgro.Modificar);
                     //}
-                    logger.Debug("Fin consulta ConsultarCuposDiarios");
+                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" + string.Join(", ",fechas.Select(a=>a.ToString("yyyy/MM/yyy")).ToList()));
 
                     return listaCuposStop.results;
                 }

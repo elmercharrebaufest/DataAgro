@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Moq;
@@ -569,8 +570,8 @@ namespace Molinos.DataAgro.Test.Services
         [Test]
         public void ValidarProveedorComercialOk()
         {
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).
-                Returns(new Proveedor
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).
+                Returns(new List<Proveedor> {new Proveedor
                 {
                     ProveedorId = 1,
                     Email1 = "bmelgarejo",
@@ -583,7 +584,7 @@ namespace Molinos.DataAgro.Test.Services
                     ProveedorComercialAsociados = new List<ProveedorComercial> {
                         new ProveedorComercial { ComercialId = 1, ProveedorId = 1, NroItem = 1, ProveedorComercialId = 1,
                             Comercial = new Comercial{ Apellido = "mel", Nombres = "bmelgarejo", IdActiveDirectory = "bmelgarejo"} } }
-                });
+                } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1 = "bmelgarejo", Email2 = "bmelgarejo", Email3 = "bmelgarejo", } });
 
@@ -601,8 +602,8 @@ namespace Molinos.DataAgro.Test.Services
         [Test]
         public void ValidarProveedorComercialError()
         {
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).
-                Returns(new Proveedor
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(),It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).
+                Returns(new List<Proveedor> {new Proveedor
                 {
                     ProveedorId = 1,
                     Email1 = "bmelgarejo",
@@ -613,7 +614,7 @@ namespace Molinos.DataAgro.Test.Services
                     ClasificacionCompraNet = null,
                     CUIT = "00023434",
                     ProveedorComercialAsociados = new List<ProveedorComercial> { null }
-                });
+                } });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Returns(new List<ContactoComercial>() { new ContactoComercial { Email1 = "bmelgarejo", Email2 = "bmelgarejo", Email3 = "bmelgarejo", } });

@@ -863,7 +863,7 @@ namespace WebDataAgro.Services
             {
                 logger.Debug("ValidarProveedorComercial " + cuit);
                 ResultadoValidarProveedorComercial resultado = new ResultadoValidarProveedorComercial();
-                var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuit);
+                var proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
                 if (proveedor != null)
                 {
                     var existeEnSISA = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
@@ -896,7 +896,7 @@ namespace WebDataAgro.Services
                     resultado.ProveedorId = proveedor.ProveedorId;
                     resultado.ProveedorRazonSocial = proveedor.RazonSocial;
                     resultado.ProveedorClasificacion = proveedor.ClasificacionCompraNet == null ? "" : proveedor.ClasificacionCompraNet.Descripcion;
-                    Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == proveedor.ProveedorId, x => x.Fecha);
+                    Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == proveedor.ProveedorId || x.CorredorId == proveedor.ProveedorId, x => x.Fecha);
                     if (negocio != null)
                     {
                         resultado.ProveedorOperando = true;
