@@ -10,7 +10,6 @@
     AperturaPrecioPorcentajeDeComision = '@ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo';
     comercialId = '@ViewBag.ComercialId';
     sap = '@ViewBag.Sap';
-    esEdicion = '@ViewBag.esEdicion';
     BlockUi("Cargando...");
     cargaFijacionAyer = '@cargaFijacionAyer';
 </script>
@@ -18,19 +17,20 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/CompraNetContrato")
-    <script src="~/Scripts/App/CrearContrato.js"></script>
+    <script src="~/Scripts/App/Fijacion.js"></script>
     @if (ViewBag.Obj != null)
     {
         <script>
             var model;
             $(document).ready(function () {
-                model = '@Html.Raw(Json.Encode(ViewBag.Obj))';                
+                model = '@Html.Raw(Json.Encode(ViewBag.Obj))';
                 var negocioCargado = JSON.parse(model);
                 CargarDatosEditar(negocioCargado);
             });
 
         </script>
     }
+}
 }
 
 @section Styles {
@@ -39,7 +39,8 @@
 
 <input type="hidden" id="comercialCreador" value="@ViewBag.ComercialId" />
 
-@Html.Hidden("crearContrato", Url.Action("CrearContrato", "CompraNet"))
+@Html.Hidden("aFijar", Url.Action("AFijar", "CompraNet"))
+@Html.Hidden("aPrecio", Url.Action("CrearContrato", "CompraNet"))
 
 <div id="CrearContrato" class="container">
     <br />

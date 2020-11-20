@@ -93,11 +93,11 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["comercialId"] = 1;
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
             configuracionMock.Setup(x => x.TraerConfiguraciones()).Returns(new Configuracion());
-
-            var result = target.CrearContrato(1, 1, "") as ViewResult;
+            contratoManagerMock.Setup(x => x.NegocioABasicoContrato(new Negocio())).Returns(new BasicoContrato());
+            contratoManagerMock.Setup(x => x.DevolverNamespaceNegocio(It.IsAny<int>())).Returns(new TipoNegocio());
+            var result = target.CrearContrato(1, 1, "", "") as ViewResult;
 
             Assert.NotNull(result);
-            Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
 
         [Test]

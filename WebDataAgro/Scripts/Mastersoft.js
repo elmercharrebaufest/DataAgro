@@ -161,6 +161,30 @@ function MSExecuteURLOnServerAsync(url, fncallback, htmlloading) {
 }
 
 
+function ExecuteURLOnServer(url, fncallback, htmlloading) {
+
+    //alert(MSGetUrl(url));
+
+    MSShowLoading(htmlloading);
+
+    $.ajax({
+        async: false,
+        url: MSGetUrl(url),
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            MSHideLoading(htmlloading);
+            fncallback(data);
+        },
+        error: function (error) {
+            MSHideLoading(htmlloading);
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+
+            //alert(kendo.stringify(error));
+        }
+    });
+}
+
 
 function MensErr(mensaje) {
 

@@ -66,5 +66,9 @@ namespace Molinos.DataAgro.Interfaces
         Resultado AltaContratoSAP(Contrato contratoSap, bool validacionesMinimas);
         Resultado AprobarContrato(int id);
         GrabarContratoResult BorrarContratoPreAprobacion(int id, string motivo);
+
+        BasicoContrato NegocioABasicoContrato(Negocio negocio);
+
+        TipoNegocio DevolverNamespaceNegocio(int tipo);
     }
 }

@@ -949,6 +949,10 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
             oContratoSave.PagoCBU = oContrato.PagoCBU;
             oContratoSave.ProveedorCreadorId = oContrato.ProveedorCreadorId;
+            oContratoSave.Canje = oContrato.Canje;
+            oContratoSave.MonedaCanjeId = oContrato.MonedaCanjeId;
+            oContratoSave.Monto = oContrato.Monto;
+            oContratoSave.Insumo = oContrato.Insumo;
 
 
             if (oContratoSave.PrecioPactado != null)
@@ -3826,6 +3830,190 @@ namespace Molinos.DataAgro.Business.Managers
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, "text/html");
             alternateView.LinkedResources.Add(res);
             return alternateView;
+        }
+        public BasicoContrato NegocioABasicoContrato(Negocio negocio)
+        {
+            var bc = new BasicoContrato();
+            var proveedor = negocio.ProveedorId != null ? repositorio.Obtener<Proveedor>(negocio.ProveedorId) : null;
+            var corredor = negocio.CorredorId != null ? repositorio.Obtener<Proveedor>(negocio.CorredorId) : null;
+            var operador = (negocio is AgenteCompra) ? repositorio.Obtener<Operador>((negocio as AgenteCompra).OperadorId) : null;
+            var comercial = repositorio.Obtener<Comercial>(negocio.ComercialId);
+
+            bc.Id = negocio.Id;
+            bc.ContratoId = negocio is Contrato ? negocio.Id : negocio is FijacionDePrecioContrato ? (negocio as FijacionDePrecioContrato).ContratoId.HasValue ? (negocio as FijacionDePrecioContrato).ContratoId.Value : 0 : 0;
+            bc.ProveedorId = negocio.ProveedorId ?? 0;
+            bc.CorredorId = negocio.CorredorId != null ? negocio.CorredorId.Value : 0;
+            bc.ComercialId = negocio.ComercialId;
+            //bc.//ComercialZonaId = negocio.Comercial.GrupoDeComprasId;
+            bc.MaterialId = negocio.MaterialId;
+            bc.TipoNegocioId = negocio.TipoNegocioId;
+            bc.Cantidad = negocio.Cantidad;
+            bc.Precio = negocio.Precio;
+            bc.PrecioPlazo = negocio.TipoNegocioId == 1 ? negocio.HastaFijacion.Value.ToString("dd-MM-yyyy") : negocio.Precio.ToString();
+            bc.FechaEntrega = negocio is Contrato ? (negocio as Contrato).FechaEntrega.Date : (DateTime?)null;
+            bc.CampanaId = negocio.CampanaId ?? 0;
+            bc.FechaDesde = negocio.FechaDesde.Date;
+            bc.FechaHasta = negocio.FechaHasta.Date;
+            bc.FechaHastaFormateado = negocio is Contrato ? (negocio as Contrato).FechaHasta.ToString("dd-MM-yyyy") : negocio is ContratoAcuerdo ? (negocio as ContratoAcuerdo).FechaHasta.ToString("dd-MM-yyyy") : "";
+            bc.FechaDesdeFormateado = negocio is Contrato ? (negocio as Contrato).FechaDesde.ToString("dd-MM-yyyy") : negocio is ContratoAcuerdo ? (negocio as ContratoAcuerdo).FechaDesde.ToString("dd-MM-yyyy") : "";
+            bc.MonedaId = negocio.MonedaId;
+            bc.Fecha = negocio.Fecha.Date;
+            bc.Hora = negocio.Fecha.ToString("hh:mm");
+            bc.Fecha_Order = negocio.Fecha.Date;
+
+           // bc.GrupoCompra = (negocio is FijacionDePrecioContrato && (negocio as FijacionDePrecioContrato).ComercialId.HasValue) ? (negocio as FijacionDePrecioContrato).Comercial.GrupoDeComprasId.Value :
+           //                         negocio.GrupoCompra.HasValue ? negocio.GrupoCompra.Value : 0;
+
+            bc.ProvinciaId = negocio is Contrato ? (negocio as Contrato).ProvinciaId : null;
+            bc.LocalidadId = negocio is Contrato ? (negocio as Contrato).LocalidadId : null;
+            bc.Base = negocio is Contrato ? (negocio as Contrato).Base : null;
+            bc.Importe_Sustentable = negocio is Contrato ? ((decimal)(negocio as Contrato).ImporteSustentable) : (decimal?)null;
+            bc.MonedaId_Sustentable = negocio is Contrato ? (negocio as Contrato).MonedaSustentableId : "";
+            bc.Moneda_Sustentable = negocio is Contrato ? (negocio as Contrato).MonedaSustentableId : "";
+            bc.Fecha_Dolarizado = negocio is Contrato && ((negocio as Contrato).FechaDolarizado).HasValue ? ((negocio as Contrato).FechaDolarizado).Value.Date : (DateTime?)null;
+            bc.Fecha_DolarizadoFormateado = negocio is Contrato && ((negocio as Contrato).FechaDolarizado).HasValue ? ((negocio as Contrato).FechaDolarizado).Value.ToString("dd-MM-yyyy") : "";
+            bc.Dias_Pesificado = negocio.DiasPesificado;
+            bc.NoInformaSIO = negocio is Contrato ? (negocio as Contrato).NoInformaSio : (bool?)null;
+            bc.Estado = negocio.EstadoId;
+            bc.UsuarioId = negocio.UsuarioId;
+            bc.ContratoSAP = negocio.ContratoSAP;
+            bc.Ampliaciones = negocio.Ampliaciones;
+
+            bc.Cuit = proveedor == null ? "" : proveedor.CUIT;
+            bc.Proveedor = (negocio is AgenteCompra) && operador != null ? operador.Descripcion : proveedor == null ? "" : proveedor.RazonSocial + $"({proveedor.CUIT})";
+            bc.Corredor = corredor == null ? "" : corredor.RazonSocial + $"({corredor.CUIT})";
+            bc.CUITCorredor = corredor == null ? "" : corredor.CUIT;
+            bc.Observacion = negocio.Observacion != null ? negocio.Observacion : "";
+
+            bc.FijacionDePrecioContratoId = (negocio is FijacionDePrecioContrato) ? (int?)(negocio as FijacionDePrecioContrato).Id : null;
+            bc.Sustentable = (negocio is Contrato) && (negocio as Contrato).ImporteSustentable != null && (negocio as Contrato).ImporteSustentable > 0;
+            bc.Dolarizado = negocio.Dolarizado.Value;
+            bc.Pesificado = negocio.DiasPesificado != null;
+            bc.Negocio = negocio is ContratoAcuerdo ? negocio.Id.ToString() : (negocio is FijacionDePrecioContrato && (negocio.EstadoId == (int)EnumEstadoContrato.Finalizado || negocio.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (negocio as FijacionDePrecioContrato).FijacionSAP : negocio.ContratoSAP != "0" ? negocio.ContratoSAP : "";
+            bc.DestinoId = negocio.DestinoId;
+            bc.CantidadCamiones = (negocio is Contrato) ? (negocio as Contrato).CantidadCamiones : (int?)null;
+            bc.Consignatario = (negocio is Contrato) ? (negocio as Contrato).Consignatario : false;
+            bc.PlanCanje = (negocio is Contrato) ? (negocio as Contrato).PlanCanje : false;
+            bc.CD = (negocio is Contrato) ? (negocio as Contrato).CD : null;
+            bc.Warrant = (negocio is Contrato) ? (negocio as Contrato).Warrant : null;
+            bc.PagoDirectoVendedor = (negocio is Contrato) ? (negocio as Contrato).PagoDirectoVendedor : null;
+            bc.EstablecimientoPropio = (negocio is Contrato) ? (negocio as Contrato).EstablecimientoPropio : null;
+            bc.BoletoId = (negocio is Contrato) ? (negocio as Contrato).BoletoId : null;
+            bc.BolsaId = (negocio is Contrato) ? (negocio as Contrato).BolsaId : null;
+            bc.DesdeFijacion = (negocio is Contrato) && ((negocio as Contrato).DesdeFijacion).HasValue ? ((negocio as Contrato).DesdeFijacion).Value.Date : (DateTime?)null;
+            bc.DesdeFijacionFormateado = (negocio is Contrato) && ((negocio as Contrato).DesdeFijacion).HasValue ? ((negocio as Contrato).DesdeFijacion).Value.ToString("dd-MM-yyyy") : "";
+            bc.HastaFijacion = (negocio is Contrato) && ((negocio as Contrato).HastaFijacion).HasValue ? ((negocio as Contrato).HastaFijacion).Value.Date : (DateTime?)null;
+            bc.HastaFijacionFormateado = (negocio is Contrato) && ((negocio as Contrato).HastaFijacion).HasValue ? ((negocio as Contrato).HastaFijacion).Value.ToString("dd-MM-yyyy") : "";
+            bc.CondicionFijacion = (negocio is Contrato) ? (negocio as Contrato).CondicionFijacionId : null;
+            bc.ClasificacionId = (negocio is Contrato) ? (negocio as Contrato).ClasificacionId : (int?)null;
+            bc.CalidadDescripcion = negocio.TrigoEspecial == true ? "Especial" : "Cámara";
+            bc.MercsDeposito = (negocio is Contrato) ? ((negocio as Contrato).MercsDeposito == true ? (negocio as Contrato).MercsDeposito : false) : null;
+            bc.ComercialCreadorId = negocio.ComercialCreadorId;
+            bc.ContratoCorredor = (negocio is Contrato) ? (negocio as Contrato).ContratoCorredor : "";
+            bc.ContratoVendedor = (negocio is Contrato) ? (negocio as Contrato).ContratoVendedor : "";
+            bc.SelCargoMOA = (negocio is Contrato) ? (negocio as Contrato).SelCargoMOA : null;
+            bc.SelCargoVendedor = (negocio is Contrato) ? (negocio as Contrato).SelCargoVendedor : null;
+            bc.Posicion = (negocio is Fason) ? (negocio as Fason).Posicion : (negocio is AgenteCompra) ? (negocio as AgenteCompra).Posicion : "";
+            bc.FasonId = (negocio is Fason) ? (negocio as Fason).Id : 0;
+            bc.OperadorId = (negocio is AgenteCompra) ? (negocio as AgenteCompra).Operador.Id : 0;
+            bc.AgenteId = (negocio is AgenteCompra) ? (negocio as AgenteCompra).Id : 0;
+            bc.PrecioNeto = negocio.PrecioNeto;
+            bc.StandardCalidadId = negocio.StandardDeCalidadId;
+            bc.Pizarra = negocio.Pizarra ?? null;
+            bc.PagoDiferido = negocio.PagoDiferido ?? null;
+            bc.ZonaId = (negocio is Contrato) ? (negocio as Contrato).ZonaId : null;
+            bc.AcuerdoId = (negocio is ContratoAcuerdo) ? (int?)(negocio as ContratoAcuerdo).Id : null;
+            bc.ImporteFinanciero = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 1).Importe : (decimal?)null;
+            bc.ImporteRedespacho = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 2).Importe : (decimal?)null; ;
+            bc.PorcentajeComision = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje : (decimal?)null;
+            bc.ImporteComision = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Importe : (decimal?)null;
+            bc.ImporteBonificacion = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe : (decimal?)null;
+            bc.PorcentajeBonificacion = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje : (decimal?)null;
+            bc.TarifaFlete = (negocio is Contrato) ? (negocio as Contrato).TarifaFlete : null;
+            bc.Compensacion = (negocio is Contrato) ? (negocio as Contrato).Compensacion : null;
+            bc.Acuerdo = (negocio is Contrato) ? (negocio as Contrato).ContratoAcuerdoId : null;
+            bc.Rechazo = negocio.MotivoRechazo;
+            bc.OcultarEnTablero = negocio.OcultarEnTablero;
+            bc.FechaCierta = negocio.FechaCierta.HasValue ? negocio.FechaCierta.Value.Date : (DateTime?)null;
+            bc.FechaCiertaFormateado = negocio.FechaCierta.HasValue ? negocio.FechaCierta.Value.ToString("dd-MM-yyyy") : "";
+            bc.EsFason = negocio is Contrato ? (negocio as Contrato).EsFason : false;
+            bc.PorcentajeDePago = negocio is Contrato ? (negocio as Contrato).PorcentajeDePago : null;
+            bc.FechaOperacion = negocio.FechaOperacion.Date;
+            bc.FechaOperacionFormateado = negocio.FechaOperacion.ToString("dd-MM-yyyy");
+            bc.MotivoOperacionAnterior = negocio.MotivoOperacionAnterior;
+            bc.FechaConfirmacion = negocio.FechaConfirmacion.HasValue ? negocio.FechaConfirmacion.Value.Date : (DateTime?)null;            
+            bc.ChequeElectronicoValor = negocio.ChequeElectronico.HasValue ? (negocio.ChequeElectronico.Value ? "Si" : "No") : "";
+            bc.DolarizadoExpress = negocio.DolarizadoExpress.Value;
+            bc.PagoCBU = negocio.PagoCBU;
+            bc.CalidadTercero = negocio.CalidadTercero;
+            bc.DolarizadoTercero = negocio.DolarizadoTercero;
+            bc.PagoDiferidoTercero = negocio.PagoDiferidoTercero;
+            bc.ObservacionTercero = negocio.ObservacionTercero;
+            bc.Canje = negocio.Canje;
+            bc.MonedacanjeId = negocio.MonedaCanjeId;
+            bc.Monto = negocio.Monto;
+            bc.Insumo = negocio.Insumo;
+
+            bc.Descuentos = negocio.Descuentos.Select(y => new DescuentoBonificacionDto
+            {
+                ContratoId = y.ContratoId,
+                FechaDesde = y.FechaDesde != null ? y.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
+                FechaHasta = y.FechaHasta != null ? y.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
+                Importe = y.Importe,
+                MonedaId = y.MonedaId,
+                Moneda = y.MonedaId,
+                Id = y.Id,
+                Porcentaje = y.Porcentaje,
+                TipoDBDesc = repositorio.Obtener<TipoDB, string>(x => x.Id == y.TipoDBId, x => x.Descripcion),
+                TipoDBId = y.TipoDBId,
+                TipoPeriodoDBDesc = repositorio.Obtener<TipoPeriodoDB, string>(x => x.Id == y.TipoPeriodoDBId, x => x.Descripcion),
+                TipoPeriodoDBId = y.TipoPeriodoDBId
+            }).ToList();
+
+            bc.Calidades = negocio is Contrato ? (negocio as Contrato).Calidad.Select(y => new CalidadDto
+            {
+                Valor = y.Valor,
+                CalidadEspecialId = y.CalidadEspecialId,
+                CalidadEspecialDesc = repositorio.Obtener<CalidadEspecial, string>(x => x.Id == y.CalidadEspecialId, x => x.Descripcion),
+                PorcentajeDesde = y.PorcentajeDesde,
+                PorcentajeHasta = y.PorcentajeHasta
+            }).ToList() : new List<CalidadDto>();
+
+            bc.PreciosPactados = negocio is Contrato ? (negocio as Contrato).PrecioPactado.Select(y => new PrecioPactadosDto
+            {
+                ContratoId = y.ContratoId,
+                FechaDesde = y.FechaDesde != null ? y.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
+                FechaHasta = y.FechaHasta != null ? y.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
+                Id = y.Id,
+                ImportePactado = y.ImportePactado,
+                MonedaImportePactadoDesc = y.MonedaImportePactadoId,
+                MonedaImportePactadoId = y.MonedaImportePactadoId,
+                MonedaPactadoDesc = y.MonedaPactadoId,
+                MonedaPactadoId = y.MonedaPactadoId,
+                Porcentaje = y.Porcentaje,
+                Precio = y.Precio
+            }).ToList() : new List<PrecioPactadosDto>();
+            var clasificacion = (negocio is Contrato) ? (negocio as Contrato).ClasificacionId : (int?)null;
+            bc.ClasificacionDescripcion = (negocio is Contrato) ? repositorio.Obtener<ClasificacionCompraNet, string>(x => x.Id == clasificacion, x => x.Descripcion) : "";
+            bc.CalidadDescripcion = negocio.TrigoEspecial == true ? "Especial" : "Cámara";
+            bc.ComercialZonaDescripcion = comercial.GrupoDeCompras.Descripcion;
+            var bolsaId = (negocio is Contrato) ? (negocio as Contrato).BolsaId : null;
+            bc.BolsaDescripcion = (negocio is Contrato) ? repositorio.Obtener<BolsaCompraNet, string>(x => x.Id == bolsaId, x => x.Descripcion) : "";
+            bc.CondicionFijacionDescripcion = (negocio is Contrato) ? repositorio.Obtener<CondicionFijacion, string>(x => x.Id == negocio.CondicionFijacionId, x => x.Descripcion) : "";
+            var localidad = (negocio is Contrato) ? (negocio as Contrato).LocalidadId: null;
+            var provincia = (negocio is Contrato) ? (negocio as Contrato).ProvinciaId : null;
+            bc.Localidad = (negocio is Contrato) && (!(negocio is Contrato) || localidad == null) ? "" : repositorio.Obtener<Localidad, string>(x => x.LocalidadId == localidad, x => x.Nombre);
+            bc.Provincia = (negocio is Contrato) && (!(negocio is Contrato) || provincia == null) ? "" : repositorio.Obtener<Provincia, string>(x => x.ProvinciaId == provincia, x => x.Nombre);
+            bc.PrecioAjusteComision = (negocio is Contrato) ? (negocio as Contrato).PrecioAjusteComision : (decimal?)null;
+            bc.MonedaAjusteComisionId = (negocio is Contrato) ? (negocio as Contrato).MonedaAjusteComisionId : "";
+            bc.CaratulaMAT = (negocio is Contrato) ? (negocio as Contrato).CaratulaMAT : "";
+            bc.TipoAgenteCompraId = (negocio is Contrato) ? (negocio as Contrato).TipoAgenteCompraId : (negocio is ContratoAcuerdo) ? (negocio as ContratoAcuerdo).TipoAgenteCompraId : (int?)null;
+            return bc;
+        }
+
+        public TipoNegocio DevolverNamespaceNegocio(int tipo)
+        {
+            return repositorio.Obtener<TipoNegocio>(x => x.TipoNegocioId == tipo);
         }
     }
 }

@@ -207,3 +207,11 @@ IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '6 DÍAS HÁBILES
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '10 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('10 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '10'); END 
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '10 DIAS CORRIDOS DE FIJACION') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('10 DIAS CORRIDOS DE FIJACION', '1T'); END 
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '15 DIAS CORRIDOS DE FIJACION') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('15 DIAS CORRIDOS DE FIJACION', '2T'); END 
+
+--TipoNegocio
+UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Contrato' WHERE Descripcion = 'A FIJAR'
+UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Contrato' WHERE Descripcion = 'A PRECIO'
+UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.FijacionDePrecioContrato' WHERE Descripcion = 'FIJACION'
+UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Fason' WHERE Descripcion = 'FASON'
+UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.AgenteCompra' WHERE Descripcion = 'AGENTE DE COMPRAS'
+UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.ContratoAcuerdo' WHERE Descripcion = 'CONTRATO ACUERDO'

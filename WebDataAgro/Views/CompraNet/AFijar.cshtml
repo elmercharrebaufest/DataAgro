@@ -7,31 +7,35 @@
     Id = '@ViewBag.Id';
     TipoId = '@ViewBag.TipoId';
     Siguientes = '@ViewBag.Siguientes';
-    AperturaPrecioPorcentajeDeComision = '@ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo';
     comercialId = '@ViewBag.ComercialId';
     sap = '@ViewBag.Sap';
     esEdicion = '@ViewBag.esEdicion';
     BlockUi("Cargando...");
     cargaFijacionAyer = '@cargaFijacionAyer';
 </script>
+
+
+
 <script src="~/Scripts/umd/popper.js"></script>
 
 @section Scripts {
     @Scripts.Render("~/bundles/CompraNetContrato")
-    <script src="~/Scripts/App/CrearContrato.js"></script>
+    <script src="~/Scripts/App/AFijar.js"></script>
     @if (ViewBag.Obj != null)
     {
         <script>
             var model;
             $(document).ready(function () {
-                model = '@Html.Raw(Json.Encode(ViewBag.Obj))';                
+                model = '@Html.Raw(Json.Encode(ViewBag.Obj))';
                 var negocioCargado = JSON.parse(model);
                 CargarDatosEditar(negocioCargado);
             });
 
         </script>
     }
-}
+ }
+
+
 
 @section Styles {
     <link href="~/Content/compraNet.css" rel="stylesheet" />
@@ -259,11 +263,11 @@
                     </div>
                 </div>
             </div>
-            <div class="noFason noAgente hijoDiv ampliar contratoAPrecio col-md-offset-1 col-md-1" style="padding-right:0">
-                <label style="width:65px">Fij. Conv.</label>
-                <input id="hijoId" class="campo-input-input" data-bind="checked:Parametros.Hijo, disabled: isControlDisabled" type="checkbox" />
-                <img id="errhijoId" src="~/Content/Images/error.png" style="display:none" />
-            </div>
+            @*<div class="noFason noAgente hijoDiv ampliar contratoAPrecio col-md-offset-1 col-md-1" style="padding-right:0">
+                    <label style="width:65px">Fij. Conv.</label>
+                    <input id="hijoId" class="campo-input-input" data-bind="checked:Parametros.Hijo, disabled: isControlDisabled" type="checkbox" />
+                    <img id="errhijoId" src="~/Content/Images/error.png" style="display:none" />
+                </div>*@
             <div class="noFason  noAgente col-sm-4 contratoMadreDiv" hidden>
                 <input id="contMadreId" placeholder="Contrato Madre" class="k-input contratoinput" type="text" s data-bind="value: Parametros.contMadreId" maxlength="10" style="width:100%" />
                 <img id="errcontMadreId" src="~/Content/Images/error.png" style="display:none" />
@@ -419,31 +423,31 @@
 
     <div class="row">
 
-        <div id="LabelPrecio" class="col-sm-2 ">
-            <label>Precio Base</label>
-        </div>
-        <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
-            <div class="col-xs-7 col-md-6 noPadding">
-                <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
-                <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
+        @*<div id="LabelPrecio" class="col-sm-2 ">
+                <label>Precio Base</label>
             </div>
-            <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
-                <div class="w70" id="ocultarAperturaMoneda">
-                    <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
-                    <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
-
+            <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
+                <div class="col-xs-7 col-md-6 noPadding">
+                    <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
+                    <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
-                <div class="w30" id="ocultarAperturaBtn">
-                    <span style="display:inline-block" id="botonAperturaDePrecio">
-                        <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
-                            <i class="fa fa-table"></i>
+                <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
+                    <div class="w70" id="ocultarAperturaMoneda">
+                        <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
+                        <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
+
+                    </div>
+                    <div class="w30" id="ocultarAperturaBtn">
+                        <span style="display:inline-block" id="botonAperturaDePrecio">
+                            <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
+                                <i class="fa fa-table"></i>
+                            </span>
                         </span>
-                    </span>
 
+                    </div>
                 </div>
-            </div>
 
-        </div>
+            </div>*@
         <div id="posicionFasonDiv" class="fason agente" hidden>
             <div class="col-sm-1">
                 <label>Posición</label>
@@ -583,7 +587,7 @@
             </div>
         </div>
     </div>
-    <div class="row" hidden id="fechaCiertaAcuerdoDiv">
+    @*<div class="row" hidden id="fechaCiertaAcuerdoDiv">
         <div class="col-md-2">
             <label>Fecha Cierta</label>
         </div>
@@ -591,7 +595,7 @@
             <input id="fechaCiertaAcuerdo" type="date" data-bind="value: Parametros.fechaCiertaId" style="width:100%" />
             <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
         </div>
-    </div>
+    </div>*@
     <div id="ComercialDiv" class="row fason acuerdo" hidden>
         <div class="col-sm-2">
             <label>Comercial</label>
@@ -661,13 +665,13 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-2 ">
+            @*<div class="col-sm-2 ">
                 <div id="pagoDolarizadoDiv">
                     <label style="width:120px">Dolarizado</label>
                     <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
                     <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
-            </div>
+            </div>*@
             <div id="dolarizadoExpressDiv" class="noAcuerdo col-xs-2" hidden>
                 <label>Dolarizado Express</label>
                 <input id="dolarizadoExpressId" class="campo-input-input" name="dolarizadoExpress" type="checkbox">
@@ -769,7 +773,7 @@
         </div>
 
         <div class="row ">
-            <div id="fechaCiertaDiv">
+            @*<div id="fechaCiertaDiv">
                 <div class="col-md-2 col-sm-9">
                     <label>Fecha Cierta</label>
                 </div>
@@ -779,7 +783,7 @@
                     <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
                 <div class="col-md-2"></div>
-            </div>
+            </div>*@
             <div class="noAcuerdo">
                 <div class="col-sm-2">
                     <label>Porcentaje de Pago</label>
@@ -1060,4 +1064,4 @@
     }
 </style>
 <!-- Modal Apertura Precio-->
-@Html.Partial("ModalAperturaPrecio")
+@*@Html.Partial("ModalAperturaPrecio")*@

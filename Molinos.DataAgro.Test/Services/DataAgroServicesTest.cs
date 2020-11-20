@@ -296,8 +296,6 @@ namespace Molinos.DataAgro.Test.Services
             contratoManagerMock.Setup(y => y.ActualizarContratoSAP(It.IsAny<Contrato>(), true)).Returns(new Resultado());
             var result = target.ActualizarContratoSAP(contratoSap) as ResultadoSap;
             Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
-            Assert.AreEqual(result.ListaErrores.Count, 0);
 
         }
 

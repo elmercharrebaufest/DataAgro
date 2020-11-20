@@ -7,6 +7,8 @@ namespace Molinos.DataAgro.Entities.Entities
         [Key]
         public int TipoNegocioId { get; set; }
         public string Descripcion { get; set; }
+
+        public string ClaseDescripcion { get; set; }
     }
 
 

@@ -1,4 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,6 +10,7 @@ namespace Molinos.DataAgro.Entities.Entities
 {
     public partial class Contrato : Negocio
     {
+        [JsonConverter(typeof(SinHora))]
         public DateTime FechaEntrega { get; set; } // FechaEntrega       
         public int? ProvinciaId { get; set; } // ProvinciaId
         public int? LocalidadId { get; set; } // LocalidadId 

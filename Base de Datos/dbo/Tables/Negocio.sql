@@ -99,6 +99,9 @@
     [ObservacionTercero]  NVARCHAR(MAX) NULL,
     
     [Canje] BIT NULL, 
+    [Monto] DECIMAL(11, 2) NULL, 
+    [Insumo] NVARCHAR(30) NULL, 
+    [MonedaCanjeId]  CHAR(5) NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
@@ -123,7 +126,9 @@
 	CONSTRAINT [FK_Negocio_Zona] FOREIGN KEY (ZonaId) REFERENCES [Zona]([Id]),
 	CONSTRAINT [FK_Negocio_NivelTarifa] FOREIGN KEY (NivelTarifaId) REFERENCES [NivelTarifa]([Id]),
 	CONSTRAINT [FK_Negocio_TipoFason] FOREIGN KEY([TipoFasonId]) REFERENCES [dbo].[TipoFason] ([Id]),
-	CONSTRAINT [FK_Negocio_MonedaAjusteComision] FOREIGN KEY ([MonedaAjusteComisionId]) REFERENCES [Moneda]([MonedaId])
+	CONSTRAINT [FK_Negocio_MonedaAjusteComision] FOREIGN KEY ([MonedaAjusteComisionId]) REFERENCES [Moneda]([MonedaId]),
+    CONSTRAINT [FK_Negocio_MonedaCanjeId] FOREIGN KEY ([MonedaCanjeId]) REFERENCES [Moneda]([MonedaId]), 
+
 )
 
 GO

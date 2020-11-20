@@ -145,7 +145,6 @@ namespace WebDataAgro
                                          "~/Scripts/App/AbmFijacionDePrecio.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/CompraNetContrato").Include(
-                                         "~/Scripts/App/CrearContrato.js",
                                          "~/Scripts/App/CopiarContrato.js",
                                          "~/Scripts/jquery.mask.js"));
 

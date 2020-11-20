@@ -349,3 +349,289 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     }
 }
 
+function ObtenerDatos(error) {
+    var obj = {};
+
+    var hoy = new Date();
+    var anio = hoy.getFullYear();
+    var mes = hoy.getMonth();
+    var dia = hoy.getDate();
+    var hora = hoy.getHours();
+    var minuto = hoy.getMinutes();
+    var maniana = new Date();
+    maniana = new Date(maniana.setMonth(maniana.getMonth() + 1));
+    
+
+    obj.TipoNegocioId = $("#tipoId").val();
+    obj.Id = Id == null || Id == undefined || Id == "" ? 0 : Id;
+    obj.MaterialId = $("#material").val() == null || $("#material").val() == undefined || $("#material").val() == "" ? 0 : $("#material").val();
+    obj.Cantidad = $("#cantidadId").val() == null || $("#cantidadId").val() == undefined || $("#cantidadId").val() == "" ? 0 : $("#cantidadId").val(); 
+    obj.Precio = $("#precioId").val() == null || $("#precioId").val() == undefined || $("#precioId").val() == "" ? 0 : $("#precioId").val();
+    obj.PrecioNeto = $("#precioTotalApertura").val();
+    obj.FechaEntrega = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? kendo.toString((maniana), "dd-MM-yyyy") : $("#fechaHastaId").val();
+    obj.CampanaId = $("#campanaId").val();
+    obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaDesdeId").val();
+    obj.Fecha = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaFijacionId").val();
+    obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? kendo.toString((maniana), "dd-MM-yyyy") : $("#fechaHastaId").val();
+    obj.MonedaId = $("#precioMonedaId").val();
+    if (obj.TipoNegocioId == "3" || obj.TipoNegocioId == "4") {
+        obj.ComercialId = $("#comercialFijacionId").val();
+        obj.ContratoSAP = $("#contratoId").val();
+    }
+    if (obj.TipoNegocioId == "1" || obj.TipoNegocioId == "2") {
+        obj.PorcentajeDePago = $("#porcentajeDePagoId").data("kendoNumericTextBox").value();
+        
+    }
+
+    obj.ComercialId = $("#comercialId").val();
+    obj.ComercialCreadorId = $("#comercialCreador").val();
+    obj.Base = $("#baseId").is(":checked") ? true : false;
+    obj.ImporteSustentable = $("#sustentablePrecioId").val() == null || $("#sustentablePrecioId").val() == undefined || $("#sustentablePrecioId").val() == "" ? 0 : $("#sustentablePrecioId").val();
+    obj.MonedaSustentableId = $("#sustentableMonedaId").val();
+    obj.FechaDolarizado = $("#dolarizadoFechaId").val();
+    obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
+    obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false;
+    obj.Dolarizado = $("#dolarizadoId").is(":checked") ? true : false;
+    obj.Sustentable = $("#sustentableId").is(":checked") ? true : false;
+    obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
+    obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
+    obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
+    obj.EstadoId = $("#estado").val() == "" ? $("#baseId").is(":checked") ? "3" : obj.TipoNegocioId != 4 && obj.TipoNegocioId != 5 && obj.TipoNegocioId != 6 ? "1" : "2" : $("#estado").val();
+    obj.Observacion = $("#observacionId").val();
+    obj.ClasificacionId = $("#clasificacion").val() == null || $("#clasificacion").val() == undefined || $("#clasificacion").val() == "" ? 0 : $("#clasificacion").val();
+    obj.CantidadCamiones = $("#cantidadCamionesId").val() == null || $("#cantidadCamionesId").val() == undefined || $("#cantidadCamionesId").val() == "" ? 0 : $("#cantidadCamionesId").val();
+    obj.EstablecimientoPropio = $("#establecimientoPropioId").is(":checked") ? true : $("#establecimientoArrendadoId").is(":checked") ? false : null;
+    obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaDesdeTopeId").val(); 
+    obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? kendo.toString((maniana), "dd-MM-yyyy") : $("#fechaHastaTopeId").val();
+    obj.CondicionFijacionId = $("#condicionFijacionId").val();
+    obj.DestinoId = $("#destinoId").val();
+    obj.planCanje = $("#planCanjeId").is(":checked") ? true : false;
+    obj.Consignatario = $("#consignatarioId").is(":checked") ? true : false;
+    obj.CD = $("#CDId").is(":checked") ? true : false;
+    obj.Warrant = $("#WarrantId").is(":checked") ? true : false;
+    obj.PagoDirectoVendedor = $("#pagoDirectoId").is(":checked") ? true : false;
+    obj.MercsDeposito = $("#mercsDepositoId").is(":checked") ? true : false;
+    obj.NivelTarifaId = $("#NivelTarifaId").val();
+    obj.TarifaFlete = $("#TarifaFleteId").val();
+    obj.ChequeElectronico = $("#tipoId").val() == "2" ? $("#chequeElectronicoInput").is(":checked") ? true : false : $("#chequeElectronico").is(":checked") ? true : false;
+    obj.DolarizadoExpress = $("#dolarizadoExpressId").is(":checked") ? true : false;
+    obj.PagoCBU = $("#tipoId").val() == "2" ? $("#pagoCbu").val() : $("#pagoCbuInput").val();
+
+    if ($("#boletoConfirmaId").is(':checked')) {
+        obj.BoletoId = 1;
+        obj.BolsaId = $("#bolsaConfirmaId").val();
+    }
+    else if ($("#boletoFisicoId").is(':checked')) {
+        obj.BoletoId = 2;
+        obj.BolsaId = $("#bolsaFisicoId").val();
+    }
+    else if ($("#boletoCartaId").is(':checked')) {
+        obj.BoletoId = 4;
+        obj.BolsaId = $("#bolsaCartaId").val();
+    }
+    else if ($("#boletoNingunoId").is(':checked')) {
+        obj.BoletoId = 3;
+        obj.BolsaId = 0;
+    }
+
+    if ($("#buscadorProveedor").val() != "") {
+        var cuitAux = $("#buscadorProveedor").val().split('(');
+        var proveedorId;
+        if (cuitAux[1]) {
+            var cuit = cuitAux[1].split(')');
+            proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+            if (proveedorId == null || proveedorId == 0) {
+                MensErr("No se pudo obtener el proveedor, verificar la segmentación.");
+                $.unblockUI();
+                return;
+            }
+        } else {
+            proveedorId = -1;
+        }
+    }
+    if ($("#buscadorCorredor").val() != "") {
+        var cuitAuxC = $("#buscadorCorredor").val().split('(');
+        if (cuitAuxC[1]) {
+            var cuitC = cuitAuxC[1].split(')');
+            var corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor: true });
+        }
+    }
+
+    obj.ProveedorId = proveedorId;
+    obj.CorredorId = corredorId;
+
+    if ($("#LocalidadCrearContrato").val() != "") {
+        var localidadAux = $("#LocalidadCrearContrato").val().split('(');
+        if (localidadAux[1]) {
+            var provinciaAux = localidadAux[1].split(')');
+            var Localidad = MSExecuteOnServer('/CompraNet/ObtenerLocalidadId', { localidad: localidadAux[0], provincia: provinciaAux[0] });
+            obj.LocalidadId = Localidad.LocalidadId;
+            obj.ProvinciaId = Localidad.ProvinciaId;
+        } else {
+            obj.LocalidadId = -1;
+        }
+    }
+    obj.ContratoVendedor = $("#contVendedorId").val();
+    obj.ContratoCorredor = $("#contCorredorId").val();
+    obj.SelCargoVendedor = $("#selCargoVendedorId").is(":checked") ? true : false;
+    obj.SelCargoMOA = $("#selCargoMOAId").is(":checked") ? true : false;
+    obj.FasoneroId = proveedorId;
+    obj.Posicion = $("#posicionFasonId").val();
+    obj.TipoFasonId = $("#tipoFasonId").val();
+    if (obj.TipoNegocioId == 5) {
+        obj.tipoAgenteCompraId = $("#tipoAgenteCompraId").val();
+    }
+
+    obj.OperadorId = $("#operadorId").val();
+    if ($("#madreId").is(":checked")) {
+        obj.Madre = true;
+    }
+    if ($("#hijoId").is(":checked")) {
+        obj.Madre = false;
+    } else {
+        if (obj.TipoNegocioId == 2) {
+            obj.FechaCierta = $("#fechaCiertaId").val();
+        }
+        if (obj.TipoNegocioId == 6) {
+            obj.FechaCierta = $("#fechaCiertaAcuerdo").val();
+
+        }
+    } if ($("#fasonIdCheck").is(":checked")) {
+        obj.EsFason = true;
+    }
+    obj.ContratoMadre = $("#contMadreId").val();
+    obj.Descuentos = viewModel.Descuentos;
+
+    obj.Especial = $("#trigoEspecialFasonId").is(":checked") ? true : false;
+    obj.TrigoEspecial = viewModel.Calidades.length > 0 && obj.MaterialId == 2;
+
+    obj.ZonaId = obj.MaterialId == 5 ?
+        $("#zonasGirasolAltoId").val() : null;
+    if (obj.MaterialId === "3") {
+        obj.Calidad = viewModel.Calidades;
+    } else {
+        if ($("#calidadesEspecialesId").data("kendoDropDownList").text() == "Especial" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado 2" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Grado" ||
+            $("#calidadesEspecialesId").data("kendoDropDownList").text() == "Bonif. SECO de 7% a 10% Por punto") {
+            var err = [];
+            if (viewModel.Calidades.length == 0 && (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2)) {
+                err = AgregarCalidades();
+            } else if ($("#valorEspecialesId").val() != "") {
+                LimpiarCalidades();
+                err = AgregarCalidades();
+            }
+            if (ExistsErrorMessages(err)) {
+                $.unblockUI();
+                error = true;
+            } else {
+                obj.Calidad = viewModel.Calidades;
+            }
+        }
+    }
+
+    if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara") {
+        if (obj.MaterialId == 3) obj.StandardDeCalidadId = 4;
+        else if (obj.MaterialId == 4 || obj.MaterialId == 5) obj.StandardDeCalidadId = 5;
+        else if (obj.MaterialId == 1 || obj.MaterialId == 2) obj.StandardDeCalidadId = 1;
+    } else if ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Fabrica") {
+        obj.StandardDeCalidadId = 3;
+    } else if (viewModel.Calidades.length > 0) {
+        obj.StandardDeCalidadId = viewModel.Calidades[0].StandardDeCalidadId;
+    }
+
+    if (obj.TipoNegocioId == 3 || obj.TipoNegocioId == 4) obj.TrigoEspecial = $("#trigoEspecialFijacion").is(":checked");
+    obj.Compensacion = $("#compensacionId").is(":checked") ? true : false;
+    obj.ContratoAcuerdoId = $("#contratoAcuerdoId").val();
+    obj.Pizarra = $("#pizarraId").is(":checked") ? true : false;
+    obj.AperturaPrecio = viewModel.AperturaPrecio;
+    obj.PrecioPactado = viewModel.PrecioPactado;
+    if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) {
+        obj.tipoAgenteCompraId = $("#AgenteCompraId").val();
+        if (obj.tipoAgenteCompraId > 0) {
+            obj.CaratulaExtension = $("#caratulaExtensionId").val();
+            obj.CaratulaMAT = $("#caratulaMATId").val();
+            obj.PrecioAjusteComision = $("#precioAjusteComisionId").val();
+            obj.MonedaAjusteComisionId = $("#monedaAjusteComisionId").val();
+        }
+    }
+    if (obj.TipoNegocioId == 6) {
+        obj.tipoAgenteCompraId = $("#AgenteCompraId").val();
+    }
+    if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) {
+        obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaOperacionId").val();
+    }
+    if (obj.TipoNegocioId == 3) {
+        obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaFijacionId").val(); 
+        obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
+    }
+
+    return obj;
+}
+
+function RedireccionarNegocio(url, tipoId, obj) {
+    var form = document.createElement("form");
+    var element1 = document.createElement("input");
+    var element2 = document.createElement("input");
+    var siguiente = document.createElement("input");
+    var negocioId = document.createElement("input");
+    form.method = "POST";
+    form.action = url;
+    element1.value = tipoId;
+    element1.name = "tipoId";
+    element2.value = JSON.stringify(obj);
+    element2.name = "obj";
+    siguiente.value = Siguientes.replace(/(&quot\;)/g, "\"");
+    siguiente.name = "siguientes";
+    negocioId.value = Id;
+    negocioId.name = "Id";
+    form.appendChild(element1);
+    form.appendChild(element2);
+    form.appendChild(siguiente);
+    form.appendChild(negocioId);
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function InicializarDatos() {
+    var funcReturn = function (data) {
+        if (ExistsErrorMessages(data.Errores)) {
+            ShowErrorMessages(data.Errores);
+        }
+        else {
+            datosIniCrearContrato = data;
+            AsignarDatos();
+        }
+        if (Id != "" && esEdicion == "False") {
+            switch (TipoId) {
+                case "1":
+                    setTimeout(InicializarContratoEdit, 300);
+                    break;
+                case "2":
+                    setTimeout(InicializarContratoEdit, 300);
+                    break;
+                case "3":
+                    setTimeout(InicializarFijacionEdit, 300);
+                    break;
+                case "4":
+                    setTimeout(InicializarFasonEdit, 300);
+                    break;
+                case "5":
+                    setTimeout(InicializarAgenteEdit, 300);
+                    break;
+                case "6":
+                    setTimeout(InicializarAcuerdoEdit, 300);
+                    break;
+                default:
+                    $.unblockUI();
+                    InicializarBordesRojos();
+            }
+        } else {
+            $.unblockUI();
+            InicializarBordesRojos();
+        }
+    };
+
+    ExecuteURLOnServer('/CompraNet/InicializarContrato', funcReturn, '');
+}
+

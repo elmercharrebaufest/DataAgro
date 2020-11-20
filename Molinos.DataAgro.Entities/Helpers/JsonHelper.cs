@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,23 @@ namespace Molinos.DataAgro.Entities.Helpers
             }
 
             return property;
+        }
+    }
+
+    public class CustomDateTimeConverter : IsoDateTimeConverter
+    {
+        public CustomDateTimeConverter()
+        {
+            base.DateTimeFormat = "dd-MM-yyyy HH:mm:ss";
+        }
+
+    }
+
+    public class SinHora : IsoDateTimeConverter
+    {
+        public SinHora()
+        {
+            DateTimeFormat = @"dd-MM-yyyy";
         }
     }
 }

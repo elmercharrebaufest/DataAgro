@@ -8,12 +8,16 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
@@ -97,11 +101,12 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             ViewBag.comercialId = GlobalVariables.ComercialId;
+
             return View();
         }
 
         [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados)]
-        public ActionResult CrearContrato(int? id, int? tipoId, string siguientes)
+        public ActionResult CrearContrato(int? id, int? tipoId, string siguientes, string obj)
         {
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
@@ -114,8 +119,38 @@ namespace WebDataAgro.Controllers
             ViewBag.Fijacion = mobjContratoManager.ObtenerSapFijacion(id.HasValue ? id.Value : 0);
             ViewBag.Siguientes = siguientes;
             ViewBag.ContratoAperturaPrecioPorcentajeDeComisionMaximo = mobjConfiguracionManager.TraerConfiguraciones().ContratoAperturaPrecioPorcentajeDeComisionMaximo;
+            ViewBag.Obj = null;
+            ViewBag.esEdicion = false;
+            if (!String.IsNullOrEmpty(obj))
+            {
+                var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
+                var negocio = typeof(CompraNetController).GetMethod("DeserializarJson").MakeGenericMethod(Type.GetType($"{tipoNegocio.ClaseDescripcion}, Molinos.DataAgro.Entities")).Invoke(null, new object[] { obj }) as Negocio;
+                ViewBag.Obj = mobjContratoManager.NegocioABasicoContrato(negocio);
+                ViewBag.esEdicion = true;
+                return View(tipoNegocio.TipoNegocioId == 1 ? tipoNegocio.Descripcion.Replace(" ", String.Empty): "CrearContrato");
+            }
+            if (id != 0 && id != null)
+            {
+                var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
+                return View(tipoNegocio.TipoNegocioId == 1 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
+            }
 
             return View();
+        }     
+
+        public static Negocio DeserializarJson<T>(string obj) where T : Negocio
+        {
+            var settings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            settings.Converters.Add(new Newtonsoft.Json.Converters.IsoDateTimeConverter()
+            {
+                DateTimeFormat = "dd-MM-yyyy",
+                Culture = CultureInfo.CurrentCulture, //CultureInfo.InvariantCulture,
+                DateTimeStyles = DateTimeStyles.AssumeUniversal,
+            });
+            return JsonConvert.DeserializeObject<T>(obj, settings);
         }
         public ActionResult ValidarModificarFinalizado(int? id)
         {
@@ -973,6 +1008,16 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjContratoManager.BorrarContratoPreAprobacion(id, motivoRechazo),
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+
+        public ActionResult ObtenerProyeccion(BasicoContrato basico)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.UltimoDiaHabil(),
                 MaxJsonLength = Int32.MaxValue
             };
 

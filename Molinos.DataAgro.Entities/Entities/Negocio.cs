@@ -1,4 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,10 +17,13 @@ namespace Molinos.DataAgro.Entities.Entities
         public double Cantidad { get; set; } // Cantidad
         public decimal Precio { get; set; } // Precio
         public int? CampanaId { get; set; } // CampañaId
+        [JsonConverter(typeof(SinHora))]
         public DateTime FechaDesde { get; set; } // FechaDesde
+        [JsonConverter(typeof(SinHora))]
         public DateTime FechaHasta { get; set; } // FechaHasta
         public int? ProveedorId { get; set; } // ProveedorId
-        public string MonedaId { get; set; } // MonedaId (length: 5) 
+        public string MonedaId { get; set; } // MonedaId (length: 5)
+        [JsonConverter(typeof(SinHora))]
         public DateTime Fecha { get; set; } // Fecha
         public int? GrupoCompra { get; set; } // GrupoCompra
         public int? ComercialId { get; set; } // ComercialId
@@ -40,19 +45,24 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Posicion { get; set; }
         public bool? CD { get; set; }
         public bool? Warrant { get; set; }
+        [JsonConverter(typeof(SinHora))]
         public DateTime? FechaDolarizado { get; set; } // Fecha_Dolarizado
         public bool? Dolarizado { get; set; }
         public bool OcultarEnTablero { get; set; }
+        [JsonConverter(typeof(SinHora))]
         public DateTime? DesdeFijacion { get; set; }
+        [JsonConverter(typeof(SinHora))]
         public DateTime? HastaFijacion { get; set; }
         public int? CondicionFijacionId { get; set; }
         public string MotivoRechazo { get; set; }
         public int? TipoAgenteCompraId { get; set; }
-
-        public int? UsuarioConfirmadorId { get; set; }
-        public DateTime FechaOperacion { get; set; } // FechaOperacion       
-
+        [JsonConverter(typeof(SinHora))]
         public DateTime? FechaConfirmacion { get; set; }
+        public int? UsuarioConfirmadorId { get; set; }
+        [JsonConverter(typeof(SinHora))]
+        public DateTime FechaOperacion { get; set; } // FechaOperacion
+
+        [JsonConverter(typeof(SinHora))]
         public DateTime? FechaCierta { get; set; }
         public bool? ChequeElectronico { get; set; }
         public bool? DolarizadoExpress { get; set; }
@@ -67,9 +77,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Canje { get; set; }
 
         public int? ProveedorCreadorId { get; set; }
-
-             
-
+        public decimal? Monto { get; set; }
+        public string Insumo { get; set; }
+        public string MonedaCanjeId { get; set; }
 
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
@@ -111,9 +121,14 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual List<AperturaPrecio> AperturaPrecio { get; set; }
 
         [InverseProperty("Negocio")]
-        public virtual List<NegocioHistorico> NegocioHistorico { get; set; } = new List<NegocioHistorico>();
-        [InverseProperty("Negocio")]
+        public virtual List<NegocioHistorico> NegocioHistorico { get; set; } = new List<NegocioHistorico>();      
+
+        [ForeignKey("MonedaCanjeId")]
+        public virtual Moneda MonedaCanje { get; set; } 
+
         public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; }
+     
+
         public Negocio()
         {
             Cantidad = 0;

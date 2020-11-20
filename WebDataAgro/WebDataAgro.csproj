@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -1003,6 +1003,8 @@
     <Content Include="Scripts\App\AbmFormula.js" />
     <Content Include="Scripts\App\AbmOperador.js" />
     <Content Include="Scripts\App\AbmRangoConfirmacionAutomatica.js" />
+    <Content Include="Scripts\App\AFijar.js" />
+    <Content Include="Scripts\App\Fijacion.js" />
     <Content Include="Scripts\App\CrearCupoExterno.js" />
     <Content Include="Scripts\App\HabilitacionCupo.js" />
     <Content Include="Scripts\App\ConfiguracionEspacioDinamico.js" />
@@ -2721,6 +2723,8 @@
     <Content Include="Views\AdministracionCupo\ModalAceptarSolicitud.cshtml" />
     <Content Include="Views\ConfiguracionInterna\_GrabarCampañaPartial.cshtml" />
     <Content Include="Views\ConfiguracionInterna\_ListaCampaña.cshtml" />
+    <Content Include="Views\CompraNet\AFijar.cshtml" />
+    <Content Include="Views\CompraNet\Fijacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
