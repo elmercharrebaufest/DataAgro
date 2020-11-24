@@ -63,11 +63,11 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("BolsaId")]
         public virtual BolsaCompraNet Bolsa { get; set; }
         [ForeignKey("ContratoAcuerdoId")]
-        public virtual ContratoAcuerdo ContratoAcuerdo { get; set; }        
+        public virtual ContratoAcuerdo ContratoAcuerdo { get; set; }
         [InverseProperty("Contrato")]
-        public virtual ICollection<Calidad> Calidad { get; set; }
+        public virtual ICollection<Calidad> Calidad { get; set; } = new List<Calidad>();
         [InverseProperty("Contrato")]
-        public virtual ICollection<PrecioPactado> PrecioPactado { get; set; }
+        public virtual ICollection<PrecioPactado> PrecioPactado { get; set; } = new List<PrecioPactado>();
 
         [ForeignKey("ZonaId")]
         public virtual Zona Zona { get; set; }

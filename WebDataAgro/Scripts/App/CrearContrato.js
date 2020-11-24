@@ -1010,7 +1010,7 @@ function InicializarElementos() {
                 if (viewModel.AperturaPrecio[2]) {
                     viewModel.AperturaPrecio[2].Porcentaje = 0;
                 }
-
+                InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
         }
     });
