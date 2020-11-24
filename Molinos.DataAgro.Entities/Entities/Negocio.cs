@@ -118,7 +118,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual StandardDeCalidad StandardDeCalidad { get; set; }
 
         [InverseProperty("Negocio")]
-        public virtual List<AperturaPrecio> AperturaPrecio { get; set; } = new List<AperturaPrecio>();
+        public virtual List<AperturaPrecio> AperturaPrecio { get; set; }
 
         [InverseProperty("Negocio")]
         public virtual List<NegocioHistorico> NegocioHistorico { get; set; } = new List<NegocioHistorico>();      
@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("MonedaCanjeId")]
         public virtual Moneda MonedaCanje { get; set; }
 
-        public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; } = new List<DescuentoBonificacion>();
+        public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; } 
      
 
         public Negocio()

@@ -466,7 +466,7 @@ namespace WebDataAgro.Services
                 {
                     if (esActualizar)
                     {
-                        if (contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
+                        if (contratoOriginal.Calidad != null && contratoOriginal.Calidad.Where(a => a.CalidadEspecialId == calidad.CalidadEspecialId).FirstOrDefault() != null)
                         {
                             calidad.PorcentajeDesde = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeDesde;
                             calidad.PorcentajeHasta = contratoOriginal.Calidad.Where(a => a.StandardDeCalidadId == calidad.StandardDeCalidadId).FirstOrDefault().PorcentajeHasta;
