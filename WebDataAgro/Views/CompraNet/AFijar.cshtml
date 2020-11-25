@@ -424,30 +424,30 @@
     <div class="row">
 
         @*<div id="LabelPrecio" class="col-sm-2 ">
-                <label>Precio Base</label>
+            <label>Precio Base</label>
+        </div>
+        <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
+            <div class="col-xs-7 col-md-6 noPadding">
+                <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
+                <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
-                <div class="col-xs-7 col-md-6 noPadding">
-                    <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
-                    <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-                <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
-                    <div class="w70" id="ocultarAperturaMoneda">
-                        <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
-                        <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
+            <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
+                <div class="w70" id="ocultarAperturaMoneda">
+                    <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
+                    <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
 
-                    </div>
-                    <div class="w30" id="ocultarAperturaBtn">
-                        <span style="display:inline-block" id="botonAperturaDePrecio">
-                            <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
-                                <i class="fa fa-table"></i>
-                            </span>
+                </div>
+                <div class="w30" id="ocultarAperturaBtn">
+                    <span style="display:inline-block" id="botonAperturaDePrecio">
+                        <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
+                            <i class="fa fa-table"></i>
                         </span>
+                    </span>
 
-                    </div>
                 </div>
+            </div>
 
-            </div>*@
+        </div>*@
         <div id="posicionFasonDiv" class="fason agente" hidden>
             <div class="col-sm-1">
                 <label>Posición</label>
@@ -485,11 +485,11 @@
             </div>
         </div>
         @*<div class="col-xs-10 col-sm-5 noFason noAgente acuerdo ampliar-fijacion ">
-                <div id="chequeElectronicoId" class="acuerdo" style="float:right" hidden>
-                    <label>Echeq</label>
-                    <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
-                </div>
-            </div>*@
+            <div id="chequeElectronicoId" class="acuerdo" style="float:right" hidden>
+                <label>Echeq</label>
+                <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
+            </div>
+        </div>*@
         <div class="col-sm-2 espacioPrecioMoneda" hidden></div>
         <div class="col-xs-12 col-sm-5 col-md-4 required-box-parent espacioPrecioMoneda" hidden></div>
         <div class="col-sm-2" id="fasonEspecial" hidden>
@@ -508,12 +508,12 @@
                 <input id="precioTotalApertura" style="width:100%; margin:0" readonly />
             </div>
         </div>
-        <div class="col-xs-12 col-sm-5 noFason noAgente acuerdo ampliar-fijacion ">
+        @*<div class="col-xs-12 col-sm-5 noFason noAgente acuerdo ampliar-fijacion ">
             <div id="chequeElectronicoId" class="acuerdo" hidden>
                 <label>Echeq</label>
                 <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
             </div>
-        </div>
+        </div>*@
     </div>
 
     <div style="margin-bottom: 5px;" id="clasificacionDiv" class="row noFason noAgente noAcuerdo ampliar ">
@@ -605,14 +605,14 @@
             <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
         </div>
     </div>
-    <div class="row acuerdo" id="pagoCbuId" hidden>
+    @*<div class="row acuerdo" id="pagoCbuId" hidden>
         <div class="col-sm-2">
             <label>Pago CBU</label>
         </div>
         <div class="col-sm-10 col-md-4">
             <input type="text" class="k-textbox" style="width:100%" id="pagoCbuInput" />
         </div>
-    </div>
+    </div>*@
 
     <div class="row ampliar noFason noAgente noAcuerdo">
         <div class="col-sm-2 ">
@@ -637,7 +637,8 @@
     </div>
     <div class="datos-adicionales ampliar-adicionales noFason noAgente acuerdo" display="block">
         <div class="row noAcuerdo">
-            <div class="col-sm-2 ">
+            <div id="ordenarRow" class="col-sm-2" hidden></div>
+            <div class="col-sm-2" id="divSojaSustentable">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
                 <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
@@ -654,6 +655,7 @@
                     <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
+
             <div class="noAcuerdo">
                 <div class="col-sm-2 ">
                     <label>Contrato Vendedor</label>
@@ -745,14 +747,14 @@
                 <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
             </div>
 
-            <div class="col-sm-2 ">
+            <div class="col-sm-2" id="compensacionDiv">
                 <label style="width:120px">Compensación</label>
                 <input id="compensacionId" class="campo-input-input" data-bind="checked:Parametros.compensacionId, disabled: isControlDisabled" type="checkbox" onclick="HayCompensacion()" />
             </div>
-            <div class="col-sm-2 " id="chequeElectronicoDiv">
+            @*<div class="col-sm-2 " id="chequeElectronicoDiv">
                 <label>Echeq</label>
                 <input id="chequeElectronicoInput" class="campo-input-input" name="chequeElectronicoInput" type="checkbox" onclick="HayChequeElectronicoAmpliar()">
-            </div>
+            </div>*@
 
         </div>
 
@@ -811,19 +813,41 @@
             <div id="LabelPrecio" class="col-sm-2 ">
                 <label>Precio Ajuste Comisión</label>
             </div>
-            <div class="col-xs-7 col-md-6">
+            <div class="col-xs-7 col-md-4">
                 <input id="precioAjusteComisionId" class="k-input" data-bind="value: Parametros.precioAjusteComisionId" />
                 <div class="w30" style="display:inline-grid">
                     <select id="monedaAjusteComisionId" data-bind="source: PrecioMonedaCombo, value: Parametros.monedaAjusteComisionId" style="width:100%;"></select>
                 </div>
             </div>
-        </div>
-        <div class="row" id="pagoCbuDiv">
+            @*<div class="row" id="pagoCbuDiv">
             <div class="col-sm-2">
                 <label>Pago CBU</label>
             </div>
             <div class="col-sm-10 col-md-4">
                 <input type="text" class="k-textbox" style="width:100%" id="pagoCbu" />
+            </div>
+        </div>*@
+            <div class="col-sm-2 ">
+                <label style="width:120px">Canje</label>
+                <input id="canjeId" class="campo-input-input" data-bind="checked:Parametros.canjeId, disabled: isControlDisabled" type="checkbox" onclick="HayCanje()" />
+            </div>
+        </div>
+      
+        <div class="row" id="mostrarCanje" hidden>
+            <div class="col-sm-2">
+                <label>Monto</label>
+            </div>
+            <div class="col-xs-7 col-md-4">
+                <input id="montoId" margin:0" />      
+                <div class="w30" style="display:inline-grid">
+                    <select id="montoMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.montoMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <label>Insumos</label>
+            </div>
+            <div class="col-sm-10 col-md-3">
+                <input type="text" class="k-textbox" style="width:100%" id="insumoId" />
             </div>
         </div>
 

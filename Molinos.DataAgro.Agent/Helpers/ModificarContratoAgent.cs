@@ -331,7 +331,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.MonedaAjusteComisionId != contrato.MonedaAjusteComisionId ||
                     contratoGuardado.ChequeElectronico != contrato.ChequeElectronico ||
                     contratoGuardado.DolarizadoExpress != contrato.DolarizadoExpress || 
-                    contratoGuardado.PagoCBU != contrato.PagoCBU;
+                    contratoGuardado.PagoCBU != contrato.PagoCBU || contratoGuardado.Canje != contrato.Canje ||
+                    contratoGuardado.Monto != contrato.Monto || contratoGuardado.Insumo != contrato.Insumo || 
+                    contratoGuardado.MonedaCanjeId != contrato.MonedaCanjeId;
 
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
@@ -438,7 +440,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                             DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X":"",
                             CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
                             PLANTA_DEST = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
-
+                            CANJE = contrato.Canje == true ? "X" : "",
+                            DESC_INSUMOS = contrato.Insumo,
+                            MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
+                            MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0
                         }
                     }
                 };

@@ -421,7 +421,7 @@ namespace Molinos.DataAgro.Business.Managers
                && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 6)
                && (x.TipoAgenteCompraId == null)
                && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
-               );
+               && ((x is Contrato) && (x as Contrato).Canje != true));
             var contratoSapFijaciones = negocios.Where(a => a.TipoNegocioId == 3 && a.ContratoSAP != null && a.ContratoSAP != "").Select(a => a.ContratoSAP).ToList();
             var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && x.EstadoId == 5 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
             foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3))
@@ -775,6 +775,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && (centroId == 0 || x.DestinoId == centroId)
                 && x.ContratoAcuerdoId == null && x.EsFason != true
                 && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2)
+                && (x.Canje != true)
             ).Select(x => new PosicionPorMaterial
             {
                 Id = x.Id,
@@ -1666,7 +1667,7 @@ namespace Molinos.DataAgro.Business.Managers
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.StandardDeCalidadId == calidad))
              && (centroId == 0 || x.DestinoId == centroId)
-             && x.ContratoAcuerdoId == null);
+             && x.ContratoAcuerdoId == null && x.Canje != true);
             var data = contratos;
             if (mes.HasValue && anio.HasValue)
             {
@@ -1725,7 +1726,7 @@ namespace Molinos.DataAgro.Business.Managers
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.TrigoEspecial == true && calidad == 7) || (calidad != null && x.TrigoEspecial == false && calidad == 3))
-             && (centroId == 0 || centroId == x.DestinoId));
+             && (centroId == 0 || centroId == x.DestinoId) && x.Canje != true);
             if (mes.HasValue && anio.HasValue)
             {
                 foreach (var i in fijaciones)

@@ -173,7 +173,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? PagoDiferidoTercero { get; set; }
         public string ObservacionTercero { get; set; }
         public bool? Canje { get; set; }
-        public string MonedacanjeId { get; set; }
+        public string MonedaCanjeId { get; set; }
         public decimal? Monto { get; set; }
         public string Insumo { get; set; }
     }

@@ -638,7 +638,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                             var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(contrato.Fecha.Date);
 
-                            if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                            if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) 
+                                || oParam.FechaOperacion < diaAnterior && oParam.Canje == true)
                             {
                                 oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
 
@@ -665,7 +666,8 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(null);
 
-                            if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
+                            if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) || 
+                                oParam.FechaOperacion < diaAnterior && oParam.Canje == true)
                             {
                                 oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
 
@@ -682,7 +684,24 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                         }
                     }
-
+                    if (!validacionesMinimas)
+                    {
+                        if (oParam.Canje == true)
+                        {
+                            if (!oParam.Monto.HasValue)
+                            {
+                                oErrorMessages.Error("Monto", "Se Debe completar el campo Monto cuando hay Canje");
+                            }
+                            if (String.IsNullOrEmpty(oParam.MonedaCanjeId))
+                            {
+                                oErrorMessages.Error("Moneda", "Se Debe completar la Moneda que corresponde al campo Canje");
+                            }
+                            if (String.IsNullOrEmpty(oParam.Insumo))
+                            {
+                                oErrorMessages.Error("Insumo", "Se Debe completar el campo Insumo cuando hay Canje");
+                            }
+                        }
+                    }
                     //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
                     //if (oParam.FechaOperacion.Date < fecha.Date && oParam.Id != 0)
                     //{
@@ -1365,7 +1384,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
                     try
                     {
-                        if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null)
+                        if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null && oContratoSave.Canje != true)
                         {
                             mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
                             var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
@@ -1995,6 +2014,11 @@ namespace Molinos.DataAgro.Business.Managers
                 DolarizadoTercero = x.DolarizadoTercero,
                 PagoDiferidoTercero = x.PagoDiferidoTercero,
                 ObservacionTercero = x.ObservacionTercero,
+                Canje = x.Canje,
+                Monto = x.Monto,
+                MonedaCanjeId = x.MonedaCanjeId,
+                Insumo = x.Insumo
+                
             });
             return contrato;
         }
@@ -2616,7 +2640,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Error("Contrato", "No existe contrato en DataAgro");
             }
-
+            contrato.TipoNegocioId = contratoSave.TipoNegocioId;
+            contrato.ComercialId = contratoSave.ComercialId;
             Validar(contrato, error, validacionesMinimas);
 
             if (error.Errores.Count > 0)
@@ -2688,6 +2713,10 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.ChequeElectronico = contrato.ChequeElectronico;
             contratoSave.DolarizadoExpress = contrato.DolarizadoExpress;
             contratoSave.PagoCBU = contrato.PagoCBU;
+            contratoSave.Canje = contrato.Canje;
+            contratoSave.Monto = contrato.Monto;
+            contratoSave.MonedaCanjeId = contrato.MonedaCanjeId;
+            contratoSave.Insumo = contrato.Insumo;
 
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
@@ -2811,8 +2840,10 @@ namespace Molinos.DataAgro.Business.Managers
                     contrato.EstadoId = 5;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
-
-                    EnviarMail(contrato, contratoSave, comercialRegistrado);
+                    if (contrato.Canje != true)
+                    {
+                        EnviarMail(contrato, contratoSave, comercialRegistrado);
+                    }
                 }
             }
             catch (Exception e)
@@ -3653,6 +3684,10 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.EsFason = contratoSap.EsFason;
                 contrato.Madre = contratoSap.Madre;
                 contrato.FechaCierta = contratoSap.FechaCierta;
+                contrato.Canje = contratoSap.Canje;
+                contrato.Monto = contratoSap.Monto;
+                contrato.MonedaCanjeId = contratoSap.MonedaCanjeId;
+                contrato.Insumo = contratoSap.Insumo;
                 repositorio.Agregar(contrato);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
@@ -3950,7 +3985,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.PagoDiferidoTercero = negocio.PagoDiferidoTercero;
             bc.ObservacionTercero = negocio.ObservacionTercero;
             bc.Canje = negocio.Canje;
-            bc.MonedacanjeId = negocio.MonedaCanjeId;
+            bc.MonedaCanjeId = negocio.MonedaCanjeId;
             bc.Monto = negocio.Monto;
             bc.Insumo = negocio.Insumo;
 

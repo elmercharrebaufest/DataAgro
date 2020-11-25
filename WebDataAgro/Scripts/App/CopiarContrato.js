@@ -433,10 +433,10 @@ function ObtenerDatos(error) {
         obj.BoletoId = 3;
         obj.BolsaId = 0;
     }
-
+    var proveedorId;
+    var corredorId;
     if ($("#buscadorProveedor").val() != "") {
-        var cuitAux = $("#buscadorProveedor").val().split('(');
-        var proveedorId;
+        var cuitAux = $("#buscadorProveedor").val().split('(');      
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
             proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
@@ -453,7 +453,7 @@ function ObtenerDatos(error) {
         var cuitAuxC = $("#buscadorCorredor").val().split('(');
         if (cuitAuxC[1]) {
             var cuitC = cuitAuxC[1].split(')');
-            var corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor: true });
+            corredorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuitC[0], corredor: true });
         }
     }
 
@@ -560,12 +560,20 @@ function ObtenerDatos(error) {
     }
     if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) {
         obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaOperacionId").val();
+        obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
     }
     if (obj.TipoNegocioId == 3) {
         obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaFijacionId").val(); 
         obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
     }
-
+    if ($("#canjeId").is(":checked") == true) {
+        ocultarSiHayCanje();
+        obj.Canje = $("#canjeId").is(":checked") ? true : false;        
+        obj.MonedaCanjeId = $("#montoMonedaId").data("kendoDropDownList").value();
+        obj.Insumo = $("#insumoId").val();
+        obj.Monto = $("#montoId").data("kendoNumericTextBox").value();
+    }
+    
     return obj;
 }
 

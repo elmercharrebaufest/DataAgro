@@ -79,7 +79,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                         Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
                         Provincia = !(contrato is Contrato) || (contrato as Contrato).Provincia == null ? "" : (contrato as Contrato).Provincia.Nombre,
-                        TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" : contrato.TipoNegocio.Descripcion),
+                        TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : 
+                        (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : 
+                        (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : 
+                        (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
+                        (contrato is Contrato && (contrato as Contrato).Canje == true) ? "CANJE" : contrato.TipoNegocio.Descripcion),
                         Localidad = !(contrato is Contrato) || (contrato as Contrato).Localidad == null ? "" : (contrato as Contrato).Localidad.Nombre,
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
@@ -156,7 +160,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PagoDiferidoTercero = contrato.PagoDiferidoTercero,
                         ObservacionTercero = contrato.ObservacionTercero,
                         Canje = contrato.Canje,
-                        MonedacanjeId = contrato.MonedaCanjeId,
+                        MonedaCanjeId = contrato.MonedaCanjeId,
                         Monto = contrato.Monto,
                         Insumo = contrato.Insumo
                     };

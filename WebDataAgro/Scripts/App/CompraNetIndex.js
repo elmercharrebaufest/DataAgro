@@ -361,7 +361,10 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.CalidadTercero + "'" + ',' +
         "'" + dataItem.DolarizadoTercero + "'" + ',' +
         "'" + dataItem.PagoDiferidoTercero + "'" + ',' +
-        "'" + dataItem.ObservacionTercero + "'" +
+        "'" + dataItem.Canje + "'" + ',' +
+        "'" + dataItem.Monto + "'" + ',' +
+        "'" + dataItem.MonedaCanjeId + "'" + ',' +
+        "'" + dataItem.Insumo + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -779,6 +782,8 @@ function CreateGridInformeCompraNet() {
                         TipoNegocio: "AGENTE DE COMPRAS MP"
                     }, {
                         TipoNegocio: "ACUERDO AGENTE"
+                    }, {
+                        TipoNegocio: "CANJE"
                     }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
@@ -1877,7 +1882,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
-    compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero, ObservacionTercero ) {
+    compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
+    Canje, Monto, MonedaCanje, Insumo, ObservacionTercero) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2265,6 +2271,21 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#visualizar_datosTercero").html(datosTercero);
     } else {
         $("#datosCargaTercero").hide();
+    }
+    if (Canje == "true") {
+        $("#canjeDiv").show();
+        $("#canjeId").text("Si");
+        $("#insumoDiv").show();
+        $("#insumoId").text(Insumo);
+        $("#montoDiv").show();
+        $("#montoId").text(kendo.toString(parseFloat(Monto), "n2"));
+        $("#monedaCanjeDiv").show();
+        $("#monedaCanjeId").text(MonedaCanje);
+    } else {
+        $("#canjeDiv").hide();
+        $("#insumoDiv").hide();
+        $("#montoDiv").hide();
+        $("#monedaCanjeDiv").hide();
     }
 }
 

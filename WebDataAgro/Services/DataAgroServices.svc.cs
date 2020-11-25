@@ -395,6 +395,10 @@ namespace WebDataAgro.Services
             contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
             contrato.PagoCBU = contratoSAP.CUENTA_MRP;
             contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
+            contrato.Canje = contratoSAP.Canje == "X";
+            contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
+            contrato.Insumo = contratoSAP.Insumo;
+            contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
             if (!esActualizar)
             {
                 contrato.EsFason = contratoSAP.TipoNegocio == "FASON" ? true : (bool?)null;

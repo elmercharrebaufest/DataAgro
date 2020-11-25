@@ -1011,6 +1011,16 @@ function InicializarElementos() {
                     viewModel.AperturaPrecio[2].Porcentaje = 0;
                 }
                 InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+            } else {
+                var cuitAux = $("#buscadorProveedor").val().split('(');
+                var cuit = cuitAux[1].split(')');
+                var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+                var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
+                if (viewModel.AperturaPrecio[2]) {
+                    viewModel.AperturaPrecio[2].Porcentaje = compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0;
+                }
+                InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
         }
     });

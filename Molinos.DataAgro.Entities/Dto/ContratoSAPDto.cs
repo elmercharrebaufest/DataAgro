@@ -69,6 +69,8 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public string Comercial { get; set; }
 
+        public decimal Monto { get; set; }
+
         public List<CalidadSAP> Calidad { get; set; }
         public List<DescuentoBonificacionSap> DescuentoBonificaciones { get; set; }
         public List<AperturaPrecioSap> Apertura { get; set; }
@@ -86,6 +88,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaCreacion { get; set; }
         public string HORAACT { get; set; }
         public string FechaCierta { get; set; }
+        public string Canje { get; set; }
+        public string Insumo { get; set; }
+        public string MonedaCanjeId { get; set; }
     }
 
     public class CalidadSAP

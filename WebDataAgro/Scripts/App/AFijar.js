@@ -688,10 +688,10 @@ function InicializarElementos() {
             $("#ocultarAperturaMoneda").addClass("w100");
             $("#corredorDiv").show();
             $("#cargarCantidadPendienteFijar").hide();
-            $("#chequeElectronicoDiv").hide();
-            $("#chequeElectronicoId").hide();
-            $("#pagoCbuId").hide();
-            $("#pagoCbuDiv").hide();
+            //$("#chequeElectronicoDiv").hide();
+            //$("#chequeElectronicoId").hide();
+            //$("#pagoCbuId").hide();
+            //$("#pagoCbuDiv").hide();
             $("#dolarizadoExpressDiv").hide();
             $("#baseDiv").hide();
             $("#pizarraDiv").hide();
@@ -1175,7 +1175,7 @@ function InicializarElementos() {
                     //    $("#dolarizadoDiv").show();
 
                     //}
-                    if ($("#tipoId").val() == "1") {
+                    if ($("#tipoId").val() == "1" && !$("#canjeId").is(":checked")) {
                         $("#dolarizadoExpressDiv").show();
                         $("#dolarizadoExpressId").attr("disabled", false);
                     }
@@ -1280,20 +1280,20 @@ function InicializarElementos() {
                     $("#pagoCbuId").show();
                 }
             }
-            if (this.value() == "" && ($("#tipoId").val() == "2")) {
-                $("#chequeElectronicoDiv").show();
-                $("#pagoCbuDiv").show();
-            }
-            if (this.value() >= 1) {
-                $("#chequeElectronicoInput").prop("checked", false);
-                $("#chequeElectronicoDiv").hide();
-                $("#pagoCbuDiv").hide();
-                $("#chequeElectronico").prop("checked", false);
-                $("#chequeElectronicoId").hide();
-                $("#pagoCbuId").hide();
-                $("#pagoCbu").val("");
-                $("#pagoCbuInput").val("");
-            }
+            //if (this.value() == "" && ($("#tipoId").val() == "2")) {
+            //    $("#chequeElectronicoDiv").show();
+            //    $("#pagoCbuDiv").show();
+            //}
+            //if (this.value() >= 1) {
+            //    $("#chequeElectronicoInput").prop("checked", false);
+            //    $("#chequeElectronicoDiv").hide();
+            //    $("#pagoCbuDiv").hide();
+            //    $("#chequeElectronico").prop("checked", false);
+            //    $("#chequeElectronicoId").hide();
+            //    $("#pagoCbuId").hide();
+            //    $("#pagoCbu").val("");
+            //    $("#pagoCbuInput").val("");
+            //}
             if (this.value() == 1) {
                 $("#boletoNingunoId").prop("checked", false);
                 $("#boletoNingunoId").click();
@@ -1499,27 +1499,21 @@ function InicializarElementos() {
             }
         }
     });
-    $("#precioId").kendoNumericTextBox({
+
+    $("#montoId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
         spinners: false,
         min: 0,
-        change: function () {
-            if ($("#tipoId").val() == "6") {
-                if ($("#AgenteCompraId").val() == "") {
-                    $("#chequeElectronicoId").show();
-                    $("#pagoCbuId").show();
-                }
-                //if ($("#precioId").val() != "" && $("#precioId").val() != "0") {
-                //    $("#fechaCiertaAcuerdoDiv").show();
-                //} else {
-                //    $("#fechaCiertaAcuerdo").data("kendoDatePicker").value("");
-                //    $("#fechaCiertaAcuerdoDiv").hide();
-                //}
-
-            }
+        change: function () {         
 
         }
+    });
+
+    $("#montoMonedaId").kendoDropDownList({
+        optionLabel: "MONEDA...",
+        dataTextField: "Descripcion",
+        dataValueField: "MonedaId"
     });
 
     $("#precioAjusteComisionId").kendoNumericTextBox({
@@ -1855,7 +1849,7 @@ function InicializarElementos() {
 
     $("#sustentableId").click(function () {
         if ($(this).is(':checked')) {
-            $(".sustentableDiv").show();
+            $(".sustentableDiv").show();          
             if ($("#mercsDepositoId").is(':checked')) {
                 MensInfo('Revisar la fecha desde de entrega');
             }
@@ -1871,43 +1865,42 @@ function InicializarElementos() {
         }
     });
 
-    $("#dolarizadoId").click(function () {
-        if ($(this).is(':checked')) {
-            $("#dolarizadoDiv").show();
-            $("#dolarizadoExpressId").prop("checked", false);
-            $("#pesificadoId").prop("checked", false);
-            $("#chequeElectronicoDiv").show();
-            $("#pesificadoDiv").hide();
-            $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
-            //$("#fechaCiertaDiv").hide();
-            //$("#fechaCiertaId").val("");
-            //$("#fechaCiertaAcuerdoDiv").hide();
-            //$("#fechaCiertaAcuerdo").val("");
+    //$("#dolarizadoId").click(function () {
+    //    if ($(this).is(':checked')) {
+    //        $("#dolarizadoDiv").show();
+    //        $("#dolarizadoExpressId").prop("checked", false);
+    //        $("#pesificadoId").prop("checked", false);
+    //        $("#pesificadoDiv").hide();
+    //        $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+    //        //$("#fechaCiertaDiv").hide();
+    //        //$("#fechaCiertaId").val("");
+    //        //$("#fechaCiertaAcuerdoDiv").hide();
+    //        //$("#fechaCiertaAcuerdo").val("");
 
 
-        }
-        else {
-            if ($("#buscadorCorredor").val() == "") {
-                $("#dolarizadoExpressId").prop("disabled", false);
-            }
-            //if (!$(this).is(':checked') && !$("#dolarizadoExpressId").is(':checked') && $("#tipoId").val() == "2") {
-            //    $("#fechaCiertaDiv").show();
-            //} else {
-            //    $("#fechaCiertaAcuerdoDiv").show();
+    //    }
+    //    else {
+    //        if ($("#buscadorCorredor").val() == "") {
+    //            $("#dolarizadoExpressId").prop("disabled", false);
+    //        }
+    //        //if (!$(this).is(':checked') && !$("#dolarizadoExpressId").is(':checked') && $("#tipoId").val() == "2") {
+    //        //    $("#fechaCiertaDiv").show();
+    //        //} else {
+    //        //    $("#fechaCiertaAcuerdoDiv").show();
 
-            //}
-            $("#dolarizadoFechaId").val("");
-        }
-    });
+    //        //}
+    //        $("#dolarizadoFechaId").val("");
+    //    }
+    //});
 
     $("#dolarizadoExpressId").click(function () {
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
             $("#dolarizadoId").prop("checked", false);
-            $("#chequeElectronicoInput").prop("checked", false);
-            $("#chequeElectronicoDiv").hide();
-            $("#pagoCbu").prop("checked", false);
-            $("#pagoCbuDiv").hide();
+            //$("#chequeElectronicoInput").prop("checked", false);
+            //$("#chequeElectronicoDiv").hide();
+            //$("#pagoCbu").prop("checked", false);
+            //$("#pagoCbuDiv").hide();
             //$("#fechaCiertaDiv").hide();
             //$("#fechaCiertaId").val("");
         }
@@ -1916,12 +1909,12 @@ function InicializarElementos() {
             //    //$("#fechaCiertaDiv").show();
             //}
             $("#dolarizadoFechaId").val("");
-            if (!$("#compensacionId").is(":checked")) {
-                $("#pagoCbuDiv").show();
-                if (!$("#pagoDirectoId").is(":checked")) {
-                    $("#chequeElectronicoDiv").show();
-                }
-            }
+            //if (!$("#compensacionId").is(":checked")) {
+            //    $("#pagoCbuDiv").show();
+            //    if (!$("#pagoDirectoId").is(":checked")) {
+            //        $("#chequeElectronicoDiv").show();
+            //    }
+            //}
         }
     });
 
@@ -1930,8 +1923,9 @@ function InicializarElementos() {
         if ($(this).is(':checked')) {
             $("#pesificadoDiv").show();
 
-            $("#dolarizadoId").prop("checked", false);
+            $("#dolarizadoExpressId").prop("checked", false);
             $("#dolarizadoDiv").hide();
+            $("#dolarizadoExpressDiv").hide();            
             $("#dolarizadoFechaId").val("");
             //$("#fechaCiertaAcuerdoDiv").hide();
             //$("#fechaCiertaAcuerdo").val("");
@@ -1941,6 +1935,9 @@ function InicializarElementos() {
         else {
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+            if (!$("#canjeId").is(":checked") && $("#clasificacion").val() == 1) {
+                $("#dolarizadoExpressDiv").show();
+            }
             //$("#fechaCiertaAcuerdoDiv").show();
 
             //if ($("#tipoId").val() == "2") {
@@ -2050,20 +2047,21 @@ function InicializarElementos() {
     };
     $("#pagoDirectoId").click(function () {
         if ($(this).is(':checked')) {
-            if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
-                $("#chequeElectronicoId").hide();
-                $("#chequeElectronico").prop("checked", false);
-            }
-            $("#chequeElectronicoDiv").hide();
-            $("#chequeElectronicoInput").prop("checked", false);
-        } else {
-            if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
-                $("#chequeElectronicoId").show();
-            } if (!$("#compensacionId").is(":checked")) {
-                $("#chequeElectronicoDiv").show();
-            }
-
+            //if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
+            //    $("#chequeElectronicoId").hide();
+            //    $("#chequeElectronico").prop("checked", false);
+            //}
+            //$("#chequeElectronicoDiv").hide();
+            //$("#chequeElectronicoInput").prop("checked", false);
         }
+        //else {
+        //    if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
+        //        $("#chequeElectronicoId").show();
+        //    } if (!$("#compensacionId").is(":checked")) {
+        //        $("#chequeElectronicoDiv").show();
+        //    }
+
+        //}
         $("#CDId").prop("checked", false);
         $("#WarrantId").prop("checked", false);
 
@@ -2313,95 +2311,95 @@ function InicializarElementos() {
     //$("#agregarPrecioPactado").click(AgregarPrecioPactado);
 
 
-    $("#pagoCbu").kendoAutoComplete({
-        template: '<p class="buscar-nomb">#: data.Pago#</p>',
-        dataTextField: "Pago",
-        dataValueField: "Pago",
-        autoWidth: true,
-        filter: "contains",
-        change: function () {
-            if ($("#pagoCbu").val() == "" && !$("#compensacionId").is(":checked") && !$("#dolarizadoExpressId").is(":checked")) {
-                $("#chequeElectronicoDiv").show();
-            } else {
-                $("#chequeElectronicoDiv").hide();
-                $("#chequeElectronicoInput").prop("checked", false);
+    //$("#pagoCbu").kendoAutoComplete({
+    //    template: '<p class="buscar-nomb">#: data.Pago#</p>',
+    //    dataTextField: "Pago",
+    //    dataValueField: "Pago",
+    //    autoWidth: true,
+    //    filter: "contains",
+    //    change: function () {
+    //        if ($("#pagoCbu").val() == "" && !$("#compensacionId").is(":checked") && !$("#dolarizadoExpressId").is(":checked")) {
+    //            $("#chequeElectronicoDiv").show();
+    //        } else {
+    //            $("#chequeElectronicoDiv").hide();
+    //            $("#chequeElectronicoInput").prop("checked", false);
 
-            }
-        },
-        //select: function (e) {
-        //    $("#pagoCbu").val(e.dataItem.Pago);
-        //},
-        dataSource: {
-            severFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/CompraNet/ObtenerListaDeCbu"
-                },
-                parameterMap: function (data, type) {
-                    var cuitProv = $("#buscadorProveedor").val().split('(');
-                    if (cuitProv[1] != null) {
-                        var cuitP = cuitProv[1].split(')');
-                    }
-                    else {
-                        cuitP = cuitProv;
-                    }
-                    return { cuitProveedor: cuitP[0], filtro: $('#pagoCbu').val() };
-                }
-            }
+    //        }
+    //    },
+    //    //select: function (e) {
+    //    //    $("#pagoCbu").val(e.dataItem.Pago);
+    //    //},
+    //    dataSource: {
+    //        severFiltering: true,
+    //        serverPaging: true,
+    //        transport: {
+    //            read: {
+    //                type: 'post',
+    //                dataType: 'json',
+    //                url: "/CompraNet/ObtenerListaDeCbu"
+    //            },
+    //            parameterMap: function (data, type) {
+    //                var cuitProv = $("#buscadorProveedor").val().split('(');
+    //                if (cuitProv[1] != null) {
+    //                    var cuitP = cuitProv[1].split(')');
+    //                }
+    //                else {
+    //                    cuitP = cuitProv;
+    //                }
+    //                return { cuitProveedor: cuitP[0], filtro: $('#pagoCbu').val() };
+    //            }
+    //        }
 
-        }
-    });
-    $('#pagoCbu').click(function (e) {
-        $('#pagoCbu').val("");
-        $("#pagoCbu").data("kendoAutoComplete").search("");
-    });
+    //    }
+    //});
+    //$('#pagoCbu').click(function (e) {
+    //    $('#pagoCbu').val("");
+    //    $("#pagoCbu").data("kendoAutoComplete").search("");
+    //});
 
 
-    $("#pagoCbuInput").kendoAutoComplete({
-        template: '<p class="buscar-nomb">#: data.Pago#</p>',
-        type: 'text',
-        dataTextField: "Pago",
-        dataValueField: "Pago",
-        autoWidth: true,
-        filter: "contains",
-        change: function () {
-            if ($("#pagoCbuInput").val() == "") {
-                $("#chequeElectronicoId").show();
-            } else {
-                $("#chequeElectronicoId").hide();
-                $("#chequeElectronico").prop("checked", false);
-            }
-        },
-        dataSource: {
-            severFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/CompraNet/ObtenerListaDeCbu"
-                },
-                parameterMap: function (data, type) {
-                    var cuitProv = $("#buscadorProveedor").val().split('(');
-                    if (cuitProv[1] != null) {
-                        var cuitP = cuitProv[1].split(')');
-                    }
-                    else {
-                        cuitP = cuitProv;
-                    }
-                    return { cuitProveedor: cuitP[0], filtro: $('#pagoCbuInput').val() };
-                }
-            }
+    //$("#pagoCbuInput").kendoAutoComplete({
+    //    template: '<p class="buscar-nomb">#: data.Pago#</p>',
+    //    type: 'text',
+    //    dataTextField: "Pago",
+    //    dataValueField: "Pago",
+    //    autoWidth: true,
+    //    filter: "contains",
+    //    change: function () {
+    //        if ($("#pagoCbuInput").val() == "") {
+    //            $("#chequeElectronicoId").show();
+    //        } else {
+    //            $("#chequeElectronicoId").hide();
+    //            $("#chequeElectronico").prop("checked", false);
+    //        }
+    //    },
+    //    dataSource: {
+    //        severFiltering: true,
+    //        serverPaging: true,
+    //        transport: {
+    //            read: {
+    //                type: 'post',
+    //                dataType: 'json',
+    //                url: "/CompraNet/ObtenerListaDeCbu"
+    //            },
+    //            parameterMap: function (data, type) {
+    //                var cuitProv = $("#buscadorProveedor").val().split('(');
+    //                if (cuitProv[1] != null) {
+    //                    var cuitP = cuitProv[1].split(')');
+    //                }
+    //                else {
+    //                    cuitP = cuitProv;
+    //                }
+    //                return { cuitProveedor: cuitP[0], filtro: $('#pagoCbuInput').val() };
+    //            }
+    //        }
 
-        }
-    });
-    $('#pagoCbuInput').click(function (e) {
-        $('#pagoCbuInput').val("");
-        $("#pagoCbuInput").data("kendoAutoComplete").search("");
-    });
+    //    }
+    //});
+    //$('#pagoCbuInput').click(function (e) {
+    //    $('#pagoCbuInput').val("");
+    //    $("#pagoCbuInput").data("kendoAutoComplete").search("");
+    //});
 
     //FIN INICIALIZARELEMENTOS
 }
@@ -2453,6 +2451,7 @@ function CambioCalidades(calidades) {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
     }
+ 
 }
 
 function ClickEnPizarra() {
@@ -2554,6 +2553,13 @@ function windowsResize() {
 }
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
+    if ($("#canjeId").is(":checked")) {
+        for (var i = 0; i < calidadGrano.length; i++) {
+            if (calidadGrano[i].Descripcion != "Camara" && calidadGrano[i].Descripcion != "Fabrica") {
+                calidadGrano.splice(i);
+            } 
+        }
+    }
     viewModel.set("EspecialesCombo", calidadGrano);
 
     if ($("#calidadesEspecialesId").data("kendoDropDownList") && value === "3") {
@@ -3044,6 +3050,10 @@ function validarDescuento(descuento) {
         errores.push("El campo Moneda no puede estar vacío");
     }
 
+    if (descuento.Porcentaje > 1 && $("#canjeId").is(":checked")) {
+        errores.push("El campo Porcentaje no puede ser mayor al 1% cuando hay Canje");
+    }
+
     if (descuentos != undefined && descuentos != null && descuentos.length > 0) {
         for (var i = 0; i < descuentos.length; i++) {
 
@@ -3457,8 +3467,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#dolarizadoDiv").show();
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
         $("#dolarizadoExpressId").prop("checked", true);
-        $("#chequeElectronicoDiv").hide();
-        $("#pagoCbuDiv").hide();
+        //$("#chequeElectronicoDiv").hide();
+        //$("#pagoCbuDiv").hide();
 
 
     } else {
@@ -3466,12 +3476,12 @@ function CargarDatosEditar(contrato, hijo) {
         //$("#dolarizadoDiv").hide();
     }
 
-    if (contrato.PagoCBU != "" && contrato.PagoCBU != null) {
-        $("#pagoCbu").data("kendoAutoComplete").value(contrato.PagoCBU);
-        $("#pagoCbuInput").data("kendoAutoComplete").value(contrato.PagoCBU);
-        $("#chequeElectronicoId").hide();
-        $("#chequeElectronicoDiv").hide();
-    }
+    //if (contrato.PagoCBU != "" && contrato.PagoCBU != null) {
+    //    $("#pagoCbu").data("kendoAutoComplete").value(contrato.PagoCBU);
+    //    $("#pagoCbuInput").data("kendoAutoComplete").value(contrato.PagoCBU);
+    //    $("#chequeElectronicoId").hide();
+    //    $("#chequeElectronicoDiv").hide();
+    //}
 
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
@@ -3603,6 +3613,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#caratulaMATId").val(contrato.CaratulaMAT);
             $("#precioAjusteComisionId").data("kendoNumericTextBox").value(contrato.PrecioAjusteComision);
             $("#monedaAjusteComisionId").data("kendoDropDownList").value(contrato.MonedaAjusteComisionId);
+            $("#montoMonedaId").data("kendoDropDownList").value(contrato.MonedaCanjeId);
             $("#boletoNingunoId").prop("checked", false);
             $("#boletoNingunoId").click();
             $("#boletoNingunoId").attr("readonly", "readonly");
@@ -3631,6 +3642,15 @@ function CargarDatosEditar(contrato, hijo) {
         $("#visualizar_datosTercero").html(datosTercero);
     } else {
         $("#datosCargaTercero").hide();
+    }
+
+    if (contrato.Canje == true) {
+        ocultarSiHayCanje();
+        $("#canjeId").prop("checked", true);
+        $("#montoId").data("kendoNumericTextBox").value(contrato.Monto);
+        $("#montoMonedaId").data("kendoDropDownList").value(contrato.MonedaCanjeId);
+        $("#montoMonedaId").data("kendoDropDownList").trigger("change");
+        $("#insumoId").val(contrato.Insumo);
     }
 
 }
@@ -4190,20 +4210,20 @@ function FormatearFecha(fecha) {
 //    }
 //}
 function HayCompensacion() {
-    if (!$("#compensacionId").is(":checked")) {
-        if (!$("#pagoDirectoId").is(":checked")) {
-            $("#chequeElectronicoDiv").show();
-        }
-        if ($("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
-            $("#pagoCbuDiv").show();
-        }
+    //if (!$("#compensacionId").is(":checked")) {
+    //    //if (!$("#pagoDirectoId").is(":checked")) {
+    //    //    $("#chequeElectronicoDiv").show();
+    //    //}
+    //    if ($("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
+    //        $("#pagoCbuDiv").show();
+    //    }
 
-    }
-    else {
-        $("#chequeElectronicoInput").prop("checked", false);
-        $("#chequeElectronicoDiv").hide();
-        $("#pagoCbuDiv").hide();
-    }
+    //}
+    //else {
+    //    $("#chequeElectronicoInput").prop("checked", false);
+    //    $("#chequeElectronicoDiv").hide();
+    //    $("#pagoCbuDiv").hide();
+    //}
 }
 
 function HayChequeElectronicoAmpliar() {
@@ -4248,6 +4268,46 @@ function formatDate(date) {
         day = '0' + day;
 
     return [year, month, day].join('-');
+}
+
+function HayCanje() {
+
+    if ($("#canjeId").is(":checked")) {
+        ocultarSiHayCanje();        
+        CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
+    } else {
+        CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
+        $("#mostrarCanje").hide();
+        $("#montoId").data("kendoNumericTextBox").value("");
+        $("#montoMonedaId").data("kendoDropDownList").value("");
+        $("#insumoId").val("");
+        $("#pagoDiferidoDiv").show();
+        if ($("#clasificacion").val() == 1) {
+            $("#dolarizadoExpressDiv").show();
+        }
+        $("#divSojaSustentable").show();
+        $("#compensacionDiv").show(); 
+        $("#ordenarRow").hide();  
+    } 
+}
+function ocultarSiHayCanje() {
+    $("#mostrarCanje").show();
+    $("#pagoDiferidoDiv").hide();
+    $("#pesificadoId").prop("checked", false);
+    $("#dolarizadoExpressDiv").hide();
+    $("#dolarizadoExpressId").prop("checked", false);
+    $("#divSojaSustentable").hide();
+    $("#sustentableId").prop("checked", false);
+    $("#compensacionDiv").hide();
+    $("#compensacionId").prop("checked", false);
+    $("#dolarizadoDiv").hide();
+    $("#dolarizadoFechaId").val("");
+    $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+    $("#sustentableMonedaId").data("kendoDropDownList").value("");
+    $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+    $(".sustentableDiv").hide();
+    $("#pesificadoDiv").hide();
+    $("#ordenarRow").show();  
 }
 
 
