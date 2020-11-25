@@ -64,28 +64,37 @@ namespace WebDataAgro.Seguridad
             }
 
             log.Debug("Agregando claims de permisos DataAgro para el usuario {0}", nombreUsuario);
-            if (esExterno)
+            try
             {
-                var usuario = repositorio.ObtenerNoTracking<Proveedor>(u => u.CUIT == nombreUsuario);
-                if (usuario != null)
+                if (esExterno)
                 {
-                    foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                    var usuario = repositorio.ObtenerNoTracking<Proveedor>(u => u.CUIT == nombreUsuario);
+                    if (usuario != null)
                     {
-                        identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
+                        foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                        {
+                            identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
+                        }
+                    }
+                }
+                else
+                {
+                    var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.IdActiveDirectory == nombreUsuario);
+                    if (usuario != null && usuario.Deshabilitado != true)
+                    {
+                        foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
+                        {
+                            identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
+                        }
                     }
                 }
             }
-            else
+            catch (Exception e)
             {
-                var usuario = repositorio.ObtenerNoTracking<Comercial>(u => u.IdActiveDirectory == nombreUsuario);
-                if (usuario != null && usuario.Deshabilitado != true)
-                {
-                    foreach (var permiso in usuario.RolesAsociados.SelectMany(rol => rol.PermisosAsociados).Distinct())
-                    {
-                        identity.AddClaim(new Claim(ClaimTypes.Role, permiso.Permiso.ToString()));
-                    }
-                }
+                log.Error("error agregando roles al usuario {0}", nombreUsuario);
+                log.Error(e);
             }
+
 
             var ci = new ClaimsIdentity(((ClaimsIdentity)incomingPrincipal.Identity).Claims, "Negotiate");
             var transformedPrincipal = new ClaimsPrincipal(ci);
