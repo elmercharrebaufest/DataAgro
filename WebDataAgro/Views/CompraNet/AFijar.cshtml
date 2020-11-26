@@ -151,10 +151,7 @@
                 <textarea type="text" class="campo-input-text k-textbox" id="motivoOperacionAnteriorId" rows="3" maxlength="100"></textarea>
             </div>
         </div>
-
-
     </div>
-
     <div class="row">
         <div class="col-sm-2">
             <label>Tipo</label>
@@ -165,14 +162,14 @@
                 <img id="errtipoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div hidden id="fechaFijacionDiv">
+        @*<div hidden id="fechaFijacionDiv">
             <div class="col-sm-2">
                 <label>Fecha Fijación</label>
             </div>
             <div class="col-md-2 ">
                 <input id="fechaFijacionId" type="date" data-bind="value: Parametros.Fecha" style="width:100%" />
             </div>
-        </div>
+        </div>*@
         <div id="destinoDiv" class="noFason noAgente">
             <div class="col-sm-1">
                 <label>Destino</label>
@@ -180,6 +177,15 @@
             <div class="col-md-4 col-sm-4">
                 <select id="destinoId" data-bind="source: DestinoCombo, value: Parametros.Destino, disabled: isControlDisabled"></select>
                 <img id="errDestinoId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+        </div>
+        <div hidden class="ampliar">
+            <div class="col-sm-offset-6 col-sm-2">
+                <label style="width:120px">Préstamo Devolución</label>
+                <input id="prestamoDevolucionId" class="campo-input-input" data-bind="checked:Parametros.prestamoDevolucionId, disabled: isControlDisabled" type="checkbox" onclick="HayPrestamo()" />
+            </div>
+            <div class="col-md-3 col-sm-3" id="plantaDestinoDiv" hidden>
+                <select id="plantaDestinoId" data-bind="source: DestinoCombo, value: Parametros.PlantaDestino, disabled: isControlDisabled"></select>
             </div>
         </div>
         <div id="tipoFasonDiv" class="fason" hidden>
@@ -200,6 +206,7 @@
                 <img id="errOperadorId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
+
     </div>
 
     <div id="plazosYTopesFijacion" class="noFason noAgente acuerdo contratoAFijar contratoAPrecio">
@@ -223,18 +230,28 @@
                     </span>
                 </div>
             </div>
-            <div class="col-sm-5 col-md-2 contratoAFijar ampliar">
-                <div class="madreDiv " style="padding-right:0">
-                    <label style="width:60px">Convenio</label>
-                    <input id="madreId" class="campo-input-input" data-bind="checked:Parametros.Madre, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errmadreId" src="~/Content/Images/error.png" style="display:none" />
+            <div hidden class="ampliar">
+                <div class="col-sm-5 col-md-2 contratoAFijar">
+                    <div class="madreDiv " style="padding-right:0">
+                        <label style="width:60px">Convenio</label>
+                        <input id="madreId" class="campo-input-input" data-bind="checked:Parametros.Madre, disabled: isControlDisabled" type="checkbox" />
+                        <img id="errmadreId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-5 col-md-3 contratoAFijar ampliar">
-                <div class="madreDiv " style="padding-right:0">
-                    <label style="width:60px">Fasón</label>
-                    <input id="fasonIdCheck" class="campo-input-input" data-bind="" type="checkbox" onclick="ValidarFason()" />
-                    <img id="errmadreId" src="~/Content/Images/error.png" style="display:none" />
+            <div hidden class="ampliar">
+                <div class="col-sm-5 col-md-2 contratoAFijar">
+                    <div class="madreDiv " style="padding-right:0">
+                        <label style="width:60px">Fasón</label>
+                        <input id="fasonIdCheck" class="campo-input-input" data-bind="" type="checkbox" onclick="ValidarFason()" />
+                        <img id="errmadreId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+            </div>
+            <div class="ampliar">
+                <div class="col-sm-2" id="canjeDiv">
+                    <label>Canje</label>
+                    <input id="canjeId" class="campo-input-input" data-bind="checked:Parametros.canjeId, disabled: isControlDisabled" type="checkbox" onclick="HayCanje()" />
                 </div>
             </div>
         </div>
@@ -424,30 +441,30 @@
     <div class="row">
 
         @*<div id="LabelPrecio" class="col-sm-2 ">
-            <label>Precio Base</label>
-        </div>
-        <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
-            <div class="col-xs-7 col-md-6 noPadding">
-                <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
-                <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
+                <label>Precio Base</label>
             </div>
-            <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
-                <div class="w70" id="ocultarAperturaMoneda">
-                    <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
-                    <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
-
+            <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
+                <div class="col-xs-7 col-md-6 noPadding">
+                    <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
+                    <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
-                <div class="w30" id="ocultarAperturaBtn">
-                    <span style="display:inline-block" id="botonAperturaDePrecio">
-                        <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
-                            <i class="fa fa-table"></i>
+                <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
+                    <div class="w70" id="ocultarAperturaMoneda">
+                        <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
+                        <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
+
+                    </div>
+                    <div class="w30" id="ocultarAperturaBtn">
+                        <span style="display:inline-block" id="botonAperturaDePrecio">
+                            <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
+                                <i class="fa fa-table"></i>
+                            </span>
                         </span>
-                    </span>
 
+                    </div>
                 </div>
-            </div>
 
-        </div>*@
+            </div>*@
         <div id="posicionFasonDiv" class="fason agente" hidden>
             <div class="col-sm-1">
                 <label>Posición</label>
@@ -485,11 +502,11 @@
             </div>
         </div>
         @*<div class="col-xs-10 col-sm-5 noFason noAgente acuerdo ampliar-fijacion ">
-            <div id="chequeElectronicoId" class="acuerdo" style="float:right" hidden>
-                <label>Echeq</label>
-                <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
-            </div>
-        </div>*@
+                <div id="chequeElectronicoId" class="acuerdo" style="float:right" hidden>
+                    <label>Echeq</label>
+                    <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
+                </div>
+            </div>*@
         <div class="col-sm-2 espacioPrecioMoneda" hidden></div>
         <div class="col-xs-12 col-sm-5 col-md-4 required-box-parent espacioPrecioMoneda" hidden></div>
         <div class="col-sm-2" id="fasonEspecial" hidden>
@@ -509,11 +526,11 @@
             </div>
         </div>
         @*<div class="col-xs-12 col-sm-5 noFason noAgente acuerdo ampliar-fijacion ">
-            <div id="chequeElectronicoId" class="acuerdo" hidden>
-                <label>Echeq</label>
-                <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
-            </div>
-        </div>*@
+                <div id="chequeElectronicoId" class="acuerdo" hidden>
+                    <label>Echeq</label>
+                    <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
+                </div>
+            </div>*@
     </div>
 
     <div style="margin-bottom: 5px;" id="clasificacionDiv" class="row noFason noAgente noAcuerdo ampliar ">
@@ -588,14 +605,14 @@
         </div>
     </div>
     @*<div class="row" hidden id="fechaCiertaAcuerdoDiv">
-        <div class="col-md-2">
-            <label>Fecha Cierta</label>
-        </div>
-        <div class="col-md-2 ">
-            <input id="fechaCiertaAcuerdo" type="date" data-bind="value: Parametros.fechaCiertaId" style="width:100%" />
-            <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
-        </div>
-    </div>*@
+            <div class="col-md-2">
+                <label>Fecha Cierta</label>
+            </div>
+            <div class="col-md-2 ">
+                <input id="fechaCiertaAcuerdo" type="date" data-bind="value: Parametros.fechaCiertaId" style="width:100%" />
+                <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+        </div>*@
     <div id="ComercialDiv" class="row fason acuerdo" hidden>
         <div class="col-sm-2">
             <label>Comercial</label>
@@ -606,13 +623,13 @@
         </div>
     </div>
     @*<div class="row acuerdo" id="pagoCbuId" hidden>
-        <div class="col-sm-2">
-            <label>Pago CBU</label>
-        </div>
-        <div class="col-sm-10 col-md-4">
-            <input type="text" class="k-textbox" style="width:100%" id="pagoCbuInput" />
-        </div>
-    </div>*@
+            <div class="col-sm-2">
+                <label>Pago CBU</label>
+            </div>
+            <div class="col-sm-10 col-md-4">
+                <input type="text" class="k-textbox" style="width:100%" id="pagoCbuInput" />
+            </div>
+        </div>*@
 
     <div class="row ampliar noFason noAgente noAcuerdo">
         <div class="col-sm-2 ">
@@ -668,12 +685,12 @@
         </div>
         <div class="row">
             @*<div class="col-sm-2 ">
-                <div id="pagoDolarizadoDiv">
-                    <label style="width:120px">Dolarizado</label>
-                    <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>*@
+                    <div id="pagoDolarizadoDiv">
+                        <label style="width:120px">Dolarizado</label>
+                        <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
+                        <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>*@
             <div id="dolarizadoExpressDiv" class="noAcuerdo col-xs-2" hidden>
                 <label>Dolarizado Express</label>
                 <input id="dolarizadoExpressId" class="campo-input-input" name="dolarizadoExpress" type="checkbox">
@@ -710,13 +727,13 @@
                     <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div class="col-sm-6 noAcuerdo">
+            <div class="col-sm-6 noAcuerdo" id="selCargoVendedorDiv">
                 <label style="width:200px">Sellado 100% a cargo vendedor</label>
                 <input id="selCargoVendedorId" class="campo-input-input" data-bind="checked:Parametros.selCargoVendedorId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errselCargoVendedorId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div class="row noAcuerdo">
+        <div class="row noAcuerdo" id="noInformarSioDiv">
             <div class="col-sm-2 ">
                 <label style="width:120px">No Informa SIO</label>
                 <input id="noInformaSioId" class="campo-input-input" data-bind="checked:Parametros.noInformaSioId, disabled: isControlDisabled" type="checkbox" />
@@ -732,7 +749,7 @@
                 </div>
             </div>
             <div class="col-sm-4"></div>
-            <div class="col-sm-6 ">
+            <div class="col-sm-6 " id="selCargoMOADiv">
                 <label style="width:200px">Sellado 100% a cargo MOA</label>
                 <input id="selCargoMOAId" class="campo-input-input" data-bind="checked:Parametros.selCargoMOAId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errselCargoMOAId" src="~/Content/Images/error.png" style="display:none" />
@@ -752,9 +769,9 @@
                 <input id="compensacionId" class="campo-input-input" data-bind="checked:Parametros.compensacionId, disabled: isControlDisabled" type="checkbox" onclick="HayCompensacion()" />
             </div>
             @*<div class="col-sm-2 " id="chequeElectronicoDiv">
-                <label>Echeq</label>
-                <input id="chequeElectronicoInput" class="campo-input-input" name="chequeElectronicoInput" type="checkbox" onclick="HayChequeElectronicoAmpliar()">
-            </div>*@
+                    <label>Echeq</label>
+                    <input id="chequeElectronicoInput" class="campo-input-input" name="chequeElectronicoInput" type="checkbox" onclick="HayChequeElectronicoAmpliar()">
+                </div>*@
 
         </div>
 
@@ -776,17 +793,17 @@
 
         <div class="row ">
             @*<div id="fechaCiertaDiv">
-                <div class="col-md-2 col-sm-9">
-                    <label>Fecha Cierta</label>
-                </div>
+                    <div class="col-md-2 col-sm-9">
+                        <label>Fecha Cierta</label>
+                    </div>
 
-                <div class="col-md-2 ">
-                    <input id="fechaCiertaId" type="date" data-bind="value: Parametros.fechaCiertaId" style="width:100%" />
-                    <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-                <div class="col-md-2"></div>
-            </div>*@
-            <div class="noAcuerdo">
+                    <div class="col-md-2 ">
+                        <input id="fechaCiertaId" type="date" data-bind="value: Parametros.fechaCiertaId" style="width:100%" />
+                        <img id="errfechaCiertaId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>*@
+            <div class="noAcuerdo" id="porcentajePagoDiv">
                 <div class="col-sm-2">
                     <label>Porcentaje de Pago</label>
                 </div>
@@ -820,25 +837,21 @@
                 </div>
             </div>
             @*<div class="row" id="pagoCbuDiv">
-            <div class="col-sm-2">
-                <label>Pago CBU</label>
-            </div>
-            <div class="col-sm-10 col-md-4">
-                <input type="text" class="k-textbox" style="width:100%" id="pagoCbu" />
-            </div>
-        </div>*@
-            <div class="col-sm-2 ">
-                <label style="width:120px">Canje</label>
-                <input id="canjeId" class="campo-input-input" data-bind="checked:Parametros.canjeId, disabled: isControlDisabled" type="checkbox" onclick="HayCanje()" />
-            </div>
+                    <div class="col-sm-2">
+                        <label>Pago CBU</label>
+                    </div>
+                    <div class="col-sm-10 col-md-4">
+                        <input type="text" class="k-textbox" style="width:100%" id="pagoCbu" />
+                    </div>
+                </div>*@            
         </div>
-      
+
         <div class="row" id="mostrarCanje" hidden>
             <div class="col-sm-2">
                 <label>Monto</label>
             </div>
             <div class="col-xs-7 col-md-4">
-                <input id="montoId" margin:0" />      
+                <input id="montoId" margin:0" />
                 <div class="w30" style="display:inline-grid">
                     <select id="montoMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.montoMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
                 </div>

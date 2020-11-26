@@ -568,10 +568,17 @@ function ObtenerDatos(error) {
     }
     if ($("#canjeId").is(":checked") == true) {
         ocultarSiHayCanje();
-        obj.Canje = $("#canjeId").is(":checked") ? true : false;        
+        obj.Canje = true;        
         obj.MonedaCanjeId = $("#montoMonedaId").data("kendoDropDownList").value();
         obj.Insumo = $("#insumoId").val();
         obj.Monto = $("#montoId").data("kendoNumericTextBox").value();
+    }
+
+    if ($("#prestamoDevolucionId").is(":checked") == true) {
+        ocultarSiHayPrestamos()
+        ocultarSiHayCanje();
+        obj.PrestamoDevolucion = true;
+        obj.PlantaDestinoId = $("#plantaDestinoId").data("kendoDropDownList").value();
     }
     
     return obj;

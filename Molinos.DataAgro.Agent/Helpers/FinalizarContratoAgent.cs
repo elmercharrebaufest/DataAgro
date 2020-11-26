@@ -253,12 +253,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                         repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
                         ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
                         DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
-                        CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
-                        PLANTA_DEST = contrato.Destino.CodigoSap,
+                        CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",                         
+                        PLANTA_DEST = contrato.PlantaDestino != null ? contrato.PlantaDestino.CodigoSap : contrato.Destino.CodigoSap,
                         CANJE = contrato.Canje == true ? "X" : "",
                         DESC_INSUMOS = contrato.Insumo,
                         MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
-                        MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0
+                        MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0                           
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
@@ -267,7 +267,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     },
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),
-                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.EsFason == true ? "FASON" : contrato.Canje == true ? "CANJE" : contrato.TipoNegocio.Descripcion,
+                    IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" :
+                    contrato.EsFason == true ? "FASON": contrato.PrestamoDevolucion == true ? "PRESTAMO DEVOLUCION" : contrato.TipoNegocio.Descripcion,
                     IM_APERTURA = listaApertura.ToArray()
                 };
                 logger.Debug(rq.ToXml());

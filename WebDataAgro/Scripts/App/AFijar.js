@@ -1248,6 +1248,25 @@ function InicializarElementos() {
         }
     });
 
+
+    $("#plantaDestinoId").kendoDropDownList({
+        optionLabel: "SELECCIONE PLANTA DESTINO...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id",
+        change: function () {
+            
+        }
+    });
+
+    $("#plantaDestinoId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#plantaDestinoId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
+
+
+    
     $("#tipoFasonId").kendoDropDownList({
         optionLabel: "SELECCIONE TIPO FASON...",
         dataTextField: "Descripcion",
@@ -1731,69 +1750,69 @@ function InicializarElementos() {
     //    }
     //});
 
-    $("#fechaFijacionId").kendoDatePicker({
-        value: date,
-        format: "dd-MM-yyyy",
-        max: new Date(),
-        disableDates: function (i) {
-            var lstFechas = FechaFeriado();
-            if (i && typeof i == 'object') {
-                i = kendo.toString(i, "dd-MM-yyyy");
-            }
-            if (lstFechas.includes(i)) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-        change: function () {
-            var hoy = new Date();
-            var anio = hoy.getFullYear();
-            var mes = hoy.getMonth();
-            var dia = hoy.getDate();
-            hoy = new Date(anio, mes, dia);
-            const diffTime = Math.abs(hoy - this.value());
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if (this.value() < hoy) {
-                $("#fechaFijacionMotivoDiv").show();
-                if (diffDays > 1) {
-                    //$("#noInformaSioId").prop("checked", true);
-                    //$("#noInformaSioId").attr("disabled", true);
-                } else {
-                    //$("#noInformaSioId").prop("checked", false);
-                    //$("#noInformaSioId").attr("disabled", false);
-                }
+    //$("#fechaFijacionId").kendoDatePicker({
+    //    value: date,
+    //    format: "dd-MM-yyyy",
+    //    max: new Date(),
+    //    disableDates: function (i) {
+    //        var lstFechas = FechaFeriado();
+    //        if (i && typeof i == 'object') {
+    //            i = kendo.toString(i, "dd-MM-yyyy");
+    //        }
+    //        if (lstFechas.includes(i)) {
+    //            return true;
+    //        } else {
+    //            return false;
+    //        }
+    //    },
+    //    change: function () {
+    //        var hoy = new Date();
+    //        var anio = hoy.getFullYear();
+    //        var mes = hoy.getMonth();
+    //        var dia = hoy.getDate();
+    //        hoy = new Date(anio, mes, dia);
+    //        const diffTime = Math.abs(hoy - this.value());
+    //        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    //        if (this.value() < hoy) {
+    //            $("#fechaFijacionMotivoDiv").show();
+    //            if (diffDays > 1) {
+    //                //$("#noInformaSioId").prop("checked", true);
+    //                //$("#noInformaSioId").attr("disabled", true);
+    //            } else {
+    //                //$("#noInformaSioId").prop("checked", false);
+    //                //$("#noInformaSioId").attr("disabled", false);
+    //            }
 
-            } else {
-                $("#fechaFijacionMotivoDiv").hide();
-                $("#motivoOperacionAnteriorFijacion").val("");
-                //$("#noInformaSioId").attr("disabled", false);
-            }
-        },
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        month: {
-            // template for dates in month view
-            content: '# if (data.date.getDay() == 0 || data.date.getDay() == 6) { #' +
-                '<div class="disabledDay">#= data.value #</div>' +
-                '# } else { #' +
-                '#= data.value #' +
-                '# } #'
-        },
-        open: function (e) {
-            $(".disabledDay").parent().removeClass("k-link") //removing this class makes the day unselectable
-            $(".disabledDay").parent().removeAttr("href") //this removes the hyperlink styling
-        },
-    });
-    if (!cargaFijacionAyer) {
-        var diaHabil = MSExecuteOnServer('/CompraNet/UltimoDiaHabil');
-        diaHabil = diaHabil.replace(/[^0-9 +]/g, '');
-        $("#fechaFijacionId").data("kendoDatePicker").min(new Date(parseInt(diaHabil)));
-    }
+    //        } else {
+    //            $("#fechaFijacionMotivoDiv").hide();
+    //            $("#motivoOperacionAnteriorFijacion").val("");
+    //            //$("#noInformaSioId").attr("disabled", false);
+    //        }
+    //    },
+    //    parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+    //    month: {
+    //        // template for dates in month view
+    //        content: '# if (data.date.getDay() == 0 || data.date.getDay() == 6) { #' +
+    //            '<div class="disabledDay">#= data.value #</div>' +
+    //            '# } else { #' +
+    //            '#= data.value #' +
+    //            '# } #'
+    //    },
+    //    open: function (e) {
+    //        $(".disabledDay").parent().removeClass("k-link") //removing this class makes the day unselectable
+    //        $(".disabledDay").parent().removeAttr("href") //this removes the hyperlink styling
+    //    },
+    //});
+    //if (!cargaFijacionAyer) {
+    //    var diaHabil = MSExecuteOnServer('/CompraNet/UltimoDiaHabil');
+    //    diaHabil = diaHabil.replace(/[^0-9 +]/g, '');
+    //    $("#fechaFijacionId").data("kendoDatePicker").min(new Date(parseInt(diaHabil)));
+    //}
 
     $("#fechaDesdeId").val(date);
     $("#fechaOperacionId").val(date);
     $("#fechaHastaId").val(datehasta);
-    $("#fechaFijacionId").val(date);
+    //$("#fechaFijacionId").val(date);
 
 
     $(".formulario-footer-guardar-contrato").click(function () {
@@ -3272,11 +3291,11 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.FechaOperacionFormateado != null) {
         $("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
-        $("#fechaFijacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
+        //$("#fechaFijacionId").val(FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado)));
 
     } else {
         $("#fechaOperacionId").val("");
-        $("#fechaFijacionId").val("");
+        //$("#fechaFijacionId").val("");
 
     }
 
@@ -3651,6 +3670,14 @@ function CargarDatosEditar(contrato, hijo) {
         $("#montoMonedaId").data("kendoDropDownList").value(contrato.MonedaCanjeId);
         $("#montoMonedaId").data("kendoDropDownList").trigger("change");
         $("#insumoId").val(contrato.Insumo);
+    }
+
+    if (contrato.PrestamoDevolucion == true) {
+        $("#prestamoDevolucionId").prop("checked", true);
+        ocultarSiHayPrestamos()
+        ocultarSiHayCanje();
+        $("#plantaDestinoId").data("kendoDropDownList").value(contrato.PlantaDestinoId);
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
     }
 
 }
@@ -4291,7 +4318,9 @@ function HayCanje() {
     } 
 }
 function ocultarSiHayCanje() {
-    $("#mostrarCanje").show();
+    if ($("#canjeId").is(":checked")) {
+        $("#mostrarCanje").show();
+    }
     $("#pagoDiferidoDiv").hide();
     $("#pesificadoId").prop("checked", false);
     $("#dolarizadoExpressDiv").hide();
@@ -4307,7 +4336,64 @@ function ocultarSiHayCanje() {
     $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
     $(".sustentableDiv").hide();
     $("#pesificadoDiv").hide();
-    $("#ordenarRow").show();  
+    $("#ordenarRow").show(); 
+   
+}
+function ocultarSiHayPrestamos() {
+    $("#mostrarCanje").hide();
+    $("#DatosDescuentos").hide();
+    $(".datos-descuentos").hide();   
+    $("#DatosCalidades").hide();
+    $(".datos-calidades").hide();   
+    $("#DatosBoleto").hide();
+    $("#selCargoVendedorDiv").hide();
+    $("#selCargoVendedorId").prop("checked", false);
+    $("#selCargoMOADiv").hide();
+    $("#selCargoMOAId").prop("checked", false);
+    $("#canjeDiv").hide();
+    $("#canjeId").prop("checked", false);
+    $("#noInformarSioDiv").hide();
+    $("#noInformaSioId").prop("checked", false);
+    $("#montoId").data("kendoNumericTextBox").value("");
+    $("#montoMonedaId").data("kendoDropDownList").value("");
+    $("#insumoId").val("");
+    $("#plantaDestinoDiv").show();
+    $("#porcentajePagoDiv").hide();
+    $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
+    LimpiarBoleto();
+    $("#boletoNingunoId").prop("checked", true); 
+    $("#calidadesEspecialesId").data("kendoDropDownList").value(0)
+    $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
+    LimpiarCalidades();
+    LimpiarDescuentos();
+}
+function HayPrestamo() {
+    if ($("#prestamoDevolucionId").is(":checked")) {
+        ocultarSiHayPrestamos()
+        ocultarSiHayCanje();
+       
+    } else {
+        $("#DatosDescuentos").show();
+        $("#DatosCalidades").show();
+        $("#DatosBoleto").show();
+        $("#selCargoVendedorDiv").show();
+        $("#selCargoMOADiv").show();
+        $("#canjeDiv").show();
+        $("#noInformarSioDiv").show();
+        $("#pagoDiferidoDiv").show();
+        if ($("#clasificacion").val() == 1) {
+            $("#dolarizadoExpressDiv").show();
+        }
+        $("#divSojaSustentable").show();
+        $("#compensacionDiv").show();
+        $("#ordenarRow").hide(); 
+        $("#plantaDestinoDiv").hide();
+        $("#plantaDestinoId").data("kendoDropDownList").value("");
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        $("#porcentajePagoDiv").hide();
+        $("#boletoNingunoId").prop("checked", false);
+    }
+    
 }
 
 

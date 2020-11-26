@@ -455,4 +455,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="MonedaCanjeId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="ce486a8f-195a-494e-9f1f-e21f4cb5111a" ChangeDateTime="11/25/2020 17:49:31">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[PlantaDestino]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PlantaDestinoId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c0ef144f-989c-40aa-a758-a39e11d2f35f" ChangeDateTime="11/25/2020 17:58:23">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[PrestamosDevolucion]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PrestamoDevolucion" />
+  </Operation>
 </Operations>

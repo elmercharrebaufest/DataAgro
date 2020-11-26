@@ -364,7 +364,10 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Canje + "'" + ',' +
         "'" + dataItem.Monto + "'" + ',' +
         "'" + dataItem.MonedaCanjeId + "'" + ',' +
-        "'" + dataItem.Insumo + "'" +
+        "'" + dataItem.Insumo + "'" + ',' +
+        "'" + dataItem.PrestamoDevolucion + "'" + ',' +
+        "'" + dataItem.PlantaDestinoDescripcion + "'" + ',' +
+        "'" + dataItem.ObservacionTercero + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1883,7 +1886,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
-    Canje, Monto, MonedaCanje, Insumo, ObservacionTercero) {
+    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2286,6 +2289,16 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#insumoDiv").hide();
         $("#montoDiv").hide();
         $("#monedaCanjeDiv").hide();
+    }
+
+    if (Prestamo == "true") {
+        $("#prestamoDiv").show();
+        $("#prestamoId").text("Si");
+        $("#plantaDestinoDiv").show();
+        $("#plantaDestinoId").text(PlantaDestino);
+    } else {
+        $("#prestamoDiv").hide();
+        $("#plantaDestinoDiv").hide();
     }
 }
 

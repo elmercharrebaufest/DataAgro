@@ -102,6 +102,8 @@
     [Monto] DECIMAL(11, 2) NULL, 
     [Insumo] NVARCHAR(30) NULL, 
     [MonedaCanjeId]  CHAR(5) NULL, 
+    [PrestamoDevolucion] BIT NULL, 
+    [PlantaDestinoId] INT NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  

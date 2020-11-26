@@ -81,6 +81,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Insumo { get; set; }
         public string MonedaCanjeId { get; set; }
 
+        public bool? PrestamoDevolucion { get; set; }
+        public int? PlantaDestinoId { get; set; }
+
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
@@ -125,6 +128,9 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("MonedaCanjeId")]
         public virtual Moneda MonedaCanje { get; set; }
+
+        [ForeignKey("PlantaDestinoId")]
+        public virtual Centro PlantaDestino { get; set; }
 
         public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; } 
      

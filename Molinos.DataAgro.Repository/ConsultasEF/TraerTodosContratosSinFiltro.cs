@@ -83,7 +83,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : 
                         (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : 
                         (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
-                        (contrato is Contrato && (contrato as Contrato).Canje == true) ? "CANJE" : contrato.TipoNegocio.Descripcion),
+                        (contrato is Contrato && (contrato as Contrato).Canje == true) ? "CANJE" : (contrato is Contrato && (contrato as Contrato).PrestamoDevolucion == true) ? "PRÉSTAMO DEVOLUCIÓN" :
+                        contrato.TipoNegocio.Descripcion),
                         Localidad = !(contrato is Contrato) || (contrato as Contrato).Localidad == null ? "" : (contrato as Contrato).Localidad.Nombre,
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
@@ -162,7 +163,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Canje = contrato.Canje,
                         MonedaCanjeId = contrato.MonedaCanjeId,
                         Monto = contrato.Monto,
-                        Insumo = contrato.Insumo
+                        Insumo = contrato.Insumo,
+                        PrestamoDevolucion = contrato.PrestamoDevolucion.HasValue ? contrato.PrestamoDevolucion.Value : false,
+                        PlantaDestinoId = contrato.PlantaDestinoId.HasValue ? contrato.PlantaDestinoId.Value : 0,
+                        PlantaDestinoDescripcion = contrato.PlantaDestino != null ? contrato.PlantaDestino.Descripcion : "",
                     };
 
                 return queryNegocios;

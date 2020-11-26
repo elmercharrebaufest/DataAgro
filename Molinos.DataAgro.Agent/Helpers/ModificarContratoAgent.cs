@@ -333,7 +333,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.DolarizadoExpress != contrato.DolarizadoExpress || 
                     contratoGuardado.PagoCBU != contrato.PagoCBU || contratoGuardado.Canje != contrato.Canje ||
                     contratoGuardado.Monto != contrato.Monto || contratoGuardado.Insumo != contrato.Insumo || 
-                    contratoGuardado.MonedaCanjeId != contrato.MonedaCanjeId;
+                    contratoGuardado.MonedaCanjeId != contrato.MonedaCanjeId || 
+                    contratoGuardado.PrestamoDevolucion != contrato.PrestamoDevolucion ||
+                    contratoGuardado.PlantaDestinoId != contrato.PlantaDestinoId ;
 
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
@@ -439,7 +441,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
                             DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X":"",
                             CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
-                            PLANTA_DEST = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
+                            PLANTA_DEST = contrato.PlantaDestinoId != null ? repositorio.Obtener<Centro, string>(x => contrato.PlantaDestinoId == x.Id, x => x.CodigoSap) : repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
                             CANJE = contrato.Canje == true ? "X" : "",
                             DESC_INSUMOS = contrato.Insumo,
                             MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,

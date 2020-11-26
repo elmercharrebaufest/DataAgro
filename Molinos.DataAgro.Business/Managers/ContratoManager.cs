@@ -638,8 +638,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                             var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(contrato.Fecha.Date);
 
-                            if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) 
-                                || oParam.FechaOperacion < diaAnterior && oParam.Canje == true)
+                            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) && oParam.PrestamoDevolucion != true)
+                                || (oParam.FechaOperacion < diaAnterior && oParam.Canje == true))
                             {
                                 oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
 
@@ -666,11 +666,10 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(null);
 
-                            if (oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) || 
-                                oParam.FechaOperacion < diaAnterior && oParam.Canje == true)
+                            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) && oParam.PrestamoDevolucion != true) || 
+                                (oParam.FechaOperacion < diaAnterior && oParam.Canje == true))
                             {
                                 oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
-
                             }
 
                             if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
@@ -678,7 +677,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                             }
 
-                            if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior)
+                            if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior && oParam.PrestamoDevolucion != true)
                             {
                                 oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
                             }
@@ -699,6 +698,16 @@ namespace Molinos.DataAgro.Business.Managers
                             if (String.IsNullOrEmpty(oParam.Insumo))
                             {
                                 oErrorMessages.Error("Insumo", "Se Debe completar el campo Insumo cuando hay Canje");
+                            }
+                        }
+                    }
+                    if (!validacionesMinimas)
+                    {
+                        if(oParam.PrestamoDevolucion == true)
+                        {
+                            if (!oParam.PlantaDestinoId.HasValue)
+                            {
+                                oErrorMessages.Error("PlantaDestino", "Se Debe completar el campo Planta Destino cuando hay Préstamo Devolución");
                             }
                         }
                     }
@@ -972,6 +981,9 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.MonedaCanjeId = oContrato.MonedaCanjeId;
             oContratoSave.Monto = oContrato.Monto;
             oContratoSave.Insumo = oContrato.Insumo;
+            oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
+            oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
+
 
 
             if (oContratoSave.PrecioPactado != null)
@@ -1384,7 +1396,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
                     try
                     {
-                        if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null && oContratoSave.Canje != true)
+                        if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null && oContratoSave.Canje != true && oContratoSave.PrestamoDevolucion != true)
                         {
                             mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
                             var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
@@ -1534,6 +1546,12 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.PagoCBU = oContrato.PagoCBU;
                             oContratoSave.ChequeElectronico = oContratoSave.ChequeElectronico;
                             oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
+                            oContratoSave.Canje = oContrato.Canje;
+                            oContratoSave.Monto = oContrato.Monto;
+                            oContratoSave.MonedaCanjeId = oContrato.MonedaCanjeId;
+                            oContratoSave.Insumo = oContrato.Insumo;
+                            oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
+                            oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
 
 
                             if (oContratoSave.PrecioPactado != null)
@@ -2017,8 +2035,11 @@ namespace Molinos.DataAgro.Business.Managers
                 Canje = x.Canje,
                 Monto = x.Monto,
                 MonedaCanjeId = x.MonedaCanjeId,
-                Insumo = x.Insumo
-                
+                Insumo = x.Insumo,
+                PrestamoDevolucion = x.PrestamoDevolucion.HasValue ? x.PrestamoDevolucion.Value : false,
+                PlantaDestinoId = x.PlantaDestinoId.HasValue ? x.PlantaDestinoId.Value : 0,
+                PlantaDestinoDescripcion = !x.PlantaDestinoId.HasValue  ? "" : x.Destino.Descripcion,
+
             });
             return contrato;
         }
@@ -2717,6 +2738,8 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.Monto = contrato.Monto;
             contratoSave.MonedaCanjeId = contrato.MonedaCanjeId;
             contratoSave.Insumo = contrato.Insumo;
+            contratoSave.PrestamoDevolucion = contrato.PrestamoDevolucion;
+            contratoSave.PlantaDestinoId = contrato.PlantaDestinoId;
 
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
             repositorio.RemoverTodos(calidades);
@@ -2840,7 +2863,7 @@ namespace Molinos.DataAgro.Business.Managers
                     contrato.EstadoId = 5;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Modificar, contrato.GetType());
-                    if (contrato.Canje != true)
+                    if (contrato.Canje != true && contrato.PrestamoDevolucion != true)
                     {
                         EnviarMail(contrato, contratoSave, comercialRegistrado);
                     }
@@ -3688,6 +3711,8 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.Monto = contratoSap.Monto;
                 contrato.MonedaCanjeId = contratoSap.MonedaCanjeId;
                 contrato.Insumo = contratoSap.Insumo;
+                contrato.PrestamoDevolucion = contratoSap.PrestamoDevolucion;
+                contrato.PlantaDestinoId = contratoSap.PlantaDestinoId;
                 repositorio.Agregar(contrato);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
@@ -3989,6 +4014,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.Monto = negocio.Monto;
             bc.Insumo = negocio.Insumo;
 
+
             bc.Descuentos = negocio.Descuentos.Select(y => new DescuentoBonificacionDto
             {
                 ContratoId = y.ContratoId,
@@ -4043,6 +4069,8 @@ namespace Molinos.DataAgro.Business.Managers
             bc.MonedaAjusteComisionId = (negocio is Contrato) ? (negocio as Contrato).MonedaAjusteComisionId : "";
             bc.CaratulaMAT = (negocio is Contrato) ? (negocio as Contrato).CaratulaMAT : "";
             bc.TipoAgenteCompraId = (negocio is Contrato) ? (negocio as Contrato).TipoAgenteCompraId : (negocio is ContratoAcuerdo) ? (negocio as ContratoAcuerdo).TipoAgenteCompraId : (int?)null;
+            bc.PrestamoDevolucion = negocio.PrestamoDevolucion.HasValue ? negocio.PrestamoDevolucion.Value : false;
+            bc.PlantaDestinoId = negocio.PlantaDestinoId.HasValue ? negocio.PlantaDestinoId.Value : 0;
             return bc;
         }
 

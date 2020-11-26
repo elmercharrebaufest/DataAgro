@@ -399,12 +399,14 @@ namespace WebDataAgro.Services
             contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
             contrato.Insumo = contratoSAP.Insumo;
             contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
+            contrato.PrestamoDevolucion = contratoSAP.TipoNegocio == "PRESTAMO EVOLUCION" ? true : false;
+            contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
             if (!esActualizar)
             {
                 contrato.EsFason = contratoSAP.TipoNegocio == "FASON" ? true : (bool?)null;
                 contrato.Madre = contratoSAP.TipoNegocio == "MADRE" ? true : contratoSAP.TipoNegocio == "HIJO" ? false : (bool?)null;
                 contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
-                    contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 :
+                    contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 : contratoSAP.TipoNegocio == "PRESTAMO EVOLUCION" ? 1 :
                     repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
             }
             if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)

@@ -176,6 +176,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaCanjeId { get; set; }
         public decimal? Monto { get; set; }
         public string Insumo { get; set; }
+        public bool PrestamoDevolucion { get; set; }
+        public int PlantaDestinoId { get; set; }
+        public string PlantaDestinoDescripcion { get; set; }
     }
 
     public class StoredPorContratoResult

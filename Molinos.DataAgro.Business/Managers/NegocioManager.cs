@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnvioMailNegociosConDiaAnterior()
         {
             DateTime hoy = DateTime.Now.Date;
-            var contratos = repositorio.Listar<Negocio>(x => DbFunctions.TruncateTime(x.Fecha) != DbFunctions.TruncateTime(x.FechaOperacion) && x.Fecha >= hoy);
+            var contratos = repositorio.Listar<Negocio>(x => DbFunctions.TruncateTime(x.Fecha) != DbFunctions.TruncateTime(x.FechaOperacion) && x.Fecha >= hoy && x.Canje != true && x.PrestamoDevolucion != true);
             var lista = new List<string>();
             var listaJefes = new List<string>();
             if (contratos.Count > 0)
