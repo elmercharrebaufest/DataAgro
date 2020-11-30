@@ -967,9 +967,12 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "MonedaId",
         change: function () {
+            if ($("#pizarraId").is(':checked')) {
+                $("#precioMonedaId").data("kendoDropDownList").value("");
+            }
             if ($("#precioMonedaId").val() === "ARP  " && $("#tipoId").val() === "3") {
                 $("#pagoDolarizadoDiv").hide();
-                $("#dolarizadoDiv").hide();                
+                $("#dolarizadoDiv").hide();
                 $("#pagoDiferidoFijacionDiv").show();
                 $("#dolarizadoId").prop("checked", false);
                 $("#dolarizadoFechaId").data("kendoDatePicker").value("");
@@ -990,9 +993,20 @@ function InicializarElementos() {
                 $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
                 $("#pagoDiferidoFijacionDiv").hide();
                 $("#diasDiferidoFijacionDiv").hide();
-                 $("#pagoDolarizadoDiv").show();
+                $("#pagoDolarizadoDiv").show();
                 $("#diasDiferidoId").prop("checked", false);
-                $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");               
+                $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
+            } else {
+                $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
+                $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
+                $("#pagoDiferidoFijacionDiv").hide();
+                $("#diasDiferidoFijacionDiv").hide();
+                $("#diasDiferidoId").prop("checked", false);
+                $("#dolarizadoId").prop("checked", false);
+                $("#dolarizadoFechaId").data("kendoDatePicker").value("");
+                $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
+                $("#pagoDolarizadoDiv").hide();
+                $("#dolarizadoDiv").hide();
             }
             if ($("#tipoId").val() === "3") {
                 CalcularPrecioTotalApertura();
@@ -2440,6 +2454,8 @@ function ClickEnPizarra() {
         LimpiarApertura();
         $("#precioId").data("kendoNumericTextBox").enable(false);
         $("#precioMonedaId").data("kendoDropDownList").enable(false);
+        $("#precioMonedaId").data("kendoDropDownList").trigger("change");
+
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(false);
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(false);
         $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");

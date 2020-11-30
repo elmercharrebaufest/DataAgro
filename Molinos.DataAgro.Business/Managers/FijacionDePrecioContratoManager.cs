@@ -287,6 +287,10 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
+            if (oParam.Dolarizado.HasValue && oParam.Dolarizado.Value && !oParam.FechaDolarizado.HasValue)
+            {
+                oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
+            }
             return oErrorMessages;
         }
 
