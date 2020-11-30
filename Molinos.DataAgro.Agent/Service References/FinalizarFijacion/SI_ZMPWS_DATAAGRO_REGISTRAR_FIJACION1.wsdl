@@ -13,14 +13,18 @@
             <xsd:element minOccurs="0" name="IM_CORREDOR" type="rfc:char16" />
             <xsd:element minOccurs="0" name="IM_CUENTA_MRP" type="rfc:char60" />
             <xsd:element name="IM_DIAS_DIFERIM" type="rfc:numeric3" />
+            <xsd:element minOccurs="0" name="IM_DOLARIZADO" type="rfc:char1" />
+            <xsd:element minOccurs="0" name="IM_DOL_CORREDOR" type="rfc:char1" />
+            <xsd:element minOccurs="0" name="IM_DOL_EXPRESS" type="rfc:char1" />
             <xsd:element name="IM_FECHA" type="rfc:date10" />
+            <xsd:element minOccurs="0" name="IM_FECHA_LIMITE" type="rfc:date10" />
             <xsd:element name="IM_KILOS" type="rfc:quantum13.3" />
             <xsd:element name="IM_MATERIAL" type="rfc:char18" />
             <xsd:element name="IM_MONEDA" type="rfc:char4" />
             <xsd:element name="IM_PAGO_DIF_ARP" type="rfc:char1" />
             <xsd:element name="IM_PRECIO" type="rfc:curr11.2" />
             <xsd:element name="IM_PROVEEDOR" type="rfc:char16" />
-            <xsd:element minOccurs="0" name="IM_ZLSCH" type="rfc:char10" />
+            <xsd:element minOccurs="0" name="IM_ZLSCH" type="rfc:char1" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -159,10 +163,10 @@
   </wsdl:binding>
   <wsdl:service name="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONService">
     <wsdl:port name="HTTP_Port" binding="p1:SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding">
-      <address location="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <address location="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
     </wsdl:port>
     <wsdl:port name="HTTPS_Port" binding="p1:SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding">
-      <address location="https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <address location="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

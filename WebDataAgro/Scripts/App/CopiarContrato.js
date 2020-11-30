@@ -368,11 +368,16 @@ function ObtenerDatos(error) {
     obj.Cantidad = $("#cantidadId").val() == null || $("#cantidadId").val() == undefined || $("#cantidadId").val() == "" ? 0 : $("#cantidadId").val(); 
     obj.Precio = $("#precioId").val() == null || $("#precioId").val() == undefined || $("#precioId").val() == "" ? 0 : $("#precioId").val();
     obj.PrecioNeto = $("#precioTotalApertura").val();
-    obj.FechaEntrega = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? kendo.toString((maniana), "dd-MM-yyyy") : $("#fechaHastaId").val();
+    obj.FechaEntrega = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
     obj.CampanaId = $("#campanaId").val();
-    obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaDesdeId").val();
-    obj.Fecha = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaFijacionId").val();
-    obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? kendo.toString((maniana), "dd-MM-yyyy") : $("#fechaHastaId").val();
+    if (TipoId != "3") {
+        obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
+        obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
+    } else {
+        obj.FechaDesde = formatearFecha(hoy);
+        obj.FechaHasta = formatearFecha(maniana);
+    }
+    obj.Fecha = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaFijacionId").val());
     obj.MonedaId = $("#precioMonedaId").val();
     if (obj.TipoNegocioId == "3" || obj.TipoNegocioId == "4") {
         obj.ComercialId = $("#comercialFijacionId").val();
@@ -401,8 +406,8 @@ function ObtenerDatos(error) {
     obj.ClasificacionId = $("#clasificacion").val() == null || $("#clasificacion").val() == undefined || $("#clasificacion").val() == "" ? 0 : $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val() == null || $("#cantidadCamionesId").val() == undefined || $("#cantidadCamionesId").val() == "" ? 0 : $("#cantidadCamionesId").val();
     obj.EstablecimientoPropio = $("#establecimientoPropioId").is(":checked") ? true : $("#establecimientoArrendadoId").is(":checked") ? false : null;
-    obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaDesdeTopeId").val(); 
-    obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? kendo.toString((maniana), "dd-MM-yyyy") : $("#fechaHastaTopeId").val();
+    obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? formatearFecha(hoy) : $("#fechaDesdeTopeId").val(); 
+    obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? formatearFecha(maniana) : $("#fechaHastaTopeId").val();
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
     obj.DestinoId = $("#destinoId").val();
     obj.planCanje = $("#planCanjeId").is(":checked") ? true : false;
@@ -559,19 +564,19 @@ function ObtenerDatos(error) {
         obj.tipoAgenteCompraId = $("#AgenteCompraId").val();
     }
     if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) {
-        obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaOperacionId").val();
+        obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionId").val();
         obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
     }
     if (obj.TipoNegocioId == 3) {
-        obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? kendo.toString((hoy), "dd-MM-yyyy") : $("#fechaFijacionId").val(); 
+        obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionId").val(); 
         obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
     }
-    if ($("#canjeId").is(":checked") == true) {
-        ocultarSiHayCanje();
+    if ($("#canjeId").is(":checked") == true) {       
         obj.Canje = true;        
         obj.MonedaCanjeId = $("#montoMonedaId").data("kendoDropDownList").value();
         obj.Insumo = $("#insumoId").val();
         obj.Monto = $("#montoId").data("kendoNumericTextBox").value();
+        ocultarSiHayCanje();
     }
 
     if ($("#prestamoDevolucionId").is(":checked") == true) {
@@ -649,4 +654,25 @@ function InicializarDatos() {
 
     ExecuteURLOnServer('/CompraNet/InicializarContrato', funcReturn, '');
 }
+function formatearFecha(fecha) {
+    var fechaFormateada = kendo.toString(fecha, "dd-MM-yyyy");
+    return FormatearFecha(fechaFormateada);
+}
+
+function FormatearFecha(fecha) {
+    if (fecha != null && fecha != undefined && fecha != "") {
+        var dias = fecha.split('-');
+        var dia = dias[0];
+        var mes = dias[1];
+        var anio = dias[2];
+        if (dia.length < 2) {
+            dia = "0" + dia;
+        }
+        if (mes.length < 2) {
+            mes = "0" + mes;
+        }
+        return dia + '-' + mes + '-' + anio;
+    }
+}
+
 

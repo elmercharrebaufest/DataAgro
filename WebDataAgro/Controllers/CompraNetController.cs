@@ -127,12 +127,12 @@ namespace WebDataAgro.Controllers
                 var negocio = typeof(CompraNetController).GetMethod("DeserializarJson").MakeGenericMethod(Type.GetType($"{tipoNegocio.ClaseDescripcion}, Molinos.DataAgro.Entities")).Invoke(null, new object[] { obj }) as Negocio;
                 ViewBag.Obj = mobjContratoManager.NegocioABasicoContrato(negocio);
                 ViewBag.esEdicion = true;
-                return View(tipoNegocio.TipoNegocioId == 1 ? tipoNegocio.Descripcion.Replace(" ", String.Empty): "CrearContrato");
+                return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 ? tipoNegocio.Descripcion.Replace(" ", String.Empty): "CrearContrato");
             }
             if (id != 0 && id != null)
             {
                 var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
-                return View(tipoNegocio.TipoNegocioId == 1 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
+                return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
             }
 
             return View();

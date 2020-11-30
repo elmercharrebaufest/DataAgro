@@ -943,6 +943,18 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "DÍAS DE DIFERIMIENTO: " + oFijacionDePrecioContrato.DiasPesificado.ToString() + "<br /> ";
             }
+            if (oFijacionDePrecioContrato.DolarizadoExpress == true)
+            {
+                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+            }
+            if (oFijacionDePrecioContrato.Dolarizado.Value)
+            {
+                htmlBody += "DOLARIZADO MÍNIMO 30 DÍAS<br />";
+            }
+            if (oFijacionDePrecioContrato.FechaDolarizado != null)
+            {
+                htmlBody += "FECHA DOLARIZADO " + Split(oFijacionDePrecioContrato.FechaDolarizado.Value.ToShortDateString()) + "<br />";
+            }
             if (oFijacionDePrecioContrato.ChequeElectronico.HasValue && oFijacionDePrecioContrato.ChequeElectronico.Value)
             {
                 htmlBody += "Pago con Echeq <br /> ";

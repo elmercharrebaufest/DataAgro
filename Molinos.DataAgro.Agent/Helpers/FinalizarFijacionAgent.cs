@@ -55,6 +55,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                     decimal precioImportFinanciero = 0;
+                    var fechaDolarizadoString = fijacion.FechaDolarizado?.ToString("yyyy-MM-dd");
                     var ImportFinanciero = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 1).SingleOrDefault();
                     if (ImportFinanciero != null)
                     {
@@ -81,6 +82,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_FECHA = fijacion.FechaOperacion.ToString("yyyy-MM-dd"),
                         IM_ZLSCH = fijacion.ChequeElectronico == true ? "=" : "",
                         IM_CUENTA_MRP = fijacion.PagoCBU != null ? fijacion.PagoCBU.Split('-')[0] : "",
+                        IM_DOLARIZADO = fijacion.Dolarizado == true ? "X" : "",
+                        IM_DOL_EXPRESS = fijacion.DolarizadoExpress == true ? "X" : "",
+                        IM_FECHA_LIMITE = fechaDolarizadoString
+
 
                     };
                     logger.Debug(rq.ToXml());

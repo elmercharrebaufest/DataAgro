@@ -338,6 +338,8 @@ namespace Molinos.DataAgro.Business.Managers
                     oFijacionDePrecioSave.EstadoId = 7;
 
                 }
+
+                var fechaDolarizado = oFijacionDePrecio.FechaDolarizado != null ? oFijacionDePrecio.FechaDolarizado.Value.AddDays(30) : (DateTime?)null;
                 oFijacionDePrecioSave.Precio = oFijacionDePrecio.Precio;
                 oFijacionDePrecioSave.Cantidad = oFijacionDePrecio.Cantidad;
                 oFijacionDePrecioSave.Ampliaciones = oFijacionDePrecio.Ampliaciones;
@@ -363,6 +365,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
                 oFijacionDePrecioSave.PagoCBU = oFijacionDePrecio.PagoCBU;
                 oFijacionDePrecioSave.MotivoOperacionAnterior = oFijacionDePrecio.MotivoOperacionAnterior;
+                oFijacionDePrecioSave.Dolarizado = fechaDolarizado != null ? (oFijacionDePrecio?.FechaDolarizado > fechaDolarizado ? true : false) : false;
+                oFijacionDePrecioSave.DolarizadoExpress = fechaDolarizado != null ? (oFijacionDePrecio?.FechaDolarizado <= fechaDolarizado ? true : false) : false;
+                oFijacionDePrecioSave.FechaDolarizado = oFijacionDePrecio.FechaDolarizado;
 
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -812,7 +817,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = fijac.Observacion ?? "",
                 FijacionDePrecioContratoId = fijac.Id,
                 Sustentable = false,
-                Dolarizado = false,
+                Dolarizado = fijac.Dolarizado,
                 Pesificado = false,
                 TrigoEspecial = fijac.TrigoEspecial,
                 Posicion = fijac.Posicion,
@@ -829,6 +834,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Pizarra = fijac.Pizarra ?? false,
                 Dias_Pesificado = fijac.DiasPesificado,
                 PagoDiferido = fijac.PagoDiferido,
+                Fecha_DolarizadoFormateado = fijac.FechaDolarizado != null ? SqlFunctions.DateName("day", fijac.FechaDolarizado).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)fijac.FechaDolarizado.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", fijac.FechaDolarizado) : "",
                 DatosFijacion = new DatosFijacionDeContratoDto()
                 {
                     ContratoId = fijac.ContratoSAP.ToString(),
@@ -862,6 +870,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.DatosFijacion.KilosPendiente = (double.Parse(contrato.DatosFijacion.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
             }
             contrato.AperturaPrecios = TraerAperturaDePrecioPorFijacion(contrato.Id);
+
             return contrato;
         }
         private DatosFijacionDeContratoDto FechaString(DatosFijacionDeContratoDto datos)

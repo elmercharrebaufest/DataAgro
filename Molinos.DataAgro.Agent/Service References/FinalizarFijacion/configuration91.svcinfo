@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="KxuQrNosPVkkuraCy5redpUp0wg=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="LPD2K55PHGm1poHNhs/kchZ4byQ=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding">
       <properties>
@@ -221,10 +221,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="HTTP_Port7" contract="FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION" bindingType="basicHttpBinding" address="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding">
+    <endpoint name="HTTP_Port7" contract="FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION" bindingType="basicHttpBinding" address="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
+          <serializedValue>http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -306,10 +306,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="HTTPS_Port5" contract="FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION" bindingType="basicHttpBinding" address="https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding1">
+    <endpoint name="HTTPS_Port5" contract="FinalizarFijacion.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION" bindingType="basicHttpBinding" address="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACIONBinding1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
+          <serializedValue>https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

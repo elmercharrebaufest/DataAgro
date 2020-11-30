@@ -2058,6 +2058,9 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
     sustentablePrecio !== "null" && sustentableMonedaId !== "null" ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
     $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
+    if (dolarizadoFecha != "") {
+        $("#visualizar_dolarizadoFecha").show();
+    }
     $("#visualizar_pesificadoDias").text(pesificadoDias);
     informaSIO === "true" ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
     mercsFijacion == "true" ? $("#visualizar_mercsDeposito").text("Si") : $("#visualizar_mercsDeposito").text("null");
