@@ -497,6 +497,7 @@ namespace Molinos.DataAgro.Business
                 {
                     par += 1;
                     string sumaPricing;
+
                     switch (datos.Id)
                     {
                         case 11:
@@ -533,6 +534,9 @@ namespace Molinos.DataAgro.Business
                             sumaPricing = "0";
                             break;
                     }
+
+                    logger.Debug("cierredeldia "+ datos.Id.ToString()+" " + (sumaPricing ?? ""));
+
                     var estilo = "style='font-size: 15px;border-left: none !important; border-right: 0px !important; background: #DDDDDD;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'";
                     if ((par % 2) == 0)
                     {

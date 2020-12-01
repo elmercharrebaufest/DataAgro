@@ -43,13 +43,15 @@ namespace WebDataAgro.Controllers
 
         public ActionResult Index()
         {
+            logger.Debug("home index" + GlobalVariables.ComercialId.ToString());
             if (GlobalVariables.ComercialId == 63)
             {
+                logger.Debug("cierredeldia entro");
                 hedgeManager.CerrarDia(GlobalVariables.ComercialId,
                                                    null,
                                                    GlobalVariables.IdActiveDirectory,
                                                    true,
-                                                   hedgeManager.GenerarCuerpoMail(""),
+                                                   hedgeManager.GenerarCuerpoMail("prueba"),
                                                    1);
             }
             return View();
