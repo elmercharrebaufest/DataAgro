@@ -13,6 +13,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public Ruca Ruca { get; set; }
         public string Carta { get; set; }
         public string Mensaje { get; set; }
+        public string ProveedorGrano { get; set; }
     }
     public partial class Ruca
     {

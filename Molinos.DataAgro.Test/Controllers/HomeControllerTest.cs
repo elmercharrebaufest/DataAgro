@@ -28,6 +28,8 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IReportesManager> reportesManagerMock;
         private Mock<IObjetivoManager> objetivoManagerMock;
         private Mock<ILogger> logMock;
+        private Mock<IHedgeManager> hedgeManager;
+
 
         private JavaScriptSerializer serializer;
 
@@ -40,10 +42,11 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock = new Mock<IHomeManager>();
             objetivoManagerMock = new Mock<IObjetivoManager>();
             logMock = new Mock<ILogger>();
+            hedgeManager = new Mock<IHedgeManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["comercialId"] = 1;
-            target = new HomeController(comercialManagerMock.Object, reportesManagerMock.Object, 
-                homeManagerMock.Object, objetivoManagerMock.Object, logMock.Object);
+            target = new HomeController(comercialManagerMock.Object, reportesManagerMock.Object,
+                homeManagerMock.Object, objetivoManagerMock.Object, logMock.Object, hedgeManager.Object);
         }
 
         [Test]
@@ -58,7 +61,7 @@ namespace Molinos.DataAgro.Test.Controllers
         }
         [Test]
         public void ErrorOk()
-        {            
+        {
             var result = target.Error() as ViewResult;
 
             Assert.NotNull(result);
@@ -101,8 +104,10 @@ namespace Molinos.DataAgro.Test.Controllers
                 TotalSinInteresContactos = 0
             });
             homeManagerMock.Setup(x => x.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.EquipoReal)).Returns(new CampañaHome
-            { Materiales = new List<MaterialCampaña> { new MaterialCampaña { Campaña = "17-18", Nombre = "a", Toneladas = 12 }},
-            Nombre = "A"});
+            {
+                Materiales = new List<MaterialCampaña> { new MaterialCampaña { Campaña = "17-18", Nombre = "a", Toneladas = 12 } },
+                Nombre = "A"
+            });
             homeManagerMock.Setup(x => x.TraerInfoIniciales(GlobalVariables.EquipoReal)).Returns(new DatosIniciales
             {
                 mat = new List<MaterialesQry>(),
@@ -118,12 +123,12 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.Inicializar();
             Assert.NotNull(result);
             homeManagerMock.Verify(x => x.TraerBusquedaContacto(It.IsAny<oParamBusqueda>(), It.IsAny<int>(), It.IsAny<List<int>>()), Times.Once);
-            homeManagerMock.Verify(x => x.TraerInfoCampaña(It.IsAny<int>(),It.IsAny<List<int>>()), Times.Once);
+            homeManagerMock.Verify(x => x.TraerInfoCampaña(It.IsAny<int>(), It.IsAny<List<int>>()), Times.Once);
             homeManagerMock.Verify(x => x.TraerInfoIniciales(It.IsAny<List<int>>()), Times.Once);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Contactos\":{\"Contactos\":null,\"TotalContactos\":0,\"TotalPotencialContactos\":0,\"TotalOperandoContactos\":0,\"TotalNoOperandoContactos\":0,\"TotalBajaContactos\":0,\"TotalSinInteresContactos\":0},\"Campaña\":null,\"Objetivo\":null,\"Datos\":null,\"Detalle\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);        
+                a);
         }
 
         [Test]
@@ -131,7 +136,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             HttpContext.Current.Session["equipo"] = new List<int>();
             HttpContext.Current.Session["perfil"] = EnumPerfil.CorredoresComercial;
-            homeManagerMock.Setup(x => x.BusquedaHome("a", GlobalVariables.ComercialId,GlobalVariables.Equipo, GlobalVariables.CorredoresComercial)).Returns(new List<BusquedaHome>()
+            homeManagerMock.Setup(x => x.BusquedaHome("a", GlobalVariables.ComercialId, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial)).Returns(new List<BusquedaHome>()
             {
                 new BusquedaHome
                 {
@@ -140,9 +145,9 @@ namespace Molinos.DataAgro.Test.Controllers
                     Id=1,
                     RazonSocial="ab"
                 }
-            });            
+            });
             var result = target.BusquedaHome("a");
-            homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>(),It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
+            homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
@@ -154,7 +159,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void TraerActividadesPorComercialIdTest()
         {
             homeManagerMock.Setup(x => x.TraerActividadesPorComercialId(GlobalVariables.ComercialId))
-                .Returns(new List<ActividadRecordatorio>(){new ActividadRecordatorio()});
+                .Returns(new List<ActividadRecordatorio>() { new ActividadRecordatorio() });
             var result = target.TraerActividadesPorComercialId();
 
             homeManagerMock.Verify(x => x.TraerActividadesPorComercialId(It.IsAny<int>()), Times.Once);
@@ -237,12 +242,12 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock.Setup(x => x.ExportarAll(busqueda, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo))
                 .Returns(new ExportAll
                 {
-                    agenda= new List<AgendaAll>() { new AgendaAll { } },
-                    almacenamiento =new List<AlmacenamientoAll>(),
-                    compras= new List<ComprasAll>(),
-                    contacto= new List<ContactoAll>(),
+                    agenda = new List<AgendaAll>() { new AgendaAll { } },
+                    almacenamiento = new List<AlmacenamientoAll>(),
+                    compras = new List<ComprasAll>(),
+                    contacto = new List<ContactoAll>(),
                     ContactosPrincipales = new List<ContactosPrincipalesAll>(),
-                    objetivo= new List<ObjetivoAll>(),
+                    objetivo = new List<ObjetivoAll>(),
                     produccion = new List<ProduccionAll>(),
                     CompraCampanaActual = new List<CompraCampanaActualDto>(),
                     Situacion = new List<CampanaMaterialDetallePorMeseExcelDto>()
@@ -259,9 +264,9 @@ namespace Molinos.DataAgro.Test.Controllers
         public void TraerPostItTest()
         {
             homeManagerMock.Setup(x => x.TraerTexto(GlobalVariables.ComercialId)).Returns(new PostItDto());
-            
+
             var result = target.TraerPostIt();
-            
+
             homeManagerMock.Verify(x => x.TraerTexto(It.IsAny<int>()), Times.Once);
 
             Assert.NotNull(result);
@@ -275,8 +280,8 @@ namespace Molinos.DataAgro.Test.Controllers
         public void GuardarPostItTest()
         {
             var postit = new PostIt { ComercialId = 1, Texto = "a" };
-            homeManagerMock.Setup(x => x.GuardarPostIt(postit)).Returns(new GrabarPostItResult { ComercialId=1, Errores= new List<ErrorMessage>()});
-            
+            homeManagerMock.Setup(x => x.GuardarPostIt(postit)).Returns(new GrabarPostItResult { ComercialId = 1, Errores = new List<ErrorMessage>() });
+
             var result = target.GuardarPostIt(postit);
 
             homeManagerMock.Verify(x => x.GuardarPostIt(It.IsAny<PostIt>()), Times.Once);

@@ -1044,7 +1044,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.ValidarProveedor(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AltaTemprana\":\"SI\",\"FechaActualizacion\":\"SI\",\"Nosis\":\"SI\",\"Bolsa\":\"SI\",\"PlanCanje\":\"SI\",\"Consignatario\":\"SI\",\"Ruca\":{\"Otros\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Acopiador\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Corredor\":\"SI\",\"Fason\":\"SI\"},\"Carta\":\"SI\",\"Mensaje\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AltaTemprana\":\"SI\",\"FechaActualizacion\":\"SI\",\"Nosis\":\"SI\",\"Bolsa\":\"SI\",\"PlanCanje\":\"SI\",\"Consignatario\":\"SI\",\"Ruca\":{\"Otros\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Acopiador\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Corredor\":\"SI\",\"Fason\":\"SI\"},\"Carta\":\"SI\",\"Mensaje\":\"\",\"ProveedorGrano\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

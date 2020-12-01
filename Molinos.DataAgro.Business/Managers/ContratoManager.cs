@@ -323,6 +323,10 @@ namespace Molinos.DataAgro.Business.Managers
                         oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
                     }
                 }
+                if (alta.ProveedorGrano == "NO")
+                {
+                    oErrorMessages.Error("MateriasPrimas", "El proveedor es un vendedor eventual");
+                }
             }
             else
             {

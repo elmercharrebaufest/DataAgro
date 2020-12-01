@@ -242,7 +242,7 @@ namespace Molinos.DataAgro.Business
             {
                 return oEntityErrors;
             }
-            var dia = new FinDelDia { Dia = DateTime.Now, Cerrado = true, ComercialId = comercialId, ReabrioComercialId = null, Diferencial = diferencial };
+            var dia = new FinDelDia { Dia = new DateTime(2020,11,18), Cerrado = true, ComercialId = comercialId, ReabrioComercialId = null, Diferencial = diferencial };
             try
             {
                 repositorio.Agregar(dia);
@@ -256,7 +256,7 @@ namespace Molinos.DataAgro.Business
             }
             try
             {
-                var hoy = DateTime.Now.Date;
+                var hoy = new DateTime(2020, 11, 18).Date;
                 var finDia = repositorio.Obtener<FinDelDia>(x => x.Cerrado && DbFunctions.TruncateTime(x.Dia) == hoy);
                 var contratos = repositorio.Listar<Contrato>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
                 var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5));
@@ -544,7 +544,7 @@ namespace Molinos.DataAgro.Business
 
                     htmlBody +=  (Model.PricingCampania.Any(x => x.SanLorenzo > 0 && x.Id == datos.Id) ?  $"<td style= 'border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>" + datos.SanLorenzo.ToString("N0") + "</td>" : "");
                     htmlBody +=  (Model.PricingCampania.Any(x => x.Acopio > 0 && x.Id == datos.Id) ?  $"<td style= 'border-left: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;border-right: none !important;'>" + datos.Acopio.ToString("N0") + "</td>" : "");
-                    htmlBody +=  $"<td style='font-size: 15px;border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> " + sumaPricing + "</td>";
+                    htmlBody +=  $"<td style='font-size: 15px;border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> " + (sumaPricing??"ola") + "</td>";
                     htmlBody += "</tr>";
 
                 }

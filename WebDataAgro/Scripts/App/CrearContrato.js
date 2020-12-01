@@ -1716,6 +1716,14 @@ function InicializarElementos() {
         change: function () {
             $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));
             validarFechaCampana();
+            var maniana = new Date();
+            maniana = new Date(maniana.setDate(maniana.getDate() + 1));
+            if ($("#fechaDesdeId").val() >= formatearFecha(maniana)) {
+                $("#mercsDepositoDiv").hide();
+                $("#mercsDepositoId").prop("checked", false);
+            } else {
+                $("#mercsDepositoDiv").show();
+            }
         }
     });
     $("#fechaHastaId").kendoDatePicker({

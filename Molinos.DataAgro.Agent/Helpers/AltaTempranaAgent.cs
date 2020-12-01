@@ -108,7 +108,8 @@ namespace Molinos.DataAgro.Agent
                         Bolsa = valor.EX_BOLSA,
                         Carta = valor.EX_CARTA,
                         FechaActualizacion = valor.EX_FECHA_ACTUALIZACION,
-                        Mensaje = valor.EX_MENSAJE
+                        Mensaje = valor.EX_MENSAJE,
+                        ProveedorGrano = valor.EX_PROVEEDOR_GRANOS
                           
                     };
                     return retorno;
