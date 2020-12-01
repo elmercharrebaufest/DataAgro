@@ -3694,11 +3694,11 @@ function CargarDatosEditar(contrato, hijo) {
         ocultarSiHayPrestamos()
         ocultarSiHayCanje();
         $("#plantaDestinoId").data("kendoDropDownList").value(contrato.PlantaDestinoId);
-        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-        if (contrato.Estado == 5) {
-            $("#prestamoDevolucionId").prop('disabled', true);
-            $("#plantaDestinoId").data("kendoDropDownList").enable(false);
-        }
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");     
+    }
+    if (contrato.Estado == 5) {
+        $("#prestamoDevolucionId").prop('disabled', true);
+        $("#plantaDestinoId").data("kendoDropDownList").enable(false);
     }
 
 }
