@@ -433,7 +433,7 @@ namespace Molinos.DataAgro.Business
         }
         public string GenerarCuerpoMail(string observaciones)
         {
-            var hoy = DateTime.Now.Date;
+            var hoy = new DateTime(2020,11,18).Date;
             var Model = this.ObtenerDatosReporte(hoy, hoy, "0");
             var dispAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAFijar > 0));
             var dispAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAPrecio > 0));
