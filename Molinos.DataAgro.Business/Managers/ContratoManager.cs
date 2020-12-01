@@ -351,7 +351,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
                 }
-                if (oParam.TipoNegocioId == 1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null))
+                if (oParam.TipoNegocioId == 1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null) && oParam.PrestamoDevolucion != true)
                 {
                     oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no debe estar vacio cuando el contrato es 'A FIJAR'");
                 }
@@ -2057,7 +2057,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDb = x.Fecha,
                 ComercialCreadorAD = x.ComercialCreadorId.HasValue ? x.ComercialCreador.IdActiveDirectory : x.Comercial.IdActiveDirectory,
                 NombreApellido = x.Comercial.Nombres + " " + x.Comercial.Apellido
-            }, x => (x.EstadoId == 1 || x.EstadoId == 3) && x.Fecha < hoy && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3));
+            }, x => (x.EstadoId == 1 || x.EstadoId == 3) && x.Fecha < hoy && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3) && x.Canje != true && x.PrestamoDevolucion != null);
             var comercialesMesa = repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, IdActiveDirectory = x.IdActiveDirectory }, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NotificacionesMailTodos)));
             var mailComercialesMesa = new List<string>();
             foreach (var mesa in comercialesMesa)

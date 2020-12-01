@@ -2106,7 +2106,10 @@ function InicializarElementos() {
             $(".ampliar").show();
             if ($('#tipoId').val() == 1) {
                 $(".contratoAPrecio").hide();
-                $(".contratoAFijar").show();
+                if (!$("#prestamoDevolucionId").is(":checked")) {
+                    $(".contratoAFijar").show();
+                }
+                
                 $("#pagosDiv").hide();
 
                 if ($("#madreId").is(':checked')) {
@@ -3663,11 +3666,19 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.Canje == true) {
         ocultarSiHayCanje();
+        $("#mostrarCanje").show();
+        $("#prestamoDevolucionDiv").hide();
+        $("#prestamoDevolucionId").prop("checked", false);
+        $("#plantaDestinoId").data("kendoDropDownList").value("");
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
         $("#canjeId").prop("checked", true);
         $("#montoId").data("kendoNumericTextBox").value(contrato.Monto);
         $("#montoMonedaId").data("kendoDropDownList").value(contrato.MonedaCanjeId);
         $("#montoMonedaId").data("kendoDropDownList").trigger("change");
         $("#insumoId").val(contrato.Insumo);
+        $("#plantaDestinoDiv").hide();
+        $("#plantaDestinoId").data("kendoDropDownList").value("");
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
     }
 
     if (contrato.PrestamoDevolucion == true) {
@@ -3676,6 +3687,10 @@ function CargarDatosEditar(contrato, hijo) {
         ocultarSiHayCanje();
         $("#plantaDestinoId").data("kendoDropDownList").value(contrato.PlantaDestinoId);
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        if (contrato.Estado == 5) {
+            $("#prestamoDevolucionId").prop('disabled', true);
+            $("#plantaDestinoId").data("kendoDropDownList").enable(false);
+        }
     }
 
 }
@@ -4300,6 +4315,12 @@ function HayCanje() {
     if ($("#canjeId").is(":checked")) {
         ocultarSiHayCanje();        
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
+        $("#prestamoDevolucionDiv").hide();
+        $("#plantaDestinoId").data("kendoDropDownList").value("");
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        $("#mostrarCanje").show();   
+        $("#fasonIdCheck").prop("disabled", false);
+        $("#madreId").prop("disabled", false);       
 
     } else {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
@@ -4319,13 +4340,7 @@ function HayCanje() {
     } 
 }
 function ocultarSiHayCanje() {
-    if ($("#canjeId").is(":checked")) {
-        $("#mostrarCanje").show();
-        $("#prestamoDevolucionDiv").hide();
-        $("#prestamoDevolucionId").prop("checked", false);
-        $("#plantaDestinoId").data("kendoDropDownList").value("");
-        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-    }
+    
     $("#pagoDiferidoDiv").hide();
     $("#pesificadoId").prop("checked", false);
     $("#dolarizadoExpressDiv").hide();
@@ -4377,6 +4392,14 @@ function ocultarSiHayPrestamos() {
     $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
     LimpiarCalidades();
     LimpiarDescuentos();
+    $(".contratoAFijar").hide(); 
+    $("#fechaDesdeTopeId").val("");
+    $("#fechaHastaTopeId").val("");
+
+    $("#condicion").hide();    
+    $("#condicionFijacionId").data("kendoDropDownList").value("");
+    $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
+    
 }
 function HayPrestamo() {
     if ($("#prestamoDevolucionId").is(":checked")) {
@@ -4404,6 +4427,15 @@ function HayPrestamo() {
         $("#porcentajePagoDiv").hide();
         $("#boletoNingunoId").prop("checked", false);
         $(".madreDiv").show();
+        $(".contratoAFijar").show(); 
+        var hoy = new Date();
+        var maniana = new Date();
+        maniana = new Date(maniana.setMonth(maniana.getMonth() + 1));
+        $("#fechaDesdeTopeId").val(formatearFecha(hoy));
+        $("#fechaHastaTopeId").val(formatearFecha(maniana));
+        $("#condicion").show();
+        $("#condicionFijacionId").data("kendoDropDownList").value(7);
+        $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
     }
     
 }

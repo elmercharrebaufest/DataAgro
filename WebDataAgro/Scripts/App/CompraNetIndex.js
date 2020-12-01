@@ -787,6 +787,8 @@ function CreateGridInformeCompraNet() {
                         TipoNegocio: "ACUERDO AGENTE"
                     }, {
                         TipoNegocio: "CANJE"
+                    }, {
+                        TipoNegocio: "PRESTAMO DEVOLUCION"
                     }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
@@ -2286,7 +2288,11 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#montoDiv").show();
         $("#montoId").text(kendo.toString(parseFloat(Monto), "n2"));
         $("#monedaCanjeDiv").show();
-        $("#monedaCanjeId").text(MonedaCanje);
+        if (MonedaCanje == "USDM ") {
+            $("#monedaCanjeId").text(MonedaCanje.slice(0, -2));
+        } else {
+            $("#monedaCanjeId").text(MonedaCanje);
+        }
     } else {
         $("#canjeDiv").hide();
         $("#insumoDiv").hide();
