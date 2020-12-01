@@ -948,6 +948,11 @@ namespace WebDataAgro.Services
 
         }
 
+        public bool ProveedorApocrifo(string cuit)
+        {
+            var oFacacop = repositorio.Existe<FACACOP>(x => x.CUIT == cuit);
+            return oFacacop;
+        }
         #endregion
     }
 

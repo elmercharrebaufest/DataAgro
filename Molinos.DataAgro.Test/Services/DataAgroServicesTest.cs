@@ -981,6 +981,18 @@ namespace Molinos.DataAgro.Test.Services
             Assert.AreEqual(result.ListaErrores.Count, 1);
 
         }
+
+
+        [Test]
+        public void ProveedorApocrifoTestOk()
+        {
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<FACACOP, bool>>>()))
+               .Returns(true);
+            var result = target.ProveedorApocrifo("");
+
+            Assert.IsTrue(result);
+
+        }
     }
 }
 

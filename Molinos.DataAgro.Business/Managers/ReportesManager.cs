@@ -727,7 +727,7 @@ namespace Molinos.DataAgro.Business.Managers
                     agenteTemp.MaterialDesc = agente.Material.Descripcion;
                     agenteTemp.TipoAgenteId = agentesPorPosicionYMaterial.Key.TipoAgenteCompraId;
                     agenteTemp.TipoAgenteDesc = agente.TipoAgenteCompra.Descripcion;
-                    agenteTemp.PrecioPonderado = agentesPorPosicionYMaterial.Sum(x => (x.MonedaId.Contains("ARP") ? x.Precio / precioDolar : x.Precio) * (decimal)x.Cantidad) / agentesPorPosicionYMaterial.Sum(x => (decimal)x.Cantidad);
+                    agenteTemp.PrecioPonderado = agentesPorPosicionYMaterial.Sum(x => (x.MonedaId.Contains("ARP") ? x.Precio / precioDolar : x.Precio) * (decimal)Math.Abs(x.Cantidad)) / agentesPorPosicionYMaterial.Sum(x => (decimal)Math.Abs(x.Cantidad));
                 }
                 listaAgentes.Add(agenteTemp);
             }

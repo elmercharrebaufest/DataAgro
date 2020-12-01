@@ -46,6 +46,9 @@ namespace WebDataAgro.Services
         ResultadoSap AltaFijacionSAP(FijacionSAPDto fijacionSAP);
         [OperationContract]
         ResultadoSap AnularFijacionSAP(FijacionSAP fijacionSAP);
+
+        [OperationContract]
+        bool ProveedorApocrifo(string cuit);
         #endregion
     }
 }
