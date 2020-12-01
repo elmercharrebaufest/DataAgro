@@ -242,7 +242,7 @@ namespace Molinos.DataAgro.Business
             {
                 return oEntityErrors;
             }
-            var dia = new FinDelDia { Dia = new DateTime(2020,11,18), Cerrado = true, ComercialId = comercialId, ReabrioComercialId = null, Diferencial = diferencial };
+            var dia = new FinDelDia { Dia = new DateTime(2020, 11, 18), Cerrado = true, ComercialId = comercialId, ReabrioComercialId = null, Diferencial = diferencial };
             try
             {
                 repositorio.Agregar(dia);
@@ -433,7 +433,7 @@ namespace Molinos.DataAgro.Business
         }
         public string GenerarCuerpoMail(string observaciones)
         {
-            var hoy = new DateTime(2020,11,18).Date;
+            var hoy = new DateTime(2020, 11, 18).Date;
             var Model = this.ObtenerDatosReporte(hoy, hoy, "0");
             var dispAFijar = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAFijar > 0));
             var dispAPrecio = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.DispAPrecio > 0));
@@ -456,15 +456,15 @@ namespace Molinos.DataAgro.Business
             var pricing = Model.PricingCampania.Count != 0;
 
             var htmlBody = "";
-           
+
 
             htmlBody += "Estimados,";
             htmlBody += "<br></br>";
             htmlBody += "A continuación se detallan las compras correspondientes al cierre del día.";
             htmlBody += "<br></br>";
             htmlBody += "Observaciones: " + (String.IsNullOrEmpty(observaciones) ? "Sin observaciones." : observaciones);
-            htmlBody += "<br></br>";          
-           
+            htmlBody += "<br></br>";
+
 
             if (pricing)
             {
@@ -485,7 +485,7 @@ namespace Molinos.DataAgro.Business
                     <thead style='background: #C71585;border-bottom: 1px solid #C71585;'>
                     <tr style= 'font-size: 12px;font-weight: bold;color: #FFFFFF;text-align: center; border-left: 0px;border-right: 0px !important; border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>
                         <th style= 'border-left: 0px ;border-right: 0px !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>PRICING</th>
-                        <th style= 'border-left: 0px;border-right: 0px !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>CAMPAÑA</th>";               
+                        <th style= 'border-left: 0px;border-right: 0px !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>CAMPAÑA</th>";
                 htmlBody += p.Any(x => x.SanLorenzo > 0) ? "<th style= 'border-left: 0px; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>SL</th>" : "";
                 htmlBody += p.Any(x => x.Acopio > 0) ? "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>Acopios</th>" : "";
                 htmlBody += "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> TOTALES </th> ";
@@ -535,7 +535,7 @@ namespace Molinos.DataAgro.Business
                             break;
                     }
 
-                    logger.Debug("cierredeldia "+ datos.Id.ToString()+" " + (sumaPricing ?? ""));
+                    logger.Debug("cierredeldia " + datos.Id.ToString() + " " + (sumaPricing ?? ""));
 
                     var estilo = "style='font-size: 15px;border-left: none !important; border-right: 0px !important; background: #DDDDDD;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'";
                     if ((par % 2) == 0)
@@ -544,11 +544,11 @@ namespace Molinos.DataAgro.Business
                     }
                     htmlBody += @"<tr " + estilo + @">
                             <td style= 'font-size: 15px; border-left: none !important; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;' >" + datos.Material + @"</td>
-                            <td style= 'font-size: 15px; border-left: none !important; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>" + datos.Campania + @"</td>";                           
+                            <td style= 'font-size: 15px; border-left: none !important; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>" + datos.Campania + @"</td>";
 
-                    htmlBody +=  (Model.PricingCampania.Any(x => x.SanLorenzo > 0 && x.Id == datos.Id) ?  $"<td style= 'border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>" + datos.SanLorenzo.ToString("N0") + "</td>" : "");
-                    htmlBody +=  (Model.PricingCampania.Any(x => x.Acopio > 0 && x.Id == datos.Id) ?  $"<td style= 'border-left: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;border-right: none !important;'>" + datos.Acopio.ToString("N0") + "</td>" : "");
-                    htmlBody +=  $"<td style='font-size: 15px;border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> " + (sumaPricing??"ola") + "</td>";
+                    htmlBody += $"<td style= 'border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>" + (datos.SanLorenzo == 0 ? "" : datos.SanLorenzo.ToString("N0")) + "</td>";
+                    htmlBody += $"<td style= 'border-left: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;border-right: none !important;'>" + (datos.Acopio == 0 ? "" : datos.Acopio.ToString("N0")) + "</td>";
+                    htmlBody += $"<td style='font-size: 15px;border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> " + sumaPricing + "</td>";
                     htmlBody += "</tr>";
 
                 }
@@ -561,29 +561,29 @@ namespace Molinos.DataAgro.Business
             {
                 htmlBody += $@" <table class='verde' style='{tabla}'><thead>
                     <tr style='{estiloTdTrVerde} {head}'><td style='{estiloTdTrVerde} {head}'></td>";
-                htmlBody += (disp > 0) ?  $"<td style=''" + estiloTdTrVerde + head + " text-aligne:center;' id='disponible'  colspan='" + disp + "'>DISPONIBLE</td>" +
+                htmlBody += (disp > 0) ? $"<td style=''" + estiloTdTrVerde + head + " text-aligne:center;' id='disponible'  colspan='" + disp + "'>DISPONIBLE</td>" +
                     $"<td style='{estiloTdTrVerde} {head}' id='disponibleTotal'  rowspan='2' colspan='2'>TOTAL DISPONIBLE</td>" : "";
-                htmlBody += (forw > 0) ?  $"<td style='{estiloTdTrVerde} {head}' id='forward' colspan='" + forw + "'>FORWARD</td>" +
+                htmlBody += (forw > 0) ? $"<td style='{estiloTdTrVerde} {head}' id='forward' colspan='" + forw + "'>FORWARD</td>" +
                          $"<td style='{estiloTdTrVerde} {head}' id='forwardTotal' class=' rowspan='2' colspan='2'>TOTAL FORWARD</td>" : "";
-                htmlBody += (newc > 0) ?  $"<td style='style='{estiloTdTrVerde} {head}'text-aligne: center;' colspan='" + newc + "'>NEW CROP</td>" +
+                htmlBody += (newc > 0) ? $"<td style='style='{estiloTdTrVerde} {head}'text-aligne: center;' colspan='" + newc + "'>NEW CROP</td>" +
                          $"<td style='{estiloTdTrVerde} {head}' id='newCropTotal' rowspan='2'>TOTAL NEW CROP</td>" : "";
                 htmlBody += "</tr>";
 
                 htmlBody += $"<tr style='{estiloTdTrVerde} {head}' class='titulos'>";
-                htmlBody +=  $"<td style='{estiloTdTrVerde} {head}'>PRODUCTO</td>";
-                htmlBody += dispAFijar ?  $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Fijar</td>" : "";
-                htmlBody += dispAPrecio ?  $"<td style='{estiloTdTrVerde} {head}' class='valores'>A Precio</td>" : "";
-                htmlBody += dispFijacion ?  $"<td style='{estiloTdTrVerde} {head}' class='valores'>Fijación</td>" : "";
-                htmlBody += dispAgente ?  $"<td style='{estiloTdTrVerde} {head}' class='valores'>MAT</td>" : "";
+                htmlBody += $"<td style='{estiloTdTrVerde} {head}'>PRODUCTO</td>";
+                htmlBody += dispAFijar ? $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Fijar</td>" : "";
+                htmlBody += dispAPrecio ? $"<td style='{estiloTdTrVerde} {head}' class='valores'>A Precio</td>" : "";
+                htmlBody += dispFijacion ? $"<td style='{estiloTdTrVerde} {head}' class='valores'>Fijación</td>" : "";
+                htmlBody += dispAgente ? $"<td style='{estiloTdTrVerde} {head}' class='valores'>MAT</td>" : "";
                 //htmlBody += disp > 0 ?  $"<td class=''></td>" : "";
-                htmlBody += forwAPrecio ?  $"<td style='{estiloTdTrVerde} {head}' class='valores'>A Precio</td>" : "";
-                htmlBody += forwFijacion ?  $"<td style='{estiloTdTrVerde} {head}'class='valores'>Fijación</td>" : "";
+                htmlBody += forwAPrecio ? $"<td style='{estiloTdTrVerde} {head}' class='valores'>A Precio</td>" : "";
+                htmlBody += forwFijacion ? $"<td style='{estiloTdTrVerde} {head}'class='valores'>Fijación</td>" : "";
                 htmlBody += forwAgente ? $"td style='{estiloTdTrVerde} {head}' class='valores'>MAT</td>" : "";
                 //htmlBody += forw > 0 ?  $"<td class=''> </td>" : "";
-                htmlBody += newcAFijar ?  $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Fijar</td>" : "";
-                htmlBody += newcAPrecio ?  $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Precio</td>" : "";
-                htmlBody += newcFijacion ?  $"<tdstyle='{estiloTdTrVerde} {head}' class='valores'>Fijación</td>" : "";
-                htmlBody += newcAgente ?  $"<tdstyle='{estiloTdTrVerde} {head}' class='valores'>MAT</td>" : "";
+                htmlBody += newcAFijar ? $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Fijar</td>" : "";
+                htmlBody += newcAPrecio ? $"<td style='{estiloTdTrVerde} {head}'class='valores'>A Precio</td>" : "";
+                htmlBody += newcFijacion ? $"<tdstyle='{estiloTdTrVerde} {head}' class='valores'>Fijación</td>" : "";
+                htmlBody += newcAgente ? $"<tdstyle='{estiloTdTrVerde} {head}' class='valores'>MAT</td>" : "";
 
                 htmlBody += "</tr> </thead>";
                 htmlBody += "<tbody>";
@@ -612,26 +612,26 @@ namespace Molinos.DataAgro.Business
                     if (totalDisp != 0 || totalForw != 0 || totalNewC != 0)
                     {
                         htmlBody += $@"<tr  style='{estiloTdTrVerde} '>";
-                        htmlBody +=  $"<td style='{estiloTdTrVerde} '>" + toneladaPrecio.Material + "</td>";
-                        htmlBody += dispAFijar ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += dispAPrecio ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += dispFijacion ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0")) + " </td>" : "";
-                        htmlBody += dispAgente ?  $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.DispAgente.ToString("N0") + " </td>" : "";
-                        htmlBody += disp > 0 ?  $"<td style='{estiloTdTrVerde} '>" + totalDisp.ToString("N0") + " </td>" : "";
+                        htmlBody += $"<td style='{estiloTdTrVerde} '>" + toneladaPrecio.Material + "</td>";
+                        htmlBody += dispAFijar ? $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAFijar)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += dispAPrecio ? $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += dispFijacion ? $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.DispFijac)).Sum().ToString("N0")) + " </td>" : "";
+                        htmlBody += dispAgente ? $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.DispAgente.ToString("N0") + " </td>" : "";
+                        htmlBody += disp > 0 ? $"<td style='{estiloTdTrVerde} '>" + totalDisp.ToString("N0") + " </td>" : "";
 
-                        htmlBody += disp > 0 ?  $"<td style='{estiloTdTrVerde} ' class=''></td>" : "";
-                        htmlBody += forwAFijar ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += forwAPrecio ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAPrecio)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += forwFijacion ?  $"<td style='{estiloTdTrVerde} 'class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwFijac)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += forwAgente ?  $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.FrwAgente.ToString("N0") + "</td>" : "";
-                        htmlBody += forw > 0 ?  $"<td style='{estiloTdTrVerde} '>" + totalForw.ToString("N0") + "</td>" : "";
+                        htmlBody += disp > 0 ? $"<td style='{estiloTdTrVerde} ' class=''></td>" : "";
+                        htmlBody += forwAFijar ? $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAFijar)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += forwAPrecio ? $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwAPrecio)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += forwFijacion ? $"<td style='{estiloTdTrVerde} 'class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.FrwFijac)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += forwAgente ? $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.FrwAgente.ToString("N0") + "</td>" : "";
+                        htmlBody += forw > 0 ? $"<td style='{estiloTdTrVerde} '>" + totalForw.ToString("N0") + "</td>" : "";
 
-                        htmlBody += forw > 0 ?  $"<td style='{estiloTdTrVerde} ' class=' '> </td>" : "";
-                        htmlBody += newcAFijar ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += newcAPrecio ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += newcFijacion ?  $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0")) + "</td>" : "";
-                        htmlBody += newcAgente ?  $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.NewAgente.ToString("N0") + " </td>" : "";
-                        htmlBody += newc > 0 ?  $"<td style='{estiloTdTrVerde} '>" + totalNewC.ToString("N0") + " </td>" : "";
+                        htmlBody += forw > 0 ? $"<td style='{estiloTdTrVerde} ' class=' '> </td>" : "";
+                        htmlBody += newcAFijar ? $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAFijar)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += newcAPrecio ? $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += newcFijacion ? $"<td style='{estiloTdTrVerde} ' class=''>" + (posicion.Select(x => x.PosicionKilos.Sum(y => y.NewFijac)).Sum().ToString("N0")) + "</td>" : "";
+                        htmlBody += newcAgente ? $"<td style='{estiloTdTrVerde} ' class=''>" + toneladaPrecio.NewAgente.ToString("N0") + " </td>" : "";
+                        htmlBody += newc > 0 ? $"<td style='{estiloTdTrVerde} '>" + totalNewC.ToString("N0") + " </td>" : "";
                         htmlBody += "</tr>";
                     }
                 }
@@ -681,13 +681,13 @@ namespace Molinos.DataAgro.Business
                     case "girasolaltooleico": color = "background: #f4c1f7"; break;
 
                 }
-              
+
                 tablaMaterial = "font-family: Arial, Helvetica, sans-serif; width: 100%; text-align: center; border-collapse: collapse;";
-                    td = "border: 1px solid #000000; padding: 4px 4px;";
-                    bodyTdM = "font-size: 15px; color: #000000;background: #FFF; border: 1px solid #000000;";
-                    bodyTdFoot = $"font-size: 15px; color: #000000; {color} ;font-weight: bold; border: 1px solid #000000;";                    
-                    theadTr = $"font-size: 15px;font-weight: bold;color: #050505;text-align: center;border-left: 0px; {color} ;border-bottom: 1px solid #000000;";
-                
+                td = "border: 1px solid #000000; padding: 4px 4px;";
+                bodyTdM = "font-size: 15px; color: #000000;background: #FFF; border: 1px solid #000000;";
+                bodyTdFoot = $"font-size: 15px; color: #000000; {color} ;font-weight: bold; border: 1px solid #000000;";
+                theadTr = $"font-size: 15px;font-weight: bold;color: #050505;text-align: center;border-left: 0px; {color} ;border-bottom: 1px solid #000000;";
+
                 if (suma > 0)
                 {
 
