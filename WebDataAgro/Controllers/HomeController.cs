@@ -24,38 +24,24 @@ namespace WebDataAgro.Controllers
         private readonly ILogger logger;
         private readonly IComercialManager comercialManager;
         private readonly IReportesManager reportesManager;
-        private readonly IHedgeManager hedgeManager;
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
 
         public HomeController(IComercialManager comercialManager, IReportesManager reportesManager,
-            IHomeManager homeManager, IObjetivoManager objetivoManager, ILogger logger, IHedgeManager hedgeManager)
+            IHomeManager homeManager, IObjetivoManager objetivoManager, ILogger logger)
         {
             this.comercialManager = comercialManager;
             this.reportesManager = reportesManager;
             this.mobjHomeManager = homeManager;
             this.objetivoManager = objetivoManager;
             this.logger = logger;
-            this.hedgeManager = hedgeManager;
         }
 
 
         public ActionResult Index()
         {
-            logger.Debug("home index" + GlobalVariables.ComercialId.ToString());
-            if (GlobalVariables.ComercialId == 63)
-            {
-                logger.Debug("cierredeldia entro");
-                hedgeManager.CerrarDia(GlobalVariables.ComercialId,
-                                                   null,
-                                                   GlobalVariables.IdActiveDirectory,
-                                                   true,
-                                                   hedgeManager.GenerarCuerpoMail("prueba"),
-                                                   1);
-            }
             return View();
-
         }
 
 
