@@ -477,7 +477,7 @@ namespace Molinos.DataAgro.Business
                         case "Maiz": item.Orden = 2; break;
                         case "Trigo": item.Orden = 3; break;
                         case "Girasol": item.Orden = 4; break;
-                        case "Girsol AO": item.Orden = 5; break;
+                        case "Girasol AO": item.Orden = 5; break;
                     }
                     p.Add(item);
                 }
@@ -486,8 +486,8 @@ namespace Molinos.DataAgro.Business
                     <tr style= 'font-size: 12px;font-weight: bold;color: #FFFFFF;text-align: center; border-left: 0px;border-right: 0px !important; border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>
                         <th style= 'border-left: 0px ;border-right: 0px !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>PRICING</th>
                         <th style= 'border-left: 0px;border-right: 0px !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>CAMPAÑA</th>";               
-                htmlBody += p.Any(x => x.SanLorenzo > 0) ? "<th style= 'border-left: 0px; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>SL</th>" : "";
-                htmlBody += p.Any(x => x.Acopio > 0) ? "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>Acopios</th>" : "";
+                htmlBody += "<th style= 'border-left: 0px; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>SL</th>" ;
+                htmlBody += "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>Acopios</th>" ;
                 htmlBody += "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> TOTALES </th> ";
                 htmlBody += "</tr>";
                 htmlBody += "</thead>";

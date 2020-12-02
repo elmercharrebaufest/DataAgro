@@ -197,7 +197,7 @@ update Segmentacion set Descripcion ='Acopio Mega: más de 150.000 tns' where Se
 update Material set Descripcion = 'Soja' where MaterialId = 3
 update Material set Descripcion = 'Maiz' where MaterialId = 1
 update Material set Descripcion = 'Trigo' where MaterialId = 2
-update Material set Descripcion = 'Girsol AO' where MaterialId = 5
+update Material set Descripcion = 'Girasol AO' where MaterialId = 5
 
 --CondicionFijacion
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '3 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('3 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '03'); END 

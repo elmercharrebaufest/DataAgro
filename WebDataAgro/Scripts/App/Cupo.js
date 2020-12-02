@@ -210,7 +210,7 @@ function InicializarCuposIndex() {
                         { MaterialNombre: "Trigo" },
                         { MaterialNombre: "Soja" },
                         { MaterialNombre: "Girasol" },
-                        { MaterialNombre: "Girsol AO" }],
+                        { MaterialNombre: "Girasol AO" }],
                     itemTemplate: function (e) {
                         return "<span><label><input type='checkbox' name='" + e.field + "' value='#= data.MaterialNombre#'/><span>#= data.MaterialNombre|| data.all #</span></label></span><br>";
                     }
