@@ -1,0 +1,86 @@
+﻿.valores {
+    width: auto;
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+}
+
+.k-icon.k-i-close {
+    display: none !important;
+}
+
+
+.tablem {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: auto !important;
+    float: left;
+    margin-right: 10px;
+    font-size: 13px;
+    text-align: center;
+}
+
+    .tablem td, table tr, table th {
+        border: none;
+        padding: 2px;
+    }
+
+    /*table tr:nth-child(even) {
+                background-color: #fcfcfc;
+            }*/
+    .tablem tr {
+        background-color: #fcfcfc;
+    }
+    /*table tr:hover {
+            background-color: #ddd;
+        }*/
+
+    .tablem th {
+        /*padding-top: 12px;
+            padding-bottom: 12px;*/
+        text-align: center;        
+        border: 1px solid black;
+    }
+.TOTAL {
+    background-color: transparent;
+    color: black;
+}
+.SOJA {
+    background: rgb(153, 204, 0)!important;
+    color: white;
+}
+
+.MAIZ {
+    color: white;
+    background: rgb(255, 204, 153)!important;
+}
+
+.TRIGO {
+    color: white;
+    background: rgb(153, 153, 255)!important;
+}
+
+.GIRASOL {
+    color: white;
+    background: rgb(211, 96, 212)!important;
+}
+
+.GIRASOLAO {
+    color: white;
+    background: rgb(244, 193, 247)!important;
+}
+
+.scrollInside {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.k-i-loading {
+    display: none;
+}
+
+.k-header > .k-grid-filter, .k-header > .k-header-column-menu {
+    margin: -.5em -0.0em -.4em 0;
+}
+.k-datepicker {
+    width: 100%;
+}

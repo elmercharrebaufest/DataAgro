@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -228,6 +228,7 @@
     <Compile Include="Controllers\FechaFeriadoController.cs" />
     <Compile Include="Controllers\CartaDePresentacionController.cs" />
     <Compile Include="Controllers\CampanaController.cs" />
+    <Compile Include="Controllers\ReporteEvolucionFijacionController.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaController.cs" />
     <Compile Include="Controllers\HabilitacionCupoController.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoController.cs" />
@@ -401,6 +402,7 @@
     <Content Include="Content\contactoDetalle.css" />
     <Content Include="Content\diffPlex.css" />
     <Content Include="Content\logDataAgro.css" />
+    <Content Include="Content\ReporteEvolucionFijacion.css" />
     <Content Include="Content\terminos.css" />
     <Content Include="Content\ReporteCupo.css" />
     <Content Include="Content\cupo.css" />
@@ -1011,6 +1013,7 @@
     <Content Include="Scripts\App\Filtros.js" />
     <Content Include="Scripts\App\CupoDisponibilidad.js" />
     <Content Include="Scripts\App\LogDataAgro.js" />
+    <Content Include="Scripts\App\ReporteEvolucionFijacion.js" />
     <Content Include="Scripts\App\TablaCompra.js" />
     <Content Include="Scripts\App\ReporteProveedores.js" />
     <Content Include="Scripts\App\reporteRangoConfirmacionAutomatica.js" />
@@ -2725,6 +2728,8 @@
     <Content Include="Views\ConfiguracionInterna\_ListaCampaña.cshtml" />
     <Content Include="Views\CompraNet\AFijar.cshtml" />
     <Content Include="Views\CompraNet\Fijacion.cshtml" />
+    <Content Include="Views\ReporteEvolucionFijacion\Index.cshtml" />
+    <Content Include="Views\ReporteEvolucionFijacion\_Reporte.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -528,7 +528,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Pricing = Math.Round(x.Cantidad / 1000),
                 SanLorenzo = x.Destino.Acopio == false ? Math.Round(x.Cantidad / 1000) : 0,
                 Acopio = x.Destino.Acopio == true ? Math.Round(x.Cantidad / 1000) : 0
-            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&  DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && 
+            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde &&
             DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId));
             var fasones = repositorio.Listar<Fason, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
@@ -1346,7 +1346,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MercsDeposito = x.MercsDeposito == true ? "X" : "",
                 Pizarra = x.Pizarra
             },
-            x => negocios.Contains(x.Id) 
+            x => negocios.Contains(x.Id)
                 && (moneda == "" || x.MonedaId == moneda)
             );
 
@@ -2330,6 +2330,121 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error("GrabarDatosReporteCompraNet", e);
             }
 
+        }
+
+        public ReporteEvolucionFijacionModel ObtenerDatosReporteEvolucionFijacion(DateTime desde, DateTime hasta, int? ProveedorId, int? ComercialId, int? CampanaId,
+            int? MaterialId, int? GrupoCompraId, int? ClasificacionId, int? DestinoId)
+        {
+            ReporteEvolucionFijacionModel result = new ReporteEvolucionFijacionModel();
+            List<MaterialDto> materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
+            materiales.Add(new MaterialDto { Descripcion = "TOTAL", MaterialId = 0 });
+
+            var afijar = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato
+            {
+                ContratoSAP = x.ContratoSAP,
+                FechaDesde = x.FechaDesde,
+                FechaHasta = x.FechaHasta,
+                FechaDesdeFormateado = SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaFormateado = SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" + SqlFunctions.DateName("year", x.FechaHasta),
+                Fecha = x.Fecha,
+                Cantidad = x.Cantidad,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                ClasificacionId = x.ClasificacionId,
+                ClasificacionDescripcion = x.Clasificacion.Descripcion,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                ComercialId = x.ComercialId,
+                ProveedorId = x.ProveedorId.Value,
+                Proveedor = x.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT
+            }, x => x.TipoNegocioId == 1 && x.FechaHasta >= desde && x.FechaHasta <= hasta && (x.EstadoId == 2 || x.EstadoId == 5)
+             && (ProveedorId == null || x.ProveedorId == ProveedorId)
+             && (ComercialId == null || x.ComercialId == ComercialId)
+             && (CampanaId == null || x.CampanaId == CampanaId)
+             && (MaterialId == null || x.MaterialId == MaterialId)
+             && (GrupoCompraId == null || x.GrupoCompra == GrupoCompraId)
+             && (ClasificacionId == null || x.ClasificacionId == ClasificacionId)
+             && (DestinoId == null || x.DestinoId == DestinoId)
+            );
+            result.afijar = afijar;
+            List<string> contratossap = afijar.Select(a => a.ContratoSAP).ToList();
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato, BasicoContrato>(x => new BasicoContrato
+            {
+                ContratoSAP = x.FijacionSAP,
+                ContratoMadre = x.ContratoSAP,
+                FechaDesde = x.FechaDesde,
+                FechaDesdeFormateado = SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" + SqlFunctions.DateName("year", x.FechaDesde),
+                FechaHastaFormateado = SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" + SqlFunctions.DateName("year", x.FechaHasta),
+                FechaHasta = x.FechaHasta,
+                Fecha = x.Fecha,
+                Cantidad = x.Cantidad,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                ComercialId = x.ComercialId,
+                ProveedorId = x.ProveedorId.Value,
+                Proveedor = x.Proveedor.RazonSocial,
+                Cuit = x.Proveedor.CUIT
+            }, x =>
+             (x.EstadoId == 2 || x.EstadoId == 5)
+             && contratossap.Contains(x.ContratoSAP)
+            );
+            result.fijaciones = fijaciones;
+            List<DateTime> meses = new List<DateTime>();
+            var startdate = new DateTime(desde.Year, desde.Month, 1);
+            var enddate = new DateTime(hasta.Year, hasta.Month, 1);
+            //something on these lines 
+            while (startdate <= enddate)
+            {
+                meses.Add(startdate);
+                // pull out month and year
+                startdate = startdate.AddMonths(1);
+            }
+
+            foreach (var item in meses)
+            {
+                foreach (var material in materiales)
+                {
+                    result.tablero.Add(new ReporteEvolucionFijacion
+                    {
+                        Anio = item.Year,
+                        MesId = item.Month,
+                        Mes = item.ToString("MMM").Replace(".", ""),
+                        MesCompleto = item.ToString("MMMM"),
+                        Material = material.Descripcion,
+                        MaterialId = material.MaterialId,
+                        TotalAfijar = 0,
+                        TotalFijacion = 0,
+                        UltimaSemana = 0,
+                        Porcentaje = 0
+                    });
+                }
+
+            }
+            var ultimasemana = DateTime.Now.AddDays(-7).Date;
+            foreach (var item in result.tablero)
+            {
+                var fecha = item.MesId.ToString() + "-" + item.Anio.ToString();
+                var totalAFijar = afijar.Where(a => (item.MaterialId == 0 || item.MaterialId == a.MaterialId) && a.FechaHastaFormateado == fecha).Sum(x => x.Cantidad);
+                var totalFijacion = fijaciones.Where(a => (item.MaterialId == 0 || item.MaterialId == a.MaterialId) && a.FechaHastaFormateado == fecha).Sum(x => x.Cantidad);
+                var totalUltimaSemana = fijaciones.Where(a => (item.MaterialId == 0 || item.MaterialId == a.MaterialId) && a.FechaHastaFormateado == fecha && a.Fecha > ultimasemana).Sum(x => x.Cantidad);
+                var porcentaje = item.MaterialId == 0 ? (totalFijacion * 100) / totalAFijar : 0;
+                porcentaje = Math.Round(Double.IsNaN(porcentaje) ? 0 : porcentaje);
+
+                item.TotalAfijar = totalAFijar / 1000;
+                item.TotalFijacion = totalFijacion / 1000;
+                item.UltimaSemana = totalUltimaSemana / 1000;
+                item.Porcentaje = porcentaje;
+            }
+            result.tablero = result.tablero.OrderBy(a => a.MaterialId).ThenBy(a => a.Anio).ThenBy(a => a.MesId).ToList();
+            return result;
+        }
+
+        public List<ClasificacionCompraNet> TraerTodoClasificacionCompraNet()
+        {
+            var combo = new CombosQueries(logger, repositorio);
+            var result = combo.GetClasificacionCombo();
+            return result;
         }
     }
 }

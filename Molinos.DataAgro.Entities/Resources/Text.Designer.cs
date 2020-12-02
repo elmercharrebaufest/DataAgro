@@ -1919,6 +1919,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Evolucion Fijacion.
+        /// </summary>
+        public static string Visualizar_Reporte_Evolucion_Fijacion {
+            get {
+                return ResourceManager.GetString("Visualizar_Reporte_Evolucion_Fijacion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Visualizar Reporte Proveedor.
         /// </summary>
         public static string Visualizar_Reporte_Proveedor {

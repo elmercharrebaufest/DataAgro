@@ -748,4 +748,7 @@
   <data name="Configuracion_Feriado" xml:space="preserve">
     <value>Configuración Feriado</value>
   </data>
+  <data name="Visualizar_Reporte_Evolucion_Fijacion" xml:space="preserve">
+    <value>Visualizar Reporte Evolucion Fijacion</value>
+  </data>
 </root>

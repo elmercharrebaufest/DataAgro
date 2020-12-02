@@ -147,6 +147,7 @@
     <Compile Include="Agent\IRelacionCorredorProveedorAgent.cs" />
     <Compile Include="Agent\IRiesgoComercialAgent.cs" />
     <Compile Include="Criterios\IServicioCriterios.cs" />
+    <Compile Include="Managers\IReporteEvolucionFijacionManager.cs" />
     <Compile Include="Managers\IAgendaManager.cs" />
     <Compile Include="Managers\IAreaInfluenciaManager.cs" />
     <Compile Include="Managers\ICampaniaActualManager.cs" />

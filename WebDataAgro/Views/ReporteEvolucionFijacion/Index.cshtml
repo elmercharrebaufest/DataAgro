@@ -1,0 +1,134 @@
+﻿@{
+    ViewBag.Title = "Reporte Evolucion Fijacion";
+}
+
+@section Styles {
+    <link href="~/Content/ReporteEvolucionFijacion.css" rel="stylesheet" />
+}
+
+@*<script type="text/javascript" src="~/Scripts/Chart.js"></script>*@
+@section Scripts {
+    @Scripts.Render("~/bundles/ReporteEvolucionFijacion")
+}
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+<div class="Titulo">
+
+    @using (Ajax.BeginForm("PartialReporte", null, new AjaxOptions { HttpMethod = "GET", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Cuerpo" }, null))
+    {
+        <div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar">
+            <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+        </div>
+        <br />
+        <div id="filtrar" class="container collapse">
+            <div class="row">
+                @*<div class="col-md-2">
+                        <label>Corredor</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="buscadorCorredor" name="CorredorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+                    </div>*@
+
+                <div class="col-md-2">
+                    <label>Proveedor</label>
+                </div>
+                <div class="col-md-4">
+                    @*<input id="buscadorProveedor" name="ProveedorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" />*@
+                    <input id="buscadorProveedor" class="k-textbox" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" />
+                    <input type="hidden" id="ProveedorId" name="ProveedorId" />
+                    <div id="buscadorResult"></div>
+                </div>
+                <div class="col-md-2">
+                    <label>Comercial</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione el Comercial", new { @class = "form-control", @id = "ComercialId" })
+                </div>
+            </div>
+
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Entrega Desde-Hasta</label>
+                </div>
+                <div class="col-md-2">
+                    <input id="fecha" name="fecha" />
+                </div>
+                <div class="col-md-2">
+                    <input id="fechaHasta" name="fechaHasta" />
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                @*<div class="col-md-2">
+                        <label>Fecha Hasta Fijación</label>
+                    </div>
+                    <div class="col-md-4">
+                        <span id="fechaHastaFijacionDiv">
+                            <input id="fechaHastaFijacionId" class="filtroFecha" name="HastaFijacion-hasta" type="date" style="width: 50%" />
+                        </span>
+                    </div>*@
+                <div class="col-md-2">
+                    <label>Centro</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("DestinoId", new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione el Centro", new { @class = "form-control" })
+                </div>
+
+                <div class="col-md-2">
+                    <label>Campaña</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("CampanaId", new SelectList(ViewBag.Campania, "Value", "Text"), "Seleccione la Campaña", new { @class = "form-control" })
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Material</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control" })
+                </div>
+                <div class="col-md-2">
+                    <label>Zona</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("GrupoCompraId", new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione la Zona", new { @class = "form-control" })
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Clasificacion</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("ClasificacionId", new SelectList(ViewBag.Clasificacion, "Value", "Text"), "Seleccione la Clasificacion", new { @class = "form-control" })
+                    @*<input id="ClasificacionId" name="ClasificacionId" class="multiselect" style="width:100%" type="text" placeholder="" required="required" />*@
+                </div>
+
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-12" style="text-align:right">
+                    <div class="row">
+                        <button type="submit" id="buscar-reporte" class="k-button k-button-icontext sideMargin-15">Buscar</button>
+                        <button type="button" id="descargar-reporte" class="k-button k-button-icontext sideMargin-15">Descargar Reporte</button>
+                        <a id="descargarReporte" href="/ReporteEvolucionFijacion/DescargarReporte" style="display:none;" >DescargarReporte</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br /> <br />
+
+    }
+
+    <div id="Cuerpo" class="container-reporte">
+        @Html.Action("PartialReporte", new { fechaString = DateTime.Now.Date.ToString("dd-MM-yyyy"), fechaHastaString = DateTime.Now.Date.ToString("dd-MM-yyyy") })
+    </div>
+</div>
+

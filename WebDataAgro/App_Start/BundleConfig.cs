@@ -210,6 +210,10 @@ namespace WebDataAgro
 
             bundles.Add(new ScriptBundle("~/bundles/AbmFechaFeriado").Include(
                                       "~/Scripts/App/AbmFechaFeriado.js"));
+            bundles.Add(new ScriptBundle("~/bundles/ReporteEvolucionFijacion").Include(
+                             //"~/Scripts/KendoExtensions.js",
+                             //"~/Scripts/App/Filtros.js",
+                             "~/Scripts/App/ReporteEvolucionFijacion.js"));
             bundles.IgnoreList.Clear();
         }
     }

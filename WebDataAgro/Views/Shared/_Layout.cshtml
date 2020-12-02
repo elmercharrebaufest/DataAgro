@@ -169,6 +169,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteEvolucionFijacion))
+                                {
+                                    <li>
+                                        <a href="/ReporteEvolucionFijacion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Reporte Evolucion Fijacion
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteRango))
                                 {
                                     <li>

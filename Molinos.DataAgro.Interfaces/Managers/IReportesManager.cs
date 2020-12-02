@@ -71,5 +71,8 @@ namespace Molinos.DataAgro.Interfaces
         string DetalleAgenteModal(DateTime fecha,List<int> materialId);
         string DetallePosicionModalIds(List<int> negocios,string moneda);
         void TraerPosicionNegocios(List<BasicoContrato> datos);
+        ReporteEvolucionFijacionModel ObtenerDatosReporteEvolucionFijacion(DateTime desde, DateTime hasta, int? ProveedorId, int? ComercialId, int? CampanaId, int? MaterialId,
+            int? GrupoCompraId, int? ClasificacionId, int? DestinoId);
+        List<ClasificacionCompraNet> TraerTodoClasificacionCompraNet();
     }
 }

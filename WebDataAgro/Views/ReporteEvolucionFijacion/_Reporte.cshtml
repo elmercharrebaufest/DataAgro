@@ -1,0 +1,73 @@
+﻿@using Molinos.DataAgro.Entities.Common.Enums
+@model List<Molinos.DataAgro.Entities.Dto.ReporteEvolucionFijacion>
+
+@{
+    int anio = 0;
+}
+<div id="Reportes">
+
+    @foreach (var material in Model.OrderBy(a => a.Anio).ThenBy(a => a.MesId).ThenBy(a => a.MaterialId).GroupBy(a => a.Material))
+    {
+        <table class="tablem">
+            <thead>
+                @if (material.Key.ToUpper() == "TOTAL")
+                {
+                    <tr class="TOTAL">
+                        <th rowspan="2">Año</th>
+                        <th rowspan="2">Mes</th>
+                        <th colspan="3">TOTAL</th>
+                        <th rowspan="2">%</th>
+                    </tr>
+                    <tr>
+                        <th>A fijar</th>
+                        <th>Fijaciones</th>
+                        <th>Semana</th>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="@material.Key.ToUpper().Replace(" ","")">
+                        <th colspan="3">@material.Key.ToUpper()</th>
+                    </tr>
+                    <tr class="@material.Key.ToUpper().Replace(" ","")">
+                        <th>A fijar</th>
+                        <th>Fijaciones</th>
+                        <th>Semana</th>
+                    </tr>
+                }
+            </thead>
+
+            @foreach (var data in material)
+            {
+                <tr style="@(data.MesId != 12 ? "" : "border-bottom: 1px solid black;")">
+                    @if (material.Key.ToUpper() == "TOTAL")
+                    {
+                        <td>@(data.Anio == anio ? "" : data.Anio.ToString())</td>
+                        anio = data.Anio;
+                        <td>@data.Mes</td>
+                        <td>@(data.TotalAfijar == 0 ? "-" : String.Format("{0:n0}", data.TotalAfijar))</td>
+                        <td>@(data.TotalFijacion == 0 ? "-" : String.Format("{0:n0}", data.TotalFijacion))</td>
+                        <td>@(data.UltimaSemana == 0 ? "-" : String.Format("{0:n0}", data.UltimaSemana))</td>
+                        <td>@(Double.IsNaN(data.Porcentaje) ? 0 : data.Porcentaje)%</td>
+                    }
+                    else
+                    {
+                        <td>@(data.TotalAfijar == 0 ? "-" : String.Format("{0:n0}", data.TotalAfijar))</td>
+                        <td>@(data.TotalFijacion == 0 ? "-" : String.Format("{0:n0}", data.TotalFijacion))</td>
+                        <td>@(data.UltimaSemana == 0 ? "-" : String.Format("{0:n0}", data.UltimaSemana))</td>
+                    }
+                </tr>
+            }
+        </table>
+
+    }
+
+</div>
+
+@*<script>
+        var data = {PricingCumplido : Number(@Model.HedgeObjetivo.PricingCumplido.ToString().Replace(',','.')),
+                    RemitirCumplido : Number(@Model.HedgeObjetivo.RemitirCumplido.ToString().Replace(',','.')),
+                    PricingObjetivo : Number(@Model.HedgeObjetivo.PricingObjetivo.ToString().Replace(',','.')),
+                    RemitirObjetivo : Number(@Model.HedgeObjetivo.RemitirObjetivo.ToString().Replace(',','.'))}
+        CrearGraficoHedgeObjetivo(data)
+    </script>*@
