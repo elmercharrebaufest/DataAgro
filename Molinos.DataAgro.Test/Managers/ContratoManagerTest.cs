@@ -4200,10 +4200,10 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var contrato = new Contrato
             {
-                Id=1,
+                Id = 1,
                 Cantidad = 1000,
                 EstadoId = 9,
-                Estado = new EstadoContrato {EstadoContratoId=9 }
+                Estado = new EstadoContrato { EstadoContratoId = 9 }
             };
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(contrato);
             repositorioMock.Setup(x => x.GuardarCambios()).Verifiable();
@@ -4227,7 +4227,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(contrato);
             repositorioMock.Setup(x => x.GuardarCambios()).Verifiable();
 
-            var res = target.BorrarContratoPreAprobacion(1,"ok");
+            var res = target.BorrarContratoPreAprobacion(1, "ok");
 
             repositorioMock.Verify(y => y.Obtener<Contrato>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);

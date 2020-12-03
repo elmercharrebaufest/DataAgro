@@ -7,8 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
+using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
+using WebDataAgro.Models;
 
 namespace Molinos.DataAgro.Test.Controllers
 {
@@ -122,9 +125,9 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
 
             var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Formula\":{\"Id\":0,\"Criterio\":null,\"Inicio\":0,\"CantDias\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            
+            var data = (AbmFormulaResult)((JsonResult)result).Data;
+            Assert.IsNotNull(data);
         }
     }
 }

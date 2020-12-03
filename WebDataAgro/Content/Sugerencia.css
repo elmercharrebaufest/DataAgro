@@ -1,0 +1,204 @@
+﻿
+div label input {
+    margin-right: 100px;
+}
+
+body {
+    font-family: sans-serif;
+}
+
+.verdeClassColumna {
+    background-color: #32a852 !important;
+}
+
+.verdeClassFila {
+    background-color: #63ff8e !important;
+}
+
+.naranjaClass {
+    background-color: #fac400 !important;
+}
+
+.redClass {
+    background-color: #e62222 !important;
+}
+
+.blueClass {
+    background-color: #bad4ff !important;
+}
+
+.naranjaClassFila {
+    background-color: #faff70 !important;
+}
+
+.redClassFila {
+    background-color: #eb5777 !important;
+}
+
+.borde {
+    border-style: double;
+    border-color: #deddd9;
+}
+
+.fa-check:before {
+    color: #1B5E20;
+}
+
+.popover-content {
+    color: dimgray;
+    font-size: 9px !important;
+    font-family: "Helvetica Neue","Helvetica","Arial","sans-serif" !important;
+}
+
+.checkbox label:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+/*.checkbox {
+        margin-top: -4px !important;
+        margin-bottom: -5px !important;
+    }*/
+
+.checkbox .cr,
+.radio .cr {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    border-radius: .25em;
+    width: 1.3em;
+    height: 1.3em;
+    float: left;
+    margin-right: .5em;
+}
+
+
+    .checkbox .cr .cr-icon,
+    .radio .cr .cr-icon {
+        position: absolute;
+        font-size: .8em;
+        line-height: 0;
+        top: 50%;
+        left: 20%;
+    }
+
+
+.checkbox label input[type="checkbox"],
+.radio label input[type="radio"] {
+    display: none;
+}
+
+    .checkbox label input[type="checkbox"] + .cr > .cr-icon,
+    .radio label input[type="radio"] + .cr > .cr-icon {
+        transform: scale(3) rotateZ(-20deg);
+        opacity: 0;
+        transition: all .3s ease-in;
+    }
+
+    .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+    .radio label input[type="radio"]:checked + .cr > .cr-icon {
+        transform: scale(1) rotateZ(0deg);
+        opacity: 1;
+    }
+
+    .checkbox label input[type="checkbox"]:disabled + .cr,
+    .radio label input[type="radio"]:disabled + .cr {
+        opacity: .5;
+    }
+
+#boton-siTabla, #boton-noTabla {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.table > tfoot > tr > td {
+    padding: 8px !important;
+}
+
+
+
+.table-scroll {
+    position: relative;
+    width: 100%;
+    z-index: 5;
+    margin: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 400px;
+}
+
+    .table-scroll table {
+        /*width: 100%;*/
+        min-width: 1280px;
+        margin: auto;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+.table-wrap {
+    position: relative;
+}
+
+.table-scroll th,
+.table-scroll td {
+    padding: 5px 10px;
+    border: 1px solid #017940;
+    background: #fff;
+    vertical-align: top;
+    text-align: center;
+    vertical-align: inherit;
+}
+
+.table-scroll thead th {
+    background: #017940;
+    color: #fff;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    text-align: center;
+}
+/* safari and ios need the tfoot itself to be position:sticky also */
+.table-scroll tfoot,
+.table-scroll tfoot th,
+.table-scroll tfoot td {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    background: #017940;
+    color: #fff;
+    z-index: 6;
+}
+
+a:focus {
+    background: red;
+}
+/* testing links*/
+
+th:first-child {
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: #ccc;
+}
+
+thead th:first-child,
+tfoot th:first-child {
+    z-index: 5;
+
+
+
+}
+
+div.scrollWrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.popover.top {
+    z-index: 3 !important;
+}

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class SugerenciaCupo
+    public partial class SugerenciaCupo : ICloneable
     {
         [Key]
         public int Id { get; set; }
@@ -12,6 +12,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int MaterialId { get; set; }
         public DateTime FechaSugerida { get; set; }
         public int CantidadDeCupos { get; set; }
+        public int CantidadCupoOriginal { get; set; }
+        
         //public int? FasonId { get; set; }
         //public int? ContratoId { get; set; }
         //public int? AgenteCompraId { get; set; }
@@ -62,5 +64,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Puntuaciones { get; set; }
         public string MotivoRechazo { get; set; }
         public bool CDWarrant { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

@@ -216,29 +216,34 @@ function MarcarColumna(elem) {
 function ConfirmarSeleccionados() {
     var datosTabla = [];
     var id = 0;
-   
+    var respuesta = {};
     var obj = {};
     var $filas = $("#tabla tr:not('.encabezado')");
     for (var j = 1; j <= $filas.length; j++) {
         var cantidadCupos = "";
         var fecha = "";
+        var cantidadDevueltos = "";
         obj = {};
         var detalleCupo = [];
+        var devueltos = [];
         var k = $('label[data-row=' + j + ']').length;
         for (var i = 0; i < k; i++) {            
             idProveedor = $('label[data-row=' + j + ']')[0].attributes["data-proveedor"].textContent;
             idComercial = $('label[data-rowComercial=' + j + ']')[0].attributes["data-comercial"].textContent;
             proveedorDesc = $('label[data-proveedorDesc=' + j + ']')[0].attributes["data-proveedorDescripcion"].textContent;
+          
+           
             if ($('input[data-row="' + j + '"][data-column="' + i + '"]').length > 0 && $('input[data-row="' + j + '"][data-column="' + i + '"]').prop('checked') && $('input[data-row="' + j + '"][data-column="' + i + '"]').length > 0) {
                 //$('div[data-row="' + j + '"][data-column="' + i + '"]').remove();
                 fecha = $('.fecha' + i).text();
                 cantidadCupos = $('label[data-row="' + j + '"][data-column="' + i + '"]')[0].innerText;
-                if (fecha != "" && cantidadCupos != "") {
-                    detalleCupo.push({ Fecha: fecha, Cantidad: cantidadCupos, CantidadFleteProcedencia: 0, CantidadSugerencia: cantidadCupos });
+                if (fecha != "" && cantidadCupos != "" || cantidadDevueltos != "") {
+                    detalleCupo.push({ Fecha: fecha, Cantidad: cantidadCupos, CantidadFleteProcedencia: 0, CantidadSugerencia: cantidadCupos});
                    
                 }
             }           
         }
+      
         if (detalleCupo.length > 0) {
             obj.ProveedorId = idProveedor;
             obj.ComercialId = idComercial;
@@ -248,25 +253,72 @@ function ConfirmarSeleccionados() {
         }
     
     }
-    return datosTabla;
+    var nColumnas = $("#tabla tr:last td").length;
+    for (var i = 0; i < nColumnas; i++) {
+        fecha = $('.fecha' + i).text();
+        cantidadDevueltos = $('.devuelto' + i).text();
+        if (fecha != "" && cantidadDevueltos != "") {
+            devueltos.push({ Fecha: fecha, CantidadCuposDevueltos: cantidadDevueltos });
+
+        }
+    }
+
+    if (devueltos.length > 0) {   
+        respuesta.Devueltos = devueltos;
+    }
+
+    respuesta.DatosTabla = datosTabla;
+ 
+    return respuesta;
 }
 
 function inicializarElementos() {
 
     $("#confirmarSugerencia").click(function () {
         var lista = ConfirmarSeleccionados();
-        if (lista.length == 0) {
-            MensErr("Debe seleccionar al menos una sugerencia.");
-        } else {
-            $("#fleteProcedenciaTabla").modal("show");
+        var detalles = lista.DatosTabla;
+        var devoluciones = lista.Devueltos;
+        var haySugerencia = false;
+        var hayDevolucion = false;
+
+        if (detalles != null || detalles != undefined) {
+            for (var i = 0; i < detalles.length; i++) {
+                if (detalles[i] != undefined) {
+                    haySugerencia = detalles.length > 0;
+                }
+            }
         }
+        if (devoluciones != null || devoluciones != undefined) {
+            for (var i = 0; i < devoluciones.length; i++) {
+
+                if (devoluciones[i] != undefined) {
+
+                    hayDevolucion = devoluciones.length > 0;
+                }
+            }
+        }
+
+        if (haySugerencia) {
+            $("#fleteProcedenciaTabla").modal("show");
+
+        } else if (hayDevolucion) {
+            result = MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: lista, devoluciones: devoluciones, materialId: $("#MaterialId").val(), centroId: $("#CentroId").val() });
+            ListarErrores(result);
+        }
+        else {
+            MensErr("Debe seleccionar al menos una sugerencia.");
+        }
+        
     });
 
     $("#boton-siTabla").click(function () {
         $("#fleteProcedenciaTabla").modal("hide");
-        var sugerencias = ConfirmarSeleccionados();
+        var lista = ConfirmarSeleccionados();
+        var sugerencias = lista.DatosTabla;        
+
         var fila = '';
         for (var i = 0; i < sugerencias.length; i++) {
+            if (sugerencias[i].Detalles != undefined) {            
             for (var j = 0; j < sugerencias[i].Detalles.length; j++) {
                 fila = '<tr><td>' + sugerencias[i].ProveedorDesc + '</td> <td>'
                     + kendo.toString(sugerencias[i].Detalles[j].Fecha, "dd/MM/yyyy")
@@ -274,6 +326,7 @@ function inicializarElementos() {
                     + '" class="cantidad-masiva" value="' + sugerencias[i].Detalles[j].CantidadFleteProcedencia + '"/> </td> <td>'
                     + 'Max. de cupos: ' + sugerencias[i].Detalles[j].Cantidad + '</td></tr>'
                 $("#cuerpo-carga-cupos-tabla").append(fila);
+                }
             }
         }
         $(".cantidad-masiva").kendoNumericTextBox({
@@ -288,54 +341,30 @@ function inicializarElementos() {
 
     $("#boton-noTabla").click(function () {
         $("#fleteProcedenciaTabla").modal("hide");
-        var sugerencias = ConfirmarSeleccionados();
-        result = MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: sugerencias, materialId: $("#MaterialId").val(), centroId: $("#CentroId").val() });
+        var lista = ConfirmarSeleccionados();
+        var sugerencias = lista.DatosTabla;
+        var devoluciones = lista.Devueltos;
+        result = MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: sugerencias, devoluciones: devoluciones , materialId: $("#MaterialId").val(), centroId: $("#CentroId").val() });
 
-        $.unblockUI();
-        var erroresTabla = new Array();
-        var cuposGeneradosTabla = new Array();
-        if (result.HayError) {
-            erroresTabla = erroresTabla.concat(result.ListaErrores);
-        }
-        if (result.ListaCupos != null && result.ListaCupos.length > 0) {
-            cuposGeneradosTabla = cuposGeneradosTabla.concat(result.ListaCupos);
-        }
-        if (cuposGeneradosTabla.length > 0) {
-            cuposCreados(cuposGeneradosTabla);
-        }
-        if (erroresTabla.length > 0) {
-            ShowErrorMessages(errores);
-        }
+        ListarErrores(result);
     });
 
     $("#aceptarTabla").click(function () {
-        var sugerencias = ConfirmarSeleccionados();       
-
+        var lista = ConfirmarSeleccionados();
+        var sugerencias = lista.DatosTabla;
+        var devoluciones = lista.Devueltos;
         for (var j = 0; j < sugerencias.length; j++) {
-            for (var a = 0; a < sugerencias[j].Detalles.length; a++) {
-                sugerencias[j].Detalles[a].CantidadFleteProcedencia = $("#flete" + j).val();
-                sugerencias[j].Detalles[a].Cantidad = sugerencias[j].Detalles[a].Cantidad - sugerencias[j].Detalles[a].CantidadFleteProcedencia;
+            if (sugerencias[i].Detalles != undefined) {
+                for (var a = 0; a < sugerencias[j].Detalles.length; a++) {
+                    sugerencias[j].Detalles[a].CantidadFleteProcedencia = $("#flete" + j).val();
+                    sugerencias[j].Detalles[a].Cantidad = sugerencias[j].Detalles[a].Cantidad - sugerencias[j].Detalles[a].CantidadFleteProcedencia;
 
+                }
             }
         }
-        result = MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: sugerencias, materialId: $("#MaterialId").val(), centroId : $("#CentroId").val() });
+        result = MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: sugerencias, devoluciones: devoluciones, materialId: $("#MaterialId").val(), centroId : $("#CentroId").val() });
 
-        $.unblockUI();
-        var errores = new Array();
-        var cuposGenerados = new Array();
-        if (result.HayError) {
-            errores = errores.concat(result.ListaErrores);
-        }
-        if (result.ListaCupos != null && result.ListaCupos.length > 0) {
-            cuposGenerados = cuposGenerados.concat(result.ListaCupos);
-        }
-        if (cuposGenerados.length > 0) {
-            cuposCreados(cuposGenerados);
-            
-        }
-        if (errores.length > 0) {
-            ShowErrorMessages(errores);
-        }
+        ListarErrores(result);
     });
 
     $("#MaterialId").change(function () {
@@ -351,6 +380,36 @@ function inicializarElementos() {
         $("#filtrarMaterial").trigger("click");
     });
 
+}
+
+function ListarErrores(result) {
+    $.unblockUI();
+    var erroresTabla = new Array();
+    var cuposGeneradosTabla = new Array();
+
+    if (result.ListaCupos != null && result.ListaCupos.length > 0) {
+        cuposGeneradosTabla = cuposGeneradosTabla.concat(result.ListaCupos);
+
+    }
+    if (result.ListaErrores != null && result.ListaErrores.length > 0) {
+        for (var i = 0; i < result.ListaErrores.length; i++) {
+            cuposGeneradosTabla = cuposGeneradosTabla.concat(result.ListaErrores[i].Message);
+        }
+        
+    }
+
+    if (cuposGeneradosTabla.length > 0) {
+        cuposCreados(cuposGeneradosTabla);
+    }
+    if (result.HayError && cuposGeneradosTabla.length < 0) {
+        for (var i = 0; i < result.ListaErrores.length; i++) {
+            erroresTabla = erroresTabla.concat(result.ListaErrores[i].Message);
+        }
+        
+    }
+    if (erroresTabla.length > 0 && cuposGeneradosTabla.length < 0) {
+        ShowErrorMessages(erroresTabla);
+    }
 }
    
 

@@ -1295,7 +1295,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarContratoResult();
 
-            var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
+            var oContratoSave = repositorio.Obtener<Contrato>(contratoId);           
             var res = status.ValidarEstado(oContratoSave.ContratoSAP);
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && String.IsNullOrEmpty(res))
@@ -1447,7 +1447,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public GrabarContratoResult BorrarContrato(Contrato oContrato)
         {
-            var tipoAccion = TipoAccionLogDataAgro.Eliminar;
+             var tipoAccion = TipoAccionLogDataAgro.Eliminar;
             var oEntityErrors = new GrabarContratoResult();
             if (string.IsNullOrEmpty(oContrato.MotivoRechazo) || string.IsNullOrWhiteSpace(oContrato.MotivoRechazo))
             {
@@ -1467,12 +1467,12 @@ namespace Molinos.DataAgro.Business.Managers
                         if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar)
                         {
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                            tipoAccion = TipoAccionLogDataAgro.Crear;
+                             tipoAccion = TipoAccionLogDataAgro.Crear;
                         }
                         else
                         {
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
-                            tipoAccion = TipoAccionLogDataAgro.Modificar;
+                             tipoAccion = TipoAccionLogDataAgro.Modificar;
                         }
                     }
                     else
@@ -1657,7 +1657,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipoAccion, oContratoSave.GetType());
+                logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipoAccion , oContratoSave.GetType());
 
                 var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
                 try

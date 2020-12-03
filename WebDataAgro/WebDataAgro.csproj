@@ -403,6 +403,7 @@
     <Content Include="Content\diffPlex.css" />
     <Content Include="Content\logDataAgro.css" />
     <Content Include="Content\ReporteEvolucionFijacion.css" />
+    <Content Include="Content\Sugerencia.css" />
     <Content Include="Content\terminos.css" />
     <Content Include="Content\ReporteCupo.css" />
     <Content Include="Content\cupo.css" />

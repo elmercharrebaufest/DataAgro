@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style2 + c.Proveedor.RazonSocial + "</td>" +
                          "<td " + style2 + c.TipoNegocio.Descripcion + "</td>" +
                          "<td " + style2 + c.Estado.Descripcion + "</td>" +
-                         "<td " + style2 + c.MotivoOperacionAnterior + "</td> </tr> ";
+                         "<td " + style2 + (c is Contrato ? (c as Contrato).MotivoOperacionAnterior : "") + "</td> </tr> ";
                 }
             }
 

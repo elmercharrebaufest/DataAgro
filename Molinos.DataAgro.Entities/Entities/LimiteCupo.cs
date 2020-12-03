@@ -10,6 +10,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ConfiguracionCupoId { get; set; }
         public int ZonaCupoId { get; set; }
         public int CantidadCupo { get; set; }
+        
+        public int? LimiteAnterior { get; set; }
 
         [ForeignKey("ConfiguracionCupoId")]
         public virtual ConfiguracionCupo ConfiguracionCupo { get; set; }

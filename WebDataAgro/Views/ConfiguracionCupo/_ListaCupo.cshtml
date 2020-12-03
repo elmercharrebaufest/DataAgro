@@ -3,11 +3,38 @@
 
 <div class="row">
     <div class="col-xs-10 m-grid-col-xs-offset-1">
-        <div class="cupo"  >
-                <span class="historial">Configuracion</span>
+        <div class="cupo">
+            <span class="historial">Configuracion</span>
+        </div>
+        <div class="row">
+            <div id="variosDiv" class="col-xs-12 col-md-5">
+                <div class="col-xs-12 col-md-6 col-sm-6">
+                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick=" AbrirMasivo()">
+                        <span class="botonVarios">
+                            <i class="fa fa-calendar-plus-o varios" aria-hidden="true"></i>
+                        </span>
+                        <span>Abrir Cupera</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6 col-sm-6">
+                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick="CierreMasivo()">
+                        <span class="botonVarios">
+                            <i class="fa fa-calendar-times-o varios" aria-hidden="true"></i>
+                        </span>
+                        <span>Cerrar Cupera</span>
+                    </div>
+                </div>
             </div>
+        </div>
         <div id="gridConfiguracionCupo" class="table-responsive">
-            
-        </div>        
+
+        </div>
     </div>
 </div>
+
+<style>
+    .fa{
+        font-size: inherit !important;
+    }
+    
+</style>

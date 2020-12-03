@@ -3514,6 +3514,17 @@ function CargarDatosEditar(contrato, hijo) {
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
 
+    if (contrato.PagoDirectoVendedor == true) {        
+        $("#pagoDirectoDiv").hide();
+    }
+
+    if (contrato.Corredor != "") {
+        $("#pagoDirectoDiv").addClass("ampliar");
+    } else {
+        $("#pagoDirectoDiv").removeClass("ampliar");
+    }
+
+
    
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);

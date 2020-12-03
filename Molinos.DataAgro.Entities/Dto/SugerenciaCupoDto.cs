@@ -32,13 +32,16 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaHasta { get; set; }
         public decimal PrecioPizarra { get; set; }
 
-        public Formula formula { get; set; }
+        public FormulaDto formula { get; set; }
 
         public Dictionary<string, decimal> Puntuaciones { get; set; } = new Dictionary<string, decimal>();
         public string PuntuacionesString{ get; set; }
         public decimal PuntuacionTotal { get; set; }
         public int DestinoId { get; set; }
         public int CantidadDeCupos { get; set; }
+        public int CantidadCupoOriginal { get; set; }
+
+        
         public decimal CantidadDeCuposMaximo { get { return this.CantidadDeCupos; } }
         public int? CantidadFleteProcedencia { get; set; }
         public string ZonaDescrip { get; set; }

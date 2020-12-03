@@ -124,6 +124,7 @@
     <Compile Include="Agent\IListaCBUProveedorAgent.cs" />
     <Compile Include="Agent\IModificarFijacionAgent.cs" />
     <Compile Include="Agent\IServicioRepositorioScatoAgent.cs" />
+    <Compile Include="Agent\IAdministracionCuperaAgent.cs" />
     <Compile Include="Agent\IValidarDocProcPagoAgent.cs" />
     <Compile Include="Agent\IStatusContratoAgent.cs" />
     <Compile Include="Agent\ICapacidadProductivaAgent.cs" />

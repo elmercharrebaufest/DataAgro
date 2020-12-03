@@ -2,6 +2,7 @@
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Transactions;
@@ -20,9 +21,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private static KendoGrid<ConfiguracionCupoDto> Query(DbContext contexto, KendoGridMvcRequest request)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-
+            var hoy = DateTime.Today;
             var query =
-                from cupo in contexto.Set<ConfiguracionCupo>()                
+                from cupo in contexto.Set<ConfiguracionCupo>() 
+                where cupo.Fecha >= hoy
                 select new ConfiguracionCupoDto()
                 {
                     Id = cupo.Id,

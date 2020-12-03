@@ -3,6 +3,7 @@
     [ConfiguracionCupoId]	INT					NOT NULL,
 	[ZonaCupoId]			INT					NOT NULL, 
 	[CantidadCupo]			INT					NOT NULL, 
+    [LimiteAnterior] INT NULL, 
     CONSTRAINT [PK_LimiteCupo] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_LimiteCupo_ConfiguracionCupo] FOREIGN KEY ([ConfiguracionCupoId]) REFERENCES [ConfiguracionCupo]([Id]) ON DELETE CASCADE,
 	CONSTRAINT [FK_LimiteCupo_ZonaCupo] FOREIGN KEY ([ZonaCupoId]) REFERENCES [ZonaCupo]([Id])

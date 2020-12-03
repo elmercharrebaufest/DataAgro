@@ -4,12 +4,14 @@ using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -52,12 +54,46 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
-               
                 CupoResult resultado = new CupoResult();
+                var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
+                var sugerenciasParaAceptar = cupoManager.SugerenciasParaAceptar(solicitud.ProveedorId.Value, solicitud.ComercialId.Value, solicitud.Centro.CodigoSap, solicitud.MaterialId);
+                //var sugerenciaPorComercial = cupoManager.ObtenerSugerenciaPorComercial(solicitud.Fecha, solicitud.ComercialId.Value, solicitud.MaterialId, solicitud.Centro.CodigoSap);
+                var cantidadIngresada = cantidad + cantidadFp;
+                
+                foreach (var s in sugerenciasParaAceptar)
+                {
+                    if (cantidadIngresada > 0)
+                    {
+                        //Acepto o resto las sugerencias, en base a las sugerencias creo los cupos
+                        var aceptarSugerencia = cantidadIngresada >= s.CantidadDeCupos;
+                        var datos = new List<string>();
+                        if (aceptarSugerencia)
+                        {
+                            s.Aceptado = true;
+                            s.FechaSugerida = solicitud.Fecha;
+                            cantidadIngresada -= s.CantidadDeCupos;
+                          
+                        }
+                        else
+                        {
+                          
+                            var cantidadOriginal = cantidadIngresada;
+                            s.CantidadDeCupos -= cantidadOriginal;
+                            var nuevaSugerencia = CopiarEntidad.ShallowCopyEntity(s);
+                            nuevaSugerencia.FechaSugerida = solicitud.Fecha;
+                            nuevaSugerencia.CantidadDeCupos = cantidadIngresada;
+                            nuevaSugerencia.MonedaId = !String.IsNullOrWhiteSpace(s.MonedaId) ? s.MonedaId : null;
+                            nuevaSugerencia.Aceptado = true;
+                            repositorio.Agregar(nuevaSugerencia);
+                            cantidadIngresada = 0;
+                        }
+                    }
+                }
+
+               
                 Cupo cupo = new Cupo
                 {
-                    ProveedorId = solicitud.ProveedorId,//---Agentecompra no tiene proveedor
+                    ProveedorId = solicitud.ProveedorId.Value,//---Agentecompra no tiene proveedor
                     CentroId = solicitud.CentroId,
                     MaterialId = solicitud.MaterialId,
                     FechaIngreso = solicitud.Fecha,
@@ -78,7 +114,6 @@ namespace Molinos.DataAgro.Business.Managers
                     ConfiguracionEspacioDinamicoId = null,
                     TipoNegocioId = null,
                 };
-
                 CupoResult result = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidad, Fecha = solicitud.Fecha } });
 
                 if (cantidadFp > 0)
@@ -123,19 +158,28 @@ namespace Molinos.DataAgro.Business.Managers
 
         private void EnviarMailSolicitudAceptada(AdministracionCupo solicitud, int cantidad, int cantidadFp, List<string> listaCupo, string active)
         {
-
-            var lista = new List<string>();
-            var comercial = new List<string>();
-            var c = repositorio.Obtener<Comercial>(comercialManager.ComercialAsociado(solicitud.ProveedorId));
-            comercial.Add(c.IdActiveDirectory);
-            if (comercial.Count <= 0)
+            try
             {
-                return;
+
+                var lista = new List<string>();
+                var comercial = new List<string>();
+                var c = repositorio.Obtener<Comercial>(comercialManager.ComercialAsociado(solicitud.ProveedorId.Value));
+                comercial.Add(c.IdActiveDirectory);
+                if (comercial.Count <= 0)
+                {
+                    return;
+                }
+                var administrador = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == active);
+                //lista.Add(active);
+                var alterView = CuerpoMailSolicitudAceptada(httpContextManager.ObtenerPathLogoMail(), solicitud, cantidad, cantidadFp, listaCupo, administrador);
+                mailManager.EnviarMail(comercial, "Solicitud de cupos Aceptada", "", lista, alterView);
+
             }
-            var administrador = repositorio.Obtener<Comercial>(x=> x.IdActiveDirectory == active);
-            //lista.Add(active);
-            var alterView = CuerpoMailSolicitudAceptada(httpContextManager.ObtenerPathLogoMail(), solicitud, cantidad, cantidadFp, listaCupo, administrador);
-            mailManager.EnviarMail(comercial, "Solicitud de cupos Aceptada", "", lista, alterView);
+            catch (Exception e)
+            {
+
+                logger.Error("Error al enviar el mail EnviarMailSolicitudAceptada", e.Message);
+            }
         }
 
         private AlternateView CuerpoMailSolicitudAceptada(String filePath, AdministracionCupo solicitud, int cantidad, int cantidadFp, List<string> listaCupo, Comercial comercial)
@@ -187,8 +231,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var administacion = repositorio.Obtener<AdministracionCupo>(idAdministracion);
                 administacion.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo;
-                EnviarMailSolicitudRechazo(administacion, active);
                 repositorio.GuardarCambios();
+                EnviarMailSolicitudRechazo(administacion, active);
                 return resultado;
 
             }catch(Exception e)
@@ -202,22 +246,29 @@ namespace Molinos.DataAgro.Business.Managers
 
         private void EnviarMailSolicitudRechazo(AdministracionCupo solicitud, string active)
         {
+            try
+            {
+                var lista = new List<string>();
+                var comercial = new List<string>();
+                var c = repositorio.Obtener<Comercial>(comercialManager.ComercialAsociado(solicitud.ProveedorId.Value));
+                comercial.Add(c.IdActiveDirectory);
+                if (comercial.Count <= 0)
+                {
+                    return;
+                }
+                var administrador = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == active);
+                if (administrador == null)
+                {
+                    administrador = new Comercial();
+                }
+                var alterView = CuerpoMailSolicitudRechazo(httpContextManager.ObtenerPathLogoMail(), solicitud, administrador);
+                mailManager.EnviarMail(comercial, "Solicitud de cupos Rechazada", "", lista, alterView);
+            }
+            catch (Exception e)
+            {
 
-            var lista = new List<string>();
-            var comercial = new List<string>();
-            var c = repositorio.Obtener<Comercial>(comercialManager.ComercialAsociado(solicitud.ProveedorId));
-            comercial.Add(c.IdActiveDirectory);
-            if (comercial.Count <= 0)
-            {
-                return;
+                logger.Error("Error al enviar el mail EnviarMailSolicitudRechazo", e.Message);
             }
-            var administrador = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == active);
-            if(administrador == null)
-            {
-                administrador = new Comercial();
-            }
-            var alterView = CuerpoMailSolicitudRechazo(httpContextManager.ObtenerPathLogoMail(), solicitud, administrador);
-            mailManager.EnviarMail(comercial, "Solicitud de cupos Rechazada", "", lista, alterView);
         }
 
         private AlternateView CuerpoMailSolicitudRechazo(String filePath, AdministracionCupo solicitud, Comercial comercial)

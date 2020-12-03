@@ -80,7 +80,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             cupoManagerMock.Verify(x => x.ObtenerSugerenciaCupo(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"ComercialId\":1,\"Id\":1,\"MaterialId\":1,\"MaterialDesc\":null,\"Precio\":null,\"MonedaId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"PrecioPizarra\":0,\"formula\":null,\"Puntuaciones\":{},\"PuntuacionesString\":null,\"PuntuacionTotal\":0,\"DestinoId\":0,\"CantidadDeCupos\":0,\"CantidadDeCuposMaximo\":0,\"CantidadFleteProcedencia\":null,\"ZonaDescrip\":null,\"Priorizado\":false,\"FechaSugerida\":\"\\/Date(-62135586000000)\\/\",\"ProveedorId\":1,\"CentroId\":1,\"MonedaDesc\":null,\"ProveedorCUIT\":null,\"ProveedorDesc\":null,\"TipoNegocioDesc\":null,\"Aceptado\":null,\"ZonaCupoId\":null,\"Destinatario\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"ContratoSAP\":null,\"NegocioId\":null,\"CDWarrant\":false}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"ComercialId\":1,\"Id\":1,\"MaterialId\":1,\"MaterialDesc\":null,\"Precio\":null,\"MonedaId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"PrecioPizarra\":0,\"formula\":null,\"Puntuaciones\":{},\"PuntuacionesString\":null,\"PuntuacionTotal\":0,\"DestinoId\":0,\"CantidadDeCupos\":0,\"CantidadCupoOriginal\":0,\"CantidadDeCuposMaximo\":0,\"CantidadFleteProcedencia\":null,\"ZonaDescrip\":null,\"Priorizado\":false,\"FechaSugerida\":\"\\/Date(-62135586000000)\\/\",\"ProveedorId\":1,\"CentroId\":1,\"MonedaDesc\":null,\"ProveedorCUIT\":null,\"ProveedorDesc\":null,\"TipoNegocioDesc\":null,\"Aceptado\":null,\"ZonaCupoId\":null,\"Destinatario\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"ContratoSAP\":null,\"NegocioId\":null,\"CDWarrant\":false}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
         [Test]
@@ -115,12 +115,12 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void DatosConfirmarTest()
         {
-            cupoManagerMock.Setup(x => x.ConfirmarSugerencia(It.IsAny<List<ConfirmacionSugerenciaCupoDto>>(), It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
+            cupoManagerMock.Setup(x => x.ConfirmarSugerencia(It.IsAny<List<ConfirmacionSugerenciaCupoDto>>(), It.IsAny<List<DiaCupo>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>())).Returns(new CupoResult());
             List<ConfirmacionSugerenciaCupoDto> lista = new List<ConfirmacionSugerenciaCupoDto>();            
-            var result = target.DatosConfirmar(lista, 1, "");
+            var result = target.DatosConfirmar(lista, It.IsAny<List<DiaCupo>>(), 1, "");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            cupoManagerMock.Verify(x => x.ConfirmarSugerencia(It.IsAny<List<ConfirmacionSugerenciaCupoDto>>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            cupoManagerMock.Verify(x => x.ConfirmarSugerencia(It.IsAny<List<ConfirmacionSugerenciaCupoDto>>(), It.IsAny<List<DiaCupo>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);

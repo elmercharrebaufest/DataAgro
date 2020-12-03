@@ -1868,6 +1868,7 @@ function InicializarElementos() {
     $("#fechaHastaId").val(datehasta);
     $("#fechaFijacionId").val(date);
 
+
     $(".formulario-footer-guardar-contrato").click(function () {
         BlockUi('Guardando...');
         var error = false;
@@ -3338,6 +3339,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#fechaFijacionId").val("");
 
     }
+    $("#tipoAgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
 
     if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
         if (contrato.TipoNegocioId != 3) {
@@ -3743,7 +3745,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.ContratoAcuerdoId);
         }
     }
-    if (contrato.TipoNegocioId == 6) {
+    if (contrato.TipoNegocioId == 6) {   
         $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
         if (contrato.Precio != null && !contrato.Dolarizado) {
             $("#fechaCiertaAcuerdoDiv").show();
@@ -3770,6 +3772,16 @@ function CargarDatosEditar(contrato, hijo) {
         $("#visualizar_datosTercero").html(datosTercero);
     } else {
         $("#datosCargaTercero").hide();
+    }
+
+    if (contrato.PagoDirectoVendedor == true) {
+        $("#pagoDirectoDiv").hide();
+    }
+
+    if (contrato.Corredor != "") {
+        $("#pagoDirectoDiv").addClass("ampliar");
+    } else {
+        $("#pagoDirectoDiv").removeClass("ampliar");
     }
 
 }
@@ -4392,6 +4404,19 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 
 
 

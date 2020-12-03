@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using Molinos.DataAgro.Entities.Resources;
+using System.Collections.Generic;
 
 namespace WebDataAgro.Models
 {
@@ -18,5 +19,7 @@ namespace WebDataAgro.Models
         public int CantidadCupo { get; set; }
         public Resultado Resultado { get; set; }
         public bool CierreCupera { get; set; }
+
+        public List<DiaCupo> Dias { get; set; }
     }
 }

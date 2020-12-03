@@ -20,6 +20,7 @@
     [ConfiguracionEspacioDinamicoId] INT NULL, 
     [NegocioId] INT NULL, 
     [CDWarrant] BIT NULL, 
+    [CantidadCupoOriginal] INT NULL, 
     CONSTRAINT [PK_SugerenciaCupo] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

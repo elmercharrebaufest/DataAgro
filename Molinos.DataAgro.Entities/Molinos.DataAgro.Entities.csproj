@@ -135,6 +135,7 @@
     <Compile Include="Dto\CompraCampanaActualDto.cs" />
     <Compile Include="Dto\CompraDetalleDto.cs" />
     <Compile Include="Dto\CompraDto.cs" />
+    <Compile Include="Dto\DevolucionSugerenciaCupoDto.cs" />
     <Compile Include="Dto\ContratoSAP.cs" />
     <Compile Include="Dto\CompraDetalleAgentDto.cs" />
     <Compile Include="Dto\ContratoTerceroDto.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Dto\ResultadoValidarProveedorComercial.cs" />
     <Compile Include="Dto\SugerenciaNoAceptada.cs" />
     <Compile Include="Dto\ReporteCompraNetModel.cs" />
+    <Compile Include="Dto\SugerenciaPorComercialDto.cs" />
     <Compile Include="Dto\TodoCompraDto.cs" />
     <Compile Include="Dto\TokenDto.cs" />
     <Compile Include="Dto\AbmZona.cs" />
@@ -322,6 +324,7 @@
     <Compile Include="Entities\ReporteCompraNetPrecioCantidad.cs" />
     <Compile Include="Entities\ReporteCompraNetPricingCampania.cs" />
     <Compile Include="Entities\ReporteCompraNetSojaSustentable.cs" />
+    <Compile Include="Entities\SugerenciaPorComercial.cs" />
     <Compile Include="Entities\UsuarioExterno.cs" />
     <Compile Include="Entities\TokenAuth.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />
@@ -389,6 +392,7 @@
     <Compile Include="Entities\TipoFason.cs" />
     <Compile Include="Entities\ZonaCupo.cs" />
     <Compile Include="Helpers\AES.cs" />
+    <Compile Include="Helpers\CopiarEntidad.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\Expresiones.cs" />
     <Compile Include="Helpers\ExtensionesSerializacion.cs" />

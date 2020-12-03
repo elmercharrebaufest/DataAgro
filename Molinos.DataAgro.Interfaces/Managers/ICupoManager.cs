@@ -23,14 +23,14 @@ namespace Molinos.DataAgro.Interfaces
         CupoDto ObtenerCupo(int id);
         Resultado EliminarVarios(List<int> cupos, string comercial);
         string ObtenerCodigoSap(int id);
-        void CrearSugerenciaCupo();
+        void CrearSugerenciaCupo(ConfiguracionCupo configuracion);
         List<SugerenciaCupoDto> ObtenerSugerenciaCupo(int ComercialId);
         IList<SugerenciaCupoDto> ObtenerSugerenciaCupoAgrupadasPorProveedor(int comercialId, int materialId, string centroId);
+        List<SugerenciaPorComercialDto> ObtenerSugerenciaPorComercialFecha(int comercialId, int materialId, string centroId);
         SugerenciaCupoDto ObtenerSugerencia(int sugerenciaId);
         List<CupoResult> AceptarSugerenciaCupo(List<SugerenciaCupoDto> ids);
-        CupoResult RechazarSugerenciaCupo(List<int> ids,string motivo);
+        CupoResult RechazarSugerenciaCupo(List<int> ids, string motivo);
         List<EstadoCupoDto> TraerTodoLosEstados();
-        CupoResult ConfirmarSugerencia(List<ConfirmacionSugerenciaCupoDto> datosTabla, int materialId, string centroId);
         List<DiaCupo> Panel();
         List<SugerenciaNoAceptada> SugerenciasNoAceptadas();
         void EnviarMailSinCtg();
@@ -42,10 +42,19 @@ namespace Molinos.DataAgro.Interfaces
 
         List<BasicoContrato> TraerNegocioConCupoDisponible(string proveedorCuit, int material, int centro, string filtro, DateTime desde, DateTime hasta);
         Resultado AltaCupoSAP(Cupo cupoSAP);
+
+        void CargarDatosSugerenciasPorComercial(List<SugerenciaCupo> sugerencias);
+
         string Td(ref int linea, int largo = 1);
         string Split(string str);
 
+        SugerenciaPorComercial ObtenerSugerenciaPorComercial(DateTime fecha, int comercialId, int materialId, string centro);
+        List<SugerenciaCupo> SugerenciasParaAceptar(int proveedorId, int comercialId, string centro, int materialId);
+        CupoResult ConfirmarSugerencia(List<ConfirmacionSugerenciaCupoDto> datosTablaPorProveedor, List<DiaCupo> devoluciones, int materialId, string centroId, int comercialId);
+
+        List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId, DateTime fecha);
+
+
         List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor);
     }
-
 }

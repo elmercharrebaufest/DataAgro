@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
 using System;
@@ -30,7 +31,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var temp = contexto.Set<SugerenciaCupo>()
-                .Where(x=> x.Centro.CodigoSap == centroId) 
+                .Where(x => x.Centro.CodigoSap == centroId && x.FechaSugerida >= desde
+                && x.FechaSugerida <= hasta && x.MaterialId == materialId
+                && x.ComercialId == comercialId && x.Aceptado == null)
                 .GroupBy(x => new { x.ProveedorId, x.FechaSugerida })
                 .Select(sugerido => new SugerenciaCupoDto
                 {
@@ -41,7 +44,27 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComercialId = sugerido.Select(x => x.Comercial.ComercialId).FirstOrDefault(),
                     MaterialId = sugerido.Select(x => x.Material.MaterialId).FirstOrDefault(),
                     Aceptado = sugerido.Select(x => x.Aceptado).FirstOrDefault(),
-                }).Where(x => x.FechaSugerida >= desde && x.FechaSugerida <= hasta  && x.MaterialId == materialId && x.ComercialId == comercialId && x.Aceptado == null).ToList();
+                }).ToList();
+
+            var adm = contexto.Set<AdministracionCupo>()
+                .Where(x => x.Centro.CodigoSap == centroId && x.MaterialId == materialId
+                && x.ComercialId == comercialId && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo)
+                .GroupBy(x => new { x.ProveedorId, x.Fecha })
+                .Select(sugerido => new SugerenciaCupoDto
+                {
+                    Id = sugerido.Key.ProveedorId.Value,
+                    FechaSugerida = sugerido.Key.Fecha,
+                    CantidadDeCupos = sugerido.Sum(x => x.CantidadCupo) + sugerido.Sum(x => x.CantidadFleteProcedencia),
+                }).ToList();
+
+            foreach (var t in temp)
+            {
+                var a = adm.Where(x => x.Id == t.Id);
+                if(a != null)
+                {
+                    t.CantidadDeCupos -= a.Sum(x => x.CantidadDeCupos);
+                }
+            }
             return temp;
         }
 

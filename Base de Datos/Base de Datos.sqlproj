@@ -297,6 +297,7 @@
     <Build Include="dbo\Tables\LogDataAgro.sql" />
     <Build Include="dbo\Tables\HabilitacionCupo.sql" />
     <Build Include="dbo\Tables\CampanaMaterialDetallePorMes.sql" />
+    <Build Include="dbo\Tables\SugerenciaPorComercial.sql" />
     <Build Include="dbo\Tables\HabilitacionCampaña.sql" />
   </ItemGroup>
   <ItemGroup>

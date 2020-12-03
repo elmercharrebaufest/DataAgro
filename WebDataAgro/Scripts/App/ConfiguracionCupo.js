@@ -3,6 +3,12 @@ $(document).ready(function () {
     $('#menuproveedor').hide();
     InicializarElementos();
     CargarGrillaConfig();
+
+    if ($("#Id").val() != "" && $("#Id").val() > 0) {
+        $("#MaterialId").prop('disabled', true);
+        $("#CentroId").prop('disabled', true);
+        $("#Fecha").data('kendoDatePicker').readonly(true);
+    }
 });
 
 function mostrarocultar(element) {
@@ -14,7 +20,7 @@ function mostrarocultar(element) {
 }
 
 $(".alert").ready(function () {
-    setTimeout(function () { $(".alert").hide(); }, 5000);
+    //setTimeout(function () { $(".alert").hide(); }, 5000);
 });
 
 function InicializarElementos() {
@@ -80,7 +86,10 @@ function CargarGrillaConfig() {
     $("#gridConfiguracionCupo").kendoGrid({
         dataSource: ds,
         columns: [
-            { field: "Centro", type: "string" },
+            { selectable: true, width: "50px" },
+            {
+                field: "Centro", type: "string", attributes: { "class": "cerrado" }
+            },
             {
                 field: "Material", title: "Cultivo", filterable: {
                     multi: true, dataSource: [{
@@ -100,15 +109,23 @@ function CargarGrillaConfig() {
             { field: "LimiteCupo", title: "Límite de Cupo" },
             { field: "BloquearCupera", title: "Bloqueo Cupera", width: 40 },
             {
-                field: "Id", title: " ", filterable: false, sortable: false, width:75, template: function (dataItem) {
-                    return '<a data-toggle="tooltip" title="Editar Configuracion" class="abrirModalLimite links-grid" onclick="Editar(' + dataItem.Id + ')">' +
-                        '<span> <i class="fa fa-pencil"></i> </span ></a >' +
-                        '<a data-toggle="tooltip" title="Limite Cupo" class="abrirModalLimite links-grid" onclick="AbrirModal(' + dataItem.Id + ')">' +
-                        '<span> <i class="fa fa-list"></i> </span ></a >';
+                field: "Id", title: " ", filterable: false, sortable: false, width: 40, template: function (dataItem) {
+
+                    return dataItem.BloquearCupera === "No" ? '<a data-toggle="tooltip" title="Editar Configuracion" class="abrirModalLimite links-grid" onclick="Editar(' + dataItem.Id + ')">' +
+                        '<span> <i class="fa fa-pencil"></i> </span ></a >' : ""; 
+                        //'<a data-toggle="tooltip" title="Limite Cupo" class="abrirModalLimite links-grid" onclick="AbrirModal(' + dataItem.Id + ')">' +
+                        //'<span> <i class="fa fa-list"></i> </span ></a >' 
                 }
-            },
-            
+            }            
         ],
+        dataBound: function (e) {
+            $(".cerrado").each(function (index) {
+                var dataItem = e.sender.dataItem($(this).parent());
+                if (dataItem.BloquearCupera == "Si") {
+                    $(this).addClass('line');
+                }
+            });
+        },
         pageable: {
             messages: {
                 display: "{2} elementos",
@@ -177,7 +194,7 @@ function AbrirModal(id) {
     if (zonas.ZonaCupo) {
         cantidadZonas = zonas.ZonaCupo.length;
         for (var i = 0; i < cantidadZonas; i++) {
-            var fila = '<tr><td>' + zonas.ZonaCupo[i].CodigoSap + '<input id="zonaId' + i + '" value="' + zonas.ZonaCupo[i].Id + '" hidden></td>' + '<td>' + zonas.ZonaCupo[i].Descripcion +'</td><td><input id="cantidad' + zonas.ZonaCupo[i].Id + '" class="number-input"/><input id="limiteCupoId' + zonas.ZonaCupo[i].Id + '" class="limite-cupo" hidden/></td></tr>';
+            var fila = '<tr><td>' + zonas.ZonaCupo[i].CodigoSap + '<input id="zonaId' + i + '" value="' + zonas.ZonaCupo[i].Id + '" hidden><input id="limiteAnterior' + zonas.ZonaCupo[i].Id + '" class="number-input hidden" hidden/></td>' + '<td>' + zonas.ZonaCupo[i].Descripcion +'</td><td><input id="cantidad' + zonas.ZonaCupo[i].Id + '" class="number-input"/><input id="limiteCupoId' + zonas.ZonaCupo[i].Id + '" class="limite-cupo" hidden/></td></tr>';
             $("#tablaLimite").append(fila);
         }
     }
@@ -204,6 +221,7 @@ function CargarLimites(id) {
     if (limites) {
         for (var i = 0; i < limites.length; i++) {
             $('#cantidad' + limites[i].ZonaCupoId).data("kendoNumericTextBox").value(limites[i].CantidadCupo);
+            $('#limiteAnterior' + limites[i].ZonaCupoId).data("kendoNumericTextBox").value(limites[i].CantidadCupo);
             $('#limiteCupoId' + limites[i].ZonaCupoId).val(limites[i].Id);
         }
     }
@@ -216,7 +234,8 @@ function GuardarLimiteCupo() {
             Id: $("#limiteCupoId" + zonaId).val(),
             ZonaCupoId: zonaId,
             CantidadCupo: $("#cantidad" + zonaId).val(),
-            ConfiguracionCupoId: $("#configuracionCupoId").val()            
+            ConfiguracionCupoId: $("#configuracionCupoId").val(),
+            LimiteAnterior: $("#limiteAnterior" + zonaId).val()
         };
         limites.push(obj);        
     }
@@ -234,13 +253,34 @@ function GuardarLimiteCupo() {
 
 function Editar(id) {
     var cupo = MSExecuteOnServer("/ConfiguracionCupo/EditarConfiguracionCupo", { id: id });
+    $("#alta").collapse('show');
     $("#Id").val(cupo.Id);
     $("#CentroId").val(cupo.CentroId);
     $("#MaterialId").val(cupo.MaterialId);
+    $("#centro").val(cupo.CentroId);
+    $("#material").val(cupo.MaterialId);
     var fecha = kendo.toString(kendo.parseDate(cupo.Fecha), "dd-MM-yyyy"); 
     $("#Fecha").val(fecha);
     $("#CantidadCupo").data("kendoNumericTextBox").value(cupo.LimiteCupo);
     $("#CierreCupera").attr("checked", cupo.CierreCupera);
+    $("#MaterialId").prop('disabled', true);
+    $("#CentroId").prop('disabled', true);
+    $("#Fecha").data('kendoDatePicker').readonly(true);
+
+}
+
+function Cancelar() {
+    $("#Id").val(0);
+    $("#CentroId").val(1);
+    $("#MaterialId").val("");
+    var hoy = new Date();
+    var fecha = kendo.toString(kendo.parseDate(hoy), "dd-MM-yyyy");
+    $("#Fecha").val(fecha);
+    $("#CantidadCupo").data("kendoNumericTextBox").value("");
+    $("#CierreCupera").attr("checked", false);
+    $("#MaterialId").prop('disabled', false);
+    $("#CentroId").prop('disabled', false);
+    $("#Fecha").data('kendoDatePicker').readonly(false);
 }
 
 function LimpiarConfiguracion() {
@@ -251,4 +291,48 @@ function LimpiarConfiguracion() {
     $("#Fecha").val(fecha);
     $("#CantidadCupo").val("");
 
+}
+
+function SeleccionarElementos() {
+    var grid = $("#gridConfiguracionCupo").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        obj.push(selectedItem);
+    });
+    return obj;
+}
+
+function CierreMasivo() {
+
+    var configuraciones = SeleccionarElementos();
+    var ids = [];
+    for (var i = 0; i < configuraciones.length; i++) {
+        ids.push(configuraciones[i].id);
+    }
+    if (ids.length <= 0) {
+        MensErr("No se seleccionó ninguna configuración");
+    } else {
+        var limites = MSExecuteOnServer("/ConfiguracionCupo/CambioMasivo", { ids: ids, aceptar: true });
+        MensInfo("Se guardó correctamente");
+        recargarGrilla();
+    }
+}
+
+function AbrirMasivo() {
+
+    var configuraciones = SeleccionarElementos();
+    var ids = [];
+    for (var i = 0; i < configuraciones.length; i++) {
+        ids.push(configuraciones[i].id);
+    }
+    if (ids.length <= 0) {
+        MensErr("No se seleccionó ninguna configuración");
+    } else {
+        var limites = MSExecuteOnServer("/ConfiguracionCupo/CambioMasivo", { ids: ids, aceptar: false });
+        MensInfo("Se guardó correctamente");
+        recargarGrilla();
+    }
 }

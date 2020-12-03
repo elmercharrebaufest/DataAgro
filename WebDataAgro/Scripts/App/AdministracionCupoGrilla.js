@@ -138,7 +138,7 @@ function CargarGrillaConfig() {
                     return false;
                 }, attributes: { "class": "mobile-xs mobile-md" } },
             {
-                field: "Fecha", title: "Fecha Sugerencia", type: "date", editable: function (dataItem) {
+                field: "Fecha", title: "Fecha Solicitud", type: "date", editable: function (dataItem) {
                     return false;
                 }, format: _DefaultDateTemplate },
             {
@@ -379,6 +379,7 @@ function AceptarSolicitud() {
     if (errores.length > 0) {
         ShowErrorMessages(errores);
     }
+    window.location.reload();
 }
 
 
@@ -403,6 +404,7 @@ function cuposCreados(lista) {
     $("#cupos-generados-modal").html(lista.join("</br>"));
     $('#resultadoCupo').modal('toggle');
 
+   
 }
 
 function resultadoCupo() {

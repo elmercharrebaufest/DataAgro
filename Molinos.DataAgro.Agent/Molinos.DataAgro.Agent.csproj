@@ -85,6 +85,7 @@
     <Compile Include="Helpers\CriterioCDWarrantAgent.cs" />
     <Compile Include="Helpers\ListaCBUProveedorAgent.cs" />
     <Compile Include="Helpers\ModificarFijacionAgent.cs" />
+    <Compile Include="Helpers\AdministracionCuperaAgent.cs" />
     <Compile Include="Helpers\ServicioRepositorioScatoAgent.cs" />
     <Compile Include="Helpers\ValidarDocProcPagoAgent.cs" />
     <Compile Include="Helpers\StatusContratoAgent.cs" />
@@ -234,6 +235,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\AdministracionCupera\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -243,6 +249,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Service References\AdministracionCupera\Molinos.DataAgro.Agent.AdministracionCupera.SI_ZMPWS_DATAAGRO_ADMIN_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AdministracionCupera\Molinos.DataAgro.Agent.AdministracionCupera.Z_MPRFC_ADMIN_CUPOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Properties\DataSources\System.Diagnostics.EventLogEntry.datasource" />
     <None Include="Service References\ComprasDetalle\Molinos.DataAgro.Agent.ComprasDetalle.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -1454,6 +1466,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ValidarDocProcPago\SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGO.wsdl" />
+    <None Include="Service References\AdministracionCupera\SI_ZMPWS_DATAAGRO_ADMIN_CUPOS.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\CriterioCDWarrant\" />
@@ -1481,6 +1494,7 @@
     <WCFMetadataStorage Include="Service References\StatusContrato\" />
     <WCFMetadataStorage Include="Service References\TipoDeCambio\" />
     <WCFMetadataStorage Include="Service References\ValidarDocProcPago\" />
+    <WCFMetadataStorage Include="Service References\AdministracionCupera\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\Compras\configuration91.svcinfo" />
@@ -1780,6 +1794,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ModificarFijacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AdministracionCupera\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AdministracionCupera\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AdministracionCupera\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

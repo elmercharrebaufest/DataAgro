@@ -8,7 +8,7 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         [Key]
         public int Id { get; set; }
-        public int ProveedorId { get; set; }
+        public int? ProveedorId { get; set; }
         public int? ComercialId { get; set; }
         public DateTime Fecha { get; set; }
         public int CantidadCupo { get; set; }

@@ -36,7 +36,7 @@
         </div>
         <div class="row">
             <div class="col-xs-10 m-grid-col-xs-offset-1">
-                <div class="desplegable" data-toggle="collapse" data-target="#alta" onclick="mostrarocultar('#mostrar')">
+                <div class="desplegable" data-toggle="collapse" data-target="#alta" id="desplegable" onclick="mostrarocultar('#mostrar')">
                     <span class="historial">Alta</span> <span id="mostrar" class="mostrar">Mostrar</span>
                 </div>
 
@@ -52,12 +52,14 @@
                             </div>
                             <div class="col-sm-4">
                                 @Html.DropDownListFor(x => x.CentroId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control" })
+                                @Html.HiddenFor(x => x.CentroId , new { @id = "centro" })
                             </div>
                             <div class="col-xs-2">
                                 <span>Material</span>
                             </div>
                             <div class="col-sm-4">
                                 @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control" })
+                                @Html.HiddenFor(x => x.MaterialId, new { @id = "material" })
                             </div>
                         </div>
                         <div class="row">
@@ -81,10 +83,12 @@
                             <div class="col-sm-4">
                                 <input id="CierreCupera" name="CierreCupera" type="checkbox" value="true">
                             </div>
-                            <div class="col-xs-4">
-                               
+                            <div class="col-sm-2">
                             </div>
-                            <div class="col-sm-1">
+                            <div class="col-sm-2">
+                                <button class="btn btnSubmit" type="button" onclick="Cancelar()">Cancelar</button>
+                            </div>
+                            <div class="col-sm-2">
                                 <button class="btn btnSubmit" type="submit">Grabar</button>
                             </div>
                         </div>
@@ -93,9 +97,20 @@
             </div>
         </div>
         <div id="tablaCupos">
+           
             @Html.Action("TablaCuposPartial", "ConfiguracionCupo")
         </div>
     </div>
 
 <!-- Modal Limite-->
 @Html.Partial("ModalLimite")
+
+<style>
+    .line {
+        border-bottom: 5px solid #d21515 !important;
+    }
+    .btn{
+        margin-left: 0px !important;
+        width: 100%;
+    }
+</style>

@@ -17,5 +17,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? CierreCupera { get; set; }
         public List<LimiteCupoDto> CantidadCupo { get; set; }
         public string BloquearCupera { get; set; }
+        public int LimiteCupoAnterior { get; set; }
+        public string ZonaCupo { get; set; }
     }
 }

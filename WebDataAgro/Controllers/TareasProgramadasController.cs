@@ -96,7 +96,7 @@ namespace WebDataAgro.Controllers
         public ActionResult CrearSugerenciaCupo()
         {
             logger.Info($"CrearSugerenciaCupo");
-            cupoManager.CrearSugerenciaCupo();
+            cupoManager.CrearSugerenciaCupo(null);
             logger.Info($"CrearSugerenciaCupo - Finalizado");
             return Content("ok");
         }

@@ -382,7 +382,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha_Dolarizado = x.FechaDolarizado,
 
                 CampanaId = x.CampanaId ?? 0,
-                TipoNegocio = x.TipoNegocio.Descripcion
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                TipoAgenteCompraId = x.TipoAgenteCompraId
             });
             return contrato;
         }

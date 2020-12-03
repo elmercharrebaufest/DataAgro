@@ -1,8 +1,13 @@
 ﻿@using Molinos.DataAgro.Entities.Dto
+@using Molinos.DataAgro.Entities.Dto
+
 @{
     ViewBag.Title = "PartialTabla";
     var lista = (List<SugerenciaCupoDto>)ViewBag.Lista;
+    var sugerencia = (List<SugerenciaPorComercialDto>)ViewBag.Sugerencia;
 }
+
+<link href="~/Content/Sugerencia.css" rel="stylesheet" />
 <script>
     var cupos = cuposAsignadosPorDia.length;
     for (var i = 0; i < cupos; i++) {
@@ -12,232 +17,140 @@
     for (var i = 0; i < cupos; i++) {
         cuposAsignados.pop();
     }
-        
+
 </script>
 <div class="card">
     <div class="card-body">
-        <div id="tabla" class="table-editable table-responsive">
-            <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="tabla">
-                <thead>
-                    <tr class="encabezado">
-                        <th class="text-center">Proveedor</th>
-                        @{var i = 1;
+        <div id="table-scroll" class="table-scroll">
+            <div id="tabla" class="table-editable table-responsive">
+                <table class="table-bordered  tabla" id="tabla">
+                    <thead>
+                        <tr class="encabezado">
+                            <th class="text-center">Proveedor</th>
+                            @{var i = 1;
 
-                            foreach (var r in ViewBag.Fechas)
-                            {
-                                var cant = lista.Where(x => x.FechaSugerida == r).Sum(x => x.CantidadDeCupos);
-                                var fecha = r.ToString("dd/MM/yyyy");
+                                foreach (var r in ViewBag.Fechas)
+                                {
+                                    var cant = sugerencia.Where(x => x.Fecha == r).Sum(x => x.Total);
+                                    var fecha = r.ToString("dd/MM/yyyy");
 
-                                <th class="text-center @("col" + i)">
+                                    <th class="text-center @("col" + i)">
+                                        <div class="ck-button">
+                                            <label>
+                                                <input type="checkbox" class="@(i)" onclick="MarcarColumna(this)" hidden>
+                                                <div class="popover-cabecera">
+                                                    <span class="@("fecha" + i)">@fecha</span>
+                                                    <br data-toggle="popover" data-placement="top" data-trigger="manual" id="popover@("col" + i)" data-container="body" data-content="" /><strong>Cupos pendientes por día: @cant</strong>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <script>
+                                  cuposAsignadosPorDia.push(@cant);
+                                    </script>
+                                    i++;
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ var j = 1; var c = 1;}
+                        @foreach (var k in lista.GroupBy(x => x.ProveedorDesc))
+                        {
+                            i = 1;
+                            <tr class="detalle  @("fila" + j)">
+                                <td class="pt-3-half">
                                     <div class="ck-button">
                                         <label>
-                                            <input type="checkbox" class="@(i)" onclick="MarcarColumna(this)" hidden>
+                                            <input type="checkbox" class="@(j)" onclick="MarcarFila(this)" hidden>
                                             <div>
-                                                <span class="@("fecha"+i)">@fecha</span>
-                                                <br data-toggle="popover" data-placement="top" data-trigger="manual" id="popover@("col" + i)" data-content="" /><strong>Cupos pendientes por día: @cant</strong>
+                                                <label data-row="@(j)" data-proveedor="@k.Select(x => x.Id).FirstOrDefault()" hidden></label>
+                                                <label hidden data-rowComercial="@(j)" data-comercial="@k.Select(x => x.ComercialId).FirstOrDefault()"></label>
+                                                <label class="aca" data-proveedordesc="@(j)" style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;" data-proveedorDescripcion="@k.Key">@k.Key</label>
+                                                <br data-toggle="popover" data-placement="top" data-trigger="manual" id="popoverFila@("fila" + j)" data-content="" /><strong>Cupos pendientes: @k.Sum(x => x.CantidadDeCupos)</strong>
                                             </div>
                                         </label>
                                     </div>
-                                </th>
+                                </td>
                                 <script>
-                                  cuposAsignadosPorDia.push(@cant);
-                                </script>
-                                i++;
-                            }
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @{ var j = 1; var c = 1;}
-                    @foreach (var k in lista.GroupBy(x => x.ProveedorDesc))
-                    {
-                        i = 1;
-                        <tr class="detalle  @("fila" + j)">
-                            <td class="pt-3-half">
-                                <div class="ck-button">
-                                    <label>
-                                        <input type="checkbox" class="@(j)" onclick="MarcarFila(this)" hidden>
-                                        <div>
-                                            <label data-row="@(j)" data-proveedor="@k.Select(x=>x.Id).FirstOrDefault()" hidden></label>
-                                            <label hidden data-rowComercial="@(j)" data-comercial="@k.Select(x=>x.ComercialId).FirstOrDefault()"></label>
-                                            <label data-proveedordesc="@(j)" style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;" data-proveedorDescripcion="@k.Key">@k.Key</label>
-                                            <br data-toggle="popover" data-placement="top" data-trigger="manual" id="popoverFila@("fila" + j)" data-content="" /><strong>Cupos pendientes: @k.Sum(x => x.CantidadDeCupos)</strong>
-                                        </div>
-                                    </label>
-                                </div>
-                            </td>
-                            <script>
                                  cuposAsignados.push(@k.Sum(x => x.CantidadDeCupos));
-                            </script>
-                            @foreach (var r in ViewBag.Fechas)
-                            {
-                                var haySugerencia = false;
-                                foreach (var sugerenciaPorDia in k)
+                                </script>
+                                @foreach (var r in ViewBag.Fechas)
                                 {
-                                    if (sugerenciaPorDia.FechaSugerida == r)
+                                    var haySugerencia = false;
+                                    foreach (var sugerenciaPorDia in k)
                                     {
-                        <td class="pt-3-half @("col" + i)" id="celda@(i)" data-column="@i" data-row="@j">
-                            <div class="row">
-                                <label class="col-sm-9 borde @("labelFila" + i)" id="@("label" + i)" onblur="CalcularTotal(this)" contenteditable="true" data-column="@i" data-row="@j">@sugerenciaPorDia.CantidadDeCupos</label>
-                                <span class="col-sm-2 @("reestablecerCelda" + i)" data-mostrarCruzColumna="@i" data-mostrarCruzFila="@j" hidden style="margin-top:7px;"><i class="fa fa-times @("reestablecerCelda" + i)" aria-hidden="true" data-reestablecerColumna="@i" data-reestablecerFila="@j"onclick="Reestablecer(this)"></i></span>
-                            </div>
-                            <span hidden class="@("contenidoFila" + i)" id="@("contenidolabel" + i)" data-columnContenido="@i" data-rowContenido="@j">@sugerenciaPorDia.CantidadDeCupos</span>
-                            <div class="checkbox" data-column="@i" data-row="@j">
-                                <label style="font-size: 1em">
-                                    <input type="checkbox" onclick="BloquearCelda(this)" id="@("check" + i)" class="@("checkFila" + j) @("checkCelda" + c)" data-column="@i" data-row="@j">
-                                    <span class="cr"><i class="cr-icon fa fa-check"></i> </span>
-                                </label>
-                            </div>
-                        </td>
-                                        haySugerencia = true;
-                                    }
+                                        if (sugerenciaPorDia.FechaSugerida == r)
+                                        {
+                                            <td class="pt-3-half @("col" + i)" id="celda@(i)" data-column="@i" data-row="@j">
+                                                <div class="row">
+                                                    <label class="col-sm-9 borde @("labelFila" + i)" id="@("label" + i)" onblur="CalcularTotal(this)" contenteditable="true" data-column="@i" data-row="@j">0</label>
+                                                    <span class="col-sm-2 @("reestablecerCelda" + i)" data-mostrarCruzColumna="@i" data-mostrarCruzFila="@j" hidden style="margin-top:7px;"><i class="fa fa-times @("reestablecerCelda" + i)" aria-hidden="true" data-reestablecerColumna="@i" data-reestablecerFila="@j" onclick="Reestablecer(this)"></i></span>
+                                                </div>
+                                                <span hidden class="@("contenidoFila" + i)" id="@("contenidolabel" + i)" data-columnContenido="@i" data-rowContenido="@j">0</span>
+                                                <div class="checkbox" data-column="@i" data-row="@j">
+                                                    <label style="font-size: 1em">
+                                                        <input type="checkbox" onclick="BloquearCelda(this)" id="@("check" + i)" class="@("checkFila" + j) @("checkCelda" + c)" data-column="@i" data-row="@j">
+                                                        <span class="cr"><i class="cr-icon fa fa-check"></i> </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            haySugerencia = true;
+                                        }
 
+                                    }
+                                    if (!haySugerencia)
+                                    {
+                                        <td class="pt-3-half @("col" + i)" id="celda@(i)" data-column="@i" data-row="@j">
+                                            <div class="row">
+                                                <label class="col-sm-9 borde @("labelFila" + i)" id="@("label" + i)" onblur="CalcularTotal(this)" contenteditable="true" data-column="@i" data-row="@j">0</label>
+                                                <span hidden class="col-sm-2 @("reestablecerCelda" + i)" data-mostrarCruzColumna="@i" data-mostrarCruzFila="@j" style="margin-top:7px"><i class="fa fa-times" data-reestablecerColumna="@i" data-reestablecerFila="@j" aria-hidden="true" onclick="Reestablecer(this)"></i></span>
+                                            </div>
+                                            <span hidden class="@("contenidoFila" + i)" id="@("contenidolabel" + i)" data-columnContenido="@i" data-rowContenido="@j">0</span>
+                                            <div class="form-check" contenteditable="false" data-column="@i" data-row="@j">
+                                                <div class="checkbox">
+                                                    <label style="font-size: 1em">
+                                                        <input type="checkbox" onclick="BloquearCelda(this)" id="@("check" + i)" class="@("checkFila" + j) @("checkCelda" + c)" data-column="@i" data-row="@j">
+                                                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                    i++;
+                                    c++;
                                 }
-                                if (!haySugerencia)
+                            </tr>
+                            j++;
+                        }
+
+                    </tbody>
+                    <tfoot>
+
+                        <tr class="detalle encabezado">
+                            <td class="text-center">Devolución de Cupos</td>
+                            @{
+                                i = 1;
+                                foreach (var r in ViewBag.Fechas)
                                 {
-                        <td class="pt-3-half @("col" + i)" id="celda@(i)" data-column="@i" data-row="@j">
-                            <div class="row">
-                                <label class="col-sm-9 borde @("labelFila" + i)" id="@("label" + i)" onblur="CalcularTotal(this)" contenteditable="true" data-column="@i" data-row="@j">0</label>
-                                <span hidden class="col-sm-2 @("reestablecerCelda" + i)" data-mostrarCruzColumna="@i" data-mostrarCruzFila="@j" style="margin-top:7px" ><i class="fa fa-times" data-reestablecerColumna="@i" data-reestablecerFila="@j" aria-hidden="true" onclick="Reestablecer(this)"></i></span>
-                            </div>
-                            <span hidden class="@("contenidoFila" + i)" id="@("contenidolabel" + i)" data-columnContenido="@i" data-rowContenido="@j">0</span>
-                            <div class="form-check" contenteditable="false" data-column="@i" data-row="@j">
-                                <div class="checkbox">
-                                    <label style="font-size: 1em">
-                                        <input type="checkbox" onclick="BloquearCelda(this)" id="@("check" + i)" class="@("checkFila" + j) @("checkCelda" + c)" data-column="@i" data-row="@j">
-                                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </td>
+                                    <td class="pt-3-half">
+                                        <div class="row">
+                                            <label class="col-sm-9 borde @("devuelto" + i)" contenteditable="true"></label>
+                                        </div>
+                                    </td>
+                                     i++;
                                 }
-                                i++;
-                                c++;
+                               
                             }
                         </tr>
-                        j++;
-                    }
 
-                </tbody>
-            </table>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 
-
-<style>
-    div label input {
-        margin-right: 100px;
-    }
-
-    body {
-        font-family: sans-serif;
-    }
-
-    .verdeClassColumna {
-        background-color: #32a852 !important;
-    }
-
-    .verdeClassFila {
-        background-color: #63ff8e !important;
-    }
-
-    .naranjaClass {
-        background-color: #fac400 !important;
-    }
-
-    .redClass {
-        background-color: #e62222 !important;
-    }
-
-    .blueClass {
-        background-color: #bad4ff !important;
-    }
-
-    .naranjaClassFila {
-        background-color: #faff70 !important;
-    }
-
-    .redClassFila {
-        background-color: #eb5777 !important;
-    }
-    .borde{
-        border-style: double;
-        border-color: #deddd9;
-    }
-
-    .fa-check:before {
-        color: #1B5E20;
-    }
-
-    .popover-content {
-        color: dimgray;
-        font-size: 9px !important;
-        font-family: "Helvetica Neue","Helvetica","Arial","sans-serif" !important;
-    }
-
-    .checkbox label:after {
-        content: '';
-        display: table;
-        clear: both;
-    }
-
-    /*.checkbox {
-        margin-top: -4px !important;
-        margin-bottom: -5px !important;
-    }*/
-
-        .checkbox .cr,
-        .radio .cr {
-            position: relative;
-            display: inline-block;
-            border: 1px solid #a9a9a9;
-            border-radius: .25em;
-            width: 1.3em;
-            height: 1.3em;
-            float: left;
-            margin-right: .5em;
-        }
-
-
-            .checkbox .cr .cr-icon,
-            .radio .cr .cr-icon {
-                position: absolute;
-                font-size: .8em;
-                line-height: 0;
-                top: 50%;
-                left: 20%;
-            }
-
-
-        .checkbox label input[type="checkbox"],
-        .radio label input[type="radio"] {
-            display: none;
-        }
-
-            .checkbox label input[type="checkbox"] + .cr > .cr-icon,
-            .radio label input[type="radio"] + .cr > .cr-icon {
-                transform: scale(3) rotateZ(-20deg);
-                opacity: 0;
-                transition: all .3s ease-in;
-            }
-
-            .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
-            .radio label input[type="radio"]:checked + .cr > .cr-icon {
-                transform: scale(1) rotateZ(0deg);
-                opacity: 1;
-            }
-
-            .checkbox label input[type="checkbox"]:disabled + .cr,
-            .radio label input[type="radio"]:disabled + .cr {
-                opacity: .5;
-            }
-
-    #boton-siTabla, #boton-noTabla {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-</style>
 <script>
     $("td").on("keydown", function (event) {
         if (event.which != 8 && event.which != 46 && isNaN(String.fromCharCode(event.which))) {

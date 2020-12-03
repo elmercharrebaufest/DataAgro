@@ -12,12 +12,12 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IConfiguracionCupoManager
     {
-        Resultado GrabarConfiguracionCupo(ConfiguracionCupo cupo);
+        Resultado GrabarConfiguracionCupo(ConfiguracionCupo cupo, List<DiaCupo> dias);
         KendoGrid<ConfiguracionCupoDto> TraerTodaConfiguracionCupo(KendoGridMvcRequest request);
         List<LimiteCupoDto> TraerLimites(int id);
         Resultado GrabarLimites(List<LimiteCupo> limite);
         ConfiguracionCupoDto TraerConfiguracionCupo(int id);
-        List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId);
+        Resultado CambioMasivo(List<int> ids, bool aceptar);
     }
 }
 

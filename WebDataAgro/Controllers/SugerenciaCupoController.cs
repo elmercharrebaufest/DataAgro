@@ -36,7 +36,7 @@ namespace WebDataAgro.Controllers
         }
 
         [Autorizacion(PermisosDataAgro.SugerenciaDeCupos)]
-        public ActionResult Index(int materialId = 2, string centroId = "1029")
+        public ActionResult Index(int materialId = 3, string centroId = "1029")
         {
             CargarVista(materialId, centroId);
             return View();
@@ -47,9 +47,11 @@ namespace WebDataAgro.Controllers
             return PartialView();
         }
 
-        private void CargarVista(int materialId = 2, string centroId = "1029")
+        private void CargarVista(int materialId = 3, string centroId = "1029")
         {
             var lista = cupoManager.ObtenerSugerenciaCupoAgrupadasPorProveedor(GlobalVariables.ComercialId, materialId, centroId);
+            var sugerenciaPorComercial = cupoManager.ObtenerSugerenciaPorComercialFecha(GlobalVariables.ComercialId, materialId, centroId);
+            ViewBag.Sugerencia = sugerenciaPorComercial;
             ViewBag.Lista = lista;
             ViewBag.Fechas = cupoManager.FechasComprendidas();
             var material = oMaterialManager.TraerTodoMaterial();
@@ -118,16 +120,16 @@ namespace WebDataAgro.Controllers
             }
             return Json(resultado);
         }
-        public JsonResult DatosConfirmar(List<ConfirmacionSugerenciaCupoDto> datosTabla, int materialId, string centroId)
+        public JsonResult DatosConfirmar(List<ConfirmacionSugerenciaCupoDto> datosTabla, List<DiaCupo> devoluciones, int materialId, string centroId)
         {            
             CupoResult resultado = new CupoResult();
-            if (datosTabla != null)
+            if (datosTabla != null || devoluciones != null)
             {
-                resultado = cupoManager.ConfirmarSugerencia(datosTabla, materialId, centroId);
+                resultado = cupoManager.ConfirmarSugerencia(datosTabla, devoluciones ,materialId, centroId, GlobalVariables.ComercialId);
             }
             else
             {
-                resultado.Errores.Add(new ErrorMessage(400, "No se seleccionó ninguna sugerencia"));
+                resultado.Error("", "No se seleccionó ninguna sugerencia");
             }
             return Json(resultado);
         }        

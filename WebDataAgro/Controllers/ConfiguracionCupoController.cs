@@ -59,6 +59,13 @@ namespace WebDataAgro.Controllers
             {
                 return View("Index", cupo);
             }
+            var dias = new List<DiaCupo>()
+            {
+                new DiaCupo{
+                    Cantidad = cupo.CantidadCupo,
+                    Fecha = cupo.Fecha
+                },
+            };
             var resultado = configuracionCupoManager.GrabarConfiguracionCupo(new ConfiguracionCupo
             {
                 Id = cupo.Id,
@@ -67,7 +74,7 @@ namespace WebDataAgro.Controllers
                 Fecha = cupo.Fecha,
                 LimiteCupo = cupo.CantidadCupo,
                 CierreCupera = cupo.CierreCupera
-            });
+            }, dias);
             if (resultado.HayError)
             {
                 foreach (var e in resultado.Errores)
@@ -124,6 +131,12 @@ namespace WebDataAgro.Controllers
         {
             var cupo = configuracionCupoManager.TraerConfiguracionCupo(id);           
             return new JsonResult() { Data = cupo, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
+        public ActionResult CambioMasivo(List<int> ids, bool aceptar)
+        {
+            var resultado = configuracionCupoManager.CambioMasivo(ids, aceptar);
+            return new JsonResult() { Data = resultado, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
     }    
 }
