@@ -557,7 +557,7 @@ namespace Molinos.DataAgro.Business
             {
                 htmlBody += $@" <table class='verde' style='{tabla}'><thead>
                     <tr style='{estiloTdTrVerde} {head}'><td style='{estiloTdTrVerde} {head}'></td>";
-                htmlBody += (disp > 0) ?  $"<td style=''" + estiloTdTrVerde + head + " text-aligne:center;' id='disponible'  colspan='" + disp + "'>DISPONIBLE</td>" +
+                htmlBody += (disp > 0) ?  $"<td style='" + estiloTdTrVerde + head + " text-aligne:center;' id='disponible'  colspan='" + disp + "'>DISPONIBLE</td>" +
                     $"<td style='{estiloTdTrVerde} {head}' id='disponibleTotal'  rowspan='2' colspan='2'>TOTAL DISPONIBLE</td>" : "";
                 htmlBody += (forw > 0) ?  $"<td style='{estiloTdTrVerde} {head}' id='forward' colspan='" + forw + "'>FORWARD</td>" +
                          $"<td style='{estiloTdTrVerde} {head}' id='forwardTotal' class=' rowspan='2' colspan='2'>TOTAL FORWARD</td>" : "";
