@@ -642,8 +642,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                             var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(contrato.Fecha.Date);
 
-                            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) && oParam.PrestamoDevolucion != true)
-                                || (oParam.FechaOperacion < diaAnterior && oParam.Canje == true))
+                            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) && oParam.PrestamoDevolucion != true && oParam.Canje != true)
+                                || (oParam.FechaOperacion < diaAnterior))
                             {
                                 oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
 
@@ -670,8 +670,8 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(null);
 
-                            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) && oParam.PrestamoDevolucion != true) || 
-                                (oParam.FechaOperacion < diaAnterior && oParam.Canje == true))
+                            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior) && oParam.PrestamoDevolucion != true && oParam.Canje != true))
+                                
                             {
                                 oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
                             }
@@ -681,7 +681,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                             }
 
-                            if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior && oParam.PrestamoDevolucion != true)
+                            if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior && oParam.PrestamoDevolucion != true && oParam.Canje != true)
                             {
                                 oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
                             }
