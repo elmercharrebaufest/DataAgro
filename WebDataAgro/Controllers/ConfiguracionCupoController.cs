@@ -55,17 +55,19 @@ namespace WebDataAgro.Controllers
         public ActionResult GrabarCupos(ConfiguracionCupoModel cupo)
         {
             CargarViewBag();
+            if (cupo.FechaHasta < cupo.Fecha)
+            {
+                ModelState.AddModelError("", "La Fecha Hasta no puede ser menor a la fecha desde");
+            }
             if (!ModelState.IsValid)
             {
                 return View("Index", cupo);
             }
-            var dias = new List<DiaCupo>()
+            var dias = new List<DiaCupo>() { };
+            for (var dt = cupo.Fecha; dt <= cupo.FechaHasta; dt = dt.AddDays(1))
             {
-                new DiaCupo{
-                    Cantidad = cupo.CantidadCupo,
-                    Fecha = cupo.Fecha
-                },
-            };
+                dias.Add(new DiaCupo { Cantidad = cupo.CantidadCupo, Fecha = dt });
+            }
             var resultado = configuracionCupoManager.GrabarConfiguracionCupo(new ConfiguracionCupo
             {
                 Id = cupo.Id,
@@ -81,7 +83,7 @@ namespace WebDataAgro.Controllers
                 {
                     ModelState.AddModelError("400", e.Message);
                 }
-            return View("Index", cupo);
+                return View("Index", cupo);
             }
             return RedirectToAction("Index");
         }
@@ -129,7 +131,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult EditarConfiguracionCupo(int id)
         {
-            var cupo = configuracionCupoManager.TraerConfiguracionCupo(id);           
+            var cupo = configuracionCupoManager.TraerConfiguracionCupo(id);
             return new JsonResult() { Data = cupo, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 
@@ -138,5 +140,5 @@ namespace WebDataAgro.Controllers
             var resultado = configuracionCupoManager.CambioMasivo(ids, aceptar);
             return new JsonResult() { Data = resultado, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
-    }    
+    }
 }

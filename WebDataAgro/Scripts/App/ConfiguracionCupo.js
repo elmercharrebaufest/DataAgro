@@ -8,6 +8,7 @@ $(document).ready(function () {
         $("#MaterialId").prop('disabled', true);
         $("#CentroId").prop('disabled', true);
         $("#Fecha").data('kendoDatePicker').readonly(true);
+        $("#FechaHasta").data('kendoDatePicker').readonly(true);
     }
 });
 
@@ -26,6 +27,11 @@ $(".alert").ready(function () {
 function InicializarElementos() {
     $("#Fecha").kendoDatePicker({
         value: new Date(),
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+    $("#FechaHasta").kendoDatePicker({
+        //value: new Date(),
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
@@ -109,12 +115,12 @@ function CargarGrillaConfig() {
             { field: "LimiteCupo", title: "Límite de Cupo" },
             { field: "BloquearCupera", title: "Bloqueo Cupera", width: 40 },
             {
-                field: "Id", title: " ", filterable: false, sortable: false, width: 40, template: function (dataItem) {
+                field: "Id", title: " ", filterable: false, sortable: false, width: 80, template: function (dataItem) {
 
-                    return dataItem.BloquearCupera === "No" ? '<a data-toggle="tooltip" title="Editar Configuracion" class="abrirModalLimite links-grid" onclick="Editar(' + dataItem.Id + ')">' +
-                        '<span> <i class="fa fa-pencil"></i> </span ></a >' : ""; 
-                        //'<a data-toggle="tooltip" title="Limite Cupo" class="abrirModalLimite links-grid" onclick="AbrirModal(' + dataItem.Id + ')">' +
-                        //'<span> <i class="fa fa-list"></i> </span ></a >' 
+                    return (dataItem.BloquearCupera === "No" ? '<a data-toggle="tooltip" title="Editar Configuracion" class="abrirModalLimite links-grid" onclick="Editar(' + dataItem.Id + ')">' +
+                        '<span> <i class="fa fa-pencil"></i> </span ></a >' : "") +
+                        '<a data-toggle="tooltip" title="Limite Cupo" class="abrirModalLimite links-grid" onclick="AbrirModal(' + dataItem.Id + ')">' +
+                        '<span> <i class="fa fa-list"></i> </span ></a >' 
                 }
             }            
         ],
@@ -261,11 +267,13 @@ function Editar(id) {
     $("#material").val(cupo.MaterialId);
     var fecha = kendo.toString(kendo.parseDate(cupo.Fecha), "dd-MM-yyyy"); 
     $("#Fecha").val(fecha);
+    $("#FechaHasta").val(fecha);
     $("#CantidadCupo").data("kendoNumericTextBox").value(cupo.LimiteCupo);
     $("#CierreCupera").attr("checked", cupo.CierreCupera);
     $("#MaterialId").prop('disabled', true);
     $("#CentroId").prop('disabled', true);
     $("#Fecha").data('kendoDatePicker').readonly(true);
+    $("#FechaHasta").data('kendoDatePicker').readonly(true);
 
 }
 
@@ -276,11 +284,13 @@ function Cancelar() {
     var hoy = new Date();
     var fecha = kendo.toString(kendo.parseDate(hoy), "dd-MM-yyyy");
     $("#Fecha").val(fecha);
+    $("#FechaHasta").val(fecha);
     $("#CantidadCupo").data("kendoNumericTextBox").value("");
     $("#CierreCupera").attr("checked", false);
     $("#MaterialId").prop('disabled', false);
     $("#CentroId").prop('disabled', false);
     $("#Fecha").data('kendoDatePicker').readonly(false);
+    $("#FechaHasta").data('kendoDatePicker').readonly(false);
 }
 
 function LimpiarConfiguracion() {
@@ -289,6 +299,7 @@ function LimpiarConfiguracion() {
     $("#MaterialId").val("");
     var fecha = kendo.toString(kendo.parseDate(new Date()), "dd-MM-yyyy");
     $("#Fecha").val(fecha);
+    $("#FechaHasta").val(fecha);
     $("#CantidadCupo").val("");
 
 }

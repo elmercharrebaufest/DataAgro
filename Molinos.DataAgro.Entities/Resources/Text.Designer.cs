@@ -916,7 +916,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Soporte correspondiente al mes de Julio 2019.
+        ///   Looks up a localized string similar to La Fecha no debe estar vacío.
         /// </summary>
         public static string Error_FechaRequerido {
             get {

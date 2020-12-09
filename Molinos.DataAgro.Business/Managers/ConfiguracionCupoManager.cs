@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public Resultado GrabarConfiguracionCupo(ConfiguracionCupo configuracion, List<DiaCupo> dias)
         {
-            var oEntityErrors = Validar(configuracion);
+            var oEntityErrors = Validar(configuracion, dias);
             if (oEntityErrors.HayError)
             {
                 return oEntityErrors;
@@ -51,6 +51,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     foreach (var d in dias)
                     {
+                        var newConfiguracion = new ConfiguracionCupo {
+                            CentroId = configuracion.CentroId,
+                            CierreCupera = configuracion.CierreCupera,
+                            MaterialId = configuracion.MaterialId
+                        };
                         if (d.Cantidad > 0)
                         {
                             if (d.Fecha < DateTime.Today)
@@ -58,32 +63,34 @@ namespace Molinos.DataAgro.Business.Managers
                                 error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
                                 continue;
                             }
-                            configuracion.Fecha = d.Fecha.Date;
-                            configuracion.LimiteCupo = d.Cantidad.Value;
-                            configuracion.CantidadCupo = new List<LimiteCupo>();
+                            newConfiguracion.Fecha = d.Fecha.Date;
+                            newConfiguracion.LimiteCupo = d.Cantidad.Value;
+                            newConfiguracion.CantidadCupo = new List<LimiteCupo>();
 
-                            errorSap = EnviarCabeceraConfiguracion(configuracion, null, null, materiales, zonas, centros);
+                            errorSap = EnviarCabeceraConfiguracion(newConfiguracion, null, null, materiales, zonas, centros);
                             if (errorSap.HayError)
                             {
-                                errorSap.Error("GrabarConfiguracionCupo - Cabecera ", configuracion.Fecha.ToShortDateString() + ": Error Sap:" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
+                                errorSap.Error("GrabarConfiguracionCupo - Cabecera ", newConfiguracion.Fecha.ToShortDateString() + ": Error Sap:" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
                                 return errorSap;
+                            }
+                            //else
+                            //{
+                            //    repositorio.Agregar(newConfiguracion);
+                            //}
+                            GenerarLimiteZona(newConfiguracion, zonas);
+                            errorSap = EnviarLimiteZona(newConfiguracion.CantidadCupo.ToList(), newConfiguracion, false, materiales, zonas, centros, newConfiguracion.CierreCupera);
+                            if (!errorSap.HayError)
+                            {
+                                repositorio.Agregar(newConfiguracion);
                             }
                             else
                             {
-                                repositorio.Agregar(configuracion);
-                            }
-                            //GenerarLimiteZona(configuracion, zonas);
-                            //errorSap = EnviarLimiteZona(configuracion.CantidadCupo.ToList(), configuracion, false, materiales, zonas, centros, configuracion.CierreCupera);
-                            //if (!errorSap.HayError)
-                            //{
-                            //    repositorio.Agregar(configuracion);
-                            //}
-                            //else
-                            //{
-                            //    errorSap.Error("GrabarConfiguracionCupo - Zonas ", configuracion.Fecha.ToShortDateString() + ": Error Sap:" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
+                                errorSap.Error("GrabarConfiguracionCupo - Zonas ", newConfiguracion.Fecha.ToShortDateString() + ": Error Sap:" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
 
-                            //    return errorSap;
-                            //}
+                                return errorSap;
+                            }
+                            repositorio.GuardarCambios();
+
                         }
                     }
                 }
@@ -99,24 +106,23 @@ namespace Molinos.DataAgro.Business.Managers
                     else
                     {
                         configuracionSave.LimiteCupo = configuracion.LimiteCupo;
-                        configuracionSave.CierreCupera = configuracion.CierreCupera;                        
+                        configuracionSave.CierreCupera = configuracion.CierreCupera;
 
                     }
-                    //errorSap = EnviarLimiteZona(configuracionSave.CantidadCupo.ToList(), configuracion, true, materiales, zonas, centros, configuracion.CierreCupera);
-                    //if (!errorSap.HayError)
-                    //{
-                    //    configuracionSave.LimiteCupo = configuracion.LimiteCupo;
-                    //    configuracionSave.CierreCupera = configuracion.CierreCupera;
-                    //}
-                    //else
-                    //{
-                    //    errorSap.Error("CantidadCuposSAP", configuracion.Fecha.ToShortDateString() + ": " + "Error sap" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
-                    //    return errorSap;
-                    //}
-
+                    errorSap = EnviarLimiteZona(configuracionSave.CantidadCupo.ToList(), configuracion, true, materiales, zonas, centros, configuracion.CierreCupera);
+                    if (!errorSap.HayError)
+                    {
+                        configuracionSave.LimiteCupo = configuracion.LimiteCupo;
+                        configuracionSave.CierreCupera = configuracion.CierreCupera;
+                    }
+                    else
+                    {
+                        errorSap.Error("CantidadCuposSAP", configuracion.Fecha.ToShortDateString() + ": " + "Error sap" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
+                        return errorSap;
+                    }
+                    repositorio.GuardarCambios();
                 }
-                repositorio.GuardarCambios();
-                cupoManager.CrearSugerenciaCupo(configuracion);
+                //cupoManager.CrearSugerenciaCupo(configuracion);
             }
             catch (Exception ex)
             {
@@ -222,13 +228,18 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private void GenerarLimiteZona(ConfiguracionCupo configuracion, List<ZonaCupo> zonas)
         {
+            var totalNeogcios = repositorio.Listar<Contrato>(x => x.FechaHasta == configuracion.Fecha && x.EstadoId == 5 && x.MaterialId == configuracion.MaterialId && x.DestinoId == configuracion.CentroId).Sum(x => x.Cantidad);
             for (int i = 0; i < zonas.Count(); i++)
             {
-                var ultima = i == zonas.Count() - 1;
+                var zonaCupo = zonas[i].Descripcion;
+                var totalZona = repositorio.Listar<Contrato>(x => x.FechaHasta == configuracion.Fecha && x.EstadoId == 5 && x.Comercial.GrupoDeCompras.Descripcion == zonaCupo && x.MaterialId == configuracion.MaterialId && x.DestinoId == configuracion.CentroId).Sum(x => x.Cantidad);
+                var porcentajeZona = (totalZona * 100) / totalNeogcios;
+                //var ultima = i == zonas.Count() - 1;
+
                 var limite = new LimiteCupo
                 {
-                    CantidadCupo = !ultima ? (int)Math.Floor((decimal)configuracion.LimiteCupo / zonas.Count()) :
-                    configuracion.LimiteCupo - configuracion.CantidadCupo.Sum(x => x.CantidadCupo),
+                    CantidadCupo = (int)Math.Floor((configuracion.LimiteCupo * porcentajeZona) / 100),
+                    //CantidadCupo = !ultima ? (int)Math.Floor((decimal)configuracion.LimiteCupo / zonas.Count()) :configuracion.LimiteCupo - configuracion.CantidadCupo.Sum(x => x.CantidadCupo),
                     ConfiguracionCupo = configuracion,
                     ZonaCupoId = zonas[i].Id,
                 };
@@ -273,7 +284,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return errorSap;
         }
-        private Resultado Validar(ConfiguracionCupo cupo)
+        private Resultado Validar(ConfiguracionCupo cupo, List<DiaCupo> dias)
         {
             var errores = new Resultado();
 
@@ -291,7 +302,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (cupo.Id == 0)
             {
-                if (repositorio.Existe<ConfiguracionCupo>(x => x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.Fecha == cupo.Fecha))
+                DateTime desde = dias.Min(x => x.Fecha);
+                DateTime hasta = dias.Max(x => x.Fecha);
+                if (repositorio.Existe<ConfiguracionCupo>(x => x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.Fecha >= desde && x.Fecha <= hasta))
                 {
                     errores.Error("cupo", "Ya existe configuración para ese Material, Centro y Fecha");
                 }
@@ -373,27 +386,27 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             item.CierreCupera = aceptar;
                         }
-                        //errorSap = EnviarLimiteZona(item.CantidadCupo.ToList(), item, true, materiales, zonas, centros, aceptar);
-                        //if (!errorSap.HayError)
-                        //{
-                        //    item.CierreCupera = aceptar;
-                        //}
-                        //else
-                        //{
-                        //    errorSap.Error("Cierre Masivo - Cabecera + Zonas ", item.Fecha.ToShortDateString() + ": Error Sap:" + string.Join(", ",errorSap.Errores.Select(a => a.Source +" "+  a.Message).ToList()));
-                        //    break;
-                        //}
+                        errorSap = EnviarLimiteZona(item.CantidadCupo.ToList(), item, true, materiales, zonas, centros, aceptar);
+                        if (!errorSap.HayError)
+                        {
+                            item.CierreCupera = aceptar;
+                        }
+                        else
+                        {
+                            errorSap.Error("Cierre Masivo - Cabecera + Zonas ", item.Fecha.ToShortDateString() + ": Error Sap:" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
+                            break;
+                        }
                     }
                 }
                 repositorio.GuardarCambios();
             }
             catch (Exception e)
             {
-                errorSap.Error("CantidadCuposSAP", e.Message);               
+                errorSap.Error("CantidadCuposSAP", e.Message);
             }
             return errorSap;
         }
 
-      
+
     }
 }

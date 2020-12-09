@@ -903,11 +903,13 @@ namespace WebDataAgro.Services
                     resultado.ProveedorRazonSocial = proveedor.RazonSocial;
                     resultado.ProveedorClasificacion = proveedor.ClasificacionCompraNet == null ? "" : proveedor.ClasificacionCompraNet.Descripcion;
                     Negocio negocio = repositorio.ObtenerMayor<Negocio, DateTime>(x => x.ProveedorId == proveedor.ProveedorId || x.CorredorId == proveedor.ProveedorId, x => x.Fecha);
-                    if (negocio != null)
+                    bool compras = repositorio.Existe<CampañaMaterial>(x => x.ProveedorId == proveedor.ProveedorId);
+                    if (negocio != null || compras)
                     {
                         resultado.ProveedorOperando = true;
                         resultado.ProveedorUltimaOperacion = negocio.Fecha;
                     }
+
 
                     var provCom = proveedor.ProveedorComercialAsociados.FirstOrDefault();
                     if (provCom != null)

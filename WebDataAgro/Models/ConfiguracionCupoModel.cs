@@ -21,5 +21,8 @@ namespace WebDataAgro.Models
         public bool CierreCupera { get; set; }
 
         public List<DiaCupo> Dias { get; set; }
+        [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaRequerido")]
+        public DateTime FechaHasta { get; set; }
+
     }
 }

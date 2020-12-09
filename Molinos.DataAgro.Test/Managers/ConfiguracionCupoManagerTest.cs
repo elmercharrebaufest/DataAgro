@@ -63,9 +63,14 @@ namespace Molinos.DataAgro.Test.Managers
                 Returns(new List<Centro> { new Centro { Id = 1, CodigoSap = "CBA", Descripcion = "Bs" } });
             repositorioMock.Setup(x => x.Obtener<ConfiguracionCupo>(It.IsAny<int>())).Returns(cupo);
             administracionCuperaAgent.Setup(x => x.AdministrarCupera(It.IsAny<ConfiguracionCupoDto>())).Returns("OK");
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
+             Returns(new List<Negocio> { new Negocio { Id = 1, Cantidad = 1000 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
+             Returns(new List<Contrato> { new Contrato { Id = 1, Cantidad = 100 } });
+
             var resultado = target.GrabarConfiguracionCupo(cupo, diaCupo);
             Assert.That(!resultado.HayError);
-            repositorioMock.Verify(x => x.Agregar(It.IsAny<ConfiguracionCupo>()), Times.Once);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<ConfiguracionCupo>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
         [Test]
