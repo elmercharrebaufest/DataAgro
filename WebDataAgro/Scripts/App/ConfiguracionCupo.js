@@ -10,6 +10,9 @@ $(document).ready(function () {
         $("#Fecha").data('kendoDatePicker').readonly(true);
         $("#FechaHasta").data('kendoDatePicker').readonly(true);
     }
+    $("#formGrabarCupos").submit(function () {
+        BlockUi('Grabando...');
+    });
 });
 
 function mostrarocultar(element) {

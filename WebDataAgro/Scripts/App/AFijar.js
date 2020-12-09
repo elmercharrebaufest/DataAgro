@@ -657,6 +657,17 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "TipoNegocioId",
         change: function () {
+            if (this.value() != 1) {
+                var tipoId = $("#tipoId").data("kendoDropDownList").value();
+                error = false;
+                obj = ObtenerDatos(error);
+                if (!error) {
+                    BlockUi('Cargando...');
+                    RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
+                } else {
+                    $.unblockUI();
+                }
+            }
             $(".fechasAFijar").hide();
             $(".contratoAFijar").hide();
             $(".contratoAPrecio").hide();
@@ -1672,8 +1683,8 @@ function InicializarElementos() {
             $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));
             validarFechaCampana();
             var maniana = new Date();
-            maniana = new Date(maniana.setDate(maniana.getDate() + 1));
-            if ($("#fechaDesdeId").val() >= formatearFecha(maniana)) {
+            //maniana = new Date(maniana.setDate(maniana.getDate() + 1));
+            if ($("#fechaDesdeId").data("kendoDatePicker").value() >= maniana) {
                 $("#mercsDepositoDiv").hide();
                 $("#mercsDepositoId").prop("checked", false);
             } else {

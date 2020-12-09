@@ -788,7 +788,7 @@ function CreateGridInformeCompraNet() {
                     }, {
                         TipoNegocio: "CANJE"
                     }, {
-                        TipoNegocio: "PRESTAMO DEVOLUCION"
+                            TipoNegocio: "PR\u00C9STAMO DEVOLUCI\u00D3N"
                     }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"

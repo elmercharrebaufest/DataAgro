@@ -656,6 +656,17 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "TipoNegocioId",
         change: function () {
+            if (this.value() != 3) {
+                var tipoId = $("#tipoId").data("kendoDropDownList").value();
+                error = false;
+                obj = ObtenerDatos(error);
+                if (!error) {
+                    BlockUi('Cargando...');
+                    RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
+                } else {
+                    $.unblockUI();
+                }
+            }
             $(".fechasAFijar").hide();
             $(".contratoAFijar").hide();
             $(".contratoAPrecio").hide();
