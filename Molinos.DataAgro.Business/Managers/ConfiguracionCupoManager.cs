@@ -235,8 +235,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var totalZona = repositorio.Listar<Contrato>(x => x.FechaHasta == configuracion.Fecha && x.EstadoId == 5 && x.Comercial.GrupoDeCompras.Descripcion == zonaCupo && x.MaterialId == configuracion.MaterialId && x.DestinoId == configuracion.CentroId).Sum(x => x.Cantidad);
                 var porcentajeZona = (totalZona * 100) / totalNeogcios;
                 //var ultima = i == zonas.Count() - 1;
-                logger.Debug("GenerarLimiteZona totalNeogcios" + totalNeogcios + " zonaCupo " + zonaCupo + " totalZona " + totalZona + " porcentajeZona " + porcentajeZona);
-
+                //logger.Debug("GenerarLimiteZona totalNeogcios" + totalNeogcios + " zonaCupo " + zonaCupo + " totalZona " + totalZona + " porcentajeZona " + porcentajeZona);
+                if (double.IsNaN(porcentajeZona))
+                {
+                    porcentajeZona = 0;
+                }
                 var limite = new LimiteCupo
                 {
                     CantidadCupo = (int)Math.Floor((configuracion.LimiteCupo * porcentajeZona) / 100),
