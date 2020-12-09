@@ -29,7 +29,7 @@ $(".alert").ready(function () {
 
 function InicializarElementos() {
     $("#Fecha").kendoDatePicker({
-        value: new Date(),
+        //value: new Date(),
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
