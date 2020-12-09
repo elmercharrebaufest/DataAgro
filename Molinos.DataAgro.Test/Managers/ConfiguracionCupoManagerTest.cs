@@ -70,7 +70,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var resultado = target.GrabarConfiguracionCupo(cupo, diaCupo);
             Assert.That(!resultado.HayError);
-            repositorioMock.Verify(x => x.Agregar(It.IsAny<ConfiguracionCupo>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<ConfiguracionCupo>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
         [Test]
