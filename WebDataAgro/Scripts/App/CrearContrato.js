@@ -289,7 +289,7 @@ function InicializarElementos() {
                 }
                 if ($("#tipoId").val() == "6") {
                     $("#dolarizadoExpressDiv").hide();
-
+                    $("#fechaCiertaDiv").hide();
                 }
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 if (($("#material").val() == "4" || $("#material").val() == "5") && $("#tipoId").val() == "2") {
@@ -3394,8 +3394,10 @@ function CargarDatosEditar(contrato, hijo) {
     $("#precioId").trigger('change');
 
     $("#precioTotalApertura").data("kendoNumericTextBox").value(contrato.PrecioNeto);
-    $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
-    $("#precioMonedaId").data("kendoDropDownList").trigger("change");
+    setTimeout(function () {
+        $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
+        $("#precioMonedaId").data("kendoDropDownList").trigger("change");
+    }, 100);//es una boludes pero sino no funciona el change de moneda, raro por que el kendoDropDownList ya existe ...
 
     $("#clasificacion").data("kendoDropDownList").value(contrato.ClasificacionId);
     $("#clasificacion").data("kendoDropDownList").trigger("change");
