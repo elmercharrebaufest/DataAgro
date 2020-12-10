@@ -221,10 +221,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="HTTP_Port19" contract="ComprasDetalle.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE" bindingType="basicHttpBinding" address="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEBinding">
+    <endpoint name="HTTP_Port19" contract="ComprasDetalle.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE" bindingType="basicHttpBinding" address="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEBinding">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
+          <serializedValue>http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -306,10 +306,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="HTTPS_Port18" contract="ComprasDetalle.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE" bindingType="basicHttpBinding" address="https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEBinding1">
+    <endpoint name="HTTPS_Port18" contract="ComprasDetalle.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE" bindingType="basicHttpBinding" address="https://GSLOPIDEVQA00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEBinding1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
+          <serializedValue>https://GSLOPIDEVQA00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

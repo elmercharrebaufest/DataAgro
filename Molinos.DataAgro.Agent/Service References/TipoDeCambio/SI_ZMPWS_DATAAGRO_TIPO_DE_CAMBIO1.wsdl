@@ -80,10 +80,10 @@
   </wsdl:binding>
   <wsdl:service name="SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIOService">
     <wsdl:port name="HTTP_Port" binding="p1:SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIOBinding">
-      <address location="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <address location="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
     </wsdl:port>
     <wsdl:port name="HTTPS_Port" binding="p1:SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIOBinding">
-      <address location="https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <address location="https://GSLOPIDEVQA00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

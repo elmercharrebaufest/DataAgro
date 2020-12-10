@@ -221,10 +221,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="HTTP_Port4" contract="RelacionCorredorProveedor.SI_ZMPWS_DATAAGRO_CONSULTAR_RP" bindingType="basicHttpBinding" address="http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace:dataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_CONSULTAR_RPBinding">
+    <endpoint name="HTTP_Port4" contract="RelacionCorredorProveedor.SI_ZMPWS_DATAAGRO_CONSULTAR_RP" bindingType="basicHttpBinding" address="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace:dataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_CONSULTAR_RPBinding">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://gvicpiqa01.ar.molinos.local:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
+          <serializedValue>http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -306,10 +306,10 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="HTTPS_Port3" contract="RelacionCorredorProveedor.SI_ZMPWS_DATAAGRO_CONSULTAR_RP" bindingType="basicHttpBinding" address="https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace:dataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_CONSULTAR_RPBinding1">
+    <endpoint name="HTTPS_Port3" contract="RelacionCorredorProveedor.SI_ZMPWS_DATAAGRO_CONSULTAR_RP" bindingType="basicHttpBinding" address="https://GSLOPIDEVQA00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace:dataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_CONSULTAR_RPBinding1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>https://gvicpiqa01.ar.molinos.local:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
+          <serializedValue>https://GSLOPIDEVQA00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONSULTAR_RP&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

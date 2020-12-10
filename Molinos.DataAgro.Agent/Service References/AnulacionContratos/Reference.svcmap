@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://gvicpiqa01.ar.molinos.local:50000/dir/wsdl?p=ic/607d4f2eeb29369f8d4965d4a7833f60" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://GSLOPIDEVQA00.molinosagro.ad:50000/dir/wsdl?p=ic/607d4f2eeb29369f8d4965d4a7833f60" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_ANULACION_CONTRATO.wsdl" MetadataType="Wsdl" ID="fd8365ca-6f4c-4c46-99c0-4da5ca826220" SourceId="1" SourceUrl="http://gvicpiqa01.ar.molinos.local:50000/dir/wsdl?p=ic/607d4f2eeb29369f8d4965d4a7833f60" />
+    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_ANULACION_CONTRATO.wsdl" MetadataType="Wsdl" ID="fd8365ca-6f4c-4c46-99c0-4da5ca826220" SourceId="1" SourceUrl="http://GSLOPIDEVQA00.molinosagro.ad:50000/dir/wsdl?p=ic/607d4f2eeb29369f8d4965d4a7833f60" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
