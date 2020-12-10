@@ -715,7 +715,7 @@ function InicializarElementos() {
                     RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
                 } else {
                     $.unblockUI();
-                } 
+                }
                 //$("#fechasDiv").hide();
                 //$("#fechaDesdeDiv").hide();
                 //$("#fechaHastaDiv").hide();
@@ -853,16 +853,16 @@ function InicializarElementos() {
                 $("#boton-ampliar").trigger("click");
                 //A FIJAR
                 if (this.value() == 1) {
-                  
+
                     var tipoId = $("#tipoId").data("kendoDropDownList").value();
                     error = false;
                     obj = ObtenerDatos(error);
                     if (!error) {
                         BlockUi('Cargando...');
-                        RedireccionarNegocio($("#crearContrato").val(), tipoId, obj); 
+                        RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
                     } else {
                         $.unblockUI();
-                    } 
+                    }
                     //$(".fechasAFijar").show();
                     //$(".contratoAPrecio").hide();
                     //$(".contratoAFijar").show();
@@ -875,7 +875,7 @@ function InicializarElementos() {
                     //$(".espacioPrecioMoneda").show();
                     //InicializarFondosGrises();
                     //$("#pizarraDiv").prop("checked", false);
-                   
+
                 }
                 if (this.value() == 2) {
                     $(".ocultar").hide();
@@ -3320,6 +3320,26 @@ function InicializarAcuerdoEdit() {
 
 
 function CargarDatosEditar(contrato, hijo) {
+    if (!hijo) {
+        //$("#fechaOperacionId").val(FormatearFecha((contrato.FechaFormateado)));
+        $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
+        if (contrato.TipoNegocioId != 1) {
+            $("#tipoId").data("kendoDropDownList").trigger("change");
+        }
+        if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 6) {
+            if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
+                $("#fechaDesdeTopeId").val(FormatearFecha((contrato.DesdeFijacionFormateado)));
+            } else {
+                $("#fechaDesdeTopeId").val("");
+            }
+            if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
+                $("#fechaHastaTopeId").val(FormatearFecha((contrato.HastaFijacionFormateado)));
+            } else {
+                $("#fechaHastaTopeId").val("");
+            }
+            $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
+        }
+    }
     InicializarBordesRojos();
     $("#buscadorCorredor").val(contrato.Corredor);
     $("#buscadorCorredor").trigger("change");
@@ -3377,7 +3397,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#fechaCiertaAcuerdo").val(FormatearFecha((contrato.FechaCiertaFormateado)));
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
-    
+
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
 
@@ -3394,10 +3414,9 @@ function CargarDatosEditar(contrato, hijo) {
     $("#precioId").trigger('change');
 
     $("#precioTotalApertura").data("kendoNumericTextBox").value(contrato.PrecioNeto);
-    setTimeout(function () {
-        $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
-        $("#precioMonedaId").data("kendoDropDownList").trigger("change");
-    }, 100);//es una boludes pero sino no funciona el change de moneda, raro por que el kendoDropDownList ya existe ...
+
+    $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
+    $("#precioMonedaId").data("kendoDropDownList").trigger("change");
 
     $("#clasificacion").data("kendoDropDownList").value(contrato.ClasificacionId);
     $("#clasificacion").data("kendoDropDownList").trigger("change");
@@ -3734,7 +3753,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.Acuerdo);
         }
     }
-    if (contrato.TipoNegocioId == 6) {   
+    if (contrato.TipoNegocioId == 6) {
         $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
         if (contrato.Precio != null && !contrato.Dolarizado) {
             $("#fechaCiertaAcuerdoDiv").show();
@@ -3773,23 +3792,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#pagoDirectoDiv").removeClass("ampliar");
     }
 
-    if (!hijo) {
-        //$("#fechaOperacionId").val(FormatearFecha((contrato.FechaFormateado)));
-        $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
+    if (!hijo && contrato.TipoNegocioId == 1) {
         $("#tipoId").data("kendoDropDownList").trigger("change");
-        if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 6) {
-            if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
-                $("#fechaDesdeTopeId").val(FormatearFecha((contrato.DesdeFijacionFormateado)));
-            } else {
-                $("#fechaDesdeTopeId").val("");
-            }
-            if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
-                $("#fechaHastaTopeId").val(FormatearFecha((contrato.HastaFijacionFormateado)));
-            } else {
-                $("#fechaHastaTopeId").val("");
-            }
-            $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
-        }
     }
 
 }
