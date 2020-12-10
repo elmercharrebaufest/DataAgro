@@ -105,6 +105,8 @@ function InicializarAutocompletar() {
 function CargarCopiaContrato(contratoId, tipo) {
     var datos = { id: contratoId, tipo: tipo };
     contratoCopia = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos, function () { $.unblockUI(); });
+    contratoCopia.ContratoAcuerdoId = contratoId;
+    $("#contratoAcuerdoId").val(contratoId);
     if (contratoCopia.HayError) {
         MensErr(contratoCopia.Errores[0].Message);
     } else {

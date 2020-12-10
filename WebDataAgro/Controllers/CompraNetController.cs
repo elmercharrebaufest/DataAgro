@@ -124,6 +124,7 @@ namespace WebDataAgro.Controllers
             if (!String.IsNullOrEmpty(obj))
             {
                 var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
+                var contrato = typeof(CompraNetController).GetMethod("DeserializarJson").MakeGenericMethod(Type.GetType($"{tipoNegocio.ClaseDescripcion}, Molinos.DataAgro.Entities")).Invoke(null, new object[] { obj });
                 var negocio = typeof(CompraNetController).GetMethod("DeserializarJson").MakeGenericMethod(Type.GetType($"{tipoNegocio.ClaseDescripcion}, Molinos.DataAgro.Entities")).Invoke(null, new object[] { obj }) as Negocio;
                 ViewBag.Obj = mobjContratoManager.NegocioABasicoContrato(negocio);
                 ViewBag.esEdicion = true;

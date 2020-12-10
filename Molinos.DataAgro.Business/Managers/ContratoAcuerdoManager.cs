@@ -59,9 +59,9 @@ namespace Molinos.DataAgro.Business
                     {
                         if (oContratoSave.Ampliaciones > 0)
                         {
-                            oContratoSave.Ampliaciones = 0;                            
+                            oContratoSave.Ampliaciones = 0;
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                           
+
                         }
                         else
                         {
@@ -227,7 +227,7 @@ namespace Molinos.DataAgro.Business
             }
             oContratoAcuerdo.CorredorId = (oContratoAcuerdo.CorredorId == -1) ? null : oContratoAcuerdo.CorredorId;
             oContratoAcuerdo.ProveedorId = (oContratoAcuerdo.ProveedorId == -1) ? null : oContratoAcuerdo.ProveedorId;
-            
+
             var estado = PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) ? 2 : 1;
             if (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados))
             {
@@ -249,9 +249,9 @@ namespace Molinos.DataAgro.Business
             }
             else
             {
-                
+
                 objContratoAcuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoAcuerdo.Id);
-               
+
                 descuentosExistentes = objContratoAcuerdo.Descuentos.ToList();
                 if (estado == 1 && objContratoAcuerdo.EstadoId == (int)EnumEstadoContrato.Confirmado)
                 {
@@ -300,7 +300,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.CondicionFijacionId = oContratoAcuerdo.CondicionFijacionId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
                 objContratoAcuerdo.FechaCierta = oContratoAcuerdo.FechaCierta;
-            
+
 
                 if (descuentosExistentes != null)
                 {
@@ -308,7 +308,7 @@ namespace Molinos.DataAgro.Business
                     {
                         if (objContratoAcuerdo.Descuentos == null || !objContratoAcuerdo.Descuentos.Any(x => x.Id == descExistente.Id))
                         {
-                            repositorio.Remover(descExistente);                           
+                            repositorio.Remover(descExistente);
                         }
                     }
                 }
@@ -317,7 +317,7 @@ namespace Molinos.DataAgro.Business
                     foreach (var descuento in oContratoAcuerdo.Descuentos.Where(x => x.Id == 0))
                     {
                         descuento.Negocio = objContratoAcuerdo;
-                        repositorio.Agregar(descuento);                       
+                        repositorio.Agregar(descuento);
                     }
                 }
 
@@ -476,7 +476,7 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("", "El campo 'Campaña' no debe estar vacio");
             }
-            
+
             if (oContratoAcuerdo.Precio < 0)
             {
                 oEntityErrors.Error("", "El precio debe ser mayor o igual a 0");
@@ -561,6 +561,14 @@ namespace Molinos.DataAgro.Business
             if (oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.DestinoId != 6 && oContratoAcuerdo.DestinoId != 7 && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
             {
                 oEntityErrors.Error("", "Se debe completar Redespacho en Acopios");
+            }
+            if (oContratoAcuerdo.Precio == 0 && !string.IsNullOrWhiteSpace(oContratoAcuerdo.PagoCBU) )
+            {
+                oEntityErrors.Error("", "No se puede completar Pago CBU en un Acuerdo a Fijar");
+            }
+            if (oContratoAcuerdo.Precio == 0 && oContratoAcuerdo.ChequeElectronico == true)
+            {
+                oEntityErrors.Error("", "No se puede completar Echeq en un Acuerdo a Fijar");
             }
         }
 
@@ -829,7 +837,7 @@ namespace Molinos.DataAgro.Business
                 logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(acuerdo.Id), TipoAccionLogDataAgro.Eliminar, acuerdo.GetType());
             }
 
-            repositorio.GuardarCambios();            
+            repositorio.GuardarCambios();
         }
     }
 }

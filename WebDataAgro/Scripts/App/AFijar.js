@@ -3351,24 +3351,7 @@ function CargarDatosEditar(contrato, hijo) {
     //$("#fechaCiertaAcuerdo").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
-    if (!hijo) {
-        //$("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
-        $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
-        $("#tipoId").data("kendoDropDownList").trigger("change");
-        if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 6) {
-            if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
-                $("#fechaDesdeTopeId").val(FormatearFecha(formatearFecha(contrato.DesdeFijacionFormateado)));
-            } else {
-                $("#fechaDesdeTopeId").val("");
-            }
-            if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
-                $("#fechaHastaTopeId").val(FormatearFecha(formatearFecha(contrato.HastaFijacionFormateado)));
-            } else {
-                $("#fechaHastaTopeId").val("");
-            }
-            $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
-        }
-    }
+    
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
 
@@ -3674,6 +3657,9 @@ function CargarDatosEditar(contrato, hijo) {
         if (contrato.ContratoAcuerdoId != null) {
             $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.ContratoAcuerdoId);
         }
+        if (contrato.Acuerdo != null) {
+            $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.Acuerdo);
+        }
     }
    
     if (contrato.CalidadTercero == true || contrato.DolarizadoTercero == true || contrato.PagoDiferidoTercero == true || contrato.ObservacionTercero != null) {
@@ -3721,6 +3707,25 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.Estado == 5) {
         $("#prestamoDevolucionId").prop('disabled', true);
         $("#plantaDestinoId").data("kendoDropDownList").enable(false);
+    }
+
+    if (!hijo) {
+        //$("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
+        $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
+        $("#tipoId").data("kendoDropDownList").trigger("change");
+        if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 6) {
+            if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
+                $("#fechaDesdeTopeId").val(FormatearFecha(formatearFecha(contrato.DesdeFijacionFormateado)));
+            } else {
+                $("#fechaDesdeTopeId").val("");
+            }
+            if (!(contrato.HastaFijacionFormateado == "null" && contrato.HastaFijacionFormateado == undefined && contrato.HastaFijacionFormateado == "")) {
+                $("#fechaHastaTopeId").val(FormatearFecha(formatearFecha(contrato.HastaFijacionFormateado)));
+            } else {
+                $("#fechaHastaTopeId").val("");
+            }
+            $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
+        }
     }
 
 }
