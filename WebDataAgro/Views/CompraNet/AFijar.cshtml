@@ -33,7 +33,7 @@
 
         </script>
     }
- }
+}
 
 
 
@@ -163,13 +163,13 @@
             </div>
         </div>
         @*<div hidden id="fechaFijacionDiv">
-            <div class="col-sm-2">
-                <label>Fecha Fijación</label>
-            </div>
-            <div class="col-md-2 ">
-                <input id="fechaFijacionId" type="date" data-bind="value: Parametros.Fecha" style="width:100%" />
-            </div>
-        </div>*@
+                <div class="col-sm-2">
+                    <label>Fecha Fijación</label>
+                </div>
+                <div class="col-md-2 ">
+                    <input id="fechaFijacionId" type="date" data-bind="value: Parametros.Fecha" style="width:100%" />
+                </div>
+            </div>*@
         <div id="destinoDiv" class="noFason noAgente">
             <div class="col-sm-1">
                 <label>Destino</label>
@@ -180,7 +180,7 @@
             </div>
         </div>
         <div hidden class="ampliar">
-            <div class="col-sm-offset-6 col-sm-2"  id="prestamoDevolucionDiv">
+            <div class="col-sm-offset-6 col-sm-2" id="prestamoDevolucionDiv">
                 <label style="width:120px">Préstamo Devolución</label>
                 <input id="prestamoDevolucionId" class="campo-input-input" data-bind="checked:Parametros.prestamoDevolucionId, disabled: isControlDisabled" type="checkbox" onclick="HayPrestamo()" />
             </div>
@@ -222,7 +222,7 @@
                     </span>
                 </div>
             </div>
-            <div class="contratoAFijar acuerdoSinPrecio"  id="contratoAfijarDiv">
+            <div class="contratoAFijar acuerdoSinPrecio" id="contratoAfijarDiv">
                 <div class="col-sm-5 col-md-2">
                     <span id="fechaHastaTopeDiv">
                         <input id="fechaHastaTopeId" type="date" style="width: 100%" />
@@ -843,7 +843,7 @@
                     <div class="col-sm-10 col-md-4">
                         <input type="text" class="k-textbox" style="width:100%" id="pagoCbu" />
                     </div>
-                </div>*@            
+                </div>*@
         </div>
 
         <div class="row" id="mostrarCanje" hidden>
@@ -1077,6 +1077,11 @@
 
     </div>
 </div>
+<label style="display:none;">
+    @*campos para poder completar el contrato a precio*@
+    <input id="precioId" style="display:none !important;" value="0" />
+    <input id="precioMonedaId" type="text" style="display:none !important;"/>
+</label>
 <style>
     .popover-content {
         color: dimgray;

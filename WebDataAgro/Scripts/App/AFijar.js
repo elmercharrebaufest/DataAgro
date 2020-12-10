@@ -17,12 +17,16 @@ $(document).ready(function () {
         'withVisible': false
     });
 
-    CrearViewModel();    
+    CrearViewModel();
     InicializarElementos();
     InicializarDatos();
     AutocompleteProcedencia();
     $("#tipoId").data("kendoDropDownList").value(1);
-    $("#tipoId").data("kendoDropDownList").trigger("change");   
+    $("#tipoId").data("kendoDropDownList").trigger("change");
+    $("#precioId").kendoNumericTextBox({});
+    $("#precioTotalApertura").kendoNumericTextBox({});
+    var precioRojo = $("#precioId").hasClass("required-box-parent") ? $("#precioId") : $("#precioId").parent().parent();
+    precioRojo.removeClass("required-border");
 });
 
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
@@ -721,7 +725,7 @@ function InicializarElementos() {
                     RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
                 } else {
                     $.unblockUI();
-                }  
+                }
                 //$("#fechasDiv").hide();
                 //$("#fechaDesdeDiv").hide();
                 //$("#fechaHastaDiv").hide();
@@ -883,7 +887,7 @@ function InicializarElementos() {
                         RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
                     } else {
                         $.unblockUI();
-                    } 
+                    }
                 }
             }
             ClickEnPizarra();
@@ -991,54 +995,7 @@ function InicializarElementos() {
     //$("#precioMonedaId").kendoDropDownList({
     //    optionLabel: "MONEDA...",
     //    dataTextField: "Descripcion",
-    //    dataValueField: "MonedaId",
-    //    change: function () {
-    //        if ($("#precioMonedaId").val() === "ARP  " && ($("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
-    //            $("#pagoDolarizadoDiv").hide();
-    //            $("#dolarizadoDiv").hide();
-    //            if ($("#fechaCiertaId").val() == "") {
-    //                $("#pagoDiferidoDiv").show();
-    //            }
-    //            $("#dolarizadoId").prop("checked", false);
-    //            $("#dolarizadoFechaId").data("kendoDatePicker").value("");
-    //            $("#dolarizadoExpressDiv").hide();
-    //            $("#dolarizadoExpressId").prop("checked", false);
-    //            if (!$("#pesificadoId").is(":checked")) {
-    //                if ($("#tipoId").val() === "2") {
-    //                    $("#fechaCiertaDiv").show();
-    //                }
-    //                if ($("#tipoId").val() === "6") {
-    //                    $("#fechaCiertaAcuerdoDiv").show();
-    //                }
-    //            }
-    //        } else if ($("#precioMonedaId").val() === "USDM " && ($("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
-    //            $("#pagoDiferidoDiv").hide();
-    //            $("#pesificadoDiv").hide();
-    //            if ($("#fechaCiertaId").val() == "") {
-    //                $("#pagoDolarizadoDiv").show();
-    //                $("#dolarizadoDiv").show();
-
-    //            }
-    //            $("#pesificadoId").prop("checked", false);
-    //            $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
-
-    //            if ($("#clasificacion").val() == "1" && $("#fechaCiertaId").val() == "" && $("#tipoId").val() != "6") {
-    //                $("#dolarizadoExpressDiv").show();
-    //            } else {
-    //                $("#dolarizadoExpressDiv").hide();
-    //                //$("#dolarizadoDiv").hide();
-    //                $("#dolarizadoExpressId").prop("checked", false);
-
-    //            }
-    //        }
-    //        if ($("#tipoId").val() === "3") {
-    //            CalcularPrecioTotalApertura();
-    //        }
-
-    //    },
-    //    select: function (e) {
-    //        $("#monedaPactadoId").data("kendoDropDownList").value(e.dataItem.MonedaId);
-    //    }
+    //    dataValueField: "MonedaId"        
     //});
 
     $("#monedaAjusteComisionId").kendoDropDownList({
@@ -1266,7 +1223,7 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "Id",
         change: function () {
-            
+
         }
     });
 
@@ -1278,7 +1235,7 @@ function InicializarElementos() {
     });
 
 
-    
+
     $("#tipoFasonId").kendoDropDownList({
         optionLabel: "SELECCIONE TIPO FASON...",
         dataTextField: "Descripcion",
@@ -1536,7 +1493,7 @@ function InicializarElementos() {
         format: "n2",
         spinners: false,
         min: 0,
-        change: function () {         
+        change: function () {
 
         }
     });
@@ -1837,11 +1794,11 @@ function InicializarElementos() {
 
     $(".formulario-footer-guardar-contrato").click(function () {
         BlockUi('Guardando...');
-        var error = false;      
+        var error = false;
         var objeto = ObtenerDatos(error);
         if (!error) {
-            setTimeout(GrabarContrato(objeto), 250);           
-        }else {
+            setTimeout(GrabarContrato(objeto), 250);
+        } else {
             $.unblockUI();
         }
     });
@@ -1888,7 +1845,7 @@ function InicializarElementos() {
 
     $("#sustentableId").click(function () {
         if ($(this).is(':checked')) {
-            $(".sustentableDiv").show();          
+            $(".sustentableDiv").show();
             if ($("#mercsDepositoId").is(':checked')) {
                 MensInfo('Revisar la fecha desde de entrega');
             }
@@ -1964,7 +1921,7 @@ function InicializarElementos() {
 
             $("#dolarizadoExpressId").prop("checked", false);
             $("#dolarizadoDiv").hide();
-            $("#dolarizadoExpressDiv").hide();            
+            $("#dolarizadoExpressDiv").hide();
             $("#dolarizadoFechaId").val("");
             //$("#fechaCiertaAcuerdoDiv").hide();
             //$("#fechaCiertaAcuerdo").val("");
@@ -2128,7 +2085,7 @@ function InicializarElementos() {
                 if (!$("#prestamoDevolucionId").is(":checked")) {
                     $(".contratoAFijar").show();
                 }
-                
+
                 $("#pagosDiv").hide();
 
                 if ($("#madreId").is(':checked')) {
@@ -2493,7 +2450,7 @@ function CambioCalidades(calidades) {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
     }
- 
+
 }
 
 function ClickEnPizarra() {
@@ -2542,7 +2499,7 @@ function ClickEnPizarra() {
         //if ($("#tipoId").val() == 5) {
         //    $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
         //}
-        precioRojo.addClass("required-border");
+        //precioRojo.addClass("required-border");
     }
 
 }
@@ -2599,7 +2556,7 @@ function CargarCalidadPorMaterial(value) {
         for (var i = 0; i < calidadGrano.length; i++) {
             if (calidadGrano[i].Descripcion != "Camara" && calidadGrano[i].Descripcion != "Fabrica") {
                 calidadGrano.splice(i);
-            } 
+            }
         }
     }
     viewModel.set("EspecialesCombo", calidadGrano);
@@ -3318,6 +3275,14 @@ function CargarDatosEditar(contrato, hijo) {
         //$("#fechaFijacionId").val("");
 
     }
+    if (contrato.Precio != null && contrato.Precio > 0) {
+        $("#precioId").data("kendoNumericTextBox").value(contrato.Precio);
+        $("#precioMonedaId").val(contrato.MonedaId);
+    }
+    if (contrato.PrecioNeto != null) {
+        $("#precioTotalApertura").data("kendoNumericTextBox").value(contrato.PrecioNeto);
+    }
+
 
     if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
         if (contrato.TipoNegocioId != 3) {
@@ -3336,7 +3301,7 @@ function CargarDatosEditar(contrato, hijo) {
                     //$("#noInformaSioId").attr("disabled", true);
                 }
             }
-        } 
+        }
 
     } else {
         $("#motivoOperacionAnteriorId").val("");
@@ -3351,7 +3316,7 @@ function CargarDatosEditar(contrato, hijo) {
     //$("#fechaCiertaAcuerdo").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
-    
+
     $("#material").data("kendoDropDownList").value(contrato.MaterialId);
     $("#material").data("kendoDropDownList").trigger("change");
 
@@ -3383,6 +3348,7 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     contrato.PlanCanje == true ? $("#planCanjeId").prop("checked", true) : $("#planCanjeId").prop("checked", false);
+    
     contrato.Consignatario == true ? $("#consignatarioId").prop("checked", true) : $("#consignatarioId").prop("checked", false);
     if (contrato.LocalidadId !== null && contrato.LocalidadId !== "undefined" && contrato.ProvinciaId !== null && contrato.ProvinciaId !== "undefined") {
         $("#LocalidadCrearContrato").val(contrato.Localidad + "(" + contrato.Provincia + ")");
@@ -3484,7 +3450,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#chequeElectronico").prop("checked", false);
         $("#chequeElectronicoInput").prop("checked", false);
     }
-    if (contrato.DolarizadoExpress == true) {        
+    if (contrato.DolarizadoExpress == true) {
         $("#dolarizadoExpressDiv").show();
         $("#dolarizadoDiv").show();
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
@@ -3508,7 +3474,7 @@ function CargarDatosEditar(contrato, hijo) {
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
 
-    if (contrato.PagoDirectoVendedor == true) {        
+    if (contrato.PagoDirectoVendedor == true) {
         $("#pagoDirectoDiv").hide();
     }
 
@@ -3519,7 +3485,7 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
 
-   
+
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);
     if (hijo != true) {
@@ -3591,7 +3557,7 @@ function CargarDatosEditar(contrato, hijo) {
         };
         viewModel.Calidades.push(calidadKendo);
     });
-    
+
     //MostrarTablaPrecioPactado();
     if (contrato.StandardCalidadId == 2) {
         $(".calidadesEspecialesDatos").show();
@@ -3610,7 +3576,7 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $("#pizarraId").prop("checked", false);
     }
-   
+
     if (contrato.Estado == 5) {
         $("#tipoId").data("kendoDropDownList").enable(false);
         $("#material").data("kendoDropDownList").enable(false);
@@ -3661,7 +3627,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.Acuerdo);
         }
     }
-   
+
     if (contrato.CalidadTercero == true || contrato.DolarizadoTercero == true || contrato.PagoDiferidoTercero == true || contrato.ObservacionTercero != null) {
         $("#datosCargaTercero").show();
         $("#visualizar_observacionTercero").text(contrato.ObservacionTercero);
@@ -3695,6 +3661,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#plantaDestinoDiv").hide();
         $("#plantaDestinoId").data("kendoDropDownList").value("");
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        CargarCalidadPorMaterial(contrato.MaterialId);
     }
 
     if (contrato.PrestamoDevolucion == true) {
@@ -3702,7 +3669,7 @@ function CargarDatosEditar(contrato, hijo) {
         ocultarSiHayPrestamos()
         ocultarSiHayCanje();
         $("#plantaDestinoId").data("kendoDropDownList").value(contrato.PlantaDestinoId);
-        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");     
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
     }
     if (contrato.Estado == 5) {
         $("#prestamoDevolucionId").prop('disabled', true);
@@ -4348,14 +4315,14 @@ function formatDate(date) {
 function HayCanje() {
 
     if ($("#canjeId").is(":checked")) {
-        ocultarSiHayCanje();        
+        ocultarSiHayCanje();
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
         $("#prestamoDevolucionDiv").hide();
         $("#plantaDestinoId").data("kendoDropDownList").value("");
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-        $("#mostrarCanje").show();   
+        $("#mostrarCanje").show();
         $("#fasonIdCheck").prop("disabled", false);
-        $("#madreId").prop("disabled", false);       
+        $("#madreId").prop("disabled", false);
 
     } else {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
@@ -4369,18 +4336,18 @@ function HayCanje() {
             $("#dolarizadoExpressDiv").show();
         }
         $("#divSojaSustentable").show();
-        $("#compensacionDiv").show(); 
-        $("#ordenarRow").hide();  
+        $("#compensacionDiv").show();
+        $("#ordenarRow").hide();
         $("#prestamoDevolucionDiv").show();
-    } 
+    }
 }
 function ocultarSiHayCanje() {
-    
+
     $("#pagoDiferidoDiv").hide();
     $("#pesificadoId").prop("checked", false);
     $("#dolarizadoExpressDiv").hide();
     $("#dolarizadoExpressId").prop("checked", false);
-    $("#divSojaSustentable").hide();
+    //$("#divSojaSustentable").hide();
     $("#sustentableId").prop("checked", false);
     $("#compensacionDiv").hide();
     $("#compensacionId").prop("checked", false);
@@ -4391,7 +4358,7 @@ function ocultarSiHayCanje() {
     $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
     $(".sustentableDiv").hide();
     $("#pesificadoDiv").hide();
-    $("#ordenarRow").show(); 
+    //$("#ordenarRow").show();
     $(".madreDiv").hide();
     $("#madreId").prop("checked", false);
     $("#fasonIdCheck").prop("checked", false);
@@ -4402,19 +4369,19 @@ function ocultarSiHayCanje() {
 function ocultarSiHayPrestamos() {
     $("#mostrarCanje").hide();
     $("#DatosDescuentos").hide();
-    $(".datos-descuentos").hide();   
+    $(".datos-descuentos").hide();
     $("#DatosCalidades").hide();
-    $(".datos-calidades").hide();   
+    $(".datos-calidades").hide();
     $("#DatosBoleto").hide();
-    $(".datos-boleto").hide();   
+    $(".datos-boleto").hide();
     $("#selCargoVendedorDiv").hide();
     $("#selCargoVendedorId").prop("checked", false);
     $("#selCargoMOADiv").hide();
     $("#selCargoMOAId").prop("checked", false);
     $("#canjeDiv").hide();
     $("#canjeId").prop("checked", false);
-    $("#noInformarSioDiv").hide();
-    $("#noInformaSioId").prop("checked", false);
+    //$("#noInformarSioDiv").hide();
+    //$("#noInformaSioId").prop("checked", false);
     $("#montoId").data("kendoNumericTextBox").value("");
     $("#montoMonedaId").data("kendoDropDownList").value("");
     $("#insumoId").val("");
@@ -4422,25 +4389,25 @@ function ocultarSiHayPrestamos() {
     $("#porcentajePagoDiv").hide();
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(97.5);
     LimpiarBoleto();
-    $("#boletoNingunoId").prop("checked", true); 
+    $("#boletoNingunoId").prop("checked", true);
     $("#calidadesEspecialesId").data("kendoDropDownList").value(0)
     $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
     LimpiarCalidades();
     LimpiarDescuentos();
-    $(".contratoAFijar").hide(); 
+    $(".contratoAFijar").hide();
     $("#fechaDesdeTopeId").val("");
     $("#fechaHastaTopeId").val("");
 
-    $("#condicion").hide();    
+    $("#condicion").hide();
     $("#condicionFijacionId").data("kendoDropDownList").value("");
     $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
-    
+
 }
 function HayPrestamo() {
     if ($("#prestamoDevolucionId").is(":checked")) {
         ocultarSiHayPrestamos()
         ocultarSiHayCanje();
-       
+
     } else {
         $("#DatosDescuentos").show();
         $("#DatosCalidades").show();
@@ -4455,14 +4422,14 @@ function HayPrestamo() {
         }
         $("#divSojaSustentable").show();
         $("#compensacionDiv").show();
-        $("#ordenarRow").hide(); 
+        $("#ordenarRow").hide();
         $("#plantaDestinoDiv").hide();
         $("#plantaDestinoId").data("kendoDropDownList").value("");
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
         $("#porcentajePagoDiv").hide();
         $("#boletoNingunoId").prop("checked", false);
         $(".madreDiv").show();
-        $(".contratoAFijar").show(); 
+        $(".contratoAFijar").show();
         var hoy = new Date();
         var maniana = new Date();
         maniana = new Date(maniana.setMonth(maniana.getMonth() + 1));
@@ -4472,7 +4439,7 @@ function HayPrestamo() {
         $("#condicionFijacionId").data("kendoDropDownList").value(7);
         $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
     }
-    
+
 }
 
 
