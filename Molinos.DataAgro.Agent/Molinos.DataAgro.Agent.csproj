@@ -262,6 +262,7 @@
     <None Include="Service References\ComprasDetalle\Molinos.DataAgro.Agent.ComprasDetalle.Z_MPRFC_DATOS_COMPRAS_DETALLEResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION11.wsdl" />
     <None Include="Service References\CriterioCDWarrant\Molinos.DataAgro.Agent.CriterioCDWarrant.SI_ZMPWS_DATAAGRO_CD_WARRANTSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -292,7 +293,7 @@
     <None Include="Service References\ModificarFijacion\Molinos.DataAgro.Agent.ModificarFijacion.Z_MPRFC_MODIFICAR_FIJACIONResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ModificarFijacion\SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION.wsdl" />
+    <None Include="Service References\ModificarFijacion\SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION1.wsdl" />
     <None Include="Service References\PrecioPizarra\Molinos.DataAgro.Agent.PrecioPizarra.SI_ZMPWS_DATAAGRO_PRECIO_PIZARRAResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -341,7 +342,6 @@
     <None Include="Service References\ContratosParaFijacion\Molinos.DataAgro.Agent.ContratosParaFijacion.Z_MPRFC_CONTRATO_PEND_FIJACIONResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION.wsdl" />
     <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION1.wsdl" />
     <None Include="Service References\CrearCupo\Molinos.DataAgro.Agent.CrearCupo.SI_ZMPWS_DATAAGRO_CREAR_CUPOSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

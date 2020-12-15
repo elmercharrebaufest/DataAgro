@@ -86,6 +86,7 @@ namespace Molinos.DataAgro.Agent
                         contrato.CondicionPagoCod = "10";
                         contrato.CondicionFijacionDescripcion = "HASTA 14.30 HS POR PIZ / MERCADERIA";
                         contrato.CondicionPagoDescripcion = "10 DÍAS HÁBILES DE FECHA DE FIJACIÓN";
+                        contrato.Clasificacion = "PRODUCTOR";
                         if (double.Parse(contrato.KilosPendiente) > 0)
                         {
                             datosContratos.Add(contrato);
@@ -162,7 +163,8 @@ namespace Molinos.DataAgro.Agent
                             CondicionPagoDescripcion = repositorio.Obtener<CondicionPago, string>(x => x.CodigoSap == contrato.COND_PAGO, x => x.Descripcion),
                             Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0'),
                             Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "#26337b",
-                            Calidades = calidades
+                            Calidades = calidades,
+                            Clasificacion = contrato.CLASIFICACION
                         };
 
                         if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)

@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
                                 IMPORTE = apertura.Importe,
                                 MONEDA = fijacion.Moneda != null && apertura.Porcentaje == 0 ? fijacion.Moneda.MonedaId : null,
-                                PORC = apertura.Porcentaje                                
+                                PORC = apertura.Porcentaje
                             });
                         }
                     }
@@ -84,7 +84,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_CUENTA_MRP = fijacion.PagoCBU != null ? fijacion.PagoCBU.Split('-')[0] : "",
                         IM_DOLARIZADO = fijacion.Dolarizado == true ? "X" : "",
                         IM_DOL_EXPRESS = fijacion.DolarizadoExpress == true ? "X" : "",
-                        IM_FECHA_LIMITE = fechaDolarizadoString
+                        IM_FECHA_LIMITE = fechaDolarizadoString,
+                        IM_DOL_CORREDOR = fijacion.DolarizadoCorredor == true ? "X" : "",
 
 
                     };

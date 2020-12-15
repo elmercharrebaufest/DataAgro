@@ -155,6 +155,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion : (DateTime?)null,
                         ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
                         DolarizadoExpress = contrato.DolarizadoExpress.Value,
+                        DolarizadoCorredor = contrato.DolarizadoCorredor.Value,
                         PagoCBU = contrato.PagoCBU,
                         CalidadTercero = contrato.CalidadTercero,
                         DolarizadoTercero = contrato.DolarizadoTercero,
@@ -308,6 +309,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         DolarizadoTercero = contrato.DolarizadoTercero,
                         PagoDiferidoTercero = contrato.PagoDiferidoTercero,
                         ObservacionTercero = contrato.ObservacionTercero,
+                        DolarizadoCorredor = contrato.DolarizadoCorredor.Value,
                     };
 
                 return queryNegocios;

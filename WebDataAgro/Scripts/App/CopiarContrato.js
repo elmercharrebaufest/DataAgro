@@ -421,7 +421,7 @@ function ObtenerDatos(error) {
     obj.NivelTarifaId = $("#NivelTarifaId").val();
     obj.TarifaFlete = $("#TarifaFleteId").val();
     obj.ChequeElectronico = $("#tipoId").val() == "2" ? $("#chequeElectronicoInput").is(":checked") ? true : false : $("#chequeElectronico").is(":checked") ? true : false;
-    obj.DolarizadoExpress = $("#dolarizadoExpressId").is(":checked") ? true : false;
+    obj.DolarizadoExpress = $("#tipoId").val() == "3" ? $("#expressId").is(":checked") ? true : false : $("#dolarizadoExpressId").is(":checked") ? true : false;
     obj.PagoCBU = $("#tipoId").val() == "2" ? $("#pagoCbu").val() : $("#pagoCbuInput").val();
 
     if ($("#boletoConfirmaId").is(':checked')) {

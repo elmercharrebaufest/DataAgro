@@ -510,19 +510,24 @@
                 <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
             </div>
         </div>
-            <div class="col-sm-2 ">
-                <div id="pagoDolarizadoDiv">
-                    <label style="width:120px">Dolarizado</label>
-                    <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errdolarizadoId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
+        <div class="col-sm-2">
+            <div id="pagoDolarizadoDiv">
+                <label style="width:120px">Dolarizado</label>
+                <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" onclick="EsDolarizado()"/>
             </div>
-            <div class="col-md-2 col-sm-9">
-                <div id="dolarizadoDiv" hidden>
-                    <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="width: 100%" />
-                    <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
+        </div>
+        <div class="col-sm-2">
+            <div id="expressDiv" hidden>
+                <label style="width:120px">Dolarizado Express</label>
+                <input id="expressId" class="campo-input-input" data-bind="checked:Parametros.expressId, disabled: isControlDisabled" type="checkbox" onclick="EsExpress()"/>
             </div>
+        </div>
+        <div class="col-md-2 col-sm-9">
+            <div id="dolarizadoDiv" hidden>
+                <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="width: 100%" />
+                <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+        </div>
     </div>
 
     <div style="margin-bottom: 5px;" id="clasificacionDiv" class="row noFason noAgente noAcuerdo ampliar ">

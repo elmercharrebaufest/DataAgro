@@ -17,7 +17,7 @@ using System.Transactions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
-    
+
     public class TraerTotalesPesosDolares : IConsultaEscalar<TotalPesosDolares>
     {
         private readonly DataSourceRequest request;
@@ -38,10 +38,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var precioPizarraPorMaterial = contexto.Set<PrecioPizarra>().GroupBy(x => x.MaterialId).Select(x => new { MaterialId = x.Key, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().MonedaId, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().Precio });
             var queryContratos =
                 from contrato in contexto.Set<Negocio>()
-                where (contrato.TipoNegocioId == 2 || contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6   )
+                where (contrato.TipoNegocioId == 2 || contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6)
                 && contrato.OcultarEnTablero == false
                 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5)
-                && ((contrato is Contrato && (contrato as Contrato).ContratoAcuerdo == null) || !(contrato is Contrato))  
+                && ((contrato is Contrato && (contrato as Contrato).ContratoAcuerdo == null) || !(contrato is Contrato))
                 //&& ((contrato is Contrato && DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion) == DbFunctions.TruncateTime((contrato as Contrato).Fecha)) || !(contrato is Contrato))
                 && ((contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId == null) || !(contrato is ContratoAcuerdo))
                 && ((contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId == null) || !(contrato is Contrato))
@@ -56,10 +56,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 select new TotalPesosDolares()
                 {
                     Id = contrato.Id,
-                    Cantidad = Math.Round(contrato.Cantidad / 1000),
+                    Cantidad = contrato.Cantidad,
                     FechaDesde = DbFunctions.TruncateTime(contrato.FechaDesde),
                     FechaHasta = DbFunctions.TruncateTime(contrato.FechaHasta),
-                    Fecha = (contrato is Contrato || contrato is FijacionDePrecioContrato) ? DbFunctions.TruncateTime(contrato.FechaOperacion) : DbFunctions.TruncateTime(contrato.Fecha),                    
+                    Fecha = (contrato is Contrato || contrato is FijacionDePrecioContrato) ? DbFunctions.TruncateTime(contrato.FechaOperacion) : DbFunctions.TruncateTime(contrato.Fecha),
                     GrupoCompraDescripcion = contrato.GrupoDeCompras.Descripcion,
                     Estado_Contrato = contrato.Estado.Descripcion,
                     Ampliaciones = contrato.Ampliaciones,
@@ -88,18 +88,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 };
 
             GridHelper.ProcessFilters(request.Filter, ref queryContratos);
-            
+
+         
             var result2 = from a in queryContratos
                           group a by 0 into g
                           select new
                           {
-                              TotalDolares = g.Sum(x => Math.Round(x.TotalDolares * x.Cantidad)),
-                              TotalPesos = g.Sum(x => Math.Round(x.TotalPesos * x.Cantidad)),
+                              TotalDolares = Math.Round(g.Sum(x => x.TotalDolares * x.Cantidad)/1000),
+                              TotalPesos = Math.Round(g.Sum(x => x.TotalPesos * x.Cantidad) /1000),
                               TotalSoja = g.Sum(x => Math.Round(x.TotalSoja / 1000)),
                               TotalMaiz = g.Sum(x => Math.Round(x.TotalMaiz / 1000)),
                               TotalTrigo = g.Sum(x => Math.Round(x.TotalTrigo / 1000)),
                               TotalGirasol = g.Sum(x => Math.Round(x.TotalGirasol / 1000)),
-                              TotalGirasolAlto = g.Sum(x => Math.Round(x.TotalGirasolAlto / 1000)),
+                              TotalGirasolAlto = g.Sum(x => Math.Round(x.TotalGirasolAlto / 1000))
                           };
             var result3 = result2.SingleOrDefault();
             if (result3 == null)

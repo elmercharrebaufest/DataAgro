@@ -3383,9 +3383,28 @@ function CargarDatosEditar(contrato, hijo) {
         $(".sustentableDiv").show();
     }
 
-    if (contrato.Dolarizado) {
+    if (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) {
         $("#dolarizadoId").prop("checked", true);
         $("#dolarizadoDiv").show();
+        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
+        if (contrato.Estado == 5) {
+            $("#expressDiv").show();
+        } else {
+            $("#expressDiv").hide();
+        }
+    }
+
+    if (contrato.DolarizadoExpress == true && contrato.Estado != 5) {
+        $("#dolarizadoId").prop("checked", true);
+        $("#dolarizadoDiv").show();
+        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
+    }
+
+    if (contrato.DolarizadoExpress == true && contrato.Estado == 5) {
+
+        $("#expressId").prop("checked", true);
+        $("#dolarizadoDiv").show();
+        $("#expressDiv").show();        
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
     }
 
@@ -3461,18 +3480,18 @@ function CargarDatosEditar(contrato, hijo) {
         $("#chequeElectronico").prop("checked", false);
         $("#chequeElectronicoInput").prop("checked", false);
     }
-    if (contrato.DolarizadoExpress == true) {
-        $("#dolarizadoDiv").show();
-        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
-        $("#dolarizadoExpressId").prop("checked", true);
-        $("#chequeElectronicoDiv").hide();
-        $("#pagoCbuDiv").hide();
+    //if (contrato.DolarizadoExpress == true) {
+    //    $("#dolarizadoDiv").show();
+    //    $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
+    //    $("#dolarizadoExpressId").prop("checked", true);
+    //    $("#chequeElectronicoDiv").hide();
+    //    $("#pagoCbuDiv").hide();
 
 
-    } else {
-        $("#dolarizadoExpressId").prop("checked", false);
-        //$("#dolarizadoDiv").hide();
-    }
+    //} else {
+    //    $("#dolarizadoExpressId").prop("checked", false);
+    //    //$("#dolarizadoDiv").hide();
+    //}
 
     if (contrato.PagoCBU != "" && contrato.PagoCBU != null) {
         $("#pagoCbu").data("kendoAutoComplete").value(contrato.PagoCBU);
@@ -4293,6 +4312,31 @@ function HayChequeElectronicoOtros() {
         $("#pagoCbuInput").val("");
     }
 }
+
+function EsExpress() {
+    if ($("#expressId").is(":checked") && $("#estado").val() == 5) {
+        $("#dolarizadoId").prop("checked", false);
+        $("#dolarizadoDiv").show();
+    } else {
+        if (!$("#dolarizadoId").is(":checked")) {
+            $("#dolarizadoDiv").hide();
+            $("#dolarizadoFechaId").val("");
+        }
+    }
+}
+
+function EsDolarizado() {
+    if ($("#dolarizadoId").is(":checked") && $("#estado").val() == 5) {
+        $("#expressId").prop("checked", false);
+        $("#dolarizadoDiv").show();
+    } else {
+        if (!$("#expressId").is(":checked")) {
+            $("#dolarizadoDiv").hide();
+            $("#dolarizadoFechaId").val("");
+        }
+    }
+}
+
 function FechaFeriado() {
     var fechaFeriado = MSExecuteOnServer('/CompraNet/FechaFeriados');
     var fechas = [];

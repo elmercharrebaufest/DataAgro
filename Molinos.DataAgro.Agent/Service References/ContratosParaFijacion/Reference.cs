@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -159,7 +159,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -217,6 +217,14 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         private ZMPES5300[] cALIDADESField;
         
         private string zONAField;
+        
+        private string cANJEField;
+        
+        private string cOMPENSACIONField;
+        
+        private string bLOQUEOField;
+        
+        private string cLASIFICACIONField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -531,6 +539,54 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=26)]
+        public string CANJE {
+            get {
+                return this.cANJEField;
+            }
+            set {
+                this.cANJEField = value;
+                this.RaisePropertyChanged("CANJE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=27)]
+        public string COMPENSACION {
+            get {
+                return this.cOMPENSACIONField;
+            }
+            set {
+                this.cOMPENSACIONField = value;
+                this.RaisePropertyChanged("COMPENSACION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=28)]
+        public string BLOQUEO {
+            get {
+                return this.bLOQUEOField;
+            }
+            set {
+                this.bLOQUEOField = value;
+                this.RaisePropertyChanged("BLOQUEO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=29)]
+        public string CLASIFICACION {
+            get {
+                return this.cLASIFICACIONField;
+            }
+            set {
+                this.cLASIFICACIONField = value;
+                this.RaisePropertyChanged("CLASIFICACION");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -542,7 +598,7 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

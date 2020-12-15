@@ -251,11 +251,11 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
-                field: "Dolarizado Express", columns: [
-                    { field: "DolarizadoExpress", title: "Dolar. Express", template: function (dataItem) { return dataItem.DolarizadoExpress ? "Si" : "No"; } },
+                field: "Dolarizado Corredor", columns: [
+                    { field: "DolarizadoCorredor", title: "Dolar. Corredor", template: function (dataItem) { return dataItem.DolarizadoCorredor ? "Si" : "No"; } },
                     {
                         field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
-                            return dataItem.DolarizadoExpress ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
+                            return dataItem.DolarizadoCorredor ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
 
                         }
                     }

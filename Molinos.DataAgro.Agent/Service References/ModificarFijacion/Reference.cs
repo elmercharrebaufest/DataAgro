@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -35,6 +35,14 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         private string iM_CONTRATOField;
         
         private string iM_CUENTA_MRPField;
+        
+        private string iM_DOLARIZADOField;
+        
+        private string iM_DOL_CORREDORField;
+        
+        private string iM_DOL_EXPRESSField;
+        
+        private string iM_FECHA_LIMITEField;
         
         private string iM_FIJACIONField;
         
@@ -66,6 +74,54 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string IM_DOLARIZADO {
+            get {
+                return this.iM_DOLARIZADOField;
+            }
+            set {
+                this.iM_DOLARIZADOField = value;
+                this.RaisePropertyChanged("IM_DOLARIZADO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string IM_DOL_CORREDOR {
+            get {
+                return this.iM_DOL_CORREDORField;
+            }
+            set {
+                this.iM_DOL_CORREDORField = value;
+                this.RaisePropertyChanged("IM_DOL_CORREDOR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string IM_DOL_EXPRESS {
+            get {
+                return this.iM_DOL_EXPRESSField;
+            }
+            set {
+                this.iM_DOL_EXPRESSField = value;
+                this.RaisePropertyChanged("IM_DOL_EXPRESS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string IM_FECHA_LIMITE {
+            get {
+                return this.iM_FECHA_LIMITEField;
+            }
+            set {
+                this.iM_FECHA_LIMITEField = value;
+                this.RaisePropertyChanged("IM_FECHA_LIMITE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string IM_FIJACION {
             get {
                 return this.iM_FIJACIONField;
@@ -77,7 +133,7 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string IM_ZLSCH {
             get {
                 return this.iM_ZLSCHField;
@@ -99,7 +155,7 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

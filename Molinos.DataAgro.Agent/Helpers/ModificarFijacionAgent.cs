@@ -35,13 +35,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Modificando Fijacion Nro: " + contrato.Id);
                 logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);               
                 logger.Debug("Cargando contrato");
-               
+                var fechaDolarizadoString = contratoGuardado.FechaDolarizado?.ToString("yyyy-MM-dd");
                 var rq = new Z_MPRFC_MODIFICAR_FIJACION
                 {
                     IM_CONTRATO = contratoGuardado.ContratoSAP,                   
                     IM_ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
                     IM_CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
-                    IM_FIJACION = contratoGuardado.FijacionSAP
+                    IM_FIJACION = contratoGuardado.FijacionSAP,
+                    IM_DOLARIZADO = contratoGuardado.Dolarizado == true ? "X" : "",
+                    IM_DOL_CORREDOR = contratoGuardado.DolarizadoCorredor == true ? "X" : "",
+                    IM_DOL_EXPRESS = contratoGuardado.DolarizadoExpress == true ? "X" : "",
+                    IM_FECHA_LIMITE = fechaDolarizadoString,
                 };               
 
                 logger.Debug(rq.ToXml());

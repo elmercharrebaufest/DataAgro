@@ -48,8 +48,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }).ToList();
 
             var fij = contexto.Set<FijacionDePrecioContrato>()
-                .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy 
-                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana && 
+                .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy 
+                && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana && 
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && 
                 (centroId == 0 || centroId == 1)
                 && x.Pizarra != true)
@@ -77,8 +77,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 }).ToList();
 
             var fijPizarra = contexto.Set<FijacionDePrecioContrato>()
-                .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
-                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana &&
+                .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy
+                && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
                 (centroId == 0 || centroId == 1)
                 && x.Pizarra == true)
