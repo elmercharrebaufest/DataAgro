@@ -3976,7 +3976,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.SelCargoVendedor = (negocio is Contrato) ? (negocio as Contrato).SelCargoVendedor : null;
             bc.Posicion = (negocio is Fason) ? (negocio as Fason).Posicion : (negocio is AgenteCompra) ? (negocio as AgenteCompra).Posicion : "";
             bc.FasonId = (negocio is Fason) ? (negocio as Fason).Id : 0;
-            bc.OperadorId = (negocio is AgenteCompra) ? (negocio as AgenteCompra).Operador.Id : 0;
+            bc.OperadorId = (negocio is AgenteCompra) ? (negocio as AgenteCompra).OperadorId : 0;
             bc.AgenteId = (negocio is AgenteCompra) ? (negocio as AgenteCompra).Id : 0;
             bc.PrecioNeto = negocio.PrecioNeto;
             bc.StandardCalidadId = negocio.StandardDeCalidadId;
