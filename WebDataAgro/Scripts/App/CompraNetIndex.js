@@ -21,6 +21,8 @@ var precioMoa;
 var ocultarEnTablero;
 var preanular;
 var anular;
+var esCanje;
+var esPrestamo;
 
 
 $(document).ready(function () {
@@ -40,6 +42,8 @@ $(document).ready(function () {
     externo = ConvertirStringABool(externo);
     preanular = ConvertirStringABool(preanular);
     anular = ConvertirStringABool(anular);
+    esCanje = ConvertirStringABool(esCanje);
+    esPrestamo = ConvertirStringABool(esPrestamo);
     modificaFinalizados = ConvertirStringABool(modificaFinalizados);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
@@ -169,7 +173,10 @@ function FormatearString(string, moneda) {
     return numero;
 }
 function botonPendiente(dataItem, icono) {
-    if (modificaNegocios && !externo) {
+    if (modificaNegocios && !externo && (dataItem.PrestamoDevolucion != true && (dataItem.Canje == null || dataItem.Canje == false) ||
+        (dataItem.Canje == true && esCanje) ||
+        (dataItem.Canje != true && (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) ||
+        (dataItem.PrestamoDevolucion == true && esPrestamo)))) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
@@ -197,7 +204,11 @@ function cambiarMarca(id, ocultar) {
     recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
-    if (modificaFinalizados && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId)) {
+    if (modificaFinalizados && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId) &&
+        (dataItem.PrestamoDevolucion != true && (dataItem.Canje == null || dataItem.Canje == false) ||
+        (dataItem.Canje == true && esCanje) ||
+        (dataItem.Canje != true && (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) ||
+        (dataItem.PrestamoDevolucion == true && esPrestamo)))) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';

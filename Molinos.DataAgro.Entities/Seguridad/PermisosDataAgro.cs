@@ -125,6 +125,10 @@ namespace Molinos.DataAgro.Entities.Seguridad
         EnvioMailNegociosConDiaAnteriorFijacion = 330,
         [Display(ResourceType = typeof(Text), Name = "ModificarDolarizado")]
         ModificarDolarizado = 331,
+        [Display(ResourceType = typeof(Text), Name = "ModificarCanje")]
+        ModificarCanje = 332,
+        [Display(ResourceType = typeof(Text), Name = "ModificarPrestamoDevolucion")]
+        ModificarPrestamoDevolucion = 333,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

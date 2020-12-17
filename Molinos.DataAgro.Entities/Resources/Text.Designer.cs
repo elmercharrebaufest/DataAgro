@@ -1366,11 +1366,29 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modificar Canje.
+        /// </summary>
+        public static string ModificarCanje {
+            get {
+                return ResourceManager.GetString("ModificarCanje", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modificar Cupos Externos.
         /// </summary>
         public static string ModificarCupo_Externo {
             get {
                 return ResourceManager.GetString("ModificarCupo_Externo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Prestamo Devolución.
+        /// </summary>
+        public static string ModificarPrestamoDevolucion {
+            get {
+                return ResourceManager.GetString("ModificarPrestamoDevolucion", resourceCulture);
             }
         }
         

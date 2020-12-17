@@ -1,5 +1,7 @@
 ﻿@{
     var cargaFijacionAyer = PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnteriorFijacion);
+    var canje = PermisosHelper.Is(PermisosDataAgro.ModificarCanje);
+    var prestamoDevolucion = PermisosHelper.Is(PermisosDataAgro.ModificarPrestamoDevolucion);
     ViewBag.Title = "CompraNet";
 }
 
@@ -11,7 +13,7 @@
     sap = '@ViewBag.Sap';
     esEdicion = '@ViewBag.esEdicion';
     BlockUi("Cargando...");
-    cargaFijacionAyer = '@cargaFijacionAyer';
+    cargaFijacionAyer = '@cargaFijacionAyer';   
 </script>
 
 
@@ -179,9 +181,9 @@
                 <img id="errDestinoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-        <div hidden class="ampliar">
+        <div hidden class="ampliar  @(!prestamoDevolucion ? "hide" : "")">
             <div class="col-sm-offset-6 col-sm-2" id="prestamoDevolucionDiv">
-                <label style="width:120px">Préstamo Devolución</label>
+                <label style="width:120px">Prestamo Devolución</label>
                 <input id="prestamoDevolucionId" class="campo-input-input" data-bind="checked:Parametros.prestamoDevolucionId, disabled: isControlDisabled" type="checkbox" onclick="HayPrestamo()" />
             </div>
             <div class="col-md-3 col-sm-3" id="plantaDestinoDiv" hidden>
@@ -248,7 +250,7 @@
                     </div>
                 </div>
             </div>
-            <div class="ampliar">
+            <div class="ampliar @(!canje ? "hide" : "")">
                 <div class="col-sm-2" id="canjeDiv">
                     <label>Canje</label>
                     <input id="canjeId" class="campo-input-input" data-bind="checked:Parametros.canjeId, disabled: isControlDisabled" type="checkbox" onclick="HayCanje()" />

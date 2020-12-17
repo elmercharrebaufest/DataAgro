@@ -754,4 +754,10 @@
   <data name="ModificarDolarizado" xml:space="preserve">
     <value>Modificar Dolarizado</value>
   </data>
+  <data name="ModificarCanje" xml:space="preserve">
+    <value>Modificar Canje</value>
+  </data>
+  <data name="ModificarPrestamoDevolucion" xml:space="preserve">
+    <value>Modificar Prestamo Devolución</value>
+  </data>
 </root>
