@@ -1,6 +1,8 @@
 ﻿@{
     var cargaFijacionAyer = PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnteriorFijacion);
     ViewBag.Title = "CompraNet";
+    var dolarizado = PermisosHelper.Is(PermisosDataAgro.ModificarDolarizado);
+
 }
 
 <script>
@@ -13,6 +15,7 @@
     esEdicion = '@ViewBag.esEdicion';
     BlockUi("Cargando...");
     cargaFijacionAyer = '@cargaFijacionAyer';
+    tieneDolarizado = '@dolarizado';
 </script>
 <script src="~/Scripts/umd/popper.js"></script>
 
@@ -30,7 +33,7 @@
             });
 
         </script>
-    }
+}
 }
 
 @section Styles {
@@ -44,13 +47,13 @@
 <div id="CrearContrato" class="container">
     <br />
     @if (!String.IsNullOrEmpty(ViewBag.Fijacion))
-    {
+{
         <h3>Fijación @ViewBag.Fijacion</h3>
-    }
+}
     @if (!String.IsNullOrEmpty(ViewBag.Contrato))
-    {
+{
         <h3>Contrato @ViewBag.Contrato</h3>
-    }
+}
 
     <div class="row">
         <div>
@@ -309,6 +312,7 @@
             <img id="contratoId" src="~/Content/Images/error.png" style="display:none" />
             <input type="checkbox" id="trigoEspecialFijacion" hidden />
         </div>
+        <div id="clasficacionContrato" hidden></div>
         <div class="col-sm-6" id="datosContrato" hidden>
             <div class="datoscontrato row">
                 <div class="col-xs-12">

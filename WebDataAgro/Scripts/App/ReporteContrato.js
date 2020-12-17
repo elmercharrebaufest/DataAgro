@@ -275,6 +275,7 @@ function CreateGridInformeCompraNet() {
             var templateSIO = kendo.template(this.columns[30].template);
             var templateTrigoEsp = kendo.template(this.columns[31].template);
             var templateDolarizadoExpress = kendo.template(this.columns[41].columns[0].template);
+            var templateDolarizadoCorredor = kendo.template(this.columns[42].columns[0].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
@@ -287,7 +288,8 @@ function CreateGridInformeCompraNet() {
                     Pesificado: row.cells[33].value,
                     NoInformaSIO: row.cells[35].value,
                     TrigoEspecial: row.cells[36].value,
-                    DolarizadoExpress: row.cells[46].value
+                    DolarizadoExpress: row.cells[46].value,
+                    DolarizadoCorredor: row.cells[48].value
                 };
 
                 var operacionFecha = row.cells[5].value;
@@ -317,6 +319,7 @@ function CreateGridInformeCompraNet() {
                 row.cells[35].value = templateSIO(dataItem);
                 row.cells[36].value = templateTrigoEsp(dataItem);
                 row.cells[46].value = templateDolarizadoExpress(dataItem);
+                row.cells[48].value = templateDolarizadoCorredor(dataItem);
                 row.cells[45].format = "yy/MM/dd hh:mm:ss";
                 row.cells[31].value = templateDolarizado(dataItem);
             }

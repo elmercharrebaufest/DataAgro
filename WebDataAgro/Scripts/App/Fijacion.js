@@ -11,6 +11,8 @@ var ImporteSobrePrecio = 0;
 var MonedaSobrePrecio = "";
 var PorcentajeSobrePrecio = 0;
 var cargaFijacionAyer;
+var tieneDolarizado;
+
 $(document).ready(function () {
     $('#menuproveedor').hide();
     $('#rootwizard').bootstrapWizard({
@@ -124,6 +126,8 @@ function cargarDatosAFijarEnFijacion(afijar) {
     $("#desdecontrato").text(afijar.FechaDesde);
     $("#hastacontrato").text(afijar.FechaHasta);
 
+    $("#clasficacionContrato").text(afijar.Clasificacion);
+
     $("#posicionFasonId").val(afijar.Posicion);
     $("#fechaOperacionId").val(afijar.FechaOperacion);
     $("#motivoOperacionAnteriorId").val(afijar.MotivoOperacionAnterior);
@@ -193,6 +197,8 @@ function cargarDatosAFijarEnFijacion(afijar) {
 function InicializarElementos() {
     kendo.culture("es-AR");
     cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);
+    tieneDolarizado = ConvertirStringABool(tieneDolarizado);
+    
     $('[data-toggle="popover"]').popover();
     $(".datos-adicionales").hide();
     $(".datos-boleto").hide();
@@ -3386,12 +3392,7 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) {
         $("#dolarizadoId").prop("checked", true);
         $("#dolarizadoDiv").show();
-        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
-        if (contrato.Estado == 5) {
-            $("#expressDiv").show();
-        } else {
-            $("#expressDiv").hide();
-        }
+        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));        
     }
 
     if (contrato.DolarizadoExpress == true && contrato.Estado != 5) {
@@ -3401,7 +3402,6 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (contrato.DolarizadoExpress == true && contrato.Estado == 5) {
-
         $("#expressId").prop("checked", true);
         $("#dolarizadoDiv").show();
         $("#expressDiv").show();        
@@ -3669,29 +3669,34 @@ function CargarDatosEditar(contrato, hijo) {
         $("#comercialFijacionId").data("kendoDropDownList").enable(false);
         $("#motivoOperacionAnteriorFijacion").attr("disabled", true);
         $("#fechaFijacionId").data("kendoDatePicker").enable(false);
+         if (!tieneDolarizado || (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true)) {
+            $("#expressId").attr("disabled", true);
+            $("#dolarizadoId").attr("disabled", true);
+            $("#dolarizadoFechaId").data("kendoDatePicker").enable(false);
+        }
         //$("#pagoCbuInput").data("kendoAutoComplete").enable(false);
 
     }
 
-    if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 2) {
+    //if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 2) {
 
-        $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
-        if (contrato.TipoAgenteCompraId > 0) {
-            $("#caratulaExtensionId").val(contrato.CaratulaExtension);
-            $("#caratulaMATId").val(contrato.CaratulaMAT);
-            $("#precioAjusteComisionId").data("kendoNumericTextBox").value(contrato.PrecioAjusteComision);
-            $("#monedaAjusteComisionId").data("kendoDropDownList").value(contrato.MonedaAjusteComisionId);
-            $("#boletoNingunoId").prop("checked", false);
-            $("#boletoNingunoId").click();
-            $("#boletoNingunoId").attr("readonly", "readonly");
-            $("#boletoConfirmaId").attr("disabled", true);
-            $("#boletoFisicoId").attr("disabled", true);
-            $("#boletoCartaId").attr("disabled", true);
-        }
-        if (contrato.ContratoAcuerdoId != null) {
-            $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.ContratoAcuerdoId);
-        }
-    }
+    //    $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
+    //    if (contrato.TipoAgenteCompraId > 0) {
+    //        $("#caratulaExtensionId").val(contrato.CaratulaExtension);
+    //        $("#caratulaMATId").val(contrato.CaratulaMAT);
+    //        $("#precioAjusteComisionId").data("kendoNumericTextBox").value(contrato.PrecioAjusteComision);
+    //        $("#monedaAjusteComisionId").data("kendoDropDownList").value(contrato.MonedaAjusteComisionId);
+    //        $("#boletoNingunoId").prop("checked", false);
+    //        $("#boletoNingunoId").click();
+    //        $("#boletoNingunoId").attr("readonly", "readonly");
+    //        $("#boletoConfirmaId").attr("disabled", true);
+    //        $("#boletoFisicoId").attr("disabled", true);
+    //        $("#boletoCartaId").attr("disabled", true);
+    //    }
+    //    if (contrato.ContratoAcuerdoId != null) {
+    //        $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.ContratoAcuerdoId);
+    //    }
+    //}
     //if (contrato.TipoNegocioId == 6) {
     //    $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
     //    if (contrato.Precio != null && !contrato.Dolarizado) {

@@ -1375,6 +1375,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modificar Dolarizado.
+        /// </summary>
+        public static string ModificarDolarizado {
+            get {
+                return ResourceManager.GetString("ModificarDolarizado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moneda.
         /// </summary>
         public static string Moneda {

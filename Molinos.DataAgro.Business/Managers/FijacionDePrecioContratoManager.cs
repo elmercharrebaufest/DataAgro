@@ -291,7 +291,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
-            if (oParam.FechaDolarizado.HasValue && oParam.FechaDolarizado.Value <= DateTime.Now)
+            if (oParam.FechaDolarizado.HasValue && oParam.FechaDolarizado.Value < DateTime.Now.Date)
             {
                 oErrorMessages.Error("dolarizado", "La fecha de dolarizado no es válida");
 
@@ -441,7 +441,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var datoContrato = TraerDatosFijacion(proveedor, corredor, oFijacionDePrecio.MaterialId, oContratoId.ContratoSAP.Remove(0, 3), 0);
                 if (datoContrato != null && oFijacionDePrecio.FechaDolarizado != null)
                 {
-                    oFijacionDePrecioSave.DolarizadoCorredor = datoContrato.First().Clasificacion.ToUpper() != "PRODUCTOR" ? true : false;
+                    oFijacionDePrecioSave.DolarizadoCorredor = datoContrato.First().Clasificacion.ToUpper() != "PRODUCTOR" || oFijacionDePrecio.CorredorId != null ? true : false;
                 }
             }
 
@@ -901,7 +901,8 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", fijac.FechaOperacion),
                 ObservacionTercero = fijac.ObservacionTercero,
                 DolarizadoCorredor = fijac.DolarizadoCorredor.Value,
-                DolarizadoExpress = fijac.DolarizadoExpress.Value
+                DolarizadoExpress = fijac.DolarizadoExpress.Value,
+                Fecha_Dolarizado = fijac.FechaDolarizado
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
@@ -922,6 +923,10 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private string FechaConCeros(string[] numero)
         {
+            if(numero.Length == 1)
+            {
+                return "";
+            }
             for (var i = 0; i < 2; i++)
             {
                 if (int.Parse(numero[i]) < 10)
@@ -1053,6 +1058,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
                 oContrato.ContratoSAP = repositorio.Obtener<FijacionDePrecioContrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
+
+                oContrato.Dolarizado = oContratoSave.DolarizadoCorredor == true ? false : oContrato.Dolarizado;
+                oContrato.DolarizadoExpress = oContrato.DolarizadoExpress;
+                oContrato.DolarizadoCorredor = oContrato.DolarizadoExpress == true ? false : oContratoSave.DolarizadoCorredor;
+
                 var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
                 if (res != "Se actualizaron los datos correctamente")
                 {
@@ -1068,9 +1078,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
                 oContratoSave.PagoCBU = oContrato.PagoCBU;
-                oContratoSave.Dolarizado = oContratoSave.DolarizadoCorredor == true ? false : oContrato.Dolarizado;
+                oContratoSave.Dolarizado = oContratoSave.Dolarizado;
                 oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
-                oContratoSave.DolarizadoCorredor = oContrato.DolarizadoExpress == true ? false : oContratoSave.DolarizadoCorredor;
+                oContratoSave.DolarizadoCorredor = oContrato.DolarizadoCorredor;
                 oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContrato.GetType());
