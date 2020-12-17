@@ -1078,7 +1078,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
                 oContratoSave.PagoCBU = oContrato.PagoCBU;
-                oContratoSave.Dolarizado = oContratoSave.Dolarizado;
+                oContratoSave.Dolarizado = oContrato.Dolarizado;
                 oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
                 oContratoSave.DolarizadoCorredor = oContrato.DolarizadoCorredor;
                 oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
