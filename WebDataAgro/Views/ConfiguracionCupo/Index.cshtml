@@ -81,11 +81,13 @@
                     <div class="col-sm-4">
                         @Html.TextBoxFor(x => x.CantidadCupo, new { @class = "w100" })
                     </div>
-                    <div class="col-xs-2">
-                        <span>Cerrar Cupera</span>
-                    </div>
-                    <div class="col-sm-4">
-                        <input id="CierreCupera" name="CierreCupera" type="checkbox" value="true">
+                    <div hidden>
+                        <div class="col-xs-2">
+                            <span>Cerrar Cupera</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input id="CierreCupera" name="CierreCupera" type="checkbox" value="true">
+                        </div>
                     </div>
                 </div>
                 <div class="row">
