@@ -3669,6 +3669,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#comercialFijacionId").data("kendoDropDownList").enable(false);
         $("#motivoOperacionAnteriorFijacion").attr("disabled", true);
         $("#fechaFijacionId").data("kendoDatePicker").enable(false);
+        $("#pizarraId").attr("disabled", true);        
          if (!tieneDolarizado || (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true)) {
             $("#expressId").attr("disabled", true);
             $("#dolarizadoId").attr("disabled", true);
