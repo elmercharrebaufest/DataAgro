@@ -407,10 +407,14 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-        public IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioCompraNet()
+        public IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioCompraNet(int? tiponegocio = null)
         {
+            tiponegocio = tiponegocio == null ? 3 : 0;
             var listaPrecio = new List<PrecioMoaCompraNetDto>();
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId != 5);
+            var tipoNegocios = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion },
+                x => tiponegocio == 0 ? x.TipoNegocioId <= 3 : x.TipoNegocioId == 3);
+
             var monedas = repositorio.Listar<Moneda, MonedaDto>(x => new MonedaDto { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
             var ahora = DateTime.Now;
             var preciosMoa = repositorio.Listar<PrecioMoa, PrecioMoaCompraNetDto>(x => new PrecioMoaCompraNetDto
@@ -418,23 +422,33 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Precio = x.Precio,
-                MonedaId = x.Moneda.Descripcion
-            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora);
+                MonedaId = x.Moneda.Descripcion,
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                TipoNegocioId = x.TipoNegocioId,
+                DesdeEntrega = x.DesdeEntrega,
+                DesdeFijacion = x.DesdeFijacion,
+                HastaEntrega = x.HastaEntrega,
+                HastaFijacion = x.HastaFijacion
+            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && (x.TipoNegocioId == tiponegocio || tiponegocio == 0));
             var hoy = DateTime.Today;
-            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora);
-            foreach (var mat in materiales)
+            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && (x.TipoNegocioId == tiponegocio || tiponegocio == 0));
+            foreach (var neg in tipoNegocios)
             {
-                foreach (var mon in monedas)
+                foreach (var mat in materiales)
                 {
-                    var precio = preciosMoa.Where(x => x.MonedaId == mon.Descripcion && x.MaterialId == mat.MaterialId).FirstOrDefault();
-                    if (precio == null)
+                    foreach (var mon in monedas)
                     {
-                        precio = new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true };
+                        var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).FirstOrDefault();
+                        if (precio == null)
+                        {
+                            precio = new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId };
+                        }
+                        precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
+                        listaPrecio.Add(precio);
                     }
-                    precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId);
-                    listaPrecio.Add(precio);
                 }
             }
+
             return listaPrecio.GroupBy(x => x.MaterialId);
         }
         public List<PrecioMoaCompraNetDto> TraerPrecioCompraNet(int materialId, int? tiponegocio = null)
@@ -445,9 +459,9 @@ namespace Molinos.DataAgro.Business.Managers
             var precios = new List<PrecioMoaCompraNetDto>();
             foreach (var monedaId in monedas)
             {
-                var precio = repositorio.Obtener<PrecioMoa, PrecioMoaCompraNetDto>(x => 
+                var precio = repositorio.Obtener<PrecioMoa, PrecioMoaCompraNetDto>(x =>
                 x.MaterialId == materialId
-                && (x.MonedaId == monedaId  || tiponegocio == 1)
+                && (x.MonedaId == monedaId || tiponegocio == 1)
                 && x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && x.TipoNegocioId == tiponegocio,
                     x => new PrecioMoaCompraNetDto
                     {

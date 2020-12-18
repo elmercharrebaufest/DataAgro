@@ -752,6 +752,12 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Dolarizado", "Se debe comletar Dolarizado que marco el tercero.");
                 }
+
+                if (contrato.SustentableTercero == true && oParam.Sustentable != true && (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value == 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId)))
+                {
+                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable que marco el tercero.");
+                }
+
                 if (contrato.PagoDiferidoTercero == true && oParam.PagoDiferido != true)
                 {
                     oErrorMessages.Error("Dolarizado", "Se debe comletar Pago Diferido que marco el tercero.");
@@ -766,7 +772,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
                     }
-                    if (oParam.MaterialId == 3 && oParam.StandardDeCalidadId == 3)
+                    if (oParam.MaterialId == 3 && oParam.StandardDeCalidadId == 4)
                     {
                         oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
                     }
@@ -896,6 +902,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.DolarizadoTercero = oContrato.DolarizadoTercero;
                 oContratoSave.ObservacionTercero = oContrato.ObservacionTercero;
                 oContratoSave.PagoDiferidoTercero = oContrato.PagoDiferidoTercero;
+                oContratoSave.SustentableTercero = oContrato.SustentableTercero;
+
             }
             if (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue)
             {
@@ -1175,7 +1183,19 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
-
+            if (oContratoSave == null)
+            {
+                oEntityErrors.Error("", "El contrato no se puede confirmar");
+                return oEntityErrors;
+            }
+            if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente && oContratoSave.ProveedorCreadorId != null)
+            {
+                Validar(oContratoSave, oEntityErrors, false);
+                if (oEntityErrors.Errores.Count > 0)
+                {
+                    return oEntityErrors;
+                }
+            }
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente ||
                                           oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta ||
                                           oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar))
@@ -1212,10 +1232,8 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Error(e);
                 }
             }
-            else
-            {
-                oEntityErrors.Error("", "El contrato no se puede confirmar");
-            }
+
+
 
             return oEntityErrors;
         }
@@ -2040,6 +2058,8 @@ namespace Molinos.DataAgro.Business.Managers
                 PrestamoDevolucion = x.PrestamoDevolucion.HasValue ? x.PrestamoDevolucion.Value : false,
                 PlantaDestinoId = x.PlantaDestinoId.HasValue ? x.PlantaDestinoId.Value : 0,
                 PlantaDestinoDescripcion = !x.PlantaDestinoId.HasValue ? "" : x.Destino.Descripcion,
+                SustentableTercero = x.SustentableTercero,
+
 
             });
             return contrato;
@@ -4014,6 +4034,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.MonedaCanjeId = negocio.MonedaCanjeId;
             bc.Monto = negocio.Monto;
             bc.Insumo = negocio.Insumo;
+            bc.SustentableTercero = negocio.SustentableTercero;
 
 
             bc.Descuentos = negocio.Descuentos.Select(y => new DescuentoBonificacionDto

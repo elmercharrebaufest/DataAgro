@@ -168,6 +168,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrestamoDevolucion = contrato.PrestamoDevolucion.HasValue ? contrato.PrestamoDevolucion.Value : false,
                         PlantaDestinoId = contrato.PlantaDestinoId.HasValue ? contrato.PlantaDestinoId.Value : 0,
                         PlantaDestinoDescripcion = contrato.PlantaDestino != null ? contrato.PlantaDestino.Descripcion : "",
+                        SustentableTercero = contrato.SustentableTercero,
+
                     };
 
                 return queryNegocios;
@@ -310,6 +312,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PagoDiferidoTercero = contrato.PagoDiferidoTercero,
                         ObservacionTercero = contrato.ObservacionTercero,
                         DolarizadoCorredor = contrato.DolarizadoCorredor.Value,
+                        SustentableTercero = contrato.SustentableTercero,
+
                     };
 
                 return queryNegocios;

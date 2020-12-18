@@ -10,6 +10,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaId { get; set; }
         public int MaterialId { get; set; }
         public string Material { get; set; }
+        public int TipoNegocioId { get; set; }
+        public string TipoNegocio { get; set; }
         public bool Retirado { get; set; }
         public bool Pizarra { get; set; }
         public DateTime? DesdeEntrega { get; set; }

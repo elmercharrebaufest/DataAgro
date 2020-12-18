@@ -180,6 +180,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int PlantaDestinoId { get; set; }
         public string PlantaDestinoDescripcion { get; set; }
         public bool? DolarizadoCorredor { get; set; }
+        public bool? SustentableTercero { get; set; }
     }
 
     public class StoredPorContratoResult

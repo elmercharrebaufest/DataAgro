@@ -852,11 +852,11 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult TraerPrecioMoa()
+        public ActionResult TraerPrecioMoa(int? tipoNegocioId)
         {
             return new JsonResult()
             {
-                Data = configuracionInternaManager.TraerPrecioCompraNet(),
+                Data = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId),
                 MaxJsonLength = Int32.MaxValue
             };
         }

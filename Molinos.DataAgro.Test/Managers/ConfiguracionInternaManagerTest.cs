@@ -214,6 +214,8 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerPrecioMoaCompraNetTestOk()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<TipoNegocio, TipoNegocioDto>>>(), It.IsAny<Expression<Func<TipoNegocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<TipoNegocioDto>() { new TipoNegocioDto { TipoNegocioId = 1, Descripcion = "a" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<MaterialDto>() { new MaterialDto { MaterialId = 1, Descripcion = "a" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Moneda, MonedaDto>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))

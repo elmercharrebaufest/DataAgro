@@ -3636,6 +3636,9 @@ function CargarDatosEditar(contrato, hijo) {
         if (contrato.CalidadTercero == true) {
             datosTercero = datosTercero + '<strong style="float:left">Calidad: </strong><span> Si</span><br>';
         }
+        if (contrato.SustentableTercero == true) {
+            datosTercero = datosTercero + '<strong style="float:left">Sustentable: </strong><span> Si</span><br>';
+        }
         if (contrato.DolarizadoTercero == true) {
             datosTercero = datosTercero + '<strong style="float:left">Dolarizado: </strong><span> Si</span><br>';
         }

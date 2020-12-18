@@ -83,7 +83,8 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public bool? PrestamoDevolucion { get; set; }
         public int? PlantaDestinoId { get; set; }
-        public bool? DolarizadoCorredor { get; set; }        
+        public bool? DolarizadoCorredor { get; set; }
+        public bool? SustentableTercero { get; set; }
 
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]

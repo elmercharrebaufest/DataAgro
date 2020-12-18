@@ -3764,7 +3764,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#fechaCiertaDiv").hide();
         }
     }
-    if (contrato.CalidadTercero == true || contrato.DolarizadoTercero == true || contrato.PagoDiferidoTercero == true || contrato.ObservacionTercero != null) {
+    if (contrato.SustentableTercero == true || contrato.CalidadTercero == true || contrato.DolarizadoTercero == true || contrato.PagoDiferidoTercero == true || contrato.ObservacionTercero != null) {
         $("#datosCargaTercero").show();
         $("#visualizar_observacionTercero").text(contrato.ObservacionTercero);
         var datosTercero = "";
@@ -3773,6 +3773,9 @@ function CargarDatosEditar(contrato, hijo) {
         }
         if (contrato.DolarizadoTercero == true) {
             datosTercero = datosTercero + '<strong style="float:left">Dolarizado: </strong><span> Si</span><br>';
+        }
+        if (contrato.SustentableTercero == true) {
+            datosTercero = datosTercero + '<strong style="float:left">Sustentable: </strong><span> Si</span><br>';
         }
         if (contrato.PagoDiferidoTercero == true) {
             datosTercero = datosTercero + '<strong style="float:left">Pago Diferido: </strong><span> Si</span><br>';
