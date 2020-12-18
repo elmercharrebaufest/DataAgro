@@ -27,6 +27,7 @@ $(document).ready(function () {
     $("#precioTotalApertura").kendoNumericTextBox({});
     var precioRojo = $("#precioId").hasClass("required-box-parent") ? $("#precioId") : $("#precioId").parent().parent();
     precioRojo.removeClass("required-border");
+
 });
 
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
@@ -3646,31 +3647,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#datosCargaTercero").hide();
     }
 
-    if (contrato.Canje == true) {
-        ocultarSiHayCanje();
-        $("#mostrarCanje").show();
-        $("#prestamoDevolucionDiv").hide();
-        $("#prestamoDevolucionId").prop("checked", false);
-        $("#plantaDestinoId").data("kendoDropDownList").value("");
-        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-        $("#canjeId").prop("checked", true);
-        $("#montoId").data("kendoNumericTextBox").value(contrato.Monto);
-        $("#montoMonedaId").data("kendoDropDownList").value(contrato.MonedaCanjeId);
-        $("#montoMonedaId").data("kendoDropDownList").trigger("change");
-        $("#insumoId").val(contrato.Insumo);
-        $("#plantaDestinoDiv").hide();
-        $("#plantaDestinoId").data("kendoDropDownList").value("");
-        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-        CargarCalidadPorMaterial(contrato.MaterialId);
-    }
+   
 
-    if (contrato.PrestamoDevolucion == true) {
-        $("#prestamoDevolucionId").prop("checked", true);
-        ocultarSiHayPrestamos()
-        ocultarSiHayCanje();
-        $("#plantaDestinoId").data("kendoDropDownList").value(contrato.PlantaDestinoId);
-        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-    }
     if (contrato.Estado == 5) {
         $("#prestamoDevolucionId").prop('disabled', true);
         $("#plantaDestinoId").data("kendoDropDownList").enable(false);
@@ -3693,6 +3671,32 @@ function CargarDatosEditar(contrato, hijo) {
             }
             $("#condicionFijacionId").data("kendoDropDownList").value(contrato.CondicionFijacion);
         }
+    }
+
+    if (contrato.PrestamoDevolucion == true) {
+        $("#prestamoDevolucionId").prop("checked", true);
+        ocultarSiHayPrestamos()
+        ocultarSiHayCanje();
+        $("#plantaDestinoId").data("kendoDropDownList").value(contrato.PlantaDestinoId);
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+    }
+
+    if (contrato.Canje == true) {
+        ocultarSiHayCanje();
+        $("#mostrarCanje").show();
+        $("#prestamoDevolucionDiv").hide();
+        $("#prestamoDevolucionId").prop("checked", false);
+        $("#plantaDestinoId").data("kendoDropDownList").value("");
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        $("#canjeId").prop("checked", true);
+        $("#montoId").data("kendoNumericTextBox").value(contrato.Monto);
+        $("#montoMonedaId").data("kendoDropDownList").value(contrato.MonedaCanjeId);
+        $("#montoMonedaId").data("kendoDropDownList").trigger("change");
+        $("#insumoId").val(contrato.Insumo);
+        $("#plantaDestinoDiv").hide();
+        $("#plantaDestinoId").data("kendoDropDownList").value("");
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        CargarCalidadPorMaterial(contrato.MaterialId);
     }
 
 }
