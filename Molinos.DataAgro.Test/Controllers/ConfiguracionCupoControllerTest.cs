@@ -155,5 +155,20 @@ namespace Molinos.DataAgro.Test.Controllers
                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":null,\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
+
+        [Test]
+        public void GrabarLimitesCupoMasivoTest()
+        {
+            configuracionCupoManagerMock.Setup(x => x.GrabarLimitesMasivo(It.IsAny<List<LimiteCupo>>(), It.IsAny<List<int>>()))
+                .Returns(new Resultado());
+            var result = target.GrabarLimitesCupoMasivo(new List<LimiteCupo>(), new List<int>());
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            configuracionCupoManagerMock.Verify(x => x.GrabarLimitesMasivo(It.IsAny<List<LimiteCupo>>(), It.IsAny<List<int>>()), Times.Once);
+            Assert.AreEqual(
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               a);
+        }
     }
 }

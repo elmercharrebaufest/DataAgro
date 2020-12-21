@@ -411,6 +411,52 @@ namespace Molinos.DataAgro.Business.Managers
             return errorSap;
         }
 
+        public Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds)
+        {
+            var errorSap = new Resultado();
+            var configuracionesCupo = repositorio.Listar<ConfiguracionCupo>(x=>configuracionesIds.Contains(x.Id));
+            var zonas = repositorio.Listar<ZonaCupo>();
 
+            foreach (var id in configuracionesIds)
+            {
+                ConfiguracionCupo configuracionCupo = configuracionesCupo.Where(x=>x.Id == id).Single();
+
+                foreach (var limiteCupo in configuracionCupo.CantidadCupo)
+                {
+                    limiteCupo.LimiteAnterior = limiteCupo.CantidadCupo;
+                    limiteCupo.CantidadCupo = limite.Where(a => a.ZonaCupoId == limiteCupo.ZonaCupoId).Single().CantidadCupo;
+                    if (limiteCupo.LimiteAnterior != limiteCupo.CantidadCupo  )
+                    {
+                        var configDto = new ConfiguracionCupoDto
+                        {
+                            LimiteCupo = limiteCupo.CantidadCupo,
+                            CierreCupera = configuracionCupo.CierreCupera,
+                            Material = configuracionCupo.Material.Codigo,
+                            Fecha = configuracionCupo.Fecha,
+                            ZonaCupo = zonas.Where(x => x.Id == limiteCupo.ZonaCupoId).FirstOrDefault().CodigoSap,
+                            LimiteCupoAnterior = limiteCupo.LimiteAnterior.Value,
+                            Centro = configuracionCupo.Centro.CodigoSap,
+                        };
+                        try
+                        {
+                            var result = administracionCuperaAgent.AdministrarCupera(configDto);
+                            if (!result.Equals("OK"))
+                            {
+                                errorSap.Error("GrabarLimitesMasivo", configuracionCupo.Fecha.ToShortDateString() + ": " + result);
+                                break;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            errorSap.Error("GrabarLimitesMasivoSAP", configuracionCupo.Fecha.ToShortDateString() + ": " + e.Message);
+                            break;
+                        }
+                    }
+                }
+            }
+            repositorio.GuardarCambios();
+
+            return errorSap;
+        }
     }
 }

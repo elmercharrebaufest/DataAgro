@@ -95,15 +95,15 @@ namespace Molinos.DataAgro.Test.Managers
                     }
                 }
             };
-            var diaCupo = new List<DiaCupo> { new DiaCupo { Cantidad = 10, Fecha = DateTime.Now} };
+            var diaCupo = new List<DiaCupo> { new DiaCupo { Cantidad = 10, Fecha = DateTime.Now } };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
-                Returns(new List<ZonaCupo> { new ZonaCupo { Id= 1, CodigoSap = "CBA", Descripcion = "Bs"} });
+                Returns(new List<ZonaCupo> { new ZonaCupo { Id = 1, CodigoSap = "CBA", Descripcion = "Bs" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
-                Returns(new List<Material> { new Material {  MaterialId = 1, Descripcion = "Bs" } });
+                Returns(new List<Material> { new Material { MaterialId = 1, Descripcion = "Bs" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
                 Returns(new List<Centro> { new Centro { Id = 1, CodigoSap = "CBA", Descripcion = "Bs" } });
 
-        
+
             repositorioMock.Setup(x => x.Obtener<ConfiguracionCupo>(It.IsAny<int>())).Returns(cupo);
             administracionCuperaAgent.Setup(x => x.AdministrarCupera(It.IsAny<ConfiguracionCupoDto>())).Returns("OK");
             var resultado = target.GrabarConfiguracionCupo(cupo, diaCupo);
@@ -116,7 +116,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<LimiteCupo, LimiteCupoDto>>>(), It.IsAny<Expression<Func<LimiteCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<LimiteCupoDto>() { new LimiteCupoDto { Id = 1, CantidadCupo = 1, ZonaCupoId = 1 } });
-            
+
             var resultado = target.TraerLimites(1);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<LimiteCupo, LimiteCupoDto>>>(), It.IsAny<Expression<Func<LimiteCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
@@ -139,8 +139,8 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 LimiteCupo = 20,
                 Fecha = DateTime.Now,
-                Material = new Material { Descripcion = "Soja", Codigo = "000"},
-                Centro = new Centro { CodigoSap = "002"}                
+                Material = new Material { Descripcion = "Soja", Codigo = "000" },
+                Centro = new Centro { CodigoSap = "002" }
             };
             repositorioMock.Setup(x => x.Obtener<ConfiguracionCupo>(It.IsAny<int>()))
                 .Returns(cupo);
@@ -153,7 +153,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Returns(new List<Material> { new Material { MaterialId = 1, Descripcion = "Bs" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
                 Returns(new List<Centro> { new Centro { Id = 1, CodigoSap = "CBA", Descripcion = "Bs" } });
-              repositorioMock.Setup(x => x.Obtener<LimiteCupo>(It.IsAny<int>())).Returns(new LimiteCupo());
+            repositorioMock.Setup(x => x.Obtener<LimiteCupo>(It.IsAny<int>())).Returns(new LimiteCupo());
             administracionCuperaAgent.Setup(x => x.AdministrarCupera(It.IsAny<ConfiguracionCupoDto>())).Returns("OK");
             repositorioMock.Setup(x => x.GuardarCambios());
             var resultado = target.GrabarLimites(limites);
@@ -192,8 +192,8 @@ namespace Molinos.DataAgro.Test.Managers
                         ConfiguracionCupoId = 1,
                         Id = 1,
                         LimiteAnterior = null,
-                        ZonaCupoId = 1,                        
-                    }               
+                        ZonaCupoId = 1,
+                    }
                 }
             };
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -208,8 +208,49 @@ namespace Molinos.DataAgro.Test.Managers
             administracionCuperaAgent.Setup(x => x.AdministrarCupera(It.IsAny<ConfiguracionCupoDto>())).Returns("OK");
             var resultado = target.CambioMasivo(ids, true);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
-        }      
+        }
 
+        [Test]
+        public void GrabarLimitesMasivoTest()
+        {
+            var limites = new List<LimiteCupo>()
+            {
+                new LimiteCupo{ Id = 0, ZonaCupoId = 1 , ConfiguracionCupoId = 1, CantidadCupo = 10 },
+                new LimiteCupo{ Id = 1, ZonaCupoId = 2 , ConfiguracionCupoId = 1, CantidadCupo = 10, LimiteAnterior = 9 }
+            };
+            var ids = new List<int> { 1 };
+            var cupo = new ConfiguracionCupo
+            {
+                CantidadCupo = limites,
+                CentroId = 1,
+                Id = 1,
+                CierreCupera = false,
+                MaterialId = 1,
+                LimiteCupo = 20,
+                Fecha = DateTime.Now,
+                Material = new Material { Descripcion = "Soja", Codigo = "000" },
+                Centro = new Centro { CodigoSap = "002" }
+            };
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
+             Returns(new List<ConfiguracionCupo> { cupo });
+            repositorioMock.Setup(x => x.Obtener<ConfiguracionCupo>(It.IsAny<int>()))
+              .Returns(cupo);
+            repositorioMock.Setup(x => x.Agregar(It.IsAny<LimiteCupo>()));
+            repositorioMock.Setup(x => x.Obtener<LimiteCupo>(It.IsAny<int>()))
+                .Returns(new LimiteCupo { Id = 1, ZonaCupoId = 2, ConfiguracionCupoId = 1, CantidadCupo = 10 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
+             Returns(new List<ZonaCupo> { new ZonaCupo { Id = 2, CodigoSap = "CBA", Descripcion = "Bs" }, new ZonaCupo { Id = 1, CodigoSap = "CBA", Descripcion = "Bs" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
+                Returns(new List<Material> { new Material { MaterialId = 1, Descripcion = "Bs" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
+                Returns(new List<Centro> { new Centro { Id = 1, CodigoSap = "CBA", Descripcion = "Bs" } });
+            repositorioMock.Setup(x => x.Obtener<LimiteCupo>(It.IsAny<int>())).Returns(new LimiteCupo());
+            administracionCuperaAgent.Setup(x => x.AdministrarCupera(It.IsAny<ConfiguracionCupoDto>())).Returns("OK");
+            repositorioMock.Setup(x => x.GuardarCambios());
+            var resultado = target.GrabarLimitesMasivo(limites, ids);
+
+            Assert.That(!resultado.HayError);
+        }
 
 
 

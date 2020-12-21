@@ -123,9 +123,14 @@ namespace WebDataAgro.Controllers
             var model = configuracionCupoManager.TraerLimites(id);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
-        public ActionResult GrabarLimitesCupo(List<LimiteCupo> limites)
+        public ActionResult GrabarLimitesCupo(List<LimiteCupo> limites )
         {
             var model = configuracionCupoManager.GrabarLimites(limites);
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+        public ActionResult GrabarLimitesCupoMasivo(List<LimiteCupo> limites, List<int> configuracionesIds)
+        {
+            var model = configuracionCupoManager.GrabarLimitesMasivo(limites, configuracionesIds);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 

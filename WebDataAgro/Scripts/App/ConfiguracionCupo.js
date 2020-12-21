@@ -216,11 +216,29 @@ function AbrirModal(id) {
         spinners: false,
         min:0
     });
-    CargarLimites(id);
-    for (var j = 0; j < cantidadZonas; j++) {        
-        var numeric = $("#cantidad" + zonas.ZonaCupo[j].Id).data("kendoNumericTextBox");
+    if (id) {
+        CargarLimites(id);
+        for (var j = 0; j < cantidadZonas; j++) {
+            var numeric = $("#cantidad" + zonas.ZonaCupo[j].Id).data("kendoNumericTextBox");
 
-        numeric.element.unbind("keydown");
+            numeric.element.unbind("keydown");
+        }
+    } else {
+        var configuraciones = SeleccionarElementos();
+        var ids = [];
+        var limite = null;
+        for (var i = 0; i < configuraciones.length; i++) {
+            ids.push(configuraciones[i].id);
+            if (limite != null && limite != configuraciones[i].LimiteCupo) {
+                MensErr("Las configuraciónes seleccionadas no tienen el mismo limite de Cupos.");
+                return false;
+            }
+            limite = configuraciones[i].LimiteCupo;
+        }
+        if (ids.length <= 0) {
+            MensErr("No se seleccionó ninguna configuración");
+            return false;
+        } 
     }
     $("#ModalLimiteCupo").modal('show');
 }
@@ -237,6 +255,7 @@ function CargarLimites(id) {
 }
 function GuardarLimiteCupo() {
     var limites = [];
+    var total = 0;
     for (var i = 0; i < cantidadZonas; i++) {
         var zonaId = $('#zonaId' + i).val();
         var obj = {
@@ -246,9 +265,25 @@ function GuardarLimiteCupo() {
             ConfiguracionCupoId: $("#configuracionCupoId").val(),
             LimiteAnterior: $("#limiteAnterior" + zonaId).val()
         };
-        limites.push(obj);        
+        limites.push(obj);    
+        total += parseInt($("#cantidad" + zonaId).val());
     }
-    var resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupo", { limites });
+
+    var configuraciones = SeleccionarElementos();
+    var configuracionesIds = [];
+    for (var i = 0; i < configuraciones.length; i++) {
+        configuracionesIds.push(configuraciones[i].id);
+        if (total != configuraciones[i].LimiteCupo) {
+            MensErr("La cantidad ingresada es diferente a la limite configurado.");
+            return false;
+        }
+    }
+    var resultado;
+    if (configuracionesIds.length == 0) {
+        resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupo", { limites });
+    } else {
+        resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds });
+    }
     if (resultado.HayError) {
         $("#error-alert").text(resultado.Errores[0].Message);
         $(".alert-danger").show();
@@ -317,6 +352,10 @@ function SeleccionarElementos() {
         obj.push(selectedItem);
     });
     return obj;
+}
+function DeseleccionarElementos() {
+    var grid = $("#gridConfiguracionCupo").data("kendoGrid");
+    grid.clearSelection();
 }
 
 function CierreMasivo() {
