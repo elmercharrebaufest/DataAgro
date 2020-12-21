@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<ICupoManager> cupoManagerMock;
         private Mock<IMailManager> mailManagerMock;
         private Mock<IFijacionDePrecioContratoManager> fijacionManager;
-
+        private Mock<ITipoDeCambioAgent> tipoDeCambioAgent;
 
         private JavaScriptSerializer serializer;
 
@@ -53,11 +53,12 @@ namespace Molinos.DataAgro.Test.Services
             cupoManagerMock = new Mock<ICupoManager>();
             mailManagerMock = new Mock<IMailManager>();
             fijacionManager = new Mock<IFijacionDePrecioContratoManager>();
+            tipoDeCambioAgent = new Mock<ITipoDeCambioAgent>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new DataAgroServices(loggerMock.Object, riesgoComercialManagerMock.Object, campaniaAcutalManagerMock.Object,
                 camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, cupoManagerMock.Object
-                , mailManagerMock.Object, fijacionManager.Object);
+                , mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
@@ -260,13 +261,13 @@ namespace Molinos.DataAgro.Test.Services
                 PrecioAjusteComision = 0,
                 Comercial = "bmelgarejo",
                 ComercialCreador = "bmelgarejo",
-                TipoNegocio = "MADRE"                
+                TipoNegocio = "MADRE"
             };
             var contrato = new Contrato
             {
                 Id = 1,
                 AperturaPrecio = new List<AperturaPrecio>(),
-                Comercial = new Comercial { GrupoDeComprasId = 1}
+                Comercial = new Comercial { GrupoDeComprasId = 1 }
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(contrato);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CalidadEspecial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
@@ -279,7 +280,7 @@ namespace Molinos.DataAgro.Test.Services
                .Returns(new List<ConceptoAperturaPrecio>() { new ConceptoAperturaPrecio { Id = 1 } });
             informeComercialManagerMock.Setup(x => x.RespuestaDeSapCapacidadProductiva(It.IsAny<String>(), It.IsAny<String>(), It.IsAny<String>()))
                 .Returns(new Resultado());
-            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { ComercialId = 1, GrupoDeComprasId = 1});
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { ComercialId = 1, GrupoDeComprasId = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ClasificacionCompraNet, bool>>>(), It.IsAny<Expression<Func<ClasificacionCompraNet, int>>>())).Returns(1);
@@ -600,7 +601,7 @@ namespace Molinos.DataAgro.Test.Services
         [Test]
         public void ValidarProveedorComercialError()
         {
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(),It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).
                 Returns(new List<Proveedor> {new Proveedor
                 {
                     ProveedorId = 1,
@@ -863,7 +864,7 @@ namespace Molinos.DataAgro.Test.Services
                 PrecioNeto = 1000,
                 Proveedor = "0003454",
                 ZLSCH = "",
-                TrigoEspecial = "X"                
+                TrigoEspecial = "X"
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
@@ -938,7 +939,7 @@ namespace Molinos.DataAgro.Test.Services
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
             fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>()))
-           .Returns(new Resultado ());
+           .Returns(new Resultado());
             var result = target.AltaFijacionSAP(fijacionSap) as ResultadoSap;
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
@@ -950,10 +951,10 @@ namespace Molinos.DataAgro.Test.Services
         public void AnularFijacionSAPOk()
         {
             var fijacionSap = new FijacionSAP
-            {                
+            {
                 Fijacion = "000332323",
-                
-            };           
+
+            };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
             fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap))
            .Returns(new Resultado());
@@ -992,6 +993,13 @@ namespace Molinos.DataAgro.Test.Services
 
             Assert.IsTrue(result);
 
+        }
+
+        [Test]
+        public void TraerTipoDeCambioTestOk()
+        {
+            var result = target.TraerTipoDeCambio(DateTime.Now.Date);
+            Assert.IsNotNull(result);
         }
     }
 }

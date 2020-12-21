@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using System;
 using System.Collections.Generic;
 using System.ServiceModel;
 
@@ -49,6 +50,8 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         bool ProveedorApocrifo(string cuit);
+        [OperationContract]
+        decimal TraerTipoDeCambio(DateTime? fecha);
         #endregion
     }
 }

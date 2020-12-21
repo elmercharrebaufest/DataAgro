@@ -31,6 +31,7 @@ namespace WebDataAgro.Services
         private readonly ICupoManager cupoManager;
         private readonly IMailManager mailManager;
         private readonly IFijacionDePrecioContratoManager fijacionDePrecioContratoManager;
+        private readonly ITipoDeCambioAgent tipoDeCambioAgent;
 
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
@@ -40,7 +41,10 @@ namespace WebDataAgro.Services
             IContratoManager contratoManager,
             IRepositorio repositorio,
             ICupoManager cupoManager,
-            IMailManager mailManager, IFijacionDePrecioContratoManager fijacionDePrecioContratoManager)
+            IMailManager mailManager,
+            IFijacionDePrecioContratoManager fijacionDePrecioContratoManager,
+            ITipoDeCambioAgent tipoDeCambioAgent
+            )
         {
             this.logger = logger;
             this.riesgoComercial = riesgoComercial;
@@ -52,6 +56,7 @@ namespace WebDataAgro.Services
             this.cupoManager = cupoManager;
             this.mailManager = mailManager;
             this.fijacionDePrecioContratoManager = fijacionDePrecioContratoManager;
+            this.tipoDeCambioAgent = tipoDeCambioAgent;
         }
         #region Servicios de DataAgro
 
@@ -954,6 +959,11 @@ namespace WebDataAgro.Services
         {
             var oFacacop = repositorio.Existe<FACACOP>(x => x.CUIT == cuit);
             return oFacacop;
+        }
+
+        public decimal TraerTipoDeCambio(DateTime? fecha)
+        {
+            return tipoDeCambioAgent.TraerTipoDeCambio(fecha);
         }
         #endregion
     }
