@@ -4079,7 +4079,7 @@ namespace Molinos.DataAgro.Business.Managers
             var clasificacion = (negocio is Contrato) ? (negocio as Contrato).ClasificacionId : (int?)null;
             bc.ClasificacionDescripcion = (negocio is Contrato) ? repositorio.Obtener<ClasificacionCompraNet, string>(x => x.Id == clasificacion, x => x.Descripcion) : "";
             bc.CalidadDescripcion = negocio.TrigoEspecial == true ? "Especial" : "Cámara";
-            bc.ComercialZonaDescripcion = comercial.GrupoDeCompras == null ? "" : comercial.GrupoDeCompras.Descripcion;
+            bc.ComercialZonaDescripcion = comercial != null && comercial.GrupoDeCompras != null ? comercial.GrupoDeCompras.Descripcion : "";
             var bolsaId = (negocio is Contrato) ? (negocio as Contrato).BolsaId : null;
             bc.BolsaDescripcion = (negocio is Contrato) ? repositorio.Obtener<BolsaCompraNet, string>(x => x.Id == bolsaId, x => x.Descripcion) : "";
             bc.CondicionFijacionDescripcion = (negocio is Contrato) ? repositorio.Obtener<CondicionFijacion, string>(x => x.Id == negocio.CondicionFijacionId, x => x.Descripcion) : "";
