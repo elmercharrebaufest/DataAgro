@@ -903,7 +903,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.ObservacionTercero = oContrato.ObservacionTercero;
                 oContratoSave.PagoDiferidoTercero = oContrato.PagoDiferidoTercero;
                 oContratoSave.SustentableTercero = oContrato.SustentableTercero;
-
+                oContratoSave.ComercialCreadorId = oContrato.ComercialCreadorId;
+                oContratoSave.ProveedorCreadorId = oContrato.ProveedorCreadorId;
+                oContratoSave.UsuarioId = oContrato.UsuarioId;
             }
             if (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue)
             {
@@ -923,7 +925,6 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.GrupoCompra = oContrato.GrupoCompra;
             oContratoSave.ComercialId = oContrato.ComercialId;
             oContratoSave.LocalidadId = oContrato.LocalidadId;
-            oContratoSave.UsuarioId = oContrato.UsuarioId;
             oContratoSave.ProvinciaId = oContrato.ProvinciaId;
             oContratoSave.Base = oContrato.Base;
             oContratoSave.ImporteSustentable = oContrato.ImporteSustentable;
@@ -933,7 +934,6 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.NoInformaSio = oContrato.NoInformaSio;
             oContratoSave.TrigoEspecial = oContrato.TrigoEspecial;
             oContratoSave.EstadoId = oContrato.EstadoId;
-            oContratoSave.UsuarioId = oContrato.UsuarioId;
             oContratoSave.Ampliaciones = oContrato.Ampliaciones;
             oContratoSave.Observacion = oContrato.Observacion;
             oContratoSave.DestinoId = oContrato.DestinoId;
@@ -952,7 +952,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.DesdeFijacion = oContrato.DesdeFijacion;
             oContratoSave.HastaFijacion = oContrato.HastaFijacion;
             oContratoSave.MercsDeposito = oContrato.MercsDeposito;
-            oContratoSave.ComercialCreadorId = oContrato.ComercialCreadorId;
+
+
             oContratoSave.CorredorId = oContrato.CorredorId;
             oContratoSave.PorcentajeComision = oContrato.PorcentajeComision;
             oContratoSave.ContratoVendedor = oContrato.ContratoVendedor;
@@ -985,7 +986,6 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
             oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
             oContratoSave.PagoCBU = oContrato.PagoCBU;
-            oContratoSave.ProveedorCreadorId = oContrato.ProveedorCreadorId;
             oContratoSave.Canje = oContrato.Canje;
             oContratoSave.MonedaCanjeId = oContrato.MonedaCanjeId;
             oContratoSave.Monto = oContrato.Monto;
