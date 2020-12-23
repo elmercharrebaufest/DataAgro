@@ -1,0 +1,32 @@
+﻿CREATE TABLE [dbo].[ReportePesificado]
+(
+	[Id] INT  IDENTITY (1, 1) NOT NULL, 
+	[Contrato] VARCHAR(50) NULL,
+    [MaterialId] INT NULL , 
+    [CantidadPendiente] INT NULL , 
+    [KgNoPesificable] DECIMAL(11, 2) NULL, 
+    [Precio] DECIMAL(11, 2) NULL,   
+    [MonedaId] CHAR(5) NULL, 
+    [FechaFijacion] DATETIME NULL, 
+    [KgVencimientoPesificable] DECIMAL(11, 2) NULL, 
+    [ComercialId] INT NULL, 
+	[CuitCorredor] VARCHAR(50) NULL,
+    [CuitVendedor] VARCHAR(50) NULL, 
+    [NombreVendedor] VARCHAR(50) NULL, 
+    [NombreCorredor] VARCHAR(50) NULL, 
+	[FechaDolarizado] DATETIME NULL,  
+	[Unidad] VARCHAR(50) NULL,  
+    [Clasificacion] VARCHAR(50) NULL,   	
+	[FechaHastaDolarizado] DATETIME NULL,
+	[FechaUltimaAplicacion] DATETIME NULL,
+    [Dolarizado] BIT NULL, 
+    [DolarizadoExpress] BIT NULL, 
+	[DolarizadoNoProductor] BIT NULL, 
+	KgTotales  DECIMAL(11, 2) NULL,
+    [Fijacion] VARCHAR(50) NULL, 
+    CONSTRAINT [PK_dbo.ReportePesificado] PRIMARY KEY CLUSTERED ([Id] ASC), 
+    CONSTRAINT [FK_ReportePesificado_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]), 
+    CONSTRAINT [FK_ReportePesificado_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]), 
+	CONSTRAINT [FK_ReportePesificado_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId])
+
+);

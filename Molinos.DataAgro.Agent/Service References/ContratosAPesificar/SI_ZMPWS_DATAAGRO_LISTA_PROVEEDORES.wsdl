@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" name="SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation />
+  <wsp:UsingPolicy wsdl:required="true" />
+  <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES" />
+  <wsdl:types>
+    <xsd:schema xmlns="urn:sap-com:document:sap:rfc:functions" targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="Z_MPRFC_LISTA_PROVEEDORESResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="EX_SALIDA" type="rfc:ZMPTT9040" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Z_MPRFC_LISTA_PROVEEDORES">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="IM_PROVEEDORES" type="rfc:ZMPTT9030" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="unit3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="curr13.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="quantum13.3">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char30">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="30" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="cuky5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char20">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="20" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char12">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="12" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char16">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="16" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char18">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="18" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ZMPTT9030">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:char10" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT9040">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6360" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES6360">
+        <xsd:sequence>
+          <xsd:element name="CONTRATO" type="rfc:char10" />
+          <xsd:element name="FIJACION" type="rfc:char10" />
+          <xsd:element name="FECHA_FIJACION" type="rfc:date10" />
+          <xsd:element name="FECHA_ULT_APLI" type="rfc:date10" />
+          <xsd:element name="DOLARIZADO" type="rfc:char2" />
+          <xsd:element name="DOLARIZADO_NO_PROD" type="rfc:char2" />
+          <xsd:element name="FECHA_HASTA_DOL" type="rfc:date10" />
+          <xsd:element name="DOLARIZADO_EXPRESS" type="rfc:char2" />
+          <xsd:element name="PRECIO" type="rfc:curr13.2" />
+          <xsd:element name="PES_VENCIDA" type="rfc:quantum13.3" />
+          <xsd:element name="PES_NO_VEN" type="rfc:quantum13.3" />
+          <xsd:element name="CANT_PENDIENTE" type="rfc:quantum13.3" />
+          <xsd:element name="CUIT_VENDEDOR" type="rfc:char16" />
+          <xsd:element name="NOM_VEND" type="rfc:char30" />
+          <xsd:element name="CUIT_CORREDOR" type="rfc:char16" />
+          <xsd:element name="NOM_CORREDOR" type="rfc:char30" />
+          <xsd:element name="MATERIAL" type="rfc:char18" />
+          <xsd:element name="COMERCIAL" type="rfc:char12" />
+          <xsd:element name="UNIDAD" type="rfc:unit3" />
+          <xsd:element name="MONEDA" type="rfc:cuky5" />
+          <xsd:element name="CLASIFICACION" type="rfc:char20" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="rfc.Z_MPRFC_LISTA_PROVEEDORES">
+    <wsdl:documentation />
+    <wsdl:part name="parameters" element="rfc:Z_MPRFC_LISTA_PROVEEDORES" />
+  </wsdl:message>
+  <wsdl:message name="rfc.Z_MPRFC_LISTA_PROVEEDORESResponse">
+    <wsdl:documentation />
+    <wsdl:part name="parameter" element="rfc:Z_MPRFC_LISTA_PROVEEDORESResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES">
+    <wsdl:documentation />
+    <wsdl:operation name="SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES">
+      <wsdl:documentation />
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES" />
+      </wsp:Policy>
+      <wsdl:input message="p1:rfc.Z_MPRFC_LISTA_PROVEEDORES" />
+      <wsdl:output message="p1:rfc.Z_MPRFC_LISTA_PROVEEDORESResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESBinding" type="p1:SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES">
+    <binding transport="http://schemas.xmlsoap.org/soap/http" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    <wsdl:operation name="SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES">
+      <operation soapAction="http://sap.com/xi/WebService/soap1.1" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <wsdl:input>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:input>
+      <wsdl:output>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESService">
+    <wsdl:port name="HTTP_Port" binding="p1:SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESBinding">
+      <address location="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+    <wsdl:port name="HTTPS_Port" binding="p1:SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESBinding">
+      <address location="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -26,6 +26,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<ITipoDeCambioAgent> tipoDeCambioMock;
         private JavaScriptSerializer serializer;
+        private Mock<IContratosAPesificarAgent>  pesificarAgent;
 
         [SetUp]
         public void SetUp()
@@ -35,7 +36,8 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock = new Mock<IRepositorio>();
             comercialManagerMock = new Mock<IComercialManager>();
             tipoDeCambioMock = new Mock<ITipoDeCambioAgent>();
-            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object);
+            pesificarAgent = new Mock<IContratosAPesificarAgent>(); 
+            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object, pesificarAgent.Object);
             tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(null)).Returns(45);
         }
 

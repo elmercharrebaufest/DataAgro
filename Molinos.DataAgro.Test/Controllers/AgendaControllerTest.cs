@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"TiposActividades\":[{\"TipoActividadId\":2,\"Descripcion\":\"1\"},{\"TipoActividadId\":2,\"Descripcion\":\"2\"}],\"Proveedores\":[{\"ProveedorId\":1,\"RazonSocial\":\"a\"},{\"ProveedorId\":2,\"RazonSocial\":\"b\"}]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"TiposActividades\":[{\"TipoActividadId\":2,\"Descripcion\":\"1\"},{\"TipoActividadId\":2,\"Descripcion\":\"2\"}],\"Proveedores\":[{\"ProveedorId\":1,\"RazonSocial\":\"a\",\"Cuit\":null},{\"ProveedorId\":2,\"RazonSocial\":\"b\",\"Cuit\":null}]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

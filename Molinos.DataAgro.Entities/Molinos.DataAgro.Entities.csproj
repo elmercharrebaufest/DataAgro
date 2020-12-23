@@ -133,6 +133,7 @@
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
     <Compile Include="Dto\CompraCampanaActualDto.cs" />
+    <Compile Include="Dto\PesificarAgentDto.cs" />
     <Compile Include="Dto\CompraDetalleDto.cs" />
     <Compile Include="Dto\CompraDto.cs" />
     <Compile Include="Dto\DevolucionSugerenciaCupoDto.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Dto\FiltroReporteCupoDto.cs" />
     <Compile Include="Dto\KendoGridMvcRequestModif.cs" />
     <Compile Include="Dto\ReporteEvolucionFijacion.cs" />
+    <Compile Include="Dto\ReportePesificadoDto.cs" />
     <Compile Include="Dto\ResultadoValidarProveedorComercial.cs" />
     <Compile Include="Dto\SugerenciaNoAceptada.cs" />
     <Compile Include="Dto\ReporteCompraNetModel.cs" />
@@ -314,6 +316,7 @@
     <Compile Include="Entities\HabilitacionCampaña.cs" />
     <Compile Include="Entities\LogDataAgro.cs" />
     <Compile Include="Entities\NegocioHistorico.cs" />
+    <Compile Include="Entities\ReportePesificado.cs" />
     <Compile Include="Entities\PrecioPactado.cs" />
     <Compile Include="Entities\Negocio.cs" />
     <Compile Include="Entities\ReporteCompraNetAgenteCompra.cs" />

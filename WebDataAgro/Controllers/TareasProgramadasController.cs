@@ -149,5 +149,13 @@ namespace WebDataAgro.Controllers
             logger.Info($"CerrarDiaHedge - Finalizado");
             return Content("ok");
         }
+
+        public ActionResult Pesificados()
+        {
+            logger.Info($"Pesificados - Iniciando");
+            reportesManager.GrabarTodoDatoPesificar();
+            logger.Info($"Pesificados - Finalizado");
+            return Content("ok");
+        }
     }
 }

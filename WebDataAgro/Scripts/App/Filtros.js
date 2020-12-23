@@ -14,6 +14,9 @@ function TraerFiltrosConValores() {
     filtroAgregarValorContratoCorredorSap(listaFiltros);
     filtroAgregarValorPopUp(listaFiltros);
     filtrosBusqContieneTexto(listaFiltros);
+    filtrosBusqSelectMultipleTexto(listaFiltros);
+    filtrosBusqNumber(listaFiltros);
+
 
     let filtroPrincipal = (listaFiltros.length == 0) ? null : new FiltroPadre("and", listaFiltros);
     let filtroCompleto = new FiltroCompleto(20, 0, filtroPrincipal);
@@ -176,6 +179,48 @@ function filtrosBusqSelectMultiple(listaDeFiltros) {
                 listaDeFiltros.push(FiltroDeMultiselect);
             }
             
+        }
+    });
+}
+
+function filtrosBusqNumber(listaDeFiltros) {
+
+    let filtroBusquedaTextBox = $(".filtroBusquedaTextBoxNumber");
+    filtroBusquedaTextBox.each(function (e) {
+        if (filtroBusquedaTextBox[e].id != "") {
+            ($("#" + filtroBusquedaTextBox[e].id).val() == "") ? null : listaDeFiltros.push(new FiltroHijo(filtroBusquedaTextBox[e].name, JSON.parse($("#" + filtroBusquedaTextBox[e].id).val()), "eq"));
+        }
+    });
+}
+
+
+
+function filtrosBusqSelectMultipleTexto(listaDeFiltros) {
+
+    //Solo Para Multiselect de Kendo
+    let filtroMultiselect = $(".multiselectText input");
+    filtroMultiselect.each(function (e) {
+
+        let listaSeleccionados = [];
+        if (filtroMultiselect[e].id == "" || filtroMultiselect[e].id == null) {
+            return;
+        }
+        ($("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value().length == 1) ? null : listaSeleccionados = $("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value().filter(function (x) { if (x == "") { return; } else { return x } });
+
+        let texto = $("#" + filtroMultiselect[e].id).data("kendoMultiSelect").value()
+        if (texto.length > 0) {
+
+            let filtrosPorCadaValorSeleccionado = [];
+            texto.forEach(function (x) {
+                if (x > 0) {
+                    filtrosPorCadaValorSeleccionado.push(new FiltroHijo(filtroMultiselect[e].name, x, "eq"));
+                }
+            });
+            if (filtrosPorCadaValorSeleccionado.length > 0) {
+                let FiltroDeMultiselect = new FiltroPadre("or", filtrosPorCadaValorSeleccionado);
+                listaDeFiltros.push(FiltroDeMultiselect);
+            }
+
         }
     });
 }

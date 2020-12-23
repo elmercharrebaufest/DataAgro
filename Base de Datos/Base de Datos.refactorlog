@@ -469,4 +469,123 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="PrestamoDevolucion" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="07eaba9f-56a2-4c85-bcf0-c62a3bbb176a" ChangeDateTime="12/21/2020 16:02:35">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[ContratoId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Contrato" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bc79fd27-d6b0-404e-9328-a0ad692415c3" ChangeDateTime="12/21/2020 16:03:04">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[TipoNegocioId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CantidadPendiente" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="98721569-1f8d-4806-b352-22c1c38bf97c" ChangeDateTime="12/21/2020 16:03:22">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[ComercialCreadorId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Comercial" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0410eab5-d924-4981-86cd-eefac0f51491" ChangeDateTime="12/21/2020 16:04:03">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[Cantidad]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="KgNoPesificable" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="bdefd985-db42-43e0-b294-bafba64d6f18" ChangeDateTime="12/21/2020 16:04:33">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[GrupoCompra]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="KgVencimientoPesificable" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8e6bb009-b622-4041-96ac-036f50f15d3c" ChangeDateTime="12/21/2020 16:07:45">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[Fecha]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaFijacion" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c819a488-aa5b-47b7-bc3a-48c85a655ea3" ChangeDateTime="12/21/2020 16:08:00">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[DesdeFijacion]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaHastaDolarizado" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1934f427-d2b3-494e-885f-5443a47004db" ChangeDateTime="12/21/2020 16:08:07">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[HastaFijacion]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaUltimaAplicacion" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e873bb96-cb4c-4c5d-900a-18c6af098bd6" ChangeDateTime="12/21/2020 16:08:17">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[EsFason]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DolarizadoNoProductor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f60c0923-156e-44ad-8a96-d2f0df9eee50" ChangeDateTime="12/21/2020 16:08:30">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[Sustentable]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DolarizadoExpress" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f6edee3e-1b69-436c-ad8f-7f2e2580cd96" ChangeDateTime="12/21/2020 16:09:04">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[MonedaSustentableId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Moneda" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0cb7fca1-60ab-463a-80e6-f704b9da3a76" ChangeDateTime="12/21/2020 16:09:33">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[ProvinciaId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CuitCorredor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="746c20ff-600f-4cff-b9a9-9df7f8a93193" ChangeDateTime="12/21/2020 16:09:45">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[LocalidadId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CuitVendedor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="82713e48-04aa-4992-b95d-21d7220f8f38" ChangeDateTime="12/21/2020 16:10:03">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[ImporteSustentable]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NombreCorredor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1191aff6-3c6f-48b9-ac72-b86b199d7a96" ChangeDateTime="12/21/2020 16:10:12">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[Base]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NombreVendedor" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b2c00630-23f5-4de4-846c-ae306b0083c5" ChangeDateTime="12/21/2020 16:10:25">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[DiasPesificado]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Unidad" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="05cc2b2f-7386-4a6f-bf86-158e4abdaa3c" ChangeDateTime="12/21/2020 16:10:34">
+    <Property Name="ElementName" Value="[dbo].[ReportePesificado].[NoInformaSIO]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ReportePesificado]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Clasificacion" />
+  </Operation>
 </Operations>

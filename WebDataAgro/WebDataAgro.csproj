@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -229,6 +229,7 @@
     <Compile Include="Controllers\CartaDePresentacionController.cs" />
     <Compile Include="Controllers\CampanaController.cs" />
     <Compile Include="Controllers\ReporteEvolucionFijacionController.cs" />
+    <Compile Include="Controllers\ReportePesificadosController.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaController.cs" />
     <Compile Include="Controllers\HabilitacionCupoController.cs" />
     <Compile Include="Controllers\ConfiguracionEspacioDinamicoController.cs" />
@@ -1014,6 +1015,7 @@
     <Content Include="Scripts\App\Filtros.js" />
     <Content Include="Scripts\App\CupoDisponibilidad.js" />
     <Content Include="Scripts\App\LogDataAgro.js" />
+    <Content Include="Scripts\App\ReportePesificados.js" />
     <Content Include="Scripts\App\ReporteEvolucionFijacion.js" />
     <Content Include="Scripts\App\TablaCompra.js" />
     <Content Include="Scripts\App\ReporteProveedores.js" />
@@ -2731,6 +2733,8 @@
     <Content Include="Views\CompraNet\Fijacion.cshtml" />
     <Content Include="Views\ReporteEvolucionFijacion\Index.cshtml" />
     <Content Include="Views\ReporteEvolucionFijacion\_Reporte.cshtml" />
+    <Content Include="Views\ReportePesificados\Index.cshtml" />
+    <Content Include="Views\ReportePesificados\_ReportePesificado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -299,6 +299,7 @@
     <Build Include="dbo\Tables\CampanaMaterialDetallePorMes.sql" />
     <Build Include="dbo\Tables\SugerenciaPorComercial.sql" />
     <Build Include="dbo\Tables\HabilitacionCampaña.sql" />
+    <Build Include="dbo\Tables\ReportePesificado.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

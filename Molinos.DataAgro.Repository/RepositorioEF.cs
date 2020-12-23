@@ -359,5 +359,11 @@ namespace Molinos.DataAgro.Repository
                 "
                 ).First();
         }
+
+        public void TruncarTabla<TEntidad>() where TEntidad : class
+        {
+            var tabla = typeof(TEntidad).Name;
+            context.Database.ExecuteSqlCommand("TRUNCATE TABLE [" + tabla + "]");
+        }
     }
 }

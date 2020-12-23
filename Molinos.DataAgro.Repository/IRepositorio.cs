@@ -144,5 +144,6 @@ namespace Molinos.DataAgro.Repository
 
         void EliminarTokens(long cuit);
         void MigrarReporteCompraNetPosicionCompras();
+        void TruncarTabla<TEntidad>() where TEntidad : class;
     }
 }

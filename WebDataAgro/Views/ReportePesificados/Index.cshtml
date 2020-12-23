@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "Reporte Pesificado";
+}
+
+@section Styles {
+    <link href="~/Content/ReporteContrato.css" rel="stylesheet" />
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/Pesificado")
+}
+
+<div class="Titulo">
+    <div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+        <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+    </div>
+    <br />
+
+    <div id="filtrar" class="container collapse">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Corredor</label>
+            </div>
+            <div class="col-md-4">
+                <input id="buscadorCorredor" name="CuitCorredor" class="multiselectText" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+            </div>
+
+            <div class="col-md-2">
+                <label>Proveedor</label>
+            </div>
+            <div class="col-md-4">
+                <input id="buscadorProveedor" name="CuitVendedor" class="multiselectText" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Contrato SAP</label>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-xs-5 noRightPadding">
+                        @Html.TextBox("Contrato", "", new { @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
+                    </div>
+                    <div class="col-xs-5">
+                        @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+                    </div>
+                    <div class="col-xs-2 noLeftPadding">
+                        <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+                    </div>
+                    <div class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label>Comercial</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione el Comercial", new { @class = "form-control filtroBusquedaPorId", @id = "ComercialId" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Fijación</label>
+            </div>
+            <div class="col-md-4">
+                @Html.TextBox("Fijacion", "", new { @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "Fijacion" })
+            </div>
+            <div class="col-md-2">
+                <label>Material</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Fecha Hasta Dolarizado</label>
+            </div>
+            <div class="col-md-2">
+                <span id="">
+                    <input id="FechaHastaDolarizado" class="filtroFecha" name="FechaFijacion" type="date" style="width: 100%" />
+                </span>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-2">
+                <label>Dolarizado</label>
+                @Html.CheckBox("Dolarizado", false, new { @class = "filtroBoleano", @id = "Dolarizado" })
+            </div>
+            <div class="col-md-2">
+                <label>Express</label>
+                @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", @id = "DolarizadoExpress" })
+            </div>
+            <div class="col-md-2">
+                <label>No Productor</label>
+                @Html.CheckBox("DolarizadoNoProductor", false, new { @class = "filtroBoleano", @id = "DolarizadoNoProductor" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Kg No Pesificable</label>
+            </div>
+            <div class="col-md-2">
+                @Html.TextBox("KgNoPesificable", "", new { @class = "form-control filtroBusquedaTextBoxNumber", style = "width:100%", @id = "KgNoPesificable" })
+            </div>
+            <div class="col-md-2">
+                <label>Kg Vencimiento Pesificable</label>
+            </div>
+            <div class="col-md-2">
+                @Html.TextBox("KgVencimientoPesificable", "", new { @class = "form-control filtroBusquedaTextBoxNumber", style = "width:100%", @id = "KgVencimientoPesificable" })
+            </div>
+        <div class="col-md-2">
+            <label>Kg Totales</label>
+        </div>
+        <div class="col-md-2">
+            @Html.TextBox("KgTotales", "", new { @class = "form-control filtroBusquedaTextBoxNumber", style = "width:100%", @id = "KgTotales" })
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-md-12" style="text-align:right">
+                <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<br />
+
+<div id="grid" class="table-responsive">
+</div>
+

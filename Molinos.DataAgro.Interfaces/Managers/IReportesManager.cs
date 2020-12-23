@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System;
@@ -74,5 +75,9 @@ namespace Molinos.DataAgro.Interfaces
         ReporteEvolucionFijacionModel ObtenerDatosReporteEvolucionFijacion(DateTime desde, DateTime hasta, int? ProveedorId, int? ComercialId, int? CampanaId, int? MaterialId,
             int? GrupoCompraId, int? ClasificacionId, int? DestinoId);
         List<ClasificacionCompraNet> TraerTodoClasificacionCompraNet();
+        List<PesificarAgentDto> GrabarTodoDatoPesificar();
+        //List<ReportePesificadoDto> TraerTodoDatoPesificado(string contrato, DateTime? fechaHastaDolarizado, decimal? kilosPesificable, int? ComercialId,
+        //  int? precio, decimal? noPesificables, decimal? total, string vendedor, string corredor, bool? dolarizado, bool? dolarizadoExpress, bool? dolarizadoNoP);
+        DataSourceResult TraerTodoDatoPesificado(DataSourceRequest filtro, List<int> equipo);
     }
 }

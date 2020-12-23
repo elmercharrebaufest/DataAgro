@@ -193,6 +193,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReportePesificado))
+                                {
+                                    <li>
+                                        <a href="~/reportePesificados" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Visualizar Reporte Pesificados
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }

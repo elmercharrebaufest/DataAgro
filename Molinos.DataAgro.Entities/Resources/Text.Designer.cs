@@ -1384,20 +1384,20 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Prestamo Devolución.
-        /// </summary>
-        public static string ModificarPrestamoDevolucion {
-            get {
-                return ResourceManager.GetString("ModificarPrestamoDevolucion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Modificar Dolarizado.
         /// </summary>
         public static string ModificarDolarizado {
             get {
                 return ResourceManager.GetString("ModificarDolarizado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Prestamo Devolución.
+        /// </summary>
+        public static string ModificarPrestamoDevolucion {
+            get {
+                return ResourceManager.GetString("ModificarPrestamoDevolucion", resourceCulture);
             }
         }
         
@@ -1987,6 +1987,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string VisualizarCompras {
             get {
                 return ResourceManager.GetString("VisualizarCompras", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Pesificado.
+        /// </summary>
+        public static string VisualizarReportePesificado {
+            get {
+                return ResourceManager.GetString("VisualizarReportePesificado", resourceCulture);
             }
         }
     }
