@@ -2521,7 +2521,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 CantidadPendiente = item.CantidadPendiente,
                 Clasificacion = item.Clasificacion,
-                ComercialId = 1,//comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId,
+                ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId,
                 Contrato = item.Contrato,
                 CuitCorredor = item.CuitCorredor,
                 CuitVendedor = item.CuitVendedor,
