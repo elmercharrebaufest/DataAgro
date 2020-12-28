@@ -2489,7 +2489,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var index = proveedores.Count >= 200 ? 200 : proveedores.Count;
                     var lista = proveedores.Take(index).ToList();
                     proveedores.RemoveRange(0, index);
-                    logger.Debug("Proveedores pesificados" + lista.Count());
+                    logger.Debug("Proveedores pesificados " + lista.Count());
                     datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).ToList()));
                 }
 
