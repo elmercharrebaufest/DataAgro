@@ -2,6 +2,7 @@
     var cargaFijacionAyer = PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnteriorFijacion);
     ViewBag.Title = "CompraNet";
     var dolarizado = PermisosHelper.Is(PermisosDataAgro.ModificarDolarizado);
+    var modificarDolarizadoFinalizado = PermisosHelper.Is(PermisosDataAgro.ModificarDolarizadoFinalizado);
 
 }
 
@@ -16,6 +17,7 @@
     BlockUi("Cargando...");
     cargaFijacionAyer = '@cargaFijacionAyer';
     tieneDolarizado = '@dolarizado';
+    modificarDolarizadoFinalizado = '@modificarDolarizadoFinalizado';
 </script>
 <script src="~/Scripts/umd/popper.js"></script>
 

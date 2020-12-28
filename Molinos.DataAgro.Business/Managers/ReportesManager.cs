@@ -2455,10 +2455,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                var proveedores = repositorio.Listar<ProveedorComercial, ProveedorCombo>(
+                var proveedores = repositorio.Listar<Proveedor, ProveedorCombo>(
                     x => new ProveedorCombo
                     {
-                        Cuit = x.Proveedor.CUIT,
+                        Cuit = x.CUIT,
                         ProveedorId = x.ProveedorId
                     });
 
@@ -2474,6 +2474,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 foreach (var p in proveedores)
                 {
+                    p.Cuit = p.Cuit.Trim();
+
                     if (corredores.Any(x => x.ProveedorId == p.ProveedorId))
                     {
                         p.Cuit = "C" + p.Cuit.Remove(p.Cuit.Length - 1).Remove(0, 2);
@@ -2493,35 +2495,7 @@ namespace Molinos.DataAgro.Business.Managers
                     datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).ToList()));
                 }
 
-                var comerciales = repositorio.Listar<Comercial>();
-                var materiales = repositorio.Listar<Material>();
-                var monedas = repositorio.Listar<Moneda>();
-
-                var items = datos.Select(item => new ReportePesificado()
-                {
-                    CantidadPendiente = item.CantidadPendiente,
-                    Clasificacion = item.Clasificacion,
-                    ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId,
-                    Contrato = item.Contrato,
-                    CuitCorredor = item.CuitCorredor,
-                    CuitVendedor = item.CuitVendedor,
-                    Dolarizado = item.Dolarizado,
-                    DolarizadoExpress = item.DolarizadoExpress,
-                    FechaFijacion = item.FechaFijacion,
-                    DolarizadoNoProductor = item.DolarizadoNoProductor,
-                    FechaHastaDolarizado = item.FechaHastaDolarizado,
-                    FechaUltimaAplicacion = item.FechaUltimaAplicacion,
-                    Fijacion = item.Fijacion,
-                    KgNoPesificable = item.KgNoPesificable,
-                    KgVencimientoPesificable = item.KgVencimientoPesificable,
-                    KgTotales = item.KgNoPesificable + item.KgVencimientoPesificable,
-                    MaterialId = materiales.Where(x => x.Codigo == item.Material).FirstOrDefault().MaterialId,
-                    Unidad = item.Unidad,
-                    MonedaId = item.Moneda,
-                    Precio = item.Precio,
-                    NombreCorredor = item.NombreCorredor,
-                    NombreVendedor = item.NombreVendedor
-                }).ToList();
+                List<ReportePesificado> items = ConvertPesificarAgent(datos);
 
                 repositorio.TruncarTabla<ReportePesificado>();
 
@@ -2535,6 +2509,39 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(e);
                 throw;
             }
+        }
+
+        private List<ReportePesificado> ConvertPesificarAgent(List<PesificarAgentDto> datos)
+        {
+            var comerciales = repositorio.Listar<Comercial>();
+            var materiales = repositorio.Listar<Material>();
+            var monedas = repositorio.Listar<Moneda>();
+
+            return datos.Select(item => new ReportePesificado()
+            {
+                CantidadPendiente = item.CantidadPendiente,
+                Clasificacion = item.Clasificacion,
+                ComercialId = 1,//comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId,
+                Contrato = item.Contrato,
+                CuitCorredor = item.CuitCorredor,
+                CuitVendedor = item.CuitVendedor,
+                Dolarizado = item.Dolarizado,
+                DolarizadoExpress = item.DolarizadoExpress,
+                FechaFijacion = item.FechaFijacion,
+                DolarizadoNoProductor = item.DolarizadoNoProductor,
+                FechaHastaDolarizado = item.FechaHastaDolarizado,
+                FechaUltimaAplicacion = item.FechaUltimaAplicacion,
+                Fijacion = item.Fijacion,
+                KgNoPesificable = item.KgNoPesificable,
+                KgVencimientoPesificable = item.KgVencimientoPesificable,
+                KgTotales = item.KgNoPesificable + item.KgVencimientoPesificable,
+                MaterialId = materiales.Where(x => x.Codigo == item.Material).FirstOrDefault().MaterialId,
+                Unidad = item.Unidad,
+                MonedaId = item.Moneda,
+                Precio = item.Precio,
+                NombreCorredor = item.NombreCorredor,
+                NombreVendedor = item.NombreVendedor
+            }).ToList();
         }
 
         //public List<ReportePesificadoDto> TraerTodoDatoPesificado(string contrato, DateTime? fechaHastaDolarizado, decimal? kilosPesificable, int? ComercialId,
@@ -2588,30 +2595,58 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
             }
-            if (cuits.Count > 0)
+            if (cuits.Count == 1)
             {
-                var prov = repositorio.Listar<ProveedorComercial>(x => cuits.Contains(x.Proveedor.CUIT));
+                var prov = repositorio.Listar<Proveedor, ProveedorCombo>(
+                    x => new ProveedorCombo
+                    {
+                        Cuit = x.CUIT,
+                        ProveedorId = x.ProveedorId
+                    }, x => cuits.Contains(x.CUIT));
                 var corredores = repositorio.Listar<CorredorProveedor>(x => cuits.Contains(x.Proveedor.CUIT));
                 foreach (var p in prov)
                 {
+                    p.Cuit = p.Cuit.Trim();
                     if (corredores.Any(x => x.ProveedorId == p.ProveedorId))
                     {
-                        p.Proveedor.CUIT = "C" + p.Proveedor.CUIT.Remove(p.Proveedor.CUIT.Length - 1).Remove(0, 2);
+                        p.Cuit = "C" + p.Cuit.Remove(p.Cuit.Length - 1).Remove(0, 2);
                     }
                     else
                     {
-                        p.Proveedor.CUIT = "00" + p.Proveedor.CUIT.Remove(p.Proveedor.CUIT.Length - 1).Remove(0, 2);
+                        p.Cuit = "00" + p.Cuit.Remove(p.Cuit.Length - 1).Remove(0, 2);
                     }
                 }
 
-                prov = prov.Distinct().ToList();
-                pesificarAgent.ConsultarTodo(prov.Select(x => x.Proveedor.CUIT).ToList());
+                prov = prov.ToList();
+                var datosNuevo = pesificarAgent.ConsultarTodo(prov.Select(x => x.Cuit).Distinct().ToList());
+                try
+                {
+                    var cuitsVendedorCorredor = datosNuevo.Select(a => new { a.CuitVendedor, a.CuitCorredor }).Distinct().ToList();
+                    if (cuitsVendedorCorredor != null && cuitsVendedorCorredor.Count > 0)
+                    {
+                        foreach (var item in cuitsVendedorCorredor)
+                        {
+                            repositorio.RemoverTodos<ReportePesificado>(a => a.CuitVendedor == item.CuitVendedor && a.CuitCorredor == item.CuitCorredor);
+                        }
+                        var datos = ConvertPesificarAgent(datosNuevo);
+                        repositorio.AgregarTodos(datos);
+                        repositorio.GuardarCambios();
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    logger.Error("Error actualizar ReportePesificado");
+                    logger.Error(e);
+                    throw;
+                }
+
             }
 
 
             return repositorio.ObtenerConsultaEscalar(new TraerTodoPesificado(filtro, equipo));
         }
 
-      
+
     }
 }

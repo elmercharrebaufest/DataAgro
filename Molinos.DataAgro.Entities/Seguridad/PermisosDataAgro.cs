@@ -129,7 +129,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ModificarCanje = 332,
         [Display(ResourceType = typeof(Text), Name = "ModificarPrestamoDevolucion")]
         ModificarPrestamoDevolucion = 333,
-
+        [Display(ResourceType = typeof(Text), Name = "ModificarDolarizadoFinalizado")]
+        ModificarDolarizadoFinalizado = 334,
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
         VisualizarReporteAgenda = 401,

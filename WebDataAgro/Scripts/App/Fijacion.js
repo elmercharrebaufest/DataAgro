@@ -12,6 +12,7 @@ var MonedaSobrePrecio = "";
 var PorcentajeSobrePrecio = 0;
 var cargaFijacionAyer;
 var tieneDolarizado;
+var modificarDolarizadoFinalizado;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -198,7 +199,7 @@ function InicializarElementos() {
     kendo.culture("es-AR");
     cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);
     tieneDolarizado = ConvertirStringABool(tieneDolarizado);
-    
+    modificarDolarizadoFinalizado = ConvertirStringABool(modificarDolarizadoFinalizado);
     $('[data-toggle="popover"]').popover();
     $(".datos-adicionales").hide();
     $(".datos-boleto").hide();
@@ -863,7 +864,7 @@ function InicializarElementos() {
                         RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
                     } else {
                         $.unblockUI();
-                    } 
+                    }
                 }
                 if (this.value() == 2) {
                     var tipoId = $("#tipoId").data("kendoDropDownList").value();
@@ -874,7 +875,7 @@ function InicializarElementos() {
                         RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
                     } else {
                         $.unblockUI();
-                    } 
+                    }
                 }
             }
             ClickEnPizarra();
@@ -3344,7 +3345,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#precioId").trigger('change');
 
     $("#precioTotalApertura").data("kendoNumericTextBox").value(contrato.PrecioNeto);
-  
+
 
     if (contrato.MonedaId) {
         $("#precioMonedaId").data("kendoDropDownList").value(contrato.MonedaId);
@@ -3392,7 +3393,7 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) {
         $("#dolarizadoId").prop("checked", true);
         $("#dolarizadoDiv").show();
-        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));        
+        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
     }
 
     if (contrato.DolarizadoExpress == true && contrato.Estado != 5) {
@@ -3404,7 +3405,7 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.DolarizadoExpress == true && contrato.Estado == 5) {
         $("#expressId").prop("checked", true);
         $("#dolarizadoDiv").show();
-        $("#expressDiv").show();        
+        $("#expressDiv").show();
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
     }
 
@@ -3669,13 +3670,21 @@ function CargarDatosEditar(contrato, hijo) {
         $("#comercialFijacionId").data("kendoDropDownList").enable(false);
         $("#motivoOperacionAnteriorFijacion").attr("disabled", true);
         $("#fechaFijacionId").data("kendoDatePicker").enable(false);
-        $("#pizarraId").attr("disabled", true);   
-        $("#CheckFijacion").attr("disabled", true);         
-         if (!tieneDolarizado || (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true)) {
-            $("#expressId").attr("disabled", true);
-            $("#dolarizadoId").attr("disabled", true);
-            $("#dolarizadoFechaId").data("kendoDatePicker").enable(false);
+        $("#pizarraId").attr("disabled", true);
+        $("#CheckFijacion").attr("disabled", true);
+
+        if (modificarDolarizadoFinalizado) {
+            $("#expressId").attr("disabled", false);
+            $("#dolarizadoId").attr("disabled", false);
+            $("#dolarizadoFechaId").data("kendoDatePicker").enable(true);
+        } else {
+            if (!tieneDolarizado || contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) {
+                $("#expressId").attr("disabled", true);
+                $("#dolarizadoId").attr("disabled", true);
+                $("#dolarizadoFechaId").data("kendoDatePicker").enable(false);
+            }
         }
+
         //$("#pagoCbuInput").data("kendoAutoComplete").enable(false);
 
     }

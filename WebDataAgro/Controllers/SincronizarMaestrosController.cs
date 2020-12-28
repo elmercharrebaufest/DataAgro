@@ -230,12 +230,18 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
+        static readonly object _lockProcessEstado = new object();
+
         public ActionResult ProcessEstado()
         {
-            logger.Info($"ProcessEstado - Iniciando");
-            estadoProveedorManager.ActualizarProveedores();
-            logger.Info($"ProcessEstado - Finalizado");
-            return Content("ok");
+            lock (_lockProcessEstado)
+            {
+                logger.Info($"ProcessEstado - Iniciando");
+                estadoProveedorManager.ActualizarProveedores();
+                logger.Info($"ProcessEstado - Finalizado");
+                return Content("ok");
+            }
+
         }
 
         public ActionResult ProcessCompras()

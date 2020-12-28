@@ -27,9 +27,9 @@ namespace WebDataAgro.Controllers
         private readonly IDiferencialManager diferencialManager;
 
 
-        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager, 
-            ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager, 
-            IReportesManager reportesManager, INegocioManager negocioManager, 
+        public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager,
+            ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager,
+            IReportesManager reportesManager, INegocioManager negocioManager,
             IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager)
 
         {
@@ -145,17 +145,23 @@ namespace WebDataAgro.Controllers
             logger.Info($"CerrarDiaHedge - Iniciando");
             var mailEnviar = ExcelReporteCompleto.GenerarExcel(oHedgeManager.ObtenerDatosReporte(), reportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true);
             var hoy = DateTime.Now.Date;
-            oHedgeManager.EnviarMail(GlobalVariables.ComercialId, hoy, oHedgeManager.GenerarCuerpoMail(""), mailEnviar);          
+            oHedgeManager.EnviarMail(GlobalVariables.ComercialId, hoy, oHedgeManager.GenerarCuerpoMail(""), mailEnviar);
             logger.Info($"CerrarDiaHedge - Finalizado");
             return Content("ok");
         }
 
+        static readonly object _lockPesificados = new object();
+
         public ActionResult Pesificados()
         {
-            logger.Info($"Pesificados - Iniciando");
-            reportesManager.GrabarTodoDatoPesificar();
-            logger.Info($"Pesificados - Finalizado");
-            return Content("ok");
+            lock (_lockPesificados)
+            {
+                logger.Info($"Pesificados - Iniciando");
+                reportesManager.GrabarTodoDatoPesificar();
+                logger.Info($"Pesificados - Finalizado");
+                return Content("ok");
+            }
+
         }
     }
 }
