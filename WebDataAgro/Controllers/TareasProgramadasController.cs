@@ -156,9 +156,9 @@ namespace WebDataAgro.Controllers
         {
             lock (_lockPesificados)
             {
-                logger.Info($"Pesificados - Iniciando");
+                logger.Info($"Pesificados - Iniciando " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
                 reportesManager.GrabarTodoDatoPesificar();
-                logger.Info($"Pesificados - Finalizado");
+                logger.Info($"Pesificados - Finalizado " + DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss"));
                 return Content("ok");
             }
 
