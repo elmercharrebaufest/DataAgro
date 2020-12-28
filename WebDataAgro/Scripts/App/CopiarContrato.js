@@ -395,10 +395,10 @@ function ObtenerDatos(error) {
     obj.Base = $("#baseId").is(":checked") ? true : false;
     obj.ImporteSustentable = $("#sustentablePrecioId").val() == null || $("#sustentablePrecioId").val() == undefined || $("#sustentablePrecioId").val() == "" ? 0 : $("#sustentablePrecioId").val();
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
-    obj.FechaDolarizado = $("#dolarizadoFechaId").val();
+    obj.FechaDolarizado = $("#tipoId").val() == "1" ? "" :$("#dolarizadoFechaId").val();
     obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
     obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false;
-    obj.Dolarizado = $("#dolarizadoId").is(":checked") ? true : false;
+    obj.Dolarizado = $("#tipoId").val() == "1" ? false: $("#dolarizadoId").is(":checked") ? true : false;
     obj.Sustentable = $("#sustentableId").is(":checked") ? true : false;
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
@@ -421,7 +421,7 @@ function ObtenerDatos(error) {
     obj.NivelTarifaId = $("#NivelTarifaId").val();
     obj.TarifaFlete = $("#TarifaFleteId").val();
     obj.ChequeElectronico = $("#tipoId").val() == "2" ? $("#chequeElectronicoInput").is(":checked") ? true : false : $("#chequeElectronico").is(":checked") ? true : false;
-    obj.DolarizadoExpress = $("#tipoId").val() == "3" ? $("#expressId").is(":checked") ? true : false : $("#dolarizadoExpressId").is(":checked") ? true : false;
+    obj.DolarizadoExpress = $("#tipoId").val() == "1" ? false :$("#tipoId").val() == "3" ? $("#expressId").is(":checked") ? true : false : $("#dolarizadoExpressId").is(":checked") ? true : false;
     obj.PagoCBU = $("#tipoId").val() == "2" ? $("#pagoCbu").val() : $("#pagoCbuInput").val();
 
     if ($("#boletoConfirmaId").is(':checked')) {
