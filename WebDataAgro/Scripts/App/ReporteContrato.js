@@ -212,7 +212,7 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
-                field: "Pago Diferido", columns: [
+                field: "Pago Diferido en pesos", columns: [
                     { field: "Pesificado", title: "Pago Dif.", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },
                     { field: "Dias_Pesificado", title: "Dias", filterable: false }
                 ]
@@ -315,11 +315,14 @@ function CreateGridInformeCompraNet() {
                 row.cells[14].value = templatePizarra(dataItem);
                 row.cells[28].value = templateSustentable(dataItem);
                 row.cells[31].value = templateDolarizado(dataItem);
+                row.cells[32].value = row.cells[31].value == "Si" ? row.cells[32].value : "";
                 row.cells[33].value = templatePesificado(dataItem);
                 row.cells[35].value = templateSIO(dataItem);
                 row.cells[36].value = templateTrigoEsp(dataItem);
                 row.cells[46].value = templateDolarizadoExpress(dataItem);
+                row.cells[47].value = row.cells[46].value == "Si" ? row.cells[47].value : "";
                 row.cells[48].value = templateDolarizadoCorredor(dataItem);
+                row.cells[49].value = row.cells[48].value == "Si" ? row.cells[49].value : "";
                 row.cells[45].format = "yy/MM/dd hh:mm:ss";
                 row.cells[31].value = templateDolarizado(dataItem);
             }
