@@ -2590,8 +2590,22 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (cuits.Count > 0)
             {
-                cuits = cuits.Distinct().ToList();
-                pesificarAgent.ConsultarTodo(cuits);
+                var prov = repositorio.Listar<ProveedorComercial>(x => cuits.Contains(x.Proveedor.CUIT));
+                var corredores = repositorio.Listar<CorredorProveedor>(x => cuits.Contains(x.Proveedor.CUIT));
+                foreach (var p in prov)
+                {
+                    if (corredores.Any(x => x.ProveedorId == p.ProveedorId))
+                    {
+                        p.Proveedor.CUIT = "C" + p.Proveedor.CUIT.Remove(p.Proveedor.CUIT.Length - 1).Remove(0, 2);
+                    }
+                    else
+                    {
+                        p.Proveedor.CUIT = "00" + p.Proveedor.CUIT.Remove(p.Proveedor.CUIT.Length - 1).Remove(0, 2);
+                    }
+                }
+
+                prov = prov.Distinct().ToList();
+                pesificarAgent.ConsultarTodo(prov.Select(x => x.Proveedor.CUIT).ToList());
             }
 
 
