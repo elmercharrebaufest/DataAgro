@@ -57,5 +57,6 @@
   <setParameter name="HTTP_Port23 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION&amp;interfaceNamespace=namespace%3Adataagro" />
   <setParameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address" value="http://scatoqa.molinosagro.com.ar/Scato.serviciosWeb/ServicioRepositorio.svc" />
   <setParameter name="HTTP_Port24 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ADMIN_CUPOS&amp;interfaceNamespace=namespace%3Adataagro" />
+  <setParameter name="HTTP_Port25 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES&amp;interfaceNamespace=namespace%3Adataagro"  />
 
 </parameters>
