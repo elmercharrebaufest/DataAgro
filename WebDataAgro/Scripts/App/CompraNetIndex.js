@@ -173,7 +173,7 @@ function FormatearString(string, moneda) {
     return numero;
 }
 function botonPendiente(dataItem, icono) {
-    if (modificaNegocios && !externo && (dataItem.PrestamoDevolucion != true && (dataItem.Canje == null || dataItem.Canje == false) ||
+    if ((modificaNegocios || (dataItem.Canje == true && esCanje)) && !externo && (dataItem.PrestamoDevolucion != true && (dataItem.Canje == null || dataItem.Canje == false) ||
         (dataItem.Canje == true && esCanje) ||
         (dataItem.Canje != true && (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) ||
             (dataItem.PrestamoDevolucion == true && esPrestamo)))) {
@@ -204,7 +204,7 @@ function cambiarMarca(id, ocultar) {
     recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
-    if (modificaFinalizados && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId) &&
+    if ((modificaFinalizados || (dataItem.Canje == true && esCanje)) && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId) &&
         (dataItem.PrestamoDevolucion != true && (dataItem.Canje == null || dataItem.Canje == false) ||
             (dataItem.Canje == true && esCanje) ||
             (dataItem.Canje != true && (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) ||

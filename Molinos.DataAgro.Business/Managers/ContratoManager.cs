@@ -147,7 +147,17 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
             datosCombo.monedaSustentable = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
-            datosCombo.tiponegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }).Where(a => a.Descripcion != "ESPACIO DINAMICO").ToList();
+            var tiposDeNegocio = repositorio.Listar<TipoNegocio, TipoNegocioQry>(x => new TipoNegocioQry() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }).Where(a => a.Descripcion != "ESPACIO DINAMICO").ToList();
+            datosCombo.tiponegocio = tiposDeNegocio;
+            if (PermisosHelper.Is(PermisosDataAgro.ModificarCanje))
+            {
+                datosCombo.tiponegocio = datosCombo.tiponegocio.Where(x => x.TipoNegocioId == 1).ToList();
+            }
+
+            if(PermisosHelper.Is(PermisosDataAgro.ModificarNegocios))
+            {
+                datosCombo.tiponegocio = tiposDeNegocio;
+            }
             if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));
@@ -160,6 +170,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 6));
             }
+
             datosCombo.Clasificacion = repositorio.Listar<ClasificacionCompraNet, ClasificacionCompraNetQry>(x => new ClasificacionCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
 
             datosCombo.Bolsa = repositorio.Listar<BolsaCompraNet, BolsaCompraNetQry>(x => new BolsaCompraNetQry() { Id = x.Id, Descripcion = x.Descripcion });
@@ -745,12 +756,20 @@ namespace Molinos.DataAgro.Business.Managers
                     }
 
                 }
+
+                if (PermisosHelper.Is(PermisosDataAgro.ModificarCanje) && oParam.TipoNegocioId == 1)
+                {
+                    if (oParam.Canje != true)
+                    {
+                        oErrorMessages.Error("Permiso Canje", "Es obligatorio completar el campo Canje");
+                    }
+                }
             }
             if (contrato != null)
             {
                 if (contrato.DolarizadoTercero == true && oParam.Dolarizado != true && oParam.DolarizadoExpress != true)
                 {
-                    oErrorMessages.Error("Dolarizado", "Se debe comletar Dolarizado que marco el tercero.");
+                    oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado que marco el tercero.");
                 }
 
                 if (contrato.SustentableTercero == true && oParam.Sustentable != true && (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value == 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId)))
@@ -760,29 +779,29 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (contrato.PagoDiferidoTercero == true && oParam.PagoDiferido != true)
                 {
-                    oErrorMessages.Error("Dolarizado", "Se debe comletar Pago Diferido que marco el tercero.");
+                    oErrorMessages.Error("Dolarizado", "Se debe completar Pago Diferido que marco el tercero.");
                 }
                 if (contrato.CalidadTercero == true)
                 {
                     if (oParam.MaterialId == 1 && oParam.StandardDeCalidadId == 2)
                     {
-                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                        oErrorMessages.Error("Calidad", "Se debe completar Calidad que marco el tercero.");
                     }
                     if (oParam.MaterialId == 2 && oParam.StandardDeCalidadId == 7)
                     {
-                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                        oErrorMessages.Error("Calidad", "Se debe completar Calidad que marco el tercero.");
                     }
                     if (oParam.MaterialId == 3 && oParam.StandardDeCalidadId == 4)
                     {
-                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                        oErrorMessages.Error("Calidad", "Se debe completar Calidad que marco el tercero.");
                     }
                     if (oParam.MaterialId == 4 && oParam.StandardDeCalidadId == 5)
                     {
-                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                        oErrorMessages.Error("Calidad", "Se debe completar Calidad que marco el tercero.");
                     }
                     if (oParam.MaterialId == 5 && oParam.StandardDeCalidadId == 5)
                     {
-                        oErrorMessages.Error("Calidad", "Se debe comletar Calidad que marco el tercero.");
+                        oErrorMessages.Error("Calidad", "Se debe completar Calidad que marco el tercero.");
                     }
                 }
             }
