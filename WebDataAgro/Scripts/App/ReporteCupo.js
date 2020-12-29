@@ -38,8 +38,8 @@ function InicializarCuposIndex() {
 
                     if (filtroCompleto.filter == null) {
                         filtroCompleto.filter = new FiltroPadre("and", defaultFiltros);
-                        $("#fechaGeneracionDesdeId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
-                        $("#fechaGeneracionHastaId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
+                        $("#fechaIngresoDesdeId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
+                        $("#fechaIngresoHastaId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
                     }
 
                     //ConvertirFechaRegistroAString(filtroCompleto.filter.filters);

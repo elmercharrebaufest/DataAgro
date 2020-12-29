@@ -267,10 +267,10 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public Resultado EliminarCupo(Cupo cupo)
         {
+            var resultado = new Resultado();
             try
             {
                 logger.Debug("Eliminar Cupo en STOP  inicio: " + cupo.CupoSap??"");
-                var resultado = new Resultado();
                 HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -329,8 +329,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             catch (Exception e)
             {
                 logger.Debug("Error Eliminar Cupo en STOP  : " + cupo.CupoSap ?? "");
-                logger.Error(e.Message);
-                throw e;
+                logger.Error(e);
+                resultado.Error("", "Error Eliminar Cupo en STOP  : " + cupo.CupoSap ?? "");
+                return resultado;
             }
         }
         public List<RespuestaCupoStop> ConsultarCuposDiarios()
