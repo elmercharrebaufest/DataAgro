@@ -1384,7 +1384,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Dolarizado.
+        ///   Looks up a localized string similar to Modificacion fijacion dolarizado express.
         /// </summary>
         public static string ModificarDolarizado {
             get {
@@ -1393,7 +1393,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modificar Dolarizado Finalizado.
+        ///   Looks up a localized string similar to Modificacion fijacion dolarizado.
         /// </summary>
         public static string ModificarDolarizadoFinalizado {
             get {

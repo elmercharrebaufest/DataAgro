@@ -105,7 +105,7 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados, PermisosDataAgro.ModificarCanje)]
+        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados, PermisosDataAgro.ModificarCanje, PermisosDataAgro.ModificarDolarizado, PermisosDataAgro.ModificarDolarizadoFinalizado)]
         public ActionResult CrearContrato(int? id, int? tipoId, string siguientes, string obj)
         {
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
@@ -130,9 +130,9 @@ namespace WebDataAgro.Controllers
                 ViewBag.esEdicion = true;
                 return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 ? tipoNegocio.Descripcion.Replace(" ", String.Empty): "CrearContrato");
             }
-            if (id != 0 && id != null || PermisosHelper.Is(PermisosDataAgro.ModificarCanje))
+            if (id > 0 || (PermisosHelper.Is(PermisosDataAgro.ModificarCanje)))
             {
-                tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) ? 1 : 2;
+                tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) ? 1 : tipoId.HasValue ? tipoId.Value : 2 ;
                 var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
                 return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
             }

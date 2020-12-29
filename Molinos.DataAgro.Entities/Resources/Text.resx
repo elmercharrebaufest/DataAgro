@@ -752,7 +752,7 @@
     <value>Visualizar Reporte Evolucion Fijacion</value>
   </data>
   <data name="ModificarDolarizado" xml:space="preserve">
-    <value>Modificar Dolarizado</value>
+    <value>Modificacion fijacion dolarizado express</value>
   </data>
   <data name="ModificarCanje" xml:space="preserve">
     <value>Modificar Canje</value>
@@ -764,6 +764,6 @@
     <value>Visualizar Reporte Pesificado</value>
   </data>
   <data name="ModificarDolarizadoFinalizado" xml:space="preserve">
-    <value>Modificar Dolarizado Finalizado</value>
+    <value>Modificacion fijacion dolarizado</value>
   </data>
 </root>

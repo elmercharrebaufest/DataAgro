@@ -23,6 +23,8 @@ var preanular;
 var anular;
 var esCanje;
 var esPrestamo;
+var modificacionFijacionDolarizado;
+var modificacionFijacionDolarizadoExpress;
 
 
 $(document).ready(function () {
@@ -45,6 +47,8 @@ $(document).ready(function () {
     esCanje = ConvertirStringABool(esCanje);
     esPrestamo = ConvertirStringABool(esPrestamo);
     modificaFinalizados = ConvertirStringABool(modificaFinalizados);
+    modificacionFijacionDolarizado = ConvertirStringABool(modificacionFijacionDolarizado);
+    modificacionFijacionDolarizadoExpress = ConvertirStringABool(modificacionFijacionDolarizadoExpress);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     $("#demo").on("hide.bs.collapse", function () {
@@ -204,11 +208,12 @@ function cambiarMarca(id, ocultar) {
     recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
-    if ((modificaFinalizados || (dataItem.Canje == true && esCanje)) && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId) &&
-        (dataItem.PrestamoDevolucion != true && (dataItem.Canje == null || dataItem.Canje == false) ||
-            (dataItem.Canje == true && esCanje) ||
-            (dataItem.Canje != true && (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) ||
-                (dataItem.PrestamoDevolucion == true && esPrestamo)))) {
+    if ((modificaFinalizados || (dataItem.Canje == true && esCanje))
+        && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId)
+        && ((dataItem.PrestamoDevolucion != true && dataItem.Canje != true)
+            || (dataItem.Canje == true && esCanje)
+            || (dataItem.PrestamoDevolucion == true && esPrestamo))
+        || (!modificaFinalizados && dataItem.TipoNegocioId == 3 && (modificacionFijacionDolarizado || modificacionFijacionDolarizadoExpress))) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';

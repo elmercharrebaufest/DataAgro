@@ -153,20 +153,19 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 datosCombo.tiponegocio = datosCombo.tiponegocio.Where(x => x.TipoNegocioId == 1).ToList();
             }
-
-            if(PermisosHelper.Is(PermisosDataAgro.ModificarNegocios))
+            if(PermisosHelper.Is(PermisosDataAgro.ModificarNegocios) || PermisosHelper.Is(PermisosDataAgro.ModificarNegFinalizados))
             {
                 datosCombo.tiponegocio = tiposDeNegocio;
             }
-            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason))
+            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosFason) && !PermisosHelper.Is(PermisosDataAgro.ModificarCanje))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 4));
             }
-            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente))
+            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente) && !PermisosHelper.Is(PermisosDataAgro.ModificarCanje))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 5));
             }
-            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosAcuerdos))
+            if (!PermisosHelper.Is(PermisosDataAgro.CrearNegociosAcuerdos) && !PermisosHelper.Is(PermisosDataAgro.ModificarCanje))
             {
                 datosCombo.tiponegocio.RemoveAt(datosCombo.tiponegocio.FindIndex(x => x.TipoNegocioId == 6));
             }
