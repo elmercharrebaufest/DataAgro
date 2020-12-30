@@ -229,26 +229,35 @@ function Inicializar() {
     });
 
 
-
-    $(".number").kendoNumericTextBox({
+    kendo.culture("es-AR");
+    $("#KgNoPesificable").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
         value: " ",
         decimals: 0,
         restrictDecimals: true,
         spinners: false,
-        min: 0
+        min: 0,
     });
-    kendo.culture("es-AR");
 
-    $("#nuevoNumContrato").kendoNumericTextBox({
+
+    $("#KgVencimientoPesificable").kendoNumericTextBox({
         culture: "es-AR",
         format: "######################",
         value: " ",
         decimals: 0,
         restrictDecimals: true,
         spinners: false,
-        min: 0
+        min: 0,
+    });
+    $("#KgTotales").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "######################",
+        value: " ",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0,
     });
 
     CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "CUIT", "/ReportePesificados/ListarProveedor");
