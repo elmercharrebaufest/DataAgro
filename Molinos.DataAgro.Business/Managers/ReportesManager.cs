@@ -2603,7 +2603,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Cuit = x.CUIT,
                         ProveedorId = x.ProveedorId
                     }, x => cuits.Contains(x.CUIT));
-                var corredores = repositorio.Listar<CorredorProveedor>(x => cuits.Contains(x.Proveedor.CUIT));
+                var corredores = repositorio.Listar<CorredorProveedor>(x => cuits.Contains(x.Corredor.CUIT));
                 foreach (var p in prov)
                 {
                     p.Cuit = p.Cuit.Trim();
