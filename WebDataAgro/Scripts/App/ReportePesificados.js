@@ -93,7 +93,7 @@ function Inicializar() {
     $("#grid").kendoGrid({
         toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Cupos.xlsx",
+            fileName: "Reporte Pesificados.xlsx",
             allPages: true
         },
         dataSource: ds,
@@ -276,7 +276,9 @@ function Inicializar() {
 }
 
 function Filtrar() {
-    $('#grid').data('kendoGrid').dataSource.read();
+    $('#grid').data('kendoGrid').dataSource.page(1)
+    //$('#grid').data('kendoGrid').dataSource.read();
+
 }
 
 $("#DolarizadoId").click(function () {

@@ -2595,7 +2595,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
             }
-            if (cuits.Count == 1)
+            if (cuits.Count == 1 && filtro.Skip == 0)
             {
                 var prov = repositorio.Listar<Proveedor, ProveedorCombo>(
                     x => new ProveedorCombo
