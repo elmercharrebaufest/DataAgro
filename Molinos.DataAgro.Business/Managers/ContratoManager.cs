@@ -153,7 +153,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 datosCombo.tiponegocio = datosCombo.tiponegocio.Where(x => x.TipoNegocioId == 1).ToList();
             }
-            if(PermisosHelper.Is(PermisosDataAgro.ModificarNegocios) || PermisosHelper.Is(PermisosDataAgro.ModificarNegFinalizados))
+            if (PermisosHelper.Is(PermisosDataAgro.ModificarNegocios) || PermisosHelper.Is(PermisosDataAgro.ModificarNegFinalizados))
             {
                 datosCombo.tiponegocio = tiposDeNegocio;
             }
@@ -809,6 +809,12 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado si completó Fecha límite .");
             }
+
+            if (oParam.TipoNegocioId == 1 && oParam.Descuentos != null && oParam.Descuentos.Any(a => a.Importe != 0 && a.TipoDBId == 2))
+            {
+                oErrorMessages.Error("Descuentos y Bonificaciones", "No se puede completar importe en un descuento o bonificacion fuera de precio.");
+            }
+
             return oErrorMessages;
         }
 
