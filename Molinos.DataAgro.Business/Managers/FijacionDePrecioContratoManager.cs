@@ -443,6 +443,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oFijacionDePrecioSave.DolarizadoCorredor = datoContrato.First().Clasificacion.ToUpper() != "PRODUCTOR" || oFijacionDePrecio.CorredorId != null ? true : false;
                 }
+                else
+                {
+                    oFijacionDePrecioSave.DolarizadoCorredor = false;
+                }
             }
 
             oFijacionDePrecioSave.Dolarizado = fechaDolarizado != null ? (oFijacionDePrecio?.FechaDolarizado > fechaDolarizado && (oFijacionDePrecioSave.DolarizadoCorredor == false || oFijacionDePrecioSave.DolarizadoCorredor == null) ? true : false) : false;
@@ -1057,11 +1061,14 @@ namespace Molinos.DataAgro.Business.Managers
                         return error;
                     }
                 }
-                oContrato.ContratoSAP = repositorio.Obtener<FijacionDePrecioContrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
 
-                oContrato.Dolarizado = oContratoSave.DolarizadoCorredor == true ? false : oContrato.Dolarizado;
-                oContrato.DolarizadoExpress = oContrato.DolarizadoExpress;
-                oContrato.DolarizadoCorredor = oContrato.DolarizadoExpress == true ? false : oContratoSave.DolarizadoCorredor;
+                var fijacionSap = oContratoSave.ContratoSAP.PadLeft(10, '0');
+                var oContratoId = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacionSap);
+
+                var fechaDolarizado = oContrato.FechaOperacion.AddDays(30);
+                var proveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.ProveedorId, x => x.CUIT);
+                var corredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.CorredorId, x => x.CUIT);
+                CargarDolarizado(oContrato, oContratoSave, oContratoId, fechaDolarizado, proveedor, corredor);
 
                 var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
                 if (res != "Se actualizaron los datos correctamente")
@@ -1078,10 +1085,6 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
                 oContratoSave.PagoCBU = oContrato.PagoCBU;
-                oContratoSave.Dolarizado = oContrato.Dolarizado;
-                oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
-                oContratoSave.DolarizadoCorredor = oContrato.DolarizadoCorredor;
-                oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oContratoSave.Id), TipoAccionLogDataAgro.Modificar, oContrato.GetType());
 
