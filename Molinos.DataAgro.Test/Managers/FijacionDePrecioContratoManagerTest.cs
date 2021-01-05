@@ -854,7 +854,8 @@ namespace Molinos.DataAgro.Test.Managers
             contratosParaFijacionMock.Setup(x => x.ObtenerContratos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>())).Returns(new List<DatosFijacionDeContratoDto>());
             validarPagoAgente.Setup(x => x.ValidarEstado(It.IsAny<String>(), It.IsAny<String>())).Returns("Ok");
             modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<FijacionDePrecioContrato>())).Returns("Se actualizaron los datos correctamente");
-            
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>()))
+                .Returns(new Contrato { ContratoSAP = "434343", Id = 1 });
             var resultado = target.ActualizarFijacion(contrato);
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
