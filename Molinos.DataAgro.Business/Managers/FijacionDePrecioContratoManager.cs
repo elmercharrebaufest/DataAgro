@@ -296,7 +296,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("dolarizado", "La fecha de dolarizado no es válida");
 
             }
-            if(oParam.EstadoId == 5 && oParam.DolarizadoExpress.HasValue && oParam.DolarizadoExpress.Value && !oParam.FechaDolarizado.HasValue)
+            if (oParam.EstadoId == 5 && oParam.DolarizadoExpress.HasValue && oParam.DolarizadoExpress.Value && !oParam.FechaDolarizado.HasValue)
             {
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
@@ -927,7 +927,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private string FechaConCeros(string[] numero)
         {
-            if(numero.Length == 1)
+            if (numero.Length == 1)
             {
                 return "";
             }
@@ -1065,16 +1065,29 @@ namespace Molinos.DataAgro.Business.Managers
                 var fijacionSap = oContratoSave.ContratoSAP.PadLeft(10, '0');
                 var oContratoId = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacionSap);
 
-                var fechaDolarizado = oContrato.FechaOperacion.AddDays(30);
                 var proveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.ProveedorId, x => x.CUIT);
                 var corredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.CorredorId, x => x.CUIT);
-                CargarDolarizado(oContrato, oContratoSave, oContratoId, fechaDolarizado, proveedor, corredor);
+
+                var datoContrato = TraerDatosFijacion(proveedor, corredor, oContrato.MaterialId, oContratoId.ContratoSAP.Remove(0, 3), 0);
+                if (datoContrato != null && oContrato.FechaDolarizado != null)
+                {
+                    oContratoSave.DolarizadoCorredor = datoContrato.First().Clasificacion.ToUpper() != "PRODUCTOR" || oContrato.CorredorId != null ? true : false;
+                }
+                else
+                {
+                    oContratoSave.DolarizadoCorredor = false;
+                }
+
+                oContratoSave.Dolarizado = oContratoSave.DolarizadoCorredor == true ? false : oContrato.FechaOperacion != null ? oContrato.Dolarizado : false;
+                oContratoSave.DolarizadoExpress = oContratoSave.DolarizadoCorredor == true ? false : oContrato.FechaOperacion != null ? oContrato.DolarizadoExpress : false;
+
+                oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
 
                 var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
                 if (res != "Se actualizaron los datos correctamente")
                 {
                     error.Error("SAP", res);
-                     return error;
+                    return error;
                 }
 
                 logger.Debug("Actualizando fijacion en BD DataAgro: " + oContrato.Id);
@@ -1108,25 +1121,25 @@ namespace Molinos.DataAgro.Business.Managers
 
             return diasHabilesAgent.UltimoDiaHabil(fecha);
         }
-      
+
         public Resultado ActualizarFijacionSap(FijacionDePrecioContrato fijacion)
         {
             var error = new Resultado();
             try
-            {                     
-            logger.Debug("Actualizando contrato en BD DataAgro: " + fijacion.Id);
-            var contratoSave = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionSAP.Contains(fijacion.FijacionSAP));
-            if (contratoSave == null || contratoSave.Id == 0)
             {
-                error.Error("Fijacion", "No existe la fijacion en DataAgro");
-            }
-            //this.Validar(fijacion, error);
-            if (error.Errores.Count > 0)
-            {
-                return error;
-            }
-            contratoSave.ChequeElectronico = fijacion.ChequeElectronico;
-            contratoSave.PagoCBU = fijacion.PagoCBU;
+                logger.Debug("Actualizando contrato en BD DataAgro: " + fijacion.Id);
+                var contratoSave = repositorio.Obtener<FijacionDePrecioContrato>(x => x.FijacionSAP.Contains(fijacion.FijacionSAP));
+                if (contratoSave == null || contratoSave.Id == 0)
+                {
+                    error.Error("Fijacion", "No existe la fijacion en DataAgro");
+                }
+                //this.Validar(fijacion, error);
+                if (error.Errores.Count > 0)
+                {
+                    return error;
+                }
+                contratoSave.ChequeElectronico = fijacion.ChequeElectronico;
+                contratoSave.PagoCBU = fijacion.PagoCBU;
                 //contratoSave.Precio = fijacion.Precio;
                 //contratoSave.Cantidad = fijacion.Cantidad;
                 //contratoSave.Ampliaciones = fijacion.Ampliaciones;
@@ -1158,8 +1171,8 @@ namespace Molinos.DataAgro.Business.Managers
                 //    contratoSave.AperturaPrecio = fijacion.AperturaPrecio;
                 //}         
 
-            repositorio.GuardarCambios();
-            logDataAgroManager.LogCambiosDataAgro(TraerFijacion(contratoSave.Id), TipoAccionLogDataAgro.Modificar, fijacion.GetType());
+                repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(TraerFijacion(contratoSave.Id), TipoAccionLogDataAgro.Modificar, fijacion.GetType());
             }
             catch (Exception e)
             {
@@ -1179,7 +1192,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (fijarSave == null || fijarSave.Id == 0)
                 {
                     error.Error("Fijacion", "No existe el contrato en DataAgro");
-                }               
+                }
                 this.Validar(fijacion, error, false);
                 if (error.Errores.Count > 0)
                 {
@@ -1188,7 +1201,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var fijacionSave = new FijacionDePrecioContrato();
                 fijacionSave.FijacionSAP = fijacion.FijacionSAP;
                 fijacionSave.ChequeElectronico = fijacion.ChequeElectronico;
-                fijacionSave.PagoCBU = fijacion.PagoCBU;             
+                fijacionSave.PagoCBU = fijacion.PagoCBU;
                 fijacionSave.TrigoEspecial = fijacion.TrigoEspecial;
                 fijacionSave.ContratoSAP = fijacion.ContratoSAP;
                 fijacionSave.ContratoId = fijacion.ContratoId;
@@ -1205,7 +1218,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacionSave.ProveedorId = fijacion.ProveedorId;
                 fijacionSave.ComercialId = fijacion.ComercialId;
                 fijacionSave.MaterialId = fijacion.MaterialId;
-                fijacionSave.CorredorId = fijacion.CorredorId;               
+                fijacionSave.CorredorId = fijacion.CorredorId;
                 fijacionSave.DiasPesificado = fijacion.DiasPesificado;
                 fijacionSave.MonedaId = fijacion.MonedaId;
                 fijacionSave.CampanaId = fijacion.CampanaId;

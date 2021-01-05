@@ -3403,10 +3403,12 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (contrato.DolarizadoExpress == true && contrato.Estado == 5) {
-        $("#expressId").prop("checked", true);
+        $("#expressId").prop("checked", true);        
+        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
+    }
+    if (contrato.Estado == 5) {
         $("#dolarizadoDiv").show();
         $("#expressDiv").show();
-        $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
     }
 
     if (contrato.PagoDiferido === true && contrato.TipoNegocioId != 3) {
