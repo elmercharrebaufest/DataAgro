@@ -1061,27 +1061,32 @@ namespace Molinos.DataAgro.Business.Managers
                         return error;
                     }
                 }
-
+                error = ValidarMoficiacionFijacionFinalizada(oContrato, oContratoSave);
+                if (error.HayError)
+                {
+                    return error;
+                }
                 var fijacionSap = oContratoSave.ContratoSAP.PadLeft(10, '0');
                 var oContratoId = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacionSap);
 
                 var proveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.ProveedorId, x => x.CUIT);
                 var corredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.CorredorId, x => x.CUIT);
 
-                var datoContrato = TraerDatosFijacion(proveedor, corredor, oContrato.MaterialId, oContratoId.ContratoSAP.Remove(0, 3), 0);
-                if (datoContrato != null && oContrato.FechaDolarizado != null)
-                {
-                    oContratoSave.DolarizadoCorredor = datoContrato.First().Clasificacion.ToUpper() != "PRODUCTOR" || oContrato.CorredorId != null ? true : false;
-                }
-                else
-                {
-                    oContratoSave.DolarizadoCorredor = false;
-                }
+                //var datoContrato = TraerDatosFijacion(proveedor, corredor, oContrato.MaterialId, oContratoId.ContratoSAP.Remove(0, 3), 0);
+                //if (datoContrato != null && oContrato.FechaDolarizado != null)
+                //{
+                //    oContratoSave.DolarizadoCorredor = datoContrato.First().Clasificacion.ToUpper() != "PRODUCTOR" || oContrato.CorredorId != null ? true : false;
+                //}
+                //else
+                //{
+                //    oContratoSave.DolarizadoCorredor = false;
+                //}
 
-                oContratoSave.Dolarizado = oContratoSave.DolarizadoCorredor == true ? false : oContrato.FechaOperacion != null ? oContrato.Dolarizado : false;
-                oContratoSave.DolarizadoExpress = oContratoSave.DolarizadoCorredor == true ? false : oContrato.FechaOperacion != null ? oContrato.DolarizadoExpress : false;
+                //oContratoSave.Dolarizado = oContratoSave.DolarizadoCorredor == true ? false : oContrato.FechaOperacion != null ? oContrato.Dolarizado : false;
+                //oContratoSave.DolarizadoExpress = oContratoSave.DolarizadoCorredor == true ? false : oContrato.FechaOperacion != null ? oContrato.DolarizadoExpress : false;
 
-                oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
+                //oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
+                CargarDolarizado(oContrato, oContratoSave, oContratoId, oContrato.FechaOperacion.AddDays(30), proveedor, corredor);
 
                 var res = modificarFijacionAgent.Modificar(oContrato, oContratoSave);
                 if (res != "Se actualizaron los datos correctamente")
@@ -1108,6 +1113,21 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Error("", e.Message + ".");
             }
             return error;
+        }
+
+        private GrabarFijacionResult ValidarMoficiacionFijacionFinalizada(FijacionDePrecioContrato oContrato, FijacionDePrecioContrato oContratoSave)
+        {
+            GrabarFijacionResult result = new GrabarFijacionResult();
+            if (oContrato.DolarizadoExpress == true && oContrato.FechaDolarizado > oContrato.FechaOperacion.AddDays(30))
+            {
+                result.Error("DolarizadoExpress", "La fecha de dolarizado express no puede ser mayor a 30 días.");
+            }
+
+            if (oContratoSave.DolarizadoExpress == true && oContrato.Dolarizado == true &&  oContrato.FechaDolarizado <= oContrato.FechaOperacion.AddDays(30))
+            {
+                result.Error("Dolarizado", "La fecha de dolarizado no puede ser menor a 30 días.");
+            }
+            return result;
         }
 
         public List<DateTime> FechaFeriados()

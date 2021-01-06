@@ -1386,9 +1386,9 @@ namespace Molinos.DataAgro.Entities.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Modificacion fijacion dolarizado express.
         /// </summary>
-        public static string ModificarDolarizado {
+        public static string ModificarDolarizadoExpress {
             get {
-                return ResourceManager.GetString("ModificarDolarizado", resourceCulture);
+                return ResourceManager.GetString("ModificarDolarizadoExpress", resourceCulture);
             }
         }
         

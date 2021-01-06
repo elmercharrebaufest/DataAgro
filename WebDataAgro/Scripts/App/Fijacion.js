@@ -3405,10 +3405,11 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.DolarizadoExpress == true && contrato.Estado == 5) {
         $("#expressId").prop("checked", true);        
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
-    }
-    if (contrato.Estado == 5) {
         $("#dolarizadoDiv").show();
         $("#expressDiv").show();
+    }
+    if (contrato.Estado == 5) {
+       
     }
 
     if (contrato.PagoDiferido === true && contrato.TipoNegocioId != 3) {
@@ -3687,6 +3688,11 @@ function CargarDatosEditar(contrato, hijo) {
             }
         }
 
+        if (tieneDolarizado  && contrato.DolarizadoExpress == true ) {
+            $("#expressId").attr("disabled", false);
+            $("#dolarizadoId").attr("disabled", true);
+            $("#dolarizadoFechaId").data("kendoDatePicker").enable(true);
+        }
         //$("#pagoCbuInput").data("kendoAutoComplete").enable(false);
 
     }

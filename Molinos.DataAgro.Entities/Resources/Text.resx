@@ -751,7 +751,7 @@
   <data name="Visualizar_Reporte_Evolucion_Fijacion" xml:space="preserve">
     <value>Visualizar Reporte Evolucion Fijacion</value>
   </data>
-  <data name="ModificarDolarizado" xml:space="preserve">
+  <data name="ModificarDolarizadoExpress" xml:space="preserve">
     <value>Modificacion fijacion dolarizado express</value>
   </data>
   <data name="ModificarCanje" xml:space="preserve">

@@ -123,8 +123,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NegociosFechaMayorDiaAnteriorFijacion = 329,
         [Display(ResourceType = typeof(Text), Name = "EnvioMailNegociosConDiaAnteriorFijacion")]
         EnvioMailNegociosConDiaAnteriorFijacion = 330,
-        [Display(ResourceType = typeof(Text), Name = "ModificarDolarizado")]
-        ModificarDolarizado = 331,
+        [Display(ResourceType = typeof(Text), Name = "ModificarDolarizadoExpress")]
+        ModificarDolarizadoExpress = 331,
         [Display(ResourceType = typeof(Text), Name = "ModificarCanje")]
         ModificarCanje = 332,
         [Display(ResourceType = typeof(Text), Name = "ModificarPrestamoDevolucion")]

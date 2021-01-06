@@ -105,7 +105,7 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados, PermisosDataAgro.ModificarCanje, PermisosDataAgro.ModificarDolarizado, PermisosDataAgro.ModificarDolarizadoFinalizado)]
+        [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados, PermisosDataAgro.ModificarCanje, PermisosDataAgro.ModificarDolarizadoExpress, PermisosDataAgro.ModificarDolarizadoFinalizado)]
         public ActionResult CrearContrato(int? id, int? tipoId, string siguientes, string obj)
         {
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
