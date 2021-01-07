@@ -5,6 +5,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IModificarFijacionAgent
     {
-        string Modificar(FijacionDePrecioContrato contrato, FijacionDePrecioContrato oContratoSave);
+        string Modificar( FijacionDePrecioContrato oContratoSave);
     }
 }

@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
 
-        public string Modificar(FijacionDePrecioContrato contrato, FijacionDePrecioContrato contratoGuardado)
+        public string Modificar(FijacionDePrecioContrato contratoGuardado)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
@@ -38,19 +38,19 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
-                    logger.Debug("Modificando Fijacion Nro: " + contrato.Id);
+                    logger.Debug("Modificando Fijacion Nro: " + contratoGuardado.Id);
                     logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);
                     logger.Debug("Cargando contrato");
-                    var fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
+                    var fechaDolarizadoString = contratoGuardado.FechaDolarizado?.ToString("yyyy-MM-dd");
                     var rq = new Z_MPRFC_MODIFICAR_FIJACION
                     {
                         IM_CONTRATO = contratoGuardado.ContratoSAP,
-                        IM_ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
-                        IM_CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
+                        IM_ZLSCH = contratoGuardado.ChequeElectronico == true ? "=" : "",
+                        IM_CUENTA_MRP = contratoGuardado.PagoCBU != null ? contratoGuardado.PagoCBU.Split('-')[0] : "",
                         IM_FIJACION = contratoGuardado.FijacionSAP,
-                        IM_DOLARIZADO = contrato.Dolarizado == true ? "X" : "",
-                        IM_DOL_CORREDOR = contrato.DolarizadoCorredor == true ? "X" : "",
-                        IM_DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
+                        IM_DOLARIZADO = contratoGuardado.Dolarizado == true ? "X" : "",
+                        IM_DOL_CORREDOR = contratoGuardado.DolarizadoCorredor == true ? "X" : "",
+                        IM_DOL_EXPRESS = contratoGuardado.DolarizadoExpress == true ? "X" : "",
                         IM_FECHA_LIMITE = fechaDolarizadoString,
                     };
 
