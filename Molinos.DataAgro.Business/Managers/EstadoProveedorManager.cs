@@ -16,7 +16,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly IDatosProveedorAgent oDatosProveedorAgent;
 
-        public EstadoProveedorManager(ILogger logger, IRepositorio repositorio,IDatosProveedorAgent oDatosProveedorAgent)
+        public EstadoProveedorManager(ILogger logger, IRepositorio repositorio, IDatosProveedorAgent oDatosProveedorAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug("Obteniendo datos de SAP" + userSap);
 
                         var list = oDatosProveedorAgent.ObtenerDatosDeProveedorEstado(proveedores.Keys.ToList(), new List<string>() { userSap });
-                        
+
                         logger.Debug("Resultado: " + list.Count);
                         var proveedoresCuit = list.Select(x => x.CUIT.ToUpper().Trim()).Distinct().ToList();
                         var comercialesAd = list.Select(x => x.USUARIO.ToUpper().Trim()).Distinct().ToList();
@@ -55,10 +55,13 @@ namespace Molinos.DataAgro.Business.Managers
 
                             foreach (var proveedor in proveedorAgrupados)
                             {
-                                var proveedorEstado = proveedoresEstado.FirstOrDefault(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
-                                if (proveedorEstado != null)
+                                var proveedorEstado = proveedoresEstado.Where(x => x.ComercialId == comercial.ComercialId && x.ProveedorId == proveedor.ProveedorId);
+                                if (proveedorEstado != null && proveedorEstado.Count() > 0)
                                 {
-                                    proveedorEstado.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
+                                    foreach (var item in proveedorEstado)
+                                    {
+                                        item.EstadoId = estados[estado.STATUS.ToLower()].EstadoId;
+                                    }
                                 }
                                 else
                                 {

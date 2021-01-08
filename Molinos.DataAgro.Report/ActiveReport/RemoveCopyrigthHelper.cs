@@ -13,9 +13,12 @@ namespace Molinos.DataAgro.Report.ActiveReport
                 {
                     byte[] contentBytes = reader.GetPageContent(i);
                     string contentString = PdfEncodings.ConvertToString(contentBytes, PdfObject.TEXT_PDFDOCENCODING);
-                    contentString = contentString.Replace("(This document was created using an EVALUATION version of ActiveReports. Only a licensed user may legally create reports)", "");
-                    contentString = contentString.Replace("(for use in production. Please report infractions or address questions to sales@grapecity.us.com.  Copyright © 2002-2010)", "");
-                    contentString = contentString.Replace("(GrapeCity, inc. All rights reserved.)", "");
+                    contentString = contentString.Replace("This document was created using an EVALUATION version of ActiveReports.", "");
+                    contentString = contentString.Replace("Only a licensed user may legally create reports", "");
+                    contentString = contentString.Replace("for use in production.", "");
+                    contentString = contentString.Replace("Please report infractions or address questions to sales@grapecity.us.com.", "");
+                    contentString = contentString.Replace("Copyright © 2002-2010", "");
+                    contentString = contentString.Replace("GrapeCity, inc. All rights reserved.", "");
                     reader.SetPageContent(i, PdfEncodings.ConvertToBytes(contentString, PdfObject.TEXT_PDFDOCENCODING));
                 }
                 var resultado = new MemoryStream();

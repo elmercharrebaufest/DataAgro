@@ -1061,7 +1061,7 @@ namespace Molinos.DataAgro.Business.Managers
                         return error;
                     }
                 }
-                error = ValidarMoficiacionFijacionFinalizada(oContrato, oContratoSave);
+                error = ValidarModificacionFijacionFinalizada(oContrato, oContratoSave);
                 if (error.HayError)
                 {
                     return error;
@@ -1103,9 +1103,13 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-        private GrabarFijacionResult ValidarMoficiacionFijacionFinalizada(FijacionDePrecioContrato oContrato, FijacionDePrecioContrato oContratoSave)
+        private GrabarFijacionResult ValidarModificacionFijacionFinalizada(FijacionDePrecioContrato oContrato, FijacionDePrecioContrato oContratoSave)
         {
             GrabarFijacionResult result = new GrabarFijacionResult();
+            if (oContrato.FechaDolarizado.HasValue && oContrato.FechaDolarizado.Value < oContrato.FechaOperacion)
+            {
+                result.Error("dolarizado", "La fecha de dolarizado no es válida");
+            }
             if (oContrato.DolarizadoExpress == true && oContrato.FechaDolarizado > oContrato.FechaOperacion.AddDays(30))
             {
                 result.Error("DolarizadoExpress", "La fecha de dolarizado express no puede ser mayor a 30 días.");
