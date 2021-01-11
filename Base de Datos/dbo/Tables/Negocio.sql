@@ -100,7 +100,7 @@
     
     [Canje] BIT NULL, 
     [Monto] DECIMAL(11, 2) NULL, 
-    [Insumo] NVARCHAR(30) NULL, 
+    [Insumo] NVARCHAR(250) NULL, 
     [MonedaCanjeId]  CHAR(5) NULL, 
     [PrestamoDevolucion] BIT NULL, 
     [PlantaDestinoId] INT NULL, 
