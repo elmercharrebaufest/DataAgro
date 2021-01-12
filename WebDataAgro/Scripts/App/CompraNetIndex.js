@@ -1015,7 +1015,7 @@ function CreateGridInformeCompraNet() {
                     if (dataItem.Estado == 9) { //preaprobacion
                         descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n pendiente aprobaci&oacute;n MOA" ' : '';
                         return '<div' + descripcion + ' class="status preaprobacion">Carga</div>' +
-                            //botonPendiente(dataItem, 'fa-pencil pre') +
+                            botonPendiente(dataItem, 'fa-pencil pre') +
                             botonAprobar(dataItem, ' fa-check-square-o pre') +
                             botonVisualizar(dataItem, 'fa-eye pre') +
                             botonBorrar(dataItem, 'fa-trash pre');

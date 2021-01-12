@@ -36,6 +36,7 @@ namespace Molinos.DataAgro.Agent
                 var contratos = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.TipoNegocioId == 1 && x.MaterialId == materialId && x.Proveedor.CUIT == CuitProveedor && (!string.IsNullOrEmpty(CuitCorredor) ? x.Corredor.CUIT == CuitCorredor : x.CorredorId == null) && x.ContratoSAP != null);
                 if (contratos != null)
                 {
+                    filtro = filtro.TrimStart('0');
                     var listaContratos = contratos.Where(x => x.StartsWith("000" + filtro));
                     foreach (var id in listaContratos)
                     {

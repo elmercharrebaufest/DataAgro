@@ -897,7 +897,8 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
-                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) 
+                    && (oContratoSave.EstadoId != (int)EnumEstadoContrato.Pendiente && oContratoSave.EstadoId != (int)EnumEstadoContrato.Oferta && oContratoSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion))
                 {
                     oContrato.EstadoId = 7;
                     if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
@@ -1212,14 +1213,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", "El contrato no se puede confirmar");
                 return oEntityErrors;
             }
-            if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente && oContratoSave.ProveedorCreadorId != null)
-            {
-                Validar(oContratoSave, oEntityErrors, false);
-                if (oEntityErrors.Errores.Count > 0)
-                {
-                    return oEntityErrors;
-                }
-            }
+
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente ||
                                           oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta ||
                                           oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar))
@@ -1439,7 +1433,8 @@ namespace Molinos.DataAgro.Business.Managers
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
                     try
                     {
-                        if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null && oContratoSave.Canje != true && oContratoSave.PrestamoDevolucion != true)
+                        if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null
+                            && oContratoSave.Canje != true && oContratoSave.PrestamoDevolucion != true && oContratoSave.PrestamoDevolucion != true)
                         {
                             mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
                             var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
@@ -3842,15 +3837,14 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (contrato.Estado.EstadoContratoId == (int)EnumEstadoContrato.PreAprobacion)
             {
-                if (ConfirmacionAutomatica(contrato))
+                Validar(contrato, oEntityErrors, false);
+                if (oEntityErrors.Errores.Count > 0)
                 {
-                    contrato.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Confirmado);
+                    return oEntityErrors;
+                }
 
-                }
-                else
-                {
-                    contrato.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
-                }
+                contrato.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
+
                 try
                 {
                     repositorio.GuardarCambios();

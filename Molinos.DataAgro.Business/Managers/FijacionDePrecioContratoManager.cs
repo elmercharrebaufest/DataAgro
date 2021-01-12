@@ -985,21 +985,18 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.PreAprobacion)
             {
-                if (ConfirmacionAutomatica(oFijacionDePrecioSave))
-                {
-                    oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Confirmado);
+                Validar(oFijacionDePrecioSave, oEntityErrors, true);
 
-                }
-                else
+                if (oEntityErrors.HayErrores)
                 {
-                    oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
+                    return oEntityErrors;
                 }
+                oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
+                
                 try
                 {
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Crear, oFijacionDePrecioSave.GetType());
-
-
                 }
                 catch (Exception ex)
                 {
