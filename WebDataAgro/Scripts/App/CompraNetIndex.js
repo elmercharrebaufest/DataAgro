@@ -1927,7 +1927,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $(".fason").show();
         $("#visualizar_tipofason").text(tipoFason);
         $("#visualizar_posicion").text(posicion);
-    } else if (tipo === "AGENTE COMPRAS") {
+    } else if (tipo === "AGENTE DE COMPRAS") {
         $(".noAgente").hide();
         $(".agente").show();
         $("#visualizar_operador").text(operador);

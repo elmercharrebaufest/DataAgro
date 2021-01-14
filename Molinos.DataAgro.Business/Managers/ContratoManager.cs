@@ -231,6 +231,30 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto");
                 }
             }
+            Proveedor corredor = null;
+            if (oParam.CorredorId != null && oParam.CorredorId > 0)
+            {
+                corredor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.CorredorId);
+                if (!string.IsNullOrEmpty(corredor.RiesgoComercialSap))
+                {
+                    if (corredor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
+                    {
+                        oErrorMessages.Error("CorredorId", "Corredor No Operable por Riesgo Comercial Alto");
+                    }
+                }
+
+                if (repositorio.Existe<ProveedorEstado>(x => x.ProveedorId == oParam.CorredorId && x.EstadoId == 4))
+                {
+                    oErrorMessages.Error("Estado", "Corredor no Operable por Estado BAJA");
+                }
+
+                if (repositorio.Existe<FACACOP>(x => x.CUIT == corredor.CUIT))
+                {
+                    oErrorMessages.Error("CorredorId", "Corredor No Operable por ser Apócrifo");
+                }
+            }
+
+
             if (oParam.ClasificacionId == 0)
             {
                 oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
@@ -275,6 +299,42 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     oErrorMessages.Error("ProveedorId", "Proveedor No Operable por CUIT o Categoria Inactivo");
+                }
+
+                if (corredor != null)
+                {
+                    sisa = new SISA();
+                    if (oParam.ClasificacionId == 1)
+                    {
+                        sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
+                    }
+                    else if (oParam.ClasificacionId == 2)
+                    {
+                        sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria == 6 && x.SituacionCategoria == "AL");
+                    }
+                    else if (oParam.ClasificacionId == 3)
+                    {
+                        sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.SituacionCategoria == "AL");
+                    }
+                    if (sisa != null)
+                    {
+                        if (sisa.EstadoCuit == 3)
+                        {
+                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Estado de CUIT 3");
+                        }
+                        else if (sisa.EstadoCuit == 0)
+                        {
+                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Estado de CUIT Inactivo");
+                        }
+                        if (sisa.SituacionCategoria != "AL")
+                        {
+                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Situación Categoría BA");
+                        }
+                    }
+                    else
+                    {
+                        oErrorMessages.Error("CorredorId", "Corredor No Operable por CUIT o Categoria Inactivo");
+                    }
                 }
             }
 
@@ -897,7 +957,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
-                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) 
+                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId)
                     && (oContratoSave.EstadoId != (int)EnumEstadoContrato.Pendiente && oContratoSave.EstadoId != (int)EnumEstadoContrato.Oferta && oContratoSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion))
                 {
                     oContrato.EstadoId = 7;
