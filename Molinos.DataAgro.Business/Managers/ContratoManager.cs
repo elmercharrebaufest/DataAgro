@@ -283,7 +283,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (sisa != null)
                 {
-                    if (sisa.EstadoCuit == 3)
+                    if (sisa.EstadoCuit == 3 && proveedor.RiesgoComercialSap != "E")
                     {
                         oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3");
                     }
@@ -303,22 +303,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (corredor != null)
                 {
-                    sisa = new SISA();
-                    if (oParam.ClasificacionId == 1)
-                    {
-                        sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
-                    }
-                    else if (oParam.ClasificacionId == 2)
-                    {
-                        sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria == 6 && x.SituacionCategoria == "AL");
-                    }
-                    else if (oParam.ClasificacionId == 3)
-                    {
-                        sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.SituacionCategoria == "AL");
-                    }
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == corredor.CUIT && x.CodCategoria == 2 && x.SituacionCategoria == "AL");
+
                     if (sisa != null)
                     {
-                        if (sisa.EstadoCuit == 3)
+                        if (sisa.EstadoCuit == 3 && corredor.RiesgoComercialSap != "E")
                         {
                             oErrorMessages.Error("CorredorId", "Corredor No Operable por Estado de CUIT 3");
                         }
@@ -754,8 +743,8 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                         }
                     }
-                    if (!validacionesMinimas)
-                    {
+                    //if (!validacionesMinimas)
+                    //{
                         if (oParam.Canje == true)
                         {
                             if (!oParam.Monto.HasValue)
@@ -771,7 +760,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 oErrorMessages.Error("Insumo", "Se Debe completar el campo Insumo cuando hay Canje");
                             }
                         }
-                    }
+                    //}
                     if (!validacionesMinimas)
                     {
                         if (oParam.PrestamoDevolucion == true)

@@ -425,8 +425,9 @@ namespace Molinos.DataAgro.Business.Managers
                && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 6)
                && (x.TipoAgenteCompraId == null)
                && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
-               && ((x is Contrato) && (x as Contrato).Canje != true)
-               && ((x is Contrato) && (x as Contrato).PrestamoDevolucion != true));
+               && (((x is Contrato) && (x as Contrato).Canje != true) || !(x is Contrato))
+               && (((x is Contrato) && (x as Contrato).PrestamoDevolucion != true) || !(x is Contrato))
+               /*&& ((x is Contrato) && (x as Contrato).Venta != true)*/);
             var contratoSapFijaciones = negocios.Where(a => a.TipoNegocioId == 3 && a.ContratoSAP != null && a.ContratoSAP != "").Select(a => a.ContratoSAP).ToList();
             var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && x.EstadoId == 5 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
             foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3))
@@ -902,8 +903,8 @@ namespace Molinos.DataAgro.Business.Managers
                 x => new PosicionPorMaterial
                 {
                     Id = x.Id,
-                    FechaDesde = x.Fecha.Value,
-                    FechaHasta = x.Fecha.Value,
+                    FechaDesde = x.FechaDesde.Value,
+                    FechaHasta = x.FechaHasta.Value,
                     Cantidad = x.Cantidad,
                     TipoNegocioId = 6,
                     Precio = x.Precio,

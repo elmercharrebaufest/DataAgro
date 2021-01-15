@@ -400,11 +400,16 @@ namespace WebDataAgro.Services
             contrato.ChequeElectronico = contratoSAP.ZLSCH == "=";
             contrato.PagoCBU = contratoSAP.CUENTA_MRP;
             contrato.DolarizadoExpress = contratoSAP.DolarizadoExpress == "X";
-            contrato.Canje = contratoSAP.Canje == "X";
+            if (!esActualizar)
+            {
+                contrato.Canje = contratoSAP.Canje == "X";
+                contrato.PrestamoDevolucion = contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? true : false;
+            }
             contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
             contrato.Insumo = contratoSAP.Insumo;
             contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
-            contrato.PrestamoDevolucion = contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? true : false;
+            //contrato.PrestamoDevolucion = contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? true : false;
+            //contrato.Venta = contratoSAP.TipoNegocio == "VENTA" ? true : false;
             contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
             if (!esActualizar)
             {

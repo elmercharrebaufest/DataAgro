@@ -234,7 +234,7 @@
             </div>
             <div hidden class="ampliar">
                 <div class="col-sm-5 col-md-2 contratoAFijar">
-                    <div class="madreDiv " style="padding-right:0">
+                    <div class="madreDiv @(canje ? "hide" : "")" style="padding-right:0">
                         <label style="width:60px">Convenio</label>
                         <input id="madreId" class="campo-input-input" data-bind="checked:Parametros.Madre, disabled: isControlDisabled" type="checkbox" />
                         <img id="errmadreId" src="~/Content/Images/error.png" style="display:none" />
@@ -243,7 +243,7 @@
             </div>
             <div hidden class="ampliar">
                 <div class="col-sm-5 col-md-2 contratoAFijar">
-                    <div class="madreDiv " style="padding-right:0">
+                    <div class="madreDiv @(canje ? "hide" : "")" style="padding-right:0">
                         <label style="width:60px">Fasón</label>
                         <input id="fasonIdCheck" class="campo-input-input" data-bind="" type="checkbox" onclick="ValidarFason()" />
                         <img id="errmadreId" src="~/Content/Images/error.png" style="display:none" />
