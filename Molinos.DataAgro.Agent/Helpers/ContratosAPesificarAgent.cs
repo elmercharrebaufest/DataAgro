@@ -131,7 +131,7 @@ namespace Molinos.DataAgro.Agent
                 NombreCorredor = dev.NOM_CORREDOR,
                 NombreVendedor = dev.NOM_VEND,
                 Unidad = dev.UNIDAD,
-                Dolarizado = dev.DOLARIZADO == "NO" ? true : false,   
+                Dolarizado = dev.DOLARIZADO == "NO" ? false : true,   
                 Clasificacion = dev.CLASIFICACION
             };
             return pesificado;
