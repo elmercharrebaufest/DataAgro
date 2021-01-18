@@ -158,8 +158,11 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarReporteRango = 412,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Evolucion_Fijacion")]
         VisualizarReporteEvolucionFijacion = 413,
-        [Display(ResourceType = typeof(Text), Name = "VisualizarReportePesificado")]
-        VisualizarReportePesificado = 414,
+       
+        [Display(ResourceType = typeof(Text), Name = "VisualizarReporteDolarizado")]
+        VisualizarReporteDolarizado = 414,
+        //[Display(ResourceType = typeof(Text), Name = "VisualizarAnulacionEnReporteCupo")]
+        //VisualizarAnulacionEnReporteCupo = 415,
 
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]

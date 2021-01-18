@@ -93,7 +93,7 @@ function Inicializar() {
     $("#grid").kendoGrid({
         toolbar: ["excel"],
         excel: {
-            fileName: "Reporte Pesificados.xlsx",
+            fileName: "Reporte Dolarizado.xlsx",
             allPages: true
         },
         dataSource: ds,
@@ -119,41 +119,41 @@ function Inicializar() {
 
             { field: "Dolarizado", title: "Dolarizado", type: "string", width: 150, template: function (dataItem) { return dataItem.Dolarizado == true  ? "Si" : "No"; } },
             { field: "DolarizadoNoProductor", title: "Dolarizado No Productor", type: "string", width: 150, template: function (dataItem) { return dataItem.DolarizadoNoProductor == true  ? "Si" : "No"; } },
+            { field: "DolarizadoExpress", title: "Dolarizado Express", type: "string", width: 150, template: function (dataItem) { return dataItem.DolarizadoExpress == true ? "Si" : "No"; } },
             {
                 field: "FechaHastaDolarizado", title: "Fecha Hasta Dolarizado", type: "date", width: 150, format: _DefaultDateTemplate, template: function (dataItem) {
 
                     return dataItem.FechaHastaDolarizado != null ? kendo.toString(kendo.parseDate(dataItem.FechaHastaDolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
                 }
             },
-            { field: "DolarizadoExpress", title: "Dolarizado Express", type: "string", width: 150, template: function (dataItem) { return dataItem.DolarizadoExpress == true ? "Si" : "No"; } },
             {
-                field: "KgVencimientoPesificable", format: "{0:n0}"
+                field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}"
             },
             {
-                field: "Pendiente", format: "{0:n0}"
+                field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}"
+            },  
+            {
+                field: "KgTotales", title: "Kilos Totales", format: "{0:n0}"
             },
+            
             {
                 field: "Precio", type: "number", format: "{0:n2}"
             },
-
-           
-            { field: "CuitVendedor", type: "string", width: 150 },
-            { field: "NombreVendedor", type: "string", width: 150 },
-            { field: "CuitCorredor", type: "string", width: 150 },
-            { field: "NombreCorredor", type: "string", width: 150 },
-            { field: "Clasificacion", type: "string", width: 150 },          
-            { field: "MaterialDesc", type: "string", width: 150 },
-            { field: "ComercialDesc", title: "Comercial", type: "string", width: 150 },
             {
                 field: "MonedaId", title: "Moneda"
-            },          
-            {
-                field: "KgNoPesificable", format: "{0:n0}"
-            },           
-            {
-                field: "KgTotales", format: "{0:n0}"
-            },
+            }, 
+           
+            { field: "CuitVendedor", title: "CUIT Vendedor", type: "string", width: 150 },
+            { field: "NombreVendedor", title: "Vendedor", type: "string", width: 150 },
+            { field: "CuitCorredor", title: "CUIT Corredor", type: "string", width: 150 },
+            { field: "NombreCorredor", title: "Corredor", type: "string", width: 150 },
+            { field: "Clasificacion", type: "string", width: 150 },          
+            { field: "MaterialDesc", title: "Material Descripción", type: "string", width: 150 },
+            { field: "ComercialDesc", title: "Comercial", title: "Comercial", type: "string", width: 150 },                 
             { field: "Unidad", type: "string", width: 150 },
+            {
+                field: "CantidadPendiente", format: "{0:n0}"
+            },
         ],
         pageable: {
             messages: {
@@ -199,14 +199,14 @@ function Inicializar() {
                     row.cells[5].value = "NO"
                 }
 
-                if (row.cells[7].value == true) {
-                    row.cells[7].value = "SI"
+                if (row.cells[6].value == true) {
+                    row.cells[6].value = "SI"
                 } else {
-                    row.cells[7].value = "NO"
+                    row.cells[6].value = "NO"
                 }
 
                 var fecha = row.cells[2].value;
-                var fechaHasta = row.cells[6].value;
+                var fechaHasta = row.cells[7].value;
                 var ultimaAplicacion = row.cells[3].value;
                 fechaHasta = kendo.toString(kendo.parseDate(fechaHasta, 'yyyy-MM-dd'), 'dd/MM/yyyy')
                 fecha = kendo.toString(kendo.parseDate(fecha, 'yyyy-MM-dd'), 'dd/MM/yyyy')
@@ -217,7 +217,7 @@ function Inicializar() {
                 }
                 if (fechaHasta != null) {
                     //fecha = fecha.setHours(fecha.getHours() + 1);
-                    row.cells[6].value = fechaHasta;
+                    row.cells[7].value = fechaHasta;
                 }
                 if (ultimaAplicacion != null) {
                     //fecha = fecha.setHours(fecha.getHours() + 1);

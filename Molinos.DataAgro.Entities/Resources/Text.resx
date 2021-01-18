@@ -760,8 +760,8 @@
   <data name="ModificarPrestamoDevolucion" xml:space="preserve">
     <value>Modificar Prestamo Devolución</value>
   </data>
-  <data name="VisualizarReportePesificado" xml:space="preserve">
-    <value>Visualizar Reporte Pesificado</value>
+  <data name="VisualizarReporteDolarizado" xml:space="preserve">
+    <value>Visualizar Reporte Dolarizado</value>
   </data>
   <data name="ModificarDolarizadoFinalizado" xml:space="preserve">
     <value>Modificacion fijacion dolarizado</value>

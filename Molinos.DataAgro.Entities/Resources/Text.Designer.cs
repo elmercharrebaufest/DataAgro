@@ -2000,11 +2000,11 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Visualizar Reporte Pesificado.
+        ///   Looks up a localized string similar to Visualizar Reporte Dolarizado.
         /// </summary>
-        public static string VisualizarReportePesificado {
+        public static string VisualizarReporteDolarizado {
             get {
-                return ResourceManager.GetString("VisualizarReportePesificado", resourceCulture);
+                return ResourceManager.GetString("VisualizarReporteDolarizado", resourceCulture);
             }
         }
     }

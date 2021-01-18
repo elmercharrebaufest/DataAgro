@@ -2734,7 +2734,6 @@
     <Content Include="Views\ReporteEvolucionFijacion\Index.cshtml" />
     <Content Include="Views\ReporteEvolucionFijacion\_Reporte.cshtml" />
     <Content Include="Views\ReportePesificados\Index.cshtml" />
-    <Content Include="Views\ReportePesificados\_ReportePesificado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

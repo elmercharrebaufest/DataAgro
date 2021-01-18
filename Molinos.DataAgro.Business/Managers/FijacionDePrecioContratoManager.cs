@@ -367,7 +367,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.Observacion = oFijacionDePrecio.Observacion;
                 oFijacionDePrecioSave.ProveedorId = oFijacionDePrecio.ProveedorId;
                 oFijacionDePrecioSave.ComercialId = oFijacionDePrecio.ComercialId;
-                oFijacionDePrecioSave.ContratoId = oContratoId.Id != 0 ? oContratoId.Id : (int?)null;
+                oFijacionDePrecioSave.ContratoId = oContratoId.Id > 0 ? oContratoId.Id : (int?)null;
                 oFijacionDePrecioSave.MonedaId = oFijacionDePrecio.MonedaId;
                 oFijacionDePrecioSave.MaterialId = oFijacionDePrecio.MaterialId;
                 oFijacionDePrecioSave.CorredorId = oFijacionDePrecio.CorredorId;
