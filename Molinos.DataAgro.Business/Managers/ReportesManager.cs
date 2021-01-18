@@ -2522,7 +2522,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 CantidadPendiente = item.CantidadPendiente,
                 Clasificacion = item.Clasificacion,
-                ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId,
+                ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault() != null ? comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId : (int?)null,
                 Contrato = item.Contrato,
                 CuitCorredor = item.CuitCorredor,
                 CuitVendedor = item.CuitVendedor,
@@ -2536,7 +2536,7 @@ namespace Molinos.DataAgro.Business.Managers
                 KgNoPesificable = item.KgNoPesificable,
                 KgVencimientoPesificable = item.KgVencimientoPesificable,
                 KgTotales = item.KgNoPesificable + item.KgVencimientoPesificable,
-                MaterialId = materiales.Where(x => x.Codigo == item.Material).FirstOrDefault().MaterialId,
+                MaterialId = materiales.Where(x => x.Codigo == item.Material).FirstOrDefault() != null ? materiales.Where(x => x.Codigo == item.Material).FirstOrDefault().MaterialId : (int?)null,
                 Unidad = item.Unidad,
                 MonedaId = item.Moneda,
                 Precio = item.Precio,

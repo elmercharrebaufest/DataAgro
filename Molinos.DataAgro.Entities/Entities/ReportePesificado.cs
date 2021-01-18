@@ -8,10 +8,10 @@ namespace Molinos.DataAgro.Entities.Entities
     public class ReportePesificado
     {
         public virtual int Id { get; set; }
-        public virtual int MaterialId { get; set; }
+        public virtual int? MaterialId { get; set; }
         public virtual string Contrato { get; set; }
         public virtual int? CantidadPendiente { get; set; }
-        public virtual int ComercialId { get; set; }
+        public virtual int? ComercialId { get; set; }
         public virtual string Fijacion { get; set; }
         public virtual DateTime? FechaFijacion { get; set; }
         public virtual DateTime? FechaHastaDolarizado { get; set; }
