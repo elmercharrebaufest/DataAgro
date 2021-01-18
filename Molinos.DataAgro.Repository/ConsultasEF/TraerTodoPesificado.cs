@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var queryRango =
                 from item in contexto.Set<ReportePesificado>()
-                where equipo.Contains(item.ComercialId)
+                where equipo.Contains(item.ComercialId.Value) || item.ComercialId == null
                 select new ReportePesificadoDto
                 {
                     Id = item.Id,
