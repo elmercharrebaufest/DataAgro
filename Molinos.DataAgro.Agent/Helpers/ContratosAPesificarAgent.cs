@@ -134,6 +134,25 @@ namespace Molinos.DataAgro.Agent
                 Dolarizado = dev.DOLARIZADO == "NO" ? false : true,   
                 Clasificacion = dev.CLASIFICACION
             };
+            var fecha = new DateTime(1753, 1, 1);
+            if (pesificado.FechaFijacion.HasValue && pesificado.FechaFijacion.Value < fecha)
+            {
+                
+                logger.Error($"Reporte Pesificado fecha Fijacion:  {pesificado.ToJson()}");
+                pesificado.FechaFijacion = (DateTime?)null;
+            }
+            if (pesificado.FechaHastaDolarizado.HasValue && pesificado.FechaHastaDolarizado.Value < fecha)
+            {
+
+                logger.Error($"Reporte Pesificado FechaHastaDolarizado:  {pesificado.ToJson()}");
+                pesificado.FechaHastaDolarizado = (DateTime?)null;
+            }
+            if (pesificado.FechaUltimaAplicacion.HasValue && pesificado.FechaUltimaAplicacion.Value < fecha)
+            {
+
+                logger.Error($"Reporte Pesificado FechaUltimaAplicacion:  {pesificado.ToJson()}");
+                pesificado.FechaUltimaAplicacion = (DateTime?)null;
+            }
             return pesificado;
         }      
     }

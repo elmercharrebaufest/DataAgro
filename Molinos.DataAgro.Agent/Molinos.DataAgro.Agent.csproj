@@ -262,6 +262,7 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Properties\DataSources\System.Diagnostics.EventLogEntry.datasource" />
+    <None Include="Service References\AltaTempranaNosisBolsaRuca\SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO1.wsdl" />
     <None Include="Service References\ComprasDetalle\Molinos.DataAgro.Agent.ComprasDetalle.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -320,7 +321,6 @@
     <None Include="Service References\AltaTempranaNosisBolsaRuca\Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca.Z_MPRFC_ALTA_TEMPRANA_N_R_COResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\AltaTempranaNosisBolsaRuca\SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO.wsdl" />
     <None Include="Service References\AnulacionContratos\Molinos.DataAgro.Agent.AnulacionContratos.SI_ZMPWS_DATAAGRO_ANULACION_CONTRATOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

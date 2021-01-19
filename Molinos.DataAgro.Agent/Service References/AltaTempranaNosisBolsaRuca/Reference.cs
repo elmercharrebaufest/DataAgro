@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -57,7 +57,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -117,7 +117,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -191,7 +191,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -199,6 +199,8 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     public partial class Z_MPRFC_ALTA_TEMPRANA_N_R_COResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string eX_ALTA_TEMPRANAField;
+        
+        private string eX_BOLETO_FISICOField;
         
         private string eX_BOLSAField;
         
@@ -232,6 +234,18 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string EX_BOLETO_FISICO {
+            get {
+                return this.eX_BOLETO_FISICOField;
+            }
+            set {
+                this.eX_BOLETO_FISICOField = value;
+                this.RaisePropertyChanged("EX_BOLETO_FISICO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
         public string EX_BOLSA {
             get {
                 return this.eX_BOLSAField;
@@ -243,7 +257,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public string EX_CARTA {
             get {
                 return this.eX_CARTAField;
@@ -255,7 +269,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string EX_CONSIGNATARIO {
             get {
                 return this.eX_CONSIGNATARIOField;
@@ -267,7 +281,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string EX_FECHA_ACTUALIZACION {
             get {
                 return this.eX_FECHA_ACTUALIZACIONField;
@@ -279,7 +293,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string EX_MENSAJE {
             get {
                 return this.eX_MENSAJEField;
@@ -291,7 +305,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string EX_NOSIS {
             get {
                 return this.eX_NOSISField;
@@ -303,7 +317,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
         public string EX_PLAN_CANJE {
             get {
                 return this.eX_PLAN_CANJEField;
@@ -315,7 +329,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
         public string EX_PROVEEDOR_GRANOS {
             get {
                 return this.eX_PROVEEDOR_GRANOSField;
@@ -327,7 +341,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
         public ZMPES5510 EX_RUCA {
             get {
                 return this.eX_RUCAField;
