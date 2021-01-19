@@ -151,9 +151,9 @@ function Inicializar() {
             { field: "MaterialDesc", title: "Material Descripción", type: "string", width: 150 },
             { field: "ComercialDesc", title: "Comercial", title: "Comercial", type: "string", width: 150 },                 
             { field: "Unidad", type: "string", width: 150 },
-            {
-                field: "CantidadPendiente", format: "{0:n0}"
-            },
+            //{
+            //    field: "CantidadPendiente", format: "{0:n0}"
+            //},
         ],
         pageable: {
             messages: {
