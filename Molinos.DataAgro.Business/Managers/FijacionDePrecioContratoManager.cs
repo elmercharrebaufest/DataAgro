@@ -1103,6 +1103,10 @@ namespace Molinos.DataAgro.Business.Managers
         private GrabarFijacionResult ValidarModificacionFijacionFinalizada(FijacionDePrecioContrato oContrato, FijacionDePrecioContrato oContratoSave)
         {
             GrabarFijacionResult result = new GrabarFijacionResult();
+            if (!oContrato.FechaDolarizado.HasValue && (oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true))
+            {
+                result.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados.");
+            }
             if (oContrato.FechaDolarizado.HasValue && oContrato.FechaDolarizado.Value < oContrato.FechaOperacion)
             {
                 result.Error("dolarizado", "La fecha de dolarizado no es válida");
