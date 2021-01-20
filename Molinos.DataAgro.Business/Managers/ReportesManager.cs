@@ -2496,7 +2496,7 @@ namespace Molinos.DataAgro.Business.Managers
                     datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).ToList()));
                 }
 
-                List<ReportePesificado> items = ConvertPesificarAgent(datos);
+                List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").ToList());
 
                 repositorio.TruncarTabla<ReportePesificado>();
 
@@ -2629,7 +2629,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             repositorio.RemoverTodos<ReportePesificado>(a => a.CuitVendedor == item.CuitVendedor && a.CuitCorredor == item.CuitCorredor);
                         }
-                        var datos = ConvertPesificarAgent(datosNuevo);
+                        var datos = ConvertPesificarAgent(datosNuevo.Where(x => x.Anticipo != "X").ToList());
                         repositorio.AgregarTodos(datos);
                         repositorio.GuardarCambios();
                     }

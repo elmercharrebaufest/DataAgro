@@ -27,6 +27,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Unidad { get; set; }
         public bool Dolarizado { get; set; }
         public string Clasificacion { get; set; }
+        public string Anticipo { get; set; }
     }
 
 }

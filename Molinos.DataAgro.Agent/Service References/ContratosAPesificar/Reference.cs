@@ -107,6 +107,8 @@ namespace Molinos.DataAgro.Agent.ContratosAPesificar {
         
         private string cLASIFICACIONField;
         
+        private string aNTICIPOField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string CONTRATO {
@@ -356,6 +358,18 @@ namespace Molinos.DataAgro.Agent.ContratosAPesificar {
             set {
                 this.cLASIFICACIONField = value;
                 this.RaisePropertyChanged("CLASIFICACION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=21)]
+        public string ANTICIPO {
+            get {
+                return this.aNTICIPOField;
+            }
+            set {
+                this.aNTICIPOField = value;
+                this.RaisePropertyChanged("ANTICIPO");
             }
         }
         

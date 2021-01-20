@@ -30,6 +30,11 @@
           <xsd:maxLength value="2" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="unit3">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="3" />
@@ -115,6 +120,7 @@
           <xsd:element name="UNIDAD" type="rfc:unit3" />
           <xsd:element name="MONEDA" type="rfc:cuky5" />
           <xsd:element name="CLASIFICACION" type="rfc:char20" />
+          <xsd:element name="ANTICIPO" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
