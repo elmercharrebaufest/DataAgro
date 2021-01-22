@@ -2493,15 +2493,17 @@ namespace Molinos.DataAgro.Business.Managers
                     var index = proveedores.Count >= 200 ? 200 : proveedores.Count;
                     var lista = proveedores.Take(index).ToList();
                     proveedores.RemoveRange(0, index);
-                    datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).ToList()));
+                    datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).Distinct().ToList()));
                 }
 
                 List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").ToList());
 
                 repositorio.TruncarTabla<ReportePesificado>();
-
+                if(items.Count > 0)
+                {
                 repositorio.AgregarTodos(items);
-                repositorio.GuardarCambios();
+                repositorio.GuardarCambios();               
+                }
                 return datos;
             }
             catch (Exception e)
@@ -2545,42 +2547,7 @@ namespace Molinos.DataAgro.Business.Managers
             }).ToList();
         }
 
-        //public List<ReportePesificadoDto> TraerTodoDatoPesificado(string contrato, DateTime? fechaHastaDolarizado, decimal? kilosPesificable, int? ComercialId,
-        //  int? precio, decimal? noPesificables, decimal? total, string vendedor, string corredor, bool? dolarizado, bool? dolarizadoExpress, bool? dolarizadoNoP)
-        //{
-        //    fechaHastaDolarizado = fechaHastaDolarizado != null ? fechaHastaDolarizado.Value.Date : fechaHastaDolarizado;
-        //    var reporte = repositorio.Listar<ReportePesificado, ReportePesificadoDto>(item => 
-        //    new ReportePesificadoDto()
-        //     {
-        //        CantidadPendiente = item.CantidadPendiente,
-        //        Clasificacion = item.Clasificacion,
-        //        ComercialDesc = item.Comercial.Nombres +" "+ item.Comercial.Apellido,
-        //        Contrato = item.Contrato,
-        //        CuitCorredor = item.CuitCorredor,
-        //        CuitVendedor = item.CuitVendedor,
-        //        Dolarizado = item.Dolarizado,
-        //        DolarizadoExpress = item.DolarizadoExpress,
-        //        FechaFijacion = item.FechaFijacion,
-        //        DolarizadoNoProductor = item.DolarizadoNoProductor,
-        //        FechaHastaDolarizado = item.FechaHastaDolarizado,
-        //        FechaUltimaAplicacion = item.FechaUltimaAplicacion,
-        //        Fijacion = item.Fijacion,
-        //        KgNoPesificable = item.KgNoPesificable,
-        //        KgVencimientoPesificable = item.KgVencimientoPesificable,
-        //        KgTotales = item.KgNoPesificable + item.KgVencimientoPesificable,
-        //        MaterialDesc = item.Material.Descripcion,
-        //        Unidad = item.Unidad,
-        //        MonedaId = item.Moneda.Descripcion,
-        //        Precio = item.Precio,
-        //        NombreCorredor = item.NombreCorredor,
-        //        NombreVendedor = item.NombreVendedor
-        //    }, x => x.Dolarizado == dolarizado && x.DolarizadoExpress == dolarizadoExpress
-        //     && x.DolarizadoNoProductor == dolarizadoNoP && x.ComercialId == ComercialId && x.Contrato.Contains(contrato)
-        //     && x.CuitCorredor == corredor && x.CuitVendedor == vendedor && x.Precio == precio && x.KgTotales == total &&
-        //     x.FechaHastaDolarizado == fechaHastaDolarizado && x.KgNoPesificable == noPesificables).ToList();
-        //    return reporte;
-        //}
-
+     
         public DataSourceResult TraerTodoDatoPesificado(DataSourceRequest filtro, List<int> equipo)
         {
             List<string> cuits = new List<string>();
@@ -2630,8 +2597,11 @@ namespace Molinos.DataAgro.Business.Managers
                             repositorio.RemoverTodos<ReportePesificado>(a => a.CuitVendedor == item.CuitVendedor && a.CuitCorredor == item.CuitCorredor);
                         }
                         var datos = ConvertPesificarAgent(datosNuevo.Where(x => x.Anticipo != "X").ToList());
-                        repositorio.AgregarTodos(datos);
-                        repositorio.GuardarCambios();
+                        if (datos.Count > 0)
+                        {
+                            repositorio.AgregarTodos(datos);
+                            repositorio.GuardarCambios();
+                        }
                     }
 
                 }

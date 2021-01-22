@@ -133,7 +133,7 @@ namespace Molinos.DataAgro.Agent
                 Unidad = dev.UNIDAD,
                 Dolarizado = dev.DOLARIZADO == "NO" ? false : true,   
                 Clasificacion = dev.CLASIFICACION,
-                Anticipo = dev.ANTICIPO
+                Anticipo = dev.ANTICIPO                
             };
             var fecha = new DateTime(1753, 1, 1);
             if (pesificado.FechaFijacion.HasValue && pesificado.FechaFijacion.Value < fecha)
