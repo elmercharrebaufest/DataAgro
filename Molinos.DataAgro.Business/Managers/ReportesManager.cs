@@ -2496,7 +2496,7 @@ namespace Molinos.DataAgro.Business.Managers
                     datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).Distinct().ToList()));
                 }
 
-                List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").ToList());
+                List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").Distinct().ToList());
                 items = items.Distinct().ToList();
                 repositorio.TruncarTabla<ReportePesificado>();
                 if(items.Count > 0)

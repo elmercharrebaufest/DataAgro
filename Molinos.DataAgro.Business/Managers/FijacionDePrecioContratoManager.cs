@@ -302,7 +302,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if ((oParam.DolarizadoExpress == true || oParam.Dolarizado == true || oParam.DolarizadoCorredor == true) && (oParam.Cesion == true || oParam.Anticipo == true))
             {
-                oErrorMessages.Error("dolarizado", "No se puede completar Dolarizados por que el contrato tiene Cesion o Anticipo.");
+                oErrorMessages.Error("dolarizado", "No se puede completar Dolarizados porque el contrato tiene Cesion o Anticipo.");
             }
             return oErrorMessages;
         }
@@ -1113,11 +1113,11 @@ namespace Molinos.DataAgro.Business.Managers
             GrabarFijacionResult result = new GrabarFijacionResult();
             if ((oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true) && (oContratoSave.Cesion == true || oContratoSave.Anticipo == true))
             {
-                result.Error("dolarizado", "No se puede completar Dolarizados por que el contrato tiene Cesion o Anticipo.");
+                result.Error("dolarizado", "No se puede completar Dolarizados porque el contrato tiene Cesion o Anticipo.");
             }
             if ((oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true) && (oContratoSave.Cesion == true || oContratoSave.Anticipo == true))
             {
-                result.Error("dolarizado", "No se puede completar Dolarizados por que el contrato tiene Cesion o Anticipo.");
+                result.Error("dolarizado", "No se puede completar Dolarizados porque el contrato tiene Cesion o Anticipo.");
             }
 
             if (!oContrato.FechaDolarizado.HasValue && (oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true))
