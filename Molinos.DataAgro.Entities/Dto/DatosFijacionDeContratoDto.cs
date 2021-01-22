@@ -38,6 +38,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CalidadDto> Calidades { get; set; }
         public int CampanaId { get; set; }
         public string Clasificacion { get; set; }
+        public bool Cesion { get; set; }
+        public bool Anticipo { get; set; }
     }
 }
 

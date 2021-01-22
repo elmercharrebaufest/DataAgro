@@ -300,6 +300,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
+            if ((oParam.DolarizadoExpress == true || oParam.Dolarizado == true || oParam.DolarizadoCorredor == true) && (oParam.Cesion == true || oParam.Anticipo == true))
+            {
+                oErrorMessages.Error("dolarizado", "No se puede completar Dolarizados por que el contrato tiene Cesion o Anticipo.");
+            }
             return oErrorMessages;
         }
 
@@ -906,7 +910,9 @@ namespace Molinos.DataAgro.Business.Managers
                 ObservacionTercero = fijac.ObservacionTercero,
                 DolarizadoCorredor = fijac.DolarizadoCorredor.Value,
                 DolarizadoExpress = fijac.DolarizadoExpress.Value,
-                Fecha_Dolarizado = fijac.FechaDolarizado
+                Fecha_Dolarizado = fijac.FechaDolarizado,
+                Anticipo = fijac.Anticipo,
+                Cesion = fijac.Cesion,
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
@@ -992,7 +998,7 @@ namespace Molinos.DataAgro.Business.Managers
                     return oEntityErrors;
                 }
                 oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
-                
+
                 try
                 {
                     repositorio.GuardarCambios();

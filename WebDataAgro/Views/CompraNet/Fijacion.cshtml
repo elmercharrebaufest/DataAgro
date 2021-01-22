@@ -35,7 +35,7 @@
             });
 
         </script>
-}
+    }
 }
 
 @section Styles {
@@ -43,19 +43,21 @@
 }
 
 <input type="hidden" id="comercialCreador" value="@ViewBag.ComercialId" />
+<input type="text" id="Cesion" />
+<input type="text" id="Anticipo" />
 
 @Html.Hidden("crearContrato", Url.Action("CrearContrato", "CompraNet"))
 
 <div id="CrearContrato" class="container">
     <br />
     @if (!String.IsNullOrEmpty(ViewBag.Fijacion))
-{
+    {
         <h3>Fijación @ViewBag.Fijacion</h3>
-}
+    }
     @if (!String.IsNullOrEmpty(ViewBag.Contrato))
-{
+    {
         <h3>Contrato @ViewBag.Contrato</h3>
-}
+    }
 
     <div class="row">
         <div>
@@ -519,13 +521,13 @@
         <div class="col-sm-2">
             <div id="pagoDolarizadoDiv">
                 <label style="width:120px">Dolarizado</label>
-                <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" onclick="EsDolarizado()"/>
+                <input id="dolarizadoId" class="campo-input-input" data-bind="checked:Parametros.dolarizadoId, disabled: isControlDisabled" type="checkbox" onclick="EsDolarizado()" />
             </div>
         </div>
         <div class="col-sm-2">
             <div id="expressDiv" hidden>
                 <label style="width:120px">Dolarizado Express</label>
-                <input id="expressId" class="campo-input-input" data-bind="checked:Parametros.expressId, disabled: isControlDisabled" type="checkbox" onclick="EsExpress()"/>
+                <input id="expressId" class="campo-input-input" data-bind="checked:Parametros.expressId, disabled: isControlDisabled" type="checkbox" onclick="EsExpress()" />
             </div>
         </div>
         <div class="col-md-2 col-sm-9">
@@ -683,7 +685,7 @@
                     <img id="errcontVendedorId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-        </div>      
+        </div>
         <div class="row">
             <div class="col-sm-2 ">
                 <div id="pagoDiferidoDiv">

@@ -193,6 +193,13 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
     }
+    console.log("entro?");
+    if ($("#estado").val() !== "5") {
+        console.log("si");
+        $("#Anticipo").val(afijar.Anticipo);
+        $("#Cesion").val(afijar.Cesion);
+    }
+
 }
 
 function InicializarElementos() {
@@ -3403,13 +3410,13 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (contrato.DolarizadoExpress == true && contrato.Estado == 5) {
-        $("#expressId").prop("checked", true);        
+        $("#expressId").prop("checked", true);
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
         $("#dolarizadoDiv").show();
         $("#expressDiv").show();
     }
     if (contrato.Estado == 5) {
-       
+
     }
 
     if (contrato.PagoDiferido === true && contrato.TipoNegocioId != 3) {
@@ -3688,7 +3695,7 @@ function CargarDatosEditar(contrato, hijo) {
             }
         }
 
-        if (tieneDolarizado  && contrato.DolarizadoExpress == true ) {
+        if (tieneDolarizado && contrato.DolarizadoExpress == true) {
             $("#expressId").attr("disabled", false);
             $("#dolarizadoId").attr("disabled", true);
             $("#dolarizadoFechaId").data("kendoDatePicker").enable(true);
@@ -3743,6 +3750,10 @@ function CargarDatosEditar(contrato, hijo) {
         $("#visualizar_datosTercero").html(datosTercero);
     } else {
         $("#datosCargaTercero").hide();
+    }
+    if (contrato.TipoNegocioId == 3) {
+        $("#Cesion").val(contrato.Cesion);
+        $("#Anticipo").val(contrato.Anticipo);
     }
 
 }

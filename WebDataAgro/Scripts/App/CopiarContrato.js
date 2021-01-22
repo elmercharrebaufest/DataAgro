@@ -277,6 +277,8 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         $("#kgscontrato").text(contrato.DatosFijacion.KilosPendiente + "/" + contrato.DatosFijacion.KilosAplicados);
         $("#desdecontrato").text(contrato.DatosFijacion.FechaDesde);
         $("#hastacontrato").text(contrato.DatosFijacion.FechaHasta);
+        $("#Cesion").val(contrato.Cesion);
+        $("#Anticipo").text(contrato.Anticipo);
     }
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);
@@ -587,7 +589,9 @@ function ObtenerDatos(error) {
         obj.PrestamoDevolucion = true;
         obj.PlantaDestinoId = $("#plantaDestinoId").data("kendoDropDownList").value();
     }
-    
+
+    obj.Anticipo = $("#Anticipo").val();
+    obj.Cesion = $("#Cesion").val();
     return obj;
 }
 

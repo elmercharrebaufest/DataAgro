@@ -88,6 +88,9 @@ namespace Molinos.DataAgro.Agent
                         contrato.CondicionFijacionDescripcion = "HASTA 14.30 HS POR PIZ / MERCADERIA";
                         contrato.CondicionPagoDescripcion = "10 DÍAS HÁBILES DE FECHA DE FIJACIÓN";
                         contrato.Clasificacion = "PRODUCTOR";
+                        contrato.Cesion = false;
+                        contrato.Anticipo = false;
+                        contrato.Clasificacion = "PRODUCTOR";
                         if (double.Parse(contrato.KilosPendiente) > 0)
                         {
                             datosContratos.Add(contrato);
@@ -165,7 +168,9 @@ namespace Molinos.DataAgro.Agent
                             Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0'),
                             Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "#26337b",
                             Calidades = calidades,
-                            Clasificacion = contrato.CLASIFICACION
+                            Clasificacion = contrato.CLASIFICACION,
+                            Cesion = contrato.CESION == "X" ? true : false,
+                            Anticipo = contrato.ANTICIPO == "X" ? true : false,
                         };
 
                         if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)
