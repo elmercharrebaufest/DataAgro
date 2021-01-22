@@ -2472,7 +2472,6 @@ namespace Molinos.DataAgro.Business.Managers
                          ProveedorId = x.CorredorId
                      }, x => cuits.Contains(x.CorredorId));
 
-
                 foreach (var p in proveedores)
                 {
                     p.Cuit = p.Cuit.Trim();
@@ -2486,6 +2485,7 @@ namespace Molinos.DataAgro.Business.Managers
                         p.Cuit = "00" + p.Cuit.Remove(p.Cuit.Length - 1).Remove(0, 2);
                     }
                 }
+                proveedores = proveedores.Distinct().ToList();
                 var datos = new List<PesificarAgentDto>();
                 while (proveedores.Count > 0)
                 {
@@ -2585,7 +2585,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                prov = prov.ToList();
+                prov = prov.Distinct().ToList();
                 var datosNuevo = pesificarAgent.ConsultarTodo(prov.Select(x => x.Cuit).Distinct().ToList());
                 try
                 {

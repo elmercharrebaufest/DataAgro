@@ -399,6 +399,7 @@
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\Expresiones.cs" />
     <Compile Include="Helpers\ExtensionesSerializacion.cs" />
+    <Compile Include="Helpers\HashCodeByPropertyExtensions.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\KendoGridFilter.cs" />
     <Compile Include="Extensions\MimeKitExtensions.cs" />

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Molinos.DataAgro.Entities.Dto
 {
     //---------------------------------------------------------
@@ -56,12 +58,28 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion { get; set; }
     }
 
-    public class ProveedorCombo
+    public class ProveedorCombo : IEquatable<ProveedorCombo>
     {
         public int ProveedorId { get; set; }
         public string RazonSocial { get; set; }
 
         public string Cuit { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ProveedorCombo);
+        }
+
+        public bool Equals(ProveedorCombo other)
+        {
+            return other != null &&
+                   Cuit == other.Cuit;
+        }
+
+        public override int GetHashCode()
+        {
+            return -833617328 + EqualityComparer<string>.Default.GetHashCode(Cuit);
+        }
     }
 
     public class TipoTelefonoQry

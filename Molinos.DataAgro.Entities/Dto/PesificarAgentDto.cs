@@ -1,10 +1,12 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public class PesificarAgentDto
+    public class PesificarAgentDto : IEquatable<PesificarAgentDto>
     {
         public string Material { get; set; }
         public string Contrato { get; set; }
@@ -28,6 +30,45 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Dolarizado { get; set; }
         public string Clasificacion { get; set; }
         public string Anticipo { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as PesificarAgentDto);
+        }
+
+        public bool Equals(PesificarAgentDto other)
+        {
+            if ((other == null) || !this.GetType().Equals(other.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                var oType = other.GetType();
+
+                foreach (var oProperty in oType.GetProperties())
+                {
+
+                    var oOldValue = oProperty.GetValue(other, null);
+                    var oNewValue = oProperty.GetValue(this, null);
+
+                    if (Equals(oOldValue, oNewValue)) { continue; }
+                    else
+                    {
+                        return false;
+                    };
+
+                }
+
+                return true;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = this.GetHashCodeOnProperties();
+            return hashCode;            
+        }        
     }
 
 }
