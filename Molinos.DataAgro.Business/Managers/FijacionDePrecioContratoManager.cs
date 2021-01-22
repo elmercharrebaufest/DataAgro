@@ -390,6 +390,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
                 oFijacionDePrecioSave.PagoCBU = oFijacionDePrecio.PagoCBU;
                 oFijacionDePrecioSave.MotivoOperacionAnterior = oFijacionDePrecio.MotivoOperacionAnterior;
+                oFijacionDePrecioSave.Anticipo = oFijacionDePrecio.Anticipo;
+                oFijacionDePrecioSave.Cesion = oFijacionDePrecio.Cesion;
                 CargarDolarizado(oFijacionDePrecio, oFijacionDePrecioSave, oContratoId, fechaDolarizado, proveedor, corredor);
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -1109,6 +1111,15 @@ namespace Molinos.DataAgro.Business.Managers
         private GrabarFijacionResult ValidarModificacionFijacionFinalizada(FijacionDePrecioContrato oContrato, FijacionDePrecioContrato oContratoSave)
         {
             GrabarFijacionResult result = new GrabarFijacionResult();
+            if ((oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true) && (oContratoSave.Cesion == true || oContratoSave.Anticipo == true))
+            {
+                result.Error("dolarizado", "No se puede completar Dolarizados por que el contrato tiene Cesion o Anticipo.");
+            }
+            if ((oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true) && (oContratoSave.Cesion == true || oContratoSave.Anticipo == true))
+            {
+                result.Error("dolarizado", "No se puede completar Dolarizados por que el contrato tiene Cesion o Anticipo.");
+            }
+
             if (!oContrato.FechaDolarizado.HasValue && (oContrato.DolarizadoExpress == true || oContrato.Dolarizado == true || oContrato.DolarizadoCorredor == true))
             {
                 result.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados.");

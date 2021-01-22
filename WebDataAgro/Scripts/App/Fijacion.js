@@ -120,6 +120,10 @@ function cargarContratoAFijarSeleccionado() {
     cargarDatosAFijarEnFijacion(afijar[0])
 }
 function cargarDatosAFijarEnFijacion(afijar) {
+    
+    if (afijar == null || typeof afijar === "undefined") {
+        return;
+    }
     $(".datoscontrato").show();
     $("#datosContrato").show();
     $("#kgspendientescontrato").text(afijar.KilosPendiente);
@@ -193,9 +197,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
     }
-    console.log("entro?");
     if ($("#estado").val() !== "5") {
-        console.log("si");
         $("#Anticipo").val(afijar.Anticipo);
         $("#Cesion").val(afijar.Cesion);
     }
