@@ -418,14 +418,17 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no debe estar vacio cuando el contrato es 'A FIJAR'");
                 }
-                if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9
-                    && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))
-                    )
+                if (PermisosHelper.ObtenerUsuario() != null && PermisosHelper.ObtenerUsuario().ToUpper() != "DATAAGROP")
                 {
-                    oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
+                    if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9
+                                        && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))
+                                        )
+                    {
+                        oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
+                    }
                 }
-            }
 
+            }
 
 
             if (oParam.ClasificacionId == 1)
@@ -587,11 +590,15 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.TipoNegocioId == 2 && oParam.DestinoId != 9
-                && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
+            if (PermisosHelper.ObtenerUsuario() != null && PermisosHelper.ObtenerUsuario().ToUpper() != "DATAAGROP")
             {
-                oErrorMessages.Error("", "Se debe completar Redespacho en Acopios");
+                if (oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.TipoNegocioId == 2 && oParam.DestinoId != 9
+                                && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
+                {
+                    oErrorMessages.Error("", "Se debe completar Redespacho en Acopios");
+                }
             }
+
 
             if ((oParam.StandardDeCalidadId == 2 && oParam.Calidad == null))
             {
@@ -745,21 +752,21 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     //if (!validacionesMinimas)
                     //{
-                        if (oParam.Canje == true)
+                    if (oParam.Canje == true)
+                    {
+                        if (!oParam.Monto.HasValue)
                         {
-                            if (!oParam.Monto.HasValue)
-                            {
-                                oErrorMessages.Error("Monto", "Se Debe completar el campo Monto cuando hay Canje");
-                            }
-                            if (String.IsNullOrEmpty(oParam.MonedaCanjeId))
-                            {
-                                oErrorMessages.Error("Moneda", "Se Debe completar la Moneda que corresponde al campo Canje");
-                            }
-                            if (String.IsNullOrEmpty(oParam.Insumo))
-                            {
-                                oErrorMessages.Error("Insumo", "Se Debe completar el campo Insumo cuando hay Canje");
-                            }
+                            oErrorMessages.Error("Monto", "Se Debe completar el campo Monto cuando hay Canje");
                         }
+                        if (String.IsNullOrEmpty(oParam.MonedaCanjeId))
+                        {
+                            oErrorMessages.Error("Moneda", "Se Debe completar la Moneda que corresponde al campo Canje");
+                        }
+                        if (String.IsNullOrEmpty(oParam.Insumo))
+                        {
+                            oErrorMessages.Error("Insumo", "Se Debe completar el campo Insumo cuando hay Canje");
+                        }
+                    }
                     //}
                     if (!validacionesMinimas)
                     {

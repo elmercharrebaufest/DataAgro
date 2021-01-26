@@ -1,6 +1,4 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Agent;
-using Molinos.DataAgro.Agent.Helpers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -12,7 +10,6 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
@@ -242,11 +239,16 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
+
+            Negocio fijacionSave = null;
+            if (oParam.Id > 0)
+            {
+                fijacionSave = repositorio.Obtener<Negocio>(oParam.Id);
+            }
             if (validacionesMinimas)
             {
                 if (oParam.Id > 0)
                 {
-                    var fijacionSave = repositorio.Obtener<Negocio>(oParam.Id);
                     if ((oParam.FechaOperacion.Date != fijacionSave.Fecha.Date && oParam.FechaOperacion.Date < fijacionSave.Fecha.Date))
                     {
 
@@ -303,6 +305,20 @@ namespace Molinos.DataAgro.Business.Managers
             if ((oParam.DolarizadoExpress == true || oParam.Dolarizado == true || oParam.DolarizadoCorredor == true) && (oParam.Cesion == true || oParam.Anticipo == true))
             {
                 oErrorMessages.Error("dolarizado", "No se puede completar Dolarizados porque el contrato tiene Cesion o Anticipo.");
+            }
+
+            if (fijacionSave != null)
+            {
+                if (fijacionSave.DolarizadoTercero == true && oParam.Dolarizado != true && oParam.DolarizadoExpress != true && oParam.DolarizadoCorredor != true)
+                {
+                    oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado que marco el tercero.");
+                }
+
+                if (fijacionSave.PagoDiferidoTercero == true && oParam.PagoDiferido != true)
+                {
+                    oErrorMessages.Error("Dolarizado", "Se debe completar Pago Diferido que marco el tercero.");
+                }
+
             }
             return oErrorMessages;
         }
