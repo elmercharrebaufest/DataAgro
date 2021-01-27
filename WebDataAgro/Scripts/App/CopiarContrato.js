@@ -279,6 +279,7 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         $("#hastacontrato").text(contrato.DatosFijacion.FechaHasta);
         $("#Cesion").val(contrato.Cesion);
         $("#Anticipo").text(contrato.Anticipo);
+        $("#ClasificacionContrato").text(contrato.ClasificacionContrato);
     }
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);
@@ -592,6 +593,7 @@ function ObtenerDatos(error) {
 
     obj.Anticipo = $("#Anticipo").val();
     obj.Cesion = $("#Cesion").val();
+    obj.ClasificacionContrato = $("#ClasificacionContrato").val();
     return obj;
 }
 
