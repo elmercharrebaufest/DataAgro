@@ -200,7 +200,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
     if ($("#estado").val() !== "5") {
         $("#Anticipo").val(afijar.Anticipo);
         $("#Cesion").val(afijar.Cesion);
-        $("#ClasificacionContrato").val(afijar.ClasificacionContrato);
+        $("#ClasificacionContrato").val(afijar.Clasificacion);
     }
 
 }
