@@ -200,6 +200,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
     if ($("#estado").val() !== "5") {
         $("#Anticipo").val(afijar.Anticipo);
         $("#Cesion").val(afijar.Cesion);
+        $("#ClasificacionContrato").val(afijar.ClasificacionContrato);
     }
 
 }
@@ -3756,6 +3757,7 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.TipoNegocioId == 3) {
         $("#Cesion").val(contrato.Cesion);
         $("#Anticipo").val(contrato.Anticipo);
+        $("#ClasificacionContrato").val(contrato.ClasificacionContrato);
     }
 
 }

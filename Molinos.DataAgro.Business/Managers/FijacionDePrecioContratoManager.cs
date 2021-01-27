@@ -408,6 +408,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.MotivoOperacionAnterior = oFijacionDePrecio.MotivoOperacionAnterior;
                 oFijacionDePrecioSave.Anticipo = oFijacionDePrecio.Anticipo;
                 oFijacionDePrecioSave.Cesion = oFijacionDePrecio.Cesion;
+                oFijacionDePrecioSave.ClasificacionContrato = oFijacionDePrecio.ClasificacionContrato;
                 CargarDolarizado(oFijacionDePrecio, oFijacionDePrecioSave, oContratoId, fechaDolarizado, proveedor, corredor);
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -460,10 +461,9 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (oContratoId != null)
             {
-                var datoContrato = TraerDatosFijacion(proveedor, corredor, oFijacionDePrecio.MaterialId, oContratoId.ContratoSAP.Remove(0, 3), 0);
-                if (datoContrato != null && oFijacionDePrecio.FechaDolarizado != null)
+                if (oFijacionDePrecio.FechaDolarizado != null)
                 {
-                    oFijacionDePrecioSave.DolarizadoCorredor = datoContrato.First().Clasificacion.ToUpper() != "PRODUCTOR" || oFijacionDePrecio.CorredorId != null ? true : false;
+                    oFijacionDePrecioSave.DolarizadoCorredor = oFijacionDePrecioSave.ClasificacionContrato.ToUpper() != "PRODUCTOR" || oFijacionDePrecio.CorredorId != null ? true : false;
                 }
                 else
                 {
@@ -931,6 +931,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha_Dolarizado = fijac.FechaDolarizado,
                 Anticipo = fijac.Anticipo,
                 Cesion = fijac.Cesion,
+                ClasificacionContrato  = fijac.ClasificacionContrato
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)

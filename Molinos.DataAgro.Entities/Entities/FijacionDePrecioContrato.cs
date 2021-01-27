@@ -11,8 +11,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Contrato Contrato { get; set; }
         public bool? Cesion { get; set; }
         public bool? Anticipo { get; set; }
-
-
+        public string ClasificacionContrato { get; set; }
     }
 }
 
