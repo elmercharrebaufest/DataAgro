@@ -107,8 +107,8 @@ function CargarCopiaContrato(contratoId, tipo) {
     contratoCopia = MSExecuteOnServer('/CompraNet/TraerContratoCompleto', datos, function () { $.unblockUI(); });
     if (tipo == "acuerdo") {
         contratoCopia.ContratoAcuerdoId = contratoId;
+        $("#contratoAcuerdoId").val(contratoId);
     }
-    $("#contratoAcuerdoId").val(contratoId);
     if (contratoCopia.HayError) {
         MensErr(contratoCopia.Errores[0].Message);
     } else {
