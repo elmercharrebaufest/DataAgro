@@ -29,6 +29,7 @@ namespace Molinos.DataAgro.Agent
 
         public List<DatosFijacionDeContratoDto> ObtenerContratos(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int idFijacion)
         {
+            filtro = filtro == null ? "" : filtro;
             var datosContratos = new List<DatosFijacionDeContratoDto>();
             var hoy = DateTime.Now.Date;
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
@@ -116,7 +117,7 @@ namespace Molinos.DataAgro.Agent
 
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION(rq);
                     logger.Debug("Numero de contratos pendientes:" + devolucion.EX_SALIDA.Count());
-                    var listaContratos = devolucion.EX_SALIDA.Where(x => x.CONTRATO.StartsWith("000" + filtro));
+                    var listaContratos = devolucion.EX_SALIDA.Where(x => x.CONTRATO.StartsWith("000" + filtro.TrimStart('0')));
                     var calidadesEspeciales = repositorio.Listar<CalidadEspecial>();
                     foreach (var contrato in listaContratos)
                     {
