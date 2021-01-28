@@ -990,7 +990,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "CALIDAD ESPECIAL<br />";
                 }
-                if (contrato.ImporteSustentable != null)
+                if (contrato.ImporteSustentable != null && contrato.ImporteSustentable > 0 && contrato.MonedaSustentable != null)
                 {
                     htmlBody += "SUSTENTABLE " + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
                 }
