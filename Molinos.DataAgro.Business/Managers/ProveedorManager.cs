@@ -738,7 +738,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "ESTABLECIMIENTO ARRENDADO<br />";
             }
-            if (oContrato.ImporteSustentable != null)
+            if (oContrato.ImporteSustentable != null && oContrato.ImporteSustentable > 0)
             {
                 htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
