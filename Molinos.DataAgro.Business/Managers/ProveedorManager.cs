@@ -819,7 +819,7 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var precio in oContrato.PrecioPactado)
                 {
                     htmlBody += "Precio " + precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() + "<br />";
-                    if (precio.ImportePactado != null)
+                    if (precio.ImportePactado != null && precio.ImportePactado > 0 && precio.MonedaImportePactado != null)
                     {
                         htmlBody += "Importe Pactado " + precio.ImportePactado.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaImportePactado.Descripcion.ToUpper() + "<br />";
                     }
@@ -1289,7 +1289,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Cupo = param.Cupo
                     };
                     repositorio.Agregar(contactoComercial);
-                    EnviarMailInvitacionMOAOperaciones(contactoComercial,oParam);
+                    EnviarMailInvitacionMOAOperaciones(contactoComercial, oParam);
 
                     int cant = 1;
                     foreach (var interes in param.intereses)
@@ -2012,7 +2012,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Cupo = can.Cupo
                             };
                             repositorio.Agregar(contacto);
-                            EnviarMailInvitacionMOAOperaciones(contacto,oParam);
+                            EnviarMailInvitacionMOAOperaciones(contacto, oParam);
                             var nroItem = 1;
                             foreach (var valor in can.intereses)
                             {
@@ -2126,7 +2126,7 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string htmlBody = "Estimado <b>" + contacto.Nombres.ToTitleCase() + " " + contacto.Apellido.ToTitleCase() + "</b><br /><br />";
-            htmlBody += "En el presente mail se notifica que ya puede comenzar a operar con "+ proveedor.basicos.RazonSocial + " ( "+ proveedor.basicos.cuit + " ) en MOA Operaciones, la web de autogestión de Molinos Agro S.A. <br /><br />  ";
+            htmlBody += "En el presente mail se notifica que ya puede comenzar a operar con " + proveedor.basicos.RazonSocial + " ( " + proveedor.basicos.cuit + " ) en MOA Operaciones, la web de autogestión de Molinos Agro S.A. <br /><br />  ";
             htmlBody += "Ingrese haciendo click <a href='" + urlMOA + "'>aquí</a>";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
 
