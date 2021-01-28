@@ -3628,22 +3628,45 @@ function CargarDatosEditar(contrato, hijo) {
         }
     }
 
-    if (contrato.CalidadTercero == true || contrato.DolarizadoTercero == true || contrato.PagoDiferidoTercero == true || contrato.ObservacionTercero != null) {
+    if (contrato.SustentableTercero == true || contrato.CalidadTercero == true || contrato.DolarizadoTercero == true || contrato.PagoDiferidoTercero == true || contrato.ObservacionTercero != null) {
         $("#datosCargaTercero").show();
-        $("#visualizar_observacionTercero").text(contrato.ObservacionTercero);
+        var p = contrato.ObservacionTercero.split("|");
+
+        $("#visualizar_observacionTercero").text(p[0]);
         var datosTercero = "";
         if (contrato.CalidadTercero == true) {
-            datosTercero = datosTercero + '<strong style="float:left">Calidad: </strong><span> Si</span><br>';
-        }
-        if (contrato.SustentableTercero == true) {
-            datosTercero = datosTercero + '<strong style="float:left">Sustentable: </strong><span> Si</span><br>';
+            var n = "";
+            var f = p.filter(function (e) { return e.includes("Calidad:") });
+            if (f) {
+                n = " - " + f[0].split(":")[1].trim();
+            }
+            datosTercero = datosTercero + '<strong style="float:left">Calidad: </strong><span> Si ' + n + '</span><br>';
         }
         if (contrato.DolarizadoTercero == true) {
-            datosTercero = datosTercero + '<strong style="float:left">Dolarizado: </strong><span> Si</span><br>';
+            var n = "";
+            var f = p.filter(function (e) { return e.includes("Dolarizado:") });
+            if (f) {
+                n = " - " + f[0].split(":")[1].trim();
+            }
+            datosTercero = datosTercero + '<strong style="float:left">Dolarizado: </strong><span> Si ' + n + '</span><br>';
+        }
+        if (contrato.SustentableTercero == true) {
+            var n = "";
+            var f = p.filter(function (e) { return e.includes("Sustentable:") });
+            if (f) {
+                n = " - " + f[0].split(":")[1].trim();
+            }
+            datosTercero = datosTercero + '<strong style="float:left">Sustentable: </strong><span> Si ' + n + '</span><br>';
         }
         if (contrato.PagoDiferidoTercero == true) {
-            datosTercero = datosTercero + '<strong style="float:left">Pago Diferido: </strong><span> Si</span><br>';
+            var n = "";
+            var f = p.filter(function (e) { return e.includes("Pago Diferido:") });
+            if (f) {
+                n = " - " + f[0].split(":")[1].trim();
+            }
+            datosTercero = datosTercero + '<strong style="float:left">Pago Diferido: </strong><span> Si ' + n + '</span><br>';
         }
+
         $("#visualizar_datosTercero").html(datosTercero);
     } else {
         $("#datosCargaTercero").hide();

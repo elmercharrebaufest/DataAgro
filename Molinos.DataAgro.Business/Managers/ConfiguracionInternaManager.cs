@@ -15,12 +15,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
         private readonly ILogDataAgroManager logDataAgroManager;
+        private readonly IDiasHabilesAgent diasHabilesAgent;
 
-        public ConfiguracionInternaManager(IRepositorio repositorio, ILogger logger, ILogDataAgroManager logDataAgroManager)
+        public ConfiguracionInternaManager(IRepositorio repositorio, ILogger logger, ILogDataAgroManager logDataAgroManager, IDiasHabilesAgent diasHabilesAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
             this.logDataAgroManager = logDataAgroManager;
+            this.diasHabilesAgent = diasHabilesAgent;
         }
         public Resultado GrabarPrecio(PrecioMoa oConfiguracion)
         {
@@ -121,11 +123,16 @@ namespace Molinos.DataAgro.Business.Managers
         public List<PrecioMoaDto> TraerPrecios()
         {
             var hoy = DateTime.Now;
+            var ultimoDiaHabil = diasHabilesAgent.UltimoDiaHabil(null);
             var lista = repositorio.Listar<PrecioMoa, PrecioMoaDto>(x => new PrecioMoaDto
             {
                 Id = x.Id,
                 DesdeVigencia = x.DesdeVigencia,
                 HastaVigencia = x.HastaVigencia,
+                DesdeEntrega = x.DesdeEntrega,
+                HastaEntrega = x.HastaEntrega,
+                DesdeFijacion = x.DesdeFijacion,
+                HastaFijacion = x.HastaFijacion,
                 MaterialId = x.MaterialId,
                 TipoNegocioId = x.TipoNegocioId,
                 Material = x.Material.Descripcion,
@@ -133,7 +140,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
                 Precio = x.Precio
             },
-           x => (x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy) || x.DesdeVigencia >= hoy)
+           x => (x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy) || x.DesdeVigencia >= hoy || (x.DesdeVigencia <= ultimoDiaHabil && x.HastaVigencia >= ultimoDiaHabil))
                 .OrderBy(x => x.DesdeVigencia).ThenBy(x => x.MaterialId).ToList();
             return lista;
         }
@@ -271,10 +278,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         error.Error("HastaFijacion", "Hasta Fijacion debe ser mayor a Desde Fijacion");
                     }
-                    if (repositorio.Existe<PrecioMoa>(x => x.HastaVigencia > precio.DesdeVigencia && x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId))
-                    {
-                        error.Error("Precio", "Existe PrecioMoa para ese Tipo de Negocio, Material y ese rango de vigencia");
-                    }
+
                 }
 
                 if (precio.TipoNegocioId == 2 || precio.TipoNegocioId == 1)
@@ -302,7 +306,6 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         error.Error("HastaEntrega", "Hasta Entrega debe ser mayor a Desde Entrega");
                     }
-
                 }
 
                 if (precio.TipoNegocioId == 3 || precio.TipoNegocioId == 2)
@@ -315,6 +318,24 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         error.Error("Precio", "El precio debe ser mayor a 0");
                     }
+                }
+
+                if (precio.TipoNegocioId == 1)
+                {
+                    if (repositorio.Existe<PrecioMoa>(x => x.HastaVigencia > precio.DesdeVigencia && x.HastaEntrega >= precio.DesdeEntrega && x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId))
+                    {
+                        error.Error("Precio", "Existe PrecioMoa para ese Tipo de Negocio, Material y ese rango de entrega y vigencia");
+                    }
+                }
+                if (precio.TipoNegocioId == 2)
+                {
+                    if (repositorio.Existe<PrecioMoa>(x => x.HastaVigencia > precio.DesdeVigencia && x.HastaEntrega >= precio.DesdeEntrega && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId))
+                    {
+                        error.Error("Precio", "Existe PrecioMoa para ese Tipo de Negocio, Material, Moneda y ese rango de entrega y vigencia");
+                    }
+                }
+                if (precio.TipoNegocioId == 3)
+                {
                     if (repositorio.Existe<PrecioMoa>(x => x.HastaVigencia > precio.DesdeVigencia && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId))
                     {
                         error.Error("Precio", "Existe PrecioMoa para ese Tipo de Negocio, Material, Moneda y ese rango de vigencia");
@@ -334,6 +355,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Error("Fecha", "Vigencia no debe ser anterior al dia de la fecha");
             }
+
 
 
             return error;
@@ -438,13 +460,51 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     foreach (var mon in monedas)
                     {
-                        var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).FirstOrDefault();
-                        if (precio == null)
+                        if (tiponegocio == 3)
                         {
-                            precio = new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId };
+                            var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).FirstOrDefault();
+                            if (precio == null)
+                            {
+                                precio = new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId };
+                            }
+                            precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
+                            listaPrecio.Add(precio);
                         }
-                        precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
-                        listaPrecio.Add(precio);
+                        else
+                        {
+                            if (neg.TipoNegocioId == 1 && mon.Descripcion == "ARP")
+                            {
+                                continue;
+                            }
+                            var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).ToList();
+                            
+                            foreach (var item in precio)
+                            {
+                                item.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
+                            }
+                            if (existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId) && mon.Descripcion == "ARP")
+                            {
+                                var pizarra = existePizarra.FirstOrDefault();
+                                precio.Add(new PrecioMoaCompraNetDto
+                                {
+                                    DesdeEntrega = pizarra.DesdeEntrega,
+                                    HastaEntrega = pizarra.HastaEntrega,
+                                    Pizarra = true,
+                                    MaterialId = mat.MaterialId,
+                                    MonedaId = "Pizarra",
+                                    Material = mat.Descripcion,
+                                    Retirado = false,
+                                    TipoNegocio = neg.Descripcion,
+                                    TipoNegocioId = neg.TipoNegocioId
+                                });
+                            }
+                            if (precio.Count == 0)
+                            {
+                                precio.Add(new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId });
+                            }
+                            listaPrecio.AddRange(precio);
+                        }
+
                     }
                 }
             }
@@ -659,5 +719,6 @@ namespace Molinos.DataAgro.Business.Managers
                 CampañaId = x.CampañaId
             }, x => x.MaterialId == material);
         }
+
     }
 }

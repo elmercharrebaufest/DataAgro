@@ -1341,6 +1341,39 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
+        public Resultado AnularFijacionCarga(int fijacionId,string motivoRechazo)
+        {
+            var oEntityErrors = new Resultado();
+            if (string.IsNullOrEmpty(motivoRechazo) || string.IsNullOrWhiteSpace(motivoRechazo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
+            var fijacion = repositorio.Obtener<FijacionDePrecioContrato>(fijacionId);
+
+            fijacion.MotivoRechazo = motivoRechazo;
+            if (fijacion != null && fijacion.EstadoId == (int)EnumEstadoContrato.PreAprobacion)
+            {                      
+                try
+                {
+                    fijacion.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                    fijacion.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacion.Id), TipoAccionLogDataAgro.Eliminar, fijacion.GetType());
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", "La Fijación no se puede anular");
+            }
+            return oEntityErrors;
+        }
+
     }
 }
 

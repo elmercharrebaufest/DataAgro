@@ -770,13 +770,19 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 45, attributes: {
+                field: "FechaDesde", type: "date", title: "Desde"/*, format: _DefaultDateTemplate*/, width: 45, attributes: {
                     "class": "mobile-sm"
+                }, template: function (dataItem) {
+                    var p = ArmarFechaDesde(dataItem);
+                    return p;
                 }
             },
             {
-                field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 45, attributes: {
+                field: "FechaHasta", type: "date", title: "Hasta"/*, format: _DefaultDateTemplate*/, width: 45, attributes: {
                     "class": "mobile-sm"
+                }, template: function (dataItem) {
+                    var p = ArmarFechaHasta(dataItem);
+                    return p;
                 }
             },
             {
@@ -2284,19 +2290,41 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     }
     if (SustentableTercero == "true" || CalidadTercero == "true" || DolarizadoTercero == "true" || PagoDiferidoTercero == "true" || ObservacionTercero != null) {
         $("#datosCargaTercero").show();
-        $("#visualizar_observacionTercero").text(ObservacionTercero);
+        var p = ObservacionTercero.split("|");
+
+        $("#visualizar_observacionTercero").text(p[0]);
         var datosTercero = "";
         if (CalidadTercero == "true") {
-            datosTercero = datosTercero + '<strong style="float:left">Calidad: </strong><span> Si</span><br>';
+            var n = "";
+            var f = p.filter(function (e) { return e.includes("Calidad:") });
+            if (f) {
+                n = " - " + f[0].split(":")[1].trim();
+            }
+            datosTercero = datosTercero + '<strong style="float:left">Calidad: </strong><span> Si ' + n + '</span><br>';
         }
         if (DolarizadoTercero == "true") {
-            datosTercero = datosTercero + '<strong style="float:left">Dolarizado: </strong><span> Si</span><br>';
+            var n = "";
+            var f = p.filter(function (e) { return e.includes("Dolarizado:") });
+            if (f) {
+                n = " - " + f[0].split(":")[1].trim();
+            }
+            datosTercero = datosTercero + '<strong style="float:left">Dolarizado: </strong><span> Si ' + n + '</span><br>';
         }
         if (SustentableTercero == "true") {
-            datosTercero = datosTercero + '<strong style="float:left">Sustentable: </strong><span> Si</span><br>';
+            var n = "";
+            var f = p.filter(function (e) { return e.includes("Sustentable:") });
+            if (f) {
+                n = " - " + f[0].split(":")[1].trim();
+            }
+            datosTercero = datosTercero + '<strong style="float:left">Sustentable: </strong><span> Si ' + n + '</span><br>';
         }
         if (PagoDiferidoTercero == "true") {
-            datosTercero = datosTercero + '<strong style="float:left">Pago Diferido: </strong><span> Si</span><br>';
+            var n = "";
+            var f = p.filter(function (e) { return e.includes("Pago Diferido:") });
+            if (f) {
+                n = " - " + f[0].split(":")[1].trim();
+            }
+            datosTercero = datosTercero + '<strong style="float:left">Pago Diferido: </strong><span> Si ' + n + '</span><br>';
         }
         $("#visualizar_datosTercero").html(datosTercero);
     } else {
@@ -2587,9 +2615,13 @@ function ArmarPrecio(dataItem) {
         if (!externo /*&& dataItem.TipoNegocioId === 3*/ && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && (e.Pizarra == true || e.MonedaId === dataItem.Moneda); })[0];
-                if (p)
-                    esPrecioMoa = p.Precio == dataItem.PrecioPlazo || (p.Pizarra == true && dataItem.Precio == 0);
+                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && (e.Pizarra == true || e.MonedaId === dataItem.Moneda); });
+
+                if (p) {
+                    for (var y = 0; y < p.length; y++) {
+                        esPrecioMoa = p[y].Precio == dataItem.PrecioPlazo || (p[y].Pizarra == true && dataItem.Precio == 0);
+                    }
+                }
             }
             if (esPrecioMoa === true) {
                 return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);
@@ -2602,20 +2634,78 @@ function ArmarPrecio(dataItem) {
         return dataItem.PrecioPlazo;
     }
 }
+function ArmarFechaDesde(dataItem) {
+    var fecha = kendo.toString(dataItem.FechaDesde, "dd/MM/yyyy");
+    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2 || dataItem.TipoNegocioId === 3) {
+        if (!externo && dataItem.Estado === 9) {
+            var esPrecioMoa = false;
+            for (i = 0; i < precioMoa.length; i++) {
+                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1); });
+
+                if (p) {
+                    for (var y = 0; y < p.length; y++) {
+                        if (esPrecioMoa === false && parseInt(p[y].DesdeEntrega != null)) {
+                            esPrecioMoa = kendo.toString(new Date(parseInt(p[y].DesdeEntrega.substr(6))), "dd/MM/yyyy") == kendo.toString(dataItem.FechaDesde, "dd/MM/yyyy");
+                        }
+                    }
+                }
+            }
+            if (esPrecioMoa === true) {
+                console.log(1);
+                return fecha;
+            } else {
+                return '<strong style="color:red;">' + fecha + '</strong>';
+            }
+        }
+        return fecha;
+    } else {
+        return fecha;
+    }
+}
+function ArmarFechaHasta(dataItem) {
+    console.log(dataItem, dataItem.FechaHasta);
+    var fecha = kendo.toString(dataItem.FechaHasta, "dd/MM/yyyy");
+    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2 || dataItem.TipoNegocioId === 3) {
+        if (!externo && dataItem.Estado === 9) {
+            var esPrecioMoa = false;
+            for (i = 0; i < precioMoa.length; i++) {
+                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1); });
+
+                if (p) {
+                    for (var y = 0; y < p.length; y++) {
+                        if (esPrecioMoa === false && parseInt(p[y].HastaEntrega != null)) {
+                            esPrecioMoa = kendo.toString(new Date(parseInt(p[y].HastaEntrega.substr(6))), "dd/MM/yyyy") == kendo.toString(dataItem.FechaHasta, "dd/MM/yyyy");
+                        }
+                    }
+                }
+            }
+            if (esPrecioMoa === true) {
+                console.log(1);
+                return fecha;
+            } else {
+                return '<strong style="color:red;">' + fecha + '</strong>';
+            }
+        }
+        return fecha;
+    } else {
+        return fecha;
+    }
+}
 function ModificoPrecio(dataItem) {
     if (dataItem.TipoNegocioId !== 1) {
         if (dataItem.ComercialCreadorId == null) {
             var esPrecioMoa = false;
             var pPrecio = "";
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && (e.Pizarra == true || e.MonedaId === dataItem.Moneda); })[0];
+                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && (e.Pizarra == true || e.MonedaId === dataItem.Moneda); });
                 if (p) {
-                    pPrecio = p.Precio;
-                    esPrecioMoa = p.Precio == dataItem.PrecioPlazo || (p.Pizarra == true && dataItem.Precio == 0);
+                    for (var y = 0; y < p.length; y++) {
+                        esPrecioMoa = p[y].Precio == dataItem.PrecioPlazo || (p[y].Pizarra == true && dataItem.Precio == 0);
+                    }
                 }
             }
             if (!esPrecioMoa) {
-                return "El precio es diferente al publicado, <br> Precio Cargado: " + dataItem.PrecioPlazo + "<br> Precio MOA: " + pPrecio ;
+                return "El precio es diferente al publicado, <br> Precio Cargado: " + dataItem.PrecioPlazo + "<br> Precio MOA: " + pPrecio;
             }
         }
         return "";

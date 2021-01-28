@@ -192,7 +192,29 @@ namespace WebDataAgro.Controllers
 
         public ActionResult TraerPrecioMoa(int material, int tiponegocio)
         {
+
             var data = configuracionInternaManager.TraerPrecioCompraNet(material, tiponegocio);
+            return new JsonResult()
+            {
+                Data = data,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult AnularContrato(int negocioId, string MotivoRechazo)
+        {
+
+            var data = mobjContratoManager.AnularContratoCarga(negocioId, MotivoRechazo);
+            return new JsonResult()
+            {
+                Data = data,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult AnularFijacion(int negocioId,string MotivoRechazo)
+        {
+
+            var data = mobjFijacionDePrecioContratoManager.AnularFijacionCarga(negocioId, MotivoRechazo);
             return new JsonResult()
             {
                 Data = data,

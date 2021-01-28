@@ -4174,5 +4174,41 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Obtener<TipoNegocio>(x => x.TipoNegocioId == tipo);
         }
+
+
+        public Resultado AnularContratoCarga(int contratoId, string motivoRechazo)
+        {
+            var oEntityErrors = new Resultado();
+            if (string.IsNullOrEmpty(motivoRechazo) || string.IsNullOrWhiteSpace(motivoRechazo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }
+            var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
+            
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAprobacion))
+            {
+
+                try
+                {
+                    oContratoSave.MotivoRechazo = motivoRechazo;
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoId), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
+                }
+            }
+            else
+            {
+                oEntityErrors.Error("", "No se pudo anular el contratro");
+            }
+
+            return oEntityErrors;
+        }
+
     }
 }

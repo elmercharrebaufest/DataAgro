@@ -29,6 +29,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<ILogDataAgroManager> logDataAgroMock;
+        private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
 
         [SetUp]
         public void SetUp()
@@ -36,10 +37,11 @@ namespace Molinos.DataAgro.Test.Managers
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             logDataAgroMock = new Mock<ILogDataAgroManager>();
+            diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
-            target = new ConfiguracionInternaManager(repositorioMock.Object, logger.Object, logDataAgroMock.Object);
+            target = new ConfiguracionInternaManager(repositorioMock.Object, logger.Object, logDataAgroMock.Object, diasHabilesAgentMock.Object);
         }
         [Test]
         public void GrabarPrecioTestOk()
@@ -123,6 +125,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioMoa, PrecioMoaDto>>>(), It.IsAny<Expression<Func<PrecioMoa, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<PrecioMoaDto>() { new PrecioMoaDto { Id = 1 } });
+            diasHabilesAgentMock.Setup(y => y.UltimoDiaHabil(null)).Returns(DateTime.Now.Date);
             var resultado = target.TraerPrecios();
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<PrecioMoa, PrecioMoaDto>>>(), It.IsAny<Expression<Func<PrecioMoa, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);

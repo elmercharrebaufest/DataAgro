@@ -47,7 +47,7 @@ function InicializarElementos() {
         $("#HabilitacionFijacion").show();
     });
 
-    $("#TipoNegocioId").change(function () {       
+    $("#TipoNegocioId").change(function () {
         LimpiarPrecioForm();
         var value = $("#TipoNegocioId").val();
         if (value == 1) {
@@ -135,5 +135,32 @@ function mostrarocultar(element) {
         $(element).text("Ocultar");
     } else {
         $(element).text("Mostrar");
+    }
+}
+
+function copiarPrecioMOA(configuracion) {
+    console.log(configuracion);
+    configuracion = JSON.parse(configuracion);
+    console.log(configuracion.DesdeEntrega);
+    console.log(new Date(configuracion.DesdeEntrega ));
+
+    $("#TipoNegocioId").val(configuracion.TipoNegocioId);
+    $("#TipoNegocioId").change();
+    $("#MonedaId").val(configuracion.MonedaId);
+    $("#MaterialId").val(configuracion.MaterialId);
+    if (configuracion.Precio > 0) {
+        $("#Precio").data("kendoNumericTextBox").value(configuracion.Precio);
+    }
+    var hoy = new Date();
+    var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
+    $("#DesdeVigencia").val(stringDia + " " + "00:00");
+    $("#HastaVigencia").val(stringDia + " " + "23:59");
+    $("#DesdeEntrega").data("kendoDatePicker").value(new Date(configuracion.DesdeEntrega));
+    $("#HastaEntrega").data("kendoDatePicker").value(new Date(configuracion.HastaEntrega));
+    if (configuracion.DesdeFijacion != null) {
+        $("#DesdeFijacion").data("kendoDatePicker").value(new Date(configuracion.DesdeFijacion ));
+    }
+    if (configuracion.HastaFijacion != null) {
+        $("#HastaFijacion").data("kendoDatePicker").value(new Date(configuracion.HastaFijacion ));
     }
 }

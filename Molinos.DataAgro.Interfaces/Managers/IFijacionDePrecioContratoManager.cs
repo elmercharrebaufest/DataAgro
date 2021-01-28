@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado ActualizarFijacionSap(FijacionDePrecioContrato fijacion);
         Resultado AltaFijacionSap(FijacionDePrecioContrato fijacion);
         Resultado AnularFijacionSAP(FijacionSAP fijacion);
+        Resultado AnularFijacionCarga(int fijacionId, string motivoRechazo);
     }
 }
 

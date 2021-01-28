@@ -70,5 +70,6 @@ namespace Molinos.DataAgro.Interfaces
         BasicoContrato NegocioABasicoContrato(Negocio negocio);
 
         TipoNegocio DevolverNamespaceNegocio(int tipo);
+        Resultado AnularContratoCarga(int contratoId, string motivoRechazo);
     }
 }
