@@ -52,6 +52,8 @@ namespace Molinos.DataAgro.Agent
                     },
                     Consignatario = "SI",
                     PlanCanje = "SI",
+                    BoletoFisico = "NO"
+                    
                     
                 };
             }
@@ -109,7 +111,8 @@ namespace Molinos.DataAgro.Agent
                         Carta = valor.EX_CARTA,
                         FechaActualizacion = valor.EX_FECHA_ACTUALIZACION,
                         Mensaje = valor.EX_MENSAJE,
-                        ProveedorGrano = valor.EX_PROVEEDOR_GRANOS
+                        ProveedorGrano = valor.EX_PROVEEDOR_GRANOS,      
+                        BoletoFisico = valor.EX_BOLETO_FISICO
                           
                     };
                     return retorno;

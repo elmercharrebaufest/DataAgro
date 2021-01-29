@@ -251,7 +251,9 @@ function InicializarElementos() {
                     $("#clasificacion").data("kendoDropDownList").value("");
                     $("#consignatarioId").prop("checked", false);
                 }
+
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
+                $("#proveedorId").val(compraNet.ProveedorId);
                 $("#clasificacion").data("kendoDropDownList").value(compraNet.ClasificacionCompraNetId);
                 if ($("#clasificacion").val() == 2 || $("#clasificacion").val() == 3) {
                     $("#consignatarioId").prop("checked", compraNet.Consignatario);
@@ -260,10 +262,12 @@ function InicializarElementos() {
                 $("#clasificacion").data("kendoDropDownList").trigger("change");
                 if (compraNet.LocalidadId != null) {
                     if (compraNet.LocalidadId != "" && compraNet.ProvinciaId != "") {
+                        $("#ProvinciaId").val(compraNet.ProvinciaId);
                         $("#LocalidadCrearContrato").val(compraNet.Localidad + " (" + compraNet.Provincia + ")");
                         HabilitarEstablecimiento();
                     } else {
                         $("#LocalidadCrearContrato").val("");
+                        $("#ProvinciaId").val("");
                         HabilitarEstablecimiento();
                     }
                 }
@@ -291,6 +295,13 @@ function InicializarElementos() {
                 }
                 if ($("#tipoId").val() == 3) {
                     compraNet.ComisionPorcentaje = 0;
+                }
+                var bolsa = SeleccionAutomaticaBolsa();
+                if (bolsa != 0) {
+                    $("#boletoConfirmaId").prop("checked", true);
+                    $("#BolsaConfirmaDiv").show();
+                    $("#bolsaConfirmaId").data("kendoDropDownList").value(bolsa.BolsaId);
+                    $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
                 }
                 //if ($("#tipoId").val() == "6") {
                 //    $("#dolarizadoExpressDiv").hide();
@@ -416,7 +427,14 @@ function InicializarElementos() {
 
                 if ($("#tipoId").val() != "3" && $("#tipoId").val() != "6" && $("#boton-ampliar").text() != "+ AMPLIAR") {
                     $('#pagoDirectoDiv').show();
-                }
+                }              
+            }
+            var bolsa = SeleccionAutomaticaBolsa();
+            if (bolsa != 0) {
+                $("#boletoConfirmaId").prop("checked", true);
+                $("#BolsaConfirmaDiv").show();
+                $("#bolsaConfirmaId").data("kendoDropDownList").value(bolsa.BolsaId);
+                $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
             }
             ValidarCorredor(e.dataItem.Id);
         },
@@ -1206,6 +1224,14 @@ function InicializarElementos() {
                 LimpiarDescuentos();
                 $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
                 $("#PorcentajeDescuentoId").val("");
+            }
+           //aca
+            var bolsa = SeleccionAutomaticaBolsa();
+            if (bolsa != 0) {
+                $("#boletoConfirmaId").prop("checked", true);
+                $("#BolsaConfirmaDiv").show();
+                $("#bolsaConfirmaId").data("kendoDropDownList").value(bolsa.BolsaId);
+                $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
             }
         }
     });
@@ -3262,6 +3288,7 @@ function CargarDatosEditar(contrato, hijo) {
         $('#contCorredorDiv').show();
         $('#porcentajeComisionDiv').show();
     }
+    $("#proveedorId").val(contrato.ProveedorId);
     $("#estado").val(contrato.Estado);
     $("#buscadorProveedor").val(contrato.Proveedor);
     $("#buscadorProveedor").trigger("change");
@@ -3740,6 +3767,7 @@ function AutocompleteProcedencia() {
         $("#LocalidadCrearContrato").trigger("change");
         $("#establecimientoPropioId").prop("checked", false);
         $("#establecimientoArrendadoId").prop("checked", false);
+        DatosProveedor();
     });
 
     $("#LocalidadCrearContrato").kendoAutoComplete({
@@ -3754,6 +3782,17 @@ function AutocompleteProcedencia() {
                 $("#LocalidadCrearContrato").val($("#LocalidadCrearContrato").val().split('|')[1]);
                 HabilitarEstablecimiento();
             }
+            DatosProveedor();
+            var bolsa = SeleccionAutomaticaBolsa();
+            if (bolsa != 0) {
+                $("#boletoConfirmaId").prop("checked", true);
+                $("#BolsaConfirmaDiv").show();
+                $("#bolsaConfirmaId").data("kendoDropDownList").value(bolsa.BolsaId);
+                $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
+            } 
+        },
+        select: function (e) {
+            $("#ProvinciaId").val(e.dataItem.ProvinciaId);
         },
         dataSource: {
             severFiltering: true,
@@ -4470,6 +4509,39 @@ function HayPrestamo() {
     }
 
 }
+
+function SeleccionAutomaticaBolsa() {
+    $("#LocalidadCrearContrato").trigger("change");
+    var destino = $("#destinoId").val();
+    var provincia = $("#ProvinciaId").val();
+    var localidadInput = $("#LocalidadCrearContrato").val();
+    var bolsa = 0;
+    if (destino != "" && provincia != "" && localidadInput != "") {
+        bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
+    } else {
+        LimpiarBoleto();
+    }
+    return bolsa;
+
+}
+
+function HayMercaderia() {
+    if ($("#mercsDepositoId").is(":checked")) {
+        $("#divSojaSustentable").hide();
+        $("#sustentableId").prop("checked", false);
+        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+        $("#sustentableMonedaId").data("kendoDropDownList").value("");
+        $(".sustentableDiv").hide();
+    }
+}
+
+function HaySustentable() {
+    if ($("#sustentableId").is(":checked")) {
+        $("#mercsDepositoId").prop("checked", false);
+    }
+}
+
+
 
 
 

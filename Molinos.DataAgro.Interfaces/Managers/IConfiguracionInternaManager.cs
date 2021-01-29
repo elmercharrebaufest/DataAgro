@@ -11,8 +11,8 @@ namespace Molinos.DataAgro.Interfaces
     public interface IConfiguracionInternaManager
     {
         //ConfiguracionInterna TraerConfiguracion();
-        Resultado GrabarPrecio(PrecioMoa oConfiguracion);
-        Resultado GrabarPizarra(HabilitacionPizarra oConfiguracion);
+        Resultado GrabarPrecio(PrecioMoa oConfiguracion, string active);
+        Resultado GrabarPizarra(HabilitacionPizarra oConfiguracion, string active);
         Resultado GrabarFijacion(HabilitacionFijacion oConfiguracion);
         List<PrecioMoaDto> TraerPrecios(); 
         List<HabilitacionFijacionDto> TraerFijaciones(); 
@@ -28,5 +28,6 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarCampaña(HabilitacionCampaña oConfiguracion);
         HabilitacionPizarraDto HabilitarPizarraExterno(int material,int tiponegocio);
         List<HabilitacionCampañaDto> HabilitarCampañaExterno(int material);
+       
     }
 }

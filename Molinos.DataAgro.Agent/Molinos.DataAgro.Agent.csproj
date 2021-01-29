@@ -88,6 +88,7 @@
     <Compile Include="Helpers\ModificarFijacionAgent.cs" />
     <Compile Include="Helpers\AdministracionCuperaAgent.cs" />
     <Compile Include="Helpers\ServicioRepositorioScatoAgent.cs" />
+    <Compile Include="Helpers\ValidacionCreditoAgent.cs" />
     <Compile Include="Helpers\ValidarDocProcPagoAgent.cs" />
     <Compile Include="Helpers\StatusContratoAgent.cs" />
     <Compile Include="Helpers\ClienteStopAgent.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Helpers\FinalizarFijacionAgent.cs" />
     <Compile Include="Helpers\RelacionCorredorProveedorAgent.cs" />
     <Compile Include="Helpers\RiesgoComercialAgent.cs" />
+    <Compile Include="Helpers\ValidarLiquidacionParaFijacionAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\ContratosAPesificar\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -236,12 +238,22 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ValidacionCredito\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\ValidarDocProcPago\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\AdministracionCupera\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ValidarLiquidacionParaFijacion\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -300,7 +312,7 @@
     <None Include="Service References\ListaCBUProveedor\Molinos.DataAgro.Agent.ListaCBUProveedor.Z_MPRFC_LISTA_CBU_PROVEEDORResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ListaCBUProveedor\SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDOR.wsdl" />
+    <None Include="Service References\ListaCBUProveedor\SI_ZMPWS_DATAAGRO_LISTA_CBU_PROVEEDOR1.wsdl" />
     <None Include="Service References\ModificarFijacion\Molinos.DataAgro.Agent.ModificarFijacion.SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACIONResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1472,6 +1484,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO1.wsdl" />
+    <None Include="Service References\ValidacionCredito\Molinos.DataAgro.Agent.ValidacionCredito.SI_ZMPWS_DATAAGRO_VALIDAR_CREDITOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidacionCredito\Molinos.DataAgro.Agent.ValidacionCredito.Z_MPRFC_VALIDAR_CREDITOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidacionCredito\SI_ZMPWS_DATAAGRO_VALIDAR_CREDITO.wsdl" />
     <None Include="Service References\ValidarDocProcPago\Molinos.DataAgro.Agent.ValidarDocProcPago.SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1480,6 +1499,13 @@
     </None>
     <None Include="Service References\ValidarDocProcPago\SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGO.wsdl" />
     <None Include="Service References\AdministracionCupera\SI_ZMPWS_DATAAGRO_ADMIN_CUPOS.wsdl" />
+    <None Include="Service References\ValidarLiquidacionParaFijacion\Molinos.DataAgro.Agent.ValidarLiquidacionParaFijacion.SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarLiquidacionParaFijacion\Molinos.DataAgro.Agent.ValidarLiquidacionParaFijacion.Z_MPFRC_VAL_LIQ_PAR_FIJACIONResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarLiquidacionParaFijacion\SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ContratosAPesificar\" />
@@ -1507,8 +1533,10 @@
     <WCFMetadataStorage Include="Service References\ScatoRepositorio\" />
     <WCFMetadataStorage Include="Service References\StatusContrato\" />
     <WCFMetadataStorage Include="Service References\TipoDeCambio\" />
+    <WCFMetadataStorage Include="Service References\ValidacionCredito\" />
     <WCFMetadataStorage Include="Service References\ValidarDocProcPago\" />
     <WCFMetadataStorage Include="Service References\AdministracionCupera\" />
+    <WCFMetadataStorage Include="Service References\ValidarLiquidacionParaFijacion\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\Compras\configuration91.svcinfo" />
@@ -1844,6 +1872,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ContratosAPesificar\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidacionCredito\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidacionCredito\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidacionCredito\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionParaFijacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionParaFijacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionParaFijacion\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

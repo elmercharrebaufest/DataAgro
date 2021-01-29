@@ -24,5 +24,8 @@ namespace WebDataAgro.Models
         public decimal ImporteSustentable { get; set; }
         public Resultado Resultado { get; set; }
         public decimal? ContratoAperturaPrecioPorcentajeDeComisionMaximo { get; set; }
+        [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_Dias")]
+        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_Dias")]
+        public int DiasDiferimiento { get; set; }
     }
 }

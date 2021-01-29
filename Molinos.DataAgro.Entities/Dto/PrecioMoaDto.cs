@@ -25,5 +25,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? DesdeFijacion { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh\\:mm tt}")]
         public DateTime? HastaFijacion { get; set; }
+        public string TipoConfiguracion { get; set; }
+        public string UsuarioCreador { get; set; }
+        public DateTime? FechaCreacion { get; set; }
     }
 }

@@ -73,14 +73,10 @@ namespace Molinos.DataAgro.Business
         public Resultado EliminarDiferencial(int id)
         {
             var resultado = new Resultado();
-            var diferencial = repositorio.Obtener<Diferencial>(x => x.Id == id);
+            var diferencial = repositorio.Obtener<Diferencial>(id);
             repositorio.Remover(diferencial);
+            repositorio.GuardarCambios();
             return resultado;
-        }
-
-        public Resultado ModificarDiferencial(Diferencial diferencial)
-        {
-            throw new NotImplementedException();
         }
 
         private List<DiferencialDto> TraerHistorial(int ultimosN = 20)
@@ -133,125 +129,125 @@ namespace Molinos.DataAgro.Business
 
         }
 
-        private string GenerarCuerpoMailCierreDiaExcedidoCantidad()
-        {
-            var model = this.ObtenerDatosReporte();
+        //private string GenerarCuerpoMailCierreDiaExcedidoCantidad()
+        //{
+        //    var model = this.ObtenerDatosReporte();
 
-            var dispAFijar = model.ToneladasGranoTipo.Any(x => x.DispAFijar > 0);
-            var dispAPrecio = model.ToneladasGranoTipo.Any(x => x.DispAPrecio > 0);
-            var dispFijacion = model.ToneladasGranoTipo.Any(x => x.DispFijac > 0);
-            var dispFason = model.ToneladasGranoTipo.Any(x => x.DispFason > 0);
-            var disp = 4 - (dispAFijar ? 0 : 1) - (dispAPrecio ? 0 : 1) - (dispFijacion ? 0 : 1) - (dispFason ? 0 : 1);
-            var forwAFijar = model.ToneladasGranoTipo.Any(x => x.FrwAFijar > 0);
-            var forwAPrecio = model.ToneladasGranoTipo.Any(x => x.FrwAPrecio > 0);
-            var forwFijacion = model.ToneladasGranoTipo.Any(x => x.FrwFijac > 0);
-            var forwFason = model.ToneladasGranoTipo.Any(x => x.FrwFason > 0);
-            var dispFwd = dispAPrecio || dispFijacion || forwAPrecio || forwFijacion;
-            var forw = 4 - (forwAFijar ? 0 : 1) - (forwAPrecio ? 0 : 1) - (forwFijacion ? 0 : 1) - (forwFason ? 0 : 1);
-            var newcAFijar = model.ToneladasGranoTipo.Any(x => x.NewAFijar > 0);
-            var newcAPrecio = model.ToneladasGranoTipo.Any(x => x.NewAPrecio > 0);
-            var newcFijacion = model.ToneladasGranoTipo.Any(x => x.NewFijac > 0);
-            var newcFason = model.ToneladasGranoTipo.Any(x => x.NewFason > 0);
-            var newc = 4 - (newcAFijar ? 0 : 1) - (newcAPrecio ? 0 : 1) - (newcFijacion ? 0 : 1) - (newcFason ? 0 : 1);
+        //    var dispAFijar = model.ToneladasGranoTipo.Any(x => x.DispAFijar > 0);
+        //    var dispAPrecio = model.ToneladasGranoTipo.Any(x => x.DispAPrecio > 0);
+        //    var dispFijacion = model.ToneladasGranoTipo.Any(x => x.DispFijac > 0);
+        //    var dispFason = model.ToneladasGranoTipo.Any(x => x.DispFason > 0);
+        //    var disp = 4 - (dispAFijar ? 0 : 1) - (dispAPrecio ? 0 : 1) - (dispFijacion ? 0 : 1) - (dispFason ? 0 : 1);
+        //    var forwAFijar = model.ToneladasGranoTipo.Any(x => x.FrwAFijar > 0);
+        //    var forwAPrecio = model.ToneladasGranoTipo.Any(x => x.FrwAPrecio > 0);
+        //    var forwFijacion = model.ToneladasGranoTipo.Any(x => x.FrwFijac > 0);
+        //    var forwFason = model.ToneladasGranoTipo.Any(x => x.FrwFason > 0);
+        //    var dispFwd = dispAPrecio || dispFijacion || forwAPrecio || forwFijacion;
+        //    var forw = 4 - (forwAFijar ? 0 : 1) - (forwAPrecio ? 0 : 1) - (forwFijacion ? 0 : 1) - (forwFason ? 0 : 1);
+        //    var newcAFijar = model.ToneladasGranoTipo.Any(x => x.NewAFijar > 0);
+        //    var newcAPrecio = model.ToneladasGranoTipo.Any(x => x.NewAPrecio > 0);
+        //    var newcFijacion = model.ToneladasGranoTipo.Any(x => x.NewFijac > 0);
+        //    var newcFason = model.ToneladasGranoTipo.Any(x => x.NewFason > 0);
+        //    var newc = 4 - (newcAFijar ? 0 : 1) - (newcAPrecio ? 0 : 1) - (newcFijacion ? 0 : 1) - (newcFason ? 0 : 1);
 
-            var titulo = " border: 1px solid black; background: #017940; color: white; ";
-            var datoIzquierda = " font-weight:bold; border: 1px solid black; text-align:left; ";
-            var datoCentro = " border: 1px solid black; text-align:center; ";
-
-
-            var htmlBody = "";
-
-            htmlBody += "Estimados,";
-            htmlBody += "<br></br>";
-            htmlBody += "A continuación, se detallan los diferenciales del día.";
-            htmlBody += "<br></br>";
-            htmlBody += "<br></br>";
-
-            htmlBody += "<table style=\"width:100%; border-collapse:unset;\">";
-            htmlBody += "<tbody>";
-            htmlBody += "<tr>";
-            htmlBody += "<td style=\"  " + titulo + " \"></td>";
-
-            htmlBody += "<th  style=\"  " + titulo + " \" colspan=\" " + 3 + "\">DISPONIBLE</th>";
-            htmlBody += "<th  style=\"  " + titulo + " \" rowspan=\" " + 2 + "\">TOTAL DISP</th>";
-
-            htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + 3 + "\">FORWARD</th>";
-            htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL FORWARD</th>";
-
-            htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + 3 + "\">NEW CROP</th>";
-            htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL NEW CROP</th>";
-
-            htmlBody += "</tr>";
-            htmlBody += "<tr>";
-            htmlBody += "<th  style=\" " + titulo + "\">PRODUCTO</th>";
-
-            htmlBody += "<th  style=\" " + titulo + "\" >A Fijar</th>";
-
-            htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
-
-            htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+        //    var titulo = " border: 1px solid black; background: #017940; color: white; ";
+        //    var datoIzquierda = " font-weight:bold; border: 1px solid black; text-align:left; ";
+        //    var datoCentro = " border: 1px solid black; text-align:center; ";
 
 
+        //    var htmlBody = "";
 
-            htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
+        //    htmlBody += "Estimados,";
+        //    htmlBody += "<br></br>";
+        //    htmlBody += "A continuación, se detallan los diferenciales del día.";
+        //    htmlBody += "<br></br>";
+        //    htmlBody += "<br></br>";
 
-            htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+        //    htmlBody += "<table style=\"width:100%; border-collapse:unset;\">";
+        //    htmlBody += "<tbody>";
+        //    htmlBody += "<tr>";
+        //    htmlBody += "<td style=\"  " + titulo + " \"></td>";
 
-            htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
+        //    htmlBody += "<th  style=\"  " + titulo + " \" colspan=\" " + 3 + "\">DISPONIBLE</th>";
+        //    htmlBody += "<th  style=\"  " + titulo + " \" rowspan=\" " + 2 + "\">TOTAL DISP</th>";
+
+        //    htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + 3 + "\">FORWARD</th>";
+        //    htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL FORWARD</th>";
+
+        //    htmlBody += "<th  style=\" " + titulo + "\" colspan=\" " + 3 + "\">NEW CROP</th>";
+        //    htmlBody += "<th  style=\" " + titulo + "\" rowspan=\" " + 2 + "\">TOTAL NEW CROP</th>";
+
+        //    htmlBody += "</tr>";
+        //    htmlBody += "<tr>";
+        //    htmlBody += "<th  style=\" " + titulo + "\">PRODUCTO</th>";
+
+        //    htmlBody += "<th  style=\" " + titulo + "\" >A Fijar</th>";
+
+        //    htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+
+        //    htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
 
 
 
-            htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
+        //    htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
 
-            htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
+        //    htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
 
-            htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
-
-
+        //    htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
 
 
-            htmlBody += "</tr>";
 
-            foreach (var toneladaPrecio in model.ToneladasGranoTipo)
-            {
-                if (toneladaPrecio.Total > 0)
-                {
-                    htmlBody += "<tr>";
-                    htmlBody += " <th  style=\" " + datoIzquierda + " \" >" + toneladaPrecio.Material + "</th>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAFijar.ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAPrecio.ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispAFijar + toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
+        //    htmlBody += "<th style=\" " + titulo + "\">A Fijar</th>";
 
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAFijar.ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAPrecio.ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwAFijar + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
+        //    htmlBody += "<th style=\" " + titulo + "\">A Precio</th>";
 
-                    htmlBody += "<td style=\" " + datoCentro + " \" > " + toneladaPrecio.NewAFijar.ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.NewAPrecio.ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
-                    htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewAFijar + toneladaPrecio.NewAPrecio + toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
-
-                    htmlBody += "</tr>";
-                }
-            }
-            htmlBody += "</tbody>";
-            htmlBody += "</table>";
+        //    htmlBody += "<th style=\" " + titulo + "\">Fijación</th>";
 
 
-            htmlBody += "<br></br>";
 
-            return htmlBody;
-        }
 
-        private ReporteCompraNetDto ObtenerDatosReporte()
-        {
-            return new ReporteCompraNetDto
-            {
-                ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(DateTime.Now, DateTime.Now,null)
-            };
-        }
+        //    htmlBody += "</tr>";
+
+        //    foreach (var toneladaPrecio in model.ToneladasGranoTipo)
+        //    {
+        //        if (toneladaPrecio.Total > 0)
+        //        {
+        //            htmlBody += "<tr>";
+        //            htmlBody += " <th  style=\" " + datoIzquierda + " \" >" + toneladaPrecio.Material + "</th>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAFijar.ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.DispAPrecio.ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.DispAFijar + toneladaPrecio.DispAPrecio + toneladaPrecio.DispFijac + toneladaPrecio.DispFason).ToString("N0") + "</td>";
+
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAFijar.ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.FrwAPrecio.ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.FrwAFijar + toneladaPrecio.FrwAPrecio + toneladaPrecio.FrwFijac + toneladaPrecio.FrwFason).ToString("N0") + "</td>";
+
+        //            htmlBody += "<td style=\" " + datoCentro + " \" > " + toneladaPrecio.NewAFijar.ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + toneladaPrecio.NewAPrecio.ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
+        //            htmlBody += "<td style=\" " + datoCentro + " \" >" + (toneladaPrecio.NewAFijar + toneladaPrecio.NewAPrecio + toneladaPrecio.NewFijac + toneladaPrecio.NewFason).ToString("N0") + "</td>";
+
+        //            htmlBody += "</tr>";
+        //        }
+        //    }
+        //    htmlBody += "</tbody>";
+        //    htmlBody += "</table>";
+
+
+        //    htmlBody += "<br></br>";
+
+        //    return htmlBody;
+        //}
+
+        //private ReporteCompraNetDto ObtenerDatosReporte()
+        //{
+        //    return new ReporteCompraNetDto
+        //    {
+        //        ToneladasGranoTipo = mobjReportesManager.TraerToneladasGranoTipo(DateTime.Now, DateTime.Now,null)
+        //    };
+        //}
 
     }
 }

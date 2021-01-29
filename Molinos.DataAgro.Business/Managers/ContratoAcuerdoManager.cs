@@ -530,6 +530,35 @@ namespace Molinos.DataAgro.Business
                 }
 
             }
+
+            if (oContratoAcuerdo.AperturaPrecio != null)
+            {
+                if (oContratoAcuerdo.FechaCierta != null)
+                {
+                    if ((oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value))
+                    {
+                        var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+                        if (!((concepto != null && (oContratoAcuerdo.FechaCierta != null) ||
+                            (concepto == null && (oContratoAcuerdo.FechaCierta == null)))))
+                        {
+                            oEntityErrors.Error("", "Fecha Cierta es obligatorio con el concepto Financiero");
+                        }
+                    }
+                }
+                else
+                {
+                    if ((oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value))
+                    {
+                        var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+                        if (!((concepto != null && (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value) && (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value != 0)) ||
+                            (concepto == null && (!oContratoAcuerdo.PagoDiferido.HasValue || (oContratoAcuerdo.PagoDiferido.HasValue && !oContratoAcuerdo.PagoDiferido.Value)) && (!oContratoAcuerdo.DiasPesificado.HasValue || (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value == 0)))))
+                        {
+                            oEntityErrors.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
+                        }
+                    }
+                }
+
+            }
             if (oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.MonedaId == "  ARP")
             {
                 var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));

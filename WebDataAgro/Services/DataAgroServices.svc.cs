@@ -361,7 +361,10 @@ namespace WebDataAgro.Services
             contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
             if (!esActualizar)
             {
-                contrato.FechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                var fechaCreacion = DateTime.ParseExact(contratoSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                var fechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                contrato.FechaOperacion = fechaOperacion;
+                contrato.MotivoOperacionAnterior = fechaOperacion.Date < fechaCreacion.Date ? "Cargado desde SAP" : "";
             }
             contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaCierta) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
             if (!esActualizar)
@@ -408,8 +411,7 @@ namespace WebDataAgro.Services
             contrato.Monto = contratoSAP.Monto == 0 ? (decimal?)null : contratoSAP.Monto;
             contrato.Insumo = contratoSAP.Insumo;
             contrato.MonedaCanjeId = contratoSAP.MonedaCanjeId;
-            //contrato.PrestamoDevolucion = contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? true : false;
-            //contrato.Venta = contratoSAP.TipoNegocio == "VENTA" ? true : false;
+            contrato.Venta = contratoSAP.TipoNegocio == "VENTA" ? true : false;
             contrato.PlantaDestinoId = !String.IsNullOrEmpty(contratoSAP.PlantaDestino) ? repositorio.Obtener<Centro, int>(x => x.CodigoSap == contratoSAP.PlantaDestino, x => x.Id) : (int?)null;
             if (!esActualizar)
             {
@@ -417,7 +419,7 @@ namespace WebDataAgro.Services
                 contrato.Madre = contratoSAP.TipoNegocio == "MADRE" ? true : contratoSAP.TipoNegocio == "HIJO" ? false : (bool?)null;
                 contrato.TipoNegocioId = contratoSAP.TipoNegocio == "HIJO" ? 2 :
                     contratoSAP.TipoNegocio == "MADRE" ? 1 : contratoSAP.TipoNegocio == "FASON" ? 1 : contratoSAP.TipoNegocio == "PRESTAMO_DEVOLUCION" ? 1 :
-                    repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
+                    contratoSAP.TipoNegocio == "VENTA" ? 1 : repositorio.Obtener<TipoNegocio, int>(x => x.Descripcion == contratoSAP.TipoNegocio, x => x.TipoNegocioId);
             }
             if (contratoSAP.Especial == "03" && contrato.MaterialId == 3)
             {

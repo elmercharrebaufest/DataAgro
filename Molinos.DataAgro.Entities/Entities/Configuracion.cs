@@ -20,5 +20,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int CodigoLocalidadStop { get; set; }
         public decimal ImporteSustentable { get; set; }
         public decimal? ContratoAperturaPrecioPorcentajeDeComisionMaximo { get; set; }
+        public int? DiasDiferimiento { get; set; }
     }
 }

@@ -43,6 +43,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.CodigoLocalidadStop = oConfiguracion.CodigoLocalidadStop;
                 oConfiguracionSave.ContratoAperturaPrecioPorcentajeDeComisionMaximo = oConfiguracion.ContratoAperturaPrecioPorcentajeDeComisionMaximo;
                 oConfiguracionSave.ImporteSustentable = oConfiguracion.ImporteSustentable;
+                oConfiguracionSave.DiasDiferimiento = oConfiguracion.DiasDiferimiento;
+                oConfiguracionSave.ImporteSustentable = oConfiguracion.ImporteSustentable;
             }
 
             else

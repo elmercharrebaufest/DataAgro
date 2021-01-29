@@ -10,6 +10,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Cbu { get; set; }
         public string Koinh { get; set; }
         public string Pago { get; set; }
+        public string NombreBanco { get; set; }
     }
 }
 

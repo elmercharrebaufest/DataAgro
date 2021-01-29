@@ -48,9 +48,77 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerDiferencialTestOk()
         {
-            //repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<Diferencial, int, DiferencialDto>>>(),It.IsAny<Expression<Func<Diferencial, bool>>>(), It.IsAny<Expression<Func<Diferencial, int>>>(), It.IsAny<Expression<Func<Diferencial, DiferencialDto>>>()))
-            //    .Returns(new DiferencialDto());
+            repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<Diferencial, bool>>>(), It.IsAny<Expression<Func<Diferencial, int>>>(),
+                It.IsAny<Expression<Func<Diferencial, DiferencialDto>>>()))
+                .Returns(new DiferencialDto() { Id = 1, Comercial = "aaa", DiferencialDefault = 1, Fecha = new DateTime(2020, 01, 08) });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Diferencial, DiferencialDto>>>(), It.IsAny<Expression<Func<Diferencial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+              .Returns(new List<DiferencialDto>() { new DiferencialDto { Id = 1 } });
+            var resultado = target.TraerDiferencial();
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Diferencial, DiferencialDto>>>(), It.IsAny<Expression<Func<Diferencial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Id);
 
         }
+
+        [Test]
+        public void GrabarDiferencialOk()
+        {
+            var diferencial = new Diferencial()
+            {
+                DiferencialDefault = 1
+            };
+            repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<Diferencial, bool>>>(),
+                It.IsAny<Expression<Func<Diferencial, int>>>())).Returns(new Diferencial() { DiferencialDefault = 2 });
+            var result = target.GrabarDiferencial(diferencial) as Resultado;
+            repositorioMock.Verify(y => y.ObtenerMayor(It.IsAny<Expression<Func<Diferencial, bool>>>(),
+                It.IsAny<Expression<Func<Diferencial, int>>>()), Times.Once);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<Diferencial>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayError);
+
+        }
+
+        [Test]
+        public void GrabarDiferencialConErrorDefault()
+        {
+            var diferencial = new Diferencial()
+            {
+                DiferencialDefault = 0
+            };
+            repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<Diferencial, bool>>>(),
+                It.IsAny<Expression<Func<Diferencial, int>>>())).Returns(new Diferencial() { DiferencialDefault = 2 });
+            var result = target.GrabarDiferencial(diferencial) as Resultado;
+            Assert.NotNull(result);
+            Assert.IsFalse(!result.HayError);
+
+        }
+        [Test]
+        public void GrabarDiferencialConError()
+        {
+            var diferencial = new Diferencial()
+            {
+                DiferencialDefault = 2
+            };
+            repositorioMock.Setup(y => y.ObtenerMayor(It.IsAny<Expression<Func<Diferencial, bool>>>(),
+                It.IsAny<Expression<Func<Diferencial, int>>>())).Returns(new Diferencial() { DiferencialDefault = 2 });
+            var result = target.GrabarDiferencial(diferencial) as Resultado;
+            Assert.NotNull(result);
+            Assert.IsFalse(!result.HayError);
+
+        }
+        [Test]
+        public void EliminarDiferencialOk()
+        {
+            repositorioMock.Setup(y => y.Obtener<Diferencial>(It.IsAny<int>())).Returns(new Diferencial { Id = 1 });
+            var resultado = target.EliminarDiferencial(1);
+            repositorioMock.Verify(x => x.Obtener<Diferencial>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Remover(It.IsAny<Diferencial>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
+     
+
     }
 }

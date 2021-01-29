@@ -184,6 +184,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Anticipo { get; set; }
         public bool? Cesion { get; set; }
         public string ClasificacionContrato { get; set; }
+        public bool? Venta { get; set; }
     }
 
     public class StoredPorContratoResult

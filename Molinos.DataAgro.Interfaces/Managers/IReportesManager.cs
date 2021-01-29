@@ -79,5 +79,6 @@ namespace Molinos.DataAgro.Interfaces
         //List<ReportePesificadoDto> TraerTodoDatoPesificado(string contrato, DateTime? fechaHastaDolarizado, decimal? kilosPesificable, int? ComercialId,
         //  int? precio, decimal? noPesificables, decimal? total, string vendedor, string corredor, bool? dolarizado, bool? dolarizadoExpress, bool? dolarizadoNoP);
         DataSourceResult TraerTodoDatoPesificado(DataSourceRequest filtro, List<int> equipo);
+        DataSourceResult TraerTodoPrecioMoaPizarra(DataSourceRequest request);
     }
 }

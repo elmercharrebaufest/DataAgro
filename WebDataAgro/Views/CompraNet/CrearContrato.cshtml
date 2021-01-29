@@ -1,6 +1,8 @@
 ﻿@{
     var cargaFijacionAyer = PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnteriorFijacion);
     ViewBag.Title = "CompraNet";
+    var venta = PermisosHelper.Is(PermisosDataAgro.ModificarVenta);
+
 }
 
 <script>
@@ -24,7 +26,7 @@
         <script>
             var model;
             $(document).ready(function () {
-                model = '@Html.Raw(Json.Encode(ViewBag.Obj))';                
+                model = '@Html.Raw(Json.Encode(ViewBag.Obj))';
                 var negocioCargado = JSON.parse(model);
                 CargarDatosEditar(negocioCargado);
             });
@@ -38,7 +40,7 @@
 }
 
 <input type="hidden" id="comercialCreador" value="@ViewBag.ComercialId" />
-
+<input id="proveedorId" hidden />
 @Html.Hidden("crearContrato", Url.Action("CrearContrato", "CompraNet"))
 
 <div id="CrearContrato" class="container">
@@ -259,16 +261,21 @@
                     </div>
                 </div>
             </div>
-            <div class="noFason noAgente hijoDiv ampliar contratoAPrecio col-md-offset-1 col-md-1" style="padding-right:0">
+            <div class="col-md-offset-1 col-md-1 @(venta != true ? "hide" : "")  ">
+                <label style="width:65px">Venta</label>
+                <input id="ventaId" class="campo-input-input" data-bind="checked:Parametros.Venta, disabled: isControlDisabled" type="checkbox" onclick="HayVenta()" />
+            </div>
+            <div class="noFason noAgente hijoDiv ampliar contratoAPrecio col-md-1" style="padding-right:0">
                 <label style="width:65px">Fij. Conv.</label>
                 <input id="hijoId" class="campo-input-input" data-bind="checked:Parametros.Hijo, disabled: isControlDisabled" type="checkbox" />
                 <img id="errhijoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="noFason  noAgente col-sm-4 contratoMadreDiv" hidden>
+            <div class="noFason  noAgente col-sm-3 contratoMadreDiv" hidden>
                 <input id="contMadreId" placeholder="Contrato Madre" class="k-input contratoinput" type="text" s data-bind="value: Parametros.contMadreId" maxlength="10" style="width:100%" />
                 <img id="errcontMadreId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
+
     </div>
     <div class="row">
         <div class="col-sm-2 ">
@@ -543,6 +550,7 @@
         <div class="col-sm-5 col-md-4">
             <input style="width:100%" type="text" id="LocalidadCrearContrato" placeholder="Buscar por Localidad" />
             <img id="errLocalidadId" src="~/Content/Images/error.png" style="display:none" />
+            <input id="ProvinciaId" hidden />
         </div>
         <div id="establecimientoDiv">
             <div class="col-sm-5">
@@ -578,7 +586,7 @@
         <div id="mercsDepositoDiv" class="ampliar noFason noAgente noAcuerdo col-md-5">
             <div>
                 <label id="mercEnDepLabel">Mercs. en dep.</label>
-                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" />
+                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" onclick="HayMercaderia()" />
                 <img id="errmercsDepositoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
@@ -635,7 +643,7 @@
         <div class="row noAcuerdo">
             <div class="col-sm-2 ">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
-                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
+                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()" />
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-4 col-md-2">
@@ -711,7 +719,8 @@
             </div>
         </div>
         <div class="row noAcuerdo">
-            <div class="col-sm-2 ">
+            <div class="col-sm-2" id="rellenar" hidden></div>
+            <div class="col-sm-2" id="sioDiv">
                 <label style="width:120px">No Informa SIO</label>
                 <input id="noInformaSioId" class="campo-input-input" data-bind="checked:Parametros.noInformaSioId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errnoInformaSioId" src="~/Content/Images/error.png" style="display:none" />

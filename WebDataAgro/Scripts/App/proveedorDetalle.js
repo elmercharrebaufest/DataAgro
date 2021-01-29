@@ -1634,8 +1634,8 @@ function armarEstilosyFuncionesDetalle() {
             $("#campana15-16").fadeOut("slow", function () {
                 $("#campana14-15").fadeIn("slow", function () { });
             });
-        } else if ($("#campana20-21").is(":visible")) {
-            $("#campana20-21").fadeOut("slow", function () {
+        } else if ($("#campana19-20").is(":visible")) {
+            $("#campana19-20").fadeOut("slow", function () {
                 $("#campana14-15").fadeIn("slow", function () { });
             });
         } else if ($("#campana20-21").is(":visible")) {

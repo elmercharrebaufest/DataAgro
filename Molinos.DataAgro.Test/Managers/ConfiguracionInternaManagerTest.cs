@@ -60,7 +60,55 @@ namespace Molinos.DataAgro.Test.Managers
                 HastaEntrega = new DateTime(2099, 1, 30),
                 HastaFijacion = new DateTime(2099, 1, 30),
             };
-            var resultado = target.GrabarPrecio(config);
+            var resultado = target.GrabarPrecio(config, "");
+
+            Assert.IsTrue(resultado.HayError);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<PrecioMoa>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.AreEqual(1, resultado.Errores.Count);
+        }
+        [Test]
+        public void GrabarPrecioTestOkNegocioAPrecio()
+        {
+            var config = new PrecioMoa
+            {
+                Id = 0,
+                DesdeVigencia = new DateTime(2099, 1, 30),
+                HastaVigencia = new DateTime(2099, 1, 30),
+                MaterialId = 1,
+                TipoNegocioId = 1,
+                MonedaId = "ARP",
+                Precio = 120,
+                DesdeEntrega = new DateTime(2099, 1, 30),
+                DesdeFijacion = new DateTime(2099, 1, 30),
+                HastaEntrega = new DateTime(2099, 1, 30),
+                HastaFijacion = new DateTime(2099, 1, 30),
+            };
+            var resultado = target.GrabarPrecio(config, "");
+
+            Assert.IsTrue(resultado.HayError);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<PrecioMoa>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.AreEqual(1, resultado.Errores.Count);
+        }
+        [Test]
+        public void GrabarPrecioTestOkNegocioAFijar()
+        {
+            var config = new PrecioMoa
+            {
+                Id = 0,
+                DesdeVigencia = new DateTime(2099, 1, 30),
+                HastaVigencia = new DateTime(2099, 1, 30),
+                MaterialId = 1,
+                TipoNegocioId = 3,
+                MonedaId = "ARP",
+                Precio = 120,
+                DesdeEntrega = new DateTime(2099, 1, 30),
+                DesdeFijacion = new DateTime(2099, 1, 30),
+                HastaEntrega = new DateTime(2099, 1, 30),
+                HastaFijacion = new DateTime(2099, 1, 30),
+            };
+            var resultado = target.GrabarPrecio(config, "");
 
             Assert.IsTrue(resultado.HayError);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<PrecioMoa>()), Times.Once);
@@ -81,7 +129,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Dia = new DateTime(2099, 1, 30)
             };
-            var resultado = target.GrabarPizarra(config);
+            var resultado = target.GrabarPizarra(config, "");
 
             Assert.IsTrue(resultado.HayError);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<HabilitacionPizarra>()), Times.Once);
@@ -330,5 +378,30 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HabilitacionCampaña, HabilitacionCampañaDto>>>(), It.IsAny<Expression<Func<HabilitacionCampaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             Assert.AreEqual(1, resultado.Count);
         }
+
+        [Test]
+        public void HabilitarPizarraExternoOk()
+        {
+
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<HabilitacionPizarra, bool>>>(), It.IsAny<Expression<Func<HabilitacionPizarra, HabilitacionPizarraDto>>>()))
+                .Returns(new HabilitacionPizarraDto { Id = 1 });
+            var resultado = target.HabilitarPizarraExterno(1, 1);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<HabilitacionPizarra, bool>>>(), It.IsAny<Expression<Func<HabilitacionPizarra, HabilitacionPizarraDto>>>()), Times.Once);
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Id);
+        }
+
+        [Test]
+        public void HabilitarCampañaExterno()
+        {
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<HabilitacionCampaña, HabilitacionCampañaDto>>>(), It.IsAny<Expression<Func<HabilitacionCampaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                 .Returns(new List<HabilitacionCampañaDto>() { new HabilitacionCampañaDto { Id = 1 } });
+            var resultado = target.HabilitarCampañaExterno(1);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HabilitacionCampaña, HabilitacionCampañaDto>>>(), It.IsAny<Expression<Func<HabilitacionCampaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Count);
+        }
+
     }
 }

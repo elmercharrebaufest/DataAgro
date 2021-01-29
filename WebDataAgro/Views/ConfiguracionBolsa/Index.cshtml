@@ -1,0 +1,105 @@
+﻿@model WebDataAgro.Models.ConfiguracionBolsaModel
+@{
+    ViewBag.Title = "Configuración Bolsa";
+}
+
+@section Styles {
+    <link href="~/Content/compraNet.css" rel="stylesheet" />
+    <link href="~/Content/cupo.css" rel="stylesheet" />
+    <link href="~/Content/configuracionCupo.css" rel="stylesheet" />
+}
+
+<script src="~/Scripts/KendoExtensions.js"></script>
+<script src="~/Scripts/App/ConfiguracionBolsa.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+
+<div class="container">
+    @if (!Html.ViewData.ModelState.IsValid)
+    {
+        <div id="errorModal">
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Html.ValidationSummary()
+            </div>
+        </div>
+    }
+    else
+    {
+        <script>$(document).ready(Cancelar)</script>
+    }
+    <h3>Configuración Bolsa</h3>
+    <br />
+
+    <div class="alert alert-success alert-dismissible" role="alert" hidden>
+        <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
+        <span>Grabación Correcta</span>
+    </div>
+    <div class="row">
+        <div class="col-xs-10 m-grid-col-xs-offset-1">
+            <div class="desplegable" id="desplegable">
+                <span class="historial">Alta</span>
+            </div>
+
+            @using (Html.BeginForm("GrabarConfiguracionBolsa", null, FormMethod.Post, new { id = "formGrabarCupos" }))
+            {
+
+                <div class="row">
+                    @Html.HiddenFor(x => x.Id)
+                    <div class="col-xs-1">
+                        <span>Destino</span>
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.DropDownListFor(x => x.DestinoId, new SelectList(ViewBag.Destino, "Value", "Text"), new { @class = "form-control" })
+                        @Html.HiddenFor(x => x.DestinoId, new { @id = "DestinoId" })
+                    </div>
+                    <div class="col-xs-1">
+                        <span>Provincia</span>
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.DropDownListFor(x => x.ProvinciaId, new SelectList(ViewBag.Provincia, "Value", "Text"), "Seleccione Provincia", new { @class = "form-control" })
+                        @Html.HiddenFor(x => x.ProvinciaId, new { @id = "ProvinciaId" })
+                    </div>
+                    <div class="col-xs-1">
+                        <span>Bolsa</span>
+                    </div>
+                    <div class="col-sm-3" style="margin-left: -10px;">
+                        @Html.DropDownListFor(x => x.BolsaId, new SelectList(ViewBag.Bolsa, "Value", "Text"), "Seleccione Bolsa", new { @class = "form-control" })
+                        @Html.HiddenFor(x => x.BolsaId, new { @id = "BolsaId" })
+                    </div>
+                </div>
+                <div class="row" style="padding-top:5px;">
+                    <div class="col-sm-8">
+
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btnSubmit" type="button" onclick="Cancelar()">Cancelar</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btnSubmit" type="submit">Grabar</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div id="tablaCupos">
+        @Html.Action("TablaBolsaPartial", "ConfiguracionBolsa")
+    </div>
+</div>
+
+<!-- Modal Limite-->
+
+<style>
+    .line {
+        border-bottom: 5px solid #d21515 !important;
+    }
+
+    .btn {
+        margin-left: 0px !important;
+        width: 100%;
+    }
+
+    #LocalidadIdInput{
+        width: 100%;
+    }
+</style>

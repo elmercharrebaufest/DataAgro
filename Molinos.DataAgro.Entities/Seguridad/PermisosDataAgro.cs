@@ -131,6 +131,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ModificarPrestamoDevolucion = 333,
         [Display(ResourceType = typeof(Text), Name = "ModificarDolarizadoFinalizado")]
         ModificarDolarizadoFinalizado = 334,
+        [Display(ResourceType = typeof(Text), Name = "ModificarVenta")]
+        ModificarVenta = 335,
+
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
         VisualizarReporteAgenda = 401,
@@ -158,12 +161,12 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarReporteRango = 412,
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Evolucion_Fijacion")]
         VisualizarReporteEvolucionFijacion = 413,
-       
         [Display(ResourceType = typeof(Text), Name = "VisualizarReporteDolarizado")]
         VisualizarReporteDolarizado = 414,
-        //[Display(ResourceType = typeof(Text), Name = "VisualizarAnulacionEnReporteCupo")]
-        //VisualizarAnulacionEnReporteCupo = 415,
-
+        [Display(ResourceType = typeof(Text), Name = "VisualizarAnulacionEnReporteCupo")]
+        VisualizarAnulacionEnReporteCupo = 415,
+        [Display(ResourceType = typeof(Text), Name = "VisualizarReportePrecioMoaPizarra")]
+        VisualizarReportePrecioMoaPizarra = 416,
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]
         ConfiguracionCanalOperacion = 501,
@@ -203,6 +206,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         LogDataAgro = 518,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Feriado")]
         ConfiguracionFeriado = 519,
+        [Display(ResourceType = typeof(Text), Name = "Configuracion_Bolsa")]
+        ConfiguracionBolsa = 520,
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]

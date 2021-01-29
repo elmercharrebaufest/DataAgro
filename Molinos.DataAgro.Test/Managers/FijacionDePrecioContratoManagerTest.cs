@@ -37,8 +37,10 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IMailManager> mailManagerMock;
         private Mock<IValidarDocProcPagoAgent> validarPagoAgente;
         private Mock<IDiasHabilesAgent> diasHabilesAgente;
-
         private Mock<IModificarFijacionAgent> modificarFijacionAgentMock;
+        private Mock<IConfiguracionManager> configuracionManagerMock;
+        private Mock<IValidarLiquidacionParaFijacionAgent> validarLiquidacionParaFijacionAgentMock;
+
 
         private JavaScriptSerializer serializer;
 
@@ -55,17 +57,21 @@ namespace Molinos.DataAgro.Test.Managers
             relacionCorredorProveedorAgentMock = new Mock<IRelacionCorredorProveedorAgent>();
             contratosParaFijacionMock = new Mock<IContratosParaFijacionAgent>();
             mailManagerMock = new Mock<IMailManager>();
+            configuracionManagerMock = new Mock<IConfiguracionManager>();
+            validarLiquidacionParaFijacionAgentMock = new Mock<IValidarLiquidacionParaFijacionAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             validarPagoAgente = new Mock<IValidarDocProcPagoAgent>();
             diasHabilesAgente = new Mock<IDiasHabilesAgent>();
             modificarFijacionAgentMock = new Mock<IModificarFijacionAgent>();
+            configuracionManagerMock = new Mock<IConfiguracionManager>(); 
+
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
                 pushNotificacionManagerMock.Object, finalizarFijacionAgentMock.Object,
                 contratosParaFijacionMock.Object, relacionCorredorProveedorAgentMock.Object,
                 mailManagerMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object,
-                modificarFijacionAgentMock.Object, diasHabilesAgente.Object);
+                modificarFijacionAgentMock.Object, diasHabilesAgente.Object, configuracionManagerMock.Object, validarLiquidacionParaFijacionAgentMock.Object);
         }
 
         [Test]
@@ -853,7 +859,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new FijacionDePrecioContrato { ContratoSAP = "434343", Id = 1 });
             contratosParaFijacionMock.Setup(x => x.ObtenerContratos(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>())).Returns(new List<DatosFijacionDeContratoDto>());
             validarPagoAgente.Setup(x => x.ValidarEstado(It.IsAny<String>(), It.IsAny<String>())).Returns("Ok");
-            modificarFijacionAgentMock.Setup(x => x.Modificar( It.IsAny<FijacionDePrecioContrato>())).Returns("Se actualizaron los datos correctamente");
+            modificarFijacionAgentMock.Setup(x => x.Modificar(It.IsAny<FijacionDePrecioContrato>())).Returns("Se actualizaron los datos correctamente");
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>()))
                 .Returns(new Contrato { ContratoSAP = "434343", Id = 1 });
             var resultado = target.ActualizarFijacion(contrato);

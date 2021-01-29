@@ -5,6 +5,7 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public class DatosIniContrato
     {
+        public List<LocalidadQry> localidad;
 
         public List<MonedaQry> moneda { get; set; }
         public List<TipoNegocioQry> tiponegocio { get; set; }

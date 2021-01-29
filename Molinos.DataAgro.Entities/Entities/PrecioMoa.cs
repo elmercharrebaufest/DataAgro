@@ -18,12 +18,16 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? HastaEntrega { get; set; }
         public DateTime? DesdeFijacion { get; set; }
         public DateTime? HastaFijacion { get; set; }
+        public int? UsuarioCreadorId { get; set; }
+        public DateTime? FechaCreacion { get; set; }
         [ForeignKey("MonedaId")]
         public virtual Moneda Moneda { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("TipoNegocioId")]
         public virtual TipoNegocio TipoNegocio { get; set; }
+        [ForeignKey("UsuarioCreadorId")]
+        public virtual Comercial UsuarioCreador { get; set; }
     }
 }
 

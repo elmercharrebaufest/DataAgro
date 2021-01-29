@@ -77,7 +77,7 @@ namespace WebDataAgro.Controllers
             }
             else
             {
-                var cupo = cupoManager.ObtenerCupo(id.Value);
+                var cupo = cupoManager.ObtenerCupo(id.Value, null);
                 var cupoModel = new CupoModel
                 {
                     Id = cupo.Id,
@@ -114,7 +114,7 @@ namespace WebDataAgro.Controllers
             }
             else
             {
-                var cupo = cupoManager.ObtenerCupo(id.Value);
+                var cupo = cupoManager.ObtenerCupo(id.Value, null);
                 var cupoModel = new CupoModel
                 {
                     Id = cupo.Id,
@@ -322,7 +322,7 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.AnularCupos)]
         public ActionResult EliminarCupo(int id)
         {
-            var model = cupoManager.EliminarCupo(id, GlobalVariables.IdActiveDirectory);
+            var model = cupoManager.EliminarCupo(id, GlobalVariables.IdActiveDirectory, true);
             return Json(model);
         }
         public ActionResult ListarProveedor(string text = "")

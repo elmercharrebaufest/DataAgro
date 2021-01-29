@@ -272,6 +272,7 @@ namespace Molinos.DataAgro.Test.Managers
                 TipoNegocioId = 2,
                 FechaDesde = new DateTime(2020,9,19),
                 FechaHasta = new DateTime(2020,9, 30),
+                FechaCierta = new DateTime(2020, 9, 30),
                 PrecioPactado = new List<PrecioPactado>() {
                         new PrecioPactado
                         {
@@ -351,6 +352,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 MonedaId = "a",
                 FechaHasta = new DateTime(2019, 08, 08),
+                FechaCierta = new DateTime(2019, 08, 08),
                 Descuentos = new List<DescuentoBonificacion>()
                 {
                     new DescuentoBonificacion()

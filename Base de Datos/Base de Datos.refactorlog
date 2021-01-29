@@ -588,4 +588,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Clasificacion" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="d596716c-8025-4b16-ba7b-482cb5c6e630" ChangeDateTime="01/19/2021 15:14:56">
+    <Property Name="ElementName" Value="[dbo].[ConfiguracionBolsa].[LocalidadId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ConfiguracionBolsa]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProvinciaId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9ca94316-e781-4060-9696-b264f8b6df46" ChangeDateTime="01/21/2021 14:06:39">
+    <Property Name="ElementName" Value="[dbo].[ConfiguracionBolsa].[ProvinciaId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ConfiguracionBolsa]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LocalidadId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="69237537-6b27-41f2-884a-2b2be58107c4" ChangeDateTime="01/22/2021 17:48:08">
+    <Property Name="ElementName" Value="[dbo].[ConfiguracionBolsa].[LocalidadId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ConfiguracionBolsa]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ProvinciaId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="48062900-aa23-4523-b32b-c156da68f14d" ChangeDateTime="01/27/2021 19:46:19">
+    <Property Name="ElementName" Value="[dbo].[PrecioMoa].[UsuarioCreador]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PrecioMoa]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UsuarioCreadorId" />
+  </Operation>
 </Operations>

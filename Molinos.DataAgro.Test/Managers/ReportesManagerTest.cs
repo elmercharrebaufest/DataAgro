@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
@@ -1080,6 +1081,14 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(5, result.PricingCumplido);
             Assert.AreEqual(5, result.RemitirObjetivo);
             Assert.AreEqual(5, result.RemitirCumplido);
+        }
+
+        [Test]
+        public void TraerTodoPrecioMoaPizarraTest()
+        {
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodoPrecioMoaPizarra>())).Returns(new DataSourceResult());
+            var resultado = target.TraerTodoPrecioMoaPizarra(It.IsAny<DataSourceRequest>());
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodoPrecioMoaPizarra>()), Times.Once);
         }
     }
 }

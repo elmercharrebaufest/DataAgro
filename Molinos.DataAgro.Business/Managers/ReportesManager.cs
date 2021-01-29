@@ -427,7 +427,7 @@ namespace Molinos.DataAgro.Business.Managers
                && ((x is ContratoAcuerdo && (x as ContratoAcuerdo).TipoAgenteCompraId == null) || !(x is ContratoAcuerdo))
                && (((x is Contrato) && (x as Contrato).Canje != true) || !(x is Contrato))
                && (((x is Contrato) && (x as Contrato).PrestamoDevolucion != true) || !(x is Contrato))
-               /*&& ((x is Contrato) && (x as Contrato).Venta != true)*/);
+               && (((x is Contrato) && (x as Contrato).Venta != true) || !(x is Contrato)));
             var contratoSapFijaciones = negocios.Where(a => a.TipoNegocioId == 3 && a.ContratoSAP != null && a.ContratoSAP != "").Select(a => a.ContratoSAP).ToList();
             var contratosDeFijaciones = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 1 && x.EstadoId == 5 && contratoSapFijaciones.Contains(x.ContratoSAP)).ToList();
             foreach (var fijacion in negocios.Where(a => a.TipoNegocioId == 3))
@@ -783,6 +783,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2)
                 && (x.Canje != true)
                 && (x.PrestamoDevolucion != true)
+                && (x.Venta != true)
             ).Select(x => new PosicionPorMaterial
             {
                 Id = x.Id,
@@ -1674,7 +1675,7 @@ namespace Molinos.DataAgro.Business.Managers
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.StandardDeCalidadId == calidad))
              && (centroId == 0 || x.DestinoId == centroId)
-             && x.ContratoAcuerdoId == null && x.Canje != true && x.PrestamoDevolucion != true);
+             && x.ContratoAcuerdoId == null && x.Canje != true && x.PrestamoDevolucion != true && x.Venta != true);
             var data = contratos;
             if (mes.HasValue && anio.HasValue)
             {
@@ -1733,7 +1734,7 @@ namespace Molinos.DataAgro.Business.Managers
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.TrigoEspecial == true && calidad == 7) || (calidad != null && x.TrigoEspecial == false && calidad == 3))
-             && (centroId == 0 || centroId == x.DestinoId) && x.Canje != true && x.PrestamoDevolucion != true);
+             && (centroId == 0 || centroId == x.DestinoId) && x.Canje != true && x.PrestamoDevolucion != true && x.Venta != true);
             if (mes.HasValue && anio.HasValue)
             {
                 foreach (var i in fijaciones)
@@ -2618,6 +2619,9 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.ObtenerConsultaEscalar(new TraerTodoPesificado(filtro, equipo));
         }
 
-
+        public DataSourceResult TraerTodoPrecioMoaPizarra(DataSourceRequest request)
+        {
+            return repositorio.ObtenerConsultaEscalar(new TraerTodoPrecioMoaPizarra(request));
+        }
     }
 }

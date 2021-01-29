@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Agent
                 return new List<PagoCBUDto>() { new PagoCBUDto() {
                     Cbu = "1234567898",
                     Koinh = "456",
-                    Pago = "456-1234567898"
+                    Pago = "456-1234567898 AFIP Santander",
                 } };
             }
             else
@@ -65,7 +65,8 @@ namespace Molinos.DataAgro.Agent
                             Cbu = item.BANKN,
                             Cuit = item.CUIT,
                             Koinh = item.KOINH,
-                            Pago = item.KOINH+"-"+item.BANKN
+                            Pago = item.KOINH+"-"+item.BANKN + " " + item.BVTYP + " " + item.BANKA,
+                            NombreBanco = item.BVTYP 
                         };
                         listaCbus.Add(cbus);
                     }                

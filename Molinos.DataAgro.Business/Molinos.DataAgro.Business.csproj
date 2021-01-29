@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Criterios\ServicioCriterios.cs" />
+    <Compile Include="Managers\ConfiguracionBolsaManager.cs" />
     <Compile Include="Managers\HttpContextManager.cs" />
     <Compile Include="Managers\AgendaManager.cs" />
     <Compile Include="Managers\AreaInfluenciaManager.cs" />

@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.logDataAgroManager = logDataAgroManager;
             this.diasHabilesAgent = diasHabilesAgent;
         }
-        public Resultado GrabarPrecio(PrecioMoa oConfiguracion)
+        public Resultado GrabarPrecio(PrecioMoa oConfiguracion, string active)
         {
             var oEntityErrors = ValidarPrecio(oConfiguracion);
 
@@ -34,6 +34,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
+                oConfiguracion.UsuarioCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
+                oConfiguracion.FechaCreacion = DateTime.Now;
                 repositorio.Agregar(oConfiguracion);
             }
             try
@@ -55,7 +57,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        public Resultado GrabarPizarra(HabilitacionPizarra oConfiguracion)
+        public Resultado GrabarPizarra(HabilitacionPizarra oConfiguracion, string active)
         {
             var oEntityErrors = ValidarPizarra(oConfiguracion);
             if (oEntityErrors.HayErrores)
@@ -64,9 +66,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
+                oConfiguracion.UsuarioCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
+                oConfiguracion.FechaCreacion = DateTime.Now;
                 repositorio.Agregar(oConfiguracion);
             }
-
             try
             {
                 var tipo = oConfiguracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;

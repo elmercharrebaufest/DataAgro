@@ -109,6 +109,7 @@
     [Cesion] BIT NULL, 
     [Anticipo] BIT NULL, 
     [ClasificacionContrato] VARCHAR(50) NULL, 
+    [Venta] BIT NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  

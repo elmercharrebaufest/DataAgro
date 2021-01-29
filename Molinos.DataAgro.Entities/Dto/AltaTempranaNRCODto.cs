@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Carta { get; set; }
         public string Mensaje { get; set; }
         public string ProveedorGrano { get; set; }
+        public string BoletoFisico { get; set; }
     }
     public partial class Ruca
     {

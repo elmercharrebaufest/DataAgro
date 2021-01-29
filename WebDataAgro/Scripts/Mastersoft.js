@@ -215,7 +215,25 @@ function MensInfo(mensaje) {
             label: 'Cerrar',
             cssClass: 'k-button',
             action: function (dialogItself) {
+                dialogItself.close();               
+            }
+        }]
+    });
+}
+
+
+function MensInfoReload(mensaje) {
+
+    BootstrapDialog.show({
+        title: 'Mensaje...',
+        message: mensaje,
+        draggable: true,
+        buttons: [{
+            label: 'Cerrar',
+            cssClass: 'k-button',
+            action: function (dialogItself) {
                 dialogItself.close();
+                window.location.reload();
             }
         }]
     });

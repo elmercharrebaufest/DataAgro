@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
+using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
 {
@@ -72,7 +73,7 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult GuardarPrecio(ConfiguracionInternaModel configuracion)
         {
-            configuracion.ResultadoPrecio = configuracionManager.GrabarPrecio(TransformarAEntidadPrecio(configuracion));
+            configuracion.ResultadoPrecio = configuracionManager.GrabarPrecio(TransformarAEntidadPrecio(configuracion), GlobalVariables.IdActiveDirectory);
             configuracion.PrecioMoa = configuracionManager.TraerPrecios();
             return PartialView("_ListaPrecio", configuracion);
         }
@@ -80,7 +81,7 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult GuardarPizarra(ConfiguracionInternaModel configuracion)
         {
-            configuracion.ResultadoPizarra = configuracionManager.GrabarPizarra(TransformarAEntidadPizarra(configuracion));
+            configuracion.ResultadoPizarra = configuracionManager.GrabarPizarra(TransformarAEntidadPizarra(configuracion), GlobalVariables.IdActiveDirectory);
             configuracion.HabilitacionPizarra = configuracionManager.TraerPizarra();
             return PartialView("_ListaPizarra", configuracion);
         }

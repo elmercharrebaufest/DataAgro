@@ -201,6 +201,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReportePrecioMoaPizarra))
+                                {
+                                    <li>
+                                        <a href="~/reportePrecioMoaPizarra" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Reporte PrecioMoa - Pizarra
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }
@@ -272,14 +280,7 @@
                         <li class="dropdown">
                             <a onclick="return false" id="tablas-a" class="dropdown-toggle nav-text3 padding-left nav-no-padding background-hover" data-toggle="dropdown" href="#">Configuraciones <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="tablas">
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionUsuarios))
-                                {
-                                    <li>
-                                        <a href="~/Comercial" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Usuarios
-                                        </a>
-                                    </li>
-                                }
+
                                 @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionCentros))
                                 {
                                     <li>
@@ -294,6 +295,14 @@
                                     <li>
                                         <a href="~/Operador" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> ABM Operador
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionUsuarios))
+                                {
+                                    <li>
+                                        <a href="~/Comercial" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Usuarios
                                         </a>
                                     </li>
                                 }
@@ -346,6 +355,54 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionDiferencial))
+                                {
+                                    <li>
+                                        <a href="~/Diferencial" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Diferencial
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionEntregaA))
+                                {
+                                    <li>
+                                        <a href="~/Destinatario" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Entrega A
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionMaterial))
+                                {
+                                    <li>
+                                        <a href="~/Material" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Material
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaCupos))
+                                {
+                                    <li>
+                                        <a href="~/ZonaCupo" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Zona Cupo
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaGirasol))
+                                {
+                                    <li>
+                                        <a href="~/Zona" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Zona Calidad Girasol
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionFeriado))
+                                {
+                                    <li>
+                                        <a href="~/FechaFeriado" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> ABM Feriados
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionConstantes))
                                 {
                                     <li>
@@ -362,20 +419,11 @@
                                         </a>
                                     </li>
                                 }
-
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionDiferencial))
+                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionBolsa))
                                 {
                                     <li>
-                                        <a href="~/Diferencial" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Diferencial
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionEntregaA))
-                                {
-                                    <li>
-                                        <a href="~/Destinatario" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Entrega A
+                                        <a href="~/ConfiguracionBolsa" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Configuración Bolsa
                                         </a>
                                     </li>
                                 }
@@ -396,14 +444,7 @@
                                         </a>
                                     </li>
                                 }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionMaterial))
-                                {
-                                    <li>
-                                        <a href="~/Material" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Material
-                                        </a>
-                                    </li>
-                                }
+
 
                                 @if (PermisosHelper.Is(PermisosDataAgro.NotificacionesResearch))
                                 {
@@ -456,31 +497,6 @@
                                     </li>
                                 }
 
-
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaCupos))
-                                {
-                                    <li>
-                                        <a href="~/ZonaCupo" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Zona Cupo
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionZonaGirasol))
-                                {
-                                    <li>
-                                        <a href="~/Zona" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Zona Calidad Girasol
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.ConfiguracionFeriado))
-                                {
-                                    <li>
-                                        <a href="~/FechaFeriado" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> ABM Feriados
-                                        </a>
-                                    </li>
-                                }
                             </ul>
                         </li>
                     }

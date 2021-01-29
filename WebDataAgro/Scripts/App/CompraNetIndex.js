@@ -25,6 +25,7 @@ var esCanje;
 var esPrestamo;
 var modificacionFijacionDolarizado;
 var modificacionFijacionDolarizadoExpress;
+var esVenta;
 
 
 $(document).ready(function () {
@@ -49,6 +50,7 @@ $(document).ready(function () {
     modificaFinalizados = ConvertirStringABool(modificaFinalizados);
     modificacionFijacionDolarizado = ConvertirStringABool(modificacionFijacionDolarizado);
     modificacionFijacionDolarizadoExpress = ConvertirStringABool(modificacionFijacionDolarizadoExpress);
+    esVenta = ConvertirStringABool(esVenta);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     $("#demo").on("hide.bs.collapse", function () {
@@ -177,10 +179,13 @@ function FormatearString(string, moneda) {
     return numero;
 }
 function botonPendiente(dataItem, icono) {
-    if ((modificaNegocios || (dataItem.Canje == true && esCanje)) && !externo && (dataItem.PrestamoDevolucion != true && (dataItem.Canje == null || dataItem.Canje == false) ||
+    if ((modificaNegocios || (dataItem.Canje == true && esCanje)) && !externo &&
+        (dataItem.PrestamoDevolucion != true && dataItem.Venta != true && (dataItem.Canje == null || dataItem.Canje == false) ||
         (dataItem.Canje == true && esCanje) ||
-        (dataItem.Canje != true && (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) ||
-            (dataItem.PrestamoDevolucion == true && esPrestamo)))) {
+        (dataItem.Canje != true && dataItem.Venta != true && (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) ||
+        (dataItem.PrestamoDevolucion == true && esPrestamo)) ||
+        (dataItem.Canje != true && dataItem.PrestamoDevolucion != true && (dataItem.Venta == null || dataItem.Venta == false) ||
+        (dataItem.Venta == true && esVenta)))) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
@@ -385,7 +390,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.PrestamoDevolucion + "'" + ',' +
         "'" + dataItem.PlantaDestinoDescripcion + "'" + ',' +
         "'" + dataItem.ObservacionTercero + "'" + ',' +
-        "'" + dataItem.SustentableTercero + "'" +
+        "'" + dataItem.SustentableTercero + "'" + ',' +
+        "'" + dataItem.Venta + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -813,7 +819,7 @@ function CreateGridInformeCompraNet() {
                         TipoNegocio: "CANJE"
                     }, {
                         TipoNegocio: "PR\u00C9STAMO DEVOLUCI\u00D3N"
-                    }]
+                    }, { TipoNegocio: "VENTA" }]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
                 }
@@ -932,7 +938,7 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Estado_Contrato: "Eliminado"
                     }, {
-                        Estado_Contrato: "PreAprobacion"
+                        Estado_Contrato: "Carga"
                     }]
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Estado_Contrato|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Estado_Contrato#'/></label></span>";
@@ -945,7 +951,7 @@ function CreateGridInformeCompraNet() {
                             botonBorrar(dataItem, 'fa-trash pend');
                     }
                     if (dataItem.Estado == 2) { //confirmado
-                        if (dataItem.TipoNegocioId == 6) {
+                        if (dataItem.TipoNegocioId == 6 || dataItem.TipoNegocioId == 5) {
                             return '<div class="status confirmado">Confirmado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'conf') +
                                 botonPendiente(dataItem, 'fa-pencil conf') +
@@ -1913,7 +1919,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
-    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero) {
+    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2358,6 +2364,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     } else {
         $("#prestamoDiv").hide();
         $("#plantaDestinoDiv").hide();
+    }
+
+    if (Venta == true) {
+        $("#ventaDiv").show();
+        $("#ventaId").text("Si");
+    } else {
+        $("#ventaDiv").hide();
     }
 }
 

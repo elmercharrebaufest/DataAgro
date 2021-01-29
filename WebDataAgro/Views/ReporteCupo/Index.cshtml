@@ -12,10 +12,12 @@
 }
 @{  
     var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);   
+    var anulacion = PermisosHelper.Is(PermisosDataAgro.VisualizarAnulacionEnReporteCupo);   
 }
 <script>
    
     externo = '@externo';
+    anulacion = '@anulacion';
     
 </script>
 <div class="Titulo">
@@ -37,12 +39,12 @@
         </div>
         <div class="col-md-2">
             <span id="fechaIngresoDesde">
-                <input id="fechaIngresoDesdeId" class="filtroFecha" name="FechaIngreso-desde" type="date" style="width: 100%" />
+                <input id="fechaIngresoDesdeId" class="filtroFecha ocultarAnular" name="FechaIngreso-desde" type="date" style="width: 100%" />
             </span>
         </div>
         <div class="col-md-2">
             <span id="fechaIngresoHasta">
-                <input id="fechaIngresoHastaId" class="filtroFecha" name="FechaIngreso-hasta" type="date" style="width: 100%" />
+                <input id="fechaIngresoHastaId" class="filtroFecha ocultarAnular" name="FechaIngreso-hasta" type="date" style="width: 100%" />
             </span>
         </div>
 
@@ -51,12 +53,12 @@
         </div>
         <div class="col-md-2">
             <span id="fechaGeneracionDesde">
-                <input id="fechaGeneracionDesdeId" class="filtroFecha" name="FechaRegistro-desde" type="date" style="width: 100%" />
+                <input id="fechaGeneracionDesdeId" class="filtroFecha ocultarAnular" name="FechaRegistro-desde" type="date" style="width: 100%" />
             </span>
         </div>
         <div class="col-md-2">
             <span id="fechaGeneracionHasta">
-                <input id="fechaGeneracionHastaId" class="filtroFecha" name="FechaRegistro-hasta" type="date" style="width: 100%" />
+                <input id="fechaGeneracionHastaId" class="filtroFecha ocultarAnular" name="FechaRegistro-hasta" type="date" style="width: 100%" />
             </span>
         </div>
 
@@ -67,14 +69,14 @@
             <label>Proveedor</label>
         </div>
         <div class="col-md-4">
-            <input id="buscadorProveedor" name="ProveedorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+            <input id="buscadorProveedor" name="ProveedorId" class="multiselect ocultarAnular" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
         </div>
 
         <div class="col-md-2">
             <label>Zona</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("ZonaCupoId", new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione el Zona", new { @class = "form-control filtroBusquedaPorId", @id = "ZonaId" })
+            @Html.DropDownList("ZonaCupoId", new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione el Zona", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "ZonaId" })
         </div>
     </div>
     <br />
@@ -84,14 +86,14 @@
             <label>Material</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "MaterialId" })
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "MaterialId" })
         </div>
 
         <div class="col-md-2">
             <label>Estado</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("EstadoCupoId", new SelectList(ViewBag.Estado, "Value", "Text"), "Seleccione el Estado", new { @class = "form-control filtroBusquedaPorId", @id = "EstadoId" })
+            @Html.DropDownList("EstadoCupoId", new SelectList(ViewBag.Estado, "Value", "Text"), "Seleccione el Estado", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "EstadoId" })
         </div>
 
     </div>
@@ -103,7 +105,7 @@
         <div class="col-md-4">
             <div class="row">
                 <div class="col-xs-9 noRightPadding">
-                    @Html.TextBox("CupoSap", "", new { @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
+                    @Html.TextBox("CupoSap", "", new { @class = "form-control filtroAgregarValorPopUp ocultarAnular", style = "width:100%", @id = "ContratoSAPId" })
                 </div>
                 <div class="col-xs-2 noLeftPadding">
                     <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
@@ -118,7 +120,7 @@
             <label>Destinatario</label>
         </div>
         <div class="col-md-4">
-            @Html.TextBox("Destinatario", "", new { @class = "form-control filtroBusquedaTextBox", style = "width:100%", @id = "Destinatario" })
+            @Html.TextBox("Destinatario", "", new { @class = "form-control filtroBusquedaTextBox ocultarAnular", style = "width:100%", @id = "Destinatario" })
         </div>
     </div>
     <br />
@@ -129,7 +131,7 @@
             <label>Comercial</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione un Comercial", new { @class = "form-control filtroBusquedaPorId", @id = "ComercialId" })
+            @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione un Comercial", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "ComercialId" })
         </div>
 
 
@@ -137,7 +139,7 @@
             <label>Planta</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("CentroId", new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione una Planta", new { @class = "form-control filtroBusquedaPorId", @id = "CentroId" })
+            @Html.DropDownList("CentroId", new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione una Planta", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "CentroId" })
         </div>
     </div>
     <br />
@@ -146,15 +148,24 @@
             <label>Flete</label>
         </div>
         <div class="col-md-4 filtroBoleano" id="FleteProcedenciaId" name="FleteProcedencia">
-            Sí: @Html.RadioButton("FleteProcedencia", true, new { @class = "filtroBoleano", @id = "FleteProcedencia" })
-            No: @Html.RadioButton("FleteProcedencia", false)
-            <i class="fa fa-close" onclick="deseleccionarRadioButton()" style="margin-left:3%; font-size:20px;color:red"></i>
+            Sí: @Html.RadioButton("FleteProcedencia", true, new { @class = "filtroBoleano ocultarAnular", @id = "FleteProcedencia" })
+            No: @Html.RadioButton("FleteProcedencia", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButton()" style="margin-left:3%; font-size:20px;color:red"></i>
         </div>
     </div>
     <br />
-    <div class="row">
+    @*<div class="row">
         <div class="col-md-12" style="text-align:right">
             <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
+        </div>
+    </div>*@
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-2" style="text-align:right" hidden id="anulacionMasivaDiv">
+            <button type="button" id="anulacionMasiva" class="k-button k-button-icontext sideMargin-15 limpiar" onclick="AnulacionMasiva()">Anulación Masiva</button>
+        </div>        
+        <div class="col-md-2" style="text-align:right">
+            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 100%" onclick="Filtrar()">Filtrar</button>
         </div>
     </div>
 
@@ -166,5 +177,6 @@
     <div id="grid" class="table-responsive">
     </div>
 </div>
+
 
 

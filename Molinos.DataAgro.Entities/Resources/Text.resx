@@ -766,4 +766,28 @@
   <data name="ModificarDolarizadoFinalizado" xml:space="preserve">
     <value>Modificacion fijacion dolarizado</value>
   </data>
+  <data name="ModificarVenta" xml:space="preserve">
+    <value>Modificar Venta</value>
+  </data>
+  <data name="VisualizarAnulacionEnReporteCupo" xml:space="preserve">
+    <value>Visualizar Anulacion En Reporte Cupo</value>
+  </data>
+  <data name="Error_BolsaRequerida" xml:space="preserve">
+    <value>El campo Bolsa es requerido</value>
+  </data>
+  <data name="Error_DestinoRequerido" xml:space="preserve">
+    <value>El campo Destino es requerido</value>
+  </data>
+  <data name="Error_ProvinciaRequerida" xml:space="preserve">
+    <value>El campo Provincia es requerido</value>
+  </data>
+  <data name="Configuracion_Bolsa" xml:space="preserve">
+    <value>Configuración Bolsa</value>
+  </data>
+  <data name="Error_LocalidadRequerida" xml:space="preserve">
+    <value>El campo Localidad es requerido</value>
+  </data>
+  <data name="VisualizarReportePrecioMoaPizarra" xml:space="preserve">
+    <value>Visualizar Reporte PrecioMoa Pizarra</value>
+  </data>
 </root>

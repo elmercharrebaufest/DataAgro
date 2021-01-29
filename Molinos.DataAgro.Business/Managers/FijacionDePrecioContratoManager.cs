@@ -32,6 +32,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IValidarDocProcPagoAgent validarPagoAgente;
         private readonly IModificarFijacionAgent modificarFijacionAgent;
         private readonly IDiasHabilesAgent diasHabilesAgent;
+        private readonly IConfiguracionManager configuracionManager;
+        private readonly IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent;
 
 
         public FijacionDePrecioContratoManager(
@@ -44,7 +46,9 @@ namespace Molinos.DataAgro.Business.Managers
             IContratosParaFijacionAgent oContratosParaFijacionAgent,
             IRelacionCorredorProveedorAgent oRelacionCorredorProveedorAgent,
             IMailManager mailManager, ILogDataAgroManager logDataAgroManager,
-            IValidarDocProcPagoAgent validarPagoAgente, IModificarFijacionAgent modificarFijacionAgent, IDiasHabilesAgent diasHabilesAgent)
+            IValidarDocProcPagoAgent validarPagoAgente, IModificarFijacionAgent modificarFijacionAgent,
+            IDiasHabilesAgent diasHabilesAgent, IConfiguracionManager configuracionManager,
+            IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -58,7 +62,9 @@ namespace Molinos.DataAgro.Business.Managers
             this.logDataAgroManager = logDataAgroManager;
             this.validarPagoAgente = validarPagoAgente;
             this.diasHabilesAgent = diasHabilesAgent;
+            this.configuracionManager = configuracionManager;
             this.modificarFijacionAgent = modificarFijacionAgent;
+            this.validarLiquidacionParaFijacionAgent = validarLiquidacionParaFijacionAgent;
         }
 
         //--------------------------------------------------
@@ -297,6 +303,30 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("dolarizado", "La fecha de dolarizado no es válida");
 
+            }
+            if (oParam.FechaDolarizado != null)
+            {
+                var conf = configuracionManager.TraerConfiguraciones();
+                if (conf != null)
+                {
+                    var fechaLimite = oParam.FechaOperacion.AddDays(conf.CantidadDias);
+                    if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
+                    {
+                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + conf.CantidadDias + " días");
+                    }
+                }
+            }
+            if (oParam.PagoDiferido == true && oParam.DiasPesificado != null)
+            {
+                var conf = configuracionManager.TraerConfiguraciones();
+                if (conf != null)
+                {
+
+                    if (oParam.DiasPesificado.Value > conf.DiasDiferimiento)
+                    {
+                        oErrorMessages.Error("Pago Diferido", "Los dias de pesificado deben ser menor o igual que los " + conf.DiasDiferimiento + " días");
+                    }
+                }
             }
             if (oParam.EstadoId == 5 && oParam.DolarizadoExpress.HasValue && oParam.DolarizadoExpress.Value && !oParam.FechaDolarizado.HasValue)
             {
@@ -1088,13 +1118,23 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     return error;
                 }
+
                 var fijacionSap = oContratoSave.ContratoSAP.PadLeft(10, '0');
                 var oContratoId = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacionSap);
 
                 var proveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.ProveedorId, x => x.CUIT);
                 var corredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.CorredorId, x => x.CUIT);
 
+                var DolarizadoExpress = oContratoSave.DolarizadoExpress ?? false;
+                var DolarizadoCorredor = oContratoSave.DolarizadoCorredor ?? false;
+                var Dolarizado = oContratoSave.Dolarizado ?? false;
+
                 CargarDolarizado(oContrato, oContratoSave, oContratoId, oContrato.FechaOperacion.AddDays(30), proveedor, corredor);
+                error = ValidarLiquidacionParaFijacion(oContratoSave, DolarizadoExpress, DolarizadoCorredor, Dolarizado);
+                if (error.HayError)
+                {
+                    return error;
+                }
                 oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
                 oContratoSave.PagoCBU = oContrato.PagoCBU;
 
@@ -1125,6 +1165,20 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
+        private GrabarFijacionResult ValidarLiquidacionParaFijacion(FijacionDePrecioContrato oContratoSave, bool DolarizadoExpress, bool DolarizadoCorredor, bool Dolarizado)
+        {
+            GrabarFijacionResult error = new GrabarFijacionResult();
+            if (DolarizadoExpress != oContratoSave.DolarizadoExpress || DolarizadoCorredor != oContratoSave.DolarizadoCorredor || Dolarizado != oContratoSave.Dolarizado)
+            {
+                var result2 = validarLiquidacionParaFijacionAgent.Validar(oContratoSave.ContratoSAP, oContratoSave.FijacionSAP);
+                if (result2 != "Ok")
+                {
+                    error.Error("", result2);
+                }
+            }
+            return error;
+        }
+
         private GrabarFijacionResult ValidarModificacionFijacionFinalizada(FijacionDePrecioContrato oContrato, FijacionDePrecioContrato oContratoSave)
         {
             GrabarFijacionResult result = new GrabarFijacionResult();
@@ -1145,6 +1199,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 result.Error("dolarizado", "La fecha de dolarizado no es válida");
             }
+
             if (oContrato.DolarizadoExpress == true && oContrato.FechaDolarizado > oContrato.FechaOperacion.AddDays(30))
             {
                 result.Error("DolarizadoExpress", "La fecha de dolarizado express no puede ser mayor a 30 días.");
@@ -1154,6 +1209,31 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 result.Error("Dolarizado", "La fecha de dolarizado no puede ser menor a 30 días.");
             }
+            if (oContrato.FechaDolarizado != null)
+            {
+                var conf = configuracionManager.TraerConfiguraciones();
+                if (conf != null)
+                {
+                    var fechaLimite = oContrato.FechaOperacion.AddDays(conf.CantidadDias);
+                    if (oContrato.FechaDolarizado.Value.Date > fechaLimite.Date)
+                    {
+                        result.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + conf.CantidadDias + " días");
+                    }
+                }
+            }
+            if (oContrato.PagoDiferido == true && oContrato.DiasPesificado != null)
+            {
+                var conf = configuracionManager.TraerConfiguraciones();
+                if (conf != null)
+                {
+
+                    if (oContrato.DiasPesificado.Value > conf.DiasDiferimiento)
+                    {
+                        result.Error("Pago Diferido", "Los dias de pesificado deben ser menor o igual que los " + conf.DiasDiferimiento + " días");
+                    }
+                }
+            }
+
             return result;
         }
 

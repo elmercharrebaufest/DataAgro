@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "ReportePrecioMoaPizarra";
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/PrecioMoaPizarra")
+}
+@section Styles {
+    <link href="~/Content/ReporteContrato.css" rel="stylesheet" />
+}
+<div class="Titulo">
+    <h3>Reporte Precio MOA - Habilitación Pizarra</h3>
+</div>
+
+<br />
+<script type="text/x-kendo-template" id="templateToolbar">
+    <div class="">
+        <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Reporte PrecioMoa - Pizarra</a>
+    </div>
+</script>
+<div id="tabla-precio-moa">
+    <div class="row" id="nuevotab">
+        <div id="gridPrecioMoaPizarra" class="tabla-result"></div>
+    </div>
+</div>
+

@@ -1,4 +1,5 @@
 ﻿var externo;
+var anulacion;
 $(document).ready(function () {
     $('#menuproveedor').hide();
     kendo.culture("es-AR");
@@ -6,6 +7,11 @@ $(document).ready(function () {
     inicializarTodosKendoDate($(".filtroFecha"));
     inicializarElementos();
     InicializarCuposIndex();
+    anulacion = ConvertirStringABool(anulacion);
+    
+    $(".ocultarAnular").change(function () {        
+      $('#anulacionMasivaDiv').hide();       
+    });
 
 });
 
@@ -115,9 +121,9 @@ function InicializarCuposIndex() {
             {
                 field: "EstadoCupo", title: "Estado", sortable: false, width: 200,
                 template: function (dataItem) {
-                    if (dataItem.EstadoCupoId == 1) {
+                    if (dataItem.EstadoCupoId == 1) {                       
                         return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
-                    } else if (dataItem.EstadoCupoId == 2) {
+                    } else if (dataItem.EstadoCupoId == 2) {                       
                         return '<div class="status activado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 3) {
                         return '<div class="status arribado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
@@ -214,6 +220,11 @@ function InicializarCuposIndex() {
 
 function Filtrar() {
     $('#grid').data('kendoGrid').dataSource.read();
+    if (anulacion == true && $("#EstadoId").val() == "1") {
+        $('#anulacionMasivaDiv').show();
+    } else {
+        $('#anulacionMasivaDiv').hide();
+    }
 }
 
 
@@ -233,6 +244,8 @@ function inicializarElementos() {
     });
 
     inicializarPopUpSap("Cupos");
+
+
 
 }
 
@@ -259,6 +272,24 @@ function ConvertirFechaRegistroAString(filtros) {
     if (arr != null) {
         //se usa asi porque usando toLocaleDateString no trae valores igual al dia de hoy
         arr.forEach(function (x) { x.value = deFechaAString(x.value) });
+    }
+}
+
+function AnulacionMasiva() {
+    
+    let filtroCompleto = TraerFiltrosConValores();
+    if (filtroCompleto.filter == null) {
+        filtroCompleto.filter = new FiltroPadre("and", defaultFiltros);
+        $("#fechaIngresoDesdeId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
+        $("#fechaIngresoHastaId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
+    }
+
+    var mensaje = MSExecuteOnServer('/ReporteCupo/AnulacionMasiva', filtroCompleto);
+    if (mensaje == "Ningún cupo para anular") {
+        MensErr(mensaje);   
+       
+    } else {        
+        MensInfoReload(mensaje);
     }
 }
 

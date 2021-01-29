@@ -127,9 +127,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\FormularioAltaNoGranosControllerTest.cs" />
+    <Compile Include="Controllers\ConfiguracionBolsaControllerTest.cs" />
     <Compile Include="Controllers\FechaFeriadoControllerTest.cs" />
-    <Compile Include="Controllers\CartaDePresentacionControllerTest.cs" />
     <Compile Include="Controllers\CompraNetTerceroControllerTest.cs" />
+    <Compile Include="Controllers\CartaDePresentacionControllerTest.cs" />
+    <Compile Include="Controllers\ReportePrecioMoaPizarraControllerTest.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaControllerTest.cs" />
     <Compile Include="Controllers\HabilitacionCupoControllerTest.cs" />
     <Compile Include="Controllers\CupoControllerTest.cs" />
@@ -172,6 +174,8 @@
     <Compile Include="Controllers\SincronizarMaestrosControllerTest.cs" />
     <Compile Include="Controllers\TareasProgramadasControllerTest.cs" />
     <Compile Include="Controllers\ZonaCupoControllerTest.cs" />
+    <Compile Include="Managers\ConfiguracionBolsaManagerTest.cs" />
+    <Compile Include="Managers\RolManagerTest.cs" />
     <Compile Include="Managers\FechaFeriadoManagerTest.cs" />
     <Compile Include="Managers\CartaDePresentacionManagerTest.cs" />
     <Compile Include="Managers\MailManagerTest.cs" />

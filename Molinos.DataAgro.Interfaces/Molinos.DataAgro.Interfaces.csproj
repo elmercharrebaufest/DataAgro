@@ -126,6 +126,7 @@
     <Compile Include="Agent\IModificarFijacionAgent.cs" />
     <Compile Include="Agent\IServicioRepositorioScatoAgent.cs" />
     <Compile Include="Agent\IAdministracionCuperaAgent.cs" />
+    <Compile Include="Agent\IValidacionCreditoAgent.cs" />
     <Compile Include="Agent\IValidarDocProcPagoAgent.cs" />
     <Compile Include="Agent\IStatusContratoAgent.cs" />
     <Compile Include="Agent\ICapacidadProductivaAgent.cs" />
@@ -148,7 +149,9 @@
     <Compile Include="Agent\IFinalizarFijacionAgent.cs" />
     <Compile Include="Agent\IRelacionCorredorProveedorAgent.cs" />
     <Compile Include="Agent\IRiesgoComercialAgent.cs" />
+    <Compile Include="Agent\IValidarLiquidacionParaFijacionAgent.cs" />
     <Compile Include="Criterios\IServicioCriterios.cs" />
+    <Compile Include="Managers\IConfiguracionBolsaManager.cs" />
     <Compile Include="Managers\IReporteEvolucionFijacionManager.cs" />
     <Compile Include="Managers\IAgendaManager.cs" />
     <Compile Include="Managers\IAreaInfluenciaManager.cs" />

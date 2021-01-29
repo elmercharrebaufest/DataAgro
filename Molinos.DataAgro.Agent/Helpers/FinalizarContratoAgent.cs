@@ -258,7 +258,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         CANJE = contrato.Canje == true ? "X" : "",
                         DESC_INSUMOS = contrato.Insumo,
                         MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
-                        MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0                           
+                        MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0,  
+                          
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
@@ -268,7 +269,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),
                     IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" :
-                    contrato.EsFason == true ? "FASON": contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" : contrato.TipoNegocio.Descripcion,
+                    contrato.EsFason == true ? "FASON": contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" :
+                    contrato.Venta == true ? "VENTA" : contrato.TipoNegocio.Descripcion,
                     IM_APERTURA = listaApertura.ToArray()
                 };
                 logger.Debug(rq.ToXml());

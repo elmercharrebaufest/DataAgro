@@ -9,7 +9,6 @@ namespace Molinos.DataAgro.Interfaces
         DiferencialDto TraerDiferencial();
         Resultado GrabarDiferencial(Diferencial diferencial);
         Resultado EliminarDiferencial(int id);
-        Resultado ModificarDiferencial(Diferencial diferencial);
         Resultado ValidarComprasDiferencial(int comercialId);
     }
 }

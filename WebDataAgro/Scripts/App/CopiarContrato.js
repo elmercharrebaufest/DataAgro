@@ -596,6 +596,9 @@ function ObtenerDatos(error) {
     obj.Anticipo = $("#Anticipo").val();
     obj.Cesion = $("#Cesion").val();
     obj.ClasificacionContrato = $("#ClasificacionContrato").val();
+    if ($("#ventaId").is(":checked") == true) {
+        obj.Venta = true;
+    }
     return obj;
 }
 
@@ -682,6 +685,34 @@ function FormatearFecha(fecha) {
             mes = "0" + mes;
         }
         return dia + '-' + mes + '-' + anio;
+    }
+}
+
+function DatosProveedor() {
+    if ($("#buscadorProveedor").val() != "") {
+        var id = $("#proveedorId").val() != "" ? $("#proveedorId").val() : 0;
+        var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: id });
+        if (compraNet.BoletoCompraNetId !== null) {
+            LimpiarBoleto();
+            if (compraNet.BoletoCompraNetId === 1) {
+                $("#boletoConfirmaId").prop("checked", true);
+                $("#BolsaConfirmaDiv").show();
+                $("#bolsaConfirmaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
+            } else if (compraNet.BoletoCompraNetId === 2) {
+                $("#boletoFisicoId").prop("checked", true);
+                $("#BolsaFisicoDiv").show();
+                $("#bolsaFisicoId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                $("#bolsaFisicoId").data("kendoDropDownList").trigger("change");
+            } else if (compraNet.BoletoCompraNetId === 4) {
+                $("#boletoCartaId").prop("checked", true);
+                $("#BolsaCartaDiv").show();
+                $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
+            } else if (compraNet.BoletoCompraNetId === 3) {
+                $("#boletoNingunoId").prop("checked", true);
+            }
+        }
     }
 }
 

@@ -430,6 +430,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuración Bolsa.
+        /// </summary>
+        public static string Configuracion_Bolsa {
+            get {
+                return ResourceManager.GetString("Configuracion_Bolsa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuración Canal Operacion.
         /// </summary>
         public static string Configuracion_Canal_Operacion {
@@ -862,6 +871,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to El campo Bolsa es requerido.
+        /// </summary>
+        public static string Error_BolsaRequerida {
+            get {
+                return ResourceManager.GetString("Error_BolsaRequerida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debe agregar cantidad de Cupos.
         /// </summary>
         public static string Error_CantidadCupoRequerido {
@@ -894,6 +912,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Error_ComercialRequerido {
             get {
                 return ResourceManager.GetString("Error_ComercialRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El campo Destino es requerido.
+        /// </summary>
+        public static string Error_DestinoRequerido {
+            get {
+                return ResourceManager.GetString("Error_DestinoRequerido", resourceCulture);
             }
         }
         
@@ -934,6 +961,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to El campo Localidad es requerido.
+        /// </summary>
+        public static string Error_LocalidadRequerida {
+            get {
+                return ResourceManager.GetString("Error_LocalidadRequerida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El Material no debe estar vacío.
         /// </summary>
         public static string Error_MaterialRequerido {
@@ -966,6 +1002,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Error_ProveedorRequerido {
             get {
                 return ResourceManager.GetString("Error_ProveedorRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El campo Provincia es requerido.
+        /// </summary>
+        public static string Error_ProvinciaRequerida {
+            get {
+                return ResourceManager.GetString("Error_ProvinciaRequerida", resourceCulture);
             }
         }
         
@@ -1407,6 +1452,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string ModificarPrestamoDevolucion {
             get {
                 return ResourceManager.GetString("ModificarPrestamoDevolucion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Venta.
+        /// </summary>
+        public static string ModificarVenta {
+            get {
+                return ResourceManager.GetString("ModificarVenta", resourceCulture);
             }
         }
         
@@ -1991,6 +2045,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visualizar Anulacion En Reporte Cupo.
+        /// </summary>
+        public static string VisualizarAnulacionEnReporteCupo {
+            get {
+                return ResourceManager.GetString("VisualizarAnulacionEnReporteCupo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Visualizar Compras.
         /// </summary>
         public static string VisualizarCompras {
@@ -2005,6 +2068,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string VisualizarReporteDolarizado {
             get {
                 return ResourceManager.GetString("VisualizarReporteDolarizado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte PrecioMoa Pizarra.
+        /// </summary>
+        public static string VisualizarReportePrecioMoaPizarra {
+            get {
+                return ResourceManager.GetString("VisualizarReportePrecioMoaPizarra", resourceCulture);
             }
         }
     }

@@ -300,6 +300,7 @@
     <Build Include="dbo\Tables\SugerenciaPorComercial.sql" />
     <Build Include="dbo\Tables\HabilitacionCampaña.sql" />
     <Build Include="dbo\Tables\ReportePesificado.sql" />
+    <Build Include="dbo\Tables\ConfiguracionBolsa.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

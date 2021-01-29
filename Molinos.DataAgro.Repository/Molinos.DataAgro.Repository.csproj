@@ -119,6 +119,7 @@
     <Compile Include="ConsultasEF\ObtenerToneladasPorMaterial.cs" />
     <Compile Include="ConsultasEF\ConsultaBusquedaHome.cs" />
     <Compile Include="ConsultasEF\TraerAdministracionCupoExcedente.cs" />
+    <Compile Include="ConsultasEF\TraerConfiguracionesBolsa.cs" />
     <Compile Include="ConsultasEF\TraerExportarAllEstablecimientos.cs" />
     <Compile Include="ConsultasEF\TraerHabilitacionesCupo.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesEspacioDinamico.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="ConsultasEF\TraerRolesPermisos.cs" />
     <Compile Include="ConsultasEF\TraerContratosPorFiltro.cs" />
     <Compile Include="ConsultasEF\TraerTodoPesificado.cs" />
+    <Compile Include="ConsultasEF\TraerTodoPrecioMoaPizarra.cs" />
     <Compile Include="ConsultasEF\TraerTodosContratosSinFiltro.cs" />
     <Compile Include="ConsultasEF\TraerTodoRango.cs" />
     <Compile Include="ConsultasEF\TraerTodosCupos.cs" />

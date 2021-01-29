@@ -177,6 +177,12 @@ namespace WebDataAgro
                            "~/Scripts/App/Filtros.js",
                             "~/Scripts/jquery.mask.js",
                            "~/Scripts/App/reporteRangoConfirmacionAutomatica.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/PrecioMoaPizarra").Include(
+                           "~/Scripts/KendoExtensions.js",
+                           "~/Scripts/App/Filtros.js",
+                            "~/Scripts/jquery.mask.js",
+                           "~/Scripts/App/reportePrecioMoaPizarra.js"));
             //------------------------
             bundles.Add(new ScriptBundle("~/bundles/Research").Include(
                                        "~/Scripts/KendoExtensions.js",

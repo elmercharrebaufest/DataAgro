@@ -32,7 +32,8 @@ namespace WebDataAgro.Controllers
                 ClaveStop = conf.ClaveStop,
                 CodigoLocalidadStop = conf.CodigoLocalidadStop,
                 ImporteSustentable = conf.ImporteSustentable,
-                ContratoAperturaPrecioPorcentajeDeComisionMaximo = conf.ContratoAperturaPrecioPorcentajeDeComisionMaximo
+                ContratoAperturaPrecioPorcentajeDeComisionMaximo = conf.ContratoAperturaPrecioPorcentajeDeComisionMaximo,
+                DiasDiferimiento = conf != null ? conf.DiasDiferimiento.Value : 0,
             });
         }
         [HttpPost]
@@ -40,7 +41,7 @@ namespace WebDataAgro.Controllers
         {
             var configuracionGrabada = configuracionManager.GrabarFechaPesificacionDolarizado(TransformarAEntidad(configuracion));
            
-            if (configuracionGrabada.HayError ||!ModelState.IsValid )
+            if (configuracionGrabada.HayError || !ModelState.IsValid )
             {
                 foreach (var e in configuracionGrabada.Errores)
                 {
@@ -56,14 +57,15 @@ namespace WebDataAgro.Controllers
             {
                 Id = configuracion.Id,
                 CantidadDias = configuracion.CantidadDias,
-                ConexionABMStop= configuracion.ConexionABMStop,
-                ConexionConsultaStop= configuracion.ConexionConsultaStop,
-                ClaveStop =configuracion.ClaveStop,
+                ConexionABMStop = configuracion.ConexionABMStop,
+                ConexionConsultaStop = configuracion.ConexionConsultaStop,
+                ClaveStop = configuracion.ClaveStop,
                 CuitDestinoStop = configuracion.CuitDestinoStop,
                 TerminalStopId = configuracion.TerminalStopId,
                 CodigoLocalidadStop = configuracion.CodigoLocalidadStop,
                 ImporteSustentable = configuracion.ImporteSustentable,
-                ContratoAperturaPrecioPorcentajeDeComisionMaximo = configuracion.ContratoAperturaPrecioPorcentajeDeComisionMaximo
+                ContratoAperturaPrecioPorcentajeDeComisionMaximo = configuracion.ContratoAperturaPrecioPorcentajeDeComisionMaximo,
+                DiasDiferimiento = configuracion.DiasDiferimiento,
             };
             return entidad;
         }

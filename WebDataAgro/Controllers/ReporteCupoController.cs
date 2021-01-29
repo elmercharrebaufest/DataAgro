@@ -6,6 +6,8 @@ using Molinos.DataAgro.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using static WebDataAgro.MvcApplication;
@@ -21,6 +23,7 @@ namespace WebDataAgro.Controllers
         private readonly IZonaCupoManager zonaCupoManager;
         private readonly ICentroManager mobjCentroManager;
         private readonly IComercialManager mobjComercialManager;
+        private readonly IHttpContextManager httpContextManager;
 
         //-----------------------------------------------------
         //  Constructor
@@ -28,17 +31,15 @@ namespace WebDataAgro.Controllers
 
         public ReporteCupoController(
             ICupoManager cupoManager,
-            IMaterialManager materialManager,
-            IZonaCupoManager zonaCupoManager,
-            ICentroManager mobjCentroManager,
-            IComercialManager mobjComercialManager
-            )
+            IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, ICentroManager mobjCentroManager,
+            IComercialManager mobjComercialManager, IHttpContextManager httpContextManager )
         {
             this.cupoManager = cupoManager;
             this.mobjMaterialManager = materialManager;
             this.zonaCupoManager = zonaCupoManager;
             this.mobjCentroManager = mobjCentroManager;
             this.mobjComercialManager = mobjComercialManager;
+            this.httpContextManager = httpContextManager;
         }
 
         [Autorizacion(PermisosDataAgro.VisualizarReporteCupo)]
@@ -54,8 +55,8 @@ namespace WebDataAgro.Controllers
             if (request.Sort == null)
             {
                 request.Sort = new List<Sort> {
-                    new Sort {Field= "FechaIngreso",Dir="desc" },
-                    new Sort { Field="Material",Dir="desc" } };
+                    new Sort {Field= "FechaIngreso", Dir="desc" },
+                    new Sort {Field="Material", Dir="desc" } };
             }
 
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
@@ -120,6 +121,34 @@ namespace WebDataAgro.Controllers
             ViewBag.Comercial = comercialListItems;
 
 
+        }
+        static readonly object _lockAnulacionMasiva = new object();
+
+        public async Task<string> AnulacionMasivaAsync(List<int> equipo, DataSourceResult cupos, string path)
+        {
+          
+            var comercialId = GlobalVariables.IdActiveDirectory;
+            await Task.Run(() =>
+            {
+                //Thread.Sleep(5000);
+                cupoManager.AnulacionMasiva(equipo, comercialId, cupos, path);
+
+            });
+            return "";
+        }
+
+        public ActionResult AnulacionMasiva(Filter filter)
+        {
+            var request = new DataSourceRequest { Filter = filter };
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            var model = cupoManager.TraerCuposTabla(request, equipo);
+            var path = httpContextManager.ObtenerPathLogoMail();
+            if (model.Total == 0)
+            {
+                return Json("Ningún cupo para anular");
+            }
+            var a = AnulacionMasivaAsync(equipo, model, path);           
+            return Json("Estamos procesando tu solicitud, en breve te enviaremos un mail.");
         }
     }
 }

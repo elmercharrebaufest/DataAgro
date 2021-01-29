@@ -100,7 +100,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 CuitId = "A",
                 Siguientes = ""
             };
-            cupoManagerMock.Setup(x => x.ObtenerCupo(It.IsAny<int>())).Returns(new CupoDto {
+            cupoManagerMock.Setup(x => x.ObtenerCupo(It.IsAny<int>(), null)).Returns(new CupoDto {
                 Id = 1,
                 Calidad = "Camara",
                 Fason = false,
@@ -245,7 +245,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void EliminarCupoTest()
         {
-            cupoManagerMock.Setup(x => x.EliminarCupo(It.IsAny<int>(), It.IsAny<string>()))
+            cupoManagerMock.Setup(x => x.EliminarCupo(It.IsAny<int>(), It.IsAny<string>(), true))
                 .Returns(new Resultado { Errores= new List<ErrorMessage>()});
             var result = target.EliminarCupo(1);
 

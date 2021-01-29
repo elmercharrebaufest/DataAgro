@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Business;
@@ -47,6 +48,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IConfiguracionCupoManager> configuracionCupoManager;
         private Mock<IServicioRepositorioScatoAgent> servicioScato;
+        private Mock<IHttpContextManager> contextoManager;
 
         [SetUp]
         public void SetUp()
@@ -65,11 +67,12 @@ namespace Molinos.DataAgro.Test.Managers
             logDataAgroManagerMock = new Mock<ILogDataAgroManager>();
             comercialManagerMock = new Mock<IComercialManager>();
             servicioScato = new Mock<IServicioRepositorioScatoAgent>();
+            contextoManager = new Mock<IHttpContextManager>();
 
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
-                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object, 
-                logDataAgroManagerMock.Object, comercialManagerMock.Object,  servicioScato.Object);
+                mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object,
+                logDataAgroManagerMock.Object, comercialManagerMock.Object, servicioScato.Object, contextoManager.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
@@ -86,7 +89,7 @@ namespace Molinos.DataAgro.Test.Managers
                 FechaIngreso = new DateTime(2099, 11, 19)
             };
             var configuracion = new ConfiguracionCupoDto()
-            { 
+            {
                 LimiteCupo = 100,
                 CentroId = 1,
                 CierreCupera = false
@@ -201,12 +204,12 @@ namespace Molinos.DataAgro.Test.Managers
             clienteStopMock.Setup(x => x.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             repositorioMock.Setup(x => x.GuardarCambios());
 
-            var result = target.EliminarCupo(1, "a");
+            var result = target.EliminarCupo(1, "a", true);
             repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Once);
             clienteStopMock.Verify(x => x.EliminarCupo(It.IsAny<Cupo>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             eliminarCupoAgentMock.Verify(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            Assert.IsFalse(result.HayError);
+           
         }
 
         [Test]
@@ -246,7 +249,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { ConexionABMStop = true });
             eliminarCupoAgentMock.Setup(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             clienteStopMock.Setup(y => y.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado() { Errores = new List<ErrorMessage>() });
-            var result = target.EliminarCupo(1, "a");
+            var result = target.EliminarCupo(1, "a", false);
 
             repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Configuracion>(It.IsAny<int>()), Times.Once);
@@ -254,7 +257,6 @@ namespace Molinos.DataAgro.Test.Managers
             clienteStopMock.Verify(y => y.EliminarCupo(It.IsAny<Cupo>()), Times.Once);
 
             Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
 
         }
         [Test]
@@ -311,7 +313,7 @@ namespace Molinos.DataAgro.Test.Managers
                 ZonaCupoId = 2,
                 ZonaCupo = "a"
             });
-            var result = target.ObtenerCupo(1);
+            var result = target.ObtenerCupo(1, null);
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<Expression<Func<Cupo, CupoDto>>>()), Times.Once);
             Assert.IsNotNull(result);
@@ -324,6 +326,17 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { ConexionABMStop = true });
             eliminarCupoAgentMock.Setup(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             clienteStopMock.Setup(y => y.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado() { Errores = new List<ErrorMessage>() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Cupo, CupoDto>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<CupoDto>() {new CupoDto
+                {
+                    Id = 1,
+                    CentroId = 1,
+                    ComercialId = 1,
+                    Destinatario = "a",
+                    MaterialId = 1,
+                    ProveedorId = 1,
+                    ZonaCupoId = 2,
+                }});
             var result = target.EliminarVarios(new List<int>() { 1, 2 }, "a");
 
             repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Exactly(2));
@@ -332,7 +345,6 @@ namespace Molinos.DataAgro.Test.Managers
             clienteStopMock.Verify(y => y.EliminarCupo(It.IsAny<Cupo>()), Times.Exactly(2));
 
             Assert.NotNull(result);
-            Assert.IsFalse(result.HayError);
         }
         [Test]
         public void ObtenerCodigoSapTestOk()
@@ -736,12 +748,12 @@ namespace Molinos.DataAgro.Test.Managers
 
         public void AceptarCupo()
         {
-            repositorioMock.Setup(y => y.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo() { CupoSap = "Mol", EstadoCupoId = 1});
-            crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>())).Returns(new List<string>() { "MOL"});
+            repositorioMock.Setup(y => y.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo() { CupoSap = "Mol", EstadoCupoId = 1 });
+            crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>())).Returns(new List<string>() { "MOL" });
 
             repositorioMock.Setup(x => x.GuardarCambios());
 
-            var resultado = target.AceptarCupo(new Cupo() { CupoSap = "Mol", EstadoCupoId = 1, Id = 1});
+            var resultado = target.AceptarCupo(new Cupo() { CupoSap = "Mol", EstadoCupoId = 1, Id = 1 });
 
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -760,6 +772,41 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, ConfiguracionCupoDto>>>(), It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 
         }
-      
+
+        //[Test]
+        //public void AnulacionMasivaTest()
+        //{
+        //    var cupo = new Cupo
+        //    {
+        //        Id = 1,
+        //        ZonaCupo = new ZonaCupo { Descripcion = "BS AS" },
+        //        Proveedor = new Proveedor { RazonSocial = "PARISI" },
+        //        CupoSap = "MOL",
+        //        Material = new Material { Descripcion = "Soja" }
+        //    };
+        //    var data = new List<CupoDto> { new CupoDto { Id = 1 } };
+        //    repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+        //        .Returns(new List<Cupo>(){
+        //            cupo
+        //        });
+        //    repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion() { ConexionABMStop = true });
+        //    eliminarCupoAgentMock.Setup(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("Ok");
+        //    clienteStopMock.Setup(x => x.EliminarCupo(cupo)).Returns(new Resultado { });
+        //    repositorioMock.Setup(x => x.GuardarCambios());
+        //    repositorioMock.Setup(y => y.Obtener<Comercial>(It.IsAny<int>())).Returns(new Comercial() { IdActiveDirectory = "bmelgarejo" });
+
+        //    target.AnulacionMasiva(new List<int> { 1, 2, 3}, It.IsAny<string>(), new DataSourceResult { Data = data }, It.IsAny<string>());
+        //    repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+        //          .Returns(new List<Comercial>() {
+        //            new Comercial
+        //            {
+        //                IdActiveDirectory = "bmelgarejo"
+        //            }
+        //          });
+
+        //    repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+
+
+        //}
     }
 }

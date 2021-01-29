@@ -134,6 +134,7 @@
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
     <Compile Include="Dto\ProveedorAltaDto.cs" />
     <Compile Include="Dto\CompraCampanaActualDto.cs" />
+    <Compile Include="Dto\ConfiguracionBolsaDto.cs" />
     <Compile Include="Dto\PesificarAgentDto.cs" />
     <Compile Include="Dto\CompraDetalleDto.cs" />
     <Compile Include="Dto\CompraDto.cs" />
@@ -316,6 +317,7 @@
     <Compile Include="Entities\CriterioCDWarrant.cs" />
     <Compile Include="Entities\HabilitacionCampaña.cs" />
     <Compile Include="Entities\LogDataAgro.cs" />
+    <Compile Include="Entities\ConfiguracionBolsa.cs" />
     <Compile Include="Entities\NegocioHistorico.cs" />
     <Compile Include="Entities\ReportePesificado.cs" />
     <Compile Include="Entities\PrecioPactado.cs" />

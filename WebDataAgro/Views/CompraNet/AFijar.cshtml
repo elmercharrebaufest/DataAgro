@@ -57,7 +57,8 @@
     {
         <h3>Contrato @ViewBag.Contrato</h3>
     }
-
+    <input id="ProvinciaId" hidden />
+    <input id="proveedorId" hidden />
     <div class="row">
         <div>
             <div class="col-sm-2">
@@ -601,7 +602,7 @@
         <div id="mercsDepositoDiv" class="ampliar noFason noAgente noAcuerdo col-md-5">
             <div>
                 <label id="mercEnDepLabel">Mercs. en dep.</label>
-                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" />
+                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" onclick="HayMercaderia()"/>
                 <img id="errmercsDepositoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
@@ -659,7 +660,7 @@
             <div id="ordenarRow" class="col-sm-2" hidden></div>
             <div class="col-sm-2" id="divSojaSustentable">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
-                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
+                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()"/>
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-4 col-md-2">
@@ -694,15 +695,15 @@
                     </div>
                 </div>*@
             @*<div id="dolarizadoExpressDiv" class="noAcuerdo col-xs-2" hidden>
-                <label>Dolarizado Express</label>
-                <input id="dolarizadoExpressId" class="campo-input-input" name="dolarizadoExpress" type="checkbox">
-            </div>
-            <div class="col-md-2 col-sm-9">
-                <div id="dolarizadoDiv" hidden>
-                    <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="width: 100%" />
-                    <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
+                    <label>Dolarizado Express</label>
+                    <input id="dolarizadoExpressId" class="campo-input-input" name="dolarizadoExpress" type="checkbox">
                 </div>
-            </div>*@
+                <div class="col-md-2 col-sm-9">
+                    <div id="dolarizadoDiv" hidden>
+                        <input id="dolarizadoFechaId" type="date" data-bind="value: Parametros.dolarizadoFechaId" style="width: 100%" />
+                        <img id="errdolarizadoFechaId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>*@
             <div class="noAcuerdo">
                 <div id="contCorredorDiv" hidden>
                     <div class="col-sm-2 ">
@@ -717,18 +718,18 @@
         </div>
         <div class="row">
             @*<div class="col-sm-2 ">
-                <div id="pagoDiferidoDiv">
-                    <label style="width:120px">Pago diferido</label>
-                    <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" />
-                    <img id="errpesificadoId" src="~/Content/Images/error.png" style="display:none" />
+                    <div id="pagoDiferidoDiv">
+                        <label style="width:120px">Pago diferido</label>
+                        <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" />
+                        <img id="errpesificadoId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 col-sm-9">
-                <div id="pesificadoDiv" hidden>
-                    <input id="pesificadoDiasId" placeholder="Días" style="width:100%" />
-                    <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-            </div>*@
+                <div class="col-md-4 col-sm-9">
+                    <div id="pesificadoDiv" hidden>
+                        <input id="pesificadoDiasId" placeholder="Días" style="width:100%" />
+                        <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>*@
             <div class="col-sm-6 noAcuerdo" id="selCargoVendedorDiv">
                 <label style="width:200px">Sellado 100% a cargo vendedor</label>
                 <input id="selCargoVendedorId" class="campo-input-input" data-bind="checked:Parametros.selCargoVendedorId, disabled: isControlDisabled" type="checkbox" />

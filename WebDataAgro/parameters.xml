@@ -285,11 +285,22 @@
                            /endpoint[@name='HTTP_Port25']
                            /@address" />
   </parameter>
-
+  <parameter name="HTTP_Port26 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port26']
+                           /@address" />
+  </parameter>
   <parameter name="BasicHttpBinding_IServicioRepositorio Service Endpoint Address">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/system.serviceModel/client
                            /endpoint[@name='BasicHttpBinding_IServicioRepositorio']
+                           /@address" />
+  </parameter>
+  <parameter name="HTTP_Port27 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port27']
                            /@address" />
   </parameter>
   

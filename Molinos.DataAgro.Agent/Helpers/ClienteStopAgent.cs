@@ -155,7 +155,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     var cupoManager = cupoManagerInj();
                     var cupoConId = (cupo.Id == 0) ? repositorio.Obtener<Cupo>(x => x.CupoSap == cupo.CupoSap) : cupo;
-                    var cupoEnDto = cupoManager.ObtenerCupo(cupoConId.Id);
+                    var cupoEnDto = cupoManager.ObtenerCupo(cupoConId.Id, null);
                     logDataAgroManager.LogCambiosDataAgro(cupoEnDto, TipoAccionLogDataAgro.Modificar);
                 }
 
@@ -228,7 +228,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     foreach (var cupoNuevo in listaCupos)
                     {
                         var cupoConId = (cupoNuevo.Id == 0) ? repositorio.Obtener<Cupo>(x => x.CupoSap == cupoNuevo.CupoSap) : cupoNuevo;
-                        logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoConId.Id), TipoAccionLogDataAgro.Modificar);
+                        logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoConId.Id, null), TipoAccionLogDataAgro.Modificar);
                     }
                 }
                 catch (Exception e)
