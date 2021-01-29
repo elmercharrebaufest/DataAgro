@@ -132,6 +132,7 @@
     <Compile Include="Dto\AbmFechaFeriado.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
+    <Compile Include="Dto\ProveedorAltaDto.cs" />
     <Compile Include="Dto\CompraCampanaActualDto.cs" />
     <Compile Include="Dto\PesificarAgentDto.cs" />
     <Compile Include="Dto\CompraDetalleDto.cs" />

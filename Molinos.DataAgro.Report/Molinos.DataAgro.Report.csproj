@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="ActiveReport\RemoveCopyrigthHelper.cs" />
     <Compile Include="Clases\LstAgendaActividad.cs" />
+    <Compile Include="Clases\LstFormularioAltaNoGranos.cs" />
     <Compile Include="Clases\LstCartaDePresentacion.cs" />
     <Compile Include="Clases\LstLogDataAgro.cs" />
     <Compile Include="Clases\LstContrato.cs" />
@@ -137,6 +138,12 @@
     </Compile>
     <Compile Include="Reportes\RptCartaDePresentacion.Designer.cs">
       <DependentUpon>RptCartaDePresentacion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\RptFormularioAltaNoGranos.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\RptFormularioAltaNoGranos.Designer.cs">
+      <DependentUpon>RptFormularioAltaNoGranos.cs</DependentUpon>
     </Compile>
     <Compile Include="Reportes\RptInformeComercial.cs">
       <SubType>Component</SubType>
@@ -225,6 +232,9 @@
     <EmbeddedResource Include="Reportes\RptCartaDePresentacion.resx">
       <DependentUpon>RptCartaDePresentacion.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\RptFormularioAltaNoGranos.resx">
+      <DependentUpon>RptFormularioAltaNoGranos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\RptInformeComercial.resx">
       <DependentUpon>RptInformeComercial.cs</DependentUpon>
