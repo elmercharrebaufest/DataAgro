@@ -865,8 +865,8 @@ namespace Molinos.DataAgro.Business.Managers
             ).Select(x => new PosicionPorMaterial
             {
                 Id = x.Id,
-                FechaDesde = x.Fecha.Value,
-                FechaHasta = x.Fecha.Value,
+                FechaDesde = x.FechaDesde.Value,
+                FechaHasta = x.FechaHasta.Value,
                 Cantidad = x.Cantidad,
                 TipoNegocioId = 4,
                 Precio = x.Precio,
