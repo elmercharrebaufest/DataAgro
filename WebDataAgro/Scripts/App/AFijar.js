@@ -4532,8 +4532,11 @@ function HayMercaderia() {
         $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
         $("#sustentableMonedaId").data("kendoDropDownList").value("");
         $(".sustentableDiv").hide();
+        $("#ordenarRow").show();
+        
     } else {
         $("#divSojaSustentable").show();
+        $("#ordenarRow").hide();
     }
 }
 
