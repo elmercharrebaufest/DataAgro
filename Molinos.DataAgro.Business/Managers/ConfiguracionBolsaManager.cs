@@ -64,7 +64,7 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado Validar(ConfiguracionBolsa bolsa)
         {
             var errores = new Resultado();            
-            if (repositorio.Obtener<ConfiguracionBolsa>(x => x.ProvinciaId == bolsa.ProvinciaId && x.DestinoId == bolsa.DestinoId) != null)
+            if (repositorio.Obtener<ConfiguracionBolsa>(x => x.ProvinciaId == bolsa.ProvinciaId && x.DestinoId == bolsa.DestinoId && x.Id != bolsa.Id) != null)
             {
                 errores.Error("cupo", "Esta configuración ya existe");
             }
