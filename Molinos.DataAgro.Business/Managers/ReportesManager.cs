@@ -419,7 +419,8 @@ namespace Molinos.DataAgro.Business.Managers
                &&
                ((x is Contrato && DbFunctions.TruncateTime((x as Contrato).FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime((x as Contrato).FechaOperacion) <= fechaManana) ||
                (x is FijacionDePrecioContrato && DbFunctions.TruncateTime((x as FijacionDePrecioContrato).FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime((x as FijacionDePrecioContrato).FechaOperacion) <= fechaManana) ||
-               (!(x is Contrato) && !(x is FijacionDePrecioContrato) && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana))
+               (x is AgenteCompra && DbFunctions.TruncateTime((x as AgenteCompra).FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime((x as AgenteCompra).FechaOperacion) <= fechaManana) ||
+               (!(x is Contrato) && !(x is FijacionDePrecioContrato) && !(x is AgenteCompra) && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana))
                && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
                && (centroId == 0 || x.DestinoId == centroId)
                && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 6)
@@ -520,7 +521,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Acopio = x.Destino.Acopio == true ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
             DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
-            && x.TipoNegocioId == 2 &&
+            && x.TipoNegocioId == 2 && x.Venta != true &&
             (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId == null && x.TipoAgenteCompraId == null);
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
@@ -560,7 +561,7 @@ namespace Molinos.DataAgro.Business.Managers
                 SanLorenzo = Math.Round(x.Cantidad / 1000),
                 Acopio = 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false
-                && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta
+                && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1));
             var acuerdo = repositorio.Listar<ContratoAcuerdo, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
@@ -711,8 +712,8 @@ namespace Molinos.DataAgro.Business.Managers
             fechaHasta = fechaHasta.Date;
             var agentes = repositorio.Listar<AgenteCompra>(x => materialId.Contains(x.MaterialId) &&
                 x.OcultarEnTablero == false &&
-                DbFunctions.TruncateTime(x.Fecha) >= fechaDesde &&
-                DbFunctions.TruncateTime(x.Fecha) <= fechaHasta &&
+                DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde &&
+                DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).GroupBy(x => new { x.Posicion, x.MaterialId, TipoAgenteCompraId = x.TipoAgenteCompraId.Value });
             foreach (var agentesPorPosicionYMaterial in agentes)
             {
@@ -1931,9 +1932,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Precio = x.Precio.ToString(),
                 Moneda = x.Moneda.Descripcion,
-                Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
+                Fecha = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido
-            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.Fecha) == fechaHoy
+            }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) == fechaHoy
              && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5), 0, "Agente");
 
             return agente;

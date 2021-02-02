@@ -873,6 +873,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<FijacionDePrecioContrato, BasicoContrato>(x => x.Id == id, fijac => new BasicoContrato
             {
                 Id = fijac.Id,
+                Negocio = fijac.FijacionSAP,
                 Proveedor = fijac.Proveedor == null ? "" : fijac.Proveedor.RazonSocial + " " + "(" + fijac.Proveedor.CUIT + ")",
                 ContratoId = fijac.ContratoId.HasValue ? fijac.ContratoId.Value : 0,
                 ProveedorId = fijac.ProveedorId ?? 0,
@@ -943,7 +944,7 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaHasta = fijac.Contrato.HastaFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.HastaFijacion).Trim() + "/" +
                                            SqlFunctions.StringConvert((double)fijac.Contrato.HastaFijacion.Value.Month).TrimStart() + "/" +
                                            SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : "",
-                    PagoDiferido = fijac.PagoDiferidoContrato,
+                    PagoDiferido = fijac.PagoDiferidoContrato                    
                 },
                 FechaDesde = fijac.FechaDesde,
                 FechaHasta = fijac.FechaHasta,

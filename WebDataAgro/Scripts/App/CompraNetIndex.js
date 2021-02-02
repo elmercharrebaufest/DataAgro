@@ -322,6 +322,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Provincia + "'" + ',' +
         "'" + dataItem.Localidad + "'" + ',' +
         "'" + dataItem.ContratoSAP + "'" + ',' +
+        "'" + dataItem.Negocio + "'" + ',' +
         "'" + dataItem.Importe_Sustentable + "'" + ',' +
         "'" + dataItem.MonedaId_Sustentable + "'" + ',' +
         "'" + formatearFecha(dataItem.Fecha_Dolarizado) + "'" + ',' +
@@ -1913,7 +1914,7 @@ function GuardarAmpliacion(ampliacion) {
 }
 
 function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda,
-    campana, provincia, localidad, nro_SAP, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO,
+    campana, provincia, localidad, nro_SAP, negocio, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
@@ -2008,8 +2009,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
             break;
     }
 
-    $(".modal-title-visualizar").empty();
-    $(".modal-title-visualizar").append("Contrato N&deg; SAP: " + (nro_SAP != "null" ? nro_SAP : ""));
+    if (tipo == "FIJACION" && status == "5") {
+        $(".modal-title-visualizar").empty();
+        $(".modal-title-visualizar").append("Fijacion N&deg; SAP: " + (negocio != "null" ? negocio : ""));
+    } else {
+        $(".modal-title-visualizar").empty();
+        $(".modal-title-visualizar").append("Contrato N&deg; SAP: " + (nro_SAP != "null" ? nro_SAP : ""));
+    }
     $("#visualizar_proveedor").text(proveedor);
     $("#fechacontrato").text(FechaOperacion == null || FechaOperacion == "" ? desdeHasta : FechaOperacion);
     $("#visualizar_desdeHasta").text(fecha);

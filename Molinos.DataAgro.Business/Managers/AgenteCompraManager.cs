@@ -22,14 +22,16 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IHedgeManager oHedgeManager;
         private readonly ILogDataAgroManager logDataAgroManager;
         private ILogger logger;
+        //private readonly IDiasHabilesAgent oDiasHabilesAgent;
 
 
-        public AgenteCompraManager(ILogger logger, IRepositorio repositorio, IHedgeManager oHedgeManager, ILogDataAgroManager logDataAgroManager)
+        public AgenteCompraManager(ILogger logger, IRepositorio repositorio, IHedgeManager oHedgeManager, ILogDataAgroManager logDataAgroManager/*, IDiasHabilesAgent oDiasHabilesAgent*/)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.oHedgeManager = oHedgeManager;
             this.logDataAgroManager = logDataAgroManager;
+            //this.oDiasHabilesAgent = oDiasHabilesAgent;
         }
 
         //--------------------------------------------------
@@ -112,6 +114,40 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("", "El Día de Operación ya se ha cerrado");
                 }
             }
+            if (oParam.FechaOperacion > DateTime.Now.Date)
+            {
+                oErrorMessages.Error("FechaOperacion", "La Fecha tiene que ser menor o igual al día de la fecha.");
+            }
+            //else
+            //{
+            //    var agente = repositorio.Obtener<AgenteCompra>(oParam.Id);
+            //    if (oParam.Id > 0)
+            //    {
+            //        if ((oParam.FechaOperacion != agente.Fecha.Date && oParam.FechaOperacion < agente.Fecha.Date))
+            //        {
+
+            //            var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(agente.Fecha.Date);
+
+            //            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)))
+            //            {
+            //                oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (oParam.FechaOperacion < DateTime.Now.Date)
+            //        {
+            //            var diaAnterior = oDiasHabilesAgent.UltimoDiaHabil(null);
+
+            //            if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)))
+            //            {
+            //                oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+            //            }
+            //        }
+
+            //    }
+            //}
             return oErrorMessages;
         }
 
@@ -157,7 +193,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oAgenteSave.Posicion = oAgente.Posicion;
                 oAgenteSave.ComercialCreadorId = oAgente.ComercialCreadorId;
                 oAgenteSave.CampanaId = oAgente.CampanaId;
-               
+                oAgenteSave.FechaOperacion = oAgente.FechaOperacion;
 
 
             }
@@ -170,7 +206,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oAgente.Fecha = DateTime.Now;
                 oAgente.EstadoId = estado;
-                oAgente.FechaOperacion = DateTime.Now;
+                oAgente.FechaOperacion = oAgente.FechaOperacion;
                 repositorio.Agregar(oAgente);
             }
 
@@ -380,10 +416,13 @@ namespace Molinos.DataAgro.Business.Managers
                 Campania = x.Campana.Descripcion,
                 Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres,
                 Fecha_Dolarizado = x.FechaDolarizado,
-
                 CampanaId = x.CampanaId ?? 0,
                 TipoNegocio = x.TipoNegocio.Descripcion,
-                TipoAgenteCompraId = x.TipoAgenteCompraId
+                TipoAgenteCompraId = x.TipoAgenteCompraId,
+                FechaOperacion = x.FechaOperacion,
+                FechaOperacionFormateado = SqlFunctions.DateName("day", x.FechaOperacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaOperacion),
             });
             return contrato;
         }

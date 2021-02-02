@@ -149,15 +149,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             //toneladasPorGrano.NewAFijar + toneladasPorGrano.NewAPrecio + toneladasPorGrano.NewFijac + toneladasPorGrano.NewFason;
 
             var agente = contexto.Set<AgenteCompra>().Where(x => x.OcultarEnTablero == false 
-                && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy 
-                && DbFunctions.TruncateTime(x.Fecha) <= fechaManana 
+                && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy 
+                && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana 
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) 
                 && x.MaterialId == materialId && (centroId == 0 || centroId == 1) 
                 && (calidad == null || calidad == 3))
                 .Select(x => new NegocioToneladasPosicionDto
                 {
                     Id = x.Id,
-                    Fecha = x.Fecha,
+                    Fecha = x.FechaOperacion,
                     TipoNegocioId = 5,
                     Cantidad = x.Cantidad,
                     PosicionString = x.Posicion,

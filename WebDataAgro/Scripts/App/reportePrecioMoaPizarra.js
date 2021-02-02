@@ -30,7 +30,15 @@ function CargarGrillaConfig() {
             model: {
                 id: 'Id',
                 fields: {
-                    Id: { type: "number" },      
+                    Id: { type: "number" },
+                    Precio: { type: "number" },
+                    DesdeEntrega: { type: "date" },
+                    DesdeFijacion: { type: "date" },
+                    DesdeVigencia: { type: "date" },
+                    FechaCreacion: { type: "date" },
+                    HastaEntrega: { type: "date" },
+                    HastaFijacion: { type: "date" },
+                    HastaVigencia: { type: "date" }
                 }
             }
         },
@@ -66,7 +74,7 @@ function CargarGrillaConfig() {
         sortable: true,
         columns: [
             { field: "TipoConfiguracion", title: "Tipo Configuración", type: "string" },
-            {                
+            {
                 field: "TipoNegocio", type: "string", filterable: {
                     multi: true, dataSource: [{
                         TipoNegocio: "FIJACIÓN"
@@ -78,7 +86,7 @@ function CargarGrillaConfig() {
                 }, title: "Tipo Negocio", width: 70, attributes: {
                     "class": "mobile-sm"
                 }
-            }, 
+            },
             {
                 field: "Precio", title: "Precio", type: "number", template: function (dataItem) {
                     return kendo.toString(dataItem.Precio, "##,#.##").replace(/,/g, ".");
@@ -150,7 +158,7 @@ function CargarGrillaConfig() {
                         return '<div></div>' + kendo.toString(kendo.parseDate(dataItem.HastaFijacion, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
                     } else return "";
                 }
-            },           
+            },
             { field: "UsuarioCreador", type: "string", title: "Usuario Creador" },
             {
                 field: "FechaCreacion", type: "date", title: "Fecha Creación", format: _DefaultDateTemplate,
@@ -201,7 +209,7 @@ function CargarGrillaConfig() {
             },
             operators: {
                 string: {
-                    eq: "Igual"
+                    contains: "Contiene"
                 },
                 date: {
                     eq: "Igual",

@@ -822,8 +822,10 @@ function InicializarElementos() {
                 $("#guardarBtn").empty();
                 $("#guardarBtn").append("Guardar Agente");
                 //if ($("#precioMonedaId").data("kendoDropDownList"))
-                $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
+                $("#precioMonedaId").data("kendoDropDownList").value("USDM ");            
                 $("#pizarraDiv").prop("checked", false);
+                $("#fechaOperacionDiv").show();
+             
             } else if (this.value() == 6) {
                 $("#boton-ampliar").hide();
                 $(".noAcuerdo").hide();
@@ -938,6 +940,7 @@ function InicializarElementos() {
                 $("#precioId").data("kendoNumericTextBox").value("");
                 $("#precioId").trigger('change');
                 precioRojo.removeClass("required-border");
+              
 
 
             }
@@ -1721,7 +1724,7 @@ function InicializarElementos() {
             var dia = hoy.getDate();
             hoy = new Date(anio, mes, dia);
             const diffTime = Math.abs(hoy - this.value());
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));           
             if (this.value() < hoy) {
                 $("#fechaOperacionMotivoDiv").show();
                 if (diffDays > 1) {
@@ -1735,10 +1738,27 @@ function InicializarElementos() {
             } else {
                 $("#fechaOperacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorId").val("");
-                //$("#noInformaSioId").attr("disabled", false);
+                //$("#noInformaSioId").attr("disabled", false);              
             }
         }
     });
+
+    $("#fechaOperacionAgenteId").kendoDatePicker({
+        value: date,
+        format: "dd-MM-yyyy",
+        max: new Date(),
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        change: function () {
+            var hoy = new Date();
+            var anio = hoy.getFullYear();
+            var mes = hoy.getMonth();
+            var dia = hoy.getDate();
+            hoy = new Date(anio, mes, dia);
+            const diffTime = Math.abs(hoy - this.value());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));         
+        }
+    });
+
     $("#fechaDesdeId").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
@@ -1896,6 +1916,7 @@ function InicializarElementos() {
 
     $("#fechaDesdeId").val(date);
     $("#fechaOperacionId").val(date);
+    $("#fechaOperacionAgenteId").val(date);    
     $("#fechaHastaId").val(datehasta);
     $("#fechaFijacionId").val(date);
 
@@ -2240,7 +2261,7 @@ function InicializarElementos() {
         if ($('#tipoId').val() == 6) {
             $("#condicionFijacionId").data("kendoDropDownList").value("7");
             $("#fechaDesdeTopeId").val(date);
-            $("#fechaHastaTopeId").val(datehasta);
+            $("#fechaHastaTopeId").val(datehasta);       
         }
     });
 
@@ -2776,6 +2797,7 @@ function CrearViewModel() {
         "fechaCiertaId": null,
         "porcentajeDePagoId": null,
         "fechaOperacionId": null,
+        "fechaOperacionAgenteId":null,
     };
     viewModel = kendo.observable({
         Parametros: param,
@@ -3386,10 +3408,12 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.FechaOperacionFormateado != null) {
         $("#fechaOperacionId").val(FormatearFecha((contrato.FechaOperacionFormateado)));
         $("#fechaFijacionId").val(FormatearFecha((contrato.FechaOperacionFormateado)));
-
+        $("#fechaOperacionAgenteId").val(FormatearFecha((contrato.FechaOperacionFormateado)));
+        
     } else {
         $("#fechaOperacionId").val("");
         $("#fechaFijacionId").val("");
+        $("#fechaOperacionAgenteId").val("");
 
     }
     $("#tipoAgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
@@ -4529,12 +4553,9 @@ function validarCredito(cuitProv) {
             var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0] });
             if (validacion == "Sin Crédito") {
                 MensErr(validacion);
-            } else {
-                MensInfo(validacion);
-            }
-           
-        }              
-        
+            } 
+        }
+
     }
 }
 

@@ -45,12 +45,19 @@ namespace Molinos.DataAgro.Business.Managers
             var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "Fecha_Order", "GrupoCompra", "Estado_Order", "DesdeFijacionFormateado", "FechaCiertaFormateado", "FechaDesdeFormateado", "FechaFormateado", "FechaHastaFormateado", "FechaOperacionFormateado", "Fecha_DolarizadoFormateado", "HastaFijacionFormateado" });
             string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.Id.ToString() + " - " + cambios.ContratoSAP.TrimStart('0');
 
-            if (cambios.DatosFijacion != null && !string.IsNullOrEmpty(cambios.DatosFijacion.ContratoId) && cambios.TipoNegocioId == 3)
+            if (cambios.TipoNegocioId == 3)
             {
-                descripcion = cambios.Id.ToString() + " - " + cambios.DatosFijacion.ContratoId.TrimStart('0');
+                if (!string.IsNullOrEmpty(cambios.Negocio) && !string.IsNullOrEmpty(cambios.Negocio.TrimStart('0')))
+                {
+                    descripcion = cambios.Id.ToString() + " - " + cambios.Negocio.TrimStart('0');
+                }
+                else if (!string.IsNullOrEmpty(cambios.DatosFijacion.ContratoId))
+                {
+                    descripcion = cambios.Id.ToString() + " - " + cambios.DatosFijacion.ContratoId.TrimStart('0');
+                }
             }
-            if ((!string.IsNullOrEmpty(cambios.ContratoSAP)) ||
-                (cambios.DatosFijacion != null && !string.IsNullOrEmpty(cambios.DatosFijacion.ContratoId) && cambios.TipoNegocioId == 3))
+            if ((!string.IsNullOrEmpty(cambios.ContratoSAP) && (cambios.TipoNegocioId == 1 || cambios.TipoNegocioId == 2)) ||
+                 (!string.IsNullOrEmpty(cambios.Negocio) && cambios.TipoNegocioId == 3))
             {
                 var tipo = cambios.GetType().Name;
                 var logs = repositorio.Listar<LogDataAgro>(x => x.ClaseId == cambios.Id && x.Tipo == tipo);

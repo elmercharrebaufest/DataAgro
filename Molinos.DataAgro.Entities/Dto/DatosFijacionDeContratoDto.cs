@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Clasificacion { get; set; }
         public bool Cesion { get; set; }
         public bool Anticipo { get; set; }
+        public string FijacionSap { get; set; }
     }
 }
 
