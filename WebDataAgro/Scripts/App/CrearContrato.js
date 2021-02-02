@@ -4578,12 +4578,22 @@ function HayMercaderia() {
         $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
         $("#sustentableMonedaId").data("kendoDropDownList").value("");   
         $(".sustentableDiv").hide();
-    }    
+    } else {
+        $("#divSojaSustentable").show();
+    }
 }
 
 function HaySustentable() {
     if ($("#sustentableId").is(":checked")) {
         $("#mercsDepositoId").prop("checked", false);
+        $("#mercsDepositoDiv").hide();
+    }
+    var maniana = new Date();
+    //maniana = new Date(maniana.setDate(maniana.getDate() + 1));
+    if ($("#fechaDesdeId").data("kendoDatePicker").value() != null && $("#fechaDesdeId").data("kendoDatePicker").value() >= maniana || $("#sustentableId").is(":checked")) {
+        $("#mercsDepositoDiv").hide();
+    } else {
+        $("#mercsDepositoDiv").show();
     }
 }
 

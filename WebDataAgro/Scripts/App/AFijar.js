@@ -1662,12 +1662,12 @@ function InicializarElementos() {
         value: date,
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        change: function () {
-            $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));
-            validarFechaCampana();
-            var maniana = new Date();
+        change: function () {  var maniana = new Date();
             //maniana = new Date(maniana.setDate(maniana.getDate() + 1));
             if ($("#fechaDesdeId").data("kendoDatePicker").value() >= maniana) {
+            $("#fechaHastaId").val(ObtenerFechaHasta(this.value()));
+            validarFechaCampana();
+          
                 $("#mercsDepositoDiv").hide();
                 $("#mercsDepositoId").prop("checked", false);
             } else {
@@ -4532,15 +4532,24 @@ function HayMercaderia() {
         $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
         $("#sustentableMonedaId").data("kendoDropDownList").value("");
         $(".sustentableDiv").hide();
+    } else {
+        $("#divSojaSustentable").show();
     }
 }
 
 function HaySustentable() {
     if ($("#sustentableId").is(":checked")) {
         $("#mercsDepositoId").prop("checked", false);
+        $("#mercsDepositoDiv").hide();
+    }
+    var maniana = new Date();
+    //maniana = new Date(maniana.setDate(maniana.getDate() + 1));
+    if ($("#fechaDesdeId").data("kendoDatePicker").value() != null && $("#fechaDesdeId").data("kendoDatePicker").value() >= maniana || $("#sustentableId").is(":checked")) {
+        $("#mercsDepositoDiv").hide();
+    } else {
+        $("#mercsDepositoDiv").show();
     }
 }
-
 
 
 
