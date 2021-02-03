@@ -589,11 +589,16 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.AperturaPrecio != null && oParam.TipoNegocioId == 2)
             {
+                var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+
+                if (oParam.FechaCierta != null && oParam.PagoDiferido != null && concepto != null)
+                {
+                    oErrorMessages.Error("", "Fecha cierta o días de diferimiento son obligatorios con el concepto Financiero");
+                }
                 if (oParam.FechaCierta != null)
                 {
                     if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
                     {
-                        var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
                         if (!((concepto != null && (oParam.FechaCierta != null) ||
                             (concepto == null && (oParam.FechaCierta == null)))))
                         {
@@ -605,7 +610,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
                     {
-                        var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
                         if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
                             (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
                         {
@@ -764,7 +768,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                             }
                         }
-                        if (oParam.FechaOperacion > contrato.Fecha.Date)
+                        if (oParam.FechaOperacion > contrato.Fecha.Date && oParam.Venta != true)
                         {
                             oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser mayor a " + contrato.Fecha.ToString("dd/MM/yyyy"));
                         }
@@ -786,7 +790,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                             }
 
-                            if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior/* && oParam.PrestamoDevolucion != true && oParam.Canje != true*/)
+                            if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior && oParam.Venta != true/* && oParam.PrestamoDevolucion != true && oParam.Canje != true*/)
                             {
                                 oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser anterior a " + diaAnterior.ToString("dd/MM/yyyy"));
                             }

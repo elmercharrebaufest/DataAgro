@@ -4410,23 +4410,13 @@ function HayCanje() {
     }
 }
 function ocultarSiHayCanje() {
-
-    $("#pagoDiferidoDiv").hide();
-    //$("#pesificadoId").prop("checked", false);
-    //$("#dolarizadoExpressDiv").hide();
-    //$("#dolarizadoExpressId").prop("checked", false);
-    //$("#divSojaSustentable").hide();
+    $("#pagoDiferidoDiv").hide();   
     $("#sustentableId").prop("checked", false);
     $("#compensacionDiv").hide();
-    $("#compensacionId").prop("checked", false);
-    //$("#dolarizadoDiv").hide();
-    //$("#dolarizadoFechaId").val("");
+    $("#compensacionId").prop("checked", false);   
     $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
-    $("#sustentableMonedaId").data("kendoDropDownList").value("");
-    //$("#pesificadoDiasId").data("kendoNumericTextBox").value("");
-    $(".sustentableDiv").hide();
-    //$("#pesificadoDiv").hide();
-    //$("#ordenarRow").show();
+    $("#sustentableMonedaId").data("kendoDropDownList").value("");    
+    $(".sustentableDiv").hide(); 
     $(".madreDiv").hide();
     $("#madreId").prop("checked", false);
     $("#fasonIdCheck").prop("checked", false);

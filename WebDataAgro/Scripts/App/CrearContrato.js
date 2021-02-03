@@ -964,23 +964,8 @@ function InicializarElementos() {
             $("#fasonIdCheck").attr("disabled", false);
         }
     });
-    $("#hijoId").click(function () {
-        if ($(this).is(':checked')) {
-            $(".contratoMadreDiv").show();
-            $("#fechaCiertaDiv").hide();
-            $("#fechaCiertaId").data("kendoDatePicker").value("");
-            $("#buscadorCorredor").prop('disabled', true);
-            $("#buscadorProveedor").prop('disabled', true);
-            $("#material").data("kendoDropDownList").enable(false);
-        }
-        else {
-            $(".contratoMadreDiv").hide();
-            $("#contMadreId").val("");
-            $("#fechaCiertaDiv").show();
-            $("#buscadorCorredor").prop('disabled', false);
-            $("#buscadorProveedor").prop('disabled', false);
-            $("#material").data("kendoDropDownList").enable(true);
-        }
+    $("#hijoId").click(function () {       
+            HayFijacionConvenio();     
     });
     $("#fasonIdCheck").click(function () {
         if ($(this).is(':checked')) {
@@ -4532,15 +4517,79 @@ function HayVenta() {
         $("#sioDiv").hide();
         $("#rellenar").show();
         $("#noInformaSioId").prop("checked", false);
-        $("#planCanjeDiv").hide();
-        $("#planCanjeId").prop("checked", false);
+     
+        $(".hijoDiv").hide();
+        $("#hijoId").prop("checked", false);
+        $("#contMadreId").val("");
+        $("#contratoMadreDiv").hide();        
+        HayFijacionConvenio();
+        $("#pizarraDiv").hide();
+        $("#pizarraId").prop("checked", false);
+        $(".ordenarRowPago").show();
+        $("#divSojaSustentable").hide();        
+        ClickEnPizarra();
+        
+        $("#baseDiv").hide();
+        $("#baseId").prop("checked", false);
 
+        $("#pagoDiferidoDiv").hide();
+        $("#sustentableId").prop("checked", false);
+        $("#compensacionDiv").hide();
+        $("#compensacionId").prop("checked", false);
+        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+        $("#sustentableMonedaId").data("kendoDropDownList").value("");
+        $(".sustentableDiv").hide();
+        $(".madreDiv").hide();
+        $("#madreId").prop("checked", false);
+        $("#fasonIdCheck").prop("checked", false);
+        $("#pagosDiv").hide();
+        $("#CDId").prop("checked", false);
+        $("#WarrantId").prop("checked", false);
+        $("#DatosBoleto").hide();
+        $(".datos-boleto").hide();
+        $("#fechaCiertaDiv").hide();
+        $("#fechaCiertaId").val("");
+        $("#pagoDolarizadoDiv").hide();
+        $("#dolarizadoId").prop("checked", false);
+        $("dolarizadoFechaId").val("");    
+        $("#consignatarioDiv").hide();
+        $("#consignatarioId").prop("checked", false);
+        $(".compensacionDiv").hide();
+        $("#compensacionId").prop("checked", false);
+        $("#chequeElectronicoDiv").hide();
+        $("#chequeElectronicoInput").prop("checked", false);
+        $("#pagoCbuDiv").hide();
+        $("#pagoCbu").val(""); 
+        $("#boletoNingunoId").prop("checked", true);        
+        
     } else {
+        $("#DatosBoleto").show();
+        $("#divSojaSustentable").show();
+        $(".ordenarRowPago").hide();
         $("#sioDiv").show();
         $("#rellenar").hide();
+        $("#pizarraDiv").show();
+        $(".hijoDiv").show();
+        $(".madreDiv").show();
+        HayFijacionConvenio();
+        ClickEnPizarra();
+        $("#pagoDiferidoDiv").show();
+        $("#compensacionDiv").show();
+        $("#pagosDiv").show();
         if ($("#clasificacion").val() != "1") {
             $("#planCanjeDiv").show();
         }
+        $("#baseDiv").show();
+        $("#fechaCiertaDiv").show();
+        if ($("#precioMonedaId").val() ==  "ARP  ") {
+            $("#pagoDolarizadoDiv").show();
+        }
+        if ($("#clasificacion").val() != "1") {
+            $("#consignatarioDiv").show();
+        }
+        $(".compensacionDiv").show();
+        $("#chequeElectronicoDiv").show();
+        $("#pagoCbuDiv").show();
     }
     
 }
@@ -4552,7 +4601,7 @@ function validarCredito(cuitProv) {
             var cuit = cuitAux[1].split(')');
             var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0] });
             if (validacion == "Sin Crédito") {
-                MensErr(validacion);
+                MensAlerta(validacion);
             } 
         }
 
@@ -4598,6 +4647,27 @@ function HaySustentable() {
     } else {
         $("#mercsDepositoDiv").show();
     }
+}
+
+function HayFijacionConvenio() {
+    if ($("#hijoId").is(':checked')) {    
+
+        $(".contratoMadreDiv").show();
+        $("#fechaCiertaDiv").hide();
+        $("#fechaCiertaId").data("kendoDatePicker").value("");
+        $("#buscadorCorredor").prop('disabled', true);
+        $("#buscadorProveedor").prop('disabled', true);
+        $("#material").data("kendoDropDownList").enable(false);
+    }
+    else {
+        $(".contratoMadreDiv").hide();
+        $("#contMadreId").val("");
+        $("#fechaCiertaDiv").show();
+        $("#buscadorCorredor").prop('disabled', false);
+        $("#buscadorProveedor").prop('disabled', false);
+        $("#material").data("kendoDropDownList").enable(true);
+    }
+ 
 }
 
 

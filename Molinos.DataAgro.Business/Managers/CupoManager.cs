@@ -309,7 +309,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         EnviarMailProveedorAnulacionCupo(cupos);
                         EnviarMailComercialAnulacionCupo(comercial, cupos);
-                        EnviarMailCreadorAnulacionCupo(cupos);
+                        EnviarMailCreadorAnulacionCupo(cupos, comercial);
                     }
                 }
                 return resultStop;
@@ -452,7 +452,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 EnviarMailProveedorAnulacionCupo(cupos);
                 EnviarMailComercialAnulacionCupo(comercial, cupos);
-                EnviarMailCreadorAnulacionCupo(cupos);
+                EnviarMailCreadorAnulacionCupo(cupos, comercial);
             }
             return resultado;
         }
@@ -2486,7 +2486,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     repo.GuardarCambios();
                     EnviarMailAnulacionCupo(result, comercialId, momento, repo, mail, path, listaCuposError, listaCuposOk);
-                    EnviarMailCreadorAnulacionCupo(listaCuposOk);
+                    EnviarMailCreadorAnulacionCupo(listaCuposOk, comercialId);
                     EnviarMailProveedorAnulacionCupo(listaCuposOk);
                 }
             }
@@ -2701,17 +2701,17 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private void EnviarMailCreadorAnulacionCupo(List<CupoDto> cupos)
+        private void EnviarMailCreadorAnulacionCupo(List<CupoDto> cupos, string active)
         {
             try
             {
                 foreach (var cuposPorComercialCreador in cupos.GroupBy(x => x.ComercialId))
                 {
                     var id = cuposPorComercialCreador.Key;
-                    var comercialContacto = repositorio.Listar<Comercial>(x => x.ComercialId == id);
+                    var comercialContacto = repositorio.Listar<Comercial>(x => x.ComercialId == id && x.IdActiveDirectory != active);
                     if (comercialContacto.Count == 0)
                     {
-                        return;
+                        continue;
                     }
                     var lista = comercialContacto.Select(x => x.IdActiveDirectory).ToList();
                     var path = httpContextManager.ObtenerPathLogoMail();

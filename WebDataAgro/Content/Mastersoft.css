@@ -108,7 +108,7 @@ span.k-widget.k-dropdown {
 }
 
 .bootstrap-dialog.type-warning .modal-header {
-    background-color: #017940;
+    background-color: #f0ad4e;
 }
 
 label {
@@ -212,3 +212,4 @@ span.k-edit {
     margin: 0;
     min-width: 13.2em;
 }
+

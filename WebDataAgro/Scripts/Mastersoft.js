@@ -221,6 +221,32 @@ function MensInfo(mensaje) {
     });
 }
 
+function MensAlerta(mensaje) {
+    BootstrapDialog.confirm({
+        title: 'Alerta...',
+        message: mensaje,
+        type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+        closable: false, // <-- Default value is false
+        draggable: false, // <-- Default value is false
+    });
+}
+
+function MensAlerta(mensaje) {
+
+    BootstrapDialog.show({
+        title: 'Alerta...',
+        message: mensaje,
+        draggable: true,
+        type: BootstrapDialog.TYPE_WARNING,
+        buttons: [{
+            label: 'Cerrar',
+            cssClass: 'k-button',
+            action: function (dialogItself) {
+                dialogItself.close();
+            }
+        }]
+    });
+}
 
 function MensInfoReload(mensaje) {
 

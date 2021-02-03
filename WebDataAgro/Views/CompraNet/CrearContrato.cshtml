@@ -242,6 +242,12 @@
                     <img id="errcondicionFijacionId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
+            <div class="ordenarRowPago" hidden>
+                <div class="col-sm-2 ">                    
+                </div>
+                <div class="col-sm-5 col-md-3">                   
+                </div>
+            </div>
             <div id="pagosDiv" class="noFason noAgente acuerdo ampliar">
                 <div class="col-sm-2 ">
                     <label>Pago</label>
@@ -763,7 +769,7 @@
                     <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
 
-                <div class="col-sm-2 ">
+                <div class="col-sm-2 compensacionDiv">
                     <label style="width:120px">Compensación</label>
                     <input id="compensacionId" class="campo-input-input" data-bind="checked:Parametros.compensacionId, disabled: isControlDisabled" type="checkbox" onclick="HayCompensacion()" />
                 </div>
