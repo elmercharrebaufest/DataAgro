@@ -20,8 +20,7 @@ $(document).ready(function () {
     CrearViewModel();
     InicializarElementos();
     InicializarDatos();
-    AutocompleteProcedencia();
-
+    AutocompleteProcedencia();    
 });
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
@@ -903,7 +902,7 @@ function InicializarElementos() {
                     $(".ocultar").hide();
                     $("#CDId").prop("checked", false);
                     $("#WarrantId").prop("checked", false);
-                    $("#pagosDiv").show();
+                    $("#pagosDiv").show();                  
                     if ($("#hijoId").is(':checked') == false) {
                         $("#fechaCiertaDiv").show();
                     }
@@ -955,7 +954,7 @@ function InicializarElementos() {
         $("#fasonIdCheck").prop("checked", false);
         $("#fasonIdCheck").attr("disabled", true);
         if ($(this).is(':checked')) {
-            $("#pagosDiv").show();
+            $("#pagosDiv").show();          
         }
         else {
             $("#pagosDiv").hide();
@@ -2197,11 +2196,13 @@ function InicializarElementos() {
 
                 if ($("#madreId").is(':checked')) {
                     $("#pagosDiv").show();
+                    HayVenta();
                 }
             } else if ($('#tipoId').val() == 2) {
                 $(".contratoAFijar").hide();
                 $(".contratoAPrecio").show();
                 $("#pagosDiv").show();
+                HayVenta();
             }
             if ($("#buscadorCorredor").val() != "") {
                 $('#pagoDirectoDiv').show();
@@ -3615,6 +3616,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#fasonIdCheck").attr("disabled", true);
             $("#madreId").prop("checked", true);
             $("#pagosDiv").show();
+            HayVenta();
         }
         if (contrato.Madre === false) {
             $("#fasonIdCheck").attr("disabled", false);
@@ -3860,6 +3862,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.Venta == true) {
         $("#ventaId").prop("checked", true);
+        HayVenta();
     } else {
         $("#ventaId").prop("checked", false);
     }
@@ -4575,7 +4578,7 @@ function HayVenta() {
         ClickEnPizarra();
         $("#pagoDiferidoDiv").show();
         $("#compensacionDiv").show();
-        $("#pagosDiv").show();
+        $("#pagosDiv").show();      
         if ($("#clasificacion").val() != "1") {
             $("#planCanjeDiv").show();
         }
