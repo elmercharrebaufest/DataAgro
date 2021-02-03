@@ -4514,91 +4514,13 @@ function formatDate(date) {
 
     return [year, month, day].join('-');
 }
-function HayVenta() {
-    validarCredito();
-    if ($("#ventaId").is(":checked")) {
-        $("#sioDiv").hide();
-        $("#rellenar").show();
-        $("#noInformaSioId").prop("checked", false);
-     
-        $(".hijoDiv").hide();
-        $("#hijoId").prop("checked", false);
-        $("#contMadreId").val("");
-        $("#contratoMadreDiv").hide();        
-        HayFijacionConvenio();
-        $("#pizarraDiv").hide();
-        $("#pizarraId").prop("checked", false);
-        $(".ordenarRowPago").show();
-        $("#divSojaSustentable").hide();        
-        ClickEnPizarra();
-        
-        $("#baseDiv").hide();
-        $("#baseId").prop("checked", false);
-
-        $("#pagoDiferidoDiv").hide();
-        $("#sustentableId").prop("checked", false);
-        $("#compensacionDiv").hide();
-        $("#compensacionId").prop("checked", false);
-        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
-        $("#sustentableMonedaId").data("kendoDropDownList").value("");
-        $(".sustentableDiv").hide();
-        $(".madreDiv").hide();
-        $("#madreId").prop("checked", false);
-        $("#fasonIdCheck").prop("checked", false);
-        $("#pagosDiv").hide();
-        $("#CDId").prop("checked", false);
-        $("#WarrantId").prop("checked", false);
-        $("#DatosBoleto").hide();
-        $(".datos-boleto").hide();
-        $("#fechaCiertaDiv").hide();
-        $("#fechaCiertaId").val("");
-        $("#pagoDolarizadoDiv").hide();
-        $("#dolarizadoId").prop("checked", false);
-        $("dolarizadoFechaId").val("");    
-        $("#consignatarioDiv").hide();
-        $("#consignatarioId").prop("checked", false);
-        $(".compensacionDiv").hide();
-        $("#compensacionId").prop("checked", false);
-        $("#chequeElectronicoDiv").hide();
-        $("#chequeElectronicoInput").prop("checked", false);
-        $("#pagoCbuDiv").hide();
-        $("#pagoCbu").val(""); 
-        $("#boletoNingunoId").prop("checked", true);        
-        
-    } else {
-        $("#DatosBoleto").show();
-        $("#divSojaSustentable").show();
-        $(".ordenarRowPago").hide();
-        $("#sioDiv").show();
-        $("#rellenar").hide();
-        $("#pizarraDiv").show();
-        $(".hijoDiv").show();
-        $(".madreDiv").show();
-        HayFijacionConvenio();
-        ClickEnPizarra();
-        $("#pagoDiferidoDiv").show();
-        $("#compensacionDiv").show();
-        $("#pagosDiv").show();      
-        if ($("#clasificacion").val() != "1") {
-            $("#planCanjeDiv").show();
-        }
-        $("#baseDiv").show();
-        $("#fechaCiertaDiv").show();
-        if ($("#precioMonedaId").val() ==  "ARP  ") {
-            $("#pagoDolarizadoDiv").show();
-        }
-        if ($("#clasificacion").val() != "1") {
-            $("#consignatarioDiv").show();
-        }
-        $(".compensacionDiv").show();
-        $("#chequeElectronicoDiv").show();
-        $("#pagoCbuDiv").show();
-    }
-    
+function Venta() {
+    validarCredito();   
+    HayVenta();
 }
 function validarCredito(cuitProv) {
     cuitProv = cuitProv != null ? cuitProv : $("#buscadorProveedor").val();
-    if ($("#ventaId").is(":checked") && cuitProv != "" ) {
+    if ($("#ventaId").is(":checked") && cuitProv != "") {
         var cuitAux = cuitProv.split('(');
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
@@ -4618,7 +4540,7 @@ function SeleccionAutomaticaBolsa() {
     var localidadInput = $("#LocalidadCrearContrato").val();
     var bolsa = 0;
     if (destino != "" && provincia != "" && localidadInput != "") {
-        bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });        
+        bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
     }
     return bolsa;
 }
@@ -4628,7 +4550,7 @@ function HayMercaderia() {
         $("#divSojaSustentable").hide();
         $("#sustentableId").prop("checked", false);
         $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
-        $("#sustentableMonedaId").data("kendoDropDownList").value("");   
+        $("#sustentableMonedaId").data("kendoDropDownList").value("");
         $(".sustentableDiv").hide();
         $("#ordenarRow").show();
 
@@ -4672,6 +4594,145 @@ function HayFijacionConvenio() {
     }
  
 }
+
+function HayVenta() {
+    if ($("#ventaId").is(":checked")) {
+        $("#sioDiv").hide();
+        $("#rellenar").show();
+        $("#noInformaSioId").prop("checked", false);
+
+        $(".hijoDiv").hide();
+        $("#hijoId").prop("checked", false);
+        $("#contMadreId").val("");
+        $("#contratoMadreDiv").hide();
+        HayFijacionConvenio();
+        $("#pizarraDiv").hide();
+        $("#pizarraId").prop("checked", false);
+        $(".ordenarRowPago").show();
+        $("#divSojaSustentable").hide();
+        ClickEnPizarra();
+
+        $("#baseDiv").hide();
+        $("#baseId").prop("checked", false);
+
+        $("#pagoDiferidoDiv").hide();
+        $("#sustentableId").prop("checked", false);
+        $("#compensacionDiv").hide();
+        $("#compensacionId").prop("checked", false);
+        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+        $("#sustentableMonedaId").data("kendoDropDownList").value("");
+        $(".sustentableDiv").hide();
+        $(".madreDiv").hide();
+        $("#madreId").prop("checked", false);
+        $("#fasonIdCheck").prop("checked", false);
+        $("#pagosDiv").hide();
+        $("#CDId").prop("checked", false);
+        $("#WarrantId").prop("checked", false);
+        $("#DatosBoleto").hide();
+        $(".datos-boleto").hide();
+        $("#fechaCiertaDiv").hide();
+        $("#fechaCiertaId").val("");
+        $("#pagoDolarizadoDiv").hide();
+        $("#dolarizadoId").prop("checked", false);
+        $("dolarizadoFechaId").val("");
+        $("#consignatarioDiv").hide();
+        $("#consignatarioId").prop("checked", false);
+        $(".compensacionDiv").hide();
+        $("#compensacionId").prop("checked", false);
+        $("#chequeElectronicoDiv").hide();
+        $("#chequeElectronicoInput").prop("checked", false);
+        $("#pagoCbuDiv").hide();
+        $("#pagoCbu").val("");
+        $("#boletoNingunoId").prop("checked", true);
+
+    } else {
+        $("#DatosBoleto").show();
+        $("#divSojaSustentable").show();
+        $(".ordenarRowPago").hide();
+        $("#sioDiv").show();
+        $("#rellenar").hide();
+        $("#pizarraDiv").show();
+        $(".hijoDiv").show();
+        $(".madreDiv").show();
+        HayFijacionConvenio();
+        ClickEnPizarra();
+        $("#pagoDiferidoDiv").show();
+        $("#compensacionDiv").show();
+        $("#pagosDiv").show();
+        if ($("#clasificacion").val() != "1") {
+            $("#planCanjeDiv").show();
+        }
+        $("#baseDiv").show();
+        $("#fechaCiertaDiv").show();
+        if ($("#precioMonedaId").val() == "ARP  ") {
+            $("#pagoDolarizadoDiv").show();
+        }
+        if ($("#clasificacion").val() != "1") {
+            $("#consignatarioDiv").show();
+        }
+        $(".compensacionDiv").show();
+        $("#chequeElectronicoDiv").show();
+        $("#pagoCbuDiv").show();
+    }
+
+}
+function validarCredito(cuitProv) {
+    cuitProv = cuitProv != null ? cuitProv : $("#buscadorProveedor").val();
+    if ($("#ventaId").is(":checked") && cuitProv != "") {
+        var cuitAux = cuitProv.split('(');
+        if (cuitAux[1]) {
+            var cuit = cuitAux[1].split(')');
+            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0] });
+            if (validacion == "Sin Crédito") {
+                MensAlerta(validacion);
+            } 
+        }
+
+    }
+}
+
+function SeleccionAutomaticaBolsa() {
+    $("#LocalidadCrearContrato").trigger("change");
+    var destino = $("#destinoId").val();
+    var provincia = $("#ProvinciaId").val();
+    var localidadInput = $("#LocalidadCrearContrato").val();
+    var bolsa = 0;
+    if (destino != "" && provincia != "" && localidadInput != "") {
+        bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
+    }
+    return bolsa;
+}
+
+function HayMercaderia() {
+    if ($("#mercsDepositoId").is(":checked")) {
+        $("#divSojaSustentable").hide();
+        $("#sustentableId").prop("checked", false);
+        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+        $("#sustentableMonedaId").data("kendoDropDownList").value("");
+        $(".sustentableDiv").hide();
+        $("#ordenarRow").show();
+
+    } else {
+        $("#divSojaSustentable").show();
+        $("#ordenarRow").hide();
+    }
+}
+
+function HaySustentable() {
+    if ($("#sustentableId").is(":checked")) {
+        $("#mercsDepositoId").prop("checked", false);
+        $("#mercsDepositoDiv").hide();
+    }
+    var maniana = new Date();
+    //maniana = new Date(maniana.setDate(maniana.getDate() + 1));
+    if ($("#fechaDesdeId").data("kendoDatePicker").value() != null && $("#fechaDesdeId").data("kendoDatePicker").value() >= maniana || $("#sustentableId").is(":checked")) {
+        $("#mercsDepositoDiv").hide();
+    } else {
+        $("#mercsDepositoDiv").show();
+    }
+}
+
+
 
 
 
