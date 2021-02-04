@@ -4707,18 +4707,6 @@ function validarCredito(cuitProv) {
     }
 }
 
-function SeleccionAutomaticaBolsa() {
-    $("#LocalidadCrearContrato").trigger("change");
-    var destino = $("#destinoId").val();
-    var provincia = $("#ProvinciaId").val();
-    var localidadInput = $("#LocalidadCrearContrato").val();
-    var bolsa = 0;
-    if (destino != "" && provincia != "" && localidadInput != "") {
-        bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
-    }
-    return bolsa;
-}
-
 function HayMercaderia() {
     if ($("#mercsDepositoId").is(":checked")) {
         $("#divSojaSustentable").hide();
