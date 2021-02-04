@@ -359,12 +359,15 @@ namespace WebDataAgro.Services
             contrato.FechaEntrega = DateTime.ParseExact(contratoSAP.FechaEntrega, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             contrato.FechaHasta = DateTime.ParseExact(contratoSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             contrato.HastaFijacion = !string.IsNullOrEmpty(contratoSAP.FeHastaFij) ? DateTime.ParseExact(contratoSAP.FeHastaFij, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+            logger.Debug("Alta de datos contrato esActualizar: " + (esActualizar ? "si" : "no"));
             if (!esActualizar)
             {
                 var fechaCreacion = DateTime.ParseExact(contratoSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 var fechaOperacion = DateTime.ParseExact(contratoSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 contrato.FechaOperacion = fechaOperacion;
-                contrato.MotivoOperacionAnterior = fechaOperacion.Date < fechaCreacion.Date ? "Cargado desde SAP" : "";
+                contrato.MotivoOperacionAnterior = fechaOperacion.Date < fechaCreacion.Date ? "Cargado desde SAP" : ".";
+                logger.Debug("Alta de datos contrato MotivoOperacionAnterior: " + contrato.MotivoOperacionAnterior + " fechas: " + fechaOperacion.Date.ToString() + fechaCreacion.Date.ToString());
+
             }
             contrato.FechaCierta = !string.IsNullOrEmpty(contratoSAP.FechaCierta) ? DateTime.ParseExact(contratoSAP.FechaCierta, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
             if (!esActualizar)
