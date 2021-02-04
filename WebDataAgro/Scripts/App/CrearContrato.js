@@ -4600,6 +4600,9 @@ function HayFijacionConvenio() {
 
 function HayVenta() {
     if ($("#ventaId").is(":checked")) {
+        $("#planCanjeDiv").hide();
+        $("#planCanjeId").prop("checked", false);
+        
         $("#sioDiv").hide();
         $("#rellenar").show();
         $("#noInformaSioId").prop("checked", false);
@@ -4646,9 +4649,19 @@ function HayVenta() {
         $("#chequeElectronicoInput").prop("checked", false);
         $("#pagoCbuDiv").hide();
         $("#pagoCbu").val("");
+        $("#boletoConfirmaId").prop("checked", false);
+        $("#boletoFisicoId").prop("checked", false);
+        $("#boletoCartaId").prop("checked", false);
         $("#boletoNingunoId").prop("checked", true);
+        $("#bolsaConfirmaId").data("kendoDropDownList").value('');
+        $("#bolsaFisicoId").data("kendoDropDownList").value('');
+        $("#bolsaCartaId").data("kendoDropDownList").value('');
+        $("#BolsaFisicoDiv").hide();
+        $("#BolsaCartaDiv").hide();
+        $("#BolsaConfirmaDiv").hide();
 
     } else {
+        $("#planCanjeDiv").show();
         $("#DatosBoleto").show();
         $("#divSojaSustentable").show();
         $(".ordenarRowPago").hide();
