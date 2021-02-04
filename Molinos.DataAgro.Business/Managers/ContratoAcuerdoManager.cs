@@ -594,7 +594,7 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("", "Se debe completar Redespacho en Acopios");
             }
-            if (oContratoAcuerdo.Precio == 0 && !string.IsNullOrWhiteSpace(oContratoAcuerdo.PagoCBU) )
+            if (oContratoAcuerdo.Precio == 0 && !string.IsNullOrWhiteSpace(oContratoAcuerdo.PagoCBU))
             {
                 oEntityErrors.Error("", "No se puede completar Pago CBU en un Acuerdo a Fijar");
             }
@@ -626,6 +626,14 @@ namespace Molinos.DataAgro.Business
                 FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaHasta),
+                DesdeFijacionFormateado = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.DesdeFijacion) : "",
+                HastaFijacionFormateado = x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.HastaFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.HastaFijacion) : "",
+                DesdeFijacion = x.DesdeFijacion,
+                HastaFijacion = x.HastaFijacion,
                 Proveedor = (x.ProveedorId != null && x.ProveedorId > 0) ? x.Proveedor.RazonSocial + " (" + x.Proveedor.CUIT + ")" : "",
                 ProveedorId = x.ProveedorId ?? 0,
                 Corredor = (x.CorredorId != null && x.CorredorId > 0) ? x.Corredor.RazonSocial + " (" + x.Corredor.CUIT + ")" : "",

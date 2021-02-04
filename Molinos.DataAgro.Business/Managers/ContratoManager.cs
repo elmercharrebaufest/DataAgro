@@ -3867,6 +3867,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.Insumo = contratoSap.Insumo;
                 contrato.PrestamoDevolucion = contratoSap.PrestamoDevolucion;
                 contrato.PlantaDestinoId = contratoSap.PlantaDestinoId;
+                contrato.MotivoOperacionAnterior = contratoSap.MotivoOperacionAnterior;
                 repositorio.Agregar(contrato);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
