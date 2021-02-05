@@ -1359,6 +1359,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacionSave.Canje = fijacion.Canje;
                 fijacionSave.Fecha = fijacion.Fecha;
                 fijacionSave.GrupoCompra = fijacion.GrupoCompra;
+                fijacionSave.MotivoOperacionAnterior = fijacion.MotivoOperacionAnterior;
 
                 if (fijacion.AperturaPrecio != null)
                 {

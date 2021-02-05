@@ -509,7 +509,7 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
-            if (oContratoAcuerdo.FechaCierta != null && oContratoAcuerdo.PagoDiferido != null)
+            if (oContratoAcuerdo.FechaCierta != null && oContratoAcuerdo.PagoDiferido == true)
             {
                 oEntityErrors.Error("", "Fecha cierta o días de diferimiento son campos obligatorios con el concepto Financiero");
             }

@@ -4477,17 +4477,16 @@ function HayPrestamo() {
 }
 
 function SeleccionAutomaticaBolsa() {
-    $("#LocalidadCrearContrato").trigger("change");
+    //$("#LocalidadCrearContrato").trigger("change");
     var destino = $("#destinoId").val();
     var provincia = $("#ProvinciaId").val();
     var localidadInput = $("#LocalidadCrearContrato").val();
     var bolsa = 0;
     if (destino != "" && provincia != "" && localidadInput != "") {
         bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
-    } else {
-        LimpiarBoleto();
     }
-    if (bolsa != 0) {
+
+    if (bolsa != 0 && $("#boletoConfirmaId").is(':checked')) {
         var cambio = false;
         if (bolsa.BolsaId != $("#bolsaConfirmaId").data("kendoDropDownList").value()) {
             cambio = true;

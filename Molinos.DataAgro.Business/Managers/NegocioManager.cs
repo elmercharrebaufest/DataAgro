@@ -140,19 +140,19 @@ namespace Molinos.DataAgro.Business.Managers
                 if (linea % 2 == 0)
                 {
                     htmlBody += "<tr>" +
-                        "<td " + style1 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +                       
-                        "<td " + style1 + c.Material.Descripcion + "</td>" +
+                         "<td " + style1 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +
+                         "<td " + style1 + c.Material.Descripcion + "</td>" +
                          "<td " + style1 + c.Precio + "</td>" +
-                         "<td " + style1 + c.Moneda.Descripcion + "</td>" +
+                         "<td " + style1 + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
                          "<td " + style1 + c.Cantidad + "</td>" +
                          "<td " + style1 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
-                          (c.Corredor != null ? "<td " + style1 + c.Corredor.RazonSocial + "</td>" : "<td " + style1 + "</td>") +
-                         "<td " + style1 + c.Proveedor.RazonSocial + "</td>" +
+                         (c.Corredor != null ? "<td " + style1 + c.Corredor.RazonSocial + "</td>" : "<td " + style1 + "</td>") +
+                         "<td " + style1 + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
                          "<td " + style1 + c.TipoNegocio.Descripcion + "</td>" +
                          "<td " + style1 + c.Estado.Descripcion + "</td>" +
-                         "<td " + style1 + c.MotivoOperacionAnterior  + "</td> </tr> ";
+                         "<td " + style1 + (c.MotivoOperacionAnterior ?? "") + "</td> </tr> ";
                 }
                 else
                 {
@@ -160,16 +160,16 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style2 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +
                          "<td " + style2 + c.Material.Descripcion + "</td>" +
                          "<td " + style2 + c.Precio + "</td>" +
-                         "<td " + style2 + c.Moneda.Descripcion + "</td>" +
+                         "<td " + style2 + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
                          "<td " + style2 + c.Cantidad + "</td>" +
                          "<td " + style2 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
                          (c.Corredor != null ? "<td " + style2 + c.Corredor.RazonSocial + "</td>" : "<td " + style2 + "</td>") +
-                         "<td " + style2 + c.Proveedor.RazonSocial + "</td>" +
+                         "<td " + style2 + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
                          "<td " + style2 + c.TipoNegocio.Descripcion + "</td>" +
                          "<td " + style2 + c.Estado.Descripcion + "</td>" +
-                         "<td " + style2 + c.MotivoOperacionAnterior + "</td> </tr> ";
+                         "<td " + style2 + (c.MotivoOperacionAnterior ?? "") + "</td> </tr> ";
                 }
             }
 

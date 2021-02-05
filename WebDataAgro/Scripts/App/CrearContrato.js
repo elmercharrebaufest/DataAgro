@@ -432,6 +432,7 @@ function InicializarElementos() {
                     $('#pagoDirectoDiv').show();
                 }
             }
+            SeleccionAutomaticaBolsa();
             ValidarCorredor(e.dataItem.Id);
         },
         dataSource: {
@@ -4533,7 +4534,7 @@ function SeleccionAutomaticaBolsa() {
         bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
     }
 
-    if (bolsa != 0) {
+    if (bolsa != 0 && $("#boletoConfirmaId").is(':checked')) {
         var cambio = false;
         if (bolsa.BolsaId != $("#bolsaConfirmaId").data("kendoDropDownList").value()) {
             cambio = true;
@@ -4602,7 +4603,7 @@ function HayVenta() {
     if ($("#ventaId").is(":checked")) {
         $("#planCanjeDiv").hide();
         $("#planCanjeId").prop("checked", false);
-        
+
         $("#sioDiv").hide();
         $("#rellenar").show();
         $("#noInformaSioId").prop("checked", false);

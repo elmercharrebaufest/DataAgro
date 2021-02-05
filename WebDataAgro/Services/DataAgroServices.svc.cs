@@ -593,6 +593,7 @@ namespace WebDataAgro.Services
                 fijacion.DiasPesificado = fijacionSAP.DiasDiferimiento == 0 ? (int?)null : fijacionSAP.DiasDiferimiento;
                 fijacion.PagoDiferido = fijacionSAP.DiasDiferimiento > 0;
                 fijacion.FechaOperacion = DateTime.ParseExact(fijacionSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.MotivoOperacionAnterior = fijacion.FechaOperacion.Date < fijacion.Fecha.Date ? "Cargado desde SAP" : "";
                 fijacion.FechaHasta = DateTime.ParseExact(fijacionSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 fijacion.FechaDesde = DateTime.ParseExact(fijacionSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 fijacion.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == fijacionSAP.Material, x => x.MaterialId);
