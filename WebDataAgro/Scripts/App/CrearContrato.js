@@ -2191,7 +2191,10 @@ function InicializarElementos() {
                 $(".contratoAFijar").hide();
                 $(".contratoAPrecio").show();
                 $("#pagosDiv").show();
-                HayVenta();
+                if ($("#ventaId").is(':checked')) {
+                    HayVenta();
+                }
+
             }
             if ($("#buscadorCorredor").val() != "") {
                 $('#pagoDirectoDiv').show();
@@ -3601,7 +3604,9 @@ function CargarDatosEditar(contrato, hijo) {
             $("#fasonIdCheck").attr("disabled", true);
             $("#madreId").prop("checked", true);
             $("#pagosDiv").show();
-            HayVenta();
+            if (contrato.Venta == true) {
+                HayVenta();
+            }
         }
         if (contrato.Madre === false) {
             $("#fasonIdCheck").attr("disabled", false);

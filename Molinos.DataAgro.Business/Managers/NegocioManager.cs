@@ -142,7 +142,7 @@ namespace Molinos.DataAgro.Business.Managers
                     htmlBody += "<tr>" +
                          "<td " + style1 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +
                          "<td " + style1 + c.Material.Descripcion + "</td>" +
-                         "<td " + style1 + c.Precio + "</td>" +
+                         "<td " + style1 + (c.Precio == 0 ? "" : c.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td>" +
                          "<td " + style1 + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
                          "<td " + style1 + c.Cantidad + "</td>" +
                          "<td " + style1 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
@@ -159,7 +159,7 @@ namespace Molinos.DataAgro.Business.Managers
                     htmlBody += "<tr>" +
                          "<td " + style2 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +
                          "<td " + style2 + c.Material.Descripcion + "</td>" +
-                         "<td " + style2 + c.Precio + "</td>" +
+                         "<td " + style2 + (c.Precio == 0 ? "" : c.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td>" +
                          "<td " + style2 + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
                          "<td " + style2 + c.Cantidad + "</td>" +
                          "<td " + style2 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
