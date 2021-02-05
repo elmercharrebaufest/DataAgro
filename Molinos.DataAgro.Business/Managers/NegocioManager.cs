@@ -108,9 +108,9 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" +
                     th + "Contrato" + "</td>" +
                     th + "Material" + "</td>" +
-                    th + "Precio" + "</td>" +
+                    th + "Precio Base" + "</td>" +
                     th + "Moneda" + "</td>" +
-                    th + "Cantidad" + "</td>" +
+                    th + "Cantidad (Kg)" + "</td>" +
                     th + "Fecha de Carga" + "</td>" +
                     th + "Fecha de Operacion" + "</td>" +
                     th + "Comercial" + "</td>" +
@@ -144,7 +144,7 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style1 + c.Material.Descripcion + "</td>" +
                          "<td " + style1 + (c.Precio == 0 ? "" : c.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td>" +
                          "<td " + style1 + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
-                         "<td " + style1 + c.Cantidad + "</td>" +
+                         "<td " + style1 + c.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td>" +
                          "<td " + style1 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style1 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
@@ -161,7 +161,7 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style2 + c.Material.Descripcion + "</td>" +
                          "<td " + style2 + (c.Precio == 0 ? "" : c.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td>" +
                          "<td " + style2 + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
-                         "<td " + style2 + c.Cantidad + "</td>" +
+                         "<td " + style2 + c.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td>" +
                          "<td " + style2 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
                          "<td " + style2 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
