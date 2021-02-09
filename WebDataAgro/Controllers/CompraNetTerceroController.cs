@@ -49,8 +49,11 @@ namespace WebDataAgro.Controllers
             contrato.NoInformaSio = false;
             contrato.TrigoEspecial = false;
             contrato.EsFason = false;
+            if (contrato.ComercialId == null || contrato.ComercialId == 0)
+            {
+                contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
+            }
 
-            contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
             var comercial = mobjComercialManager.TraerComercial(contrato.ComercialId.Value);
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             contrato.UsuarioId = proveedor.RazonSocial;
@@ -102,7 +105,10 @@ namespace WebDataAgro.Controllers
             contrato.TrigoEspecial = false;
             contrato.EsFason = false;
 
-            contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
+            if (contrato.ComercialId == null || contrato.ComercialId == 0)
+            {
+                contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
+            }
             var comercial = mobjComercialManager.TraerComercial(contrato.ComercialId.Value);
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             contrato.UsuarioId = proveedor.RazonSocial;
@@ -159,7 +165,10 @@ namespace WebDataAgro.Controllers
         public ActionResult GrabarFijacion(FijacionDePrecioContrato contrato)
         {
             var model = new GrabarFijacionResult();
-            contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
+            if (contrato.ComercialId == null || contrato.ComercialId == 0)
+            {
+                contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
+            }
             var comercial = mobjComercialManager.TraerComercial(contrato.ComercialId.Value);
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             contrato.UsuarioId = proveedor.RazonSocial;
@@ -211,7 +220,7 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult AnularFijacion(int negocioId,string MotivoRechazo)
+        public ActionResult AnularFijacion(int negocioId, string MotivoRechazo)
         {
 
             var data = mobjFijacionDePrecioContratoManager.AnularFijacionCarga(negocioId, MotivoRechazo);
