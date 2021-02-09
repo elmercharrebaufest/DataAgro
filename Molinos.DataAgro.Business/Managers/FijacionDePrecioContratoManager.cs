@@ -436,6 +436,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.Pizarra = oFijacionDePrecio.Pizarra;
                 oFijacionDePrecioSave.DiasPesificado = oFijacionDePrecio.DiasPesificado;
                 oFijacionDePrecioSave.PagoDiferidoContrato = oFijacionDePrecio.PagoDiferidoContrato;
+                oFijacionDePrecioSave.PagoDiferido = oFijacionDePrecio.PagoDiferido;
                 oFijacionDePrecioSave.DestinoId = oFijacionDePrecio.DestinoId;
                 oFijacionDePrecioSave.FechaOperacion = oFijacionDePrecio.FechaOperacion;
                 oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
