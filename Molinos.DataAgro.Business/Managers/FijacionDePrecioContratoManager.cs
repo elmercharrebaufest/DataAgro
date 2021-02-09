@@ -382,7 +382,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oFijacionDePrecio.Id != 0)
             {
                 oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(oFijacionDePrecio.Id);
-                if ((oFijacionDePrecio.ChequeElectronico != oFijacionDePrecioSave.ChequeElectronico && oFijacionDePrecio.ChequeElectronico.Value) || oFijacionDePrecioSave.PagoCBU != oFijacionDePrecio.PagoCBU)
+                if ((oFijacionDePrecio.ChequeElectronico != oFijacionDePrecioSave.ChequeElectronico && oFijacionDePrecio.ChequeElectronico == true) || oFijacionDePrecioSave.PagoCBU != oFijacionDePrecio.PagoCBU)
                 {
                     var result = validarPagoAgente.ValidarEstado(oFijacionDePrecioSave.ContratoSAP, oFijacionDePrecioSave.FijacionSAP);
                     if (result != "Ok")
