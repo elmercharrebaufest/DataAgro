@@ -2638,7 +2638,9 @@ function ArmarPrecio(dataItem) {
 
                 if (p) {
                     for (var y = 0; y < p.length; y++) {
-                        esPrecioMoa = p[y].Precio == dataItem.PrecioPlazo || (p[y].Pizarra == true && dataItem.Precio == 0);
+                        if (esPrecioMoa === false) {
+                            esPrecioMoa = p[y].Precio == dataItem.PrecioPlazo || (p[y].Pizarra == true && dataItem.Precio == 0);
+                        }
                     }
                 }
             }
@@ -2655,7 +2657,7 @@ function ArmarPrecio(dataItem) {
 }
 function ArmarFechaDesde(dataItem) {
     var fecha = kendo.toString(dataItem.FechaDesde, "dd/MM/yyyy");
-    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2 ) {
+    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2) {
         if (!externo && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
@@ -2682,7 +2684,7 @@ function ArmarFechaDesde(dataItem) {
 }
 function ArmarFechaHasta(dataItem) {
     var fecha = kendo.toString(dataItem.FechaHasta, "dd/MM/yyyy");
-    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2 ) {
+    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2) {
         if (!externo && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
