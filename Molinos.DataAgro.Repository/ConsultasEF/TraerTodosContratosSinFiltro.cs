@@ -222,7 +222,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Fecha_Dolarizado = contrato is Contrato ? DbFunctions.TruncateTime((contrato as Contrato).FechaDolarizado) : contrato is FijacionDePrecioContrato ? DbFunctions.TruncateTime((contrato as FijacionDePrecioContrato).FechaDolarizado) : (DateTime?)null,
                         Dias_Pesificado = contrato.DiasPesificado,
                         NoInformaSIO = contrato is Contrato ? (contrato as Contrato).NoInformaSio : (bool?)null,
-                        Estado = contrato.EstadoId == 9 || contrato.EstadoId == 1 || contrato.EstadoId == 7 ? 9 : contrato.EstadoId == 6 || contrato.EstadoId == 8 ? 6 : contrato.EstadoId == 5 ? 5 : 2,
+                        Estado = contrato.EstadoId == 9 ? 9 :  contrato.EstadoId == 1 || contrato.EstadoId == 7 ? 1 : contrato.EstadoId == 6 || contrato.EstadoId == 8 ? 6 : contrato.EstadoId == 5 ? 5 : 2,
                         Estado_Contrato = contrato.EstadoId == 9 || contrato.EstadoId == 1 || contrato.EstadoId == 7 ? "Carga" : contrato.EstadoId == 6 || contrato.EstadoId == 8 ? "Rechazado" : contrato.EstadoId == 5 ? "Finalizado" : "Confirmado",
                         Estado_Order = contrato.Estado.Orden,
                         UsuarioId = contrato.UsuarioId,

@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         {
             var identity = (ClaimsPrincipal)Thread.CurrentPrincipal;
             return identity.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier)
-                   .Select(c => c.Value).SingleOrDefault();
+                   .Select(c => c.Value).SingleOrDefault() ?? "";
         }
     }
 }

@@ -337,7 +337,12 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("dolarizado", "No se puede completar Dolarizados porque el contrato tiene Cesion o Anticipo.");
             }
 
-            if (fijacionSave != null)
+            if (fijacionSave != null && PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && fijacionSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion)
+            {
+                oErrorMessages.Error("Contrato", "No se puede modificar la fijacion.");
+            }
+
+            if (fijacionSave != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 if (fijacionSave.DolarizadoTercero == true && oParam.Dolarizado != true && oParam.DolarizadoExpress != true && oParam.DolarizadoCorredor != true)
                 {
@@ -391,7 +396,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
                     return oEntityErrors;
                 }
-                if ((oFijacionDePrecioSave.Precio != oFijacionDePrecio.Precio || oFijacionDePrecioSave.Cantidad != oFijacionDePrecio.Cantidad) && (oFijacionDePrecioSave.EstadoId != 1 && oFijacionDePrecioSave.EstadoId != 3))
+                if ((oFijacionDePrecioSave.Precio != oFijacionDePrecio.Precio || oFijacionDePrecioSave.Cantidad != oFijacionDePrecio.Cantidad) && (oFijacionDePrecioSave.EstadoId != 1 && oFijacionDePrecioSave.EstadoId != 3 && oFijacionDePrecioSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion))
                 {
                     if (oFijacionDePrecioSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
                     {
@@ -439,6 +444,17 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.Anticipo = oFijacionDePrecio.Anticipo;
                 oFijacionDePrecioSave.Cesion = oFijacionDePrecio.Cesion;
                 oFijacionDePrecioSave.ClasificacionContrato = oFijacionDePrecio.ClasificacionContrato;
+                if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
+                {
+                    oFijacionDePrecioSave.ObservacionTercero = oFijacionDePrecio.ObservacionTercero;
+                    oFijacionDePrecioSave.DolarizadoTercero = oFijacionDePrecio.DolarizadoTercero;
+                    oFijacionDePrecioSave.CalidadTercero = oFijacionDePrecio.CalidadTercero;
+                    oFijacionDePrecioSave.PagoDiferidoTercero = oFijacionDePrecio.PagoDiferidoTercero;
+                    oFijacionDePrecioSave.SustentableTercero = oFijacionDePrecio.SustentableTercero;
+                    oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.PreAprobacion;
+                }
+
+
                 CargarDolarizado(oFijacionDePrecio, oFijacionDePrecioSave, oContratoId, fechaDolarizado, proveedor, corredor);
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -467,7 +483,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
 
-            if (oFijacionDePrecio.EstadoId < (int)EnumEstadoContrato.PreAprobacion && ConfirmacionAutomatica(oFijacionDePrecioSave))
+            if ((oFijacionDePrecio.EstadoId < (int)EnumEstadoContrato.PreAprobacion
+                || (!PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && oFijacionDePrecio.EstadoId == (int)EnumEstadoContrato.PreAprobacion && oFijacionDePrecio.Id > 0))
+                && ConfirmacionAutomatica(oFijacionDePrecioSave))
             {
                 oFijacionDePrecioSave.FechaConfirmacion = DateTime.Now;
                 oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
@@ -944,7 +962,7 @@ namespace Molinos.DataAgro.Business.Managers
                     FechaHasta = fijac.Contrato.HastaFijacion.HasValue ? SqlFunctions.DateName("day", fijac.Contrato.HastaFijacion).Trim() + "/" +
                                            SqlFunctions.StringConvert((double)fijac.Contrato.HastaFijacion.Value.Month).TrimStart() + "/" +
                                            SqlFunctions.DateName("year", fijac.Contrato.HastaFijacion) : "",
-                    PagoDiferido = fijac.PagoDiferidoContrato                    
+                    PagoDiferido = fijac.PagoDiferidoContrato
                 },
                 FechaDesde = fijac.FechaDesde,
                 FechaHasta = fijac.FechaHasta,
@@ -957,12 +975,16 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)fijac.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.FechaOperacion),
                 ObservacionTercero = fijac.ObservacionTercero,
+                DolarizadoTercero = fijac.DolarizadoTercero,
+                CalidadTercero = fijac.CalidadTercero,
+                PagoDiferidoTercero = fijac.PagoDiferidoTercero,
+                SustentableTercero = fijac.SustentableTercero,
                 DolarizadoCorredor = fijac.DolarizadoCorredor.Value,
                 DolarizadoExpress = fijac.DolarizadoExpress.Value,
                 Fecha_Dolarizado = fijac.FechaDolarizado,
                 Anticipo = fijac.Anticipo,
                 Cesion = fijac.Cesion,
-                ClasificacionContrato  = fijac.ClasificacionContrato
+                ClasificacionContrato = fijac.ClasificacionContrato
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
@@ -1047,8 +1069,16 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     return oEntityErrors;
                 }
-                oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
-
+                if (ConfirmacionAutomatica(oFijacionDePrecioSave))
+                {
+                    oFijacionDePrecioSave.FechaConfirmacion = DateTime.Now;
+                    oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    logger.Debug("El contrato " + oFijacionDePrecioSave.Id + " se confirmo automaticamente por estar dentro de los rangos configurados");
+                }
+                else
+                {
+                    oFijacionDePrecioSave.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                }
                 try
                 {
                     repositorio.GuardarCambios();
@@ -1424,7 +1454,7 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public Resultado AnularFijacionCarga(int fijacionId,string motivoRechazo)
+        public Resultado AnularFijacionCarga(int fijacionId, string motivoRechazo)
         {
             var oEntityErrors = new Resultado();
             if (string.IsNullOrEmpty(motivoRechazo) || string.IsNullOrWhiteSpace(motivoRechazo))
@@ -1436,7 +1466,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             fijacion.MotivoRechazo = motivoRechazo;
             if (fijacion != null && fijacion.EstadoId == (int)EnumEstadoContrato.PreAprobacion)
-            {                      
+            {
                 try
                 {
                     fijacion.EstadoId = (int)EnumEstadoContrato.Eliminado;

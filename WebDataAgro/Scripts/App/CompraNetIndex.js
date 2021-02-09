@@ -2655,7 +2655,7 @@ function ArmarPrecio(dataItem) {
 }
 function ArmarFechaDesde(dataItem) {
     var fecha = kendo.toString(dataItem.FechaDesde, "dd/MM/yyyy");
-    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2 || dataItem.TipoNegocioId === 3) {
+    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2 ) {
         if (!externo && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
@@ -2663,14 +2663,13 @@ function ArmarFechaDesde(dataItem) {
 
                 if (p) {
                     for (var y = 0; y < p.length; y++) {
-                        if (esPrecioMoa === false && parseInt(p[y].DesdeEntrega != null)) {
+                        if (esPrecioMoa === false && p[y].DesdeEntrega != null) {
                             esPrecioMoa = kendo.toString(new Date(parseInt(p[y].DesdeEntrega.substr(6))), "dd/MM/yyyy") == kendo.toString(dataItem.FechaDesde, "dd/MM/yyyy");
                         }
                     }
                 }
             }
             if (esPrecioMoa === true) {
-                console.log(1);
                 return fecha;
             } else {
                 return '<strong style="color:red;">' + fecha + '</strong>';
@@ -2682,9 +2681,8 @@ function ArmarFechaDesde(dataItem) {
     }
 }
 function ArmarFechaHasta(dataItem) {
-    console.log(dataItem, dataItem.FechaHasta);
     var fecha = kendo.toString(dataItem.FechaHasta, "dd/MM/yyyy");
-    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2 || dataItem.TipoNegocioId === 3) {
+    if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2 ) {
         if (!externo && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
@@ -2692,14 +2690,13 @@ function ArmarFechaHasta(dataItem) {
 
                 if (p) {
                     for (var y = 0; y < p.length; y++) {
-                        if (esPrecioMoa === false && parseInt(p[y].HastaEntrega != null)) {
+                        if (esPrecioMoa === false && p[y].HastaEntrega != null) {
                             esPrecioMoa = kendo.toString(new Date(parseInt(p[y].HastaEntrega.substr(6))), "dd/MM/yyyy") == kendo.toString(dataItem.FechaHasta, "dd/MM/yyyy");
                         }
                     }
                 }
             }
             if (esPrecioMoa === true) {
-                console.log(1);
                 return fecha;
             } else {
                 return '<strong style="color:red;">' + fecha + '</strong>';

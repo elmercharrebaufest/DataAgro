@@ -136,7 +136,7 @@ namespace Molinos.DataAgro.Business.Managers
                     && (tipoNegocioId == null || x.TipoNegocioId == tipoNegocioId.Value)
                     );
 
-                listaMaterial.AddRange(repositorio.Listar<PrecioMoa, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
+                listaMaterial.AddRange(repositorio.Listar<PrecioMoa, MaterialQry>(x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion, CampaniaTableroId = x.Material.CampaniaTableroId.Value, CampañaIdActual = x.Material.CampañaId.Value },
                     x => x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy && (tipoNegocioId == null || x.TipoNegocioId == tipoNegocioId.Value)));
 
                 datosCombo.material = listaMaterial.GroupBy(y => y.MaterialId).Select(y => y.FirstOrDefault()).ToList();
@@ -425,7 +425,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no debe estar vacio cuando el contrato es 'A FIJAR'");
                 }
-                if (PermisosHelper.ObtenerUsuario() != null && PermisosHelper.ObtenerUsuario().ToUpper() != "DATAAGROP")
+                if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9
                                         && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))
@@ -619,7 +619,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
              
             }
-            if (PermisosHelper.ObtenerUsuario() != null && PermisosHelper.ObtenerUsuario().ToUpper() != "DATAAGROP")
+            if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 if (oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.TipoNegocioId == 2 && oParam.DestinoId != 9
                                 && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
@@ -866,7 +866,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (contrato != null)
+            if (contrato != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 if (contrato.DolarizadoTercero == true && oParam.Dolarizado != true && oParam.DolarizadoExpress != true)
                 {
@@ -928,6 +928,11 @@ namespace Molinos.DataAgro.Business.Managers
                         oErrorMessages.Error("Pago Diferido", "Los dias de pesificado deben ser menor o igual que los " + conf.DiasDiferimiento + " días");
                     }
                 }
+            }
+
+            if (contrato != null && PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && contrato.EstadoId != (int)EnumEstadoContrato.PreAprobacion)
+            {
+                oErrorMessages.Error("Contrato", "No se puede modificar el contrato.");
             }
             return oErrorMessages;
         }
@@ -1037,11 +1042,7 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 oContratoSave.Fecha = hoy;
-                oContratoSave.CalidadTercero = oContrato.CalidadTercero;
-                oContratoSave.DolarizadoTercero = oContrato.DolarizadoTercero;
-                oContratoSave.ObservacionTercero = oContrato.ObservacionTercero;
-                oContratoSave.PagoDiferidoTercero = oContrato.PagoDiferidoTercero;
-                oContratoSave.SustentableTercero = oContrato.SustentableTercero;
+
                 oContratoSave.ComercialCreadorId = oContrato.ComercialCreadorId;
                 oContratoSave.ProveedorCreadorId = oContrato.ProveedorCreadorId;
                 oContratoSave.UsuarioId = oContrato.UsuarioId;
@@ -1076,7 +1077,6 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Ampliaciones = oContrato.Ampliaciones;
             oContratoSave.Observacion = oContrato.Observacion;
             oContratoSave.DestinoId = oContrato.DestinoId;
-            oContratoSave.CantidadCamiones = oContrato.CantidadCamiones;
             oContratoSave.Consignatario = oContrato.Consignatario;
             oContratoSave.PlanCanje = oContrato.PlanCanje;
             oContratoSave.CondicionFijacionId = oContrato.CondicionFijacionId;
@@ -1130,7 +1130,14 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
             oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
             oContratoSave.Venta = oContrato.Venta;
-
+            if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
+            {
+                oContratoSave.CalidadTercero = oContrato.CalidadTercero;
+                oContratoSave.DolarizadoTercero = oContrato.DolarizadoTercero;
+                oContratoSave.ObservacionTercero = oContrato.ObservacionTercero;
+                oContratoSave.PagoDiferidoTercero = oContrato.PagoDiferidoTercero;
+                oContratoSave.SustentableTercero = oContrato.SustentableTercero;
+            }
 
 
             if (oContratoSave.PrecioPactado != null)
@@ -1234,11 +1241,12 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
 
-            if (oContrato.EstadoId < (int)EnumEstadoContrato.PreAprobacion && ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date)
+            if ((oContrato.EstadoId < (int)EnumEstadoContrato.PreAprobacion || (!PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && oContrato.EstadoId == (int)EnumEstadoContrato.PreAprobacion && oContrato.Id > 0))
+                && ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date)
             {
                 oContratoSave.FechaConfirmacion = DateTime.Now;
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
-                logger.Debug("El contrato " + oContrato.Id + " se finalizo automaticamente por estar dentro de los rangos configurados");
+                logger.Debug("El contrato " + oContrato.Id + " se confirmo automaticamente por estar dentro de los rangos configurados");
 
             }
             var tipoDeLog = (oContratoSave.Id == 0 || string.IsNullOrEmpty(oContratoSave.ContratoSAP)) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar;
@@ -2071,6 +2079,8 @@ namespace Molinos.DataAgro.Business.Managers
                 HastaFijacionFormateado = x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.HastaFijacion.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.HastaFijacion) : "",
+                DesdeFijacion = x.DesdeFijacion,
+                HastaFijacion = x.HastaFijacion,
                 CondicionFijacion = x.CondicionFijacionId,
                 CD = x.CD,
                 Warrant = x.Warrant,
@@ -3958,14 +3968,20 @@ namespace Molinos.DataAgro.Business.Managers
                     return oEntityErrors;
                 }
 
-                contrato.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Pendiente);
-
+                if (ConfirmacionAutomatica(contrato) && DateTime.Now.Date == contrato.FechaOperacion.Date)
+                {
+                    contrato.FechaConfirmacion = DateTime.Now;
+                    contrato.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    logger.Debug("El contrato " + contrato.Id + " se confirmo automaticamente por estar dentro de los rangos configurados");
+                }
+                else
+                {
+                    contrato.EstadoId = (int)EnumEstadoContrato.Pendiente;
+                }
                 try
                 {
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
-
-
                 }
                 catch (Exception ex)
                 {
@@ -4244,7 +4260,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return oEntityErrors;
             }
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
-            
+
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAprobacion))
             {
 
