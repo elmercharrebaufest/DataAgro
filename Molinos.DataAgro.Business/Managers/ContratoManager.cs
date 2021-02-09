@@ -130,7 +130,7 @@ namespace Molinos.DataAgro.Business.Managers
                 datosCombo.campaña = repositorio.Listar<Campaña, CampañaQry>(x => new CampañaQry() { CampañaId = x.CampañaId, Descripcion = x.Descripcion });
 
                 var listaMaterial = repositorio.Listar<HabilitacionPizarra, MaterialQry>(
-                    x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion },
+                    x => new MaterialQry() { MaterialId = x.MaterialId, Descripcion = x.Material.Descripcion, CampaniaTableroId = x.Material.CampaniaTableroId.Value, CampañaIdActual = x.Material.CampañaId.Value },
                     x => x.DesdeVigencia <= hoy
                     && x.HastaVigencia >= hoy
                     && (tipoNegocioId == null || x.TipoNegocioId == tipoNegocioId.Value)
