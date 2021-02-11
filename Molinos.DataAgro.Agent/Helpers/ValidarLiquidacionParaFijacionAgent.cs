@@ -40,20 +40,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         IM_CON_PED = new ZMPES6290[] { new ZMPES6290 { CONTRATO = contratoSap, PEDIDO = fijacion } },
                     };
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
                     logger.Debug(rq.ToXml());
-
+                    
                     var valor = agent.SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION(rq);
                     logger.Debug(valor.ToXml());
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += valor.ToXml();
-                    repositorio.GuardarCambios();
 
                     return valor.EX_RESULTADO[0].MENSAJE;
 
