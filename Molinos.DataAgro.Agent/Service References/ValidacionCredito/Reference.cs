@@ -64,17 +64,45 @@ namespace Molinos.DataAgro.Agent.ValidacionCredito {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_VALIDAR_CREDITOResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string eX_SALIDAField;
+        private string eX_CUITField;
+        
+        private string eX_MONEDAField;
+        
+        private decimal eX_MONTOField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string EX_SALIDA {
+        public string EX_CUIT {
             get {
-                return this.eX_SALIDAField;
+                return this.eX_CUITField;
             }
             set {
-                this.eX_SALIDAField = value;
-                this.RaisePropertyChanged("EX_SALIDA");
+                this.eX_CUITField = value;
+                this.RaisePropertyChanged("EX_CUIT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string EX_MONEDA {
+            get {
+                return this.eX_MONEDAField;
+            }
+            set {
+                this.eX_MONEDAField = value;
+                this.RaisePropertyChanged("EX_MONEDA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public decimal EX_MONTO {
+            get {
+                return this.eX_MONTOField;
+            }
+            set {
+                this.eX_MONTOField = value;
+                this.RaisePropertyChanged("EX_MONTO");
             }
         }
         

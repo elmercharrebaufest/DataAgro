@@ -22,7 +22,7 @@
     <MetadataSource Address="http://GSLOPIDEVQA00.molinosagro.ad:50000/dir/wsdl?p=ic/b90aef0bd4c93a9eb7e96ff111215fe1" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO1.wsdl" MetadataType="Wsdl" ID="1ad21f65-7cb9-4c04-a9d8-bbd7dbd19813" SourceId="1" SourceUrl="http://GSLOPIDEVQA00.molinosagro.ad:50000/dir/wsdl?p=ic/b90aef0bd4c93a9eb7e96ff111215fe1" />
+    <MetadataFile FileName="SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO.wsdl" MetadataType="Wsdl" ID="acbd9cbe-6c1b-4eae-9cde-93477274520f" SourceId="1" SourceUrl="http://gslopidevqa00.molinosagro.ad:50000/dir/wsdl?p=ic/b90aef0bd4c93a9eb7e96ff111215fe1" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

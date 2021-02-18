@@ -4,6 +4,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IValidacionCreditoAgent
     {
-        string ValidarCredito(string cuitProveedor);
+        ValidarCreditoDto ValidarCredito(string cuitProveedor);
     }
 }
