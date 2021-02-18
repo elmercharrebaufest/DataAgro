@@ -1041,7 +1041,6 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "MonedaId",
         change: function () {
-            validarCredito();
             if ($("#precioMonedaId").val() === "ARP  " && ($("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
                 $("#pagoDolarizadoDiv").hide();
                 $("#dolarizadoDiv").hide();
@@ -1520,7 +1519,6 @@ function InicializarElementos() {
             if ($("#cargarCantidadCamiones").is(':checked')) {
                 $("#cantidadCamionesId").data("kendoNumericTextBox").value(Math.ceil(this.value() / 30000));
             }
-            validarCredito();
             if ($("#cantidadId").val() <= 30) {
                 $("#cantidadTooltip").tooltip({ title: 'Cantidad inferior a 30kg' });
                 $("#cantidadTooltip").tooltip('show');
@@ -1572,7 +1570,6 @@ function InicializarElementos() {
         spinners: false,
         min: 0,
         change: function () {
-            validarCredito();
             if ($("#tipoId").val() == "6") {
                 if ($("#AgenteCompraId").val() == "") {
                     $("#chequeElectronicoId").show();
@@ -4519,14 +4516,11 @@ function Venta() {
 }
 function validarCredito(cuitProv) {
     cuitProv = cuitProv != null ? cuitProv : $("#buscadorProveedor").val();
-    var moneda = $("#precioMonedaId").val();
-    var cantidad = $("#cantidadId").data("kendoNumericTextBox").value() == null ? "" : $("#cantidadId").data("kendoNumericTextBox").value();
-    var precio = $("#precioId").data("kendoNumericTextBox").value() == null ? "" : $("#precioId").data("kendoNumericTextBox").value();
-    if ($("#ventaId").is(":checked") && cuitProv != "" && moneda != "" && cantidad != "" && precio!= "") {
+    if ($("#ventaId").is(":checked") && cuitProv != "") {
         var cuitAux = cuitProv.split('(');
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
-            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0], cantidad: cantidad, precio: precio, moneda: moneda });
+            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0] });
             if (validacion == "Sin Crédito") {
                 MensAlerta(validacion);
             }

@@ -1483,7 +1483,7 @@
     <None Include="Service References\TipoDeCambio\Molinos.DataAgro.Agent.TipoDeCambio.Z_MPRFC_TIPO_DE_CAMBIOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO.wsdl" />
+    <None Include="Service References\TipoDeCambio\SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO1.wsdl" />
     <None Include="Service References\ValidacionCredito\Molinos.DataAgro.Agent.ValidacionCredito.SI_ZMPWS_DATAAGRO_VALIDAR_CREDITOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

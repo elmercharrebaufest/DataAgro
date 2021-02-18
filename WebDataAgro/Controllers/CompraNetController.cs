@@ -57,7 +57,7 @@ namespace WebDataAgro.Controllers
         private readonly IConfiguracionInternaManager configuracionInternaManager;
         private IConfiguracionManager mobjConfiguracionManager;
         private ITipoDeCambioAgent tipoDeCambioAgent;
- 
+        private IValidacionCreditoAgent validarCreditoAgente;
 
         //-----------------------------------------------------
         //  Constructor
@@ -70,7 +70,7 @@ namespace WebDataAgro.Controllers
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
             IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, 
             IOperadorManager oOperadorManager, INegocioManager oNegocioManager, 
-            ITipoDeCambioAgent tipoDeCambioAgent)
+            ITipoDeCambioAgent tipoDeCambioAgent, IValidacionCreditoAgent validarCreditoAgente)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -89,7 +89,8 @@ namespace WebDataAgro.Controllers
             mobjConfiguracionManager = configuracionManager;
             mobjNegocioManager = oNegocioManager;
             this.configuracionInternaManager = configuracionInternaManager;
-            this.tipoDeCambioAgent = tipoDeCambioAgent;            
+            this.tipoDeCambioAgent = tipoDeCambioAgent;
+            this.validarCreditoAgente = validarCreditoAgente;
         }
 
         //-----------------------------------------------------
@@ -1024,12 +1025,11 @@ namespace WebDataAgro.Controllers
             };
 
         }
-        public ActionResult ValidarCredito(string cuit, double cantidad, decimal precio, string moneda)
+        public ActionResult ValidarCredito(string cuit)
         {
-            var val = mobjContratoManager.ValidarCredito(cuit, cantidad, precio, moneda);
             return new JsonResult()
             {
-                Data = String.IsNullOrEmpty(val) ? "" : val,
+                Data = validarCreditoAgente.ValidarCredito(cuit),
                 MaxJsonLength = Int32.MaxValue
             };
 

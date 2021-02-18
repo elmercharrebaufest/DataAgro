@@ -8,9 +8,7 @@
       <xsd:element name="Z_MPRFC_VALIDAR_CREDITOResponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="EX_CUIT" type="rfc:char16" />
-            <xsd:element name="EX_MONEDA" type="rfc:cuky5" />
-            <xsd:element name="EX_MONTO" type="rfc:curr13.2" />
+            <xsd:element name="EX_SALIDA" type="rfc:string" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -21,20 +19,12 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:simpleType name="string">
+        <xsd:restriction base="xsd:string" />
+      </xsd:simpleType>
       <xsd:simpleType name="char16">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="16" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="curr13.2">
-        <xsd:restriction base="xsd:decimal">
-          <xsd:totalDigits value="13" />
-          <xsd:fractionDigits value="2" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="cuky5">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="5" />
         </xsd:restriction>
       </xsd:simpleType>
     </xsd:schema>

@@ -43,6 +43,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IConfiguracionInternaManager> configuracionInternaMock;
         private Mock<IConfiguracionManager> configuracionMock;
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
+        private Mock<IValidacionCreditoAgent> validacionCreditoAgent;
 
         private JavaScriptSerializer serializer;
 
@@ -67,13 +68,14 @@ namespace Molinos.DataAgro.Test.Controllers
             configuracionInternaMock = new Mock<IConfiguracionInternaManager>();
             configuracionMock = new Mock<IConfiguracionManager>();
             tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
+            validacionCreditoAgent = new Mock<IValidacionCreditoAgent>();
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new CompraNetController(homeManagerMock.Object, localidadManagerMock.Object, proveedorManagerMock.Object,
                 materialManagerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, compranetManagerMock.Object,
                 comercialManagerMock.Object, campanaManagerMock.Object, logger.Object, fasonManagerMock.Object, agenteManagerMock.Object,
                 acuerdoManagerMock.Object, configuracionInternaMock.Object, configuracionMock.Object, operadorManagerMock.Object,
-                negocioManagerMock.Object, tipoDeCambioAgentMock.Object);
+                negocioManagerMock.Object, tipoDeCambioAgentMock.Object, validacionCreditoAgent.Object);
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
@@ -1224,12 +1226,12 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ValidarCreditoTest()
         {
 
-            contratoManagerMock.Setup(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>())).Returns("");
-            var result = target.ValidarCredito("", 1, 1, "");
+            validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns("");
+            var result = target.ValidarCredito("");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            contratoManagerMock.Verify(x => x.ValidarCredito(It.IsAny<string>(), It.IsAny<double>(), It.IsAny<decimal>(), It.IsAny<string>()), Times.Once);
+            validacionCreditoAgent.Verify(x => x.ValidarCredito(It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
