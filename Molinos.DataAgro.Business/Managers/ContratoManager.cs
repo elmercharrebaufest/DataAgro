@@ -58,6 +58,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IListaCBUProveedorAgent cbuAgent;
         private readonly IModificarFijacionAgent modificarFijacionAgent;
         private readonly IHttpContextManager httpContextManager;
+        private readonly IValidacionCreditoAgent validarCreditoAgente;
+        private readonly ITipoDeCambioAgent tipoCambioAgent;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -77,7 +79,8 @@ namespace Molinos.DataAgro.Business.Managers
             ILogDataAgroManager logDataAgroManager,
             IValidarDocProcPagoAgent validarPagoAgente,
             IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent,
-            IHttpContextManager httpContextManager)
+            //ICartasDePortePendienteAplicarAgent ccppAgent,
+            IHttpContextManager httpContextManager, IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -107,6 +110,8 @@ namespace Molinos.DataAgro.Business.Managers
             this.cbuAgent = cbuAgent;
             this.modificarFijacionAgent = modificarFijacionAgent;
             this.httpContextManager = httpContextManager;
+            this.validarCreditoAgente = validarCreditoAgente;
+            this.tipoCambioAgent = tipoCambioAgent;
         }
 
         public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
@@ -4283,6 +4288,43 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return oEntityErrors;
+        }
+
+        //public List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
+        //{
+        //    return ccppAgent.ListarCartasDePortePendienteAplicar(req);
+        //}
+
+        public string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda)
+        {
+            var tipoCambio = tipoCambioAgent.TraerTipoDeCambio(null);
+            var resultado = "";
+            if (!string.IsNullOrEmpty(cuit) && cantidad > 0 && precio > 0 && !string.IsNullOrEmpty(moneda))
+            {              
+                var validacionCredito = validarCreditoAgente.ValidarCredito(cuit);                      
+                var importeNegocio = ((precio * (decimal)cantidad) / 1000);
+                if (importeNegocio > 0 && tipoCambio > 0 && validacionCredito != null)
+                {
+                    if (validacionCredito.Moneda == "ARP" && moneda == "ARP  " || validacionCredito.Moneda == "USDM" && moneda == "USDM  ")
+                    {
+                        resultado = importeNegocio > validacionCredito.Monto ? "Sin Crédito" : "";
+                    }
+                    if (validacionCredito.Moneda == "ARP" && moneda == "USDM  ")
+                    {
+                        resultado = (importeNegocio * tipoCambio) > validacionCredito.Monto ? "Sin Crédito" : "";
+                    }
+                    if (validacionCredito.Moneda == "USDM" && moneda == "ARP  ")
+                    {
+                        resultado = (importeNegocio / tipoCambio) > validacionCredito.Monto ? "Sin Crédito" : "";
+                    }
+                    if(validacionCredito.Moneda == ""){
+                        resultado = "Sin Crédito";
+                    }
+                }
+            }
+
+
+            return resultado;
         }
 
     }
