@@ -130,6 +130,7 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\AbmFechaFeriado.cs" />
+    <Compile Include="Dto\ValidarCreditoDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
     <Compile Include="Dto\ProveedorAltaDto.cs" />
