@@ -22,11 +22,11 @@ namespace Molinos.DataAgro.Agent
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
-        public string ValidarCredito(string cuit)
+        public ValidarCreditoDto ValidarCredito(string cuit)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return "";
+                return new ValidarCreditoDto { Moneda = "ARP ", Monto = 1000};
             }
             else
             {
@@ -54,8 +54,13 @@ namespace Molinos.DataAgro.Agent
                     log = repositorio.Obtener<Log>(logId.Id);
                     log.Xml += valor.ToXml();
                     repositorio.GuardarCambios();
-                    logger.Debug("valor.EX_SALIDA: ." + valor.EX_SALIDA + ".");
-                    return valor.EX_SALIDA;
+                    var credito = new ValidarCreditoDto
+                    {
+                       Cuit = valor.EX_CUIT,
+                       Monto = valor.EX_MONTO,
+                       Moneda = valor.EX_MONEDA
+                    };             
+                    return credito;
                 }
                 catch (Exception e)
                 {
