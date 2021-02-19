@@ -62,6 +62,9 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IListaCBUProveedorAgent> cbuAgentMock;
         private Mock<IModificarFijacionAgent> modificarFijacionAgentMock;
         private Mock<IHttpContextManager> contextoMock;
+        private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
+        private Mock<IValidacionCreditoAgent> validacionCreditoAgent;
+
 
 
 
@@ -104,6 +107,8 @@ namespace Molinos.DataAgro.Test.Managers
             cbuAgentMock = new Mock<IListaCBUProveedorAgent>();
             modificarFijacionAgentMock = new Mock<IModificarFijacionAgent>();
             contextoMock = new Mock<IHttpContextManager>();
+            tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
+            validacionCreditoAgent = new Mock<IValidacionCreditoAgent>();
 
 
 
@@ -123,7 +128,8 @@ namespace Molinos.DataAgro.Test.Managers
                 diasHabilesAgentMock.Object, modificarContratoAgentMock.Object,
                 mailManagerMock.Object, status.Object, logDataAgroManagerMock.Object,
                 validarPagoAgente.Object, cbuAgentMock.Object,
-                modificarFijacionAgentMock.Object, contextoMock.Object);
+                modificarFijacionAgentMock.Object,// ccppPendienteAplicarAgentMock.Object,
+                contextoMock.Object, validacionCreditoAgent.Object, tipoDeCambioAgentMock.Object);
         }
 
         [Test]
