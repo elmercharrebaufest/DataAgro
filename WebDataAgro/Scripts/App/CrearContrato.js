@@ -4517,23 +4517,6 @@ function Venta() {
     validarCredito();
     HayVenta();
 }
-////function validarCredito(cuitProv) {
-////    cuitProv = cuitProv != null ? cuitProv : $("#buscadorProveedor").val();
-////    var moneda = $("#precioMonedaId").val();
-////    var cantidad = $("#cantidadId").data("kendoNumericTextBox").value() == null ? "" : $("#cantidadId").data("kendoNumericTextBox").value();
-////    var precio = $("#precioId").data("kendoNumericTextBox").value() == null ? "" : $("#precioId").data("kendoNumericTextBox").value();
-////    if ($("#ventaId").is(":checked") && cuitProv != "" && moneda != "" && cantidad != "" && precio!= "") {
-////        var cuitAux = cuitProv.split('(');
-////        if (cuitAux[1]) {
-////            var cuit = cuitAux[1].split(')');
-////            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0], cantidad: cantidad, precio: precio, moneda: moneda });
-////            if (validacion == "Sin Crédito") {
-////                MensAlerta(validacion);
-////            }
-////        }
-
-////    }
-////}
 
 function SeleccionAutomaticaBolsa() {
     //$("#LocalidadCrearContrato").trigger("change");
@@ -4704,20 +4687,6 @@ function HayVenta() {
     }
 
 }
-function validarCredito(cuitProv) {
-    cuitProv = cuitProv != null ? cuitProv : $("#buscadorProveedor").val();
-    if ($("#ventaId").is(":checked") && cuitProv != "") {
-        var cuitAux = cuitProv.split('(');
-        if (cuitAux[1]) {
-            var cuit = cuitAux[1].split(')');
-            var validacion = MSExecuteOnServer('/CompraNet/ValidarCredito', { cuit: cuit[0] });
-            if (validacion == "Sin Crédito") {
-                MensAlerta(validacion);
-            } 
-        }
-
-    }
-}
 
 function HayMercaderia() {
     if ($("#mercsDepositoId").is(":checked")) {
@@ -4748,8 +4717,6 @@ function HaySustentable() {
     }
 }
 
-//prueba integracion
-
 function validarCredito(cuitProv) {
     cuitProv = cuitProv != null ? cuitProv : $("#buscadorProveedor").val();
     var moneda = $("#precioMonedaId").val();
@@ -4765,6 +4732,9 @@ function validarCredito(cuitProv) {
             }
         }
 
+//prueba integracion
+
     }
 }
+
 
