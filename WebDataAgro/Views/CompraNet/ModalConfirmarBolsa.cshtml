@@ -1,0 +1,35 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalConfirmarBolsa" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmadoTilde" id="lineModalLabel"></h1>
+                <div class="status confirmado-modal">
+                    <div> Bolsa automática</div>
+                </div>
+            </div>
+            <div class="modal-body clearfix ">
+                <div class="col-xs-12 noPadding">
+                    <div id="mensajeModalConTilde"></div>
+                    <div class="col-xs-12 noPadding"> La bolsa recomendada es:  <span id="nombreBolsa"></span>  ¿Quiere asignarla como bolsa? </div>
+                </div>
+            </div>
+            <br />
+            <input type="hidden" id="contratoModalConTilde" />
+            <input type="hidden" id="tipoNegocioModalConTilde" />
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingLeft">
+                    <span id="idBolsa"></span>
+                    <button type="button" id="finalizarConfirmado" onclick="ConfirmarBolsaModal()" class="myBtn" data-dismiss="modal">Confirmar</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

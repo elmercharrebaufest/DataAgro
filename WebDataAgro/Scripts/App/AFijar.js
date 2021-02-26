@@ -4487,18 +4487,25 @@ function SeleccionAutomaticaBolsa() {
     }
 
     if (bolsa != 0 && $("#boletoConfirmaId").is(':checked')) {
-        var cambio = false;
-        if (bolsa.BolsaId != $("#bolsaConfirmaId").data("kendoDropDownList").value()) {
-            cambio = true;
-        }
-        $("#boletoConfirmaId").prop("checked", true);
-        $("#BolsaConfirmaDiv").show();
-        $("#bolsaConfirmaId").data("kendoDropDownList").value(bolsa.BolsaId);
-        $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
-        if (cambio) {
-            MensInfo('Se cambio la bolsa a ' + $("#bolsaConfirmaId").data("kendoDropDownList").text());
-        }
+        //var cambio = false;
+
+        //if (bolsa.BolsaId != $("#bolsaConfirmaId").data("kendoDropDownList").value()) {
+        //    cambio = true;
+        //}
+        $("#modalConfirmarBolsa").modal("show");
+        $("#idBolsa").val(bolsa.BolsaId);
+        $("#nombreBolsa").text(bolsa.Bolsa.Descripcion);
+
     }
+}
+
+function ConfirmarBolsaModal() {
+
+    $("#boletoConfirmaId").prop("checked", true);
+    $("#BolsaConfirmaDiv").show();
+    $("#bolsaConfirmaId").data("kendoDropDownList").value($("#idBolsa").val());
+    $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
+    MensInfo('Se cambio la bolsa a ' + $("#bolsaConfirmaId").data("kendoDropDownList").text());
 }
 
 function HayMercaderia() {

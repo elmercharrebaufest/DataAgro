@@ -2743,6 +2743,8 @@
     <Content Include="Views\ConfiguracionBolsa\_ListaBolsa.cshtml" />
     <Content Include="Views\ConfiguracionBolsa\Index.cshtml" />
     <Content Include="Views\ReportePrecioMoaPizarra\Index.cshtml" />
+   
+    <Content Include="Views\CompraNet\ModalConfirmarBolsa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4305,11 +4305,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var importeNegocio = ((precio * (decimal)cantidad) / 1000);
                 if (importeNegocio > 0 && tipoCambio > 0 && validacionCredito != null)
                 {
-                    if (validacionCredito.Moneda == "ARP" && moneda == "ARP  " || validacionCredito.Moneda == "USDM" && moneda == "USDM  ")
+                    if (validacionCredito.Moneda == "ARP" && moneda == "ARP  " || validacionCredito.Moneda == "USDM" && moneda == "USDM ")
                     {
                         resultado = importeNegocio > validacionCredito.Monto ? "Sin Crédito" : "";
                     }
-                    if (validacionCredito.Moneda == "ARP" && moneda == "USDM  ")
+                    if (validacionCredito.Moneda == "ARP" && moneda == "USDM ")
                     {
                         resultado = (importeNegocio * tipoCambio) > validacionCredito.Monto ? "Sin Crédito" : "";
                     }

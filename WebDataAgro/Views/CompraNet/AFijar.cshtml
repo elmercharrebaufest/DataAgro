@@ -13,7 +13,7 @@
     sap = '@ViewBag.Sap';
     esEdicion = '@ViewBag.esEdicion';
     BlockUi("Cargando...");
-    cargaFijacionAyer = '@cargaFijacionAyer';   
+    cargaFijacionAyer = '@cargaFijacionAyer';
 </script>
 
 
@@ -602,7 +602,7 @@
         <div id="mercsDepositoDiv" class="ampliar noFason noAgente noAcuerdo col-md-5">
             <div class="mercsDepositoDiv">
                 <label id="mercEnDepLabel">Mercs. en dep.</label>
-                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" onclick="HayMercaderia()"/>
+                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" onclick="HayMercaderia()" />
                 <img id="errmercsDepositoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
@@ -660,7 +660,7 @@
             <div id="ordenarRow" class="col-sm-2" hidden></div>
             <div class="col-sm-2" id="divSojaSustentable">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
-                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()"/>
+                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()" />
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-4 col-md-2">
@@ -1083,7 +1083,7 @@
 <label style="display:none;">
     @*campos para poder completar el contrato a precio*@
     <input id="precioId" style="display:none !important;" value="0" />
-    <input id="precioMonedaId" type="text" style="display:none !important;"/>
+    <input id="precioMonedaId" type="text" style="display:none !important;" />
 </label>
 <style>
     .popover-content {
@@ -1110,3 +1110,6 @@
 </style>
 <!-- Modal Apertura Precio-->
 @*@Html.Partial("ModalAperturaPrecio")*@
+
+@*@Html.Partial("_ModalCCPPPendienteAplicar")*@
+@Html.Partial("ModalConfirmarBolsa")
