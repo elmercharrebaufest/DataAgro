@@ -1160,9 +1160,10 @@ namespace Molinos.DataAgro.Business.Managers
                 var DolarizadoExpress = oContratoSave.DolarizadoExpress ?? false;
                 var DolarizadoCorredor = oContratoSave.DolarizadoCorredor ?? false;
                 var Dolarizado = oContratoSave.Dolarizado ?? false;
+                var fechaDolarizado = oContratoSave.FechaDolarizado;
 
                 CargarDolarizado(oContrato, oContratoSave, oContratoId, oContrato.FechaOperacion.AddDays(30), proveedor, corredor);
-                error = ValidarLiquidacionParaFijacion(oContratoSave, DolarizadoExpress, DolarizadoCorredor, Dolarizado);
+                error = ValidarLiquidacionParaFijacion(oContratoSave, DolarizadoExpress, DolarizadoCorredor, Dolarizado, fechaDolarizado);
                 if (error.HayError)
                 {
                     return error;
@@ -1197,10 +1198,10 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-        private GrabarFijacionResult ValidarLiquidacionParaFijacion(FijacionDePrecioContrato oContratoSave, bool DolarizadoExpress, bool DolarizadoCorredor, bool Dolarizado)
+        private GrabarFijacionResult ValidarLiquidacionParaFijacion(FijacionDePrecioContrato oContratoSave, bool DolarizadoExpress, bool DolarizadoCorredor, bool Dolarizado, DateTime? fechaDolarizado)
         {
             GrabarFijacionResult error = new GrabarFijacionResult();
-            if (DolarizadoExpress != oContratoSave.DolarizadoExpress || DolarizadoCorredor != oContratoSave.DolarizadoCorredor || Dolarizado != oContratoSave.Dolarizado)
+            if (DolarizadoExpress != oContratoSave.DolarizadoExpress || DolarizadoCorredor != oContratoSave.DolarizadoCorredor || Dolarizado != oContratoSave.Dolarizado || fechaDolarizado != oContratoSave.FechaDolarizado)
             {
                 var result2 = validarLiquidacionParaFijacionAgent.Validar(oContratoSave.ContratoSAP, oContratoSave.FijacionSAP);
                 if (result2 != "Ok")
