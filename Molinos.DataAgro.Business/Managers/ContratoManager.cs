@@ -4160,7 +4160,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.AcuerdoId = (negocio is ContratoAcuerdo) ? (int?)(negocio as ContratoAcuerdo).Id : null;
             bc.ImporteFinanciero = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 1).Importe : (decimal?)null;
             bc.ImporteRedespacho = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 2).Importe : (decimal?)null; ;
-            bc.PorcentajeComision = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje : (decimal?)null;
+            bc.PorcentajeComision = (negocio is Contrato) ? (negocio as Contrato).PorcentajeComision : 0;
             bc.ImporteComision = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Importe : (decimal?)null;
             bc.ImporteBonificacion = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe : (decimal?)null;
             bc.PorcentajeBonificacion = negocio.AperturaPrecio.Count() > 0 ? negocio.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje : (decimal?)null;

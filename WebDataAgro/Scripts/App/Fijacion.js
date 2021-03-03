@@ -100,23 +100,23 @@ function ObtenerFechaHasta(fechaBase) {
 }
 
 function cargarContratoAFijarSeleccionado() {
-    var cuitProv = $("#buscadorProveedor").val().split('(');
-    if (cuitProv[1] != null) {
-        var cuitP = cuitProv[1].split(')');
-    }
-    else {
-        cuitP = cuitProv;
-    }
-    var cuitCorr = $("#buscadorCorredor").val().split('(');
-    if (cuitCorr[1] != null) {
-        var cuitC = cuitCorr[1].split(')');
-    }
-    else {
-        cuitC = cuitCorr;
-    }
-    Id = Id != "" ? Id : 0;
-    var datos = { cuitProveedor: cuitP[0], cuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val(), fijacionId: Id };
-    var afijar = MSExecuteOnServer('/CompraNet/ObtenerFijacionesAutomaticas', datos);
+    //var cuitProv = $("#buscadorProveedor").val().split('(');
+    //if (cuitProv[1] != null) {
+    //    var cuitP = cuitProv[1].split(')');
+    //}
+    //else {
+    //    cuitP = cuitProv;
+    //}
+    //var cuitCorr = $("#buscadorCorredor").val().split('(');
+    //if (cuitCorr[1] != null) {
+    //    var cuitC = cuitCorr[1].split(')');
+    //}
+    //else {
+    //    cuitC = cuitCorr;
+    //}
+    //Id = Id != "" ? Id : 0;
+    //var datos = { cuitProveedor: cuitP[0], cuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val(), fijacionId: Id };
+    var afijar = datosAfijar();
     cargarDatosAFijarEnFijacion(afijar[0])
 }
 function cargarDatosAFijarEnFijacion(afijar) {
@@ -124,6 +124,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
     if (afijar == null || typeof afijar === "undefined") {
         return;
     }
+  
     $(".datoscontrato").show();
     $("#datosContrato").show();
     $("#kgspendientescontrato").text(afijar.KilosPendiente);
@@ -253,10 +254,12 @@ function InicializarElementos() {
 
             }
             InicializarBordesRojos();
+            consultarBonificacionAfijar(datosAfijar());  
         },
         select: function (e) {
             ObtenerAlta(e.dataItem.Id);
             ValidarFason();
+            $("#idProveedor").val(e.dataItem.Id);
             if ($("#estado").val() !== "5") {
                 if ($("#tipoId").val() != 3 && (Id == 0 || Id == null || Id == "")) {
                     //$("#clasificacion").data("kendoDropDownList").value("");
@@ -300,13 +303,12 @@ function InicializarElementos() {
                         $("#boletoNingunoId").prop("checked", true);
                     }
                 }
-                if ($("#tipoId").val() == 3) {
-                    compraNet.ComisionPorcentaje = 0;
-                }
-                if ($("#tipoId").val() == "6") {
-                    $("#dolarizadoExpressDiv").hide();
+                                
+                consultarBonificacionAfijar(datosAfijar(), compraNet);  
+                //if ($("#tipoId").val() == "6") 
+                //    $("#dolarizadoExpressDiv").hide();
 
-                }
+                //}
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
@@ -493,6 +495,9 @@ function InicializarElementos() {
         },
         select: function (e) {
             cargarDatosAFijarEnFijacion(e.dataItem);
+
+            var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#idProveedor").val()});
+            consultarBonificacionAfijar(e.dataItem, compraNet);
             //$(".datoscontrato").show();
             //$("#datosContrato").show();
             //$("#kgspendientescontrato").text(e.dataItem.KilosPendiente);
@@ -980,6 +985,21 @@ function InicializarElementos() {
             $("#contratoId").val("");
             $(".datoscontrato").hide();
             $("#datosContrato").hide();
+            consultarBonificacionAfijar(datosAfijar());
+            //if ()) {
+            //    var cuitAux = $("#buscadorProveedor").val().split('(');
+            //    if (cuitAux[0] != "") {
+            //        var cuit = cuitAux[1].split(')');
+            //        var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+            //        var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
+            //        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
+            //        if (viewModel.AperturaPrecio[2]) {
+            //            viewModel.AperturaPrecio[2].Porcentaje = compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0;
+            //        }
+            //    }
+            //    InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+            //}
+
         }
     });
 
@@ -3272,6 +3292,7 @@ function CargarDatosEditar(contrato, hijo) {
         $('#contCorredorDiv').show();
         $('#porcentajeComisionDiv').show();
     }
+    $("#idProveedor").val(contrato.ProveedorId);
     $("#estado").val(contrato.Estado);
     $("#buscadorProveedor").val(contrato.Proveedor);
     $("#buscadorProveedor").trigger("change");
@@ -4426,6 +4447,42 @@ function formatDate(date) {
         day = '0' + day;
 
     return [year, month, day].join('-');
+}
+
+function consultarBonificacionAfijar(afijar, compraNet) {
+    var hayBonificacion = true;
+    if ((afijar.ImporteAPrecio != undefined && afijar.ImporteSobrePrecio != undefined && afijar.PorcentajeAPrecio != undefined && afijar.PorcentajeSobrePrecio != undefined)) {
+        if (afijar.ImporteAPrecio != 0 || afijar.ImporteSobrePrecio != 0 || afijar.PorcentajeAPrecio != 0 || afijar.PorcentajeSobrePrecio != 0) {
+            if (compraNet) {
+                compraNet.ComisionPorcentaje = 0;
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
+                InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+                hayBonificacion = false;
+            }
+        }
+    }
+    
+    return hayBonificacion;
+}
+
+function datosAfijar() {
+    var cuitProv = $("#buscadorProveedor").val().split('(');
+    if (cuitProv[1] != null) {
+        var cuitP = cuitProv[1].split(')');
+    }
+    else {
+        cuitP = cuitProv;
+    }
+    var cuitCorr = $("#buscadorCorredor").val().split('(');
+    if (cuitCorr[1] != null) {
+        var cuitC = cuitCorr[1].split(')');
+    }
+    else {
+        cuitC = cuitCorr;
+    }
+    Id = Id != "" ? Id : 0;
+    var datos = { cuitProveedor: cuitP[0], cuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val(), fijacionId: Id };
+    return MSExecuteOnServer('/CompraNet/ObtenerFijacionesAutomaticas', datos);
 }
 
 

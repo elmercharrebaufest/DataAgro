@@ -208,20 +208,23 @@ function Inicializar() {
                 var fecha = row.cells[2].value;
                 var fechaHasta = row.cells[7].value;
                 var ultimaAplicacion = row.cells[3].value;
-                fechaHasta = kendo.toString(kendo.parseDate(fechaHasta, 'yyyy-MM-dd'), 'dd/MM/yyyy')
-                fecha = kendo.toString(kendo.parseDate(fecha, 'yyyy-MM-dd'), 'dd/MM/yyyy')
-                ultimaAplicacion = kendo.toString(kendo.parseDate(ultimaAplicacion, 'yyyy-MM-dd'), 'dd/MM/yyyy')
+                fechaHasta = kendo.parseDate(fechaHasta, 'yyyy-MM-dd')
+                fecha = kendo.parseDate(fecha, 'yyyy-MM-dd')
+                ultimaAplicacion = kendo.parseDate(ultimaAplicacion, 'yyyy-MM-dd')
                 if (fecha != null) {
                     //fecha = fecha.setHours(fecha.getHours() + 1);
                     row.cells[2].value = fecha;
+                    row.cells[2].format = 'dd/MM/yyyy'
                 }
                 if (fechaHasta != null) {
                     //fecha = fecha.setHours(fecha.getHours() + 1);
                     row.cells[7].value = fechaHasta;
+                    row.cells[7].format = 'dd/MM/yyyy'
                 }
                 if (ultimaAplicacion != null) {
                     //fecha = fecha.setHours(fecha.getHours() + 1);
                     row.cells[3].value = ultimaAplicacion;
+                    row.cells[3].format = 'dd/MM/yyyy'
                 }
                 
             }

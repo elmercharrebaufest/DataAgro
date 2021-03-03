@@ -338,6 +338,7 @@ function InicializarElementos() {
     $("#buscadorCorredor").click(function () {
         $("#buscadorCorredor").data("kendoAutoComplete").value("");
         $("#buscadorCorredor").data("kendoAutoComplete").trigger("change");
+        $("#porcentajeComision").data("kendoNumericTextBox").value("");
     });
     $("#buscadorCorredor").kendoAutoComplete({
         template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
@@ -416,6 +417,12 @@ function InicializarElementos() {
                         $("#boletoNingunoId").prop("checked", true);
                     }
                 }
+                //if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje != 0) {
+                //    $("#porcentajeComision").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje);
+                //}
+                //else {
+                    $("#porcentajeComision").data("kendoNumericTextBox").value(1);
+                //}
                 $('#porcentajeComisionDiv').show();
                 $('#contCorredorDiv').show();
 
