@@ -2079,6 +2079,7 @@ function InicializarElementos() {
             LimpiarBoleto();
             $("#boletoConfirmaId").prop("checked", true);
             $("#BolsaConfirmaDiv").show();
+            SeleccionAutomaticaBolsa();
         }
         else {
             $("#BolsaConfirmaDiv").hide();
@@ -2091,6 +2092,7 @@ function InicializarElementos() {
             LimpiarBoleto();
             $("#boletoFisicoId").prop("checked", true);
             $("#BolsaFisicoDiv").show();
+            SeleccionAutomaticaBolsa();
         }
         else {
             $("#BolsaFisicoDiv").hide();
@@ -2102,6 +2104,7 @@ function InicializarElementos() {
             LimpiarBoleto();
             $("#boletoCartaId").prop("checked", true);
             $("#BolsaCartaDiv").show();
+            SeleccionAutomaticaBolsa();
         }
         else {
             $("#BolsaCartaDiv").hide();
@@ -2113,6 +2116,7 @@ function InicializarElementos() {
         if ($(this).is(':checked')) {
             LimpiarBoleto();
             $("#boletoNingunoId").prop("checked", true);
+            SeleccionAutomaticaBolsa();
         }
     });
 
