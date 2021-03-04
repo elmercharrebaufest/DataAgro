@@ -4493,12 +4493,8 @@ function SeleccionAutomaticaBolsa() {
         bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
     }
 
-    if (bolsa != 0 && $("#boletoConfirmaId").is(':checked')) {
-        //var cambio = false;
-
-        //if (bolsa.BolsaId != $("#bolsaConfirmaId").data("kendoDropDownList").value()) {
-        //    cambio = true;
-        //}
+    if (bolsa != 0 && $("#boletoConfirmaId").is(':checked') && $("#bolsaConfirmaId").val() != bolsa.BolsaId) {
+        
         $("#modalConfirmarBolsa").modal("show");
         $("#idBolsa").val(bolsa.BolsaId);
         $("#nombreBolsa").text(bolsa.Bolsa.Descripcion);
