@@ -479,6 +479,7 @@ function Filtrar() {
 
         for (var i = 0; i < filtroSap.filter.filters[0].filters.length; i++) {
             contratoSapFilters.filters.push({ field: 'ContratoSAP', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
+            contratoSapFilters.filters.push({ field: 'Negocio', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
 
             contratoSapFilters.filters.push({ field: 'ContratoCorredor', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value });
             //contratoCorredorFilters.filters.push({ field: 'ContratoCorredor', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value });
@@ -742,27 +743,27 @@ function CreateGridInformeCompraNet() {
                 headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
                 template: function (dataItem) {
                     if (dataItem.Estado == 1) {
-                        return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
+                        return '<div class="statuspendiente "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 2) {
-                        return '<div class="statusconfirmado "></div>' + dataItem.Proveedor;
+                        return '<div class="statusconfirmado "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 3) {
-                        return '<div class="statusoferta "></div>' + dataItem.Proveedor;
+                        return '<div class="statusoferta "></div>' + dataItem.Proveedor + " " +  dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 4) {
-                        return '<div class="statuserror "></div>' + dataItem.Proveedor;
+                        return '<div class="statuserror "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 5) {
-                        return '<div class="statusfinalizado "></div>' + dataItem.Proveedor;
+                        return '<div class="statusfinalizado "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 6) {
-                        return '<div class="statusborrado "></div>' + dataItem.Proveedor;
+                        return '<div class="statusborrado "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 7) {
-                        return '<div class="statusreconfirmar "></div>' + dataItem.Proveedor;
+                        return '<div class="statusreconfirmar "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 8) {
-                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
+                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 9) {
-                        return '<div class="statuspreaprobacion "></div>' + dataItem.Proveedor;
+                        return '<div class="statuspreaprobacion "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 10) {
-                        return '<div class="statuspreanulado "></div>' + dataItem.Proveedor;
+                        return '<div class="statuspreanulado "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 11) {
-                        return '<div class="statusreconfirmarfinalizado "></div>' + dataItem.Proveedor;
+                        return '<div class="statusreconfirmarfinalizado "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     }
                 },
                 filterable: { ui: createMultiSelectProveedor }

@@ -270,6 +270,11 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                         }
+
+                        if (!string.IsNullOrEmpty(oParam.MotivoOperacionAnterior) && oParam.MotivoOperacionAnterior.Length <= 5)
+                        {
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
+                        }
                     }
                     if (oParam.FechaOperacion.Date > fijacionSave.Fecha.Date)
                     {
@@ -287,10 +292,13 @@ namespace Molinos.DataAgro.Business.Managers
                             oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
 
                         }
-
                         if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
                         {
                             oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                        }
+                        if (!string.IsNullOrEmpty(oParam.MotivoOperacionAnterior) && oParam.MotivoOperacionAnterior.Length <= 5)
+                        {
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
                         }
                     }
                 }

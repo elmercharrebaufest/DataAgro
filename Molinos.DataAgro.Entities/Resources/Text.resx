@@ -790,4 +790,7 @@
   <data name="VisualizarReportePrecioMoaPizarra" xml:space="preserve">
     <value>Visualizar Reporte PrecioMoa Pizarra</value>
   </data>
+  <data name="ModificarRazonSocial" xml:space="preserve">
+    <value>Modificar Razon Social</value>
+  </data>
 </root>

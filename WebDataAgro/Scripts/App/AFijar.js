@@ -1801,6 +1801,16 @@ function InicializarElementos() {
     //    $("#fechaFijacionId").data("kendoDatePicker").min(new Date(parseInt(diaHabil)));
     //}
 
+    $("#fechaDesdeSustentableId").kendoDatePicker({
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+
+    $("#fechaHastaSustentableId").kendoDatePicker({
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+
     $("#fechaDesdeId").val(date);
     $("#fechaOperacionId").val(date);
     $("#fechaHastaId").val(datehasta);
@@ -1862,17 +1872,19 @@ function InicializarElementos() {
         if ($(this).is(':checked')) {
             $(".sustentableDiv").show();
             if ($("#mercsDepositoId").is(':checked')) {
-                MensInfo('Revisar la fecha desde de entrega');
+                //MensInfo('Revisar la fecha desde de entrega');
+                MostrarCcPpPendientesAplicar();
             }
         }
         else {
-            $(".sustentableDiv").hide();
+            //$(".sustentableDiv").hide();
             $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
         }
     });
     $("#mercsDepositoId").click(function () {
         if ($(this).is(':checked') && $("#sustentableId").is(':checked')) {
-            MensInfo('Revisar la fecha desde de entrega');
+                MostrarCcPpPendientesAplicar();
+            //MensInfo('Revisar la fecha desde de entrega');
         }
     });
 
@@ -4545,6 +4557,41 @@ function HaySustentable() {
 }
 
 
+function MostrarCcPpPendientesAplicar() {
+    //if ($("#mercsDepositoId").is(":checked") && $("#sustentableId").is(":checked")) {
+    var cuitP = "";
+    var cuitC = "";
+
+    var cuitProv = $("#buscadorProveedor").val().split('(');
+    if (cuitProv[1] != null) {
+        cuitP = cuitProv[1].split(')')[0];
+    }
+    else {
+        cuitP = cuitProv[0];
+    }
+    var cuitCorr = $("#buscadorCorredor").val().split('(');
+    if (cuitCorr[1] != null) {
+        cuitC = cuitCorr[1].split(')')[0];
+    }
+    else {
+        cuitC = cuitCorr[0];
+    }
+
+    var lista = MSExecuteOnServer('/CompraNet/ListarCartasDePortePendienteAplicar',
+        {
+            AgenteCompra: $("#AgenteCompraId").val(),
+            Proveedor: cuitP,
+            Corredor: cuitC,
+            Centro: $("#destinoId").val(),
+            Material: $('#material').data("kendoDropDownList").value()
+        });
+    var viewmodel = {
+        CcPpPendientes: lista
+    }
+    kendo.bind($("#modalCcPpPendienteAplicar"), viewmodel);
+    $("#modalCcPpPendienteAplicar").modal("show");
+    //}
+}
 
 
 

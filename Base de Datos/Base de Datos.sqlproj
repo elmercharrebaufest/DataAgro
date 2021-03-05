@@ -301,6 +301,7 @@
     <Build Include="dbo\Tables\HabilitacionCampaña.sql" />
     <Build Include="dbo\Tables\ReportePesificado.sql" />
     <Build Include="dbo\Tables\ConfiguracionBolsa.sql" />
+    <Build Include="dbo\Tables\HabilitacionPagoDiferido.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

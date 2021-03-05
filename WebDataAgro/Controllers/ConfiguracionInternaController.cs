@@ -60,6 +60,15 @@ namespace WebDataAgro.Controllers
                 HabilitacionPizarra = configuracionManager.TraerPizarra()
             });
         }
+        public ActionResult GrabarPagoDiferidoPartial()
+        {
+            var hoy = DateTime.Today;
+            CargarViewBag();
+            return PartialView("_GrabarPagoDiferidoPartial", new ConfiguracionInternaModel
+            {
+                HabilitacionPagoDiferido = configuracionManager.TraerPagoDiferido()
+            });
+        }
         public ActionResult GrabarFijacionPartial()
         {
             var hoy = DateTime.Today;
@@ -92,14 +101,30 @@ namespace WebDataAgro.Controllers
             configuracion.HabilitacionFijacion = configuracionManager.TraerFijaciones();
             return PartialView("_ListaFijacion", configuracion);
         }
-        
+
+        [HttpPost]
+        public ActionResult GuardarPagoDiferido(ConfiguracionInternaModel configuracion)
+        {
+            var resultado = new Resultado();
+            if (!string.IsNullOrEmpty(configuracion.DesdeVigencia) && !string.IsNullOrEmpty(configuracion.HastaVigencia))
+            {
+                configuracion.ResultadoPago = configuracionManager.GrabarPagoDiferido(TransformarAEntidadPago(configuracion), GlobalVariables.IdActiveDirectory);
+            }
+            else
+            {
+                resultado.Error("FechaValida", "Debe ingresar una fecha de vigencia válida");
+                configuracion.ResultadoPago = resultado;
+            }
+            configuracion.HabilitacionPagoDiferido = configuracionManager.TraerPagoDiferido();
+            return PartialView("_ListaPago", configuracion);
+        }
 
         private PrecioMoa TransformarAEntidadPrecio(ConfiguracionInternaModel configuracion)
         {
             var entidad = new PrecioMoa
             {
                 MaterialId = configuracion.MaterialId,
-                DesdeVigencia = DateTime.Parse(configuracion.DesdeVigencia),
+                DesdeVigencia =  DateTime.Parse(configuracion.DesdeVigencia),
                 HastaVigencia = DateTime.Parse(configuracion.HastaVigencia),
                 MonedaId = configuracion.MonedaId,
                 Precio = configuracion.Precio,
@@ -108,6 +133,19 @@ namespace WebDataAgro.Controllers
                 HastaEntrega = configuracion.HastaEntrega,
                 DesdeFijacion = configuracion.DesdeFijacion,
                 HastaFijacion = configuracion.HastaFijacion,
+            };
+            return entidad;
+        }
+        private HabilitacionPagoDiferido TransformarAEntidadPago(ConfiguracionInternaModel configuracion)
+        {
+            var entidad = new HabilitacionPagoDiferido
+            {
+                MaterialId = configuracion.MaterialId,
+                DesdeVigencia = DateTime.Parse(configuracion.DesdeVigencia),
+                HastaVigencia = DateTime.Parse(configuracion.HastaVigencia),
+                TipoNegocioId = configuracion.TipoNegocioId,
+                CantidadDia = configuracion.CantidadDia,
+                Importe = configuracion.Importe
             };
             return entidad;
         }
@@ -244,6 +282,15 @@ namespace WebDataAgro.Controllers
             {
                 ResultadoCampaña = configuracionManager.EliminarCampaña(id),
                 HabilitacionCampaña = configuracionManager.TraerCampaña()
+            });
+        }
+
+        public ActionResult EliminarPagoDiferido(int id)
+        {
+            return PartialView("_ListaPago", new ConfiguracionInternaModel
+            {
+                ResultadoPago = configuracionManager.EliminarHabilitacionPagoDiferido(id),
+                HabilitacionPagoDiferido = configuracionManager.TraerPagoDiferido()
             });
         }
 

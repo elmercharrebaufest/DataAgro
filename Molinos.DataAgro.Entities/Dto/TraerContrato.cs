@@ -42,6 +42,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? Importe_Sustentable { get; set; }
         public string MonedaId_Sustentable { get; set; }
         public string Moneda_Sustentable { get; set; }
+        public DateTime? FechaDesde_Sustentable { get; set; }
+        public string FechaDesde_SustentableFormateado { get; set; }
+        public DateTime? FechaHasta_Sustentable { get; set; }
+        public string FechaHasta_SustentableFormateado { get; set; }
         public DateTime? Fecha_Dolarizado { get; set; }
         public string Fecha_DolarizadoFormateado { get; set; }
         public int? Dias_Pesificado { get; set; }
@@ -131,6 +135,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? StandardCalidadId { get; set; }
         public string StandardDeCalidadDescripcion { get; set; }
         public bool? PagoDiferido { get; set; }
+        public int? PagoDiferidoTerceroId { get; set; }
         public int? ZonaId { get; set; }
         public string ZonaDescripcion { get; set; }
         public int? AcuerdoId { get; set; }
@@ -184,6 +189,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Anticipo { get; set; }
         public bool? Cesion { get; set; }
         public string ClasificacionContrato { get; set; }
+        public string TipoAgenteCompra { get; set; }
         public bool? Venta { get; set; }
     }
 

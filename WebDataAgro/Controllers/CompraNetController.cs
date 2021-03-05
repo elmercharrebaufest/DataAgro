@@ -442,6 +442,26 @@ namespace WebDataAgro.Controllers
             {
                 equipo = GlobalVariables.EquipoReal;
             }
+            if (request.Filter != null && request.Filter.Filters != null)
+            {
+                foreach (var item in request.Filter.Filters)
+                {
+                    if (item.Field == "Negocio" && item.Operator == "eq")
+                    {
+                        item.Value = item.Value.ToString().PadLeft(10, '0');
+                    }
+                    if (item.Filters != null)
+                    {
+                        foreach (var item2 in item.Filters)
+                        {
+                            if (item2.Field == "Negocio" && item.Operator == "eq")
+                            {
+                                item2.Value = item2.Value.ToString().PadLeft(10, '0');
+                            }                            
+                        }
+                    }
+                }
+            }
             var model = mobjContratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
 
             return Json(model);
@@ -1035,6 +1055,13 @@ namespace WebDataAgro.Controllers
 
         }
 
-
+        public ActionResult ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
+        {
+            return new JsonResult()
+            {
+                Data = mobjContratoManager.ListarCartasDePortePendienteAplicar(req),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

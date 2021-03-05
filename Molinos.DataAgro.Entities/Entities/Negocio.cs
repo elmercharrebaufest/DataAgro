@@ -72,6 +72,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string ObservacionTercero { get; set; }
         public bool? CalidadTercero { get; set; }
         public bool? PagoDiferidoTercero { get; set; }
+        public int? PagoDiferidoTerceroId { get; set; }
         public bool? DolarizadoTercero { get; set; }
 
         public bool? Canje { get; set; }
@@ -86,6 +87,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? DolarizadoCorredor { get; set; }
         public bool? SustentableTercero { get; set; }
         public bool? Venta { get; set; }
+
+        [JsonConverter(typeof(SinHora))]
+        public DateTime? FechaDesdeSustentable { get; set; } // FechaDesdeSustentable       
+        [JsonConverter(typeof(SinHora))]
+        public DateTime? FechaHastaSustentable { get; set; } // FechaHastaSustentable   
 
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]

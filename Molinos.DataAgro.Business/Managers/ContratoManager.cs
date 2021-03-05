@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IValidarDocProcPagoAgent validarPagoAgente;
         private readonly IListaCBUProveedorAgent cbuAgent;
         private readonly IModificarFijacionAgent modificarFijacionAgent;
+        private readonly ICartasDePortePendienteAplicarAgent ccppAgent;
         private readonly IHttpContextManager httpContextManager;
         private readonly IValidacionCreditoAgent validarCreditoAgente;
         private readonly ITipoDeCambioAgent tipoCambioAgent;
@@ -79,7 +80,7 @@ namespace Molinos.DataAgro.Business.Managers
             ILogDataAgroManager logDataAgroManager,
             IValidarDocProcPagoAgent validarPagoAgente,
             IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent,
-            //ICartasDePortePendienteAplicarAgent ccppAgent,
+            ICartasDePortePendienteAplicarAgent ccppAgent,
             IHttpContextManager httpContextManager, IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent)
         {
             this.logger = logger;
@@ -109,6 +110,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.validarPagoAgente = validarPagoAgente;
             this.cbuAgent = cbuAgent;
             this.modificarFijacionAgent = modificarFijacionAgent;
+            this.ccppAgent = ccppAgent;
             this.httpContextManager = httpContextManager;
             this.validarCreditoAgente = validarCreditoAgente;
             this.tipoCambioAgent = tipoCambioAgent;
@@ -663,12 +665,27 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("DolarizadoExpress", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
-
-            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value == 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId)))
+            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value)
             {
-                oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
+                if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value == 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
+                {
+                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
+                }
+                if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
+                {
+                    oErrorMessages.Error("Sustentable", "Debe indicar fecha desde de sustentable");
+                }
+                if (!oParam.FechaHastaSustentable.HasValue || oParam.FechaHastaSustentable.Value == null)
+                {
+                    oErrorMessages.Error("Sustentable", "Debe indicar fecha hasta de sustentable");
+                }
+                if (oParam.FechaDesdeSustentable.HasValue && oParam.FechaHastaSustentable.HasValue
+                    && oParam.FechaHastaSustentable.Value < oParam.FechaDesdeSustentable.Value)
+                {
+                    oErrorMessages.Error("Sustentable", "Debe indicar rango de fechas válido de sustentable");
+                }
             }
-            if(oParam.FechaDolarizado != null)
+            if (oParam.FechaDolarizado != null)
             {
                 var conf = configuracionManager.TraerConfiguraciones();
                 if (conf != null)
@@ -765,6 +782,11 @@ namespace Molinos.DataAgro.Business.Managers
                                 oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                             }
 
+                            if (!string.IsNullOrEmpty(oParam.MotivoOperacionAnterior) && oParam.MotivoOperacionAnterior.Length <= 5)
+                            {
+                                oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
+                            }
+
                             if (oParam.Venta != true)
                             {
                                 if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior)
@@ -793,6 +815,11 @@ namespace Molinos.DataAgro.Business.Managers
                             if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
                             {
                                 oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                            }
+
+                            if (!string.IsNullOrEmpty(oParam.MotivoOperacionAnterior) && oParam.MotivoOperacionAnterior.Length <= 5)
+                            {
+                                oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
                             }
 
                             if ((oParam.NoInformaSio == null || oParam.NoInformaSio == false) && oParam.FechaOperacion < diaAnterior && oParam.Venta != true/* && oParam.PrestamoDevolucion != true && oParam.Canje != true*/)
@@ -827,6 +854,23 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 oErrorMessages.Error("PlantaDestino", "Se Debe completar el campo Planta Destino cuando hay Préstamo Devolución");
                             }
+                        }
+                    }
+                    var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
+                    if (!string.IsNullOrEmpty(cosecha) && oParam.FechaDesde != null && oParam.FechaHasta != null) {
+                        var anios = cosecha.Split('-');
+                        var anioInicial = "20" + anios[0];
+                        var anioFinal = "20" + anios[1];
+
+                        var campaniaDesde = new DateTime(int.Parse(anioInicial), 01, 01);
+                        var campaniaHasta = new DateTime(int.Parse(anioFinal), 12, 31);
+                        var fechaDesde = oParam.FechaDesde;
+                        var fechaHasta = oParam.FechaHasta;
+                      
+                        if (fechaDesde < campaniaDesde || fechaHasta > campaniaHasta)
+                        {
+                            oErrorMessages.Error("MotivoOperacionAnterior", " La campaña esta fuera de rango");
+
                         }
                     }
                     //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
@@ -1074,6 +1118,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Base = oContrato.Base;
             oContratoSave.ImporteSustentable = oContrato.ImporteSustentable;
             oContratoSave.MonedaSustentableId = oContrato.MonedaSustentableId;
+            oContratoSave.FechaDesdeSustentable = oContrato.FechaDesdeSustentable;
+            oContratoSave.FechaHastaSustentable = oContrato.FechaHastaSustentable;
             oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
             oContratoSave.DiasPesificado = oContrato.DiasPesificado;
             oContratoSave.NoInformaSio = oContrato.NoInformaSio;
@@ -1109,6 +1155,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.StandardDeCalidadId = oContrato.StandardDeCalidadId;
             oContratoSave.Pizarra = oContrato.Pizarra;
             oContratoSave.PagoDiferido = oContrato.PagoDiferido;
+            oContratoSave.PagoDiferidoTerceroId = oContrato.PagoDiferidoTerceroId;
             oContratoSave.ZonaId = oContrato.ZonaId;
             oContratoSave.Compensacion = oContrato.Compensacion;
             oContratoSave.TarifaFlete = oContrato.TarifaFlete;
@@ -1495,6 +1542,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
+
         public GrabarContratoResult FinalizarContrato(int contratoId, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -2104,6 +2152,7 @@ namespace Molinos.DataAgro.Business.Managers
                 StandardCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 PagoDiferido = x.PagoDiferido,
+                PagoDiferidoTerceroId = x.PagoDiferidoTerceroId,
                 ZonaId = x.ZonaId,
                 ZonaDescripcion = x.Zona.Descripcion,
                 Compensacion = x.Compensacion,
@@ -4325,6 +4374,11 @@ namespace Molinos.DataAgro.Business.Managers
 
 
             return resultado;
+        }
+
+        public List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
+        {
+            return ccppAgent.ListarCartasDePortePendienteAplicar(req);
         }
 
     }

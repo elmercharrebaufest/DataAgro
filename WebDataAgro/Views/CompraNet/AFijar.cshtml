@@ -664,18 +664,37 @@
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-4 col-md-2">
-                <div class="sustentableDiv" hidden>
+                <div class="sustentableDiv fason acuerdo" hidden>
                     <input id="sustentablePrecioId" placeholder="Importe" style="width:100%" />
                     <img id="errsustentableprecioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
             <div class="col-sm-4 col-md-2">
-                <div class="sustentableDiv" hidden>
+                <div class="sustentableDiv fason acuerdo" hidden>
                     <select id="sustentableMonedaId" data-bind="source: SustentableMonedaCombo, value: Parametros.sustentableMonedaId, disabled: isControlDisabled" style="width:100%"></select>
                     <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
 
+            <div class="sustentableDiv col-sm-6 col-md-5 left" hidden>
+                <div class="col-sm-3 left" data-toggle="tooltip" data-placement="top" id="fechaTooltipSustentable">
+                    <label>Desde-Hasta</label>
+                </div>
+                <div class="col-sm-4 col-md-4 left">
+                    <span id="fechaDesdeSustentableDiv">
+                        <input id="fechaDesdeSustentableId" type="date" data-bind="value: Parametros.fechaDesdeSustentableId" style="width:100%" />
+                        <img id="errfechaDesdeSustentableId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>
+                <div class="col-sm-4 col-md-4 left">
+                    <span id="fechaHastaSustentableDiv">
+                        <input id="fechaHastaSustentableId" type="date" data-bind="value: Parametros.fechaHastaSustentableId" style="width:100%" />
+                        <img id="errfechaHastaSustentableId" src="~/Content/Images/error.png" style="display:none" />
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row noAcuerdo">
             <div class="noAcuerdo">
                 <div class="col-sm-2 ">
                     <label>Contrato Vendedor</label>
@@ -1109,7 +1128,7 @@
     }
 </style>
 <!-- Modal Apertura Precio-->
-@*@Html.Partial("ModalAperturaPrecio")*@
+@Html.Partial("ModalAperturaPrecio")
 
-@*@Html.Partial("_ModalCCPPPendienteAplicar")*@
+@Html.Partial("_ModalCCPPPendienteAplicar")
 @Html.Partial("ModalConfirmarBolsa")

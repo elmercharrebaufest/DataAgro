@@ -28,7 +28,11 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var numeroSAP = repositorio.Listar<FijacionDePrecioContrato, string>(x => x.FijacionSAP, x => x.FijacionSAP != null).Last();
+                var numeroSAP = repositorio.Listar<FijacionDePrecioContrato, string>(x => x.FijacionSAP, x => x.FijacionSAP != null && x.ContratoSAP == fijacion.ContratoSAP).LastOrDefault();
+                if (string.IsNullOrEmpty(numeroSAP))
+                {
+                    numeroSAP = fijacion.ContratoSAP+"00";
+                }
                 return (int.Parse(numeroSAP) + 1).ToString();
             }
             else

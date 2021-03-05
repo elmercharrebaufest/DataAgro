@@ -68,8 +68,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         TIPO_PERIODO = "I",
                         TIPO_DB = "B",
-                        FEDESDE = contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
-                        FEHASTA = contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
+                        FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : null,
+                        FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : null,
                         IMPORTE_DB = contrato.ImporteSustentable.Value,
                         MONEDA_DB = contrato.MonedaSustentableId,
                         PORC_DB = 0

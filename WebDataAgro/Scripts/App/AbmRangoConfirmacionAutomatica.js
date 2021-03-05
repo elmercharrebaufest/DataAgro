@@ -21,7 +21,7 @@ $(document).ready(function() {
 
 function InicializarElementos() {
     kendo.culture("es-AR");
-
+    var hoy = new Date();
 
     $("#precioMinimo").kendoNumericTextBox({
         culture: "es-AR",
@@ -98,12 +98,15 @@ function InicializarElementos() {
         value: new Date(),
         dateInput: true
     });
+
     $("#cantidad").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
         spinners: false,
         min: 0
     });
+
+
     $("#desdeMes").kendoNumericTextBox({
         culture: "es-AR",
         format: "#",
@@ -130,6 +133,7 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
+
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
     });
@@ -149,6 +153,14 @@ function InicializarElementos() {
     $("#butCancelar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Cancelar.png")
     });
+
+    var hoy = new Date();
+    var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
+    $("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + "00:00");
+    $("#FechaHasta").data("kendoDateTimePicker").value(stringDia + " " + "23:59");
+    $("#cantidad").data("kendoNumericTextBox").value("20000");
+    $("#hastaAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
+    $("#desdeAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
 }
 
 function CrearResultadosDataSource(datos) {
@@ -279,6 +291,14 @@ function InicializarBusquedaInicial() {
 function AsignarBotones() {
     $("#butAgregar").click(function () {
         Agregar();
+        var hoy = new Date();
+        var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
+        $("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + "00:00");
+        $("#FechaHasta").data("kendoDateTimePicker").value(stringDia + " " + "23:59");
+        $("#cantidad").data("kendoNumericTextBox").value("20000");
+        $("#hastaAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
+        $("#desdeAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
+      
     });
 
     $("#butModificar").click(function () {

@@ -12,6 +12,8 @@ namespace WebDataAgro.Models
     {
         public int Id { get; set; }
         public decimal Precio { get; set; }
+        public int CantidadDia { get; set; }
+        public decimal Importe { get; set; }
         public string MonedaId { get; set; }
         public int MaterialId { get; set; }
         public string DesdeVigencia { get; set; }
@@ -37,16 +39,19 @@ namespace WebDataAgro.Models
         public Resultado ResultadoPizarra { get; set; }
         public Resultado ResultadoFijacion { get; set; }
         public Resultado ResultadoCampaña { get; set; }
+        public Resultado ResultadoPago { get; set; }
         public List<PrecioMoaDto> PrecioMoa { get; set; }
         public List<HabilitacionPizarraDto> HabilitacionPizarra { get; set; }
         public List<HabilitacionFijacionDto> HabilitacionFijacion { get; set; }
         public List<HabilitacionCampañaDto> HabilitacionCampaña { get; set; }
+        public List<HabilitacionPagoDiferidoDto> HabilitacionPagoDiferido { get; set; }
         public ConfiguracionInternaModel()
         {
             PrecioMoa = new List<PrecioMoaDto>();
             HabilitacionFijacion = new List<HabilitacionFijacionDto>();
             HabilitacionPizarra = new List<HabilitacionPizarraDto>();
             HabilitacionCampaña = new List<HabilitacionCampañaDto>();
+            HabilitacionPagoDiferido = new List<HabilitacionPagoDiferidoDto>();
         }
     }
 }

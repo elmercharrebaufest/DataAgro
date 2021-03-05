@@ -11,7 +11,7 @@ using WebDataAgro.Atributos;
 
 namespace WebDataAgro.Controllers
 {
-    [Autorizacion(PermisosDataAgro.IngresoDataAgro, PermisosDataAgro.AdministracionProveedores)]
+    [Autorizacion(PermisosDataAgro.IngresoDataAgro, PermisosDataAgro.Administracion_Proveedores)]
     public class AdministracionProveedorController : Controller
     {
         private readonly IRolManager rolManager;
@@ -25,7 +25,7 @@ namespace WebDataAgro.Controllers
             this.comercialManager = comercialManager;
         }
 
-        [Autorizacion(PermisosDataAgro.AdministracionProveedores)]
+        [Autorizacion(PermisosDataAgro.Administracion_Proveedores)]
         public ActionResult Index()
         {
             return View( );

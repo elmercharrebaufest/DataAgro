@@ -28,6 +28,11 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarCampaña(HabilitacionCampaña oConfiguracion);
         HabilitacionPizarraDto HabilitarPizarraExterno(int material,int tiponegocio);
         List<HabilitacionCampañaDto> HabilitarCampañaExterno(int material);
-       
+
+        List<HabilitacionPagoDiferidoDto> TraerPagosDiferido(int tipoNegocio, int material);
+        List<HabilitacionPagoDiferidoDto> TraerPagoDiferido();
+
+        Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active);
+        Resultado EliminarHabilitacionPagoDiferido(int id);
     }
 }

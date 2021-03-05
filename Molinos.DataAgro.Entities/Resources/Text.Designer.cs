@@ -1456,6 +1456,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modificar Razon Social.
+        /// </summary>
+        public static string ModificarRazonSocial {
+            get {
+                return ResourceManager.GetString("ModificarRazonSocial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modificar Venta.
         /// </summary>
         public static string ModificarVenta {

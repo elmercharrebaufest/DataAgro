@@ -18,6 +18,7 @@ namespace Molinos.DataAgro.Interfaces
         int LogCambiosDataAgro(RangoConfirmacionAutomaticaDto cambios, TipoAccionLogDataAgro tipoDeAccion);
         int LogCambiosDataAgro(HabilitacionFijacionDto habilitacionFijacionDto, TipoAccionLogDataAgro tipoDeAccion);
         int LogCambiosDataAgro(HabilitacionPizarraDto habilitacionPizarraDto, TipoAccionLogDataAgro tipoDeAccion);
+        int LogCambiosDataAgro(HabilitacionPagoDiferidoDto habilitacionPizarraDto, TipoAccionLogDataAgro tipoDeAccion);
         int LogCambiosDataAgro(PrecioMoaDto precioMoaDto, TipoAccionLogDataAgro tipoDeAccion);
         string AddSpacesToSentence(string text, char v);
         string BuscaFechaYFormatea(string text, string campo);

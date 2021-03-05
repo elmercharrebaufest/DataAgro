@@ -400,6 +400,8 @@ function ObtenerDatos(error) {
     obj.Base = $("#baseId").is(":checked") ? true : false;
     obj.ImporteSustentable = $("#sustentablePrecioId").val();//== null || $("#sustentablePrecioId").val() == undefined || $("#sustentablePrecioId").val() == "" ? 0 : $("#sustentablePrecioId").val();
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
+    obj.FechaDesdeSustentable = fechaValida($("#fechaDesdeSustentableId").val()) ? $("#fechaDesdeSustentableId").val() : null;
+    obj.FechaHastaSustentable = fechaValida($("#fechaHastaSustentableId").val()) ? $("#fechaHastaSustentableId").val() : null;
     obj.FechaDolarizado = $("#tipoId").val() == "1" ? "" :$("#dolarizadoFechaId").val();
     obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
     obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false;
@@ -672,6 +674,10 @@ function InicializarDatos() {
     };
 
     ExecuteURLOnServer('/CompraNet/InicializarContrato', funcReturn, '');
+}
+
+function fechaValida(fecha) {
+    return fecha != null && fecha != undefined && fecha != "";
 }
 function formatearFecha(fecha) {
     var fechaFormateada = kendo.toString(fecha, "dd-MM-yyyy");

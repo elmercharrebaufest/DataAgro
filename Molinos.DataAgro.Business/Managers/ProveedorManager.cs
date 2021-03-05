@@ -1609,6 +1609,11 @@ namespace Molinos.DataAgro.Business.Managers
             var resultado = new GrabarProveedorResult();
             try
             {
+                if (string.IsNullOrEmpty(oParam.basicos.RazonSocial))
+                {
+                    resultado.Error("Razon Social", "La Razon Social no puede estar vacía");
+                    return resultado;
+                }
                 var oProveedorSave = repositorio.Obtener<Proveedor>(oParam.ProveedorId);
 
                 var clasificacion = oParam.basicos.ClasificacionCompraNet != null ?
@@ -1639,6 +1644,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.Consignatario = oParam.basicos.Consignatario;
                 oProveedorSave.ComisionPorcentaje = oParam.basicos.Comision;
                 oProveedorSave.PlanCanje = oParam.basicos.PlanCanje;
+                oProveedorSave.RazonSocial = oParam.basicos.RazonSocial;
 
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);

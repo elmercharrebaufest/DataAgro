@@ -133,6 +133,8 @@
     <Compile Include="Dto\ValidarCreditoDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
+    <Compile Include="Dto\CcPpPerndienteAplicarDto.cs" />
+    <Compile Include="Dto\HabilitacionPagoDiferidoDto.cs" />
     <Compile Include="Dto\ProveedorAltaDto.cs" />
     <Compile Include="Dto\CompraCampanaActualDto.cs" />
     <Compile Include="Dto\ConfiguracionBolsaDto.cs" />
@@ -317,6 +319,7 @@
     <Compile Include="Entities\HabilitacionCupo.cs" />
     <Compile Include="Entities\CriterioCDWarrant.cs" />
     <Compile Include="Entities\HabilitacionCampaña.cs" />
+    <Compile Include="Entities\HabilitacionPagoDiferido.cs" />
     <Compile Include="Entities\LogDataAgro.cs" />
     <Compile Include="Entities\ConfiguracionBolsa.cs" />
     <Compile Include="Entities\NegocioHistorico.cs" />

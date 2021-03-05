@@ -679,6 +679,11 @@ namespace Molinos.DataAgro.Business.Managers
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPizarra", cambios.TipoNegocio + " - " + cambios.Material);
         }
 
+        public int LogCambiosDataAgro(HabilitacionPagoDiferidoDto cambios, TipoAccionLogDataAgro tipoDeAccion)
+        {
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionPagoDiferido", cambios.TipoNegocio + " - " + cambios.Material);
+        }
+
 
         public string AddSpacesToSentence(string text, char limite)
         {

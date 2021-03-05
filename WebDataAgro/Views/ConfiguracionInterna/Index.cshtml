@@ -14,17 +14,17 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-4 wizard-header-group" id="PrecioTab">
+        <div class="col-xs-3 wizard-header-group" id="PrecioTab">
             <div class="wizard-header-contenedor whc-selected">
                 Precio MOA
             </div>
         </div>
-        <div class="col-xs-4 wizard-header-group" id="PizarraTab">
+        <div class="col-xs-3 wizard-header-group" id="PizarraTab">
             <div class="wizard-header-contenedor">
                 Habilitación Pizarra
             </div>
         </div>
-        <div class="col-xs-4 wizard-header-group" id="CampañaTab">
+        <div class="col-xs-3 wizard-header-group" id="CampañaTab">
             <div class="wizard-header-contenedor">
                 Habilitación Campaña
             </div>
@@ -34,6 +34,11 @@
                    Habilitacion Fijación
                 </div>
             </div>*@
+        <div class="col-xs-3 wizard-header-group" id="PagoTab">
+            <div class="wizard-header-contenedor">
+                Habilitación Pago Diferido
+            </div>
+        </div>
     </div>
     <br />
     <div id="PrecioMoa">
@@ -48,4 +53,7 @@
     @*<div id="HabilitacionFijacion" hidden>
             @Html.Action("GrabarFijacionPartial", "ConfiguracionInterna")
         </div>*@
+    <div id="HabilitacionPagoDiferido" hidden>
+        @Html.Action("GrabarPagoDiferidoPartial", "ConfiguracionInterna")
+    </div>
 </div>

@@ -108,8 +108,13 @@
     [SustentableTercero] BIT NULL, 
     [Cesion] BIT NULL, 
     [Anticipo] BIT NULL, 
-    [ClasificacionContrato] VARCHAR(50) NULL, 
+    [ClasificacionContrato] VARCHAR(50) NULL,
+	[FechaDesdeSustentable] DATETIME NULL,
+	[FechaHastaSustentable] DATETIME NULL,
+    
     [Venta] BIT NULL, 
+    [PagoDiferidoTerceroId] INT NULL, 
+
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
@@ -136,6 +141,7 @@
 	CONSTRAINT [FK_Negocio_TipoFason] FOREIGN KEY([TipoFasonId]) REFERENCES [dbo].[TipoFason] ([Id]),
 	CONSTRAINT [FK_Negocio_MonedaAjusteComision] FOREIGN KEY ([MonedaAjusteComisionId]) REFERENCES [Moneda]([MonedaId]),
     CONSTRAINT [FK_Negocio_MonedaCanjeId] FOREIGN KEY ([MonedaCanjeId]) REFERENCES [Moneda]([MonedaId]), 
+    CONSTRAINT [FK_Negocio_HabilitacionPagoDiferido] FOREIGN KEY ([PagoDiferidoTerceroId]) REFERENCES [HabilitacionPagoDiferido]([Id]), 
 
 )
 

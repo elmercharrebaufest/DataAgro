@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalCcPpPendienteAplicar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="cerrar close blancoCerrarModalFinalizar" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmado" id="lineModalLabel" ></h1>
+                <div class="status finalizado-modal">
+                    <div>Cartas de Porte Pendientes de Aplicar</div>
+                </div>
+            </div>
+            <div class="modal-body clearfix ">
+                <table id="tablaCcPpPendientes" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td class="fuente600">Carta de porte</td>
+                            <td class="fuente600">Cantidad</td>
+                            <td class="fuente600">Fecha Desde</td>
+                            <td class="fuente600">Fecha Hasta</td>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-ccpp-pendientes" data-template="div-tablas-ccpp-pendientes" data-bind="source:CcPpPendientes" type="text/x-kendo-template">
+                    </tbody>
+                    <script id="div-tablas-ccpp-pendientes" type="text/x-kendo-template">
+                        <tr>
+                            <td>#=CartasPorte#</td>
+                            <td>#=Cantidad#</td>
+                            <td>#=FechaIngreso#</td>
+                            <td>#=FechaNeto#</td>
+                        </tr>
+                    </script>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

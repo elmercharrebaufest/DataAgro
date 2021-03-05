@@ -41,7 +41,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Profesion = ContactoComercial.Cargo,
                     Puesto = ContactoComercial.Puesto,
                     RazonSocial = provis.RazonSocial,
-                    Telefono = ContactoComercial.Telefono1
+                    Telefono = ContactoComercial.Telefono1,
+                    CompraNet = ContactoComercial.CompraNet.HasValue && ContactoComercial.CompraNet.Value ? "SI" : "NO",
+                    Cupo = ContactoComercial.Cupo.HasValue && ContactoComercial.Cupo.Value ? "SI" : "NO",
+
                 };
 
             return resultado.Distinct().ToList();

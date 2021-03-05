@@ -78,14 +78,21 @@
         <br />
         <div class="row">
             <div class="col-md-2">
+                <label>Fecha Desde Dolarizado</label>
+            </div>
+            <div class="col-md-2">
+                <span id="">
+                    <input id="FechaDesdeDolarizado" class="filtroFecha" name="FechaHastaDolarizado-desde" type="date" style="width: 100%" />
+                </span>
+            </div>
+            <div class="col-md-2">
                 <label>Fecha Hasta Dolarizado</label>
             </div>
             <div class="col-md-2">
                 <span id="">
-                    <input id="FechaHastaDolarizado" class="filtroFecha" name="FechaFijacion" type="date" style="width: 100%" />
+                    <input id="FechaHastaDolarizado" class="filtroFecha" name="FechaHastaDolarizado-hasta" type="date" style="width: 100%" />
                 </span>
             </div>
-            <div class="col-md-2"></div>
             <div class="col-md-2">
                 <label>Dolarizado</label>
                 @Html.CheckBox("Dolarizado", false, new { @class = "filtroBoleano", @id = "Dolarizado" })

@@ -1,0 +1,67 @@
+﻿@using Newtonsoft.Json;
+@model WebDataAgro.Models.ConfiguracionInternaModel
+
+<div id="formulario" class="table-container">
+
+    @if (Model.ResultadoPago != null && Model.ResultadoPago.HayError)
+    {
+        if (Model.ResultadoPago.Errores[0].ErrorCode != 200)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.ResultadoPago.Errores[0]
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.ResultadoPago.Errores[0]
+            </div>
+            <script>LimpiarPagoForm()</script>
+        }
+    }
+</div>
+<div class="row">
+    <div class="col-xs-10 m-grid-col-xs-offset-1">
+        <div class="historial-desplegable" data-toggle="collapse" data-target="#historialPago" onclick="mostrarocultar('#mostrarPago')">
+            <span class="historial">Activos</span> <span id="mostrarPago" class="mostrar">Mostrar</span>
+        </div>
+        <div id="historialPago" class="collapse tabla-research">
+            <table class="tabla-historial table">
+                <tr>
+                    <th>Tipo Negocio</th>
+                    <th>Material</th>
+                    <th>Importe</th>
+                    <th>Cantidad Dias</th>
+                    <th>Vigencia Desde</th>
+                    <th>Vigencia Hasta</th>
+                    <th></th>
+                </tr>
+                @foreach (var pr in Model.HabilitacionPagoDiferido)
+                {
+            <tr>
+                <td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
+                <td>@Html.DisplayFor(model => pr.Material)</td>
+                <td>@Html.DisplayFor(model => pr.Importe)</td>
+                <td>@Html.DisplayFor(model => pr.CantidadDia)</td>
+                @{var desde = pr.DesdeVigencia.ToString("dd/MM/yyyy hh\\:mm tt");}
+                @{var hasta = pr.HastaVigencia.ToString("dd/MM/yyyy hh\\:mm tt");}
+                <td>@Html.DisplayFor(model => desde)</td>
+                <td>@Html.DisplayFor(model => hasta)</td>
+                <td>
+                    @if ((pr.DesdeVigencia <= DateTime.Now.Date && pr.HastaVigencia >= DateTime.Now.Date) || pr.DesdeVigencia >= DateTime.Now.Date)
+                    {
+                        @Ajax.ActionLink(" ", "EliminarPagoDiferido", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaPago", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
+                    }
+                    @{
+                        var json = JsonConvert.SerializeObject(pr);
+                    }
+                    <a href="#" class="fa fa-copy danger" onclick="copiarPago('@json')"></a>
+                </td>
+            </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

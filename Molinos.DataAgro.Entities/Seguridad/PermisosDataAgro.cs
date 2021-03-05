@@ -35,6 +35,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         SubidaArchivosKMZ = 112,
         [Display(ResourceType = typeof(Text), Name = "ProveedorZonaPropia")]
         ProveedorZonaPropia = 113,
+        [Display(ResourceType = typeof(Text), Name = "ModificarRazonSocial")]
+        ModificarRazonSocial = 114,
         //Comercial
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,
@@ -59,7 +61,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Ver_Todos_Tipos_Negocios")]
         VerTodosTiposNegocios = 211,
         [Display(ResourceType = typeof(Text), Name = "Lista_Comercial")]
-        ListaComercial = 212,       
+        ListaComercial = 212,
+       
 
         //CompraNet
         [Display(ResourceType = typeof(Text), Name = "Visualizar_CompraNet")]
@@ -199,15 +202,16 @@ namespace Molinos.DataAgro.Entities.Seguridad
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Constantes")]
         ConfiguracionConstantes = 515,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Roles_Permisos")]
-        ConfiguracionRolesPermisos = 516,
-        [Display(ResourceType = typeof(Text), Name = "Administracion_Proveedores")]
-        AdministracionProveedores = 517,
+        ConfiguracionRolesPermisos = 516,      
         [Display(ResourceType = typeof(Text), Name = "Administracion_Logs")]
-        LogDataAgro = 518,
+        LogDataAgro = 517,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Feriado")]
-        ConfiguracionFeriado = 519,
+        ConfiguracionFeriado = 518,
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Bolsa")]
-        ConfiguracionBolsa = 520,
+        ConfiguracionBolsa = 519,
+        [Display(ResourceType = typeof(Text), Name = "Administracion_Proveedores")]
+        Administracion_Proveedores = 520,
+
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]

@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -2745,6 +2745,9 @@
     <Content Include="Views\ReportePrecioMoaPizarra\Index.cshtml" />
    
     <Content Include="Views\CompraNet\ModalConfirmarBolsa.cshtml" />
+    <Content Include="Views\CompraNet\_ModalCCPPPendienteAplicar.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_GrabarPagoDiferidoPartial.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_ListaPago.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2840,7 +2843,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52498</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

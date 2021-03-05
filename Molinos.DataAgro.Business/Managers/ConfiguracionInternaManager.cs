@@ -181,6 +181,24 @@ namespace Molinos.DataAgro.Business.Managers
 
             return lista;
         }
+        public List<HabilitacionPagoDiferidoDto> TraerPagoDiferido()
+        {
+            var hoy = DateTime.Today;
+            var lista = repositorio.Listar<HabilitacionPagoDiferido, HabilitacionPagoDiferidoDto>(x => new HabilitacionPagoDiferidoDto
+            {
+                Id = x.Id,
+                CantidadDia = x.CantidadDia,
+                Importe = x.Importe,
+                DesdeVigencia = x.DesdeVigencia,
+                HastaVigencia = x.HastaVigencia,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                TipoNegocioId = x.TipoNegocioId
+            }).OrderBy(x => x.DesdeVigencia).ToList();
+
+            return lista;
+        }
         public Resultado EliminarPrecio(int id)
         {
             var oEntityErrors = new Resultado();
@@ -414,6 +432,37 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return error;
         }
+
+        private Resultado ValidarPagoDiferido(HabilitacionPagoDiferido pago)
+        {
+            var error = new Resultado();
+            if (pago.TipoNegocioId == 0)
+            {
+                error.Error("TipoNegocioId", "No Selecciono el Tipo de Negocio");
+            }
+            if (pago.MaterialId == 0)
+            {
+                error.Error("Material", "No Selecciono el Material");
+            }
+            if (pago.CantidadDia <= 0)
+            {
+                error.Error("CantidadDia", "El campo Cantidad de Días es obligatorio");
+            }
+            if (pago.Importe <= 0)
+            {
+                error.Error("Importe", "El campo Importe es obligatorio");
+            }
+            if (pago.DesdeVigencia > pago.HastaVigencia)
+            {
+                error.Error("Vigencia", "La vigencia desde no puede ser mayor al hasta");
+            }
+            if (repositorio.Existe<HabilitacionPagoDiferido>(x => x.CantidadDia == pago.CantidadDia && x.HastaVigencia > pago.DesdeVigencia && x.MaterialId == pago.MaterialId && pago.TipoNegocioId == x.TipoNegocioId))
+            {
+                error.Error("Vigencia", "Ya existe habilitación con ese rango para esa fecha y material");
+            }
+            return error;
+        }
+
         private Resultado ValidarFijacion(HabilitacionFijacion fijacion)
         {
             var error = new Resultado();
@@ -548,6 +597,20 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Existe<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && x.MaterialId == material);
         }
 
+        public List<HabilitacionPagoDiferidoDto> TraerPagosDiferido(int tipoNegocio, int material)
+        {
+            var ahora = DateTime.Now;
+            var pagosDiferidosVigentes = repositorio.Listar<HabilitacionPagoDiferido, HabilitacionPagoDiferidoDto>(x => new HabilitacionPagoDiferidoDto
+            {
+                Importe = x.Importe,
+                CantidadDia = x.CantidadDia,
+                Id = x.Id
+            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora 
+                    && x.TipoNegocioId == tipoNegocio && x.MaterialId == material);
+
+            return pagosDiferidosVigentes;
+        }
+
         public PrecioMoaDto TraerPrecio(int id)
         {
             return repositorio.Obtener<PrecioMoa, PrecioMoaDto>(x => x.Id == id, x => new PrecioMoaDto
@@ -578,6 +641,24 @@ namespace Molinos.DataAgro.Business.Managers
             });
 
         }
+
+        public HabilitacionPagoDiferidoDto TraerPagoDiferido(int id)
+        {
+            return repositorio.Obtener<HabilitacionPagoDiferido, HabilitacionPagoDiferidoDto>(x => x.Id == id, x => new HabilitacionPagoDiferidoDto
+            {
+                Id = x.Id,
+                CantidadDia = x.CantidadDia,
+                Importe = x.Importe,
+                DesdeVigencia = x.DesdeVigencia,
+                HastaVigencia = x.HastaVigencia,
+                Material = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                TipoNegocioId = x.TipoNegocioId
+            });
+
+        }
+
         public HabilitacionFijacionDto TraerFijacion(int id)
         {
             return repositorio.Obtener<HabilitacionFijacion, HabilitacionFijacionDto>(x => x.Id == id, x => new HabilitacionFijacionDto
@@ -723,5 +804,60 @@ namespace Molinos.DataAgro.Business.Managers
             }, x => x.MaterialId == material);
         }
 
+        public Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active)
+        {
+            var oEntityErrors = ValidarPagoDiferido(oConfiguracion);
+            if (oEntityErrors.HayErrores)
+            {
+                return oEntityErrors;
+            }
+            else
+            {
+                oConfiguracion.UsuarioCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
+                oConfiguracion.FechaCreacion = DateTime.Now;
+                repositorio.Agregar(oConfiguracion);
+            }
+            try
+            {
+                var tipo = oConfiguracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
+                repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(TraerPagoDiferido(oConfiguracion.Id), tipo);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                oEntityErrors.Error(ex.Source, ex.Message);
+                throw;
+            }
+            if (!oEntityErrors.HayError)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se guardó correctamente"));
+                logger.Debug("Se guardó correctamente");
+            }
+
+            return oEntityErrors;
+        }
+        public Resultado EliminarHabilitacionPagoDiferido(int id)
+        {
+            var oEntityErrors = new Resultado();
+            var hp = repositorio.Obtener<HabilitacionPagoDiferido>(id);
+            logDataAgroManager.LogCambiosDataAgro(TraerPagoDiferido(id), TipoAccionLogDataAgro.Eliminar);
+            try
+            {
+                repositorio.Remover(hp);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                oEntityErrors.Error(ex.Source, ex.Message);
+                throw;
+            }
+            if (!oEntityErrors.HayError)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se eliminó correctamente"));
+            }
+            return oEntityErrors;
+        }
     }
 }

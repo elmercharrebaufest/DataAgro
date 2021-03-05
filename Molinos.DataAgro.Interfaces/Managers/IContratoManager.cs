@@ -71,7 +71,7 @@ namespace Molinos.DataAgro.Interfaces
 
         TipoNegocio DevolverNamespaceNegocio(int tipo);
         Resultado AnularContratoCarga(int contratoId, string motivoRechazo);
-        //List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req);
+        List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req);
         string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda);
     }
 }

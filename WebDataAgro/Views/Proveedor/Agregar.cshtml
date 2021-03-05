@@ -8,6 +8,7 @@
     Random randAgregar = new Random();
     string jsAgregar = randAgregar.Next().ToString();
     bool modificarDatosCampos = PermisosHelper.Is(PermisosDataAgro.SubidaArchivosKMZ);
+    var modificarRazonSocial = PermisosHelper.Is(PermisosDataAgro.ModificarRazonSocial);
     if (global_asax.GlobalVariables.EsAdministrador)
     {
         modificarDatosCampos = false;
@@ -62,7 +63,7 @@
         </div>
         <div class="formulario-campo campo-razonsocial">
             <span class="campo-span">Razón Social</span>
-            <input type="text" disabled class="campo-input-text" id="razonsocial" />
+            <input type="text" class="campo-input-text" id="razonsocial" @(modificarRazonSocial ? "" : "disabled")/>
             <div class="campo-estadoafip">
                 <span class="campo-estadoafip-span">
                     Estado Registro AFIP

@@ -73,6 +73,8 @@ function CreateGridInformeCompraNet() {
                     TrigoEspecial: { type: "boolean" },
                     DesdeFijacion: { type: "date" },
                     FechaOperacion: { type: "date" },
+                    FechaDesde_Sustentable: { type: "date" },
+                    FechaHasta_Sustentable: { type: "date" },
                 }
             }
         },
@@ -197,7 +199,19 @@ function CreateGridInformeCompraNet() {
                 field: "Sustentable", columns: [
                     { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
                     { field: "Importe_Sustentable", title: "Importe", filterable: false },
-                    { field: "Moneda_Sustentable", title: "Moneda", filterable: false }
+                    { field: "Moneda_Sustentable", title: "Moneda", filterable: false },
+                    {
+                        field: "FechaDesde_Sustentable", title: "Desde", filterable: false, width: 80, format: _DefaultDateTemplate, template: function (dataItem) {
+                            return dataItem.FechaDesde_Sustentable ? kendo.toString(kendo.parseDate(dataItem.FechaDesde_Sustentable, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
+
+                        }
+                    },
+                    {
+                        field: "FechaHasta_Sustentable", title: "Hasta", filterable: false, width: 80, format: _DefaultDateTemplate, template: function (dataItem) {
+                            return dataItem.FechaHasta_Sustentable ? kendo.toString(kendo.parseDate(dataItem.FechaHasta_Sustentable, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
+
+                        }
+                    }
                 ]
             },
             {
@@ -314,17 +328,17 @@ function CreateGridInformeCompraNet() {
                 row.cells[6].value = templateHora(dataItem);
                 row.cells[14].value = templatePizarra(dataItem);
                 row.cells[28].value = templateSustentable(dataItem);
-                row.cells[31].value = templateDolarizado(dataItem);
-                row.cells[32].value = row.cells[31].value == "Si" ? row.cells[32].value : "";
-                row.cells[33].value = templatePesificado(dataItem);
-                row.cells[35].value = templateSIO(dataItem);
-                row.cells[36].value = templateTrigoEsp(dataItem);
-                row.cells[46].value = templateDolarizadoExpress(dataItem);
-                row.cells[47].value = row.cells[46].value == "Si" ? row.cells[47].value : "";
-                row.cells[48].value = templateDolarizadoCorredor(dataItem);
+                row.cells[33].value = templateDolarizado(dataItem);
+                row.cells[34].value = row.cells[33].value == "Si" ? row.cells[35].value : "";
+                row.cells[35].value = templatePesificado(dataItem);
+                row.cells[37].value = templateSIO(dataItem);
+                row.cells[38].value = templateTrigoEsp(dataItem);
+                row.cells[48].value = templateDolarizadoExpress(dataItem);
                 row.cells[49].value = row.cells[48].value == "Si" ? row.cells[49].value : "";
-                row.cells[45].format = "yy/MM/dd hh:mm:ss";
-                row.cells[31].value = templateDolarizado(dataItem);
+                row.cells[50].value = templateDolarizadoCorredor(dataItem);
+                row.cells[51].value = row.cells[50].value == "Si" ? row.cells[51].value : "";
+                row.cells[47].format = "yy/MM/dd hh:mm:ss";
+                row.cells[33].value = templateDolarizado(dataItem);
             }
         },
         pageable: {

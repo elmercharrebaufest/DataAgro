@@ -122,6 +122,7 @@
     <Compile Include="Agent\IContratosAPesificarAgent.cs" />
     <Compile Include="Agent\IComprasDetalleAgent.cs" />
     <Compile Include="Agent\ICriterioCDWarrantAgent.cs" />
+    <Compile Include="Agent\ICartasDePortePendienteAplicarAgent.cs" />
     <Compile Include="Agent\IListaCBUProveedorAgent.cs" />
     <Compile Include="Agent\IModificarFijacionAgent.cs" />
     <Compile Include="Agent\IServicioRepositorioScatoAgent.cs" />

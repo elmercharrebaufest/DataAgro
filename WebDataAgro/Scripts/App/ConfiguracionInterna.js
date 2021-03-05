@@ -10,7 +10,23 @@ function InicializarElementos() {
     var hoy = new Date();
     $("#DesdeVigencia").kendoDateTimePicker();
     $("#HastaVigencia").kendoDateTimePicker();
+    $("#DesdeVigenciaPago").kendoDateTimePicker();
+    $("#HastaVigenciaPago").kendoDateTimePicker();
+    var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
+    $("#DesdeVigenciaPago").val(stringDia + " " + "00:00");
+    $("#HastaVigenciaPago").val(stringDia + " " + "23:59");
     $("#Precio").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        spinners: false,
+        min: 0
+    });
+    $("#CantidadDia").kendoNumericTextBox({
+        culture: "es-AR",    
+        format: "n0",
+        spinners: false
+    });
+    $("#Importe").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
         spinners: false,
@@ -45,6 +61,11 @@ function InicializarElementos() {
         DeseleccionarForms();
         $("#FijacionTab").children().addClass("whc-selected");
         $("#HabilitacionFijacion").show();
+    });
+    $("#PagoTab").click(function () {
+        DeseleccionarForms();
+        $("#PagoTab").children().addClass("whc-selected");
+        $("#HabilitacionPagoDiferido").show();
     });
 
     $("#TipoNegocioId").change(function () {
@@ -105,6 +126,16 @@ function LimpiarPrecioForm() {
     $("#DesdeFijacion").data("kendoDatePicker").value("");
     $("#HastaFijacion").data("kendoDatePicker").value("");
 }
+function LimpiarPagoForm() {
+    $("#CantidadDia").data("kendoNumericTextBox").value("0");
+    $("#Importe").data("kendoNumericTextBox").value("0");
+    $("#TipoNegocioIdPago").val("");
+    $("#MaterialIdPago").val("");
+    var hoy = new Date();
+    var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
+    $("#DesdeVigenciaPago").val(stringDia + " " + "00:00");
+    $("#HastaVigenciaPago").val(stringDia + " " + "23:59");
+}
 function LimpiarPizarraForm() {
     var hoy = new Date();
     var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
@@ -128,6 +159,8 @@ function DeseleccionarForms() {
     $("#HabilitacionFijacion").hide();
     $("#CampañaTab").children().removeClass("whc-selected");
     $("#HabilitacionCampaña").hide();
+    $("#PagoTab").children().removeClass("whc-selected");
+    $("#HabilitacionPagoDiferido").hide();
 }
 
 function mostrarocultar(element) {
@@ -139,11 +172,7 @@ function mostrarocultar(element) {
 }
 
 function copiarPrecioMOA(configuracion) {
-    console.log(configuracion);
     configuracion = JSON.parse(configuracion);
-    console.log(configuracion.DesdeEntrega);
-    console.log(new Date(configuracion.DesdeEntrega ));
-
     $("#TipoNegocioId").val(configuracion.TipoNegocioId);
     $("#TipoNegocioId").change();
     $("#MonedaId").val(configuracion.MonedaId);
@@ -163,4 +192,22 @@ function copiarPrecioMOA(configuracion) {
     if (configuracion.HastaFijacion != null) {
         $("#HastaFijacion").data("kendoDatePicker").value(new Date(configuracion.HastaFijacion ));
     }
+}
+
+function copiarPago(configuracion) {
+    configuracion = JSON.parse(configuracion);
+    $("#TipoNegocioId").val(configuracion.TipoNegocioId);
+    $("#TipoNegocioId").change();
+    $("#MaterialId").val(configuracion.MaterialId);
+    if (configuracion.Importe > 0) {
+        $("#Importe").data("kendoNumericTextBox").value(configuracion.Importe);
+    }
+    if (configuracion.CantidadDia > 0) {
+        $("#CantidadDia").data("kendoNumericTextBox").value(configuracion.CantidadDia);
+    }
+    var hoy = new Date();
+    var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
+    $("#DesdeVigenciaPago").val(stringDia + " " + "00:00");
+    $("#HastaVigenciaPago").val(stringDia + " " + "23:59");
+  
 }

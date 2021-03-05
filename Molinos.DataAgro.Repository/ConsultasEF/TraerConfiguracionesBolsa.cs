@@ -26,10 +26,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 from bolsa in contexto.Set<ConfiguracionBolsa>()               
                 select new ConfiguracionBolsaDto()
                 {
-                    Id = bolsa.Id,
+                    Id = bolsa.Id,                    
                     Bolsa = bolsa.Bolsa.Descripcion,
                     Destino = bolsa.Destino.Descripcion,
-                    Provincia = bolsa.Provincia.Nombre
+                    Provincia = bolsa.Provincia.Nombre,
+                    BolsaId = bolsa.BolsaId,
+                    DestinoId = bolsa.DestinoId,
+                    ProvinciaId = bolsa.ProvinciaId
                 };
             
             return new KendoGrid<ConfiguracionBolsaDto>(request, query);
