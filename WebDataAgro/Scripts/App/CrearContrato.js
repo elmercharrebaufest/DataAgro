@@ -1958,25 +1958,25 @@ function InicializarElementos() {
         }
     });
 
-    $("#sustentableId").click(function () {
-        if ($(this).is(':checked')) {
-            //$(".sustentableDiv").show();
-            if ($("#mercsDepositoId").is(':checked')) {
-                //MensInfo('Revisar la fecha desde de entrega');
-                MostrarCcPpPendientesAplicar();
-            }
-        }
-        else {
-            //$(".sustentableDiv").hide();
-            $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
-        }
-    });
-    $("#mercsDepositoId").click(function () {
-        if ($(this).is(':checked') && $("#sustentableId").is(':checked')) {
-            MostrarCcPpPendientesAplicar();
-            //MensInfo('Revisar la fecha desde de entrega');
-        }
-    });
+    //$("#sustentableId").click(function () {
+    //    if ($(this).is(':checked')) {
+    //        //$(".sustentableDiv").show();
+    //        if ($("#mercsDepositoId").is(':checked')) {
+    //            //MensInfo('Revisar la fecha desde de entrega');
+    //            MostrarCcPpPendientesAplicar();
+    //        }
+    //    }
+    //    else {
+    //        //$(".sustentableDiv").hide();
+    //        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+    //    }
+    //});
+    //$("#mercsDepositoId").click(function () {
+    //    if ($(this).is(':checked') && $("#sustentableId").is(':checked')) {
+    //        MostrarCcPpPendientesAplicar();
+    //        //MensInfo('Revisar la fecha desde de entrega');
+    //    }
+    //});
 
     $("#dolarizadoId").click(function () {
         if ($(this).is(':checked')) {
@@ -2350,7 +2350,19 @@ function InicializarElementos() {
         }
     });
     $("#posicionFasonId").mask("00.0000", { placeholder: "MM.AAAA" });
+    $("#posicionFasonId").change(function () {
+        if ($("#tipoId").val() == "5") {
+            var values = $("#posicionFasonId").val().split('.');
+            if (values.length == 2) {
+                $("#fechaDesdeId").val('01' + '-' + values[0] + '-' + values[1]);
+                var desde = new Date(values[1], parseInt(values[0]) - 1, 1);
+                var hasta = new Date(values[1], parseInt(values[0]), 0);
+                $("#fechaHastaId").val(hasta.getDate() + '-' + values[0] + '-' + values[1]);
 
+            }
+        }
+
+    });
     $("#pizarraId").click(ClickEnPizarra);
 
     InicializarAperturaDePrecios();
@@ -4545,11 +4557,11 @@ function SeleccionAutomaticaBolsa() {
     }
 
     if (bolsa != 0 && $("#boletoConfirmaId").is(':checked') && $("#bolsaConfirmaId").val() != bolsa.BolsaId) {
-        
-        $("#modalConfirmarBolsa").modal("show");    
+
+        $("#modalConfirmarBolsa").modal("show");
         $("#idBolsa").val(bolsa.BolsaId);
         $("#nombreBolsa").text(bolsa.Bolsa.Descripcion);
-            
+
     }
 }
 
@@ -4559,36 +4571,7 @@ function ConfirmarBolsaModal() {
     $("#BolsaConfirmaDiv").show();
     $("#bolsaConfirmaId").data("kendoDropDownList").value($("#idBolsa").val());
     $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
-     MensInfo('Se cambio la bolsa a ' + $("#bolsaConfirmaId").data("kendoDropDownList").text());  
-}
-
-function HayMercaderia() {
-    if ($("#mercsDepositoId").is(":checked")) {
-        $("#divSojaSustentable").hide();
-        $("#sustentableId").prop("checked", false);
-        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
-        $("#sustentableMonedaId").data("kendoDropDownList").value("");
-        $(".sustentableDiv").hide();
-        $("#ordenarRow").show();
-
-    } else {
-        $("#divSojaSustentable").show();
-        $("#ordenarRow").hide();
-    }
-}
-
-function HaySustentable() {
-    if ($("#sustentableId").is(":checked")) {
-        $("#mercsDepositoId").prop("checked", false);
-        $("#mercsDepositoDiv").hide();
-    }
-    var maniana = new Date();
-    //maniana = new Date(maniana.setDate(maniana.getDate() + 1));
-    if ($("#fechaDesdeId").data("kendoDatePicker").value() != null && $("#fechaDesdeId").data("kendoDatePicker").value() >= maniana || $("#sustentableId").is(":checked")) {
-        $("#mercsDepositoDiv").hide();
-    } else {
-        $("#mercsDepositoDiv").show();
-    }
+    MensInfo('Se cambio la bolsa a ' + $("#bolsaConfirmaId").data("kendoDropDownList").text());
 }
 
 function HayFijacionConvenio() {
@@ -4708,39 +4691,44 @@ function HayVenta() {
 }
 
 function MostrarCcPpPendientesAplicar() {
-    //if ($("#mercsDepositoId").is(":checked") && $("#sustentableId").is(":checked")) {
-    var cuitP = "";
-    var cuitC = "";
+    if ($("#mercsDepositoId").is(":checked") && $("#sustentableId").is(":checked")) {
+        $(".fechaHastaSustentableDiv").show();
+        var cuitP = "";
+        var cuitC = "";
 
-    var cuitProv = $("#buscadorProveedor").val().split('(');
-    if (cuitProv[1] != null) {
-        cuitP = cuitProv[1].split(')')[0];
-    }
-    else {
-        cuitP = cuitProv[0];
-    }
-    var cuitCorr = $("#buscadorCorredor").val().split('(');
-    if (cuitCorr[1] != null) {
-        cuitC = cuitCorr[1].split(')')[0];
-    }
-    else {
-        cuitC = cuitCorr[0];
-    }
+        var cuitProv = $("#buscadorProveedor").val().split('(');
+        if (cuitProv[1] != null) {
+            cuitP = cuitProv[1].split(')')[0];
+        }
+        else {
+            cuitP = cuitProv[0];
+        }
+        var cuitCorr = $("#buscadorCorredor").val().split('(');
+        if (cuitCorr[1] != null) {
+            cuitC = cuitCorr[1].split(')')[0];
+        }
+        else {
+            cuitC = cuitCorr[0];
+        }
 
-    var lista = MSExecuteOnServer('/CompraNet/ListarCartasDePortePendienteAplicar',
-        {
-            AgenteCompra: $("#AgenteCompraId").val(),
-            Proveedor: cuitP,
-            Corredor: cuitC,
-            Centro: $("#destinoId").val(),
-            Material: $('#material').data("kendoDropDownList").value()
-        });
-    var viewmodel = {
-        CcPpPendientes: lista
+        var lista = MSExecuteOnServer('/CompraNet/ListarCartasDePortePendienteAplicar',
+            {
+                AgenteCompra: $("#AgenteCompraId").val(),
+                Proveedor: cuitP,
+                Corredor: cuitC,
+                Centro: $("#destinoId").val(),
+                Material: $('#material').data("kendoDropDownList").value()
+            });
+        var viewmodel = {
+            CcPpPendientes: lista
+        }
+        kendo.bind($("#modalCcPpPendienteAplicar"), viewmodel);
+        $("#modalCcPpPendienteAplicar").modal("show");
+    } else {
+        $(".fechaHastaSustentableDiv").hide();
+        $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
+        $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
     }
-    kendo.bind($("#modalCcPpPendienteAplicar"), viewmodel);
-    $("#modalCcPpPendienteAplicar").modal("show");
-    //}
 }
 
 
@@ -4763,3 +4751,35 @@ function validarCredito(cuitProv) {
 
     }
 }
+
+function HayMercaderia() {
+    if ($("#mercsDepositoId").is(":checked")) {
+        MostrarCcPpPendientesAplicar();
+    } else {
+        $(".fechaHastaSustentableDiv").hide();
+        $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
+        $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
+    }
+}
+
+function HaySustentable() {
+    if ($("#sustentableId").is(":checked")) {
+        MostrarCcPpPendientesAplicar();
+        $(".sustentableDiv").show();
+    } else {
+        $(".sustentableDiv").hide();
+        $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+        $("#sustentableMonedaId").data("kendoDropDownList").value("");
+        $(".fechaHastaSustentableDiv").hide();
+        $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
+        $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
+    }
+    //var maniana = new Date();
+    //if ($("#fechaDesdeId").data("kendoDatePicker").value() != null && $("#fechaDesdeId").data("kendoDatePicker").value() >= maniana || $("#sustentableId").is(":checked")) {
+    //    $("#mercsDepositoDiv").hide();
+    //} else {
+    //    $("#mercsDepositoDiv").show();
+    //}
+}
+
+

@@ -4296,6 +4296,10 @@ namespace Molinos.DataAgro.Business.Managers
             bc.TipoAgenteCompraId = (negocio is Contrato) ? (negocio as Contrato).TipoAgenteCompraId : (negocio is ContratoAcuerdo) ? (negocio as ContratoAcuerdo).TipoAgenteCompraId : (int?)null;
             bc.PrestamoDevolucion = negocio.PrestamoDevolucion.HasValue ? negocio.PrestamoDevolucion.Value : false;
             bc.PlantaDestinoId = negocio.PlantaDestinoId.HasValue ? negocio.PlantaDestinoId.Value : 0;
+            bc.FechaHasta_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaHastaSustentable == null ? "" 
+                : (negocio as Contrato).FechaHastaSustentable.Value.ToString("dd-MM-yyyy");
+            bc.FechaDesde_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaHastaSustentable == null ? ""
+               : (negocio as Contrato).FechaDesdeSustentable.Value.ToString("dd-MM-yyyy");
             return bc;
         }
 

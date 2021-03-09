@@ -392,7 +392,9 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.PlantaDestinoDescripcion + "'" + ',' +
         "'" + dataItem.ObservacionTercero + "'" + ',' +
         "'" + dataItem.SustentableTercero + "'" + ',' +
-        "'" + dataItem.Venta + "'" +
+        "'" + dataItem.Venta + "'" + ',' +
+        "'" + dataItem.FechaDesde_SustentableFormateado + "'" + ',' +   
+        "'" + dataItem.FechaHasta_SustentableFormateado + "'" +  
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1921,7 +1923,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
-    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta) {
+    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2097,6 +2099,14 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
     sustentablePrecio !== "null" && sustentableMonedaId !== "null" ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
+
+    if (fechaDesdeSustentable != null && fechaHastaSustentable != null) {
+        $("#visualizar_sustentableDesde").text(fechaDesdeSustentable);
+        $("#visualizar_sustentableHasta").text(fechaHastaSustentable);
+        $("#sustentableDivVisualizarHasta").show();
+        $("#sustentableDivVisualizarDesde").show();
+        
+    }
     $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
     if (dolarizadoFecha != "") {
         $("#visualizar_dolarizadoFecha").show();

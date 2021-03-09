@@ -155,14 +155,12 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarAgenteResult();
             AgenteCompra oAgenteSave = null;
-
             this.Validar(oAgente, oEntityErrors);
 
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
-            }
-
+            }        
             if (oAgente.Id != 0)
             {
                 oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
@@ -190,7 +188,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oAgenteSave.ComercialId = oAgente.ComercialId;
                 oAgenteSave.MonedaId = oAgente.MonedaId;
                 oAgenteSave.MaterialId = oAgente.MaterialId;
-                oAgenteSave.Posicion = oAgente.Posicion;
+                oAgenteSave.Posicion = oAgente.Posicion;                
+                oAgenteSave.FechaDesde = oAgente.FechaDesde;                
+                oAgenteSave.FechaHasta = oAgente.FechaHasta;
                 oAgenteSave.ComercialCreadorId = oAgente.ComercialCreadorId;
                 oAgenteSave.CampanaId = oAgente.CampanaId;
                 oAgenteSave.FechaOperacion = oAgente.FechaOperacion;
@@ -407,6 +407,12 @@ namespace Molinos.DataAgro.Business.Managers
                 AgenteId = x.Id,
                 FechaHasta = x.FechaHasta,
                 FechaDesde = x.FechaDesde,
+                FechaHastaFormateado = SqlFunctions.DateName("day", x.FechaHasta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaHasta.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaHasta),
+                FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaDesde),                
                 Proveedor = x.Proveedor.RazonSocial,
                 PrecioNeto = x.PrecioNeto,
                 Moneda = x.Moneda.Descripcion,

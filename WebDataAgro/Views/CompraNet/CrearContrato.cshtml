@@ -604,7 +604,7 @@
         <div id="mercsDepositoDiv" class="ampliar noFason noAgente noAcuerdo col-md-5">
             <div class="mercsDepositoDiv">
                 <label id="mercEnDepLabel">Mercs. en dep.</label>
-                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" />
+                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" onclick="HayMercaderia()" />
                 <img id="errmercsDepositoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
@@ -662,7 +662,7 @@
             <div id="ordenarRow" class="col-sm-2" hidden></div>
             <div class="col-sm-2" id="divSojaSustentable">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
-                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" />
+                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()"/>
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-4 col-md-2">
@@ -677,18 +677,18 @@
                     <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div class="sustentableDiv col-sm-6 col-md-5 left" hidden>
+            <div class="fechaHastaSustentableDiv col-sm-6 col-md-5 left" hidden>
                 <div class="col-sm-3 left" data-toggle="tooltip" data-placement="top" id="fechaTooltipSustentable">
                     <label>Desde-Hasta</label>
                 </div>
                 <div class="col-sm-4 col-md-4 left">
-                    <span id="fechaDesdeSustentableDiv">
+                    <span >
                         <input id="fechaDesdeSustentableId" type="date" data-bind="value: Parametros.fechaDesdeSustentableId" style="width:100%" />
                         <img id="errfechaDesdeSustentableId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
                 <div class="col-sm-4 col-md-4 left">
-                    <span id="fechaHastaSustentableDiv">
+                    <span>
                         <input id="fechaHastaSustentableId" type="date" data-bind="value: Parametros.fechaHastaSustentableId" style="width:100%" />
                         <img id="errfechaHastaSustentableId" src="~/Content/Images/error.png" style="display:none" />
                     </span>

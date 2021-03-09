@@ -64,6 +64,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Moneda_Sustentable = !(contrato is Contrato) || (contrato as Contrato).MonedaSustentable == null ? "" : (contrato as Contrato).MonedaSustentable.Descripcion,
                         FechaDesde_Sustentable = DbFunctions.TruncateTime((contrato as Contrato).FechaDesdeSustentable),
                         FechaHasta_Sustentable = DbFunctions.TruncateTime((contrato as Contrato).FechaHastaSustentable),
+                        FechaDesde_SustentableFormateado = SqlFunctions.DateName("day", (contrato as Contrato).FechaDesdeSustentable) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaDesdeSustentable) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaDesdeSustentable),
+                        FechaHasta_SustentableFormateado = SqlFunctions.DateName("day", (contrato as Contrato).FechaHastaSustentable) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaHastaSustentable) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaHastaSustentable),
                         Fecha_Dolarizado = contrato is Contrato ? DbFunctions.TruncateTime((contrato as Contrato).FechaDolarizado) : contrato is FijacionDePrecioContrato ? DbFunctions.TruncateTime((contrato as FijacionDePrecioContrato).FechaDolarizado) : (DateTime?)null,
                         Dias_Pesificado = contrato.DiasPesificado,
                         NoInformaSIO = contrato is Contrato ? (contrato as Contrato).NoInformaSio : (bool?)null,
