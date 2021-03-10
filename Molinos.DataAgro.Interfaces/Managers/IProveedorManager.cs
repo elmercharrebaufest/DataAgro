@@ -70,5 +70,7 @@ namespace Molinos.DataAgro.Interfaces
         List<CampanaMaterialDetallePorMesDto> BuscarDatosTablaCompras();
 
         List<CompraDto> TraerTodoCompra(int proveedorId, List<int> equipo);
+
+        DatosCompraNetDto TraerBoletoBolsa(int id);
     }
 }

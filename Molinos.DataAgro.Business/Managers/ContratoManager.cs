@@ -857,7 +857,8 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                     }
                     var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
-                    if (!string.IsNullOrEmpty(cosecha) && oParam.FechaDesde != null && oParam.FechaHasta != null) {
+                    if (!string.IsNullOrEmpty(cosecha) && oParam.FechaDesde != null && oParam.FechaHasta != null)
+                    {
                         var anios = cosecha.Split('-');
                         var anioInicial = "20" + anios[0];
                         var anioFinal = "20" + anios[1];
@@ -866,7 +867,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var campaniaHasta = new DateTime(int.Parse(anioFinal), 12, 31);
                         var fechaDesde = oParam.FechaDesde;
                         var fechaHasta = oParam.FechaHasta;
-                      
+
                         if (fechaDesde < campaniaDesde || fechaHasta > campaniaHasta)
                         {
                             oErrorMessages.Error("MotivoOperacionAnterior", " La campaña esta fuera de rango");
@@ -982,6 +983,15 @@ namespace Molinos.DataAgro.Business.Managers
             if (contrato != null && PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && contrato.EstadoId != (int)EnumEstadoContrato.PreAprobacion)
             {
                 oErrorMessages.Error("Contrato", "No se puede modificar el contrato.");
+            }
+
+            if (!repositorio.Existe<Localidad>(a => a.LocalidadId == oParam.LocalidadId))
+            {
+                oErrorMessages.Error("Localidad", "La localidad seleccionada no es valida.");
+            }
+            if (!repositorio.Existe<Provincia>(a => a.ProvinciaId == oParam.ProvinciaId))
+            {
+                oErrorMessages.Error("Provincia", "La provincia seleccionada no es valida.");
             }
             return oErrorMessages;
         }
@@ -1322,6 +1332,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Error("No se pudo ValidarComprasDiferencial", ex);
                 }
             }
+
             return oEntityErrors;
         }
         private bool ConfirmacionAutomatica(Contrato contrato)
@@ -2701,6 +2712,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad,
                 Ampliaciones = null,
                 Precio = x.Precio,
+                PrecioNeto = x.PrecioNeto,
                 MonedaId = x.MonedaId,
                 CampanaId = x.CampanaId ?? x.Material.CampaniaTableroId ?? x.Material.CampañaId ?? 0,
                 ProvinciaId = x.Proveedor.ProveedorId,
@@ -4353,8 +4365,8 @@ namespace Molinos.DataAgro.Business.Managers
             var tipoCambio = tipoCambioAgent.TraerTipoDeCambio(null);
             var resultado = "";
             if (!string.IsNullOrEmpty(cuit) && cantidad > 0 && precio > 0 && !string.IsNullOrEmpty(moneda))
-            {              
-                var validacionCredito = validarCreditoAgente.ValidarCredito(cuit);                      
+            {
+                var validacionCredito = validarCreditoAgente.ValidarCredito(cuit);
                 var importeNegocio = ((precio * (decimal)cantidad) / 1000);
                 if (importeNegocio > 0 && tipoCambio > 0 && validacionCredito != null)
                 {
@@ -4370,7 +4382,8 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         resultado = (importeNegocio / tipoCambio) > validacionCredito.Monto ? "Sin Crédito" : "";
                     }
-                    if(validacionCredito.Moneda == ""){
+                    if (validacionCredito.Moneda == "")
+                    {
                         resultado = "Sin Crédito";
                     }
                 }
@@ -4385,6 +4398,175 @@ namespace Molinos.DataAgro.Business.Managers
             return ccppAgent.ListarCartasDePortePendienteAplicar(req);
         }
 
+        public List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId)
+        {
+            DateTime? fecha = null;
+            var dia = oDiasHabilesAgent.UltimoDiaHabil(fecha);
+            return repositorio.ListarConsulta(new DevolverContratosAcuerdoPorCorredor(corredorId, dia));
+        }
+
+        public List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos)
+        {
+            List<GrabarContratoResult> results = new List<GrabarContratoResult>();
+            var acuerdo = TraerContratoAcuerdoACopiar(contratos.First().ContratoAcuerdoId.Value);
+            var comercial = mobjComercialManager.TraerComercial(acuerdo.ComercialId.Value);
+
+            foreach (var item in contratos)
+            {
+
+
+                var proveedorid = mobjProveedorManager.ObtenerIdProveedorPorCuit(item.Cuit);
+                if (proveedorid == 0)
+                {
+                    results.Add(new GrabarContratoResult { ContratoId = int.Parse(item.Observacion), Errores = new List<ErrorMessage> { new ErrorMessage { Source = "Proveedor", Message = "El cuit no existe." } } });
+                    continue;
+                }
+                var proveedor = mobjProveedorManager.TraerProveedor(proveedorid, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+                var boletobolsa = mobjProveedorManager.TraerBoletoBolsa(proveedorid);
+                Contrato contrato = new Contrato();
+                contrato.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
+                contrato.ContratoCorredor = item.ContratoCorredor;
+                contrato.ContratoVendedor = item.ContratoVendedor;
+                contrato.MaterialId = item.MaterialId;
+                contrato.CampanaId = item.CampanaId;
+                contrato.FechaOperacion = item.FechaOperacion.Value;
+                contrato.Fecha = DateTime.Now;
+                if (item.FechaOperacion.Value.Date < DateTime.Now.Date)
+                {
+                    contrato.MotivoOperacionAnterior = "Acuerdo " + item.ContratoAcuerdoId;
+                }
+                contrato.FechaDesde = item.FechaDesde.Value;
+                contrato.FechaHasta = item.FechaHasta.Value;
+                contrato.FechaEntrega = item.FechaEntrega.Value;
+                contrato.Cantidad = item.Cantidad;
+                contrato.ClasificacionId = item.ClasificacionId.Value;
+                contrato.PlanCanje = item.PlanCanje;
+                contrato.Consignatario = item.Consignatario;
+                contrato.DestinoId = item.DestinoId;
+                contrato.LocalidadId = item.LocalidadId;
+                contrato.ProvinciaId = item.ProvinciaId;
+                contrato.ContratoAcuerdoId = item.ContratoAcuerdoId;
+
+                contrato.EstadoId = 9;
+                contrato.AperturaPrecio = new List<AperturaPrecio>();
+                foreach (var ap in acuerdo.AperturaPrecios)
+                {
+                    contrato.AperturaPrecio.Add(new AperturaPrecio
+                    {
+                        ConceptoAperturaPrecioId = ap.ConceptoAperturaPrecioId,
+                        Importe = ap.Importe,
+                        MonedaId = ap.MonedaId,
+                        Porcentaje = ap.Porcentaje
+                    });
+                }
+                contrato.Descuentos = new List<DescuentoBonificacion>();
+                foreach (var d in acuerdo.Descuentos)
+                {
+                    contrato.Descuentos.Add(new DescuentoBonificacion
+                    {
+                        TipoDBId = d.TipoDBId,
+                        TipoPeriodoDBId = d.TipoPeriodoDBId,
+                        Importe = d.Importe,
+                        MonedaId = d.MonedaId,
+                        Porcentaje = d.Porcentaje
+                    });
+                }
+                contrato.Calidad = new List<Calidad>();
+                foreach (var c in acuerdo.Calidades)
+                {
+                    contrato.Calidad.Add(new Calidad
+                    {
+                        CalidadEspecialId = c.CalidadEspecialId,
+                        PorcentajeDesde = c.PorcentajeDesde,
+                        PorcentajeHasta = c.PorcentajeHasta,
+                        StandardDeCalidadId = 2,
+                        Valor = c.Valor,
+                    });
+                }
+                DateTime? nullDate = null;
+                contrato.PrecioPactado = new List<PrecioPactado>();
+                foreach (var p in acuerdo.PreciosPactados)
+                {
+                    contrato.PrecioPactado.Add(new PrecioPactado
+                    {
+                        FechaDesde = string.IsNullOrEmpty(p.FechaDesde) ? nullDate : new DateTime(int.Parse(p.FechaDesde.Split('-')[2]), int.Parse(p.FechaDesde.Split('-')[1]), int.Parse(p.FechaDesde.Split('-')[0])),
+                        FechaHasta = string.IsNullOrEmpty(p.FechaHasta) ? nullDate : new DateTime(int.Parse(p.FechaHasta.Split('-')[2]), int.Parse(p.FechaHasta.Split('-')[1]), int.Parse(p.FechaHasta.Split('-')[0])),
+                        ImportePactado = p.ImportePactado,
+                        MonedaImportePactadoId = p.MonedaImportePactadoId,
+                        MonedaPactadoId = p.MonedaPactadoId,
+                        Porcentaje = p.Porcentaje,
+                        Precio = p.Precio
+                    });
+                }
+
+                contrato.TipoAgenteCompraId = acuerdo.TipoAgenteCompraId;
+                contrato.FechaCierta = acuerdo.FechaCierta;
+                contrato.PorcentajeDePago = 97.5m;
+                contrato.NivelTarifaId = acuerdo.NivelTarifaId;
+                contrato.TarifaFlete = acuerdo.TarifaFlete;
+                contrato.Observacion = acuerdo.Observacion;
+                contrato.TipoNegocioId = acuerdo.Precio > 0 ? 2 : 1;
+                contrato.Precio = acuerdo.Precio;
+                contrato.PrecioNeto = acuerdo.PrecioNeto;
+                contrato.MonedaId = acuerdo.MonedaId;
+                contrato.CantidadCamiones = acuerdo.CantidadCamiones;
+                contrato.Base = acuerdo.Base;
+                contrato.ImporteSustentable = acuerdo.Importe_Sustentable;
+                contrato.MonedaSustentableId = acuerdo.Moneda_Sustentable;
+                contrato.Dolarizado = acuerdo.Dolarizado;
+                contrato.FechaDolarizado = acuerdo.Fecha_Dolarizado;
+                contrato.DiasPesificado = acuerdo.Dias_Pesificado;
+                contrato.PagoDiferido = acuerdo.PagoDiferido;
+                contrato.NoInformaSio = acuerdo.NoInformaSIO;
+                contrato.TrigoEspecial = acuerdo.TrigoEspecial;
+                contrato.CD = acuerdo.CD;
+                contrato.Warrant = acuerdo.Warrant;
+                contrato.ChequeElectronico = acuerdo.ChequeElectronico;
+                contrato.DolarizadoExpress = acuerdo.DolarizadoExpress;
+                contrato.PagoCBU = acuerdo.PagoCBU;
+                contrato.PagoDirectoVendedor = acuerdo.PagoDirectoVendedor;
+                contrato.EstablecimientoPropio = acuerdo.EstablecimientoPropio;
+                contrato.Madre = acuerdo.Madre;
+                contrato.Venta = acuerdo.Venta;
+                contrato.ContratoMadre = acuerdo.ContratoMadre;
+                contrato.SelCargoMOA = acuerdo.SelCargoMOA;
+                contrato.SelCargoVendedor = acuerdo.SelCargoVendedor;
+                contrato.MercsDeposito = acuerdo.MercsDeposito;
+                contrato.StandardDeCalidadId = acuerdo.StandardCalidadId;
+                contrato.ZonaId = acuerdo.ZonaId;
+                contrato.Pizarra = acuerdo.Pizarra == true;
+                contrato.CaratulaMAT = acuerdo.CaratulaMAT;
+                contrato.PrecioAjusteComision = acuerdo.PrecioAjusteComision;
+                contrato.MonedaAjusteComisionId = acuerdo.MonedaAjusteComisionId;
+                contrato.PagoDirectoVendedor = acuerdo.PagoDirectoVendedor;
+
+                contrato.ProveedorCreadorId = acuerdo.CorredorId;
+                contrato.CorredorId = acuerdo.CorredorId;
+                contrato.ComercialCreadorId = null;
+                contrato.UsuarioId = proveedor.RazonSocial;
+                contrato.ComercialId = acuerdo.ComercialId;
+                contrato.ProveedorId = proveedorid;
+                contrato.UsuarioId = proveedor.RazonSocial;
+                contrato.BoletoId = boletobolsa.BoletoCompraNetId ?? 3;
+                contrato.BolsaId = boletobolsa.BolsaCompraNetId;
+                contrato.PorcentajeComision = 1;
+                var existe = repositorio.Existe<Contrato>(a => a.ContratoCorredor == contrato.ContratoCorredor && a.CorredorId == item.CorredorId);
+                if (existe)
+                {
+                    results.Add(new GrabarContratoResult { ContratoId = int.Parse(item.Observacion), Errores = new List<ErrorMessage> { new ErrorMessage { Source = "Contrato Corredor", Message = "El contrato corredor ya existe." } } });
+                }
+                else
+                {
+                    var result = GrabarContrato(contrato);
+                    result.ContratoId = int.Parse(item.Observacion);
+                    results.Add(result);
+
+                }
+            }
+
+
+            return results;
+        }
     }
 }
 

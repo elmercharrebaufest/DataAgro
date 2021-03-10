@@ -107,6 +107,7 @@
     <Compile Include="ConsultasEF\BusquedaDatosAlmacenamiento.cs" />
     <Compile Include="ConsultasEF\BusquedaDatosProduccion.cs" />
     <Compile Include="ConsultasEF\BusquedaLocalidades.cs" />
+    <Compile Include="ConsultasEF\DevolverContratosAcuerdoPorCorredor.cs" />
     <Compile Include="ConsultasEF\EliminarToken.cs" />
     <Compile Include="ConsultasEF\ActualizarComercialHome.cs" />
     <Compile Include="ConsultasEF\DevolverContratosAcuerdo.cs" />

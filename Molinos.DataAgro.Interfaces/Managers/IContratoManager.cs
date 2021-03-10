@@ -73,5 +73,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado AnularContratoCarga(int contratoId, string motivoRechazo);
         List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req);
         string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda);
+        List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId);
+        List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos);
     }
 }

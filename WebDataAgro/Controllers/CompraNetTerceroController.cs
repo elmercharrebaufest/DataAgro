@@ -298,5 +298,14 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        public JsonResult TraerContratosAcuerdoPorCorredor(int corredorId)
+        {
+            return Json(mobjContratoManager.TraerContratosAcuerdoPorCorredor(corredorId), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GrabarContratoMasivo(List<BasicoContrato> contratos) {
+            return Json(mobjContratoManager.GrabarContratoMasivo(contratos), JsonRequestBehavior.AllowGet);
+        }
     }
 }

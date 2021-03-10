@@ -216,5 +216,20 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
         }
+
+        [Test]
+        public void ObtenerContratosAcuerdoPorCorredorTest()
+        {
+            contratoManagerMock.Setup(x => x.TraerContratosAcuerdoPorCorredor(It.IsAny<int>()))
+                .Returns(new List<ContratoCopiar>() { new ContratoCopiar { CantidadD = 1, Comercial = "", ContratoSap = "a", Fecha = "a", Filtro = "a", Id = 1, Material = "a", RazonSocial = "a", tipoNegocio = "a" } });
+            var result = target.TraerContratosAcuerdoPorCorredor(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.TraerContratosAcuerdoPorCorredor(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\",\"CantidadD\":1,\"Cantidad\":\"1\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }
