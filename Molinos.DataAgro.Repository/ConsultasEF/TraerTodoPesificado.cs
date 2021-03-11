@@ -16,7 +16,7 @@ using Molinos.DataAgro.Entities.Seguridad;
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public class TraerTodoPesificado : IConsultaEscalar<DataSourceResult>
-    {       
+    {
         private readonly DataSourceRequest request;
         private readonly List<int> equipo;
 
@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
         private static DataSourceResult Query(DbContext contexto, DataSourceRequest request, List<int> equipo)
         {
-            
+
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var queryRango =
                 from item in contexto.Set<ReportePesificado>()
@@ -53,8 +53,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FechaHastaDolarizado = item.FechaHastaDolarizado != null ? DbFunctions.TruncateTime(item.FechaHastaDolarizado) : (DateTime?)null,
                     FechaUltimaAplicacion = item.FechaUltimaAplicacion != null ? DbFunctions.TruncateTime(item.FechaUltimaAplicacion) : (DateTime?)null,
                     Fijacion = item.Fijacion,
-                    KgNoPesificable = item.KgNoPesificable,
-                    KgVencimientoPesificable = item.KgVencimientoPesificable,
+                    KgNoPesificable = item.KgVencimientoPesificable < 0 ? (item.KgNoPesificable + item.KgVencimientoPesificable) : item.KgNoPesificable,
+                    KgVencimientoPesificable = item.KgVencimientoPesificable < 0 ? 0 : item.KgVencimientoPesificable,
                     KgTotales = item.KgNoPesificable + item.KgVencimientoPesificable,
                     Unidad = item.Unidad,
                     Precio = item.Precio,

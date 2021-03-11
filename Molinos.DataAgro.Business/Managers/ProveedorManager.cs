@@ -1556,6 +1556,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("UpdateProveedor: " + ex);
                 resultado.Error("", ex.Message);
                 return resultado;
             }
@@ -1747,6 +1748,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error(" UpdateDatosBasicosProveedor: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
@@ -1783,6 +1785,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error( "UpdateDatosContacto: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
@@ -1822,6 +1825,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("UpdateCanalOperacion: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
@@ -1860,6 +1864,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("UpdateDestinatario: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
@@ -1902,6 +1907,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("UpdateCondicion: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
@@ -2102,6 +2108,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("UpdateContactoComerciales: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
@@ -2298,6 +2305,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("UpdateProduccion: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
@@ -2517,6 +2525,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("UpdateAlmacenamiento: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
@@ -2604,6 +2613,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception ex)
             {
+                logger.Error("UpdateEstablecimiento: " + ex);
                 resultado.Error("", ex.Message);
             }
             return resultado;
