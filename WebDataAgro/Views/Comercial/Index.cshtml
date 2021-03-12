@@ -8,7 +8,17 @@
 <link href="~/Content/compraNet.css" rel="stylesheet" />
 <link href="~/Content/rol.css" rel="stylesheet" />
 
+<style>
+    .k-tooltip {
+        background: black !important;
+        border-color: black !important;
+        color: white !important;
+    }
 
+    .k-callout-s {
+        border-top-color: black;
+    }
+</style>
 
 <h3>ABM de Usuarios</h3>
 <br />
@@ -106,7 +116,7 @@
                         <label>Deshabilitado</label>
                     </div>
                     <div class="col-md-4">
-                        <input id="Deshabilitado" type="checkbox" data-bind="checked: Comercial.Deshabilitado, disabled: isControlDisabled"  />
+                        <input id="Deshabilitado" type="checkbox" data-bind="checked: Comercial.Deshabilitado, disabled: isControlDisabled" />
                         <img id="errDeshabilitado" src="~/Content/Images/error.png" style="display:none" />
 
                     </div>
@@ -114,18 +124,18 @@
                 </div>
 
                 <!--
-    <div class="row">
-        <div class="col-md-2">
-            <label>Grupo de Compras</label>
-        </div>
-        <div class="col-md-4">
-            <select id="GrupoDeCompras" data-bind="source: GrupoDeComprasCombo, value: Comercial.GrupoDeCompras, disabled: isControlDisabled"  style="max-width:310px"></select>
-            <img id="errGrupoDeCompras" src="~/Content/Images/error.png" style="display:none" />
-        </div>
-        <div class="col-md-6">
-        </div>
-    </div>
-    -->
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Grupo de Compras</label>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="GrupoDeCompras" data-bind="source: GrupoDeComprasCombo, value: Comercial.GrupoDeCompras, disabled: isControlDisabled"  style="max-width:310px"></select>
+                        <img id="errGrupoDeCompras" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                -->
                 <div class="row">
                     <div class="col-md-2">
                         <label>Rol</label>

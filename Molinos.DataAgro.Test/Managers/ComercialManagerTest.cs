@@ -65,6 +65,10 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerComerciales>()))
                 .Returns(new List<ComercialIni>() { new ComercialIni { ComercialId = 1, Apellido = "a", Nombres = "a", PerDescripcion = "2" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, ComercialCombo>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<ComercialCombo>());
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, ComercialQry>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<ComercialQry>());
             var resultado = target.TraerTodoComercial();
 
             repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerComerciales>()), Times.Once);

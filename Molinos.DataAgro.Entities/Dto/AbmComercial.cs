@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Deshabilitado { get; set; }
         public DateTime? FechaDeshabilitado { get; set; }
         public string IdActiveDirectory { get; set; }
+        public List<ComercialCombo> Equipo { get; set; }
     }
 
 }

@@ -61,9 +61,15 @@ namespace Molinos.DataAgro.Business
 
         public ResultIniComercial TraerTodoComercial()
         {
+            var result = repositorio.ObtenerConsultaEscalar(new TraerComerciales()).ToList();
+            foreach (var item in result)
+            {
+                var equipo = ListarEquipo(item.IdActiveDirectory).Equipo;
+                item.Equipo = repositorio.Listar<Comercial, ComercialCombo>(a => new ComercialCombo { ComercialId = a.ComercialId, Apellido = a.Apellido + " " + a.Nombres }, a => equipo.Contains(a.ComercialId)).ToList();
+            }
             return new ResultIniComercial
             {
-                Comercial = repositorio.ObtenerConsultaEscalar(new TraerComerciales()).ToList()
+                Comercial = result
             };
         }
 

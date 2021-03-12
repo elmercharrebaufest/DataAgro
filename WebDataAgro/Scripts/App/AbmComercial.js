@@ -131,8 +131,9 @@ function CreateGridCentro() {
         columns: [
             { field: "Apellido", title: "Apellido" },
             { field: "Nombres", title: "Nombres" },
-            { field: "Rol", title: "Roles" },
+            { field: "Rol", title: "Roles", attributes: { style: 'white-space: nowrap ' }},
             { field: "Deshabilitado", title: "Deshabilitado", template: "#if(Deshabilitado){#Si (#=kendo.toString(kendo.parseDate(FechaDeshabilitado, 'yyyy-MM-dd hh:mm:sss'), 'MM/dd/yyyy HH:mm:ss')#) #}else{}# " },
+            { filed: "Equipo", title: "Equipo", template: "#= Equipo.map(a => a.Apellido).join(', ') #"}
         ],
 
         sortable: true,
@@ -177,6 +178,52 @@ function CreateGridCentro() {
             }
         }
     });
+    $("#gridIniComercial").data("kendoGrid").hideColumn(4);
+    $("#gridIniComercial").kendoTooltip({
+        filter: "td:nth-child(3)",
+        position: "top",
+        content: function (e) {
+            var dataItem = $("#gridIniComercial").data("kendoGrid").dataItem(e.target.closest("tr"));
+            var content = dataItem.Rol;
+
+            if (content.length > 30) {
+                return content;
+            } else {
+                return "";
+            }
+        },
+        show: function (e) {
+            if (this.content.text() != "") {
+                $('[role="tooltip"]').css("visibility", "visible");
+            }
+        },
+        hide: function () {
+            $('[role="tooltip"]').css("visibility", "hidden");
+        }
+    }).data("kendoTooltip");
+
+    $("#gridIniComercial").kendoTooltip({
+        filter: "td:nth-child(5)",
+        position: "top",
+        content: function (e) {
+            var dataItem = $("#gridIniComercial").data("kendoGrid").dataItem(e.target.closest("tr"));
+            var content = dataItem.Equipo.map(a => a.Apellido);
+            content = content.join(', ');
+            if (content.length > 30) {
+                return content;
+            } else {
+                return "";
+            }
+        },
+        show: function (e) {
+            if (this.content.text() != "") {
+                $('[role="tooltip"]').css("visibility", "visible");
+            }
+        },
+        hide: function () {
+            $('[role="tooltip"]').css("visibility", "hidden");
+        }
+    }).data("kendoTooltip");
 }
 
 function onChangeGridInicial() {
