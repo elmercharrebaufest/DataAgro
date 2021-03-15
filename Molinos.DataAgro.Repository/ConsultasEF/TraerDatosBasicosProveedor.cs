@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var estadosDisponibles = contexto.Set<ProveedorEstado>().Where(x => x.Proveedor.ProveedorId == proveedorId && equipo.Contains(x.Comercial.ComercialId)).Select(x => x.Estado.EstadoId).ToList();
-            var estado = estadosDisponibles.Contains(4) ? 4 : estadosDisponibles.Contains(5) ? 5 : estadosDisponibles.Contains(1) ? 1 : estadosDisponibles.Contains(2) ? 2 : estadosDisponibles.Contains(3) ? 3 : 0;
+            var estado = estadosDisponibles.Contains(2) ? 2 : estadosDisponibles.Contains(3) ? 3 : estadosDisponibles.Contains(4) ? 4 : estadosDisponibles.Contains(5) ? 5 : estadosDisponibles.Contains(1) ? 1 : 0;
             var resultado =
                 from prove in contexto.Set<Proveedor>()
                 join est in contexto.Set<Estado>() on (estado == 0 ? prove.Estado.EstadoId : estado) equals est.EstadoId into ests
