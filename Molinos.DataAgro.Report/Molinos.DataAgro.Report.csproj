@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="ActiveReport\RemoveCopyrigthHelper.cs" />
     <Compile Include="Clases\LstAgendaActividad.cs" />
+    <Compile Include="Clases\LstCamposSustentables.cs" />
     <Compile Include="Clases\LstFormularioAltaNoGranos.cs" />
     <Compile Include="Clases\LstCartaDePresentacion.cs" />
     <Compile Include="Clases\LstLogDataAgro.cs" />
@@ -126,6 +127,12 @@
     </Compile>
     <Compile Include="Reportes\RptAgendaActividad.Designer.cs">
       <DependentUpon>RptAgendaActividad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\RptCamposSustentables.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\RptCamposSustentables.Designer.cs">
+      <DependentUpon>RptCamposSustentables.cs</DependentUpon>
     </Compile>
     <Compile Include="Reportes\RptContacto.cs">
       <SubType>Component</SubType>
@@ -150,6 +157,12 @@
     </Compile>
     <Compile Include="Reportes\RptInformeComercial.Designer.cs">
       <DependentUpon>RptInformeComercial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reportes\SubRptCamposSustentables.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reportes\SubRptCamposSustentables.Designer.cs">
+      <DependentUpon>SubRptCamposSustentables.cs</DependentUpon>
     </Compile>
     <Compile Include="Reportes\SubRptFirma.cs">
       <SubType>Component</SubType>
@@ -226,6 +239,10 @@
     <EmbeddedResource Include="Reportes\RptAgendaActividad.resx">
       <DependentUpon>RptAgendaActividad.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\RptCamposSustentables.resx">
+      <DependentUpon>RptCamposSustentables.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reportes\RptContacto.resx">
       <DependentUpon>RptContacto.cs</DependentUpon>
     </EmbeddedResource>
@@ -238,6 +255,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\RptInformeComercial.resx">
       <DependentUpon>RptInformeComercial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reportes\SubRptCamposSustentables.resx">
+      <DependentUpon>SubRptCamposSustentables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reportes\SubRptFirma.resx">
       <DependentUpon>SubRptFirma.cs</DependentUpon>
