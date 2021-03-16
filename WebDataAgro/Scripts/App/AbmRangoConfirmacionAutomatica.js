@@ -156,9 +156,10 @@ function InicializarElementos() {
 
     var hoy = new Date();
     var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
-    $("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + "00:00");
+    var stringHora = hoy.getHours() + ":" + hoy.getMinutes();
+    $("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + stringHora);
     $("#FechaHasta").data("kendoDateTimePicker").value(stringDia + " " + "23:59");
-    $("#cantidad").data("kendoNumericTextBox").value("20000");
+    //$("#cantidad").data("kendoNumericTextBox").value("20000");
     $("#hastaAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
     $("#desdeAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
 }
@@ -293,7 +294,8 @@ function AsignarBotones() {
         Agregar();
         var hoy = new Date();
         var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
-        $("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + "00:00");
+        var stringHora = hoy.getHours() + ":" + hoy.getMinutes();
+        $("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + stringHora);
         $("#FechaHasta").data("kendoDateTimePicker").value(stringDia + " " + "23:59");
         $("#cantidad").data("kendoNumericTextBox").value("20000");
         $("#hastaAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
