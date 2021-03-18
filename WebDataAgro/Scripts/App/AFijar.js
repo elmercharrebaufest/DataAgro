@@ -3714,7 +3714,7 @@ function CargarDatosEditar(contrato, hijo) {
     if (!hijo) {
         //$("#fechaOperacionId").val(FormatearFecha(formatearFecha(contrato.FechaFormateado)));
         $("#tipoId").data("kendoDropDownList").value(contrato.TipoNegocioId);
-        $("#tipoId").data("kendoDropDownList").trigger("change");
+        //$("#tipoId").data("kendoDropDownList").trigger("change");
         if (contrato.TipoNegocioId == 1 || contrato.TipoNegocioId == 6) {
             if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
                 $("#fechaDesdeTopeId").val(FormatearFecha(formatearFecha(contrato.DesdeFijacionFormateado)));
