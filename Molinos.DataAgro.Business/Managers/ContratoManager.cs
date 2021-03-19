@@ -856,24 +856,24 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                         }
                     }
-                    var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
-                    if (!string.IsNullOrEmpty(cosecha) && oParam.FechaDesde != null && oParam.FechaHasta != null)
-                    {
-                        var anios = cosecha.Split('-');
-                        var anioInicial = "20" + anios[0];
-                        var anioFinal = "20" + anios[1];
+                    //var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
+                    //if (!string.IsNullOrEmpty(cosecha) && oParam.FechaDesde != null && oParam.FechaHasta != null)
+                    //{
+                    //    var anios = cosecha.Split('-');
+                    //    var anioInicial = "20" + anios[0];
+                    //    var anioFinal = "20" + anios[1];
 
-                        var campaniaDesde = new DateTime(int.Parse(anioInicial), 01, 01);
-                        var campaniaHasta = new DateTime(int.Parse(anioFinal), 12, 31);
-                        var fechaDesde = oParam.FechaDesde;
-                        var fechaHasta = oParam.FechaHasta;
+                    //    var campaniaDesde = new DateTime(int.Parse(anioInicial), 01, 01);
+                    //    var campaniaHasta = new DateTime(int.Parse(anioFinal), 12, 31);
+                    //    var fechaDesde = oParam.FechaDesde;
+                    //    var fechaHasta = oParam.FechaHasta;
 
-                        if (fechaDesde < campaniaDesde || fechaHasta > campaniaHasta)
-                        {
-                            oErrorMessages.Error("MotivoOperacionAnterior", " La campaña esta fuera de rango");
+                    //    if (fechaDesde < campaniaDesde || fechaHasta > campaniaHasta)
+                    //    {
+                    //        oErrorMessages.Error("MotivoOperacionAnterior", " La campaña esta fuera de rango");
 
-                        }
-                    }
+                    //    }
+                    //}
                     //DateTime fecha = repositorio.Listar<Contrato>(d => oParam.Id == d.Id ).Select(d => d.Fecha).Single();
                     //if (oParam.FechaOperacion.Date < fecha.Date && oParam.Id != 0)
                     //{
@@ -4308,10 +4308,10 @@ namespace Molinos.DataAgro.Business.Managers
             bc.TipoAgenteCompraId = (negocio is Contrato) ? (negocio as Contrato).TipoAgenteCompraId : (negocio is ContratoAcuerdo) ? (negocio as ContratoAcuerdo).TipoAgenteCompraId : (int?)null;
             bc.PrestamoDevolucion = negocio.PrestamoDevolucion.HasValue ? negocio.PrestamoDevolucion.Value : false;
             bc.PlantaDestinoId = negocio.PlantaDestinoId.HasValue ? negocio.PlantaDestinoId.Value : 0;
-            bc.FechaHasta_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaHastaSustentable == null ? "" 
-                : (negocio as Contrato).FechaHastaSustentable.Value.ToString("dd-MM-yyyy");
-            bc.FechaDesde_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaHastaSustentable == null ? ""
-               : (negocio as Contrato).FechaDesdeSustentable.Value.ToString("dd-MM-yyyy");
+            bc.FechaHasta_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaHastaSustentable != null ?
+                (negocio as Contrato).FechaHastaSustentable.Value.ToString("dd-MM-yyyy") : "";
+            bc.FechaDesde_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaDesdeSustentable != null ?
+                (negocio as Contrato).FechaDesdeSustentable.Value.ToString("dd-MM-yyyy") : "";
             return bc;
         }
 
