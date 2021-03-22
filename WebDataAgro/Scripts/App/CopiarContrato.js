@@ -214,14 +214,7 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     } else {
         $("#baseId").prop("checked", false);
     }
-
-    if (contrato.Importe_Sustentable !== null && contrato.Importe_Sustentable !== undefined && contrato.Importe_Sustentable !== 0) {
-        $("#sustentablePrecioId").data("kendoNumericTextBox").value(contrato.Importe_Sustentable);
-        $("#sustentableMonedaId").data("kendoDropDownList").value(contrato.Moneda_Sustentable);
-        $("#sustentableId").prop("checked", true);
-        $(".sustentableDiv").show();
-    }
-
+        
     if (contrato.Fecha_DolarizadoFormateado !== null && contrato.Fecha_DolarizadoFormateado !== undefined && contrato.Fecha_DolarizadoFormateado !== "") {
         $("#dolarizadoId").prop("checked", true);
         $("#dolarizadoDiv").show();
@@ -353,6 +346,18 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     });
     if ($("#contratoAcuerdoId").val() != "") {
         $("#precioId").data("kendoNumericTextBox").enable(false);
+    }
+
+    if (contrato.Importe_Sustentable !== null && contrato.Importe_Sustentable !== undefined && contrato.Importe_Sustentable !== 0) {
+        $("#sustentablePrecioId").data("kendoNumericTextBox").value(contrato.Importe_Sustentable);
+        $("#sustentableMonedaId").data("kendoDropDownList").value(contrato.Moneda_Sustentable);
+        $("#sustentableId").prop("checked", true);
+        $(".sustentableDiv").show();
+        if (contrato.MercsDeposito == true) {
+            $(".fechaHastaSustentableDiv").show();
+            $("#fechaDesdeSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaDesde_SustentableFormateado)));
+            $("#fechaHastaSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaHasta_SustentableFormateado)));
+        }
     }
 }
 
@@ -729,3 +734,54 @@ function DatosProveedor() {
 }
 
 
+function MostrarCcPpPendientesAplicar() {
+    if ($("#mercsDepositoId").is(":checked") && $("#sustentableId").is(":checked")) {
+        $(".fechaHastaSustentableDiv").show();
+        var cuitP = "";
+        var cuitC = "";
+
+        var cuitProv = $("#buscadorProveedor").val().split('(');
+        if (cuitProv[1] != null) {
+            cuitP = cuitProv[1].split(')')[0];
+        }
+        else {
+            cuitP = cuitProv[0];
+        }
+        var cuitCorr = $("#buscadorCorredor").val().split('(');
+        if (cuitCorr[1] != null) {
+            cuitC = cuitCorr[1].split(')')[0];
+        }
+        else {
+            cuitC = cuitCorr[0];
+        }
+
+        var lista = MSExecuteOnServer('/CompraNet/ListarCartasDePortePendienteAplicar',
+            {
+                AgenteCompra: $("#AgenteCompraId").val(),
+                Proveedor: cuitP,
+                Corredor: cuitC,
+                Centro: $("#destinoId").val(),
+                Material: $('#material').data("kendoDropDownList").value()
+            });
+        if (lista == null || lista.length == 0) {
+            $("#mercsDepositoId").prop("checked", false);
+            $(".fechaHastaSustentableDiv").hide();
+            $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
+            $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
+            MensInfo("No hay cartas de porte pendientes de aplicar");
+        } else {
+            $("#fechaDesdeSustentableId").val(lista[0].FechaIngreso);
+            $("#fechaHastaSustentableId").val($("#fechaHastaId").val());
+
+        }
+        //var viewmodel = {
+        //    CcPpPendientes: lista
+        //}
+        //kendo.bind($("#modalCcPpPendienteAplicar"), viewmodel);
+        //$("#modalCcPpPendienteAplicar").modal("show");
+    } else {
+        $(".fechaHastaSustentableDiv").hide();
+        $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
+        $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
+    }
+}

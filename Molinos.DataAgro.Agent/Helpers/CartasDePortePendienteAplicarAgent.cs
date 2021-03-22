@@ -8,6 +8,7 @@ using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 
 namespace Molinos.DataAgro.Agent
@@ -27,22 +28,50 @@ namespace Molinos.DataAgro.Agent
         private string ObtenerCodigoProveedor(string cuit, bool esCorredor = false)
         {
             var prefix = esCorredor ? "C" : "00";
-            
+
             return prefix + cuit.Remove(cuit.Length - 1).Remove(0, 2);
         }
         public List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
+                if (req.Proveedor == "20043159381")
+                {
+                    return new List<CcPpPerndienteAplicarDto>();
+                }
                 return new List<CcPpPerndienteAplicarDto>() { new CcPpPerndienteAplicarDto() {
                     AgenteCompra = "Agente compra",
                     Cantidad = 10,
-                    CartasPorte = "Carta de porte",
+                    CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
-                    FechaIngreso = "10/02/2021",
-                    FechaNeto = "12/01/2021"
-                } };
+                    FechaIngreso = "2020-08-08",
+                    FechaNeto = "2020-08-08",
+                    FechaIngresoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaNetoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                },
+                new CcPpPerndienteAplicarDto() {
+                    AgenteCompra = "Agente compra",
+                    Cantidad = 10,
+                    CartasPorte = "000585221852",
+                    Centro = "centro",
+                    Corredor = "corredor",
+                    FechaIngreso = "2020-06-06",
+                    FechaNeto = "2020-06-06",
+                    FechaIngresoFecha = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaNetoFecha = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                },
+                new CcPpPerndienteAplicarDto() {
+                    AgenteCompra = "Agente compra",
+                    Cantidad = 10,
+                    CartasPorte = "000585221852",
+                    Centro = "centro",
+                    Corredor = "corredor",
+                    FechaIngreso = "2020-07-07",
+                    FechaNeto = "2020-07-07",
+                    FechaIngresoFecha = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaNetoFecha = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                } }.OrderBy(a => a.FechaIngresoFecha).ToList(); 
             }
             else
             {
@@ -71,11 +100,15 @@ namespace Molinos.DataAgro.Agent
                             AgenteCompra = item.AGENTE_COMPRA,
                             Cantidad = item.CANTIDAD,
                             CartasPorte = item.CCPP,
-                            Centro = item.CENTRO,
+                            Centro = centro.Descripcion,
                             Corredor = item.CORREDOR,
                             FechaIngreso = item.FECHA_INGRESO,
-                            FechaNeto = item.FECHA_NETO
-                        }).ToList();
+                            FechaNeto = item.FECHA_NETO,
+                            Material = material.Descripcion,
+                            Proveedor = item.PROVEEDOR,
+                            FechaIngresoFecha = DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                            FechaNetoFecha = DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                        }).OrderBy(a => a.FechaIngresoFecha).ToList();
 
                     return listaccpp;
                 }

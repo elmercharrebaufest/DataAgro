@@ -3513,6 +3513,11 @@ function CargarDatosEditar(contrato, hijo) {
         $("#sustentableMonedaId").data("kendoDropDownList").value(contrato.Moneda_Sustentable);
         $("#sustentableId").prop("checked", true);
         $(".sustentableDiv").show();
+        if (contrato.MercsDeposito == true) {
+            $(".fechaHastaSustentableDiv").show();
+            $("#fechaDesdeSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaDesde_SustentableFormateado)));
+            $("#fechaHastaSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaHasta_SustentableFormateado)));
+        }
     }
 
     if (contrato.Dolarizado) {
@@ -4691,46 +4696,6 @@ function HayVenta() {
 
 }
 
-function MostrarCcPpPendientesAplicar() {
-    if ($("#mercsDepositoId").is(":checked") && $("#sustentableId").is(":checked")) {
-        $(".fechaHastaSustentableDiv").show();
-        var cuitP = "";
-        var cuitC = "";
-
-        var cuitProv = $("#buscadorProveedor").val().split('(');
-        if (cuitProv[1] != null) {
-            cuitP = cuitProv[1].split(')')[0];
-        }
-        else {
-            cuitP = cuitProv[0];
-        }
-        var cuitCorr = $("#buscadorCorredor").val().split('(');
-        if (cuitCorr[1] != null) {
-            cuitC = cuitCorr[1].split(')')[0];
-        }
-        else {
-            cuitC = cuitCorr[0];
-        }
-
-        var lista = MSExecuteOnServer('/CompraNet/ListarCartasDePortePendienteAplicar',
-            {
-                AgenteCompra: $("#AgenteCompraId").val(),
-                Proveedor: cuitP,
-                Corredor: cuitC,
-                Centro: $("#destinoId").val(),
-                Material: $('#material').data("kendoDropDownList").value()
-            });
-        var viewmodel = {
-            CcPpPendientes: lista
-        }
-        kendo.bind($("#modalCcPpPendienteAplicar"), viewmodel);
-        $("#modalCcPpPendienteAplicar").modal("show");
-    } else {
-        $(".fechaHastaSustentableDiv").hide();
-        $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
-        $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
-    }
-}
 
 
 function validarCredito(cuitProv) {

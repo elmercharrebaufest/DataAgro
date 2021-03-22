@@ -2100,12 +2100,14 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
     sustentablePrecio !== "null" && sustentableMonedaId !== "null" ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
 
-    if (fechaDesdeSustentable != null && fechaHastaSustentable != null) {
+    if (fechaDesdeSustentable != null && fechaHastaSustentable != null && fechaDesdeSustentable != "//" && fechaHastaSustentable != "//") {
         $("#visualizar_sustentableDesde").text(fechaDesdeSustentable);
         $("#visualizar_sustentableHasta").text(fechaHastaSustentable);
         $("#sustentableDivVisualizarHasta").show();
         $("#sustentableDivVisualizarDesde").show();
-        
+    } else {
+        $("#sustentableDivVisualizarHasta").hide();
+        $("#sustentableDivVisualizarDesde").hide();
     }
     $("#visualizar_dolarizadoFecha").text(dolarizadoFecha);
     if (dolarizadoFecha != "") {

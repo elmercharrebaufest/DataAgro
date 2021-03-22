@@ -68,8 +68,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         TIPO_PERIODO = "I",
                         TIPO_DB = "B",
-                        FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : null,
-                        FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : null,
+                        FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
+                        FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
                         IMPORTE_DB = contrato.ImporteSustentable.Value,
                         MONEDA_DB = contrato.MonedaSustentableId,
                         PORC_DB = 0
@@ -253,13 +253,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                         repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
                         ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
                         DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
-                        CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",                         
+                        CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
                         PLANTA_DEST = contrato.PlantaDestino != null ? contrato.PlantaDestino.CodigoSap : contrato.Destino.CodigoSap,
                         CANJE = contrato.Canje == true ? "X" : "",
                         DESC_INSUMOS = contrato.Insumo,
                         MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
-                        MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0,  
-                          
+                        MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0,
+
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
@@ -269,7 +269,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),
                     IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" :
-                    contrato.EsFason == true ? "FASON": contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" :
+                    contrato.EsFason == true ? "FASON" : contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" :
                     contrato.Venta == true ? "VENTA" : contrato.TipoNegocio.Descripcion,
                     IM_APERTURA = listaApertura.ToArray()
                 };

@@ -671,18 +671,21 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
                 }
-                if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
+                if (oParam.MercsDeposito == true)
                 {
-                    oErrorMessages.Error("Sustentable", "Debe indicar fecha desde de sustentable");
-                }
-                if (!oParam.FechaHastaSustentable.HasValue || oParam.FechaHastaSustentable.Value == null)
-                {
-                    oErrorMessages.Error("Sustentable", "Debe indicar fecha hasta de sustentable");
-                }
-                if (oParam.FechaDesdeSustentable.HasValue && oParam.FechaHastaSustentable.HasValue
-                    && oParam.FechaHastaSustentable.Value < oParam.FechaDesdeSustentable.Value)
-                {
-                    oErrorMessages.Error("Sustentable", "Debe indicar rango de fechas válido de sustentable");
+                    if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
+                    {
+                        oErrorMessages.Error("Sustentable", "Debe indicar fecha desde de sustentable");
+                    }
+                    if (!oParam.FechaHastaSustentable.HasValue || oParam.FechaHastaSustentable.Value == null)
+                    {
+                        oErrorMessages.Error("Sustentable", "Debe indicar fecha hasta de sustentable");
+                    }
+                    if (oParam.FechaDesdeSustentable.HasValue && oParam.FechaHastaSustentable.HasValue
+                        && oParam.FechaHastaSustentable.Value < oParam.FechaDesdeSustentable.Value)
+                    {
+                        oErrorMessages.Error("Sustentable", "Debe indicar rango de fechas válido de sustentable");
+                    }
                 }
             }
             if (oParam.FechaDolarizado != null)
@@ -2267,7 +2270,15 @@ namespace Molinos.DataAgro.Business.Managers
                 PlantaDestinoId = x.PlantaDestinoId.HasValue ? x.PlantaDestinoId.Value : 0,
                 PlantaDestinoDescripcion = !x.PlantaDestinoId.HasValue ? "" : x.Destino.Descripcion,
                 SustentableTercero = x.SustentableTercero,
-                Venta = x.Venta
+                Venta = x.Venta,
+                FechaDesde_Sustentable = x.FechaDesdeSustentable,
+                FechaDesde_SustentableFormateado = x.FechaDesdeSustentable != null ? SqlFunctions.DateName("day", x.FechaDesdeSustentable).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaDesdeSustentable.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaDesdeSustentable) : "",
+                FechaHasta_Sustentable = x.FechaHastaSustentable,
+                FechaHasta_SustentableFormateado = x.FechaHastaSustentable != null ? SqlFunctions.DateName("day", x.FechaHastaSustentable).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.FechaHastaSustentable.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.FechaHastaSustentable) : "",
 
             });
             return contrato;
