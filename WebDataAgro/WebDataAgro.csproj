@@ -407,6 +407,9 @@
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
     <Content Include="Content\diffPlex.css" />
+    <Content Include="Content\Images\logo-sharepoint.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\logDataAgro.css" />
     <Content Include="Content\ReporteEvolucionFijacion.css" />
     <Content Include="Content\Sugerencia.css" />
