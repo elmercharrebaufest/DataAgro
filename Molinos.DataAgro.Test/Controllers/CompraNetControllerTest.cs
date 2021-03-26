@@ -113,7 +113,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             compranetManagerMock.Verify(x => x.TraerDatosIniciales(It.IsAny<List<int>>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Proveedor\":null,\"Comercial\":null,\"Material\":null,\"Campaña\":null,\"Provincia\":null,\"Localidad\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Proveedor\":null,\"Comercial\":null,\"Material\":null,\"Campaña\":null,\"Provincia\":null,\"Localidad\":null,\"MotivoAnterior\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -127,7 +127,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int?>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"localidad\":null,\"moneda\":[],\"tiponegocio\":[],\"material\":[],\"prov\":[],\"loc\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"localidad\":null,\"moneda\":[],\"tiponegocio\":[],\"material\":[],\"prov\":[],\"loc\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[],\"MotivoAnterior\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

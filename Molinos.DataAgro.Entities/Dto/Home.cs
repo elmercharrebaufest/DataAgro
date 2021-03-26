@@ -196,4 +196,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion { get; set; }
         public string CodigoSap { get; set; }
     }
+    public class MotivoAnteriorQry
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
+    }
 }

@@ -1005,6 +1005,22 @@ function InicializarElementos() {
         }
     });
 
+    $("#motivoAnterior").kendoDropDownList({
+        optionLabel: "SELECCIONE UN MOTIVO...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id",
+        change: function () {
+            if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro") {
+                $("#motivoTexto").show();
+                $("#motivoOperacionAnteriorId").val("");
+            } else {
+                $("#motivoTexto").hide();
+            }
+        },
+        select: function () {
+
+        }
+    });
     //$("#precioMonedaId").kendoDropDownList({
     //    optionLabel: "MONEDA...",
     //    dataTextField: "Descripcion",
@@ -2812,6 +2828,7 @@ function CrearViewModel() {
 function AsignarDatos() {
     viewModel.set("ComercialCombo", datosIniCrearContrato.Datos.comercial);
     viewModel.set("MaterialCombo", datosIniCrearContrato.Datos.material);
+    viewModel.set("MotivoAnteriorCombo", datosIniCrearContrato.Datos.MotivoAnterior);
     viewModel.set("TipoCombo", datosIniCrearContrato.Datos.tiponegocio);
     viewModel.set("PrecioMonedaCombo", datosIniCrearContrato.Datos.moneda);
     viewModel.set("ProvinciaCombo", datosIniCrearContrato.Datos.prov);
@@ -2859,7 +2876,7 @@ function AsignarDatos() {
     viewModel.set("BolsaComboModalPendiente", datosIniCrearContrato.Datos.Bolsa);
     viewModel.set("CondicionFijacionComboModalPendiente", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardComboModalPendiente", datosIniCrearContrato.Datos.Standard);
-
+    viewModel.set("MotivoComboModalPendiente", datosIniCrearContrato.Datos.MotivoAnterior);
     viewModel.set("isControlDisabled", false);
 
     if ($("#tipoId").data("kendoDropDownList")) $("#tipoId").data("kendoDropDownList").value("1");
@@ -3318,7 +3335,17 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
         if (contrato.TipoNegocioId != 3) {
-            $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
+            var listMotivos = $("#motivoAnterior").data("kendoDropDownList").dataSource.data().filter(function (x) { return x.Descripcion == contrato.MotivoOperacionAnterior });
+            if (listMotivos != null && listMotivos.length > 0) {
+                $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
+                $("#motivoAnterior").data("kendoDropDownList").value(listMotivos[0].Id);
+                $("#motivoAnterior").data("kendoDropDownList").trigger("change");
+
+            } else {
+                $("#motivoAnterior").data("kendoDropDownList").text("Otro");
+                $("#motivoAnterior").data("kendoDropDownList").trigger("change");
+                $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
+            }     
             $("#fechaOperacionMotivoDiv").show();
             var hoy = new Date();
             var anio = hoy.getFullYear();
@@ -4397,6 +4424,16 @@ function HayCanje() {
         $("#mostrarCanje").show();
         $("#fasonIdCheck").prop("disabled", false);
         $("#madreId").prop("disabled", false);
+        $("#TipoDBId").data("kendoDropDownList").value(1);
+        $("#TipoDBId").data("kendoDropDownList").enable(false);
+        $("#boletoCartaId").prop("checked", false);
+        $("#boletoNingunoId").prop("checked", false);
+        $("#boletoCartaId").prop("disabled", true);
+        $("#boletoNingunoId").prop("disabled", true);
+        $("#BolsaCartaDiv").hide();
+        $("#bolsaCartaId").data("kendoDropDownList").value("");
+        $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
+        
 
     } else {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
@@ -4413,6 +4450,9 @@ function HayCanje() {
         $("#compensacionDiv").show();
         $("#ordenarRow").hide();
         $("#prestamoDevolucionDiv").show();
+        $("#boletoCartaId").prop("disabled", false);
+        $("#boletoNingunoId").prop("disabled", false);
+        $("#TipoDBId").data("kendoDropDownList").enable(true);
     }
 }
 function ocultarSiHayCanje() {
@@ -4429,6 +4469,15 @@ function ocultarSiHayCanje() {
     $("#pagosDiv").hide();
     $("#CDId").prop("checked", false);
     $("#WarrantId").prop("checked", false);
+    $("#TipoDBId").data("kendoDropDownList").value(1);
+    $("#TipoDBId").data("kendoDropDownList").enable(false);
+    $("#boletoCartaId").prop("checked", false);
+    $("#boletoNingunoId").prop("checked", false);
+    $("#boletoCartaId").prop("disabled", true);
+    $("#boletoNingunoId").prop("disabled", true);
+    $("#BolsaCartaDiv").hide();
+    $("#bolsaCartaId").data("kendoDropDownList").value("");
+    $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
 }
 function ocultarSiHayPrestamos() {
     $("#mostrarCanje").hide();

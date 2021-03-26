@@ -275,6 +275,12 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         $("#Cesion").val(contrato.Cesion);
         $("#Anticipo").text(contrato.Anticipo);
         $("#ClasificacionContrato").text(contrato.ClasificacionContrato);
+        $("#ImporteAPrecioContrato").val(contrato.ImporteAPrecioContrato);
+        $("#PorcentajeAPrecioContrato").val(contrato.PorcentajeAPrecioContrato);
+        $("#MonedaAPrecioContrato").val(contrato.MonedaAPrecioContrato);
+        $("#ImporteSobrePrecioContrato").val(contrato.ImporteSobrePrecioContrato);
+        $("#PorcentajeSobrePrecioContrato").val(contrato.PorcentajeSobrePrecioContrato);
+        $("#MonedaSobrePrecioContrato").val(contrato.MonedaSobrePrecioContrato);
     }
     $("#contCorredorId").val(contrato.ContratoCorredor);
     $("#contVendedorId").val(contrato.ContratoVendedor);
@@ -579,11 +585,23 @@ function ObtenerDatos(error) {
     }
     if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) {
         obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionId").val();
-        obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
+        if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "") {
+            obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
+        } else {
+            $("#motivoOperacionAnteriorId").val($('#motivoAnterior').data("kendoDropDownList").text());
+            obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
+        }
+      
     }
     if (obj.TipoNegocioId == 3) {
         obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionId").val(); 
-        obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
+
+        if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "") {
+            obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
+        } else {
+            $("#motivoOperacionAnteriorFijacion").val($('#motivoAnterior').data("kendoDropDownList").text());
+            obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
+        }
     }
 
     if (obj.TipoNegocioId == 5) {
@@ -609,6 +627,13 @@ function ObtenerDatos(error) {
     obj.Anticipo = $("#Anticipo").val();
     obj.Cesion = $("#Cesion").val();
     obj.ClasificacionContrato = $("#ClasificacionContrato").val();
+    obj.Clasificacion = $("#ClasificacionContrato").val();
+    obj.ImporteAPrecioContrato = $("#ImporteAPrecioContrato").val();
+    obj.PorcentajeAPrecioContrato = $("#PorcentajeAPrecioContrato").val();
+    obj.MonedaAPrecioContrato = $("#MonedaAPrecioContrato").val();
+    obj.ImporteSobrePrecioContrato = $("#ImporteSobrePrecioContrato").val();
+    obj.PorcentajeSobrePrecioContrato = $("#PorcentajeSobrePrecioContrato").val();
+    obj.MonedaSobrePrecioContrato = $("#MonedaSobrePrecioContrato").val();
     if ($("#ventaId").is(":checked") == true) {
         obj.Venta = true;
     }

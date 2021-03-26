@@ -163,6 +163,23 @@ namespace Molinos.DataAgro.Business
             return null;
         }
 
+        public List<MotivoCombo> GetAbmMotivoCombo()
+        {
+            try
+            {
+                return repositorio.Listar<MotivoAnterior, MotivoCombo>(x => new MotivoCombo()
+                {
+                    MotivoId = x.Id,
+                    Descripcion = x.Descripcion
+                }, null, 0, "Descripcion");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            return null;
+        }
+
         public List<CampaniaCombo> GetAbmCampaniaCombo()
         {
             try

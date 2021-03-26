@@ -29,8 +29,9 @@ namespace Molinos.DataAgro.Business
                 Proveedor = qry.GetProveedorPorComercialCombo(equipo),
                 Comercial = qry.GetComercialCombo(),
                 Material = qry.GetMaterialCombo(),
-                Provincia =  qry.GetProvinciaCombo(),
-                Localidad = qry.GetLocalidadCombo()
+                Provincia = qry.GetProvinciaCombo(),
+                Localidad = qry.GetLocalidadCombo(),
+                MotivoAnterior = qry.GetAbmMotivoCombo()
             };
 
             return oDatosIniciales;

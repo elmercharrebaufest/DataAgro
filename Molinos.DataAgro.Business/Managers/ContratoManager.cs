@@ -200,6 +200,8 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.TipoAgenteCompra = repositorio.Listar<TipoAgenteCompra, TipoAgenteCompraQry>(x => new TipoAgenteCompraQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.Operador = repositorio.Listar<Operador, OperadorQry>(x => new OperadorQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.Zona = repositorio.Listar<Zona, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.MotivoAnterior = repositorio.Listar<MotivoAnterior, MotivoAnteriorQry>(x => new MotivoAnteriorQry() { Id = x.Id, Descripcion = x.Descripcion });
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
             foreach (int estadoValue in estadosValues)
@@ -566,6 +568,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var cantidadAcuerdo = contratoAcuerdoManager.TraerAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
                 var cantidadCargada = repositorio.Listar<Contrato>(d => oParam.Id != d.Id && d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
+                cantidadAcuerdo += config != null ? config.CantidadAcuerdo.Value * 1000 : 0;
                 if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
                 {
                     oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " kg)");
@@ -1632,6 +1635,16 @@ namespace Molinos.DataAgro.Business.Managers
                                 EnviarNotificacion(comercialId, oContratoSave);
                             }
                         }
+
+                        if (oContratoSave.Venta.HasValue && oContratoSave.Venta != false)
+                        {
+                            mobjProveedorManager.EnviarMailVenta(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
+                        }
+                        if (oContratoSave.Canje.HasValue && oContratoSave.Canje != false)
+                        {
+                            mobjProveedorManager.EnviarMailCanje(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
+                        }
+
                     }
                     catch (Exception e)
                     {

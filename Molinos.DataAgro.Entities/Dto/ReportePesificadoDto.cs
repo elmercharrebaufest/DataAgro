@@ -32,6 +32,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? Id { get; set; }
         public int? MaterialId { get; set; }
         public int? ComercialId { get; set; }
+        public bool NingunDolarizado { get; set; }
     }
 
 }

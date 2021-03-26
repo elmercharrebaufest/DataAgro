@@ -10,15 +10,15 @@
 @section Styles {
     <link href="~/Content/ReporteCupo.css" rel="stylesheet" />
 }
-@{  
-    var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);   
-    var anulacion = PermisosHelper.Is(PermisosDataAgro.VisualizarAnulacionEnReporteCupo);   
+@{
+    var externo = PermisosHelper.Is(PermisosDataAgro.IngresoExterno);
+    var anulacion = PermisosHelper.Is(PermisosDataAgro.VisualizarAnulacionEnReporteCupo);
 }
 <script>
-   
+
     externo = '@externo';
     anulacion = '@anulacion';
-    
+
 </script>
 <div class="Titulo">
     <h5>Reporte de Cupos</h5>
@@ -155,17 +155,18 @@
     </div>
     <br />
     @*<div class="row">
-        <div class="col-md-12" style="text-align:right">
-            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
-        </div>
-    </div>*@
+            <div class="col-md-12" style="text-align:right">
+                <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
+            </div>
+        </div>*@
     <div class="row">
         <div class="col-md-8"></div>
-        <div class="col-md-2" style="text-align:right" hidden id="anulacionMasivaDiv">
-            <button type="button" id="anulacionMasiva" class="k-button k-button-icontext sideMargin-15 limpiar" onclick="AnulacionMasiva()">Anulación Masiva</button>
-        </div>        
+
         <div class="col-md-2" style="text-align:right">
             <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 100%" onclick="Filtrar()">Filtrar</button>
+        </div>
+        <div class="col-md-2" style="text-align:right" hidden id="anulacionMasivaDiv">
+            <button type="button" id="anulacionMasiva" class="k-button k-button-icontext sideMargin-15 limpiar" onclick="AnulacionMasiva()">Anulación Masiva</button>
         </div>
     </div>
 
@@ -180,3 +181,36 @@
 
 
 
+<div class="modal fade" id="modalConfirmarAnulacion" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmadoTilde" id="lineModalLabel"></h1>
+                <div class="status confirmado-modal">
+                    <div> Anulación Masiva</div>
+                </div>
+            </div>
+            <div class="modal-body clearfix ">
+                <div class="col-xs-12 noPadding">
+                    <div id="mensajeModalConTilde"></div>
+                    <div class="col-xs-12 noPadding"> Se anularán todos los cupos en la grilla menos los siguientes: </div>
+                    <div class="col-xs-12 noPadding" id="cuposSeleccionados"></div>
+                    <div id="gridNoEliminar"></div>
+                </div>
+            </div>
+            <br />
+            <input type="hidden" id="contratoModalConTilde" />
+            <input type="hidden" id="tipoNegocioModalConTilde" />
+            <div class="modal-footer clearfix ">
+                <div class="col-xs-6 noPaddingLeft">
+                    <span id="idBolsa"></span>
+                    <button type="button" id="finalizarConfirmado" onclick="AnulacionMasivaConfirmacion()" class="k-button k-button-icontext sideMargin-15 limpiar" data-dismiss="modal">Confirmar</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" data-dismiss="modal" class="k-button k-button-icontext sideMargin-15 limpiar">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

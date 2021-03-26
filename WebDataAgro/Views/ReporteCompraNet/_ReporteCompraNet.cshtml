@@ -554,10 +554,10 @@
                                 <td class="@(pondPesos != 0 ? "" : "hide")"> @(mes.PrecioPonderadoPesos.Value.ToString("N0"))</td>
                                 <td class="@(totalDolares != 0 ? "" : "hide")">
                                     <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds(@mes.Anio, '@material.Material.ToUpper()', '@mes.Mes.ToString().ToUpper()', '@String.Join(",", totalMesNeogcioIds)','', 'USDM ')">
-                                        @(mes.KilosDolares.ToString("N0"))
+                                        @(mes.KilosDolares.ToString("N1"))
                                     </a>
                                 </td>
-                                <td class="@(pondDolares != 0 ? "" : "hide")"> @(mes.PrecioPonderadoDolares.Value.ToString("N0"))</td>
+                                <td class="@(pondDolares != 0 ? "" : "hide")"> @(mes.PrecioPonderadoDolares.Value.ToString("N2"))</td>
                                 <td>
                                     <a class="descargarDetallePosicion" data-toggle="tooltip" title="Descargar Excel" href="@Url.Action("DetalleExcel", "ReporteCompraNet", new { material.MaterialId, mes = mesActual, anio = mes.Anio, fechaString = ViewBag.Fecha, fechaHastaString = ViewBag.FechaHasta, centroId = ViewBag.CentroSeleccionado, clasificacion = (material.Material.ToUpper() == "TRIGO CALIDAD" ? 2 : material.Material.ToUpper() == "TRIGO GRADO 2" ? 7 : 3) })">
                                         <span>
@@ -635,7 +635,7 @@
                             </th>
                             <td class="@(totalDolares != 0 ? "" : "hide")">
                                 @(material.PosicionKilos.Count() > 0 && material.PosicionKilos.Sum(x => x.PrecioPonderadoDolares) > 0 && material.PosicionKilos.Where(x => x.PrecioPonderadoDolares > 0).Count() > 0?
-                          (material.PosicionKilos.Sum(x => x.PrecioPonderadoDolares) / material.PosicionKilos.Where(x => x.PrecioPonderadoDolares > 0).Count()).Value.ToString("N0") : "")
+                          (material.PosicionKilos.Sum(x => x.PrecioPonderadoDolares) / material.PosicionKilos.Where(x => x.PrecioPonderadoDolares > 0).Count()).Value.ToString("N2") : "")
                                                     </td>
                             <td></td>
                             <td>

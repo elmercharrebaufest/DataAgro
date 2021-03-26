@@ -202,6 +202,12 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#Anticipo").val(afijar.Anticipo);
         $("#Cesion").val(afijar.Cesion);
         $("#ClasificacionContrato").val(afijar.Clasificacion);
+        $("#ImporteAPrecioContrato").val(afijar.ImporteAPrecio);
+        $("#PorcentajeAPrecioContrato").val(afijar.PorcentajeAPrecio);
+        $("#MonedaAPrecioContrato").val(afijar.MonedaAPrecio);
+        $("#ImporteSobrePrecioContrato").val(afijar.ImporteSobrePrecio);
+        $("#PorcentajeSobrePrecioContrato").val(afijar.PorcentajeSobrePrecio);
+        $("#MonedaSobrePrecioContrato").val(afijar.MonedaSobrePrecio);
     }
 
 }
@@ -1007,6 +1013,23 @@ function InicializarElementos() {
         if (e.keyCode == 46) {
             var dropdownlist = $("#material").data("kendoDropDownList");
             dropdownlist.text("");
+        }
+    });
+
+    $("#motivoAnterior").kendoDropDownList({
+        optionLabel: "SELECCIONE UN MOTIVO...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id",
+        change: function () {
+            if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro") {
+                $("#motivoTexto").show();
+                $("#motivoOperacionAnteriorFijacion").val("");
+            } else {
+                $("#motivoTexto").hide();
+            }
+        },
+        select: function () {
+
         }
     });
 
@@ -2825,6 +2848,7 @@ function AsignarDatos() {
     viewModel.set("ClasificacionCombo", datosIniCrearContrato.Datos.Clasificacion);
     viewModel.set("DestinoCombo", datosIniCrearContrato.Datos.Destino);
     viewModel.set("BolsaCombo", datosIniCrearContrato.Datos.Bolsa);
+    viewModel.set("MotivoAnteriorCombo", datosIniCrearContrato.Datos.MotivoAnterior);
     var bolsaFisico = [];
     for (i = 0; i < datosIniCrearContrato.Datos.Bolsa.length; i++) {
         if (datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Bs As" || datosIniCrearContrato.Datos.Bolsa[i].Descripcion == "Rosario")
@@ -2862,7 +2886,7 @@ function AsignarDatos() {
     viewModel.set("BolsaComboModalPendiente", datosIniCrearContrato.Datos.Bolsa);
     viewModel.set("CondicionFijacionComboModalPendiente", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardComboModalPendiente", datosIniCrearContrato.Datos.Standard);
-
+    viewModel.set("MotivoComboModalPendiente", datosIniCrearContrato.Datos.MotivoAnterior);
     viewModel.set("isControlDisabled", false);
 
     //if ($("#tipoId").data("kendoDropDownList")) $("#tipoId").data("kendoDropDownList").value("3");
@@ -3307,28 +3331,18 @@ function CargarDatosEditar(contrato, hijo) {
 
     }
 
-    if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
-        if (contrato.TipoNegocioId != 3) {
-            $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
-            $("#fechaOperacionMotivoDiv").show();
-            var hoy = new Date();
-            var anio = hoy.getFullYear();
-            var mes = hoy.getMonth();
-            var dia = hoy.getDate();
-            hoy = new Date(anio, mes, dia);
-            var fechaop = new Date(parseInt(contrato.FechaOperacion.substr(6)));
-            const diffTime = Math.abs(hoy - fechaop);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if (fechaop < hoy) {
-                if (Id > 0 && diffDays > 1) {
-                    //$("#noInformaSioId").attr("disabled", true);
-                }
-            }
-        } else {
+    if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {       
+        var listMotivos = $("#motivoAnterior").data("kendoDropDownList").dataSource.data().filter(function (x) { return x.Descripcion == contrato.MotivoOperacionAnterior });
+        if (listMotivos != null && listMotivos.length > 0) {
             $("#motivoOperacionAnteriorFijacion").val(contrato.MotivoOperacionAnterior);
-            $("#fechaFijacionMotivoDiv").show();
-        }
-
+            $("#motivoAnterior").data("kendoDropDownList").value(listMotivos[0].Id);
+            $("#motivoAnterior").data("kendoDropDownList").trigger("change");
+        } else {
+            $("#motivoAnterior").data("kendoDropDownList").text("Otro");
+            $("#motivoAnterior").data("kendoDropDownList").trigger("change");
+            $("#motivoOperacionAnteriorFijacion").val(contrato.MotivoOperacionAnterior);
+        }          
+       $("#fechaFijacionMotivoDiv").show();       
     } else {
         $("#motivoOperacionAnteriorId").val("");
         $("#fechaOperacionMotivoDiv").hide();
@@ -3805,6 +3819,12 @@ function CargarDatosEditar(contrato, hijo) {
         $("#Cesion").val(contrato.Cesion);
         $("#Anticipo").val(contrato.Anticipo);
         $("#ClasificacionContrato").val(contrato.ClasificacionContrato);
+        $("#ImporteAPrecioContrato").val(contrato.ImporteAPrecioContrato);
+        $("#PorcentajeAPrecioContrato").val(contrato.PorcentajeAPrecioContrato);
+        $("#MonedaAPrecioContrato").val(contrato.MonedaAPrecioContrato);
+        $("#ImporteSobrePrecioContrato").val(contrato.ImporteSobrePrecioContrato);
+        $("#PorcentajeSobrePrecioContrato").val(contrato.PorcentajeSobrePrecioContrato);
+        $("#MonedaSobrePrecioContrato").val(contrato.MonedaSobrePrecioContrato);
     }
 
 }

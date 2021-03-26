@@ -302,6 +302,7 @@
     <Build Include="dbo\Tables\ReportePesificado.sql" />
     <Build Include="dbo\Tables\ConfiguracionBolsa.sql" />
     <Build Include="dbo\Tables\HabilitacionPagoDiferido.sql" />
+    <Build Include="dbo\Tables\MotivoAnterior.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

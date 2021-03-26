@@ -27,5 +27,8 @@ namespace WebDataAgro.Models
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_Dias")]
         [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_Dias")]
         public int DiasDiferimiento { get; set; }
+        [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_Cantidad")]
+        [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_Cantidad")]
+        public int CantidadAcuerdo { get; set; }
     }
 }

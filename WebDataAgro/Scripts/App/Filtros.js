@@ -16,6 +16,7 @@ function TraerFiltrosConValores() {
     filtrosBusqContieneTexto(listaFiltros);
     filtrosBusqSelectMultipleTexto(listaFiltros);
     filtrosBusqNumber(listaFiltros);
+    filtrosBusqPesificable(listaFiltros);
 
 
     let filtroPrincipal = (listaFiltros.length == 0) ? null : new FiltroPadre("and", listaFiltros);
@@ -124,6 +125,16 @@ function filtrosBusqBooleano(listaDeFiltros) {
 
             ($('[name=' + filtrosBoleanos[e].name + ']:checked').val() == null) ? null : listaDeFiltros.push(new FiltroHijo(filtrosBoleanos[e].name, JSON.parse($('[name=' + filtrosBoleanos[e].name + ']:checked').val().toLowerCase()), "eq"));
         }
+    });
+}
+
+
+function filtrosBusqPesificable(listaDeFiltros) {
+
+    let filtrosBoleanos = $(".filtroPesificable");
+
+    filtrosBoleanos.each(function (e) {
+        $('[name=' + filtrosBoleanos[e].name + ']:checked').val() == "true" ? listaDeFiltros.push(new FiltroHijo(filtrosBoleanos[e].name, 0, "gt")) : null;
     });
 }
 

@@ -24,6 +24,12 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public string Campaña { get; set; }
     }
+
+    public class MotivoCombo
+    {
+        public int MotivoId { get; set; }
+        public string Descripcion { get; set; }
+    }
     public class NivelTarifaCombo
     {
         public int Id { get; set; }

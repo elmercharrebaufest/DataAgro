@@ -149,11 +149,17 @@
             <div class="col-sm-offset-6 col-sm-1">
                 <label>Motivo</label>
             </div>
-            <div class="col-sm-4">
-                <textarea type="text" class="campo-input-text k-textbox" id="motivoOperacionAnteriorId" rows="3" maxlength="100"></textarea>
+            <div class="col-sm-3">
+                <select id="motivoAnterior" class="" data-bind="source: MotivoAnteriorCombo, value: Parametros.motivoAnterior, disabled: isControlDisabled"></select>
+                <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+            <div class="col-sm-offset-6"></div>
+            <div class="col-sm-4" style="margin-top: 7px" hidden id="motivoTexto">
+                <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="motivoOperacionAnteriorId" rows="3" maxlength="100"></textarea>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-sm-2">
             <label>Tipo</label>
@@ -601,7 +607,7 @@
         <div id="mercsDepositoDiv" class="ampliar noFason noAgente noAcuerdo col-md-5">
             <div class="mercsDepositoDiv">
                 <label id="mercEnDepLabel">Mercs. en dep.</label>
-                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" onclick="HayMercaderia()"/>
+                <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" onclick="HayMercaderia()" />
                 <img id="errmercsDepositoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
@@ -659,7 +665,7 @@
             <div id="ordenarRow" class="col-sm-2" hidden></div>
             <div class="col-sm-2" id="divSojaSustentable">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
-                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()"/>
+                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()" />
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-4 col-md-2">

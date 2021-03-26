@@ -34,6 +34,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IDiasHabilesAgent diasHabilesAgent;
         private readonly IConfiguracionManager configuracionManager;
         private readonly IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent;
+        private readonly ITipoDeCambioAgent tipoDeCambioAgent;
 
 
         public FijacionDePrecioContratoManager(
@@ -48,7 +49,7 @@ namespace Molinos.DataAgro.Business.Managers
             IMailManager mailManager, ILogDataAgroManager logDataAgroManager,
             IValidarDocProcPagoAgent validarPagoAgente, IModificarFijacionAgent modificarFijacionAgent,
             IDiasHabilesAgent diasHabilesAgent, IConfiguracionManager configuracionManager,
-            IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent)
+            IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent, ITipoDeCambioAgent tipoDeCambioAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -65,6 +66,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.configuracionManager = configuracionManager;
             this.modificarFijacionAgent = modificarFijacionAgent;
             this.validarLiquidacionParaFijacionAgent = validarLiquidacionParaFijacionAgent;
+            this.tipoDeCambioAgent = tipoDeCambioAgent;
         }
 
         //--------------------------------------------------
@@ -453,6 +455,12 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.Anticipo = oFijacionDePrecio.Anticipo;
                 oFijacionDePrecioSave.Cesion = oFijacionDePrecio.Cesion;
                 oFijacionDePrecioSave.ClasificacionContrato = oFijacionDePrecio.ClasificacionContrato;
+                oFijacionDePrecioSave.ImporteAPrecioContrato = oFijacionDePrecio.ImporteAPrecioContrato;
+                oFijacionDePrecioSave.PorcentajeAPrecioContrato = oFijacionDePrecio.PorcentajeAPrecioContrato;
+                oFijacionDePrecioSave.MonedaAPrecioContrato = oFijacionDePrecio.MonedaAPrecioContrato;
+                oFijacionDePrecioSave.ImporteSobrePrecioContrato = oFijacionDePrecio.ImporteSobrePrecioContrato;
+                oFijacionDePrecioSave.PorcentajeSobrePrecioContrato = oFijacionDePrecio.PorcentajeSobrePrecioContrato;
+                oFijacionDePrecioSave.MonedaSobrePrecioContrato = oFijacionDePrecio.MonedaSobrePrecioContrato;
                 if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     oFijacionDePrecioSave.ObservacionTercero = oFijacionDePrecio.ObservacionTercero;
@@ -993,7 +1001,14 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha_Dolarizado = fijac.FechaDolarizado,
                 Anticipo = fijac.Anticipo,
                 Cesion = fijac.Cesion,
-                ClasificacionContrato = fijac.ClasificacionContrato
+                ClasificacionContrato = fijac.ClasificacionContrato,
+                ImporteAPrecioContrato = fijac.ImporteAPrecioContrato,
+                PorcentajeAPrecioContrato = fijac.PorcentajeAPrecioContrato,
+                MonedaAPrecioContrato = fijac.MonedaAPrecioContrato,
+                ImporteSobrePrecioContrato = fijac.ImporteSobrePrecioContrato,
+                PorcentajeSobrePrecioContrato = fijac.PorcentajeSobrePrecioContrato,
+                MonedaSobrePrecioContrato = fijac.MonedaSobrePrecioContrato,
+
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
@@ -1496,6 +1511,66 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
+        public void BuscarComision(BasicoContrato negocio)
+        {
+            if (negocio.TipoNegocioId == 3 && (negocio.ImporteComision ?? 0) == 0 && (negocio.PorcentajeComision ?? 0) == 0)
+            {
+                var fijacion = TraerFijacion(negocio.Id);
+
+                if (fijacion.PorcentajeSobrePrecioContrato > 0)
+                {
+                    negocio.PorcentajeComision = fijacion.PorcentajeSobrePrecioContrato;
+                }
+                else if ((fijacion.ImporteSobrePrecioContrato ?? 0) != 0)
+                {
+                    negocio.ImporteComision = fijacion.ImporteSobrePrecioContrato;
+                    if (fijacion.MonedaSobrePrecioContrato != negocio.MonedaId)
+                    {
+                        var cambio = tipoDeCambioAgent.TraerTipoDeCambio(negocio.FechaOperacion);
+                        if (negocio.MonedaId == "ARP  ")
+                        {
+                            negocio.ImporteComision = negocio.ImporteComision * cambio;
+                        }
+                        else
+                        {
+                            negocio.ImporteComision = negocio.ImporteComision / cambio;
+                        }
+                    }
+                }
+                else
+                {
+                    string contratoSAP = fijacion.DatosFijacion.ContratoId.PadLeft(10, '0');
+                    var afijar = repositorio.Obtener<Contrato>(a => a.TipoNegocioId == 1 && a.ContratoSAP == contratoSAP && a.EstadoId == 5);
+                    if (afijar != null && afijar.Descuentos != null && afijar.Descuentos.Count > 0)
+                    {
+                        var descuento = afijar.Descuentos.Where(a => a.TipoDBId == 1 && a.TipoPeriodoDBId == 1).FirstOrDefault();
+                        if (descuento != null)
+                        {
+                            if (descuento.Porcentaje > 0)
+                            {
+                                negocio.PorcentajeComision = descuento.Porcentaje;
+                            }
+                            else if (descuento.Importe != 0)
+                            {
+                                negocio.ImporteComision = descuento.Importe;
+                                if (descuento.MonedaId != negocio.MonedaId)
+                                {
+                                    var cambio = tipoDeCambioAgent.TraerTipoDeCambio(negocio.FechaOperacion);
+                                    if (negocio.MonedaId == "ARP  ")
+                                    {
+                                        negocio.ImporteComision = negocio.ImporteComision * cambio;
+                                    }
+                                    else
+                                    {
+                                        negocio.ImporteComision = negocio.ImporteComision / cambio;
+                                    }
+                                }
+                            }
+                        }
+                        }
+                }
+            }
+        }
     }
 }
 

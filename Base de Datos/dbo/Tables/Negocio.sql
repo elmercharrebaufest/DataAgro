@@ -115,6 +115,12 @@
     [Venta] BIT NULL, 
     [PagoDiferidoTerceroId] INT NULL, 
 
+    [ImporteAPrecioContrato] DECIMAL(11, 2) NULL, 
+    [PorcentajeAPrecioContrato] DECIMAL(11, 2) NULL, 
+    [MonedaAPrecioContrato] CHAR(5) NULL, 
+    [ImporteSobrePrecioContrato] DECIMAL(11, 2) NULL, 
+    [PorcentajeSobrePrecioContrato] DECIMAL(11, 2) NULL, 
+    [MonedaSobrePrecioContrato] CHAR(5) NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  

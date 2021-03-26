@@ -215,3 +215,8 @@ UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Fi
 UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Fason' WHERE Descripcion = 'FASON'
 UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.AgenteCompra' WHERE Descripcion = 'AGENTE DE COMPRAS'
 UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.ContratoAcuerdo' WHERE Descripcion = 'CONTRATO ACUERDO'
+
+--MotivoAnterior
+IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Otro') BEGIN insert into MotivoAnterior(Descripcion) values ('Otro'); END
+IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Error en la carga') BEGIN insert into MotivoAnterior(Descripcion) values ('Error en la carga'); END
+IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Me olvidé de cargar') BEGIN insert into MotivoAnterior(Descripcion) values ('Me olvidé de cargar'); END

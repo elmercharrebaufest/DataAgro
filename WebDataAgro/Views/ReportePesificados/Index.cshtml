@@ -105,6 +105,11 @@
                 <label>No Productor</label>
                 @Html.CheckBox("DolarizadoNoProductor", false, new { @class = "filtroBoleano", @id = "DolarizadoNoProductor" })
             </div>
+            <div class="col-md-2">
+                <label>Ninguno</label>
+                @Html.CheckBox("NingunDolarizado", false, new { @class = "filtroBoleano", @id = "NingunDolarizado" })
+            </div>
+
         </div>
         <br />
         <div class="row">
@@ -112,19 +117,19 @@
                 <label>Kg No Pesificable</label>
             </div>
             <div class="col-md-2">
-                @Html.TextBox("KgNoPesificable", "", new { @class = "filtroBusquedaTextBoxNumber", style = "width:100%", @id = "KgNoPesificable" })
+                @Html.CheckBox("KgNoPesificable", false, new { @class = "filtroPesificable", @id = "KgNoPesificable" })
             </div>
             <div class="col-md-2">
                 <label>Kg Vencimiento Pesificable</label>
             </div>
             <div class="col-md-2">
-                @Html.TextBox("KgVencimientoPesificable", "", new { @class = "filtroBusquedaTextBoxNumber", style = "width:100%", @id = "KgVencimientoPesificable" })
+                @Html.CheckBox("KgVencimientoPesificable", false, new { @class = "filtroPesificable",  @id = "KgVencimientoPesificable" })
             </div>
         <div class="col-md-2">
             <label>Kg Totales</label>
         </div>
         <div class="col-md-2">
-            @Html.TextBox("KgTotales", "", new { @class = "filtroBusquedaTextBoxNumber", style = "width:100%", @id = "KgTotales" })
+            @Html.CheckBox("KgTotales",false, new { @class = "filtroPesificable",  @id = "KgTotales" })
         </div>
     </div>
         <div class="row">

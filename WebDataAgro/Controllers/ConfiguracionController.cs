@@ -34,6 +34,7 @@ namespace WebDataAgro.Controllers
                 ImporteSustentable = conf.ImporteSustentable,
                 ContratoAperturaPrecioPorcentajeDeComisionMaximo = conf.ContratoAperturaPrecioPorcentajeDeComisionMaximo,
                 DiasDiferimiento = conf != null ? conf.DiasDiferimiento.Value : 0,
+                CantidadAcuerdo = conf != null ? conf.CantidadAcuerdo.Value : 0
             });
         }
         [HttpPost]
@@ -66,6 +67,7 @@ namespace WebDataAgro.Controllers
                 ImporteSustentable = configuracion.ImporteSustentable,
                 ContratoAperturaPrecioPorcentajeDeComisionMaximo = configuracion.ContratoAperturaPrecioPorcentajeDeComisionMaximo,
                 DiasDiferimiento = configuracion.DiasDiferimiento,
+                CantidadAcuerdo = configuracion.CantidadAcuerdo
             };
             return entidad;
         }

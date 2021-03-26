@@ -2017,7 +2017,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $(".modal-title-visualizar").append("Fijacion N&deg; SAP: " + (negocio != "null" ? negocio : ""));
     } else {
         $(".modal-title-visualizar").empty();
-        $(".modal-title-visualizar").append("Contrato N&deg; SAP: " + (nro_SAP != "null" ? nro_SAP : ""));
+        $(".modal-title-visualizar").append("Contrato N&deg; SAP: " + (nro_SAP != "null" ? nro_SAP.substr(3, nro_SAP.length - 3) : ""));
     }
     $("#visualizar_proveedor").text(proveedor);
     $("#fechacontrato").text(FechaOperacion == null || FechaOperacion == "" ? desdeHasta : FechaOperacion);
@@ -2656,7 +2656,8 @@ function ArmarPrecio(dataItem) {
                         }
                     }
                 }
-            }
+            }           
+           
             if (esPrecioMoa === true) {
                 return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);
             } else {
@@ -2665,7 +2666,31 @@ function ArmarPrecio(dataItem) {
         }
         return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);
     } else {
-        return dataItem.PrecioPlazo;
+        var fecha = kendo.toString(dataItem.HastaFijacion, "dd/MM/yyyy");
+        if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2) {
+            if (!externo && dataItem.Estado === 9) {
+                var esPrecioMoa = false;
+                for (i = 0; i < precioMoa.length; i++) {
+                    var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1); });
+
+                    if (p) {
+                        for (var y = 0; y < p.length; y++) {
+                            if (esPrecioMoa === false && p[y].HastaFijacion != null) {
+                                esPrecioMoa = kendo.toString(new Date(parseInt(p[y].HastaFijacion.substr(6))), "dd/MM/yyyy") == kendo.toString(dataItem.HastaFijacion, "dd/MM/yyyy");
+                            }
+                        }
+                    }
+                }
+                if (esPrecioMoa === true) {
+                    return fecha;
+                } else {
+                    return '<strong style="color:red;">' + fecha + '</strong>';
+                }
+            }
+            return fecha;
+        } else {
+            return dataItem.PrecioPlazo;
+        }
     }
 }
 function ArmarFechaDesde(dataItem) {

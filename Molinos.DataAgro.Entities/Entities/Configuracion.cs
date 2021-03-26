@@ -21,5 +21,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal ImporteSustentable { get; set; }
         public decimal? ContratoAperturaPrecioPorcentajeDeComisionMaximo { get; set; }
         public int? DiasDiferimiento { get; set; }
+        public int? CantidadAcuerdo { get; set; }
     }
 }

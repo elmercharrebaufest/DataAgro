@@ -880,6 +880,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to El campo cantidad acuerdo no debe estar vacío.
+        /// </summary>
+        public static string Error_Cantidad {
+            get {
+                return ResourceManager.GetString("Error_Cantidad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debe agregar cantidad de Cupos.
         /// </summary>
         public static string Error_CantidadCupoRequerido {

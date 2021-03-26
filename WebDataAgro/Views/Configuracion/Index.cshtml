@@ -45,11 +45,18 @@
                     <label>Validación Sustentable</label>
                 </div>
                 <div class="col-md-2" id="CantidadDiasId">
-                    @Html.TextBoxFor(m => m.ImporteSustentable, new { @class = "CantidadDeDias number" })
-                </div>              
+                    @Html.TextBoxFor(m => m.ImporteSustentable, new { @class = "CantidadDeDias number-input" })
+                </div>
+
             </div>
 
             <div class="row-botones-material row padding">
+                <div class="col-md-2">
+                    <label>Cantidad Acuerdo (Tn)</label>
+                </div>
+                <div class="col-md-2" id="CantidadDiasId">
+                    @Html.TextBoxFor(m => m.CantidadAcuerdo, new { @class = "CantidadDeDias number" })
+                </div>
                 <div class="col-md-2">
                     <label>Apertura de Precio Porcentaje de Comisión Máximo</label>
                 </div>
@@ -96,11 +103,11 @@
                     @Html.TextBoxFor(m => m.CodigoLocalidadStop, new { @class = "CantidadDeDias number-input" })
                 </div>
             </div>
-        <div class="row">
-            <div class="col-md-3">
-                <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 

@@ -10,6 +10,7 @@
     [ImporteSustentable] DECIMAL(11, 2) NULL DEFAULT 8, 
     [ContratoAperturaPrecioPorcentajeDeComisionMaximo] DECIMAL(11, 2) NULL DEFAULT 3, 
     [DiasDiferimiento] INT NULL DEFAULT 120, 
+    [CantidadAcuerdo] INT NULL DEFAULT 30000, 
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

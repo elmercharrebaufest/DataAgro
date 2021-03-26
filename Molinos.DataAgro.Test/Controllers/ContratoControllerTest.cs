@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<ICampañaManager> campaniaManagerMock;
         private Mock<ICentroManager> centroManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
-
+        private Mock<IFijacionDePrecioContratoManager> fijacionDePrecioContratoManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -51,11 +51,12 @@ namespace Molinos.DataAgro.Test.Controllers
             campaniaManagerMock = new Mock<ICampañaManager>();
             centroManagerMock = new Mock<ICentroManager>();
             reportesManagerMock = new Mock<IReportesManager>();
+            fijacionDePrecioContratoManagerMock = new Mock<IFijacionDePrecioContratoManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new ContratoController(proveedorManagerMock.Object, contratoManagerMock.Object, comercialManagerMock.Object, provinciaManagerMock.Object,
                 localidadManagerMock.Object, materialManagerMock.Object, tipoNegocioManagerMock.Object, campaniaManagerMock.Object,
-                centroManagerMock.Object, reportesManagerMock.Object);
+                centroManagerMock.Object, reportesManagerMock.Object, fijacionDePrecioContratoManagerMock.Object);
         }
 
         [Test]
@@ -168,6 +169,31 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"CorredorId\":0,\"Corredor\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
+        }
+
+
+        [Test]
+        public void ExportTest()
+        {
+            HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
+            HttpContext.Current.Session["perfil"] = 7;
+            var request = new DataSourceRequest();
+            //contratoManagerMock.Setup(x => x.TraerContratosFiltrados(request, It.IsAny<bool>(), GlobalVariables.EquipoReal, GlobalVariables.CorredoresComercial))
+            contratoManagerMock.Setup(x => x.TraerContratosFiltrados(request, It.IsAny<List<int>>()))
+                .Returns(new DataSourceResult
+                {
+                    Data = new List<BasicoContrato>() {
+                    new BasicoContrato { ContratoId = 1, ComercialId = 1,TipoNegocioId=1,PorcentajeComision=1 },
+                    new BasicoContrato { ContratoId = 2, ComercialId = 1, TipoNegocioId = 3,PorcentajeComision=1 } }
+                });
+            var result = target.Export(request);
+            Assert.NotNull(result);
+            // var a = serializer.Serialize(result);
+
+            // contratoManagerMock.Verify(x => x.TraerContratosFiltrados(It.IsAny<DataSourceRequest>(), It.IsAny<List<int>>()));
+            // Assert.AreEqual(
+            //"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Data\":[{\"ChequeElectronicoValor\":null,\"Id\":0,\"Cuit\":null,\"ContratoId\":1,\"MaterialId\":0,\"NivelTarifaId\":null,\"TipoNegocioId\":0,\"Cantidad\":0,\"Precio\":0,\"PrecioPlazo\":null,\"FechaEntrega\":null,\"CampanaId\":null,\"FechaDesde\":null,\"FechaDesdeFormateado\":null,\"FechaHasta\":null,\"FechaHastaFormateado\":null,\"ProveedorId\":0,\"MonedaId\":null,\"Moneda\":null,\"Fecha\":null,\"FechaFormateado\":null,\"Hora\":null,\"NivelTarifa\":null,\"TarifaFlete\":null,\"GrupoCompra\":0,\"GrupoCompraDescripcion\":null,\"ComercialId\":1,\"ComercialCreadorId\":null,\"ProvinciaId\":null,\"LocalidadId\":null,\"Base\":null,\"Importe_Sustentable\":null,\"MonedaId_Sustentable\":null,\"Moneda_Sustentable\":null,\"Fecha_Dolarizado\":null,\"Fecha_DolarizadoFormateado\":null,\"Dias_Pesificado\":null,\"NoInformaSIO\":null,\"TrigoEspecial\":null,\"Estado\":null,\"UsuarioId\":null,\"ContratoSAP\":null,\"Ampliaciones\":null,\"TipoNegocio\":null,\"Proveedor\":null,\"Corredor\":null,\"CUITCorredor\":null,\"Comercial\":null,\"ComercialCreador\":null,\"Material\":null,\"Campania\":null,\"Provincia\":null,\"Localidad\":null,\"Estado_Contrato\":null,\"Fecha_Order\":\"\\/Date(-62135586000000)\\/\",\"Estado_Order\":0,\"Observacion\":null,\"FijacionDePrecioContratoId\":null,\"Sustentable\":null,\"Dolarizado\":null,\"Pesificado\":null,\"Negocio\":null,\"ClasificacionId\":null,\"ClasificacionDescripcion\":null,\"DestinoId\":null,\"DestinoDescripcion\":null,\"CantidadCamiones\":null,\"Consignatario\":null,\"PlanCanje\":null,\"CondicionFijacion\":null,\"CD\":null,\"Warrant\":null,\"PagoDirectoVendedor\":null,\"CalidadDescripcion\":null,\"EstablecimientoPropio\":null,\"BoletoId\":null,\"BolsaId\":null,\"BoletoDescripcion\":null,\"BolsaDescripcion\":null,\"DesdeFijacion\":null,\"DesdeFijacionFormateado\":null,\"HastaFijacion\":null,\"HastaFijacionFormateado\":null,\"CondicionFijacionDescripcion\":null,\"Descuentos\":null,\"Calidades\":null,\"MercsDeposito\":null,\"CorredorId\":0,\"DatosFijacion\":null,\"PorcentajeComision\":null,\"ContratoCorredor\":null,\"ContratoVendedor\":null,\"SelCargoMOA\":null,\"SelCargoVendedor\":null,\"Madre\":null,\"EsFason\":null,\"ContratoMadre\":null,\"Posicion\":null,\"TipoFason\":null,\"TipoFasonId\":0,\"FasonId\":0,\"Operador\":null,\"OperadorId\":0,\"AgenteId\":0,\"AperturaPrecios\":null,\"PreciosPactados\":null,\"PrecioNeto\":null,\"Pizarra\":null,\"StandardCalidadId\":null,\"StandardDeCalidadDescripcion\":null,\"PagoDiferido\":null,\"ZonaId\":null,\"ZonaDescripcion\":null,\"AcuerdoId\":null,\"ImporteFinanciero\":null,\"ImporteRedespacho\":null,\"ImporteComision\":null,\"ImporteBonificacion\":null,\"PorcentajeBonificacion\":null,\"Compensacion\":null,\"Acuerdo\":null,\"Rechazo\":null,\"ComercialZonaId\":null,\"ComercialZonaDescripcion\":null,\"OcultarEnTablero\":false,\"FechaCiertaFormateado\":null,\"FechaCierta\":null,\"MonedaBonificacion\":null,\"MesPosicion\":null,\"CampanaMaterialId\":null,\"ContratoAcuerdoId\":null,\"PorcentajeDePago\":null,\"TipoAgenteCompraId\":null,\"CaratulaExtension\":null,\"CaratulaMAT\":null,\"PrecioAjusteComision\":null,\"MonedaAjusteComisionId\":null,\"FechaOperacion\":null,\"FechaOperacionFormateado\":null,\"MotivoOperacionAnterior\":null,\"UsuarioConfirmador\":null,\"FechaConfirmacion\":null,\"CantidadMaximaCupo\":0,\"ChequeElectronico\":null,\"DolarizadoExpress\":null,\"DolarizadoExpressValor\":null,\"PagoCBU\":null,\"DolarizadoValor\":null}],\"Total\":0,\"Aggregates\":null},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+            // a);
         }
     }
 }

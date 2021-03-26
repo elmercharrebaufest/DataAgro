@@ -793,4 +793,7 @@
   <data name="ModificarRazonSocial" xml:space="preserve">
     <value>Modificar Razon Social</value>
   </data>
+  <data name="Error_Cantidad" xml:space="preserve">
+    <value>El campo cantidad acuerdo no debe estar vacío</value>
+  </data>
 </root>

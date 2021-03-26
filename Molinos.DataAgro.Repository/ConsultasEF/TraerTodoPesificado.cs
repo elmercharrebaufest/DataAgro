@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var queryRango =
                 from item in contexto.Set<ReportePesificado>()
-                where (equipo.Contains(item.ComercialId.Value) || item.ComercialId == null) && item.KgTotales > 0
+                where (equipo.Contains(item.ComercialId.Value) || item.ComercialId == null) && item.KgTotales > 0         
                 select new ReportePesificadoDto
                 {
                     Id = item.Id,
@@ -59,7 +59,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Unidad = item.Unidad,
                     Precio = item.Precio,
                     NombreCorredor = item.NombreCorredor,
-                    NombreVendedor = item.NombreVendedor 
+                    NombreVendedor = item.NombreVendedor,
+                    NingunDolarizado = item.Dolarizado == false && item.DolarizadoExpress == false && item.DolarizadoNoProductor == false
                 };
 
             GridHelper.TruncateTime(request.Filter, ref queryRango);

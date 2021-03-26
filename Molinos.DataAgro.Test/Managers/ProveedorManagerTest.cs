@@ -1809,6 +1809,8 @@ namespace Molinos.DataAgro.Test.Managers
             //UpdateDatosBasicosProveedor
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+         .Returns(new List<Proveedor>() { new Proveedor { CUIT = "a" } });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
@@ -2046,6 +2048,8 @@ namespace Molinos.DataAgro.Test.Managers
             //UpdateDatosBasicosProveedor
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+             .Returns(new List<Proveedor>() { new Proveedor { CUIT = "a"} });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
@@ -2255,6 +2259,8 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
                 .Returns(comercial);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+         .Returns(new List<Proveedor>() { new Proveedor { CUIT = "a" } });
             repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<TraerDatosBasicosProveedor>()))
                 .Returns(new List<BasicoProveedor>() { new BasicoProveedor() { NoOperable = true, Operando = true, EstadoCuit = 2, Facacop = 0 } });
             repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<ConsultaActividadHistoriaTraerPorProveedorId>()))
@@ -2471,6 +2477,8 @@ namespace Molinos.DataAgro.Test.Managers
             //UpdateDatosBasicosProveedor
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+         .Returns(new List<Proveedor>() { new Proveedor { CUIT = "a" } });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
@@ -2916,6 +2924,8 @@ namespace Molinos.DataAgro.Test.Managers
             //UpdateDatosBasicosProveedor
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+         .Returns(new List<Proveedor>() { new Proveedor { CUIT = "a" } });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>()))

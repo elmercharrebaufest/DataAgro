@@ -42,7 +42,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<Campaña> Campaña { get; set; }
         public List<Provincia> Provincia { get; set; }
         public List<LocalidadCombo> Localidad { get; set; }
-        //public List<MonedaCombo> MonedaSustentable { get; set; }
+        public List<MotivoCombo> MotivoAnterior { get; set; }
     }
 
     public class ContratoExcel
@@ -63,7 +63,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Precio { get; set; }
         public string Moneda { get; set; }
         public int? Camiones { get; set; }
-        public decimal? Comision { get; set; }
+        public decimal Comision { get; set; }
         public string PorcentajeBonificacion { get; set; }
         public string ImporteBonificacion { get; set; }
         public string MonedaBonificacion { get; set; }

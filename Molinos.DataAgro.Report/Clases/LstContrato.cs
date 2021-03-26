@@ -51,10 +51,10 @@ namespace Molinos.DataAgro.Report
                     Precio = x.PrecioNeto ?? x.Precio,
                     Moneda = x.MonedaId,
                     Camiones = x.CantidadCamiones,
-                    Comision = x.PorcentajeComision,
-                    PorcentajeBonificacion = ((x.Descuentos != null && x.Descuentos.Count>0)? string.Join("/", x.Descuentos.Select(a => a.Porcentaje.ToString()).ToList()) : ""),
+                    Comision = (x.TipoNegocioId != 2 && x.TipoNegocioId != 3 && !(x.TipoNegocioId == 6 && x.Precio > 0)) ? 0 : decimal.Parse(((x.PorcentajeComision ?? 0) == 0 ? ((x.ImporteComision ?? 0) * 100 / x.Precio) : x.PorcentajeComision ?? 0).ToString("0.##")),
+                    PorcentajeBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => a.Porcentaje.ToString()).ToList()) : ""),
                     ImporteBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => a.Importe.ToString()).ToList()) : ""),
-                    MonedaBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => (a.MonedaId??"").ToString()).ToList()) : ""),
+                    MonedaBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => (a.MonedaId ?? "").ToString()).ToList()) : ""),
                     MesPosicion = x.MesPosicion,
                     Procedencia = x.Localidad + " - " + x.Provincia,
                     Desde = x.FechaDesde,
@@ -64,35 +64,35 @@ namespace Molinos.DataAgro.Report
                     Observaciones = x.Observacion
                 });
 
-            var oColumnas = query.ToList();
+                var oColumnas = query.ToList();
 
-            var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
 
-            workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
+                workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
 
-            var oPropRow = oColumnas[0].GetType().GetProperties();
+                var oPropRow = oColumnas[0].GetType().GetProperties();
 
-            var cantColumns = oPropRow.Count();
-            var j = 1;
-            while (workSheet.Cells[1, j].Value != null)
-            {
-                workSheet.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-
-                workSheet.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
-
-                workSheet.Cells[1, j].Style.Font.Bold = true;
-
-                j++;
-            }
-            for (int i = 1; i <= cantColumns; i++)
-            {
-                if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                var cantColumns = oPropRow.Count();
+                var j = 1;
+                while (workSheet.Cells[1, j].Value != null)
                 {
-                    workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+                    workSheet.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
 
+                    workSheet.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGreen);
+
+                    workSheet.Cells[1, j].Style.Font.Bold = true;
+
+                    j++;
                 }
-                workSheet.Column(i).AutoFit();
-            };
+                for (int i = 1; i <= cantColumns; i++)
+                {
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheet.Column(i).AutoFit();
+                };
 
                 workSheet.Cells[1, 10].Value = "Nombre Corredor";
                 workSheet.Cells[1, 11].Value = "CUIT Corredor";
@@ -104,7 +104,7 @@ namespace Molinos.DataAgro.Report
 
             }
 
-        var identif = Varios.GetIdentif();
+            var identif = Varios.GetIdentif();
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -117,7 +117,7 @@ namespace Molinos.DataAgro.Report
                     Contenido = ms.ToArray()
                 };
 
-    reportesManager.GrabarReporte(oReporte);
+                reportesManager.GrabarReporte(oReporte);
             }
 
             return identif;

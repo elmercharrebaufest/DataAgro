@@ -8,9 +8,9 @@ $(document).ready(function () {
     inicializarElementos();
     InicializarCuposIndex();
     anulacion = ConvertirStringABool(anulacion);
-    
-    $(".ocultarAnular").change(function () {        
-      $('#anulacionMasivaDiv').hide();       
+
+    $(".ocultarAnular").change(function () {
+        $('#anulacionMasivaDiv').hide();
     });
 
 });
@@ -88,7 +88,7 @@ function InicializarCuposIndex() {
             var grid = $("#grid").data("kendoGrid");
             if (externo) {
                 grid.hideColumn("ZonaCupo");
-            }  
+            }
             var view = grid.dataSource.view();
             for (var i = 0; i < view.length; i++) {
                 if (view[i].FleteProcedencia) {
@@ -100,6 +100,7 @@ function InicializarCuposIndex() {
             $("td:has(div.statusexterno)").css('border-bottom', '5px solid #15deca');
         },
         columns: [
+            { selectable: true },
             {
                 field: "FechaIngreso", title: externo ? "Fecha de Cupo" : "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate, template: function (dataItem) {
 
@@ -115,15 +116,15 @@ function InicializarCuposIndex() {
             { field: "Destinatario", type: "string", width: 150 },
             { field: "Centro", title: "Planta", type: "string", width: 150 },
             { field: "Calidad", type: "string", width: 150 },
-            { field: "ZonaCupo", title: "Zona", type: "string", width: 150},
+            { field: "ZonaCupo", title: "Zona", type: "string", width: 150 },
             { field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; } },
             { field: "CupoStop", title: "Cupo STOP", type: "string", width: 150 },
             {
                 field: "EstadoCupo", title: "Estado", sortable: false, width: 200,
                 template: function (dataItem) {
-                    if (dataItem.EstadoCupoId == 1) {                       
+                    if (dataItem.EstadoCupoId == 1) {
                         return '<div class="status sinctg"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
-                    } else if (dataItem.EstadoCupoId == 2) {                       
+                    } else if (dataItem.EstadoCupoId == 2) {
                         return '<div class="status activado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 3) {
                         return '<div class="status arribado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
@@ -137,7 +138,7 @@ function InicializarCuposIndex() {
                         return '<div class="status error" data-toggle="tooltip" data-placement="top" title="' + dataItem.MensajeError + '"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 8) {
                         return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
-                    }else if (dataItem.EstadoCupoId == 9) {
+                    } else if (dataItem.EstadoCupoId == 9) {
                         return '<div class="status anulado"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
                     } else if (dataItem.EstadoCupoId == 10) {
                         return '<div class="status sinstop"><span style:"display:inline-block;">' + dataItem.EstadoCupo + '</span></div>';
@@ -150,26 +151,26 @@ function InicializarCuposIndex() {
             { field: "Observaciones", type: "string", width: 150, hidden: externo },
             { field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "Hora", title: "Hora", type: "date", width: 150 },
-            { field: "EstadoPlanta", title: "Estado en Planta",type: "string", width: 150 },
+            { field: "EstadoPlanta", title: "Estado en Planta", type: "string", width: 150 },
             { field: "CartaPorte", title: "Carta de Porte", type: "string", width: 150 },
             { field: "CTG", title: "CTG", type: "string", width: 150 },
             { field: "CTGFechaDesde", title: "Desde CTG", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "CTGFechaHasta", title: "Hasta CTG", type: "date", width: 150, format: _DefaultDateTemplate },
             { field: "CuitOrigen", title: "Cuit Origen", type: "string", width: 150 },
             { field: "CuitOrigenAfip", title: "Cuit Origen Afip", type: "string", width: 150 },
-            { field: "CodLocalidadOrigen", title: "Cod Localidad",type: "string", width: 150 },
+            { field: "CodLocalidadOrigen", title: "Cod Localidad", type: "string", width: 150 },
             { field: "NroEstablecimientoOrigen", title: "Nro Establecimiento", type: "string", width: 150 },
             { field: "RemitenteComercial", title: "Remitente Comercial", type: "string", width: 150 },
             { field: "CorredorComprador", title: "Corredor Comprador", type: "string", width: 150 },
             { field: "CorredorVendedor", title: "Corredor Vendedor", type: "string", width: 150 },
             { field: "MercadoATermino", title: "Mercado a Termino", type: "string", width: 150 },
             { field: "Cosecha", type: "string", width: 150 },
-            { field: "Peso",type: "string", width: 150 },
+            { field: "Peso", type: "string", width: 150 },
             { field: "Km", type: "string", width: 150 },
             { field: "IntermediarioFlete", title: "Intermediario Flete", type: "string", width: 150 },
             { field: "Transportista", type: "string", width: 150 },
-            { field: "Chofer", type: "string", width: 150 }, 
-            { field: "MotivoRechazo", title: "Motivo de Rechazo", type: "string", width: 150 }, 
+            { field: "Chofer", type: "string", width: 150 },
+            { field: "MotivoRechazo", title: "Motivo de Rechazo", type: "string", width: 150 },
         ],
         pageable: {
             messages: {
@@ -214,11 +215,21 @@ function InicializarCuposIndex() {
                 }
             }
         },
+        persistSelection: true,
+    });
+
+    $("#gridNoEliminar").kendoGrid({
+        columns: [
+            { field: "CupoSap", title: "Cupo", type: "string", width: 65 },
+            { field: "Proveedor", type: "string", width: 150 },
+            { field: "Destinatario", type: "string", width: 50 },
+        ]
     });
 }
 
 
 function Filtrar() {
+    clearSelectionGrid();
     $('#grid').data('kendoGrid').dataSource.read();
     if (anulacion == true && $("#EstadoId").val() == "1") {
         $('#anulacionMasivaDiv').show();
@@ -276,7 +287,48 @@ function ConvertirFechaRegistroAString(filtros) {
 }
 
 function AnulacionMasiva() {
-    
+    var grid = $("#grid").data("kendoGrid");
+    var selectedIds = grid.selectedKeyNames();
+    var ids = new Array();
+    for (var i = 0; i < selectedIds.length; i++) {
+        ids.push(
+            { field: "Id", operator: "eq", value: parseInt(selectedIds[i]) }
+        );
+    }
+    var filter = {
+        logic: "and",
+        filters: [
+            {
+                logic: "or",
+                filters: ids
+            }
+        ]
+    };
+    var request = {
+        filter: filter,
+        page: 1,
+        skip: 0,
+        take: null,
+        sort: null
+    };
+    datos = MSExecuteOnServer('/ReporteCupo/BuscaDatosTabla', request);
+    if (datos.Data.length == 0) {
+        AnulacionMasivaConfirmacion();
+    } else {
+        //$("#cuposSeleccionados").html("");
+        //for (var i = 0; i < datos.Data.length; i++) {
+        //    $("#cuposSeleccionados").append(datos.Data[i].CupoSap + " " + datos.Data[i].Destinatario + " " + datos.Data[i].Proveedor + "<br>");
+        //}
+        var ds2 = new kendo.data.DataSource({ data: datos.Data });
+
+        $("#gridNoEliminar").data("kendoGrid").setDataSource(ds2);
+        $("#modalConfirmarAnulacion").modal("show");
+    }
+
+}
+
+function AnulacionMasivaConfirmacion() {
+
     let filtroCompleto = TraerFiltrosConValores();
     if (filtroCompleto.filter == null) {
         filtroCompleto.filter = new FiltroPadre("and", defaultFiltros);
@@ -284,19 +336,29 @@ function AnulacionMasiva() {
         $("#fechaIngresoHastaId").val(new Date().toLocaleDateString().replace(new RegExp('/', 'g'), '-'));
     }
 
+    var grid = $("#grid").data("kendoGrid");
+    var selectedIds = grid.selectedKeyNames();
+    var ids = new Array();
+    for (var i = 0; i < selectedIds.length; i++) {
+        ids.push(
+            { field: "Id", operator: "neq", value: parseInt(selectedIds[i]) }
+        );
+    }
+    filtroCompleto.filter.filters.push({ logic: "and", filters: ids });
+
     var mensaje = MSExecuteOnServer('/ReporteCupo/AnulacionMasiva', filtroCompleto);
     if (mensaje == "Ningún cupo para anular") {
-        MensErr(mensaje);   
-       
-    } else {        
+        MensErr(mensaje);
+
+    } else {
         MensInfoReload(mensaje);
     }
 }
 
-
-
-
-
-
+function clearSelectionGrid() {
+    var grid = $("#grid").data("kendoGrid");
+    grid._selectedIds = {};
+    grid.clearSelection();
+}
 
 

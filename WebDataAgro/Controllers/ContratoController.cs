@@ -27,6 +27,7 @@ namespace WebDataAgro.Controllers
         private readonly ICampañaManager mobjCampaniaManager;
         private readonly ICentroManager mobjCentroManager;
         private readonly IReportesManager reportesManager;
+        private readonly IFijacionDePrecioContratoManager fijacionDePrecioContratoManager;
 
 
         //-----------------------------------------------------
@@ -34,7 +35,7 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
 
         public ContratoController(IProveedorManager oProveedorManager, IContratoManager ocontratoManager, IComercialManager oComercialManager, IProvinciaManager oProvinciaManager, ILocalidadManager oLocalidadManager,
-            IMaterialManager oMaterialManager, ITipoNegocioManager oTipoNegocioManager, ICampañaManager oCampaniaManager, ICentroManager oCentroManager, IReportesManager reportesManager)
+            IMaterialManager oMaterialManager, ITipoNegocioManager oTipoNegocioManager, ICampañaManager oCampaniaManager, ICentroManager oCentroManager, IReportesManager reportesManager, IFijacionDePrecioContratoManager fijacionDePrecioContratoManager)
         {
             mobjProveedorManager = oProveedorManager;
             mobjComercialManager = oComercialManager;
@@ -46,7 +47,7 @@ namespace WebDataAgro.Controllers
             mobjCampaniaManager = oCampaniaManager;
             mobjCentroManager = oCentroManager;
             this.reportesManager = reportesManager;
-
+            this.fijacionDePrecioContratoManager = fijacionDePrecioContratoManager;
         }
 
         [Autorizacion(PermisosDataAgro.VisualizarReporteCompraNet, PermisosDataAgro.VisualizarReporteCompraNetExterno)]
@@ -217,6 +218,10 @@ namespace WebDataAgro.Controllers
                 if (negocio.TipoNegocioId == 1 || negocio.TipoNegocioId == 2)
                 {
                     negocio.Descuentos = mobjContratoManager.TraerDescuentosPorContrato(negocio.Id);
+                }
+                if (negocio.TipoNegocioId == 3 && (negocio.ImporteComision ?? 0) == 0 && (negocio.PorcentajeComision ?? 0) == 0)
+                {
+                    fijacionDePrecioContratoManager.BuscarComision(negocio);
                 }
             }
             var identif = oLstContacto.GenerarExcel(datos);
