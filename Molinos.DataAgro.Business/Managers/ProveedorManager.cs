@@ -742,7 +742,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
-            if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado.Value)
+            if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado  == true)
             {
                 htmlBody += "DOLARIZADO MÍNIMO 30 DÍAS<br />";
             }
@@ -947,7 +947,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
             }
-            if (oFijacionDePrecioContrato.Dolarizado.Value)
+            if (oFijacionDePrecioContrato.Dolarizado == true)
             {
                 htmlBody += "DOLARIZADO MÍNIMO 30 DÍAS<br />";
             }
@@ -3618,7 +3618,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
-            if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado.Value)
+            if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
             {
                 htmlBody += "DOLARIZADO MÍNIMO 30 DÍAS<br />";
             }
@@ -3924,7 +3924,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
-            if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado.Value)
+            if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
             {
                 htmlBody += "DOLARIZADO MÍNIMO 30 DÍAS<br />";
             }
