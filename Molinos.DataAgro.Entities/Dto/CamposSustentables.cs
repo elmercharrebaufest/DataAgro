@@ -50,5 +50,6 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public string Coordenadas { get; set; }
         public int N { get; set; }
+        public string Partido { get; set; }
     }
 }

@@ -62,8 +62,10 @@
             this.label14 = new DataDynamics.ActiveReports.Label();
             this.textBox3 = new DataDynamics.ActiveReports.TextBox();
             this.textBox4 = new DataDynamics.ActiveReports.TextBox();
-            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
             this.pageBreak1 = new DataDynamics.ActiveReports.PageBreak();
+            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
+            this.label15 = new DataDynamics.ActiveReports.Label();
+            this.label16 = new DataDynamics.ActiveReports.Label();
             ((System.ComponentModel.ISupportInitialize)(this.label1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label9)).BeginInit();
@@ -92,6 +94,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.label14)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label15)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label16)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // pageHeader
@@ -157,7 +161,9 @@
             this.label14,
             this.textBox3,
             this.textBox4,
-            this.pageBreak1});
+            this.pageBreak1,
+            this.label15,
+            this.label16});
             this.detail.Height = 10.158F;
             this.detail.Name = "detail";
             this.detail.Format += new System.EventHandler(this.detail_Format);
@@ -356,7 +362,7 @@
     "ine; vertical-align: bottom; ddo-char-set: 0";
             this.textBox2.Text = "Información de los establecimientos, campos o parcelas para realizar el análisis " +
     "satelital";
-            this.textBox2.Top = 6.210001F;
+            this.textBox2.Top = 8.315001F;
             this.textBox2.Width = 8.8F;
             // 
             // SubRptCamposSustentables
@@ -375,7 +381,7 @@
             this.SubRptCamposSustentables.Name = "SubRptCamposSustentables";
             this.SubRptCamposSustentables.Report = null;
             this.SubRptCamposSustentables.ReportName = "SubRptCamposSustentables";
-            this.SubRptCamposSustentables.Top = 6.900001F;
+            this.SubRptCamposSustentables.Top = 9.005002F;
             this.SubRptCamposSustentables.Width = 8.593F;
             // 
             // label18
@@ -395,7 +401,7 @@
             this.label18.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label18.Text = "N°";
-            this.label18.Top = 6.548002F;
+            this.label18.Top = 8.653003F;
             this.label18.Width = 0.2699997F;
             // 
             // label42
@@ -415,7 +421,7 @@
             this.label42.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label42.Text = "Nombre del Establecimiento";
-            this.label42.Top = 6.548002F;
+            this.label42.Top = 8.653003F;
             this.label42.Width = 1.163F;
             // 
             // label43
@@ -430,12 +436,12 @@
             this.label43.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.label43.Height = 0.3519998F;
             this.label43.HyperLink = null;
-            this.label43.Left = 2.621F;
+            this.label43.Left = 1.643F;
             this.label43.Name = "label43";
             this.label43.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label43.Text = "Provincia";
-            this.label43.Top = 6.548002F;
+            this.label43.Top = 8.653001F;
             this.label43.Width = 1.094F;
             // 
             // label44
@@ -450,13 +456,13 @@
             this.label44.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.label44.Height = 0.3520022F;
             this.label44.HyperLink = null;
-            this.label44.Left = 1.647F;
+            this.label44.Left = 2.737F;
             this.label44.Name = "label44";
             this.label44.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
-            this.label44.Text = "Pais";
-            this.label44.Top = 6.548002F;
-            this.label44.Width = 0.974F;
+            this.label44.Text = "Partido";
+            this.label44.Top = 8.653001F;
+            this.label44.Width = 1.186F;
             // 
             // label45
             // 
@@ -475,7 +481,7 @@
             this.label45.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label45.Text = "Coordenadas Geográficas";
-            this.label45.Top = 6.548002F;
+            this.label45.Top = 8.653003F;
             this.label45.Width = 2.008F;
             // 
             // label12
@@ -490,12 +496,12 @@
             this.label12.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.label12.Height = 0.3519998F;
             this.label12.HyperLink = null;
-            this.label12.Left = 3.715F;
+            this.label12.Left = 3.923F;
             this.label12.Name = "label12";
             this.label12.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label12.Text = "Localidad";
-            this.label12.Top = 6.548002F;
+            this.label12.Top = 8.653001F;
             this.label12.Width = 1.414F;
             // 
             // label13
@@ -510,13 +516,13 @@
             this.label13.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.label13.Height = 0.3519998F;
             this.label13.HyperLink = null;
-            this.label13.Left = 5.129F;
+            this.label13.Left = 5.337F;
             this.label13.Name = "label13";
             this.label13.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label13.Text = "Hectáreas Totales";
-            this.label13.Top = 6.548002F;
-            this.label13.Width = 0.835F;
+            this.label13.Top = 8.653001F;
+            this.label13.Width = 0.7309999F;
             // 
             // label14
             // 
@@ -530,13 +536,13 @@
             this.label14.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.label14.Height = 0.3519998F;
             this.label14.HyperLink = null;
-            this.label14.Left = 5.964F;
+            this.label14.Left = 6.068F;
             this.label14.Name = "label14";
             this.label14.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label14.Text = "Hectáreas de Soja";
-            this.label14.Top = 6.548002F;
-            this.label14.Width = 0.835F;
+            this.label14.Top = 8.653001F;
+            this.label14.Width = 0.7309999F;
             // 
             // textBox3
             // 
@@ -561,20 +567,42 @@
             this.textBox4.Top = 5.4615F;
             this.textBox4.Width = 8.239F;
             // 
-            // pageFooter
-            // 
-            this.pageFooter.Height = 0F;
-            this.pageFooter.Name = "pageFooter";
-            this.pageFooter.Format += new System.EventHandler(this.PageFooter_Format);
-            // 
             // pageBreak1
             // 
             this.pageBreak1.Height = 0.01F;
             this.pageBreak1.Left = 0F;
             this.pageBreak1.Name = "pageBreak1";
             this.pageBreak1.Size = new System.Drawing.SizeF(9.06575F, 0.01F);
-            this.pageBreak1.Top = 6.031F;
+            this.pageBreak1.Top = 8.136001F;
             this.pageBreak1.Width = 9.06575F;
+            // 
+            // pageFooter
+            // 
+            this.pageFooter.Height = 0F;
+            this.pageFooter.Name = "pageFooter";
+            this.pageFooter.Format += new System.EventHandler(this.PageFooter_Format);
+            // 
+            // label15
+            // 
+            this.label15.Height = 0.2F;
+            this.label15.HyperLink = null;
+            this.label15.Left = 0.214F;
+            this.label15.Name = "label15";
+            this.label15.Style = "font-size: 9.75pt; font-weight: bold; ddo-char-set: 0";
+            this.label15.Text = "Firma:";
+            this.label15.Top = 6.35F;
+            this.label15.Width = 1.758F;
+            // 
+            // label16
+            // 
+            this.label16.Height = 0.2F;
+            this.label16.HyperLink = null;
+            this.label16.Left = 3.562F;
+            this.label16.Name = "label16";
+            this.label16.Style = "font-size: 9.75pt; font-weight: bold; ddo-char-set: 0";
+            this.label16.Text = "Aclaración y DNI:";
+            this.label16.Top = 6.35F;
+            this.label16.Width = 1.758F;
             // 
             // RptCamposSustentables
             // 
@@ -628,6 +656,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.label14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label15)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label16)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -663,6 +693,8 @@
         private DataDynamics.ActiveReports.TextBox textBox3;
         private DataDynamics.ActiveReports.TextBox textBox4;
         private DataDynamics.ActiveReports.PageBreak pageBreak1;
+        private DataDynamics.ActiveReports.Label label15;
+        private DataDynamics.ActiveReports.Label label16;
     }
 }
 

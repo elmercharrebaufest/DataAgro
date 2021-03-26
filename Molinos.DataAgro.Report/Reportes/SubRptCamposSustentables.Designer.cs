@@ -71,7 +71,7 @@ namespace Molinos.DataAgro.Report
             this.textBox3,
             this.textBox4,
             this.textBox5});
-            this.detail.Height = 0.2020001F;
+            this.detail.Height = 0.215417F;
             this.detail.KeepTogether = true;
             this.detail.Name = "detail";
             this.detail.Format += new System.EventHandler(this.detail_Format);
@@ -93,7 +93,7 @@ namespace Molinos.DataAgro.Report
             this.textBox1.CanShrink = true;
             this.textBox1.DataField = "Localidad";
             this.textBox1.Height = 0.205F;
-            this.textBox1.Left = 3.501F;
+            this.textBox1.Left = 3.711F;
             this.textBox1.Name = "textBox1";
             this.textBox1.Style = "text-align: center";
             this.textBox1.Text = null;
@@ -102,32 +102,32 @@ namespace Molinos.DataAgro.Report
             // 
             // textBox9
             // 
-            this.textBox9.DataField = "Pais";
+            this.textBox9.DataField = "Partido";
             this.textBox9.Height = 0.205F;
-            this.textBox9.Left = 1.433F;
+            this.textBox9.Left = 2.527F;
             this.textBox9.Name = "textBox9";
             this.textBox9.Style = "text-align: center";
             this.textBox9.Text = null;
             this.textBox9.Top = 0F;
-            this.textBox9.Width = 0.9740002F;
+            this.textBox9.Width = 1.184F;
             // 
             // textBox10
             // 
             this.textBox10.CountNullValues = true;
             this.textBox10.DataField = "HectareasTotales";
             this.textBox10.Height = 0.205F;
-            this.textBox10.Left = 4.915F;
+            this.textBox10.Left = 5.125F;
             this.textBox10.Name = "textBox10";
             this.textBox10.Style = "text-align: center";
             this.textBox10.Text = null;
             this.textBox10.Top = 0F;
-            this.textBox10.Width = 0.8349999F;
+            this.textBox10.Width = 0.73F;
             // 
             // textBox2
             // 
             this.textBox2.DataField = "Provincia";
             this.textBox2.Height = 0.205F;
-            this.textBox2.Left = 2.407F;
+            this.textBox2.Left = 1.433F;
             this.textBox2.Name = "textBox2";
             this.textBox2.Style = "text-align: center";
             this.textBox2.Text = null;
@@ -176,12 +176,12 @@ namespace Molinos.DataAgro.Report
             this.textBox4.CountNullValues = true;
             this.textBox4.DataField = "HectareasSoja";
             this.textBox4.Height = 0.205F;
-            this.textBox4.Left = 5.75F;
+            this.textBox4.Left = 5.855F;
             this.textBox4.Name = "textBox4";
             this.textBox4.Style = "text-align: center";
             this.textBox4.Text = null;
             this.textBox4.Top = 0F;
-            this.textBox4.Width = 0.835F;
+            this.textBox4.Width = 0.73F;
             // 
             // textBox5
             // 
