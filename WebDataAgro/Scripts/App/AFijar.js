@@ -229,6 +229,7 @@ function InicializarElementos() {
         autoWidth: true,
         filter: "contains",
         change: function () {
+            HayCanje();
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
             }

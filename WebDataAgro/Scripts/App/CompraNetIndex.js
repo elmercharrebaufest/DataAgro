@@ -2014,7 +2014,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
     if (tipo == "FIJACION" && status == "5") {
         $(".modal-title-visualizar").empty();
-        $(".modal-title-visualizar").append("Fijacion N&deg; SAP: " + (negocio != "null" ? negocio : ""));
+        $(".modal-title-visualizar").append("Fijacion N&deg; SAP: " + (negocio != "null" ? negocio.substr(1, nro_SAP.length - 1) : ""));
     } else {
         $(".modal-title-visualizar").empty();
         $(".modal-title-visualizar").append("Contrato N&deg; SAP: " + (nro_SAP != "null" ? nro_SAP.substr(3, nro_SAP.length - 3) : ""));
