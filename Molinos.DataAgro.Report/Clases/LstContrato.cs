@@ -51,7 +51,7 @@ namespace Molinos.DataAgro.Report
                     Precio = x.PrecioNeto ?? x.Precio,
                     Moneda = x.MonedaId,
                     Camiones = x.CantidadCamiones,
-                    Comision = (x.TipoNegocioId != 2 && x.TipoNegocioId != 3 && !(x.TipoNegocioId == 6 && x.Precio > 0)) ? 0 : decimal.Parse(((x.PorcentajeComision ?? 0) == 0 ? ((x.ImporteComision ?? 0) * 100 / x.Precio) : x.PorcentajeComision ?? 0).ToString("0.##")),
+                    Comision = ObtenerComision(x),
                     PorcentajeBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => a.Porcentaje.ToString()).ToList()) : ""),
                     ImporteBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => a.Importe.ToString()).ToList()) : ""),
                     MonedaBonificacion = ((x.Descuentos != null && x.Descuentos.Count > 0) ? string.Join("/", x.Descuentos.Select(a => (a.MonedaId ?? "").ToString()).ToList()) : ""),
@@ -123,7 +123,27 @@ namespace Molinos.DataAgro.Report
             return identif;
         }
 
+        private static decimal ObtenerComision(BasicoContrato x)
+        {
+            decimal reslutado = 0;
+            if (x.TipoNegocioId != 2 && x.TipoNegocioId != 3 && !(x.TipoNegocioId == 6 && x.Precio > 0))
+            {
+                reslutado = 0;
+            }
+            else
+            {
+                if ((x.PorcentajeComision ?? 0) == 0 && x.ImporteComision > 0 && x.Precio > 0)
+                {
+                    reslutado = (x.ImporteComision ?? 0) * 100 / x.Precio;
+                }
+                else
+                {
+                    reslutado = x.PorcentajeComision ?? 0;
+                }
+            }
 
+            return decimal.Parse(reslutado.ToString("0.##"));
+        }
     }
 }
 
