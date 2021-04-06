@@ -21,6 +21,7 @@ $(document).ready(function () {
     InicializarElementos();
     InicializarDatos();
     AutocompleteProcedencia();
+    OcultarCamposAgente();
 });
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
@@ -1380,7 +1381,7 @@ function InicializarElementos() {
                     $("#pagoCbuId").show();
                 }
             }
-            OcultarCamposAgente();
+          
             if (this.value() == "" && ($("#tipoId").val() == "2")) {
                 $("#chequeElectronicoDiv").show();
                 $("#pagoCbuDiv").show();
@@ -1409,6 +1410,7 @@ function InicializarElementos() {
                 $("#boletoFisicoId").removeAttr("disabled");
                 $("#boletoCartaId").removeAttr("disabled");
             }
+            OcultarCamposAgente();
         },
         select: function () {
            
@@ -2586,7 +2588,7 @@ function InicializarElementos() {
         $('#pagoCbuInput').val("");
         $("#pagoCbuInput").data("kendoAutoComplete").search("");
     });
-
+  
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -3878,6 +3880,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#boletoConfirmaId").attr("disabled", true);
             $("#boletoFisicoId").attr("disabled", true);
             $("#boletoCartaId").attr("disabled", true);
+            $(".ocultarAgenteDiv").show();
         } else {
             OcultarCamposAgente();
         }
