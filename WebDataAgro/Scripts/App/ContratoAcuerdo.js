@@ -1088,12 +1088,9 @@ function InicializarElementos() {
                 //}               
             } else if ($("#precioMonedaId").val() === "USDM " && ($("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
                 //$("#pagoDiferidoDiv").hide();
-                //$("#pesificadoDiv").hide();
-                if ($("#fechaCiertaId").val() == "") {
+                //$("#pesificadoDiv").hide();             
                     $("#pagoDolarizadoDiv").show();
-                    $("#dolarizadoDiv").show();
-
-                }             
+                    $("#dolarizadoDiv").show();                      
 
                 if ($("#clasificacion").val() == "1" && $("#fechaCiertaId").val() == "" && $("#tipoId").val() != "6") {
                     $("#dolarizadoExpressDiv").show();
@@ -1866,6 +1863,8 @@ function InicializarElementos() {
                 $("#dolarizadoDiv").hide();
                 $("#dolarizadoFechaId").val("");
             }
+
+            MostrarFechaCierta();
             MostrarPagoDiferido();
         }
     });
