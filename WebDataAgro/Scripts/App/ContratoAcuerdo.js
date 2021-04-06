@@ -1067,13 +1067,13 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "MonedaId",
         change: function () {
-            //validarCredito();
+            //validarCredito();      
             if ($("#precioMonedaId").val() === "ARP  " && ($("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
                 $("#pagoDolarizadoDiv").hide();
                 $("#dolarizadoDiv").hide();
-                if ($("#fechaCiertaId").val() == "") {
-                    $("#pagoDiferidoDiv").show();
-                }
+                //if ($("#fechaCiertaId").val() == "") {
+                //    $("#pagoDiferidoDiv").show();
+                //}
                 $("#dolarizadoId").prop("checked", false);
                 $("#dolarizadoFechaId").data("kendoDatePicker").value("");
                 $("#dolarizadoExpressDiv").hide();
@@ -1085,18 +1085,15 @@ function InicializarElementos() {
                 //    if ($("#tipoId").val() === "6") {
                 //        $("#fechaCiertaAcuerdoDiv").show();
                 //    }
-                //}
-                MostrarFechaCierta();
+                //}               
             } else if ($("#precioMonedaId").val() === "USDM " && ($("#tipoId").val() === "2" || $("#tipoId").val() === "6")) {
-                $("#pagoDiferidoDiv").hide();
-                $("#pesificadoDiv").hide();
+                //$("#pagoDiferidoDiv").hide();
+                //$("#pesificadoDiv").hide();
                 if ($("#fechaCiertaId").val() == "") {
                     $("#pagoDolarizadoDiv").show();
                     $("#dolarizadoDiv").show();
 
-                }
-                $("#pesificadoId").prop("checked", false);
-                $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+                }             
 
                 if ($("#clasificacion").val() == "1" && $("#fechaCiertaId").val() == "" && $("#tipoId").val() != "6") {
                     $("#dolarizadoExpressDiv").show();
@@ -1110,6 +1107,8 @@ function InicializarElementos() {
             if ($("#tipoId").val() === "3") {
                 CalcularPrecioTotalApertura();
             }
+            MostrarFechaCierta();
+            MostrarPagoDiferido();
 
         },
         select: function (e) {
@@ -1259,7 +1258,7 @@ function InicializarElementos() {
                     if ($("#precioMonedaId").data("kendoDropDownList").value() == "USDM " && $("#tipoId").val() != "6") {
                         $("#dolarizadoExpressDiv").show();
                         $("#dolarizadoExpressId").attr("disabled", false);
-                        //$("#pagoDolarizadoDiv").show();
+                        $("#pagoDolarizadoDiv").show();
                         $("#dolarizadoDiv").show();
 
                     }
@@ -1816,9 +1815,9 @@ function InicializarElementos() {
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
         change: function () {
             if ($("#fechaCiertaId").val() == "") {
-                if ($("#precioMonedaId").val() == "ARP  ") {
-                    $("#pagoDiferidoDiv").show();
-                }
+                //if ($("#precioMonedaId").val() == "ARP  ") {
+                //    $("#pagoDiferidoDiv").show();
+                //}
                 if (!$("#dolarizadoExpressId").is(":checked") && $("#precioMonedaId").val() == "USDM ") {
                     $("#pagoDolarizadoDiv").show();
                     if ($("#clasificacion").val() == 1 && $("#tipoId").val() != "6") {
@@ -1839,9 +1838,11 @@ function InicializarElementos() {
                 $("#dolarizadoDiv").hide();
                 $("#dolarizadoExpressId").prop("checked", false);
                 $("#pagoDolarizadoDiv").hide();
-                $("#pagoDiferidoDiv").hide();
+                //$("#pagoDiferidoDiv").hide();
             }
+            MostrarPagoDiferido();
         }
+       
     });
     $("#fechaCiertaAcuerdo").kendoDatePicker({
         value: date,
@@ -1851,19 +1852,21 @@ function InicializarElementos() {
             if ($("#fechaCiertaAcuerdo").val() == "") {
                 if ($("#precioMonedaId").val() == "USDM ") {
                     $("#pagoDolarizadoDiv").show();
-                } else {
-                    $("#pagoDiferidoDiv").show();
-
                 }
+                //else {
+                //    $("#pagoDiferidoDiv").show();
+
+                //}
 
 
             } else {
-                $("#pagoDiferidoDiv").hide();
+                //$("#pagoDiferidoDiv").hide();
                 $("#dolarizadoId").attr("disabled", false);
                 $("#pagoDolarizadoDiv").hide();
                 $("#dolarizadoDiv").hide();
                 $("#dolarizadoFechaId").val("");
             }
+            MostrarPagoDiferido();
         }
     });
 
@@ -2662,9 +2665,9 @@ function ClickEnPizarra() {
             $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
             $("#pagoDiferidoFijacionDiv").removeClass("hide-fijacion");
         } else {
-            if ($("#tipoId").val() != 6) {
-                $("#pagoDiferidoDiv").show();
-            }
+            //if ($("#tipoId").val() != 6) {
+            //    $("#pagoDiferidoDiv").show();
+            //}
 
         }
         if ($("#tipoId").val() == 5) {
@@ -4802,7 +4805,7 @@ function HaySustentable() {
 }
 
 function MostrarFechaCierta() {
-   
+
     if ($("#pesificadoId").is(":checked") == true || $("#dolarizadoId").is(":checked") == true || $("#precioMonedaId").val() == "USDM ") {
         $("#fechaCiertaAcuerdoDiv").hide();
         $("#fechaCiertaAcuerdo").val("");
@@ -4826,4 +4829,24 @@ function EsconderCalidadSiHaySojaYCalidadEspecial() {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
     }
 
+}
+
+function MostrarPagoDiferido() {
+    if ($("#fechaCiertaAcuerdo").val() != "" ||  $("#dolarizadoId").is(":checked") == true || $("#precioMonedaId").val() == "USDM ") {
+        $("#pesificadoId").prop("checked", false);
+        $("#pagoDiferidoDiv").hide();
+        $("#pesificadoDiv").hide();
+        $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+    } else {
+        if ($("#precioId").val() == "" ||
+            $("#precioId").val() == "0" ||
+            $("#precioId").val() == null) {            
+            $("#pesificadoId").prop("checked", false);
+            $("#pagoDiferidoDiv").hide();
+            $("#pesificadoDiv").hide();
+            $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+        } else {
+            $("#pagoDiferidoDiv").show();
+        }
+    }
 }

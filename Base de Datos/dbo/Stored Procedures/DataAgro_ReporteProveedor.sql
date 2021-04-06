@@ -32,6 +32,8 @@ BEGIN
 	OR
 	P.CUIT LIKE '%'+@Valor+'%'
 	OR
+	P.Alias LIKE '%'+@Valor+'%'
+	OR
 	P.RazonSocial LIKE '%'+@Valor+'%'
 	OR
 	C.Nombres LIKE '%'+ @Valor+'%'
@@ -91,6 +93,8 @@ BEGIN
 	WHERE @Valor is null 
 	OR
 	P.CUIT LIKE '%'+@Valor+'%'
+	OR
+	P.Alias LIKE '%'+@Valor+'%'
 	OR
 	P.RazonSocial LIKE '%'+@Valor+'%'
 	OR
