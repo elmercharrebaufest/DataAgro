@@ -96,12 +96,12 @@ namespace WebDataAgro.Controllers
         public ActionResult ListarProveedor(string text = "")
         {
             var proveedores = mobjProveedorManager.ListarProveedor(text);
-            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
         public ActionResult ListarCorredor(string text = "")
         {
             var corredores = mobjProveedorManager.ListarCorredor(text);
-            return Json(corredores.Select(x => new { CorredorId = x.ProveedorId, Corredor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+            return Json(corredores.Select(x => new { CorredorId = x.ProveedorId, Corredor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
         private void FillViewBag()
         {

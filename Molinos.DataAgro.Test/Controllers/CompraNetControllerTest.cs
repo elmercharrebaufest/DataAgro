@@ -479,7 +479,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             proveedorManagerMock.Verify(x => x.TraerProveedor(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

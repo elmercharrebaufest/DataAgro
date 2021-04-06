@@ -117,7 +117,7 @@ function CargarGrillaConfig() {
                 }
             },           
             {
-                field: "Cantidad", type: "number", title: "Cantidad (Kg)", template: function (dataItem) {
+                field: "Cantidad", type: "number", title: "Cantidad (Tn)", template: function (dataItem) {
                     return kendo.toString(dataItem.Cantidad, "##,#.##").replace(/,/g, ".");
                 }
             },

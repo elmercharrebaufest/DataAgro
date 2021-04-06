@@ -88,6 +88,7 @@
     <Compile Include="Helpers\ListaCBUProveedorAgent.cs" />
     <Compile Include="Helpers\ModificarFijacionAgent.cs" />
     <Compile Include="Helpers\AdministracionCuperaAgent.cs" />
+    <Compile Include="Helpers\ClientePrimariAPIAgent.cs" />
     <Compile Include="Helpers\ServicioRepositorioScatoAgent.cs" />
     <Compile Include="Helpers\ValidacionCreditoAgent.cs" />
     <Compile Include="Helpers\ValidarDocProcPagoAgent.cs" />

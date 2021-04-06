@@ -828,18 +828,27 @@ function InicializarElementos() {
                 //$("#precioMonedaId").data("kendoDropDownList").value("USDM ");
                 $("#pizarraDiv").prop("checked", false);
             } else if (this.value() == 6) {
-                $("#boton-ampliar").hide();
-                $(".noAcuerdo").hide();
-                $(".acuerdo").show();
-                RemoverFondosGrises();
-                $("#guardarBtn").empty();
-                $("#guardarBtn").append("Guardar Acuerdo");
-                $("#aperturaPrecioDiv").show();
-                $("#ocultarAperturaBtn").show();
-                $("#ocultarAperturaMoneda").removeClass("w100");
-                $("#ocultarAperturaMoneda").addClass("w70");
-                //if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
-                $("#pizarraDiv").prop("checked", false);
+                var tipoId = $("#tipoId").data("kendoDropDownList").value();
+                error = false;
+                obj = ObtenerDatos(error);
+                if (!error) {
+                    BlockUi('Cargando...');
+                    RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
+                } else {
+                    $.unblockUI();
+                }
+                //$("#boton-ampliar").hide();
+                //$(".noAcuerdo").hide();
+                //$(".acuerdo").show();
+                //RemoverFondosGrises();
+                //$("#guardarBtn").empty();
+                //$("#guardarBtn").append("Guardar Acuerdo");
+                //$("#aperturaPrecioDiv").show();
+                //$("#ocultarAperturaBtn").show();
+                //$("#ocultarAperturaMoneda").removeClass("w100");
+                //$("#ocultarAperturaMoneda").addClass("w70");
+                ////if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+                //$("#pizarraDiv").prop("checked", false);
 
             } else {
                 $("#fechasDiv").show();
@@ -971,7 +980,8 @@ function InicializarElementos() {
         dataValueField: "MaterialId",
         change: function () {
             obtenerLocalidadProvincia();
-            CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
+            //CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
+            EsconderCalidadSiHaySojaYCalidadEspecial();
             if ($("#material").val() !== "") {
                 CargarCampaniaPorMaterial($("#material").val());
                 CargarCalidadPorMaterial($("#material").val());
@@ -1232,6 +1242,7 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "Id",
         change: function () {
+            EsconderCalidadSiHaySojaYCalidadEspecial();
             if ($("#tipoId").val() == 1 && $("#destinoId").val() != 1) {
                 LimpiarDescuentos();
                 $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
@@ -1314,6 +1325,7 @@ function InicializarElementos() {
             //    $("#pagoCbu").val("");
             //    $("#pagoCbuInput").val("");
             //}
+            OcultarCamposAgente();
             if (this.value() == 1) {
                 $("#boletoNingunoId").prop("checked", false);
                 $("#boletoNingunoId").click();
@@ -2600,7 +2612,8 @@ function windowsResize() {
 }
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
-    if ($("#canjeId").is(":checked")) {
+    if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
+        $("#destinoId").data("kendoDropDownList").value() == "7" && $('#material').data("kendoDropDownList").value() == "3")) {
         for (var i = 0; i < calidadGrano.length; i++) {
             if (calidadGrano[i].Descripcion != "Camara" && calidadGrano[i].Descripcion != "Fabrica") {
                 calidadGrano.splice(i);
@@ -3674,6 +3687,8 @@ function CargarDatosEditar(contrato, hijo) {
             $("#boletoConfirmaId").attr("disabled", true);
             $("#boletoFisicoId").attr("disabled", true);
             $("#boletoCartaId").attr("disabled", true);
+        } else {
+            OcultarCamposAgente();
         }
         if (contrato.ContratoAcuerdoId != null) {
             $("#contratoAcuerdoId").data("kendoAutoComplete").value(contrato.ContratoAcuerdoId);
@@ -4614,6 +4629,15 @@ function HaySustentable() {
     //} else {
     //    $("#mercsDepositoDiv").show();
     //}
+}
+function EsconderCalidadSiHaySojaYCalidadEspecial() {
+    if ($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
+        $("#destinoId").data("kendoDropDownList").value() == "7" && $('#material').data("kendoDropDownList").value() == "3") {
+        CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
+    } else {
+        CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
+    }
+
 }
 
 

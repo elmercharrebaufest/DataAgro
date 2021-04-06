@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Molinos.DataAgro.Entities.Helpers;
+using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
@@ -6,7 +8,10 @@ namespace Molinos.DataAgro.Entities.Entities
     public partial class DescuentoBonificacion
     {
         public int Id { get; set; }
+        [JsonConverter(typeof(SinHora))]
+
         public DateTime? FechaDesde { get; set; }
+        [JsonConverter(typeof(SinHora))]
         public DateTime? FechaHasta { get; set; }
         public decimal Importe { get; set; }
         public string MonedaId { get; set; }

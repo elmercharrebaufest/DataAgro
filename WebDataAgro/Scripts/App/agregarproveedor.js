@@ -2874,8 +2874,10 @@ function ObtenerDatos() {
     obj.basicos.cuit = $("#cuit").val();
 
     obj.basicos.razonsocial = $("#razonsocial").val();
+    obj.basicos.Alias = $("#Alias").val();
 
     obj.basicos.nocliente = $("#nocliente").is(":checked") ? "1" : "0";
+    obj.basicos.Deshabilitado = $("#deshabilitado").is(":checked");
 
     obj.basicos.segmentacion = $("#segmentacion").val();
     obj.basicos.calificacion = $("#calificacion").val();

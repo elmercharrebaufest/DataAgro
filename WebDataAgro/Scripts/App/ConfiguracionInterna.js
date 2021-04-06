@@ -33,6 +33,7 @@ function InicializarElementos() {
         min: 0
     });
     $("#DiaPizarra").kendoDatePicker();
+    $("#DiaPizarraHasta").kendoDatePicker();
     $("#DesdeEntregaPizarra").kendoDatePicker();
     $("#HastaEntregaPizarra").kendoDatePicker();
     $("#DesdeEntrega").kendoDatePicker();
@@ -140,6 +141,7 @@ function LimpiarPizarraForm() {
     var hoy = new Date();
     var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
     $("#DiaPizarra").val(stringDia);
+    $("#DiaPizarraHasta").val(stringDia);
     $("#PizarraDesde").val("00:00");
     $("#PizarraHasta").val("23:59");
 }

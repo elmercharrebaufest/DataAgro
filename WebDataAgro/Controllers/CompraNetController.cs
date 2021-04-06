@@ -124,17 +124,17 @@ namespace WebDataAgro.Controllers
             if (!String.IsNullOrEmpty(obj))
             {
                 var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
-                var contrato = typeof(CompraNetController).GetMethod("DeserializarJson").MakeGenericMethod(Type.GetType($"{tipoNegocio.ClaseDescripcion}, Molinos.DataAgro.Entities")).Invoke(null, new object[] { obj });
+                //var contrato = typeof(CompraNetController).GetMethod("DeserializarJson").MakeGenericMethod(Type.GetType($"{tipoNegocio.ClaseDescripcion}, Molinos.DataAgro.Entities")).Invoke(null, new object[] { obj });
                 var negocio = typeof(CompraNetController).GetMethod("DeserializarJson").MakeGenericMethod(Type.GetType($"{tipoNegocio.ClaseDescripcion}, Molinos.DataAgro.Entities")).Invoke(null, new object[] { obj }) as Negocio;
                 ViewBag.Obj = mobjContratoManager.NegocioABasicoContrato(negocio);
                 ViewBag.esEdicion = true;
-                return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 ? tipoNegocio.Descripcion.Replace(" ", String.Empty): "CrearContrato");
+                return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 || tipoNegocio.TipoNegocioId == 6 ? tipoNegocio.Descripcion.Replace(" ", String.Empty): "CrearContrato");
             }
             if (id > 0 || (PermisosHelper.Is(PermisosDataAgro.ModificarCanje)))
             {
                 tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) ? 1 : tipoId.HasValue ? tipoId.Value : 2 ;
                 var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
-                return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
+                return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 || tipoNegocio.TipoNegocioId == 6 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
             }
 
             return View();

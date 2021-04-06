@@ -27,13 +27,15 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
         private readonly IMailManager mailManager;
+        private readonly IClientePrimariAPIAgent clientePrimariAPI;
 
 
-        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager)
+        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimariAPIAgent clientePrimariAPI)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.mailManager = mailManager;
+            this.clientePrimariAPI = clientePrimariAPI;
         }
 
         public Resultado OcultarEnTablero(Negocio negocio)
@@ -52,7 +54,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return error;
         }
-
         public void EnvioMailNegociosConDiaAnterior()
         {
             DateTime hoy = DateTime.Now.Date;
@@ -68,7 +69,7 @@ namespace Molinos.DataAgro.Business.Managers
                     lista.Add(email);
 
                 }
-                var idJefes = repositorio.Listar<Comercial,string>(x=>x.IdActiveDirectory, 
+                var idJefes = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory,
                     a => a.RolesAsociados.Any(b => b.PermisosAsociados.Any(c => c.Permiso == PermisosDataAgro.JefeEnvioMailNegociosConDiaAnterior)));
 
                 foreach (var item in idJefes)
@@ -87,7 +88,6 @@ namespace Molinos.DataAgro.Business.Managers
 
 
         }
-
         private AlternateView CuerpoMailNegociosConDiaAnterior(string filePath, List<Negocio> contratos)
         {
             LinkedResource res = new LinkedResource(filePath);
@@ -182,6 +182,11 @@ namespace Molinos.DataAgro.Business.Managers
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
             return alternateView;
+        }
+        
+        public void ConsultarContratosPrimary()
+        {
+            clientePrimariAPI.ObtenerNegocios();
         }
     }
 }

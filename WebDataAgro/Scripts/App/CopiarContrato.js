@@ -810,3 +810,15 @@ function MostrarCcPpPendientesAplicar() {
         $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
     }
 }
+
+function OcultarCamposAgente() {
+    if ($("#AgenteCompraId").data("kendoDropDownList").value() == "" && ($("#tipoId").val() == "2") || $("#tipoId").val() == "1") {
+        $(".ocultarAgenteDiv").hide();
+        $("#caratulaExtensionId").val("");
+        $("#caratulaMATId").val("");
+        $("#precioAjusteComisionId").data("kendoNumericTextBox").value("");
+        $("#monedaAjusteComisionId").data("kendoDropDownList").value("");
+    } else {
+        $(".ocultarAgenteDiv").show();
+    }
+}

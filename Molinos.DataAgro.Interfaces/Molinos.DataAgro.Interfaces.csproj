@@ -119,6 +119,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agent\IClientePrimariAPIAgent.cs" />
     <Compile Include="Agent\IContratosAPesificarAgent.cs" />
     <Compile Include="Agent\IComprasDetalleAgent.cs" />
     <Compile Include="Agent\ICriterioCDWarrantAgent.cs" />

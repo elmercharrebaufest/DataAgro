@@ -43,12 +43,15 @@ function armarBasico(basico) {
     $("#cuit").val(basico.CUIT);
     $("#cuit").trigger("keyup");
     $("#razonsocial").val(basico.RazonSocial);
+    $("#Alias").val(basico.Alias);
     $("#segmentacion").val($('#segmentacion option').filter(function () { return $(this).html() == basico.Segmentacion; }).val());
     $("#Operable-agregar").val(basico.Operable);
     if (basico.Estado === "Sin interés de operar") {
         $("#nocliente").attr("checked", true);
     } else
         $("#nocliente").attr("checked", false);
+
+    $("#deshabilitado").attr("checked", basico.Deshabilitado);
 
     $("#calificacion").val(basico.Calificacion);
     $("#calificacion").multiselect("refresh");

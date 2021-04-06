@@ -129,7 +129,7 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 1,
                 Dia = new DateTime(2099, 1, 30)
             };
-            var resultado = target.GrabarPizarra(config, "");
+            var resultado = target.GrabarPizarra(config, "", new DateTime(2099, 1, 30));
 
             Assert.IsTrue(resultado.HayError);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<HabilitacionPizarra>()), Times.Once);

@@ -350,7 +350,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -364,7 +364,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -378,7 +378,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -404,7 +404,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ProveedorId\":1,\"CUIT\":\"A\",\"RazonSocial\":null,\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":2,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"Direccion\":null,\"CodigoPostal\":\"1\",\"ClasificacionCompraNetId\":1,\"ClasificacionDescripcion\":null,\"ProveedorCorredorId\":1,\"Consignatario\":null,\"NoOperable\":null,\"Operando\":null,\"TooltipNoOperable\":null,\"EstadoCuit\":null,\"RiesgoComercialSap\":null,\"Facacop\":false}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ProveedorId\":1,\"CUIT\":\"A\",\"RazonSocial\":null,\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":2,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"Direccion\":null,\"CodigoPostal\":\"1\",\"ClasificacionCompraNetId\":1,\"ClasificacionDescripcion\":null,\"ProveedorCorredorId\":1,\"Consignatario\":null,\"NoOperable\":null,\"Operando\":null,\"TooltipNoOperable\":null,\"EstadoCuit\":null,\"RiesgoComercialSap\":null,\"Facacop\":false,\"Alias\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -417,7 +417,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

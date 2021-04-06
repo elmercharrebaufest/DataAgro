@@ -216,6 +216,9 @@ function guardarProveedorCorredor() {
             obj.contacto = {};
             obj.basicos.cuit = $("#provcorr-cuit").val();
             obj.basicos.RazonSocial = $("#provcorr-razonsocial").val();
+            obj.basicos.Alias = $("#Alias").val();
+            obj.basicos.Deshabilitado = $("#deshabilitado").is(":checked");
+
             if ($("#procedencia").val() !== "") {
                 var localidadAux = $("#procedencia").val().split(' (');
                 obj.contacto.localidadDesc = localidadAux[0];
@@ -363,6 +366,7 @@ function armarEditCorredor() {
             proveedor.contacto = {};
             proveedor.produccion = {};
             proveedor.basicos.RazonSocial = proveedores[i].RazonSocial;
+            proveedor.basicos.Alias = proveedores[i].Alias;
             proveedor.basicos.cuit = proveedores[i].CUIT;
             proveedor.contacto.direccion = proveedores[i].Direccion;
             proveedor.contacto.codpost = proveedores[i].CodigoPostal;
@@ -413,6 +417,8 @@ function DatosCorredor() {
 
     obj.basicos.cuit = $("#cuit").val();
     obj.basicos.razonsocial = $("#razonsocial").val();
+    obj.basicos.Alias = $("#Alias").val();
+    obj.basicos.Deshabilitado = $("#deshabilitado").is(":checked");
     obj.basicos.nocliente = $("#nocliente").is(":checked") ? "1" : "0";
     obj.basicos.segmentacion = $("#segmentacion").val();
     obj.basicos.calificacion = $("#calificacion").val();

@@ -12,7 +12,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         //ConfiguracionInterna TraerConfiguracion();
         Resultado GrabarPrecio(PrecioMoa oConfiguracion, string active);
-        Resultado GrabarPizarra(HabilitacionPizarra oConfiguracion, string active);
+        Resultado GrabarPizarra(HabilitacionPizarra oConfiguracion, string active, DateTime fechaHasta);
         Resultado GrabarFijacion(HabilitacionFijacion oConfiguracion);
         List<PrecioMoaDto> TraerPrecios(); 
         List<HabilitacionFijacionDto> TraerFijaciones(); 

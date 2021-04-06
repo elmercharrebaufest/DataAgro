@@ -91,6 +91,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Consignatario { get; set; }
         public decimal? Comision { get; set; }
         public bool? PlanCanje { get; set; }
+        public bool? Deshabilitado { get; set; }
+        public string Alias { get; set; }
     }
 
     public class BasicoProveedorTraerPorProveedor

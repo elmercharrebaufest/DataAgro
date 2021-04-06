@@ -19,6 +19,7 @@ namespace WebDataAgro.Models
         public string DesdeVigencia { get; set; }
         public string HastaVigencia { get; set; }
         public string DiaPizarra { get; set; }
+        public string DiaPizarraHasta { get; set; }
         public string PizarraDesde { get; set; }
         public string PizarraHasta { get; set; }
         public int MaterialPizarra { get; set; }

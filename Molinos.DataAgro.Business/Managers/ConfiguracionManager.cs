@@ -46,6 +46,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.DiasDiferimiento = oConfiguracion.DiasDiferimiento;
                 oConfiguracionSave.ImporteSustentable = oConfiguracion.ImporteSustentable;
                 oConfiguracionSave.CantidadAcuerdo = oConfiguracion.CantidadAcuerdo;
+                oConfiguracionSave.CantidadDiasDolarizadoLimiteMaximo = oConfiguracion.CantidadDiasDolarizadoLimiteMaximo;
+                oConfiguracionSave.CantidadMaxima = oConfiguracion.CantidadMaxima;
             }
 
             else

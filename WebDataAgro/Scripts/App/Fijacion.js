@@ -120,11 +120,11 @@ function cargarContratoAFijarSeleccionado() {
     cargarDatosAFijarEnFijacion(afijar[0])
 }
 function cargarDatosAFijarEnFijacion(afijar) {
-    
-    if (afijar == null || typeof afijar === "undefined") {
+
+    if (afijar == null || typeof afijar === "undefined") {        
         return;
     }
-  
+
     $(".datoscontrato").show();
     $("#datosContrato").show();
     $("#kgspendientescontrato").text(afijar.KilosPendiente);
@@ -210,6 +210,16 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#MonedaSobrePrecioContrato").val(afijar.MonedaSobrePrecio);
     }
 
+    if (afijar.Clasificacion == "PRODUCTOR" && $("#buscadorCorredor").data("kendoAutoComplete").value() == "") {
+        $("#chequeElectronico").prop("checked", false);
+        $("#chequeElectronico").attr('readonly', true);
+        $("#chequeElectronico").attr('disabled', true);
+    } else {
+        $("#chequeElectronico").attr('readonly', false);
+        $("#chequeElectronico").attr('disabled', false);
+    }
+    HayChequeElectronicoOtros();
+
 }
 
 function InicializarElementos() {
@@ -260,7 +270,7 @@ function InicializarElementos() {
 
             }
             InicializarBordesRojos();
-            consultarBonificacionAfijar(datosAfijar());  
+            consultarBonificacionAfijar(datosAfijar());
         },
         select: function (e) {
             ObtenerAlta(e.dataItem.Id);
@@ -309,8 +319,8 @@ function InicializarElementos() {
                         $("#boletoNingunoId").prop("checked", true);
                     }
                 }
-                                
-                consultarBonificacionAfijar(datosAfijar(), compraNet);  
+
+                consultarBonificacionAfijar(datosAfijar(), compraNet);
                 //if ($("#tipoId").val() == "6") 
                 //    $("#dolarizadoExpressDiv").hide();
 
@@ -502,7 +512,7 @@ function InicializarElementos() {
         select: function (e) {
             cargarDatosAFijarEnFijacion(e.dataItem);
 
-            var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#idProveedor").val()});
+            var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#idProveedor").val() });
             consultarBonificacionAfijar(e.dataItem, compraNet);
             //$(".datoscontrato").show();
             //$("#datosContrato").show();
@@ -828,18 +838,27 @@ function InicializarElementos() {
                 $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
                 $("#pizarraDiv").prop("checked", false);
             } else if (this.value() == 6) {
-                $("#boton-ampliar").hide();
-                $(".noAcuerdo").hide();
-                $(".acuerdo").show();
-                RemoverFondosGrises();
-                $("#guardarBtn").empty();
-                $("#guardarBtn").append("Guardar Acuerdo");
-                $("#aperturaPrecioDiv").show();
-                $("#ocultarAperturaBtn").show();
-                $("#ocultarAperturaMoneda").removeClass("w100");
-                $("#ocultarAperturaMoneda").addClass("w70");
-                if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
-                $("#pizarraDiv").prop("checked", false);
+                var tipoId = $("#tipoId").data("kendoDropDownList").value();
+                error = false;
+                obj = ObtenerDatos(error);
+                if (!error) {
+                    BlockUi('Cargando...');
+                    RedireccionarNegocio($("#crearContrato").val(), tipoId, obj);
+                } else {
+                    $.unblockUI();
+                }
+                //$("#boton-ampliar").hide();
+                //$(".noAcuerdo").hide();
+                //$(".acuerdo").show();
+                //RemoverFondosGrises();
+                //$("#guardarBtn").empty();
+                //$("#guardarBtn").append("Guardar Acuerdo");
+                //$("#aperturaPrecioDiv").show();
+                //$("#ocultarAperturaBtn").show();
+                //$("#ocultarAperturaMoneda").removeClass("w100");
+                //$("#ocultarAperturaMoneda").addClass("w70");
+                //if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+                //$("#pizarraDiv").prop("checked", false);
 
             } else {
                 $("#fechasDiv").show();
@@ -3331,7 +3350,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     }
 
-    if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {       
+    if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
         var listMotivos = $("#motivoAnterior").data("kendoDropDownList").dataSource.data().filter(function (x) { return x.Descripcion == contrato.MotivoOperacionAnterior });
         if (listMotivos != null && listMotivos.length > 0) {
             $("#motivoOperacionAnteriorFijacion").val(contrato.MotivoOperacionAnterior);
@@ -3341,8 +3360,8 @@ function CargarDatosEditar(contrato, hijo) {
             $("#motivoAnterior").data("kendoDropDownList").text("Otro");
             $("#motivoAnterior").data("kendoDropDownList").trigger("change");
             $("#motivoOperacionAnteriorFijacion").val(contrato.MotivoOperacionAnterior);
-        }          
-       $("#fechaFijacionMotivoDiv").show();       
+        }
+        $("#fechaFijacionMotivoDiv").show();
     } else {
         $("#motivoOperacionAnteriorId").val("");
         $("#fechaOperacionMotivoDiv").hide();
@@ -3825,6 +3844,16 @@ function CargarDatosEditar(contrato, hijo) {
         $("#ImporteSobrePrecioContrato").val(contrato.ImporteSobrePrecioContrato);
         $("#PorcentajeSobrePrecioContrato").val(contrato.PorcentajeSobrePrecioContrato);
         $("#MonedaSobrePrecioContrato").val(contrato.MonedaSobrePrecioContrato);
+
+        if (contrato.ClasificacionContrato == "PRODUCTOR" && contrato.Corredor == "") {
+            $("#chequeElectronico").prop("checked", false);
+            $("#chequeElectronico").attr('readonly', true);
+            $("#chequeElectronico").attr('disabled', true);
+        } else {
+            $("#chequeElectronico").attr('readonly', false);
+            $("#chequeElectronico").attr('disabled', false);
+        }
+        HayChequeElectronicoOtros();
     }
 
 }
@@ -4481,7 +4510,7 @@ function consultarBonificacionAfijar(afijar, compraNet) {
             }
         }
     }
-    
+
     return hayBonificacion;
 }
 

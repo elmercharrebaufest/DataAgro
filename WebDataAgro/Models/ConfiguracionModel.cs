@@ -30,5 +30,7 @@ namespace WebDataAgro.Models
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_Cantidad")]
         [Range(1, int.MaxValue, ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_Cantidad")]
         public int CantidadAcuerdo { get; set; }
+        public int CantidadDiasDolarizadoLimiteMaximo { get; set; }
+        public int CantidadMaxima { get; set; }
     }
 }

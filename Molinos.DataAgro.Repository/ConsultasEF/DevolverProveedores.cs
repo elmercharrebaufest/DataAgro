@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             from p in rgs.DefaultIfEmpty()
                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
                             from c in rg.DefaultIfEmpty()
-                            where ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) ||
+                            where ((Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
                             c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) &&
                             (corredor.Equals(0) ? Proveedor.SegmentacionId != 5 && Proveedor.SegmentacionId != 7
                             : corredor.Equals(1) ? (Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7): Proveedor.SegmentacionId>0))
@@ -36,8 +36,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             {
                                 Id = provs.Key.ProveedorId,
                                 Cuit = provs.Key.CUIT,
-                                RazonSocial = provs.Key.RazonSocial,
-                                Filtro = filtro + "|" + provs.Key.RazonSocial + " (" + provs.Key.CUIT + ")"
+                                RazonSocial = !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial): provs.Key.RazonSocial,
+                                Alias = provs.Key.Alias,
+                                Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")"
                             };
 
             return resultado.Distinct().Take(15).ToList();

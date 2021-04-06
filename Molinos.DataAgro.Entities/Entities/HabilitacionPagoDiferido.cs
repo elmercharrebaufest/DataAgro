@@ -16,6 +16,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaCreacion { get; set; }
         public int? UsuarioCreadorId { get; set; }
         public int MaterialId { get; set; }
+        public bool Habilitado { get; set; }
+
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("TipoNegocioId")]

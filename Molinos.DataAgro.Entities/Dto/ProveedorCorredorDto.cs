@@ -28,6 +28,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? EstadoCuit { get; set; }
         public string RiesgoComercialSap { get; set; }
         public bool Facacop { get; set; }
+        public string Alias { get; set; }
     }
 }
 

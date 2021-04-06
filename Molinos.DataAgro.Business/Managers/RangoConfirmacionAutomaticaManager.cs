@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Business
                     Moneda = x.MonedaId,
                     FechaDesde = x.FechaDesde,
                     FechaHasta = x.FechaHasta,
-                    Cantidad = x.Cantidad,
+                    Cantidad = x.Cantidad /1000,
                     EntregaDesde = (x.DesdeMes + "/" + x.DesdeAnio) == "0/0" ? "" : (x.DesdeMes + "/" + x.DesdeAnio),
                     EntregaHasta = (x.HastaMes + "/" + x.HastaAnio) == "0/0" ? "" : (x.HastaMes + "/" + x.HastaAnio),
                     Zona = x.Zona != null ? x.Zona.Descripcion : "",
@@ -82,7 +82,7 @@ namespace Molinos.DataAgro.Business
                 HastaAnio = x.HastaAnio,
                 ZonaId = x.ZonaId ?? 0,
                 Zona = x.Zona.Descripcion,
-                Cantidad = x.Cantidad,
+                Cantidad = x.Cantidad /1000,
                 DesdeAnio = x.DesdeAnio,
                 DesdeMes = x.DesdeMes,
                 HastaMes = x.HastaMes,
@@ -116,7 +116,7 @@ namespace Molinos.DataAgro.Business
                 oRangoSave.FechaDesde = oRango.FechaDesde;
                 oRangoSave.FechaHasta = oRango.FechaHasta;
                 oRangoSave.ZonaId = oRango.ZonaId;
-                oRangoSave.Cantidad = oRango.Cantidad;
+                oRangoSave.Cantidad = oRango.Cantidad * 1000;
                 oRangoSave.DesdeMes = oRango.DesdeMes;
                 oRangoSave.HastaMes = oRango.HastaMes;
                 oRangoSave.DesdeAnio = oRango.DesdeAnio;
@@ -128,6 +128,7 @@ namespace Molinos.DataAgro.Business
             {
                 oRango.UsuarioCreadorId = comercialId;
                 oRango.FechaCreacion = DateTime.Now;
+                oRango.Cantidad *= 1000;
                 repositorio.Agregar(oRango);
             }
 

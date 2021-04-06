@@ -53,7 +53,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal? ComisionPorcentaje { get; set; }
         public bool? PlanCanje { get; set; }
 
+        public string Alias { get; set; }
 
+        public bool? Deshabilitado { get; set; }
         [ForeignKey("EstadoId")]
         public virtual Estado Estado { get; set; }
         [ForeignKey("SegmentacionId")]

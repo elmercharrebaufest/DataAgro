@@ -202,6 +202,8 @@ namespace Molinos.DataAgro.Test.Managers
                 CampanaId = 1,
                 FechaOperacion = DateTime.Now
             };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
+
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<double> { 1.0 });
@@ -254,6 +256,8 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<double> { 1.0 });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
+
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>()))
                 .Returns(new BasicoContrato
                 {
@@ -336,6 +340,7 @@ namespace Molinos.DataAgro.Test.Managers
                         Clasificacion = "PRODUCTOR"
                     }
                 });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
               .Returns(new List<RangoPrecio>() { new RangoPrecio { MonedaId = "AUS ", MaterialId = 2, PrecioMaximo = 20000, PrecioMinimo = 0 } });
@@ -975,6 +980,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Fecha = DateTime.Now,
                 AperturaPrecio = null
             };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
+
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(new Contrato { Id = 1 });
             repositorioMock.Setup(y => y.Obtener<Negocio>(It.IsAny<int>())).Returns(new Negocio { Id = 1, Fecha = DateTime.Now });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))

@@ -24,16 +24,17 @@ namespace Molinos.DataAgro.Business
         private readonly IDiasHabilesAgent diasHabilesAgent;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IValidarDocProcPagoAgent validarPagoAgente;
+        private readonly IConfiguracionManager configuracionManager;
 
         public ContratoAcuerdoManager(ILogger logger, IRepositorio repositorio,
-            IDiasHabilesAgent diasHabilesAgent, ILogDataAgroManager logDataAgroManager, IValidarDocProcPagoAgent validarPagoAgente)
+            IDiasHabilesAgent diasHabilesAgent, ILogDataAgroManager logDataAgroManager, IValidarDocProcPagoAgent validarPagoAgente,IConfiguracionManager configuracionManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.diasHabilesAgent = diasHabilesAgent;
             this.logDataAgroManager = logDataAgroManager;
             this.validarPagoAgente = validarPagoAgente;
-
+            this.configuracionManager = configuracionManager;
         }
 
         public GrabarAcuerdoResult BorrarAcuerdo(ContratoAcuerdo oAcuerdo)
@@ -472,6 +473,11 @@ namespace Molinos.DataAgro.Business
 
         private void Validar(ContratoAcuerdo oContratoAcuerdo, GrabarAcuerdoResult oEntityErrors)
         {
+            var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oContratoAcuerdo.ProveedorId);
+            if (proveedor != null && proveedor.Deshabilitado.HasValue && proveedor.Deshabilitado.Value != false)
+            {
+                oEntityErrors.Error("", "El Proveedor se encuentra deshabilitado");
+            }
             if (oContratoAcuerdo.CampanaId == null || oContratoAcuerdo.CampanaId == 0)
             {
                 oEntityErrors.Error("", "El campo 'Campaña' no debe estar vacio");
@@ -602,6 +608,30 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("", "No se puede completar Echeq en un Acuerdo a Fijar");
             }
+            if (oContratoAcuerdo.Descuentos != null)
+            {
+                if (oContratoAcuerdo.Descuentos.Any(a => a.FechaDesde != null && a.FechaHasta != null && a.FechaDesde > a.FechaHasta))
+                {
+                    oEntityErrors.Error("Descuentos", "La fecha desde de descuento o bonificacion no puede ser mayor a la fecha hasta.");
+                }
+                if (oContratoAcuerdo.Descuentos.Any(a => (a.TipoPeriodoDBId == 3 || a.TipoPeriodoDBId == 2) && (a.FechaDesde == null || a.FechaHasta == null)))
+                {
+                    oEntityErrors.Error("Descuentos", "La fecha desde y hasta de descuento o bonificacion es obligatoria.");
+                }
+                if (oContratoAcuerdo.Descuentos.Any(a => a.TipoPeriodoDBId == 3 || a.TipoPeriodoDBId == 2) && oContratoAcuerdo.Precio > 0)
+                {
+                    oEntityErrors.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación o de Entrega en un acuerdo a precio.");
+                }
+            }
+            var conf = configuracionManager.TraerConfiguraciones();
+            if (conf != null)
+            {
+                var cantidadMaxima = conf.CantidadMaxima * 1000;
+                if (cantidadMaxima < oContratoAcuerdo.Cantidad)
+                {
+                    oEntityErrors.Error("", "Cantidad del negocio excedida (" + cantidadMaxima.ToString("N0") + " kg)");
+                }
+            }
         }
 
         public BasicoContrato TraerAcuerdo(int id)
@@ -663,11 +693,11 @@ namespace Molinos.DataAgro.Business
                 Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
                 {
                     ContratoId = y.ContratoId,
-                    FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
+                    FechaDesde = y.FechaDesde != null ? DbFunctions.Right("00" + SqlFunctions.DateName("day", y.FechaDesde).Trim(), 2) + "-" +
+                                            DbFunctions.Right("00" + SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart(), 2) + "-" +
                                            SqlFunctions.DateName("year", y.FechaDesde) : "",
-                    FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
-                                           SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
+                    FechaHasta = y.FechaHasta != null ? DbFunctions.Right("00" + SqlFunctions.DateName("day", y.FechaHasta).Trim(), 2) + "-" +
+                                            DbFunctions.Right("00" + SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart(), 2) + "-" +
                                            SqlFunctions.DateName("year", y.FechaHasta) : "",
                     Importe = y.Importe,
                     MonedaId = y.MonedaId,

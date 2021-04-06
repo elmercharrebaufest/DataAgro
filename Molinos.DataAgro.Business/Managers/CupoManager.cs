@@ -227,6 +227,16 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado Validar(Cupo cupo, int cantidadCupos, DateTime? fechaHasta)
         {
             var error = new Resultado();
+            var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == cupo.ProveedorId);
+            if (proveedor == null)
+            {
+                error.Error("ProveedorId", "El campo 'Proveedor' es obligatorio");
+                return error;
+            }
+            if (proveedor.Deshabilitado.HasValue && proveedor.Deshabilitado.Value != false)
+            {
+                error.Error("ProveedorId", "Proveedor deshabilitado");
+            }
             if (cupo.ProveedorId == 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "El Proveedor no debe estar vacío"));

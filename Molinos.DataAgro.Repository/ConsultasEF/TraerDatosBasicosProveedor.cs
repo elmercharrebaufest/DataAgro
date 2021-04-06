@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 {
                     ProveedorId = prove.ProveedorId,
                     RazonSocial = prove.RazonSocial,
+                    Alias = prove.Alias,
                     CUIT = prove.CUIT,
                     Estado = est.Descripcion,
                     Facacop = (fac.CUIT == null) ? 0 : 1,
@@ -94,8 +95,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     BolsaCompraNet = prove.BolsaCompraNet.Descripcion,
                     Consignatario = prove.Consignatario,
                     Comision = prove.ComisionPorcentaje,
-                    PlanCanje = prove.PlanCanje
-
+                    PlanCanje = prove.PlanCanje,
+                    Deshabilitado = prove.Deshabilitado
+                    
 
                 };
 

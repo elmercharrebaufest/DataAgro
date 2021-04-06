@@ -33,7 +33,16 @@ namespace Molinos.DataAgro.Business.Managers
 
         private Resultado Validar(Fason oParam, Resultado oErrorMessages)
         {
-
+            var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
+            if (proveedor == null)
+            {
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' es obligatorio");
+                return oErrorMessages;
+            }
+            if (proveedor.Deshabilitado.HasValue && proveedor.Deshabilitado.Value != false)
+            {
+                oErrorMessages.Error("ProveedorId", "Proveedor deshabilitado");
+            }
             if (!oParam.ProveedorId.HasValue || oParam.ProveedorId == 0)
             {
                 oErrorMessages.Error("ProveedorId", "El campo 'Fasonero' no debe estar vacio");

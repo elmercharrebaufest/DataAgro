@@ -9,6 +9,7 @@
     string jsAgregar = randAgregar.Next().ToString();
     bool modificarDatosCampos = PermisosHelper.Is(PermisosDataAgro.SubidaArchivosKMZ);
     var modificarRazonSocial = PermisosHelper.Is(PermisosDataAgro.ModificarRazonSocial);
+    var deshabilitarProveedor = PermisosHelper.Is(PermisosDataAgro.DeshabilitarProveedor);
     if (global_asax.GlobalVariables.EsAdministrador)
     {
         modificarDatosCampos = false;
@@ -63,7 +64,10 @@
         </div>
         <div class="formulario-campo campo-razonsocial">
             <span class="campo-span">Razón Social</span>
-            <input type="text" class="campo-input-text" id="razonsocial" @(modificarRazonSocial ? "" : "disabled")/>
+            <input type="text" class="campo-input-text" id="razonsocial" @(modificarRazonSocial ? "" : "disabled") />
+            <br />
+            <span class="campo-span">Alias</span>
+            <input type="text" class="campo-input-text" id="Alias"/>
             <div class="campo-estadoafip">
                 <span class="campo-estadoafip-span">
                     Estado Registro AFIP
@@ -87,6 +91,12 @@
                 Sin interés de operar
             </div>
             <input id="nocliente" class="campo-input-text input-nocliente" type="checkbox" />
+        </div>
+        <div class="formulario-campo noCorredor" style="height:38px;" >
+            <div class="campo-span">
+               Deshabilitar
+            </div>
+            <input id="deshabilitado" class="campo-input-text input-nocliente"  @(deshabilitarProveedor ? "" : "disabled") type="checkbox" />
         </div>
         <div class="formulario-campo campo-segmentacion">
             <span class="campo-span">Segmentación (*)</span>
@@ -730,6 +740,7 @@
                             <input type="text" id="provcorr-razonsocial" disabled />
                         </div>
                     </div>
+                   
                 </div>
                 <div class="row provcorr-form">
                     <div class="col-lg-3"></div>

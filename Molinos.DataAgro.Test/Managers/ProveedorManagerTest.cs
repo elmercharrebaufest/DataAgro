@@ -2049,7 +2049,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
-             .Returns(new List<Proveedor>() { new Proveedor { CUIT = "a"} });
+             .Returns(new List<Proveedor>() { new Proveedor { CUIT = "a" } });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
                 .Returns(new Proveedor { CUIT = "1", RazonSocial = "a", SegmentacionId = 1, Calificacion = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
@@ -3530,6 +3530,8 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<ContactoComercial> { new ContactoComercial { Email1 = "dataagro.baufest@gmail.com" } });
             mailManagerMock.Setup(x => x.GetEmailUserActiveDirectory(It.IsAny<string>()))
                .Returns("dataagro.baufest@gmail.com");
+            comercialManagerMock.Setup(x => x.ListarComercialesSinRecibirMail()).Returns(new List<Comercial> { new Comercial { IdActiveDirectory = "asd" } });
+
             comercialManagerMock.Setup(x => x.ListarComercialesCorredor()).Returns(new List<Comercial> { new Comercial { IdActiveDirectory = "asd" } });
             Thread.CurrentPrincipal = new TestPrincipal(new Claim[] {
             new Claim(ClaimTypes.Role, PermisosDataAgro.VerCorredorComercial.ToString())
@@ -3659,6 +3661,8 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(oContrato);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Calidad, bool>>>()))
                .Returns(true);
+            comercialManagerMock.Setup(x => x.ListarComercialesSinRecibirMail()).Returns(new List<Comercial> { new Comercial { IdActiveDirectory = "asd" } });
+
             repositorioMock.Setup(y => y.Listar<ContactoComercial>(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<ContactoComercial> { new ContactoComercial { Email1 = "dataagro.baufest@gmail.com" } });
             mailManagerMock.Setup(x => x.GetEmailUserActiveDirectory(It.IsAny<string>()))
@@ -3775,6 +3779,22 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count);
+        }
+
+        [Test]
+        public void ActualizarRazonSocialTest()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<SISA> { new SISA { CUIT = "1", RazonSocial = "a", FechaVigenciaEstado = new DateTime(2020, 1, 1) }, new SISA { CUIT = "1", RazonSocial = "b", FechaVigenciaEstado = new DateTime(2000, 1, 1) } });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+              .Returns(new List<Proveedor> { new Proveedor { CUIT = "1", RazonSocial = "aaaa" }, new Proveedor { CUIT = "1", RazonSocial = "bbbb" }, new Proveedor { CUIT = "2", RazonSocial = "b" } });
+
+            target.ActualizarRazonSocial();
+
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
         }
     }
 }

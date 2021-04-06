@@ -39,20 +39,23 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     contactoComercial.Nombres.Contains(filtro) ||
                     contactoComercial.Apellido.Contains(filtro) ||
                     contactoComercial.Proveedor.RazonSocial.Contains(filtro) ||
-                    Proveedor.RazonSocial.Contains(filtro))
+                    Proveedor.RazonSocial.Contains(filtro) ||
+                    Proveedor.Alias.Contains(filtro))
 
                 group new { proveedorComercial } by new
                 {
                     proveedorComercial.ProveedorId,
                     proveedorComercial.Proveedor.RazonSocial,
-                    proveedorComercial.Proveedor.CUIT
+                    proveedorComercial.Proveedor.CUIT,
+                    proveedorComercial.Proveedor.Alias
                 };
-            var query = resultado.Select(x => new BusquedaHome
+            var query = resultado.Select(provs => new BusquedaHome
             {
-                Id = x.Key.ProveedorId,
-                RazonSocial = x.Key.RazonSocial,
-                Cuit = x.Key.CUIT,
-                Filtro = filtro
+                Id = provs.Key.ProveedorId,
+                RazonSocial = !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
+                Alias = provs.Key.Alias,
+                Cuit = provs.Key.CUIT,
+                Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")"
             });
             return query.ToList();
         }

@@ -219,6 +219,8 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns("a");
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA());
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
+
             var result = target.Validar(new Cupo() { Fason = true, MaterialId = 3, ProveedorId = 1, FechaIngreso = new DateTime(2019, 12, 30) }, 0, new DateTime(2019, 12, 1));
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>()), Times.Once);

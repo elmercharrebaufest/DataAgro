@@ -23,16 +23,16 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             from p in rgs.DefaultIfEmpty()
                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
                             from c in rg.DefaultIfEmpty()
-                            where Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) ||
+                            where Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
                             c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)
                             group c by Proveedor into provs
                             select new BusquedaHome
                             {
                                 Id = provs.Key.ProveedorId,
                                 Cuit = provs.Key.CUIT,
-                                RazonSocial = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR - " + provs.Key.RazonSocial : provs.Key.RazonSocial,
+                                RazonSocial = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR - " + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) : !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
                                 Corredor = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR" : "",
-                                Filtro = filtro + "|" + provs.Key.RazonSocial + " (" + provs.Key.CUIT + ")"
+                                Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")"
                             };
 
             return resultado.Distinct().Take(15).ToList();

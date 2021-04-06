@@ -75,5 +75,6 @@ namespace Molinos.DataAgro.Interfaces
 
         DatosCompraNetDto TraerBoletoBolsa(int id);
         void EnviarMailCanje(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial);
+        void ActualizarRazonSocial();
     }
 }

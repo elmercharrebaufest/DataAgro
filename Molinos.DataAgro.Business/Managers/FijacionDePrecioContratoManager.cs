@@ -148,7 +148,17 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private Resultado Validar(FijacionDePrecioContrato oParam, Resultado oErrorMessages, bool validacionesMinimas)
         {
-
+            var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
+            if (proveedor == null)
+            {
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' es obligatorio");
+                return oErrorMessages;
+            }
+            if (proveedor.Deshabilitado.HasValue && proveedor.Deshabilitado.Value != false)
+            {
+                oErrorMessages.Error("ProveedorId", "Proveedor deshabilitado");
+                return oErrorMessages;
+            }
             if (oParam.ProveedorId == 0)
             {
                 oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
@@ -314,18 +324,21 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("dolarizado", "La fecha de dolarizado no es válida");
 
             }
+
             if (oParam.FechaDolarizado != null)
             {
                 var conf = configuracionManager.TraerConfiguraciones();
                 if (conf != null)
                 {
-                    var fechaLimite = oParam.FechaOperacion.AddDays(conf.CantidadDias);
+                    var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? conf.CantidadDiasDolarizadoLimiteMaximo : conf.CantidadDias;
+                    var fechaLimite = oParam.FechaOperacion.AddDays(cantidadDias);
                     if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
-                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + conf.CantidadDias + " días");
+                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
                     }
                 }
             }
+
             if (oParam.PagoDiferido == true && oParam.DiasPesificado != null)
             {
                 var conf = configuracionManager.TraerConfiguraciones();

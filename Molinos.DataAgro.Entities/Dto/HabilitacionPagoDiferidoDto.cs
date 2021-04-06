@@ -14,5 +14,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Importe { get; set; }
         public DateTime DesdeVigencia { get; set; }
         public DateTime HastaVigencia { get; set; }
+        public bool Habilitado { get; set; }
     }
 }

@@ -83,9 +83,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                         Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
                         Provincia = !(contrato is Contrato) || (contrato as Contrato).Provincia == null ? "" : (contrato as Contrato).Provincia.Nombre,
-                        TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : 
-                        (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : 
-                        (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : 
+                        TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" :
+                        (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" :
+                        (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" :
                         (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
                         (contrato is Contrato && (contrato as Contrato).Canje == true) ? "CANJE" : (contrato is Contrato && (contrato as Contrato).PrestamoDevolucion == true) ? "PRÉSTAMO DEVOLUCIÓN" :
                         (contrato is Contrato && (contrato as Contrato).Venta == true) ? "VENTA" : contrato.TipoNegocio.Descripcion),
@@ -176,6 +176,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Venta = contrato.Venta,
                         TipoAgenteCompraId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompraId : 0,
                         TipoAgenteCompra = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompra.Descripcion : "",
+                        CantidadAmpliado = contrato.CantidadAmpliado ?? 0
 
                     };
 
@@ -230,7 +231,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Fecha_Dolarizado = contrato is Contrato ? DbFunctions.TruncateTime((contrato as Contrato).FechaDolarizado) : contrato is FijacionDePrecioContrato ? DbFunctions.TruncateTime((contrato as FijacionDePrecioContrato).FechaDolarizado) : (DateTime?)null,
                         Dias_Pesificado = contrato.DiasPesificado,
                         NoInformaSIO = contrato is Contrato ? (contrato as Contrato).NoInformaSio : (bool?)null,
-                        Estado = contrato.EstadoId == 9 ? 9 :  contrato.EstadoId == 1 || contrato.EstadoId == 7 ? 1 : contrato.EstadoId == 6 || contrato.EstadoId == 8 ? 6 : contrato.EstadoId == 5 ? 5 : 2,
+                        Estado = contrato.EstadoId == 9 ? 9 : contrato.EstadoId == 1 || contrato.EstadoId == 7 ? 1 : contrato.EstadoId == 6 || contrato.EstadoId == 8 ? 6 : contrato.EstadoId == 5 ? 5 : 2,
                         Estado_Contrato = contrato.EstadoId == 9 || contrato.EstadoId == 1 || contrato.EstadoId == 7 ? "Carga" : contrato.EstadoId == 6 || contrato.EstadoId == 8 ? "Rechazado" : contrato.EstadoId == 5 ? "Finalizado" : "Confirmado",
                         Estado_Order = contrato.Estado.Orden,
                         UsuarioId = contrato.UsuarioId,
@@ -326,8 +327,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     };
 
                 return queryNegocios;
-            }      
-            
+            }
+
         }
     }
 }

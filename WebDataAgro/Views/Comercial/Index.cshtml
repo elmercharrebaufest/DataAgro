@@ -124,18 +124,18 @@
                 </div>
 
                 <!--
-                <div class="row">
-                    <div class="col-md-2">
-                        <label>Grupo de Compras</label>
-                    </div>
-                    <div class="col-md-4">
-                        <select id="GrupoDeCompras" data-bind="source: GrupoDeComprasCombo, value: Comercial.GrupoDeCompras, disabled: isControlDisabled"  style="max-width:310px"></select>
-                        <img id="errGrupoDeCompras" src="~/Content/Images/error.png" style="display:none" />
-                    </div>
-                    <div class="col-md-6">
-                    </div>
-                </div>
-                -->
+    <div class="row">
+        <div class="col-md-2">
+            <label>Grupo de Compras</label>
+        </div>
+        <div class="col-md-4">
+            <select id="GrupoDeCompras" data-bind="source: GrupoDeComprasCombo, value: Comercial.GrupoDeCompras, disabled: isControlDisabled"  style="max-width:310px"></select>
+            <img id="errGrupoDeCompras" src="~/Content/Images/error.png" style="display:none" />
+        </div>
+        <div class="col-md-6">
+        </div>
+    </div>
+    -->
                 <div class="row">
                     <div class="col-md-2">
                         <label>Rol</label>
@@ -154,6 +154,19 @@
                         <button class="k-button k-button-icontext" style="margin-top: 1.4%;margin-left: -59%" type="button" data-bind="click: addRol">Agregar</button>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Asignar Negocios</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="AsignarNegocios" type="checkbox" data-bind="checked: Comercial.AsignarNegocios, disabled: isControlDisabled" />
+                        <img id="errAsignarNegocios" src="~/Content/Images/error.png" style="display:none" />
+
+                    </div>
+
+                </div>
+
                 <br />
                 <table id="lista-permisos" style="width: 67%">
                     <thead>

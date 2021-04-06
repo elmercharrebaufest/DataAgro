@@ -58,6 +58,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<RangoPrecio>() { });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
 
             var result = target.GrabarFason(oFason);
 
@@ -113,7 +114,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener<Fason>(It.IsAny<int>())).Returns(oFason);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<RangoPrecio>() { });
-
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
             var result = target.GrabarFason(oFason);
 
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Fason>()), Times.Never);
@@ -205,8 +206,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Confirmado }
             };
 
-            repositorioMock.Setup(y => y.Obtener<Fason>(It.IsAny<int>())).Returns(oFason);
-
+            repositorioMock.Setup(y => y.Obtener<Fason>(It.IsAny<int>())).Returns(oFason);          
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<RangoPrecio>() { });
             repositorioMock.Setup(y => y.Obtener<EstadoContrato>(5)).Throws(new Exception("Error obtener estado"));
             repositorioMock.Setup(y => y.Obtener<EstadoContrato>(4)).Returns(new EstadoContrato { });

@@ -8,6 +8,7 @@
     [UsuarioCreadorId] INT NULL, 
     [FechaCreacion] DATETIME NULL, 
     [Importe] DECIMAL(11, 2) NOT NULL, 
+    [Habilitado] BIT NOT NULL DEFAULT 1, 
     CONSTRAINT [PK_HabilitacionPagoDiferido] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_HabilitacionPagoDiferido_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].Material ([MaterialId]),
 	CONSTRAINT [FK_HabilitacionPagoDiferido_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [dbo].TipoNegocio ([TipoNegocioId]),

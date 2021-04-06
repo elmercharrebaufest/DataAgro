@@ -37,6 +37,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ProveedorZonaPropia = 113,
         [Display(ResourceType = typeof(Text), Name = "ModificarRazonSocial")]
         ModificarRazonSocial = 114,
+        [Display(ResourceType = typeof(Text), Name = "DeshabilitarProveedor")]
+        DeshabilitarProveedor = 115,
         //Comercial
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,
@@ -136,6 +138,10 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ModificarDolarizadoFinalizado = 334,
         [Display(ResourceType = typeof(Text), Name = "ModificarVenta")]
         ModificarVenta = 335,
+        [Display(ResourceType = typeof(Text), Name = "NoRecibirMail")]
+        NoRecibirMail = 336,
+        [Display(ResourceType = typeof(Text), Name = "ModificarLimiteDolarizado")]
+        ModificarLimiteDolarizado = 337,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

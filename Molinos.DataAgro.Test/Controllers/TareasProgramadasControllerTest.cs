@@ -30,6 +30,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IDiferencialManager> diferencialManagerMock;
         private Mock<IAdministracionCupoManager> administracionCupoManagerMock;
         private Mock<IHedgeManager> oHedgeManagerMock;
+        private Mock<IProveedorManager> proveedorManagerMock;
 
         private JavaScriptSerializer serializer;
 
@@ -45,10 +46,10 @@ namespace Molinos.DataAgro.Test.Controllers
             contratoAcuerdoManagerMock = new Mock<IContratoAcuerdoManager>();
             reportesManagerMock = new Mock<IReportesManager>();
             negocioManagerMock = new Mock<INegocioManager>();
-            administracionCupoManagerMock = new Mock<IAdministracionCupoManager>();            
+            administracionCupoManagerMock = new Mock<IAdministracionCupoManager>();
             oHedgeManagerMock = new Mock<IHedgeManager>();
             diferencialManagerMock = new Mock<IDiferencialManager>();
-
+            proveedorManagerMock = new Mock<IProveedorManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new TareasProgramadasController(loggerMock.Object,
                                                      contratoManagerMock.Object,
@@ -59,7 +60,8 @@ namespace Molinos.DataAgro.Test.Controllers
                                                      negocioManagerMock.Object,
                                                      administracionCupoManagerMock.Object,
                                                      oHedgeManagerMock.Object,
-                                                     diferencialManagerMock.Object);
+                                                     diferencialManagerMock.Object, 
+                                                     proveedorManagerMock.Object);
         }
 
         [Test]
@@ -68,7 +70,7 @@ namespace Molinos.DataAgro.Test.Controllers
             contratoManagerMock.Setup(x => x.EnviarMailPendiente());
             var result = target.EnvioMailPendientes() as ContentResult;
 
-            Assert.NotNull(result);            
+            Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
         }
@@ -112,6 +114,15 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.GrabarDatosReporteCompraNet(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<int>>()));
             var result = target.GrabarDatosReporteCompraNet("") as ContentResult;
 
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ActualizarRazonSocialTest()
+        {           
+            var result = target.ActualizarRazonSocial() as ContentResult;
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);

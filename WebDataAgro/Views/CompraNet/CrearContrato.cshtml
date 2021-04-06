@@ -839,31 +839,35 @@
                 </div>
             </div>
         </div>
-        <div class="row noAcuerdo">
-            <div class="col-sm-2 ">
-                <label>Caratula extensión</label>
+
+        <div class="noAcuerdo ocultarAgenteDiv">
+            <div class="row">
+                <div class="col-sm-2 ">
+                    <label>Caratula extensión</label>
+                </div>
+                <div class="col-md-4 col-sm-9">
+                    <input id="caratulaExtensionId" class="k-input contratoinput" type="text" data-bind="value: Parametros.caratulaExtensionId" maxlength="10" />
+                </div>
+                <div class="col-sm-2 ">
+                    <label>Caratula MAT</label>
+                </div>
+                <div class="col-md-3 col-sm-9">
+                    <input id="caratulaMATId" class="k-input contratoinput" type="text" data-bind="value: Parametros.caratulaMATId" maxlength="10" />
+                </div>
             </div>
-            <div class="col-md-4 col-sm-9">
-                <input id="caratulaExtensionId" class="k-input contratoinput" type="text" data-bind="value: Parametros.caratulaExtensionId" maxlength="10" />
-            </div>
-            <div class="col-sm-2 ">
-                <label>Caratula MAT</label>
-            </div>
-            <div class="col-md-3 col-sm-9">
-                <input id="caratulaMATId" class="k-input contratoinput" type="text" data-bind="value: Parametros.caratulaMATId" maxlength="10" />
-            </div>
-        </div>
-        <div class="row noAcuerdo">
-            <div id="LabelPrecio" class="col-sm-2 ">
-                <label>Precio Ajuste Comisión</label>
-            </div>
-            <div class="col-xs-7 col-md-6">
-                <input id="precioAjusteComisionId" class="k-input" data-bind="value: Parametros.precioAjusteComisionId" />
-                <div class="w30" style="display:inline-grid">
-                    <select id="monedaAjusteComisionId" data-bind="source: PrecioMonedaCombo, value: Parametros.monedaAjusteComisionId" style="width:100%;"></select>
+            <div class="row noAcuerdo">
+                <div id="LabelPrecio" class="col-sm-2 ">
+                    <label>Precio Ajuste Comisión</label>
+                </div>
+                <div class="col-xs-7 col-md-6">
+                    <input id="precioAjusteComisionId" class="k-input" data-bind="value: Parametros.precioAjusteComisionId" />
+                    <div class="w30" style="display:inline-grid">
+                        <select id="monedaAjusteComisionId" data-bind="source: PrecioMonedaCombo, value: Parametros.monedaAjusteComisionId" style="width:100%;"></select>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="row" id="pagoCbuDiv">
             <div class="col-sm-2">
                 <label>Pago CBU</label>
@@ -945,19 +949,19 @@
                 <select id="TipoDBId" data-bind="source: TipoDBCombo, value: Parametros.TipoDBId, disabled: isControlDisabled"></select>
                 <img id="errTipoDBId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-sm-3 col-md-1 col-md-offset-2">
+            <div class="col-sm-3 col-md-3 col-md-offset-2">
                 <span id="IngresarDescuento" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
             </div>
-            @*<div class="fecha-descuento" style="display:none">
-                    <span id="fechaDesdeDiv" class="col-xs-6 col-md-2 ">
+            <div class="fecha-descuento" style="display:none">
+                    <span id="fechaDescuentoDesdeDiv" class="col-md-offset-2 col-xs-6 col-md-2 ">
                         <input id="fechaDesdeDescuentoId" class="descuento-fecha" placeholder="DESDE" type="date" style="width:100%" data-bind="value: Parametros.fechaDesdeDescuentoId" />
                         <img id="errfechaDesdeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
-                    <span id="fechaHastaDiv" class="col-xs-6 col-md-2 ">
+                    <span id="fechaDescuentoHastaDiv" class="col-xs-6 col-md-2 ">
                         <input id="fechaHastaDescuentoId" class="descuento-fecha" placeholder="HASTA" type="date" style="width:100%" data-bind="value: Parametros.fechaHastaDescuentoId" />
                         <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
-                </div>*@
+                </div>
         </div>
         <div class="row">
             <div class="col-sm-3 col-md-2 col-md-offset-2">

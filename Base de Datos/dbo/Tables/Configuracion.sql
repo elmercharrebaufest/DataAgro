@@ -11,6 +11,8 @@
     [ContratoAperturaPrecioPorcentajeDeComisionMaximo] DECIMAL(11, 2) NULL DEFAULT 3, 
     [DiasDiferimiento] INT NULL DEFAULT 120, 
     [CantidadAcuerdo] INT NULL DEFAULT 30000, 
+    [CantidadDiasDolarizadoLimiteMaximo] INT NULL DEFAULT 120, 
+    [CantidadMaxima] INT NULL DEFAULT 15000000, 
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

@@ -90,7 +90,8 @@ namespace Molinos.DataAgro.Business
                      Deshabilitado = x.Deshabilitado ?? false,
                      FechaDeshabilitado = x.FechaDeshabilitado,
                      Cupera = x.Cupera,
-                     RolesAsociados = x.RolesAsociados.Select(y => new RolBasicoDto { Descripcion = y.Descripcion, Id = y.Id }).ToList()
+                     RolesAsociados = x.RolesAsociados.Select(y => new RolBasicoDto { Descripcion = y.Descripcion, Id = y.Id }).ToList(),
+                     AsignarNegocios = x.AsignarNegocios
                  }) ?? new ComercialDto();
             return comercial;
         }
@@ -184,7 +185,7 @@ namespace Molinos.DataAgro.Business
                 oComercialSave.Deshabilitado = oComercial.Deshabilitado;
                 oComercialSave.PerfilId = oComercial.PerfilId;
                 oComercialSave.Cupera = oComercial.Cupera;
-
+                oComercialSave.AsignarNegocios = oComercial.AsignarNegocios;
                 if (oComercialSave.RolesAsociados != null)
                 {
                     oComercialSave.RolesAsociados.Clear();
@@ -352,6 +353,11 @@ namespace Molinos.DataAgro.Business
         public List<Comercial> ListarComercialesCorredor()
         {
             return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
+        }
+
+        public List<Comercial> ListarComercialesSinRecibirMail()
+        {
+            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NoRecibirMail)));
         }
 
         public List<GrupoDeCompras> ListarGrupoDeCompras(string filtro)

@@ -835,6 +835,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deshabilitar Proveedor.
+        /// </summary>
+        public static string DeshabilitarProveedor {
+            get {
+                return ResourceManager.GetString("DeshabilitarProveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Destino.
         /// </summary>
         public static string Destino {
@@ -1456,6 +1465,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modificar Limite Dolarizado.
+        /// </summary>
+        public static string ModificarLimiteDolarizado {
+            get {
+                return ResourceManager.GetString("ModificarLimiteDolarizado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modificar Prestamo Devolución.
         /// </summary>
         public static string ModificarPrestamoDevolucion {
@@ -1506,6 +1524,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string NoInformaSio {
             get {
                 return ResourceManager.GetString("NoInformaSio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No recibir Mail.
+        /// </summary>
+        public static string NoRecibirMail {
+            get {
+                return ResourceManager.GetString("NoRecibirMail", resourceCulture);
             }
         }
         

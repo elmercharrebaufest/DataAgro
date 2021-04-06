@@ -7,5 +7,6 @@
         public string Cuit { get; set; }
         public string Corredor { get; set; }
         public string Filtro { get; set; }
+        public string Alias { get; set; }
     }
 }

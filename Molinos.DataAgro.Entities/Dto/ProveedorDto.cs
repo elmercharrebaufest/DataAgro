@@ -53,6 +53,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? ComisionPorcentaje { get; set; }
         public bool? Consignatario { get; set; }
         public int SegmentacionId { get; set; }
+        public bool? Deshabilitado { get; set; }
+        public string Alias { get; set; }
     }
 }
 

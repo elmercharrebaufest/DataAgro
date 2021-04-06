@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     HastaAnio = rango.HastaAnio,
                     ZonaId = rango.ZonaId ?? 0,
                     Zona = rango.Zona.Descripcion,
-                    Cantidad = rango.Cantidad,
+                    Cantidad = rango.Cantidad /1000,
                     DesdeAnio = rango.DesdeAnio,
                     DesdeMes = rango.DesdeMes,
                     HastaMes = rango.HastaMes,

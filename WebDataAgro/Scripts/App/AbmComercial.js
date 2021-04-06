@@ -117,6 +117,7 @@ function CrearResultadosDataSource(datos) {
                     Nombres: { type: "string", editable: false },
                     Roles: { type: "string", editable: false },
                     Deshabilitado: { type: "boolean", editable: false },
+                    AsignarNegocios: { type: "boolean", editable: false },
                     FechaDeshabilitado: { type: "date", editable: false },
                 }
             }
@@ -133,7 +134,8 @@ function CreateGridCentro() {
             { field: "Nombres", title: "Nombres" },
             { field: "Rol", title: "Roles", attributes: { style: 'white-space: nowrap ' }},
             { field: "Deshabilitado", title: "Deshabilitado", template: "#if(Deshabilitado){#Si (#=kendo.toString(kendo.parseDate(FechaDeshabilitado, 'yyyy-MM-dd hh:mm:sss'), 'MM/dd/yyyy HH:mm:ss')#) #}else{}# " },
-            { filed: "Equipo", title: "Equipo", template: "#= Equipo.map(a => a.Apellido).join(', ') #"}
+            { field: "AsignarNegocios", title: "Asignar Negocios", template: "#if(AsignarNegocios){#Si#}else{#No#}# " },
+            { filed: "Equipo", title: "Equipo", template: "#= Equipo.map(a => a.Apellido).join(', ') #" }
         ],
 
         sortable: true,
@@ -178,7 +180,7 @@ function CreateGridCentro() {
             }
         }
     });
-    $("#gridIniComercial").data("kendoGrid").hideColumn(4);
+    $("#gridIniComercial").data("kendoGrid").hideColumn(5);
     $("#gridIniComercial").kendoTooltip({
         filter: "td:nth-child(3)",
         position: "top",
@@ -354,6 +356,7 @@ function UpdateViewModel(model) {
         "Administrador": model.Comercial.Administrador,
         "Cupera": model.Comercial.Cupera,        
         "Deshabilitado": model.Comercial.Deshabilitado,
+        "AsignarNegocios": model.Comercial.AsignarNegocios,
         "FechaDeshabilitado": model.Comercial.FechaDeshabilitado,
     };
     
@@ -387,6 +390,7 @@ function LimpiarValidaciones() {
     $("#errApellido").css("display", "none");
     $("#errNombres").css("display", "none");
     $("#errDeshabilitado").css("display", "none");
+    $("#errAsignarNegocios").css("display", "none");    
     $("#errPerfilId").css("display", "none");
     $("#errEmpleadorACargo").css("display", "none");
     $("#errIdActiveDirectory").css("display", "none");
@@ -515,6 +519,7 @@ function Grabar() {
         "Nombres": viewModel.get("Comercial.Nombres"),
         "Deshabilitado": viewModel.get("Comercial.Deshabilitado"),
         "FechaDeshabilitado": new Date(),
+        "AsignarNegocios": viewModel.get("Comercial.AsignarNegocios"),
         "PerfilId": GetDropDownValue(viewModel, "Comercial.PerfilId.PerfilId"),
         "EmpleadorACargoId": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),

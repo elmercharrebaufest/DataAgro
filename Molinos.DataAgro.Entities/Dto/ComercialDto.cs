@@ -22,6 +22,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public bool Deshabilitado { get; set; }
         public DateTime? FechaDeshabilitado { get; set; }
+        public bool AsignarNegocios { get; set; }
     }
 }
 

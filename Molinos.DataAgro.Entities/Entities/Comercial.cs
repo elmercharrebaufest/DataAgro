@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Cupera { get; set; }
         public bool? Deshabilitado { get; set; }
         public DateTime? FechaDeshabilitado { get; set; }
-
+        public bool AsignarNegocios { get; set; }
 
         [ForeignKey("PerfilId")]
         public virtual Perfil Perfil { get; set; }

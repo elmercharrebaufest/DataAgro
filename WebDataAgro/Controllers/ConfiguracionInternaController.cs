@@ -90,7 +90,7 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult GuardarPizarra(ConfiguracionInternaModel configuracion)
         {
-            configuracion.ResultadoPizarra = configuracionManager.GrabarPizarra(TransformarAEntidadPizarra(configuracion), GlobalVariables.IdActiveDirectory);
+            configuracion.ResultadoPizarra = configuracionManager.GrabarPizarra(TransformarAEntidadPizarra(configuracion), GlobalVariables.IdActiveDirectory, DateTime.Parse(configuracion.DiaPizarraHasta));
             configuracion.HabilitacionPizarra = configuracionManager.TraerPizarra();
             return PartialView("_ListaPizarra", configuracion);
         }

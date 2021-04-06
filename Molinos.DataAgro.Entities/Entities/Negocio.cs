@@ -49,6 +49,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaDolarizado { get; set; } // Fecha_Dolarizado
         public bool? Dolarizado { get; set; }
         public bool OcultarEnTablero { get; set; }
+        public double? CantidadAmpliado { get; set; }
+
+
         [JsonConverter(typeof(SinHora))]
         public DateTime? DesdeFijacion { get; set; }
         [JsonConverter(typeof(SinHora))]

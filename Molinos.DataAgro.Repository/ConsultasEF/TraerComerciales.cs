@@ -23,7 +23,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     x.Deshabilitado,
                     x.FechaDeshabilitado,
                     x.IdActiveDirectory,
-                    Roles = x.RolesAsociados.AsEnumerable()
+                    Roles = x.RolesAsociados.AsEnumerable(),
+                    x.AsignarNegocios
                 }).ToList().OrderBy(x => x.Apellido);
 
             var list = temp.Select(q => new ComercialIni
@@ -35,7 +36,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 IdActiveDirectory = q.IdActiveDirectory,
                 Deshabilitado = q.Deshabilitado ?? false,
                 FechaDeshabilitado = q.FechaDeshabilitado,
-                Rol = string.Join(", ", q.Roles.Select(x => x.Descripcion))
+                Rol = string.Join(", ", q.Roles.Select(x => x.Descripcion)),
+                AsignarNegocios = q.AsignarNegocios
             }).ToList();
 
             return list;

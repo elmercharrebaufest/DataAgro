@@ -44,6 +44,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ComercialDto> TraerComercialesProveedor(int proveedorId);
 
         int TraerZonaDelComercialAsociado();
+        List<Comercial> ListarComercialesSinRecibirMail();
     }
 }
 

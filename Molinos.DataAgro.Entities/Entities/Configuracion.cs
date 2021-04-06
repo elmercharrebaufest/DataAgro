@@ -22,5 +22,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal? ContratoAperturaPrecioPorcentajeDeComisionMaximo { get; set; }
         public int? DiasDiferimiento { get; set; }
         public int? CantidadAcuerdo { get; set; }
+        public int CantidadDiasDolarizadoLimiteMaximo { get; set; }
+        public int CantidadMaxima { get; set; }
+        
+
+
     }
 }

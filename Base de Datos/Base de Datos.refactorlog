@@ -616,4 +616,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="UsuarioCreadorId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="0ca7e336-409a-4041-8cc3-f10b8d1b61b4" ChangeDateTime="03/25/2021 18:11:16">
+    <Property Name="ElementName" Value="[dbo].[Comercial].[Comercial]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Comercial]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AsignarNegocios" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d64264d6-010b-48b9-8286-86867db6737b" ChangeDateTime="04/05/2021 18:53:02">
+    <Property Name="ElementName" Value="[dbo].[HabilitacionPagoDiferido].[Deshabilitado]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[HabilitacionPagoDiferido]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Habilitado" />
+  </Operation>
 </Operations>

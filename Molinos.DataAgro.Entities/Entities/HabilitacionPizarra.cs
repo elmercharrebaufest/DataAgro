@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public partial class HabilitacionPizarra
+    public partial class HabilitacionPizarra : ICloneable
     {
         [Key]
         public int Id { get; set; }
@@ -23,5 +23,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual TipoNegocio TipoNegocio { get; set; }
         [ForeignKey("UsuarioCreadorId")]
         public virtual Comercial UsuarioCreador { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

@@ -30,22 +30,22 @@
             </div>
             <div class="row-botones-material row padding">
                 <div class="col-md-2">
+                    <label>Cantidad Máxima (Tn)</label>
+                </div>
+                <div class="col-md-2" id="CantidadDiasId">
+                    @Html.TextBoxFor(m => m.CantidadMaxima, new { @class = "CantidadDeDias number form-control" })
+                </div>
+                <div class="col-md-2">
                     <label>Cantidad de días dolarizado</label>
                 </div>
                 <div class="col-md-1" id="CantidadDiasId">
-                    @Html.TextBoxFor(m => m.CantidadDias, new { @class = "CantidadDeDias number-input" })
+                    @Html.TextBoxFor(m => m.CantidadDias, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
                 <div class="col-md-2">
-                    <label>Dias Diferimiento</label>
+                    <label>Cantidad días Maxima Dolarizado</label>
                 </div>
-                <div class="col-md-1" id="diasDiferId">
-                    @Html.TextBoxFor(m => m.DiasDiferimiento, new { @class = "CantidadDeDias number-input" })
-                </div>
-                <div class="col-md-2">
-                    <label>Validación Sustentable</label>
-                </div>
-                <div class="col-md-2" id="CantidadDiasId">
-                    @Html.TextBoxFor(m => m.ImporteSustentable, new { @class = "CantidadDeDias number-input" })
+                <div class="col-md-1" id="CantidadDiasDolarizadoLimiteMaximoId">
+                    @Html.TextBoxFor(m => m.CantidadDiasDolarizadoLimiteMaximo, new { @class = "CantidadDeDias number form-control" })
                 </div>
 
             </div>
@@ -55,13 +55,28 @@
                     <label>Cantidad Acuerdo (Tn)</label>
                 </div>
                 <div class="col-md-2" id="CantidadDiasId">
-                    @Html.TextBoxFor(m => m.CantidadAcuerdo, new { @class = "CantidadDeDias number" })
+                    @Html.TextBoxFor(m => m.CantidadAcuerdo, new { @class = "CantidadDeDias number form-control" })
                 </div>
+                <div class="col-md-2">
+                    <label>Dias Diferimiento</label>
+                </div>
+                <div class="col-md-1" id="diasDiferId">
+                    @Html.TextBoxFor(m => m.DiasDiferimiento, new { @class = "CantidadDeDias number-input form-control" })
+                </div>
+                <div class="col-md-2">
+                    <label>Validación Sustentable</label>
+                </div>
+                <div class="col-md-1" id="CantidadDiasId">
+                    @Html.TextBoxFor(m => m.ImporteSustentable, new { @class = "CantidadDeDias number-input form-control" })
+                </div>
+            </div>
+            <div class="row-botones-material row padding">              
+
                 <div class="col-md-2">
                     <label>Apertura de Precio Porcentaje de Comisión Máximo</label>
                 </div>
                 <div class="col-md-2">
-                    @Html.TextBoxFor(m => m.ContratoAperturaPrecioPorcentajeDeComisionMaximo, new { @class = "number" })
+                    @Html.TextBoxFor(m => m.ContratoAperturaPrecioPorcentajeDeComisionMaximo, new { @class = "number form-control" })
                 </div>
             </div>
             <h4>Stop</h4>
@@ -71,7 +86,7 @@
                     <label>Clave Stop</label>
                 </div>
                 <div class="col-md-4">
-                    @Html.TextBoxFor(m => m.ClaveStop, new { @class = "CantidadDeDias k-input" })
+                    @Html.TextBoxFor(m => m.ClaveStop, new { @class = "CantidadDeDias k-input form-control" })
                 </div>
                 <div class="col-md-offset-2 col-md-2">
                     <label>ABM STOP</label>
@@ -88,19 +103,19 @@
                     <label>Terminal Stop</label>
                 </div>
                 <div class="col-md-2">
-                    @Html.TextBoxFor(m => m.TerminalStopId, new { @class = "CantidadDeDias number-input" })
+                    @Html.TextBoxFor(m => m.TerminalStopId, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
                 <div class="col-md-2">
                     <label>CUIT Destinatario</label>
                 </div>
                 <div class="col-md-2">
-                    @Html.TextBoxFor(m => m.CuitDestinoStop, new { @class = "CantidadDeDias number-input" })
+                    @Html.TextBoxFor(m => m.CuitDestinoStop, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
                 <div class="col-md-2">
                     <label>Codigo Localidad</label>
                 </div>
                 <div class="col-md-2">
-                    @Html.TextBoxFor(m => m.CodigoLocalidadStop, new { @class = "CantidadDeDias number-input" })
+                    @Html.TextBoxFor(m => m.CodigoLocalidadStop, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
             </div>
             <div class="row">

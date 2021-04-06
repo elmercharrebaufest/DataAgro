@@ -25,12 +25,13 @@ namespace WebDataAgro.Controllers
         private readonly IAdministracionCupoManager administracionCupoManager;
         private readonly IHedgeManager oHedgeManager;
         private readonly IDiferencialManager diferencialManager;
-
+        private readonly IProveedorManager proveedorManager;
 
         public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager,
             ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager,
             IReportesManager reportesManager, INegocioManager negocioManager,
-            IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager)
+            IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager,
+            IProveedorManager proveedorManager)
 
         {
             this.logger = logger;
@@ -43,6 +44,7 @@ namespace WebDataAgro.Controllers
             this.administracionCupoManager = administracionCupoManager;
             this.oHedgeManager = oHedgeManager;
             this.diferencialManager = diferencialManager;
+            this.proveedorManager = proveedorManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -162,6 +164,32 @@ namespace WebDataAgro.Controllers
                 return Content("ok");
             }
 
+        }
+
+
+        public ActionResult ConsultarContratosPrimary()
+        {
+            logger.Info($"ConsultarContratosPrimary - inicio");
+            negocioManager.ConsultarContratosPrimary();
+            logger.Info($"ConsultarContratosPrimary - Finalizado");
+            return Content("ok");
+        }
+
+
+        public ActionResult ActualizarRazonSocial()
+        {
+            logger.Info("ActualizarRazonSocial - Iniciando");
+            try
+            {
+                proveedorManager.ActualizarRazonSocial();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+            logger.Info("ActualizarRazonSocial - Finalizado");
+            return Content("ok");
         }
     }
 }
