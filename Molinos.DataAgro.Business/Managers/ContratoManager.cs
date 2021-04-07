@@ -580,11 +580,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var cantidadAcuerdo = contratoAcuerdoManager.TraerAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
                 var cantidadCargada = repositorio.Listar<Contrato>(d => oParam.Id != d.Id && d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
-                cantidadAcuerdo += config != null ? config.CantidadAcuerdo.Value * 1000 : 0;            
+                cantidadAcuerdo += config != null ? config.CantidadAcuerdo.Value * 1000 : 0;
                 if (cantidadMaxima < cantidadCargada + oParam.Cantidad)
                 {
                     oErrorMessages.Error("", "Cantidad del negocio excedida (" + cantidadMaxima.ToString("N0") + " kg)");
-                }  
+                }
                 else if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
                 {
                     oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " kg)");
@@ -712,34 +712,34 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? config.CantidadDiasDolarizadoLimiteMaximo : config.CantidadDias;
             if (oParam.FechaDolarizado != null)
-                {                   
-                    if (config != null)
+            {
+                if (config != null)
+                {
+                    var fechaLimite = oParam.FechaOperacion.AddDays(cantidadDias);
+                    if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
-                        var fechaLimite = oParam.FechaOperacion.AddDays(cantidadDias);
-                        if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
-                        {
-                            oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
-                        }
+                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
                     }
-                }           
-            
-                var fechaFijacion = oParam.HastaFijacion;
-                var fechaAPrecio = oParam.FechaHasta.AddDays(cantidadDias);
-
-                if (fechaFijacion.HasValue)
-                {
-                    fechaFijacion = fechaFijacion.Value.AddDays(cantidadDias);
                 }
+            }
 
-                if (oParam.TipoNegocioId == 1 && oParam.FechaDolarizado > fechaFijacion)
-                {
-                    oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de Fijación");
-                }
+            var fechaFijacion = oParam.HastaFijacion;
+            var fechaAPrecio = oParam.FechaHasta.AddDays(cantidadDias);
 
-                if (oParam.TipoNegocioId == 2 && oParam.FechaDolarizado > fechaAPrecio)
-                {
-                    oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de la Entrega");
-                }
+            if (fechaFijacion.HasValue)
+            {
+                fechaFijacion = fechaFijacion.Value.AddDays(cantidadDias);
+            }
+
+            if (oParam.TipoNegocioId == 1 && oParam.FechaDolarizado > fechaFijacion)
+            {
+                oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de Fijación");
+            }
+
+            if (oParam.TipoNegocioId == 2 && oParam.FechaDolarizado > fechaAPrecio)
+            {
+                oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de la Entrega");
+            }
 
             if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null || oParam.NivelTarifaId == 0))
             {
@@ -2840,6 +2840,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha_DolarizadoFormateado = x.FechaDolarizado.HasValue ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDolarizado) : "",
+                Fecha_Dolarizado = x.FechaDolarizado,
                 Dias_Pesificado = x.DiasPesificado,
                 CD = x.CD,
                 Warrant = x.Warrant,

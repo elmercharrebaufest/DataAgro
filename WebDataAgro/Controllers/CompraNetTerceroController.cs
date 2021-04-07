@@ -296,5 +296,6 @@ namespace WebDataAgro.Controllers
         {
             return Json(mobjContratoManager.GrabarContratoMasivo(contratos), JsonRequestBehavior.AllowGet);
         }
+
     }
 }

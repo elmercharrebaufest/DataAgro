@@ -93,7 +93,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerUltimoHedgeObjetivo()).Returns(new HedgeCargaObjetivoDto());
             reportesManagerMock.Setup(x => x.TraerTcPromedio(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new HedgeTCPromedioDto());
             reportesManagerMock.Setup(x => x.TraerHedgeObjetivo(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new HedgeCargaObjetivoDto());
-            reportesManagerMock.Setup(x => x.ObtenerDatosReporteCompraNet(fecha, fecha, "0", new List<int>() { 1, 2, 3, 4, 5 })).Returns(new ReporteCompraNetModel { AgenteCompras = new AgenteCompraModel {ListaOperadores = new List<AgenteCompraDto.OperadorCantidad>(),ListaAgenteCompras= new List<AgenteCompraDto>() }, HedgeMaterial = new List<HedgeMaterialModel>(), HedgeObjetivo = new HedgeCargaObjetivoDto(), PosicionCompras = new List<PosicionComprasDto>(), PrecioCantidad = new List<PrecioCantidadDto>(), PricingCampania = new List<PricingCampaniaDto>(), SojaSustentable = new ReporteSojaSustDto(), TCPromedioDto = new HedgeTCPromedioDto(), ToneladasGranoTipo = new List<ToneladasGranoTipoDto>() });
+            reportesManagerMock.Setup(x => x.ObtenerDatosReporteCompraNet(fecha, fecha, "0", new List<int>() { 1, 2, 3, 4, 5 })).Returns(new ReporteCompraNetModel { AgenteCompras = new AgenteCompraModel { ListaOperadores = new List<AgenteCompraDto.OperadorCantidad>(), ListaAgenteCompras = new List<AgenteCompraDto>() }, HedgeMaterial = new List<HedgeMaterialModel>(), HedgeObjetivo = new HedgeCargaObjetivoDto(), PosicionCompras = new List<PosicionComprasDto>(), PrecioCantidad = new List<PrecioCantidadDto>(), PricingCampania = new List<PricingCampaniaDto>(), SojaSustentable = new ReporteSojaSustDto(), TCPromedioDto = new HedgeTCPromedioDto(), ToneladasGranoTipo = new List<ToneladasGranoTipoDto>() });
 
             var reportes = new ParamReportes() { ComercialActual = 1 };
             reportesManagerMock.Setup(x => x.PosicionPorMaterial(fecha, fecha)).Returns(new List<ExcelPosicionMaterialDto>());
@@ -153,7 +153,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var fecha = new DateTime(2018, 10, 26);
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
             reportesManagerMock.Setup(x => x.DetallePosicionModalIds(It.IsAny<List<int>>(), It.IsAny<string>())).Returns("");
-            var result = target.DetalleIdsModal(new List<int> {  1}, "");
+            var result = target.DetalleIdsModal(new List<int> { 1 }, "");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
@@ -161,6 +161,16 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
+        }
+
+        [Test]
+        public void ExcelModeloAltaMasivaTest()
+        {
+            materialManagerMock.Setup(x => x.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>() { new MaterialIni { MaterialId = 1, Descripcion = "a" } } });
+            centroManagerMock.Setup(x => x.TraerTodoCentro()).Returns(new ResultIniCentro { Centro = new List<CentroIni>() { new CentroIni { Id = 1, Descripcion = "a" } } });
+
+            var result = target.ExcelModeloAltaMasiva();
+            Assert.NotNull(result);
         }
 
     }

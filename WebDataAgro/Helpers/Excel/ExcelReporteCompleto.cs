@@ -513,7 +513,7 @@ namespace WebDataAgro.Helpers.Excel
             var fontBold = workbook.CreateFont();
             fontBold.Boldweight = (short)FontBoldWeight.Bold;
             stylebold.SetFont(fontBold);
-            
+
             var cellBorderStyleColumnTitles = workbook.CreateCellStyle();
             cellBorderStyleColumnTitles.BorderBottom = BorderStyle.Thin;
             cellBorderStyleColumnTitles.BorderTop = BorderStyle.Thin;
@@ -523,7 +523,7 @@ namespace WebDataAgro.Helpers.Excel
             cellBorderStyleColumnTitles.FillForegroundColor = IndexedColors.White.Index;
             cellBorderStyleColumnTitles.SetFont(fontBold);
 
-        
+
             #region row1
             var row = sheet.CreateRow(r); r++;
             row = sheet.CreateRow(r); r++;
@@ -870,5 +870,146 @@ namespace WebDataAgro.Helpers.Excel
                 filaOperador++;
             }
         }
+
+        public static byte[] ExcelModeloAltaMasiva(List<MaterialIni> materiales, List<CentroIni> destinos)
+        {
+            //Create workbook
+            IWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = (XSSFSheet)workbook.CreateSheet("AltaMasiva");
+            
+            //Create dropdown list materiales
+            IDataValidationHelper validationHelperMaterial = new XSSFDataValidationHelper(sheet);
+            CellRangeAddressList addressListMaterial = new CellRangeAddressList(1, 999, 2, 2);
+            IDataValidationConstraint constraintMaterial = validationHelperMaterial.CreateExplicitListConstraint(materiales.Where(x => x.MaterialId != 5).Select(a => a.Descripcion).ToArray());
+            IDataValidation dataValidationMaterial = validationHelperMaterial.CreateValidation(constraintMaterial, addressListMaterial);
+            dataValidationMaterial.SuppressDropDownArrow = true;
+            sheet.AddValidationData(dataValidationMaterial);
+
+            //Create dropdown list Clasificacion
+            IDataValidationHelper validationHelperClasificacion = new XSSFDataValidationHelper(sheet);
+            CellRangeAddressList addressListClasificacion = new CellRangeAddressList(1, 999, 9, 9);
+            IDataValidationConstraint constraintClasificacion = validationHelperClasificacion.CreateExplicitListConstraint(new string[] { "Acopiador", "Otros", "Productor" });
+            IDataValidation dataValidationClasificacion = validationHelperClasificacion.CreateValidation(constraintClasificacion, addressListClasificacion);
+            dataValidationClasificacion.SuppressDropDownArrow = true;
+            sheet.AddValidationData(dataValidationClasificacion);
+
+            //Create dropdown list Centros
+            IDataValidationHelper validationHelper = new XSSFDataValidationHelper(sheet);
+            CellRangeAddressList addressList = new CellRangeAddressList(1, 999, 12, 12);
+            IDataValidationConstraint constraint = validationHelper.CreateExplicitListConstraint(destinos.Where(a => a.Id != 10).Select(a => a.Descripcion).ToArray());
+            IDataValidation dataValidation = validationHelper.CreateValidation(constraint, addressList);
+            dataValidation.SuppressDropDownArrow = true;
+            sheet.AddValidationData(dataValidation);
+
+            //Create dropdown list materiales
+            IDataValidationHelper validationHelperX = new XSSFDataValidationHelper(sheet);
+            CellRangeAddressList addressListX = new CellRangeAddressList(1, 999, 10, 11);
+            IDataValidationConstraint constraintX = validationHelperX.CreateExplicitListConstraint(new string[] { "x"});
+            IDataValidation dataValidationX = validationHelperX.CreateValidation(constraintX, addressListX);
+            dataValidationX.SuppressDropDownArrow = true;
+            sheet.AddValidationData(dataValidationX);
+
+            var stylebold = workbook.CreateCellStyle();
+            var fontBold = workbook.CreateFont();
+            fontBold.Boldweight = (short)FontBoldWeight.Bold;
+            stylebold.SetFont(fontBold);
+            var cellBorderStyleColumnTitles = workbook.CreateCellStyle();
+            cellBorderStyleColumnTitles.BorderBottom = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderTop = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderLeft = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.BorderRight = BorderStyle.Thin;
+            cellBorderStyleColumnTitles.Alignment = HorizontalAlignment.Center;
+            cellBorderStyleColumnTitles.FillForegroundColor = IndexedColors.White.Index;
+            cellBorderStyleColumnTitles.SetFont(fontBold);
+
+            var c = 0;
+            var r = 0;
+
+            var row = sheet.CreateRow(r); r++;
+
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            var celda = sheet.GetRow(0).GetCell(0);
+            celda.SetCellValue("Contrato corredor");
+            sheet.AutoSizeColumn(0);
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(1);
+            celda.SetCellValue("Contrato vendedor");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(2);
+            celda.SetCellValue("Grano");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(3);
+            celda.SetCellValue("Cosecha");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(4);
+            celda.SetCellValue("Fecha Operación");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(5);
+            celda.SetCellValue("Fecha Desde Entrega");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(6);
+            celda.SetCellValue("Fecha Vto.Entrega");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(7);
+            celda.SetCellValue("TN");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(8);
+            celda.SetCellValue("CUIT Vendedor");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(9);
+            celda.SetCellValue("Clasificacion");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(10);
+            celda.SetCellValue("Plan Canje");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(11);
+            celda.SetCellValue("Consignatario");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(12);
+            celda.SetCellValue("Destino");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(13);
+            celda.SetCellValue("Procedencia");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            celda = sheet.GetRow(0).GetCell(14);
+            celda.SetCellValue("Provincia");
+            celda.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+            sheet.AutoSizeColumn(0);
+            sheet.AutoSizeColumn(1);
+            sheet.AutoSizeColumn(2);
+            sheet.AutoSizeColumn(3);
+            sheet.AutoSizeColumn(4);
+            sheet.AutoSizeColumn(5);
+            sheet.AutoSizeColumn(6);
+            sheet.AutoSizeColumn(7);
+            sheet.AutoSizeColumn(8);
+            sheet.AutoSizeColumn(9);
+            sheet.AutoSizeColumn(10);
+            sheet.AutoSizeColumn(11);
+            sheet.AutoSizeColumn(12);
+            sheet.AutoSizeColumn(13);
+            sheet.AutoSizeColumn(14);
+
+            using (var fileData = new MemoryStream())
+            {
+                workbook.Write(fileData);
+                return fileData.ToArray();
+            }
+        }
+
     }
 }

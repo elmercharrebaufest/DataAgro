@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
@@ -130,6 +131,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     }).ToList();
 
+                    var  ppp = lista.ToJson();
                     return result;
                 }
 
@@ -149,7 +151,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
             if (item != null)
             {
-                var anio = item.MaturityMonthYear.Substring(3, 2);
+                var anio = (int.Parse(item.MaturityMonthYear.Substring(2, 2)) -1).ToString();
                 int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio)).Select(a => a.CampañaId).SingleOrDefault();
                 return campaña ?? 0;
             }
@@ -180,15 +182,15 @@ namespace Molinos.DataAgro.Agent.Helpers
             {
                 switch (item.SecurityGroup)
                 {
-                    case "MAI":
+                    case var s when item.SecurityGroup.Contains("MAI"):
                         materialId = 1; break;
-                    case "TRI":
+                    case var s when item.SecurityGroup.Contains("TRI"):
                         materialId = 2; break;
-                    case "SOJ":
+                    case var s when item.SecurityGroup.Contains("SOJ"):
                         materialId = 3; break;
-                    case "GIR":
+                    case var s when item.SecurityGroup.Contains("GIR"):
                         materialId = 4; break;
-                    case "GIO":
+                    case var s when item.SecurityGroup.Contains("GIO"):
                         materialId = 5; break;
                     default:
                         break;

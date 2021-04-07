@@ -92,7 +92,7 @@ namespace WebDataAgro.Controllers
         //    };
         //    return result;
         //}
-        
+
 
         public JsonResult DetalleExcelModal(int? mes, int? anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion, string centroId = "0")
         {
@@ -137,6 +137,13 @@ namespace WebDataAgro.Controllers
             List<MaterialCombo> materiales = materialManager.TraerDatosIniciales().Material;
             return Json(JsonConvert.SerializeObject(new { data = materiales }), JsonRequestBehavior.AllowGet);
 
+        }
+
+        public ActionResult ExcelModeloAltaMasiva()
+        {
+            var materiales = materialManager.TraerTodoMaterial().Material;
+            var centros = centroManager.TraerTodoCentro().Centro;
+            return File(ExcelReporteCompleto.ExcelModeloAltaMasiva(materiales, centros), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
     }
 }
