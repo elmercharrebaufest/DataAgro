@@ -4316,5 +4316,142 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.TraerContratosAcuerdoPorCorredor(It.IsAny<int>());
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<DevolverContratosAcuerdoPorCorredor>()), Times.Once);
         }
+
+        [Test]
+        public void GrabarContratoMasivoTest()
+        {
+            var contratos = new List<BasicoContrato>{ new BasicoContrato
+            {
+                MaterialId =1,
+                ProveedorId = 1,
+                Cantidad = 1,
+                Precio =1,
+                PrecioNeto =1,
+                Id = 0,
+                ContratoCorredor="1",
+                ContratoVendedor="1",
+                CampanaId=1,
+                ClasificacionId=1,
+                PlanCanje=false,
+                Consignatario= false,
+                DestinoId=1,
+                LocalidadId=1,
+                ProvinciaId=1,
+                ContratoAcuerdoId=1,
+                Observacion="0"
+            } };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, BasicoContrato>>>()))
+                            .Returns(new BasicoContrato
+                            {
+                                FechaOperacion = DateTime.Now.Date,
+                                FechaDesde = DateTime.Now.Date,
+                                FechaHasta = DateTime.Now.Date,
+                                DesdeFijacion = DateTime.Now.Date,
+                                HastaFijacion = DateTime.Now.Date,
+                                ContratoId = 1,
+                                ProveedorId = 1,
+                                Proveedor = "HAA",
+                                Corredor = "HEE",
+                                ComercialId = 1,
+                                FechaDesdeFormateado = "10101",
+                                FechaHastaFormateado = "02020",
+                                FechaFormateado = "0403030",
+                                TipoNegocioId = 2,
+                                MaterialId = 1,
+                                Cantidad = 1000,
+                                Ampliaciones = 1,
+                                Precio = 111,
+                                PrecioNeto = 111,
+                                MonedaId = "ARS  ",
+                                CampanaId = 5,
+                                ProvinciaId = 1,
+                                Provincia = "BS AS",
+                                LocalidadId = 2,
+                                Localidad = "SAN MARTIN",
+                                ContratoSAP = "010101",
+                                Base = true,
+                                Observacion = "HHAAA",
+                                Estado = 2,
+                                Importe_Sustentable = 0,
+                                Moneda_Sustentable = "ARS  ",
+                                Fecha_DolarizadoFormateado = "848484",
+                                //Dias_Pesificado = 3,
+                                NoInformaSIO = true,
+                                TrigoEspecial = false,
+                                ClasificacionId = 4,
+                                DestinoId = 2,
+                                PlanCanje = false,
+                                Consignatario = false,
+                                CantidadCamiones = 0,
+                                BoletoId = 3,
+                                BolsaId = 3,
+                                DesdeFijacionFormateado = "87454",
+                                HastaFijacionFormateado = "7564",
+                                CondicionFijacion = 2,
+                                CD = false,
+                                Warrant = false,
+                                PagoDirectoVendedor = false,
+                                EstablecimientoPropio = false,
+                                MercsDeposito = false,
+                                PorcentajeComision = 2,
+                                ContratoCorredor = "33",
+                                ContratoVendedor = "44",
+                                SelCargoMOA = true,
+                                SelCargoVendedor = true,
+                                Madre = false,
+                                ContratoMadre = "",
+                                Pizarra = false,
+                                StandardCalidadId = 2,
+                                AperturaPrecios = new List<AperturaPrecioDto> { new AperturaPrecioDto {Importe=0,Porcentaje=0,MonedaId=null,ConceptoAperturaPrecioId=1 }, new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 2 } , new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 3 }, new AperturaPrecioDto { Importe = 0, Porcentaje = 0, MonedaId = null, ConceptoAperturaPrecioId = 4 } },
+                                Descuentos = new List<DescuentoBonificacionDto>(),
+                                Calidades = new List<CalidadDto>(),
+                                PreciosPactados = new List<PrecioPactadosDto>(),
+
+                            });
+
+            comercialManagerMock.Setup(y => y.TraerComercial(It.IsAny<int>())).Returns(new ComercialDto { IdActiveDirectory = "a", GrupoDeComprasId = 1 });
+            materialManagerMock.Setup(y => y.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni> { new MaterialIni { MaterialId = 1, Descripcion = "a" } } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Moneda, MonedaQry>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                            .Returns(new List<MonedaQry>() { new MonedaQry { Descripcion = "ARS  ", MonedaId = "ARS  " } });
+            proveedorManagerMock.Setup(y => y.TraerProveedor(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<List<int>>())).Returns(new StoredPorProveedorResult { BasicoProveedorTraerPorProveedores = new List<BasicoProveedor> { new BasicoProveedor { RazonSocial = "a" } } });
+            proveedorManagerMock.Setup(y => y.TraerBoletoBolsa(It.IsAny<int>())).Returns(new DatosCompraNetDto { BoletoCompraNetId = 1, BolsaCompraNetId = 1 });
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(false);
+            proveedorManagerMock.Setup(y => y.ObtenerIdProveedorPorCuit(It.IsAny<string>())).Returns(1);
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<RangoPrecio, bool>>>())).Returns(new RangoPrecio { PrecioMaximo = 50000, PrecioMinimo = 1 });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ProveedorEstado, bool>>>())).Returns(new ProveedorEstado { EstadoId = 1 });
+            repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000, CantidadAcuerdo = 10000, CantidadDiasDolarizadoLimiteMaximo = 11, DiasDiferimiento = 111 });
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
+            capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            {
+                AltaTemprana = "SI",
+                Bolsa = "SI",
+                Carta = "SI",
+                FechaActualizacion = "SI",
+                Mensaje = "",
+                Nosis = "SI",
+                Ruca = new Ruca
+                {
+                    Acopiador = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor = "SI"
+                }
+            });
+            contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato { Cantidad = 1000000 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Contrato>() { new Contrato { Cantidad = 10 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, string>>>(), It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                            .Returns(new List<string>{"a"});
+            contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
+            mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
+         It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>())).Verifiable();
+
+            var resultado = target.GrabarContratoMasivo(contratos);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
     }
 }

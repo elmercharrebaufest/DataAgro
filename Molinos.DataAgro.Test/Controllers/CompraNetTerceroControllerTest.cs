@@ -231,5 +231,24 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\",\"CantidadD\":1,\"Cantidad\":\"1\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
+        [Test]
+        public void GrabarContratoMasivoTest()
+        {
+            List<BasicoContrato> contratos = new List<BasicoContrato> {
+                new BasicoContrato{ ContratoAcuerdoId=1 }
+            };
+            
+            var result = target.GrabarContratoMasivo(contratos);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            contratoManagerMock.Setup(x => x.GrabarContratoMasivo(It.IsAny<List<BasicoContrato>>()))
+                .Returns(new List<GrabarContratoResult>() { new GrabarContratoResult { } });
+
+            contratoManagerMock.Verify(x => x.GrabarContratoMasivo(It.IsAny<List<BasicoContrato>>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":null,\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

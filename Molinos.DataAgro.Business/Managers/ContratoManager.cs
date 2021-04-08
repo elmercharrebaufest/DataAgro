@@ -1147,7 +1147,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.ProveedorCreadorId = oContrato.ProveedorCreadorId;
                 oContratoSave.UsuarioId = oContrato.UsuarioId;
             }
-            if (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue)
+            if (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue && oContrato.ProveedorCreadorId == null)
             {
                 logger.Debug("Contrato Confirmado por contratoAcuerdo: " + oContrato.ContratoAcuerdoId);
                 oContrato.EstadoId = 2;
@@ -2761,6 +2761,8 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocioId = x.Precio > 0 ? 2 : 1,
                 HastaFijacion = x.HastaFijacion,
                 DesdeFijacion = x.DesdeFijacion,
+                FechaDesde = x.FechaDesde,
+                FechaHasta = x.FechaHasta,                
                 DesdeFijacionFormateado = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.DesdeFijacion) : "",
@@ -4476,6 +4478,8 @@ namespace Molinos.DataAgro.Business.Managers
             List<GrabarContratoResult> results = new List<GrabarContratoResult>();
             var acuerdo = TraerContratoAcuerdoACopiar(contratos.First().ContratoAcuerdoId.Value);
             var comercial = mobjComercialManager.TraerComercial(acuerdo.ComercialId.Value);
+            var materiales = mobjMaterialManager.TraerTodoMaterial().Material;
+            var monedas = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
             foreach (var item in contratos)
             {
@@ -4489,6 +4493,14 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 var proveedor = mobjProveedorManager.TraerProveedor(proveedorid, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
                 var boletobolsa = mobjProveedorManager.TraerBoletoBolsa(proveedorid);
+                item.Proveedor = proveedor.RazonSocial;
+                item.Material = materiales.Where(a => a.MaterialId == item.MaterialId).Single().Descripcion;
+                item.FechaOperacion = acuerdo.FechaOperacion.Value.Date;
+                item.FechaDesde = acuerdo.FechaDesde;
+                item.FechaHasta = acuerdo.FechaHasta;
+                item.FechaEntrega = acuerdo.FechaHasta;
+                item.DesdeFijacion = acuerdo.DesdeFijacion;
+                item.HastaFijacion = acuerdo.HastaFijacion;
                 Contrato contrato = new Contrato();
                 contrato.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
                 contrato.ContratoCorredor = item.ContratoCorredor;
@@ -4572,9 +4584,14 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.TarifaFlete = acuerdo.TarifaFlete;
                 contrato.Observacion = acuerdo.Observacion;
                 contrato.TipoNegocioId = acuerdo.Precio > 0 ? 2 : 1;
+                item.TipoNegocioId = acuerdo.Precio > 0 ? 2 : 1;
+                item.TipoNegocio = acuerdo.Precio > 0 ? "A Precio" : "A Fijar";
                 contrato.Precio = acuerdo.Precio;
                 contrato.PrecioNeto = acuerdo.PrecioNeto;
+                item.Precio = acuerdo.Precio;
+                item.PrecioNeto = acuerdo.PrecioNeto;
                 contrato.MonedaId = acuerdo.MonedaId;
+                item.Moneda = monedas.Where(a => a.MonedaId == acuerdo.MonedaId).SingleOrDefault() != null ? monedas.Where(a => a.MonedaId == acuerdo.MonedaId).SingleOrDefault().Descripcion : "";
                 contrato.CantidadCamiones = acuerdo.CantidadCamiones;
                 contrato.Base = acuerdo.Base;
                 contrato.ImporteSustentable = acuerdo.Importe_Sustentable;
@@ -4612,11 +4629,10 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.UsuarioId = proveedor.RazonSocial;
                 contrato.ComercialId = acuerdo.ComercialId;
                 contrato.ProveedorId = proveedorid;
-                contrato.UsuarioId = proveedor.RazonSocial;
                 contrato.BoletoId = boletobolsa.BoletoCompraNetId ?? 3;
                 contrato.BolsaId = boletobolsa.BolsaCompraNetId;
                 contrato.PorcentajeComision = 1;
-                var existe = repositorio.Existe<Contrato>(a => a.ContratoCorredor == contrato.ContratoCorredor && a.CorredorId == item.CorredorId);
+                var existe = repositorio.Existe<Contrato>(a => a.ContratoCorredor == contrato.ContratoCorredor && a.CorredorId == item.CorredorId && a.EstadoId != 8 && a.EstadoId != 6);
                 if (existe)
                 {
                     results.Add(new GrabarContratoResult { ContratoId = int.Parse(item.Observacion), Errores = new List<ErrorMessage> { new ErrorMessage { Source = "Contrato Corredor", Message = "El contrato corredor ya existe." } } });
@@ -4624,16 +4640,128 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     var result = GrabarContrato(contrato);
-                    result.ContratoId = int.Parse(item.Observacion);
-                    results.Add(result);
-
+                    results.Add(result);                   
                 }
             }
-
+            if (contratos.Count > 0)
+            {
+                var enviarA = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == acuerdo.CorredorId && x.CompraNet == true);
+                EnviarMailAltaMasiva(results, contratos, enviarA);
+            }
 
             return results;
         }
+
+        private void EnviarMailAltaMasiva(List<GrabarContratoResult> results, List<BasicoContrato> contratos, List<string> enviarA)
+        {
+            var cuerpoMail = CuerpoMailAltaMasiva(httpContextManager.ObtenerPathLogoMail(), results, contratos);
+            mailManager.EnviarMail(enviarA, "Resultado importacion alta masiva", "", null, cuerpoMail);
+        }
+        private AlternateView CuerpoMailAltaMasiva(string filePath, List<GrabarContratoResult> results, List<BasicoContrato> contratos)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
+            var linea = 0;
+            string htmlBody = "";
+            htmlBody += "En el presente mail se detalla los resultados de la importacion: <br /><br />  ";
+
+            if (results.Where(a => a.HayError == false).Count() > 0)
+            {
+                htmlBody += " <br /><br />Los siguientes contratos quedan pendientes a verificar por el Comercial: <br /><br />  ";
+                CrearTabla(results.Where(a => a.HayError == false).ToList(), th, ref linea, ref htmlBody, contratos);
+            }
+            else
+            {
+                htmlBody += "<b>No se pudo generar ningun contrato.</b>";
+            }
+
+
+            if (results.Where(a => a.HayError == true).Count() > 0)
+            {
+                htmlBody += " <br /><br />A continuacion se listan los contratos que no se pudieron generar: <br /><br />  ";
+                CrearTabla(results.Where(a => a.HayError == true).ToList(), th, ref linea, ref htmlBody, contratos);
+            }
+            else
+            {
+                htmlBody += "<b>Ningun registro con error.</b>";
+            }
+
+            htmlBody += "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+        private static void CrearTabla(List<GrabarContratoResult> results, string th, ref int linea, ref string htmlBody, List<BasicoContrato> contratos)
+        {
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+            htmlBody += "<tr>" +
+                                th + "Linea" + "</td>" +
+                                th + "Contrato Corredor" + "</td>" +
+                                th + "Material" + "</td>" +
+                                th + "Precio Base" + "</td>" +
+                                th + "Moneda" + "</td>" +
+                                th + "Cantidad (Kg)" + "</td>" +
+                                //th + "Fecha de Carga" + "</td>" +
+                                //th + "Fecha de Operacion" + "</td>" +
+                                th + "Proveedor" + "</td>" +
+                                //th + "Tipo" + "</td>" +
+                                (!results.First().HayError ? "" : th + "Resultado" + "</td>") +
+                                "</tr>";
+
+            foreach (var c in results)
+            {
+                string style1 = "";
+                string style2 = "";
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+                {
+                    style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                    style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+                }
+                else
+                {
+                    style1 = "style =\"border: 0px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                    style2 = "style=\"border: 0px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+                }
+
+                linea += 1;
+                var style = style1;
+                if (linea % 2 == 0)
+                {
+                    style = style1;
+                }
+                else
+                {
+                    style = style2;
+                }
+                var contrato = contratos.Where(a => a.Observacion == (c.ContratoId??-1).ToString()).SingleOrDefault();
+                htmlBody += "<tr>" +
+                         "<td " + style + ((c.ContratoId ?? 0) + 2) + "</td>" +
+                         "<td " + style + (contrato == null ? "" : contrato.ContratoCorredor) + "</td>" +
+                         "<td " + style + (contrato == null ? "" : contrato.Material) + "</td>" +
+                         "<td " + style + (contrato == null ? "" : contrato.Precio.ToString()) + "</td>" +
+                         "<td " + style + (contrato != null && contrato.Moneda != null && contrato.TipoNegocioId == 2 ? contrato.Moneda : "") + "</td>" +
+                         "<td " + style + (contrato == null ? "" : contrato.Cantidad.ToString()) + "</td>" +
+                         //"<td " + style + (contrato != null && contrato.Fecha.HasValue ?  contrato.Fecha.Value.ToString("dd/MM/yyyy"):"") + "</td>" +
+                         //"<td " + style + (contrato != null && contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : "") + "</td>" +
+                         "<td " + style + (contrato == null ? "" : contrato.Proveedor.ToString()) + "</td>" +
+                         //"<td " + style + (contrato == null ? "" : contrato.TipoNegocio.ToString()) + "</td>" +
+                         (!results.First().HayError ? "" : "<td " + style + "<b style='color:red;'>" + string.Join("<br>", c.Errores.Select(x => x.Message).ToList()) + "</b>" + "</td>");
+            }
+
+            htmlBody += " </td></tr>";
+            htmlBody += "</td></tr></table>";
+        }
     }
 }
-
-//prueba integracion
