@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0)).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha, 0)).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0)).Returns(new List<PosicionComprasDto>());
+            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0, false)).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0)).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerUltimoHedgeObjetivo()).Returns(new HedgeCargaObjetivoDto());
@@ -87,7 +87,7 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.TraerAgenteDeCompra(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new List<AgenteCompraDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasGranoTipo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<int>>(), It.IsAny<int>())).Returns(new List<ToneladasGranoTipoDto>());
             reportesManagerMock.Setup(x => x.TraerToneladasSojaSust(fecha, fecha, 0)).Returns(new ReporteSojaSustDto());
-            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0)).Returns(new List<PosicionComprasDto>());
+            reportesManagerMock.Setup(x => x.TraerPosicionCompras(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0, false)).Returns(new List<PosicionComprasDto>());
             reportesManagerMock.Setup(x => x.TraerMonedaCantidad(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 }, 0)).Returns(new List<PrecioCantidadDto>());
             reportesManagerMock.Setup(x => x.TraerTodosHedgeMaterial(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 })).Returns(new List<HedgeMaterialDto>());
             reportesManagerMock.Setup(x => x.TraerUltimoHedgeObjetivo()).Returns(new HedgeCargaObjetivoDto());

@@ -385,7 +385,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerToneladasSojaSustentable(fechaDesde, fechaHasta, centroId));
         }
-        public List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0)
+        public List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool TraerPosicionMaterialCampaña = false)
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
             var precioPizarra = repositorio.Listar<PrecioPizarra>(x => x.FechaHasta <= fechaHasta);
@@ -403,6 +403,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocioId = x.TipoNegocioId,
                 CampanaMaterialId = x.Material.CampaniaTableroId,
                 CampanaId = x.CampanaId,
+                Campania = x.Campana.Descripcion,
                 MonedaId = x.MonedaId,
                 OcultarEnTablero = x.OcultarEnTablero,
                 Estado = x.EstadoId,
@@ -446,7 +447,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            var kilosPosicionSoja = materialId.Contains(3) ? TraerPosicionMaterial(3, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
+            var kilosPosicionSoja = materialId.Contains(3) ?
+                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(3, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
+                TraerPosicionMaterial(3, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId)
+                )
+                : new List<PosicionKilos>();
             var posicionSoja = new PosicionComprasDto
             {
                 Material = "Soja",
@@ -454,7 +459,11 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionSoja,
                 Total = kilosPosicionSoja.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            var kilosPosicionMaiz = materialId.Contains(1) ? TraerPosicionMaterial(1, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
+            var kilosPosicionMaiz = materialId.Contains(1) ?
+                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(1, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
+                TraerPosicionMaterial(1, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId)
+                )
+                : new List<PosicionKilos>();
             var posicionMaiz = new PosicionComprasDto
             {
                 Material = "Maiz",
@@ -462,7 +471,10 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionMaiz,
                 Total = kilosPosicionMaiz.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            var kilosPosicionTrigoCamara = materialId.Contains(2) ? TraerPosicionMaterial(2, fechaDesde, fechaHasta, 1, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
+            var kilosPosicionTrigoCamara = materialId.Contains(2) ?
+                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 1, precioPizarra, negocios, centroId) :
+                TraerPosicionMaterial(2, fechaDesde, fechaHasta, 1, precioPizarra, negocios, centroId)
+                ) : new List<PosicionKilos>();
             var posicionTrigoCamara = new PosicionComprasDto
             {
                 Material = "Trigo Cámara",
@@ -470,7 +482,10 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionTrigoCamara,
                 Total = kilosPosicionTrigoCamara.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            var kilosPosicionTrigoCalidad = materialId.Contains(2) ? TraerPosicionMaterial(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
+            var kilosPosicionTrigoCalidad = materialId.Contains(2) ?
+                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId) :
+                TraerPosicionMaterial(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId)
+                ) : new List<PosicionKilos>();
             var posicionTrigoCalidad = new PosicionComprasDto
             {
                 Material = "Trigo Calidad",
@@ -478,7 +493,10 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionTrigoCalidad,
                 Total = kilosPosicionTrigoCalidad.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            var kilosPosicionTrigoGrado = materialId.Contains(2) ? TraerPosicionMaterial(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
+            var kilosPosicionTrigoGrado = materialId.Contains(2) ?
+                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId) :
+                TraerPosicionMaterial(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId))
+                : new List<PosicionKilos>();
             var posicionTrigoGrado = new PosicionComprasDto
             {
                 Material = "Trigo Grado 2",
@@ -486,7 +504,10 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionTrigoGrado,
                 Total = kilosPosicionTrigoCamara.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            var kilosPosiciongirasol = materialId.Contains(4) ? TraerPosicionMaterial(4, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
+            var kilosPosiciongirasol = materialId.Contains(4) ?
+                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(4, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
+                TraerPosicionMaterial(4, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId))
+                : new List<PosicionKilos>();
             var posicionGirasol = new PosicionComprasDto
             {
                 Material = "Girasol",
@@ -494,7 +515,10 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosiciongirasol,
                 Total = kilosPosiciongirasol.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            var kilosPosicionGirasolAlto = materialId.Contains(5) ? TraerPosicionMaterial(5, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) : new List<PosicionKilos>();
+            var kilosPosicionGirasolAlto = materialId.Contains(5) ?
+                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(5, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
+                TraerPosicionMaterial(5, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId))
+                : new List<PosicionKilos>();
             var posicionGirasolAlto = new PosicionComprasDto
             {
                 Material = "Girasol Alto Oleico",
@@ -766,13 +790,126 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private List<PosicionKilos> TraerPosicionMaterial(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra, List<BasicoContrato> negocios, int centroId = 0)
         {
+            var posicionKilos = new List<PosicionKilos>();
+            ObtenerPosicionMaterialBase(materialId, fechaDesde, fechaHasta, calidad, precioPizarra, negocios, centroId, posicionKilos);
+            posicionKilos = posicionKilos
+                        .GroupBy(x => new { x.Anio, x.Mes })
+                        .Select(x => new PosicionKilos
+                        {
+                            Anio = x.Key.Anio,
+                            Mes = x.Key.Mes,
+                            KilosPesos = x.Sum(y => y.KilosPesos),
+                            KilosDolares = x.Sum(y => y.KilosDolares),
+                            DispAFijar = Math.Round(x.Sum(y => y.DispAFijar / 1000)),
+
+                            DispAPrecio = Math.Round(x.Sum(y => y.DispAPrecio / 1000)),
+                            DispAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.DispAPrecio / 1000)),
+                            DispAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.DispAPrecio / 1000)),
+
+                            DispFijac = Math.Round(x.Sum(y => y.DispFijac / 1000)),
+                            DispFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.DispFijac / 1000)),
+                            DispFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.DispFijac / 1000)),
+
+                            FrwAFijar = Math.Round(x.Sum(y => y.FrwAFijar / 1000)),
+
+                            FrwAPrecio = Math.Round(x.Sum(y => y.FrwAPrecio / 1000)),
+                            FrwAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.FrwAPrecio / 1000)),
+                            FrwAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.FrwAPrecio / 1000)),
+
+                            FrwFijac = Math.Round(x.Sum(y => y.FrwFijac / 1000)),
+                            FrwFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.FrwFijac / 1000)),
+                            FrwFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.FrwFijac / 1000)),
+
+                            NewAFijar = Math.Round(x.Sum(y => y.NewAFijar / 1000)),
+
+                            NewAPrecio = Math.Round(x.Sum(y => y.NewAPrecio / 1000)),
+                            NewAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.NewAPrecio / 1000)),
+                            NewAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.NewAPrecio / 1000)),
+
+                            NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
+                            NewFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.NewFijac / 1000)),
+                            NewFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.NewFijac / 1000)),
+
+                            PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
+                            PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0,
+                            ListDispAFijar = x.Where(y => y.DispAFijar != 0).Select(y => y.NegocioId),
+                            ListDispAPrecio = x.Where(y => y.DispAPrecio != 0).Select(y => y.NegocioId),
+                            ListDispFijac = x.Where(y => y.DispFijac != 0).Select(y => y.NegocioId),
+                            ListFrwAFijar = x.Where(y => y.FrwAFijar != 0).Select(y => y.NegocioId),
+                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio != 0).Select(y => y.NegocioId),
+                            ListFrwFijac = x.Where(y => y.FrwFijac != 0).Select(y => y.NegocioId),
+                            ListNewAFijar = x.Where(y => y.NewAFijar != 0).Select(y => y.NegocioId),
+                            ListNewAPrecio = x.Where(y => y.NewAPrecio != 0).Select(y => y.NegocioId),
+                            ListNewFijac = x.Where(y => y.NewFijac != 0).Select(y => y.NegocioId)
+                        }).ToList();
+            return posicionKilos;
+        }
+        private List<PosicionKilos> TraerPosicionMaterialPorCampaña(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra, List<BasicoContrato> negocios, int centroId = 0)
+        {
+            var posicionKilos = new List<PosicionKilos>();
+            ObtenerPosicionMaterialBase(materialId, fechaDesde, fechaHasta, calidad, precioPizarra, negocios, centroId, posicionKilos);
+            posicionKilos = posicionKilos
+                        .GroupBy(x => new { x.Anio, x.Mes, x.CampanaId })
+                        .Select(x => new PosicionKilos
+                        {
+                            Anio = x.Key.Anio,
+                            Mes = x.Key.Mes,
+                            CampanaId = x.Key.CampanaId,
+                            Campana = x.First().Campana,
+                            KilosPesos = x.Sum(y => y.KilosPesos),
+                            KilosDolares = x.Sum(y => y.KilosDolares),
+                            DispAFijar = Math.Round(x.Sum(y => y.DispAFijar / 1000)),
+
+                            DispAPrecio = Math.Round(x.Sum(y => y.DispAPrecio / 1000)),
+                            DispAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.DispAPrecio / 1000)),
+                            DispAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.DispAPrecio / 1000)),
+
+                            DispFijac = Math.Round(x.Sum(y => y.DispFijac / 1000)),
+                            DispFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.DispFijac / 1000)),
+                            DispFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.DispFijac / 1000)),
+
+                            FrwAFijar = Math.Round(x.Sum(y => y.FrwAFijar / 1000)),
+
+                            FrwAPrecio = Math.Round(x.Sum(y => y.FrwAPrecio / 1000)),
+                            FrwAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.FrwAPrecio / 1000)),
+                            FrwAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.FrwAPrecio / 1000)),
+
+                            FrwFijac = Math.Round(x.Sum(y => y.FrwFijac / 1000)),
+                            FrwFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.FrwFijac / 1000)),
+                            FrwFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.FrwFijac / 1000)),
+
+                            NewAFijar = Math.Round(x.Sum(y => y.NewAFijar / 1000)),
+
+                            NewAPrecio = Math.Round(x.Sum(y => y.NewAPrecio / 1000)),
+                            NewAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.NewAPrecio / 1000)),
+                            NewAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.NewAPrecio / 1000)),
+
+                            NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
+                            NewFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.NewFijac / 1000)),
+                            NewFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.NewFijac / 1000)),
+
+                            PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
+                            PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0,
+                            ListDispAFijar = x.Where(y => y.DispAFijar != 0).Select(y => y.NegocioId),
+                            ListDispAPrecio = x.Where(y => y.DispAPrecio != 0).Select(y => y.NegocioId),
+                            ListDispFijac = x.Where(y => y.DispFijac != 0).Select(y => y.NegocioId),
+                            ListFrwAFijar = x.Where(y => y.FrwAFijar != 0).Select(y => y.NegocioId),
+                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio != 0).Select(y => y.NegocioId),
+                            ListFrwFijac = x.Where(y => y.FrwFijac != 0).Select(y => y.NegocioId),
+                            ListNewAFijar = x.Where(y => y.NewAFijar != 0).Select(y => y.NegocioId),
+                            ListNewAPrecio = x.Where(y => y.NewAPrecio != 0).Select(y => y.NegocioId),
+                            ListNewFijac = x.Where(y => y.NewFijac != 0).Select(y => y.NegocioId)
+                        }).ToList();
+            return posicionKilos;
+        }
+        private static void ObtenerPosicionMaterialBase(int materialId, DateTime fechaDesde, DateTime fechaHasta, int? calidad, List<PrecioPizarra> precioPizarra, List<BasicoContrato> negocios, int centroId, List<PosicionKilos> posicionKilos)
+        {
             var standard = calidad.HasValue ? calidad.Value : 1;
             precioPizarra = precioPizarra.Where(x => x.MaterialId == materialId && x.FechaHasta <= fechaHasta).ToList();
             var precio = precioPizarra.Count != 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
             var fechaHoy = fechaDesde.Date;
             var fechaManana = fechaHasta.Date;
             var fechaPosicion = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(+1);
-            var posicionKilos = new List<PosicionKilos>();
             var contratos = negocios.Where(x =>
                 x.OcultarEnTablero == false
                 //&& x.Fecha >= fechaHoy && x.Fecha <= fechaManana
@@ -795,6 +932,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocioId = x.TipoNegocioId,
                 CampanaMaterialId = x.CampanaMaterialId,
                 CampanaId = x.CampanaId,
+                Campana = x.Campania,
                 CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
                 MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
             }).ToList();
@@ -874,6 +1012,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Precio = x.Precio,
                 CantidadPonderada = x.Precio != 0 ? x.Cantidad : 0,
                 CampanaId = x.CampanaId,
+                Campana = x.Campania,
                 CampanaMaterialId = x.CampanaMaterialId,
                 Posicion = x.Posicion,
                 MonedaId = x.MonedaId
@@ -913,6 +1052,7 @@ namespace Molinos.DataAgro.Business.Managers
                     CantidadPonderada = x.Precio != 0 ? x.Cantidad : 0,
                     MonedaId = x.MonedaId,
                     CampanaId = x.CampanaId,
+                    Campana = x.Campania,
                     CampanaMaterialId = x.CampanaMaterialId,
                 }
                 ).ToList();
@@ -1003,60 +1143,11 @@ namespace Molinos.DataAgro.Business.Managers
                 posKil.PrecioPonderadoPesos = cont.MonedaId == "ARP  " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
                 posKil.PrecioPonderadoDolares = cont.MonedaId == "USDM " ? cont.Precio * (decimal)cont.CantidadPonderada : 0;
                 posKil.CantidadPonderada = cont.CantidadPonderada;
+                posKil.CampanaId = cont.CampanaId;
+                posKil.Campana = cont.Campana;
 
                 posicionKilos.Add(posKil);
             }
-            posicionKilos = posicionKilos
-                        .GroupBy(x => new { x.Anio, x.Mes })
-                        .Select(x => new PosicionKilos
-                        {
-                            Anio = x.Key.Anio,
-                            Mes = x.Key.Mes,
-                            KilosPesos = x.Sum(y => y.KilosPesos),
-                            KilosDolares = x.Sum(y => y.KilosDolares),
-                            DispAFijar = Math.Round(x.Sum(y => y.DispAFijar / 1000)),
-
-                            DispAPrecio = Math.Round(x.Sum(y => y.DispAPrecio / 1000)),
-                            DispAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.DispAPrecio / 1000)),
-                            DispAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.DispAPrecio / 1000)),
-
-                            DispFijac = Math.Round(x.Sum(y => y.DispFijac / 1000)),
-                            DispFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.DispFijac / 1000)),
-                            DispFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.DispFijac / 1000)),
-
-                            FrwAFijar = Math.Round(x.Sum(y => y.FrwAFijar / 1000)),
-
-                            FrwAPrecio = Math.Round(x.Sum(y => y.FrwAPrecio / 1000)),
-                            FrwAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.FrwAPrecio / 1000)),
-                            FrwAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.FrwAPrecio / 1000)),
-
-                            FrwFijac = Math.Round(x.Sum(y => y.FrwFijac / 1000)),
-                            FrwFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.FrwFijac / 1000)),
-                            FrwFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.FrwFijac / 1000)),
-
-                            NewAFijar = Math.Round(x.Sum(y => y.NewAFijar / 1000)),
-
-                            NewAPrecio = Math.Round(x.Sum(y => y.NewAPrecio / 1000)),
-                            NewAPrecioPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.NewAPrecio / 1000)),
-                            NewAPrecioDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.NewAPrecio / 1000)),
-
-                            NewFijac = Math.Round(x.Sum(y => y.NewFijac / 1000)),
-                            NewFijacPesos = Math.Round(x.Where(a => a.KilosPesos > 0).Sum(y => y.NewFijac / 1000)),
-                            NewFijacDolares = Math.Round(x.Where(a => a.KilosDolares > 0).Sum(y => y.NewFijac / 1000)),
-
-                            PrecioPonderadoPesos = x.Where(y => y.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoPesos / (decimal)x.Where(f => f.PrecioPonderadoPesos != 0).Sum(f => f.CantidadPonderada)) : 0,
-                            PrecioPonderadoDolares = x.Where(y => y.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada) != 0 ? x.Sum(y => y.PrecioPonderadoDolares / (decimal)x.Where(f => f.PrecioPonderadoDolares != 0).Sum(f => f.CantidadPonderada)) : 0,
-                            ListDispAFijar = x.Where(y => y.DispAFijar != 0).Select(y => y.NegocioId),
-                            ListDispAPrecio = x.Where(y => y.DispAPrecio != 0).Select(y => y.NegocioId),
-                            ListDispFijac = x.Where(y => y.DispFijac != 0).Select(y => y.NegocioId),
-                            ListFrwAFijar = x.Where(y => y.FrwAFijar != 0).Select(y => y.NegocioId),
-                            ListFrwAPrecio = x.Where(y => y.FrwAPrecio != 0).Select(y => y.NegocioId),
-                            ListFrwFijac = x.Where(y => y.FrwFijac != 0).Select(y => y.NegocioId),
-                            ListNewAFijar = x.Where(y => y.NewAFijar != 0).Select(y => y.NegocioId),
-                            ListNewAPrecio = x.Where(y => y.NewAPrecio != 0).Select(y => y.NegocioId),
-                            ListNewFijac = x.Where(y => y.NewFijac != 0).Select(y => y.NegocioId)
-                        }).ToList();
-            return posicionKilos;
         }
 
         public void TraerPosicionNegocios(List<BasicoContrato> negocios)
@@ -2108,7 +2199,7 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("GrabarDatosReporteCompraNet - inicio obtener datos");
                 ReporteCompraNetModel result = ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId, materialId);
                 logger.Debug("GrabarDatosReporteCompraNet - fin obtener datos");
-
+                var PosicionCompras = TraerPosicionCompras(fechaDesde, fechaHasta, materialId, int.Parse(centroId), true);
                 List<ReporteCompraNetPosicionCompras> posicionCompras = new List<ReporteCompraNetPosicionCompras>();
                 List<ReporteCompraNetPrecioCantidad> precioCantidad = new List<ReporteCompraNetPrecioCantidad>();
                 ReporteCompraNetSojaSustentable sojaSustentable = new ReporteCompraNetSojaSustentable();
@@ -2121,7 +2212,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 logger.Debug("GrabarDatosReporteCompraNet - inicio armadatos");
                 logger.Debug("GrabarDatosReporteCompraNet - inicio armadatos posicioncompras");
-                foreach (var posicion in result.PosicionCompras)
+                foreach (var posicion in PosicionCompras)
                 {
                     foreach (var kilos in posicion.PosicionKilos)
                     {
@@ -2157,6 +2248,8 @@ namespace Molinos.DataAgro.Business.Managers
                             NewAPrecioDolares = kilos.NewAPrecioDolares,
                             NewFijacPesos = kilos.NewFijacPesos,
                             NewFijacDolares = kilos.NewFijacDolares,
+                            CampanaId = kilos.CampanaId,
+                            Campana = kilos.Campana
                         });
                     }
 
@@ -2501,10 +2594,10 @@ namespace Molinos.DataAgro.Business.Managers
                 List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").Distinct().ToList());
                 items = items.Distinct().ToList();
                 repositorio.TruncarTabla<ReportePesificado>();
-                if(items.Count > 0)
+                if (items.Count > 0)
                 {
-                repositorio.AgregarTodos(items);
-                repositorio.GuardarCambios();               
+                    repositorio.AgregarTodos(items);
+                    repositorio.GuardarCambios();
                 }
                 return datos;
             }
@@ -2549,7 +2642,7 @@ namespace Molinos.DataAgro.Business.Managers
             }).ToList();
         }
 
-     
+
         public DataSourceResult TraerTodoDatoPesificado(DataSourceRequest filtro, List<int> equipo)
         {
             List<string> cuits = new List<string>();

@@ -59,7 +59,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public double NewAPrecioDolares { get; set; }
         public double NewFijacPesos { get; set; }
         public double NewFijacDolares { get; set; }
-
+        public int? CampanaId { get; set; }
+        public string Campana { get; set; }
     }
 
 }
