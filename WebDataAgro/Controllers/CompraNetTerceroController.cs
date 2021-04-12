@@ -191,30 +191,55 @@ namespace WebDataAgro.Controllers
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             contrato.UsuarioId = proveedor.RazonSocial;
 
+            //if (contrato.PagoDiferidoTerceroId.HasValue && contrato.PagoDiferidoTerceroId.Value > 0)
+            //{
+            //    var pago = configuracionInternaManager.TraerPagosDiferido(contrato.TipoNegocioId, contrato.MaterialId).First(x => x.Id == contrato.PagoDiferidoTerceroId.Value);
+            //    contrato.PagoDiferido = contrato.PagoDiferidoTercero;
+            //    contrato.DiasPesificado = pago.CantidadDia;
+            //    contrato.PrecioNeto = contrato.Precio + pago.Importe;
+            //    if (contrato.AperturaPrecio == null)
+            //    {
+            //        contrato.AperturaPrecio = new List<AperturaPrecio>();
+
+            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, MonedaId = null, Porcentaje = 0 });
+            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, MonedaId = null, Porcentaje = 0 });
+            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = 0 });
+            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
+            //    }
+
+            //    if (contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == 1))
+            //    {
+            //        contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe += pago.Importe;
+            //    }
+            //    else
+            //    {
+            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = pago.Importe, MonedaId = null, Porcentaje = 0 });
+            //    }
+            //}
+            if (contrato.AperturaPrecio == null)
+            {
+                contrato.AperturaPrecio = new List<AperturaPrecio>();
+
+                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, MonedaId = null, Porcentaje = 0 });
+                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, MonedaId = null, Porcentaje = 0 });
+                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = 0 });
+                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
+            }
+
             if (contrato.PagoDiferidoTerceroId.HasValue && contrato.PagoDiferidoTerceroId.Value > 0)
             {
                 var pago = configuracionInternaManager.TraerPagosDiferido(contrato.TipoNegocioId, contrato.MaterialId).First(x => x.Id == contrato.PagoDiferidoTerceroId.Value);
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
                 contrato.DiasPesificado = pago.CantidadDia;
+                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe += pago.Importe;
                 contrato.PrecioNeto = contrato.Precio + pago.Importe;
-                if (contrato.AperturaPrecio == null)
-                {
-                    contrato.AperturaPrecio = new List<AperturaPrecio>();
 
-                    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                }
+            }
 
-                if (contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == 1))
-                {
-                    contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe += pago.Importe;
-                }
-                else
-                {
-                    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = pago.Importe, MonedaId = null, Porcentaje = 0 });
-                }
+            if (proveedor.Comision > 0)
+            {
+                contrato.PrecioNeto = contrato.Precio + ((contrato.Precio + contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe) * proveedor.Comision.Value / 100);
+                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = proveedor.Comision.Value;
             }
 
             contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? (int?)null : contrato.PagoDiferidoTerceroId;
