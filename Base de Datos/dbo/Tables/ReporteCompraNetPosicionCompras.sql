@@ -30,7 +30,9 @@
 	[NewAPrecioDolares]			DECIMAL(11, 2) NOT NULL default 0,
 	[NewFijacPesos]			DECIMAL(11, 2) NOT NULL default 0,
 	[NewFijacDolares]			DECIMAL(11, 2) NOT NULL default 0,
-	    CONSTRAINT [PK_ReporteCompraNetPosicionCompras] PRIMARY KEY CLUSTERED ([Id] ASC)
+	    [CampanaId] INT NULL, 
+    [Campana] VARCHAR(50) NULL, 
+    CONSTRAINT [PK_ReporteCompraNetPosicionCompras] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
 --go
