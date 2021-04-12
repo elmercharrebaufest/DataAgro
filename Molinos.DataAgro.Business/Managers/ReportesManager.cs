@@ -978,6 +978,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Cantidad = x.Cantidad,
                     Precio = x.Pizarra == true ? precio.Precio : x.Precio,
                     CampanaId = x.CampanaId,
+                    Campana = x.Campania,
                     CampanaMaterialId = x.CampanaMaterialId,
                     CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
                     MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
