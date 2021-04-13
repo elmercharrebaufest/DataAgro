@@ -1033,6 +1033,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación o de Entrega en un a precio.");
                 }
+                if (oParam.Descuentos.Any(a => a.TipoPeriodoDBId == 1 && (a.Importe > 0 || a.Porcentaje > 0)) && oParam.TipoNegocioId == 2 && oParam.Precio > 0)
+                {
+                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion Sobre Precio cuando tiene precio.");
+                }
             }
             return oErrorMessages;
         }
@@ -2762,7 +2766,7 @@ namespace Molinos.DataAgro.Business.Managers
                 HastaFijacion = x.HastaFijacion,
                 DesdeFijacion = x.DesdeFijacion,
                 FechaDesde = x.FechaDesde,
-                FechaHasta = x.FechaHasta,                
+                FechaHasta = x.FechaHasta,
                 DesdeFijacionFormateado = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.DesdeFijacion) : "",
@@ -4640,7 +4644,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     var result = GrabarContrato(contrato);
-                    results.Add(result);                   
+                    results.Add(result);
                 }
             }
             if (contratos.Count > 0)
@@ -4745,7 +4749,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     style = style2;
                 }
-                var contrato = contratos.Where(a => a.Observacion == (c.ContratoId??-1).ToString()).SingleOrDefault();
+                var contrato = contratos.Where(a => a.Observacion == (c.ContratoId ?? -1).ToString()).SingleOrDefault();
                 htmlBody += "<tr>" +
                          "<td " + style + ((c.ContratoId ?? 0) + 2) + "</td>" +
                          "<td " + style + (contrato == null ? "" : contrato.ContratoCorredor) + "</td>" +
