@@ -4644,6 +4644,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     var result = GrabarContrato(contrato);
+                    result.ContratoId = int.Parse(item.Observacion);
                     results.Add(result);
                 }
             }
