@@ -203,7 +203,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 TipoNegocio = x.TipoNegocio.Descripcion,
                 TipoNegocioId = x.TipoNegocioId
-            }, x => x.Habilitado, 0, "DesdeVigencia", Entities.Helpers.DirOrden.Asc).ToList();
+            }, x => x.Habilitado && x.HastaVigencia >= hoy, 0, "DesdeVigencia", Entities.Helpers.DirOrden.Asc).ToList();
 
             return lista;
         }

@@ -3423,7 +3423,7 @@ namespace Molinos.DataAgro.Business.Managers
             var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(comercial);
             lista.Add(comercialRegistrado);
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
-            logger.Debug("Enviando mail a Comercial " + email);
+            logger.Debug("Enviando mail a Comercial Venta" + email);
             logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             var emailComerciales = "";
 
@@ -3431,7 +3431,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Usuario tiene permiso " + tienePermiso);
             if (tienePermiso)
             {
-                var comercialVenta = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial))); ;
+                var comercialVenta = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarVenta))); ;
                 comercialVenta.Remove(contrato.Comercial);
                 comercialVenta.Remove(contrato.ComercialCreador);
                 logger.Debug("Enviando mail a " + string.Join(", ", comercialVenta.Select(x => x.IdActiveDirectory)));
@@ -3802,7 +3802,7 @@ namespace Molinos.DataAgro.Business.Managers
                 lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
             }
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
-            logger.Debug("Enviando mail a Comercial " + email);
+            logger.Debug("Enviando mail a Comercial canje" + email);
             logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
 
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
