@@ -26,7 +26,7 @@ function InicializarElementos() {
         format: "n0",
         spinners: false
     });
-    $("#Importe").kendoNumericTextBox({
+    $("#Tasa").kendoNumericTextBox({
         culture: "es-AR",
         format: "n2",
         spinners: false,

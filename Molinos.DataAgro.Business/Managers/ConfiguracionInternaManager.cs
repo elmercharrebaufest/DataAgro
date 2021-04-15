@@ -196,13 +196,13 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Id = x.Id,
                 CantidadDia = x.CantidadDia,
-                Importe = x.Importe,
+                Tasa = x.Tasa,
                 DesdeVigencia = x.DesdeVigencia,
                 HastaVigencia = x.HastaVigencia,
-                Material = x.Material.Descripcion,
-                MaterialId = x.MaterialId,
-                TipoNegocio = x.TipoNegocio.Descripcion,
-                TipoNegocioId = x.TipoNegocioId
+                //Material = x.Material.Descripcion,
+                //MaterialId = x.MaterialId,
+                //TipoNegocio = x.TipoNegocio.Descripcion,
+                //TipoNegocioId = x.TipoNegocioId
             }, x => x.Habilitado && x.HastaVigencia >= hoy, 0, "DesdeVigencia", Entities.Helpers.DirOrden.Asc).ToList();
 
             return lista;
@@ -448,19 +448,19 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado ValidarPagoDiferido(HabilitacionPagoDiferido pago)
         {
             var error = new Resultado();
-            if (pago.TipoNegocioId == 0)
-            {
-                error.Error("TipoNegocioId", "No Selecciono el Tipo de Negocio");
-            }
-            if (pago.MaterialId == 0)
-            {
-                error.Error("Material", "No Selecciono el Material");
-            }
+            //if (pago.TipoNegocioId == 0)
+            //{
+            //    error.Error("TipoNegocioId", "No Selecciono el Tipo de Negocio");
+            //}
+            //if (pago.MaterialId == 0)
+            //{
+            //    error.Error("Material", "No Selecciono el Material");
+            //}
             if (pago.CantidadDia <= 0)
             {
                 error.Error("CantidadDia", "El campo Cantidad de Días es obligatorio");
             }
-            if (pago.Importe <= 0)
+            if (pago.Tasa <= 0)
             {
                 error.Error("Importe", "El campo Importe es obligatorio");
             }
@@ -468,7 +468,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Error("Vigencia", "La vigencia desde no puede ser mayor al hasta");
             }
-            if (repositorio.Existe<HabilitacionPagoDiferido>(x => x.CantidadDia == pago.CantidadDia && x.HastaVigencia > pago.DesdeVigencia && x.MaterialId == pago.MaterialId && pago.TipoNegocioId == x.TipoNegocioId && x.Habilitado))
+            if (repositorio.Existe<HabilitacionPagoDiferido>(x => x.CantidadDia == pago.CantidadDia && x.HastaVigencia > pago.DesdeVigencia /*&& x.MaterialId == pago.MaterialId && pago.TipoNegocioId == x.TipoNegocioId*/ && x.Habilitado))
             {
                 error.Error("Vigencia", "Ya existe habilitación con ese rango para esa fecha y material");
             }
@@ -609,16 +609,15 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Existe<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && x.MaterialId == material);
         }
 
-        public List<HabilitacionPagoDiferidoDto> TraerPagosDiferido(int tipoNegocio, int material)
+        public List<HabilitacionPagoDiferidoDto> TraerPagosDiferido()
         {
             var ahora = DateTime.Now;
             var pagosDiferidosVigentes = repositorio.Listar<HabilitacionPagoDiferido, HabilitacionPagoDiferidoDto>(x => new HabilitacionPagoDiferidoDto
             {
-                Importe = x.Importe,
+                Tasa = x.Tasa,
                 CantidadDia = x.CantidadDia,
                 Id = x.Id
-            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora
-                    && x.TipoNegocioId == tipoNegocio && x.MaterialId == material && x.Habilitado);
+            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && x.Habilitado);
 
             return pagosDiferidosVigentes;
         }
@@ -660,13 +659,13 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 Id = x.Id,
                 CantidadDia = x.CantidadDia,
-                Importe = x.Importe,
+                Tasa = x.Tasa,
                 DesdeVigencia = x.DesdeVigencia,
                 HastaVigencia = x.HastaVigencia,
-                Material = x.Material.Descripcion,
-                MaterialId = x.MaterialId,
-                TipoNegocio = x.TipoNegocio.Descripcion,
-                TipoNegocioId = x.TipoNegocioId,
+                //Material = x.Material.Descripcion,
+                //MaterialId = x.MaterialId,
+                //TipoNegocio = x.TipoNegocio.Descripcion,
+                //TipoNegocioId = x.TipoNegocioId,
                 Habilitado = x.Habilitado
             });
 

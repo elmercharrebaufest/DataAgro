@@ -30,10 +30,10 @@
         <div id="historialPago" class="collapse tabla-research">
             <table class="tabla-historial table">
                 <tr>
-                    <th>Tipo Negocio</th>
-                    <th>Material</th>
-                    <th>Importe</th>
-                    <th>Cantidad Dias</th>
+                    @*<th>Tipo Negocio</th>
+                    <th>Material</th>*@
+                    <th>Tasa</th>
+                    <th>Dias Hasta</th>
                     <th>Vigencia Desde</th>
                     <th>Vigencia Hasta</th>
                     <th></th>
@@ -41,9 +41,9 @@
                 @foreach (var pr in Model.HabilitacionPagoDiferido)
                 {
             <tr>
-                <td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
-                <td>@Html.DisplayFor(model => pr.Material)</td>
-                <td>@Html.DisplayFor(model => pr.Importe)</td>
+                @*<td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
+                <td>@Html.DisplayFor(model => pr.Material)</td>*@
+                <td>@Html.DisplayFor(model => pr.Tasa)</td>
                 <td>@Html.DisplayFor(model => pr.CantidadDia)</td>
                 @{var desde = pr.DesdeVigencia.ToString("dd/MM/yyyy hh\\:mm tt");}
                 @{var hasta = pr.HastaVigencia.ToString("dd/MM/yyyy hh\\:mm tt");}

@@ -630,4 +630,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Habilitado" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="74cf8ed7-0a0d-4da8-9ec0-84a3a154dffe" ChangeDateTime="04/14/2021 20:18:15">
+    <Property Name="ElementName" Value="[dbo].[HabilitacionPagoDiferido].[Importe]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[HabilitacionPagoDiferido]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Tasa" />
+  </Operation>
 </Operations>

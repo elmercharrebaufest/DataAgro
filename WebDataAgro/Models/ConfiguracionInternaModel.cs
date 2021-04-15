@@ -13,7 +13,7 @@ namespace WebDataAgro.Models
         public int Id { get; set; }
         public decimal Precio { get; set; }
         public int CantidadDia { get; set; }
-        public decimal Importe { get; set; }
+        public decimal Tasa { get; set; }
         public string MonedaId { get; set; }
         public int MaterialId { get; set; }
         public string DesdeVigencia { get; set; }

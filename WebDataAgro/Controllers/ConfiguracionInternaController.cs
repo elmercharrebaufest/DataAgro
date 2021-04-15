@@ -140,12 +140,12 @@ namespace WebDataAgro.Controllers
         {
             var entidad = new HabilitacionPagoDiferido
             {
-                MaterialId = configuracion.MaterialId,
+                //MaterialId = configuracion.MaterialId,
                 DesdeVigencia = DateTime.Parse(configuracion.DesdeVigencia),
                 HastaVigencia = DateTime.Parse(configuracion.HastaVigencia),
-                TipoNegocioId = configuracion.TipoNegocioId,
+                //TipoNegocioId = configuracion.TipoNegocioId,
                 CantidadDia = configuracion.CantidadDia,
-                Importe = configuracion.Importe
+                Tasa = configuracion.Tasa
             };
             return entidad;
         }

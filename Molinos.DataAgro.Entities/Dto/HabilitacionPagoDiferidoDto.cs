@@ -11,7 +11,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int TipoNegocioId { get; set; }
         public string TipoNegocio { get; set; }
         public int CantidadDia { get; set; }
-        public decimal Importe { get; set; }
+        public decimal Tasa { get; set; }
         public DateTime DesdeVigencia { get; set; }
         public DateTime HastaVigencia { get; set; }
         public bool Habilitado { get; set; }

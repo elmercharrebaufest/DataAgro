@@ -69,13 +69,17 @@ namespace WebDataAgro.Controllers
                 contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
             }
 
-            if (contrato.PagoDiferidoTerceroId.HasValue && contrato.PagoDiferidoTerceroId.Value > 0)
+            if (contrato.PagoDiferidoTercero == true)
             {
-                var pago = configuracionInternaManager.TraerPagosDiferido(contrato.TipoNegocioId, contrato.MaterialId).First(x => x.Id == contrato.PagoDiferidoTerceroId.Value);
+                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia <= contrato.DiasPesificado).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
+                if (pago == null)
+                {
+                    return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
+                }
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
-                contrato.DiasPesificado = pago.CantidadDia;
-                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe += pago.Importe;
-                contrato.PrecioNeto = contrato.Precio + pago.Importe;
+                //contrato.DiasPesificado = pago.CantidadDia;
+                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = pago.Tasa * contrato.Precio / 100;
+                contrato.PrecioNeto = contrato.Precio + (pago.Tasa * contrato.Precio / 100);
 
             }
 
@@ -131,15 +135,7 @@ namespace WebDataAgro.Controllers
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             contrato.UsuarioId = proveedor.RazonSocial;
             contrato.PorcentajeComision = proveedor.Comision;
-            //if (contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision > 0)
-            //{
-            //    contrato.PrecioNeto = contrato.Precio + (contrato.Precio * contrato.PorcentajeComision.Value / 100);
-            //    contrato.AperturaPrecio = new List<AperturaPrecio>();
-            //    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, MonedaId = null, Porcentaje = 0 });
-            //    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, MonedaId = null, Porcentaje = 0 });
-            //    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = 1 });
-            //    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
-            //}
+
             if (contrato.ComercialId.HasValue)
             {
                 contrato.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
@@ -191,31 +187,6 @@ namespace WebDataAgro.Controllers
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             contrato.UsuarioId = proveedor.RazonSocial;
 
-            //if (contrato.PagoDiferidoTerceroId.HasValue && contrato.PagoDiferidoTerceroId.Value > 0)
-            //{
-            //    var pago = configuracionInternaManager.TraerPagosDiferido(contrato.TipoNegocioId, contrato.MaterialId).First(x => x.Id == contrato.PagoDiferidoTerceroId.Value);
-            //    contrato.PagoDiferido = contrato.PagoDiferidoTercero;
-            //    contrato.DiasPesificado = pago.CantidadDia;
-            //    contrato.PrecioNeto = contrato.Precio + pago.Importe;
-            //    if (contrato.AperturaPrecio == null)
-            //    {
-            //        contrato.AperturaPrecio = new List<AperturaPrecio>();
-
-            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, MonedaId = null, Porcentaje = 0 });
-            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, MonedaId = null, Porcentaje = 0 });
-            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = 0 });
-            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
-            //    }
-
-            //    if (contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == 1))
-            //    {
-            //        contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe += pago.Importe;
-            //    }
-            //    else
-            //    {
-            //        contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = pago.Importe, MonedaId = null, Porcentaje = 0 });
-            //    }
-            //}
             if (contrato.AperturaPrecio == null)
             {
                 contrato.AperturaPrecio = new List<AperturaPrecio>();
@@ -226,13 +197,17 @@ namespace WebDataAgro.Controllers
                 contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
             }
 
-            if (contrato.PagoDiferidoTerceroId.HasValue && contrato.PagoDiferidoTerceroId.Value > 0)
+            if (contrato.PagoDiferidoTercero == true)
             {
-                var pago = configuracionInternaManager.TraerPagosDiferido(contrato.TipoNegocioId, contrato.MaterialId).First(x => x.Id == contrato.PagoDiferidoTerceroId.Value);
+                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia <= contrato.DiasPesificado).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
+                if (pago == null)
+                {
+                    return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
+                }
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
-                contrato.DiasPesificado = pago.CantidadDia;
-                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe += pago.Importe;
-                contrato.PrecioNeto = contrato.Precio + pago.Importe;
+                //contrato.DiasPesificado = pago.CantidadDia;
+                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = pago.Tasa * contrato.Precio / 100;
+                contrato.PrecioNeto = contrato.Precio + (pago.Tasa * contrato.Precio / 100);
 
             }
 
@@ -282,11 +257,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult TraerPagosDiferido(int tipoNegocio, int material)
+        public ActionResult TraerPagosDiferido()
         {
             return new JsonResult()
             {
-                Data = configuracionInternaManager.TraerPagosDiferido(tipoNegocio, material),
+                Data = configuracionInternaManager.TraerPagosDiferido(),
                 MaxJsonLength = Int32.MaxValue
             };
         }
