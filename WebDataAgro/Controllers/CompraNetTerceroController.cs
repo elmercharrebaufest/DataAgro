@@ -77,9 +77,9 @@ namespace WebDataAgro.Controllers
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
                 }
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
-                //contrato.DiasPesificado = pago.CantidadDia;
-                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = pago.Tasa * contrato.Precio / 100;
-                contrato.PrecioNeto = contrato.Precio + (pago.Tasa * contrato.Precio / 100);
+                var ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365 * 2, MidpointRounding.AwayFromZero) / 2;
+                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = ImporteFinanciero;
+                contrato.PrecioNeto = contrato.Precio + ImporteFinanciero;
 
             }
 
@@ -205,9 +205,10 @@ namespace WebDataAgro.Controllers
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
                 }
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
-                //contrato.DiasPesificado = pago.CantidadDia;
-                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = pago.Tasa * contrato.Precio / 100;
-                contrato.PrecioNeto = contrato.Precio + (pago.Tasa * contrato.Precio / 100);
+                var ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365 * 2, MidpointRounding.AwayFromZero) / 2;
+                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = ImporteFinanciero;
+                contrato.PrecioNeto = contrato.Precio + ImporteFinanciero;
+               
 
             }
 

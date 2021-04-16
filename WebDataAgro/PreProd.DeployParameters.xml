@@ -2,8 +2,8 @@
 <parameters>
   <setParameter name="IIS Web Application Name" value="dataagroPreProd" />
   <setParameter name="DataAgro-Web.config Connection String" value="Data Source=gvicsqltest2016.molinosagro.ad; Initial Catalog=Dataagro_Homologacion; Integrated Security=True " />
-  <setParameter name="SmtpServer Key" value="smtpmol.molinos.com.ar" />
-  <setParameter name="SmtpServerPort Key" value="26" />
+  <setParameter name="SmtpServer Key" value="smtp.molinosagro.com.ar" />
+  <setParameter name="SmtpServerPort Key" value="25" />
   <setParameter name="ImapServer Key" value="outlook.office365.com" />
   <setParameter name="ImapServerPort Key" value="993" />
   <setParameter name="EnableSSL Key" value="N" />
