@@ -95,19 +95,19 @@
             </div>
             <div class="col-md-2">
                 <label>Dolarizado</label>
-                @Html.CheckBox("Dolarizado", false, new { @class = "filtroBoleano", @id = "Dolarizado" })
+                @Html.CheckBox("Dolarizado", false, new { @class = "filtroBoleano", @id = "Dolarizado", @onclick = "DeshabilitarNinguno()"})
             </div>
             <div class="col-md-2">
                 <label>Express</label>
-                @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", @id = "DolarizadoExpress" })
+                @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", @id = "DolarizadoExpress", @onclick = "DeshabilitarNinguno()" })
             </div>
             <div class="col-md-2">
                 <label>No Productor</label>
-                @Html.CheckBox("DolarizadoNoProductor", false, new { @class = "filtroBoleano", @id = "DolarizadoNoProductor" })
+                @Html.CheckBox("DolarizadoNoProductor", false, new { @class = "filtroBoleano", @id = "DolarizadoNoProductor", @onclick = "DeshabilitarNinguno()" })
             </div>
             <div class="col-md-2">
                 <label>Ninguno</label>
-                @Html.CheckBox("NingunDolarizado", false, new { @class = "filtroBoleano", @id = "NingunDolarizado" })
+                @Html.CheckBox("NingunDolarizado", false, new { @class = "filtroBoleano", @id = "NingunDolarizado", @onclick = "DeshabilitarDolarizado()" })
             </div>
 
         </div>
@@ -117,19 +117,19 @@
                 <label>Kg No Pesificable</label>
             </div>
             <div class="col-md-2">
-                @Html.CheckBox("KgNoPesificable", false, new { @class = "filtroPesificable", @id = "KgNoPesificable" })
+                @Html.CheckBox("KgNoPesificable", false, new { @class = "filtroPesificable", @id = "KgNoPesificable", @onclick = "DeshabilitarTildeExcluyenteKgNoPesificable()"})
             </div>
             <div class="col-md-2">
                 <label>Kg Vencimiento Pesificable</label>
             </div>
             <div class="col-md-2">
-                @Html.CheckBox("KgVencimientoPesificable", false, new { @class = "filtroPesificable",  @id = "KgVencimientoPesificable" })
+                @Html.CheckBox("KgVencimientoPesificable", false, new { @class = "filtroPesificable",  @id = "KgVencimientoPesificable", @onclick = "DeshabilitarTildeExcluyenteKgVencimientoPesificable()"})
             </div>
         <div class="col-md-2">
             <label>Kg Totales</label>
         </div>
         <div class="col-md-2">
-            @Html.CheckBox("KgTotales",false, new { @class = "filtroPesificable",  @id = "KgTotales" })
+            @Html.CheckBox("KgTotales",false, new { @class = "filtroPesificable",  @id = "KgTotales", @onclick = "DeshabilitarTildeExcluyenteKgTotales()" })
         </div>
     </div>
         <div class="row">

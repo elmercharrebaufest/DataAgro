@@ -2656,8 +2656,9 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         cuits.AddRange(f.Filters.Select(a => a.Value.ToString()).ToList());
                     }
-                }
+                }                          
 
+                FiltrarBooleano(filtro);
             }
             if (cuits.Count == 1 && filtro.Skip == 0)
             {
@@ -2712,6 +2713,44 @@ namespace Molinos.DataAgro.Business.Managers
 
 
             return repositorio.ObtenerConsultaEscalar(new TraerTodoPesificado(filtro, equipo));
+        }
+
+        private static void FiltrarBooleano(DataSourceRequest filtro)
+        {
+            var dolarizado = "Dolarizado";
+            var dolarizadoExpress = "DolarizadoExpress";
+            var noProductor = "DolarizadoNoProductor";
+
+            if (filtro.Filter.Filters.Where(x => x.Field == dolarizado || x.Field == dolarizadoExpress || x.Field == noProductor).ToList().Count > 1)
+            {
+                var filter = new List<Filter>();
+
+                if (filtro.Filter.Filters.Any(x => x.Field == dolarizado))
+                {
+                    filter.Add(new Filter { Field = dolarizado, Operator = "eq", Value = true });
+                                                       
+                }
+                if (filtro.Filter.Filters.Any(x => x.Field == dolarizadoExpress))
+                {
+                filter.Add(new Filter { Field = dolarizadoExpress, Operator = "eq", Value = true });
+                }
+                if (filtro.Filter.Filters.Any(x => x.Field == noProductor))
+                {
+                    filter.Add(new Filter { Field = noProductor, Operator = "eq", Value = true });
+                }
+               
+                var filtroHijo = new Filter { Logic = "or", Filters = filter };
+                var filtroPadre = new List<Filter>();
+                foreach (var f in filtro.Filter.Filters)
+                {
+                    if (f.Field != dolarizado && f.Field != dolarizadoExpress && f.Field != noProductor)
+                    {
+                        filtroPadre.Add(f);
+                    }
+                }
+                filtroPadre.Add(filtroHijo);
+                filtro.Filter.Filters = filtroPadre;
+            }
         }
 
         public DataSourceResult TraerTodoPrecioMoaPizarra(DataSourceRequest request)

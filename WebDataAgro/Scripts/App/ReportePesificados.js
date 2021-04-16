@@ -352,3 +352,47 @@ $("#descargar-reporte").click(function () {
         + '&CampanaId=' + CampanaId + '&MaterialId=' + MaterialId + '&GrupoCompraId=' + GrupoCompraId + '&ClasificacionId=' + ClasificacionId + '&DestinoId=' + DestinoId);
     document.getElementById("descargarReporte").click();
 });
+
+function DeshabilitarTildeExcluyenteKgVencimientoPesificable() {
+
+    if ($("#KgVencimientoPesificable").is(":checked")) {
+        $("#KgNoPesificable").prop("checked", false)
+        $("#KgTotales").prop("checked", false)
+    }  
+    
+}
+
+function DeshabilitarTildeExcluyenteKgNoPesificable() {
+
+    if ($("#KgNoPesificable").is(":checked")) {
+        $("#KgVencimientoPesificable").prop("checked", false)
+        $("#KgTotales").prop("checked", false)
+    }
+
+}
+function DeshabilitarTildeExcluyenteKgTotales() {
+
+    if ($("#KgTotales").is(":checked")) {
+        $("#KgNoPesificable").prop("checked", false)
+        $("#KgVencimientoPesificable").prop("checked", false)
+    }
+
+}
+
+function DeshabilitarDolarizado() {
+
+    if ($("#NingunDolarizado").is(":checked")) {
+        $("#DolarizadoNoProductor").prop("checked", false)
+        $("#DolarizadoExpress").prop("checked", false)
+        $("#Dolarizado").prop("checked", false)
+
+    }
+}
+
+function DeshabilitarNinguno() {
+
+    if ($("#DolarizadoNoProductor").is(":checked") || $("#DolarizadoExpress").is(":checked") || $("#Dolarizado").is(":checked")) {
+        $("#NingunDolarizado").prop("checked", false)    
+
+    }
+}
