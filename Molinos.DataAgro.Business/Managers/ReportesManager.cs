@@ -2720,8 +2720,9 @@ namespace Molinos.DataAgro.Business.Managers
             var dolarizado = "Dolarizado";
             var dolarizadoExpress = "DolarizadoExpress";
             var noProductor = "DolarizadoNoProductor";
+            var ninguno = "NingunDolarizado";
 
-            if (filtro.Filter.Filters.Where(x => x.Field == dolarizado || x.Field == dolarizadoExpress || x.Field == noProductor).ToList().Count > 1)
+            if (filtro.Filter.Filters.Where(x => x.Field == dolarizado || x.Field == dolarizadoExpress || x.Field == noProductor || x.Field == ninguno).ToList().Count > 1)
             {
                 var filter = new List<Filter>();
 
@@ -2738,12 +2739,17 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     filter.Add(new Filter { Field = noProductor, Operator = "eq", Value = true });
                 }
-               
+
+                if (filtro.Filter.Filters.Any(x => x.Field == ninguno))
+                {
+                    filter.Add(new Filter { Field = ninguno, Operator = "eq", Value = true });
+                }
+
                 var filtroHijo = new Filter { Logic = "or", Filters = filter };
                 var filtroPadre = new List<Filter>();
                 foreach (var f in filtro.Filter.Filters)
                 {
-                    if (f.Field != dolarizado && f.Field != dolarizadoExpress && f.Field != noProductor)
+                    if (f.Field != dolarizado && f.Field != dolarizadoExpress && f.Field != noProductor && f.Field != ninguno)
                     {
                         filtroPadre.Add(f);
                     }

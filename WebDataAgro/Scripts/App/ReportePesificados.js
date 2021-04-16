@@ -379,20 +379,3 @@ function DeshabilitarTildeExcluyenteKgTotales() {
 
 }
 
-function DeshabilitarDolarizado() {
-
-    if ($("#NingunDolarizado").is(":checked")) {
-        $("#DolarizadoNoProductor").prop("checked", false)
-        $("#DolarizadoExpress").prop("checked", false)
-        $("#Dolarizado").prop("checked", false)
-
-    }
-}
-
-function DeshabilitarNinguno() {
-
-    if ($("#DolarizadoNoProductor").is(":checked") || $("#DolarizadoExpress").is(":checked") || $("#Dolarizado").is(":checked")) {
-        $("#NingunDolarizado").prop("checked", false)    
-
-    }
-}
