@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CupoStop = cupo.CupoStop.ToString(),
                     Material = cupo.Material.Descripcion,
                     MaterialId = cupo.Material.MaterialId,
-                    Proveedor = cupo.Proveedor.RazonSocial,
+                    Proveedor = !string.IsNullOrEmpty(cupo.Proveedor.Alias) ? cupo.Proveedor.Alias + " - " + cupo.Proveedor.RazonSocial : cupo.Proveedor.RazonSocial,
                     ProveedorId = cupo.ProveedorId,
                     Destinatario = cupo.Destinatario,
                     Centro = cupo.Centro.Descripcion,
