@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Business
         private readonly IConfiguracionManager configuracionManager;
 
         public ContratoAcuerdoManager(ILogger logger, IRepositorio repositorio,
-            IDiasHabilesAgent diasHabilesAgent, ILogDataAgroManager logDataAgroManager, IValidarDocProcPagoAgent validarPagoAgente,IConfiguracionManager configuracionManager)
+            IDiasHabilesAgent diasHabilesAgent, ILogDataAgroManager logDataAgroManager, IValidarDocProcPagoAgent validarPagoAgente, IConfiguracionManager configuracionManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -625,6 +625,15 @@ namespace Molinos.DataAgro.Business
                 if (oContratoAcuerdo.Descuentos.Any(a => a.TipoPeriodoDBId == 3 || a.TipoPeriodoDBId == 2) && oContratoAcuerdo.Precio > 0)
                 {
                     oEntityErrors.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación o de Entrega en un acuerdo a precio.");
+                }
+
+                if (oContratoAcuerdo.Descuentos.Any(a => a.TipoPeriodoDBId == 3 && (a.FechaDesde < oContratoAcuerdo.DesdeFijacion || a.FechaDesde > oContratoAcuerdo.HastaFijacion || a.FechaHasta < oContratoAcuerdo.DesdeFijacion || a.FechaHasta > oContratoAcuerdo.HastaFijacion)))
+                {
+                    oEntityErrors.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación fuera del rango de Fijación.");
+                }
+                if (oContratoAcuerdo.Descuentos.Any(a => a.TipoPeriodoDBId == 2 && (a.FechaDesde < oContratoAcuerdo.FechaDesde || a.FechaDesde > oContratoAcuerdo.FechaHasta || a.FechaHasta < oContratoAcuerdo.FechaDesde || a.FechaHasta > oContratoAcuerdo.FechaHasta)))
+                {
+                    oEntityErrors.Error("Descuentos", "No se puede cargar descuento o bonificacion por Por Fecha de Entrega fuera del rango de Entrega.");
                 }
             }
             var conf = configuracionManager.TraerConfiguraciones();
