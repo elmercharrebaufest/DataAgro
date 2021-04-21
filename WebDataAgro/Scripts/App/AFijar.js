@@ -2613,7 +2613,7 @@ function windowsResize() {
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
     if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
-        $("#destinoId").data("kendoDropDownList").value() == "7" && $('#material').data("kendoDropDownList").value() == "3")) {
+        $("#destinoId").data("kendoDropDownList").value() == "7" && $('#material').data("kendoDropDownList").value() == "3") || $("#canjeId").is(":checked")) {
         for (var i = 0; i < calidadGrano.length; i++) {
             if (calidadGrano[i].Descripcion != "Camara" && calidadGrano[i].Descripcion != "Fabrica") {
                 calidadGrano.splice(i);
@@ -3583,6 +3583,23 @@ function CargarDatosEditar(contrato, hijo) {
     $("#operadorId").data("kendoDropDownList").value(contrato.OperadorId);
     $("#posicionFasonId").val(contrato.Posicion);
 
+    if (contrato.Canje == true) {
+        ocultarSiHayCanje();
+        $("#mostrarCanje").show();
+        $("#prestamoDevolucionDiv").hide();
+        $("#prestamoDevolucionId").prop("checked", false);
+        $("#plantaDestinoId").data("kendoDropDownList").value("");
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        $("#canjeId").prop("checked", true);
+        $("#montoId").data("kendoNumericTextBox").value(contrato.Monto);
+        $("#montoMonedaId").data("kendoDropDownList").value(contrato.MonedaCanjeId);
+        $("#montoMonedaId").data("kendoDropDownList").trigger("change");
+        $("#insumoId").val(contrato.Insumo);
+        $("#plantaDestinoDiv").hide();
+        $("#plantaDestinoId").data("kendoDropDownList").value("");
+        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        CargarCalidadPorMaterial(contrato.MaterialId);
+    }
     LimpiarDescuentos();
     LimpiarCalidades();
     contrato.MercsDeposito == true ? $("#mercsDepositoId").prop("checked", true) : $("#mercsDepositoId").prop("checked", false);
@@ -3774,25 +3791,7 @@ function CargarDatosEditar(contrato, hijo) {
         ocultarSiHayCanje();
         $("#plantaDestinoId").data("kendoDropDownList").value(contrato.PlantaDestinoId);
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-    }
-
-    if (contrato.Canje == true) {
-        ocultarSiHayCanje();
-        $("#mostrarCanje").show();
-        $("#prestamoDevolucionDiv").hide();
-        $("#prestamoDevolucionId").prop("checked", false);
-        $("#plantaDestinoId").data("kendoDropDownList").value("");
-        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-        $("#canjeId").prop("checked", true);
-        $("#montoId").data("kendoNumericTextBox").value(contrato.Monto);
-        $("#montoMonedaId").data("kendoDropDownList").value(contrato.MonedaCanjeId);
-        $("#montoMonedaId").data("kendoDropDownList").trigger("change");
-        $("#insumoId").val(contrato.Insumo);
-        $("#plantaDestinoDiv").hide();
-        $("#plantaDestinoId").data("kendoDropDownList").value("");
-        $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
-        CargarCalidadPorMaterial(contrato.MaterialId);
-    }
+    }  
 
     if (contrato.Importe_Sustentable !== null && contrato.Importe_Sustentable !== undefined && contrato.Importe_Sustentable !== 0) {
         $("#sustentablePrecioId").data("kendoNumericTextBox").value(contrato.Importe_Sustentable);
@@ -4449,9 +4448,9 @@ function HayCanje() {
         $("#BolsaCartaDiv").hide();
         $("#bolsaCartaId").data("kendoDropDownList").value("");
         $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
-        $("#calidadesEspecialesId").data("kendoDropDownList").value(0)
-        $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
-        LimpiarCalidades();
+        //$("#calidadesEspecialesId").data("kendoDropDownList").value(0)
+        //$("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
+        //LimpiarCalidades();
         
 
     } else {
@@ -4472,16 +4471,16 @@ function HayCanje() {
         $("#boletoCartaId").prop("disabled", false);
         $("#boletoNingunoId").prop("disabled", false);
         $("#TipoDBId").data("kendoDropDownList").enable(true);
-        $("#DatosCalidades").show();
-        $("#calidadesEspecialesId").data("kendoDropDownList").value(0)
-        $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
-        LimpiarCalidades();
+        //$("#DatosCalidades").show();
+        //$("#calidadesEspecialesId").data("kendoDropDownList").value(0)
+        //$("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
+        //LimpiarCalidades();
     }
 }
 
 function ocultarSiHayCanje() {
-    $("#DatosCalidades").hide();
-    $(".datos-calidades").hide();
+    //$("#DatosCalidades").hide();
+    //$(".datos-calidades").hide();
     $("#pagoDiferidoDiv").hide();   
     $("#sustentableId").prop("checked", false);
     $("#compensacionDiv").hide();

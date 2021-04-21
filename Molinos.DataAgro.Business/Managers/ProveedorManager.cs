@@ -2772,7 +2772,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<ProveedorDto> ListarProveedor(string proveedor)
         {
-            var resultado = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, Alias = x.Alias }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.Alias.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
+            var resultado = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, Alias = x.Alias }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.Alias.Contains(proveedor) || x.CUIT.Contains(proveedor)) && x.Segmentacion.Grupo != "Corredores", 15);
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
