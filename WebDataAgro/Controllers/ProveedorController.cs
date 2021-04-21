@@ -153,7 +153,7 @@ namespace WebDataAgro.Controllers
             {
                 ActionView = "ErrorDePermisos";
             }
-
+            ViewBag.Deshabilitado = ProveedorId != null ? mobjProveedorManager.MostrarProveedorDeshabilitado(ProveedorId) : false;
             ViewBag.MostrarEditar = mostrarEditar;
             ViewBag.MostrarAgenda = Agenda;
             ViewBag.ProveedorId = ProveedorId;

@@ -245,7 +245,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             //var query = repositorio.SelStore<BusquedaHome>("DataAgro_BusquedaHome", 0, filtro, ComercialId);
             var query = repositorio.ListarConsulta(new ConsultaBusquedaHome(equipo, comercialId, filtro, corredoresComercial, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial)));
-            return query;
+            var listaOrdenada = query.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return query.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
 
         public List<ActividadRecordatorio> TraerActividadesPorComercialId(int ComercialId)

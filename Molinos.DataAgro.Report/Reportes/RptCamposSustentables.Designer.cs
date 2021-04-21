@@ -63,9 +63,10 @@
             this.textBox3 = new DataDynamics.ActiveReports.TextBox();
             this.textBox4 = new DataDynamics.ActiveReports.TextBox();
             this.pageBreak1 = new DataDynamics.ActiveReports.PageBreak();
-            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
             this.label15 = new DataDynamics.ActiveReports.Label();
             this.label16 = new DataDynamics.ActiveReports.Label();
+            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
+            this.label17 = new DataDynamics.ActiveReports.Label();
             ((System.ComponentModel.ISupportInitialize)(this.label1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label9)).BeginInit();
@@ -96,6 +97,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.textBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label15)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label16)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label17)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // pageHeader
@@ -163,7 +165,8 @@
             this.textBox4,
             this.pageBreak1,
             this.label15,
-            this.label16});
+            this.label16,
+            this.label17});
             this.detail.Height = 10.158F;
             this.detail.Name = "detail";
             this.detail.Format += new System.EventHandler(this.detail_Format);
@@ -381,7 +384,7 @@
             this.SubRptCamposSustentables.Name = "SubRptCamposSustentables";
             this.SubRptCamposSustentables.Report = null;
             this.SubRptCamposSustentables.ReportName = "SubRptCamposSustentables";
-            this.SubRptCamposSustentables.Top = 9.005002F;
+            this.SubRptCamposSustentables.Top = 9.185F;
             this.SubRptCamposSustentables.Width = 8.593F;
             // 
             // label18
@@ -401,7 +404,7 @@
             this.label18.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label18.Text = "N°";
-            this.label18.Top = 8.653003F;
+            this.label18.Top = 8.833001F;
             this.label18.Width = 0.2699997F;
             // 
             // label42
@@ -421,7 +424,7 @@
             this.label42.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label42.Text = "Nombre del Establecimiento";
-            this.label42.Top = 8.653003F;
+            this.label42.Top = 8.833001F;
             this.label42.Width = 1.163F;
             // 
             // label43
@@ -441,7 +444,7 @@
             this.label43.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label43.Text = "Provincia";
-            this.label43.Top = 8.653001F;
+            this.label43.Top = 8.832999F;
             this.label43.Width = 1.094F;
             // 
             // label44
@@ -461,7 +464,7 @@
             this.label44.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label44.Text = "Partido";
-            this.label44.Top = 8.653001F;
+            this.label44.Top = 8.832999F;
             this.label44.Width = 1.186F;
             // 
             // label45
@@ -481,7 +484,7 @@
             this.label45.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label45.Text = "Coordenadas Geográficas";
-            this.label45.Top = 8.653003F;
+            this.label45.Top = 8.833001F;
             this.label45.Width = 2.008F;
             // 
             // label12
@@ -501,7 +504,7 @@
             this.label12.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label12.Text = "Localidad";
-            this.label12.Top = 8.653001F;
+            this.label12.Top = 8.832999F;
             this.label12.Width = 1.414F;
             // 
             // label13
@@ -521,7 +524,7 @@
             this.label13.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label13.Text = "Hectáreas Totales";
-            this.label13.Top = 8.653001F;
+            this.label13.Top = 8.832999F;
             this.label13.Width = 0.7309999F;
             // 
             // label14
@@ -541,7 +544,7 @@
             this.label14.Style = "font-size: 10pt; font-weight: bold; text-align: center; vertical-align: middle; d" +
     "do-char-set: 0";
             this.label14.Text = "Hectáreas de Soja";
-            this.label14.Top = 8.653001F;
+            this.label14.Top = 8.832999F;
             this.label14.Width = 0.7309999F;
             // 
             // textBox3
@@ -572,15 +575,9 @@
             this.pageBreak1.Height = 0.01F;
             this.pageBreak1.Left = 0F;
             this.pageBreak1.Name = "pageBreak1";
-            this.pageBreak1.Size = new System.Drawing.SizeF(9.06575F, 0.01F);
+            this.pageBreak1.Size = new System.Drawing.SizeF(6.5F, 0.01F);
             this.pageBreak1.Top = 8.136001F;
-            this.pageBreak1.Width = 9.06575F;
-            // 
-            // pageFooter
-            // 
-            this.pageFooter.Height = 0F;
-            this.pageFooter.Name = "pageFooter";
-            this.pageFooter.Format += new System.EventHandler(this.PageFooter_Format);
+            this.pageBreak1.Width = 6.5F;
             // 
             // label15
             // 
@@ -603,6 +600,23 @@
             this.label16.Text = "Aclaración y DNI:";
             this.label16.Top = 6.35F;
             this.label16.Width = 1.758F;
+            // 
+            // pageFooter
+            // 
+            this.pageFooter.Height = 0F;
+            this.pageFooter.Name = "pageFooter";
+            this.pageFooter.Format += new System.EventHandler(this.PageFooter_Format);
+            // 
+            // label17
+            // 
+            this.label17.Height = 0.2F;
+            this.label17.HyperLink = null;
+            this.label17.Left = 0.214F;
+            this.label17.Name = "label17";
+            this.label17.Style = "font-size: 9.75pt; font-weight: normal; ddo-char-set: 0";
+            this.label17.Text = "Todos los campos corresponden a Argentina";
+            this.label17.Top = 8.575001F;
+            this.label17.Width = 3.348F;
             // 
             // RptCamposSustentables
             // 
@@ -658,6 +672,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.textBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label15)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label16)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label17)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -695,6 +710,7 @@
         private DataDynamics.ActiveReports.PageBreak pageBreak1;
         private DataDynamics.ActiveReports.Label label15;
         private DataDynamics.ActiveReports.Label label16;
+        private DataDynamics.ActiveReports.Label label17;
     }
 }
 

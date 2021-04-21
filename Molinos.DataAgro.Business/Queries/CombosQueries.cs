@@ -76,12 +76,16 @@ namespace Molinos.DataAgro.Business
 
         public List<ProveedorCombo> GetProveedorPorComercialCombo(List<int> equipo)
         {
-            return repositorio.Listar<ProveedorComercial, ProveedorCombo>(
+            var resultado = repositorio.Listar<ProveedorComercial, ProveedorCombo>(
                 x => new ProveedorCombo
                 {
                     ProveedorId = x.Proveedor.ProveedorId,
-                    RazonSocial = x.Proveedor.RazonSocial
+                    RazonSocial = !string.IsNullOrEmpty(x.Proveedor.Alias) ? (x.Proveedor.Alias + " - " + x.Proveedor.RazonSocial) : x.Proveedor.RazonSocial,
+                    Alias = x.Proveedor.Alias
                 }, x => equipo.Contains(x.Comercial.ComercialId));
+
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
 
         public List<ComercialCombo> GetComercialCombo()

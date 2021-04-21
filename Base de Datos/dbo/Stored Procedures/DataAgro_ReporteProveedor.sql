@@ -17,6 +17,7 @@ BEGIN
 		P.RazonSocial,
 		P.EstadoId,
 		Es.Descripcion Estado,
+		P.Alias,
 		(STUFF((
 			SELECT ', ' + ISNULL(CC.Nombres,'') + ' ' + ISNULL(CC.Apellido,'')
 			FROM Comercial CC
@@ -78,6 +79,7 @@ BEGIN
 		P.RazonSocial,
 		P.EstadoId,
 		E.Descripcion Estado,
+		P.Alias,
 		(STUFF((
 			SELECT ', ' + ISNULL(CC.Nombres,'') + ' ' + ISNULL(CC.Apellido,'')
 			FROM Comercial CC

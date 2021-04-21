@@ -32,7 +32,7 @@
     margin-left: 15px;
 }
 
-.detalle-contacto-header-estado-span {
+.detalle-contacto-header-estado-span, .detalle-contacto-header-deshabilitado {
     color: #000;
     font-family: "G-Open Sans-n8", Arial;
     font-size: 14px;
@@ -52,7 +52,8 @@
 
 .detalle-contacto-header-estado,
 .detalle-contacto-header-exportar,
-.detalle-contacto-header-campana-filtro {
+.detalle-contacto-header-campana-filtro,
+.detalle-contacto-header-deshabilitado {
     padding-top: 5px;
     height: 35px;
     border-bottom: 1px solid #ccc;

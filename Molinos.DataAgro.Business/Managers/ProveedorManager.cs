@@ -2738,13 +2738,16 @@ namespace Molinos.DataAgro.Business.Managers
 
             var comercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower(), x => x.ComercialId);
 
-            return repositorio.SelStore<ReporteProveedor>("DataAgro_ReporteProveedor", 0, Valor, comercialId);
+            var resultado = repositorio.SelStore<ReporteProveedor>("DataAgro_ReporteProveedor", 0, Valor, comercialId);
+            resultado.Select(x => new { x.ProveedorId, RazonSocial = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial });
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<BusquedaHome> DevolverProveedoresConCorredor(string filtro, string cuitCorredor)
         {
             var resultado = repositorio.ListarConsulta(new DevolverProveedoresConCorredor(filtro, cuitCorredor));
-
-            return resultado;
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<BusquedaHome> DevolverProveedores(string filtro, int corredor, List<int> equipo)
         {
@@ -2758,24 +2761,20 @@ namespace Molinos.DataAgro.Business.Managers
                 Alias = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Alias,
                 Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id
             }).ToList();
-            return resultado;
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<BusquedaHome> DevolverProveedoresCorredores(string filtro)
         {
             var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro));
-            //var lista = resultado.GroupBy(x => new { x.Cuit, x.Filtro }).ToList();
-            //resultado = lista.Select(x => new BusquedaHome
-            //{
-            //    Cuit = x.Key.Cuit,
-            //    Filtro = x.Key.Filtro,
-            //    RazonSocial = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).RazonSocial,
-            //    Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id
-            //}).ToList();
-            return resultado;
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<ProveedorDto> ListarProveedor(string proveedor)
         {
-            return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, Alias = x.Alias }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.Alias.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
+            var resultado = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, Alias = x.Alias }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.Alias.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<ProveedorDto> ListarProveedorTodos()                                                                                                    
         {
@@ -2783,7 +2782,9 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<ProveedorDto> ListarCorredor(string proveedor)
         {
-            return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, Alias = x.Alias }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.Alias.Contains(proveedor) || x.CUIT.Contains(proveedor)) && x.Segmentacion.Grupo == "Corredores", 15);
+            var resultado = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, Alias = x.Alias }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.Alias.Contains(proveedor) || x.CUIT.Contains(proveedor)) && x.Segmentacion.Grupo == "Corredores", 15);
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<ProveedorCorredorDto> ListarProveedorCorredor(int corredorId)
         {
@@ -3807,7 +3808,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
-            mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoCanje(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, comercial, false));
+            mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoCanje(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, comercialRegistrado, false));
         }
 
         private AlternateView CuerpoMailContratoCanje(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)
@@ -4123,6 +4124,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             repositorio.GuardarCambios();
 
+        }
+
+        public bool MostrarProveedorDeshabilitado(int proveedorId)
+        {
+            return repositorio.Obtener<Proveedor, bool>(x => x.ProveedorId == proveedorId, x => x.Deshabilitado ?? false);
         }
     }
 }

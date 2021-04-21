@@ -70,6 +70,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string RazonSocial { get; set; }
 
         public string Cuit { get; set; }
+        public string Alias { get; set; }
 
         public override bool Equals(object obj)
         {

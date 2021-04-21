@@ -4449,6 +4449,9 @@ function HayCanje() {
         $("#BolsaCartaDiv").hide();
         $("#bolsaCartaId").data("kendoDropDownList").value("");
         $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
+        $("#calidadesEspecialesId").data("kendoDropDownList").value(0)
+        $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
+        LimpiarCalidades();
         
 
     } else {
@@ -4469,9 +4472,16 @@ function HayCanje() {
         $("#boletoCartaId").prop("disabled", false);
         $("#boletoNingunoId").prop("disabled", false);
         $("#TipoDBId").data("kendoDropDownList").enable(true);
+        $("#DatosCalidades").show();
+        $("#calidadesEspecialesId").data("kendoDropDownList").value(0)
+        $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
+        LimpiarCalidades();
     }
 }
+
 function ocultarSiHayCanje() {
+    $("#DatosCalidades").hide();
+    $(".datos-calidades").hide();
     $("#pagoDiferidoDiv").hide();   
     $("#sustentableId").prop("checked", false);
     $("#compensacionDiv").hide();

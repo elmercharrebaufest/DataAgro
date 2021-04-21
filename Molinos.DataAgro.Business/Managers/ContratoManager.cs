@@ -1037,7 +1037,19 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion Sobre Precio cuando tiene precio.");
                 }
+
+                if (oParam.TipoNegocioId == 1 && oParam.Descuentos.Any(a => a.TipoPeriodoDBId == 3 && (a.FechaDesde < oParam.DesdeFijacion || a.FechaDesde > oParam.HastaFijacion || a.FechaHasta < oParam.DesdeFijacion || a.FechaHasta > oParam.HastaFijacion)))
+                {
+                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación fuera del rango de Fijación.");
+                }
+                if (oParam.TipoNegocioId == 1 && oParam.Descuentos.Any(a => a.TipoPeriodoDBId == 2 && (a.FechaDesde < oParam.FechaDesde || a.FechaDesde > oParam.FechaHasta || a.FechaHasta < oParam.FechaDesde || a.FechaHasta > oParam.FechaHasta)))
+                {
+                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Por Fecha de Entrega fuera del rango de Entrega.");
+                }
             }
+
+
+
             return oErrorMessages;
         }
 
@@ -2228,12 +2240,12 @@ namespace Molinos.DataAgro.Business.Managers
                 Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
                 {
                     ContratoId = y.ContratoId,
-                    FechaDesde = y.FechaDesde != null ? SqlFunctions.DateName("day", y.FechaDesde).Trim() + "-" +
-                                          SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart() + "-" +
-                                          SqlFunctions.DateName("year", y.FechaDesde) : "",
-                    FechaHasta = y.FechaHasta != null ? SqlFunctions.DateName("day", y.FechaHasta).Trim() + "-" +
-                                          SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart() + "-" +
-                                          SqlFunctions.DateName("year", y.FechaHasta) : "",
+                    FechaDesde = y.FechaDesde != null ? DbFunctions.Right("00" + SqlFunctions.DateName("day", y.FechaDesde).Trim(), 2) + "-" +
+                                            DbFunctions.Right("00" + SqlFunctions.StringConvert((double)y.FechaDesde.Value.Month).TrimStart(), 2) + "-" +
+                                           SqlFunctions.DateName("year", y.FechaDesde) : "",
+                    FechaHasta = y.FechaHasta != null ? DbFunctions.Right("00" + SqlFunctions.DateName("day", y.FechaHasta).Trim(), 2) + "-" +
+                                            DbFunctions.Right("00" + SqlFunctions.StringConvert((double)y.FechaHasta.Value.Month).TrimStart(), 2) + "-" +
+                                           SqlFunctions.DateName("year", y.FechaHasta) : "",
                     Importe = y.Importe,
                     MonedaId = y.MonedaId,
                     Moneda = y.MonedaId,
@@ -2781,8 +2793,8 @@ namespace Molinos.DataAgro.Business.Managers
                 PrecioNeto = x.PrecioNeto,
                 MonedaId = x.MonedaId,
                 CampanaId = x.CampanaId ?? x.Material.CampaniaTableroId ?? x.Material.CampañaId ?? 0,
-                ProvinciaId = x.Proveedor.ProveedorId,
-                Provincia = x.Proveedor.Provincia.Nombre,
+                ProvinciaId = x.Proveedor.ProvinciaCompraNetId,
+                Provincia = x.Proveedor.ProvinciaCompraNet.Nombre,
                 LocalidadId = x.Proveedor.LocalidadCompraNetId,
                 Localidad = x.Proveedor.LocalidadCompraNet.Nombre,
                 ContratoSAP = "",

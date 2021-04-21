@@ -571,7 +571,7 @@ namespace WebDataAgro.Controllers
             if (operadores.Count() > 0)
                 proveedores.AddRange(operadores);
 
-            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? x.Alias +" - "+ x.RazonSocial : x.RazonSocial}), JsonRequestBehavior.AllowGet);
         }
         public ActionResult ListarCorredor(string text = "")
         {

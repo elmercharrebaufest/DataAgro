@@ -140,16 +140,16 @@ function AsignarCombos() {
         return a1 > b1 ? 1 : -1;
     });
 
-    datosIniActividad.Datos.Proveedores.push({
-        ProveedorId: null,
-        RazonSocial: "Todos los Proveedores"
-    });
+    //datosIniActividad.Datos.Proveedores.push({
+    //    ProveedorId: null,
+    //    RazonSocial: "Todos los Proveedores"
+    //});
 
-    datosIniActividad.Datos.Proveedores.sort(function (a, b) {
-        var a1 = a.ProveedorId, b1 = b.ProveedorId;
-        if (a1 == b1) return 0;
-        return a1 > b1 ? 1 : -1;
-    });
+    //datosIniActividad.Datos.Proveedores.sort(function (a, b) {
+    //    var a1 = a.ProveedorId, b1 = b.ProveedorId;
+    //    if (a1 == b1) return 0;
+    //    return a1 > b1 ? 1 : -1;
+    //});
 
     viewModel.set("TipoActividadCombo", datosIniActividad.Datos.TiposActividades);
     viewModel.set("ProveedorCombo", datosIniActividad.Datos.Proveedores);
