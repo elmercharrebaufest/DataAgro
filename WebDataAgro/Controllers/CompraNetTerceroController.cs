@@ -77,7 +77,9 @@ namespace WebDataAgro.Controllers
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
                 }
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
-                var ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365 * 2, MidpointRounding.AwayFromZero) / 2;
+                //var ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365 * 2, MidpointRounding.AwayFromZero) / 2;
+                decimal ImporteFinanciero = Redondear(Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365));
+
                 contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = ImporteFinanciero;
                 contrato.PrecioNeto = contrato.Precio + ImporteFinanciero;
 
@@ -117,6 +119,15 @@ namespace WebDataAgro.Controllers
                 Data = mobjContratoManager.GrabarContrato(contrato),
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        private decimal Redondear(decimal numero)
+        {
+            double final;
+            double d10 = decimal.ToDouble(numero) / 10.00;
+            final = Math.Round(d10 * 2, MidpointRounding.AwayFromZero) / 2;
+            final = final * 10;
+            return Convert.ToDecimal(final);
         }
 
         [Autorizacion(PermisosDataAgro.NuevoNegocioExterno)]
@@ -205,10 +216,10 @@ namespace WebDataAgro.Controllers
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
                 }
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
-                var ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365 * 2, MidpointRounding.AwayFromZero) / 2;
+                decimal ImporteFinanciero = Redondear(Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365));
                 contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = ImporteFinanciero;
                 contrato.PrecioNeto = contrato.Precio + ImporteFinanciero;
-               
+
 
             }
 
