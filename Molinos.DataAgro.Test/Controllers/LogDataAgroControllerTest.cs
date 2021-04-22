@@ -113,5 +113,19 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.That(clases.Count() > 0 && acciones.Count() > 0 && comerciales.Count() == 1, "");
             mockComercialManager.Verify(c => c.TraerTodoComercial(), Times.Once);
         }
+
+
+        [Test]
+        public void BuscarProveedorOk()
+        {
+            mockProveedorManager.Setup(x => x.DevolverProveedoresCorredores(It.IsAny<string>())).
+                Returns(new List<BusquedaHome>() { new BusquedaHome { Alias = "ACA", RazonSocial = "ACA", Cuit = "1233", Id = 1, Filtro = "",} });
+            var result = target.BuscarProveedor(It.IsAny<string>()) as JsonResult;
+
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ProveedorId\":1,\"Proveedor\":\"ACA\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

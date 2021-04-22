@@ -29,10 +29,11 @@ namespace WebDataAgro.Controllers
     public class LogDataAgroController : Controller
     {
         private readonly ILogDataAgroManager logDataAgroManager;
-        private readonly IReportesManager reportesManager;
+        private readonly IReportesManager reportesManager;       
         private readonly IComercialManager mobjComercialManager;
 
-        public LogDataAgroController(ILogDataAgroManager logDataAgroManager, IReportesManager reportesManager, IComercialManager mobjComercialManager)
+
+        public LogDataAgroController(ILogDataAgroManager logDataAgroManager, IReportesManager reportesManager, IComercialManager mobjComercialManager, IProveedorManager proveedorManager)
         {
             this.logDataAgroManager = logDataAgroManager;
             this.reportesManager = reportesManager;
@@ -110,6 +111,7 @@ namespace WebDataAgro.Controllers
         public JsonResult BuscarProveedor(string text)
         {
             var proveedores = proveedorManager.DevolverProveedoresCorredores(text);
+
             return Json(proveedores.Select(x => new { ProveedorId = x.Id, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
         public ActionResult Export(DataSourceRequest filtro)
