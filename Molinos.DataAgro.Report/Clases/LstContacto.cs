@@ -260,6 +260,8 @@ namespace Molinos.DataAgro.Report
 
             workSheet.Cells[1, 26].Value = "ProvinciaCompraNet";
             workSheet.Column(26).AutoFit();
+            workSheet.Cells[1, 27].Value = "Deshabilitado";
+            workSheet.Column(27).AutoFit();
 
             if (oDatos.objetivo.Count > 0)
             {

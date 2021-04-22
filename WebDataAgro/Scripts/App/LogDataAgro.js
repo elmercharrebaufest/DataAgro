@@ -127,7 +127,7 @@ function InicializarCuposIndex() {
 
     });
 
-    CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/cupo/ListarProveedor");
+    CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/LogDataagro/BuscarProveedor");
     //CrearMultiSelectFiltro("#buscadorCupo", "CupoSap", "Id", "/cupo/ListarCupo");
     //CrearMultiSelectFiltro("#buscadorNegocio", "Descripcion", "Id", "/logdataagro/ListarNegocios");
     //var kendoDropDown = $('#buscadorNegocio').data('kendoMultiSelect');

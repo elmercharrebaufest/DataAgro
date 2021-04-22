@@ -67,6 +67,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComisionPorcentaje = provs.Key.ComisionPorcentaje??0,
                     LocalidadCompraNet = provs.Key.LocalidadCompraNet.Nombre,
                     ProvinciaCompraNet = provs.Key.ProvinciaCompraNet.Nombre,
+                    Deshabilitado = provs.Key.Deshabilitado.HasValue && provs.Key.Deshabilitado.Value ? "SI" : "NO",
 
                 };
 

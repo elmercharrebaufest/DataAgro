@@ -24,6 +24,7 @@ namespace WebDataAgro.Controllers
         private readonly ICentroManager mobjCentroManager;
         private readonly IComercialManager mobjComercialManager;
         private readonly IHttpContextManager httpContextManager;
+        private readonly IProveedorManager proveedormanager;
 
         //-----------------------------------------------------
         //  Constructor
@@ -32,7 +33,7 @@ namespace WebDataAgro.Controllers
         public ReporteCupoController(
             ICupoManager cupoManager,
             IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, ICentroManager mobjCentroManager,
-            IComercialManager mobjComercialManager, IHttpContextManager httpContextManager )
+            IComercialManager mobjComercialManager, IHttpContextManager httpContextManager, IProveedorManager proveedormanager)
         {
             this.cupoManager = cupoManager;
             this.mobjMaterialManager = materialManager;
@@ -40,6 +41,7 @@ namespace WebDataAgro.Controllers
             this.mobjCentroManager = mobjCentroManager;
             this.mobjComercialManager = mobjComercialManager;
             this.httpContextManager = httpContextManager;
+            this.proveedormanager = proveedormanager;
         }
 
         [Autorizacion(PermisosDataAgro.VisualizarReporteCupo)]
@@ -63,7 +65,11 @@ namespace WebDataAgro.Controllers
             var model = cupoManager.TraerCuposTabla(request, equipo);
             return Json(model);
         }
-
+        public JsonResult BuscarProveedor(string text)
+        {
+            var proveedores = proveedormanager.DevolverProveedoresCorredores(text);
+            return Json(proveedores.Select(x => new { ProveedorId = x.Id, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
 
         private void FillViewBag()
         {

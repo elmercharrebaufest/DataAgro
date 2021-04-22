@@ -241,7 +241,7 @@ function Filtrar() {
 
 function inicializarElementos() {
 
-    CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/cupo/ListarProveedor");
+    CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/ReporteCupo/BuscarProveedor");
 
     $("#Destinatario").bind("paste", function (e) {
         e.preventDefault();

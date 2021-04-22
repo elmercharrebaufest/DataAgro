@@ -22,7 +22,7 @@ Segmentacion  varchar(255),Domicilio  varchar(255),Localidad varchar(255),Provin
 CanalDeOperacion varchar(255),Destinatario varchar(255),Condicion varchar(255),Intermediario varchar(255),
 AreaDeInfluencia varchar(10),Comentario varchar(MAX),Comercial varchar(255),ClienteMoa varchar(255), 
 Zona varchar(255), FechaAlta DATETIME null, Clasificacion varchar(255), TipoBoleto varchar(255), Bolsa varchar(255),
-Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompraNet varchar(255),ProvinciaCompraNet varchar(255) )
+Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompraNet varchar(255),ProvinciaCompraNet varchar(255), Deshabilitado varchar(255) )
 
 
  insert into @table 
@@ -31,7 +31,7 @@ Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompr
 
  insert into #ProveedorAux(ProveedorId,CUIT,RazonSocial,Estado, Calificacion,
  Segmentacion,Domicilio,Localidad,Provincia,CodPostal,CanalDeOperacion,Destinatario,Condicion,Intermediario, AreaDeInfluencia,Comentario,Comercial
- ,ClienteMoa,Zona,FechaAlta, Clasificacion, TipoBoleto, Bolsa, Consignatario,ComisionPorcentaje,LocalidadCompraNet,ProvinciaCompraNet )
+ ,ClienteMoa,Zona,FechaAlta, Clasificacion, TipoBoleto, Bolsa, Consignatario,ComisionPorcentaje,LocalidadCompraNet,ProvinciaCompraNet, Deshabilitado)
 
  select  
 	p.ProveedorId,
@@ -76,6 +76,7 @@ Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompr
 	boletocn.Descripcion,
 	bolsacn.Descripcion,
 	case when p.Consignatario = 1 then 'SI' else 'NO' end,
+	case when p.Deshabilitado = 1 then 'SI' else 'NO' end,
 	isnull(p.ComisionPorcentaje,0) as ComisionPorcentaje,
 	l1.Nombre ,
 	p1.Nombre
@@ -155,7 +156,8 @@ select
 	Consignatario,
 	ComisionPorcentaje,
 	LocalidadCompraNet,
-	ProvinciaCompraNet
+	ProvinciaCompraNet,
+	Deshabilitado
 from #ProveedorAux PA
 
 drop table #ProveedorAux

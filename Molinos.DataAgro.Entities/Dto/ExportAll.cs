@@ -61,6 +61,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? ComisionPorcentaje { get; set; }
         public string LocalidadCompraNet { get; set; }
         public string ProvinciaCompraNet { get; set; }
+        public string Deshabilitado { get; set; }
     }
 
     public class ObjetivoAll

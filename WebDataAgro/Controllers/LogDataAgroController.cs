@@ -107,7 +107,11 @@ namespace WebDataAgro.Controllers
             return PartialView("_MostrarDiferenciasTabla", CamposCambiados);
         }
 
-
+        public JsonResult BuscarProveedor(string text)
+        {
+            var proveedores = proveedorManager.DevolverProveedoresCorredores(text);
+            return Json(proveedores.Select(x => new { ProveedorId = x.Id, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
         public ActionResult Export(DataSourceRequest filtro)
         {
             var model = new ReportesModel();
