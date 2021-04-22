@@ -31,6 +31,7 @@ namespace WebDataAgro.Controllers
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IReportesManager reportesManager;       
         private readonly IComercialManager mobjComercialManager;
+        private readonly IProveedorManager proveedorManager;
 
 
         public LogDataAgroController(ILogDataAgroManager logDataAgroManager, IReportesManager reportesManager, IComercialManager mobjComercialManager, IProveedorManager proveedorManager)
@@ -38,6 +39,7 @@ namespace WebDataAgro.Controllers
             this.logDataAgroManager = logDataAgroManager;
             this.reportesManager = reportesManager;
             this.mobjComercialManager = mobjComercialManager;
+            this.proveedorManager = proveedorManager;
         }
 
         public ActionResult Index()

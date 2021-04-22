@@ -23,6 +23,8 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<ILogDataAgroManager> mockLogDataAgroManager;
         private Mock<IReportesManager> mockReportesManager;
         private Mock<IComercialManager> mockComercialManager;
+        private Mock<IProveedorManager> mockProveedorManager;
+        
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -32,10 +34,11 @@ namespace Molinos.DataAgro.Test.Controllers
             mockLogDataAgroManager = new Mock<ILogDataAgroManager>();
             mockReportesManager = new Mock<IReportesManager>();
             mockComercialManager = new Mock<IComercialManager>();
+            mockProveedorManager = new Mock<IProveedorManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
 
-            target = new LogDataAgroController(mockLogDataAgroManager.Object, mockReportesManager.Object, mockComercialManager.Object);
+            target = new LogDataAgroController(mockLogDataAgroManager.Object, mockReportesManager.Object, mockComercialManager.Object, mockProveedorManager.Object);
 
         }
 
