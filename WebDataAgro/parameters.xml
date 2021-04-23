@@ -303,5 +303,11 @@
                            /endpoint[@name='HTTP_Port27']
                            /@address" />
   </parameter>
+  <parameter name="HTTP_Port28 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port28']
+                           /@address" />
+  </parameter>
   
 </parameters>

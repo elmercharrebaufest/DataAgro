@@ -6,6 +6,7 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -114,6 +115,7 @@ namespace WebDataAgro.Controllers
 
             contrato.PorcentajeDePago = 97.5m;
             contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? (int?)null : contrato.PagoDiferidoTerceroId;
+            mobjLogger.Debug("CrearContratoTercero APRECIO:" + contrato.ToJson());
             return new JsonResult()
             {
                 Data = mobjContratoManager.GrabarContrato(contrato),
@@ -169,6 +171,7 @@ namespace WebDataAgro.Controllers
             }
 
             contrato.PorcentajeDePago = 97.5m;
+            mobjLogger.Debug("CrearContratoTercero AFIJAR:" + contrato.ToJson());
             return new JsonResult()
             {
                 Data = mobjContratoManager.GrabarContrato(contrato),
@@ -230,6 +233,7 @@ namespace WebDataAgro.Controllers
             }
 
             contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? (int?)null : contrato.PagoDiferidoTerceroId;
+            mobjLogger.Debug("CrearContratoTercero FIJACION:" + contrato.ToJson());
 
             model = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(contrato);
 

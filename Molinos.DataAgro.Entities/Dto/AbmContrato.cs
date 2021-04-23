@@ -74,7 +74,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Cosecha { get; set; }
         public decimal? FleteProcedencia { get; set; }
         public string Observaciones { get; set; }
-        
+        public string Estado { get; set; }
     }
 }
 

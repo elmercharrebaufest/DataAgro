@@ -61,7 +61,8 @@ namespace Molinos.DataAgro.Report
                     Hasta = x.FechaHasta,
                     Cosecha = x.Campania,
                     FleteProcedencia = x.TarifaFlete,
-                    Observaciones = x.Observacion
+                    Observaciones = x.Observacion,
+                    Estado = x.Estado_Contrato
                 });
 
                 var oColumnas = query.ToList();
