@@ -72,14 +72,19 @@ namespace WebDataAgro.Controllers
 
             if (contrato.PagoDiferidoTercero == true)
             {
-                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia <= contrato.DiasPesificado).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
+               var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia <= contrato.DiasPesificado).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
                 if (pago == null)
                 {
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
                 }
+                mobjLogger.Debug("tasa: "+ pago.ToJson());
+
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
                 //var ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365 * 2, MidpointRounding.AwayFromZero) / 2;
-                decimal ImporteFinanciero = Redondear(Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365));
+                decimal ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365);
+                mobjLogger.Debug("ImporteFinanciero: " + ImporteFinanciero);
+                ImporteFinanciero = Redondear(ImporteFinanciero);
+                mobjLogger.Debug("ImporteFinanciero: " + ImporteFinanciero);
 
                 contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = ImporteFinanciero;
                 contrato.PrecioNeto = contrato.Precio + ImporteFinanciero;
