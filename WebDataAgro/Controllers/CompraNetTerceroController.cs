@@ -77,14 +77,11 @@ namespace WebDataAgro.Controllers
                 {
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
                 }
-                mobjLogger.Debug("tasa: "+ pago.ToJson());
 
                 contrato.PagoDiferido = contrato.PagoDiferidoTercero;
                 //var ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365 * 2, MidpointRounding.AwayFromZero) / 2;
                 decimal ImporteFinanciero = Math.Round(contrato.Precio * (pago.Tasa / 100) * (contrato.DiasPesificado.Value - 3) / 365);
-                mobjLogger.Debug("ImporteFinanciero: " + ImporteFinanciero);
                 ImporteFinanciero = Redondear(ImporteFinanciero);
-                mobjLogger.Debug("ImporteFinanciero: " + ImporteFinanciero);
 
                 contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = ImporteFinanciero;
                 contrato.PrecioNeto = contrato.Precio + ImporteFinanciero;
@@ -120,7 +117,6 @@ namespace WebDataAgro.Controllers
 
             contrato.PorcentajeDePago = 97.5m;
             contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? (int?)null : contrato.PagoDiferidoTerceroId;
-            mobjLogger.Debug("CrearContratoTercero APRECIO:" + contrato.ToJson());
             return new JsonResult()
             {
                 Data = mobjContratoManager.GrabarContrato(contrato),
@@ -176,7 +172,6 @@ namespace WebDataAgro.Controllers
             }
 
             contrato.PorcentajeDePago = 97.5m;
-            mobjLogger.Debug("CrearContratoTercero AFIJAR:" + contrato.ToJson());
             return new JsonResult()
             {
                 Data = mobjContratoManager.GrabarContrato(contrato),
@@ -238,7 +233,6 @@ namespace WebDataAgro.Controllers
             }
 
             contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? (int?)null : contrato.PagoDiferidoTerceroId;
-            mobjLogger.Debug("CrearContratoTercero FIJACION:" + contrato.ToJson());
 
             model = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(contrato);
 

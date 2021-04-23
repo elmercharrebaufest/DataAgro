@@ -448,21 +448,14 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado ValidarPagoDiferido(HabilitacionPagoDiferido pago)
         {
             var error = new Resultado();
-            //if (pago.TipoNegocioId == 0)
-            //{
-            //    error.Error("TipoNegocioId", "No Selecciono el Tipo de Negocio");
-            //}
-            //if (pago.MaterialId == 0)
-            //{
-            //    error.Error("Material", "No Selecciono el Material");
-            //}
+            
             if (pago.CantidadDia <= 0)
             {
                 error.Error("CantidadDia", "El campo Cantidad de Días es obligatorio");
             }
-            if (pago.Tasa <= 0)
+            if (pago.Tasa <= 10)
             {
-                error.Error("Importe", "El campo Importe es obligatorio");
+                error.Error("Importe", "El valor minimo para la tasa es 10");
             }
             if (pago.DesdeVigencia > pago.HastaVigencia)
             {
