@@ -875,7 +875,6 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 0,
                 Cantidad = 0,
                 ContratoMadre = "001010101010",
-                ContratoAcuerdoId = 2,
                 Precio = 0,
                 TipoNegocioId = 2,
                 DestinoId = 0,
@@ -945,7 +944,6 @@ namespace Molinos.DataAgro.Test.Managers
                 MaterialId = 0,
                 Cantidad = -1,
                 ContratoMadre = "001010101010",
-                ContratoAcuerdoId = 2,
                 Precio = 0,
                 TipoNegocioId = 1,
                 DestinoId = 0,
@@ -4322,6 +4320,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var contratos = new List<BasicoContrato>{ new BasicoContrato
             {
+                ContratoAcuerdoId = 1,
                 MaterialId =1,
                 ProveedorId = 1,
                 Cantidad = 1,
@@ -4337,9 +4336,32 @@ namespace Molinos.DataAgro.Test.Managers
                 DestinoId=1,
                 LocalidadId=1,
                 ProvinciaId=1,
-                ContratoAcuerdoId=1,
-                Observacion="0"
+                Observacion="0",
+                CantidadAmpliado = 10
             } };
+            repositorioMock.Setup(y => y.Obtener<ContratoAcuerdo>(It.IsAny<int>()))
+                           .Returns(new ContratoAcuerdo
+                           {
+                               FechaOperacion = DateTime.Now.Date,
+                               FechaDesde = DateTime.Now.Date,
+                               FechaHasta = DateTime.Now.Date,
+                               DesdeFijacion = DateTime.Now.Date,
+                               HastaFijacion = DateTime.Now.Date,
+                               ProveedorId = 1,
+                               ComercialId = 1,
+                               TipoNegocioId = 2,
+                               MaterialId = 1,
+                               Cantidad = 1000,
+                               Ampliaciones = 1,
+                               Precio = 111,
+                               PrecioNeto = 111,
+                               MonedaId = "ARS  ",
+                               CampanaId = 5,
+                               ContratoSAP = "010101",
+                               Observacion = "HHAAA",
+                               CD = false,
+                               Warrant = false,
+                           });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, BasicoContrato>>>()))
                             .Returns(new BasicoContrato
                             {

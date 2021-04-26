@@ -575,19 +575,23 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
+            var contrato = repositorio.Obtener<Negocio>(oParam.Id);
+
             var cantidadMaxima = config.CantidadMaxima * 1000;
             if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
             {
-                var cantidadAcuerdo = contratoAcuerdoManager.TraerAcuerdo(oParam.ContratoAcuerdoId.Value).Cantidad;
+                var acuerdo = repositorio.Obtener<ContratoAcuerdo>(oParam.ContratoAcuerdoId);
+                acuerdo.CantidadAmpliado = acuerdo.CantidadAmpliado ?? 0;
                 var cantidadCargada = repositorio.Listar<Contrato>(d => oParam.Id != d.Id && d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
-                cantidadAcuerdo += config != null ? config.CantidadAcuerdo.Value * 1000 : 0;
-                if (cantidadMaxima < cantidadCargada + oParam.Cantidad)
+                var cantidadTodoAcuerdo = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oParam.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
+                var tolerancia = config != null ? config.CantidadAcuerdo.Value * 1000 : 0;
+                if (cantidadCargada + oParam.Cantidad > acuerdo.Cantidad + (tolerancia - acuerdo.CantidadAmpliado.Value))
                 {
-                    oErrorMessages.Error("", "Cantidad del negocio excedida (" + cantidadMaxima.ToString("N0") + " kg)");
-                }
-                else if (cantidadAcuerdo < cantidadCargada + oParam.Cantidad)
-                {
-                    oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (cantidadAcuerdo - cantidadCargada).ToString("N0") + " kg)");
+                    if (cantidadCargada + oParam.Cantidad > acuerdo.Cantidad + tolerancia - acuerdo.CantidadAmpliado)
+                    {
+                        oErrorMessages.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (tolerancia - acuerdo.CantidadAmpliado.Value).ToString("N0") + " kg)");
+                    }
+
                 }
             }
             if (cantidadMaxima < oParam.Cantidad)
@@ -779,7 +783,6 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("TipoAgenteCompraId", "Debe seleccionar el agente de compra.");
                 }
             }
-            var contrato = repositorio.Obtener<Negocio>(oParam.Id);
 
             if (!validacionesMinimas)
             {
@@ -1067,6 +1070,8 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
                 }
             }
+
+            ValidarCantidadAcuerdoTolerancia(oContratoSave, oContrato, oEntityErrors);
             if (oEntityErrors.Errores.Count > 0)
             {
                 return oEntityErrors;
@@ -1091,7 +1096,31 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
-
+        private GrabarContratoResult ValidarCantidadAcuerdoTolerancia(Contrato oContratoSave, Contrato oContrato, GrabarContratoResult oEntityErrors)
+        {
+            if (oContratoSave.ContratoAcuerdoId != null && oContratoSave.ContratoAcuerdoId > 0)
+            {
+                var config = repositorio.Obtener<Configuracion>(1);
+                var cantidadMaxima = config.CantidadMaxima * 1000;
+                var acuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoSave.ContratoAcuerdoId);
+                var cantidadAcuerdo = acuerdo.Cantidad;
+                var cantidadAmpliadoAcuerdo = acuerdo.CantidadAmpliado;
+                var cantidadTodoAcuerdo = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oContratoSave.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
+                var tolerancia = (config != null ? config.CantidadAcuerdo.Value * 1000 : 0);
+                var totalAcuerdo = cantidadAcuerdo + tolerancia - (cantidadAmpliadoAcuerdo ?? 0);
+                if (cantidadMaxima < cantidadTodoAcuerdo + oContrato.Ampliaciones)
+                {
+                    oEntityErrors.Error("", "Cantidad del negocio excedida (" + cantidadMaxima.ToString("N0") + " kg)");
+                    return oEntityErrors;
+                }
+                else if (totalAcuerdo < oContrato.Ampliaciones + cantidadTodoAcuerdo)
+                {
+                    oEntityErrors.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (totalAcuerdo - cantidadTodoAcuerdo).ToString("N0") + " kg)");
+                    return oEntityErrors;
+                }
+            }
+            return oEntityErrors;
+        }
         public GrabarContratoResult GrabarContrato(Contrato oContrato)
         {
             var oEntityErrors = new GrabarContratoResult();
@@ -1158,15 +1187,23 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 oContratoSave.Fecha = hoy;
-
                 oContratoSave.ComercialCreadorId = oContrato.ComercialCreadorId;
                 oContratoSave.ProveedorCreadorId = oContrato.ProveedorCreadorId;
                 oContratoSave.UsuarioId = oContrato.UsuarioId;
             }
+
+            var confirmacionAutomatica = (oContrato.EstadoId < (int)EnumEstadoContrato.PreAprobacion || (!PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && oContrato.EstadoId == (int)EnumEstadoContrato.PreAprobacion && oContrato.Id > 0))
+                && ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date;
+
             if (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue && oContrato.ProveedorCreadorId == null)
             {
                 logger.Debug("Contrato Confirmado por contratoAcuerdo: " + oContrato.ContratoAcuerdoId);
                 oContrato.EstadoId = 2;
+            }
+            if (confirmacionAutomatica || (oContrato.ContratoAcuerdoId != null && oContrato.ContratoAcuerdoId != 0 && oContrato.ContratoAcuerdoId.HasValue && oContrato.ProveedorCreadorId == null))
+            {
+                AgregarAmpliacionAlAcuerdo(oEntityErrors, oContrato.Id, oContrato.Cantidad, 0, oContrato.ContratoAcuerdoId, oContratoSave.Cantidad);
+                if (oEntityErrors.HayError) return oEntityErrors;
             }
             oContratoSave.MaterialId = oContrato.MaterialId;
             oContratoSave.TipoNegocioId = oContrato.TipoNegocioId;
@@ -1360,8 +1397,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
 
-            if ((oContrato.EstadoId < (int)EnumEstadoContrato.PreAprobacion || (!PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && oContrato.EstadoId == (int)EnumEstadoContrato.PreAprobacion && oContrato.Id > 0))
-                && ConfirmacionAutomatica(oContrato) && DateTime.Now.Date == oContrato.FechaOperacion.Date)
+            if (confirmacionAutomatica)
             {
                 oContratoSave.FechaConfirmacion = DateTime.Now;
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Confirmado;
@@ -1459,6 +1495,8 @@ namespace Molinos.DataAgro.Business.Managers
                                           oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta ||
                                           oContratoSave.EstadoId == (int)EnumEstadoContrato.Reconfirmar))
             {
+                AgregarAmpliacionAlAcuerdo(oEntityErrors, oContratoSave.Id, oContratoSave.Cantidad, oContratoSave.Ampliaciones, oContratoSave.ContratoAcuerdoId, null);
+                if (oEntityErrors.HayError) return oEntityErrors;
                 oContratoSave.Cantidad += oContratoSave.Ampliaciones ?? 0;
                 oContratoSave.CantidadAmpliado = (oContratoSave.CantidadAmpliado ?? 0) + (oContratoSave.Ampliaciones ?? 0);
                 oContratoSave.Ampliaciones = 0;
@@ -1497,6 +1535,43 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
+
+        private void AgregarAmpliacionAlAcuerdo(GrabarContratoResult oEntityErrors, int contratoId, double cantidad, double? ampliaciones, int? contratoAcuerdoId, double? cantidadOriginal)
+        {
+            ampliaciones = ampliaciones ?? 0;
+            var config = repositorio.Obtener<Configuracion>(1);
+
+            if (contratoAcuerdoId != null && contratoAcuerdoId > 0)
+            {
+                var acuerdo = repositorio.Obtener<ContratoAcuerdo>(contratoAcuerdoId);
+                acuerdo.CantidadAmpliado = acuerdo.CantidadAmpliado ?? 0;
+                var cantidadCargada = repositorio.Listar<Contrato>(d => contratoId != d.Id && d.ContratoAcuerdoId == contratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
+                var cantidadTodoAcuerdo = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == contratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
+                var tolerancia = config != null ? config.CantidadAcuerdo.Value * 1000 : 0;
+                if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad)
+                {
+                    if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad + (tolerancia - acuerdo.CantidadAmpliado))
+                    {
+                        oEntityErrors.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (tolerancia - acuerdo.CantidadAmpliado.Value).ToString("N0") + " kg)");
+                    }
+                    else
+                    {
+                        if (cantidadCargada == 0 && contratoId == 0)
+                        {
+                            cantidad = cantidad - acuerdo.Cantidad;
+                        }
+                        if (cantidadOriginal > 0)
+                        {
+                            ampliaciones = cantidad - cantidadOriginal.Value;
+                        }
+                        acuerdo.CantidadAmpliado += contratoId > 0 ? ampliaciones : cantidad;
+                        acuerdo.Cantidad += contratoId > 0 ? ampliaciones.Value : cantidad;
+                    }
+                }
+
+            }
+        }
+
         public GrabarContratoResult PreAnularContrato(int contratoId, string motivo)
         {
             var oEntityErrors = new GrabarContratoResult();
