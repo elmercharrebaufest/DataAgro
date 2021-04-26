@@ -1283,10 +1283,12 @@ namespace Molinos.DataAgro.Business.Managers
                 var conf = configuracionManager.TraerConfiguraciones();
                 if (conf != null)
                 {
-                    var fechaLimite = oContrato.FechaOperacion.AddDays(conf.CantidadDias);
+                    var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? conf.CantidadDiasDolarizadoLimiteMaximo : conf.CantidadDias;
+
+                    var fechaLimite = oContrato.FechaOperacion.AddDays(cantidadDias);
                     if (oContrato.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
-                        result.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + conf.CantidadDias + " días");
+                        result.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
                     }
                 }
             }
