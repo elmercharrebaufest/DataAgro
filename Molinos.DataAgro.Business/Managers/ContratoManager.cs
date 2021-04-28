@@ -1539,6 +1539,7 @@ namespace Molinos.DataAgro.Business.Managers
         private void AgregarAmpliacionAlAcuerdo(GrabarContratoResult oEntityErrors, int contratoId, double cantidad, double? ampliaciones, int? contratoAcuerdoId, double? cantidadOriginal)
         {
             ampliaciones = ampliaciones ?? 0;
+            cantidadOriginal = cantidadOriginal ?? 0;
             var config = repositorio.Obtener<Configuracion>(1);
 
             if (contratoAcuerdoId != null && contratoAcuerdoId > 0)
@@ -1548,25 +1549,46 @@ namespace Molinos.DataAgro.Business.Managers
                 var cantidadCargada = repositorio.Listar<Contrato>(d => contratoId != d.Id && d.ContratoAcuerdoId == contratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
                 var cantidadTodoAcuerdo = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == contratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
                 var tolerancia = config != null ? config.CantidadAcuerdo.Value * 1000 : 0;
-                if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad)
+                if (cantidad < cantidadOriginal)
                 {
-                    if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad + (tolerancia - acuerdo.CantidadAmpliado))
+                    if (acuerdo.CantidadAmpliado > 0)
                     {
-                        oEntityErrors.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (tolerancia - acuerdo.CantidadAmpliado.Value).ToString("N0") + " kg)");
+                        acuerdo.Cantidad -= acuerdo.CantidadAmpliado.Value < cantidad ? acuerdo.CantidadAmpliado.Value : cantidad;
+                        acuerdo.CantidadAmpliado -= acuerdo.CantidadAmpliado.Value < cantidad ? acuerdo.CantidadAmpliado.Value : cantidad;
                     }
-                    else
+                }
+                else
+                {
+                    if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad)
                     {
-                        if (cantidadCargada == 0 && contratoId == 0)
+                        if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad + (tolerancia - acuerdo.CantidadAmpliado))
                         {
-                            cantidad = cantidad - acuerdo.Cantidad;
+                            oEntityErrors.Error("", "Cantidad del negocio mayor al saldo disponible del Acuerdo (" + (tolerancia - acuerdo.CantidadAmpliado.Value).ToString("N0") + " kg)");
                         }
-                        if (cantidadOriginal > 0)
+                        else
                         {
-                            ampliaciones = cantidad - cantidadOriginal.Value;
+                            if (cantidadCargada == 0 && contratoId == 0)
+                            {
+                                cantidad = cantidad - acuerdo.Cantidad;
+                            }
+                            if (cantidadOriginal > 0)
+                            {
+                                ampliaciones = cantidad - cantidadOriginal.Value;
+                            }
+                            double disponible = 0;
+                            if ((contratoId > 0 ? cantidadTodoAcuerdo : cantidadCargada) <= acuerdo.Cantidad)
+                            {
+                                disponible = acuerdo.Cantidad - (contratoId > 0 ? cantidadTodoAcuerdo : cantidadCargada);
+                            }
+                            if ((contratoId > 0 ? ampliaciones : cantidad) < disponible)
+                            {
+                                disponible = 0;
+                            }
+                            acuerdo.CantidadAmpliado += (contratoId > 0 ? ampliaciones : cantidad) - disponible;
+                            acuerdo.Cantidad += (contratoId > 0 ? ampliaciones.Value : cantidad) - disponible;
                         }
-                        acuerdo.CantidadAmpliado += contratoId > 0 ? ampliaciones : cantidad;
-                        acuerdo.Cantidad += contratoId > 0 ? ampliaciones.Value : cantidad;
                     }
+
                 }
 
             }
@@ -1665,6 +1687,15 @@ namespace Molinos.DataAgro.Business.Managers
                     try
                     {
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                        if (oContratoSave.ContratoAcuerdoId.HasValue)
+                        {
+                            var acuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoSave.ContratoAcuerdoId);
+                            if (acuerdo != null && acuerdo.CantidadAmpliado > 0)
+                            {
+                                acuerdo.Cantidad -= oContratoSave.Cantidad > acuerdo.CantidadAmpliado ? acuerdo.CantidadAmpliado.Value : oContratoSave.Cantidad;
+                                acuerdo.CantidadAmpliado -= oContratoSave.Cantidad > acuerdo.CantidadAmpliado ? acuerdo.CantidadAmpliado.Value : oContratoSave.Cantidad;
+                            }
+                        }
                         repositorio.GuardarCambios();
                         logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoId), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
                     }
@@ -2006,6 +2037,15 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         else
                         {
+                            if (oContratoSave.ContratoAcuerdoId.HasValue)
+                            {
+                                var acuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoSave.ContratoAcuerdoId);
+                                if (acuerdo != null && acuerdo.CantidadAmpliado > 0)
+                                {
+                                    acuerdo.Cantidad -= oContratoSave.Cantidad > acuerdo.CantidadAmpliado ? acuerdo.CantidadAmpliado.Value : oContratoSave.Cantidad;
+                                    acuerdo.CantidadAmpliado -= oContratoSave.Cantidad > acuerdo.CantidadAmpliado ? acuerdo.CantidadAmpliado.Value : oContratoSave.Cantidad;
+                                }
+                            }
                             oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
                             tipoAccion = TipoAccionLogDataAgro.Eliminar;
                         }
@@ -2015,6 +2055,15 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
+                    if (oContratoSave.ContratoAcuerdoId.HasValue)
+                    {
+                        var acuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoSave.ContratoAcuerdoId);
+                        if (acuerdo != null && acuerdo.CantidadAmpliado > 0)
+                        {
+                            acuerdo.Cantidad -= oContratoSave.Cantidad > acuerdo.CantidadAmpliado ? acuerdo.CantidadAmpliado.Value : oContratoSave.Cantidad;
+                            acuerdo.CantidadAmpliado -= oContratoSave.Cantidad > acuerdo.CantidadAmpliado ? acuerdo.CantidadAmpliado.Value : oContratoSave.Cantidad;
+                        }
+                    }
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
                     tipoAccion = TipoAccionLogDataAgro.Eliminar;
                 }
@@ -2695,6 +2744,15 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
+                        if (oContratoSave.ContratoAcuerdoId.HasValue)
+                        {
+                            var acuerdo = repositorio.Obtener<ContratoAcuerdo>(oContratoSave.ContratoAcuerdoId);
+                            if (acuerdo != null && acuerdo.CantidadAmpliado > 0)
+                            {
+                                acuerdo.Cantidad -= oContratoSave.Cantidad > acuerdo.CantidadAmpliado ? acuerdo.CantidadAmpliado.Value : oContratoSave.Cantidad;
+                                acuerdo.CantidadAmpliado -= oContratoSave.Cantidad > acuerdo.CantidadAmpliado ? acuerdo.CantidadAmpliado.Value : oContratoSave.Cantidad;
+                            }
+                        }
                         oContratoSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
                         repositorio.GuardarCambios();
                         logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
