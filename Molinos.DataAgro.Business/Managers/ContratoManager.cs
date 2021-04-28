@@ -1553,13 +1553,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (acuerdo.CantidadAmpliado > 0)
                     {
-                        acuerdo.Cantidad -= acuerdo.CantidadAmpliado.Value < cantidad ? acuerdo.CantidadAmpliado.Value : cantidad;
-                        acuerdo.CantidadAmpliado -= acuerdo.CantidadAmpliado.Value < cantidad ? acuerdo.CantidadAmpliado.Value : cantidad;
+                        acuerdo.Cantidad -= acuerdo.CantidadAmpliado.Value < (cantidadOriginal.Value - cantidad) ? acuerdo.CantidadAmpliado.Value : cantidadOriginal.Value - cantidad;
+                        acuerdo.CantidadAmpliado -= acuerdo.CantidadAmpliado.Value < (cantidadOriginal.Value - cantidad) ? acuerdo.CantidadAmpliado.Value : (cantidadOriginal.Value - cantidad);
                     }
                 }
                 else
                 {
-                    if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad)
+                    if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad)// es una ampliacion
                     {
                         if (cantidadCargada + cantidad + ampliaciones > acuerdo.Cantidad + (tolerancia - acuerdo.CantidadAmpliado))
                         {
@@ -1567,25 +1567,34 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         else
                         {
-                            if (cantidadCargada == 0 && contratoId == 0)
+                            if (contratoId == 0)//nueuvo
                             {
-                                cantidad = cantidad - acuerdo.Cantidad;
+                                var disponible = acuerdo.Cantidad - cantidadCargada;
+                                if (cantidad > disponible)
+                                {
+                                    acuerdo.Cantidad += cantidad - disponible;
+                                    acuerdo.CantidadAmpliado += cantidad - disponible;
+                                }
                             }
-                            if (cantidadOriginal > 0)
+                            if (contratoId > 0 && ampliaciones == 0)//edicion
                             {
-                                ampliaciones = cantidad - cantidadOriginal.Value;
+                                var disponible = acuerdo.Cantidad - cantidadTodoAcuerdo;
+                                if (cantidad - cantidadOriginal > disponible)
+                                {
+                                    acuerdo.Cantidad += cantidad - cantidadOriginal.Value - disponible;
+                                    acuerdo.CantidadAmpliado += cantidad - cantidadOriginal - disponible;
+                                }
                             }
-                            double disponible = 0;
-                            if ((contratoId > 0 ? cantidadTodoAcuerdo : cantidadCargada) <= acuerdo.Cantidad)
+                            if (ampliaciones > 0)//ampliaciones
                             {
-                                disponible = acuerdo.Cantidad - (contratoId > 0 ? cantidadTodoAcuerdo : cantidadCargada);
-                            }
-                            if ((contratoId > 0 ? ampliaciones : cantidad) < disponible)
-                            {
-                                disponible = 0;
-                            }
-                            acuerdo.CantidadAmpliado += (contratoId > 0 ? ampliaciones : cantidad) - disponible;
-                            acuerdo.Cantidad += (contratoId > 0 ? ampliaciones.Value : cantidad) - disponible;
+                                var disponible = acuerdo.Cantidad - cantidadTodoAcuerdo;
+                                if (ampliaciones > disponible)
+                                {
+                                    acuerdo.Cantidad += ampliaciones.Value - disponible;
+                                    acuerdo.CantidadAmpliado += ampliaciones - disponible;
+                                }
+                            }                        
+
                         }
                     }
 
