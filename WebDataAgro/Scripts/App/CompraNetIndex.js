@@ -749,7 +749,7 @@ function CreateGridInformeCompraNet() {
                     } else if (dataItem.Estado == 2) {
                         return '<div class="statusconfirmado "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 3) {
-                        return '<div class="statusoferta "></div>' + dataItem.Proveedor + " " +  dataItem.TipoAgenteCompra;
+                        return '<div class="statusoferta "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 4) {
                         return '<div class="statuserror "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
                     } else if (dataItem.Estado == 5) {
@@ -2286,6 +2286,9 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                 case 4:
                     if (concepto.Importe || concepto.Porcentaje) {
                         $("#visualizar_aperturaBonificaciones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
+                        if (precioNeto > 0) {
+                            $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                        }
                     }
 
                     break;
@@ -2657,8 +2660,8 @@ function ArmarPrecio(dataItem) {
                         }
                     }
                 }
-            }           
-           
+            }
+
             if (esPrecioMoa === true) {
                 return FormatearString(dataItem.PrecioPlazo, dataItem.Moneda);
             } else {
