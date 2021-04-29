@@ -1008,6 +1008,7 @@ function CreateGridInformeCompraNet() {
                             return '<div ' + descripcion + 'class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
+                                botonPreAnular(dataItem, 'fa-trash fin') +
                                 botonModificarFinalizados(dataItem, 'fa-pencil fin');
                         }
                     }

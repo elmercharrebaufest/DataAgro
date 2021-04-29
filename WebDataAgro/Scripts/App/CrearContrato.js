@@ -259,6 +259,7 @@ function InicializarElementos() {
                     $("#planCanjeId").prop("checked", compraNet.PlanCanje);
                 }
                 $("#clasificacion").data("kendoDropDownList").trigger("change");
+
                 if (compraNet.LocalidadId != null) {
                     if (compraNet.LocalidadId != "" && compraNet.ProvinciaId != "") {
                         $("#ProvinciaId").val(compraNet.ProvinciaId);

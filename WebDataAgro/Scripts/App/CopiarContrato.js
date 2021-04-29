@@ -734,7 +734,7 @@ function DatosProveedor() {
     if ($("#buscadorProveedor").val() != "") {
         var id = $("#proveedorId").val() != "" ? $("#proveedorId").val() : 0;
         var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: id });
-        if (compraNet.BoletoCompraNetId !== null) {
+        if ($("#estado").val() !== "5" && compraNet.BoletoCompraNetId !== null) {
             LimpiarBoleto();
             if (compraNet.BoletoCompraNetId === 1) {
                 $("#boletoConfirmaId").prop("checked", true);

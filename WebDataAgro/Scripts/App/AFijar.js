@@ -254,6 +254,7 @@ function InicializarElementos() {
                 }
 
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
+
                 $("#proveedorId").val(compraNet.ProveedorId);
                 $("#clasificacion").data("kendoDropDownList").value(compraNet.ClasificacionCompraNetId);
                 if ($("#clasificacion").val() == 2 || $("#clasificacion").val() == 3) {
@@ -297,14 +298,16 @@ function InicializarElementos() {
                 if ($("#tipoId").val() == 3) {
                     compraNet.ComisionPorcentaje = 0;
                 }
+
                 SeleccionAutomaticaBolsa();
+            }
                 //if ($("#tipoId").val() == "6") {
                 //    $("#dolarizadoExpressDiv").hide();
 
                 //}
                 //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 //InsertarAperturasViewModel(CalcularPrecioTotalApertura());
-            }
+            
         },
         dataSource: {
             severFiltering: true,
