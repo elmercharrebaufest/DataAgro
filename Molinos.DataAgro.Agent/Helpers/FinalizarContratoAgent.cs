@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
                             IMPORTE_DB = descBon.Importe,
                             MONEDA_DB = descBon.Moneda.MonedaId ?? "",
+                            MONEDA = descBon.Moneda.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
                         }
                         );
@@ -72,6 +73,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
                         IMPORTE_DB = contrato.ImporteSustentable.Value,
                         MONEDA_DB = contrato.MonedaSustentableId,
+                        MONEDA = contrato.MonedaSustentableId,
                         PORC_DB = 0
                     });
                 }
