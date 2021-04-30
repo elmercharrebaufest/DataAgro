@@ -914,7 +914,8 @@ namespace Molinos.DataAgro.Business
 
             foreach (var acuerdo in listaAcuerdo)
             {
-                var cantidad = repositorio.Listar<Contrato, double>(x => x.Cantidad, x => x.ContratoAcuerdoId == acuerdo.Id).Sum();
+                var cantidad = repositorio.Listar<Contrato, double>(d => d.Cantidad, d => d.ContratoAcuerdoId == acuerdo.Id && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum();
+
                 acuerdo.Cantidad = (int)cantidad;
                 acuerdo.EstadoId = 5;
                 logDataAgroManager.LogCambiosDataAgro(TraerAcuerdo(acuerdo.Id), TipoAccionLogDataAgro.Eliminar, acuerdo.GetType());
