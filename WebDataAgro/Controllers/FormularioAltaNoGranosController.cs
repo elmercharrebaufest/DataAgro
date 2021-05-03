@@ -29,7 +29,7 @@ namespace WebDataAgro.Controllers
         {
             if (oParam.CUIT.Length == 11)
             {
-                oParam.CUIT = oParam.CUIT.Substring(0, 2) + "-" + oParam.CUIT.Substring(2, 8) + "-" + oParam.CUIT.Substring(9, 1);
+                oParam.CUIT = oParam.CUIT.Substring(0, 2) + "-" + oParam.CUIT.Substring(2, 8) + "-" + oParam.CUIT.Substring(10, 1);
             }
             var model = new ReportesModel();
 
