@@ -210,15 +210,15 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#MonedaSobrePrecioContrato").val(afijar.MonedaSobrePrecio);
     }
 
-    if (afijar.Clasificacion == "PRODUCTOR" && $("#buscadorCorredor").data("kendoAutoComplete").value() == "") {
-        $("#chequeElectronico").prop("checked", false);
-        $("#chequeElectronico").attr('readonly', true);
-        $("#chequeElectronico").attr('disabled', true);
-    } else {
-        $("#chequeElectronico").attr('readonly', false);
-        $("#chequeElectronico").attr('disabled', false);
-    }
-    HayChequeElectronicoOtros();
+    //if (afijar.Clasificacion == "PRODUCTOR" && $("#buscadorCorredor").data("kendoAutoComplete").value() == "") {
+    //    $("#chequeElectronico").prop("checked", false);
+    //    $("#chequeElectronico").attr('readonly', true);
+    //    $("#chequeElectronico").attr('disabled', true);
+    //} else {
+    //    $("#chequeElectronico").attr('readonly', false);
+    //    $("#chequeElectronico").attr('disabled', false);
+    //}
+    //HayChequeElectronicoOtros();
 
 }
 
@@ -3845,15 +3845,15 @@ function CargarDatosEditar(contrato, hijo) {
         $("#PorcentajeSobrePrecioContrato").val(contrato.PorcentajeSobrePrecioContrato);
         $("#MonedaSobrePrecioContrato").val(contrato.MonedaSobrePrecioContrato);
 
-        if (contrato.ClasificacionContrato == "PRODUCTOR" && contrato.Corredor == "") {
-            $("#chequeElectronico").prop("checked", false);
-            $("#chequeElectronico").attr('readonly', true);
-            $("#chequeElectronico").attr('disabled', true);
-        } else {
-            $("#chequeElectronico").attr('readonly', false);
-            $("#chequeElectronico").attr('disabled', false);
-        }
-        HayChequeElectronicoOtros();
+        //if (contrato.ClasificacionContrato == "PRODUCTOR" && contrato.Corredor == "") {
+        //    $("#chequeElectronico").prop("checked", false);
+        //    $("#chequeElectronico").attr('readonly', true);
+        //    $("#chequeElectronico").attr('disabled', true);
+        //} else {
+        //    $("#chequeElectronico").attr('readonly', false);
+        //    $("#chequeElectronico").attr('disabled', false);
+        //}
+        //HayChequeElectronicoOtros();
     }
 
 }
