@@ -1080,7 +1080,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oContratoSave.Ampliaciones = oContrato.Ampliaciones.Value;
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Reconfirmar;
-                if (oContratoSave.CantidadCamiones != null)
+                if (oContratoSave.CantidadCamiones != null && oContratoSave.CantidadCamiones > 0)
                 {
                     oContratoSave.CantidadCamiones = Convert.ToInt32(Math.Ceiling(((decimal)oContratoSave.Cantidad + (decimal)oContrato.Ampliaciones) / 30000));
                 }
