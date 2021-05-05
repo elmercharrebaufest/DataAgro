@@ -26,6 +26,8 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public string Finalizar(Contrato contrato, List<DescuentoBonificacion> descuentoBonificacion, List<Calidad> calidad)
         {
+            descuentoBonificacion = descuentoBonificacion ?? new List<DescuentoBonificacion>();
+            calidad = calidad ?? new List<Calidad>();
             logger.Debug("Finalizando Contrato Nro: " + contrato.Id);
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
@@ -56,8 +58,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FEDESDE = descBon.FechaDesde != null ? descBon.FechaDesde.Value.ToString("yyyy-MM-dd") : null,
                             FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
                             IMPORTE_DB = descBon.Importe,
-                            MONEDA_DB = descBon.Moneda.MonedaId ?? "",
-                            MONEDA = descBon.Moneda.MonedaId ?? "",
+                            MONEDA_DB = descBon.MonedaId ?? "",
+                            MONEDA = descBon.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
                         }
                         );
