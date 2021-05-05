@@ -388,13 +388,13 @@ function ObtenerDatos(error) {
     obj.PrecioNeto = $("#precioTotalApertura").val();
     obj.FechaEntrega = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
     obj.CampanaId = $("#campanaId").val();
-    if (TipoId != "3") {
+    //if (TipoId != "3") {
         obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
         obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
-    } else {
-        obj.FechaDesde = formatearFecha(hoy);
-        obj.FechaHasta = formatearFecha(maniana);
-    }
+    //} else {
+    //    obj.FechaDesde = formatearFecha(hoy);
+    //    obj.FechaHasta = formatearFecha(maniana);
+    //}
     obj.Fecha = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaFijacionId").val());
     obj.MonedaId = $("#precioMonedaId").val();
     if (obj.TipoNegocioId == "3" || obj.TipoNegocioId == "4") {
