@@ -77,7 +77,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         PORC_DB = 0
                     });
                 }
-                if (contrato.PrecioPactado.Count > 0)
+                if (contrato.PrecioPactado != null && contrato.PrecioPactado.Count > 0)
                 {
                     foreach (var p in contrato.PrecioPactado)
                     {
