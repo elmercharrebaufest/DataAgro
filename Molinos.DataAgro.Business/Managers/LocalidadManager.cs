@@ -151,7 +151,7 @@ namespace Molinos.DataAgro.Business
         }
         public LocalidadQry TraerLocalidadProvincia(string localidad, string provincia)
         {
-            var localidadDto = repositorio.Obtener<Localidad, LocalidadQry>(x => x.Nombre == localidad, x => new LocalidadQry() { LocalidadId = x.LocalidadId, Nombre = x.Nombre});
+            var localidadDto = repositorio.Obtener<Localidad, LocalidadQry>(x => x.Nombre == localidad && x.Provincia.Nombre == provincia, x => new LocalidadQry() { LocalidadId = x.LocalidadId, Nombre = x.Nombre});
             localidadDto.ProvinciaId = repositorio.Obtener<Provincia, int>(x => x.Nombre == provincia, x => x.ProvinciaId);
             return localidadDto;
         }
