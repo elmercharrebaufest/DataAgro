@@ -11,6 +11,8 @@ namespace Molinos.DataAgro.Entities.Common.Enums
         Financiero = 1,
         Redespacho = 2,
         Comisiones = 3,
-        Bonificaciones = 4
+        Bonificaciones = 4,
+        Basis = 5,
+
     }
 }

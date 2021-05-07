@@ -22,7 +22,7 @@
                         <div class="col-xs-12 noPadding">
                             <table id="tablaApertura" class="table table-bordered">
                                 <thead>
-                                    <tr>
+                                    <tr class="aperturaPrecioPrecio">
                                         <td style="border-top: 1px solid Transparent !important; border-left: 1px solid Transparent !important;" colspan="2"></td>
 
                                         <td class="fuente600">Precio:</td>
@@ -36,7 +36,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr style="display:none;" id="aperturaPrecioConceptoBasis">
+                                        <td>Basis</td>
+                                        <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteBasisId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr id="aperturaPrecioConceptoFinanciero">
                                         <td>Financiero</td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteFinancieroId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
@@ -48,23 +54,23 @@
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
                                         <td></td>
                                     </tr>
-                                    <tr>
+                                    <tr id="aperturaPrecioConceptoComisiones">
                                         <td>Comisiones</td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteComisionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioPorcentajeComisionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                     </tr>
-                                    <tr style="display:none;">
+                                    <tr style="display:none;" id="aperturaPrecioConceptoBonificaciones">
                                         <td>Bonificaciones</td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteBonificacionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
-                                        <td class="aperturaPrecioTd"><input id="aperturaPrecioPorcentajeBonificacionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd" style="display:none;"><input id="aperturaPrecioPorcentajeBonificacionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <td style="border-bottom: 1px solid Transparent !important; border-left: 1px solid Transparent !important;" colspan="2"></td>
-                                        <td>Precio Neto:</td>
+                                        <td id="aperturaPrecioTdPrecioNeto">Precio Neto:</td>
                                         <td class="aperturaPrecioTd"> <span id="totalApertura" class="aperturaPrecioInput" type="number"></span></td>
                                     </tr>
                                 </tfoot>

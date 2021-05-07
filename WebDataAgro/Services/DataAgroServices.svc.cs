@@ -309,10 +309,10 @@ namespace WebDataAgro.Services
             var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
             if (contratoSAP.Apertura != null && contratoSAP.Apertura.Count > 0)
             {
-                aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
-                aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
-                aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
-                aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
+                foreach (var item in conceptoList)
+                {
+                    aperturas.Add(new AperturaPrecio { NegocioId = esActualizar ? contratoOriginal.Id : 0, ConceptoAperturaPrecioId = item.Id, Importe = 0, Porcentaje = 0 });
+                }
             }
             foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
             {
@@ -616,12 +616,13 @@ namespace WebDataAgro.Services
 
                 var aperturas = new List<AperturaPrecio>();
                 var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
+
                 if (fijacionSAP.Apertura != null && fijacionSAP.Apertura.Count > 0)
                 {
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, Porcentaje = 0 });
-                    aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, Porcentaje = 0 });
+                    foreach (var item in conceptoList)
+                    {
+                        aperturas.Add(new AperturaPrecio { ConceptoAperturaPrecioId = item.Id, Importe = 0, Porcentaje = 0 });
+                    }
                 }
                 foreach (var aper in fijacionSAP.Apertura ?? new List<AperturaPrecioSap>())
                 {

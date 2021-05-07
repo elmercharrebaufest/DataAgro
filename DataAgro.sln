@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebDataAgro", "WebDataAgro\WebDataAgro.csproj", "{4A4B326D-1ED3-4AED-A2B9-06EC9464810D}"
 EndProject
@@ -169,7 +169,7 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 11
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs.baufest.com:8080/tfs/molinos%20rio%20de%20la%20plata
+		SccTeamFoundationServer = http://tfs-ms.baufest.com:8080/tfs/molinos%20rio%20de%20la%20plata
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = WebDataAgro\\WebDataAgro.csproj
 		SccProjectName1 = WebDataAgro

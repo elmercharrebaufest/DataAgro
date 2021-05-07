@@ -90,6 +90,80 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES5440 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string cONCEPTOField;
+        
+        private decimal iMPORTEField;
+        
+        private string mONEDAField;
+        
+        private decimal pORCField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string CONCEPTO {
+            get {
+                return this.cONCEPTOField;
+            }
+            set {
+                this.cONCEPTOField = value;
+                this.RaisePropertyChanged("CONCEPTO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public decimal IMPORTE {
+            get {
+                return this.iMPORTEField;
+            }
+            set {
+                this.iMPORTEField = value;
+                this.RaisePropertyChanged("IMPORTE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string MONEDA {
+            get {
+                return this.mONEDAField;
+            }
+            set {
+                this.mONEDAField = value;
+                this.RaisePropertyChanged("MONEDA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public decimal PORC {
+            get {
+                return this.pORCField;
+            }
+            set {
+                this.pORCField = value;
+                this.RaisePropertyChanged("PORC");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class ZMPES5300 : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string cODIGOField;
@@ -229,6 +303,10 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         private string cESIONField;
         
         private string aNTICIPOField;
+        
+        private ZMPES5440[] aPERTURAField;
+        
+        private decimal cANT_MAXField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -612,6 +690,31 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             set {
                 this.aNTICIPOField = value;
                 this.RaisePropertyChanged("ANTICIPO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=32)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES5440[] APERTURA {
+            get {
+                return this.aPERTURAField;
+            }
+            set {
+                this.aPERTURAField = value;
+                this.RaisePropertyChanged("APERTURA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=33)]
+        public decimal CANT_MAX {
+            get {
+                return this.cANT_MAXField;
+            }
+            set {
+                this.cANT_MAXField = value;
+                this.RaisePropertyChanged("CANT_MAX");
             }
         }
         

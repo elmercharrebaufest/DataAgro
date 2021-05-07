@@ -47,6 +47,11 @@
           <xsd:maxLength value="60" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char7">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="7" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="cuky5">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="5" />
@@ -241,6 +246,7 @@
           <xsd:element name="MONEDA_DEUDA" type="rfc:cuky5" />
           <xsd:element name="MONTO_DEUDA" type="rfc:curr13.2" />
           <xsd:element name="DESC_INSUMOS" type="rfc:char79" />
+          <xsd:element name="POSICION_CBOT" type="rfc:char7" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

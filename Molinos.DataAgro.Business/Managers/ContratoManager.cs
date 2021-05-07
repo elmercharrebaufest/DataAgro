@@ -654,13 +654,25 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
-                if (oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.TipoNegocioId == 2 && oParam.DestinoId != 9 && oParam.DestinoId != 13
+                if (oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 /*&& oParam.TipoNegocioId == 2*/ && oParam.DestinoId != 9 && oParam.DestinoId != 13
                                 && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
                 {
                     oErrorMessages.Error("", "Se debe completar Redespacho en Acopios");
                 }
             }
 
+            if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
+            {
+                if (string.IsNullOrEmpty(oParam.PosicionCBOT)  && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
+                {
+                    oErrorMessages.Error("", "Se debe completar Posicion CBOT con el concepto Basis");
+                }
+
+                if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && (oParam.AperturaPrecio != null  && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0))))
+                {
+                    oErrorMessages.Error("", "Se debe completar el concepto Basis con Posicion CBOT");
+                }
+            }
 
             if ((oParam.StandardDeCalidadId == 2 && oParam.Calidad == null))
             {
@@ -1286,6 +1298,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
             oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
             oContratoSave.Venta = oContrato.Venta;
+            oContratoSave.PosicionCBOT = oContrato.PosicionCBOT;
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 oContratoSave.CalidadTercero = oContrato.CalidadTercero;
@@ -2477,7 +2490,9 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHasta_SustentableFormateado = x.FechaHastaSustentable != null ? SqlFunctions.DateName("day", x.FechaHastaSustentable).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaHastaSustentable.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaHastaSustentable) : "",
-
+                PosicionCBOT = x.PosicionCBOT,
+                ProveedorCreador = x.ProveedorCreadorId,
+                UsuarioId = x.UsuarioId
             });
             return contrato;
         }
@@ -3059,6 +3074,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ConceptoAperturaPrecioId = x.ConceptoAperturaPrecioId,
                 Importe = x.Importe,
                 MonedaId = x.MonedaId,
+                Moneda = x.Moneda.Descripcion,
                 Porcentaje = x.Porcentaje
             },
             x => x.NegocioId == contratoId);
@@ -4494,7 +4510,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoPeriodoDBId = y.TipoPeriodoDBId
             }).ToList();
 
-            bc.Calidades = negocio is Contrato ? (negocio as Contrato).Calidad.Select(y => new CalidadDto
+            bc.Calidades = negocio is Contrato && (negocio as Contrato).Calidad != null ? (negocio as Contrato).Calidad.Select(y => new CalidadDto
             {
                 Valor = y.Valor,
                 CalidadEspecialId = y.CalidadEspecialId,
@@ -4502,6 +4518,14 @@ namespace Molinos.DataAgro.Business.Managers
                 PorcentajeDesde = y.PorcentajeDesde,
                 PorcentajeHasta = y.PorcentajeHasta
             }).ToList() : new List<CalidadDto>();
+
+            bc.AperturaPrecios = negocio is Contrato && (negocio as Contrato).AperturaPrecio != null ? (negocio as Contrato).AperturaPrecio.Select(y => new AperturaPrecioDto
+            {
+                ConceptoAperturaPrecioId=y.ConceptoAperturaPrecioId,
+                Importe = y.Importe,
+                MonedaId = negocio.MonedaId,
+                Porcentaje = y.Porcentaje
+            }).ToList() : new List<AperturaPrecioDto>();
 
             bc.PreciosPactados = negocio is Contrato ? (negocio as Contrato).PrecioPactado.Select(y => new PrecioPactadosDto
             {
@@ -4538,6 +4562,8 @@ namespace Molinos.DataAgro.Business.Managers
                 (negocio as Contrato).FechaHastaSustentable.Value.ToString("dd-MM-yyyy") : "";
             bc.FechaDesde_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaDesdeSustentable != null ?
                 (negocio as Contrato).FechaDesdeSustentable.Value.ToString("dd-MM-yyyy") : "";
+            bc.PosicionCBOT = negocio.PosicionCBOT;
+
             return bc;
         }
 

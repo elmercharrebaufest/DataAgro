@@ -1071,6 +1071,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId,
                 Importe = apertura.Importe,
                 MonedaId = apertura.MonedaId,
+                Moneda = apertura.Moneda.Descripcion,
                 Porcentaje = apertura.Porcentaje
             },
             x => x.NegocioId == fijacionId);

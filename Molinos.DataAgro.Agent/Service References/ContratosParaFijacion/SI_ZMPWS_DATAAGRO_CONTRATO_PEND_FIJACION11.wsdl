@@ -21,43 +21,21 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:simpleType name="date10">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="10" />
-          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="char2">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="2" />
-        </xsd:restriction>
-      </xsd:simpleType>
       <xsd:simpleType name="char1">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="1" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="decimal25.0">
+      <xsd:simpleType name="curr13.2">
         <xsd:restriction base="xsd:decimal">
-          <xsd:totalDigits value="25" />
-          <xsd:fractionDigits value="0" />
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="2" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="curr11.2">
         <xsd:restriction base="xsd:decimal">
           <xsd:totalDigits value="11" />
           <xsd:fractionDigits value="2" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="decimal10.2">
-        <xsd:restriction base="xsd:decimal">
-          <xsd:totalDigits value="10" />
-          <xsd:fractionDigits value="2" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="char8">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="8" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char7">
@@ -78,11 +56,6 @@
       <xsd:simpleType name="char20">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="20" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="char4">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="4" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char3">
@@ -106,20 +79,72 @@
           <xsd:fractionDigits value="2" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char18">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="18" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal25.0">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="25" />
+          <xsd:fractionDigits value="0" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal10.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="10" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="quantum13.3">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char8">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="8" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="decimal13.3">
         <xsd:restriction base="xsd:decimal">
           <xsd:totalDigits value="13" />
           <xsd:fractionDigits value="3" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="char18">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="18" />
-        </xsd:restriction>
-      </xsd:simpleType>
       <xsd:complexType name="ZMPTT7820">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5300" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5440">
+        <xsd:sequence>
+          <xsd:element name="CONCEPTO" type="rfc:char2" />
+          <xsd:element name="IMPORTE" type="rfc:curr13.2" />
+          <xsd:element name="MONEDA" type="rfc:cuky5" />
+          <xsd:element name="PORC" type="rfc:decimal5.2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT7960">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5440" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5300">
@@ -164,6 +189,8 @@
           <xsd:element name="CLASIFICACION" type="rfc:char20" />
           <xsd:element name="CESION" type="rfc:char1" />
           <xsd:element name="ANTICIPO" type="rfc:char1" />
+          <xsd:element name="APERTURA" type="rfc:ZMPTT7960" />
+          <xsd:element name="CANT_MAX" type="rfc:quantum13.3" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT7910">

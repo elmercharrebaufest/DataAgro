@@ -3790,25 +3790,30 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnviarMailCanje(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial)
         {
             var lista = new List<string>();
-            var email = "";
+            var email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
             if (contrato.Comercial.IdActiveDirectory != comercial)
             {
-                email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
                 lista.Add(email);
+                logger.Debug("Enviando mail a Comercial canje" + email);
             }
+
             var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(comercial);
-            lista.Add(comercialRegistrado);
+
+            if (!PermisosHelper.Is(PermisosDataAgro.NoRecibirMail))
+            {
+                lista.Add(comercialRegistrado);
+                logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
+            }
+
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
             }
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
-            logger.Debug("Enviando mail a Comercial canje" + email);
-            logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
 
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
-            mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoCanje(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, comercialRegistrado, false));
+            mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoCanje(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, email, false));
         }
 
         private AlternateView CuerpoMailContratoCanje(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar)

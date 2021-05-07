@@ -282,6 +282,9 @@ function CreateGridInformeCompraNet() {
             },
             { field: "ChequeElectronicoValor", type: "string", title: "Cheque Electrónico" },
             { field: "PagoCBU", type: "string", title: "Pago Cbu" },
+
+            { field: "PosicionCBOT", type: "string", title: "PosicionCBOT" },
+
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];            

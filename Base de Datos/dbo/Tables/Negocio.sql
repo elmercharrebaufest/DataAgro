@@ -122,6 +122,7 @@
     [PorcentajeSobrePrecioContrato] DECIMAL(11, 2) NULL, 
     [MonedaSobrePrecioContrato] CHAR(5) NULL, 
     [CantidadAmpliado] FLOAT NULL, 
+    [PosicionCBOT] NVARCHAR(10) NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  

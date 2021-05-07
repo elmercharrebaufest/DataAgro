@@ -176,7 +176,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Venta = contrato.Venta,
                         TipoAgenteCompraId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompraId : 0,
                         TipoAgenteCompra = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompra.Descripcion : "",
-                        CantidadAmpliado = contrato.CantidadAmpliado ?? 0
+                        CantidadAmpliado = contrato.CantidadAmpliado ?? 0,
+
+                        PosicionCBOT = contrato.PosicionCBOT,
 
                     };
 
@@ -323,6 +325,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ObservacionTercero = contrato.ObservacionTercero,
                         DolarizadoCorredor = contrato.DolarizadoCorredor.Value,
                         SustentableTercero = contrato.SustentableTercero,
+
+                        PosicionCBOT = contrato.PosicionCBOT,
 
                     };
 

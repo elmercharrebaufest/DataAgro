@@ -67,8 +67,12 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 repositorio.GuardarCambios();
             }
-
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, resolver);
+            string usuario = null;
+            if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
+            {
+                usuario = cambios.UsuarioId;
+            }
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, cambios.ProveedorId, cambios.CorredorId == 0 ? (int?)null : cambios.CorredorId, resolver, usuario);
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
@@ -88,7 +92,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 descripcion = cambios.BasicoProveedorTraerPorProveedores.First().RazonSocial + " (" + cambios.BasicoProveedorTraerPorProveedores.First().CUIT + ")";
             }
-            return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, "Proveedor", descripcion, resolver);
+            return LogGuardarCambios(cambios, tipoDeAccion, idProveedor, "Proveedor", descripcion, idProveedor, null, resolver);
         }
         public int LogCambiosDataAgro(CupoDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
@@ -96,49 +100,58 @@ namespace Molinos.DataAgro.Business.Managers
 
             string descripcion = string.IsNullOrEmpty(cambios.CupoSap) ? cambios.Id.ToString() : cambios.CupoSap;
 
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Cupo", descripcion, resolver);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Cupo", descripcion, cambios.ProveedorId, null, resolver);
         }
 
-        private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string clase, string descripcion, IgnorePropertiesResolver resolver = null)
+        private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string clase, string descripcion, int? proveedorId = null, int? corredorId = null, IgnorePropertiesResolver resolver = null, string usuario = null)
         {
             if (resolver == null)
             {
                 resolver = new IgnorePropertiesResolver(new[] { "" });
             }
             var usuarioComercial = "";
-            //logger.Debug("LogGuardarCambios");
-            try
-            {
-                //logger.Debug("LogGuardarCambios ObtenerUsuario");
-                usuarioComercial = PermisosHelper.ObtenerUsuario();
-                //logger.Debug("LogGuardarCambios ObtenerUsuario :" + (usuarioComercial ?? "null"));
 
-            }
-            catch (Exception)
-            { }
-            if (string.IsNullOrEmpty(usuarioComercial))
+            if (usuario != null)
             {
+                usuarioComercial = usuario;
+            }
+            else
+            {
+                //logger.Debug("LogGuardarCambios");
                 try
                 {
-                    usuarioComercial = OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name.Split('\\').Last();
+                    //logger.Debug("LogGuardarCambios ObtenerUsuario");
+                    usuarioComercial = PermisosHelper.ObtenerUsuario();
+                    //logger.Debug("LogGuardarCambios ObtenerUsuario :" + (usuarioComercial ?? "null"));
+
                 }
                 catch (Exception)
                 { }
-            }
-
-            if (!string.IsNullOrEmpty(usuarioComercial))
-            {
-                var comercial = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == usuarioComercial, x => x.Nombres + " " + x.Apellido);
-                if (comercial != null)
+                if (string.IsNullOrEmpty(usuarioComercial))
                 {
-                    usuarioComercial = comercial;
+                    try
+                    {
+                        usuarioComercial = OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name.Split('\\').Last();
+                    }
+                    catch (Exception)
+                    { }
+                }
+
+                if (!string.IsNullOrEmpty(usuarioComercial))
+                {
+                    var comercial = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == usuarioComercial, x => x.Nombres + " " + x.Apellido);
+                    if (comercial != null)
+                    {
+                        usuarioComercial = comercial;
+                    }
+                }
+
+                if (usuarioComercial == null)
+                {
+                    usuarioComercial = "";
                 }
             }
 
-            if (usuarioComercial == null)
-            {
-                usuarioComercial = "";
-            }
 
             string jsonObjeto = JsonConvert.SerializeObject(cambios, new JsonSerializerSettings()
             {
@@ -662,7 +675,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var resolver = new IgnorePropertiesResolver(new[] { "PrecioMinimo", "PrecioMaximo", "Moneda" });
 
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica", cambios.TipoNegocio.ToString() + " - " + cambios.Material, resolver);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "RangoConfirmacionAutomatica", cambios.TipoNegocio.ToString() + " - " + cambios.Material, null, null, resolver);
         }
 
         public int LogCambiosDataAgro(PrecioMoaDto cambios, TipoAccionLogDataAgro tipoDeAccion)

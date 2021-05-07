@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaDesdeSustentable { get; set; } // FechaDesdeSustentable       
         [JsonConverter(typeof(SinHora))]
         public DateTime? FechaHastaSustentable { get; set; } // FechaHastaSustentable   
-
+        public string PosicionCBOT { get; set; }
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
@@ -136,7 +136,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual List<AperturaPrecio> AperturaPrecio { get; set; }
 
         [InverseProperty("Negocio")]
-        public virtual List<NegocioHistorico> NegocioHistorico { get; set; } = new List<NegocioHistorico>();      
+        public virtual List<NegocioHistorico> NegocioHistorico { get; set; } = new List<NegocioHistorico>();
 
         [ForeignKey("MonedaCanjeId")]
         public virtual Moneda MonedaCanje { get; set; }
@@ -144,8 +144,8 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("PlantaDestinoId")]
         public virtual Centro PlantaDestino { get; set; }
 
-        public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; } 
-     
+        public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; }
+
 
         public Negocio()
         {

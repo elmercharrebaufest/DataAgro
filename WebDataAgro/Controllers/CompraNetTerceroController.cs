@@ -63,16 +63,15 @@ namespace WebDataAgro.Controllers
             if (contrato.AperturaPrecio == null)
             {
                 contrato.AperturaPrecio = new List<AperturaPrecio>();
-
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
+                foreach (EnumConceptoApertura concepto in (EnumConceptoApertura[])Enum.GetValues(typeof(EnumConceptoApertura)))
+                {
+                    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = (int)concepto, Importe = 0, MonedaId = null, Porcentaje = 0 });
+                }
             }
 
             if (contrato.PagoDiferidoTercero == true)
             {
-               var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia <= contrato.DiasPesificado).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
+                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia <= contrato.DiasPesificado).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
                 if (pago == null)
                 {
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
@@ -205,10 +204,10 @@ namespace WebDataAgro.Controllers
             {
                 contrato.AperturaPrecio = new List<AperturaPrecio>();
 
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 1, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 2, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 3, Importe = 0, MonedaId = null, Porcentaje = 0 });
-                contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = 4, Importe = 0, MonedaId = null, Porcentaje = 0 });
+                foreach (EnumConceptoApertura concepto in (EnumConceptoApertura[])Enum.GetValues(typeof(EnumConceptoApertura)))
+                {
+                    contrato.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = (int)concepto, Importe = 0, MonedaId = null, Porcentaje = 0 });
+                }
             }
 
             if (contrato.PagoDiferidoTercero == true)

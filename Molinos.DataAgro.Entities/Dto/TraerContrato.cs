@@ -198,6 +198,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaSobrePrecioContrato { get; set; }
         public bool? Venta { get; set; }
         public double CantidadAmpliado { get; set; }
+
+        public string PosicionCBOT { get; set; }
+        public int? ProveedorCreador { get; set; }
     }
 
     public class StoredPorContratoResult

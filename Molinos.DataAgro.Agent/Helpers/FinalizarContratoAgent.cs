@@ -153,22 +153,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 logger.Debug("Calidades: " + calidad);
                 var listaApertura = new List<ZMPES5440>();
-                if (contrato.TipoNegocioId == 2)
+                //if (contrato.TipoNegocioId == 2)
+                //{
+                foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
                 {
-                    foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
+                    if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                     {
-                        if (apertura.Importe != 0 || apertura.Porcentaje != 0)
+                        listaApertura.Add(new ZMPES5440
                         {
-                            listaApertura.Add(new ZMPES5440
-                            {
-                                CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
-                                IMPORTE = apertura.Importe,
-                                MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
-                                PORC = apertura.Porcentaje
-                            });
-                        }
+                            CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                            IMPORTE = apertura.Importe,
+                            MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
+                            PORC = apertura.Porcentaje
+                        });
                     }
                 }
+                //}
                 logger.Debug("Apertura: " + contrato.AperturaPrecio);
                 var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
@@ -263,6 +263,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         DESC_INSUMOS = contrato.Insumo,
                         MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
                         MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0,
+                        POSICION_CBOT = contrato.PosicionCBOT ?? ""
 
                     },
                     IM_TOPES_FIJ = new ZMPES5280

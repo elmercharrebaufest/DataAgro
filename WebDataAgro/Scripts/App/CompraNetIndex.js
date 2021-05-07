@@ -394,7 +394,10 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.SustentableTercero + "'" + ',' +
         "'" + dataItem.Venta + "'" + ',' +
         "'" + dataItem.FechaDesde_SustentableFormateado + "'" + ',' +   
-        "'" + dataItem.FechaHasta_SustentableFormateado + "'" +  
+        "'" + dataItem.FechaHasta_SustentableFormateado + "'" + ',' +  
+
+        "'" + dataItem.PosicionCBOT + "'" + 
+        
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1924,7 +1927,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
-    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable) {
+    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, PosicionCBOT) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2253,10 +2256,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaDePrecioVisualizarDiv").hide();
     $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
 
-    if (precioNeto != 0) {
+    if (precioNeto != 0 || tipo === "A FIJAR") {
         $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
+        
         var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: id, tipo: tipo });
         $.each(aperturaPrecio, function (key, concepto) {
+            var moneda = concepto.Moneda ==null? "": concepto.Moneda;
             switch (concepto.ConceptoAperturaPrecioId) {
                 case 1:
                     if (concepto.Importe) {
@@ -2285,10 +2290,18 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                     break;
                 case 4:
                     if (concepto.Importe || concepto.Porcentaje) {
-                        $("#visualizar_aperturaBonificaciones").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda + " - " + concepto.Porcentaje + "%");
+                        $("#visualizar_aperturaBonificaciones").text((concepto.Importe ? (kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda) : "") + (concepto.Porcentaje ? (" - " + concepto.Porcentaje + "%") : ""));
                         if (precioNeto > 0) {
                             $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                         }
+                    }
+                case 5:
+                    if (concepto.Importe > 0 ) {
+                        $("#visualizar_aperturaBasis").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
+                        visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
+                        $("#visualizar_PosicionCBOT").text(PosicionCBOT);
+                    } else {
+                        $("#aperturaBasisDivVisualizar").hide();
                     }
 
                     break;
@@ -2296,6 +2309,9 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
             visualizacionRowDoble("aperturaFinancieroDivVisualizar", "visualizar_aperturaFinanciero", "aperturaRedespachoDivVisualizar", "visualizar_aperturaRedespacho");
             visualizacionRowDoble("aperturaComisionesDivVisualizar", "visualizar_aperturaComisiones", "aperturaBonificacionesDivVisualizar", "visualizar_aperturaBonificaciones");
+            if (tipo === "A FIJAR") {
+                $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
+            }
         });
     }
     if ((nivelTarifa == "" || nivelTarifa == "null") && tarifaFlete == "null") {
