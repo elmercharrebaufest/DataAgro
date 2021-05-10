@@ -983,7 +983,7 @@
                 <span id="fechaHastaDiv" class="col-xs-6 col-md-2 ">
                     <input id="fechaHastaDescuentoId" class="descuento-fecha" placeholder="HASTA" type="date" style="width:100%" data-bind="value: Parametros.fechaHastaDescuentoId" />
                     <img id="errfechaHastaDescuentoId" src="~/Content/Images/error.png" style="display:none" />
-                </span>
+                </span>                
             </div>
         </div>
         <div class="row">
@@ -999,6 +999,14 @@
                 <input type="text" id="PorcentajeDescuentoId" class="campo-input-text k-textbox" placeholder="(comision)" style="width: 80%" max="1" />%
                 <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
+            <div class="col-xs-6 col-md-2 w30" id="ocultarAperturaBtn">
+                <span style="display:inline-block" id="botonAperturaDePrecio">
+                    <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
+                        <i class="fa fa-table"></i>
+                    </span>
+                </span>
+
+            </div>
         </div>
 
         <div class="row" hidden>
@@ -1011,8 +1019,8 @@
             </div>
             <div class="col-sm-3 col-md-2">
                 <div style="width: 20%" @*id="ocultarAperturaBtn"*@>
-                    <span style="display:inline-block" id="botonAperturaDePrecio">
-                        <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
+                    <span style="display:inline-block" @*id="botonAperturaDePrecio"*@>
+                        <span class="k-button k-button-icontext" @*id="aperturaPrecioBtn"*@ data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
                             <i class="fa fa-table"></i>
                         </span>
                     </span>

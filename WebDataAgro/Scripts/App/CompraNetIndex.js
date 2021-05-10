@@ -2306,7 +2306,11 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
                     break;
             }
-
+            if (PosicionCBOT == "" || PosicionCBOT == undefined || PosicionCBOT == null) {
+                $("#divPosicionCBOT").hide();
+            } else {
+                $("#divPosicionCBOT").show();
+            }
             visualizacionRowDoble("aperturaFinancieroDivVisualizar", "visualizar_aperturaFinanciero", "aperturaRedespachoDivVisualizar", "visualizar_aperturaRedespacho");
             visualizacionRowDoble("aperturaComisionesDivVisualizar", "visualizar_aperturaComisiones", "aperturaBonificacionesDivVisualizar", "visualizar_aperturaBonificaciones");
             if (tipo === "A FIJAR") {

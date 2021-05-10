@@ -3438,7 +3438,7 @@ function InicializarAcuerdoEdit() {
     var datos = { id: Id };
     contratoEdit = MSExecuteOnServer('/CompraNet/TraerAcuerdoCompleto', datos, function () { $.unblockUI(); });
     CargarDatosEditar(contratoEdit);
-    InicializarBordesRojos();
+    //InicializarBordesRojos();
 }
 
 
