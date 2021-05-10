@@ -385,7 +385,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarFijacionResult();
             this.Validar(oFijacionDePrecio, oEntityErrors, true);
-
+           
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
@@ -415,6 +415,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
                 if (oFijacionDePrecioSave.EstadoId == 6)
+                {
+                    oEntityErrors.Error("", "La Fijación no se puede modificar");
+                    return oEntityErrors;
+                }
+                if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && oFijacionDePrecioSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion)
                 {
                     oEntityErrors.Error("", "La Fijación no se puede modificar");
                     return oEntityErrors;

@@ -663,12 +663,12 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
-                if (string.IsNullOrEmpty(oParam.PosicionCBOT)  && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
+                if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
                 {
                     oErrorMessages.Error("", "Se debe completar Posicion CBOT con el concepto Basis");
                 }
 
-                if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && (oParam.AperturaPrecio != null  && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0))))
+                if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && (oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0))))
                 {
                     oErrorMessages.Error("", "Se debe completar el concepto Basis con Posicion CBOT");
                 }
@@ -1173,6 +1173,11 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
+                if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && oContratoSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion)
+                {
+                    oEntityErrors.Error("", "El contrato no se puede modificar");
+                    return oEntityErrors;
+                }
                 if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId)
                     && (oContratoSave.EstadoId != (int)EnumEstadoContrato.Pendiente && oContratoSave.EstadoId != (int)EnumEstadoContrato.Oferta && oContratoSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion))
                 {
@@ -1417,6 +1422,10 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("El contrato " + oContrato.Id + " se confirmo automaticamente por estar dentro de los rangos configurados");
 
             }
+            if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
+            {
+                oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAprobacion;
+            }
             var tipoDeLog = (oContratoSave.Id == 0 || string.IsNullOrEmpty(oContratoSave.ContratoSAP)) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar;
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipoDeLog, oContratoSave.GetType());
@@ -1606,7 +1615,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     acuerdo.Cantidad += ampliaciones.Value - disponible;
                                     acuerdo.CantidadAmpliado += ampliaciones - disponible;
                                 }
-                            }                        
+                            }
 
                         }
                     }
@@ -4521,7 +4530,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             bc.AperturaPrecios = negocio is Contrato && (negocio as Contrato).AperturaPrecio != null ? (negocio as Contrato).AperturaPrecio.Select(y => new AperturaPrecioDto
             {
-                ConceptoAperturaPrecioId=y.ConceptoAperturaPrecioId,
+                ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
                 Importe = y.Importe,
                 MonedaId = negocio.MonedaId,
                 Porcentaje = y.Porcentaje
@@ -4816,6 +4825,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.BoletoId = boletobolsa.BoletoCompraNetId ?? 3;
                 contrato.BolsaId = boletobolsa.BolsaCompraNetId;
                 contrato.PorcentajeComision = 1;
+
                 var existe = repositorio.Existe<Contrato>(a => a.ContratoCorredor == contrato.ContratoCorredor && a.CorredorId == item.CorredorId && a.EstadoId != 8 && a.EstadoId != 6);
                 if (existe)
                 {

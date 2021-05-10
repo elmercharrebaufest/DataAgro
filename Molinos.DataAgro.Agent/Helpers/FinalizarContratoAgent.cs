@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
                         IMPORTE_DB = contrato.ImporteSustentable.Value,
                         MONEDA_DB = contrato.MonedaSustentableId,
-                        MONEDA = contrato.MonedaSustentableId,
+                        //MONEDA = contrato.MonedaSustentableId,
                         PORC_DB = 0
                     });
                 }
