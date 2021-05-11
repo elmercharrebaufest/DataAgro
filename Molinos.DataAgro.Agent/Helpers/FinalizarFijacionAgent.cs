@@ -123,19 +123,19 @@ namespace Molinos.DataAgro.Agent.Helpers
                         precioApertura += ImportBonificaciones.Importe;
                     }
                     var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
-                    decimal porcentajeComision = 0;
-                    if (Comisiones != null)
-                    {
-                        precioApertura += Comisiones.Importe;
-                        porcentajeComision = Comisiones.Porcentaje / 100;
-                    }
+                    //decimal porcentajeComision = 0;
+                    //if (Comisiones != null)
+                    //{
+                    //    precioApertura += Comisiones.Importe;
+                    //    porcentajeComision = Comisiones.Porcentaje / 100;
+                    //}
 
                     decimal im_precio = (fijacion.Precio + precioApertura);
-                    if (porcentajeComision > 0)
-                    {
-                        im_precio = im_precio + (im_precio * porcentajeComision);
-                        im_precio = Decimal.Round(im_precio, 2);
-                    }
+                    //if (porcentajeComision > 0)
+                    //{
+                    //    im_precio = im_precio + (im_precio * porcentajeComision);
+                    //    im_precio = Decimal.Round(im_precio, 2);
+                    //}
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
