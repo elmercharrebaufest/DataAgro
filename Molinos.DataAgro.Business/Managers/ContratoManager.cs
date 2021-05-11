@@ -1407,10 +1407,12 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            if (oContrato.AperturaPrecio != null)
+            if (oContrato.AperturaPrecio != null && oContrato.AperturaPrecio.Count > 0)
             {
-                var redespacho = oContrato.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho);
-                redespacho.Importe = -1 * Math.Abs(redespacho.Importe);
+                if (oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) {
+                    var redespacho = oContrato.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho);
+                    redespacho.Importe = -1 * Math.Abs(redespacho.Importe);                  
+                }
                 oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
 
