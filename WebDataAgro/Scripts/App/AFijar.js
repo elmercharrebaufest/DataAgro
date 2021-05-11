@@ -3640,6 +3640,10 @@ function CargarDatosEditar(contrato, hijo) {
         $("#plantaDestinoDiv").hide();
         $("#plantaDestinoId").data("kendoDropDownList").value("");
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
+        $("#boletoCartaId").prop("checked", false);
+        $("#boletoNingunoId").prop("checked", false);
+        $("#boletoCartaId").prop("disabled", true);
+        $("#boletoNingunoId").prop("disabled", true);
         CargarCalidadPorMaterial(contrato.MaterialId);
     }
     LimpiarDescuentos();
@@ -3848,9 +3852,9 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (contrato.PrestamoDevolucion == true) {
-        $("#prestamoDevolucionId").prop("checked", true);
-        ocultarSiHayPrestamos()
+        $("#prestamoDevolucionId").prop("checked", true);      
         ocultarSiHayCanje();
+        ocultarSiHayPrestamos();
         $("#plantaDestinoId").data("kendoDropDownList").value(contrato.PlantaDestinoId);
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
     }
@@ -4503,6 +4507,10 @@ function HayCanje() {
         $("#BolsaCartaDiv").hide();
         $("#bolsaCartaId").data("kendoDropDownList").value("");
         $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
+        $("#boletoCartaId").prop("checked", false);
+        $("#boletoNingunoId").prop("checked", false);
+        $("#boletoCartaId").prop("disabled", true);
+        $("#boletoNingunoId").prop("disabled", true);
         //$("#calidadesEspecialesId").data("kendoDropDownList").value(0)
         //$("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
         //LimpiarCalidades();
@@ -4550,11 +4558,7 @@ function ocultarSiHayCanje() {
     $("#CDId").prop("checked", false);
     $("#WarrantId").prop("checked", false);
     $("#TipoDBId").data("kendoDropDownList").value(1);
-    $("#TipoDBId").data("kendoDropDownList").enable(false);
-    $("#boletoCartaId").prop("checked", false);
-    $("#boletoNingunoId").prop("checked", false);
-    $("#boletoCartaId").prop("disabled", true);
-    $("#boletoNingunoId").prop("disabled", true);
+    $("#TipoDBId").data("kendoDropDownList").enable(false);  
     $("#BolsaCartaDiv").hide();
     $("#bolsaCartaId").data("kendoDropDownList").value("");
     $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
@@ -4598,8 +4602,9 @@ function ocultarSiHayPrestamos() {
 }
 function HayPrestamo() {
     if ($("#prestamoDevolucionId").is(":checked")) {
-        ocultarSiHayPrestamos()
         ocultarSiHayCanje();
+        ocultarSiHayPrestamos();
+     
 
     } else {
         $("#DatosDescuentos").show();
