@@ -448,8 +448,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9 && oParam.DestinoId != 13
-                                        && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1))
-                                        )
+                        && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == 2)))
                     {
                         oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
                     }
