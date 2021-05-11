@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
                                 IMPORTE = apertura.Importe,
-                                MONEDA = fijacion.Moneda != null && apertura.Porcentaje == 0 ? fijacion.Moneda.MonedaId : null,
+                                MONEDA = fijacion.MonedaId/* != null && apertura.Porcentaje == 0 ? fijacion.Moneda.MonedaId : null*/,
                                 PORC = apertura.Porcentaje
                             };
                             if (apertura.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones)

@@ -163,7 +163,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
                             IMPORTE = apertura.Importe,
-                            MONEDA = contrato.Moneda != null ? contrato.Moneda.MonedaId : null,
+                            MONEDA = contrato.TipoNegocioId == 2 ? (contrato.Moneda != null ? contrato.Moneda.MonedaId : null) : apertura.MonedaId,
                             PORC = apertura.Porcentaje
                         });
                     }
