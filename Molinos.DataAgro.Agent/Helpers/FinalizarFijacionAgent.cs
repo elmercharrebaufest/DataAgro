@@ -91,13 +91,23 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                         {
-                            listaApertura.Add(new ZMPES5440
+                            var a = new ZMPES5440
                             {
                                 CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
                                 IMPORTE = apertura.Importe,
                                 MONEDA = fijacion.Moneda != null && apertura.Porcentaje == 0 ? fijacion.Moneda.MonedaId : null,
                                 PORC = apertura.Porcentaje
-                            });
+                            };
+                            if (apertura.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones)
+                            {
+                                if (oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje !=
+                                    fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje)
+                                {
+                                    a.PORC = fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje -
+                                        oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje;
+                                }
+                            }
+                            listaApertura.Add(a);
                         }
                     }
                     decimal precioApertura = 0;

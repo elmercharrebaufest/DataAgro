@@ -2255,10 +2255,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaBonificacionesDivVisualizar").hide();
     $("#aperturaDePrecioVisualizarDiv").hide();
     $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
+    $("#aperturaBasisDivVisualizar").hide();
+    $("#divPosicionCBOT").hide();
 
     if (precioNeto != 0 || tipo === "A FIJAR") {
         $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
-        
+        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+
         var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: id, tipo: tipo });
         $.each(aperturaPrecio, function (key, concepto) {
             var moneda = concepto.Moneda ==null? "": concepto.Moneda;
@@ -2300,9 +2303,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                         $("#visualizar_aperturaBasis").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                         visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
                         $("#visualizar_PosicionCBOT").text(PosicionCBOT);
-                    } else {
-                        $("#aperturaBasisDivVisualizar").hide();
-                    }
+                    } 
 
                     break;
             }
