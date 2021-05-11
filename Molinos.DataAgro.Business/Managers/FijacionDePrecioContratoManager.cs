@@ -583,7 +583,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var cantidad =
                     repositorio.Listar<FijacionDePrecioContrato, double>(x => x.Cantidad, x => x.Fecha == hoy &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.Id != contrato.Id
-                && x.MaterialId == rango.MaterialId);
+                && x.MaterialId == rango.MaterialId && x.Precio > 0);
 
                 var total = cantidad.Sum();
                 var valor =

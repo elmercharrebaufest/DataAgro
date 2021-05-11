@@ -32,7 +32,7 @@
                                         <td class="fuente600">Concepto</td>
                                         <td class="fuente600">Importe</td>
                                         <td class="fuente600">Moneda</td>
-                                        <td class="fuente600">Porcentaje</td>
+                                        <td class="fuente600" id="porcentajeLabel">Porcentaje</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -40,31 +40,31 @@
                                         <td>Basis</td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteBasisId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
-                                        <td></td>
+                                        <td class="noAFijar"></td>
                                     </tr>
                                     <tr id="aperturaPrecioConceptoFinanciero">
                                         <td>Financiero</td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteFinancieroId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
-                                        <td></td>
+                                        <td class="noAFijar"></td>
                                     </tr>
                                     <tr>
                                         <td>Redespacho</td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteRedespachoId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
-                                        <td></td>
+                                        <td class="noAFijar"></td>
                                     </tr>
                                     <tr id="aperturaPrecioConceptoComisiones">
                                         <td>Comisiones</td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteComisionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
-                                        <td class="aperturaPrecioTd"><input id="aperturaPrecioPorcentajeComisionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd noAFijar"><input id="aperturaPrecioPorcentajeComisionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                     </tr>
                                     <tr style="display:none;" id="aperturaPrecioConceptoBonificaciones">
                                         <td>Bonificaciones</td>
                                         <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteBonificacionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                         <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
-                                        <td class="aperturaPrecioTd" style="display:none;"><input id="aperturaPrecioPorcentajeBonificacionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd noAFijar" style="display:none;"><input id="aperturaPrecioPorcentajeBonificacionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
                                     </tr>
                                 </tbody>
                                 <tfoot>

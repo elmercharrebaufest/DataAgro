@@ -457,7 +457,7 @@ namespace Molinos.DataAgro.Business
                  && x.MaterialId == rango.MaterialId && x.ContratoAcuerdoId == null);
                 cantidad.AddRange(repositorio.Listar<ContratoAcuerdo, double>(x => x.Cantidad, x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(hoy) &&
                  (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.Id != contrato.Id && x.TipoNegocioId == 6
-                 && x.MaterialId == rango.MaterialId));
+                 && x.MaterialId == rango.MaterialId && x.Precio > 0));
                 var total = cantidad.Sum();
 
                 var valor =

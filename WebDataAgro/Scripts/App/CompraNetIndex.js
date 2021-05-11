@@ -2306,7 +2306,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
                     break;
             }
-            if (PosicionCBOT == "" || PosicionCBOT == undefined || PosicionCBOT == null) {
+            if (PosicionCBOT == "" || PosicionCBOT == "null" || PosicionCBOT == undefined || PosicionCBOT == null) {
                 $("#divPosicionCBOT").hide();
             } else {
                 $("#divPosicionCBOT").show();
