@@ -100,12 +100,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                             };
                             if (apertura.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones)
                             {
-                                if (oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje !=
-                                    fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje)
+                                if (oContrato != null && oContrato.Aperturas != null && oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones))
                                 {
-                                    a.PORC = fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje -
-                                        oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje;
+                                    if (oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje !=
+                                                                        fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje)
+                                    {
+                                        a.PORC = fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje -
+                                            oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje;
+                                    }
                                 }
+
                             }
                             listaApertura.Add(a);
                         }

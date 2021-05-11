@@ -875,9 +875,7 @@ function InicializarElementos() {
                 $("#guardarBtn").append("Guardar Negocio");
                 $("#boton-ampliar").show();
                 $("#mercsDepositoDiv").show();
-                RemoverFondosGrises();
-                $("#boton-ampliar").trigger("click");
-                $("#boton-ampliar").trigger("click");
+               
                 //A FIJAR
                 if (this.value() == 1) {
 
@@ -904,6 +902,9 @@ function InicializarElementos() {
                     //$("#pizarraDiv").prop("checked", false);
 
                 }
+                RemoverFondosGrises();
+                $("#boton-ampliar").trigger("click");
+                $("#boton-ampliar").trigger("click");
                 if (this.value() == 2) {
                     $(".ocultar").hide();
                     $("#CDId").prop("checked", false);
@@ -3963,18 +3964,13 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $("#pagoDirectoDiv").removeClass("ampliar");
     }
-
-    if (!hijo && contrato.TipoNegocioId == 1) {
-        $("#tipoId").data("kendoDropDownList").trigger("change");
-    }
-
     if (contrato.Venta == true) {
         $("#ventaId").prop("checked", true);
         HayVenta();
     } else {
         $("#ventaId").prop("checked", false);
     }
-    if (contrato.TipoNegocioId == 6) {
+    if (contrato.TipoNegocioId == 6 || contrato.TipoNegocioId == 1) {
         if (!(contrato.DesdeFijacionFormateado == null && contrato.DesdeFijacionFormateado == undefined && contrato.DesdeFijacionFormateado == "")) {
             $("#fechaDesdeTopeId").val(FormatearFecha(contrato.DesdeFijacionFormateado));
         } else {
@@ -3985,6 +3981,9 @@ function CargarDatosEditar(contrato, hijo) {
         } else {
             $("#fechaHastaTopeId").val("");
         }
+    }
+    if (!hijo && contrato.TipoNegocioId == 1) {
+        $("#tipoId").data("kendoDropDownList").trigger("change");
     }
     VisualizarFechaCierta();
 }
