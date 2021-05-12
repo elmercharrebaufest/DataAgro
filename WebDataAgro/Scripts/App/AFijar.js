@@ -135,6 +135,9 @@ function cargarDatosAFijarEnFijacion(afijar) {
 
     $("#posicionFasonId").val(afijar.Posicion);
     $("#posicionCBOTId").val(afijar.PosicionCBOT);
+    if (afijar.PosicionCBOT != null && afijar.PosicionCBOT != "") {
+        $("#posicionCBOTDiv").show();
+    }
     $("#fechaOperacionId").val(afijar.FechaOperacion);
     $("#motivoOperacionAnteriorId").val(afijar.MotivoOperacionAnterior);
     $("#fechaDesdeId").val(afijar.DesdeEntrega);
@@ -3100,19 +3103,20 @@ function AgregarDescuentos() {
             eliminarDescuento(this);
         }
     };
-    //if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {
-    //    if (descuento.MonedaId == "") {
-    //        MensErr("El campo Moneda no puede estar vacío");
-    //        return;
-    //    }
-    //    if (viewModel.Descuentos.some(elem => |)) {
-    //        MensErr("Ya existe un descuento general sobre precio");
-    //        return;
-    //    }
-    //    $("#precioMonedaId").data("kendoDropDownList").value($("#descuentoMonedaId").data("kendoDropDownList").value());
-    //    AbrirModalAperturaDePrecio();
-    //    return;
-    //}
+    if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {
+        $("#posicionCBOTDiv").show();
+        //if (descuento.MonedaId == "") {
+        //    MensErr("El campo Moneda no puede estar vacío");
+        //    return;
+        //}
+        //if (viewModel.Descuentos.some(elem => |)) {
+        //    MensErr("Ya existe un descuento general sobre precio");
+        //    return;
+        //}
+        //$("#precioMonedaId").data("kendoDropDownList").value($("#descuentoMonedaId").data("kendoDropDownList").value());
+        //AbrirModalAperturaDePrecio();
+        //return;
+    }
     var err = validarDescuento(descuento);
     if (ExistsErrorMessages(err)) {
         MensErr(err[0]);
@@ -3623,7 +3627,11 @@ function CargarDatosEditar(contrato, hijo) {
     $("#tipoFasonId").data("kendoDropDownList").value(contrato.TipoFasonId);
     $("#operadorId").data("kendoDropDownList").value(contrato.OperadorId);
     $("#posicionFasonId").val(contrato.Posicion);
-    $("#posicionCBOTId").val(contrato.PosicionCBOT);
+    if (contrato.PosicionCBOT != null && contrato.PosicionCBOT != "") {
+        $("#posicionCBOTId").val(contrato.PosicionCBOT);
+        $("#posicionCBOTDiv").show();
+    }
+    
 
     if (contrato.Canje == true) {
         ocultarSiHayCanje();
@@ -4064,6 +4072,8 @@ function eliminarDescuento(descuento) {
     if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {
         LimpiarApertura();
         $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
+        $("#posicionCBOTDiv").hide();
+        $("#posicionCBOTId").val("");
     }
     viewModel.Descuentos.remove(descuento);
 

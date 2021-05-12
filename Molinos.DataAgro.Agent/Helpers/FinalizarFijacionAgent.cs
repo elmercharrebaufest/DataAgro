@@ -49,71 +49,54 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
                     var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
 
-                    //•	Contrato 2699085 – No tiene descuentos y bonificaciones: el comercial podrá completar los conceptos que serían financiero, comisiones y bonificaciones:
-                    if (oContrato != null && oContrato.PorcentajeSobrePrecio == 0 && oContrato.ImporteSobrePrecio == 0 &&
-                        (oContrato.Aperturas == null || !oContrato.Aperturas.Any(x => x.Importe > 0 || x.Porcentaje > 0))
+
+                    //if (oContrato != null && oContrato.PorcentajeSobrePrecio == 0 && oContrato.ImporteSobrePrecio == 0 &&
+                    //    (oContrato.Aperturas == null || !oContrato.Aperturas.Any(x => x.Importe > 0 || x.Porcentaje > 0))
+                    //    )
+                    //{
+                    //    conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
+                    //    conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
+                    //}
+
+                    if (oContrato != null && oContrato.Aperturas != null
+                        && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (x.Importe > 0))
                         )
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
-                        conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
                     }
-                    //•	Contrato 2699086 – Tiene bonificaciones: el comercial podrá completar los conceptos que serían financiero y comisiones:
                     if (oContrato != null && oContrato.Aperturas != null
-                        //&& oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0))
-                        && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (x.Importe > 0 || x.Porcentaje > 0))
-                        )
+                        && oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje !=
+                                                fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje)
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
                     }
-                    else
-                    {
-                        if (oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje !=
-                            fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje
-                            )
-                        {
-                            conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
-                        }
-                    }
-                    //•	Contrato 2699087 – Tiene descuentos: el comercial podrá completar los conceptos que serían financiero, comisiones y bonificaciones:
-                    // no afecta, seria lo mismo que el caso 2699085
-                    //•	Contrato 2699088 – Tiene 1 de comisión o porcentaje sobre precio: el comercial podrá completar los conceptos que serían financiero y bonificaciones:
+
                     if (oContrato != null && oContrato.Aperturas != null
-                        //&& oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (x.Importe > 0 || x.Porcentaje == 1))
                         && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0))
                         )
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
                     }
-                    //•	Contrato 2699089 – Tiene comisiones o porcentaje sobre precio y bonificaciones: el comercial podrá completar el costo financiero:
 
-
-                    foreach (AperturaPrecio apertura in fijacion.AperturaPrecio)//.Where(x => listaAperturaConceptos.Contains(x.ConceptoAperturaPrecioId)))
+                    if (fijacion.Pizarra != true)
                     {
-                        if (apertura.Importe != 0 || apertura.Porcentaje != 0)
+                        foreach (AperturaPrecio apertura in fijacion.AperturaPrecio.Where(x => conceptosCargados.Contains(x.ConceptoAperturaPrecioId)))
                         {
-                            var a = new ZMPES5440
+                            if (apertura.Importe != 0 || apertura.Porcentaje != 0)
                             {
-                                CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
-                                IMPORTE = apertura.Importe,
-                                MONEDA = fijacion.MonedaId/* != null && apertura.Porcentaje == 0 ? fijacion.Moneda.MonedaId : null*/,
-                                PORC = apertura.Porcentaje
-                            };
-                            if (apertura.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones)
-                            {
-                                if (oContrato != null && oContrato.Aperturas != null && oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones))
+                                var a = new ZMPES5440
                                 {
-                                    if (oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje !=
-                                                                        fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje)
-                                    {
-                                        a.PORC = fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje -
-                                            oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje;
-                                    }
-                                }
-
+                                    CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                                    IMPORTE = apertura.Importe,
+                                    MONEDA = apertura.MonedaId,
+                                    PORC = apertura.Porcentaje
+                                };
+                                listaApertura.Add(a);
                             }
-                            listaApertura.Add(a);
                         }
                     }
+
+
                     decimal precioApertura = 0;
                     var fechaDolarizadoString = fijacion.FechaDolarizado?.ToString("yyyy-MM-dd");
                     var ImportFinanciero = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
@@ -127,19 +110,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                         precioApertura += ImportBonificaciones.Importe;
                     }
                     var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
-                    //decimal porcentajeComision = 0;
-                    //if (Comisiones != null)
-                    //{
-                    //    precioApertura += Comisiones.Importe;
-                    //    porcentajeComision = Comisiones.Porcentaje / 100;
-                    //}
+                    if (Comisiones != null)
+                    {
+                        precioApertura += Comisiones.Importe;
+                    }
 
-                    decimal im_precio = (fijacion.Precio + precioApertura);
-                    //if (porcentajeComision > 0)
-                    //{
-                    //    im_precio = im_precio + (im_precio * porcentajeComision);
-                    //    im_precio = Decimal.Round(im_precio, 2);
-                    //}
+                    decimal im_precio = fijacion.Precio + precioApertura;
+
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,

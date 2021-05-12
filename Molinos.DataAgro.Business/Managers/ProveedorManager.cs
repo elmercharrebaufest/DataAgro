@@ -4100,34 +4100,43 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void ActualizarRazonSocial()
         {
-            var listaSisa = repositorio.Listar<SISA>().GroupBy(a => a.CUIT);
-            var proveedores = repositorio.Listar<Proveedor>();
-            foreach (var sisa in listaSisa)
+            try
             {
-                var proveedor = proveedores.Where(a => a.CUIT == sisa.Key);
-                if (proveedor.Count() > 0)
+                var listaSisa = repositorio.Listar<SISA>().GroupBy(a => a.CUIT);
+                var proveedores = repositorio.Listar<Proveedor>();
+                foreach (var sisa in listaSisa)
                 {
-                    try
+                    var proveedor = proveedores.Where(a => a.CUIT == sisa.Key);
+                    if (proveedor.Count() > 0)
                     {
-                        if (proveedor.First().RazonSocial != sisa.OrderByDescending(a => a.FechaVigenciaEstado).First().RazonSocial)
+                        try
                         {
-                            foreach (var prov in proveedor)
+                            if (proveedor.First().RazonSocial.Replace("(", "").Replace(")", "") != sisa.OrderByDescending(a => a.FechaVigenciaEstado).First().RazonSocial.RemoveDiacritics().Replace("(", "").Replace(")", ""))
                             {
-                                logger.Info($"ActualizarRazonSocial - Actualizando razon social de : {sisa.Key}, anterior: {prov.RazonSocial} , nuevo: {sisa.OrderByDescending(a => a.FechaVigenciaEstado).First().RazonSocial.RemoveDiacritics()}");
-                                prov.RazonSocial = sisa.OrderByDescending(a => a.FechaVigenciaEstado).First().RazonSocial.RemoveDiacritics();
+                                foreach (var prov in proveedor)
+                                {
+                                    logger.Info($"ActualizarRazonSocial - Actualizando razon social de : {sisa.Key}, anterior: {prov.RazonSocial} , nuevo: {sisa.OrderByDescending(a => a.FechaVigenciaEstado).First().RazonSocial.RemoveDiacritics()}");
+                                    prov.RazonSocial = sisa.OrderByDescending(a => a.FechaVigenciaEstado).First().RazonSocial.RemoveDiacritics().Replace("(", "").Replace(")", "");
+                                }
                             }
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        logger.Error($"ActualizarRazonSocial ERROR - {sisa.Key}");
-                        logger.Error(e);
-                    }
+                        catch (Exception e)
+                        {
+                            logger.Error($"ActualizarRazonSocial ERROR - {sisa.Key}");
+                            logger.Error(e);
+                        }
 
+                    }
                 }
+
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error($"ActualizarRazonSocial ERROR");
+                logger.Error(e);
             }
 
-            repositorio.GuardarCambios();
 
         }
 
