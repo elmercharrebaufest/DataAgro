@@ -144,6 +144,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ImporteBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe,
                         PorcentajeBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
                         MonedaBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Moneda.Descripcion,
+                        ImporteBasis = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 5).Importe,
                         NivelTarifa = (contrato is Contrato) ? (contrato as Contrato).NivelTarifa.Descripcion : "",
                         TarifaFlete = (contrato is Contrato) ? (contrato as Contrato).TarifaFlete : null,
                         Compensacion = (contrato is Contrato) ? (contrato as Contrato).Compensacion : null,

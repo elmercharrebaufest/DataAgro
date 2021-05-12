@@ -187,7 +187,8 @@ function CreateGridInformeCompraNet() {
             { field: "ImporteComision", title: "Importe Comision", type: "number", format: "{0:n2}" },
             { field: "ImporteBonificacion", title: "Importe Bonificacion", type: "number", format: "{0:n2}" },
             { field: "PorcentajeBonificacion", title: "Porcentaje Bonificacion", type: "number", format: "{0:n2}" },
-
+            { field: "ImporteBasis", title: "Importe Basis", type: "number", format: "{0:n2}" },
+            
             { field: "Provincia" },
             { field: "Localidad" },
             { field: "Campania", value: "Campania", title: "Campaña" },
@@ -305,48 +306,48 @@ function CreateGridInformeCompraNet() {
                 var dataItem = {
                     Hora: row.cells[6].value,
                     Pizarra: row.cells[15].value,
-                    Sustentable: row.cells[29].value,
-                    Dolarizado: row.cells[32].value,
-                    Pesificado: row.cells[34].value,
-                    NoInformaSIO: row.cells[36].value,
-                    TrigoEspecial: row.cells[37].value,
-                    DolarizadoExpress: row.cells[47].value,
-                    DolarizadoCorredor: row.cells[49].value
+                    Sustentable: row.cells[30].value,
+                    Dolarizado: row.cells[33].value,
+                    Pesificado: row.cells[35].value,
+                    NoInformaSIO: row.cells[37].value,
+                    TrigoEspecial: row.cells[38].value,
+                    DolarizadoExpress: row.cells[48].value,
+                    DolarizadoCorredor: row.cells[50].value
                 };
 
                 var operacionFecha = row.cells[5].value;
                 operacionFecha.setHours(operacionFecha.getHours() + 1);
                 row.cells[5].value = operacionFecha;
 
-                var fechaDesde = row.cells[25].value;
-                var fechaHasta = row.cells[26].value;
+                var fechaDesde = row.cells[26].value;
+                var fechaHasta = row.cells[27].value;
 
                 if (fechaDesde != null) {
                     fechaDesde.setHours(fechaDesde.getHours() + 1);
-                    row.cells[25].value = fechaDesde;
+                    row.cells[26].value = fechaDesde;
                 }
 
                 if (fechaHasta != null) {
 
                     fechaHasta.setHours(fechaHasta.getHours() + 1);
-                    row.cells[25].value = fechaHasta;
+                    row.cells[26].value = fechaHasta;
                 }
 
 
                 row.cells[6].value = templateHora(dataItem);
                 row.cells[15].value = templatePizarra(dataItem);
-                row.cells[29].value = templateSustentable(dataItem);
-                row.cells[34].value = templateDolarizado(dataItem);
-                row.cells[35].value = row.cells[34].value == "Si" ? row.cells[36].value : "";
-                row.cells[36].value = templatePesificado(dataItem);
-                row.cells[38].value = templateSIO(dataItem);
-                row.cells[39].value = templateTrigoEsp(dataItem);
-                row.cells[49].value = templateDolarizadoExpress(dataItem);
-                row.cells[50].value = row.cells[49].value == "Si" ? row.cells[50].value : "";
-                row.cells[51].value = templateDolarizadoCorredor(dataItem);
-                row.cells[52].value = row.cells[51].value == "Si" ? row.cells[52].value : "";
-                row.cells[48].format = "yy/MM/dd hh:mm:ss";
-                row.cells[34].value = templateDolarizado(dataItem);
+                row.cells[30].value = templateSustentable(dataItem);
+                row.cells[35].value = templateDolarizado(dataItem);
+                row.cells[36].value = row.cells[35].value == "Si" ? row.cells[37].value : "";
+                row.cells[37].value = templatePesificado(dataItem);
+                row.cells[39].value = templateSIO(dataItem);
+                row.cells[40].value = templateTrigoEsp(dataItem);
+                row.cells[50].value = templateDolarizadoExpress(dataItem);
+                row.cells[51].value = row.cells[50].value == "Si" ? row.cells[51].value : "";
+                row.cells[52].value = templateDolarizadoCorredor(dataItem);
+                row.cells[53].value = row.cells[52].value == "Si" ? row.cells[53].value : "";
+                row.cells[49].format = "yy/MM/dd hh:mm:ss";
+                row.cells[35].value = templateDolarizado(dataItem);
             }
         },
         pageable: {

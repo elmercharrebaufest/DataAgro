@@ -4153,6 +4153,8 @@ function InicializarAperturaDePrecios() {
     $("#aperturaPrecioConceptoFinanciero").hide();
 
     $("#aperturaPrecioImporteRedespachoId").change(ConvertirRedespachoANegativo);
+    $("#aperturaPrecioImporteBasisId").change(ConvertirBasisANegativo);
+
     $("#aperturaPrecioTdPrecioNeto").html("Total");
 
 }
@@ -4245,6 +4247,13 @@ function ConvertirRedespachoANegativo() {
     var valor = $("#aperturaPrecioImporteRedespachoId").val().replace(',', '.');
     if (valor > 0) {
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(-1 * valor);
+    }
+    CalcularPrecioTotalApertura();
+}
+function ConvertirBasisANegativo() {
+    var valor = $("#aperturaPrecioImporteBasisId").val().replace(',', '.');
+    if (valor > 0) {
+        $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value(-1 * valor);
     }
     CalcularPrecioTotalApertura();
 }
