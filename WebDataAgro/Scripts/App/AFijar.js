@@ -1253,9 +1253,9 @@ function InicializarElementos() {
         change: function () {
             EsconderCalidadSiHaySojaYCalidadEspecial();
             if ($("#tipoId").val() == 1 && $("#destinoId").val() != 1) {
-                LimpiarDescuentos();
-                $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
-                $("#PorcentajeDescuentoId").val("");
+                //LimpiarDescuentos();
+                //$("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
+                //$("#PorcentajeDescuentoId").val("");
             }
             //aca
             SeleccionAutomaticaBolsa();
@@ -2318,7 +2318,7 @@ function InicializarElementos() {
     $("#ImporteDescuentoId").kendoNumericTextBox({
         culture: "es-AR",
         spinners: false,
-        change: function () { ConvertirDescuentoANegativo(); }
+        //change: function () { ConvertirDescuentoANegativo(); }
     });
 
     $("#TarifaFleteId").change(function () {
@@ -4207,7 +4207,7 @@ function CalcularPrecioTotalApertura() {
     precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
     precioOriginal += Number($("#aperturaPrecioImporteComisionesId").val().replace(',', '.'));
 
-    $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
+    $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + ($("#totalApertura").val() ? $("#totalApertura").data("kendoDropDownList").text() : ""));
 
     return precioOriginal;
 }
