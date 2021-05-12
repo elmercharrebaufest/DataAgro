@@ -3948,8 +3948,13 @@ function InsertarAperturasViewModel(total) {
     viewModel.AperturaPrecio.push(Basis);
     $('#modalAperturaPrecio').modal('hide');
 
-    $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
-    $("#precioTotalApertura").trigger("change");
+    if ($("#precioId").data("kendoNumericTextBox").value() > 0) {
+        $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
+        $("#precioTotalApertura").trigger("change");
+    } else {
+        $("#precioTotalApertura").data("kendoNumericTextBox").value('');
+    }
+
 
     if (Financiero.Importe != 0 || Redespacho.Importe != 0 || Financiero.Importe != 0 || Comisiones.Importe != 0 || Bonificaciones.Importe != 0 || Comisiones.Porcentaje != 0 || Bonificaciones.Porcentaje != 0) {
         $("#NivelTarifaId").data("kendoDropDownList").enable(false);

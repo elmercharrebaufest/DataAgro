@@ -58,13 +58,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //    conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
                     //}
 
-                    if (oContrato != null && oContrato.Aperturas != null
-                        && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (x.Importe > 0)))
-                    {
-                        conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
-                    }
+                    //if (oContrato != null && oContrato.Aperturas != null
+                    //    && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (x.Importe > 0)))
+                    //{
+                    //    conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
+                    //}
 
-                    if (fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje > 0)
+                    //if (fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje > 0)
+                    if (oContrato != null && oContrato.ImporteSobrePrecio == 0)
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
                     }

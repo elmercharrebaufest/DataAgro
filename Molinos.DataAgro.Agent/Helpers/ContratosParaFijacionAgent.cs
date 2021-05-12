@@ -189,6 +189,19 @@ namespace Molinos.DataAgro.Agent
                             };
                             aperturas.Add(a);
                         }
+                        if (contrato.PORC_S_PRECIO > 0 || contrato.IMPORTE_S_PRECIO > 0)
+                        {
+                            var a = new AperturaPrecioDto()
+                            {
+                                ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Comisiones,
+                                ConceptoAperturaPrecio = conceptoAperturas.Where(x => x.Id == (int)EnumConceptoApertura.Comisiones).FirstOrDefault().Descripcion,
+                                Importe = contrato.IMPORTE_S_PRECIO,
+                                Porcentaje = contrato.PORC_S_PRECIO,
+                                MonedaId = contrato.MONEDA_S_PRECIO,
+                                Moneda = contrato.MONEDA_S_PRECIO.Trim() != "" ? monedas.Where(x => x.MonedaId.Trim() == contrato.MONEDA_S_PRECIO.Trim()).FirstOrDefault().Descripcion : ""
+                            };
+                            aperturas.Add(a);
+                        }
                         var contratoParaFijacion = new DatosFijacionDeContratoDto
                         {
                             ContratoId = contrato.CONTRATO.TrimStart('0'),
