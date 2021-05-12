@@ -3232,6 +3232,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.AperturaPrecio = contrato.AperturaPrecio;
             contratoSave.PrecioPactado = contrato.PrecioPactado;
             contratoSave.PorcentajeDePago = contrato.PorcentajeDePago;
+            contratoSave.PosicionCBOT = contrato.PosicionCBOT;
 
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoSave.Id), TipoAccionLogDataAgro.Modificar, contratoSave.GetType());
@@ -4196,6 +4197,8 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.PrestamoDevolucion = contratoSap.PrestamoDevolucion;
                 contrato.PlantaDestinoId = contratoSap.PlantaDestinoId;
                 contrato.MotivoOperacionAnterior = contratoSap.MotivoOperacionAnterior;
+                contrato.PosicionCBOT = contratoSap.PosicionCBOT;
+
                 repositorio.Agregar(contrato);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());

@@ -520,6 +520,8 @@ namespace WebDataAgro.Services
             {
                 contrato.Descuentos.Add(new DescuentoBonificacion { TipoPeriodoDBId = 1, TipoDBId = 1, MonedaId = contratoSAP.MonedaSPrecio, Porcentaje = Convert.ToDecimal(contratoSAP.PorcSPrecio.Replace(",", "").Replace(".", ",")), Importe = Convert.ToDecimal(contratoSAP.ImporteSPrecio.Replace(",", "").Replace(".", ",")) });
             }
+
+            contrato.PosicionCBOT = contratoSAP.PosicionCBOT;
         }
 
         public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)

@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
-                    logger.Debug("Modificando Fijacion Nro: " + contratoGuardado.Id);
+                    logger.Debug("Modificando Fijacion Nro: " + contratoGuardado.FijacionSAP);
                     logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);
                     logger.Debug("Cargando contrato");
                     var fechaDolarizadoString = contratoGuardado.FechaDolarizado?.ToString("yyyy-MM-dd");

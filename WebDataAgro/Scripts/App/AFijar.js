@@ -3104,7 +3104,7 @@ function AgregarDescuentos() {
         }
     };
     if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {
-        $("#posicionCBOTDiv").show();
+        //$("#posicionCBOTDiv").show();
         //if (descuento.MonedaId == "") {
         //    MensErr("El campo Moneda no puede estar vacío");
         //    return;
@@ -4066,6 +4066,12 @@ function InsertarAperturasViewModel(total) {
     //    viewModel.Descuentos = viewModel.Descuentos.filter(el => el.TipoDBId != 1 && el.TipoPeriodoDBId != 1);
     //    viewModel.Descuentos.push(descuento);
     //}
+    if (viewModel.AperturaPrecio.some(x => x.ConceptoAperturaPrecioId == 5 && x.Importe > 0)) {
+        $("#posicionCBOTDiv").show();
+    } else {
+        $("#posicionCBOTDiv").hide();
+        $("#posicionCBOTId").val("");
+    }
     $("#ImporteDescuentoId").data("kendoNumericTextBox").value(total);
 }
 function eliminarDescuento(descuento) {
