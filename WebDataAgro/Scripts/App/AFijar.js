@@ -4066,7 +4066,7 @@ function InsertarAperturasViewModel(total) {
     //    viewModel.Descuentos = viewModel.Descuentos.filter(el => el.TipoDBId != 1 && el.TipoPeriodoDBId != 1);
     //    viewModel.Descuentos.push(descuento);
     //}
-    if (viewModel.AperturaPrecio.some(x => x.ConceptoAperturaPrecioId == 5 && x.Importe > 0)) {
+    if (viewModel.AperturaPrecio.some(x => x.ConceptoAperturaPrecioId == 5 && x.Importe != 0)) {
         $("#posicionCBOTDiv").show();
     } else {
         $("#posicionCBOTDiv").hide();
