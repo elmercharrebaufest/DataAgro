@@ -2301,7 +2301,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                 case 5:
                     if (concepto.Importe) {
                         $("#visualizar_aperturaBasis").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
-                        visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
+                        //visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
+                        $("#aperturaBasisDivVisualizar").show();
                         $("#visualizar_PosicionCBOT").text(PosicionCBOT);
                     } 
 
