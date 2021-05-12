@@ -59,21 +59,18 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //}
 
                     if (oContrato != null && oContrato.Aperturas != null
-                        && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (x.Importe > 0))
-                        )
+                        && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (x.Importe > 0)))
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
                     }
-                    if (oContrato != null && oContrato.Aperturas != null
-                        && oContrato.Aperturas.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje !=
-                                                fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje)
+
+                    if (fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje > 0)
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
                     }
 
                     if (oContrato != null && oContrato.Aperturas != null
-                        && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0))
-                        )
+                        && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0)))
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
                     }
