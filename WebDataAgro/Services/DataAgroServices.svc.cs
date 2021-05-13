@@ -570,20 +570,23 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("AltaFijacion" + fijacionSAP.ToXml());
-                var f = fijacionSAP.FijacionSAP.PadLeft(10, '0');
                 //if (repositorio.Existe<FijacionDePrecioContrato>(x => x.FijacionSAP == f)) {
                 //    oEntityErrors.ListaErrores.Add( new ErrorMessage("Fijacion", "la fijacion ya existe en DataAgro"));
                 //    return oEntityErrors;
                 //}
-                var fijarId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == f, x => x.Id);
+                var aFijar = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacionSAP.ContratoSAP.PadLeft(10, '0'));
 
                 var fijacion = new FijacionDePrecioContrato();
+                if (aFijar != null)
+                {
+                    fijacion.ClasificacionContrato = aFijar.Clasificacion.Descripcion.ToUpper();
+                }
                 fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
                 fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
                 fijacion.TrigoEspecial = fijacionSAP.TrigoEspecial == "X";
                 fijacion.PagoCBU = fijacionSAP.CUENTA_MRP;
                 fijacion.ContratoSAP = fijacionSAP.ContratoSAP.PadLeft(10, '0');
-                fijacion.ContratoId = fijarId != 0 ? fijarId : (int?)null;
+                fijacion.ContratoId = aFijar != null ? aFijar.Id : (int?)null;
                 fijacion.Precio = fijacionSAP.Precio;
                 fijacion.Cantidad = (double)fijacionSAP.Cantidad;
                 fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);

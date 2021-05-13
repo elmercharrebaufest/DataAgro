@@ -2258,7 +2258,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaBasisDivVisualizar").hide();
     $("#divPosicionCBOT").hide();
 
-    if (precioNeto != 0 || tipo === "A FIJAR") {
+    if (precioNeto != 0  || tipo === "A FIJAR") {
         $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
         $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
 
@@ -2297,6 +2297,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                         if (precioNeto > 0) {
                             $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                         }
+
+                        break;
                     }
                 case 5:
                     if (concepto.Importe) {
@@ -2315,10 +2317,11 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
             }
             visualizacionRowDoble("aperturaFinancieroDivVisualizar", "visualizar_aperturaFinanciero", "aperturaRedespachoDivVisualizar", "visualizar_aperturaRedespacho");
             visualizacionRowDoble("aperturaComisionesDivVisualizar", "visualizar_aperturaComisiones", "aperturaBonificacionesDivVisualizar", "visualizar_aperturaBonificaciones");
-            if (tipo === "A FIJAR") {
-                $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
-            }
+          
         });
+        if (tipo === "A FIJAR") {
+            $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
+        }
     }
     if ((nivelTarifa == "" || nivelTarifa == "null") && tarifaFlete == "null") {
         $("#fleteDivVisualizar").hide();
