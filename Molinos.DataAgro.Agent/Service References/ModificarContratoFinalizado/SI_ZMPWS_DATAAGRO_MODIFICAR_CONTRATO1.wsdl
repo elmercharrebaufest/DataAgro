@@ -46,6 +46,11 @@
           <xsd:maxLength value="60" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char7">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="7" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="cuky5">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="5" />
@@ -251,6 +256,7 @@
           <xsd:element name="MONEDA_DEUDA" type="rfc:cuky5" />
           <xsd:element name="MONTO_DEUDA" type="rfc:curr13.2" />
           <xsd:element name="DESC_INSUMOS" type="rfc:char79" />
+          <xsd:element name="POSICION_CBOT" type="rfc:char7" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">
@@ -289,6 +295,7 @@
         <xsd:sequence>
           <xsd:element name="CONTRATO" type="rfc:char10" />
           <xsd:element name="DETALLE" type="rfc:ZMPES5270" />
+          <xsd:element name="POSICION_CBOT" type="rfc:char7" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
@@ -326,10 +333,10 @@
   </wsdl:binding>
   <wsdl:service name="SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOService">
     <wsdl:port name="HTTP_Port" binding="p1:SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOBinding">
-      <address location="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <address location="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
     </wsdl:port>
     <wsdl:port name="HTTPS_Port" binding="p1:SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOBinding">
-      <address location="https://GSLOPIDEVQA00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <address location="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATO&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -641,6 +641,8 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         
         private string dESC_INSUMOSField;
         
+        private string pOSICION_CBOTField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -1553,6 +1555,18 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=76)]
+        public string POSICION_CBOT {
+            get {
+                return this.pOSICION_CBOTField;
+            }
+            set {
+                this.pOSICION_CBOTField = value;
+                this.RaisePropertyChanged("POSICION_CBOT");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -1575,6 +1589,8 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         
         private ZMPES5270 dETALLEField;
         
+        private string pOSICION_CBOTField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string CONTRATO {
@@ -1596,6 +1612,18 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
             set {
                 this.dETALLEField = value;
                 this.RaisePropertyChanged("DETALLE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string POSICION_CBOT {
+            get {
+                return this.pOSICION_CBOTField;
+            }
+            set {
+                this.pOSICION_CBOTField = value;
+                this.RaisePropertyChanged("POSICION_CBOT");
             }
         }
         

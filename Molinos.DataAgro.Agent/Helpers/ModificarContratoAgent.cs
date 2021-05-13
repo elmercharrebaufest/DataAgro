@@ -232,7 +232,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                 }
                 var listaApertura = new List<ZMPES5440>();
-                if (contrato.TipoNegocioId == 2 && contrato.AperturaPrecio != null)
+                if (contrato.AperturaPrecio != null)
                 {
                     var listaAperturaPrecios = repositorio.Listar<ConceptoAperturaPrecio>();
                     foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
@@ -243,7 +243,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             {
                                 CONCEPTO = listaAperturaPrecios.FirstOrDefault(x => x.Id == apertura.ConceptoAperturaPrecioId).CodigoSap,
                                 IMPORTE = apertura.Importe,
-                                MONEDA = contrato.MonedaId,
+                                MONEDA = contrato.TipoNegocioId == 1 ? apertura.MonedaId : contrato.MonedaId,
                                 PORC = apertura.Porcentaje
                             });
                         }
@@ -257,7 +257,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
-                string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : "";                
+                string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : "";
                 string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                 string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
                 string especialString = contrato.Calidad != null && contrato.Calidad.Count > 0 ? "4" : "1";
@@ -330,12 +330,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.PrecioAjusteComision != contrato.PrecioAjusteComision ||
                     contratoGuardado.MonedaAjusteComisionId != contrato.MonedaAjusteComisionId ||
                     contratoGuardado.ChequeElectronico != contrato.ChequeElectronico ||
-                    contratoGuardado.DolarizadoExpress != contrato.DolarizadoExpress || 
+                    contratoGuardado.DolarizadoExpress != contrato.DolarizadoExpress ||
                     contratoGuardado.PagoCBU != contrato.PagoCBU || contratoGuardado.Canje != contrato.Canje ||
-                    contratoGuardado.Monto != contrato.Monto || contratoGuardado.Insumo != contrato.Insumo || 
-                    contratoGuardado.MonedaCanjeId != contrato.MonedaCanjeId || 
+                    contratoGuardado.Monto != contrato.Monto || contratoGuardado.Insumo != contrato.Insumo ||
+                    contratoGuardado.MonedaCanjeId != contrato.MonedaCanjeId ||
                     contratoGuardado.PrestamoDevolucion != contrato.PrestamoDevolucion ||
-                    contratoGuardado.PlantaDestinoId != contrato.PlantaDestinoId ;
+                    contratoGuardado.PosicionCBOT != contrato.PosicionCBOT ||
+                    contratoGuardado.PlantaDestinoId != contrato.PlantaDestinoId;
 
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||
@@ -431,7 +432,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "",
                             FLETE_TARIFA = contrato.TarifaFlete ?? 0,
                             FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
-                            PORCPARCIAL = contrato.PorcentajeDePago?? (decimal)97.5,
+                            PORCPARCIAL = contrato.PorcentajeDePago ?? (decimal)97.5,
                             AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "",
                             CARATULA = contrato.CaratulaMAT,
                             CARATULA_EXT = contrato.CaratulaExtension,
@@ -439,13 +440,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MONEDA_COM_MAT = contrato.MonedaAjusteComisionId,
                             FECHA_CREACION = fechaContrato.ToString("yyyy-MM-dd"),
                             ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
-                            DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X":"",
+                            DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
                             CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
                             PLANTA_DEST = contrato.PlantaDestinoId != null ? repositorio.Obtener<Centro, string>(x => contrato.PlantaDestinoId == x.Id, x => x.CodigoSap) : repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
                             CANJE = contrato.Canje == true ? "X" : "",
                             DESC_INSUMOS = contrato.Insumo,
                             MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
-                            MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0
+                            MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0,
+                            POSICION_CBOT = contrato.PosicionCBOT
                         }
                     }
                 };

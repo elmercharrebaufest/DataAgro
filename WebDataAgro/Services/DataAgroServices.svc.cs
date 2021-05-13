@@ -322,6 +322,10 @@ namespace WebDataAgro.Services
                 aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
                 aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
             }
+            //foreach (var item in aperturas.Where(a => string.IsNullOrEmpty(a.MonedaId)))
+            //{
+            //    item.MonedaId
+            //}
             if (esActualizar)
             {
                 if (contratoOriginal.AperturaPrecio != null && contratoOriginal.AperturaPrecio.Count() == 0 && !aperturas.Any(a => a.Importe != 0 || a.Porcentaje != 0))
