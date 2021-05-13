@@ -49,23 +49,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
                     var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
 
-
-                    //if (oContrato != null && oContrato.PorcentajeSobrePrecio == 0 && oContrato.ImporteSobrePrecio == 0 &&
-                    //    (oContrato.Aperturas == null || !oContrato.Aperturas.Any(x => x.Importe > 0 || x.Porcentaje > 0))
-                    //    )
-                    //{
-                    //    conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
-                    //    conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
-                    //}
-
-                    //if (oContrato != null && oContrato.Aperturas != null
-                    //    && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (x.Importe > 0)))
-                    //{
-                    //    conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
-                    //}
-
-                    //if (fijacion.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).First().Porcentaje > 0)
-                    if (oContrato != null && oContrato.ImporteSobrePrecio == 0)
+                    if ((oContrato != null && oContrato.ImporteSobrePrecio == 0)
+                        || fijacion.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && a.Porcentaje > 0)
+                        )
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
                     }
