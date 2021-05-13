@@ -1409,9 +1409,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oContrato.AperturaPrecio != null && oContrato.AperturaPrecio.Count > 0)
             {
-                if (oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) {
+                if (oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
+                {
                     var redespacho = oContrato.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho);
-                    redespacho.Importe = -1 * Math.Abs(redespacho.Importe);                  
+                    redespacho.Importe = -1 * Math.Abs(redespacho.Importe);
                 }
                 oContratoSave.AperturaPrecio = oContrato.AperturaPrecio;
             }
@@ -4536,7 +4537,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 ConceptoAperturaPrecioId = y.ConceptoAperturaPrecioId,
                 Importe = y.Importe,
-                MonedaId = negocio.MonedaId,
+                MonedaId = negocio.TipoNegocioId == 1 ? y.MonedaId : negocio.MonedaId,
                 Porcentaje = y.Porcentaje
             }).ToList() : new List<AperturaPrecioDto>();
 

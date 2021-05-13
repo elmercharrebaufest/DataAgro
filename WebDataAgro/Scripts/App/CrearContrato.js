@@ -1122,6 +1122,23 @@ function InicializarElementos() {
         }
     });
 
+    $("#precioMonedaAFijarId").kendoDropDownList({
+        optionLabel: "MONEDA...",
+        dataTextField: "Descripcion",
+        dataValueField: "MonedaId",
+        change: function () {
+            var moneda = $("#precioMonedaId").val();
+            if ($("#precioMonedaAFijarId").val()) {
+                $(".aperturaprecioMoneda").text($("#precioMonedaAFijarId").data("kendoDropDownList").text());
+                moneda = $("#precioMonedaAFijarId").data("kendoDropDownList").text();
+            } else {
+                $("#precioMonedaAFijarId").data("kendoDropDownList").value("ARP  ");
+                $(".aperturaprecioMoneda").text($("#precioMonedaAFijarId").data("kendoDropDownList").text());
+                moneda = $("#precioMonedaAFijarId").data("kendoDropDownList").text();
+            }
+        }
+    });
+
     $("#monedaAjusteComisionId").kendoDropDownList({
         optionLabel: "MONEDA...",
         dataTextField: "Descripcion",
@@ -3821,6 +3838,7 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $("#pizarraId").prop("checked", false);
     }
+
     if (!hijo || contrato.TipoNegocioId == 1) {
 
         if (contrato.AperturaPrecios != null && contrato.AperturaPrecios.length != 0) {
@@ -3832,12 +3850,14 @@ function CargarDatosEditar(contrato, hijo) {
             $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 3; }).Porcentaje);
             $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 4; }).Importe);
             $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 4; }).Porcentaje);
-            $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 5; }).Importe);
-
+            if (contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 5; }) != null) {
+                $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value(contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 5; }).Importe);
+            }
 
         }
         if (contrato.TipoNegocioId == 1) {
-            InsertarAperturasViewModel();
+            $("#precioMonedaAFijarId").data("kendoDropDownList").value(contrato.AperturaPrecios.find(function (x) { return x.ConceptoAperturaPrecioId == 1; }).MonedaId);
+            InsertarAperturasViewModelAFijar();
         } else {
             InicializarEditarContratoApertura();
             if (Number($("#precioId").val().replace(',', '.')) > 0) {
@@ -3987,7 +4007,53 @@ function CargarDatosEditar(contrato, hijo) {
     }
     VisualizarFechaCierta();
 }
+function InsertarAperturasViewModelAFijar() {
+    var Financiero = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 1,
+        Importe: $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(),
+        MonedaId: $("#precioMonedaAFijarId").val()
+    };
+    var Redespacho = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 2,
+        Importe: $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(),
+        MonedaId: $("#precioMonedaAFijarId").val()
+    };
+    var Comisiones = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 3,
+        Importe: $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(),
+        MonedaId: $("#precioMonedaAFijarId").val(),
+    };
+    var Bonificaciones = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 4,
+        Importe: $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(),
+        MonedaId: $("#precioMonedaAFijarId").val(),
+    };
 
+    var Basis = {
+        Id: 0,
+        ConceptoAperturaPrecioId: 5,
+        Importe: $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value(),
+        MonedaId: $("#precioMonedaAFijarId").val(),
+    };
+
+    viewModel.AperturaPrecio = [];
+    viewModel.AperturaPrecio.push(Financiero);
+    viewModel.AperturaPrecio.push(Redespacho);
+    viewModel.AperturaPrecio.push(Comisiones);
+    viewModel.AperturaPrecio.push(Bonificaciones);
+    viewModel.AperturaPrecio.push(Basis);
+    $('#modalAperturaPrecio').modal('hide');
+    if (viewModel.AperturaPrecio.some(x => x.ConceptoAperturaPrecioId == 5 && x.Importe)) {
+        $("#posicionCBOTDiv").show();
+    } else {
+        $("#posicionCBOTDiv").hide();
+        $("#posicionCBOTId").val("");
+    }
+}
 function LimpiarApertura() {
     var iteraciones = viewModel.AperturaPrecio.length;
     for (i = 0; i < iteraciones; i++) {
@@ -4260,7 +4326,6 @@ function InicializarAperturaDePrecios() {
         culture: "es-AR",
         format: "n2",
         spinners: false,
-        min: 0
     });
     $("#aperturaPrecioImporteBonificacionesId").kendoNumericTextBox({
         culture: "es-AR",

@@ -29,6 +29,7 @@
             $(document).ready(function () {
                 model = '@Html.Raw(Json.Encode(ViewBag.Obj))';
                 var negocioCargado = JSON.parse(model);
+                console.log(negocioCargado);
                 CargarDatosEditar(negocioCargado);
             });
 
@@ -446,22 +447,22 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row ampliar">
 
-        @*<div id="LabelPrecio" class="col-sm-2 ">
-                <label>Precio Base</label>
+        <div id="@*LabelPrecio*@" class="col-sm-2">
+                <label>Apertura de precio</label>
             </div>
-            <div id="DivPrecioMoneda" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
-                <div class="col-xs-7 col-md-6 noPadding">
+            <div id="@*DivPrecioMoneda*@" class="col-xs-12 col-sm-5 col-md-4 required-box-parent">
+                @*<div class="col-xs-7 col-md-6 noPadding">
                     <input id="precioId" class="required-box gris" style="width:100%; margin:0" />
                     <img id="errprecioId" src="~/Content/Images/error.png" style="display:none" />
-                </div>
-                <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="float:right; display:inline-flex;">
-                    <div class="w70" id="ocultarAperturaMoneda">
+                </div>*@
+                <div class="col-xs-4 col-md-5 noPadding" id="fijacion" style="display:inline-flex;">
+                    @*<div class="w70" id="ocultarAperturaMoneda">
                         <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
                         <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
 
-                    </div>
+                    </div>*@
                     <div class="w30" id="ocultarAperturaBtn">
                         <span style="display:inline-block" id="botonAperturaDePrecio">
                             <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
@@ -472,7 +473,7 @@
                     </div>
                 </div>
 
-            </div>*@
+            </div>
         <div id="posicionFasonDiv" class="fason agente" hidden>
             <div class="col-sm-1">
                 <label>Posición</label>
@@ -999,17 +1000,17 @@
                 <input type="text" id="PorcentajeDescuentoId" class="campo-input-text k-textbox" placeholder="(comision)" style="width: 80%" max="1" />%
                 <img id="errPorcentajeDescuentoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-xs-6 col-md-2 w30" id="ocultarAperturaBtn">
+            @*<div class="col-xs-6 col-md-2 w30" id="ocultarAperturaBtn">
                 <span style="display:inline-block" id="botonAperturaDePrecio">
                     <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
                         <i class="fa fa-table"></i>
                     </span>
                 </span>
 
-            </div>
+            </div>*@
         </div>
 
-        <div class="row" hidden>
+        @*<div class="row" hidden>
             <div class="col-sm-3 col-md-2 col-md-offset-2">
                 <label>Apertura de precio</label>
             </div>
@@ -1018,16 +1019,16 @@
                 <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-3 col-md-2">
-                <div style="width: 20%" @*id="ocultarAperturaBtn"*@>
-                    <span style="display:inline-block" @*id="botonAperturaDePrecio"*@>
-                        <span class="k-button k-button-icontext" @*id="aperturaPrecioBtn"*@ data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
+                <div style="width: 20%" id="ocultarAperturaBtn">
+                    <span style="display:inline-block" id="botonAperturaDePrecio">
+                        <span class="k-button k-button-icontext" id="aperturaPrecioBtn" data-toggle="tooltip" data-placement="top" title="Apertura de Precio">
                             <i class="fa fa-table"></i>
                         </span>
                     </span>
 
                 </div>
             </div>
-        </div>
+        </div>*@
 
         <br />
         <div id="tabla-descuentos" data-template="div-template" data-bind="source:Descuentos">
