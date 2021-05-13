@@ -29,6 +29,8 @@ $(document).ready(function () {
     precioRojo.removeClass("required-border");
     $("#porcentajeLabel").html("Total");
     $(".noAFijar").hide();
+    $("#precioId").data("kendoNumericTextBox").value("");
+    $("#precioTotalApertura").data("kendoNumericTextBox").value("");
 });
 
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
@@ -3363,6 +3365,9 @@ function InicializarAcuerdoEdit() {
 
 function CargarDatosEditar(contrato, hijo) {
     InicializarBordesRojos();
+    $("#precioId").data("kendoNumericTextBox").value("");
+    $("#precioTotalApertura").data("kendoNumericTextBox").value("");
+    $("#precioMonedaId").val("");
     $("#buscadorCorredor").val(contrato.Corredor);
     $("#buscadorCorredor").trigger("change");
     if (contrato.Corredor != null && contrato.Corredor != "") {
@@ -3383,11 +3388,12 @@ function CargarDatosEditar(contrato, hijo) {
         //$("#fechaFijacionId").val("");
 
     }
-    if (contrato.Precio != null && contrato.Precio > 0) {
+  
+    if (contrato.Precio != null && contrato.Precio > 0 && contrato.TipoNegocioId != 1) {
         $("#precioId").data("kendoNumericTextBox").value(contrato.Precio);
         $("#precioMonedaId").val(contrato.MonedaId);
     }
-    if (contrato.PrecioNeto != null) {
+    if (contrato.PrecioNeto != null && contrato.TipoNegocioId != 1) {
         $("#precioTotalApertura").data("kendoNumericTextBox").value(contrato.PrecioNeto);
     }
 
