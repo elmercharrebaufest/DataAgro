@@ -49,8 +49,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
                     var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
 
+                    var importeComisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault().Importe;
+                    var modificoImporteComisionesAFijarViejo = (oContrato.Aperturas == null || oContrato.Aperturas.Count == 0)
+                                                            && importeComisiones != 0
+                                                            && oContrato.ImporteSobrePrecio != 0
+                                                            && importeComisiones != oContrato.ImporteSobrePrecio;
+
                     if ((oContrato != null && oContrato.ImporteSobrePrecio == 0)
                         || fijacion.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && a.Porcentaje > 0)
+                        || modificoImporteComisionesAFijarViejo
                         )
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
