@@ -214,7 +214,7 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     } else {
         $("#baseId").prop("checked", false);
     }
-        
+
     if (contrato.Fecha_DolarizadoFormateado !== null && contrato.Fecha_DolarizadoFormateado !== undefined && contrato.Fecha_DolarizadoFormateado !== "") {
         $("#dolarizadoId").prop("checked", true);
         $("#dolarizadoDiv").show();
@@ -379,25 +379,25 @@ function ObtenerDatos(error) {
     var minuto = hoy.getMinutes();
     var maniana = new Date();
     maniana = new Date(maniana.setMonth(maniana.getMonth() + 1));
-    
+
 
     obj.TipoNegocioId = $("#tipoId").val();
     obj.Id = Id == null || Id == undefined || Id == "" ? 0 : Id;
     obj.MaterialId = $("#material").val() == null || $("#material").val() == undefined || $("#material").val() == "" ? 0 : $("#material").val();
-    obj.Cantidad = $("#cantidadId").val() == null || $("#cantidadId").val() == undefined || $("#cantidadId").val() == "" ? 0 : $("#cantidadId").val(); 
+    obj.Cantidad = $("#cantidadId").val() == null || $("#cantidadId").val() == undefined || $("#cantidadId").val() == "" ? 0 : $("#cantidadId").val();
     obj.Precio = $("#precioId").val() == null || $("#precioId").val() == undefined || $("#precioId").val() == "" ? 0 : $("#precioId").val();
     obj.PrecioNeto = $("#precioTotalApertura").val();
     obj.FechaEntrega = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
     obj.CampanaId = $("#campanaId").val();
     //if (TipoId != "3") {
-        obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
-        obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
+    obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
+    obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
     //} else {
     //    obj.FechaDesde = formatearFecha(hoy);
     //    obj.FechaHasta = formatearFecha(maniana);
     //}
     obj.Fecha = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaFijacionId").val());
-    obj.MonedaId = $("#precioMonedaId").val();    
+    obj.MonedaId = $("#precioMonedaId").val();
     obj.PosicionCBOT = $("#posicionCBOTId").val();
 
     if (obj.TipoNegocioId == "3" || obj.TipoNegocioId == "4") {
@@ -406,7 +406,7 @@ function ObtenerDatos(error) {
     }
     if (obj.TipoNegocioId == "1" || obj.TipoNegocioId == "2") {
         obj.PorcentajeDePago = $("#porcentajeDePagoId").data("kendoNumericTextBox").value();
-        
+
     }
 
     obj.ComercialId = $("#comercialId").val();
@@ -416,10 +416,10 @@ function ObtenerDatos(error) {
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
     obj.FechaDesdeSustentable = fechaValida($("#fechaDesdeSustentableId").val()) ? $("#fechaDesdeSustentableId").val() : null;
     obj.FechaHastaSustentable = fechaValida($("#fechaHastaSustentableId").val()) ? $("#fechaHastaSustentableId").val() : null;
-    obj.FechaDolarizado = $("#tipoId").val() == "1" ? "" :$("#dolarizadoFechaId").val();
+    obj.FechaDolarizado = $("#tipoId").val() == "1" ? "" : $("#dolarizadoFechaId").val();
     obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
     obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false;
-    obj.Dolarizado = $("#tipoId").val() == "1" ? false: $("#dolarizadoId").is(":checked") ? true : false;
+    obj.Dolarizado = $("#tipoId").val() == "1" ? false : $("#dolarizadoId").is(":checked") ? true : false;
     obj.Sustentable = $("#sustentableId").is(":checked") ? true : false;
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
@@ -429,8 +429,14 @@ function ObtenerDatos(error) {
     obj.ClasificacionId = $("#clasificacion").val() == null || $("#clasificacion").val() == undefined || $("#clasificacion").val() == "" ? 0 : $("#clasificacion").val();
     obj.CantidadCamiones = $("#cantidadCamionesId").val() == null || $("#cantidadCamionesId").val() == undefined || $("#cantidadCamionesId").val() == "" ? 0 : $("#cantidadCamionesId").val();
     obj.EstablecimientoPropio = $("#establecimientoPropioId").is(":checked") ? true : $("#establecimientoArrendadoId").is(":checked") ? false : null;
-    obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? formatearFecha(hoy) : $("#fechaDesdeTopeId").val(); 
-    obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? formatearFecha(maniana) : $("#fechaHastaTopeId").val();
+    if (obj.TipoNegocioId == 6) {
+        obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? null : $("#fechaDesdeTopeId").val();
+        obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? null : $("#fechaHastaTopeId").val();
+    } else {
+        obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? formatearFecha(hoy) : $("#fechaDesdeTopeId").val();
+        obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? formatearFecha(maniana) : $("#fechaHastaTopeId").val();
+    }
+
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
     obj.DestinoId = $("#destinoId").val();
     obj.planCanje = $("#planCanjeId").is(":checked") ? true : false;
@@ -442,7 +448,7 @@ function ObtenerDatos(error) {
     obj.NivelTarifaId = $("#NivelTarifaId").val();
     obj.TarifaFlete = $("#TarifaFleteId").val();
     obj.ChequeElectronico = $("#tipoId").val() == "2" ? $("#chequeElectronicoInput").is(":checked") ? true : false : $("#chequeElectronico").is(":checked") ? true : false;
-    obj.DolarizadoExpress = $("#tipoId").val() == "1" ? false :$("#tipoId").val() == "3" ? $("#expressId").is(":checked") ? true : false : $("#dolarizadoExpressId").is(":checked") ? true : false;
+    obj.DolarizadoExpress = $("#tipoId").val() == "1" ? false : $("#tipoId").val() == "3" ? $("#expressId").is(":checked") ? true : false : $("#dolarizadoExpressId").is(":checked") ? true : false;
     obj.PagoCBU = $("#tipoId").val() == "2" ? $("#pagoCbu").val() : $("#pagoCbuInput").val();
 
     if ($("#boletoConfirmaId").is(':checked')) {
@@ -464,7 +470,7 @@ function ObtenerDatos(error) {
     var proveedorId;
     var corredorId;
     if ($("#buscadorProveedor").val() != "") {
-        var cuitAux = $("#buscadorProveedor").val().split('(');      
+        var cuitAux = $("#buscadorProveedor").val().split('(');
         if (cuitAux[1]) {
             var cuit = cuitAux[1].split(')');
             proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
@@ -594,10 +600,10 @@ function ObtenerDatos(error) {
             $("#motivoOperacionAnteriorId").val($('#motivoAnterior').data("kendoDropDownList").text());
             obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
         }
-      
+
     }
     if (obj.TipoNegocioId == 3) {
-        obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionId").val(); 
+        obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionId").val();
 
         if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "") {
             obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
@@ -609,11 +615,11 @@ function ObtenerDatos(error) {
 
     if (obj.TipoNegocioId == 5) {
         obj.FechaOperacion = $("#fechaOperacionAgenteId").val() == null || $("#fechaOperacionAgenteId").val() == undefined || $("#fechaOperacionAgenteId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionAgenteId").val();
-      
+
     }
 
-    if ($("#canjeId").is(":checked") == true) {       
-        obj.Canje = true;        
+    if ($("#canjeId").is(":checked") == true) {
+        obj.Canje = true;
         obj.MonedaCanjeId = $("#montoMonedaId").data("kendoDropDownList").value();
         obj.Insumo = $("#insumoId").val();
         obj.Monto = $("#montoId").data("kendoNumericTextBox").value();
