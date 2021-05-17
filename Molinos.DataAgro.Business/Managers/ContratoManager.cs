@@ -730,7 +730,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (config != null)
                 {
-                    var fechaLimite = oParam.FechaOperacion.AddDays(cantidadDias);
+                    var fechaLimite = oParam.FechaDesde.AddDays(cantidadDias);
                     if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
                         oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");

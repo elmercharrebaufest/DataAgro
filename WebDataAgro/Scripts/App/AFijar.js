@@ -2283,16 +2283,16 @@ function InicializarElementos() {
     $("#PorcentajeDescuentoId").val("");
 
     $('select[id="tipoPeriodoDBId"]').change(function () {
-        $("#ocultarAperturaBtn").hide();
+        //$("#ocultarAperturaBtn").hide();
         $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
         if ($(this).val() == 1) {
             $(".fecha-descuento").hide();
             $(".fecha-descuento-pendiente").hide();
             $("#fechaHastaDescuentoId").val("");
             $("#fechaDesdeDescuentoId").val("");
-            if ($("#TipoDBId").val() == 1) {
-                $("#ocultarAperturaBtn").show();
-            }
+            //if ($("#TipoDBId").val() == 1) {
+            //    $("#ocultarAperturaBtn").show();
+            //}
         }
         else {
             $(".fecha-descuento").show();
@@ -2302,11 +2302,11 @@ function InicializarElementos() {
         }
     });
     $('select[id="TipoDBId"]').change(function () {
-        $("#ocultarAperturaBtn").hide();
+        //$("#ocultarAperturaBtn").hide();
         $("#ImporteDescuentoId").data("kendoNumericTextBox").value('');
-        if ($(this).val() == 1 && $("#tipoPeriodoDBId").val() == 1) {
-            $("#ocultarAperturaBtn").show();
-        }
+        //if ($(this).val() == 1 && $("#tipoPeriodoDBId").val() == 1) {
+        //    $("#ocultarAperturaBtn").show();
+        //}
     });
 
     $("#IngresarDescuento").click(AgregarDescuentos);
@@ -2916,7 +2916,7 @@ function AsignarDatos() {
     viewModel.set("NivelTarifaCombo", datosIniCrearContrato.Datos.NivelTarifa);
     viewModel.set("ZonasCombo", datosIniCrearContrato.Datos.Zona);
 
-    viewModel.set("TipoPeriodoDBCombo", datosIniCrearContrato.Datos.TipoPeriodoDB);
+    viewModel.set("TipoPeriodoDBCombo", [datosIniCrearContrato.Datos.TipoPeriodoDB[0], datosIniCrearContrato.Datos.TipoPeriodoDB[2]]);
     viewModel.set("TipoDBCombo", datosIniCrearContrato.Datos.TipoDB);
     viewModel.set("DescuentoMonedaCombo", datosIniCrearContrato.Datos.MonedaDescuento);
 
@@ -3147,11 +3147,11 @@ function validarDescuento(descuento) {
     //if (descuento.TipoPeriodoDBId != 1 && (descuento.FechaDesde == "" || descuento.FechaDesde == undefined || descuento.FechaHasta == "" || descuento.FechaHasta == undefined)) {
     //    errores.push("La fecha no puede estar vacía");
     //}
-    //var fechaD = kendo.parseDate(descuento.FechaDesde, "dd-MM-yyyy");
-    //var fechaH = kendo.parseDate(descuento.FechaHasta, "dd-MM-yyyy");
-    //if (descuento.TipoPeriodoDBId != 1 && (!fechaD || !fechaH)) {
-    //    errores.push("La fecha no es válida");
-    //}
+    var fechaD = kendo.parseDate(descuento.FechaDesde, "dd-MM-yyyy");
+    var fechaH = kendo.parseDate(descuento.FechaHasta, "dd-MM-yyyy");
+    if (descuento.TipoPeriodoDBId != 1 && (!fechaD || !fechaH)) {
+        errores.push("La fecha no es válida");
+    }
     if (descuento.Importe == 0 && descuento.Porcentaje == 0) {
         errores.push("El campo Importe y Porcentaje no pueden estar vacíos");
     }
@@ -3162,20 +3162,32 @@ function validarDescuento(descuento) {
     if (descuento.Porcentaje > 1 /*&& $("#canjeId").is(":checked")*/) {
         errores.push("El campo Porcentaje no puede ser mayor al 1% cuando hay Canje");
     }
+    var topeD = kendo.parseDate($("#fechaDesdeTopeId").val(), "dd-MM-yyyyy");
+    var topeH = kendo.parseDate($("#fechaHastaTopeId").val(), "dd-MM-yyyyy");
 
+    if (descuento.TipoPeriodoDBId != 1 && (fechaD < topeD || fechaH > topeH)) {
+        errores.push("El descuento o bonificación que intenta agregar esta fuera del rango de la fijacion.");
+    }
     if (descuentos != undefined && descuentos != null && descuentos.length > 0) {
         for (var i = 0; i < descuentos.length; i++) {
-
-            if (descuentos[i].TipoPeriodoDBId == descuento.TipoPeriodoDBId &&
-                descuentos[i].TipoDBId == descuento.TipoDBId //&&
-                //descuentos[i].Importe == descuento.Importe &&
-                //descuentos[i].Porcentaje == descuento.Porcentaje &&
-                //descuentos[i].MonedaId == descuento.MonedaId || descuentos[i].TipoDBDesc == descuento.TipoDBDesc
+            console.log(descuento.FechaDesde);
+            if (descuentos[i].TipoPeriodoDBId == descuento.TipoPeriodoDBId && descuentos[i].TipoDBId == descuento.TipoDBId
+                && descuentos[i].TipoPeriodoDBId == 1
             ) {
-
                 sonIguales = true;
                 break;
             }
+
+            if (descuentos[i].TipoPeriodoDBId == descuento.TipoPeriodoDBId && descuentos[i].TipoDBId == descuento.TipoDBId
+                && descuentos[i].TipoPeriodoDBId != 1 && descuento.TipoPeriodoDBId != 1) {
+                var descD = kendo.parseDate(descuentos[i].FechaDesde, "dd-MM-yyyyy");
+                var descH = kendo.parseDate(descuentos[i].FechaHasta, "dd-MM-yyyyy");
+                if ((descD >= fechaD && descD < fechaH) || (descH >= fechaD && descH < fechaH)) {
+                    sonIguales = true;
+                    break;
+                }                
+            }
+
 
         }
     }

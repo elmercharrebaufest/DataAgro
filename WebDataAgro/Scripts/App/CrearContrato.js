@@ -3023,7 +3023,7 @@ function AsignarDatos() {
     viewModel.set("NivelTarifaCombo", datosIniCrearContrato.Datos.NivelTarifa);
     viewModel.set("ZonasCombo", datosIniCrearContrato.Datos.Zona);
 
-    viewModel.set("TipoPeriodoDBCombo", datosIniCrearContrato.Datos.TipoPeriodoDB);
+    viewModel.set("TipoPeriodoDBCombo", [datosIniCrearContrato.Datos.TipoPeriodoDB[0]]);
     viewModel.set("TipoDBCombo", datosIniCrearContrato.Datos.TipoDB);
     viewModel.set("DescuentoMonedaCombo", datosIniCrearContrato.Datos.MonedaDescuento);
 

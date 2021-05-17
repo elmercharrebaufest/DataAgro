@@ -414,6 +414,22 @@
                         <span id="cond-pago"></span>
                     </div>
                 </div>
+                <div style="display:inline-block" id="gridDescuentosPorFechadiv">
+                    <div class="condicion" style="display:inline-block">
+                        <div id="gridDescuentosPorFecha" data-template="gridDescuentosPorFecha-template" data-bind="source:DescuentosPorFechaList">
+                        </div>
+                        <script id="gridDescuentosPorFecha-template" type="text/x-kendo-template">
+                            <div>
+                                <div style="display:inline-block">
+                                    Desc por Fecha de Fijacion Desde: <span> #: FechaDesde#  </span>
+                                    Hasta: <span> #:FechaHasta#</span>
+                                    Importe: <span> #:Importe# #:MonedaId#</span>
+                                </div>
+                                <br />
+                            </div>
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="CantidadCamionesDiv" class="noFason noAgente noAcuerdo">

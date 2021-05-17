@@ -331,7 +331,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (conf != null)
                 {
                     var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? conf.CantidadDiasDolarizadoLimiteMaximo : conf.CantidadDias;
-                    var fechaLimite = oParam.FechaOperacion.AddDays(cantidadDias);
+                    var fechaLimite = oParam.FechaDesde.AddDays(cantidadDias);
                     if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
                         oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
@@ -397,7 +397,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoId = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacionSap);
 
             var tipoCambio = oFijacionDePrecio.Id != 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
-            var fechaDolarizado = oFijacionDePrecio.FechaOperacion.AddDays(30);
+            var fechaDolarizado = oFijacionDePrecio.FechaDesde.AddDays(30);
             var proveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oFijacionDePrecio.ProveedorId, x => x.CUIT);
             var corredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oFijacionDePrecio.CorredorId, x => x.CUIT);
             CargarDolarizado(oFijacionDePrecio, oFijacionDePrecioSave, oContratoId, fechaDolarizado, proveedor, corredor);
@@ -1204,7 +1204,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var Dolarizado = oContratoSave.Dolarizado ?? false;
                 var fechaDolarizado = oContratoSave.FechaDolarizado;
 
-                CargarDolarizado(oContrato, oContratoSave, oContratoId, oContrato.FechaOperacion.AddDays(30), proveedor, corredor);
+                CargarDolarizado(oContrato, oContratoSave, oContratoId, oContrato.FechaDesde.AddDays(30), proveedor, corredor);
                 error = ValidarLiquidacionParaFijacion(oContratoSave, DolarizadoExpress, DolarizadoCorredor, Dolarizado, fechaDolarizado);
                 if (error.HayError)
                 {
@@ -1291,7 +1291,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? conf.CantidadDiasDolarizadoLimiteMaximo : conf.CantidadDias;
 
-                    var fechaLimite = oContrato.FechaOperacion.AddDays(cantidadDias);
+                    var fechaLimite = oContrato.FechaDesde.AddDays(cantidadDias);
                     if (oContrato.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
                         result.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");

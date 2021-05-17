@@ -57,7 +57,7 @@ namespace WebDataAgro.Controllers
         private readonly IConfiguracionInternaManager configuracionInternaManager;
         private IConfiguracionManager mobjConfiguracionManager;
         private ITipoDeCambioAgent tipoDeCambioAgent;
- 
+
 
         //-----------------------------------------------------
         //  Constructor
@@ -68,8 +68,8 @@ namespace WebDataAgro.Controllers
             IContratoManager oContratoManager, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager,
             ICompraNetManager oCompraNetManager, IComercialManager oComercialManager, ICampañaManager oCampañaManager,
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
-            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager, 
-            IOperadorManager oOperadorManager, INegocioManager oNegocioManager, 
+            IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager,
+            IOperadorManager oOperadorManager, INegocioManager oNegocioManager,
             ITipoDeCambioAgent tipoDeCambioAgent)
         {
             mobjHomeManager = oHomeManager;
@@ -89,7 +89,7 @@ namespace WebDataAgro.Controllers
             mobjConfiguracionManager = configuracionManager;
             mobjNegocioManager = oNegocioManager;
             this.configuracionInternaManager = configuracionInternaManager;
-            this.tipoDeCambioAgent = tipoDeCambioAgent;            
+            this.tipoDeCambioAgent = tipoDeCambioAgent;
         }
 
         //-----------------------------------------------------
@@ -128,17 +128,17 @@ namespace WebDataAgro.Controllers
                 var negocio = typeof(CompraNetController).GetMethod("DeserializarJson").MakeGenericMethod(Type.GetType($"{tipoNegocio.ClaseDescripcion}, Molinos.DataAgro.Entities")).Invoke(null, new object[] { obj }) as Negocio;
                 ViewBag.Obj = mobjContratoManager.NegocioABasicoContrato(negocio);
                 ViewBag.esEdicion = true;
-                return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 || tipoNegocio.TipoNegocioId == 6 ? tipoNegocio.Descripcion.Replace(" ", String.Empty): "CrearContrato");
+                return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 || tipoNegocio.TipoNegocioId == 6 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
             }
             if (id > 0 || (PermisosHelper.Is(PermisosDataAgro.ModificarCanje)))
             {
-                tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) ? 1 : tipoId.HasValue ? tipoId.Value : 2 ;
+                tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) ? 1 : tipoId.HasValue ? tipoId.Value : 2;
                 var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
                 return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 || tipoNegocio.TipoNegocioId == 6 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
             }
 
             return View();
-        }     
+        }
 
         public static Negocio DeserializarJson<T>(string obj) where T : Negocio
         {
@@ -410,7 +410,7 @@ namespace WebDataAgro.Controllers
                 oParam.ComercialId = mobjComercialManager.ComercialAsociado(oParam.CorredorId.HasValue && oParam.CorredorId != 0 ? oParam.CorredorId.Value : oParam.ProveedorId ?? 0);
                 oParam.UsuarioId = PermisosHelper.ObtenerUsuario();
             }
-            if(oParam.EstadoId == (int)EnumEstadoContrato.Finalizado)
+            if (oParam.EstadoId == (int)EnumEstadoContrato.Finalizado)
             {
                 model = mobjFijacionDePrecioContratoManager.ActualizarFijacion(oParam);
             }
@@ -457,7 +457,7 @@ namespace WebDataAgro.Controllers
                             if (item2.Field == "Negocio" && item.Operator == "eq")
                             {
                                 item2.Value = item2.Value.ToString().PadLeft(10, '0');
-                            }                            
+                            }
                         }
                     }
                 }
@@ -571,7 +571,7 @@ namespace WebDataAgro.Controllers
             if (operadores.Count() > 0)
                 proveedores.AddRange(operadores);
 
-            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? x.Alias +" - "+ x.RazonSocial : x.RazonSocial}), JsonRequestBehavior.AllowGet);
+            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? x.Alias + " - " + x.RazonSocial : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
         public ActionResult ListarCorredor(string text = "")
         {
@@ -665,6 +665,22 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        public ActionResult TraerContratoCompletoPorContratoSAP(string contratoSAP)
+        {
+            BasicoContrato contrato = null;
+            contratoSAP = contratoSAP.ToString().PadLeft(10, '0');
+            var ids = mobjContratoManager.TraerContratosPorSap(contratoSAP);
+            if (ids.Count == 1)
+            {
+                contrato = mobjContratoManager.TraerContrato(ids[0].Id);
+            }
+
+            return new JsonResult()
+            {
+                Data = contrato,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
         public ActionResult TraerFijacionCompleto(int id)
         {
             return new JsonResult()
