@@ -351,21 +351,35 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (precio.TipoNegocioId == 1)
                 {
-                    if (repositorio.Existe<PrecioMoa>(x => x.HastaVigencia > precio.DesdeVigencia && x.HastaEntrega >= precio.DesdeEntrega && x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId))
+                    var existe = repositorio.Existe<PrecioMoa>(x =>
+                    ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
+                    && ((precio.DesdeEntrega >= x.DesdeEntrega && precio.DesdeEntrega <= x.HastaEntrega) || (precio.HastaEntrega >= x.DesdeEntrega && precio.HastaEntrega <= x.HastaEntrega))
+                    && x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId);
+
+                    if (existe)
                     {
                         error.Error("Precio", "Existe PrecioMoa para ese Tipo de Negocio, Material y ese rango de entrega y vigencia");
                     }
                 }
                 if (precio.TipoNegocioId == 2)
                 {
-                    if (repositorio.Existe<PrecioMoa>(x => x.HastaVigencia > precio.DesdeVigencia && x.HastaEntrega >= precio.DesdeEntrega && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId))
+                    var existe = repositorio.Existe<PrecioMoa>(x =>
+                    ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
+                    && ((precio.DesdeEntrega >= x.DesdeEntrega && precio.DesdeEntrega <= x.HastaEntrega) || (precio.HastaEntrega >= x.DesdeEntrega && precio.HastaEntrega <= x.HastaEntrega))
+                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId);
+
+                    if (existe)
                     {
                         error.Error("Precio", "Existe PrecioMoa para ese Tipo de Negocio, Material, Moneda y ese rango de entrega y vigencia");
                     }
                 }
                 if (precio.TipoNegocioId == 3)
                 {
-                    if (repositorio.Existe<PrecioMoa>(x => x.HastaVigencia > precio.DesdeVigencia && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId))
+                    var existe = repositorio.Existe<PrecioMoa>(x =>
+                    ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
+                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId);
+
+                    if (existe)
                     {
                         error.Error("Precio", "Existe PrecioMoa para ese Tipo de Negocio, Material, Moneda y ese rango de vigencia");
                     }

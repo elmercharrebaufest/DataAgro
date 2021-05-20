@@ -87,11 +87,11 @@ namespace WebDataAgro.Controllers
 
             }
 
-            if (contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision > 0)
-            {
-                contrato.PrecioNeto = contrato.Precio + ((contrato.Precio + contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe) * contrato.PorcentajeComision.Value / 100);
-                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = contrato.PorcentajeComision.Value;
-            }
+            //if (contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision > 0)
+            //{
+            //    contrato.PrecioNeto = contrato.Precio + ((contrato.Precio + contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe) * contrato.PorcentajeComision.Value / 100);
+            //    contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = contrato.PorcentajeComision.Value;
+            //}
 
             if (contrato.ComercialId.HasValue)
             {
