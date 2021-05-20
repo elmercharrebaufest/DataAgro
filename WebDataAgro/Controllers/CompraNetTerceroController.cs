@@ -60,7 +60,7 @@ namespace WebDataAgro.Controllers
             if (contrato.CorredorId > 0)
             {
                 var corredor = mobjProveedorManager.TraerProveedor(contrato.CorredorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
-                contrato.PorcentajeComision = corredor.Comision;
+                contrato.PorcentajeComision = corredor.Comision ?? 1;
             }
             contrato.UsuarioId = proveedor.RazonSocial;
             contrato.PrecioNeto = contrato.Precio;
@@ -91,11 +91,11 @@ namespace WebDataAgro.Controllers
 
             }
 
-            //if (contrato.PorcentajeComision.HasValue && contrato.PorcentajeComision > 0)
-            //{
-            //    contrato.PrecioNeto = contrato.Precio + ((contrato.Precio + contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe) * contrato.PorcentajeComision.Value / 100);
-            //    contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = contrato.PorcentajeComision.Value;
-            //}
+            if ((contrato.CorredorId == null || contrato.CorredorId == 0) && proveedor.Comision > 0)
+            {
+                contrato.PrecioNeto = contrato.Precio + ((contrato.Precio + contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe) * proveedor.Comision.Value / 100);
+                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = proveedor.Comision.Value;
+            }
 
             if (contrato.ComercialId.HasValue)
             {
