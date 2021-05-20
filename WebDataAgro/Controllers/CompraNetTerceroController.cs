@@ -241,19 +241,27 @@ namespace WebDataAgro.Controllers
 
             }
 
-            var afijar = mobjFijacionDePrecioContratoManager.TraerDatosFijacion(proveedor.CUIT, cuitCorredor, contrato.MaterialId, contrato.ContratoSAP.Remove(0, 3), contrato.Id);
+            var afijar = mobjFijacionDePrecioContratoManager.TraerDatosFijacion(proveedor.CUIT, cuitCorredor, contrato.MaterialId, contrato.ContratoSAP.TrimStart('0'), contrato.Id);
             if (afijar != null && afijar.Count > 0)
             {
+                contrato.ClasificacionContrato = afijar[0].Clasificacion;
+                contrato.ImporteSobrePrecioContrato = afijar[0].ImporteSobrePrecio;
+                contrato.MonedaSobrePrecioContrato = afijar[0].MonedaSobrePrecio;
+                contrato.PorcentajeSobrePrecioContrato = afijar[0].PorcentajeSobrePrecio;
+                contrato.ImporteAPrecioContrato = afijar[0].ImporteAPrecio;
+                contrato.MonedaAPrecioContrato = afijar[0].MonedaAPrecio;
+                contrato.PorcentajeAPrecioContrato = afijar[0].PorcentajeAPrecio;
+
                 if (afijar[0].ImporteSobrePrecio > 0)
                 {
-                    if (afijar[0].MonedaSobrePrecio == contrato.MonedaId)
+                    if (afijar[0].MonedaSobrePrecio?.Trim() == contrato.MonedaId.Trim())
                     {
                         contrato.PrecioNeto += afijar[0].ImporteSobrePrecio;
                     }
                     else
                     {
                         var cambio = tipoDeCambioAgent.TraerTipoDeCambio(contrato.FechaOperacion);
-                        if (contrato.MonedaId == "ARP  ")
+                        if (contrato.MonedaId.Trim() == "ARP")
                         {
                             contrato.PrecioNeto += afijar[0].ImporteSobrePrecio * cambio;
                         }
@@ -271,7 +279,7 @@ namespace WebDataAgro.Controllers
                 }
             }
             contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? (int?)null : contrato.PagoDiferidoTerceroId;
-
+            contrato.ContratoId = null;
             model = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(contrato);
 
             return new JsonResult()
