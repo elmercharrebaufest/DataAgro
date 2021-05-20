@@ -42,6 +42,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Anticipo { get; set; }
         public string FijacionSap { get; set; }
         public List<AperturaPrecioDto> Aperturas { get; set; }
+        public List<DescuentoBonificacionDto> Bonificaciones { get; set; }
     }
 }
 

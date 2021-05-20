@@ -142,6 +142,20 @@
           <xsd:element name="PORC" type="rfc:decimal5.2" />
         </xsd:sequence>
       </xsd:complexType>
+      <xsd:complexType name="ZMPTT9100">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6510" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES6510">
+        <xsd:sequence>
+          <xsd:element name="FEDESDE" type="rfc:date10" />
+          <xsd:element name="FEHASTA" type="rfc:date10" />
+          <xsd:element name="IMPORTE_DB" type="rfc:curr11.2" />
+          <xsd:element name="MONEDA_DB" type="rfc:cuky5" />
+          <xsd:element name="PORC_DB" type="rfc:decimal5.2" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:complexType name="ZMPTT7960">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5440" />
@@ -191,6 +205,7 @@
           <xsd:element name="ANTICIPO" type="rfc:char1" />
           <xsd:element name="APERTURA" type="rfc:ZMPTT7960" />
           <xsd:element name="CANT_MAX" type="rfc:quantum13.3" />
+          <xsd:element name="BONIF_FIJACION" type="rfc:ZMPTT9100" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT7910">

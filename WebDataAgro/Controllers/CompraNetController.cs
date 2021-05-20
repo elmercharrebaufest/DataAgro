@@ -673,13 +673,18 @@ namespace WebDataAgro.Controllers
             if (ids.Count == 1)
             {
                 contrato = mobjContratoManager.TraerContrato(ids[0].Id);
+                return new JsonResult()
+                {
+                    Data = contrato,
+                    MaxJsonLength = Int32.MaxValue
+                };
             }
-
             return new JsonResult()
             {
-                Data = contrato,
+                Data = "",
                 MaxJsonLength = Int32.MaxValue
             };
+
         }
         public ActionResult TraerFijacionCompleto(int id)
         {

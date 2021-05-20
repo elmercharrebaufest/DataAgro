@@ -90,6 +90,94 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES6510 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string fEDESDEField;
+        
+        private string fEHASTAField;
+        
+        private decimal iMPORTE_DBField;
+        
+        private string mONEDA_DBField;
+        
+        private decimal pORC_DBField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string FEDESDE {
+            get {
+                return this.fEDESDEField;
+            }
+            set {
+                this.fEDESDEField = value;
+                this.RaisePropertyChanged("FEDESDE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string FEHASTA {
+            get {
+                return this.fEHASTAField;
+            }
+            set {
+                this.fEHASTAField = value;
+                this.RaisePropertyChanged("FEHASTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public decimal IMPORTE_DB {
+            get {
+                return this.iMPORTE_DBField;
+            }
+            set {
+                this.iMPORTE_DBField = value;
+                this.RaisePropertyChanged("IMPORTE_DB");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string MONEDA_DB {
+            get {
+                return this.mONEDA_DBField;
+            }
+            set {
+                this.mONEDA_DBField = value;
+                this.RaisePropertyChanged("MONEDA_DB");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public decimal PORC_DB {
+            get {
+                return this.pORC_DBField;
+            }
+            set {
+                this.pORC_DBField = value;
+                this.RaisePropertyChanged("PORC_DB");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class ZMPES5440 : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string cONCEPTOField;
@@ -307,6 +395,8 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
         private ZMPES5440[] aPERTURAField;
         
         private decimal cANT_MAXField;
+        
+        private ZMPES6510[] bONIF_FIJACIONField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -715,6 +805,19 @@ namespace Molinos.DataAgro.Agent.ContratosParaFijacion {
             set {
                 this.cANT_MAXField = value;
                 this.RaisePropertyChanged("CANT_MAX");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=34)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES6510[] BONIF_FIJACION {
+            get {
+                return this.bONIF_FIJACIONField;
+            }
+            set {
+                this.bONIF_FIJACIONField = value;
+                this.RaisePropertyChanged("BONIF_FIJACION");
             }
         }
         

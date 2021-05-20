@@ -82,21 +82,20 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
-                if (descuentos != null)
+                if (descuentos != null && descuentos.Count > 0)
                 {
+                    var listaPeriodo = repositorio.Listar<TipoPeriodoDB>();
+                    var listaTipo = repositorio.Listar<TipoDB>();
                     foreach (var descBon in descuentos)
                     {
-                        var listaPeriodo = repositorio.Listar<TipoPeriodoDB>();
-                        var listaTipo = repositorio.Listar<TipoDB>();
-
                         listaDescuentos.Add(new ZMPES5290
                         {
-                            TIPO_PERIODO = descBon.TipoPeriodoDB.CodigoSap,
-                            TIPO_DB = descBon.TipoDB.CodigoSap,
+                            TIPO_PERIODO = listaPeriodo.Where(x => x.Id == descBon.TipoPeriodoDBId).Single().CodigoSap,
+                            TIPO_DB = listaTipo.Where(x => x.Id == descBon.TipoDBId).Single().CodigoSap,
                             FEDESDE = descBon.FechaDesde != null ? descBon.FechaDesde.Value.ToString("yyyy-MM-dd") : null,
                             FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
                             IMPORTE_DB = descBon.Importe,
-                            MONEDA_DB = descBon.Moneda.MonedaId ?? "",
+                            MONEDA_DB = descBon.MonedaId ?? "",
                             PORC_DB = descBon.Porcentaje
                         });
 

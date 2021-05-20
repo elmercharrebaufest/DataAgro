@@ -423,7 +423,8 @@
                                 <div style="display:inline-block">
                                     Desc por Fecha de Fijacion Desde: <span> #: FechaDesde#  </span>
                                     Hasta: <span> #:FechaHasta#</span>
-                                    Importe: <span> #:Importe# #:MonedaId#</span>
+                                    # if(Importe >0){# Importe: <span> #:Importe# #:MonedaId#</span> #}#
+                                    # if(Porcentaje >0){# Porcentaje: <span> #:Porcentaje#</span> #}#
                                 </div>
                                 <br />
                             </div>

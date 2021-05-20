@@ -319,12 +319,11 @@ function ArmarAperturaDesdeAFijar(afijar) {
         CambiarAperturaAMonedaActual();
     }
 
-    var AFijarDA = MSExecuteOnServer('/CompraNet/TraerContratoCompletoPorContratoSAP', { contratoSAP: afijar.ContratoId }, function () { $.unblockUI(); });
     viewModel.set("DescuentosPorFechaList", []);
     $("#gridDescuentosPorFechadiv").hide();
-    if (AFijarDA != null && AFijarDA.Descuentos != null && AFijarDA.Descuentos.length > 0) {
+    if (afijar.Bonificaciones != null && afijar.Bonificaciones.length > 0) {
         $("#gridDescuentosPorFechadiv").show();
-        viewModel.set("DescuentosPorFechaList", AFijarDA.Descuentos);
+        viewModel.set("DescuentosPorFechaList", afijar.Bonificaciones);
     }
     InsertarAperturasViewModel(CalcularPrecioTotalApertura());
     $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").readonly();
@@ -1866,7 +1865,7 @@ function InicializarElementos() {
     $("#fechaFijacionId").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
-        max: new Date(),
+        //max: new Date(),
         disableDates: function (i) {
             var lstFechas = FechaFeriado();
             if (i && typeof i == 'object') {
@@ -4206,32 +4205,32 @@ function AbrirModalAperturaDePrecio() {
 
 function CalcularPrecioTotalApertura() {
     console.log(ObtenerDescuentoPorFecha());
-    var precioOriginal = Number($("#precioId").val().replace(',', '.'));
+    var precioNeto = Number($("#precioId").val().replace(',', '.'));
     var importeComision = Number($("#aperturaPrecioImporteComisionesId").val().replace(',', '.'));
     var porcentajeComision = Math.min(Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')), $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").max());
+    porcentajeComision = porcentajeComision / 100;
 
     if ((ImporteSobrePrecio != 0 && noTieneAperturasEnAFijar)
         && Number($("#precioId").val().replace(',', '.')) > 0) {
-        precioOriginal = CalcularNetoFijacionConDescuentos();
-        $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
+        precioNeto = CalcularNetoFijacionConDescuentos();
+        $("#totalApertura").text(kendo.toString(precioNeto, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
     } else {
 
         var precioTarifaFlete = Number($("#TarifaFleteId").val().replace(',', '.'));
-        precioOriginal += Math.min(Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')), Number($("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").max()));
-        precioOriginal += Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
-        precioOriginal += Number($("#aperturaPrecioImporteBasisId").val().replace(',', '.'));
+        precioNeto += Math.min(Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')), Number($("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").max()));
+        precioNeto += Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
+        precioNeto += Number($("#aperturaPrecioImporteBasisId").val().replace(',', '.'));
         CalcularMaximoComision();
-        precioOriginal += Number($("#aperturaPrecioImporteBonificacionesId").val().replace(',', '.'));
+        precioNeto += Number($("#aperturaPrecioImporteBonificacionesId").val().replace(',', '.'));
 
-        precioOriginal += Number($("#aperturaPrecioPorcentajeBonificacionesId").val().replace(',', '.')) * Number($("#precioId").val().replace(',', '.')) / 100;
-        precioOriginal += ObtenerDescuentoPorFecha();
-        porcentajeComision = porcentajeComision / 100;
-        precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
-        precioOriginal += importeComision;
+        precioNeto += Number($("#aperturaPrecioPorcentajeBonificacionesId").val().replace(',', '.')) * Number($("#precioId").val().replace(',', '.')) / 100;
+        precioNeto += ObtenerDescuentoPorFecha();
+        precioNeto += (precioNeto * porcentajeComision) - precioTarifaFlete;
+        precioNeto += importeComision;
 
-        $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
+        $("#totalApertura").text(kendo.toString(precioNeto, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
     }
-    return precioOriginal;
+    return precioNeto;
 }
 
 function ObtenerDescuentoPorFecha() {
@@ -4240,12 +4239,17 @@ function ObtenerDescuentoPorFecha() {
     var precioDescuento = 0;
     if (descuentos.length > 0) {
         $.each(descuentos, function (key, desc) {
-            if (desc.TipoPeriodoDBId == 3 && desc.TipoDBId == 1) {
-                var fechaDesde = kendo.parseDate(desc.FechaDesde, "dd-MM-yyyy");
-                var fechaHasta = kendo.parseDate(desc.FechaHasta, "dd-MM-yyyy");
-                if (fechaOperacion >= fechaDesde && fechaOperacion <= fechaHasta) {
-                    precioDescuento = PasarAMonedaActual(desc.Importe, desc.MonedaId);
+            var fechaDesde = kendo.parseDate(desc.FechaDesde, "dd-MM-yyyy");
+            var fechaHasta = kendo.parseDate(desc.FechaHasta, "dd-MM-yyyy");
+            if (fechaOperacion >= fechaDesde && fechaOperacion <= fechaHasta) {
+                if (desc.Importe > 0) {
+                    precioDescuento = + PasarAMonedaActual(desc.Importe, desc.MonedaId);
                 }
+                if (desc.Porcentaje > 0) {
+                    var precioBase = Number($("#precioId").val().replace(',', '.'));
+                    precioDescuento += precioBase * (desc.Porcentaje / 100);
+                }
+
             }
         });
     }
@@ -4257,7 +4261,7 @@ function PasarAMonedaActual(importe, monedaId) {
     var monedaIdActual = $("#precioMonedaId").val();
     var importeMonedaAcutal = importe;
 
-    if (monedaIdActual == monedaId) {
+    if ($.trim(monedaIdActual) == $.trim(monedaId)) {
         return importe;
     } else {
         if ($.trim(monedaIdActual) == "USDM") {
