@@ -57,8 +57,12 @@ namespace WebDataAgro.Controllers
 
             var comercial = mobjComercialManager.TraerComercial(contrato.ComercialId.Value);
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+            if (contrato.CorredorId > 0)
+            {
+                var corredor = mobjProveedorManager.TraerProveedor(contrato.CorredorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+                contrato.PorcentajeComision = corredor.Comision;
+            }
             contrato.UsuarioId = proveedor.RazonSocial;
-            contrato.PorcentajeComision = proveedor.Comision;
             contrato.PrecioNeto = contrato.Precio;
             if (contrato.AperturaPrecio == null)
             {
