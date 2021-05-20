@@ -35,6 +35,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<ILogger> logger;
         private Mock<IFijacionDePrecioContratoManager> fijacionDePrecioContratoManagerMock;
         private Mock<IConfiguracionInternaManager> configuracionInternaManagerMock;
+        private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -46,12 +47,14 @@ namespace Molinos.DataAgro.Test.Controllers
             proveedorManagerMock = new Mock<IProveedorManager>();
             fijacionDePrecioContratoManagerMock = new Mock<IFijacionDePrecioContratoManager>();
             configuracionInternaManagerMock = new Mock<IConfiguracionInternaManager>();
+            tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
             //
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new CompraNetTerceroController(proveedorManagerMock.Object,
                contratoManagerMock.Object,
-                comercialManagerMock.Object, logger.Object, fijacionDePrecioContratoManagerMock.Object, configuracionInternaManagerMock.Object);
+                comercialManagerMock.Object, logger.Object, fijacionDePrecioContratoManagerMock.Object, configuracionInternaManagerMock.Object, 
+                tipoDeCambioAgentMock.Object);
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
@@ -168,7 +171,8 @@ namespace Molinos.DataAgro.Test.Controllers
                     ProveedorId = 1,
                     ProveedorCreadorId = 1,
                     CorredorId = 1,
-                    GrupoCompra = 1
+                    GrupoCompra = 1,
+                    ContratoSAP = "000111111"
 
                 });
             Assert.NotNull(result);

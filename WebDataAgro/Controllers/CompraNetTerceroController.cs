@@ -30,9 +30,11 @@ namespace WebDataAgro.Controllers
         private IFijacionDePrecioContratoManager mobjFijacionDePrecioContratoManager;
         private ILogger mobjLogger;
         private IConfiguracionInternaManager configuracionInternaManager;
+        private ITipoDeCambioAgent tipoDeCambioAgent;
 
         public CompraNetTerceroController(IProveedorManager oProveedorManager, IContratoManager oContratoManager,
-            IComercialManager oComercialManager, ILogger oLogger, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, IConfiguracionInternaManager configuracionInternaManager)
+            IComercialManager oComercialManager, ILogger oLogger, IFijacionDePrecioContratoManager oFijacionDePrecioContratoManager, IConfiguracionInternaManager configuracionInternaManager
+            , ITipoDeCambioAgent tipoDeCambioAgent)
         {
             mobjComercialManager = oComercialManager;
             mobjContratoManager = oContratoManager;
@@ -40,6 +42,7 @@ namespace WebDataAgro.Controllers
             mobjLogger = oLogger;
             mobjFijacionDePrecioContratoManager = oFijacionDePrecioContratoManager;
             this.configuracionInternaManager = configuracionInternaManager;
+            this.tipoDeCambioAgent = tipoDeCambioAgent;
 
         }
 
@@ -56,13 +59,13 @@ namespace WebDataAgro.Controllers
             }
 
             var comercial = mobjComercialManager.TraerComercial(contrato.ComercialId.Value);
-            var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+            var proveedorCreador = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+            var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             if (contrato.CorredorId > 0)
             {
-                var corredor = mobjProveedorManager.TraerProveedor(contrato.CorredorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
-                contrato.PorcentajeComision = corredor.Comision ?? 1;
+                contrato.PorcentajeComision = 1;
             }
-            contrato.UsuarioId = proveedor.RazonSocial;
+            contrato.UsuarioId = proveedorCreador.RazonSocial;
             contrato.PrecioNeto = contrato.Precio;
             if (contrato.AperturaPrecio == null)
             {
@@ -149,10 +152,13 @@ namespace WebDataAgro.Controllers
                 contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
             }
             var comercial = mobjComercialManager.TraerComercial(contrato.ComercialId.Value);
+            var proveedorCreaador = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
             var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
-            contrato.UsuarioId = proveedor.RazonSocial;
-            contrato.PorcentajeComision = proveedor.Comision;
-
+            contrato.UsuarioId = proveedorCreaador.RazonSocial;
+            if (contrato.CorredorId > 0)
+            {
+                contrato.PorcentajeComision = 1;
+            }
             if (contrato.ComercialId.HasValue)
             {
                 contrato.GrupoCompra = comercial.GrupoDeComprasId ?? 0;
@@ -201,8 +207,14 @@ namespace WebDataAgro.Controllers
                 contrato.ComercialId = mobjComercialManager.ComercialAsociado(contrato.CorredorId.HasValue && contrato.CorredorId != 0 ? contrato.CorredorId.Value : contrato.ProveedorId ?? 0);
             }
             var comercial = mobjComercialManager.TraerComercial(contrato.ComercialId.Value);
-            var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
-            contrato.UsuarioId = proveedor.RazonSocial;
+            var proveedorCreador = mobjProveedorManager.TraerProveedor(contrato.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+            var proveedor = mobjProveedorManager.TraerProveedor(contrato.ProveedorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+            var cuitCorredor = "";
+            if (contrato.CorredorId > 0)
+            {
+                cuitCorredor = mobjProveedorManager.TraerProveedor(contrato.CorredorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First().CUIT;
+            }
+            contrato.UsuarioId = proveedorCreador.RazonSocial;
 
             if (contrato.AperturaPrecio == null)
             {
@@ -229,12 +241,35 @@ namespace WebDataAgro.Controllers
 
             }
 
-            if (proveedor.Comision > 0)
+            var afijar = mobjFijacionDePrecioContratoManager.TraerDatosFijacion(proveedor.CUIT, cuitCorredor, contrato.MaterialId, contrato.ContratoSAP.Remove(0, 3), contrato.Id);
+            if (afijar != null && afijar.Count > 0)
             {
-                contrato.PrecioNeto = contrato.Precio + ((contrato.Precio + contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe) * proveedor.Comision.Value / 100);
-                contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = proveedor.Comision.Value;
-            }
+                if (afijar[0].ImporteSobrePrecio > 0)
+                {
+                    if (afijar[0].MonedaSobrePrecio == contrato.MonedaId)
+                    {
+                        contrato.PrecioNeto += afijar[0].ImporteSobrePrecio;
+                    }
+                    else
+                    {
+                        var cambio = tipoDeCambioAgent.TraerTipoDeCambio(contrato.FechaOperacion);
+                        if (contrato.MonedaId == "ARP  ")
+                        {
+                            contrato.PrecioNeto += afijar[0].ImporteSobrePrecio * cambio;
+                        }
+                        else
+                        {
+                            contrato.PrecioNeto += afijar[0].ImporteSobrePrecio / cambio;
+                        }
+                    }
 
+                }
+
+                if (afijar[0].PorcentajeSobrePrecio > 0)
+                {
+                    contrato.PrecioNeto += contrato.PrecioNeto * afijar[0].PorcentajeSobrePrecio / 100;
+                }
+            }
             contrato.PagoDiferidoTerceroId = contrato.PagoDiferidoTerceroId == -1 ? (int?)null : contrato.PagoDiferidoTerceroId;
 
             model = mobjFijacionDePrecioContratoManager.GrabarFijacionDePrecio(contrato);
