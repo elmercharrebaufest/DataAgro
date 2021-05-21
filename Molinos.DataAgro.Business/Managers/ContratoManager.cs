@@ -1061,7 +1061,14 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Por Fecha de Entrega fuera del rango de Entrega.");
                 }
             }
-
+            if (oParam.ContratoCorredor != null && oParam.ContratoCorredor.Length > 10)
+            {
+                oErrorMessages.Error("ContratoCorredor", "El numero de contrato corredor no puede ser más largo que 10 caracteres.");
+            }
+            if (oParam.ContratoVendedor != null && oParam.ContratoVendedor.Length > 10)
+            {
+                oErrorMessages.Error("ContratoVendedor", "El numero de contrato vendedor no puede ser más largo que 10 caracteres.");
+            }
 
 
             return oErrorMessages;
