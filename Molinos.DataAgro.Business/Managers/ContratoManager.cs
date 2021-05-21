@@ -452,6 +452,12 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
                     }
+
+                    if (oParam.TipoNegocioId == 1 && (oParam.DestinoId == 1 || oParam.DestinoId == 6 || oParam.DestinoId == 7 || oParam.DestinoId == 9 || oParam.DestinoId == 13)
+                        && (oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == 2)))
+                    {
+                        oErrorMessages.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
+                    }
                 }
 
             }
@@ -657,6 +663,12 @@ namespace Molinos.DataAgro.Business.Managers
                                 && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
                 {
                     oErrorMessages.Error("", "Se debe completar Redespacho en Acopios");
+                }
+
+                if ((oParam.DestinoId == 1 || oParam.DestinoId == 6 || oParam.DestinoId == 7 || oParam.DestinoId == 9 || oParam.DestinoId == 13)
+                                && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
+                {
+                    oErrorMessages.Error("", "Solo se debe completar Redespacho en Acopios");
                 }
             }
 

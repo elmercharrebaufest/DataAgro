@@ -3159,8 +3159,8 @@ function validarDescuento(descuento) {
         errores.push("El campo Moneda no puede estar vacío");
     }
 
-    if (descuento.Porcentaje > 1 /*&& $("#canjeId").is(":checked")*/) {
-        errores.push("El campo Porcentaje no puede ser mayor al 1% cuando hay Canje");
+    if (descuento.Porcentaje > 5 /*&& $("#canjeId").is(":checked")*/) {
+        errores.push("El campo Porcentaje no puede ser mayor al 5%");
     }
     var topeD = kendo.parseDate($("#fechaDesdeTopeId").val(), "dd-MM-yyyyy");
     var topeH = kendo.parseDate($("#fechaHastaTopeId").val(), "dd-MM-yyyyy");
