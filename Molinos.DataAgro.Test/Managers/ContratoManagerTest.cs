@@ -535,11 +535,6 @@ namespace Molinos.DataAgro.Test.Managers
                 },
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
-                    new AperturaPrecio()
-                    {
-                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
-                        Importe = 300
-                    },
                     new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
                 }
             };
@@ -2673,11 +2668,6 @@ namespace Molinos.DataAgro.Test.Managers
                 },
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
-                    new AperturaPrecio()
-                    {
-                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
-                        Importe = 300
-                    },
                     new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
                 }
             };
@@ -3063,16 +3053,7 @@ namespace Molinos.DataAgro.Test.Managers
                     {
                         Id= 0,
                     }
-                },
-                AperturaPrecio = new List<AperturaPrecio>()
-                {
-                    new AperturaPrecio()
-                    {
-                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
-                        Importe = 300
-                    },
-                    new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
-                }
+                }              
             };
             var oContratoBase = new Contrato()
             {
@@ -3197,11 +3178,6 @@ namespace Molinos.DataAgro.Test.Managers
                 },
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
-                    new AperturaPrecio()
-                    {
-                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
-                        Importe = 300
-                    },
                     new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
                 }
             };
@@ -3665,11 +3641,6 @@ namespace Molinos.DataAgro.Test.Managers
                 },
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
-                    new AperturaPrecio()
-                    {
-                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
-                        Importe = 300
-                    },
                     new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
                 }
             };
