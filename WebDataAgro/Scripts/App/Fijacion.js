@@ -207,22 +207,16 @@ function cargarDatosAFijarEnFijacion(afijar) {
 }
 
 function ArmarAperturaDesdeAFijar(afijar) {
+    HabilitarCamposApertura();
     noTieneAperturasEnAFijar = afijar.Aperturas == null || afijar.Aperturas.length == 0;
-    if (noTieneAperturasEnAFijar && afijar.ImporteSobrePrecio) {
-        //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
-        //$("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
-        //$("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
-        //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+    noTienImporteSobrePrecioEnAFijar = afijar.ImporteSobrePrecio == null || afijar.ImporteSobrePrecio == 0;    
+    if (noTieneAperturasEnAFijar && !noTienImporteSobrePrecioEnAFijar) {
         $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly();
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly();
         $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
     }
     else {
-        //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
-        //$("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
-        //$("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
-        //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
         $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly(false);
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
         $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
@@ -330,6 +324,16 @@ function ArmarAperturaDesdeAFijar(afijar) {
     $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").readonly();
 }
 
+function HabilitarCamposApertura(){
+    $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly(false);
+    $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+    $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
+    $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+    $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
+    $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+}
 function InicializarElementos() {
     kendo.culture("es-AR");
     cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);

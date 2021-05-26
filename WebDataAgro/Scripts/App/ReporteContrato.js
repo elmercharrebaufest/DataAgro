@@ -196,11 +196,11 @@ function CreateGridInformeCompraNet() {
             
             { field: "Provincia" },
             { field: "Localidad" },
-            { field: "Campania", value: "Campania", title: "Campaña" },
+            { field: "Campania", value: "Campania", title: "Campaña" },//30
             {
                 title: "Fecha", columns: [
                     { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 80 },
-                    { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 }
+                    { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80 }//col num 32
                 ]
             },
 
@@ -265,7 +265,7 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "Dolarizado Express", columns: [
+                field: "Dolarizado Express", columns: [//48
                     { field: "DolarizadoExpress", title: "Dolar. Express", template: function (dataItem) { return dataItem.DolarizadoExpress ? "Si" : "No"; } },
                     {
                         field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
@@ -293,68 +293,67 @@ function CreateGridInformeCompraNet() {
 
         ],
         excelExport: function (e) {
-            var sheet = e.workbook.sheets[0];            
-            
-            var templateHora = kendo.template(this.columns[6].template);
-            var templatePizarra = kendo.template(this.columns[15].template);
-            var templateSustentable = kendo.template(this.columns[34].columns[0].template);
-            var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
-            var templatePesificado = kendo.template(this.columns[36].columns[0].template);
-            var templateSIO = kendo.template(this.columns[37].template);
-            var templateTrigoEsp = kendo.template(this.columns[38].template);
-            var templateDolarizadoExpress = kendo.template(this.columns[48].columns[0].template);
-            var templateDolarizadoCorredor = kendo.template(this.columns[49].columns[0].template);
+                var sheet = e.workbook.sheets[0];
 
-            for (var i = 2; i < sheet.rows.length; i++) {
-                var row = sheet.rows[i];
+                var templateHora = kendo.template(this.columns[6].template);
+                var templatePizarra = kendo.template(this.columns[15].template);
+                var templateSustentable = kendo.template(this.columns[34].columns[0].template);
+                var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
+                var templatePesificado = kendo.template(this.columns[36].columns[0].template);
+                var templateSIO = kendo.template(this.columns[37].template);
+                var templateTrigoEsp = kendo.template(this.columns[38].template);
+                var templateDolarizadoExpress = kendo.template(this.columns[48].columns[0].template);
+                var templateDolarizadoCorredor = kendo.template(this.columns[49].columns[0].template);
 
-                var dataItem = {
-                    Hora: row.cells[6].value,
-                    Pizarra: row.cells[15].value,
-                    Sustentable: row.cells[35].value,
-                    Dolarizado: row.cells[38].value,
-                    Pesificado: row.cells[40].value,
-                    NoInformaSIO: row.cells[42].value,
-                    TrigoEspecial: row.cells[43].value,
-                    DolarizadoExpress: row.cells[53].value,
-                    DolarizadoCorredor: row.cells[55].value
-                };
+                for (var i = 2; i < sheet.rows.length; i++) {
+                    var row = sheet.rows[i];
 
-                var operacionFecha = row.cells[5].value;
-                operacionFecha.setHours(operacionFecha.getHours() + 1);
-                row.cells[5].value = operacionFecha;
+                    var dataItem = {
+                        Hora: row.cells[6].value,
+                        Pizarra: row.cells[15].value,
+                        Sustentable: row.cells[35].value,
+                        Dolarizado: row.cells[40].value,
+                        Pesificado: row.cells[42].value,
+                        NoInformaSIO: row.cells[44].value,
+                        TrigoEspecial: row.cells[45].value,
+                        DolarizadoExpress: row.cells[55].value,
+                        DolarizadoCorredor: row.cells[57].value
+                    };
 
-                var fechaDesde = row.cells[31].value;
-                var fechaHasta = row.cells[32].value;
+                    var operacionFecha = row.cells[5].value;
+                    operacionFecha.setHours(operacionFecha.getHours() + 1);
+                    row.cells[5].value = operacionFecha;
 
-                if (fechaDesde != null) {
-                    fechaDesde.setHours(fechaDesde.getHours() + 1);
-                    row.cells[31].value = fechaDesde;
+                    var fechaDesde = row.cells[31].value;
+                    var fechaHasta = row.cells[32].value;
+
+                    if (fechaDesde != null) {
+                        fechaDesde.setHours(fechaDesde.getHours() + 1);
+                        row.cells[31].value = fechaDesde;
+                    }
+
+                    if (fechaHasta != null) {
+
+                        fechaHasta.setHours(fechaHasta.getHours() + 1);
+                        row.cells[32].value = fechaHasta;
+                    }
+
+
+                    row.cells[6].value = templateHora(dataItem);
+                    row.cells[15].value = templatePizarra(dataItem);
+                    row.cells[35].value = templateSustentable(dataItem);
+                    row.cells[40].value = templateDolarizado(dataItem);
+                    row.cells[41].value = row.cells[34].value == "Si" ? row.cells[36].value : "";
+                    row.cells[42].value = templatePesificado(dataItem);
+                    row.cells[44].value = templateSIO(dataItem);
+                    row.cells[45].value = templateTrigoEsp(dataItem);
+                    row.cells[55].value = templateDolarizadoExpress(dataItem);
+                    row.cells[56].value = row.cells[49].value == "Si" ? row.cells[50].value : "";
+                    row.cells[57].value = templateDolarizadoCorredor(dataItem);
+                    row.cells[58].value = row.cells[51].value == "Si" ? row.cells[52].value : "";
+                    row.cells[56].format = "yy/MM/dd hh:mm:ss";
                 }
-
-                if (fechaHasta != null) {
-
-                    fechaHasta.setHours(fechaHasta.getHours() + 1);
-                    row.cells[31].value = fechaHasta;
-                }
-
-
-                row.cells[6].value = templateHora(dataItem);
-                row.cells[15].value = templatePizarra(dataItem);
-                row.cells[35].value = templateSustentable(dataItem);
-                row.cells[40].value = templateDolarizado(dataItem);
-                row.cells[41].value = row.cells[40].value == "Si" ? row.cells[42].value : "";
-                row.cells[42].value = templatePesificado(dataItem);
-                row.cells[44].value = templateSIO(dataItem);
-                row.cells[45].value = templateTrigoEsp(dataItem);
-                row.cells[55].value = templateDolarizadoExpress(dataItem);
-                row.cells[56].value = row.cells[55].value == "Si" ? row.cells[56].value : "";
-                row.cells[57].value = templateDolarizadoCorredor(dataItem);
-                row.cells[58].value = row.cells[57].value == "Si" ? row.cells[58].value : "";
-                row.cells[50].format = "yy/MM/dd hh:mm:ss";
-                row.cells[40].value = templateDolarizado(dataItem);
-            }
-        },
+            },
         pageable: {
             messages: {
                 display: "{2} elementos",
