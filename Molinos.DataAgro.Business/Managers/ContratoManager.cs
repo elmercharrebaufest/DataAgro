@@ -448,13 +448,14 @@ namespace Molinos.DataAgro.Business.Managers
                 if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9 && oParam.DestinoId != 13 && oParam.DestinoId != 15
-                        && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == 2)))
+                                        && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1 && x.TipoDBId == 1))
+                                        )
                     {
                         oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
                     }
 
                     if (oParam.TipoNegocioId == 1 && (oParam.DestinoId == 1 || oParam.DestinoId == 6 || oParam.DestinoId == 7 || oParam.DestinoId == 9 || oParam.DestinoId == 13 || oParam.DestinoId == 15)
-                        && (oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == 2)))
+                        && (oParam.Descuentos != null && oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1 && x.TipoDBId == 1)))
                     {
                         oErrorMessages.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
                     }
@@ -659,14 +660,14 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
-                if (oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 /*&& oParam.TipoNegocioId == 2*/ && oParam.DestinoId != 9 && oParam.DestinoId != 13 && oParam.DestinoId != 15
+                if (oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.TipoNegocioId == 2 && oParam.DestinoId != 9 && oParam.DestinoId != 13 && oParam.DestinoId != 15
                                 && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
                 {
                     oErrorMessages.Error("", "Se debe completar Redespacho en Acopios");
                 }
 
                 if ((oParam.DestinoId == 1 || oParam.DestinoId == 6 || oParam.DestinoId == 7 || oParam.DestinoId == 9 || oParam.DestinoId == 13 || oParam.DestinoId == 15)
-                                && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
+                               && oParam.TipoNegocioId == 2 && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
                 {
                     oErrorMessages.Error("", "Solo se debe completar Redespacho en Acopios");
                 }
@@ -4849,6 +4850,9 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.BoletoId = boletobolsa.BoletoCompraNetId ?? 3;
                 contrato.BolsaId = boletobolsa.BolsaCompraNetId;
                 contrato.PorcentajeComision = 1;
+                contrato.CondicionFijacionId = acuerdo.CondicionFijacion;
+                contrato.DesdeFijacion = acuerdo.DesdeFijacion;
+                contrato.HastaFijacion = acuerdo.HastaFijacion;
 
                 var existe = repositorio.Existe<Contrato>(a => a.ContratoCorredor == contrato.ContratoCorredor && a.CorredorId == item.CorredorId && a.EstadoId != 8 && a.EstadoId != 6);
                 if (existe)
@@ -4974,7 +4978,7 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style + (contrato == null ? "" : contrato.Cantidad.ToString()) + "</td>" +
                          //"<td " + style + (contrato != null && contrato.Fecha.HasValue ?  contrato.Fecha.Value.ToString("dd/MM/yyyy"):"") + "</td>" +
                          //"<td " + style + (contrato != null && contrato.FechaOperacion.HasValue ? contrato.FechaOperacion.Value.ToString("dd/MM/yyyy") : "") + "</td>" +
-                         "<td " + style + (contrato == null ? "" : contrato.Proveedor.ToString()) + "</td>" +
+                         "<td " + style + (contrato == null ? "" : contrato.Proveedor?.ToString()) + "</td>" +
                          //"<td " + style + (contrato == null ? "" : contrato.TipoNegocio.ToString()) + "</td>" +
                          (!results.First().HayError ? "" : "<td " + style + "<b style='color:red;'>" + string.Join("<br>", c.Errores.Select(x => x.Message).ToList()) + "</b>" + "</td>");
             }

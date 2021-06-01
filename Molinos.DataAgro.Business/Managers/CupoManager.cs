@@ -245,9 +245,35 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var cuit = repositorio.Obtener<Proveedor, string>(y => y.ProveedorId == cupo.ProveedorId, y => y.CUIT);
                 var sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
-                if ((sisa != null && (sisa.EstadoCuit == 0 || sisa.EstadoCuit == 3)) || sisa == null)
+                if (sisa == null)
                 {
-                    error.Errores.Add(new ErrorMessage(400, "Proveedor con CUIT en estado No Operable"));
+                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por CUIT Inactivo"));
+                }
+                else
+                {
+                    if (sisa.EstadoCuit == 3 && proveedor.RiesgoComercialSap != "E")
+                    {
+                        error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Estado de CUIT 3"));
+                    }
+                    else if (sisa.EstadoCuit == 0)
+                    {
+                        error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Estado de CUIT Inactivo"));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(proveedor.RiesgoComercialSap) && proveedor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Riesgo Comercial Alto"));
+                }
+
+                if (repositorio.Existe<ProveedorEstado>(x => x.ProveedorId == proveedor.ProveedorId && x.EstadoId == 4))
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor no Operable por Estado BAJA"));
+                }
+
+                if (repositorio.Existe<FACACOP>(x => x.CUIT == proveedor.CUIT))
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por ser Apócrifo"));
                 }
             }
             if (cupo.Id == 0 && cantidadCupos == 0)
@@ -2677,7 +2703,8 @@ namespace Molinos.DataAgro.Business.Managers
                         var alterView = CuerpoMailProveedorAnulacionCupo(path, cupo);
                         mailManager.EnviarMail(null, lista, "Anulación de cupos", "", null, alterView);
                     }
-                }else return;
+                }
+                else return;
             }
             catch (Exception e)
             {
@@ -2755,8 +2782,9 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "";
             htmlBody += "En el presente mail, se detalla el resultado de la Anulación de cupos <br />";
 
-            if (cupos.Count > 0)            {
-              
+            if (cupos.Count > 0)
+            {
+
                 htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
                 htmlBody += "<tr>" +
                         th + "Cupo" + "</td>" +
