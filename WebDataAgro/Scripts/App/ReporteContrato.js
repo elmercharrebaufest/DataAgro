@@ -289,8 +289,8 @@ function CreateGridInformeCompraNet() {
             { field: "ChequeElectronicoValor", type: "string", title: "Cheque Electrónico" },
             { field: "PagoCBU", type: "string", title: "Pago Cbu" },
 
-            { field: "PosicionCBOT", type: "string", title: "PosicionCBOT" },
-            { field: "TipoPosicionCBOT", type: "string", title: "Tipo PosicionCBOT" },
+            { field: "PosicionCBOT", type: "string", title: "Posicion" },
+            { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posicion" },
             { field: "UsuarioTercero", type: "string", title: "Usuario Tercero" },
 
         ],
