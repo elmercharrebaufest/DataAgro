@@ -302,6 +302,7 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     $("#operadorId").data("kendoDropDownList").value(contrato.OperadorId);
     $("#posicionFasonId").val(contrato.Posicion);
     $("#posicionCBOTId").val(contrato.PosicionCBOT);
+    $("#tipoPosicionCBOTId").data("kendoDropDownList").value(contrato.TipoPosicionCBOT);
 
     var iteracionesDescuentos = viewModel.Descuentos.length;
     for (var i = 0; i < iteracionesDescuentos; i++) {
@@ -399,6 +400,7 @@ function ObtenerDatos(error) {
     obj.Fecha = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaFijacionId").val());
     obj.MonedaId = $("#precioMonedaId").val();
     obj.PosicionCBOT = $("#posicionCBOTId").val();
+    obj.TipoPosicionCBOTId = $("#tipoPosicionCBOTId").val();
 
     if (obj.TipoNegocioId == "3" || obj.TipoNegocioId == "4") {
         obj.ComercialId = $("#comercialFijacionId").val();

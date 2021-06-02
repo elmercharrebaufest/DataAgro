@@ -526,6 +526,7 @@ namespace WebDataAgro.Services
             }
 
             contrato.PosicionCBOT = contratoSAP.PosicionCBOT;
+            contrato.TipoPosicionCBOTId = contratoSAP.TipoPosicionCBOTId;
         }
 
         public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)

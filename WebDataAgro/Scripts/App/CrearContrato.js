@@ -3755,6 +3755,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#operadorId").data("kendoDropDownList").value(contrato.OperadorId);
     $("#posicionFasonId").val(contrato.Posicion);
     $("#posicionCBOTId").val(contrato.PosicionCBOT);
+    $("#tipoPosicionCBOTId").val(contrato.TipoPosicionCBOTId);
 
     LimpiarDescuentos();
     LimpiarCalidades();
@@ -4052,6 +4053,7 @@ function InsertarAperturasViewModelAFijar() {
     } else {
         $("#posicionCBOTDiv").hide();
         $("#posicionCBOTId").val("");
+        $("#tipoPosicionCBOTId").val("");
     }
 }
 function LimpiarApertura() {

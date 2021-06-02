@@ -303,6 +303,7 @@
     <Build Include="dbo\Tables\ConfiguracionBolsa.sql" />
     <Build Include="dbo\Tables\HabilitacionPagoDiferido.sql" />
     <Build Include="dbo\Tables\MotivoAnterior.sql" />
+    <Build Include="dbo\Tables\TipoPosicionCBOT.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

@@ -123,6 +123,8 @@
     [MonedaSobrePrecioContrato] CHAR(5) NULL, 
     [CantidadAmpliado] FLOAT NULL, 
     [PosicionCBOT] NVARCHAR(10) NULL, 
+    [UsuarioTercero] VARCHAR(150) NULL, 
+    [TipoPosicionCBOTId] INT NULL, 
     CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]), 
     CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),  
@@ -150,6 +152,7 @@
 	CONSTRAINT [FK_Negocio_MonedaAjusteComision] FOREIGN KEY ([MonedaAjusteComisionId]) REFERENCES [Moneda]([MonedaId]),
     CONSTRAINT [FK_Negocio_MonedaCanjeId] FOREIGN KEY ([MonedaCanjeId]) REFERENCES [Moneda]([MonedaId]), 
     CONSTRAINT [FK_Negocio_HabilitacionPagoDiferido] FOREIGN KEY ([PagoDiferidoTerceroId]) REFERENCES [HabilitacionPagoDiferido]([Id]), 
+    CONSTRAINT [FK_Negocio_TipoPosicionCBOT] FOREIGN KEY ([TipoPosicionCBOTId]) REFERENCES [TipoPosicionCBOT]([Id]), 
 
 )
 

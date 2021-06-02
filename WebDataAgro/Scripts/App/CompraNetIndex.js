@@ -393,11 +393,11 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.ObservacionTercero + "'" + ',' +
         "'" + dataItem.SustentableTercero + "'" + ',' +
         "'" + dataItem.Venta + "'" + ',' +
-        "'" + dataItem.FechaDesde_SustentableFormateado + "'" + ',' +   
-        "'" + dataItem.FechaHasta_SustentableFormateado + "'" + ',' +  
+        "'" + dataItem.FechaDesde_SustentableFormateado + "'" + ',' +
+        "'" + dataItem.FechaHasta_SustentableFormateado + "'" + ',' +
+        "'" + dataItem.PosicionCBOT + "'" + ',' +
+        "'" + dataItem.TipoPosicionCBOT + "'" +
 
-        "'" + dataItem.PosicionCBOT + "'" + 
-        
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1927,7 +1927,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
-    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, PosicionCBOT) {
+    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, PosicionCBOT, TipoPosicionCBOT) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2305,7 +2305,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                         $("#visualizar_aperturaBasis").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                         //visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
                         $("#aperturaBasisDivVisualizar").show();
-                        $("#visualizar_PosicionCBOT").text(PosicionCBOT);
+                        $("#visualizar_PosicionCBOT").text(TipoPosicionCBOT + " - " + PosicionCBOT);
                     } 
 
                     break;

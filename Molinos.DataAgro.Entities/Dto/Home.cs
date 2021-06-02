@@ -201,4 +201,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Id { get; set; }
         public string Descripcion { get; set; }
     }
+
+    public class TipoPosicionCBOTQry
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
+    }
 }

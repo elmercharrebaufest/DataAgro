@@ -290,6 +290,8 @@ function CreateGridInformeCompraNet() {
             { field: "PagoCBU", type: "string", title: "Pago Cbu" },
 
             { field: "PosicionCBOT", type: "string", title: "PosicionCBOT" },
+            { field: "TipoPosicionCBOT", type: "string", title: "Tipo PosicionCBOT" },
+            { field: "UsuarioTercero", type: "string", title: "Usuario Tercero" },
 
         ],
         excelExport: function (e) {

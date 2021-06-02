@@ -335,6 +335,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.MonedaCanjeId != contrato.MonedaCanjeId ||
                     contratoGuardado.PrestamoDevolucion != contrato.PrestamoDevolucion ||
                     contratoGuardado.PosicionCBOT != contrato.PosicionCBOT ||
+                    contratoGuardado.TipoPosicionCBOTId != contrato.TipoPosicionCBOTId ||
                     contratoGuardado.PlantaDestinoId != contrato.PlantaDestinoId;
 
 
@@ -446,7 +447,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                             DESC_INSUMOS = contrato.Insumo,
                             MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
                             MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0,
-                            POSICION_CBOT = contrato.PosicionCBOT
+                            POSICION_CBOT = contrato.PosicionCBOT,
+                            FIJ_CBOT_MAT = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "",
+                            TERCERO = contrato.ProveedorCreadorId != null ? "X" : ""
                         }
                     }
                 };

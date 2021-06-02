@@ -227,4 +227,7 @@ IF NOT EXISTS (select 1 from ConceptoAperturaPrecio where Descripcion = 'Basis')
 
 
 
+--TipoPosicionCBOT
+IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'CBOT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('CBOT'); END
+IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'MAT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('MAT'); END
 

@@ -191,8 +191,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             datosCombo.TipoPeriodoDB = repositorio.Listar<TipoPeriodoDB, TipoPeriodoDBQry>(x => new TipoPeriodoDBQry() { Id = x.Id, Descripcion = x.Descripcion });
 
-            datosCombo.MonedaDescuento = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
-
             datosCombo.NivelTarifa = repositorio.Listar<NivelTarifa, NivelTarifaQry>(x => new NivelTarifaQry() { Id = x.Id, Descripcion = x.Descripcion, CodigoSap = x.CodigoSap });
 
             datosCombo.MonedaDescuento = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
@@ -202,6 +200,9 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.Zona = repositorio.Listar<Zona, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion });
 
             datosCombo.MotivoAnterior = repositorio.Listar<MotivoAnterior, MotivoAnteriorQry>(x => new MotivoAnteriorQry() { Id = x.Id, Descripcion = x.Descripcion });
+
+            datosCombo.TipoPosicionCBOT = repositorio.Listar<TipoPosicionCBOT, TipoPosicionCBOTQry>(x => new TipoPosicionCBOTQry() { Id = x.Id, Descripcion = x.Descripcion });
+
             Array estadosValues = Enum.GetValues(typeof(EnumEstadoContrato));
 
             foreach (int estadoValue in estadosValues)
@@ -448,14 +449,14 @@ namespace Molinos.DataAgro.Business.Managers
                 if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     if (oParam.TipoNegocioId == 1 && oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9 && oParam.DestinoId != 13 && oParam.DestinoId != 15
-                                        && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1 && x.TipoDBId == 1))
+                                        && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
                                         )
                     {
                         oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
                     }
 
                     if (oParam.TipoNegocioId == 1 && (oParam.DestinoId == 1 || oParam.DestinoId == 6 || oParam.DestinoId == 7 || oParam.DestinoId == 9 || oParam.DestinoId == 13 || oParam.DestinoId == 15)
-                        && (oParam.Descuentos != null && oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1 && x.TipoDBId == 1)))
+                        && (oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0))))
                     {
                         oErrorMessages.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
                     }
@@ -683,6 +684,11 @@ namespace Molinos.DataAgro.Business.Managers
                 if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && (oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0))))
                 {
                     oErrorMessages.Error("", "Se debe completar el concepto Basis con Posicion CBOT");
+                }
+
+                if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && (oParam.TipoPosicionCBOTId == null || oParam.TipoPosicionCBOTId == 0))
+                {
+                    oErrorMessages.Error("", "Se debe completar el Tipo Posicion CBOT con Posicion CBOT");
                 }
             }
 
@@ -1323,6 +1329,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
             oContratoSave.Venta = oContrato.Venta;
             oContratoSave.PosicionCBOT = oContrato.PosicionCBOT;
+            oContratoSave.TipoPosicionCBOTId = oContrato.TipoPosicionCBOTId;
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 oContratoSave.CalidadTercero = oContrato.CalidadTercero;
@@ -2522,6 +2529,8 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)x.FechaHastaSustentable.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaHastaSustentable) : "",
                 PosicionCBOT = x.PosicionCBOT,
+                TipoPosicionCBOTId = x.TipoPosicionCBOTId,
+                TipoPosicionCBOT = x.TipoPosicionCBOT.Descripcion,
                 ProveedorCreador = x.ProveedorCreadorId,
                 UsuarioId = x.UsuarioId
             });
@@ -3254,6 +3263,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.PrecioPactado = contrato.PrecioPactado;
             contratoSave.PorcentajeDePago = contrato.PorcentajeDePago;
             contratoSave.PosicionCBOT = contrato.PosicionCBOT;
+            contratoSave.TipoPosicionCBOTId = contrato.TipoPosicionCBOTId;
 
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoSave.Id), TipoAccionLogDataAgro.Modificar, contratoSave.GetType());
@@ -4219,6 +4229,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.PlantaDestinoId = contratoSap.PlantaDestinoId;
                 contrato.MotivoOperacionAnterior = contratoSap.MotivoOperacionAnterior;
                 contrato.PosicionCBOT = contratoSap.PosicionCBOT;
+                contrato.TipoPosicionCBOTId = contratoSap.TipoPosicionCBOTId;
 
                 repositorio.Agregar(contrato);
                 repositorio.GuardarCambios();
@@ -4597,6 +4608,9 @@ namespace Molinos.DataAgro.Business.Managers
             bc.FechaDesde_SustentableFormateado = (negocio is Contrato) && (negocio as Contrato).FechaDesdeSustentable != null ?
                 (negocio as Contrato).FechaDesdeSustentable.Value.ToString("dd-MM-yyyy") : "";
             bc.PosicionCBOT = negocio.PosicionCBOT;
+            bc.TipoPosicionCBOTId = negocio.TipoPosicionCBOTId;
+            bc.TipoPosicionCBOT = (negocio is Contrato) && (negocio as Contrato).TipoPosicionCBOT != null ? negocio.TipoPosicionCBOT.Descripcion : "";
+            bc.ProveedorCreador = negocio.ProveedorCreadorId;
 
             return bc;
         }

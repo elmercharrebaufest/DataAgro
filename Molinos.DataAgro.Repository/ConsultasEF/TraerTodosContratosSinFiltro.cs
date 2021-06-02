@@ -184,6 +184,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CantidadAmpliado = contrato.CantidadAmpliado ?? 0,
 
                         PosicionCBOT = contrato.PosicionCBOT,
+                        TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
+                        ProveedorCreador = contrato.ProveedorCreadorId,
+                        UsuarioTercero = contrato.UsuarioTercero,
 
                     };
 
@@ -332,7 +335,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         SustentableTercero = contrato.SustentableTercero,
 
                         PosicionCBOT = contrato.PosicionCBOT,
-
+                        TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
+                        ProveedorCreador = contrato.ProveedorCreadorId,
+                        UsuarioTercero = contrato.UsuarioTercero,
                     };
 
                 return queryNegocios;

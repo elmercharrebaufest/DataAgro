@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<ZonaQry> Zona { get; set; }
         public List<NivelTarifaQry> NivelTarifa { get; set; }
         public List<MotivoAnteriorQry> MotivoAnterior { get; set; }
+        public List<TipoPosicionCBOTQry> TipoPosicionCBOT { get; set; }
 
         public DatosIniContrato()
         {

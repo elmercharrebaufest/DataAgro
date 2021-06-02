@@ -138,6 +138,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
 
     $("#posicionFasonId").val(afijar.Posicion);
     $("#posicionCBOTId").val(afijar.PosicionCBOT);
+    $("#tipoPosicionCBOTId").data("kendoDropDownList").value(afijar.TipoPosicionCBOTId);
     if (afijar.PosicionCBOT != null && afijar.PosicionCBOT != "") {
         $("#posicionCBOTDiv").show();
     }
@@ -2503,6 +2504,18 @@ function InicializarElementos() {
     //    $("#pagoCbuInput").data("kendoAutoComplete").search("");
     //});
 
+    $("#tipoPosicionCBOTId").kendoDropDownList({
+        optionLabel: "SELECCIONE TIPO...",
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
+    });
+
+    $("#tipoPosicionCBOTId").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            var dropdownlist = $("#tipoPosicionCBOTId").data("kendoDropDownList");
+            dropdownlist.text("");
+        }
+    });
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -2782,6 +2795,7 @@ function CrearViewModel() {
         "fechaCiertaId": null,
         "porcentajeDePagoId": null,
         "fechaOperacionId": null,
+        "tipoPosicionCBOTId": null,
     };
     viewModel = kendo.observable({
         Parametros: param,
@@ -2826,7 +2840,8 @@ function CrearViewModel() {
         CalidadesVisualizar: [],
         ContratosPendientes: [],
         AperturaPrecio: [],
-        MonedaPactadoCombo: []
+        MonedaPactadoCombo: [],
+        TipoPosicionCBOT: []
     });
 
     kendo.bind($("#CrearContrato"), viewModel);
@@ -2934,6 +2949,7 @@ function AsignarDatos() {
     viewModel.set("CondicionFijacionComboModalPendiente", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardComboModalPendiente", datosIniCrearContrato.Datos.Standard);
     viewModel.set("MotivoComboModalPendiente", datosIniCrearContrato.Datos.MotivoAnterior);
+    viewModel.set("TipoPosicionCBOT", datosIniCrearContrato.Datos.TipoPosicionCBOT); 
     viewModel.set("isControlDisabled", false);
 
     if ($("#tipoId").data("kendoDropDownList")) $("#tipoId").data("kendoDropDownList").value("1");
@@ -3649,6 +3665,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#posicionFasonId").val(contrato.Posicion);
     if (contrato.PosicionCBOT != null && contrato.PosicionCBOT != "") {
         $("#posicionCBOTId").val(contrato.PosicionCBOT);
+        $("#tipoPosicionCBOTId").data("kendoDropDownList").value(contrato.TipoPosicionCBOTId);
         $("#posicionCBOTDiv").show();
     }
 
@@ -4099,6 +4116,7 @@ function InsertarAperturasViewModel(total) {
     } else {
         $("#posicionCBOTDiv").hide();
         $("#posicionCBOTId").val("");
+        $("#tipoPosicionCBOTId").data("kendoDropDownList").value("");
     }
     //$("#ImporteDescuentoId").data("kendoNumericTextBox").value(total);
 }
@@ -4108,6 +4126,7 @@ function eliminarDescuento(descuento) {
         $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
         $("#posicionCBOTDiv").hide();
         $("#posicionCBOTId").val("");
+        $("#tipoPosicionCBOTId").data("kendoDropDownList").value("");
     }
     viewModel.Descuentos.remove(descuento);
 

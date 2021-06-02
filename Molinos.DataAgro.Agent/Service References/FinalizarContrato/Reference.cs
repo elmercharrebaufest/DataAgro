@@ -555,6 +555,10 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private string pOSICION_CBOTField;
         
+        private string fIJ_CBOT_MATField;
+        
+        private string tERCEROField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -1476,6 +1480,30 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.pOSICION_CBOTField = value;
                 this.RaisePropertyChanged("POSICION_CBOT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=77)]
+        public string FIJ_CBOT_MAT {
+            get {
+                return this.fIJ_CBOT_MATField;
+            }
+            set {
+                this.fIJ_CBOT_MATField = value;
+                this.RaisePropertyChanged("FIJ_CBOT_MAT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=78)]
+        public string TERCERO {
+            get {
+                return this.tERCEROField;
+            }
+            set {
+                this.tERCEROField = value;
+                this.RaisePropertyChanged("TERCERO");
             }
         }
         

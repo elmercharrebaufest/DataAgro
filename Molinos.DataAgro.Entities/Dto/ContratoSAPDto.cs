@@ -93,6 +93,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaCanjeId { get; set; }
         public string PlantaDestino { get; set; }
         public string PosicionCBOT { get; set; }
+        public int? TipoPosicionCBOTId { get; set; }
     }
 
     public class CalidadSAP

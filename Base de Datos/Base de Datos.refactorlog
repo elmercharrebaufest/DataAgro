@@ -637,4 +637,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Tasa" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="97ee795c-a70a-4cb8-b093-993069118211" ChangeDateTime="04/21/2021 20:22:34">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[ObligatoriedadFechaCierta]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ObligatoriedadCostoFinanciero" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="470aeb33-9490-467f-ae74-01fbd03a1e20" ChangeDateTime="05/03/2021 13:16:05">
+    <Property Name="ElementName" Value="[dbo].[HabilitacionPizarra].[Pausar]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[HabilitacionPizarra]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Habilitado" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4aff44a9-d438-4cd6-8487-c81f2011f771" ChangeDateTime="05/03/2021 13:16:13">
+    <Property Name="ElementName" Value="[dbo].[PrecioMoa].[Pausar]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PrecioMoa]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Habilitado" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5fe07df7-fd39-4970-9850-bd11ea41dac4" ChangeDateTime="06/01/2021 17:21:24">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[TipoPosicionCBOT]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TipoPosicionCBOTId" />
+  </Operation>
 </Operations>

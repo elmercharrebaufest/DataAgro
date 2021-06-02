@@ -257,6 +257,8 @@
           <xsd:element name="MONTO_DEUDA" type="rfc:curr13.2" />
           <xsd:element name="DESC_INSUMOS" type="rfc:char79" />
           <xsd:element name="POSICION_CBOT" type="rfc:char7" />
+          <xsd:element name="FIJ_CBOT_MAT" type="rfc:char1" />
+          <xsd:element name="TERCERO" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">
@@ -296,6 +298,8 @@
           <xsd:element name="CONTRATO" type="rfc:char10" />
           <xsd:element name="DETALLE" type="rfc:ZMPES5270" />
           <xsd:element name="POSICION_CBOT" type="rfc:char7" />
+          <xsd:element name="FIJ_CBOT_MAT" type="rfc:char1" />
+          <xsd:element name="TERCERO" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

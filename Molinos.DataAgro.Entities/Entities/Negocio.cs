@@ -96,6 +96,8 @@ namespace Molinos.DataAgro.Entities.Entities
         [JsonConverter(typeof(SinHora))]
         public DateTime? FechaHastaSustentable { get; set; } // FechaHastaSustentable   
         public string PosicionCBOT { get; set; }
+        public int? TipoPosicionCBOTId { get; set; }
+
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
@@ -146,6 +148,9 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public virtual ICollection<DescuentoBonificacion> Descuentos { get; set; }
 
+        [ForeignKey("TipoPosicionCBOTId")]
+        public virtual TipoPosicionCBOT TipoPosicionCBOT { get; set; }
+        public string UsuarioTercero { get; set; }
 
         public Negocio()
         {
