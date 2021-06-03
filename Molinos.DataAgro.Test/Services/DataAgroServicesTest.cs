@@ -591,7 +591,7 @@ namespace Molinos.DataAgro.Test.Services
               Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = 1 });
             repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
                    .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
-            var result = target.ValidarProveedorComercial("00023434") as ResultadoValidarProveedorComercial;
+            var result = target.ValidarProveedorComercial("00023434", true) as ResultadoValidarProveedorComercial;
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 0);
@@ -622,7 +622,7 @@ namespace Molinos.DataAgro.Test.Services
               Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = 1 });
             repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
                    .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
-            var result = target.ValidarProveedorComercial("00023434") as ResultadoValidarProveedorComercial;
+            var result = target.ValidarProveedorComercial("00023434",true) as ResultadoValidarProveedorComercial;
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);

@@ -46,13 +46,15 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IComercialManager comercialManager;
         private readonly IServicioRepositorioScatoAgent servicioScato;
         private readonly IHttpContextManager httpContextManager;
+        private readonly IAltaTempranaAgent altaTempranaAgent;
 
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
             IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios,
             IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
-            IComercialManager comercialManager, IServicioRepositorioScatoAgent servicioScato, IHttpContextManager httpContextManager)
+            IComercialManager comercialManager, IServicioRepositorioScatoAgent servicioScato, IHttpContextManager httpContextManager,
+            IAltaTempranaAgent altaTempranaAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -69,6 +71,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.comercialManager = comercialManager;
             this.servicioScato = servicioScato;
             this.httpContextManager = httpContextManager;
+            this.altaTempranaAgent = altaTempranaAgent;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
@@ -275,6 +278,20 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por ser Apócrifo"));
                 }
+
+                var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+                if (string.IsNullOrEmpty(alta.Mensaje))
+                {                    
+                    if (alta.ProveedorGrano == "SI")
+                    {
+                        error.Errores.Add(new ErrorMessage(400, "El Corredor/Proveedor es un vendedor eventual"));
+                    }
+                }
+                else
+                {
+                    error.Errores.Add(new ErrorMessage(400, alta.Mensaje));
+                }
+
             }
             if (cupo.Id == 0 && cantidadCupos == 0)
             {

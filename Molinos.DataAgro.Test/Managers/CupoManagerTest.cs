@@ -49,6 +49,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IConfiguracionCupoManager> configuracionCupoManager;
         private Mock<IServicioRepositorioScatoAgent> servicioScato;
         private Mock<IHttpContextManager> contextoManager;
+        private Mock<IAltaTempranaAgent> altaTempranaAgent;
 
         [SetUp]
         public void SetUp()
@@ -68,11 +69,12 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock = new Mock<IComercialManager>();
             servicioScato = new Mock<IServicioRepositorioScatoAgent>();
             contextoManager = new Mock<IHttpContextManager>();
+            altaTempranaAgent = new Mock<IAltaTempranaAgent>();
 
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
                 mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object,
-                logDataAgroManagerMock.Object, comercialManagerMock.Object, servicioScato.Object, contextoManager.Object);
+                logDataAgroManagerMock.Object, comercialManagerMock.Object, servicioScato.Object, contextoManager.Object, altaTempranaAgent.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
@@ -220,6 +222,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA());
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
+            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
 
             var result = target.Validar(new Cupo() { Fason = true, MaterialId = 3, ProveedorId = 1, FechaIngreso = new DateTime(2019, 12, 30) }, 0, new DateTime(2019, 12, 1));
 

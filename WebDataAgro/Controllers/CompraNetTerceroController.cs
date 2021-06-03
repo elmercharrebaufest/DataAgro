@@ -78,7 +78,7 @@ namespace WebDataAgro.Controllers
 
             if (contrato.PagoDiferidoTercero == true)
             {
-                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia <= contrato.DiasPesificado).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
+                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia >= contrato.DiasPesificado).OrderBy(x => x.CantidadDia).FirstOrDefault();
                 if (pago == null)
                 {
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
@@ -228,7 +228,7 @@ namespace WebDataAgro.Controllers
 
             if (contrato.PagoDiferidoTercero == true)
             {
-                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia <= contrato.DiasPesificado).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
+                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia >= contrato.DiasPesificado).OrderBy(x => x.CantidadDia).FirstOrDefault();
                 if (pago == null)
                 {
                     return new JsonResult() { Data = new GrabarContratoResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } }, MaxJsonLength = Int32.MaxValue };
