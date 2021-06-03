@@ -889,13 +889,22 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
-        public ResultadoValidarProveedorComercial ValidarProveedorComercial(string cuit)
+        public ResultadoValidarProveedorComercial ValidarProveedorComercial(string cuit, bool? corredor)
         {
             try
             {
                 logger.Debug("ValidarProveedorComercial " + cuit);
                 ResultadoValidarProveedorComercial resultado = new ResultadoValidarProveedorComercial();
-                var proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                Proveedor proveedor = null;
+                if (corredor == true)
+                {
+                    proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit && (x.SegmentacionId == 5 || x.SegmentacionId == 7), 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                }
+                else
+                {
+                    proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit && x.SegmentacionId != 5 && x.SegmentacionId != 7, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                }
+
                 if (proveedor != null)
                 {
                     var existeEnSISA = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
