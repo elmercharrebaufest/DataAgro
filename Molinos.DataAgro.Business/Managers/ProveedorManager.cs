@@ -704,7 +704,30 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else if (oContrato.TipoNegocioId == 1)
             {
-                htmlBody += "A FIJAR HASTA: <br />" + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + "<br />" + Split(oContrato.CondicionFijacion.Descripcion.ToUpper()) + "</td></tr>";
+                htmlBody += "A FIJAR HASTA: <br />" + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + "<br />";
+                if (!string.IsNullOrEmpty(oContrato.PosicionCBOT) && oContrato.AperturaPrecio != null &&
+                    oContrato.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis &&
+                    (x.Importe != 0 || x.Porcentaje != 0)))
+                {
+                    htmlBody += oContrato.TipoPosicionCBOT.Descripcion + " " + oContrato.PosicionCBOT + " ";
+                    foreach (var desc in objDescuento)
+                    {
+                        if (desc.Importe != 0)
+                        {
+                            htmlBody += desc.Importe + " " + desc.Moneda.Descripcion + "<br />";
+                        }
+                        if (desc.Porcentaje != 0)
+                        {
+                            htmlBody += desc.Porcentaje + "%<br />";
+                        }
+                    }                  
+                }
+                else
+                {
+                    htmlBody += Split(oContrato.CondicionFijacion.Descripcion.ToUpper());
+                }
+
+                htmlBody += "</td></tr>";
             }
             htmlBody += "<tr>" + th + "PORCENTAJE DE PAGO</th>" + Td(ref linea) + oContrato.PorcentajeDePago.ToString() + "</td></tr>";
             htmlBody += "<tr>" + th + "PROCEDENCIA</th>" + Td(ref linea) + oContrato.Localidad.Nombre.ToUpper() + " - " + oContrato.Provincia.Nombre.ToUpper() + "</td></tr>";
@@ -784,6 +807,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "MERCADERIA EN DEPOSITO<br /> ";
             }
+
             if (objDescuento != null)
             {
                 foreach (var desc in objDescuento)
@@ -796,14 +820,17 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         htmlBody += "DESCUENTOS " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
                     }
-                    if (desc.Importe != 0)
+                    if (oContrato.AperturaPrecio != null && !oContrato.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis &&
+                    (x.Importe != 0 || x.Porcentaje != 0)))
                     {
-                        htmlBody += desc.Importe + " " + desc.Moneda.Descripcion + "<br />";
-                    }
-
-                    if (desc.Porcentaje != 0)
-                    {
-                        htmlBody += desc.Porcentaje + "%<br />";
+                        if (desc.Importe != 0)
+                        {
+                            htmlBody += desc.Importe + " " + desc.Moneda.Descripcion + "<br />";
+                        }
+                        if (desc.Porcentaje != 0)
+                        {
+                            htmlBody += desc.Porcentaje + "%<br />";
+                        }
                     }
                 }
             }
