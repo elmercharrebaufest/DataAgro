@@ -237,6 +237,28 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
+                field: "Dolarizado Express", columns: [//48
+                    { field: "DolarizadoExpress", title: "Dolar. Express", template: function (dataItem) { return dataItem.DolarizadoExpress ? "Si" : "No"; } },
+                    {
+                        field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
+                            return dataItem.DolarizadoExpress ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
+
+                        }
+                    }
+                ]
+            },
+            {
+                field: "Dolarizado Corredor", columns: [
+                    { field: "DolarizadoCorredor", title: "Dolar. Corredor", template: function (dataItem) { return dataItem.DolarizadoCorredor ? "Si" : "No"; } },
+                    {
+                        field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
+                            return dataItem.DolarizadoCorredor ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
+
+                        }
+                    }
+                ]
+            },
+            {
                 field: "Pago Diferido en pesos", columns: [
                     { field: "Pesificado", title: "Pago Dif.", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },
                     { field: "Dias_Pesificado", title: "Dias", filterable: false }
@@ -264,28 +286,7 @@ function CreateGridInformeCompraNet() {
                     } else return "";
                 }
             },
-            {
-                field: "Dolarizado Express", columns: [//48
-                    { field: "DolarizadoExpress", title: "Dolar. Express", template: function (dataItem) { return dataItem.DolarizadoExpress ? "Si" : "No"; } },
-                    {
-                        field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
-                            return dataItem.DolarizadoExpress ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
-
-                        }
-                    }
-                ]
-            },
-            {
-                field: "Dolarizado Corredor", columns: [
-                    { field: "DolarizadoCorredor", title: "Dolar. Corredor", template: function (dataItem) { return dataItem.DolarizadoCorredor ? "Si" : "No"; } },
-                    {
-                        field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
-                            return dataItem.DolarizadoCorredor ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
-
-                        }
-                    }
-                ]
-            },
+            
             { field: "ChequeElectronicoValor", type: "string", title: "Cheque Electrónico" },
             { field: "PagoCBU", type: "string", title: "Pago Cbu" },
 
@@ -301,11 +302,11 @@ function CreateGridInformeCompraNet() {
                 var templatePizarra = kendo.template(this.columns[15].template);
                 var templateSustentable = kendo.template(this.columns[34].columns[0].template);
                 var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
-                var templatePesificado = kendo.template(this.columns[36].columns[0].template);
-                var templateSIO = kendo.template(this.columns[37].template);
-                var templateTrigoEsp = kendo.template(this.columns[38].template);
-                var templateDolarizadoExpress = kendo.template(this.columns[48].columns[0].template);
-                var templateDolarizadoCorredor = kendo.template(this.columns[49].columns[0].template);
+                var templateDolarizadoExpress = kendo.template(this.columns[36].columns[0].template);
+                var templateDolarizadoCorredor = kendo.template(this.columns[37].columns[0].template);
+                var templatePesificado = kendo.template(this.columns[38].columns[0].template);
+                var templateSIO = kendo.template(this.columns[39].template);
+                var templateTrigoEsp = kendo.template(this.columns[40].template);
 
                 for (var i = 2; i < sheet.rows.length; i++) {
                     var row = sheet.rows[i];
@@ -315,11 +316,11 @@ function CreateGridInformeCompraNet() {
                         Pizarra: row.cells[15].value,
                         Sustentable: row.cells[35].value,
                         Dolarizado: row.cells[40].value,
-                        Pesificado: row.cells[42].value,
-                        NoInformaSIO: row.cells[44].value,
-                        TrigoEspecial: row.cells[45].value,
-                        DolarizadoExpress: row.cells[55].value,
-                        DolarizadoCorredor: row.cells[57].value
+                        DolarizadoExpress: row.cells[42].value,
+                        DolarizadoCorredor: row.cells[44].value,
+                        Pesificado: row.cells[46].value,
+                        NoInformaSIO: row.cells[48].value,
+                        TrigoEspecial: row.cells[49].value,
                     };
 
                     var operacionFecha = row.cells[5].value;
@@ -345,15 +346,14 @@ function CreateGridInformeCompraNet() {
                     row.cells[15].value = templatePizarra(dataItem);
                     row.cells[35].value = templateSustentable(dataItem);
                     row.cells[40].value = templateDolarizado(dataItem);
-                    row.cells[41].value = row.cells[34].value == "Si" ? row.cells[36].value : "";
-                    row.cells[42].value = templatePesificado(dataItem);
-                    row.cells[44].value = templateSIO(dataItem);
-                    row.cells[45].value = templateTrigoEsp(dataItem);
-                    row.cells[55].value = templateDolarizadoExpress(dataItem);
-                    row.cells[56].value = row.cells[49].value == "Si" ? row.cells[50].value : "";
-                    row.cells[57].value = templateDolarizadoCorredor(dataItem);
-                    row.cells[58].value = row.cells[51].value == "Si" ? row.cells[52].value : "";
-                    row.cells[56].format = "yy/MM/dd hh:mm:ss";
+                    row.cells[41].value = row.cells[40].value == "Si" ? row.cells[41].value : "";
+                    row.cells[42].value = templateDolarizadoExpress(dataItem);
+                    row.cells[43].value = row.cells[42].value == "Si" ? row.cells[43].value : "";
+                    row.cells[44].value = templateDolarizadoCorredor(dataItem);
+                    row.cells[45].value = row.cells[44].value == "Si" ? row.cells[45].value : "";
+                    row.cells[46].value = templatePesificado(dataItem);
+                    row.cells[48].value = templateSIO(dataItem);
+                    row.cells[49].value = templateTrigoEsp(dataItem);
                 }
             },
         pageable: {
