@@ -279,17 +279,20 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por ser Apócrifo"));
                 }
 
-                var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
-                if (string.IsNullOrEmpty(alta.Mensaje))
-                {                    
-                    if (alta.ProveedorGrano == "SI")
-                    {
-                        error.Errores.Add(new ErrorMessage(400, "El Corredor/Proveedor es un vendedor eventual"));
-                    }
-                }
-                else
+                if (proveedor.SegmentacionId != 5 && proveedor.SegmentacionId != 7)
                 {
-                    error.Errores.Add(new ErrorMessage(400, alta.Mensaje));
+                    var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+                    if (string.IsNullOrEmpty(alta.Mensaje))
+                    {
+                        if (alta.ProveedorGrano == "SI")
+                        {
+                            error.Errores.Add(new ErrorMessage(400, "El Corredor/Proveedor es un vendedor eventual"));
+                        }
+                    }
+                    else
+                    {
+                        error.Errores.Add(new ErrorMessage(400, alta.Mensaje));
+                    }
                 }
 
             }

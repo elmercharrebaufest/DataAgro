@@ -331,7 +331,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (conf != null)
                 {
                     var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? conf.CantidadDiasDolarizadoLimiteMaximo : conf.CantidadDias;
-                    var fechaLimite = oParam.FechaDesde.AddDays(cantidadDias);
+                    var fechaLimite = oParam.FechaOperacion.AddDays(cantidadDias);
                     if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
                         oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
@@ -1291,7 +1291,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? conf.CantidadDiasDolarizadoLimiteMaximo : conf.CantidadDias;
 
-                    var fechaLimite = oContrato.FechaDesde.AddDays(cantidadDias);
+                    var fechaLimite = oContrato.FechaOperacion.AddDays(cantidadDias);
                     if (oContrato.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
                         result.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
