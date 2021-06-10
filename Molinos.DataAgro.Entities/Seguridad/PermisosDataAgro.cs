@@ -39,6 +39,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ModificarRazonSocial = 114,
         [Display(ResourceType = typeof(Text), Name = "DeshabilitarProveedor")]
         DeshabilitarProveedor = 115,
+        [Display(ResourceType = typeof(Text), Name = "OcultarCamposEditar")]
+        OcultarCamposEditar = 116,
         //Comercial
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,
@@ -142,6 +144,23 @@ namespace Molinos.DataAgro.Entities.Seguridad
         NoRecibirMail = 336,
         [Display(ResourceType = typeof(Text), Name = "ModificarLimiteDolarizado")]
         ModificarLimiteDolarizado = 337,
+        [Display(ResourceType = typeof(Text), Name = "ModificarLimitePesificado")]
+        ModificarLimitePesificado = 338,
+        [Display(ResourceType = typeof(Text), Name = "ModificarLimitePesificadoFinalizado")]
+        ModificarLimitePesificadoFinalizado = 339,
+        [Display(ResourceType = typeof(Text), Name = "ConfirmarNegociosMaiz")]
+        ConfirmarNegociosMaiz = 340,
+        [Display(ResourceType = typeof(Text), Name = "ConfirmarNegociosSoja")]
+        ConfirmarNegociosSoja = 341,
+        [Display(ResourceType = typeof(Text), Name = "ConfirmarNegociosTrigo")]
+        ConfirmarNegociosTrigo = 342,
+        [Display(ResourceType = typeof(Text), Name = "ConfirmarNegociosGirasol")]
+        ConfirmarNegociosGirasol = 343,
+        [Display(ResourceType = typeof(Text), Name = "ConfirmarNegociosGirasolAO")]
+        ConfirmarNegociosGirasolAO = 344,
+        [Display(ResourceType = typeof(Text), Name = "ModificarFijacionVirtual")]
+        ModificarFijacionVirtual = 345,
+
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
@@ -217,7 +236,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfiguracionBolsa = 519,
         [Display(ResourceType = typeof(Text), Name = "Administracion_Proveedores")]
         Administracion_Proveedores = 520,
-
+        [Display(ResourceType = typeof(Text), Name = "Administracion_LogServer")]
+        LogServer = 521,
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]

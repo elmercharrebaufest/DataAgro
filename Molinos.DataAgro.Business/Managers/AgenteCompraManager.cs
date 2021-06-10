@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
-            }        
+            }
             if (oAgente.Id != 0)
             {
                 oAgenteSave = repositorio.Obtener<AgenteCompra>(oAgente.Id);
@@ -188,8 +188,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oAgenteSave.ComercialId = oAgente.ComercialId;
                 oAgenteSave.MonedaId = oAgente.MonedaId;
                 oAgenteSave.MaterialId = oAgente.MaterialId;
-                oAgenteSave.Posicion = oAgente.Posicion;                
-                oAgenteSave.FechaDesde = oAgente.FechaDesde;                
+                oAgenteSave.Posicion = oAgente.Posicion;
+                oAgenteSave.FechaDesde = oAgente.FechaDesde;
                 oAgenteSave.FechaHasta = oAgente.FechaHasta;
                 oAgenteSave.ComercialCreadorId = oAgente.ComercialCreadorId;
                 oAgenteSave.CampanaId = oAgente.CampanaId;
@@ -200,7 +200,7 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 var estado = (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) || PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente)) ? 2 : 1;
-                if(PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) || PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente))
+                if (PermisosHelper.Is(PermisosDataAgro.NegociosConfirmados) || PermisosHelper.Is(PermisosDataAgro.CrearNegociosAgente))
                 {
                     oAgente.FechaConfirmacion = DateTime.Now;
                 }
@@ -412,8 +412,9 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", x.FechaHasta),
                 FechaDesdeFormateado = SqlFunctions.DateName("day", x.FechaDesde).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDesde.Month).TrimStart() + "-" +
-                                           SqlFunctions.DateName("year", x.FechaDesde),                
+                                           SqlFunctions.DateName("year", x.FechaDesde),
                 Proveedor = x.Proveedor.RazonSocial,
+                ProveedorId = x.ProveedorId ?? 0,
                 PrecioNeto = x.PrecioNeto,
                 Moneda = x.Moneda.Descripcion,
                 Material = x.Material.Descripcion,
@@ -475,7 +476,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 logger.Debug("Confirmando el Agente:" + id);
                 try
-                {                    
+                {
                     contrato.UsuarioConfirmadorId = usuarioConfirmador;
                     contrato.FechaConfirmacion = DateTime.Now;
                     repositorio.GuardarCambios();

@@ -18,6 +18,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Anterior { get; set; }
         public string Tipo { get; set; }
         public string Descripcion { get; set; }
+        public int? ProveedorId { get; set; }
+        public int? CorredorId { get; set; }
     }
     public class LogDataAgroExcel
     {

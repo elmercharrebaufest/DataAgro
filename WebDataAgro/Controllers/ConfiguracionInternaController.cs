@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -133,6 +134,7 @@ namespace WebDataAgro.Controllers
                 HastaEntrega = configuracion.HastaEntrega,
                 DesdeFijacion = configuracion.DesdeFijacion,
                 HastaFijacion = configuracion.HastaFijacion,
+                Habilitado = configuracion.Pausar
             };
             return entidad;
         }
@@ -177,6 +179,7 @@ namespace WebDataAgro.Controllers
         private void CargarViewBag()
         {
             var material = materialManager.TraerTodoMaterial();
+            ViewBag.MaterialDesc = configuracionManager.TraerEstadoPrecioMOA();
             var materialesListItems = material.Material.Select(
                     x => new SelectListItem
                     {
@@ -219,6 +222,7 @@ namespace WebDataAgro.Controllers
                         Value = x.CampañaId.ToString()
                     }).OrderBy(x => x.Value);
             ViewBag.Campaña = campañaList;
+            ViewBag.Habilitado = configuracionManager.TraerPausadoGeneral();
         }
         public ActionResult EliminarPrecio(int id)
         {
@@ -292,6 +296,17 @@ namespace WebDataAgro.Controllers
                 ResultadoPago = configuracionManager.EliminarHabilitacionPagoDiferido(id),
                 HabilitacionPagoDiferido = configuracionManager.TraerPagoDiferido()
             });
+        }      
+        
+        public ActionResult PausarPrecios(List<EstadoPrecioMOADto> lista)
+        {
+            configuracionManager.CambiarEstadoPrecioMOA(lista);
+            CargarViewBag();
+            return new JsonResult()
+            {
+                Data = "",
+                MaxJsonLength = Int32.MaxValue
+            };
         }
 
     }

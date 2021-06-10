@@ -805,4 +805,37 @@
   <data name="ModificarLimiteDolarizado" xml:space="preserve">
     <value>Modificar Limite Dolarizado</value>
   </data>
+  <data name="ModificarLimitePesificado" xml:space="preserve">
+    <value>Modificar Límite Pesificado</value>
+  </data>
+  <data name="OcultarCamposEditar" xml:space="preserve">
+    <value>Ocultar Campos Editar Proveedor</value>
+  </data>
+  <data name="Administracion_LogServer" xml:space="preserve">
+    <value>Logs Servidor</value>
+  </data>
+  <data name="ModificarLimitePesificadoFinalizado" xml:space="preserve">
+    <value>Modificar Limite Pesificado Finalizado</value>
+  </data>
+  <data name="VisualizarReportePagoDiferido" xml:space="preserve">
+    <value>Visualizar Reporte Pago Diferido</value>
+  </data>
+  <data name="ConfirmarNegociosGirasol" xml:space="preserve">
+    <value>Confirmar Negocios Girasol</value>
+  </data>
+  <data name="ConfirmarNegociosGirasolAO" xml:space="preserve">
+    <value>Confirmar Negocios Girasol AO</value>
+  </data>
+  <data name="ConfirmarNegociosMaiz" xml:space="preserve">
+    <value>Confirmar Negocios Maiz</value>
+  </data>
+  <data name="ConfirmarNegociosSoja" xml:space="preserve">
+    <value>Confirmar Negocios Soja</value>
+  </data>
+  <data name="ConfirmarNegociosTrigo" xml:space="preserve">
+    <value>Confirmar Negocios Trigo</value>
+  </data>
+  <data name="ModificarFijacionVirtual" xml:space="preserve">
+    <value>Modificar Fijacion Virtual</value>
+  </data>
 </root>

@@ -47,16 +47,23 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     proveedorComercial.ProveedorId,
                     proveedorComercial.Proveedor.RazonSocial,
                     proveedorComercial.Proveedor.CUIT,
-                    proveedorComercial.Proveedor.Alias
+                    proveedorComercial.Proveedor.Alias,
+                    proveedorComercial.Proveedor.SegmentacionId
                 };
             var query = resultado.Select(provs => new BusquedaHome
             {
                 Id = provs.Key.ProveedorId,
-                RazonSocial = !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
-                Alias = provs.Key.Alias,
                 Cuit = provs.Key.CUIT,
+                Alias = provs.Key.Alias,
+                RazonSocial = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR - " + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) : !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
+                Corredor = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR" : "",
                 Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")"
             });
+
+
+
+
+
             return query.ToList();
         }
 

@@ -10,9 +10,11 @@
           <xsd:sequence>
             <xsd:element name="IM_CONTRATO" type="rfc:char10" />
             <xsd:element name="IM_CUENTA_MRP" type="rfc:char60" />
+            <xsd:element minOccurs="0" name="IM_DIAS_DIFERIM" type="rfc:numeric3" />
             <xsd:element minOccurs="0" name="IM_DOLARIZADO" type="rfc:char1" />
             <xsd:element minOccurs="0" name="IM_DOL_CORREDOR" type="rfc:char1" />
             <xsd:element minOccurs="0" name="IM_DOL_EXPRESS" type="rfc:char1" />
+            <xsd:element minOccurs="0" name="IM_FECHA_CIERTA" type="rfc:char10" />
             <xsd:element minOccurs="0" name="IM_FECHA_LIMITE" type="rfc:date10" />
             <xsd:element name="IM_FIJACION" type="rfc:char10" />
             <xsd:element name="IM_ZLSCH" type="rfc:char1" />
@@ -40,6 +42,12 @@
       <xsd:simpleType name="char10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="numeric3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+          <xsd:pattern value="\d*" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="string">

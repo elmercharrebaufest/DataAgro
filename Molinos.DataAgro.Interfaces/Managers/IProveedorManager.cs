@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult BuscarDatosProduccion(DataSourceRequest request, List<int> equipo);
         DataSourceResult BuscarDatosAlmacenamiento(DataSourceRequest request, List<int> equipo);
         void ImportarEstablecimientos(List<CampoDetalleDto> campos, Resultado resultado);
-
+        List<ProveedorDto> TraerProveedoresPorCuit(string cuit);
         int ObtenerIdProveedorPorCuit(string cuit);
 
         Proveedor ObtenerEmailProveedorPorCuit(string cuit);
@@ -77,5 +77,7 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarMailCanje(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial);
         void ActualizarRazonSocial();
         bool MostrarProveedorDeshabilitado(int proveedorId);
+        void EnviarMailFijacionVirtual(FijacionDePrecioContrato contrato, string comercial);
+        void EnviarMailPrestamoDevolucion(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial);
     }
 }

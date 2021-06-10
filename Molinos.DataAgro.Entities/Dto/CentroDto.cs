@@ -6,6 +6,7 @@
         public string Descripcion { get; set; }
         public string CodigoSap { get; set; }
         public bool Acopio { get; set; }
+        public bool ValidaRedespacho { get; set; }
     }
 
 }

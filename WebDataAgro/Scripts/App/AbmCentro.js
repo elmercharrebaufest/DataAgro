@@ -194,7 +194,8 @@ function UpdateViewModel(model) {
         "Id": model.Centro.Id,
         "Descripcion": model.Centro.Descripcion,
         "CodigoSap": model.Centro.CodigoSap,
-        "Acopio":model.Centro.Acopio
+        "Acopio": model.Centro.Acopio,
+        "ValidaRedespacho": model.Centro.ValidaRedespacho
     };
 
     viewModel.set("Centro", centro);
@@ -335,7 +336,8 @@ function Grabar() {
         "Id": viewModel.get("Centro.Id"),
         "Descripcion": viewModel.get("Centro.Descripcion"),
         "CodigoSap": viewModel.get("Centro.CodigoSap"),
-        "Acopio": viewModel.get("Centro.Acopio")
+        "Acopio": viewModel.get("Centro.Acopio"),
+        "ValidaRedespacho": viewModel.get("Centro.ValidaRedespacho")
     };
 
     var result = MSExecuteOnServer('/Centro/Grabar', datos);

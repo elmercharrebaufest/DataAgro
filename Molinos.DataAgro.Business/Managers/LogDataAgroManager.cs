@@ -42,7 +42,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato)
         {
-            var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "Fecha_Order", "GrupoCompra", "Estado_Order", "DesdeFijacionFormateado", "FechaCiertaFormateado", "FechaDesdeFormateado", "FechaFormateado", "FechaHastaFormateado", "FechaOperacionFormateado", "Fecha_DolarizadoFormateado", "HastaFijacionFormateado" });
+            var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "Fecha_Order", "GrupoCompra", "Estado_Order", "DesdeFijacionFormateado", "FechaCiertaFormateado", "FechaDesdeFormateado", "FechaFormateado", "FechaHastaFormateado", "FechaOperacionFormateado", "Fecha_DolarizadoFormateado", "HastaFijacionFormateado", "ProveedorCreador" });
             string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.Id.ToString() + " - " + cambios.ContratoSAP.TrimStart('0');
 
             if (cambios.TipoNegocioId == 3)
@@ -170,6 +170,8 @@ namespace Molinos.DataAgro.Business.Managers
                 AccionRealizada = tipoDeAccion.ToString(),
                 ClaseId = id,
                 Descripcion = descripcion,
+                ProveedorId = proveedorId,
+                CorredorId = corredorId,
             };
             if (hayCambios(logAgregado) || tipoDeAccion == TipoAccionLogDataAgro.Eliminar)
             {
@@ -750,26 +752,35 @@ namespace Molinos.DataAgro.Business.Managers
         public string BuscaFechaYFormatea(string s, string campo)
         {
             List<string> contratosap = new List<string> { "Contrato SAP", "ContratoSAP", "Contrato Vendedor", "ContratoVendedor" };
+            List<string> noFormatear = new List<string> { "UsuarioTercero" };
+            List<string> noEsNumero = new List<string> { "CUIT", "CodigoPostal", "Telefono1", "Email1", "EstadoCuit" };
             if (contratosap.Contains(campo))
             {
                 return s.TrimStart('0');
             }
             if (string.IsNullOrEmpty(s))
                 return s;
-            //s = s.Trim();
-            s = s.Replace("false", "No");
-            s = s.Replace("true", "Si");
-            s = s.Replace("False", "No");
-            s = s.Replace("True", "Si");
-            s = s.Replace("null", "");
-            s = s.Replace("\"", "");
-            s = s.Replace("_", "");
+
+            if (s == "null")
+                s = "";
+
+
+            if (!noFormatear.Contains(campo))
+            {
+                s = s.Replace("false", "No");
+                s = s.Replace("true", "Si");
+                s = s.Replace("False", "No");
+                s = s.Replace("True", "Si");
+                s = s.Replace("null", "");
+                s = s.Replace("\"", "");
+                s = s.Replace("_", "");
+            }
 
             Regex formato1 = new Regex("[0-9]{4}-[0-1]?[0-9]-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}"); //2020-06-30T16:36:23.597
             Regex formato2 = new Regex("[0-9]{4}-[0-1]?[0-9]-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}"); //2020-06-30T00:00:00
             Regex formato3 = new Regex("[0-9]{4}-[0-1]?[0-9]-[0-9]{2} T[0-9]{2}:[0-9]{2}:[0-9]{2}"); //2020-08-02 T00:00:00
             double number = 0;
-            if (double.TryParse(s, out number))
+            if (double.TryParse(s, out number) && !noEsNumero.Contains(campo))
             {
                 s = string.Format("{0:#,0.00}", number);
             }

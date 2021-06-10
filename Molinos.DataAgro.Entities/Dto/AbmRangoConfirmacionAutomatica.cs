@@ -1,4 +1,5 @@
-﻿using Molinos.DataAgro.Entities.Entities;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
 
@@ -10,6 +11,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<MonedaQry> Moneda { get; set; }
         public List<ZonaQry> Zona { get; set; }
         public List<TipoNegocioDto> TipoNegocio { get; set; }
+        public List<TipoRangoConfirmacionAutomaticaDto> TipoRango { get; set; }
     }
 
     public class DataAbmRangoConfirmacionAutomatica : Resultado
@@ -43,6 +45,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string EntregaHasta { get; set; }
         public string TipoNegocio { get; set; }
         public int TipoNegocioId { get; set; }
+        public int TipoRangoId { get; set; }
+        public string TipoRango { get; set; }
     }
 }
 

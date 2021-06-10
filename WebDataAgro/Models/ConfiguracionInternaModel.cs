@@ -35,6 +35,7 @@ namespace WebDataAgro.Models
         public DateTime? HastaEntregaPizarra { get; set; }
         public int MaterialCampañaId { get; set; }
         public int CampañaId { get; set; }
+        public bool? Pausar { get; set; }
 
         public Resultado ResultadoPrecio { get; set; }
         public Resultado ResultadoPizarra { get; set; }

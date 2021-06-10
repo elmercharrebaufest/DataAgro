@@ -626,9 +626,9 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new ToneladasGranoTipoDto { Material = "a", Total = 0 });
             var result = target.TraerToneladasGranoTipo(fecha, fecha, new List<int>() { 1, 2, 3, 4, 5 });
 
-            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerToneladasPorGrano>()), Times.Exactly(7));
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerToneladasPorGrano>()), Times.Exactly(5));
             Assert.NotNull(result);
-            Assert.AreEqual(7, result.Count);
+            Assert.AreEqual(5, result.Count);
         }
         [Test]
         public void TraerToneladasSojaSustTest()
@@ -684,7 +684,7 @@ namespace Molinos.DataAgro.Test.Managers
             //repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Fason, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(7));
             //repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContratoAcuerdo, PosicionPorMaterial>>>(), It.IsAny<Expression<Func<ContratoAcuerdo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), Entities.Helpers.DirOrden.Asc), Times.Exactly(7));
             Assert.NotNull(result);
-            Assert.AreEqual(7, result.Count);
+            Assert.AreEqual(5, result.Count);
         }
         [Test]
         public void TraerMonedaCantidadTest()

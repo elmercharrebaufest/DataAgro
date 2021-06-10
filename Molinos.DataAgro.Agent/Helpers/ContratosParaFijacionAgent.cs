@@ -257,6 +257,7 @@ namespace Molinos.DataAgro.Agent
                         Anticipo = contrato.ANTICIPO == "X" ? true : false,
                         Aperturas = aperturas,
                         Bonificaciones = bonificaciones,
+                        Virtual = false
                     };
 
                     if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)

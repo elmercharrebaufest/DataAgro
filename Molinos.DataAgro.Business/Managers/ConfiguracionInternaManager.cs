@@ -149,7 +149,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 TipoNegocio = x.TipoNegocio.Descripcion,
                 MonedaId = x.MonedaId,
-                Precio = x.Precio
+                Precio = x.Precio,
+                Pausar = x.Habilitado
             },
            x => (x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy) || x.DesdeVigencia >= hoy || (x.DesdeVigencia <= ultimoDiaHabil && x.HastaVigencia >= ultimoDiaHabil))
                 .OrderBy(x => x.DesdeVigencia).ThenBy(x => x.MaterialId).ToList();
@@ -182,7 +183,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 TipoNegocio = x.TipoNegocio.Descripcion,
-                TipoNegocioId = x.TipoNegocioId
+                TipoNegocioId = x.TipoNegocioId,
+                Habilitado = x.Habilitado
             },
             x => x.Dia >= hoy)
                 .OrderBy(x => x.Dia).ThenBy(x => x.DesdeVigencia).ToList();
@@ -462,7 +464,7 @@ namespace Molinos.DataAgro.Business.Managers
         private Resultado ValidarPagoDiferido(HabilitacionPagoDiferido pago)
         {
             var error = new Resultado();
-            
+
             if (pago.CantidadDia <= 0)
             {
                 error.Error("CantidadDia", "El campo Cantidad de Días es obligatorio");
@@ -507,7 +509,7 @@ namespace Molinos.DataAgro.Business.Managers
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId != 5);
             var tipoNegocios = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion },
                 x => tiponegocio == 0 ? x.TipoNegocioId <= 3 : x.TipoNegocioId == 3);
-
+            var habilitado = repositorio.Listar<EstadoPrecioMOA, int>(x=> x.MaterialId, x => x.Habilitado.Value);
             var monedas = repositorio.Listar<Moneda, MonedaDto>(x => new MonedaDto { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
             var ahora = DateTime.Now;
             var preciosMoa = repositorio.Listar<PrecioMoa, PrecioMoaCompraNetDto>(x => new PrecioMoaCompraNetDto
@@ -522,9 +524,12 @@ namespace Molinos.DataAgro.Business.Managers
                 DesdeFijacion = x.DesdeFijacion,
                 HastaEntrega = x.HastaEntrega,
                 HastaFijacion = x.HastaFijacion
-            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && (x.TipoNegocioId == tiponegocio || tiponegocio == 0));
+            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora 
+            && (x.TipoNegocioId == tiponegocio || tiponegocio == 0) && (habilitado.Contains(x.MaterialId) || 
+            (x.Habilitado.HasValue && x.Habilitado.Value)));
             var hoy = DateTime.Today;
-            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && (x.TipoNegocioId == tiponegocio || tiponegocio == 0));
+            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && (x.TipoNegocioId == tiponegocio || tiponegocio == 0) && (habilitado.Contains(x.MaterialId) ||
+            (x.Habilitado.HasValue && x.Habilitado.Value)));
             foreach (var neg in tipoNegocios)
             {
                 foreach (var mat in materiales)
@@ -879,6 +884,85 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Errores.Add(new ErrorMessage(200, "Se eliminó correctamente"));
             }
             return oEntityErrors;
+        }
+
+        public void PausarCargaDePrecios(bool pausar)
+        {
+            try
+            {
+                var hoy = DateTime.Today;
+                var precio = repositorio.Listar<PrecioMoa>(x => x.HastaVigencia >= hoy);
+                var pizarra = repositorio.Listar<HabilitacionPizarra>(x => x.HastaVigencia >= hoy);
+                precio.ForEach(m => m.Habilitado = pausar);
+                pizarra.ForEach(m => m.Habilitado = pausar);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+        }    
+
+        public bool TraerPausadoGeneral()
+        {
+            var hoy = DateTime.Today;
+            var hayPizarra = false;
+            var hayPrecio = false;
+            var precio = repositorio.Listar<PrecioMoa>(x => x.HastaVigencia >= hoy).FirstOrDefault();
+            var pizarra = repositorio.Listar<HabilitacionPizarra>(x => x.HastaVigencia >= hoy).FirstOrDefault();
+            if(pizarra != null)
+            {
+                hayPizarra = pizarra.Habilitado ?? true;
+            }
+            if (precio != null)
+            {
+                hayPrecio = precio.Habilitado ?? true;
+            }
+            return hayPrecio != false || hayPizarra != false ? true : false;           
+          
+        }
+
+        public void CambiarEstadoPrecioMOA(List<EstadoPrecioMOADto> precios)
+        {
+            try
+            {
+             var estadosPrecio = repositorio.Listar<EstadoPrecioMOA>();
+                if (precios != null && precios.Count > 0)
+                {
+                    foreach (var precio in precios)
+                    {
+                        if (precio.MaterialId == 0)
+                        {
+                            PausarCargaDePrecios(precio.Habilitado.Value);
+                        }
+                        if (precio.MaterialId > 0)
+                        {
+                           var estado = estadosPrecio.Where(x => x.MaterialId == precio.MaterialId).FirstOrDefault();
+                           estado.MaterialId = precio.MaterialId;
+                           estado.Habilitado = precio.Habilitado;                           
+                        }
+                    }
+
+                }
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+        }
+
+        public List<EstadoPrecioMOADto> TraerEstadoPrecioMOA()
+        {
+          return  repositorio.Listar<EstadoPrecioMOA, EstadoPrecioMOADto>(x => 
+            new EstadoPrecioMOADto
+            {
+                Descripcion = x.Material.Descripcion,
+                MaterialId = x.MaterialId,
+                Habilitado = x.Habilitado
+            });
         }
     }
 }

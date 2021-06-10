@@ -12,6 +12,7 @@
     [HastaFijacion] DATETIME NULL, 
     [UsuarioCreadorId] INT NULL, 
     [FechaCreacion] DATETIME NULL, 
+    [Habilitado] BIT NULL, 
     CONSTRAINT [PK_PrecioMoa] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_PrecioMoa_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].Material ([MaterialId]),
 	CONSTRAINT [FK_PrecioMoa_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [dbo].Moneda ([MonedaId]),

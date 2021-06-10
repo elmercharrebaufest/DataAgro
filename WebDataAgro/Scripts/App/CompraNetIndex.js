@@ -26,6 +26,12 @@ var esPrestamo;
 var modificacionFijacionDolarizado;
 var modificacionFijacionDolarizadoExpress;
 var esVenta;
+var confirmarNegociosMaiz;
+var confirmarNegociosSoja;
+var confirmarNegociosTrigo;
+var confirmarNegociosGirasol;
+var confirmarNegociosGirasolAO;
+var esVirtual;
 
 
 $(document).ready(function () {
@@ -51,6 +57,12 @@ $(document).ready(function () {
     modificacionFijacionDolarizado = ConvertirStringABool(modificacionFijacionDolarizado);
     modificacionFijacionDolarizadoExpress = ConvertirStringABool(modificacionFijacionDolarizadoExpress);
     esVenta = ConvertirStringABool(esVenta);
+    confirmarNegociosMaiz = ConvertirStringABool(confirmarNegociosMaiz);
+    confirmarNegociosSoja = ConvertirStringABool(confirmarNegociosSoja);
+    confirmarNegociosTrigo = ConvertirStringABool(confirmarNegociosTrigo);
+    confirmarNegociosGirasol = ConvertirStringABool(confirmarNegociosGirasol);
+    confirmarNegociosGirasolAO = ConvertirStringABool(confirmarNegociosGirasolAO);
+    esVirtual = ConvertirStringABool(esVirtual);
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     $("#demo").on("hide.bs.collapse", function () {
@@ -180,12 +192,14 @@ function FormatearString(string, moneda) {
 }
 function botonPendiente(dataItem, icono) {
     if ((modificaNegocios || (dataItem.Canje == true && esCanje)) && !externo &&
-        (dataItem.PrestamoDevolucion != true && dataItem.Venta != true && (dataItem.Canje == null || dataItem.Canje == false) ||
-        (dataItem.Canje == true && esCanje) ||
-        (dataItem.Canje != true && dataItem.Venta != true && (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) ||
-        (dataItem.PrestamoDevolucion == true && esPrestamo)) ||
-        (dataItem.Canje != true && dataItem.PrestamoDevolucion != true && (dataItem.Venta == null || dataItem.Venta == false) ||
-        (dataItem.Venta == true && esVenta)))) {
+        (dataItem.PrestamoDevolucion != true && dataItem.Venta != true && dataItem.Virtual != true &&
+        (dataItem.Canje == null || dataItem.Canje == false) ||  (dataItem.Canje == true && esCanje) ||
+        (dataItem.Canje != true && dataItem.Venta != true && dataItem.Virtual != true &&
+        (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) || (dataItem.PrestamoDevolucion == true && esPrestamo)) ||
+        (dataItem.Canje != true && dataItem.PrestamoDevolucion != true && dataItem.Virtual != true &&
+        (dataItem.Venta == null || dataItem.Venta == false) || (dataItem.Venta == true && esVenta)) ||
+        (dataItem.Canje != true && dataItem.Venta != true && dataItem.PrestamoDevolucion != true &&
+        (dataItem.Virtual == null || dataItem.Virtual == false) || (dataItem.Virtual == true && esVirtual)))) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
@@ -213,7 +227,7 @@ function cambiarMarca(id, ocultar) {
     recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
-    if ((modificaFinalizados || (dataItem.Canje == true && esCanje))
+    if (((modificaFinalizados && (dataItem.Virtual == false)) || (dataItem.Canje == true && esCanje) || dataItem.Virtual == false)
         && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId)
         && ((dataItem.PrestamoDevolucion != true && dataItem.Canje != true)
             || (dataItem.Canje == true && esCanje)
@@ -266,11 +280,16 @@ function botonConfirmadoTildeFinalizado(dataItem, icono) {
 
 function puedeConfirmarNegocio(dataItem) {
     return (
-        (dataItem.ComercialZonaId == 42 && confirmaNegocioOrigNorte)
+        ((dataItem.ComercialZonaId == 42 && confirmaNegocioOrigNorte)
         || (dataItem.ComercialZonaId == 43 && confirmaNegocioOrigCentro)
         || (dataItem.ComercialZonaId == 44 && confirmaNegocioOrigSur)
         || (dataItem.ComercialZonaId == 45 && confirmaNegocioCorredoresBsAs)
-        || (dataItem.ComercialZonaId == 46 && confirmaNegocioCorredoresRosario)
+        || (dataItem.ComercialZonaId == 46 && confirmaNegocioCorredoresRosario))
+        && ((dataItem.MaterialId == 1 && confirmarNegociosMaiz)
+            || (dataItem.MaterialId == 2 && confirmarNegociosTrigo)
+            || (dataItem.MaterialId == 3 && confirmarNegociosSoja)
+            || (dataItem.MaterialId == 4 && confirmarNegociosGirasol)
+            || (dataItem.MaterialId == 5 && confirmarNegociosGirasolAO))
     );
 }
 function botonFinalizado(dataItem, icono) {
@@ -396,8 +415,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.FechaDesde_SustentableFormateado + "'" + ',' +
         "'" + dataItem.FechaHasta_SustentableFormateado + "'" + ',' +
         "'" + dataItem.PosicionCBOT + "'" + ',' +
-        "'" + dataItem.TipoPosicionCBOT + "'" +
-
+        "'" + dataItem.TipoPosicionCBOT + "'" + ',' +  
+        "'" + dataItem.ObligatoriedadCostoFinanciero + "'" + 
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -826,7 +845,9 @@ function CreateGridInformeCompraNet() {
                         TipoNegocio: "CANJE"
                     }, {
                         TipoNegocio: "PR\u00C9STAMO DEVOLUCI\u00D3N"
-                    }, { TipoNegocio: "VENTA" }]
+                    }, { TipoNegocio: "VENTA" },
+                    { TipoNegocio: "FIJACI\u00D3N VIRTUAL" }
+                    ]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
                 }
@@ -1927,7 +1948,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
-    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, PosicionCBOT, TipoPosicionCBOT) {
+    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, PosicionCBOT, TipoPosicionCBOT, obligatoriedad) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2156,86 +2177,94 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     } else if (tipo == "CONTRATO ACUERDO") {
         datos = MSExecuteOnServer('/CompraNet/TraerDatosDeContratoAcuerdo', { contratoId: id });
 
-    } else {
+    } else if (tipo != 'FIJACION VIRTUAL') {
         datos = MSExecuteOnServer('/CompraNet/TraerDatosDeContrato', { contratoId: id });
+
+    } else {
+        $("#procedenciaDivVisualizar").hide();
+        $("#tipoCalidadDiv").hide();
+        $("#clasificacionDivVisualizar").hide();
+
     }
     var iteracionesDescuentos = viewModel.DescuentosVisualizar.length;
     for (var i = 0; i < iteracionesDescuentos; i++) {
         viewModel.DescuentosVisualizar.pop();
     }
+    if (datos != null && datos != undefined) {
+        var descuentosDto = datos.DescuentosBonificaciones;
+        $.each(descuentosDto, function (key, descuento) {
+            var descuentoKendo = {
+                Id: descuento.Id,
+                TipoPeriodoDBDesc: descuento.TipoPeriodoDBDesc,
+                TipoPeriodoDBId: descuento.TipoPeriodoDBId,
+                TipoDBDesc: descuento.TipoDBDesc,
+                TipoDBId: descuento.TipoDBId,
+                FechaDesde: descuento.FechaDesde,
+                FechaHasta: descuento.FechaHasta,
+                Importe: descuento.Importe,
+                MonedaId: descuento.MonedaId,
+                Porcentaje: descuento.Porcentaje,
+                ContratoId: descuento.contratoId
+            };
+            viewModel.DescuentosVisualizar.push(descuentoKendo);
+        });
 
-    var descuentosDto = datos.DescuentosBonificaciones;
-    $.each(descuentosDto, function (key, descuento) {
-        var descuentoKendo = {
-            Id: descuento.Id,
-            TipoPeriodoDBDesc: descuento.TipoPeriodoDBDesc,
-            TipoPeriodoDBId: descuento.TipoPeriodoDBId,
-            TipoDBDesc: descuento.TipoDBDesc,
-            TipoDBId: descuento.TipoDBId,
-            FechaDesde: descuento.FechaDesde,
-            FechaHasta: descuento.FechaHasta,
-            Importe: descuento.Importe,
-            MonedaId: descuento.MonedaId,
-            Porcentaje: descuento.Porcentaje,
-            ContratoId: descuento.contratoId
-        };
-        viewModel.DescuentosVisualizar.push(descuentoKendo);
-    });
+        var iteracionesCalidades = viewModel.CalidadesVisualizar.length;
+        for (var j = 0; j < iteracionesCalidades; j++) {
+            viewModel.CalidadesVisualizar.pop();
+        }
 
+        var calidadesDto = datos.Calidades;
+        $("#visualizar_calidad").text(standardDeCalidadDescripcion);
 
-    var iteracionesCalidades = viewModel.CalidadesVisualizar.length;
-    for (var j = 0; j < iteracionesCalidades; j++) {
-        viewModel.CalidadesVisualizar.pop();
-    }
+        $.each(calidadesDto, function (key, calidad) {
+            var calidadKendo = {
+                Id: calidad.Id,
+                CalidadEspecialId: calidad.CalidadEspecialId,
+                CalidadEspecialDesc: calidad.CalidadEspecialDesc,
+                Valor: calidad.Valor,
+                ContratoId: calidad.ContratoId,
+                PorcentajeDesde: calidad.PorcentajeDesde,
+                PorcentajeHasta: calidad.PorcentajeHasta,
+                StandardDeCalidadId: 2
+            };
+            viewModel.CalidadesVisualizar.push(calidadKendo);
+        });
+        if (calidadesDto != null && calidadesDto.length > 0) {
+            $("#calidadesDivVisualizar").show();
+        } else {
+            $("#calidadesDivVisualizar").hide();
 
-    var calidadesDto = datos.Calidades;
-    $("#visualizar_calidad").text(standardDeCalidadDescripcion);
+        }
+        var iteracionesPrecio = viewModel.PreciosVisualizar.length;
+        for (var k = 0; k < iteracionesPrecio; k++) {
+            viewModel.PreciosVisualizar.pop();
+        }
+        var preciosDto = datos.Precios;
+        if (preciosDto != null && preciosDto.length > 0)
+            $("#pactadosDivVisualizar").show();
+        else
+            $("#pactadosDivVisualizar").hide();
 
-    $.each(calidadesDto, function (key, calidad) {
-        var calidadKendo = {
-            Id: calidad.Id,
-            CalidadEspecialId: calidad.CalidadEspecialId,
-            CalidadEspecialDesc: calidad.CalidadEspecialDesc,
-            Valor: calidad.Valor,
-            ContratoId: calidad.ContratoId,
-            PorcentajeDesde: calidad.PorcentajeDesde,
-            PorcentajeHasta: calidad.PorcentajeHasta,
-            StandardDeCalidadId: 2
-        };
-        viewModel.CalidadesVisualizar.push(calidadKendo);
-    });
-    if (calidadesDto != null && calidadesDto.length > 0) {
-        $("#calidadesDivVisualizar").show();
+        $.each(preciosDto, function (key, precio) {
+            var precioKendo = {
+                Id: precio.Id,
+                FechaDesde: precio.FechaDesde,
+                FechaHasta: precio.FechaHasta,
+                Precio: kendo.toString(precio.Precio ? Number(precio.Precio) : "", "n2"),
+                MonedaPactadoId: precio.MonedaPactadoId,
+                MonedaPactadoDesc: precio.MonedaPactadoDesc,
+                ImportePactado: kendo.toString(precio.ImportePactado ? Number(precio.ImportePactado) : "", "n2"),
+                MonedaImportePactadoId: precio.MonedaImportePactadoId != null ? precio.MonedaImportePactadoId : "",
+                MonedaImportePactadoDesc: precio.MonedaImportePactadoDesc != null ? precio.MonedaImportePactadoDesc : "",
+                Porcentaje: precio.Porcentaje != null ? precio.Porcentaje : ""
+            };
+            viewModel.PreciosVisualizar.push(precioKendo);
+        });
     } else {
-        $("#calidadesDivVisualizar").hide();
-
-    }
-    var iteracionesPrecio = viewModel.PreciosVisualizar.length;
-    for (var k = 0; k < iteracionesPrecio; k++) {
-        viewModel.PreciosVisualizar.pop();
-    }
-    var preciosDto = datos.Precios;
-    if (preciosDto != null && preciosDto.length > 0)
-        $("#pactadosDivVisualizar").show();
-    else
         $("#pactadosDivVisualizar").hide();
-
-    $.each(preciosDto, function (key, precio) {
-        var precioKendo = {
-            Id: precio.Id,
-            FechaDesde: precio.FechaDesde,
-            FechaHasta: precio.FechaHasta,
-            Precio: kendo.toString(precio.Precio ? Number(precio.Precio) : "", "n2"),
-            MonedaPactadoId: precio.MonedaPactadoId,
-            MonedaPactadoDesc: precio.MonedaPactadoDesc,
-            ImportePactado: kendo.toString(precio.ImportePactado ? Number(precio.ImportePactado) : "", "n2"),
-            MonedaImportePactadoId: precio.MonedaImportePactadoId != null ? precio.MonedaImportePactadoId : "",
-            MonedaImportePactadoDesc: precio.MonedaImportePactadoDesc != null ? precio.MonedaImportePactadoDesc : "",
-            Porcentaje: precio.Porcentaje != null ? precio.Porcentaje : ""
-        };
-        viewModel.PreciosVisualizar.push(precioKendo);
-    });
-
+        $("#calidadesDivVisualizar").hide();
+    }
     if (standardDeCalidadDescripcion == "null") $("#tipoCalidadDiv").hide();
     if (standardDeCalidadDescripcion == "Grado 2" || standardDeCalidadDescripcion == "Bonif. SECO de 7% a 10% Por punto") $("#calidadesDivVisualizar").hide();
 
@@ -2258,13 +2287,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaBasisDivVisualizar").hide();
     $("#divPosicionCBOT").hide();
 
-    if (precioNeto != 0  || tipo === "A FIJAR") {
+    if (precioNeto != 0 || tipo === "A FIJAR") {
         $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
         $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
 
         var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: id, tipo: tipo });
         $.each(aperturaPrecio, function (key, concepto) {
-            var moneda = concepto.Moneda ==null? "": concepto.Moneda;
+            var moneda = concepto.Moneda == null ? "" : concepto.Moneda;
             switch (concepto.ConceptoAperturaPrecioId) {
                 case 1:
                     if (concepto.Importe) {
@@ -2306,7 +2335,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                         //visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
                         $("#aperturaBasisDivVisualizar").show();
                         $("#visualizar_PosicionCBOT").text(TipoPosicionCBOT + " - " + PosicionCBOT);
-                    } 
+                    }
 
                     break;
             }
@@ -2317,7 +2346,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
             }
             visualizacionRowDoble("aperturaFinancieroDivVisualizar", "visualizar_aperturaFinanciero", "aperturaRedespachoDivVisualizar", "visualizar_aperturaRedespacho");
             visualizacionRowDoble("aperturaComisionesDivVisualizar", "visualizar_aperturaComisiones", "aperturaBonificacionesDivVisualizar", "visualizar_aperturaBonificaciones");
-          
+
         });
         if (tipo === "A FIJAR") {
             $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
@@ -2402,6 +2431,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#insumoDiv").hide();
         $("#montoDiv").hide();
         $("#monedaCanjeDiv").hide();
+    }
+
+    if (obligatoriedad == "true") {
+        $("#obligatorioDiv").show();
+        $("#obligatorioId").text("Si");       
+    } else {
+        $("#obligatorioDiv").hide();
     }
 
     if (Prestamo == "true") {

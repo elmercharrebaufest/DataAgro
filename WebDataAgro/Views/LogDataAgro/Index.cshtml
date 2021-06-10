@@ -62,20 +62,19 @@
             @Html.DropDownList("Clase", new SelectList(ViewBag.Clase, "Value", "Text"), "Seleccione una Clase", new { @class = "form-control filtroBusquedaTextBoxContieneTexto", @id = "Clase" })
         </div>
     </div>    <br />
-    <div class="row">
-        <div id="ProveedorDiv">
+    <div id="ProveedorDiv">
+        <div class="row">
             <div class="col-md-2">
                 <label>Proveedor</label>
             </div>
             <div class="col-md-4">
-                <input id="buscadorProveedor" name="ClaseId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" />
+                <input id="buscadorProveedor" name="ProveedorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" />
             </div>
         </div>
+        <br />
+    </div>
+    <div class="row">
         <div id="NegocioDiv">
-
-            @*<div class="col-md-4">
-                    <input id="buscadorNegocio" name="ClaseId" class="multiselect" style="width:100%" type="text" placeholder="Buscar ContratoSAP o Nro de Negocio" />
-                </div>*@
             <div class="col-md-2">
                 <label>Contrato SAP</label>
             </div>
@@ -89,8 +88,6 @@
                 <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
                 <div class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
                 </div>
-                @*<button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="FiltrarNegocio()">
-                </button>*@
                 <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
                 </button>
             </div>
@@ -98,13 +95,11 @@
         <div id="CupoDiv">
             <div class="col-md-2">
                 <label>Cupo SAP</label>
-            </div>           
+            </div>
             <div class="col-xs-12 col-md-2">
                 @Html.TextBox("CupoSap", "", new { placeholder = "Código de Cupo", @class = "form-control ", style = "width:100%", @id = "CupoSAPId" })
             </div>
             <div class="col-xs-12 col-md-2">
-                @*<button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="FiltrarCupo()">
-                </button>*@
                 <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
                 </button>
 

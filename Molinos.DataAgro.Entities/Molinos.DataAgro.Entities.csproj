@@ -128,9 +128,13 @@
     <Compile Include="Common\Enums\InformeComercial.cs" />
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
+    <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
+    <Compile Include="Dto\LogFileModel.cs" />
     <Compile Include="Dto\AbmFechaFeriado.cs" />
     <Compile Include="Dto\CamposSustentables.cs" />
+    <Compile Include="Dto\EstadoPrecioMOADto.cs" />
+    <Compile Include="Dto\TipoRangoConfirmacionAutomaticaDto.cs" />
     <Compile Include="Dto\ValidarCreditoDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
@@ -315,7 +319,9 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\AdministracionCupo.cs" />
+    <Compile Include="Entities\EstadoPrecioMOA.cs" />
     <Compile Include="Entities\TipoPosicionCBOT.cs" />
+    <Compile Include="Entities\TipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="Entities\MotivoAnterior.cs" />
     <Compile Include="Entities\CampanaMaterialDetallePorMes.cs" />
     <Compile Include="Entities\CampoDetalle.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -26,8 +27,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? UsuarioCreadorId { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioCreador { get; set; }
+        public DateTime? DesdeEntrega { get; set; }
+        public DateTime? HastaEntrega { get; set; }
 
         public string PrecioMinimoMoneda { get { return string.Format("{0:#,0.00}", PrecioMinimo) + " " + Moneda; } }
         public string PrecioMaximoMoneda { get { return string.Format("{0:#,0.00}", PrecioMaximo) + " " + Moneda; } }
+
+        public int TipoRangoId { get; set; }
+        public string TipoRango { get; set; }
     }
 }

@@ -66,9 +66,9 @@
         </div>
 
     </div>
-
+    <input id="esCostoFinanciero" class="campo-input-input" data-bind="" hidden type="checkbox"/>
     <div class="copia-contratos noAcuerdo">
-        <div class="row ampliar">
+        <div class="row ampliar esconderTercero">
             <div class="col-sm-2">
                 <label>Copiar Contrato</label>
             </div>
@@ -297,7 +297,7 @@
         <div id="fechaFijacionMotivoDiv" style="display:none;">
             <div class="col-sm-1">
                 <label>Motivo</label>
-            </div>            
+            </div>
             <div class="col-sm-5 col-md-4">
                 <textarea type="text" class="campo-input-text k-textbox" id="motivoOperacionAnteriorFijacion" rows="3" maxlength="100"></textarea>
             </div>
@@ -667,7 +667,7 @@
             <div id="ordenarRow" class="col-sm-2" hidden></div>
             <div class="col-sm-2" id="divSojaSustentable">
                 <label class="sojaSustentable" style="width:120px">Sustentable</label>
-                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()"/>
+                <input id="sustentableId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.sustentableId, disabled: isControlDisabled" type="checkbox" onclick="HaySustentable()" />
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-4 col-md-2">
@@ -687,7 +687,7 @@
                     <label>Desde-Hasta</label>
                 </div>
                 <div class="col-sm-4 col-md-4 left">
-                    <span >
+                    <span>
                         <input id="fechaDesdeSustentableId" type="date" data-bind="value: Parametros.fechaDesdeSustentableId" style="width:100%" />
                         <img id="errfechaDesdeSustentableId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
@@ -751,7 +751,7 @@
             </div>
             <div class="col-md-4 col-sm-9">
                 <div id="pesificadoDiv" hidden>
-                    <input id="pesificadoDiasId" placeholder="Días" style="width:100%" />
+                    <input id="pesificadoDiasId" placeholder="Días" style="width:100%" onfocus="SetearDiaPesificado()"/>
                     <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
@@ -1119,4 +1119,10 @@
 @Html.Partial("ModalAperturaPrecio")
 
 @Html.Partial("_ModalCCPPPendienteAplicar")
+
 @Html.Partial("ModalConfirmarBolsa")
+
+@Html.Partial("ModalConfirmarCostoFinanciero")
+
+
+

@@ -118,6 +118,11 @@ function CargarCopiaContrato(contratoId, tipo) {
                 contratoCopia.Descuentos[i].Id = 0;
             }
         }       
+
+        if (tipo == "sap") {
+            contratoCopia.MotivoOperacionAnterior = null;
+            contratoCopia.FechaOperacionFormateado = null;
+        }
         
         modificarContrato(contratoCopia);
         CargarDatosEditar(contratoCopia);
@@ -518,6 +523,8 @@ function ObtenerDatos(error) {
         obj.tipoAgenteCompraId = $("#tipoAgenteCompraId").val();
     }
 
+    obj.ObligatoriedadCostoFinanciero = $("#esCostoFinanciero").is(":checked") ? true : false;
+
     obj.OperadorId = $("#operadorId").val();
     if ($("#madreId").is(":checked")) {
         obj.Madre = true;
@@ -634,7 +641,12 @@ function ObtenerDatos(error) {
         obj.PrestamoDevolucion = true;
         obj.PlantaDestinoId = $("#plantaDestinoId").data("kendoDropDownList").value();
     }
-
+    if ($("#ventaId").is(":checked") == true) {
+        obj.Venta = true;
+    }
+    if ($("#virtualId").is(":checked") == true) {
+        obj.Virtual = true;
+    }
     obj.Anticipo = $("#Anticipo").val();
     obj.Cesion = $("#Cesion").val();
     obj.ClasificacionContrato = $("#ClasificacionContrato").val();

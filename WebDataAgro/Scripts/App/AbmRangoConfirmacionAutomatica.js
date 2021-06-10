@@ -52,13 +52,19 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "TipoNegocioId"
     });
+    $("#tipoRango").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "TipoRangoId"
+    });
     $("#tipoNegocio").change( function(){
         if ($("#tipoNegocio").val() == "3") {
             $("#divEntrega").hide();
-            $("#desdeMes").data("kendoNumericTextBox").value("");
-            $("#hastaMes").data("kendoNumericTextBox").value("");
-            $("#desdeAnio").data("kendoNumericTextBox").value("");
-            $("#hastaAnio").data("kendoNumericTextBox").value("");
+            //$("#desdeMes").data("kendoNumericTextBox").value("");
+            //$("#hastaMes").data("kendoNumericTextBox").value("");
+            //$("#desdeAnio").data("kendoNumericTextBox").value("");
+            //$("#hastaAnio").data("kendoNumericTextBox").value("");
+            $("#DesdeEntrega").data("kendoDatePicker").value("");
+            $("#HastaEntrega").data("kendoDatePicker").value("");
         } else {
             $("#divEntrega").show();
         }
@@ -99,6 +105,15 @@ function InicializarElementos() {
         dateInput: true
     });
 
+    $("#DesdeEntrega").kendoDatePicker({
+        value: new Date(),
+        dateInput: true
+    });
+    $("#HastaEntrega").kendoDatePicker({
+        value: new Date(),
+        dateInput: true
+    });
+
     $("#cantidad").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
@@ -107,32 +122,32 @@ function InicializarElementos() {
     });
 
 
-    $("#desdeMes").kendoNumericTextBox({
-        culture: "es-AR",
-        format: "#",
-        spinners: false,
-        min: 1,
-        max:12
-    });
-    $("#hastaMes").kendoNumericTextBox({
-        culture: "es-AR",
-        format: "#",
-        spinners: false,
-        min: 1,
-        max:12
-    });
-    $("#desdeAnio").kendoNumericTextBox({
-        culture: "es-AR",
-        format: "#",
-        spinners: false,
-        min: 0
-    });
-    $("#hastaAnio").kendoNumericTextBox({
-        culture: "es-AR",
-        format: "#",
-        spinners: false,
-        min: 0
-    });
+    //$("#desdeMes").kendoNumericTextBox({
+    //    culture: "es-AR",
+    //    format: "#",
+    //    spinners: false,
+    //    min: 1,
+    //    max:12
+    //});
+    //$("#hastaMes").kendoNumericTextBox({
+    //    culture: "es-AR",
+    //    format: "#",
+    //    spinners: false,
+    //    min: 1,
+    //    max:12
+    //});
+    //$("#desdeAnio").kendoNumericTextBox({
+    //    culture: "es-AR",
+    //    format: "#",
+    //    spinners: false,
+    //    min: 0
+    //});
+    //$("#hastaAnio").kendoNumericTextBox({
+    //    culture: "es-AR",
+    //    format: "#",
+    //    spinners: false,
+    //    min: 0
+    //});
 
     $("#butAgregar").kendoButton({
         imageUrl: MSGetUrl("/Content/Images/Agregar.png")
@@ -154,14 +169,14 @@ function InicializarElementos() {
         imageUrl: MSGetUrl("/Content/Images/Cancelar.png")
     });
 
-    var hoy = new Date();
-    var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
-    var stringHora = hoy.getHours() + ":" + hoy.getMinutes();
-    $("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + stringHora);
-    $("#FechaHasta").data("kendoDateTimePicker").value(stringDia + " " + "23:59");
-    //$("#cantidad").data("kendoNumericTextBox").value("20000");
-    $("#hastaAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
-    $("#desdeAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
+    //var hoy = new Date();
+    //var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
+    //var stringHora = hoy.getHours() + ":" + hoy.getMinutes();
+    //$("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + stringHora);
+    //$("#FechaHasta").data("kendoDateTimePicker").value(stringDia + " " + "23:59");
+    //$("#DesdeEntrega").data("kendoDatePicker").value(stringDia);
+    //$("#HastaEntrega").data("kendoDatePicker").value(stringDia);
+   
 }
 
 function CrearResultadosDataSource(datos) {
@@ -175,12 +190,13 @@ function CrearResultadosDataSource(datos) {
                     PrecioMaximo: { type: "number", editable: false },
                     Material: { type: "string", editable: false },
                     TipoNegocio: { type: "string", editable: false },
+                    TipoRangoId: { type: "string", editable: false },
                     Moneda: { type: "string", editable: false },
                     FechaDesde: { type: "date", format: 'DD/MM/YYYY HH:mm:ss', editable: false },
                     FechaHasta: { type: "date", format: 'DD/MM/YYYY HH:mm:ss', editable: false },
                     Cantidad: { type: "number", editable: false },
-                    EntregaDesde: { type: "string", editable: false },
-                    EntregaHasta: { type: "string", editable: false },
+                    EntregaDesde: { type: "date", format: 'DD/MM/YYYY', editable: false },
+                    EntregaHasta: { type: "date", format: 'DD/MM/YYYY', editable: false },
                     Zona: { type: "string", editable: false }
                 }
             }
@@ -195,6 +211,7 @@ function CreateGridRango() {
     $("#gridIniRango").kendoGrid({
 
         columns: [
+            { field: "TipoRango", title: "Tipo", filterable: false },
             { field: "TipoNegocio", title: "Negocio", filterable: false },
             { field: "PrecioMinimo", title: "Mínimo", filterable: false },
             { field: "PrecioMaximo", title: "Máximo", filterable: false },
@@ -209,8 +226,14 @@ function CreateGridRango() {
                 template: "#= kendo.toString(kendo.parseDate(FechaHasta, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm') #"
             },
             { field: "Cantidad", title: "Cantidad", filterable: false },
-            { field: "EntregaDesde", title: "Entrega Desde", filterable: false },
-            { field: "EntregaHasta", title: "Entrega Hasta", filterable: false },
+            {
+                field: "EntregaDesde", title: "Desde Entrega", filterable: false,
+                template: "#= EntregaDesde != null ? kendo.toString(kendo.parseDate(EntregaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy') : '' #"
+            },
+            {
+                field: "EntregaHasta", title: "Hasta Entrega", filterable: false,
+                template: "#= EntregaHasta != null ? kendo.toString(kendo.parseDate(EntregaHasta, 'yyyy-MM-dd'), 'dd/MM/yyyy') : '' #" 
+            },
             { field: "Zona", title: "Zona", filterable: false }
         ],
         sortable: true,
@@ -272,6 +295,7 @@ function AsignarCombos() {
     viewModel.set("MonedaCombo", datosIniAbmRango.Datos.Moneda);
     viewModel.set("ZonaCombo", datosIniAbmRango.Datos.Zona);
     viewModel.set("TipoNegocioCombo", datosIniAbmRango.Datos.TipoNegocio);
+    viewModel.set("TipoRangoCombo", datosIniAbmRango.Datos.TipoRango);
     
 }
 
@@ -293,13 +317,18 @@ function AsignarBotones() {
     $("#butAgregar").click(function () {
         Agregar();
         var hoy = new Date();
+        var mesSiguiente = new Date();
+        mesSiguiente = new Date(mesSiguiente.setMonth(mesSiguiente.getMonth() + 1));
         var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
         var stringHora = hoy.getHours() + ":" + hoy.getMinutes();
+        var stringMesSiguiente = mesSiguiente.getDate().toString() + "/" + (mesSiguiente.getMonth() + 1).toString() + "/" + mesSiguiente.getFullYear().toString();
         $("#FechaDesde").data("kendoDateTimePicker").value(stringDia + " " + stringHora);
         $("#FechaHasta").data("kendoDateTimePicker").value(stringDia + " " + "23:59");
         $("#cantidad").data("kendoNumericTextBox").value("20000");
-        $("#hastaAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
-        $("#desdeAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
+        $("#DesdeEntrega").data("kendoDatePicker").value(stringDia);
+        $("#HastaEntrega").data("kendoDatePicker").value(stringMesSiguiente);
+        //$("#hastaAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
+        //$("#desdeAnio").data("kendoNumericTextBox").value(hoy.getFullYear().toString());
       
     });
 
@@ -324,7 +353,10 @@ function AsignarBotones() {
         Cancelar();
     });
 }
-
+function formatearFecha(fecha) {
+    var fechaFormateada = kendo.toString(fecha, "dd/MM/yyyy");
+    return fechaFormateada;
+}
 function UpdateViewModel(model) {
 
 
@@ -338,11 +370,14 @@ function UpdateViewModel(model) {
         "FechaHasta": model.Rango.FechaHasta,
         "ZonaId": model.Rango.ZonaId,
         "TipoNegocioId": model.Rango.TipoNegocioId,
+        "TipoRangoId": model.Rango.TipoRangoId,
         "Cantidad": model.Rango.Cantidad,
-        "DesdeMes": model.Rango.DesdeMes,
-        "DesdeAnio": model.Rango.DesdeAnio,
-        "HastaMes": model.Rango.HastaMes,
-        "HastaAnio": model.Rango.HastaAnio
+        //"DesdeMes": model.Rango.DesdeMes,
+        //"DesdeAnio": model.Rango.DesdeAnio,
+        //"HastaMes": model.Rango.HastaMes,
+        //"HastaAnio": model.Rango.HastaAnio
+        "DesdeEntrega": model.Rango.DesdeEntrega,
+        "HastaEntrega": model.Rango.HastaEntrega,
     };
 
     viewModel.set("RangoConfirmacionAutomatica", rango);
@@ -394,15 +429,18 @@ function LimpiarAgregarModificar() {
     $("#precioMaximo").data("kendoNumericTextBox").value("");
     $("#material").data("kendoDropDownList").value("");
     $("#tipoNegocio").data("kendoDropDownList").value("");
+    $("#tipoRango").data("kendoDropDownList").value("");
     $("#moneda").data("kendoDropDownList").value("");
     $("#FechaDesde").data("kendoDateTimePicker").value("");
     $("#FechaHasta").data("kendoDateTimePicker").value("");
+    $("#DesdeEntrega").data("kendoDatePicker").value("");
+    $("#HastaEntrega").data("kendoDatePicker").value("");
     $("#zona").data("kendoDropDownList").value("");
     $("#cantidad").data("kendoNumericTextBox").value("");
-    $("#desdeMes").data("kendoNumericTextBox").value("");
-    $("#desdeAnio").data("kendoNumericTextBox").value("");
-    $("#hastaMes").data("kendoNumericTextBox").value("");
-    $("#hastaAnio").data("kendoNumericTextBox").value("");
+    //$("#desdeMes").data("kendoNumericTextBox").value("");
+    //$("#desdeAnio").data("kendoNumericTextBox").value("");
+    //$("#hastaMes").data("kendoNumericTextBox").value("");
+    //$("#hastaAnio").data("kendoNumericTextBox").value("");
 }
 function Modificar() {
 
@@ -431,6 +469,8 @@ function Modificar() {
                 viewModel.set("RangoConfirmacionAutomatica", datosRango.Rango);
                 $("#FechaDesde").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaDesde, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
                 $("#FechaHasta").data("kendoDateTimePicker").value(kendo.parseDate(datosRango.Rango.FechaHasta, 'yyyy-MM-dd'), 'dd/MM/yyyy HH:mm');
+                $("#DesdeEntrega").data("kendoDatePicker").value(kendo.parseDate(datosRango.Rango.DesdeEntrega, 'yyyy-MM-dd'), 'dd/MM/yyyy');
+                $("#HastaEntrega").data("kendoDatePicker").value(kendo.parseDate(datosRango.Rango.HastaEntrega, 'yyyy-MM-dd'), 'dd/MM/yyyy');
                 viewModel.set("isModifyDisabled", true);
                 HabilitarEdicion();
                 LimpiarValidaciones();
@@ -493,11 +533,14 @@ function Grabar() {
         "Fechahasta": $("#FechaHasta").data("kendoDateTimePicker").value(),
         "ZonaId": $("#zona").data("kendoDropDownList").value(),
         "TipoNegocioId": $("#tipoNegocio").data("kendoDropDownList").value(),
+        "TipoRangoId": $("#tipoRango").data("kendoDropDownList").value(),
         "Cantidad": $("#cantidad").data("kendoNumericTextBox").value(),
-        "DesdeMes": $("#desdeMes").data("kendoNumericTextBox").value(),
-        "DesdeAnio": $("#desdeAnio").data("kendoNumericTextBox").value(),
-        "HastaMes": $("#hastaMes").data("kendoNumericTextBox").value(),
-        "HastaAnio": $("#hastaAnio").data("kendoNumericTextBox").value()
+        "DesdeEntrega": $("#DesdeEntrega").data("kendoDatePicker").value(),
+        "HastaEntrega": $("#HastaEntrega").data("kendoDatePicker").value(),
+        //"DesdeMes": $("#desdeMes").data("kendoNumericTextBox").value(),
+        //"DesdeAnio": $("#desdeAnio").data("kendoNumericTextBox").value(),
+        //"HastaMes": $("#hastaMes").data("kendoNumericTextBox").value(),
+        //"HastaAnio": $("#hastaAnio").data("kendoNumericTextBox").value()
     };
     var result = MSExecuteOnServer('/RangoConfirmacionAutomatica/Grabar', datos);
 

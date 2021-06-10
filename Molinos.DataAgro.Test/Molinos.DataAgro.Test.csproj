@@ -126,6 +126,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ConfiguracionInternaControllerTest.cs" />
     <Compile Include="Controllers\FormularioAltaNoGranosControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionBolsaControllerTest.cs" />
     <Compile Include="Controllers\FechaFeriadoControllerTest.cs" />

@@ -363,22 +363,25 @@ namespace Molinos.DataAgro.Business.Managers
             var maizToneladas = materialId.Contains(1) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(1, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
             maizToneladas.Material = "Maiz";
             maizToneladas.MaterialId = 1;
-            var trigoCamaraToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, 3, centroId)) : new ToneladasGranoTipoDto();
-            trigoCamaraToneladas.Material = "Trigo Cámara";
+            var trigoCamaraToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
+            trigoCamaraToneladas.Material = "Trigo";
             trigoCamaraToneladas.MaterialId = 2;
-            var trigoCalidadToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, 2, centroId)) : new ToneladasGranoTipoDto();
-            trigoCalidadToneladas.Material = "Trigo Calidad";
-            trigoCalidadToneladas.MaterialId = 2;
+            //var trigoCalidadToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(2, fechaDesde, fechaHasta, 2, centroId)) : new ToneladasGranoTipoDto();
+            //trigoCalidadToneladas.Material = "Trigo Calidad";
+            //trigoCalidadToneladas.MaterialId = 2;
             var girasolToneladas = materialId.Contains(4) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(4, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
             girasolToneladas.Material = "Girasol";
             girasolToneladas.MaterialId = 4;
             var girasolAltoToneladas = materialId.Contains(5) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, null, centroId)) : new ToneladasGranoTipoDto();
             girasolAltoToneladas.Material = "Girasol Alto Oleico";
             girasolAltoToneladas.MaterialId = 5;
-            var trigoGradoToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, 7, centroId)) : new ToneladasGranoTipoDto();
-            trigoGradoToneladas.Material = "Trigo Grado 2";
-            trigoGradoToneladas.MaterialId = 2;
-            return new List<ToneladasGranoTipoDto>() { sojaToneladas, maizToneladas, trigoCamaraToneladas, trigoCalidadToneladas, trigoGradoToneladas, girasolToneladas, girasolAltoToneladas };
+            //var trigoGradoToneladas = materialId.Contains(2) ? repositorio.ObtenerConsultaEscalar(new TraerToneladasPorGrano(25, fechaDesde, fechaHasta, 7, centroId)) : new ToneladasGranoTipoDto();
+            //trigoGradoToneladas.Material = "Trigo Grado 2";
+            //trigoGradoToneladas.MaterialId = 2;
+
+
+
+            return new List<ToneladasGranoTipoDto>() { sojaToneladas, maizToneladas, trigoCamaraToneladas, /*trigoCalidadToneladas, trigoGradoToneladas,*/ girasolToneladas, girasolAltoToneladas };
 
         }
         public ReporteSojaSustDto TraerToneladasSojaSust(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
@@ -473,37 +476,37 @@ namespace Molinos.DataAgro.Business.Managers
             };
             var kilosPosicionTrigoCamara = materialId.Contains(2) ?
                 (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 1, precioPizarra, negocios, centroId) :
-                TraerPosicionMaterial(2, fechaDesde, fechaHasta, 1, precioPizarra, negocios, centroId)
+                TraerPosicionMaterial(2, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId)
                 ) : new List<PosicionKilos>();
             var posicionTrigoCamara = new PosicionComprasDto
             {
-                Material = "Trigo Cámara",
+                Material = "Trigo",
                 MaterialId = 2,
                 PosicionKilos = kilosPosicionTrigoCamara,
                 Total = kilosPosicionTrigoCamara.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            var kilosPosicionTrigoCalidad = materialId.Contains(2) ?
-                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId) :
-                TraerPosicionMaterial(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId)
-                ) : new List<PosicionKilos>();
-            var posicionTrigoCalidad = new PosicionComprasDto
-            {
-                Material = "Trigo Calidad",
-                MaterialId = 2,
-                PosicionKilos = kilosPosicionTrigoCalidad,
-                Total = kilosPosicionTrigoCalidad.Sum(x => x.KilosPesos + x.KilosDolares)
-            };
-            var kilosPosicionTrigoGrado = materialId.Contains(2) ?
-                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId) :
-                TraerPosicionMaterial(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId))
-                : new List<PosicionKilos>();
-            var posicionTrigoGrado = new PosicionComprasDto
-            {
-                Material = "Trigo Grado 2",
-                MaterialId = 2,
-                PosicionKilos = kilosPosicionTrigoGrado,
-                Total = kilosPosicionTrigoCamara.Sum(x => x.KilosPesos + x.KilosDolares)
-            };
+            //var kilosPosicionTrigoCalidad = materialId.Contains(2) ?
+            //    (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId) :
+            //    TraerPosicionMaterial(2, fechaDesde, fechaHasta, 2, precioPizarra, negocios, centroId)
+            //    ) : new List<PosicionKilos>();
+            //var posicionTrigoCalidad = new PosicionComprasDto
+            //{
+            //    Material = "Trigo Calidad",
+            //    MaterialId = 2,
+            //    PosicionKilos = kilosPosicionTrigoCalidad,
+            //    Total = kilosPosicionTrigoCalidad.Sum(x => x.KilosPesos + x.KilosDolares)
+            //};
+            //var kilosPosicionTrigoGrado = materialId.Contains(2) ?
+            //    (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId) :
+            //    TraerPosicionMaterial(2, fechaDesde, fechaHasta, 7, precioPizarra, negocios, centroId))
+            //    : new List<PosicionKilos>();
+            //var posicionTrigoGrado = new PosicionComprasDto
+            //{
+            //    Material = "Trigo Grado 2",
+            //    MaterialId = 2,
+            //    PosicionKilos = kilosPosicionTrigoGrado,
+            //    Total = kilosPosicionTrigoCamara.Sum(x => x.KilosPesos + x.KilosDolares)
+            //};
             var kilosPosiciongirasol = materialId.Contains(4) ?
                 (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(4, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
                 TraerPosicionMaterial(4, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId))
@@ -526,7 +529,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PosicionKilos = kilosPosicionGirasolAlto,
                 Total = kilosPosicionGirasolAlto.Sum(x => x.KilosPesos + x.KilosDolares)
             };
-            return new List<PosicionComprasDto> { posicionSoja, posicionMaiz, posicionTrigoCamara, posicionTrigoCalidad, posicionTrigoGrado, posicionGirasol, posicionGirasolAlto };
+            return new List<PosicionComprasDto> { posicionSoja, posicionMaiz, posicionTrigoCamara, /*posicionTrigoCalidad, posicionTrigoGrado,*/ posicionGirasol, posicionGirasolAlto };
         }
         public List<PricingCampaniaDto> TraerPricingCampania(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId)
         {
@@ -2334,12 +2337,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                             break;
                         case 21:
-                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.DispAgente + x.FrwAgente));
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo"/*"Trigo Cámara" ||*/ /*x.Material == "Trigo Calidad"*/).Sum(x => x.DispAgente + x.FrwAgente));
                             datos.Pricing = sumaPricing;
 
                             break;
                         case 22:
-                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.NewAgente));
+                            sumaPricing = (result.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + result.ToneladasGranoTipo.Where(x => x.Material == "Trigo"/*"Trigo Cámara" ||*/ /*x.Material == "Trigo Calidad"*/).Sum(x => x.NewAgente));
                             datos.Pricing = sumaPricing;
 
                             break;

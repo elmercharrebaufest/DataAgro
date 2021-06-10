@@ -301,6 +301,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.CondicionFijacionId = oContratoAcuerdo.CondicionFijacionId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
                 objContratoAcuerdo.FechaCierta = oContratoAcuerdo.FechaCierta;
+                objContratoAcuerdo.ObligatoriedadCostoFinanciero = oContratoAcuerdo.ObligatoriedadCostoFinanciero;
 
 
                 if (descuentosExistentes != null)
@@ -434,14 +435,23 @@ namespace Molinos.DataAgro.Business
         {
             var hoy = DateTime.Now;
             var precioContrato = contrato.Precio;
-
+            List<int> tipoRangos = new List<int>() { (int)EnumTipoRangoConfirmacionAutomatica.ConfirmacionYReconfirmacion };
+            if (contrato.EstadoId == 1)
+            {
+                tipoRangos.Add((int)EnumTipoRangoConfirmacionAutomatica.Confirmacion);
+            }
+            else
+            {
+                tipoRangos.Add((int)EnumTipoRangoConfirmacionAutomatica.Reconfirmacion);
+            }
             var rangos = repositorio.Listar<RangoConfirmacionAutomatica>(x =>
             x.TipoNegocioId == 2 &&
             x.FechaDesde <= hoy &&
             x.FechaHasta >= hoy &&
             x.MaterialId == contrato.MaterialId &&
             x.MonedaId == contrato.MonedaId &&
-            precioContrato >= x.PrecioMinimo && precioContrato <= x.PrecioMaximo) ?? new List<RangoConfirmacionAutomatica>();
+            precioContrato >= x.PrecioMinimo && precioContrato <= x.PrecioMaximo
+            && tipoRangos.Contains(x.TipoRangoId)) ?? new List<RangoConfirmacionAutomatica>();
 
             var rango = rangos.FirstOrDefault(
                 x => contrato.FechaDesde >= new DateTime(x.DesdeAnio, x.DesdeMes, 1) &&
@@ -544,42 +554,39 @@ namespace Molinos.DataAgro.Business
 
             }
 
-            if (oContratoAcuerdo.AperturaPrecio != null)
+            if (oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.FechaCierta != null && oContratoAcuerdo.ObligatoriedadCostoFinanciero != false)
             {
-                if (oContratoAcuerdo.FechaCierta != null)
+                if ((oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value))
                 {
-                    if ((oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value))
+                    var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+                    if (!((concepto != null && (oContratoAcuerdo.FechaCierta != null) ||
+                        (concepto == null && (oContratoAcuerdo.FechaCierta == null)))))
                     {
-                        var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
-                        if (!((concepto != null && (oContratoAcuerdo.FechaCierta != null) ||
-                            (concepto == null && (oContratoAcuerdo.FechaCierta == null)))))
-                        {
-                            oEntityErrors.Error("", "Fecha Cierta es obligatorio con el concepto Financiero");
-                        }
+                        oEntityErrors.Error("", "Fecha Cierta es obligatorio con el concepto Financiero");
                     }
                 }
-                else
-                {
-                    if ((oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value))
-                    {
-                        var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
-                        if (!((concepto != null && (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value) && (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value != 0)) ||
-                            (concepto == null && (!oContratoAcuerdo.PagoDiferido.HasValue || (oContratoAcuerdo.PagoDiferido.HasValue && !oContratoAcuerdo.PagoDiferido.Value)) && (!oContratoAcuerdo.DiasPesificado.HasValue || (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value == 0)))))
-                        {
-                            oEntityErrors.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
-                        }
-                    }
-                }
+            }
+                //else
+                //{
+                //    if ((oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value))
+                //    {
+                //        var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+                //        if (!((concepto != null && (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value) && (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value != 0)) ||
+                //            (concepto == null && (!oContratoAcuerdo.PagoDiferido.HasValue || (oContratoAcuerdo.PagoDiferido.HasValue && !oContratoAcuerdo.PagoDiferido.Value)) && (!oContratoAcuerdo.DiasPesificado.HasValue || (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value == 0)))))
+                //        {
+                //            oEntityErrors.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
+                //        }
+                //    }
+                //}
 
-            }
-            if (oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.MonedaId == "  ARP")
-            {
-                var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
-                if (concepto != null && oContratoAcuerdo.PagoDiferido != true)
-                {
-                    oEntityErrors.Error("", "Pago Diferido es obligatorio con el concepto Financiero");
-                }
-            }
+            //if (oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.MonedaId == "  ARP")
+            //{
+            //    var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+            //    if (concepto != null && oContratoAcuerdo.PagoDiferido != true)
+            //    {
+            //        oEntityErrors.Error("", "Pago Diferido es obligatorio con el concepto Financiero");
+            //    }
+            //}
             if (oContratoAcuerdo.Calidad != null)
             {
                 var calidad = oContratoAcuerdo.Calidad.LastOrDefault(x => x.CalidadEspecialId == 1);
@@ -599,8 +606,10 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
             }
-
-            if (oContratoAcuerdo.DestinoId != 13 && oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.DestinoId != 6 && oContratoAcuerdo.DestinoId != 7 && oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
+            var centro = repositorio.Obtener<Centro>(x => x.Id == oContratoAcuerdo.DestinoId);
+            if (/*oContratoAcuerdo.DestinoId != 13 && oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.DestinoId != 6 && oContratoAcuerdo.DestinoId != 7 &&*/ 
+                oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho 
+                && (x.Importe != 0 || x.Porcentaje != 0)) && centro.ValidaRedespacho != false)
             {
                 oEntityErrors.Error("", "Se debe completar Redespacho en Acopios");
             }
@@ -762,7 +771,8 @@ namespace Molinos.DataAgro.Business
                                            SqlFunctions.StringConvert((double)x.FechaCierta.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaCierta) : "",
                 ChequeElectronico = x.ChequeElectronico,
-                PagoCBU = x.PagoCBU
+                PagoCBU = x.PagoCBU,
+                ObligatoriedadCostoFinanciero = x.ObligatoriedadCostoFinanciero
             });
             return contrato;
         }

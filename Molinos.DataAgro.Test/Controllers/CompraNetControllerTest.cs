@@ -627,13 +627,13 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ObtenerFijacionesAutomaticasTest()
         {
             fijacionManagerMock.Setup(x => x.TraerDatosFijacion("201", "202", 1, "a", 0)).Returns(new List<DatosFijacionDeContratoDto>() { new DatosFijacionDeContratoDto { ContratoId = "1", Filtro = "a|aa", KilosAplicados = "12", KilosContrato = "200", KilosPendiente = "20" } });
-            var result = target.ObtenerFijacionesAutomaticas("201", "202", 1, "a", 0);
+            var result = target.ObtenerFijacionesAutomaticas("201", "202", 1, "a", 0, false);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
             fijacionManagerMock.Verify(x => x.TraerDatosFijacion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":\"1\",\"KilosAplicados\":\"12\",\"KilosPendiente\":\"20\",\"KilosContrato\":\"200\",\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\",\"DesdeEntrega\":null,\"HastaEntrega\":null,\"Posicion\":null,\"Calidad\":null,\"Campana\":null,\"PagoDiferido\":null,\"Centro\":null,\"CentroDescripcion\":null,\"ARecibirSinPrecio\":null,\"RecibidoSinFijar\":null,\"Color\":null,\"ImporteAPrecio\":0,\"ImporteSobrePrecio\":0,\"MonedaAPrecio\":null,\"MonedaSobrePrecio\":null,\"PorcentajeAPrecio\":0,\"PorcentajeSobrePrecio\":0,\"CondicionFijacionCod\":null,\"CondicionFijacionDescripcion\":null,\"CondicionPagoCod\":null,\"CondicionPagoDescripcion\":null,\"ChequeElectronico\":null,\"Calidades\":null,\"CampanaId\":0,\"Clasificacion\":null,\"Cesion\":false,\"Anticipo\":false,\"FijacionSap\":null,\"Aperturas\":null,\"Bonificaciones\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":\"1\",\"KilosAplicados\":\"12\",\"KilosPendiente\":\"20\",\"KilosContrato\":\"200\",\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\",\"DesdeEntrega\":null,\"HastaEntrega\":null,\"Posicion\":null,\"Calidad\":null,\"Campana\":null,\"PagoDiferido\":null,\"Centro\":null,\"CentroDescripcion\":null,\"ARecibirSinPrecio\":null,\"RecibidoSinFijar\":null,\"Color\":null,\"ImporteAPrecio\":0,\"ImporteSobrePrecio\":0,\"MonedaAPrecio\":null,\"MonedaSobrePrecio\":null,\"PorcentajeAPrecio\":0,\"PorcentajeSobrePrecio\":0,\"CondicionFijacionCod\":null,\"CondicionFijacionDescripcion\":null,\"CondicionPagoCod\":null,\"CondicionPagoDescripcion\":null,\"ChequeElectronico\":null,\"Calidades\":null,\"CampanaId\":0,\"Clasificacion\":null,\"Cesion\":false,\"Anticipo\":false,\"FijacionSap\":null,\"Aperturas\":null,\"Bonificaciones\":null,\"Virtual\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1234,6 +1234,36 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
-        
+
+        [Test]
+        public void ListarCartasDePortePendienteAplicarTest()
+        {
+
+            contratoManagerMock.Setup(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>())).Returns(new List<CcPpPerndienteAplicarDto>());
+            var result = target.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.ListarCartasDePortePendienteAplicar(It.IsAny<CcPpPerndienteAplicarDto>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void TraerPagosDiferidoTest()
+        {
+
+            configuracionInternaMock.Setup(x => x.TraerPagosDiferido()).Returns(new List<HabilitacionPagoDiferidoDto>());
+            var result = target.TraerPagosDiferido(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            configuracionInternaMock.Verify(x => x.TraerPagosDiferido(), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":0,\"MaterialId\":0,\"Material\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"CantidadDia\":0,\"Tasa\":0,\"DesdeVigencia\":\"\\/Date(-62135586000000)\\/\",\"HastaVigencia\":\"\\/Date(-62135586000000)\\/\",\"Habilitado\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
     }
 }

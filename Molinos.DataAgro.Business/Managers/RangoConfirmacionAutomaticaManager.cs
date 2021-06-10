@@ -8,7 +8,10 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
+using System.Linq;
 using System.Data.Entity;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Business
 {
@@ -35,7 +38,8 @@ namespace Molinos.DataAgro.Business
                 Material = qry.GetMaterialCombo(),
                 Moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }),
                 Zona = repositorio.Listar<GrupoDeCompras, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion }),
-                TipoNegocio = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }, x => x.TipoNegocioId == 2 || x.TipoNegocioId == 3)
+                TipoNegocio = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }, x => x.TipoNegocioId == 2 || x.TipoNegocioId == 3),
+                TipoRango = repositorio.Listar<TipoRangoConfirmacionAutomatica, TipoRangoConfirmacionAutomaticaDto>(x => new TipoRangoConfirmacionAutomaticaDto() { TipoRangoId = x.Id, Descripcion = x.Descripcion }),
             };
         }
 
@@ -43,7 +47,7 @@ namespace Molinos.DataAgro.Business
         {
             var hoy = DateTime.Today;
             return new ResultIniRangoConfirmacionAutomatica
-            {                 
+            {
                 Rango = repositorio.Listar<RangoConfirmacionAutomatica, RangoConfirmacionAutomaticaIni>(x => new RangoConfirmacionAutomaticaIni()
                 {
                     Id = x.Id,
@@ -53,11 +57,13 @@ namespace Molinos.DataAgro.Business
                     Moneda = x.MonedaId,
                     FechaDesde = x.FechaDesde,
                     FechaHasta = x.FechaHasta,
-                    Cantidad = x.Cantidad /1000,
-                    EntregaDesde = (x.DesdeMes + "/" + x.DesdeAnio) == "0/0" ? "" : (x.DesdeMes + "/" + x.DesdeAnio),
-                    EntregaHasta = (x.HastaMes + "/" + x.HastaAnio) == "0/0" ? "" : (x.HastaMes + "/" + x.HastaAnio),
+                    Cantidad = x.Cantidad / 1000,
+                    EntregaDesde = x.DesdeEntrega.HasValue ? x.DesdeEntrega.Value.Day +"/"+ x.DesdeEntrega.Value.Month +"/"+ x.DesdeEntrega.Value.Year : "",
+                    EntregaHasta = x.HastaEntrega.HasValue ? x.HastaEntrega.Value.Day + "/" + x.HastaEntrega.Value.Month + "/" + x.HastaEntrega.Value.Year : "",
                     Zona = x.Zona != null ? x.Zona.Descripcion : "",
-                    TipoNegocio = x.TipoNegocio.Descripcion
+                    TipoNegocio = x.TipoNegocio.Descripcion,
+                    TipoRangoId = x.TipoRangoId,
+                    TipoRango = x.TipoRango.Descripcion,
                 }, x => DbFunctions.TruncateTime(x.FechaDesde) <= hoy && DbFunctions.TruncateTime(x.FechaHasta) >= hoy, 0, "Material")
             };
         }
@@ -82,7 +88,7 @@ namespace Molinos.DataAgro.Business
                 HastaAnio = x.HastaAnio,
                 ZonaId = x.ZonaId ?? 0,
                 Zona = x.Zona.Descripcion,
-                Cantidad = x.Cantidad /1000,
+                Cantidad = x.Cantidad / 1000,
                 DesdeAnio = x.DesdeAnio,
                 DesdeMes = x.DesdeMes,
                 HastaMes = x.HastaMes,
@@ -90,7 +96,11 @@ namespace Molinos.DataAgro.Business
                 TipoNegocioId = x.TipoNegocioId,
                 TipoNegocio = x.TipoNegocio.Descripcion,
                 UsuarioCreador = x.Comercial.Nombres + " " + x.Comercial.Apellido,
-                FechaCreacion = x.FechaCreacion
+                FechaCreacion = x.FechaCreacion,
+                TipoRangoId = x.TipoRangoId,
+                TipoRango = x.TipoRango.Descripcion,
+                DesdeEntrega = x.DesdeEntrega,
+                HastaEntrega = x.HastaEntrega
             }) ?? new RangoConfirmacionAutomaticaDto();
         }
 
@@ -117,12 +127,16 @@ namespace Molinos.DataAgro.Business
                 oRangoSave.FechaHasta = oRango.FechaHasta;
                 oRangoSave.ZonaId = oRango.ZonaId;
                 oRangoSave.Cantidad = oRango.Cantidad * 1000;
-                oRangoSave.DesdeMes = oRango.DesdeMes;
-                oRangoSave.HastaMes = oRango.HastaMes;
-                oRangoSave.DesdeAnio = oRango.DesdeAnio;
-                oRangoSave.HastaAnio = oRango.HastaAnio;
+                oRangoSave.DesdeMes = oRango.DesdeEntrega.HasValue ? oRango.DesdeEntrega.Value.Month : 0;
+                oRangoSave.HastaMes = oRango.HastaEntrega.HasValue ? oRango.HastaEntrega.Value.Month : 0;
+                oRangoSave.DesdeAnio = oRango.DesdeEntrega.HasValue ? oRango.DesdeEntrega.Value.Year : 0;
+                oRangoSave.HastaAnio = oRango.HastaEntrega.HasValue ? oRango.HastaEntrega.Value.Year : 0;
                 oRangoSave.TipoNegocioId = oRango.TipoNegocioId;
-                
+                oRangoSave.TipoRangoId = oRango.TipoRangoId;
+                oRangoSave.DesdeEntrega = oRango.DesdeEntrega;
+                oRangoSave.HastaEntrega = oRango.HastaEntrega;
+
+
             }
             else
             {
@@ -133,7 +147,7 @@ namespace Molinos.DataAgro.Business
             }
 
             try
-            {                
+            {
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerRango(oRango.Id), tipo);
             }
@@ -193,19 +207,39 @@ namespace Molinos.DataAgro.Business
                 oEntityErrors.Error("cantidad", "El campo Cantidad no puede estar vacío");
             }
 
-            if ((oRango.DesdeMes == 0 || oRango.HastaMes == 0) && oRango.TipoNegocioId == 2)
+            if ((oRango.DesdeEntrega == null || oRango.HastaEntrega == null) && oRango.TipoNegocioId == 2)
             {
-                oEntityErrors.Error("Mes", "Los campos Mes no pueden estar vacios");
+                oEntityErrors.Error("Mes", "Los campos Fecha Entrega no pueden estar vacios");
             }
-            if ((oRango.DesdeAnio == 0 || oRango.HastaAnio == 0) && oRango.TipoNegocioId == 2)
-            {
-                oEntityErrors.Error("Anio", "Los campos Año no pueden estar vacios");
-            }
+            //if ((oRango.DesdeAnio == 0 || oRango.HastaAnio == 0) && oRango.TipoNegocioId == 2)
+            //{
+            //    oEntityErrors.Error("Anio", "Los campos Año no pueden estar vacios");
+            //}
             if (oRango.FechaHasta < oRango.FechaDesde)
             {
-                oEntityErrors.Error("Fechas", "La fecha hasta no puede ser menor que: "+oRango.FechaDesde);
+                oEntityErrors.Error("Fechas", "La fecha hasta no puede ser menor que: " + oRango.FechaDesde);
             }
-
+            if (oRango.HastaEntrega < oRango.DesdeEntrega)
+            {
+                oEntityErrors.Error("Fechas", "La fecha hasta de entrega no puede ser menor que: " + oRango.DesdeEntrega);
+            }
+            var rangos = new List<int>();
+            if (oRango.TipoRangoId == (int)EnumTipoRangoConfirmacionAutomatica.Confirmacion)
+            {
+                rangos.Add((int)EnumTipoRangoConfirmacionAutomatica.Confirmacion);
+                rangos.Add((int)EnumTipoRangoConfirmacionAutomatica.ConfirmacionYReconfirmacion);
+            }
+            if (oRango.TipoRangoId == (int)EnumTipoRangoConfirmacionAutomatica.Reconfirmacion)
+            {
+                rangos.Add((int)EnumTipoRangoConfirmacionAutomatica.Reconfirmacion);
+                rangos.Add((int)EnumTipoRangoConfirmacionAutomatica.ConfirmacionYReconfirmacion);
+            }
+            if (oRango.TipoRangoId == (int)EnumTipoRangoConfirmacionAutomatica.ConfirmacionYReconfirmacion)
+            {
+                rangos.Add((int)EnumTipoRangoConfirmacionAutomatica.Confirmacion);
+                rangos.Add((int)EnumTipoRangoConfirmacionAutomatica.Reconfirmacion);
+                rangos.Add((int)EnumTipoRangoConfirmacionAutomatica.ConfirmacionYReconfirmacion);
+            }
 
             var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();
             if (rangosExistentes.Exists(x =>
@@ -219,6 +253,9 @@ namespace Molinos.DataAgro.Business
             x.HastaMes == oRango.HastaMes &&
             x.DesdeAnio == oRango.DesdeAnio &&
             x.HastaAnio == oRango.HastaAnio &&
+            x.DesdeEntrega == oRango.DesdeEntrega &&
+            x.HastaEntrega == oRango.HastaEntrega &&
+            rangos.Contains(x.TipoRangoId) &&
             x.TipoNegocioId == oRango.TipoNegocioId))
             {
                 oEntityErrors.Error("Rango", "Ya existe un rango para los valores seleccionados");

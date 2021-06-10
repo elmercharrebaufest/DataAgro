@@ -16,5 +16,6 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public DateTime? DesdeEntrega { get; set; }
         public DateTime? HastaEntrega { get; set; }
+        public bool? Habilitado { get; set; }
     }
 }

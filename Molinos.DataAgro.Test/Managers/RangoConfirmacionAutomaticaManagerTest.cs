@@ -95,7 +95,10 @@ namespace Molinos.DataAgro.Test.Managers
             DesdeMes=1,
             ZonaId=1,
             FechaHasta=new DateTime(2019,11,11),
-            FechaDesde= new DateTime(2019, 11, 11)};
+            FechaDesde= new DateTime(2019, 11, 11),
+            DesdeEntrega = new DateTime(2019, 11, 11),
+            HastaEntrega = new DateTime(2019, 11, 11)
+            };
             repositorioMock.Setup(y => y.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()))
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
             repositorioMock.Setup(y => y.Listar( It.IsAny<Expression<Func<RangoConfirmacionAutomatica, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -127,7 +130,9 @@ namespace Molinos.DataAgro.Test.Managers
                 DesdeMes = 1,
                 ZonaId = 1,
                 FechaHasta = new DateTime(2019, 11, 11),
-                FechaDesde = new DateTime(2019, 11, 11)
+                FechaDesde = new DateTime(2019, 11, 11),
+                DesdeEntrega = new DateTime(2019, 11, 11),
+                HastaEntrega = new DateTime(2019, 11, 11)
             };
             repositorioMock.Setup(y => y.Obtener<RangoConfirmacionAutomatica>(It.IsAny<int>()))
                 .Returns(new RangoConfirmacionAutomatica { Id = 1 });
@@ -228,6 +233,8 @@ namespace Molinos.DataAgro.Test.Managers
             {
                 Id = 0,
                 MaterialId = 1,
+                TipoRangoId = 1,
+                TipoNegocioId = 1,
                 MonedaId = "a",
                 PrecioMaximo = 10,
                 PrecioMinimo = 1,
@@ -255,6 +262,8 @@ namespace Molinos.DataAgro.Test.Managers
                 HastaMes = 1,
                 DesdeMes = 1,
                 ZonaId = 1,
+                TipoRangoId = 1,
+                TipoNegocioId = 1,
                 FechaHasta = new DateTime(2019, 04, 25),
                 FechaDesde = new DateTime(2019, 04, 25) } });
             var resultado = target.GrabarRangoConfirmacionAutomatica(rango, It.IsAny<int>());

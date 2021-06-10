@@ -1,0 +1,29 @@
+﻿@model IEnumerable <Molinos.DataAgro.Entities.Dto.LogFileModel >
+
+<style>
+    a.delete-log {
+        color: firebrick;
+    }
+</style>
+<div class="container">
+    <h1>Logs</h1>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var file in Model)
+            {
+            <tr>
+                <td><a href="@Url.Action("ViewLog","LogServer", new { log = file.Name })">@file.Name</a></td>
+                <td>@file.Size</td>
+                <td><a class="delete-log" href="@Url.Action("Delete","LogServer", new { log = file.Name })">X</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

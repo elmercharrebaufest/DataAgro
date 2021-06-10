@@ -76,6 +76,7 @@ function CreateGridInformeCompraNet() {
                     FechaOperacion: { type: "date" },
                     FechaDesde_Sustentable: { type: "date" },
                     FechaHasta_Sustentable: { type: "date" },
+                    Pesificado: { type: "boolean" },
                 }
             }
         },
@@ -289,6 +290,8 @@ function CreateGridInformeCompraNet() {
             
             { field: "ChequeElectronicoValor", type: "string", title: "Cheque Electrónico" },
             { field: "PagoCBU", type: "string", title: "Pago Cbu" },
+            { field: "ObligatoriedadCostoFinancieroDesc", title: "Obligatoriedad Costo Financiero" },
+
 
             { field: "PosicionCBOT", type: "string", title: "Posicion" },
             { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posicion" },

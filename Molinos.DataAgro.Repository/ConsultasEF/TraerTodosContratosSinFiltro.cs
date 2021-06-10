@@ -88,7 +88,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" :
                         (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
                         (contrato is Contrato && (contrato as Contrato).Canje == true) ? "CANJE" : (contrato is Contrato && (contrato as Contrato).PrestamoDevolucion == true) ? "PRÉSTAMO DEVOLUCIÓN" :
-                        (contrato is Contrato && (contrato as Contrato).Venta == true) ? "VENTA" : contrato.TipoNegocio.Descripcion),
+                        (contrato is Contrato && (contrato as Contrato).Venta == true) ? "VENTA" :
+                        (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Virtual == true) ? "FIJACION VIRTUAL" : contrato.TipoNegocio.Descripcion),
                         Localidad = !(contrato is Contrato) || (contrato as Contrato).Localidad == null ? "" : (contrato as Contrato).Localidad.Nombre,
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
@@ -182,12 +183,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         TipoAgenteCompraId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompraId : 0,
                         TipoAgenteCompra = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompra.Descripcion : "",
                         CantidadAmpliado = contrato.CantidadAmpliado ?? 0,
-
                         PosicionCBOT = contrato.PosicionCBOT,
-                        TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
+                        VirtualDescripcion = contrato.Virtual == true ? "Si" : "No",
+                        Virtual = contrato.Virtual,
                         ProveedorCreador = contrato.ProveedorCreadorId,
                         UsuarioTercero = contrato.UsuarioTercero,
-
+                        ObligatoriedadCostoFinancieroDesc = contrato.ObligatoriedadCostoFinanciero.HasValue && contrato.ObligatoriedadCostoFinanciero.Value != false ? "Si" : "No",
+                        ObligatoriedadCostoFinanciero = contrato.ObligatoriedadCostoFinanciero.HasValue ? contrato.ObligatoriedadCostoFinanciero.Value : false,
                     };
 
                 return queryNegocios;
@@ -333,11 +335,17 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ObservacionTercero = contrato.ObservacionTercero,
                         DolarizadoCorredor = contrato.DolarizadoCorredor.Value,
                         SustentableTercero = contrato.SustentableTercero,
+                        ObligatoriedadCostoFinancieroDesc = contrato.ObligatoriedadCostoFinanciero.HasValue && contrato.ObligatoriedadCostoFinanciero.Value != false ? "Si" : "No",
+                        ObligatoriedadCostoFinanciero = contrato.ObligatoriedadCostoFinanciero.HasValue ? contrato.ObligatoriedadCostoFinanciero.Value : false,
 
                         PosicionCBOT = contrato.PosicionCBOT,
                         TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
                         ProveedorCreador = contrato.ProveedorCreadorId,
                         UsuarioTercero = contrato.UsuarioTercero,
+
+                       
+                        VirtualDescripcion = contrato.Virtual == true ? "Si" : "No",
+                        Virtual = contrato.Virtual
                     };
 
                 return queryNegocios;

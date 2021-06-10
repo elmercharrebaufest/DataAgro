@@ -101,6 +101,15 @@ a.Descarga {
 #TrigoCalidadTable {
     z-index: 125;
 }
+
+#Trigo .titulosPosicion {
+    background: rgb(153, 204, 255);
+}
+
+#TrigoTable {
+    z-index: 125;
+}
+
 #TrigoGrado2 .titulosPosicion {
     background: rgb(106, 230, 190);
 }

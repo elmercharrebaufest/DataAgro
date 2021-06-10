@@ -2668,8 +2668,8 @@ function windowsResize() {
 }
 function CargarCalidadPorMaterial(value) {
     var calidadGrano = MSExecuteOnServer('/CompraNet/TraerCalidadesPorMaterial', { MaterialId: value });
-    if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
-        $("#destinoId").data("kendoDropDownList").value() == "7" && $('#material').data("kendoDropDownList").value() == "3") || $("#canjeId").is(":checked")) {
+    if ((($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
+        $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == "3") || $("#canjeId").is(":checked")) {
         for (var i = 0; i < calidadGrano.length; i++) {
             if (calidadGrano[i].Descripcion != "Camara" && calidadGrano[i].Descripcion != "Fabrica") {
                 calidadGrano.splice(i);
@@ -3418,7 +3418,11 @@ function CargarDatosEditar(contrato, hijo) {
         //$("#fechaFijacionId").val("");
 
     }
-  
+    if (contrato.ProveedorCreador != null) {
+        $(".esconderTercero").removeClass("ampliar");
+    } else {
+        $(".esconderTercero").addClass("ampliar");
+    }
     if (contrato.Precio != null && contrato.Precio > 0 && contrato.TipoNegocioId != 1) {
         $("#precioId").data("kendoNumericTextBox").value(contrato.Precio);
         $("#precioMonedaId").val(contrato.MonedaId);
@@ -4714,20 +4718,22 @@ function HayPrestamo() {
 
 function SeleccionAutomaticaBolsa() {
     //$("#LocalidadCrearContrato").trigger("change");
-    var destino = $("#destinoId").val();
-    var provincia = $("#ProvinciaId").val();
-    var localidadInput = $("#LocalidadCrearContrato").val();
-    var bolsa = 0;
-    if (destino != "" && provincia != "" && localidadInput != "") {
-        bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
-    }
+    if ($("#tipoId").val() == "1" && $("#buscadorCorredor").val() != "") {
+        var destino = $("#destinoId").val();
+        var provincia = $("#ProvinciaId").val();
+        var localidadInput = $("#LocalidadCrearContrato").val();
+        var bolsa = 0;
+        if (destino != "" && provincia != "" && localidadInput != "") {
+            bolsa = MSExecuteOnServer('/ConfiguracionBolsa/TraerConfiguracionBolsaConDestinoYProcedencia', { destinoId: destino, provinciaId: provincia });
+        }
 
-    if (bolsa != 0 && $("#boletoConfirmaId").is(':checked') && $("#bolsaConfirmaId").val() != bolsa.BolsaId) {
+        if (bolsa != 0 && $("#boletoConfirmaId").is(':checked') && $("#bolsaConfirmaId").val() != bolsa.BolsaId) {
 
-        $("#modalConfirmarBolsa").modal("show");
-        $("#idBolsa").val(bolsa.BolsaId);
-        $("#nombreBolsa").text(bolsa.Bolsa.Descripcion);
+            $("#modalConfirmarBolsa").modal("show");
+            $("#idBolsa").val(bolsa.BolsaId);
+            $("#nombreBolsa").text(bolsa.Bolsa.Descripcion);
 
+        }
     }
 }
 

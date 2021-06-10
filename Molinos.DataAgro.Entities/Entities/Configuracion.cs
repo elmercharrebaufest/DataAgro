@@ -24,6 +24,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CantidadAcuerdo { get; set; }
         public int CantidadDiasDolarizadoLimiteMaximo { get; set; }
         public int CantidadMaxima { get; set; }
+        public int CantidadDiasPesificadoLimite { get; set; }
         
 
 

@@ -193,6 +193,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.LogServer))
+                                {
+                                    <li>
+                                        <a href="~/LogServer" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Logs Server
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDolarizado))
                                 {
                                     <li>

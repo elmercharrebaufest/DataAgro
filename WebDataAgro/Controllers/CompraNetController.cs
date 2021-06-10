@@ -731,11 +731,14 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public ActionResult ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId)
+        public ActionResult ObtenerFijacionesAutomaticas(string cuitProveedor, string cuitCorredor, int materialId, string filtro, int fijacionId, bool esVirtual)
         {
+            //var esVirtual = false;
+            var result = esVirtual ? mobjFijacionDePrecioContratoManager.TraerDatosFijacionVirtual(cuitProveedor, cuitCorredor, materialId, filtro, fijacionId) :
+                mobjFijacionDePrecioContratoManager.TraerDatosFijacion(cuitProveedor, cuitCorredor, materialId, filtro, fijacionId);
             return new JsonResult()
             {
-                Data = mobjFijacionDePrecioContratoManager.TraerDatosFijacion(cuitProveedor, cuitCorredor, materialId, filtro, fijacionId),
+                Data = result,
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -1081,6 +1084,16 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjContratoManager.ListarCartasDePortePendienteAplicar(req),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult TraerPagosDiferido(int cantidadDia)
+        {
+            var result = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia >= cantidadDia).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
+            return new JsonResult()
+            {
+                Data = result != null ? result : new HabilitacionPagoDiferidoDto(),
                 MaxJsonLength = Int32.MaxValue
             };
         }

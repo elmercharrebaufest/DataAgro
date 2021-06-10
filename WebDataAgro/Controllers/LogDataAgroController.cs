@@ -64,7 +64,47 @@ namespace WebDataAgro.Controllers
                     {
                         item.Value = Convert.ToDateTime(item.Value).AddDays(1);
                     }
+                    if (item.Field == null && item.Operator == null && item.Logic == "or" && item.Filters.Any(x => x.Field == "ProveedorId"))
+                    {
+                        var filters = item.Filters.ToList();
+                        foreach (var prov in item.Filters.Where(x => x.Field == "ProveedorId"))
+                        {
+                            filters.Add(new Kendo.DynamicLinq.Filter
+                            {
+                                Field = "CorredorId",
+                                Filters = prov.Filters,
+                                Logic = prov.Logic,
+                                Operator = prov.Operator,
+                                Value = prov.Value
+                            });
+                            int provId = int.Parse(prov.Value.ToString());
+                            var cuit = proveedorManager.TraerProveedor(provId).CUIT;
+                            List<ProveedorDto> provs = proveedorManager.TraerProveedoresPorCuit(cuit).Where(a => a.ProveedorId != provId).ToList();
+                            foreach (var provc in provs)
+                            {
+                                filters.Add(new Kendo.DynamicLinq.Filter
+                                {
+                                    Field = "CorredorId",
+                                    Filters = prov.Filters,
+                                    Logic = prov.Logic,
+                                    Operator = prov.Operator,
+                                    Value = provc.ProveedorId
+                                });
+                                filters.Add(new Kendo.DynamicLinq.Filter
+                                {
+                                    Field = "ProveedorId",
+                                    Filters = prov.Filters,
+                                    Logic = prov.Logic,
+                                    Operator = prov.Operator,
+                                    Value = provc.ProveedorId
+                                });
+                            }
+                        }
+
+                        item.Filters = filters;
+                    }
                 }
+
             }
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosNegocios) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = logDataAgroManager.ListarDatosLogDataAgro(request, equipo);
@@ -236,14 +276,14 @@ namespace WebDataAgro.Controllers
             if (diffLine.Text != null)
             {
                 //diffLine.Text = diffLine.Text.Replace("\"", "").Replace("_", "");
-                diffLine.Text = logDataAgroManager.BuscaFechaYFormatea(diffLine.Text,"");
+                diffLine.Text = logDataAgroManager.BuscaFechaYFormatea(diffLine.Text, "");
                 diffLine.Text = logDataAgroManager.AddSpacesToSentence(diffLine.Text, ':');
 
                 foreach (var character in diffLine.SubPieces)
                 {
                     if (character.Text != null)
                     {
-                        character.Text = logDataAgroManager.BuscaFechaYFormatea(character.Text,"");
+                        character.Text = logDataAgroManager.BuscaFechaYFormatea(character.Text, "");
                         character.Text = logDataAgroManager.AddSpacesToSentence(character.Text, ':');
                     }
 
@@ -254,7 +294,7 @@ namespace WebDataAgro.Controllers
 
         public JsonResult ObtenerNegociosId(List<string> contratosSap)
         {
-           
+
             List<int> negocios = logDataAgroManager.ObtenerNegociosId(contratosSap);
 
             return Json(negocios, JsonRequestBehavior.AllowGet);
@@ -266,6 +306,6 @@ namespace WebDataAgro.Controllers
 
             return Json(cupos, JsonRequestBehavior.AllowGet);
         }
-        
+
     }
 }

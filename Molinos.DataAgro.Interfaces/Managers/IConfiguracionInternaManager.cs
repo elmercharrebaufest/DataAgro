@@ -34,5 +34,9 @@ namespace Molinos.DataAgro.Interfaces
 
         Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active);
         Resultado EliminarHabilitacionPagoDiferido(int id);
+        void PausarCargaDePrecios(bool pausa);
+        bool TraerPausadoGeneral();
+        List<EstadoPrecioMOADto> TraerEstadoPrecioMOA();
+        void CambiarEstadoPrecioMOA(List<EstadoPrecioMOADto> precios);
     }
 }

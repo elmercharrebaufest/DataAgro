@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Molinos.DataAgro.Entities.Common.Enums;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
@@ -19,9 +20,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public int HastaMes { get; set; }
         public int HastaAnio { get; set; }
         public int TipoNegocioId { get; set; }
+        public int TipoRangoId { get; set; }
 
         public int? UsuarioCreadorId { get; set; }
         public DateTime? FechaCreacion { get; set; }
+        public DateTime? DesdeEntrega { get; set; }
+        public DateTime? HastaEntrega { get; set; }
 
         [ForeignKey("TipoNegocioId")]
         public virtual TipoNegocio TipoNegocio { get; set; }
@@ -34,6 +38,8 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("UsuarioCreadorId")]
         public virtual Comercial Comercial { get; set; }
 
+        [ForeignKey("TipoRangoId")]
+        public virtual TipoRangoConfirmacionAutomatica TipoRango { get; set; }
     }
 
 }

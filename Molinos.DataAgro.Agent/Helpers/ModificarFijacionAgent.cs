@@ -51,7 +51,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_DOLARIZADO = contratoGuardado.Dolarizado == true ? "X" : "",
                         IM_DOL_CORREDOR = contratoGuardado.DolarizadoCorredor == true ? "X" : "",
                         IM_DOL_EXPRESS = contratoGuardado.DolarizadoExpress == true ? "X" : "",
-                        IM_FECHA_LIMITE = fechaDolarizadoString,
+                        IM_FECHA_LIMITE = fechaDolarizadoString,  
+                        IM_DIAS_DIFERIM = contratoGuardado.DiasPesificado != null ? contratoGuardado.DiasPesificado.ToString() : "0"
                     };
 
                     logger.Debug(rq.ToXml());

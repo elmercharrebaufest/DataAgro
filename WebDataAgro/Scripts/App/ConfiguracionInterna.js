@@ -1,13 +1,18 @@
-﻿$(document).ready(function () {
+﻿var pausado;
+var material = [];
+$(document).ready(function () {
     kendo.culture("es-AR");
 
     kendo.culture();
     InicializarElementos();
+
 });
 
 
 function InicializarElementos() {
     var hoy = new Date();
+    pausado = ConvertirStringABool(pausado);
+ 
     $("#DesdeVigencia").kendoDateTimePicker();
     $("#HastaVigencia").kendoDateTimePicker();
     $("#DesdeVigenciaPago").kendoDateTimePicker();
@@ -112,6 +117,25 @@ function InicializarElementos() {
     });
     $("#TipoNegocioId").change();
     $("#TipoNegocioIdPizarra").change();
+
+    $("#selectall").on("click", function () {
+        $(".case").prop("checked", this.checked);
+    });
+
+    // if all checkbox are selected, check the selectall checkbox and viceversa  
+    $(".case").on("click", function () {
+        if ($(".case").length == $(".case:checked").length) {
+            $("#selectall").prop("checked", true);
+        } else {
+            $("#selectall").prop("checked", false);
+        }
+    });
+
+    if (pausado == true) {
+        $(".pausado").prop("checked", this.checked);
+    }
+ 
+    
 }
 
 function LimpiarPrecioForm() {
@@ -213,3 +237,31 @@ function copiarPago(configuracion) {
     $("#HastaVigenciaPago").val(stringDia + " " + "23:59");
   
 }
+
+//function Pausar() {  
+//    MSExecuteOnServer("ConfiguracionInterna/PausarPrecios", { pausa: $("#pausar").is(":checked") ? true : false});
+//    MensInfo("El cambio se guardó correctamente");
+//}
+
+function ObtenerDatosMaterialHabilitado() {
+
+    var obj = {};
+    var lista = [];
+    obj.MaterialId = 0;
+    obj.Habilitado = $("#selectall").is(":checked");
+    lista.push(obj);
+    for (var i = 0; i < material.length; i++) {
+        obj = {}
+        obj.MaterialId = material[i].MaterialId;        
+        obj.Habilitado = $("#" + material[i].MaterialId).is(":checked");
+        lista.push(obj);
+    }
+
+    MSExecuteOnServer("ConfiguracionInterna/PausarPrecios", { lista: lista });
+    MensInfo("El cambio se guardó correctamente");
+}
+
+function AbrirModal() {
+    $("#modalHabilitarMaterial").modal("show");
+}
+

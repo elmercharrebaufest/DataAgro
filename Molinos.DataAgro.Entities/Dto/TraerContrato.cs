@@ -206,9 +206,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaRedespacho { get; set; }
         public string MonedaComision { get; set; }
         public string MonedaBasis { get; set; }
+        public bool? Virtual { get; set; }
+        public string VirtualDescripcion { get; set; }
         public string UsuarioTercero { get; set; }
         public int? TipoPosicionCBOTId { get; set; }
         public string TipoPosicionCBOT { get; set; }
+        public bool? ObligatoriedadCostoFinanciero { get; set; }
+        public string ObligatoriedadCostoFinancieroDesc { get; set; }
     }
 
     public class StoredPorContratoResult

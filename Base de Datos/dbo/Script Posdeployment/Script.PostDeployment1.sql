@@ -220,11 +220,23 @@ UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Co
 IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Otro') BEGIN insert into MotivoAnterior(Descripcion) values ('Otro'); END
 IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Error en la carga') BEGIN insert into MotivoAnterior(Descripcion) values ('Error en la carga'); END
 IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Me olvidé de cargar') BEGIN insert into MotivoAnterior(Descripcion) values ('Me olvidé de cargar'); END
+
+--ClasificacionCompraNet
+IF NOT EXISTS (select 1 from TipoRangoConfirmacionAutomatica where Descripcion = 'Confirmación y Reconfirmación') BEGIN insert into TipoRangoConfirmacionAutomatica (Descripcion) values ('Confirmación y Reconfirmación'); END
+IF NOT EXISTS (select 1 from TipoRangoConfirmacionAutomatica where Descripcion = 'Confirmación') BEGIN insert into TipoRangoConfirmacionAutomatica (Descripcion) values ('Confirmación'); END
+IF NOT EXISTS (select 1 from TipoRangoConfirmacionAutomatica where Descripcion = 'Reconfirmación') BEGIN insert into TipoRangoConfirmacionAutomatica (Descripcion) values ('Reconfirmación'); END
+IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Me olvidé de cargar') BEGIN insert into MotivoAnterior(Descripcion) values ('Me olvidé de cargar'); END
 IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Me olvidé de cargar') BEGIN insert into MotivoAnterior(Descripcion) values ('Me olvidé de cargar'); END
 
 --ConceptoAperturaPrecio
 IF NOT EXISTS (select 1 from ConceptoAperturaPrecio where Descripcion = 'Basis') BEGIN insert into ConceptoAperturaPrecio (Descripcion,CodigoSap) values ('Basis','BA'); END
 
+--Configuracion precio Moa
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 1) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (1, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 2) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (2, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (3, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 4) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (4, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (5, 1); END
 
 
 --TipoPosicionCBOT

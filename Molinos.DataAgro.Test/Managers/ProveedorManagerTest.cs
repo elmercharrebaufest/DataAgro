@@ -902,7 +902,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var result = target.TraerDatosCombo(1, false);
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Segmentacion, SegmentacionQry>>>(), It.IsAny<Expression<Func<Segmentacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Segmentacion, SegmentacionQry>>>(), It.IsAny<Expression<Func<Segmentacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<TipoTelefono, TipoTelefonoQry>>>(), It.IsAny<Expression<Func<TipoTelefono, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Provincia, ProvinciaQry>>>(), It.IsAny<Expression<Func<Provincia, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CanalOperacion, CanalOperacionQry>>>(), It.IsAny<Expression<Func<CanalOperacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
@@ -3361,7 +3361,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EnviarEmailEliminarOkTest()
         {
-            var PrecioPactado = new List<PrecioPactado> { new PrecioPactado { MonedaPactado = new Moneda { Descripcion = "" }, MonedaImportePactado = new Moneda { Descripcion = "" }, Precio = 1, ImportePactado = 1, Porcentaje = 1 } };
+            var PrecioPactado = new List<PrecioPactado> { new PrecioPactado { MonedaPactado = new Moneda { Descripcion = "" }, MonedaImportePactado = new Moneda { Descripcion = "" }, Precio = 1, ImportePactado = 1, Porcentaje = 1, FechaDesde = DateTime.Now, FechaHasta = DateTime.Now } };
             var oContrato = new Contrato()
             {
                 Comercial = new Comercial { IdActiveDirectory = "q", ComercialId = 1 },
@@ -3450,7 +3450,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EnviarEmailOkTest()
         {
-            var PrecioPactado = new List<PrecioPactado> { new PrecioPactado { MonedaPactado = new Moneda { Descripcion = "" }, MonedaImportePactado = new Moneda { Descripcion = "" }, Precio = 1, ImportePactado = 1, Porcentaje = 1 } };
+            var PrecioPactado = new List<PrecioPactado> { new PrecioPactado { MonedaPactado = new Moneda { Descripcion = "" }, MonedaImportePactado = new Moneda { Descripcion = "" }, Precio = 1, ImportePactado = 1, Porcentaje = 1, FechaDesde = DateTime.Now, FechaHasta = DateTime.Now } };
             var oContrato = new Contrato()
             {
                 Comercial = new Comercial { IdActiveDirectory = "q", ComercialId = 1 },
@@ -3796,5 +3796,20 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
         }
+
+        [Test]
+        public void TraerProveedoresPorCuitTest()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+              .Returns(new List<ProveedorDto>() { new ProveedorDto { ProveedorId = 1 } });
+
+            var result = target.TraerProveedoresPorCuit("");
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count);
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+        }
+
     }
 }

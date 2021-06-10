@@ -77,7 +77,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (precioPizarra.MaterialId == 0) error.Errores.Add(new ErrorMessage(400, "El campo Cultivo no puede estar vacío"));
             if (string.IsNullOrEmpty(precioPizarra.MonedaId)) error.Errores.Add(new ErrorMessage(400, "El campo Moneda no puede estar vacío"));
             if (precioPizarra.FechaHasta.CompareTo(precioPizarra.FechaDesde) == -1) error.Errores.Add(new ErrorMessage(400, "El campo Fecha Hasta no puede ser menor que el campo Fecha Desde"));
-            if (precioMayorHasta != null && precioMayorHasta.FechaHasta >= precioPizarra.FechaDesde) error.Errores.Add(new ErrorMessage(400, "Ya existe un rango de fechas asignado para este cultivo"));
+            if (precioMayorHasta != null && precioMayorHasta.FechaHasta >= precioPizarra.FechaDesde) error.Errores.Add(new ErrorMessage(400, "El rango ingresado no puede ser menor que la fecha hasta del último registro " + precioMayorHasta.FechaHasta.ToString("dd/MM/yyyy")));
             if (precioPizarra.Precio == 0) error.Errores.Add(new ErrorMessage(400, "El campo Precio no puede estar vacío"));
             if (precioPizarra.ComercialId == null) error.Errores.Add(new ErrorMessage(400, "El campo Comercial no puede estar vacío"));
             return error;

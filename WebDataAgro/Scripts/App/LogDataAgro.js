@@ -155,6 +155,7 @@ function traerDatosModificados(idLogDataAgro, tipoDeClase) {
 }
 
 function customExport() {
+    BlockUi('Procesando...');
     var funcReturn = function (data) {
         if (data != null) {
             if (data.DownloadKey.length > 0) {
@@ -162,6 +163,7 @@ function customExport() {
                 window.location = url;
             }
         }
+        $.unblockUI();
     };
     MSExecuteOnServerAsync('/LogDataAgro/Export', TraerFiltrosConValores(), funcReturn, true);
 }
@@ -176,9 +178,11 @@ $('#Clase').on('change', function () {
         $("#ProveedorDiv").show();
     }
     if (this.value == "Negocio") {
+        $("#ProveedorDiv").show();
         $("#NegocioDiv").show();
     }
     if (this.value == "Cupo") {
+        $("#ProveedorDiv").show();
         $("#CupoDiv").show();
     }
 });

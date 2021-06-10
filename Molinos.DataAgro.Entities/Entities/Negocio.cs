@@ -91,6 +91,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? SustentableTercero { get; set; }
         public bool? Venta { get; set; }
 
+        public bool? ObligatoriedadCostoFinanciero { get; set; }
+
+        public string UsuarioTercero { get; set; }
+
+        public bool? Virtual { get; set; }
+
         [JsonConverter(typeof(SinHora))]
         public DateTime? FechaDesdeSustentable { get; set; } // FechaDesdeSustentable       
         [JsonConverter(typeof(SinHora))]

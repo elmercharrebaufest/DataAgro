@@ -33,6 +33,8 @@ namespace Molinos.DataAgro.Interfaces
         Resultado AnularFijacionSAP(FijacionSAP fijacion);
         Resultado AnularFijacionCarga(int fijacionId, string motivoRechazo);
         void BuscarComision(BasicoContrato negocio);
+        List<DatosFijacionDeContratoDto> TraerDatosFijacionVirtual(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId);
+     
     }
 }
 

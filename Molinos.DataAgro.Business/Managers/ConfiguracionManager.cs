@@ -48,6 +48,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.CantidadAcuerdo = oConfiguracion.CantidadAcuerdo;
                 oConfiguracionSave.CantidadDiasDolarizadoLimiteMaximo = oConfiguracion.CantidadDiasDolarizadoLimiteMaximo;
                 oConfiguracionSave.CantidadMaxima = oConfiguracion.CantidadMaxima;
+                oConfiguracionSave.CantidadDiasPesificadoLimite = oConfiguracion.CantidadDiasPesificadoLimite;
+                
             }
 
             else

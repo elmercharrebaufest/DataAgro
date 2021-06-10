@@ -12,6 +12,7 @@ using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Transactions;
 using Molinos.DataAgro.Entities.Seguridad;
+using System.Text.RegularExpressions;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
@@ -51,6 +52,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TipoNegocio = rango.TipoNegocio.Descripcion,
                     FechaCreacion = rango.FechaCreacion,
                     UsuarioCreador = rango.Comercial != null ? rango.Comercial.Nombres + " " + rango.Comercial.Apellido: "",
+                    TipoRangoId = rango.TipoRangoId,
+                    TipoRango = String.Join(" ", Regex.Split(rango.TipoRangoId.ToString(), @"(?<!^)(?=[A-Z])")),
+                    DesdeEntrega = rango.DesdeEntrega,
+                    HastaEntrega = rango.HastaEntrega
                 };
 
             GridHelper.TruncateTime(request.Filter, ref queryRango);

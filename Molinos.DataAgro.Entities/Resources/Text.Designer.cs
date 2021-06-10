@@ -97,6 +97,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logs Servidor.
+        /// </summary>
+        public static string Administracion_LogServer {
+            get {
+                return ResourceManager.GetString("Administracion_LogServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configurar Administración Proveedores.
         /// </summary>
         public static string Administracion_Proveedores {
@@ -660,6 +669,51 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Confirmar_NegocioOrigSur {
             get {
                 return ResourceManager.GetString("Confirmar_NegocioOrigSur", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar Negocios Girasol.
+        /// </summary>
+        public static string ConfirmarNegociosGirasol {
+            get {
+                return ResourceManager.GetString("ConfirmarNegociosGirasol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar Negocios Girasol AO.
+        /// </summary>
+        public static string ConfirmarNegociosGirasolAO {
+            get {
+                return ResourceManager.GetString("ConfirmarNegociosGirasolAO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar Negocios Maiz.
+        /// </summary>
+        public static string ConfirmarNegociosMaiz {
+            get {
+                return ResourceManager.GetString("ConfirmarNegociosMaiz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar Negocios Soja.
+        /// </summary>
+        public static string ConfirmarNegociosSoja {
+            get {
+                return ResourceManager.GetString("ConfirmarNegociosSoja", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmar Negocios Trigo.
+        /// </summary>
+        public static string ConfirmarNegociosTrigo {
+            get {
+                return ResourceManager.GetString("ConfirmarNegociosTrigo", resourceCulture);
             }
         }
         
@@ -1465,11 +1519,38 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modificar Fijacion Virtual.
+        /// </summary>
+        public static string ModificarFijacionVirtual {
+            get {
+                return ResourceManager.GetString("ModificarFijacionVirtual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modificar Limite Dolarizado.
         /// </summary>
         public static string ModificarLimiteDolarizado {
             get {
                 return ResourceManager.GetString("ModificarLimiteDolarizado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Límite Pesificado.
+        /// </summary>
+        public static string ModificarLimitePesificado {
+            get {
+                return ResourceManager.GetString("ModificarLimitePesificado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modificar Limite Pesificado Finalizado.
+        /// </summary>
+        public static string ModificarLimitePesificadoFinalizado {
+            get {
+                return ResourceManager.GetString("ModificarLimitePesificadoFinalizado", resourceCulture);
             }
         }
         
@@ -1614,6 +1695,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string October {
             get {
                 return ResourceManager.GetString("October", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ocultar Campos Editar Proveedor.
+        /// </summary>
+        public static string OcultarCamposEditar {
+            get {
+                return ResourceManager.GetString("OcultarCamposEditar", resourceCulture);
             }
         }
         

@@ -28,5 +28,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string TipoConfiguracion { get; set; }
         public string UsuarioCreador { get; set; }
         public DateTime? FechaCreacion { get; set; }
+        public bool? Pausar { get; set; }
     }
 }

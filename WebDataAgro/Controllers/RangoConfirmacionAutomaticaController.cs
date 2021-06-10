@@ -91,7 +91,8 @@ namespace WebDataAgro.Controllers
 
             if (!entityErrors.HayErrores)
             {
-                model.Rango = new RangoConfirmacionAutomaticaDto { Id = oRango.Id, PrecioMinimo = oRango.PrecioMinimo, PrecioMaximo = oRango.PrecioMaximo, MaterialId = oRango.MaterialId, MonedaId = oRango.MonedaId, FechaDesde = oRango.FechaDesde};
+                model.Rango = new RangoConfirmacionAutomaticaDto { Id = oRango.Id, PrecioMinimo = oRango.PrecioMinimo, PrecioMaximo = oRango.PrecioMaximo, 
+                    MaterialId = oRango.MaterialId, MonedaId = oRango.MonedaId, FechaDesde = oRango.FechaDesde, DesdeEntrega = oRango.DesdeEntrega, HastaEntrega = oRango.HastaEntrega };
             }
             else
             {

@@ -8,10 +8,35 @@
 @section Scripts{
     @Scripts.Render("~/bundles/ConfiguracionInterna")
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
 }
+<script>
+    pausado = '@ViewBag.Habilitado';
+    $(document).ready(function () {
+       var model = '@Html.Raw(Json.Encode(@ViewBag.MaterialDesc))';
+    material = JSON.parse(model);
 
+    });
+
+</script>
 <h3 class="padding"> Configuración Interna</h3>
-
+<div class="row">
+    <div class="col-md-7"></div>
+    <div class="col-md-3 padding">
+        @* <label class="content-input">
+                <span>Deshabilitación General de Precios</span>
+                <input id="pausar" class="campo-input-input pausado" value="9" data-bind="" type="checkbox" @(ViewBag.Habilitado != false ? "checked" : "") onclick="Pausar()" />
+                <i></i>
+            </label>*@
+    </div>
+    <div class="col-md-2">
+        <div style="width:fit-content">
+            <span id="habilitacionPrecio" class="btnAzul btn-block" type="button" onclick="AbrirModal()">
+                Habilitacion de Precios
+            </span>
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="row">
         <div class="col-xs-3 wizard-header-group" id="PrecioTab">
@@ -56,4 +81,11 @@
     <div id="HabilitacionPagoDiferido" hidden>
         @Html.Action("GrabarPagoDiferidoPartial", "ConfiguracionInterna")
     </div>
+    @Html.Partial("ModalHabilitarMaterial")
 </div>
+
+<style>
+    .btnAzul {
+        background: #017940 !important
+    }
+</style>

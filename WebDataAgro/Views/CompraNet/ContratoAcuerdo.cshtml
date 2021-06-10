@@ -64,6 +64,7 @@
         </div>
 
     </div>
+    <input id="esCostoFinanciero" class="campo-input-input" data-bind="" hidden type="checkbox" />
 
     <div class="copia-contratos noAcuerdo">
         <div class="row ampliar">
@@ -504,7 +505,7 @@
                 <input id="diasDiferidoId" class="campo-input-input" data-bind="checked:Parametros.diasDiferidoId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errdiasDiferidoId" src="~/Content/Images/error.png" style="display:none" />
                 <div id="diasDiferidoFijacionDiv" class="pagoFijacion" hidden>
-                    <input id="diasDiferidoFijacionId" placeholder="Días" />
+                    <input id="diasDiferidoFijacionId" placeholder="Días" onfocus="SetearDiaPesificado()"/>
                 </div>
             </div>
         </div>
@@ -626,13 +627,13 @@
         <div class="col-sm-2 ">
             <div>
                 <label style="width:120px">Pago diferido</label>
-                <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" onclick="MostrarPagoDiferido()"/>
+                <input id="pesificadoId" class="campo-input-input" data-bind="checked:Parametros.pesificadoId, disabled: isControlDisabled" type="checkbox" onclick="MostrarPagoDiferido()" />
                 <img id="errpesificadoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
         <div class="col-md-4 col-sm-9">
             <div id="pesificadoDiv" hidden>
-                <input id="pesificadoDiasId" placeholder="Días" style="width:100%" />
+                <input id="pesificadoDiasId" placeholder="Días" style="width:100%" onfocus="SetearDiaPesificado()"/>
                 <img id="errpesificadoDiasId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
@@ -1120,5 +1121,6 @@
 
 @Html.Partial("_ModalCCPPPendienteAplicar")
 
-@Html.Partial("ModalConfirmarBolsa")
+
+@Html.Partial("ModalConfirmarCostoFinanciero")
 

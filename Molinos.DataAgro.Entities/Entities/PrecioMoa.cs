@@ -19,6 +19,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? DesdeFijacion { get; set; }
         public DateTime? HastaFijacion { get; set; }
         public int? UsuarioCreadorId { get; set; }
+        public bool? Habilitado { get; set; }
         public DateTime? FechaCreacion { get; set; }
         [ForeignKey("MonedaId")]
         public virtual Moneda Moneda { get; set; }

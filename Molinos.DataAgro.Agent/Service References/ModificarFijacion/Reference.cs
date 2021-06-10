@@ -36,11 +36,15 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         
         private string iM_CUENTA_MRPField;
         
+        private string iM_DIAS_DIFERIMField;
+        
         private string iM_DOLARIZADOField;
         
         private string iM_DOL_CORREDORField;
         
         private string iM_DOL_EXPRESSField;
+        
+        private string iM_FECHA_CIERTAField;
         
         private string iM_FECHA_LIMITEField;
         
@@ -74,6 +78,18 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string IM_DIAS_DIFERIM {
+            get {
+                return this.iM_DIAS_DIFERIMField;
+            }
+            set {
+                this.iM_DIAS_DIFERIMField = value;
+                this.RaisePropertyChanged("IM_DIAS_DIFERIM");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public string IM_DOLARIZADO {
             get {
                 return this.iM_DOLARIZADOField;
@@ -85,7 +101,7 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string IM_DOL_CORREDOR {
             get {
                 return this.iM_DOL_CORREDORField;
@@ -97,7 +113,7 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string IM_DOL_EXPRESS {
             get {
                 return this.iM_DOL_EXPRESSField;
@@ -109,7 +125,19 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public string IM_FECHA_CIERTA {
+            get {
+                return this.iM_FECHA_CIERTAField;
+            }
+            set {
+                this.iM_FECHA_CIERTAField = value;
+                this.RaisePropertyChanged("IM_FECHA_CIERTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string IM_FECHA_LIMITE {
             get {
                 return this.iM_FECHA_LIMITEField;
@@ -121,7 +149,7 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
         public string IM_FIJACION {
             get {
                 return this.iM_FIJACIONField;
@@ -133,7 +161,7 @@ namespace Molinos.DataAgro.Agent.ModificarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
         public string IM_ZLSCH {
             get {
                 return this.iM_ZLSCHField;
