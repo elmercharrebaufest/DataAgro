@@ -4190,11 +4190,6 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, CUIT = x.CUIT }, x => x.CUIT == cuit);
         }
 
-        public List<ProveedorDto> TraerProveedoresPorCuit(string cuit)
-        {
-            return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, CUIT = x.CUIT }, x => x.CUIT == cuit);
-        }
-
         public void EnviarMailFijacionVirtual(FijacionDePrecioContrato contrato, string comercial)
         {
             var lista = new List<string>();

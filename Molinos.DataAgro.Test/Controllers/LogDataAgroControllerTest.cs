@@ -26,7 +26,6 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IProveedorManager> mockProveedorManager;
         
         private JavaScriptSerializer serializer;
-        private Mock<IProveedorManager> mockProveedorManager;
 
         [SetUp]
         public void SetUp()

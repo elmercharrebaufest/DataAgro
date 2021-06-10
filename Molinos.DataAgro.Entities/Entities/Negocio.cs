@@ -156,7 +156,6 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("TipoPosicionCBOTId")]
         public virtual TipoPosicionCBOT TipoPosicionCBOT { get; set; }
-        public string UsuarioTercero { get; set; }
 
         public Negocio()
         {
