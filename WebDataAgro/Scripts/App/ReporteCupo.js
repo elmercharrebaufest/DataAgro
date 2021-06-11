@@ -230,12 +230,16 @@ function InicializarCuposIndex() {
 
 function Filtrar() {
     clearSelectionGrid();
-    $('#grid').data('kendoGrid').dataSource.read();
-    if (anulacion == true && $("#EstadoId").val() == "1") {
-        $('#anulacionMasivaDiv').show();
-    } else {
-        $('#anulacionMasivaDiv').hide();
-    }
+    var grid = $('#grid').data('kendoGrid').dataSource;
+    grid.read();
+    setTimeout(function () {
+        if (anulacion == true && $("#EstadoId").val() == "1" && grid.data().length > 0) {
+            $('#anulacionMasivaDiv').show();
+        } else {
+            $('#anulacionMasivaDiv').hide();
+        }
+    }, 500)
+ 
 }
 
 
@@ -289,40 +293,44 @@ function ConvertirFechaRegistroAString(filtros) {
 function AnulacionMasiva() {
     var grid = $("#grid").data("kendoGrid");
     var selectedIds = grid.selectedKeyNames();
-    var ids = new Array();
-    for (var i = 0; i < selectedIds.length; i++) {
-        ids.push(
-            { field: "Id", operator: "eq", value: parseInt(selectedIds[i]) }
-        );
-    }
-    var filter = {
-        logic: "and",
-        filters: [
-            {
-                logic: "or",
-                filters: ids
-            }
-        ]
-    };
-    var request = {
-        filter: filter,
-        page: 1,
-        skip: 0,
-        take: null,
-        sort: null
-    };
-    datos = MSExecuteOnServer('/ReporteCupo/BuscaDatosTabla', request);
-    if (datos.Data.length == 0) {
-        AnulacionMasivaConfirmacion();
-    } else {
-        //$("#cuposSeleccionados").html("");
-        //for (var i = 0; i < datos.Data.length; i++) {
-        //    $("#cuposSeleccionados").append(datos.Data[i].CupoSap + " " + datos.Data[i].Destinatario + " " + datos.Data[i].Proveedor + "<br>");
-        //}
-        var ds2 = new kendo.data.DataSource({ data: datos.Data });
+    if (selectedIds.length > 0) {
+        var ids = new Array();
+        for (var i = 0; i < selectedIds.length; i++) {
+            ids.push(
+                { field: "Id", operator: "eq", value: parseInt(selectedIds[i]) }
+            );
+        }
+        var filter = {
+            logic: "and",
+            filters: [
+                {
+                    logic: "or",
+                    filters: ids
+                }
+            ]
+        };
+        var request = {
+            filter: filter,
+            page: 1,
+            skip: 0,
+            take: null,
+            sort: null
+        };
+        datos = MSExecuteOnServer('/ReporteCupo/BuscaDatosTabla', request);
+        if (datos.Data.length == 0) {
+            AnulacionMasivaConfirmacion();
+        } else {
+            //$("#cuposSeleccionados").html("");
+            //for (var i = 0; i < datos.Data.length; i++) {
+            //    $("#cuposSeleccionados").append(datos.Data[i].CupoSap + " " + datos.Data[i].Destinatario + " " + datos.Data[i].Proveedor + "<br>");
+            //}
+            var ds2 = new kendo.data.DataSource({ data: datos.Data });
 
-        $("#gridNoEliminar").data("kendoGrid").setDataSource(ds2);
-        $("#modalConfirmarAnulacion").modal("show");
+            $("#gridNoEliminar").data("kendoGrid").setDataSource(ds2);
+            $("#modalConfirmarAnulacion").modal("show");
+        }
+    } else {
+        AnulacionMasivaConfirmacion();
     }
 
 }
@@ -338,13 +346,15 @@ function AnulacionMasivaConfirmacion() {
 
     var grid = $("#grid").data("kendoGrid");
     var selectedIds = grid.selectedKeyNames();
-    var ids = new Array();
-    for (var i = 0; i < selectedIds.length; i++) {
-        ids.push(
-            { field: "Id", operator: "neq", value: parseInt(selectedIds[i]) }
-        );
+    if (selectedIds.length > 0) {
+        var ids = new Array();
+        for (var i = 0; i < selectedIds.length; i++) {
+            ids.push(
+                { field: "Id", operator: "neq", value: parseInt(selectedIds[i]) }
+            );
+        }
+        filtroCompleto.filter.filters.push({ logic: "and", filters: ids });
     }
-    filtroCompleto.filter.filters.push({ logic: "and", filters: ids });
 
     var mensaje = MSExecuteOnServer('/ReporteCupo/AnulacionMasiva', filtroCompleto);
     if (mensaje == "Ningún cupo para anular") {

@@ -904,6 +904,10 @@ namespace WebDataAgro.Services
                 {
                     proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit && x.SegmentacionId != 5 && x.SegmentacionId != 7, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
                 }
+                if (corredor == null)
+                {
+                    proveedor = repositorio.Listar<Proveedor>(x => x.CUIT == cuit, 0, "ProveedorId", DirOrden.Asc).FirstOrDefault();
+                }
 
                 if (proveedor != null)
                 {
