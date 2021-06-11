@@ -227,7 +227,7 @@ function cambiarMarca(id, ocultar) {
     recargarGrilla();
 }
 function botonModificarFinalizados(dataItem, icono) {
-    if (((modificaFinalizados && (dataItem.Virtual == false)) || (dataItem.Canje == true && esCanje) || dataItem.Virtual == false)
+    if (((modificaFinalizados && (dataItem.Virtual == false || dataItem.Virtual == null)) || (dataItem.Canje == true && esCanje) || dataItem.Virtual == false)
         && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId)
         && ((dataItem.PrestamoDevolucion != true && dataItem.Canje != true)
             || (dataItem.Canje == true && esCanje)
