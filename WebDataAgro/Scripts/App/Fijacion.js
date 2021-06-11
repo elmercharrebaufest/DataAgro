@@ -3779,7 +3779,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#fechaFijacionId").data("kendoDatePicker").enable(false);
         $("#pizarraId").attr("disabled", true);
         $("#CheckFijacion").attr("disabled", true);
-
+        $("#virtual").hide();
         if (modificarDolarizadoFinalizado) {
             $("#expressId").attr("disabled", false);
             $("#dolarizadoId").attr("disabled", false);
