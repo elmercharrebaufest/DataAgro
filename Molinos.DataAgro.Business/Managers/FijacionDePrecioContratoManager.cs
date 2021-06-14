@@ -274,30 +274,31 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oParam.FechaCierta == null && oParam.PagoDiferido != true && concepto != null)
                 {
-                    oErrorMessages.Error("", ".Días de diferimiento o Fecha cierta es obligatorio con el concepto financiero");
+                    oErrorMessages.Error("", ".Concepto financiero es obligatorio con pago diferido o fecha cierta");
                 }
-                if (oParam.FechaCierta != null && oParam.ObligatoriedadCostoFinanciero != false)
+                //if (oParam.FechaCierta != null && oParam.ObligatoriedadCostoFinanciero == true)
+                //{
+                //    if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
+                //    {
+                //        if (!((concepto != null && (oParam.FechaCierta != null) ||
+                //            (concepto == null && (oParam.FechaCierta == null)))))
+                //        {
+                //            oErrorMessages.Error("", "Fecha cierta es obligatorio con el concepto financiero,");
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                if (oParam.Pizarra.HasValue && !oParam.Pizarra.Value && oParam.FechaCierta == null)
                 {
-                    if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
+                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
+                        (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && 
+                        (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
                     {
-                        if (!((concepto != null && (oParam.FechaCierta != null) ||
-                            (concepto == null && (oParam.FechaCierta == null)))))
-                        {
-                            oErrorMessages.Error("", "Fecha cierta es obligatorio con el concepto financiero,");
-                        }
+                        oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto financiero");
                     }
                 }
-                else
-                {
-                    if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
-                    {
-                        if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
-                            (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
-                        {
-                            oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto financiero");
-                        }
-                    }
-                }
+                //}
 
             }
 
@@ -1130,6 +1131,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaCiertaFormateado = fijac.FechaCierta != null ? SqlFunctions.DateName("day", fijac.FechaCierta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)fijac.FechaCierta.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.FechaCierta) : "",
+                ObligatoriedadCostoFinanciero = fijac.ObligatoriedadCostoFinanciero
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
@@ -1139,7 +1141,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.DatosFijacion.KilosPendiente = (double.Parse(contrato.DatosFijacion.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
             }
             contrato.AperturaPrecios = TraerAperturaDePrecioPorFijacion(contrato.Id);
-
+            
             return contrato;
         }
         private DatosFijacionDeContratoDto FechaString(DatosFijacionDeContratoDto datos)

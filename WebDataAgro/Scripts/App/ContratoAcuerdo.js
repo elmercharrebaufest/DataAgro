@@ -3129,7 +3129,7 @@ function GrabarContrato(nuevoContrato) {
     } else if (nuevoContrato.TipoNegocioId == 5) {
         result = MSExecuteOnServer('/CompraNet/GrabarAgente', nuevoContrato);
     } else if (nuevoContrato.TipoNegocioId == 6) {
-        if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" && $("#esCostoFinanciero").is(':checked') != true) {
+        if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
             $("#ModalConfirmarCostoFinanciero").modal('show');
         } else {
             result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', nuevoContrato);

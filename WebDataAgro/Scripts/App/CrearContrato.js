@@ -3160,7 +3160,7 @@ function GrabarContrato(nuevoContrato) {
             $.unblockUI();
         } else {           
            
-            if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" && $("#esCostoFinanciero").is(':checked') != true) {
+            if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
                 $("#ModalConfirmarCostoFinanciero").modal('show');
             }else {
                 result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);

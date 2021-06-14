@@ -632,27 +632,27 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("", ".Días de diferimiento o Fecha cierta es obligatorio con el concepto financiero");
                 }
-                if (oParam.FechaCierta != null && oParam.ObligatoriedadCostoFinanciero != false)
-                {
-                    if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
-                    {
-                        if (!((concepto != null && (oParam.FechaCierta != null) ||
-                            (concepto == null && (oParam.FechaCierta == null)))))
-                        {
-                            oErrorMessages.Error("", "Fecha cierta es obligatorio con el concepto financiero,");
-                        }
-                    }
-                }
-                //else
+                //if (oParam.FechaCierta != null && oParam.ObligatoriedadCostoFinanciero != false)
                 //{
                 //    if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
                 //    {
-                //        if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
-                //            (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
+                //        if (!((concepto != null && (oParam.FechaCierta != null) ||
+                //            (concepto == null && (oParam.FechaCierta == null)))))
                 //        {
-                //            oErrorMessages.Error("", "Días de diferimiento o Fecha cierta es obligatorio con el concepto financiero");
+                //            oErrorMessages.Error("", "Fecha cierta es obligatorio con el concepto financiero,");
                 //        }
                 //    }
+                //}
+                //else
+                //{
+                if (oParam.Pizarra.HasValue && !oParam.Pizarra.Value && oParam.FechaCierta == null)
+                {
+                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
+                        (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
+                    {
+                        oErrorMessages.Error("", "Días de diferimiento o Fecha cierta es obligatorio con el concepto financiero");
+                    }
+                }
                 //}
 
             }

@@ -3036,7 +3036,7 @@ function GrabarContrato(nuevoContrato) {
     } else if (nuevoContrato.TipoNegocioId == 6) {
         result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', nuevoContrato);
     } else {
-        if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" && $("#esCostoFinanciero").is(':checked') != true) {
+        if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
             $("#ModalConfirmarCostoFinanciero").modal('show');
         } else {
             result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);

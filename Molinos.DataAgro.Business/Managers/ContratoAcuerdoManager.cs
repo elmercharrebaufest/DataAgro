@@ -529,9 +529,16 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Dolarizado", "Se debe completar Dolarizado si completó Fecha límite .");
             }
-            if (oContratoAcuerdo.FechaCierta != null && oContratoAcuerdo.PagoDiferido == true)
+            if (oContratoAcuerdo.FechaCierta != null && oContratoAcuerdo.PagoDiferido == true )
             {
-                oEntityErrors.Error("", "Fecha cierta o días de diferimiento son campos obligatorios con el concepto Financiero");
+                oEntityErrors.Error("", "Los campos fecha cierta y pago diferido son excluyentes");
+            }
+           
+            var conceptoFinanciero = oContratoAcuerdo.AperturaPrecio != null ?
+                oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0)) : null;
+            if (oContratoAcuerdo.FechaCierta == null && oContratoAcuerdo.PagoDiferido != true && conceptoFinanciero != null)
+            {
+                oEntityErrors.Error("", ".Concepto financiero es obligatorio con pago diferido o fecha cierta");
             }
             if (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value)
             {
@@ -539,54 +546,22 @@ namespace Molinos.DataAgro.Business
                 {
                     oEntityErrors.Error("", "Días de diferimiento es obligatorio con el Pago Diferido");
                 }
-                if (oContratoAcuerdo.AperturaPrecio != null)
-                {
-                    var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
-                    if (concepto == null)
-                    {
-                        oEntityErrors.Error("", "Concepto Financiero es obligatorio con el Pago Diferido");
-                    }
-                }
-                else
+                if (conceptoFinanciero == null)
                 {
                     oEntityErrors.Error("", "Concepto Financiero es obligatorio con el Pago Diferido");
                 }
-
             }
-
-            if (oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.FechaCierta != null && oContratoAcuerdo.ObligatoriedadCostoFinanciero != false)
+           
+            if (oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value && oContratoAcuerdo.FechaCierta == null)
             {
-                if ((oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value))
+                if (!((conceptoFinanciero != null && (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value) && (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value != 0)) ||
+                    (conceptoFinanciero == null && (!oContratoAcuerdo.PagoDiferido.HasValue || (oContratoAcuerdo.PagoDiferido.HasValue && !oContratoAcuerdo.PagoDiferido.Value)) 
+                    && (!oContratoAcuerdo.DiasPesificado.HasValue || (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value == 0)))))
                 {
-                    var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
-                    if (!((concepto != null && (oContratoAcuerdo.FechaCierta != null) ||
-                        (concepto == null && (oContratoAcuerdo.FechaCierta == null)))))
-                    {
-                        oEntityErrors.Error("", "Fecha Cierta es obligatorio con el concepto Financiero");
-                    }
+                    oEntityErrors.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
                 }
-            }
-                //else
-                //{
-                //    if ((oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value))
-                //    {
-                //        var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
-                //        if (!((concepto != null && (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value) && (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value != 0)) ||
-                //            (concepto == null && (!oContratoAcuerdo.PagoDiferido.HasValue || (oContratoAcuerdo.PagoDiferido.HasValue && !oContratoAcuerdo.PagoDiferido.Value)) && (!oContratoAcuerdo.DiasPesificado.HasValue || (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value == 0)))))
-                //        {
-                //            oEntityErrors.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
-                //        }
-                //    }
-                //}
+            }           
 
-            //if (oContratoAcuerdo.AperturaPrecio != null && oContratoAcuerdo.MonedaId == "  ARP")
-            //{
-            //    var concepto = oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
-            //    if (concepto != null && oContratoAcuerdo.PagoDiferido != true)
-            //    {
-            //        oEntityErrors.Error("", "Pago Diferido es obligatorio con el concepto Financiero");
-            //    }
-            //}
             if (oContratoAcuerdo.Calidad != null)
             {
                 var calidad = oContratoAcuerdo.Calidad.LastOrDefault(x => x.CalidadEspecialId == 1);
