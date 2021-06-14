@@ -1861,7 +1861,6 @@ function InicializarElementos() {
                 $("#pagoDolarizadoDiv").hide();
                 $("#dolarizadoDiv").hide();
                 $("#dolarizadoFechaId").val("");
-                $("#ModalConfirmarCostoFinanciero").modal('show');
             }
 
             MostrarFechaCierta();
@@ -3130,7 +3129,11 @@ function GrabarContrato(nuevoContrato) {
     } else if (nuevoContrato.TipoNegocioId == 5) {
         result = MSExecuteOnServer('/CompraNet/GrabarAgente', nuevoContrato);
     } else if (nuevoContrato.TipoNegocioId == 6) {
-        result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', nuevoContrato);
+        if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" && $("#esCostoFinanciero").is(':checked') != true) {
+            $("#ModalConfirmarCostoFinanciero").modal('show');
+        } else {
+            result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', nuevoContrato);
+        }
     } else {
         result = MSExecuteOnServer('/CompraNet/GrabarFijacion', nuevoContrato);
     }
@@ -4844,6 +4847,30 @@ function ConfirmarCostoFinanciero() {
 
 function RechazarCostoFinanciero() {
     $("#esCostoFinanciero").prop("checked", false);
+    var error = false;
+    BlockUi('Guardando...');
+    var objeto = ObtenerDatos(error);
+    if (!error) {
+        var result = MSExecuteOnServer('/CompraNet/GrabarAcuerdo', objeto);
+        if (result != null) {
+            if (ExistsErrorMessages(result.Errores)) {
+                MensErr(result.Errores[0].Message);
+                $.unblockUI();
+            }
+            else {
+                if (Siguientes != undefined && Siguientes != null && Siguientes != "" && Siguientes != "[]") {
+                    var siguientesObj = JSON.parse(Siguientes.replace(/(&quot\;)/g, "\""));
+                    var primero = siguientesObj.shift();
+                    editarContrato(primero.Id, primero.TipoNegocioId, siguientesObj);
+                } else {
+                    window.location.href = window.location.origin + "/CompraNet";
+                }
+            }
+        }
+        $.unblockUI();
+    } else {
+        $.unblockUI();
+    }
 }
 
 function EstablecerCostoFinanciero() {

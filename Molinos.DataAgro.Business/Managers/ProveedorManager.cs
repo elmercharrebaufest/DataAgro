@@ -905,7 +905,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.FechaCierta.HasValue)
             {
-                htmlBody += "Fecha Cierta: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
+                htmlBody += "Fecha Cierta de pago: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
             }
             if (oContrato.DolarizadoExpress == true)
             {
@@ -987,6 +987,10 @@ namespace Molinos.DataAgro.Business.Managers
             if (oFijacionDePrecioContrato.DolarizadoExpress == true)
             {
                 htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+            }
+            if (oFijacionDePrecioContrato.FechaCierta.HasValue)
+            {
+                htmlBody += "Fecha Cierta de pago: " + oFijacionDePrecioContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
             }
             if (oFijacionDePrecioContrato.Dolarizado == true)
             {
@@ -3800,7 +3804,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.FechaCierta.HasValue)
             {
-                htmlBody += "Fecha Cierta: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
+                htmlBody += "Fecha Cierta de pago: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
             }
             if (oContrato.DolarizadoExpress == true)
             {
@@ -4112,7 +4116,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.FechaCierta.HasValue)
             {
-                htmlBody += "Fecha Cierta: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
+                htmlBody += "Fecha Cierta de pago: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
             }
             if (oContrato.DolarizadoExpress == true)
             {
@@ -4644,7 +4648,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.FechaCierta.HasValue)
             {
-                htmlBody += "Fecha Cierta: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
+                htmlBody += "Fecha Cierta de pago: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
             }
             if (oContrato.DolarizadoExpress == true)
             {

@@ -1868,8 +1868,7 @@ function InicializarElementos() {
                 $("#dolarizadoDiv").hide();
                 $("#dolarizadoExpressId").prop("checked", false);
                 $("#pagoDolarizadoDiv").hide();
-                $("#pagoDiferidoDiv").hide();
-                $("#ModalConfirmarCostoFinanciero").modal('show');
+                $("#pagoDiferidoDiv").hide();              
                 
             }
         }
@@ -3159,8 +3158,13 @@ function GrabarContrato(nuevoContrato) {
         if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El Contrato Madre es Obligatorio al Fijar el Convenio");
             $.unblockUI();
-        } else {
-            result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
+        } else {           
+           
+            if ($("#aperturaPrecioImporteFinancieroId").val() == "0" && $("#fechaCiertaId").val() != "" && $("#esCostoFinanciero").is(':checked') != true) {
+                $("#ModalConfirmarCostoFinanciero").modal('show');
+            }else {
+                result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
+            }
         }
     } else if (nuevoContrato.TipoNegocioId == 4) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
@@ -4770,7 +4774,6 @@ function ConfirmarBolsaModal() {
 }
 
 function HayFijacionConvenio() {
-
     if ($("#hijoId").is(':checked')) {
 
         $(".contratoMadreDiv").show();
@@ -4969,8 +4972,33 @@ function ConfirmarCostoFinanciero() {
     $("#esCostoFinanciero").prop("checked", true);
 }
 
-function RechazarCostoFinanciero() {
+function RechazarCostoFinanciero() {     
     $("#esCostoFinanciero").prop("checked", false);
+    var error = false;
+    BlockUi('Guardando...');
+    var objeto = ObtenerDatos(error);
+    if (!error) {
+       var result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
+        if (result != null) {
+            if (ExistsErrorMessages(result.Errores)) {
+                MensErr(result.Errores[0].Message);
+                $.unblockUI();
+            }
+            else {
+                if (Siguientes != undefined && Siguientes != null && Siguientes != "" && Siguientes != "[]") {
+                    var siguientesObj = JSON.parse(Siguientes.replace(/(&quot\;)/g, "\""));
+                    var primero = siguientesObj.shift();
+                    editarContrato(primero.Id, primero.TipoNegocioId, siguientesObj);
+                } else {
+                    window.location.href = window.location.origin + "/CompraNet";
+                }
+            }
+        }
+        $.unblockUI();
+    } else {
+        $.unblockUI();
+    }
+   
 }
 
 function CargarCampoMAT() {

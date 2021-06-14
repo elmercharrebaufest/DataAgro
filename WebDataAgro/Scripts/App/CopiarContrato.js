@@ -532,7 +532,7 @@ function ObtenerDatos(error) {
     if ($("#hijoId").is(":checked")) {
         obj.Madre = false;
     } else {
-        if (obj.TipoNegocioId == 2) {
+        if (obj.TipoNegocioId == 2 || obj.TipoNegocioId == 3) {
             obj.FechaCierta = $("#fechaCiertaId").val();
         }
         if (obj.TipoNegocioId == 6) {

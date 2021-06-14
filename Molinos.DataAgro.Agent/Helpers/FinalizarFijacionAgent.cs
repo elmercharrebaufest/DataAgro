@@ -127,7 +127,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_DOL_EXPRESS = fijacion.DolarizadoExpress == true ? "X" : "",
                         IM_FECHA_LIMITE = fechaDolarizadoString,
                         IM_DOL_CORREDOR = fijacion.DolarizadoCorredor == true ? "X" : "",
-                        IM_FECHA_CIERTA = "",
+                        IM_FECHA_CIERTA = fijacion.FechaCierta.HasValue ? fijacion.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
 
 
                     };

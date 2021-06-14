@@ -268,17 +268,37 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("pagoDiferido", "La Fijación de pago diferido siempre es en ARP");
             }
 
-            if (oParam.AperturaPrecio != null)
+            if (oParam.MonedaId != "USDM " && oParam.AperturaPrecio != null)
             {
-                if (oParam.Pizarra.HasValue && !oParam.Pizarra.Value)
+                var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+
+                if (oParam.FechaCierta == null && oParam.PagoDiferido != true && concepto != null)
                 {
-                    var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
-                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
-                        (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
+                    oErrorMessages.Error("", ".Días de diferimiento o Fecha cierta es obligatorio con el concepto financiero");
+                }
+                if (oParam.FechaCierta != null && oParam.ObligatoriedadCostoFinanciero != false)
+                {
+                    if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
                     {
-                        oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
+                        if (!((concepto != null && (oParam.FechaCierta != null) ||
+                            (concepto == null && (oParam.FechaCierta == null)))))
+                        {
+                            oErrorMessages.Error("", "Fecha cierta es obligatorio con el concepto financiero,");
+                        }
                     }
                 }
+                else
+                {
+                    if ((oParam.Pizarra.HasValue && !oParam.Pizarra.Value))
+                    {
+                        if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
+                            (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
+                        {
+                            oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto financiero");
+                        }
+                    }
+                }
+
             }
 
             Negocio fijacionSave = null;
@@ -521,6 +541,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.PorcentajeSobrePrecioContrato = oFijacionDePrecio.PorcentajeSobrePrecioContrato;
                 oFijacionDePrecioSave.MonedaSobrePrecioContrato = oFijacionDePrecio.MonedaSobrePrecioContrato;
                 oFijacionDePrecioSave.Virtual = oFijacionDePrecio.Virtual;
+                oFijacionDePrecioSave.FechaCierta = oFijacionDePrecio.FechaCierta;
+                oFijacionDePrecioSave.ObligatoriedadCostoFinanciero = oFijacionDePrecio.FechaCierta.HasValue ? oFijacionDePrecio.ObligatoriedadCostoFinanciero : null;
                 if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     oFijacionDePrecioSave.ObservacionTercero = oFijacionDePrecio.ObservacionTercero;
@@ -1103,7 +1125,11 @@ namespace Molinos.DataAgro.Business.Managers
                 UsuarioId = fijac.UsuarioId,
                 UsuarioTercero = fijac.UsuarioTercero,
                 ProveedorCreador = fijac.ProveedorCreadorId, 
-                Virtual = fijac.Virtual
+                Virtual = fijac.Virtual,
+                FechaCierta = fijac.FechaCierta,
+                FechaCiertaFormateado = fijac.FechaCierta != null ? SqlFunctions.DateName("day", fijac.FechaCierta).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)fijac.FechaCierta.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", fijac.FechaCierta) : "",
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)

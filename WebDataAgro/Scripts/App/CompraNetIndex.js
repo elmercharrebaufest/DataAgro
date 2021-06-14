@@ -2437,7 +2437,10 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#obligatorioDiv").show();
         $("#obligatorioId").text("Si");       
     } else {
-        $("#obligatorioDiv").hide();
+        if (fechaCierta != "null") {
+            $("#obligatorioDiv").show();
+            $("#obligatorioId").text("No");
+        }
     }
 
     if (Prestamo == "true") {

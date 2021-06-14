@@ -448,16 +448,14 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
-                    if (oParam.TipoNegocioId == 1 /*&& oParam.DestinoId != 1 && oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.DestinoId != 9 && oParam.DestinoId != 13*/
-                        && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoPeriodoDBId == 1)) && centro.ValidaRedespacho != false)
+                    if (centro.ValidaRedespacho != false && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int) EnumConceptoApertura.Redespacho)))
                     {
                         oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
                     }
 
-                    if (oParam.TipoNegocioId == 1 && (oParam.DestinoId == 1 || oParam.DestinoId == 6 || oParam.DestinoId == 7 || oParam.DestinoId == 9 || oParam.DestinoId == 13 || oParam.DestinoId == 15)
-                        && (oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0))))
+                    if (centro.ValidaRedespacho == false && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
                     {
-                        oErrorMessages.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
+                        oErrorMessages.Error("Descuentos", " Solo se debe completar Redespacho en Acopios.");
                     }
                 }
 
@@ -657,21 +655,6 @@ namespace Molinos.DataAgro.Business.Managers
                 //    }
                 //}
 
-            }
-            if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
-            {
-                if (oParam.DestinoId != 1 /*&& oParam.DestinoId != 6 && oParam.DestinoId != 7 && oParam.TipoNegocioId == 2 && oParam.DestinoId != 9 && oParam.DestinoId != 13*/
-                && oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho 
-                && (x.Importe != 0 || x.Porcentaje != 0)) && centro.ValidaRedespacho != false)
-                {
-                    oErrorMessages.Error("", "Se debe completar Redespacho en Acopios");
-                }
-
-                if ((oParam.DestinoId == 1 || oParam.DestinoId == 6 || oParam.DestinoId == 7 || oParam.DestinoId == 9 || oParam.DestinoId == 13 || oParam.DestinoId == 15)
-                               && oParam.TipoNegocioId == 2 && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && (x.Importe != 0 || x.Porcentaje != 0)))
-                {
-                    oErrorMessages.Error("", "Solo se debe completar Redespacho en Acopios");
-                }
             }
 
             if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
@@ -1326,9 +1309,9 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
             oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
             oContratoSave.Venta = oContrato.Venta;
+            oContratoSave.ObligatoriedadCostoFinanciero = oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null; 
             oContratoSave.PosicionCBOT = oContrato.PosicionCBOT;
             oContratoSave.TipoPosicionCBOTId = oContrato.TipoPosicionCBOTId;
-            oContratoSave.ObligatoriedadCostoFinanciero = oContrato.ObligatoriedadCostoFinanciero;
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 oContratoSave.CalidadTercero = oContrato.CalidadTercero;
@@ -2022,7 +2005,7 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.Insumo = oContrato.Insumo;
                             oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
                             oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
-                            oContrato.ObligatoriedadCostoFinanciero = oContrato.ObligatoriedadCostoFinanciero;
+                            oContratoSave.ObligatoriedadCostoFinanciero = oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null;
                             oContrato.Venta = oContrato.Venta;
 
 

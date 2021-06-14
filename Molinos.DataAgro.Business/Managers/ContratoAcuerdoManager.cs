@@ -105,8 +105,8 @@ namespace Molinos.DataAgro.Business
                                 oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
                                 oContratoSave.CampanaId = contratoOriginal.CampanaId;
                                 oContratoSave.DolarizadoExpress = contratoOriginal.DolarizadoExpress;
-                                //oContratoSave.ChequeElectronico = contratoOriginal.ChequeElectronico;
-                                //oContratoSave.PagoCBU = contratoOriginal.PagoCBU;
+                                oContratoSave.FechaCierta = contratoOriginal.FechaCierta;
+                                oContratoSave.ObligatoriedadCostoFinanciero = contratoOriginal.ObligatoriedadCostoFinanciero;
 
 
                                 if (oContratoSave.PrecioPactado != null)
@@ -301,7 +301,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.CondicionFijacionId = oContratoAcuerdo.CondicionFijacionId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
                 objContratoAcuerdo.FechaCierta = oContratoAcuerdo.FechaCierta;
-                objContratoAcuerdo.ObligatoriedadCostoFinanciero = oContratoAcuerdo.ObligatoriedadCostoFinanciero;
+                objContratoAcuerdo.ObligatoriedadCostoFinanciero = oContratoAcuerdo.FechaCierta.HasValue ? oContratoAcuerdo.ObligatoriedadCostoFinanciero : null;
 
 
                 if (descuentosExistentes != null)

@@ -193,6 +193,7 @@ namespace Molinos.DataAgro.Business.Managers
                         cupoSave.FleteProcedencia = cupo.FleteProcedencia;
                         cupoSave.NegocioId = cupo.NegocioId;
                         cupoSave.ComercialId = cupo.ComercialId;
+                        cupoSave.Comercial = cupo.Comercial;
                         var res = modificarCupoAgent.Modificar(cupoSave);
                         if (res != "Ok")
                         {
