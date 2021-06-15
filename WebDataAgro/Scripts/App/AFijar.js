@@ -4718,7 +4718,7 @@ function HayPrestamo() {
 
 function SeleccionAutomaticaBolsa() {
     //$("#LocalidadCrearContrato").trigger("change");
-    if ($("#tipoId").val() == "1" && $("#buscadorCorredor").val() != "") {
+    if ($("#tipoId").val() == "1") {
         var destino = $("#destinoId").val();
         var provincia = $("#ProvinciaId").val();
         var localidadInput = $("#LocalidadCrearContrato").val();
@@ -4728,11 +4728,15 @@ function SeleccionAutomaticaBolsa() {
         }
 
         if (bolsa != 0 && $("#boletoConfirmaId").is(':checked') && $("#bolsaConfirmaId").val() != bolsa.BolsaId) {
-
-            $("#modalConfirmarBolsa").modal("show");
             $("#idBolsa").val(bolsa.BolsaId);
-            $("#nombreBolsa").text(bolsa.Bolsa.Descripcion);
-
+            if ($("#buscadorCorredor").val() != "") {
+                $("#nombreBolsa").text(bolsa.Bolsa.Descripcion);
+                $("#modalConfirmarBolsa").modal("show");
+            } else {
+                $("#boletoConfirmaId").prop("checked", true);
+                $("#bolsaConfirmaId").data("kendoDropDownList").value($("#idBolsa").val());
+                $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
+            }
         }
     }
 }
