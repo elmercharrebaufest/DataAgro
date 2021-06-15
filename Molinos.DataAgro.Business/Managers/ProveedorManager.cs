@@ -4244,7 +4244,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "NEGOCIO</th>" + Td(ref linea) + "FIJACIÓN CANJE" + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea) + oFijacionDePrecioContrato.Fecha.ToShortDateString() + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Material.Descripcion + "</td></tr>";
-            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.ContratoSAP.TrimStart('0') + " - " + oFijacionDePrecioContrato.FijacionSAP.Substring(oFijacionDePrecioContrato.FijacionSAP.Length - 2) + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.ContratoSAP.TrimStart('0') + "</td></tr>";
             htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.RazonSocial + "</td></tr>";
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.CUIT + "</td></tr>";
             if (oFijacionDePrecioContrato.Corredor != null)

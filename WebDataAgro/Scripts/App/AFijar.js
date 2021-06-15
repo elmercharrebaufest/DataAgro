@@ -4782,8 +4782,8 @@ function HaySustentable() {
     //}
 }
 function EsconderCalidadSiHaySojaYCalidadEspecial() {
-    if ($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
-        $("#destinoId").data("kendoDropDownList").value() == "7" && $('#material').data("kendoDropDownList").value() == "3") {
+    if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
+        $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == "3") {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
     } else {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
