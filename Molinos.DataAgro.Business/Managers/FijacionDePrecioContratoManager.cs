@@ -1412,10 +1412,10 @@ namespace Molinos.DataAgro.Business.Managers
                 var conf = configuracionManager.TraerConfiguraciones();
                 if (conf != null)
                 {
-
-                    if (oContrato.DiasPesificado.Value > conf.DiasDiferimiento)
+                    var limitePesificado = PermisosHelper.Is(PermisosDataAgro.ModificarLimitePesificado) ? conf.CantidadDiasPesificadoLimite : conf.DiasDiferimiento;
+                    if (oContrato.DiasPesificado.Value > limitePesificado)
                     {
-                        result.Error("Pago Diferido", "Los dias de pesificado deben ser menor o igual que los " + conf.DiasDiferimiento + " días");
+                        result.Error("Pago Diferido", "Los dias de pesificado deben ser menor o igual que los " + limitePesificado + " días");
                     }
                 }
             }
