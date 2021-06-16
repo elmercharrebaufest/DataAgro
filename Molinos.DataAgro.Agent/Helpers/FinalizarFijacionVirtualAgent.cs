@@ -26,12 +26,8 @@ namespace Molinos.DataAgro.Agent
         public string FinalizarFijacionVirtual(FijacionDePrecioContrato fijacion)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            {
-                var numeroSAP = repositorio.Listar<FijacionDePrecioContrato, string>(x => x.FijacionSAP, x => x.FijacionSAP != null && x.ContratoSAP == fijacion.ContratoSAP).LastOrDefault();
-                if (string.IsNullOrEmpty(numeroSAP))
-                {
-                    numeroSAP = fijacion.ContratoSAP + "00";
-                }
+            {               
+                var numeroSAP = "05";                
                 return (int.Parse(numeroSAP) + 1).ToString();
             }
             else
@@ -72,7 +68,7 @@ namespace Molinos.DataAgro.Agent
                     log.Xml += valor.ToXml();
                     repositorio.GuardarCambios();
 
-                    return valor.EX_MENSAJE;
+                    return valor.EX_NROFIJO;
                 }
                 catch (Exception e)
                 {

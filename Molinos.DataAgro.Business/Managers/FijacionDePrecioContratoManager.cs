@@ -749,10 +749,12 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oFijacionDePrecioSave.Virtual != true)
                     {
                          nroFijacionSAP = SapFinalizarFijacion(oFijacionDePrecioSave);
+                    
                     }
                     else
                     {
                          nroFijacionSAP = SapFinalizarFijacionVirtual(oFijacionDePrecioSave);
+                         nroFijacionSAP = oFijacionDePrecioSave.ContratoSAP + nroFijacionSAP;
                     }
                     try
                     {

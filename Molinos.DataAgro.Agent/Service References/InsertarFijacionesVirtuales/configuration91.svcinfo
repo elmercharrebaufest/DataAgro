@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="KF6te1geD4czTrJPkF0T2FejT6iHRYubK17Sj4aO35w=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="NnFmOs5BCPaVK7aqrQPZcJLOnV+n0OKeUS4G74eh9b4=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJEBinding">
       <properties>
@@ -221,7 +221,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="HTTP_Port30" contract="InsertarFijacionesVirtuales.SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE" bindingType="basicHttpBinding" address="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJEBinding">
+    <endpoint name="HTTP_Port33" contract="InsertarFijacionesVirtuales.SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE" bindingType="basicHttpBinding" address="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJEBinding">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
@@ -296,7 +296,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>HTTP_Port30</serializedValue>
+          <serializedValue>HTTP_Port33</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -306,7 +306,7 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="HTTPS_Port29" contract="InsertarFijacionesVirtuales.SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE" bindingType="basicHttpBinding" address="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJEBinding1">
+    <endpoint name="HTTPS_Port32" contract="InsertarFijacionesVirtuales.SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE" bindingType="basicHttpBinding" address="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJEBinding1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
@@ -381,7 +381,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>HTTPS_Port29</serializedValue>
+          <serializedValue>HTTPS_Port32</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

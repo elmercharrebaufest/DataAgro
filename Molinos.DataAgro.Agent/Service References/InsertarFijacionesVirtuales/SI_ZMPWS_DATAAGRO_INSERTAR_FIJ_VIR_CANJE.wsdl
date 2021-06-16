@@ -23,7 +23,7 @@
       <xsd:element name="Z_MPRFC_INSERTAR_FIJ_VIR_CANJEResponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="EX_MENSAJE" type="rfc:string" />
+            <xsd:element name="EX_NROFIJO" type="rfc:numeric2" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -48,8 +48,11 @@
           <xsd:maxLength value="11" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="string">
-        <xsd:restriction base="xsd:string" />
+      <xsd:simpleType name="numeric2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
+          <xsd:pattern value="\d*" />
+        </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="curr13.2">
         <xsd:restriction base="xsd:decimal">

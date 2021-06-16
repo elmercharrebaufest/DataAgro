@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.InsertarFijacionesVirtuales {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -169,24 +169,24 @@ namespace Molinos.DataAgro.Agent.InsertarFijacionesVirtuales {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_INSERTAR_FIJ_VIR_CANJEResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string eX_MENSAJEField;
+        private string eX_NROFIJOField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string EX_MENSAJE {
+        public string EX_NROFIJO {
             get {
-                return this.eX_MENSAJEField;
+                return this.eX_NROFIJOField;
             }
             set {
-                this.eX_MENSAJEField = value;
-                this.RaisePropertyChanged("EX_MENSAJE");
+                this.eX_NROFIJOField = value;
+                this.RaisePropertyChanged("EX_NROFIJO");
             }
         }
         
