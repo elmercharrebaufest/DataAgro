@@ -409,11 +409,16 @@
                         </label>
                         <span id="cond-fijacion"></span>
                     </div>
-                    <div class="condicion" style="display:inline-block">
+                    <div class="condicion @(fijacionVirtual ? "hide" : "")" style="display:inline-block">
+                        <label style="padding:0;">
+                        </label>
+                        <span id="cond-pago" ></span>
+                    </div>
+                    <div class="@(!fijacionVirtual ? "hide" : "")" style="display:inline-block">
                         <label style="padding:0;">
                             Cond Pago:
                         </label>
-                        <span id="cond-pago"></span>
+                        <span class="">Canje</span>
                     </div>
                 </div>
                 <div style="display:inline-block" id="gridDescuentosPorFechadiv">
