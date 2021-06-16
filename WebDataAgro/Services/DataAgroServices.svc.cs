@@ -946,7 +946,7 @@ namespace WebDataAgro.Services
                     if (negocio != null || compras)
                     {
                         resultado.ProveedorOperando = true;
-                        resultado.ProveedorUltimaOperacion = negocio.Fecha;
+                        resultado.ProveedorUltimaOperacion = negocio == null ? (DateTime?)null : negocio.Fecha;
                     }
 
 

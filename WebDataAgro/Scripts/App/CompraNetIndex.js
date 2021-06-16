@@ -846,7 +846,7 @@ function CreateGridInformeCompraNet() {
                     }, {
                         TipoNegocio: "PR\u00C9STAMO DEVOLUCI\u00D3N"
                     }, { TipoNegocio: "VENTA" },
-                    { TipoNegocio: "FIJACI\u00D3N VIRTUAL" }
+                    { TipoNegocio: "FIJACION VIRTUAL" }
                     ]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
