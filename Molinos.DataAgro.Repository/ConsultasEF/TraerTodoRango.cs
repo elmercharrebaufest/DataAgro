@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FechaCreacion = rango.FechaCreacion,
                     UsuarioCreador = rango.Comercial != null ? rango.Comercial.Nombres + " " + rango.Comercial.Apellido: "",
                     TipoRangoId = rango.TipoRangoId,
-                    TipoRango = String.Join(" ", Regex.Split(rango.TipoRangoId.ToString(), @"(?<!^)(?=[A-Z])")),
+                    TipoRango = rango.TipoRango.Descripcion,
                     DesdeEntrega = rango.DesdeEntrega,
                     HastaEntrega = rango.HastaEntrega
                 };

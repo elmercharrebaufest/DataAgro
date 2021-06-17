@@ -31,10 +31,11 @@ function CargarGrillaConfig() {
                 id: 'Id',
                 fields: {
                     Id: { type: "number" },
+                    Tipo: { type: "string" },
                     PrecioMinimo: { type: "number" },
                     PrecioMaximo: { type: "number" },
                     Material: { type: "string" },
-                    Moneda: { type: "string" },
+                    TipoRango: { type: "string" },
                     FechaDesde: { type: "date" },
                     FechaHasta: { type: "date" },
                     FechaCreacion: { type: "date" },
@@ -61,15 +62,16 @@ function CargarGrillaConfig() {
             for (var rowIndex = 1; rowIndex < sheet.rows.length; rowIndex++) {
                 var row = sheet.rows[rowIndex];
                 for (var cellIndex = 0; cellIndex < row.cells.length; cellIndex++) {
-                    row.cells[9].format = "yy/MM/dd hh:mm:ss";
-                    row.cells[4].format = "yy/MM/dd hh:mm:ss";
+                    row.cells[10].format = "yy/MM/dd hh:mm:ss";
                     row.cells[5].format = "yy/MM/dd hh:mm:ss";
+                    row.cells[6].format = "yy/MM/dd hh:mm:ss";
                 }
             }
         },
         dataSource: ds,
         sortable: true,
         columns: [
+            { field: "TipoRango", type: "string", title: "Tipo de Rango" },
             {
                 field: "PrecioMinimo", title: "Precio Mínimo", type: "number", template: function (dataItem) {
                     return kendo.toString(dataItem.PrecioMinimo, "##,#.##").replace(/,/g, ".");

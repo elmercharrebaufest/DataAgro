@@ -403,43 +403,45 @@
                     <span id="porc-sobre-precio"></span>
                 </div>
                 <div style="display:inline-block">
-                    <div class="condicion" style="display:inline-block">
+                    <div class="condicion ocultar-canje" style="display:inline-block">
                         <label style="padding:0;">
                             Cond fijacion:
                         </label>
                         <span id="cond-fijacion"></span>
                     </div>
-                    <div class="condicion @(fijacionVirtual ? "hide" : "")" style="display:inline-block">
+                    <div class="condicion" style="display:inline-block">
                         <label style="padding:0;">
                         </label>
-                        <span id="cond-pago" ></span>
+                        <span id="cond-pago"></span>
                     </div>
-                    <div class="@(!fijacionVirtual ? "hide" : "")" style="display:inline-block">
+                </div>
+                <div style="display:inline-block">
+                    <div class="visualizar-canje" style="display:inline-block" hidden>
                         <label style="padding:0;">
                             Cond Pago:
                         </label>
                         <span class="">Canje</span>
                     </div>
                 </div>
-                <div style="display:inline-block" id="gridDescuentosPorFechadiv">
-                    <div class="condicion" style="display:inline-block">
-                        <div id="gridDescuentosPorFecha" data-template="gridDescuentosPorFecha-template" data-bind="source:DescuentosPorFechaList">
-                        </div>
-                        <script id="gridDescuentosPorFecha-template" type="text/x-kendo-template">
-                            <div>
-                                <div style="display:inline-block">
-                                    Desc por Fecha de Fijacion Desde: <span> #: FechaDesde#  </span>
-                                    Hasta: <span> #:FechaHasta#</span>
-                                    # if(Importe >0){# Importe: <span> #:Importe# #:MonedaId#</span> #}#
-                                    # if(Porcentaje >0){# Porcentaje: <span> #:Porcentaje#</span> #}#
-                                </div>
-                                <br />
+                    <div style="display:inline-block" id="gridDescuentosPorFechadiv">
+                        <div class="condicion" style="display:inline-block">
+                            <div id="gridDescuentosPorFecha" data-template="gridDescuentosPorFecha-template" data-bind="source:DescuentosPorFechaList">
                             </div>
-                        </script>
+                            <script id="gridDescuentosPorFecha-template" type="text/x-kendo-template">
+                                <div>
+                                    <div style="display:inline-block">
+                                        Desc por Fecha de Fijacion Desde: <span> #: FechaDesde#  </span>
+                                        Hasta: <span> #:FechaHasta#</span>
+                                        # if(Importe >0){# Importe: <span> #:Importe# #:MonedaId#</span> #}#
+                                        # if(Porcentaje >0){# Porcentaje: <span> #:Porcentaje#</span> #}#
+                                    </div>
+                                    <br />
+                                </div>
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         <div id="CantidadCamionesDiv" class="noFason noAgente noAcuerdo">
             <div class="col-sm-1">
                 <label>Camiones</label>

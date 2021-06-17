@@ -4726,6 +4726,7 @@ function OcultarCamposSiEsVirtual() {
         $("#cantidadId").data("kendoNumericTextBox").value("");
         HayChequeElectronicoOtros();
         $("#chequeElectronicoId").show();
+        $(".visualizar-canje").hide();
 
 
     }
@@ -4735,6 +4736,7 @@ function EsVirtual() {
     $("#CheckFijacion").prop("checked", false);
     $("#cantidadId").data("kendoNumericTextBox").value("");
     $('#contratoId').val("");
+    $(".visualizar-canje").show();
     OcultarCamposSiEsVirtual();
 }
 
