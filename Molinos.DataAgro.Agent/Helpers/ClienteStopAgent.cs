@@ -304,7 +304,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                         else
                         {
-                            logger.Debug("Error al Modificar en STOP  " + cupo.CupoSap);
+                            logger.Debug("Error al Modificar en STOP linea 307" + cupo.CupoSap);
                             resultado.Error("", "Error al Modificar en STOP");
                             return resultado;
                         }
@@ -312,7 +312,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     else
                     {
                         ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                        logger.Debug("Error al Modificar en STOP  " + cupo.CupoSap);
+                        logger.Debug("Error al Modificar en STOP  linea 315" + cupo.CupoSap);
                         logger.Debug(error.ToJson());
                         resultado.Error(error.errorCode, error.userMessage);
                         return resultado;
@@ -320,7 +320,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 else
                 {
-                    logger.Debug("Error al Modificar en STOP  " + cupo.CupoSap);
+                    logger.Debug("Error al Modificar en STOP linea 323" + cupo.CupoSap);
                     cupo.EstadoCupoId = estado;
                     repositorio.GuardarCambios();
                     resultado.Error("", "Cupo con CTG");
@@ -329,9 +329,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Debug("Error Eliminar Cupo en STOP  : " + cupo.CupoSap ?? "");
+                logger.Debug("Error Eliminar Cupo en STOP  linea 332: " + cupo.CupoSap ?? "");
                 logger.Error(e);
-                resultado.Error("", "Error Eliminar Cupo en STOP  : " + cupo.CupoSap ?? "");
+                resultado.Error("", "Error Eliminar Cupo en STOP  linea 334: " + cupo.CupoSap ?? "");
                 return resultado;
             }
         }
