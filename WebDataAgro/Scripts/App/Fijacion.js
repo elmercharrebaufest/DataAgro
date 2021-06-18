@@ -194,7 +194,15 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#PorcentajeSobrePrecioContrato").val(afijar.PorcentajeSobrePrecio);
         $("#MonedaSobrePrecioContrato").val(afijar.MonedaSobrePrecio);
     }
-
+    if ($("#virtualId").is(":checked")) {
+        $(".aplicados").hide();
+        $(".visualizar-canje").show();       
+        $(".fijados").show();
+    } else {
+        $(".aplicados").show();
+        $(".visualizar-canje").hide();
+        $(".fijados").hide();
+    }
     //if (afijar.Clasificacion == "PRODUCTOR" && $("#buscadorCorredor").data("kendoAutoComplete").value() == "") {
     //    $("#chequeElectronico").prop("checked", false);
     //    $("#chequeElectronico").attr('readonly', true);
@@ -602,8 +610,7 @@ function InicializarElementos() {
             ' }# </strong><i>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></i># }else { } # </p > ' +
 
             '# }else { # <p class="buscar-nomb #if(data.Calidad == true){#subrayadoVerde#}else{}#" style="color:#: data.Color#;"><strong>#: data.ContratoId#</strong> - ' +
-            'KG CONTRATO: #: data.KilosContrato# ' +
-            /*' - KGS SIN PRECIO : #: data.ARecibirSinPrecio#*/ ' KG APLICADOS: #: data.KilosAplicados# ' +
+            'KG CONTRATO: #: data.KilosContrato# ' + ' - KG FIJADOS: #: data.KilosAplicados# ' +
             ' - KG PENDIENTES A FIJAR: #: data.KilosPendiente# ' +
         ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong> </p > #} #',         
         dataBound: function () {
@@ -634,6 +641,7 @@ function InicializarElementos() {
             aFijar = e.dataItem;
             cargarDatosAFijarEnFijacion(e.dataItem);
             VisualizarFechaCierta();
+           
             //var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#idProveedor").val() });
             //consultarBonificacionAfijar(e.dataItem, compraNet);
         },
@@ -4702,6 +4710,9 @@ function SetearDiaPesificado() {
 }
 function OcultarCamposSiEsVirtual() {
     if ($("#virtualId").is(":checked")) {
+        $("#pizarraId").prop("checked", false);
+        $("#pizarraDiv").hide();
+        ClickEnPizarra();
         $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
         $("#precioMonedaId").data("kendoDropDownList").enable(false);
         $("#precioMonedaId").data("kendoDropDownList").trigger("change");
@@ -4714,21 +4725,22 @@ function OcultarCamposSiEsVirtual() {
         $("#dolarizadoFechaId").data("kendoDatePicker").value("");
         $("#chequeElectronicoId").hide();
         $("#chequeElectronico").prop("checked", false);
-        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
+        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");      
         Cancelar();
         InsertarAperturasViewModel(CalcularPrecioTotalApertura());
     } else {
-        $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
+        $("#pizarraDiv").hide();
+        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
         $("#precioMonedaId").data("kendoDropDownList").enable(true);
         $("#precioMonedaId").data("kendoDropDownList").trigger("change");
         $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
         $("#CheckFijacion").prop("checked", false);
         $("#cantidadId").data("kendoNumericTextBox").value("");
-        HayChequeElectronicoOtros();
         $("#chequeElectronicoId").show();
+        HayChequeElectronicoOtros();
+        $("#pizarraDiv").show();
+        ClickEnPizarra();
         $(".visualizar-canje").hide();
-
-
     }
 }
 function EsVirtual() {
@@ -4736,7 +4748,7 @@ function EsVirtual() {
     $("#CheckFijacion").prop("checked", false);
     $("#cantidadId").data("kendoNumericTextBox").value("");
     $('#contratoId').val("");
-    $(".visualizar-canje").show();
+  
     OcultarCamposSiEsVirtual();
 }
 

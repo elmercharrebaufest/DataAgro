@@ -342,8 +342,11 @@
                         <span id="kgspendientescontrato"></span>
                     </div>
                     <div style="display:inline-block">
-                        <label>
+                        <label class="aplicados" hidden>
                             - Aplicados:
+                        </label>
+                        <label class="fijados" hidden>
+                            - Fijados:
                         </label>
                         <span id="kgsaplicadoscontrato"></span>
                     </div>
@@ -551,17 +554,19 @@
                 <input id="precioTotalApertura" style="width:100%; margin:0" readonly />
             </div>
         </div>
-        <div id="virtual" class="col-sm-2 @(!fijacionVirtual ? "hide" : "")">
-            <label>Virtual</label>
-            <span style="margin-left: 37px">
-                <input id="virtualId" class="campo-input-input" name="virtual" type="checkbox" onclick="EsVirtual()">
+        <div class="col-md-6">
+            <span id="virtual" class=" @(!fijacionVirtual ? "hide" : "")">
+                <label>Virtual</label>
+                <span style="margin-left: 37px">
+                    <input id="virtualId" class="campo-input-input" name="virtual" type="checkbox" onclick="EsVirtual()">
+                </span>
             </span>
-        </div>
-        <div class="col-xs-12 col-sm-2 noFason noAgente acuerdo ampliar-fijacion ">
-            <div id="chequeElectronicoId" class="acuerdo" hidden>
-                <label>Echeq</label>
-                <input id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
-            </div>
+            <span class=" noFason noAgente acuerdo ampliar-fijacion ">
+                <span id="chequeElectronicoId" class="acuerdo" hidden>
+                    <label>Echeq</label>
+                    <input style="margin-left: 56px !important" id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
+                </span>
+            </span>
         </div>
     </div>
     <div class="row" id="aperturaPrecioDiv">

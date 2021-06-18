@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Agent
             var hoy = DateTime.Now.Date;
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                var json = "{\"ARecibirSinPrecio\":\"98.000\",\"Anticipo\":false,\"Aperturas\":[{\"ConceptoAperturaPrecio\":\"Basis\",\"ConceptoAperturaPrecioId\":5,\"FijacionId\":null,\"Id\":0,\"Importe\":120.0,\"Moneda\":\"USD\",\"MonedaId\":\"USDM\",\"Porcentaje\":0.0,\"contratoId\":null}],\"Calidad\":false,\"Calidades\":[],\"Campana\":\"19-20\",\"CampanaId\":8,\"Centro\":1,\"CentroDescripcion\":\"S. Lorenzo\",\"Cesion\":false,\"ChequeElectronico\":null,\"Clasificacion\":\"OTROS\",\"Color\":\"#26337b\",\"CondicionFijacionCod\":\"07\",\"CondicionFijacionDescripcion\":\"MERCADO MOA\",\"CondicionPagoCod\":\"04\",\"CondicionPagoDescripcion\":\"4 DÍAS HÁBILES DE FECHA DE FIJACIÓN\",\"ContratoId\":\"2699076\",\"DesdeEntrega\":\"23-04-2021\",\"FechaDesde\":\"23-04-2021\",\"FechaHasta\":\"23-05-2021\",\"FijacionSap\":null,\"Filtro\":\"2699076|2699076\",\"HastaEntrega\":\"23-05-2021\",\"ImporteAPrecio\":0.0,\"ImporteSobrePrecio\":12.0,\"KilosAplicados\":\"0\",\"KilosContrato\":\"98.000\",\"KilosPendiente\":\"98.000\",\"MonedaAPrecio\":\"\",\"MonedaSobrePrecio\":\"USDM\",\"PagoDiferido\":false,\"PorcentajeAPrecio\":0.0,\"PorcentajeSobrePrecio\":0.0,\"Posicion\":\"04.2021\",\"RecibidoSinFijar\":\"0\"}";
+                var json = "{\"ARecibirSinPrecio\":\"98.000\",\"Anticipo\":false,\"Aperturas\":[{\"ConceptoAperturaPrecio\":\"Basis\",\"ConceptoAperturaPrecioId\":5,\"FijacionId\":null,\"Id\":0,\"Importe\":120.0,\"Moneda\":\"USD\",\"MonedaId\":\"USDM\",\"Porcentaje\":0.0,\"contratoId\":null}],\"Calidad\":false,\"Calidades\":[],\"Campana\":\"19-20\",\"CampanaId\":8,\"Centro\":1,\"CentroDescripcion\":\"S. Lorenzo\",\"Cesion\":false,\"ChequeElectronico\":null,\"Clasificacion\":\"OTROS\",\"Color\":\"#26337b\",\"CondicionFijacionCod\":\"07\",\"CondicionFijacionDescripcion\":\"MERCADO MOA\",\"CondicionPagoCod\":\"04\",\"CondicionPagoDescripcion\":\"4 DÍAS HÁBILES DE FECHA DE FIJACIÓN\",\"ContratoId\":\"2699076\",\"DesdeEntrega\":\"23-04-2021\",\"FechaDesde\":\"23-04-2021\",\"FechaHasta\":\"23-05-2021\",\"FijacionSap\":null,\"Filtro\":\"2699076|2699076\",\"HastaEntrega\":\"23-05-2021\",\"ImporteAPrecio\":0.0,\"ImporteSobrePrecio\":12.0,\"KilosAplicados\":\"0\",\"KilosContrato\":\"98.000\",\"Virtual\":\"true\",\"KilosPendiente\":\"98.000\",\"MonedaAPrecio\":\"\",\"MonedaSobrePrecio\":\"USDM\",\"PagoDiferido\":false,\"PorcentajeAPrecio\":0.0,\"PorcentajeSobrePrecio\":0.0,\"Posicion\":\"04.2021\",\"RecibidoSinFijar\":\"0\"}";
                 DatosFijacionDeContratoDto contrato = json.FromJson<DatosFijacionDeContratoDto>();
                 datosContratos.Add(contrato);
 
@@ -157,7 +157,7 @@ namespace Molinos.DataAgro.Agent
                     var conceptoAperturas = repositorio.Listar<ConceptoAperturaPrecio>();
                     var monedas = repositorio.Listar<Moneda>();
                     foreach (var contrato in listaContratos)
-                    {
+                    {                       
                         var cantidad = repositorio.Listar<Negocio, double>(x => x.Cantidad + (x.Ampliaciones ?? 0), x => x.TipoNegocioId == 3 && x.ContratoSAP == contrato.CONTRNUM && x.Id != idFijacion
                           && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
                         var centro = repositorio.Obtener<Centro>(x => x.CodigoSap == contrato.CENTRO);
@@ -165,7 +165,7 @@ namespace Molinos.DataAgro.Agent
                         //var calidades = new List<CalidadDto>();                       
                         var contratoParaFijacion = new DatosFijacionDeContratoDto
                         {
-                            ContratoId = contrato.CONTRNUM.TrimStart('0'),
+                            ContratoId = contrato.CONTRNUM.TrimStart('0'),                            
                             KilosAplicados = ((double)contrato.KILOS_FIJADOS).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             KilosPendiente = ((double)contrato.KILOS_A_FIJAR - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),

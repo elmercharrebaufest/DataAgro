@@ -1,11 +1,13 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.InsertarFijacionesVirtuales;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
@@ -13,10 +15,12 @@ namespace Molinos.DataAgro.Agent
 {
     public class FinalizarFijacionVirtualAgent : IFinalizarFijacionVirtualAgent
     {
-        public FinalizarFijacionVirtualAgent(ILogger logger, IRepositorio repositorio)
+        private readonly IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent;
+        public FinalizarFijacionVirtualAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.contratosParaFijacionVirtualAgent = contratosParaFijacionVirtualAgent;
         }
         string UserSap = ConfigurationManager.AppSettings["SapUser"];
         string PassSap = ConfigurationManager.AppSettings["SapPass"];
@@ -37,7 +41,49 @@ namespace Molinos.DataAgro.Agent
                     var agent = new SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJEClient();
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
+                    //var conceptosCargados = new List<int>() { };
+                    //var oContrato = contratosParaFijacionVirtualAgent.ObtenerContratosCanje(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
 
+                    //var importeComisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault().Importe;
+                    //var modificoImporteComisionesAFijarViejo = (oContrato.Aperturas == null || oContrato.Aperturas.Count == 0)
+                    //                                        && importeComisiones != 0
+                    //                                        && oContrato.ImporteSobrePrecio != 0
+                    //                                        && importeComisiones != oContrato.ImporteSobrePrecio;
+
+                    //if ((oContrato != null && oContrato.ImporteSobrePrecio == 0)
+                    //    || fijacion.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && a.Porcentaje > 0)
+                    //    || modificoImporteComisionesAFijarViejo
+                    //    )
+                    //{
+                    //    conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
+                    //}
+
+                    //if (oContrato != null && oContrato.Aperturas != null
+                    //    && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0)))
+                    //{
+                    //    conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
+                    //}                   
+
+
+                    //decimal precioApertura = 0;
+                    //var fechaDolarizadoString = fijacion.FechaDolarizado?.ToString("yyyy-MM-dd");
+                    //var ImportFinanciero = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
+                    //if (ImportFinanciero != null)
+                    //{
+                    //    precioApertura += ImportFinanciero.Importe;
+                    //}
+                    //var ImportBonificaciones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
+                    //if (ImportBonificaciones != null)
+                    //{
+                    //    precioApertura += ImportBonificaciones.Importe;
+                    //}
+                    //var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
+                    //if (Comisiones != null)
+                    //{
+                    //    precioApertura += Comisiones.Importe;
+                    //}
+
+                    //decimal im_precio = fijacion.Precio + precioApertura;
 
                     var rq = new Z_MPRFC_INSERTAR_FIJ_VIR_CANJE()
                     {
@@ -46,11 +92,10 @@ namespace Molinos.DataAgro.Agent
                         IM_CONTRATO = fijacion.ContratoSAP,
                         IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd"),
                         IM_HORA = fijacion.Fecha.ToString("HH:mm:ss"),
-                        IM_PRECIO = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.Precio : 0 : 0,
-                        IM_MONEDA = fijacion.Pizarra.HasValue ? !fijacion.Pizarra.Value ? fijacion.MonedaId.TrimEnd() : "" : "",
+                        IM_PRECIO = fijacion.Precio,
+                        IM_MONEDA = fijacion.MonedaId.TrimEnd(),
                         IM_UNIME = "KG",
-                        IM_FECHA_OPERACION = fijacion.FechaOperacion.ToString("yyyy-MM-dd"),
-                        
+                        IM_FECHA_OPERACION = fijacion.FechaOperacion.ToString("yyyy-MM-dd"),                        
                     };
 
                     var log = new Log
