@@ -173,7 +173,7 @@ namespace Molinos.DataAgro.Agent
                 CultureInfo provider = CultureInfo.InvariantCulture;
                 foreach (var contrato in listaContratos)
                 {
-                    var cantidad = repositorio.Listar<Negocio, double>(x => x.Cantidad + (x.Ampliaciones ?? 0), x => x.TipoNegocioId == 3 && x.ContratoSAP == contrato.CONTRATO && x.Id != idFijacion
+                    var cantidad = repositorio.Listar<Negocio, double>(x => x.Cantidad + (x.Ampliaciones ?? 0), x => x.TipoNegocioId == 3 && x.Virtual != true && x.ContratoSAP == contrato.CONTRATO && x.Id != idFijacion
                       && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
                     var centro = repositorio.Obtener<Centro>(x => x.CodigoSap == contrato.CENTRO);
                     var calidades = new List<CalidadDto>();

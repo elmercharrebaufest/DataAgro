@@ -772,7 +772,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         //Envio de mail
 
-                        if (oFijacionDePrecioSave.Virtual != false)
+                        if (oFijacionDePrecioSave.Virtual == true)
                         {
                             mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionDePrecioSave, idActiveDirectory);
                         }
@@ -1323,6 +1323,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
                 oContratoSave.PagoCBU = oContrato.PagoCBU;
+                oContratoSave.DiasPesificado = oContrato.DiasPesificado;
 
 
                 var res = modificarFijacionAgent.Modificar(oContratoSave);

@@ -1466,7 +1466,7 @@ namespace Molinos.DataAgro.Business.Managers
                 RazonCorredor = x.Corredor.RazonSocial,
                 CuitCorredor = x.Corredor.CUIT,
                 Material = x.Material.Descripcion,
-                TipoNegocio = "FIJACION",
+                TipoNegocio = x.Virtual == true ? "FIJACION VIRTUAL" : "FIJACION",
                 TipoNegocioId = 3,
                 CampanaId = x.CampanaId,
                 CampanaMaterialId = x.Material.CampaniaTableroId,

@@ -150,8 +150,8 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style1 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
                          (c.Corredor != null ? "<td " + style1 + c.Corredor.RazonSocial + "</td>" : "<td " + style1 + "</td>") +
                          "<td " + style1 + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
-                         "<td " + style1 + c.TipoNegocio.Descripcion + "</td>" +
-                         "<td " + style1 + c.Estado.Descripcion + "</td>" +
+                         "<td " + style1 + (c.Virtual == true ? "FIJACION VIRTUAL" : c.TipoNegocio.Descripcion) + "</td>" +
+                         //"<td " + style1 + c.Estado.Descripcion + "</td>" +
                          "<td " + style1 + (c.MotivoOperacionAnterior ?? "") + "</td> </tr> ";
                 }
                 else
@@ -167,8 +167,8 @@ namespace Molinos.DataAgro.Business.Managers
                          "<td " + style2 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
                          (c.Corredor != null ? "<td " + style2 + c.Corredor.RazonSocial + "</td>" : "<td " + style2 + "</td>") +
                          "<td " + style2 + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
-                         "<td " + style2 + c.TipoNegocio.Descripcion + "</td>" +
-                         "<td " + style2 + c.Estado.Descripcion + "</td>" +
+                         "<td " + style2 + (c.Virtual == true ? "FIJACION VIRTUAL" : c.TipoNegocio.Descripcion) + "</td>" +
+                         //"<td " + style2 + c.Estado.Descripcion + "</td>" +
                          "<td " + style2 + (c.MotivoOperacionAnterior ?? "") + "</td> </tr> ";
                 }
             }

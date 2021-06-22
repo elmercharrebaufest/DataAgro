@@ -4211,14 +4211,19 @@ namespace Molinos.DataAgro.Business.Managers
                 lista.Add(comercialRegistrado);
                 logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             }
-
+            var subject = "";
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
+                subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+                lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
+            }
+            else
+            {
+                subject = "Mail Prueba - Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
                 lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
             }
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
 
-            var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailFijacionVirtual(httpContextManager.ObtenerPathLogoMail(), contrato, email));
         }
@@ -4244,7 +4249,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "NEGOCIO</th>" + Td(ref linea) + "FIJACIÓN CANJE" + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea) + oFijacionDePrecioContrato.Fecha.ToShortDateString() + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Material.Descripcion + "</td></tr>";
-            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.ContratoSAP.TrimStart('0') + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.FijacionSAP.TrimStart('0') + "</td></tr>";
             htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.RazonSocial + "</td></tr>";
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.CUIT + "</td></tr>";
             if (oFijacionDePrecioContrato.Corredor != null)

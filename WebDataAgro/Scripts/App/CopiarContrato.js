@@ -121,7 +121,7 @@ function CargarCopiaContrato(contratoId, tipo) {
 
         if (tipo == "sap") {
             contratoCopia.MotivoOperacionAnterior = null;
-            contratoCopia.FechaOperacionFormateado = null;
+            contratoCopia.FechaOperacionFormateado = new Date();
         }
         
         modificarContrato(contratoCopia);

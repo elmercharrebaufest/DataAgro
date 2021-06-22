@@ -132,7 +132,7 @@ namespace WebDataAgro.Controllers
             }
             if (id > 0 || (PermisosHelper.Is(PermisosDataAgro.ModificarCanje)))
             {
-                tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) ? 1 : tipoId.HasValue ? tipoId.Value : 2;
+                tipoId = PermisosHelper.Is(PermisosDataAgro.ModificarCanje) && (id == null || id == 0) ? 1 : tipoId.HasValue ? tipoId.Value : 2;
                 var tipoNegocio = mobjContratoManager.DevolverNamespaceNegocio(tipoId.Value);
                 return View(tipoNegocio.TipoNegocioId == 1 || tipoNegocio.TipoNegocioId == 3 || tipoNegocio.TipoNegocioId == 6 ? tipoNegocio.Descripcion.Replace(" ", String.Empty) : "CrearContrato");
             }
