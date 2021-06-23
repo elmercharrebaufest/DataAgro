@@ -1648,7 +1648,7 @@ function InicializarElementos() {
             //    }
 
             //}
-
+            EstablecerCostoFinanciero();
         }
     });
 
@@ -2120,6 +2120,9 @@ function InicializarElementos() {
         else {
             $("#pesificadoDiv").hide();
             $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
+            $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
+            InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+
             //$("#fechaCiertaAcuerdoDiv").show();
 
             //if ($("#tipoId").val() == "2") {
@@ -5022,25 +5025,29 @@ function EstablecerCostoFinanciero() {
 
             var tasa = 0;
             var result = MSExecuteOnServer("/CompraNet/TraerPagosDiferido", { cantidadDia: c });
-            if ($("#precioId").val() != "0" && $("#precioMonedaId").data("kendoDropDownList").value() == "ARP  " && result != null) {
-                if (result.CantidadDia != null) {
-                    if (c <= result.CantidadDia) {
-                        tasa = result.Tasa;
-                    }
-                    if (tasa == 0) {
-                        MensErr("Debe completar el costo Financiero de forma manual");
+            if ($("#precioId").val() != "0" && $("#precioId").val() != "" &&
+                $("#precioMonedaId").data("kendoDropDownList").value() == "ARP  " &&
+                $("#pesificadoId").is(":checked") && result != null && $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value() != "") {
+                if ($("#precioMonedaId").data("kendoDropDownList").value() == "ARP  " && result != null) {
+                    if (result.CantidadDia != null) {
+                        if (c <= result.CantidadDia) {
+                            tasa = result.Tasa;
+                        }
+                        if (tasa == 0) {
+                            MensErr("Debe completar el costo Financiero de forma manual");
+                        } else {
+                            var precio = Number($("#precioId").val().toString().replace(',', '.'));
+                            tasa = Number(tasa);
+                            var costo = Math.round(precio * (tasa / 100) * (c - 3) / 365 * 2) / 2;
+                            var d10 = costo / 10.00;
+                            costo = Math.round(d10 * 2) / 2;
+                            costo = costo * 10;
+                            $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(costo);
+                            InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+                        }
                     } else {
-                        var precio = Number($("#precioId").val().toString().replace(',', '.'));
-                        tasa = Number(tasa);
-                        var costo = Math.round(precio * (tasa / 100) * (c - 3) / 365 * 2) / 2;
-                        var d10 = costo / 10.00;
-                        costo = Math.round(d10 * 2) / 2;
-                        costo = costo * 10;
-                        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(costo);
-                        InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+                        MensErr("Debe completar el costo Financiero de forma manual");
                     }
-                } else {
-                    MensErr("Debe completar el costo Financiero de forma manual");
                 }
             }
         }
@@ -5049,6 +5056,8 @@ function EstablecerCostoFinanciero() {
 }
 function SetearDiaPesificado() {
     $("#pesificadoDiasId").data("kendoNumericTextBox").value('');
+    $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
+    InsertarAperturasViewModel(CalcularPrecioTotalApertura());
 }
 
 

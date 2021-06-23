@@ -178,6 +178,7 @@ namespace Molinos.DataAgro.Agent
                             CentroDescripcion = centro.Descripcion,
                             Filtro = filtro + "|" + contrato.CONTRNUM.TrimStart('0'),
                             Color = DateTime.Parse(contrato.FECHA_HASTA) < hoy ? "Red" : "#26337b",
+                            KgContratoTotal = contrato.CANTIDAD,
                             KilosContrato = contrato.UNIME,
                             Virtual = true,
                         };

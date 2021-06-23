@@ -291,8 +291,9 @@ namespace Molinos.DataAgro.Business.Managers
                 //{
                 if (oParam.Pizarra.HasValue && !oParam.Pizarra.Value && oParam.FechaCierta == null)
                 {
-                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
-                        (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && 
+                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue 
+                        && oParam.DiasPesificado.Value != 0)) || (concepto == null && (!oParam.PagoDiferido.HasValue || 
+                        (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && 
                         (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
                     {
                         oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto financiero");
@@ -421,6 +422,10 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Dolarizado", "Se debe completar Pago Diferido que marco el tercero.");
                 }
 
+            }
+            if (PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual) && fijacionSave.Virtual != true)
+            {
+                oErrorMessages.Error("Virtual", "Es obligatorio completar el campo fijacion virtual");
             }
             return oErrorMessages;
         }

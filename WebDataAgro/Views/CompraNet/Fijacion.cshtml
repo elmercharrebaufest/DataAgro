@@ -20,6 +20,7 @@
     tieneDolarizado = '@dolarizado';
     modificarDolarizadoFinalizado = '@modificarDolarizadoFinalizado';
     modificarPesificadoFinalizado = '@modificarPesificadoFinalizado';
+    fijacionVirtual = '@fijacionVirtual';
 </script>
 <script src="~/Scripts/umd/popper.js"></script>
 
@@ -335,9 +336,15 @@
         <div class="col-sm-6" id="datosContrato" hidden>
             <div class="datoscontrato row">
                 <div class="col-xs-12">
+                    <div style="display:inline-block" class="fijados" hidden>
+                        <label>
+                            Kgs Totales:
+                        </label>
+                        <span id="kgsTotalesContrato"></span>
+                    </div>
                     <div style="display:inline-block">
                         <label>
-                            Kgs Pendientes:
+                           - Kgs Pendientes:
                         </label>
                         <span id="kgspendientescontrato"></span>
                     </div>
@@ -505,7 +512,7 @@
         </div>
 
 
-        <div class="col-xs-10 col-sm-5 noFason noAgente  ampliar-fijacion ">
+        <div class="col-xs-10 col-sm-5 noFason noAgente  ampliar-fijacion @(fijacionVirtual ? "hide" : "")">
             @*<div class="ampliar">*@
             <span id="baseDiv" class="noAcuerdo ampliar">
                 <label id="lblBase">Base</label>
@@ -561,7 +568,7 @@
                     <input id="virtualId" class="campo-input-input" name="virtual" type="checkbox" onclick="EsVirtual()">
                 </span>
             </span>
-            <span class=" noFason noAgente acuerdo ampliar-fijacion ">
+            <span class=" noFason noAgente acuerdo ampliar-fijacion @(fijacionVirtual ? "hide" : "")">
                 <span id="chequeElectronicoId" class="acuerdo" hidden>
                     <label>Echeq</label>
                     <input style="margin-left: 56px !important" id="chequeElectronico" class="campo-input-input" name="chequeElectronico" type="checkbox" onclick="HayChequeElectronicoOtros()">
@@ -569,7 +576,7 @@
             </span>
         </div>
     </div>
-    <div class="row" id="aperturaPrecioDiv">
+    <div class="row" id="aperturaPrecioDiv @(fijacionVirtual ? "hide" : "")">
         <div id="fechaCiertaDiv">
             <div class="col-md-2 col-sm-9">
                 <label>Fecha Cierta</label>
@@ -689,7 +696,7 @@
             <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
         </div>
     </div>
-    <div class="row acuerdo" id="pagoCbuId" hidden>
+    <div class="row acuerdo" id="pagoCbuId" hidden @(fijacionVirtual ? "hide" : "")>
         <div class="col-sm-2">
             <label>Pago CBU</label>
         </div>
@@ -748,7 +755,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row @(fijacionVirtual ? "hide" : "")">
             <div class="col-sm-2 ">
                 <div id="pagoDiferidoDiv">
                     <label style="width:120px">Pago diferido</label>

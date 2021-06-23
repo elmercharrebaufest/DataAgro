@@ -18,6 +18,7 @@ var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
 var aFijar = null;
 var noTieneAperturasEnAFijar = false;
 var modificarPesificadoFinalizado;
+var fijacionVirtual;
 $(document).ready(function () {
     $('#menuproveedor').hide();
     $('#rootwizard').bootstrapWizard({
@@ -116,6 +117,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
 
     $(".datoscontrato").show();
     $("#datosContrato").show();
+    $("#kgsTotalesContrato").text(afijar.KgContratoTotal);
     $("#kgspendientescontrato").text(afijar.KilosPendiente);
     $("#kgsaplicadoscontrato").text(afijar.KilosAplicados);
     $("#desdecontrato").text(afijar.FechaDesde);
@@ -349,6 +351,8 @@ function InicializarElementos() {
     tieneDolarizado = ConvertirStringABool(tieneDolarizado);
     modificarDolarizadoFinalizado = ConvertirStringABool(modificarDolarizadoFinalizado);
     modificarPesificadoFinalizado = ConvertirStringABool(modificarPesificadoFinalizado);    
+    fijacionVirtual = ConvertirStringABool(fijacionVirtual); 
+    
     $('[data-toggle="popover"]').popover();
     $(".datos-adicionales").hide();
     $(".datos-boleto").hide();
@@ -518,7 +522,7 @@ function InicializarElementos() {
                 //    $("#dolarizadoDiv").hide();
                 //    $("#dolarizadoFechaId").val("");
                 //}
-                if ($("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
+                if ($("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked") && fijacionVirtual != true) {
                     $("#pagoDirectoDiv").hide();
                     $("#pagoCbuDiv").show();
                     if ($("#tipoId").val() == "6" || $("#tipoId").val() == "3") {
@@ -610,7 +614,7 @@ function InicializarElementos() {
             ' }# </strong><i>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></i># }else { } # </p > ' +
 
             '# }else { # <p class="buscar-nomb #if(data.Calidad == true){#subrayadoVerde#}else{}#" style="color:#: data.Color#;"><strong>#: data.ContratoId#</strong> - ' +
-            'KG CONTRATO: #: data.KilosContrato# ' + ' - KG FIJADOS VIRTUALES: #: data.KilosAplicados# ' +
+            'KG CONTRATO: #: data.KgContratoTotal#  #:data.KilosContrato# ' + ' - KG FIJADOS VIRTUALES: #: data.KilosAplicados# ' +
             ' - KG PENDIENTES A FIJAR: #: data.KilosPendiente# ' +
         ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong> </p > #} #',         
         dataBound: function () {
@@ -838,8 +842,10 @@ function InicializarElementos() {
                 $("#mercsDepositoDiv").hide();
                 $("#guardarBtn").empty();
                 $("#guardarBtn").append("Guardar Fijacion");
-                $("#chequeElectronicoId").show();
-                $("#pagoCbuId").show();
+                if (fijacionVirtual != true) {
+                    $("#chequeElectronicoId").show();
+                    $("#pagoCbuId").show();
+                }
                 RemoverFondosGrises();
                 $("#boton-ampliar").hide();
                 $(".ampliar").hide();
@@ -1136,7 +1142,7 @@ function InicializarElementos() {
                 //        $("#fechaCiertaAcuerdoDiv").show();
                 //    }
                 //}
-            } else if ($("#precioMonedaId").val() === "USDM " && ($("#tipoId").val() === "3")) {
+            } else if ($("#precioMonedaId").val() === "USDM " && ($("#tipoId").val() === "3") && fijacionVirtual != true) {
                 $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
                 $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
                 $("#pagoDiferidoFijacionDiv").hide();
@@ -1171,6 +1177,7 @@ function InicializarElementos() {
                 InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
             VisualizarFechaCierta();
+            OcultarCamposSiEsVirtual();
         },
         select: function (e) {
             $("#monedaPactadoId").data("kendoDropDownList").value(e.dataItem.MonedaId);
@@ -1696,6 +1703,7 @@ function InicializarElementos() {
 
     $("#diasDiferidoFijacionId").kendoNumericTextBox({
         change: function () {
+
             EstablecerCostoFinanciero();
         },
         culture: "es-AR",
@@ -2048,7 +2056,7 @@ function InicializarElementos() {
             //    $("#fechaCiertaDiv").show();
             //}
             $("#dolarizadoFechaId").val("");
-            if (!$("#compensacionId").is(":checked")) {
+            if (!$("#compensacionId").is(":checked") && fijacionVirtual != true) {
                 $("#pagoCbuDiv").show();
                 if (!$("#pagoDirectoId").is(":checked")) {
                     $("#chequeElectronicoDiv").show();
@@ -2098,7 +2106,8 @@ function InicializarElementos() {
             $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
             $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
             $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
-
+            $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value('');
+            $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
             //if ($("#tipoId").val() == "2") {
             //    $("#fechaCiertaDiv").show();
 
@@ -2190,7 +2199,7 @@ function InicializarElementos() {
             $("#chequeElectronicoDiv").hide();
             $("#chequeElectronicoInput").prop("checked", false);
         } else {
-            if ($("#tipoId").val() == '6' || $("#tipoId").val() == '3') {
+            if (($("#tipoId").val() == '6' || $("#tipoId").val() == '3') && fijacionVirtual != true) {
                 $("#chequeElectronicoId").show();
             } if (!$("#compensacionId").is(":checked")) {
                 $("#chequeElectronicoDiv").show();
@@ -2506,7 +2515,7 @@ function InicializarElementos() {
         autoWidth: true,
         filter: "contains",
         change: function () {
-            if ($("#pagoCbuInput").val() == "") {
+            if ($("#pagoCbuInput").val() == "" && fijacionVirtual != true) {
                 $("#chequeElectronicoId").show();
             } else {
                 $("#chequeElectronicoId").hide();
@@ -2545,6 +2554,9 @@ function InicializarElementos() {
     $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
     $(".noAFijar").css("background-color", "lightgray");
 
+    if (fijacionVirtual == true) {
+        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado"); 
+    }
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -2631,7 +2643,9 @@ function ClickEnPizarra() {
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(true);
         $("#diasDiferidoId").prop("checked", false);
         $("#pesificadoId").prop("checked", false);
-        $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        if (fijacionVirtual != true) {
+            $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        }
         $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
         if ($("#tipoId").val() == 3) {
             $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
@@ -4551,10 +4565,10 @@ function CalcularNetoFijacionConDescuentos() {
 }
 function HayCompensacion() {
     if (!$("#compensacionId").is(":checked")) {
-        if (!$("#pagoDirectoId").is(":checked")) {
+        if (!$("#pagoDirectoId").is(":checked") && fijacionVirtual != true) {
             $("#chequeElectronicoDiv").show();
         }
-        if ($("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
+        if ($("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked") && fijacionVirtual != true) {
             $("#pagoCbuDiv").show();
         }
 
@@ -4567,7 +4581,7 @@ function HayCompensacion() {
 }
 
 function HayChequeElectronicoAmpliar() {
-    if (!$("#chequeElectronicoInput").is(":checked") && $("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "") {
+    if (!$("#chequeElectronicoInput").is(":checked") && $("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && fijacionVirtual != true) {
         $("#pagoCbuDiv").show();
     } else {
         $("#pagoCbuDiv").hide();
@@ -4577,7 +4591,7 @@ function HayChequeElectronicoAmpliar() {
 
 function HayChequeElectronicoOtros() {
 
-    if (!$("#chequeElectronico").is(":checked") && $("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "") {
+    if (!$("#chequeElectronico").is(":checked") && $("#buscadorCorredor").val() == "" && $("#AgenteCompraId").val() == "" && fijacionVirtual != true) {
         $("#pagoCbuId").show();
     } else {
         $("#pagoCbuId").hide();
@@ -4586,7 +4600,7 @@ function HayChequeElectronicoOtros() {
 }
 
 function EsExpress() {
-    if ($("#expressId").is(":checked") && $("#estado").val() == 5) {
+    if ($("#expressId").is(":checked") && $("#estado").val() == 5 && fijacionVirtual != true) {
         $("#dolarizadoId").prop("checked", false);
         $("#dolarizadoDiv").show();
     } else {
@@ -4598,7 +4612,7 @@ function EsExpress() {
 }
 
 function EsDolarizado() {
-    if ($("#dolarizadoId").is(":checked") && $("#estado").val() == 5) {
+    if ($("#dolarizadoId").is(":checked") && $("#estado").val() == 5 && fijacionVirtual != true) {
         $("#expressId").prop("checked", false);
         $("#dolarizadoDiv").show();
     } else {
@@ -4712,15 +4726,17 @@ function EstablecerCostoFinanciero() {
 }
 function SetearDiaPesificado() {
     $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value('');
+    $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
+    InsertarAperturasViewModel(CalcularPrecioTotalApertura());
 }
 function OcultarCamposSiEsVirtual() {
     if ($("#virtualId").is(":checked")) {
         $("#pizarraId").prop("checked", false);
         $("#pizarraDiv").hide();
         ClickEnPizarra();
-        $("#precioMonedaId").data("kendoDropDownList").value("USDM ");
-        $("#precioMonedaId").data("kendoDropDownList").enable(false);
-        $("#precioMonedaId").data("kendoDropDownList").trigger("change");
+        //$("#precioMonedaId").data("kendoDropDownList").value("USDM ");
+        //$("#precioMonedaId").data("kendoDropDownList").enable(false);
+        //$("#precioMonedaId").data("kendoDropDownList").trigger("change");
         $("#pagoCbuId").hide();
         $("#pagoCbuInput").val("");
         $(".condicion").hide();
@@ -4734,18 +4750,18 @@ function OcultarCamposSiEsVirtual() {
         Cancelar();
         InsertarAperturasViewModel(CalcularPrecioTotalApertura());
     } else {
-        $("#pizarraDiv").hide();
-        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
-        $("#precioMonedaId").data("kendoDropDownList").enable(true);
-        $("#precioMonedaId").data("kendoDropDownList").trigger("change");
-        $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
-        $("#CheckFijacion").prop("checked", false);
-        $("#cantidadId").data("kendoNumericTextBox").value("");
-        $("#chequeElectronicoId").show();
-        HayChequeElectronicoOtros();
-        $("#pizarraDiv").show();
-        ClickEnPizarra();
-        $(".visualizar-canje").hide();
+        //$("#pizarraDiv").hide();
+        //$("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+        //$("#precioMonedaId").data("kendoDropDownList").enable(true);
+        //$("#precioMonedaId").data("kendoDropDownList").trigger("change");
+        //$("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        //$("#CheckFijacion").prop("checked", false);
+        //$("#cantidadId").data("kendoNumericTextBox").value("");
+        //$("#chequeElectronicoId").show();
+        //HayChequeElectronicoOtros();
+        //$("#pizarraDiv").show();
+        //ClickEnPizarra();
+        //$(".visualizar-canje").hide();
     }
 }
 function EsVirtual() {
@@ -4758,7 +4774,7 @@ function EsVirtual() {
 }
 
 function VisualizarFechaCierta() {
-    if (($("#diasDiferidoId").is(':checked') == true || $("#dolarizadoId").is(':checked') == true || $("#precioMonedaId").val() == "USDM " || $("#clasficacionContrato").text() == "PRODUCTOR")) {
+    if (($("#diasDiferidoId").is(':checked') == true || fijacionVirtual == true|| $("#dolarizadoId").is(':checked') == true || $("#precioMonedaId").val() == "USDM " || $("#clasficacionContrato").text() == "PRODUCTOR")) {
     
         $("#fechaCiertaDiv").hide();
         $("#fechaCiertaId").val("");
