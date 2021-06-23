@@ -157,9 +157,10 @@ namespace Molinos.DataAgro.Agent
                     var conceptoAperturas = repositorio.Listar<ConceptoAperturaPrecio>();
                     var monedas = repositorio.Listar<Moneda>();
                     foreach (var contrato in listaContratos)
-                    {                       
-                        var cantidad = repositorio.Listar<Negocio, double>(x => x.Cantidad + (x.Ampliaciones ?? 0), x => x.TipoNegocioId == 3 && x.Virtual == true && x.ContratoSAP == contrato.CONTRNUM && x.Id != idFijacion
-                          && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum();
+                    {                     
+                         var cantidad = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 3 && x.Virtual == true && x.ContratoSAP == contrato.CONTRNUM && x.Id != idFijacion
+                         && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum(x => x.Cantidad + (x.Ampliaciones ?? 0));
+
                         var centro = repositorio.Obtener<Centro>(x => x.CodigoSap == contrato.CENTRO);
                         //var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<Negocio, double>(x => x.TipoNegocioId == 3 && x.Id == idFijacion && x.ContratoSAP == contrato.CONTRATO, x => x.Cantidad + (x.Ampliaciones ?? 0)) : 0;
                         //var calidades = new List<CalidadDto>();                       

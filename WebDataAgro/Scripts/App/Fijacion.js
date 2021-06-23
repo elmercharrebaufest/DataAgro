@@ -2555,8 +2555,12 @@ function InicializarElementos() {
     $(".noAFijar").css("background-color", "lightgray");
 
     if (fijacionVirtual == true) {
-        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado"); 
+        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");      
+        $("#virtualId").attr("disabled", true);
+        $("#virtualId").prop("checked", true);
+        OcultarCamposSiEsVirtual();
     }
+   
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -3906,6 +3910,7 @@ function CargarDatosEditar(contrato, hijo) {
     }
     if (contrato.Virtual == true) {
         $("#virtualId").prop("checked", true);
+        $("#virtualId").attr("disabled", true);
         OcultarCamposSiEsVirtual();
     }
 
