@@ -274,7 +274,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oParam.FechaCierta == null && oParam.PagoDiferido != true && concepto != null)
                 {
-                    oErrorMessages.Error("", ".Concepto financiero es obligatorio con pago diferido o fecha cierta");
+                    oErrorMessages.Error("", ".Concepto financiero es obligatorio con pago diferido");
                 }
                 //if (oParam.FechaCierta != null && oParam.ObligatoriedadCostoFinanciero == true)
                 //{
@@ -296,7 +296,7 @@ namespace Molinos.DataAgro.Business.Managers
                         (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && 
                         (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
                     {
-                        oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto financiero");
+                        oErrorMessages.Error("", "Días de diferimiento/costo financiero es obligatorio con el pago diferido en pesos");
                     }
                 }
                 //}

@@ -538,7 +538,7 @@ namespace Molinos.DataAgro.Business
                 oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0)) : null;
             if (oContratoAcuerdo.FechaCierta == null && oContratoAcuerdo.PagoDiferido != true && conceptoFinanciero != null)
             {
-                oEntityErrors.Error("", ".Concepto financiero es obligatorio con pago diferido o fecha cierta");
+                oEntityErrors.Error("", ".Concepto financiero es obligatorio con pago diferido");
             }
             if (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value)
             {
@@ -558,7 +558,7 @@ namespace Molinos.DataAgro.Business
                     (conceptoFinanciero == null && (!oContratoAcuerdo.PagoDiferido.HasValue || (oContratoAcuerdo.PagoDiferido.HasValue && !oContratoAcuerdo.PagoDiferido.Value)) 
                     && (!oContratoAcuerdo.DiasPesificado.HasValue || (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value == 0)))))
                 {
-                    oEntityErrors.Error("", "Días de diferimiento es obligatorio con el concepto Financiero");
+                    oEntityErrors.Error("", "Días de diferimiento/costo financiero es obligatorio con el pago diferido en pesos");
                 }
             }           
 
