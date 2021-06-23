@@ -423,7 +423,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
             }
-            if (PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual) && fijacionSave.Virtual != true)
+            if (PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual) && oParam.Virtual != true)
             {
                 oErrorMessages.Error("Virtual", "Es obligatorio completar el campo fijacion virtual");
             }
