@@ -5034,7 +5034,7 @@ function EstablecerCostoFinanciero() {
                             tasa = result.Tasa;
                         }
                         if (tasa == 0) {
-                            MensErr("Debe completar el costo Financiero de forma manual");
+                            MensAlerta("Debe completar el costo Financiero de forma manual");
                         } else {
                             var precio = Number($("#precioId").val().toString().replace(',', '.'));
                             tasa = Number(tasa);
@@ -5046,7 +5046,7 @@ function EstablecerCostoFinanciero() {
                             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
                         }
                     } else {
-                        MensErr("Debe completar el costo Financiero de forma manual");
+                        MensAlerta("Debe completar el costo Financiero de forma manual");
                     }
                 }
             }
