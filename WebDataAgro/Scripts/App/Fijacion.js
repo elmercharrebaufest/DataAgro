@@ -263,7 +263,7 @@ function ArmarAperturaDesdeAFijar(afijar) {
         }
     }
     $.each(afijar.Aperturas, function (key, apertura) {
-        if (apertura.ConceptoAperturaPrecioId == 2) {
+        if (apertura.ConceptoAperturaPrecioId == 2 && !primeraCargaEdit) {
             $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(apertura.Importe);
         }
         if (apertura.ConceptoAperturaPrecioId == 3) {
@@ -316,11 +316,12 @@ function ArmarAperturaDesdeAFijar(afijar) {
                 $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
             }
         }
-        if (apertura.ConceptoAperturaPrecioId == 5) {
+        if (apertura.ConceptoAperturaPrecioId == 5 && !primeraCargaEdit) {
             $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value(apertura.Importe);
         }
     });
-    if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
+
+    if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val()) && !primeraCargaEdit) {
         CambiarAperturaAMonedaActual();
     }
 
