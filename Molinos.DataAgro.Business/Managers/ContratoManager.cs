@@ -158,7 +158,7 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.tiponegocio = tiposDeNegocio;
             if (PermisosHelper.Is(PermisosDataAgro.ModificarCanje))
             {
-                datosCombo.tiponegocio = datosCombo.tiponegocio.Where(x => x.TipoNegocioId == 1 && x.TipoNegocioId == 3).ToList();
+                datosCombo.tiponegocio = datosCombo.tiponegocio.Where(x => x.TipoNegocioId == 1 || x.TipoNegocioId == 3).ToList();
             }
             if (PermisosHelper.Is(PermisosDataAgro.ModificarNegocios) || PermisosHelper.Is(PermisosDataAgro.ModificarNegFinalizados))
             {
