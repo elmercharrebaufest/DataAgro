@@ -125,11 +125,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_CUENTA_MRP = fijacion.PagoCBU != null ? fijacion.PagoCBU.Split('-')[0] : "",
                         IM_DOLARIZADO = fijacion.Dolarizado == true ? "X" : "",
                         IM_DOL_EXPRESS = fijacion.DolarizadoExpress == true ? "X" : "",
-                        IM_FECHA_LIMITE = fechaDolarizadoString,
+                        IM_FECHA_LIMITE = !String.IsNullOrEmpty(fechaDolarizadoString) ? fechaDolarizadoString : "",
                         IM_DOL_CORREDOR = fijacion.DolarizadoCorredor == true ? "X" : "",
-                        IM_FECHA_CIERTA = fijacion.FechaCierta.HasValue ? fijacion.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
-
-
+                        IM_FECHA_CIERTA = fijacion.FechaCierta.HasValue ? fijacion.FechaCierta.Value.ToString("yyyy-MM-dd") : "",
                     };
                     logger.Debug(rq.ToXml());
 
