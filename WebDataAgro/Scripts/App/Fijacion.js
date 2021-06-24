@@ -4730,9 +4730,11 @@ function EstablecerCostoFinanciero() {
     }
 }
 function SetearDiaPesificado() {
-    $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value('');
-    $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
-    InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+    if ($("#diasDiferidoFijacionId").data("kendoNumericTextBox").value() != "" && $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value() != null) {
+        $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value('');
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
+        InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+    }
 }
 function OcultarCamposSiEsVirtual() {
     if ($("#virtualId").is(":checked")) {
