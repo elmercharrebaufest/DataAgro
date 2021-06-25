@@ -198,7 +198,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
     }
     if ($("#virtualId").is(":checked")) {
         $(".aplicados").hide();
-        $(".visualizar-canje").show();       
+        $(".visualizar-canje").show();
         $(".fijados").show();
     } else {
         $(".aplicados").show();
@@ -220,7 +220,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
 function ArmarAperturaDesdeAFijar(afijar) {
     HabilitarCamposApertura();
     noTieneAperturasEnAFijar = afijar.Aperturas == null || afijar.Aperturas.length == 0;
-    noTienImporteSobrePrecioEnAFijar = afijar.ImporteSobrePrecio == null || afijar.ImporteSobrePrecio == 0;    
+    noTienImporteSobrePrecioEnAFijar = afijar.ImporteSobrePrecio == null || afijar.ImporteSobrePrecio == 0;
     if (noTieneAperturasEnAFijar && !noTienImporteSobrePrecioEnAFijar) {
         $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly();
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly();
@@ -336,7 +336,7 @@ function ArmarAperturaDesdeAFijar(afijar) {
     $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").readonly();
 }
 
-function HabilitarCamposApertura(){
+function HabilitarCamposApertura() {
     $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly(false);
     $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
     $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
@@ -351,9 +351,9 @@ function InicializarElementos() {
     cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);
     tieneDolarizado = ConvertirStringABool(tieneDolarizado);
     modificarDolarizadoFinalizado = ConvertirStringABool(modificarDolarizadoFinalizado);
-    modificarPesificadoFinalizado = ConvertirStringABool(modificarPesificadoFinalizado);    
-    fijacionVirtual = ConvertirStringABool(fijacionVirtual); 
-    
+    modificarPesificadoFinalizado = ConvertirStringABool(modificarPesificadoFinalizado);
+    fijacionVirtual = ConvertirStringABool(fijacionVirtual);
+
     $('[data-toggle="popover"]').popover();
     $(".datos-adicionales").hide();
     $(".datos-boleto").hide();
@@ -602,22 +602,22 @@ function InicializarElementos() {
 
     $("#contratoId").kendoAutoComplete({
         template: '#if(data.Virtual == false) {#' +
-          '<p class="buscar-nomb #if(data.Calidad == true){#subrayadoVerde#}else{}#" style="color:#: data.Color#;"><strong>#: data.ContratoId#</strong> - ' +
-                    'KG CONTRATO: #: data.KilosContrato# ' +
+            '<p class="buscar-nomb #if(data.Calidad == true){#subrayadoVerde#}else{}#" style="color:#: data.Color#;"><strong>#: data.ContratoId#</strong> - ' +
+            'KG CONTRATO: #: data.KilosContrato# ' +
             /*' - KGS SIN PRECIO : #: data.ARecibirSinPrecio#*/ ' KG APLICADOS: #: data.KilosAplicados# ' +
-                    ' - KG APLICADOS SIN FIJAR : #: data.RecibidoSinFijar# - KG PENDIENTES A FIJAR: #: data.KilosPendiente# ' +
-                    ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong>' +
-                    ' #if(data.Calidad == true){ #<i style="z-index:10005 !important;" value="true" data-html="true" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="<i><strong>' +
-                    '#for(var cal = 0; cal < data.Calidades.length; cal++){# ' +
-                    ' ${data.Calidades[cal].CalidadEspecialDesc} ${data.Calidades[cal].Valor} <br /> ' +
-                    ' #if(data.Calidades[cal].PorcentajeDesde != null && data.Calidades[cal].PorcentajeHasta != null) {' +
-                    '  # <li>Porc. Desde #:data.Calidades[cal].PorcentajeDesde# % Hasta #:data.Calidades[cal].PorcentajeHasta# %</li> <br /> # }' +
+            ' - KG APLICADOS SIN FIJAR : #: data.RecibidoSinFijar# - KG PENDIENTES A FIJAR: #: data.KilosPendiente# ' +
+            ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong>' +
+            ' #if(data.Calidad == true){ #<i style="z-index:10005 !important;" value="true" data-html="true" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="<i><strong>' +
+            '#for(var cal = 0; cal < data.Calidades.length; cal++){# ' +
+            ' ${data.Calidades[cal].CalidadEspecialDesc} ${data.Calidades[cal].Valor} <br /> ' +
+            ' #if(data.Calidades[cal].PorcentajeDesde != null && data.Calidades[cal].PorcentajeHasta != null) {' +
+            '  # <li>Porc. Desde #:data.Calidades[cal].PorcentajeDesde# % Hasta #:data.Calidades[cal].PorcentajeHasta# %</li> <br /> # }' +
             ' }# </strong><i>"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></i># }else { } # </p > ' +
 
             '# }else { # <p class="buscar-nomb #if(data.Calidad == true){#subrayadoVerde#}else{}#" style="color:#: data.Color#;"><strong>#: data.ContratoId#</strong> - ' +
             'KG CONTRATO: #: data.KgContratoTotal#  #:data.KilosContrato# ' + ' - KG FIJADOS VIRTUALES: #: data.KilosAplicados# ' +
             ' - KG PENDIENTES A FIJAR: #: data.KilosPendiente# ' +
-        ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong> </p > #} #',         
+            ' - Hasta: #: data.FechaHasta# - <strong>#: data.CentroDescripcion#</strong> </p > #} #',
         dataBound: function () {
             $('[data-toggle="popover"]').popover({
                 container: 'body'
@@ -646,7 +646,7 @@ function InicializarElementos() {
             aFijar = e.dataItem;
             cargarDatosAFijarEnFijacion(e.dataItem);
             VisualizarFechaCierta();
-           
+
             //var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#idProveedor").val() });
             //consultarBonificacionAfijar(e.dataItem, compraNet);
         },
@@ -1850,7 +1850,7 @@ function InicializarElementos() {
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
         change: function () {
-            OcultarCamposCuandoHayFechaCierta();                   
+            OcultarCamposCuandoHayFechaCierta();
         }
     });
     //$("#fechaCiertaAcuerdo").kendoDatePicker({
@@ -2011,7 +2011,7 @@ function InicializarElementos() {
         }
     });
 
-    $("#dolarizadoId").click(function () {        
+    $("#dolarizadoId").click(function () {
         if ($(this).is(':checked')) {
             $("#dolarizadoDiv").show();
             //$("#dolarizadoExpressId").prop("checked", false);
@@ -2557,12 +2557,12 @@ function InicializarElementos() {
     $(".noAFijar").css("background-color", "lightgray");
 
     if (fijacionVirtual == true) {
-        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");      
+        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
         $("#virtualId").attr("disabled", true);
         $("#virtualId").prop("checked", true);
         OcultarCamposSiEsVirtual();
     }
-   
+
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -2651,8 +2651,9 @@ function ClickEnPizarra() {
         $("#pesificadoId").prop("checked", false);
         if (fijacionVirtual != true) {
             $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+            $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
         }
-        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+
         if ($("#tipoId").val() == 3) {
             $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
             $("#pagoDiferidoFijacionDiv").removeClass("hide-fijacion");
@@ -3420,7 +3421,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
     $("#fechaHastaId").val(FormatearFecha(formatearFecha(contrato.FechaHastaFormateado)));
-    $("#fechaCiertaId").val(FormatearFecha((contrato.FechaCiertaFormateado)));    
+    $("#fechaCiertaId").val(FormatearFecha((contrato.FechaCiertaFormateado)));
     //$("#fechaCiertaAcuerdo").val(FormatearFecha(formatearFecha(contrato.FechaCiertaFormateado)));
     $("#porcentajeDePagoId").data("kendoNumericTextBox").value(contrato.PorcentajeDePago == null ? 97.5 : contrato.PorcentajeDePago);
 
@@ -4753,11 +4754,11 @@ function OcultarCamposSiEsVirtual() {
         $(".condicion").hide();
         $("#pagoDolarizadoDiv").hide();
         $("#dolarizadoDiv").hide();
-        $("#dolarizadoId").prop("checked", false);      
+        $("#dolarizadoId").prop("checked", false);
         $("#dolarizadoFechaId").data("kendoDatePicker").value("");
         $("#chequeElectronicoId").hide();
         $("#chequeElectronico").prop("checked", false);
-        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");      
+        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
         Cancelar();
         InsertarAperturasViewModel(CalcularPrecioTotalApertura());
     } else {
@@ -4780,18 +4781,18 @@ function EsVirtual() {
     $("#CheckFijacion").prop("checked", false);
     $("#cantidadId").data("kendoNumericTextBox").value("");
     $('#contratoId').val("");
-  
+
     OcultarCamposSiEsVirtual();
 }
 
 function VisualizarFechaCierta() {
-    if (($("#diasDiferidoId").is(':checked') == true || fijacionVirtual == true|| $("#dolarizadoId").is(':checked') == true || $("#precioMonedaId").val() == "USDM " || $("#clasficacionContrato").text() == "PRODUCTOR")) {
-    
+    if (($("#diasDiferidoId").is(':checked') == true || fijacionVirtual == true || $("#dolarizadoId").is(':checked') == true || $("#precioMonedaId").val() == "USDM " || $("#clasficacionContrato").text() == "PRODUCTOR")) {
+
         $("#fechaCiertaDiv").hide();
         $("#fechaCiertaId").val("");
         $("#esCostoFinanciero").prop("checked", false);
-    } else {    
-       
+    } else {
+
         $("#fechaCiertaDiv").show();
     }
 }
@@ -4805,14 +4806,14 @@ function OcultarCamposCuandoHayFechaCierta() {
             $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
             $("#diasDiferidoFijacionDiv").addClass("inline-fijacion");
         }
-    } else {  
+    } else {
         $("#pagoDiferidoFijacionDiv").hide();
-        $("#diasDiferidoFijacionDiv").hide(); 
+        $("#diasDiferidoFijacionDiv").hide();
         $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
         $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
         $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
         $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
-        $("#diasDiferidoId").prop("checked", false);        
+        $("#diasDiferidoId").prop("checked", false);
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
     }
 
