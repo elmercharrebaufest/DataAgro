@@ -36,23 +36,33 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos = TraerTodosContratosSinFiltro.QueryBase(contexto, equipo);
             GridHelper.TruncateTime(request.Filter, ref queryContratos);
+            if (request.Filter == null)
+            {
+                request.Filter = new Filter { Filters = new List<Filter>() { new Filter() { Field = "Fecha", Operator = "gte", Value = DateTime.Now.Date } }, Logic = "and" };
+            }
             var result = queryContratos.ToDataSourceResult<BasicoContrato>(request);
             var cargaDesde = DateTime.Now.Date;
             var cargaHasta = DateTime.Now.Date;
-            foreach (var item in request.Filter.Filters)
+           
+            if (request.Filter != null && request.Filter.Filters != null)
             {
-                if (item.Field == "Fecha")
+                foreach (var item in request.Filter.Filters)
                 {
-                    if (item.Operator == "gte")
+                    if (item.Field == "Fecha")
                     {
-                        cargaDesde = (DateTime)item.Value;
-                    }
-                    else
-                    {
-                        cargaHasta = (DateTime)item.Value;
+                        if (item.Operator == "gte")
+                        {
+                            cargaDesde = (DateTime)item.Value;
+                        }
+                        else
+                        {
+                            cargaHasta = (DateTime)item.Value;
+                        }
                     }
                 }
             }
+            
+
             List<PrecioPizarra> listaPizarra = contexto.Set<PrecioPizarra>().Where(a => (( a.FechaDesde >=cargaDesde && a.FechaDesde <= cargaHasta) 
                                                                                       || (a.FechaHasta >= cargaDesde && a.FechaHasta <= cargaHasta)
                                                                                       || (a.FechaDesde <= cargaDesde && a.FechaHasta >= cargaHasta)

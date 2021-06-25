@@ -190,6 +190,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         UsuarioTercero = contrato.UsuarioTercero,
                         ObligatoriedadCostoFinancieroDesc = contrato.ObligatoriedadCostoFinanciero.HasValue && contrato.ObligatoriedadCostoFinanciero.Value != false ? "Si" : "No",
                         ObligatoriedadCostoFinanciero = contrato.ObligatoriedadCostoFinanciero.HasValue ? contrato.ObligatoriedadCostoFinanciero.Value : false,
+                        FechaCiertaTilde = contrato.FechaCierta.HasValue
                     };
 
                 return queryNegocios;

@@ -213,6 +213,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string TipoPosicionCBOT { get; set; }
         public bool? ObligatoriedadCostoFinanciero { get; set; }
         public string ObligatoriedadCostoFinancieroDesc { get; set; }
+        public DateTime? FechaCiertaHasta { get; set; }
+        public bool FechaCiertaTilde { get; set; }
     }
 
     public class StoredPorContratoResult
