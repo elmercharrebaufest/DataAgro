@@ -873,6 +873,7 @@ function InicializarElementos() {
 
                 }
                 $("#cargarCantidadPendienteFijar").show();
+                $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
             }
             else if (this.value() == 4) {
 
@@ -3543,6 +3544,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#pesificadoId").prop("checked", false);
         $("#diasDiferidoId").prop("checked", false);
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
+        $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
+        $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
     }
 
     if (contrato.PorcentajeComision !== null && contrato.PorcentajeComision !== undefined && contrato.PorcentajeComision !== "") {
