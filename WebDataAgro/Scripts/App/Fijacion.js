@@ -4786,8 +4786,8 @@ function EsVirtual() {
 }
 
 function VisualizarFechaCierta() {
-    if (($("#diasDiferidoId").is(':checked') == true || fijacionVirtual == true || $("#dolarizadoId").is(':checked') == true || $("#precioMonedaId").val() == "USDM " || $("#clasficacionContrato").text() == "PRODUCTOR")) {
-
+    if (($("#diasDiferidoId").is(':checked') == true || fijacionVirtual == true|| $("#dolarizadoId").is(':checked') == true || $("#precioMonedaId").val() == "USDM ")) {
+    
         $("#fechaCiertaDiv").hide();
         $("#fechaCiertaId").val("");
         $("#esCostoFinanciero").prop("checked", false);

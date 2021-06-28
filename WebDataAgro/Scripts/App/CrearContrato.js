@@ -4955,7 +4955,7 @@ function HaySustentable() {
 
 function VisualizarFechaCierta() {
     if ($("#hijoId").is(':checked') == true || $("#pesificadoId").is(':checked') == true || $("#dolarizadoId").is(':checked') == true || $("#precioMonedaId").val() == "USDM " ||
-        $("#dolarizadoExpressId").is(':checked') == true || $("#clasificacion").val() == 1) {
+        $("#dolarizadoExpressId").is(':checked') == true) {
         $("#fechaCiertaDiv").hide();
         $("#fechaCiertaId").val("");
         $("#esCostoFinanciero").prop("checked", false);
