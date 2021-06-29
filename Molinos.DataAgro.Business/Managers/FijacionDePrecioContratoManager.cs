@@ -753,13 +753,22 @@ namespace Molinos.DataAgro.Business.Managers
                     string nroFijacionSAP = "";
                     if (oFijacionDePrecioSave.Virtual != true)
                     {
-                         nroFijacionSAP = SapFinalizarFijacion(oFijacionDePrecioSave);
+                         nroFijacionSAP = SapFinalizarFijacion(oFijacionDePrecioSave);                     
                     
                     }
                     else
                     {
                          nroFijacionSAP = SapFinalizarFijacionVirtual(oFijacionDePrecioSave);
-                         nroFijacionSAP = oFijacionDePrecioSave.ContratoSAP + nroFijacionSAP;
+                        double nroFijacion = double.TryParse(nroFijacionSAP, out nroFijacion) ? nroFijacion : 0;
+                        if (nroFijacion <= 0)
+                        {
+                            oEntityErrors.Error("", "Error al grabar la fijación virtual contrato bloqueado");
+                            oFijacionDePrecioSave.Estado = repositorio.Obtener<EstadoContrato>((int)EnumEstadoContrato.Con_Error);
+                            repositorio.GuardarCambios();
+                            logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Crear, oFijacionDePrecioSave.GetType());
+                            return oEntityErrors;
+                        }
+                        nroFijacionSAP = oFijacionDePrecioSave.ContratoSAP + nroFijacionSAP;
                     }
                     try
                     {
