@@ -29,7 +29,7 @@ namespace WebDataAgro.Controllers
     public class LogDataAgroController : Controller
     {
         private readonly ILogDataAgroManager logDataAgroManager;
-        private readonly IReportesManager reportesManager;       
+        private readonly IReportesManager reportesManager;
         private readonly IComercialManager mobjComercialManager;
         private readonly IProveedorManager proveedorManager;
 
@@ -77,28 +77,28 @@ namespace WebDataAgro.Controllers
                                 Operator = prov.Operator,
                                 Value = prov.Value
                             });
-                            int provId = int.Parse(prov.Value.ToString());
-                            var cuit = proveedorManager.TraerProveedor(provId).CUIT;
-                            List<ProveedorDto> provs = proveedorManager.TraerProveedoresPorCuit(cuit).Where(a => a.ProveedorId != provId).ToList();
-                            foreach (var provc in provs)
-                            {
-                                filters.Add(new Kendo.DynamicLinq.Filter
-                                {
-                                    Field = "CorredorId",
-                                    Filters = prov.Filters,
-                                    Logic = prov.Logic,
-                                    Operator = prov.Operator,
-                                    Value = provc.ProveedorId
-                                });
-                                filters.Add(new Kendo.DynamicLinq.Filter
-                                {
-                                    Field = "ProveedorId",
-                                    Filters = prov.Filters,
-                                    Logic = prov.Logic,
-                                    Operator = prov.Operator,
-                                    Value = provc.ProveedorId
-                                });
-                            }
+                            //int provId = int.Parse(prov.Value.ToString());
+                            //var cuit = proveedorManager.TraerProveedor(provId).CUIT;
+                            //List<ProveedorDto> provs = proveedorManager.TraerProveedoresPorCuit(cuit).Where(a => a.ProveedorId != provId).ToList();
+                            //foreach (var provc in provs)
+                            //{
+                            //    filters.Add(new Kendo.DynamicLinq.Filter
+                            //    {
+                            //        Field = "CorredorId",
+                            //        Filters = prov.Filters,
+                            //        Logic = prov.Logic,
+                            //        Operator = prov.Operator,
+                            //        Value = provc.ProveedorId
+                            //    });
+                            //    filters.Add(new Kendo.DynamicLinq.Filter
+                            //    {
+                            //        Field = "ProveedorId",
+                            //        Filters = prov.Filters,
+                            //        Logic = prov.Logic,
+                            //        Operator = prov.Operator,
+                            //        Value = provc.ProveedorId
+                            //    });
+                            //}
                         }
 
                         item.Filters = filters;
@@ -209,53 +209,15 @@ namespace WebDataAgro.Controllers
             ViewBag.Accion = accionesListItems;
 
             var clasesListItems = new List<SelectListItem>{
-                new SelectListItem
-                    {
-                        Text = "Cupo",
-                        Value = "Cupo",
-                        Selected = false
-                    },
-                new SelectListItem
-                    {
-                        Text = "Proveedor",
-                        Value = "Proveedor",
-                        Selected = false
-                    },
-                new SelectListItem
-                    {
-                        Text = "Negocio",
-                        Value = "Negocio",
-                        Selected = false
-                    },
-                new SelectListItem
-                    {
-                        Text = "RangoConfirmacionAutomatica",
-                        Value = "RangoConfirmacionAutomatica",
-                        Selected = false
-                    },
-                 new SelectListItem
-                    {
-                        Text = "PrecioMoa",
-                        Value = "PrecioMoa",
-                        Selected = false
-                    },
-                 //new SelectListItem
-                 //   {
-                 //       Text = "HabilitacionFijacion",
-                 //       Value = "HabilitacionFijacion",
-                 //       Selected = false
-                 //   },
-                 new SelectListItem
-                    {
-                        Text = "HabilitacionPizarra",
-                        Value = "HabilitacionPizarra",
-                        Selected = false
-                    },new SelectListItem
-                    {
-                        Text = "HabilitacionCampaña",
-                        Value = "HabilitacionCampaña",
-                        Selected = false
-                    },
+                new SelectListItem{ Text = "Cupo",Value = "Cupo", Selected = false},
+                new SelectListItem{ Text = "Proveedor", Value = "Proveedor", Selected = false},
+                new SelectListItem{ Text = "Negocio", Value = "Negocio", Selected = false},
+                new SelectListItem{ Text = "RangoConfirmacionAutomatica", Value = "RangoConfirmacionAutomatica", Selected = false},
+                 new SelectListItem{Text = "PrecioMoa",Value = "PrecioMoa", Selected = false},
+                 //new SelectListItem{ Text = "HabilitacionFijacion",Value = "HabilitacionFijacion",Selected = false},
+                 new SelectListItem{ Text = "HabilitacionPizarra", Value = "HabilitacionPizarra", Selected = false},
+                 new SelectListItem{ Text = "HabilitacionCampaña", Value = "HabilitacionCampaña", Selected = false },
+                 new SelectListItem{ Text = "HabilitacionSustentable", Value = "HabilitacionSustentable", Selected = false },
             }.OrderBy(x => x.Text);
             ViewBag.Clase = clasesListItems;
 
