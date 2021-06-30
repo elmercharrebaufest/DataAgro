@@ -215,7 +215,7 @@ function FiltrarNegocio() {
     var result = MSExecuteOnServer('/LogDataAgro/ObtenerNegociosId', { contratosSap: filtrosContratosSap });//2647187
     if (result.length > 0) {
         currentFilters.filter.filters = currentFilters.filter.filters.filter(function (x) {
-            return x.field != 'ClaseId' && x.field != undefined
+            return x.field != 'ClaseId' //&& x.field != undefined 
         });
 
         var contratoSapFilters = { logic: 'or', filters: [] };
@@ -252,7 +252,7 @@ function FiltrarCupo() {
     var result = MSExecuteOnServer('/LogDataAgro/ObtenerCuposId', { cupoSap: filtrosCuposSap });//2647187
     if (result.length > 0) {
         currentFilters.filter.filters = currentFilters.filter.filters.filter(function (x) {
-            return x.field != 'ClaseId' && x.field != undefined
+            return x.field != 'ClaseId' //&& x.field != undefined
         });
 
         var contratoSapFilters = { logic: 'or', filters: [] };
@@ -275,6 +275,10 @@ function BorrarFiltro() {
     $("#CupoSAPId").val("");
     $("#ContratoSAPId").val("");
     $("#ContratoSAPHastaId").val("");
+    
+    $(".borrarContrato").each(function () {
+        $(this).parent().parent().remove();
+    });
     var grid = $('#grid').data('kendoGrid');
     var dataSource = grid.dataSource;
     var filters = null;

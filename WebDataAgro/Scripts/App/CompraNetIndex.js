@@ -1101,7 +1101,9 @@ function CreateGridInformeCompraNet() {
                 refresh: "Recargar"
             },
             input: true,
-            numeric: true
+            numeric: true,
+            pageSize: 20,
+            pageSizes: [5, 10, 20, 40]
         },
         scrollable: false,
         sortable: {
