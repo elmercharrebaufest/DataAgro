@@ -1090,7 +1090,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult TraerPagosDiferido(int cantidadDia)
         {
-            var result = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia >= cantidadDia).OrderByDescending(x => x.CantidadDia).FirstOrDefault();
+            var result = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia >= cantidadDia).OrderBy(x => x.CantidadDia).FirstOrDefault();
             return new JsonResult()
             {
                 Data = result != null ? result : new HabilitacionPagoDiferidoDto(),

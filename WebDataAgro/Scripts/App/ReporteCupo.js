@@ -197,21 +197,21 @@ function InicializarCuposIndex() {
         },
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-            var templateFlete = kendo.template(this.columns[8].template);
+            var templateflete = kendo.template(this.columns[9].template);
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
-                var dataItem = { FleteProcedencia: row.cells[8].value };
-                row.cells[8].value = templateFlete(dataItem);
+                var dataitem = { fleteprocedencia: row.cells[9].value };
+                row.cells[9].value = templateflete(dataitem);
 
 
-                //la Fecha en Chrome aparece corrida un dia, solucion:
+                //la fecha en chrome aparece corrida un dia, solucion:
                 var fecha = row.cells[0].value;
 
                 if (fecha != null) {
                     fecha = fecha.setHours(fecha.getHours() + 1);
-                    row.cells[0].value = new Date(fecha);
+                    row.cells[0].value = new Date( fecha);
                 }
             }
         },

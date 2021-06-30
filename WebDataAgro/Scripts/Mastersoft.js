@@ -275,7 +275,10 @@ function Confirma(mensaje, fncallback) {
         buttons: [{
             label: 'Aceptar',
             cssClass: 'k-button',
-            action: fncallback
+            action: function (dialogItself) {
+                fncallback();
+                dialogItself.close();
+            } 
         }, {
             label: 'Cancelar',
             cssClass: 'k-button',
