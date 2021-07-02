@@ -1308,7 +1308,10 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
             oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
             oContratoSave.Venta = oContrato.Venta;
-            oContratoSave.ObligatoriedadCostoFinanciero = oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null; 
+            oContratoSave.ObligatoriedadCostoFinanciero = oContrato.FechaCierta.HasValue &&
+             oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
+             oContrato.ObligatoriedadCostoFinanciero.HasValue && !oContrato.ObligatoriedadCostoFinanciero.Value
+             ? null : oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null; 
             oContratoSave.PosicionCBOT = oContrato.PosicionCBOT;
             oContratoSave.TipoPosicionCBOTId = oContrato.TipoPosicionCBOTId;
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
@@ -2004,7 +2007,10 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.Insumo = oContrato.Insumo;
                             oContratoSave.PrestamoDevolucion = oContrato.PrestamoDevolucion;
                             oContratoSave.PlantaDestinoId = oContrato.PlantaDestinoId;
-                            oContratoSave.ObligatoriedadCostoFinanciero = oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null;
+                            oContratoSave.ObligatoriedadCostoFinanciero = oContrato.FechaCierta.HasValue &&
+                            oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
+                            oContrato.ObligatoriedadCostoFinanciero.HasValue && !oContrato.ObligatoriedadCostoFinanciero.Value
+                            ? null : oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null;
                             oContrato.Venta = oContrato.Venta;
 
 
@@ -2532,6 +2538,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ProveedorCreador = x.ProveedorCreadorId,
                 UsuarioId = x.UsuarioId,
                 UsuarioTercero = x.UsuarioTercero,
+                FechaCierta = x.FechaCierta
             });
             return contrato;
         }

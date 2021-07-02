@@ -106,7 +106,10 @@ namespace Molinos.DataAgro.Business
                                 oContratoSave.CampanaId = contratoOriginal.CampanaId;
                                 oContratoSave.DolarizadoExpress = contratoOriginal.DolarizadoExpress;
                                 oContratoSave.FechaCierta = contratoOriginal.FechaCierta;
-                                oContratoSave.ObligatoriedadCostoFinanciero = contratoOriginal.ObligatoriedadCostoFinanciero;
+                                oContratoSave.ObligatoriedadCostoFinanciero = contratoOriginal.FechaCierta.HasValue &&
+                                contratoOriginal.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
+                                contratoOriginal.ObligatoriedadCostoFinanciero.HasValue && !contratoOriginal.ObligatoriedadCostoFinanciero.Value
+                                 ? null : contratoOriginal.FechaCierta.HasValue ? contratoOriginal.ObligatoriedadCostoFinanciero : null;
 
 
                                 if (oContratoSave.PrecioPactado != null)
@@ -239,6 +242,11 @@ namespace Molinos.DataAgro.Business
                 oContratoAcuerdo.Fecha = DateTime.Now;
                 oContratoAcuerdo.EstadoId = estado;
                 oContratoAcuerdo.FechaOperacion = DateTime.Now;
+                oContratoAcuerdo.ObligatoriedadCostoFinanciero = oContratoAcuerdo.FechaCierta.HasValue &&
+                oContratoAcuerdo.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
+                oContratoAcuerdo.ObligatoriedadCostoFinanciero.HasValue && !oContratoAcuerdo.ObligatoriedadCostoFinanciero.Value
+                ? null : oContratoAcuerdo.FechaCierta.HasValue ? oContratoAcuerdo.ObligatoriedadCostoFinanciero : null;
+
                 repositorio.Agregar(oContratoAcuerdo);
                 if (ConfirmacionAutomatica(oContratoAcuerdo))
                 {
@@ -301,7 +309,10 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.CondicionFijacionId = oContratoAcuerdo.CondicionFijacionId;
                 objContratoAcuerdo.CampanaId = oContratoAcuerdo.CampanaId;
                 objContratoAcuerdo.FechaCierta = oContratoAcuerdo.FechaCierta;
-                objContratoAcuerdo.ObligatoriedadCostoFinanciero = oContratoAcuerdo.FechaCierta.HasValue ? oContratoAcuerdo.ObligatoriedadCostoFinanciero : null;
+                objContratoAcuerdo.ObligatoriedadCostoFinanciero = oContratoAcuerdo.FechaCierta.HasValue &&
+                oContratoAcuerdo.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
+                oContratoAcuerdo.ObligatoriedadCostoFinanciero.HasValue && !oContratoAcuerdo.ObligatoriedadCostoFinanciero.Value
+                 ? null : oContratoAcuerdo.FechaCierta.HasValue ? oContratoAcuerdo.ObligatoriedadCostoFinanciero : null;
 
 
                 if (descuentosExistentes != null)

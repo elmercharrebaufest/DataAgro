@@ -183,13 +183,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         TipoAgenteCompraId = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompraId : 0,
                         TipoAgenteCompra = (contrato is AgenteCompra) ? (contrato as AgenteCompra).TipoAgenteCompra.Descripcion : "",
                         CantidadAmpliado = contrato.CantidadAmpliado ?? 0,
+                        ObligatoriedadCostoFinancieroDesc = !contrato.ObligatoriedadCostoFinanciero.HasValue ? "" : contrato.ObligatoriedadCostoFinanciero.HasValue && contrato.ObligatoriedadCostoFinanciero.Value == true ? "Si" : "No",
+                        ObligatoriedadCostoFinanciero = contrato.ObligatoriedadCostoFinanciero.HasValue ? contrato.ObligatoriedadCostoFinanciero.Value : (bool?)null,
                         PosicionCBOT = contrato.PosicionCBOT,
                         VirtualDescripcion = contrato.Virtual == true ? "Si" : "No",
                         Virtual = contrato.Virtual,
                         ProveedorCreador = contrato.ProveedorCreadorId,
                         UsuarioTercero = contrato.UsuarioTercero,
-                        ObligatoriedadCostoFinancieroDesc = contrato.ObligatoriedadCostoFinanciero.HasValue && contrato.ObligatoriedadCostoFinanciero.Value != false ? "Si" : "No",
-                        ObligatoriedadCostoFinanciero = contrato.ObligatoriedadCostoFinanciero.HasValue ? contrato.ObligatoriedadCostoFinanciero.Value : false,
                         FechaCiertaTilde = contrato.FechaCierta.HasValue
                     };
 

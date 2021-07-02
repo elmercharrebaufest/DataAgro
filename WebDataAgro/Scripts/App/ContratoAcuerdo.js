@@ -3587,9 +3587,10 @@ function CargarDatosEditar(contrato, hijo) {
     }
     if (contrato.ObligatoriedadCostoFinanciero == true) {
         $("#esCostoFinanciero").prop("checked", true);
-    } else {
+    } else if (contrato.ObligatoriedadCostoFinanciero == false) {
         $("#esCostoFinanciero").prop("checked", false);
     }
+
     if (contrato.Dolarizado) {
         $("#dolarizadoId").prop("checked", true);
         $("#dolarizadoDiv").show();

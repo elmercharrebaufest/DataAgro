@@ -2439,9 +2439,11 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#obligatorioDiv").show();
         $("#obligatorioId").text("Si");       
     } else {
-        if (fechaCierta != "null") {
-            $("#obligatorioDiv").show();
-            $("#obligatorioId").text("No");
+        if (fechaCierta != "null") {            
+            if (obligatoriedad == "false") {
+                $("#obligatorioDiv").show();
+                $("#obligatorioId").text("No");
+            }
         }
     }
 

@@ -548,7 +548,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.MonedaSobrePrecioContrato = oFijacionDePrecio.MonedaSobrePrecioContrato;
                 oFijacionDePrecioSave.Virtual = oFijacionDePrecio.Virtual;
                 oFijacionDePrecioSave.FechaCierta = oFijacionDePrecio.FechaCierta;
-                oFijacionDePrecioSave.ObligatoriedadCostoFinanciero = oFijacionDePrecio.FechaCierta.HasValue ? oFijacionDePrecio.ObligatoriedadCostoFinanciero : null;
+                oFijacionDePrecioSave.ObligatoriedadCostoFinanciero = oFijacionDePrecio.FechaCierta.HasValue &&
+                oFijacionDePrecio.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
+                oFijacionDePrecio.ObligatoriedadCostoFinanciero.HasValue && !oFijacionDePrecio.ObligatoriedadCostoFinanciero.Value
+                ? null : oFijacionDePrecio.FechaCierta.HasValue ? oFijacionDePrecio.ObligatoriedadCostoFinanciero : null;
+
                 if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     oFijacionDePrecioSave.ObservacionTercero = oFijacionDePrecio.ObservacionTercero;
@@ -575,6 +579,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oFijacionDePrecio.ContratoSAP = oFijacionDePrecio.ContratoSAP.PadLeft(10, '0');
                 oFijacionDePrecio.Fecha = DateTime.Now;
+                oFijacionDePrecio.ObligatoriedadCostoFinanciero = oFijacionDePrecio.FechaCierta.HasValue &&
+                oFijacionDePrecio.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
+                oFijacionDePrecio.ObligatoriedadCostoFinanciero.HasValue && !oFijacionDePrecio.ObligatoriedadCostoFinanciero.Value
+                ? null : oFijacionDePrecio.FechaCierta.HasValue ? oFijacionDePrecio.ObligatoriedadCostoFinanciero : null;
                 if (oContratoId != null)
                 {
                     if (oContratoId.Id == 0)

@@ -3624,7 +3624,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.ObligatoriedadCostoFinanciero == true) {
         $("#esCostoFinanciero").prop("checked", true);
-    } else {
+    } else if (contrato.ObligatoriedadCostoFinanciero == false) {
         $("#esCostoFinanciero").prop("checked", false);
     }
 
@@ -4957,8 +4957,7 @@ function VisualizarFechaCierta() {
     if ($("#hijoId").is(':checked') == true || $("#pesificadoId").is(':checked') == true || $("#dolarizadoId").is(':checked') == true || $("#precioMonedaId").val() == "USDM " ||
         $("#dolarizadoExpressId").is(':checked') == true) {
         $("#fechaCiertaDiv").hide();
-        $("#fechaCiertaId").val("");
-        $("#esCostoFinanciero").prop("checked", false);
+        $("#fechaCiertaId").val("");       
     } else {
         $("#fechaCiertaDiv").show();
     }

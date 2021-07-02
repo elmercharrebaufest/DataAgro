@@ -523,7 +523,7 @@ function ObtenerDatos(error) {
         obj.tipoAgenteCompraId = $("#tipoAgenteCompraId").val();
     }
 
-    obj.ObligatoriedadCostoFinanciero = $("#esCostoFinanciero").is(":checked") ? true : false;
+    obj.ObligatoriedadCostoFinanciero = $("#esCostoFinanciero").is(":checked") == true ? true : $("#esCostoFinanciero").is(":checked") == false ?  false : null;
 
     obj.OperadorId = $("#operadorId").val();
     if ($("#madreId").is(":checked")) {
