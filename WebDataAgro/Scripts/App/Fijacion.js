@@ -3522,10 +3522,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#dolarizadoDiv").show();
         $("#expressDiv").show();
     }
-    if (contrato.Estado == 5) {
-
-    }
-
+    
     if (contrato.PagoDiferido === true && contrato.TipoNegocioId != 3) {
         $("#pesificadoId").prop("checked", true);
         $("#pesificadoDiv").show();
@@ -3776,9 +3773,9 @@ function CargarDatosEditar(contrato, hijo) {
         if (!contrato.TipoNegocioId == 3) {
             $("#contrato-modificado").html("<h3>CONTRATO " + contrato.ContratoSAP.replace('000', '') + "</h3>");
         }
-
     }
     if (contrato.Estado == 5 && contrato.TipoNegocioId == 3) {
+        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
         $("#buscadorCorredor").data("kendoAutoComplete").enable(false);
         $("#buscadorProveedor").data("kendoAutoComplete").enable(false);
         $("#contratoId").data("kendoAutoComplete").enable(false);
@@ -4697,6 +4694,9 @@ function datosAfijar() {
 }
 
 function EstablecerCostoFinanciero() {
+    if ($("#estado").val() == 5) {
+        return false;
+    }
     var c = Number($("#diasDiferidoFijacionId").val());
     var costoFinancieroActual = $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value();
     if ($("#diasDiferidoId").is(":checked") && $("#diasDiferidoFijacionId").val() == '' && c < 7) {
