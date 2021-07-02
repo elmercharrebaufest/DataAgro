@@ -758,7 +758,8 @@ namespace Molinos.DataAgro.Business
                                            SqlFunctions.DateName("year", x.FechaCierta) : "",
                 ChequeElectronico = x.ChequeElectronico,
                 PagoCBU = x.PagoCBU,
-                ObligatoriedadCostoFinanciero = x.ObligatoriedadCostoFinanciero
+                ObligatoriedadCostoFinanciero = x.ObligatoriedadCostoFinanciero,
+                FechaCierta = x.FechaCierta,
             });
             return contrato;
         }
