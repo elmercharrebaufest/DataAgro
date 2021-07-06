@@ -20,8 +20,6 @@ IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Acopiad
 IF NOT EXISTS (select 1 from ClasificacionCompraNet where Descripcion = 'Otros') BEGIN insert into ClasificacionCompraNet (Descripcion) values ('Otros'); END
 
 --Centro
-update Centro set  Descripcion = 'S. Lorenzo' where id = 1
-update Centro set  Descripcion = 'S. Lorenzo Especial' where id = 14
 IF NOT EXISTS (select 1 from Centro where Descripcion = 'S. Lorenzo') BEGIN insert into Centro(Descripcion,CodigoSap) values ('S. Lorenzo', '1029'); END
 IF NOT EXISTS (select 1 from Centro where Descripcion = 'Pergamino') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Pergamino', '1035'); END
 IF NOT EXISTS (select 1 from Centro where Descripcion = 'Bandera') BEGIN insert into Centro(Descripcion,CodigoSap) values ('Bandera', '1127'); END
@@ -179,25 +177,6 @@ IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Sin STOP') BEGIN in
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Error STOP') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Error STOP', 7); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Disponible') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Disponible', 8); END
 IF NOT EXISTS (select 1 from EstadoCupo where Descripcion = 'Rechazado') BEGIN insert into EstadoCupo (Descripcion, Orden) values ('Rechazado', 9); END
---Segmentacion
-update Segmentacion set Descripcion ='Corredores tradicionales (cooperativas)' where SegmentacionId = '7'
-update Segmentacion set Descripcion ='Corredor Correacopios' where SegmentacionId = '5'
-
-update Segmentacion set Descripcion ='Productor Grande: Más de 10.000 tns' where SegmentacionId = '2'
-update Segmentacion set Descripcion ='Productor Mediano: Entre 3.000 y 10.000 tns' where SegmentacionId = '3'
-update Segmentacion set Descripcion ='Productor Chico: menos de 3.000 tns' where SegmentacionId = '4'
-
-update Segmentacion set Descripcion ='Acopio Chico: menos de 20.000 tns' where SegmentacionId = '9'
-update Segmentacion set Descripcion ='Acopio Mediano: entre 20.000 y 50.000 tns' where SegmentacionId = '10'
-update Segmentacion set Descripcion ='Acopio Grande: entre 50.000 y 150.000 tns' where SegmentacionId = '11'
-update Segmentacion set Descripcion ='Acopio Mega: más de 150.000 tns' where SegmentacionId = '15'
-
-
---Material 
-update Material set Descripcion = 'Soja' where MaterialId = 3
-update Material set Descripcion = 'Maiz' where MaterialId = 1
-update Material set Descripcion = 'Trigo' where MaterialId = 2
-update Material set Descripcion = 'Girasol AO' where MaterialId = 5
 
 --CondicionFijacion
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '3 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('3 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '03'); END 
@@ -207,14 +186,6 @@ IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '6 DÍAS HÁBILES
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '10 DÍAS HÁBILES DE FECHA DE FIJACIÓN') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('10 DÍAS HÁBILES DE FECHA DE FIJACIÓN', '10'); END 
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '10 DIAS CORRIDOS DE FIJACION') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('10 DIAS CORRIDOS DE FIJACION', '1T'); END 
 IF NOT EXISTS (select 1 from CondicionPago where Descripcion = '15 DIAS CORRIDOS DE FIJACION') BEGIN insert into CondicionPago(Descripcion,CodigoSap) values ('15 DIAS CORRIDOS DE FIJACION', '2T'); END 
-
---TipoNegocio
-UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Contrato' WHERE Descripcion = 'A FIJAR'
-UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Contrato' WHERE Descripcion = 'A PRECIO'
-UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.FijacionDePrecioContrato' WHERE Descripcion = 'FIJACION'
-UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.Fason' WHERE Descripcion = 'FASON'
-UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.AgenteCompra' WHERE Descripcion = 'AGENTE DE COMPRAS'
-UPDATE TipoNegocio SET ClaseDescripcion = 'Molinos.DataAgro.Entities.Entities.ContratoAcuerdo' WHERE Descripcion = 'CONTRATO ACUERDO'
 
 --MotivoAnterior
 IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Otro') BEGIN insert into MotivoAnterior(Descripcion) values ('Otro'); END

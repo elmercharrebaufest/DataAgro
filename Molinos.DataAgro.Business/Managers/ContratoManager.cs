@@ -448,7 +448,12 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
-                    if (centro.ValidaRedespacho != false && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) && oParam.Pizarra != true)
+                    if (centro.ValidaRedespacho == true && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) && oParam.Pizarra != true)
+                    {
+                        oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
+                    }                   
+
+                    if (centro.ValidaRedespacho == true && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoDBId == 1 && x.TipoPeriodoDBId == 1)) && oParam.Pizarra == true)
                     {
                         oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
                     }
@@ -457,6 +462,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("Descuentos", " Solo se debe completar Redespacho en Acopios.");
                     }
+
                 }
 
             }
