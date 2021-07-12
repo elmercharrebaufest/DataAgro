@@ -1520,7 +1520,7 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-        public Resultado AltaFijacionSap(FijacionDePrecioContrato fijacion)
+        public Resultado AltaFijacionSap(FijacionDePrecioContrato fijacion, List<FijacionVirtualSAPDto> fijacionesVirtuales)
         {
             var error = new Resultado();
             try
@@ -1578,9 +1578,11 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Error("Iniciando Apertura");
                     fijacionSave.AperturaPrecio = fijacion.AperturaPrecio;
                 }
+                RelacionarVirtualConCanje(fijacionesVirtuales, fijacion, fijacionSave);
                 repositorio.Agregar(fijacionSave);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacionSave.Id), TipoAccionLogDataAgro.Crear, fijacionSave.GetType());
+                
             }
             catch (Exception e)
             {
@@ -1589,6 +1591,38 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(e);
             }
             return error;
+        }
+
+        private void RelacionarVirtualConCanje(List<FijacionVirtualSAPDto> fijacionesVirtuales, FijacionDePrecioContrato fijacion, FijacionDePrecioContrato fijacionSave)
+        {
+            fijacionSave.FijacionCanje = new List<FijacionVirtualSap>();
+            logger.Error("Inicio Alta Cierre de canje");
+            try
+            {
+                if (fijacionesVirtuales != null && fijacionesVirtuales.Count > 0)
+                {
+                    logger.Error("Fijacion de canje" + JsonConvert.SerializeObject(fijacionesVirtuales));
+                    
+                    foreach (var item in fijacionesVirtuales)
+                    {
+                        var f = new FijacionVirtualSap()
+                        {   
+                            FijacionVirtualId = repositorio.Obtener<FijacionDePrecioContrato, int?>(x => x.FijacionSAP == (fijacionSave.ContratoSAP + item.NumeroFijacionVirtual), x => x.Id),
+                            Cantidad = item.Cantidad,
+                            FijacionVirtualNro = item.NumeroFijacionVirtual
+                        };
+                        fijacionSave.FijacionCanje.Add(f);
+                    }
+                    logger.Error("Fin cierre de canje");
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error Cierre de canje");
+                logger.Error("", e.Message);
+                logger.Error(e);
+            }
+
         }
 
         public Resultado AnularFijacionSAP(FijacionSAP fijacion)

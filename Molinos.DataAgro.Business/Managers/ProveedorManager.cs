@@ -1013,7 +1013,7 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    htmlBody += "COSTO FINANCIERO: " + conceptoApertura.Select(x => x.Importe).First().ToString()+ "<br />";
             //}
-            if (oFijacionDePrecioContrato.FechaOperacion != null)
+            if (oFijacionDePrecioContrato.FechaOperacion != null && oFijacionDePrecioContrato.FechaOperacion != oFijacionDePrecioContrato.Fecha.Date)
             {
                 htmlBody += "Fecha Operacion: " + oFijacionDePrecioContrato.FechaOperacion.ToShortDateString() + "<br /> ";
             }

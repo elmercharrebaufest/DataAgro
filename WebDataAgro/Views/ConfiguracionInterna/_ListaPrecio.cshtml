@@ -32,6 +32,7 @@
                 <tr>
                     <th>Tipo Negocio</th>
                     <th>Material</th>
+                    <th>Destino</th>
                     <th>Precio</th>
                     <th>Moneda</th>
                     <th>Vigencia Desde</th>
@@ -44,28 +45,29 @@
                 </tr>
                 @foreach (var pr in Model.PrecioMoa)
                 {
-                    <tr>
-                        <td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
-                        <td>@Html.DisplayFor(model => pr.Material)</td>
-                        <td>@Html.DisplayFor(model => pr.Precio)</td>
-                        <td>@Html.DisplayFor(model => pr.MonedaId)</td>
-                        <td>@Html.DisplayFor(model => pr.DesdeVigencia)</td>
-                        <td>@Html.DisplayFor(model => pr.HastaVigencia)</td>
-                        <td>@Html.DisplayFor(model => pr.DesdeEntrega)</td>
-                        <td>@Html.DisplayFor(model => pr.HastaEntrega)</td>
-                        <td>@Html.DisplayFor(model => pr.DesdeFijacion)</td>
-                        <td>@Html.DisplayFor(model => pr.HastaFijacion)</td>
-                        <td>
-                            @if ((pr.DesdeVigencia <= DateTime.Now.Date && pr.HastaVigencia >= DateTime.Now.Date) || pr.DesdeVigencia >= DateTime.Now.Date)
-                            {
-                                @Ajax.ActionLink(" ", "EliminarPrecio", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaPrecio", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
-                            }
-                            @{
-                                var json = JsonConvert.SerializeObject(pr);
-                            }
-                            <a href="#" class="fa fa-copy danger" onclick="copiarPrecioMOA('@json')"></a>
-                        </td>
-                    </tr>
+            <tr>
+                <td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
+                <td>@Html.DisplayFor(model => pr.Material)</td>
+                <td>@Html.DisplayFor(model => pr.Destino)</td>
+                <td>@Html.DisplayFor(model => pr.Precio)</td>
+                <td>@Html.DisplayFor(model => pr.MonedaId)</td>
+                <td>@Html.DisplayFor(model => pr.DesdeVigencia)</td>
+                <td>@Html.DisplayFor(model => pr.HastaVigencia)</td>
+                <td>@Html.DisplayFor(model => pr.DesdeEntrega)</td>
+                <td>@Html.DisplayFor(model => pr.HastaEntrega)</td>
+                <td>@Html.DisplayFor(model => pr.DesdeFijacion)</td>
+                <td>@Html.DisplayFor(model => pr.HastaFijacion)</td>
+                <td>
+                    @if ((pr.DesdeVigencia <= DateTime.Now.Date && pr.HastaVigencia >= DateTime.Now.Date) || pr.DesdeVigencia >= DateTime.Now.Date)
+                    {
+                        @Ajax.ActionLink(" ", "EliminarPrecio", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaPrecio", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
+                    }
+                    @{
+                        var json = JsonConvert.SerializeObject(pr);
+                    }
+                    <a href="#" class="fa fa-copy danger" onclick="copiarPrecioMOA('@json')"></a>
+                </td>
+            </tr>
                 }
             </table>
         </div>

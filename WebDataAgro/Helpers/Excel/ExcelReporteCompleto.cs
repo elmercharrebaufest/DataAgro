@@ -876,7 +876,7 @@ namespace WebDataAgro.Helpers.Excel
             //Create workbook
             IWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = (XSSFSheet)workbook.CreateSheet("AltaMasiva");
-            
+
             //Create dropdown list materiales
             IDataValidationHelper validationHelperMaterial = new XSSFDataValidationHelper(sheet);
             CellRangeAddressList addressListMaterial = new CellRangeAddressList(1, 999, 2, 2);
@@ -904,7 +904,7 @@ namespace WebDataAgro.Helpers.Excel
             //Create dropdown list materiales
             IDataValidationHelper validationHelperX = new XSSFDataValidationHelper(sheet);
             CellRangeAddressList addressListX = new CellRangeAddressList(1, 999, 10, 11);
-            IDataValidationConstraint constraintX = validationHelperX.CreateExplicitListConstraint(new string[] { "x"});
+            IDataValidationConstraint constraintX = validationHelperX.CreateExplicitListConstraint(new string[] { "x" });
             IDataValidation dataValidationX = validationHelperX.CreateValidation(constraintX, addressListX);
             dataValidationX.SuppressDropDownArrow = true;
             sheet.AddValidationData(dataValidationX);
@@ -1010,6 +1010,321 @@ namespace WebDataAgro.Helpers.Excel
                 return fileData.ToArray();
             }
         }
+
+        public static byte[] ExcelReportePagosDiferidos(ResultReportePagosDiferidos datos, DateTime desde, DateTime hasta)
+        {
+            if (datos == null || datos.Contratos == null || datos.Contratos.Count == 0)
+            {
+                return null;
+            }
+
+            //Create workbook
+            IWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = (XSSFSheet)workbook.CreateSheet("Diferidos");
+            var stylebold = workbook.CreateCellStyle();
+            var fontBold = workbook.CreateFont();
+            fontBold.Boldweight = (short)FontBoldWeight.Bold;
+            stylebold.SetFont(fontBold);
+
+            byte[] celeste = new byte[3] { 155, 184, 230 };
+            byte[] celesteOscuro = new byte[3] { 142, 169, 219 };
+            byte[] rojo = new byte[3] { 233, 145, 127 };
+            byte[] verde = new byte[3] { 169, 208, 142 };
+
+            ICellStyle cellStyleDouble = workbook.CreateCellStyle();
+            cellStyleDouble.DataFormat = workbook.CreateDataFormat().GetFormat("#,##0.00");
+            ICellStyle cellStylePorcentaje = workbook.CreateCellStyle();
+            cellStylePorcentaje.DataFormat = workbook.CreateDataFormat().GetFormat("0.00%");
+
+
+            var estiloNegrita = workbook.CreateCellStyle();
+            estiloNegrita.BorderBottom = BorderStyle.Thin;
+            estiloNegrita.BorderTop = BorderStyle.Thin;
+            estiloNegrita.BorderLeft = BorderStyle.Thin;
+            estiloNegrita.BorderRight = BorderStyle.Thin;
+            estiloNegrita.SetFont(fontBold);
+            estiloNegrita.Alignment = HorizontalAlignment.Center;
+
+            var estiloBordes = workbook.CreateCellStyle();
+            estiloBordes.BorderBottom = BorderStyle.Thin;
+            estiloBordes.BorderTop = BorderStyle.Thin;
+            estiloBordes.BorderLeft = BorderStyle.Thin;
+            estiloBordes.BorderRight = BorderStyle.Thin;
+            estiloBordes.DataFormat = workbook.CreateDataFormat().GetFormat("#,##0.00");
+
+            var estilofondoGris = workbook.CreateCellStyle();
+            estilofondoGris.BorderBottom = BorderStyle.Thin;
+            estilofondoGris.BorderTop = BorderStyle.Thin;
+            estilofondoGris.BorderLeft = BorderStyle.Thin;
+            estilofondoGris.BorderRight = BorderStyle.Thin;
+            estilofondoGris.Alignment = HorizontalAlignment.Center;
+            estilofondoGris.FillForegroundColor = IndexedColors.Grey25Percent.Index;
+            estilofondoGris.FillPattern = FillPattern.SolidForeground;
+            estilofondoGris.DataFormat = workbook.CreateDataFormat().GetFormat("#,##0.00");
+            estilofondoGris.SetFont(fontBold);
+
+            var estilofondoGrisSinBorde = workbook.CreateCellStyle();
+            estilofondoGrisSinBorde.BorderBottom = BorderStyle.None;
+            estilofondoGrisSinBorde.BorderTop = BorderStyle.None;
+            estilofondoGrisSinBorde.BorderLeft = BorderStyle.None;
+            estilofondoGrisSinBorde.BorderRight = BorderStyle.None;
+            estilofondoGrisSinBorde.Alignment = HorizontalAlignment.Center;
+            estilofondoGrisSinBorde.FillForegroundColor = IndexedColors.Grey25Percent.Index;
+            estilofondoGrisSinBorde.FillPattern = FillPattern.SolidForeground;
+            estilofondoGrisSinBorde.DataFormat = workbook.CreateDataFormat().GetFormat("#,##0.00");
+            estilofondoGrisSinBorde.SetFont(fontBold);
+
+            var estilofondoGrisOscuroSinBorde = workbook.CreateCellStyle();
+            estilofondoGrisOscuroSinBorde.BorderBottom = BorderStyle.None;
+            estilofondoGrisOscuroSinBorde.BorderTop = BorderStyle.None;
+            estilofondoGrisOscuroSinBorde.BorderLeft = BorderStyle.None;
+            estilofondoGrisOscuroSinBorde.BorderRight = BorderStyle.None;
+            estilofondoGrisOscuroSinBorde.Alignment = HorizontalAlignment.Center;
+            estilofondoGrisOscuroSinBorde.FillForegroundColor = IndexedColors.Grey50Percent.Index;
+            estilofondoGrisOscuroSinBorde.FillPattern = FillPattern.SolidForeground;
+            estilofondoGrisOscuroSinBorde.DataFormat = workbook.CreateDataFormat().GetFormat("#,##0.00");
+
+            var estilofondoCelesteOscuro = (XSSFCellStyle)workbook.CreateCellStyle();
+            estilofondoCelesteOscuro.BorderBottom = BorderStyle.None;
+            estilofondoCelesteOscuro.BorderTop = BorderStyle.None;
+            estilofondoCelesteOscuro.BorderLeft = BorderStyle.None;
+            estilofondoCelesteOscuro.BorderRight = BorderStyle.None;
+            estilofondoCelesteOscuro.Alignment = HorizontalAlignment.Center;
+            estilofondoCelesteOscuro.FillPattern = FillPattern.SolidForeground;
+            estilofondoCelesteOscuro.DataFormat = workbook.CreateDataFormat().GetFormat("#,##0.00");
+            estilofondoCelesteOscuro.SetFillForegroundColor(new XSSFColor(celesteOscuro));
+
+            var estilofondoCeleste = (XSSFCellStyle)workbook.CreateCellStyle();
+            estilofondoCeleste.BorderBottom = BorderStyle.None;
+            estilofondoCeleste.BorderTop = BorderStyle.None;
+            estilofondoCeleste.BorderLeft = BorderStyle.None;
+            estilofondoCeleste.BorderRight = BorderStyle.None;
+            estilofondoCeleste.Alignment = HorizontalAlignment.Center;
+            estilofondoCeleste.FillPattern = FillPattern.SolidForeground;
+            estilofondoCeleste.DataFormat = workbook.CreateDataFormat().GetFormat("#,##0.00");
+            estilofondoCeleste.SetFillForegroundColor(new XSSFColor(celeste));
+
+            var estilofondoCelesteNegrita = (XSSFCellStyle)workbook.CreateCellStyle();
+            estilofondoCelesteNegrita.BorderBottom = BorderStyle.None;
+            estilofondoCelesteNegrita.BorderTop = BorderStyle.None;
+            estilofondoCelesteNegrita.BorderLeft = BorderStyle.None;
+            estilofondoCelesteNegrita.BorderRight = BorderStyle.None;
+            estilofondoCelesteNegrita.Alignment = HorizontalAlignment.Center;
+            estilofondoCelesteNegrita.SetFillForegroundColor(new XSSFColor(celeste));
+            estilofondoCelesteNegrita.FillPattern = FillPattern.SolidForeground;
+            estilofondoCelesteNegrita.DataFormat = workbook.CreateDataFormat().GetFormat("#,##0.00");
+            estilofondoCelesteNegrita.SetFont(fontBold);
+
+            var estilofondoVerdeSinBorde = (XSSFCellStyle)workbook.CreateCellStyle();
+            estilofondoVerdeSinBorde.BorderBottom = BorderStyle.None;
+            estilofondoVerdeSinBorde.BorderTop = BorderStyle.None;
+            estilofondoVerdeSinBorde.BorderLeft = BorderStyle.None;
+            estilofondoVerdeSinBorde.BorderRight = BorderStyle.None;
+            estilofondoVerdeSinBorde.Alignment = HorizontalAlignment.Center;
+            estilofondoVerdeSinBorde.SetFillForegroundColor(new XSSFColor(verde));
+            estilofondoVerdeSinBorde.FillPattern = FillPattern.SolidForeground;
+
+            var estilofondoRojoSinBorde = (XSSFCellStyle)workbook.CreateCellStyle();
+            estilofondoRojoSinBorde.BorderBottom = BorderStyle.None;
+            estilofondoRojoSinBorde.BorderTop = BorderStyle.None;
+            estilofondoRojoSinBorde.BorderLeft = BorderStyle.None;
+            estilofondoRojoSinBorde.BorderRight = BorderStyle.None;
+            estilofondoRojoSinBorde.Alignment = HorizontalAlignment.Center;
+            estilofondoRojoSinBorde.SetFillForegroundColor(new XSSFColor(rojo));
+            estilofondoRojoSinBorde.FillPattern = FillPattern.SolidForeground;
+
+            var c = 0;
+            var r = 0;
+
+            var row = sheet.CreateRow(r); r++;
+
+            CrearCelda(row, c, null, estiloNegrita); c++;
+            CrearCelda(row, c, null, estilofondoCelesteOscuro); c++;
+
+            var celda = sheet.GetRow(0).GetCell(0);
+            celda.SetCellValue("Fecha");
+            celda = sheet.GetRow(0).GetCell(1);
+            celda.SetCellValue(DateTime.Now.ToString("dd-MM-yyyy"));
+            row = sheet.CreateRow(r++); c = 0;
+            row = sheet.CreateRow(r++); c = 0;
+            CrearCelda(row, c++, "Capital", estilofondoGris);
+            CrearCelda(row, c++, Convert.ToDouble(datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital)).ToString(), estiloBordes);
+            CrearCelda(row, 3, "Fecha Desde", estilofondoCelesteNegrita);
+            CrearCelda(row, 4, desde.ToString("dd-MM-yyyy"), estilofondoCeleste);
+
+            row = sheet.CreateRow(r++); c = 0;
+            CrearCelda(row, 0, "Tasa PP", estilofondoGris);
+            CrearCelda(row, 1, Convert.ToDouble(
+                datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital) != 0 ?
+                    datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital * a.TEA) / datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital)
+                :
+                    0
+                ).ToString(), estiloBordes);
+            CrearCelda(row, 3, "Fecha Hasta", estilofondoCelesteNegrita);
+            CrearCelda(row, 4, hasta.ToString("dd-MM-yyyy"), estilofondoCeleste);
+
+            row = sheet.CreateRow(r++); c = 0;
+            CrearCelda(row, 0, "Vida PP", estilofondoGris);
+            CrearCelda(row, 1, Convert.ToDouble(Convert.ToDouble(datos.Contratos.Sum(a => a.AlVencimiento)) / datos.Contratos.Count()).ToString(), estiloBordes);
+            CrearCelda(row, 3, "Intereses Dv", estilofondoCelesteNegrita);
+            CrearCelda(row, 4, Convert.ToDouble(datos.Contratos.Sum(a => a.DevengadoMes)).ToString(), estilofondoCeleste);
+
+            row = sheet.CreateRow(r++); c = 0;
+            CrearCelda(row, 0, "Plazo PP", estilofondoGris);
+            CrearCelda(row, 1, Convert.ToDouble(datos.Contratos.Sum(a => a.Plazo) / datos.Contratos.Count()).ToString(), estiloBordes);
+
+            row = sheet.CreateRow(r++); c = 0;
+            row = sheet.CreateRow(r++); c = 0;
+            CrearCelda(row, 18, "Fecha Desde", estilofondoCelesteNegrita);
+            CrearCelda(row, 19, desde.ToString("dd-MM-yyyy"), estilofondoCeleste);
+
+            row = sheet.CreateRow(r++); c = 0;
+            CrearCelda(row, 18, "Fecha Hasta", estilofondoCelesteNegrita);
+            CrearCelda(row, 19, hasta.ToString("dd-MM-yyyy"), estilofondoCeleste);
+
+            row = sheet.CreateRow(r++); c = 0;
+            for (int i = 0; i < 17; i++)
+            {
+                CrearCelda(row, i, "", estilofondoGrisOscuroSinBorde);
+            }
+
+            CrearCelda(row, 18, null, null);
+            CrearCelda(row, 19, null, null);
+            CrearCelda(row, 20, null, null);
+            var cra = new CellRangeAddress(row.RowNum, row.RowNum, 18, 20);
+            sheet.AddMergedRegion(cra);
+            celda = sheet.GetRow(row.RowNum).GetCell(18);
+            celda.SetCellValue("DEVENGAMIENTO DE INTERESES");
+            celda.CellStyle = estilofondoGrisOscuroSinBorde;
+
+            row = sheet.CreateRow(r++); c = 0;
+            CrearCelda(row, c++, "N° Cto", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Vendedor", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Corredor", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Estado", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Tn", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Precio USD", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "TC", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Capital", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "TNA", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "TEA", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Toma", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Plazo", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Vto", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "al Vto", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Capital + Intereses", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Int. Totales", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Int. X día", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, null, null);
+            CrearCelda(row, c++, "Acumulado mes ant.", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "M2M Mes", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, "Devegado Mes", estilofondoGrisSinBorde);
+            CrearCelda(row, c++, null, null);
+
+            foreach (var dia in datos.Contratos.First().Dias)
+            {
+                CrearCelda(row, c++, dia.Dia.ToString("dd/MM"), estilofondoGrisSinBorde);
+            }
+
+            foreach (var cont in datos.Contratos)
+            {
+                row = sheet.CreateRow(r++); c = 0;
+                CrearCelda(row, c++, cont.ContratoSAP, null);
+                CrearCelda(row, c++, cont.Vendedor, null);
+                CrearCelda(row, c++, cont.Corredor, null);
+                CrearCelda(row, c++, cont.Estado, cont.Estado == "Vigente" ? estilofondoVerdeSinBorde : estilofondoRojoSinBorde);
+                CrearCelda(row, c++, cont.Tn.ToString(), null);
+                sheet.GetRow(row.RowNum).GetCell(c - 1).SetCellType(CellType.Numeric);
+                CrearCelda(row, c++, cont.PrecioUSD.ToString(), null);
+                sheet.GetRow(row.RowNum).GetCell(c - 1).CellStyle = cellStyleDouble;
+                CrearCelda(row, c++, cont.TipoCambio.ToString(), null);
+                CrearCelda(row, c++, cont.Capital.ToString(), null);
+                sheet.GetRow(row.RowNum).GetCell(c - 1).CellStyle = cellStyleDouble;
+                CrearCelda(row, c++, cont.TNA.ToString(), cellStylePorcentaje);
+                CrearCelda(row, c++, cont.TEA.ToString(), cellStylePorcentaje);
+                CrearCelda(row, c++, cont.Toma.ToString("dd-MM-yyyy"), null);
+                CrearCelda(row, c++, cont.Plazo.ToString(), null);
+                CrearCelda(row, c++, cont.Vencimiento.ToString("dd-MM-yyyy"), cellStyleDouble);
+                CrearCelda(row, c++, cont.AlVencimiento.ToString(), cellStyleDouble);
+                CrearCelda(row, c++, cont.CapitalMasIntereses.ToString(), cellStyleDouble);
+                CrearCelda(row, c++, cont.InteresesTotales.ToString(), cellStyleDouble);
+                CrearCelda(row, c++, cont.InteresesPorDia.ToString(), cellStyleDouble);
+                CrearCelda(row, c++, null, null);
+                CrearCelda(row, c++, cont.AcumuladoMesAnterior.ToString(), cellStyleDouble);
+                CrearCelda(row, c++, cont.M2MMes.ToString(), cellStyleDouble);
+                CrearCelda(row, c++, cont.DevengadoMes.ToString(), cellStyleDouble);
+                CrearCelda(row, c++, null, null);
+
+                foreach (var dia in cont.Dias)
+                {
+                    CrearCelda(row, c++, dia.Importe == 0 ? "-" : dia.Importe.ToString(), cellStyleDouble);
+                }
+            }
+
+            row = sheet.CreateRow(r++); c = 0;
+            row = sheet.CreateRow(r++); c = 0;
+            for (int i = 0; i < 17; i++)
+            {
+                if (i != 4 && i != 5 && i != 7 && i != 11 && i != 16)
+                {
+                    CrearCelda(row, i, "", estilofondoGrisSinBorde);
+                }
+            }
+            var totaltn = datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Tn);
+            CrearCelda(row, 4, totaltn == 0 ? "-" : totaltn.ToString(), estilofondoGrisSinBorde);
+            var total = datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.PrecioUSD);
+            CrearCelda(row, 5, total == 0 ? "-" : total.ToString(), estilofondoGrisSinBorde);
+            total = datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital);
+            CrearCelda(row, 7, total == 0 ? "-" : total.ToString(), estilofondoGrisSinBorde);
+            if (datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital) != 0)
+            {
+                total = datos.Contratos.Sum(a => a.Plazo * a.Capital) / datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital);
+            }
+            else
+            {
+                total = 0;
+            }
+            CrearCelda(row, 11, total == 0 ? "-" : total.ToString(), estilofondoGrisSinBorde);
+            if (datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital) != 0)
+            {
+                total = datos.Contratos.Sum(a => a.AlVencimiento * a.Capital) / datos.Contratos.Where(a => a.Estado == "Vigente").Sum(a => a.Capital);
+            }
+            else
+            {
+                total = 0;
+            }
+            CrearCelda(row, 13, total == 0 ? "-" : total.ToString(), estilofondoGrisSinBorde);
+            total = datos.Contratos.Sum(a => a.AcumuladoMesAnterior);
+            CrearCelda(row, 18, total == 0 ? "-" : total.ToString(), estilofondoGrisSinBorde);
+            sheet.GetRow(row.RowNum).GetCell(18).CellStyle = estilofondoGrisSinBorde;
+            total = datos.Contratos.Sum(a => a.M2MMes);
+            CrearCelda(row, 19, total == 0 ? "-" : total.ToString(), estilofondoGrisSinBorde);
+            sheet.GetRow(row.RowNum).GetCell(19).CellStyle = estilofondoGrisSinBorde;
+            total = datos.Contratos.Sum(a => a.DevengadoMes);
+            CrearCelda(row, 20, total == 0 ? "-" : total.ToString(), estilofondoGrisSinBorde);
+            sheet.GetRow(row.RowNum).GetCell(20).CellStyle = estilofondoGrisSinBorde;
+            c = 21;
+            CrearCelda(row, c++, null, null);
+
+            foreach (var dia in datos.Contratos.First().Dias)
+            {
+                total = datos.Contratos.Sum(x => x.Dias.Where(a => a.Dia == dia.Dia).Sum(a => a.Importe));
+                CrearCelda(row, c++, total == 0 ? "-" : total.ToString(), estilofondoGrisSinBorde);
+            }
+
+
+            for (int i = 0; i < 60; i++)
+            {
+                sheet.AutoSizeColumn(i);
+            }
+
+            using (var fileData = new MemoryStream())
+            {
+                workbook.Write(fileData);
+                return fileData.ToArray();
+            }
+        }
+
 
     }
 }

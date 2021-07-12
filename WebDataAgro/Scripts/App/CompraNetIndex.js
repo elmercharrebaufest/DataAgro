@@ -2723,7 +2723,11 @@ function ArmarPrecio(dataItem) {
         if (!externo /*&& dataItem.TipoNegocioId === 3*/ && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && (e.Pizarra == true || e.MonedaId === dataItem.Moneda); });
+                var p = precioMoa[i].filter(function (e) {
+                    return (e.TipoNegocioId === dataItem.TipoNegocioId &&
+                        e.MaterialId === dataItem.MaterialId && (e.DestinoId == dataItem.DestinoId || e.DestinoId == null) &&
+                        (e.Pizarra == true || e.MonedaId === dataItem.Moneda));
+                });
 
                 if (p) {
                     for (var y = 0; y < p.length; y++) {
@@ -2747,7 +2751,11 @@ function ArmarPrecio(dataItem) {
             if (!externo && dataItem.Estado === 9) {
                 var esPrecioMoa = false;
                 for (i = 0; i < precioMoa.length; i++) {
-                    var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1); });
+                    var p = precioMoa[i].filter(function (e) {
+                        return e.TipoNegocioId === dataItem.TipoNegocioId &&
+                            e.MaterialId === dataItem.MaterialId && (e.DestinoId == dataItem.DestinoId || e.DestinoId == null) &&
+                            ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1);
+                    });
 
                     if (p) {
                         for (var y = 0; y < p.length; y++) {
@@ -2775,7 +2783,10 @@ function ArmarFechaDesde(dataItem) {
         if (!externo && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1); });
+                var p = precioMoa[i].filter(function (e) {
+                    return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId &&
+                        (e.DestinoId == dataItem.DestinoId || e.DestinoId == null) && ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1);
+                });
 
                 if (p) {
                     for (var y = 0; y < p.length; y++) {
@@ -2802,7 +2813,10 @@ function ArmarFechaHasta(dataItem) {
         if (!externo && dataItem.Estado === 9) {
             var esPrecioMoa = false;
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1); });
+                var p = precioMoa[i].filter(function (e) {
+                    return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId
+                        && (e.DestinoId == dataItem.DestinoId || e.DestinoId == null) && ((e.Pizarra == true || e.MonedaId === dataItem.Moneda) || e.TipoNegocioId === 1);
+                });
 
                 if (p) {
                     for (var y = 0; y < p.length; y++) {
@@ -2829,7 +2843,10 @@ function ModificoPrecio(dataItem) {
             var esPrecioMoa = false;
             var pPrecio = "";
             for (i = 0; i < precioMoa.length; i++) {
-                var p = precioMoa[i].filter(function (e) { return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId && (e.Pizarra == true || e.MonedaId === dataItem.Moneda); });
+                var p = precioMoa[i].filter(function (e) {
+                    return e.TipoNegocioId === dataItem.TipoNegocioId && e.MaterialId === dataItem.MaterialId &&
+                        (e.DestinoId == dataItem.DestinoId || e.DestinoId == null) && (e.Pizarra == true || e.MonedaId === dataItem.Moneda);
+                });
                 if (p) {
                     for (var y = 0; y < p.length; y++) {
                         esPrecioMoa = p[y].Precio == dataItem.PrecioPlazo || (p[y].Pizarra == true && dataItem.Precio == 0);

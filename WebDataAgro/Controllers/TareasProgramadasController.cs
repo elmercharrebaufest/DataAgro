@@ -191,5 +191,45 @@ namespace WebDataAgro.Controllers
             logger.Info("ActualizarRazonSocial - Finalizado");
             return Content("ok");
         }
+
+        public ActionResult ReportePagosDiferidos(string fecha)
+        {
+            logger.Info("ReportePagosDiferidos - Iniciando");
+            try
+            {
+                var hoy = DateTime.Now.Date;
+                var ultimoDiaDelMesSiguiente = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1).AddDays(-1);
+                DateTime? desde = null;
+                if (hoy.DayOfWeek == DayOfWeek.Friday)//el semanal solo se envian los viernes 
+                {
+                    desde = hoy.AddDays(-7);
+                }
+
+                if (hoy == ultimoDiaDelMesSiguiente)// si es el  ultimo dia del mes manda el informe del mes
+                {
+                    desde = new DateTime(hoy.Year, hoy.Month, 1);
+                }
+                if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
+                {
+                    desde = DateTime.ParseExact(fecha, "yyyyMMdd", null);
+                }
+                if (desde.HasValue)
+                {
+                    var datos = reportesManager.ObtenerDatosReportePagosDiferidos(desde.Value, hoy);
+
+                    var excel = ExcelReporteCompleto.ExcelReportePagosDiferidos(datos, datos.Desde, datos.Hasta);
+                    reportesManager.EnviarMailReportePagosDiferidos(excel, desde.Value, hoy);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.Info("ReportePagosDiferidos - Error");
+                logger.Error(ex);
+            }
+            logger.Info("ReportePagosDiferidos - Finalizado");
+            return Content("ok");
+        }
     }
 }

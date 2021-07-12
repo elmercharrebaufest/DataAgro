@@ -9,6 +9,7 @@
             <div class="col-sm-3">
                 @Html.DropDownListFor(x => x.TipoNegocioId, new SelectList(ViewBag.TipoNegocio, "Value", "Text"), "Seleccione Tipo de Negocio", new { @class = "form-control" })
             </div>
+           
         </div>
         <div class="row-botones-material row" style="margin-top:10px;">
             <div class="col-md-2">
@@ -24,7 +25,7 @@
                 <label>Material</label>
             </div>
             <div class="col-sm-3">
-                @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Material", new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control" })
             </div>
         </div>
         <div class="row-botones-material row">
@@ -37,6 +38,12 @@
             </div>
             <div class="col-md-3">
                 @Html.TextBoxFor(m => m.HastaVigencia, new { @class = "w100" })
+            </div>
+            <div class="col-md-1">
+                <label>Destino</label>
+            </div>
+            <div class="col-sm-3">
+                @Html.DropDownListFor(x => x.DestinoId, new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione el destino", new { @class = "form-control" })
             </div>
         </div>
 
@@ -62,7 +69,7 @@
             </div>
             <div class="col-md-3">
                 @Html.TextBoxFor(m => m.HastaFijacion, new { @class = "w100" })
-            </div>
+            </div>           
         </div>
         <div class="row" style="margin-top:10px;">
             <div class="col-md-3 col-md-offset-9">

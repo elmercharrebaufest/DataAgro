@@ -38,6 +38,8 @@ namespace Molinos.DataAgro.Agent.CrearCupo {
         
         private ZMPES5500 iM_CUPOField;
         
+        private string iM_DATAAGROField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string IM_CANTIDAD_CUPOS {
@@ -71,6 +73,18 @@ namespace Molinos.DataAgro.Agent.CrearCupo {
             set {
                 this.iM_CUPOField = value;
                 this.RaisePropertyChanged("IM_CUPO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string IM_DATAAGRO {
+            get {
+                return this.iM_DATAAGROField;
+            }
+            set {
+                this.iM_DATAAGROField = value;
+                this.RaisePropertyChanged("IM_DATAAGRO");
             }
         }
         

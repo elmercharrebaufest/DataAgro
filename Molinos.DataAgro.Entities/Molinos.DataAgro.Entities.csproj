@@ -134,6 +134,7 @@
     <Compile Include="Dto\AbmFechaFeriado.cs" />
     <Compile Include="Dto\CamposSustentables.cs" />
     <Compile Include="Dto\EstadoPrecioMOADto.cs" />
+    <Compile Include="Dto\HabilitacionSustentableDto.cs" />
     <Compile Include="Dto\TipoRangoConfirmacionAutomaticaDto.cs" />
     <Compile Include="Dto\ValidarCreditoDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
@@ -318,8 +319,11 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\FijacionVirtualSAP.cs" />
     <Compile Include="Entities\AdministracionCupo.cs" />
     <Compile Include="Entities\EstadoPrecioMOA.cs" />
+    <Compile Include="Entities\HabilitacionSustentable.cs" />
+    <Compile Include="Entities\ReportePagosDiferidos.cs" />
     <Compile Include="Entities\TipoPosicionCBOT.cs" />
     <Compile Include="Entities\TipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="Entities\MotivoAnterior.cs" />

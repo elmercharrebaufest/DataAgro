@@ -50,6 +50,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         IM_CANTIDAD_CUPOS = cantidadCupos.ToString(),
                         IM_COMERCIAL = cupo.Comercial.IdActiveDirectory,
+                        IM_DATAAGRO = "X",
                         IM_CUPO = new ZMPES5500()
                         {
                             FECHA_INGRESO = cupo.FechaIngreso.ToString("yyyy-MM-dd"),
@@ -61,7 +62,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             OBSERVACIONES = cupo.Observaciones,
                             DESTINATARIO = cupo.Destinatario,
                             FLETE_PROC = cupo.FleteProcedencia == true ? "S" : "N",
-                            CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
+                            CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""                                  
                         }
                     };
 

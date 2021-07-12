@@ -32,6 +32,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IPrecioPizarraManager> precioMock;
         private Mock<ICampañaManager> campaniaMock;
         private Mock<ITipoNegocioManager> tipoNegocioMock;
+        private Mock<ICentroManager> centroManagerMock;
 
         private JavaScriptSerializer serializer;
 
@@ -44,10 +45,11 @@ namespace Molinos.DataAgro.Test.Controllers
             precioMock = new Mock<IPrecioPizarraManager>();
             campaniaMock = new Mock<ICampañaManager>();
             tipoNegocioMock = new Mock<ITipoNegocioManager>();
+            centroManagerMock = new Mock<ICentroManager>();
 
-            HttpContext.Current = Mock.FakeContext.FakeHttpContext();
+        HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new ConfiguracionInternaController(configuracionInternaMock.Object, materialMock.Object, precioMock.Object,
-                campaniaMock.Object, tipoNegocioMock.Object);
+                campaniaMock.Object, tipoNegocioMock.Object, centroManagerMock.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
@@ -71,6 +73,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             campaniaMock.Setup(x => x.TraerTodoCampania())
                 .Returns(new List<CampañaDto>());
+            centroManagerMock.Setup(x => x.TraerTodoCentro()).Returns(new ResultIniCentro() { Centro = new List<CentroIni>()});
             configuracionInternaMock.Setup(x => x.TraerPausadoGeneral())
                 .Returns(true);
 
@@ -98,6 +101,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 .Returns(new List<CampañaDto>());
             configuracionInternaMock.Setup(x => x.TraerPausadoGeneral())
                 .Returns(true);
+            centroManagerMock.Setup(x => x.TraerTodoCentro()).Returns(new ResultIniCentro() { Centro = new List<CentroIni>() });
             var listaPrecio = new List<EstadoPrecioMOADto>() { new EstadoPrecioMOADto { Descripcion = "Soja", MaterialId = 3, Habilitado = true, Id = 1 } };
             configuracionInternaMock.Setup(x => x.CambiarEstadoPrecioMOA(listaPrecio));
 

@@ -13,10 +13,12 @@
     [UsuarioCreadorId] INT NULL, 
     [FechaCreacion] DATETIME NULL, 
     [Habilitado] BIT NULL, 
+    [DestinoId] INT NULL, 
     CONSTRAINT [PK_PrecioMoa] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_PrecioMoa_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].Material ([MaterialId]),
 	CONSTRAINT [FK_PrecioMoa_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [dbo].Moneda ([MonedaId]),
 	CONSTRAINT [FK_PrecioMoa_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [dbo].TipoNegocio ([TipoNegocioId]),
-	CONSTRAINT [FK_PrecioMoa_UsuarioCreadorId] FOREIGN KEY ([UsuarioCreadorId]) REFERENCES [Comercial]([ComercialId])
+	CONSTRAINT [FK_PrecioMoa_UsuarioCreadorId] FOREIGN KEY ([UsuarioCreadorId]) REFERENCES [Comercial]([ComercialId]),
+    CONSTRAINT [FK_PrecioMoa_Destino] FOREIGN KEY ([DestinoId]) REFERENCES [Centro](Id),
 );
 

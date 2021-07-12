@@ -570,7 +570,7 @@ namespace WebDataAgro.Services
             //contratoSAP.Calidad = contratoSAP.Calidad ?? new List<CalidadSAP>();
             //contratoSAP.DescuentoBonificaciones = contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>();
             fijacionSAP.Apertura = fijacionSAP.Apertura ?? new List<AperturaPrecioSap>();
-            //fijacionSAP.Procedencia = fijacionSAP.Procedencia != null ? fijacionSAP.Procedencia.Trim() : fijacionSAP.Procedencia;
+            //fijacionSAP.Procedencia = fijacionSAP.Procedencia != null ? fijacionSAP.Procedencia.Trim() : fijacionSAP.Procedencia;           
             var oEntityErrors = new ResultadoSap();
             try
             {
@@ -603,6 +603,10 @@ namespace WebDataAgro.Services
                 fijacion.CorredorId = !string.IsNullOrEmpty(fijacionSAP.CuitCorredor) ? repositorio.Obtener<CorredorProveedor, int>(x => x.Corredor.CUIT == fijacionSAP.CuitCorredor, x => x.CorredorId) : (int?)null;
                 fijacion.DiasPesificado = fijacionSAP.DiasDiferimiento == 0 ? (int?)null : fijacionSAP.DiasDiferimiento;
                 fijacion.PagoDiferido = fijacionSAP.DiasDiferimiento > 0;
+                var hora = DateTime.ParseExact(fijacionSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
+                TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
+                fijacion.Fecha = DateTime.ParseExact(fijacionSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                fijacion.Fecha = fijacion.Fecha.Add(time);
                 fijacion.FechaOperacion = DateTime.ParseExact(fijacionSAP.FechaOperacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 fijacion.MotivoOperacionAnterior = fijacion.FechaOperacion.Date < fijacion.Fecha.Date ? "Cargado desde SAP" : "";
                 fijacion.FechaHasta = DateTime.ParseExact(fijacionSAP.FechaHasta, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -618,11 +622,9 @@ namespace WebDataAgro.Services
                 fijacion.ComercialId = comercial.ComercialId;
                 fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
                 fijacion.GrupoCompra = comercial.GrupoDeComprasId;
-                var hora = DateTime.ParseExact(fijacionSAP.HORAACT, "HH:mm:ss", CultureInfo.InvariantCulture);
-                TimeSpan time = new TimeSpan(hora.Hour, hora.Minute, hora.Second);
-                fijacion.Fecha = DateTime.ParseExact(fijacionSAP.FechaCreacion, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                fijacion.Fecha = fijacion.Fecha.Add(time);
+               
                 fijacion.Canje = fijacionSAP.Canje == "X" ? true : false;
+                fijacion.Virtual = fijacionSAP.Virtual == "X" ? true : false;
                 logger.Debug("Alta fijacion Apertura");
 
                 var aperturas = new List<AperturaPrecio>();
@@ -643,12 +645,14 @@ namespace WebDataAgro.Services
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
                 }
+                
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
                 }
                 fijacion.AperturaPrecio = aperturas;
-                var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion);
+                var resultado = fijacionDePrecioContratoManager.AltaFijacionSap(fijacion, fijacionSAP.FijacionVirtuales);
+
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
             catch (Exception ex)

@@ -1816,6 +1816,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reasignar Proveedor Pantalla Cupo.
+        /// </summary>
+        public static string ReasignarProveedorPantallaCupo {
+            get {
+                return ResourceManager.GetString("ReasignarProveedorPantallaCupo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rechazar Negocios.
         /// </summary>
         public static string Rechazar_Negocios {
@@ -2203,6 +2212,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string VisualizarReporteDolarizado {
             get {
                 return ResourceManager.GetString("VisualizarReporteDolarizado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Reporte Pago Diferido.
+        /// </summary>
+        public static string VisualizarReportePagoDiferido {
+            get {
+                return ResourceManager.GetString("VisualizarReportePagoDiferido", resourceCulture);
             }
         }
         

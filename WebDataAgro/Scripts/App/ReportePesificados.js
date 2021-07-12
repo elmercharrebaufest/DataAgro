@@ -135,6 +135,19 @@ function Inicializar() {
             {
                 field: "KgTotales", title: "Kilos Totales", format: "{0:n0}"
             },
+
+            {
+                field: "USDPesificable", title: "USD Kilos Pesificable", format: "{0:n0}"
+            },
+            {
+                field: "USDNoPesificable", title: "USD Kilos No Pesificables", format: "{0:n0}"
+            },
+            {
+                field: "USDTotal", title: "USD Kilos Totales", format: "{0:n0}"
+            },
+            {
+                field: "USDTotalizador", title: "Totalizador", format: "{0:n0}"
+            },
             
             {
                 field: "Precio", type: "number", format: "{0:n2}"

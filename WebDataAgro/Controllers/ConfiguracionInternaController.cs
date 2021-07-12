@@ -21,14 +21,17 @@ namespace WebDataAgro.Controllers
         private readonly IPrecioPizarraManager precioPizarraManager;
         private readonly ICampañaManager campañaManager;
         private readonly ITipoNegocioManager tipoNegocioManager;
+        private readonly ICentroManager centroManager;
 
-        public ConfiguracionInternaController(IConfiguracionInternaManager configuracionManager, IMaterialManager materialManager, IPrecioPizarraManager precioPizarraManager, ICampañaManager campañaManager, ITipoNegocioManager tipoNegocioManager)
+        public ConfiguracionInternaController(IConfiguracionInternaManager configuracionManager, IMaterialManager materialManager, 
+            IPrecioPizarraManager precioPizarraManager, ICampañaManager campañaManager, ITipoNegocioManager tipoNegocioManager, ICentroManager centroManager)
         {
             this.configuracionManager = configuracionManager;
             this.materialManager = materialManager;
             this.precioPizarraManager = precioPizarraManager;
             this.campañaManager = campañaManager;
             this.tipoNegocioManager = tipoNegocioManager;
+            this.centroManager = centroManager;
         }
 
         [Autorizacion(PermisosDataAgro.ConfiguracionesInternas)]
@@ -134,7 +137,8 @@ namespace WebDataAgro.Controllers
                 HastaEntrega = configuracion.HastaEntrega,
                 DesdeFijacion = configuracion.DesdeFijacion,
                 HastaFijacion = configuracion.HastaFijacion,
-                Habilitado = configuracion.Pausar
+                Habilitado = configuracion.Pausar,
+                DestinoId = configuracion.DestinoId
             };
             return entidad;
         }
@@ -214,6 +218,14 @@ namespace WebDataAgro.Controllers
                     }).OrderBy(x => x.Value);
             ViewBag.TipoNegocioPizarra = tiponegociopizarralist;
 
+            var tiponegocioSustentalbelist = tiponegocio.Where(a => a.TipoNegocioId == 1 || a.TipoNegocioId == 2).Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.TipoNegocioId.ToString()
+                    }).OrderBy(x => x.Value);
+            ViewBag.TipoNegocioSustentable = tiponegocioSustentalbelist;
+
             var campaña = campañaManager.TraerTodoCampania();
             var campañaList = campaña.Select(
                     x => new SelectListItem
@@ -223,6 +235,17 @@ namespace WebDataAgro.Controllers
                     }).OrderBy(x => x.Value);
             ViewBag.Campaña = campañaList;
             ViewBag.Habilitado = configuracionManager.TraerPausadoGeneral();
+
+            var centro = centroManager.TraerTodoCentro();
+            var centroListItems = centro.Centro.Select(
+                   x => new SelectListItem
+                   {
+                       Text = x.Descripcion,
+                       Value = x.Id.ToString(),
+                       Selected = false
+                   }).OrderBy(x => x.Value);
+            ViewBag.Centro = centroListItems;
+
         }
         public ActionResult EliminarPrecio(int id)
         {
@@ -307,6 +330,51 @@ namespace WebDataAgro.Controllers
                 Data = "",
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+
+        public ActionResult GrabarSustentablePartial()
+        {
+            var hoy = DateTime.Today;
+            CargarViewBag();
+            return PartialView("_GrabarSustentablePartial", new ConfiguracionInternaModel
+            {
+                MonedaId = "USDM ",
+                DesdeVigenciaSustentable = hoy.ToShortDateString() + " 00:00",
+                HastaVigenciaSustentable = hoy.ToShortDateString() + " 23:59",
+                HabilitacionSustentable = configuracionManager.TraerSustentables()
+            });
+        }
+
+        [HttpPost]
+        public ActionResult GuardarSustentable(ConfiguracionInternaModel configuracion)
+        {
+            configuracion.ResultadoSustentable = configuracionManager.GrabarSustentable(TransformarAEntidadSustentable(configuracion), GlobalVariables.IdActiveDirectory);
+            configuracion.HabilitacionSustentable = configuracionManager.TraerSustentables();
+            return PartialView("_ListaSustentable", configuracion);
+        }
+        public ActionResult EliminarSustentable(int id)
+        {
+            return PartialView("_ListaSustentable", new ConfiguracionInternaModel
+            {
+                ResultadoSustentable = configuracionManager.EliminarSustentable(id),
+                HabilitacionSustentable = configuracionManager.TraerSustentables()
+            });
+        }
+
+        private HabilitacionSustentable TransformarAEntidadSustentable(ConfiguracionInternaModel configuracion)
+        {
+            var entidad = new HabilitacionSustentable
+            {
+                DesdeVigencia = DateTime.Parse(configuracion.DesdeVigenciaSustentable),
+                HastaVigencia = DateTime.Parse(configuracion.HastaVigenciaSustentable),
+                MonedaId = configuracion.MonedaId,
+                Precio = configuracion.PrecioSustentable,
+                TipoNegocioId = configuracion.TipoNegocioId,
+                DesdeEntrega = configuracion.DesdeEntregaSustentable,
+                HastaEntrega = configuracion.HastaEntregaSustentable
+            };
+            return entidad;
         }
 
     }

@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities.Dto
-{
+    {
     public class FijacionSAPDto
     {
         public string FijacionSAP { get; set; }
         public string ZLSCH { get; set; }
         public string CUENTA_MRP { get; set; }
-      
+
         public decimal Cantidad { get; set; } // Cantidad
         public decimal Precio { get; set; } // Precio      
         public string FechaDesde { get; set; } // FechaDesde
@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? PrecioNeto { get; set; }
         public bool? PagoDiferido { get; set; }
         public string Posicion { get; set; }
-        public string MotivoRechazo { get; set; }   
+        public string MotivoRechazo { get; set; }
         public string Centro { get; set; }
         public string CuitCorredor { get; set; }
         public int DiasDiferimiento { get; set; }
@@ -41,5 +41,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Canje { get; set; }
         public string HORAACT { get; set; }
         public string FechaCreacion { get; set; }
+        public List<FijacionVirtualSAPDto> FijacionVirtuales { get; set; } = new List<FijacionVirtualSAPDto>();
+        public string Virtual { get; set; }
     }
+    
+    public class FijacionVirtualSAPDto
+    {        
+        public string NumeroFijacionVirtual { get; set; } 
+        public int Cantidad { get; set; }
+
+    }
+
+ 
 }
+

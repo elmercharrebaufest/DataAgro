@@ -18,5 +18,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? HastaEntrega { get; set; }
         public DateTime? DesdeFijacion { get; set; }
         public DateTime? HastaFijacion { get; set; }
+        public int? DestinoId { get; set; }
+        public string Destino { get; set; }
     }
 }

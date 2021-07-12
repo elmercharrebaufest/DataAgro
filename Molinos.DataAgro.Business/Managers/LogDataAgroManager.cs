@@ -42,7 +42,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato)
         {
-            var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "Fecha_Order", "GrupoCompra", "Estado_Order", "DesdeFijacionFormateado", "FechaCiertaFormateado", "FechaDesdeFormateado", "FechaFormateado", "FechaHastaFormateado", "FechaOperacionFormateado", "Fecha_DolarizadoFormateado", "HastaFijacionFormateado", "ProveedorCreador", "FechaCiertaTilde" });
+             var resolver = new IgnorePropertiesResolver(new[] { "Estado", "CantidadMaximaCupo", "Fecha_Order", "GrupoCompra", "Estado_Order", "DesdeFijacionFormateado", "FechaCiertaFormateado", "FechaDesdeFormateado", "FechaFormateado", "FechaHastaFormateado", "FechaOperacionFormateado", "Fecha_DolarizadoFormateado", "HastaFijacionFormateado", "ProveedorCreador", "FechaCiertaTilde" });
             string descripcion = string.IsNullOrEmpty(cambios.ContratoSAP) ? cambios.Id.ToString() : cambios.Id.ToString() + " - " + cambios.ContratoSAP.TrimStart('0');
 
             if (cambios.TipoNegocioId == 3)
@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 usuario = cambios.UsuarioId;
             }
-            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, cambios.ProveedorId, cambios.CorredorId == 0 ? (int?)null : cambios.CorredorId, resolver, usuario);
+            return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Negocio - " + cambios.TipoNegocio, descripcion, cambios.ProveedorId == 0 ? (int?)null : cambios.ProveedorId, cambios.CorredorId == 0 ? (int?)null : cambios.CorredorId, resolver, usuario);
         }
         public int LogCambiosDataAgro(StoredPorProveedorResult cambios, TipoAccionLogDataAgro tipoDeAccion, int idProveedor)
         {
@@ -753,7 +753,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             List<string> contratosap = new List<string> { "Contrato SAP", "ContratoSAP", "Contrato Vendedor", "ContratoVendedor" };
             List<string> noFormatear = new List<string> { "UsuarioTercero" };
-            List<string> noEsNumero = new List<string> { "CUIT", "CodigoPostal", "Telefono1", "Email1", "EstadoCuit" };
+            List<string> noEsNumero = new List<string> { "CUIT", "CodigoPostal", "Telefono1", "Email1", "EstadoCuit", "Dias_Pesificado", "ContratoSAP", "FijacionSap", "Cuit", "Negocio" };
             if (contratosap.Contains(campo))
             {
                 return s.TrimStart('0');
@@ -833,6 +833,11 @@ namespace Molinos.DataAgro.Business.Managers
         public int LogCambiosDataAgro(HabilitacionCampañaDto cambios, TipoAccionLogDataAgro tipoDeAccion)
         {
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionCampaña", cambios.Campaña + " - " + cambios.Material);
+        }
+
+        public void LogCambiosDataAgro(HabilitacionSustentableDto cambios, TipoAccionLogDataAgro tipoDeAccion)
+        {
+            LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "HabilitacionSustentable", cambios.TipoNegocio);
         }
     }
 }

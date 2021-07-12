@@ -12,7 +12,7 @@ $(document).ready(function () {
 function InicializarElementos() {
     var hoy = new Date();
     pausado = ConvertirStringABool(pausado);
- 
+
     $("#DesdeVigencia").kendoDateTimePicker();
     $("#HastaVigencia").kendoDateTimePicker();
     $("#DesdeVigenciaPago").kendoDateTimePicker();
@@ -27,7 +27,7 @@ function InicializarElementos() {
         min: 0
     });
     $("#CantidadDia").kendoNumericTextBox({
-        culture: "es-AR",    
+        culture: "es-AR",
         format: "n0",
         spinners: false
     });
@@ -37,6 +37,13 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
+
+    $("#PrecioSustentable").kendoNumericTextBox({ culture: "es-AR", format: "n2", spinners: false, min: 0 });
+    $("#DesdeVigenciaSustentable").kendoDateTimePicker();
+    $("#HastaVigenciaSustentable").kendoDateTimePicker();
+    $("#DesdeEntregaSustentable").kendoDatePicker();
+    $("#HastaEntregaSustentable").kendoDatePicker();
+
     $("#DiaPizarra").kendoDatePicker();
     $("#DiaPizarraHasta").kendoDatePicker();
     $("#DesdeEntregaPizarra").kendoDatePicker();
@@ -72,6 +79,11 @@ function InicializarElementos() {
         DeseleccionarForms();
         $("#PagoTab").children().addClass("whc-selected");
         $("#HabilitacionPagoDiferido").show();
+    });
+    $("#SustentableTab").click(function () {
+        DeseleccionarForms();
+        $("#SustentableTab").children().addClass("whc-selected");
+        $("#HabilitacionSustentable").show();
     });
 
     $("#TipoNegocioId").change(function () {
@@ -134,8 +146,8 @@ function InicializarElementos() {
     if (pausado == true) {
         $(".pausado").prop("checked", this.checked);
     }
- 
-    
+
+
 }
 
 function LimpiarPrecioForm() {
@@ -175,7 +187,16 @@ function LimpiarFijacionForm() {
     $("#FijacionDia").val(stringDia);
     $("#MaterialFijacionId").val("");
 }
-
+function LimpiarSustentableForm() {
+    $("#MonedaId").val("");
+    var hoy = new Date();
+    var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
+    $("#PrecioSustentable").data("kendoNumericTextBox").value("0");
+    $("#DesdeVigenciaSustentable").val(stringDia + " " + "00:00");
+    $("#HastaVigenciaSustentable").val(stringDia + " " + "23:59");
+    $("#DesdeEntregaSustentable").data("kendoDatePicker").value("");
+    $("#HastaEntregaSustentable").data("kendoDatePicker").value("");
+}
 function DeseleccionarForms() {
     $("#PrecioTab").children().removeClass("whc-selected");
     $("#PrecioMoa").hide();
@@ -187,6 +208,8 @@ function DeseleccionarForms() {
     $("#HabilitacionCampaña").hide();
     $("#PagoTab").children().removeClass("whc-selected");
     $("#HabilitacionPagoDiferido").hide();
+    $("#SustentableTab").children().removeClass("whc-selected");
+    $("#HabilitacionSustentable").hide();
 }
 
 function mostrarocultar(element) {
@@ -203,6 +226,7 @@ function copiarPrecioMOA(configuracion) {
     $("#TipoNegocioId").change();
     $("#MonedaId").val(configuracion.MonedaId);
     $("#MaterialId").val(configuracion.MaterialId);
+    $("#DestinoId").val(configuracion.DestinoId);
     if (configuracion.Precio > 0) {
         $("#Precio").data("kendoNumericTextBox").value(configuracion.Precio);
     }
@@ -213,10 +237,10 @@ function copiarPrecioMOA(configuracion) {
     $("#DesdeEntrega").data("kendoDatePicker").value(new Date(configuracion.DesdeEntrega));
     $("#HastaEntrega").data("kendoDatePicker").value(new Date(configuracion.HastaEntrega));
     if (configuracion.DesdeFijacion != null) {
-        $("#DesdeFijacion").data("kendoDatePicker").value(new Date(configuracion.DesdeFijacion ));
+        $("#DesdeFijacion").data("kendoDatePicker").value(new Date(configuracion.DesdeFijacion));
     }
     if (configuracion.HastaFijacion != null) {
-        $("#HastaFijacion").data("kendoDatePicker").value(new Date(configuracion.HastaFijacion ));
+        $("#HastaFijacion").data("kendoDatePicker").value(new Date(configuracion.HastaFijacion));
     }
 }
 
@@ -235,7 +259,7 @@ function copiarPago(configuracion) {
     var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
     $("#DesdeVigenciaPago").val(stringDia + " " + "00:00");
     $("#HastaVigenciaPago").val(stringDia + " " + "23:59");
-  
+
 }
 
 //function Pausar() {  
@@ -252,7 +276,7 @@ function ObtenerDatosMaterialHabilitado() {
     lista.push(obj);
     for (var i = 0; i < material.length; i++) {
         obj = {}
-        obj.MaterialId = material[i].MaterialId;        
+        obj.MaterialId = material[i].MaterialId;
         obj.Habilitado = $("#" + material[i].MaterialId).is(":checked");
         lista.push(obj);
     }

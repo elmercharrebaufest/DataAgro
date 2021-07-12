@@ -13,9 +13,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Net.Mail;
 using System.Reflection;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -27,15 +29,17 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ITipoDeCambioAgent tipoDeCambio;
         private ILogger logger;
         private readonly IContratosAPesificarAgent pesificarAgent;
+        private readonly IMailManager mailManager;
 
         public ReportesManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
-            ITipoDeCambioAgent tipoDeCambio, IContratosAPesificarAgent pesificarAgent)
+            ITipoDeCambioAgent tipoDeCambio, IContratosAPesificarAgent pesificarAgent, IMailManager mailManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.oComercial = oComercial;
             this.tipoDeCambio = tipoDeCambio;
             this.pesificarAgent = pesificarAgent;
+            this.mailManager = mailManager;
         }
 
         //--------------------------------------------------
@@ -1590,8 +1594,8 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDesdeDate = x.FechaDesde,
                 FechaHastaDate = x.FechaHasta,
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
-                Cantidad =  SqlFunctions.StringConvert((double)x.Cantidad),
-                CantidadD =  (double)x.Cantidad,
+                Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
+                CantidadD = (double)x.Cantidad,
                 CantidadCamiones = "",
                 Campana = "",
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
@@ -2636,7 +2640,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Fijacion = item.Fijacion,
                 KgNoPesificable = item.KgNoPesificable,
                 KgVencimientoPesificable = item.KgVencimientoPesificable,
-                KgTotales = item.KgNoPesificable + item.KgVencimientoPesificable,
+                KgTotales = item.KgTotales,
                 MaterialId = materiales.Where(x => x.Codigo == item.Material).FirstOrDefault() != null ? materiales.Where(x => x.Codigo == item.Material).FirstOrDefault().MaterialId : (int?)null,
                 Unidad = item.Unidad,
                 MonedaId = item.Moneda,
@@ -2659,7 +2663,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         cuits.AddRange(f.Filters.Select(a => a.Value.ToString()).ToList());
                     }
-                }                          
+                }
 
                 FiltrarBooleano(filtro);
             }
@@ -2732,11 +2736,11 @@ namespace Molinos.DataAgro.Business.Managers
                 if (filtro.Filter.Filters.Any(x => x.Field == dolarizado))
                 {
                     filter.Add(new Filter { Field = dolarizado, Operator = "eq", Value = true });
-                                                       
+
                 }
                 if (filtro.Filter.Filters.Any(x => x.Field == dolarizadoExpress))
                 {
-                filter.Add(new Filter { Field = dolarizadoExpress, Operator = "eq", Value = true });
+                    filter.Add(new Filter { Field = dolarizadoExpress, Operator = "eq", Value = true });
                 }
                 if (filtro.Filter.Filters.Any(x => x.Field == noProductor))
                 {
@@ -2766,5 +2770,182 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodoPrecioMoaPizarra(request));
         }
+
+        public ResultReportePagosDiferidos ObtenerDatosReportePagosDiferidos(DateTime desde, DateTime hasta)
+        {
+            var hoy = DateTime.Now.Date;
+
+            decimal tna = decimal.Parse(ConfigurationManager.AppSettings["TNAReportePagosDiferidos"]) / 100;
+            var dias = new List<DateTime>();
+            var desdeDias = new DateTime(hoy.Year, hoy.Month, 1);
+            var hastaDias = new DateTime(hoy.Year, hoy.Month + 1, 1).AddDays(-1);
+            while (desdeDias <= hastaDias)
+            {
+                dias.Add(desdeDias);
+                desdeDias = desdeDias.AddDays(1);
+            }
+            desdeDias = new DateTime(hoy.Year, hoy.Month, 1);
+
+
+            var cotizaciones = new Dictionary<DateTime, decimal>();            
+            var dia = desde;
+            while (dia <= hasta)
+            {
+                cotizaciones.Add(dia, tipoDeCambio.TraerTipoDeCambio(dia));
+                dia = dia.AddDays(1);
+            }
+            List<ReportePagosDiferidos> datos = repositorio.Listar<Negocio, ReportePagosDiferidos>(x => new ReportePagosDiferidos
+            {
+                ContratoSAP = x.ContratoSAP,
+                Vendedor = x.Proveedor.RazonSocial,
+                VendedorCUIT = x.Proveedor.CUIT,
+                VendedorID = x.ProveedorId,
+                Corredor = x.Corredor == null ? "" : x.Corredor.RazonSocial,
+                CorredorCUIT = x.Corredor == null ? "" : x.Corredor.CUIT,
+                CorredorId = x.CorredorId,
+                Tn = x.Cantidad / 1000,
+                TNA = tna,
+                Precio = x.Precio,
+                Plazo = x.DiasPesificado.Value,
+                Toma = x.FechaOperacion,
+
+            },
+            x => (x.TipoNegocioId == 2 || x.TipoNegocioId == 3)
+            && (x.EstadoId == (int)EnumEstadoContrato.Confirmado || x.EstadoId == (int)EnumEstadoContrato.Finalizado)
+            && x.PagoDiferido == true && x.DiasPesificado > 0
+            && x.FechaOperacion >= desde && x.FechaOperacion <= hasta
+            );
+            ////para las pruebas
+            //datos = new List<ReportePagosDiferidos>();
+            //datos.Add(new ReportePagosDiferidos { ContratoSAP = "1", Tn = 5000, PrecioUSD = 230, Precio = 230 * 94, Plazo = 33, Toma = desde, TNA = tna  });
+            //datos.Add(new ReportePagosDiferidos { ContratoSAP = "6", Tn = 200, PrecioUSD = 270, Precio = 270 * 94, Plazo = 80, Toma = hasta, TNA = tna  });
+
+            foreach (var x in datos)
+            {
+                x.TipoCambio = cotizaciones.Where(a => a.Key == x.Toma).First().Value;
+                x.PrecioUSD = x.Precio / x.TipoCambio;
+                x.Capital = x.Precio * Convert.ToDecimal(x.Tn);
+
+                decimal Number1 = (tna * x.Plazo / 365m + 1);
+                decimal Number2 = 365m / x.Plazo;
+                decimal resultado = Convert.ToDecimal(Math.Pow(Convert.ToDouble(Number1), Convert.ToDouble(Number2)) - 1);
+                x.TEA = resultado;
+                x.Vencimiento = x.Toma.AddDays(x.Plazo);
+                x.Estado = hoy >= x.Vencimiento ? "Cancelado" : hoy >= x.Toma ? "Vigente" : "";
+                x.AlVencimiento = x.Estado == "Vigente" ? Convert.ToInt32((x.Vencimiento.Date - hoy).TotalDays) : 0;
+                x.InteresesTotales = x.Capital * tna / 365 * x.Plazo;
+                x.CapitalMasIntereses = x.Capital + x.InteresesTotales;
+                x.InteresesPorDia = x.InteresesTotales / x.Plazo;
+                x.AcumuladoMesAnterior = x.Vencimiento > hasta && x.Toma <= desde ? x.InteresesPorDia * (Convert.ToInt32((desdeDias - x.Toma).TotalDays) + 1) : 0;
+                x.M2MMes = ObtenerM2MMes(x, desdeDias, hastaDias );
+                x.DevengadoMes = ObtenerDebengadoMes(x, desdeDias, hastaDias);
+                x.DevengadoMes = ObtenerDebengadoMes(x, desdeDias, hastaDias);
+                x.Dias = ObtenerDias(x, dias);
+
+            }
+            return new ResultReportePagosDiferidos { Contratos = datos, Desde = desdeDias, Hasta = hastaDias };
+
+
+        }
+
+        public void EnviarMailReportePagosDiferidos(byte[] datos, DateTime desde, DateTime hoy)
+        {
+
+            string cuerpoMail = "";
+
+            if (datos != null)
+            {
+                cuerpoMail = $"Se envian adjuntos los contratos con pago diferido en el rango de fechas {desde.ToString("dd-MM-yyyy")} - {hoy.ToString("dd-MM-yyyy")} ";
+            }
+            else
+            {
+                cuerpoMail = $"No hay contratos con pago diferido en el rango de fechas {desde.ToString("dd-MM-yyyy")} - {hoy.ToString("dd-MM-yyyy")} ";
+            }
+
+            mailManager.EnviarMail(repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VisualizarReportePagoDiferido))),
+                                                               "Diferidos " + hoy.Day + "/" + hoy.Month,
+                                                                   string.Empty,
+                                                                       null,
+                                                                           AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),
+                                                                               datos,
+                                                                                   "Diferidos.xlsx");
+
+        }
+
+        private decimal ObtenerM2MMes(ReportePagosDiferidos x, DateTime desde, DateTime hasta)
+        {
+            decimal result;
+
+            if (x.Toma <= desde && x.Vencimiento > hasta && desde <= hasta)
+            {
+                result = x.InteresesPorDia * Convert.ToDecimal((hasta - desde).TotalDays);
+            }
+            else
+            {
+                if (x.Toma > desde && x.Vencimiento > hasta && x.Toma <= hasta && x.Toma >= desde && desde <= hasta)
+                {
+                    result = x.InteresesPorDia * (Convert.ToDecimal((hasta - x.Toma).TotalDays) + 1);
+                }
+                else
+                {
+                    result = 0;
+                }
+            }
+
+            return result;
+        }
+        private decimal ObtenerDebengadoMes(ReportePagosDiferidos x, DateTime desde, DateTime hasta)
+        {
+            decimal result;
+
+            if (x.Toma <= desde && x.Vencimiento > hasta)
+            {
+                result = x.InteresesPorDia * Convert.ToDecimal((hasta - desde).TotalDays);
+            }
+            else
+            {
+                if (x.Toma <= desde && x.Vencimiento <= hasta && x.Vencimiento > desde)
+                {
+                    result = x.InteresesPorDia * (Convert.ToDecimal((x.Vencimiento - desde).TotalDays) - 1);
+                }
+                else
+                {
+                    if (x.Toma > desde && x.Vencimiento > hasta && x.Toma <= hasta)
+                    {
+                        result = x.InteresesPorDia * (Convert.ToDecimal((hasta - x.Toma).TotalDays) + 1);
+                    }
+                    else
+                    {
+                        if (x.Toma > desde && x.Vencimiento <= hasta)
+                        {
+                            result = x.InteresesPorDia * Convert.ToDecimal((x.Vencimiento - x.Toma).TotalDays);
+                        }
+                        else
+                        {
+                            result = 0;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+        private List<ReportePagosDiferidosDia> ObtenerDias(ReportePagosDiferidos x, List<DateTime> dias)
+        {
+            List<ReportePagosDiferidosDia> result = new List<ReportePagosDiferidosDia>();
+            foreach (var dia in dias)
+            {
+                var item = new ReportePagosDiferidosDia
+                {
+                    Dia = dia,
+                    Importe = (dia >= x.Toma && dia < x.Vencimiento ? x.Capital : 0) + (dia >= x.Toma && dia < x.Vencimiento ? x.InteresesPorDia * (Convert.ToDecimal((dia - x.Toma).TotalDays) + 1) : 0)
+                };
+                result.Add(item);
+            }
+
+
+            return result;
+        }
+
     }
 }

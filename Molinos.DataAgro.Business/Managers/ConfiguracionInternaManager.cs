@@ -130,6 +130,40 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
+        public Resultado GrabarSustentable(HabilitacionSustentable oConfiguracion, string active)
+        {
+            var oEntityErrors = ValidarSustentable(oConfiguracion);
+
+            if (oEntityErrors.HayErrores)
+            {
+                return oEntityErrors;
+            }
+            else
+            {
+                oConfiguracion.UsuarioCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
+                oConfiguracion.FechaCreacion = DateTime.Now;
+                repositorio.Agregar(oConfiguracion);
+            }
+            try
+            {
+                var tipo = oConfiguracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
+                repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(TraerSustentable(oConfiguracion.Id), tipo);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                oEntityErrors.Error(ex.Source, ex.Message);
+                throw;
+            }
+            if (!oEntityErrors.HayError)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se guardó correctamente"));
+                logger.Debug("Se guardó correctamente");
+            }
+            return oEntityErrors;
+        }
+
 
         public List<PrecioMoaDto> TraerPrecios()
         {
@@ -150,9 +184,12 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocio = x.TipoNegocio.Descripcion,
                 MonedaId = x.MonedaId,
                 Precio = x.Precio,
-                Pausar = x.Habilitado
+                Pausar = x.Habilitado,
+                Destino = x.Destino.Descripcion,
+                DestinoId = x.DestinoId
             },
-           x => (x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy) || x.DesdeVigencia >= hoy || (x.DesdeVigencia <= ultimoDiaHabil && x.HastaVigencia >= ultimoDiaHabil))
+           x => (x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy) || x.DesdeVigencia >= hoy || 
+           (x.DesdeVigencia <= ultimoDiaHabil && x.HastaVigencia >= ultimoDiaHabil))
                 .OrderBy(x => x.DesdeVigencia).ThenBy(x => x.MaterialId).ToList();
             return lista;
         }
@@ -207,6 +244,27 @@ namespace Molinos.DataAgro.Business.Managers
                 //TipoNegocioId = x.TipoNegocioId
             }, x => x.Habilitado && x.HastaVigencia >= hoy, 0, "DesdeVigencia", Entities.Helpers.DirOrden.Asc).ToList();
 
+            return lista;
+        }
+
+        public List<HabilitacionSustentableDto> TraerSustentables()
+        {
+            var hoy = DateTime.Now;
+            var ultimoDiaHabil = diasHabilesAgent.UltimoDiaHabil(null);
+            var lista = repositorio.Listar<HabilitacionSustentable, HabilitacionSustentableDto>(x => new HabilitacionSustentableDto
+            {
+                Id = x.Id,
+                DesdeVigencia = x.DesdeVigencia,
+                HastaVigencia = x.HastaVigencia,
+                DesdeEntrega = x.DesdeEntrega.Value,
+                HastaEntrega = x.HastaEntrega.Value,
+                TipoNegocioId = x.TipoNegocioId,
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                MonedaId = x.MonedaId,
+                Precio = x.Precio,
+            },
+           x => (x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy) || x.DesdeVigencia >= hoy || (x.DesdeVigencia <= ultimoDiaHabil && x.HastaVigencia >= ultimoDiaHabil))
+                .OrderBy(x => x.DesdeVigencia).ToList();
             return lista;
         }
         public Resultado EliminarPrecio(int id)
@@ -356,7 +414,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var existe = repositorio.Existe<PrecioMoa>(x =>
                     ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
                     && ((precio.DesdeEntrega >= x.DesdeEntrega && precio.DesdeEntrega <= x.HastaEntrega) || (precio.HastaEntrega >= x.DesdeEntrega && precio.HastaEntrega <= x.HastaEntrega))
-                    && x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId);
+                    && x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId && (x.DestinoId == precio.DestinoId || x.DestinoId == null));
 
                     if (existe)
                     {
@@ -368,7 +426,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var existe = repositorio.Existe<PrecioMoa>(x =>
                     ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
                     && ((precio.DesdeEntrega >= x.DesdeEntrega && precio.DesdeEntrega <= x.HastaEntrega) || (precio.HastaEntrega >= x.DesdeEntrega && precio.HastaEntrega <= x.HastaEntrega))
-                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId);
+                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId && (x.DestinoId == precio.DestinoId || x.DestinoId == null));
 
                     if (existe)
                     {
@@ -379,7 +437,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var existe = repositorio.Existe<PrecioMoa>(x =>
                     ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
-                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId);
+                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId && (x.DestinoId == precio.DestinoId || x.DestinoId == null));
 
                     if (existe)
                     {
@@ -502,6 +560,69 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
+        private Resultado ValidarSustentable(HabilitacionSustentable precio)
+        {
+            var error = new Resultado();
+            if (precio.TipoNegocioId == 0)
+            {
+                error.Error("TipoNegocioId", "Debe Seleccionar Tipo de Negocio");
+            }
+            else
+            {
+
+                //entrega
+                if (precio.DesdeEntrega == null)
+                {
+                    error.Error("DesdeEntrega", "Debe Seleccionar Desde Entrega");
+                }
+                if (precio.HastaEntrega == null)
+                {
+                    error.Error("HastaEntrega", "Debe Seleccionar Hasta Entrega");
+                }
+
+                if (precio.DesdeEntrega < DateTime.Now.Date)
+                {
+                    error.Error("DesdeEntrega", "Desde Entrega no debe ser anterior al dia de la fecha");
+                }
+                if (precio.HastaEntrega < DateTime.Now.Date)
+                {
+                    error.Error("HastaEntrega", "Hasta Entrega no debe ser anterior al dia de la fecha");
+                }
+
+                if (precio.HastaEntrega < precio.DesdeEntrega)
+                {
+                    error.Error("HastaEntrega", "Hasta Entrega debe ser mayor a Desde Entrega");
+                }
+
+                if (string.IsNullOrEmpty(precio.MonedaId))
+                {
+                    error.Error("Moneda", "Debe Seleccionar Moneda");
+                }
+
+                var existe = repositorio.Existe<HabilitacionSustentable>(x =>
+                ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
+                && ((precio.DesdeEntrega >= x.DesdeEntrega && precio.DesdeEntrega <= x.HastaEntrega) || (precio.HastaEntrega >= x.DesdeEntrega && precio.HastaEntrega <= x.HastaEntrega))
+                && x.TipoNegocioId == precio.TipoNegocioId);
+                if (existe)
+                {
+                    error.Error("Precio", "Existe configuracion para ese Tipo de Negocio y ese rango de entrega y vigencia");
+                }
+            }
+
+            if (precio.DesdeVigencia > precio.HastaVigencia)
+            {
+                error.Error("Fecha", "La vigencia desde no debe ser mayor al Hasta");
+            }
+            if (precio.DesdeVigencia < DateTime.Today)
+            {
+                error.Error("Fecha", "Vigencia no debe ser anterior al dia de la fecha");
+            }
+
+
+
+            return error;
+        }
+        
         public IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioCompraNet(int? tiponegocio = null)
         {
             tiponegocio = tiponegocio == null ? 3 : 0;
@@ -523,10 +644,12 @@ namespace Molinos.DataAgro.Business.Managers
                 DesdeEntrega = x.DesdeEntrega,
                 DesdeFijacion = x.DesdeFijacion,
                 HastaEntrega = x.HastaEntrega,
-                HastaFijacion = x.HastaFijacion
-            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora 
-            && (x.TipoNegocioId == tiponegocio || tiponegocio == 0) && (habilitado.Contains(x.MaterialId) || 
-            (x.Habilitado.HasValue && x.Habilitado.Value)));
+                HastaFijacion = x.HastaFijacion,
+                DestinoId = x.DestinoId,
+                Destino = x.Destino.Descripcion
+            }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora
+            && (x.TipoNegocioId == tiponegocio || tiponegocio == 0) && (habilitado.Contains(x.MaterialId) ||
+            (x.Habilitado.HasValue && x.Habilitado.Value)), 0, "DestinoId", Entities.Helpers.DirOrden.Desc);
             var hoy = DateTime.Today;
             var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && (x.TipoNegocioId == tiponegocio || tiponegocio == 0) && (habilitado.Contains(x.MaterialId) ||
             (x.Habilitado.HasValue && x.Habilitado.Value)));
@@ -708,7 +831,21 @@ namespace Molinos.DataAgro.Business.Managers
 
             return lista;
         }
-
+        public HabilitacionSustentableDto TraerSustentable(int id)
+        {
+            return repositorio.Obtener<HabilitacionSustentable, HabilitacionSustentableDto>(x => x.Id == id, x => new HabilitacionSustentableDto
+            {
+                Id = x.Id,
+                DesdeVigencia = x.DesdeVigencia,
+                HastaVigencia = x.HastaVigencia,
+                DesdeEntrega = x.DesdeEntrega.Value,
+                HastaEntrega = x.HastaEntrega.Value,
+                TipoNegocioId = x.TipoNegocioId,
+                TipoNegocio = x.TipoNegocio.Descripcion,
+                MonedaId = x.MonedaId,
+                Precio = x.Precio
+            });
+        }
         public Resultado EliminarCampaña(int id)
         {
             var oEntityErrors = new Resultado();
@@ -731,7 +868,28 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-
+        public Resultado EliminarSustentable(int id)
+        {
+            var oEntityErrors = new Resultado();
+            var hp = repositorio.Obtener<HabilitacionSustentable>(id);
+            logDataAgroManager.LogCambiosDataAgro(TraerSustentable(id), TipoAccionLogDataAgro.Eliminar);
+            try
+            {
+                repositorio.Remover(hp);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                oEntityErrors.Error(ex.Source, ex.Message);
+                throw;
+            }
+            if (!oEntityErrors.HayError)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se eliminó correctamente"));
+            }
+            return oEntityErrors;
+        }
         public HabilitacionCampañaDto TraerCampaña(int id)
         {
             return repositorio.Obtener<HabilitacionCampaña, HabilitacionCampañaDto>(x => x.Id == id, x => new HabilitacionCampañaDto
@@ -964,5 +1122,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Habilitado = x.Habilitado
             });
         }
+
+        
     }
 }

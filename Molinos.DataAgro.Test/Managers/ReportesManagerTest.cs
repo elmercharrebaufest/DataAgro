@@ -12,6 +12,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq.Expressions;
 using System.Web.Script.Serialization;
 
@@ -27,19 +28,25 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<ITipoDeCambioAgent> tipoDeCambioMock;
         private JavaScriptSerializer serializer;
-        private Mock<IContratosAPesificarAgent>  pesificarAgent;
+        private Mock<IContratosAPesificarAgent> pesificarAgent;
+        private Mock<IMailManager> mailManager;
 
         [SetUp]
         public void SetUp()
         {
+            ConfigurationManager.AppSettings["TNAReportePagosDiferidos"] = "30";
+
             this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             comercialManagerMock = new Mock<IComercialManager>();
             tipoDeCambioMock = new Mock<ITipoDeCambioAgent>();
-            pesificarAgent = new Mock<IContratosAPesificarAgent>(); 
-            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object, pesificarAgent.Object);
+            pesificarAgent = new Mock<IContratosAPesificarAgent>();
+            mailManager = new Mock<IMailManager>();
+            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object, pesificarAgent.Object, mailManager.Object);
             tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(null)).Returns(45);
+            tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(It.IsAny<DateTime>())).Returns(94);
+
         }
 
         [Test]
@@ -1089,6 +1096,21 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodoPrecioMoaPizarra>())).Returns(new DataSourceResult());
             var resultado = target.TraerTodoPrecioMoaPizarra(It.IsAny<DataSourceRequest>());
             repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodoPrecioMoaPizarra>()), Times.Once);
+        }
+
+        [Test]
+        public void ObtenerDatosReportePagosDiferidosTest()
+        {
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Negocio, ReportePagosDiferidos>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<ReportePagosDiferidos>() { new ReportePagosDiferidos {
+                    ContratoSAP = "1", Tn = 5000, PrecioUSD = 230, Precio = 230 * 94, Plazo = 33, Toma = new DateTime(2021, 5, 29), TNA = 30 ,
+                            Estado = "Vigente",AcumuladoMesAnterior=1,AlVencimiento=1,Capital=1,CapitalMasIntereses=1,Corredor ="corr",CorredorCUIT="",DevengadoMes=1,
+                            InteresesPorDia =1,InteresesTotales=1,M2MMes=1,TEA=1,TipoCambio=1,Vendedor="",VendedorCUIT="",
+                } });
+
+            var resultado = target.ObtenerDatosReportePagosDiferidos(new DateTime(2021, 5, 29), new DateTime(2021, 6, 4));
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, ReportePagosDiferidos>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
         }
     }
 }

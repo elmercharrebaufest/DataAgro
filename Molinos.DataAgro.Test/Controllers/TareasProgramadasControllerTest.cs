@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Test.Controllers
                                                      negocioManagerMock.Object,
                                                      administracionCupoManagerMock.Object,
                                                      oHedgeManagerMock.Object,
-                                                     diferencialManagerMock.Object, 
+                                                     diferencialManagerMock.Object,
                                                      proveedorManagerMock.Object);
         }
 
@@ -121,8 +121,29 @@ namespace Molinos.DataAgro.Test.Controllers
 
         [Test]
         public void ActualizarRazonSocialTest()
-        {           
+        {
             var result = target.ActualizarRazonSocial() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ReportePagosDiferidosTest()
+        {
+            reportesManagerMock.Setup(x => x.ObtenerDatosReportePagosDiferidos(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(
+                new ResultReportePagosDiferidos
+                {
+                    Desde = DateTime.Now.Date.AddDays(-7),
+                    Hasta = DateTime.Now.Date,
+                    Contratos = new List<ReportePagosDiferidos> {
+                        new ReportePagosDiferidos{ContratoSAP = "1", Tn = 5000, PrecioUSD = 230, Precio = 230 * 94, Plazo = 33, Toma = DateTime.Now.Date, TNA = 30 ,
+                            Estado = "Vigente",AcumuladoMesAnterior=1,AlVencimiento=1,Capital=1,CapitalMasIntereses=1,Corredor ="corr",CorredorCUIT="",DevengadoMes=1,
+                            InteresesPorDia =1,InteresesTotales=1,M2MMes=1,TEA=1,TipoCambio=1,Vencimiento=DateTime.Now.Date.AddDays(1),Vendedor="",VendedorCUIT="",  }
+                    }
+                });
+
+            var result = target.ReportePagosDiferidos("") as ContentResult;
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);

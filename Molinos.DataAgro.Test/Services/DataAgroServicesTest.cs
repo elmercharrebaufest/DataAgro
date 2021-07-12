@@ -883,7 +883,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
-            fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>()))
+            fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<List<FijacionVirtualSAPDto>>()))
            .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
             var result = target.AltaFijacionSAP(fijacionSap) as ResultadoSap;
             Assert.NotNull(result);
@@ -919,7 +919,8 @@ namespace Molinos.DataAgro.Test.Services
                 PrecioNeto = 1000,
                 Proveedor = "0003454",
                 ZLSCH = "",
-                TrigoEspecial = "X"
+                TrigoEspecial = "X",
+                FijacionVirtuales = new List<FijacionVirtualSAPDto>()
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<BolsaCompraNet, bool>>>(), It.IsAny<Expression<Func<BolsaCompraNet, int>>>())).Returns(1);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, int>>>())).Returns(1);
@@ -938,7 +939,7 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 });
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
-            fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>()))
+            fijacionManager.Setup(y => y.AltaFijacionSap(It.IsAny<FijacionDePrecioContrato>(), It.IsAny<List<FijacionVirtualSAPDto>>()))
            .Returns(new Resultado());
             var result = target.AltaFijacionSAP(fijacionSap) as ResultadoSap;
             Assert.NotNull(result);

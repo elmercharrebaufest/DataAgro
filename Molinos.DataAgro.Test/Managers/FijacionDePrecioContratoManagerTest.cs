@@ -1015,7 +1015,7 @@ namespace Molinos.DataAgro.Test.Managers
                 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AperturaPrecio, AperturaPrecioDto>>>(), It.IsAny<Expression<Func<AperturaPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<AperturaPrecioDto>());
-            var resultado = target.AltaFijacionSap(fijacion) as Resultado;
+            var resultado = target.AltaFijacionSap(fijacion, null) as Resultado;
             repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
@@ -1062,7 +1062,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<RangoPrecio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                 .Returns(new List<RangoPrecio>() { new RangoPrecio { Id = 1, MaterialId = 1, PrecioMaximo = 10000, PrecioMinimo = 200, MonedaId = "ARP " } });
 
-            var resultado = target.AltaFijacionSap(fijacion) as Resultado;
+            var resultado = target.AltaFijacionSap(fijacion, null) as Resultado;
             repositorioMock.Verify(x => x.Agregar(It.IsAny<FijacionDePrecioContrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }

@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return 45;
+                return 94;
             }
             else
             {

@@ -838,4 +838,10 @@
   <data name="ModificarFijacionVirtual" xml:space="preserve">
     <value>Modificar Fijacion Virtual</value>
   </data>
+  <data name="VisualizarReportePagoDiferido" xml:space="preserve">
+    <value>Visualizar Reporte Pago Diferido</value>
+  </data>
+  <data name="ReasignarProveedorPantallaCupo" xml:space="preserve">
+    <value>Reasignar Proveedor Pantalla Cupo</value>
+  </data>
 </root>

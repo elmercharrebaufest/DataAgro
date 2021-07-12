@@ -1,0 +1,58 @@
+﻿@model WebDataAgro.Models.ConfiguracionInternaModel
+@using (Ajax.BeginForm("GuardarSustentable", null, new AjaxOptions { UpdateTargetId = "listaSustentable", InsertionMode = InsertionMode.Replace }, new { }))
+{
+    <div id="form-precio">
+        <div class="row-botones-material row">
+            <div class="col-md-2">
+                <label>Tipo de Negocio</label>
+            </div>
+            <div class="col-sm-3">
+                @Html.DropDownListFor(x => x.TipoNegocioId, new SelectList(ViewBag.TipoNegocioSustentable, "Value", "Text"), "Seleccione Tipo de Negocio", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="row-botones-material row" style="margin-top:10px;">
+            <div class="col-md-2">
+                <label>Precio</label>
+            </div>
+            <div class="col-md-3" id="CantidadDiasId">
+                @Html.TextBoxFor(m => m.PrecioSustentable, new { @class = "w100" })
+            </div>
+            <div class="col-sm-3" style="display:none;">
+                @Html.DropDownListFor(x => x.MonedaId, new SelectList(ViewBag.Moneda, "Value", "Text"), "Seleccione Moneda", new { @class = "form-control"})
+            </div>            
+        </div>
+        <div class="row-botones-material row">
+
+            <div class="col-md-2">
+                <label>Horas Vigencia</label>
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(m => m.DesdeVigenciaSustentable, new { @class = "w100" })
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(m => m.HastaVigenciaSustentable, new { @class = "w100" })
+            </div>
+        </div>
+
+        <div class="row-botones-material row" style="margin-top:10px;">
+
+            <div class="col-md-2">
+                <label>Entrega Desde/Hasta</label>
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(m => m.DesdeEntregaSustentable, new { @class = "w100" })
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(m => m.HastaEntregaSustentable, new { @class = "w100" })
+            </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+            <div class="col-md-3 col-md-offset-9">
+                <button type="submit" class="k-button k-button-icontext float-right">Guardar</button>
+            </div>
+        </div>
+    </div>
+}
+<div id="listaSustentable">
+    @Html.Partial("_ListaSustentable", Model)
+</div>

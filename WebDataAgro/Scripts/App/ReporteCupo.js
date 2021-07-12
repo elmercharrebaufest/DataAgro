@@ -12,7 +12,7 @@ $(document).ready(function () {
     $(".ocultarAnular").change(function () {
         $('#anulacionMasivaDiv').hide();
     });
-
+    $(".k-i-loading").hide();
 });
 
 
@@ -239,13 +239,53 @@ function Filtrar() {
             $('#anulacionMasivaDiv').hide();
         }
     }, 500)
- 
+
 }
 
 
 function inicializarElementos() {
 
     CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/ReporteCupo/BuscarProveedor");
+    $("#ZonaId").kendoMultiSelect({
+        open: function (e) { $("#ZonaId").data("kendoMultiSelect").value(''); },
+        dataTextField: 'Text',
+        dataValueField: 'Value',
+        autoClose: false,
+        autoBind: false,
+    }).data("kendoMultiSelect").value('');
+
+    $("#MaterialId").kendoMultiSelect({
+        open: function (e) { $("#MaterialId").data("kendoMultiSelect").value(''); },
+        dataTextField: 'Text',
+        dataValueField: 'Value',
+        autoClose: false,
+        autoBind: false,
+    }).data("kendoMultiSelect").value('');
+
+    $("#EstadoId").kendoMultiSelect({
+        open: function (e) { $("#EstadoId").data("kendoMultiSelect").value(''); },
+        dataTextField: 'Text',
+        dataValueField: 'Value',
+        autoClose: false,
+        autoBind: false,
+    }).data("kendoMultiSelect").value('');
+
+    $("#ComercialId").kendoMultiSelect({
+        open: function (e) { $("#ComercialId").data("kendoMultiSelect").value(''); },
+        dataTextField: 'Text',
+        dataValueField: 'Value',
+        autoClose: false,
+        autoBind: false,
+    }).data("kendoMultiSelect").value('');
+
+    $("#CentroId").kendoMultiSelect({
+        open: function (e) { $("#CentroId").data("kendoMultiSelect").value(''); },
+        dataTextField: 'Text',
+        dataValueField: 'Value',
+        autoClose: false,
+        autoBind: false,
+    }).data("kendoMultiSelect").value('');
+
 
     $("#Destinatario").bind("paste", function (e) {
         e.preventDefault();

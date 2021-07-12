@@ -358,5 +358,13 @@ namespace WebDataAgro.Controllers
             return Json(mobjContratoManager.GrabarContratoMasivo(contratos), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult HabilitarSustentable()
+        {
+            return new JsonResult()
+            {
+                Data = configuracionInternaManager.TraerSustentables(),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

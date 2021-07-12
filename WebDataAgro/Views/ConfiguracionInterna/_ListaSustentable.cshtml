@@ -1,0 +1,67 @@
+﻿@using Newtonsoft.Json;
+@model WebDataAgro.Models.ConfiguracionInternaModel
+
+<div id="formulariosus" class="table-container">
+
+    @if (Model.ResultadoSustentable != null && Model.ResultadoSustentable.HayError)
+    {
+        if (Model.ResultadoSustentable.Errores[0].ErrorCode != 200)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.ResultadoSustentable.Errores[0]
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                @Model.ResultadoSustentable.Errores[0]
+            </div>
+            <script>LimpiarSustentableForm()</script>
+        }
+    }
+</div>
+<div class="row">
+    <div class="col-xs-10 m-grid-col-xs-offset-1">
+        <div class="historial-desplegable" data-toggle="collapse" data-target="#historialSustentable"  onclick="mostrarocultar('#mostrarSustentable')">
+            <span class="historial">Activos</span> <span id="mostrarSustentable" class="mostrar">Mostrar</span>
+        </div>
+        <div id="historialSustentable" class="collapse tabla-research">
+            <table class="tabla-historial table">
+                <tr>
+                    <th>Tipo Negocio</th>
+                    <th>Precio</th>
+                    <th>Moneda</th>
+                    <th>Vigencia Desde</th>
+                    <th>Vigencia Hasta</th>
+                    <th>Entrega Desde</th>
+                    <th>Entrega Hasta</th>
+                    <th></th>
+                </tr>
+                @foreach (var pr in Model.HabilitacionSustentable)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
+                        <td>@Html.DisplayFor(model => pr.Precio)</td>
+                        <td>@Html.DisplayFor(model => pr.MonedaId)</td>
+                        <td>@Html.DisplayFor(model => pr.DesdeVigencia)</td>
+                        <td>@Html.DisplayFor(model => pr.HastaVigencia)</td>
+                        <td>@Html.DisplayFor(model => pr.DesdeEntrega)</td>
+                        <td>@Html.DisplayFor(model => pr.HastaEntrega)</td>
+                        <td>
+                            @if ((pr.DesdeVigencia <= DateTime.Now.Date && pr.HastaVigencia >= DateTime.Now.Date) || pr.DesdeVigencia >= DateTime.Now.Date)
+                            {
+                                @Ajax.ActionLink(" ", "EliminarSustentable", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaSustentable", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
+                            }
+                            @{
+                                var json = JsonConvert.SerializeObject(pr);
+                            }
+                            @*<a href="#" class="fa fa-copy danger" onclick="copiarPrecioMOA('@json')"></a>*@
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

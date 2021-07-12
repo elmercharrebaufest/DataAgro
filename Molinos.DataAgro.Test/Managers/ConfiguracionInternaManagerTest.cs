@@ -403,5 +403,64 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, resultado.Count);
         }
 
+        [Test]
+        public void TraerSustentableOk()
+        {
+
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<HabilitacionSustentable, bool>>>(), It.IsAny<Expression<Func<HabilitacionSustentable, HabilitacionSustentableDto>>>()))
+                .Returns(new HabilitacionSustentableDto { Id = 1 });
+
+            var resultado = target.TraerSustentable(1);
+            repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<HabilitacionSustentable, bool>>>(), It.IsAny<Expression<Func<HabilitacionSustentable, HabilitacionSustentableDto>>>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Id);
+        }
+
+        [Test]
+        public void TraerSustentablesTestOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<HabilitacionSustentable, HabilitacionSustentableDto>>>(), It.IsAny<Expression<Func<HabilitacionSustentable, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<HabilitacionSustentableDto>() { new HabilitacionSustentableDto { Id = 1 } });
+            var resultado = target.TraerSustentables();
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HabilitacionSustentable, HabilitacionSustentableDto>>>(), It.IsAny<Expression<Func<HabilitacionSustentable, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            Assert.AreEqual(1, resultado.Count);
+        }
+
+        [Test]
+        public void GrabarSustentableTestOk()
+        {
+            var config = new HabilitacionSustentable
+            {
+                Id = 0,
+                DesdeVigencia = new DateTime(2099, 1, 30),
+                HastaVigencia = new DateTime(2099, 1, 30),
+                TipoNegocioId = 3,
+                MonedaId = "USDM",
+                Precio = 120,
+                DesdeEntrega = new DateTime(2099, 1, 30),
+                HastaEntrega = new DateTime(2099, 1, 30),
+            };
+            var resultado = target.GrabarSustentable(config, "");
+
+            Assert.IsTrue(resultado.HayError);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<HabilitacionSustentable>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.AreEqual(1, resultado.Errores.Count);
+        }
+        [Test]
+        public void EliminarSustentableTestOk()
+        {
+            repositorioMock.Setup(y => y.Obtener<HabilitacionSustentable>(It.IsAny<int>()))
+                .Returns(new HabilitacionSustentable { Id = 1 });
+            var resultado = target.EliminarSustentable(1);
+
+            repositorioMock.Verify(x => x.Obtener<HabilitacionSustentable>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Remover(It.IsAny<HabilitacionSustentable>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.IsTrue(resultado.HayError);
+            Assert.AreEqual(1, resultado.Errores.Count);
+        }
     }
 }

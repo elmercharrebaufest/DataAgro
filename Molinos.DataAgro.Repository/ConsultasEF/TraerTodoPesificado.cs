@@ -53,14 +53,20 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FechaHastaDolarizado = item.FechaHastaDolarizado != null ? DbFunctions.TruncateTime(item.FechaHastaDolarizado) : (DateTime?)null,
                     FechaUltimaAplicacion = item.FechaUltimaAplicacion != null ? DbFunctions.TruncateTime(item.FechaUltimaAplicacion) : (DateTime?)null,
                     Fijacion = item.Fijacion,
-                    KgNoPesificable = item.KgVencimientoPesificable < 0 ? (item.KgNoPesificable + item.KgVencimientoPesificable) : item.KgNoPesificable,
-                    KgVencimientoPesificable = item.KgVencimientoPesificable < 0 ? 0 : item.KgVencimientoPesificable,
-                    KgTotales = item.KgNoPesificable + item.KgVencimientoPesificable,
+                    KgNoPesificable = item.KgNoPesificable,
+                    KgVencimientoPesificable = item.KgVencimientoPesificable,
+                    KgTotales = item.KgTotales,
                     Unidad = item.Unidad,
                     Precio = item.Precio,
                     NombreCorredor = item.NombreCorredor,
                     NombreVendedor = item.NombreVendedor,
-                    NingunDolarizado = item.Dolarizado == false && item.DolarizadoExpress == false && item.DolarizadoNoProductor == false
+                    NingunDolarizado = item.Dolarizado == false && item.DolarizadoExpress == false && item.DolarizadoNoProductor == false,
+                    USDPesificable = (item.KgVencimientoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)),
+                    USDNoPesificable = (item.KgNoPesificable  * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)),
+                    USDTotal = (item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)),
+                    USDTotalizador = (item.KgVencimientoPesificable  * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) +
+                    (item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) +
+                    (item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1))
                 };
 
             GridHelper.TruncateTime(request.Filter, ref queryRango);

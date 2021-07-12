@@ -327,6 +327,7 @@
     </None>
     <None Include="Service References\ContratosParaFijacionVirtual\SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE.wsdl" />
     <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION11.wsdl" />
+    <None Include="Service References\CrearCupo\SI_ZMPWS_DATAAGRO_CREAR_CUPOS.wsdl" />
     <None Include="Service References\CriterioCDWarrant\Molinos.DataAgro.Agent.CriterioCDWarrant.SI_ZMPWS_DATAAGRO_CD_WARRANTSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -427,7 +428,6 @@
     <None Include="Service References\CrearCupo\Molinos.DataAgro.Agent.CrearCupo.Z_MPRFC_CREAR_CUPOSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\CrearCupo\SI_ZMPWS_DATAAGRO_CREAR_CUPOS1.wsdl" />
     <None Include="Service References\DatosDelComercial\Molinos.DataAgro.Agent.DatosDelComercial.SI_ZMPWS_DATAAGRO_DATOS_COMERCIALESResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

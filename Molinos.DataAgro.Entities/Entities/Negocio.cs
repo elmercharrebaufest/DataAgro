@@ -156,7 +156,10 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("TipoPosicionCBOTId")]
         public virtual TipoPosicionCBOT TipoPosicionCBOT { get; set; }
-
+        [InverseProperty("FijacionCanje")]
+        public virtual List<FijacionVirtualSap> FijacionCanje { get; set; }
+        [InverseProperty("FijacionVirtual")]
+        public virtual List<FijacionVirtualSap> FijacionVirtual { get; set; }
         public Negocio()
         {
             Cantidad = 0;

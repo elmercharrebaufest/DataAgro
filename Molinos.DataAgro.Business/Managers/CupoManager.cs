@@ -485,6 +485,63 @@ namespace Molinos.DataAgro.Business.Managers
                 NegocioId = x.NegocioId
             });
         }
+
+        public List<CupoDto> ObtenerCupos(List<int> id, RepositorioEF repo)
+        {
+            var r = repo != null ? repo : repositorio;
+            return r.Listar<Cupo, CupoDto>(x => new CupoDto
+            {
+                Id = x.Id,
+                Calidad = x.Calidad,
+                Centro = x.Centro.Descripcion,
+                CentroId = x.CentroId,
+                CentroCodigo = x.Centro.CodigoSap,
+                ComercialId = x.ComercialId,
+                Destinatario = x.Destinatario,
+                Fason = x.Fason,
+                FleteProcedencia = x.FleteProcedencia,
+                FechaIngreso = x.FechaIngreso,
+                MaterialId = x.MaterialId,
+                Material = x.Material.Descripcion,
+                Observaciones = x.Observaciones,
+                ProveedorId = x.ProveedorId,
+                Proveedor = x.Proveedor.RazonSocial + " (" + x.Proveedor.CUIT + ")",
+                ZonaCupoId = x.ZonaCupoId,
+                ZonaCupo = x.ZonaCupo.Descripcion,
+                CupoSap = x.CupoSap,
+                EstadoCupo = x.EstadoCupo.Descripcion,
+                EstadoCupoId = x.EstadoCupoId,
+                CartaPorte = x.CartaPorte,
+                Chofer = x.Chofer,
+                CodLocalidadOrigen = x.CodLocalidadOrigen,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                CorredorComprador = x.CorredorComprador,
+                CorredorVendedor = x.CorredorVendedor,
+                Cosecha = x.Cosecha,
+                CTG = x.CTG,
+                CTGFechaDesde = x.CTGFechaDesde,
+                CTGFechaHasta = x.CTGFechaHasta,
+                CuitOrigen = x.CuitOrigen,
+                CuitOrigenAfip = x.CuitOrigenAfip,
+                CupoStop = x.CupoStop == null ? "" : x.CupoSap.ToString(),
+                EstadoPlanta = x.EstadoPlanta,
+                FechaGeneracion = x.FechaGeneracion,
+                FechaRegistro = x.FechaGeneracion,
+                IntermediarioFlete = x.IntermediarioFlete,
+                Km = x.Km,
+                MercadoATermino = x.MercadoATermino,
+                MotivoRechazo = x.MotivoRechazo,
+                NroEstablecimientoOrigen = x.NroEstablecimientoOrigen,
+                Peso = x.Peso,
+                RemitenteComercial = x.RemitenteComercial,
+                Transportista = x.Transportista,
+                UsuarioCreador = x.UsuarioCreador,
+                ZonaCupoSap = x.ZonaCupo.CodigoSap,
+                Acopio = x.Centro.Acopio,
+                NegocioId = x.NegocioId
+            }, x => id.Contains(x.Id));
+        }
+
         public Resultado EliminarVarios(List<int> c, string comercial)
         {
             var resultado = new Resultado();

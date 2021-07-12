@@ -36,17 +36,27 @@ namespace WebDataAgro.Models
         public int MaterialCampañaId { get; set; }
         public int CampañaId { get; set; }
         public bool? Pausar { get; set; }
+        public DateTime? DesdeEntregaSustentable { get; set; }
+        public DateTime? HastaEntregaSustentable { get; set; }
+        public string DesdeVigenciaSustentable { get; set; }
+        public string HastaVigenciaSustentable { get; set; }
+        public decimal PrecioSustentable { get; set; }
+
+        public int? DestinoId { get; set; }
 
         public Resultado ResultadoPrecio { get; set; }
         public Resultado ResultadoPizarra { get; set; }
         public Resultado ResultadoFijacion { get; set; }
         public Resultado ResultadoCampaña { get; set; }
         public Resultado ResultadoPago { get; set; }
+        public Resultado ResultadoSustentable { get; set; }
+
         public List<PrecioMoaDto> PrecioMoa { get; set; }
         public List<HabilitacionPizarraDto> HabilitacionPizarra { get; set; }
         public List<HabilitacionFijacionDto> HabilitacionFijacion { get; set; }
         public List<HabilitacionCampañaDto> HabilitacionCampaña { get; set; }
         public List<HabilitacionPagoDiferidoDto> HabilitacionPagoDiferido { get; set; }
+        public List<HabilitacionSustentableDto> HabilitacionSustentable { get; set; }
         public ConfiguracionInternaModel()
         {
             PrecioMoa = new List<PrecioMoaDto>();

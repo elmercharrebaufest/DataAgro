@@ -2,12 +2,13 @@
 var fecha;
 var zonaSeleccionada;
 var fleteProcedencia;
+var reasignarCupo;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     fleteProcedencia = ConvertirStringABool(fleteProcedencia);
-
+    reasignarCupo = ConvertirStringABool(reasignarCupo);
     InicializarCargaCupos();
     $.unblockUI();
     checkFason();
@@ -115,9 +116,12 @@ function InicializarCargaCupos() {
         $("#planta").attr('disabled', 'disabled');
         $("#fechaEntrega").data('kendoDatePicker').enable(false);
         $("#fechaHasta").data('kendoDatePicker').enable(false);
-        $("#cantidad").data('kendoNumericTextBox').enable(false);
+        $("#cantidad").data('kendoNumericTextBox').enable(false);        
         $("#zona").attr('disabled', 'disabled');
         $("#flete").attr('disabled', 'disabled');
+        if (reasignarCupo == false) {
+            $("#buscadorProveedor").attr('disabled', 'disabled');     
+        }
         if ($("#flete").is(':checked')) {
             MensInfo("Cupo con condición de Flete");
         }

@@ -665,4 +665,46 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="TipoPosicionCBOTId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="987f94f7-48bb-41f4-9c23-467c7672815b" ChangeDateTime="06/28/2021 18:09:48">
+    <Property Name="ElementName" Value="[dbo].[PrecioMoa].[Destino]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[PrecioMoa]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DestinoId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c5b4ab09-d561-4dc7-a769-a77458e36d2e" ChangeDateTime="06/29/2021 19:44:11">
+    <Property Name="ElementName" Value="[dbo].[FijacionVirtualSAP].[AcopioId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[FijacionVirtualSAP]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="021316a8-03ec-4c46-992f-f4508277b891" ChangeDateTime="06/29/2021 19:44:21">
+    <Property Name="ElementName" Value="[dbo].[FijacionVirtualSAP].[NroItem]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[FijacionVirtualSAP]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FijacionCanjeId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d636b964-7b71-4fdf-ae7c-e9125dd4ebee" ChangeDateTime="06/29/2021 19:45:30">
+    <Property Name="ElementName" Value="[dbo].[FijacionVirtualSAP].[ProveedorId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[FijacionVirtualSAP]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ContratoId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d521275e-839c-4bd8-84da-65f7f3f790be" ChangeDateTime="06/29/2021 19:45:55">
+    <Property Name="ElementName" Value="[dbo].[FijacionVirtualSAP].[LocalidadId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[FijacionVirtualSAP]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FijacionVirtualNro" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4e01c4ff-44b9-407e-bc3f-94b9f9951c12" ChangeDateTime="06/29/2021 19:46:52">
+    <Property Name="ElementName" Value="[dbo].[FijacionVirtualSAP].[KMZnombre]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[FijacionVirtualSAP]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Cantidad" />
+  </Operation>
 </Operations>

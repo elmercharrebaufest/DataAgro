@@ -41,6 +41,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         DeshabilitarProveedor = 115,
         [Display(ResourceType = typeof(Text), Name = "OcultarCamposEditar")]
         OcultarCamposEditar = 116,
+        [Display(ResourceType = typeof(Text), Name = "ReasignarProveedorPantallaCupo")]
+        ReasignarProveedorPantallaCupo = 117,
         //Comercial
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,
@@ -195,6 +197,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarAnulacionEnReporteCupo = 415,
         [Display(ResourceType = typeof(Text), Name = "VisualizarReportePrecioMoaPizarra")]
         VisualizarReportePrecioMoaPizarra = 416,
+        [Display(ResourceType = typeof(Text), Name = "VisualizarReportePagoDiferido")]
+        VisualizarReportePagoDiferido = 417,
+
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]
         ConfiguracionCanalOperacion = 501,

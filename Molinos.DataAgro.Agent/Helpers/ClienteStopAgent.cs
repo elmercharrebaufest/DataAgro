@@ -271,7 +271,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             var resultado = new Resultado();
             try
             {
-                logger.Debug("Eliminar Cupo en STOP  inicio: " + cupo.CupoSap??"");
+                logger.Debug("Eliminar Cupo en STOP  inicio: " + cupo.CupoSap ?? "");
                 HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -356,10 +356,11 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     listaCuposStop = ObtenerDatosDeStop(datosConfiguracion, client, fechas);
 
-                    IEnumerable<Cupo> actualizarCupos = listaCuposStop.results.Select(cupo=> new Cupo {
+                    IEnumerable<Cupo> actualizarCupos = listaCuposStop.results.Select(cupo => new Cupo
+                    {
                         EstadoPlanta = cupo.estadoEnPlanta,
-                        CTGFechaDesde = !String.IsNullOrEmpty(cupo.fechaCTG_Desde) ?DateTime.ParseExact(cupo.fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
-                        CTGFechaHasta = !String.IsNullOrEmpty(cupo.fechaCTG_Hasta) ?DateTime.ParseExact(cupo.fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        CTGFechaDesde = !String.IsNullOrEmpty(cupo.fechaCTG_Desde) ? DateTime.ParseExact(cupo.fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        CTGFechaHasta = !String.IsNullOrEmpty(cupo.fechaCTG_Hasta) ? DateTime.ParseExact(cupo.fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
                         RemitenteComercial = cupo.cuitRemComercial,
                         CorredorComprador = cupo.cuitCorredorCAfip,
                         CorredorVendedor = cupo.cuitCorredorVAfip,
@@ -406,21 +407,51 @@ namespace Molinos.DataAgro.Agent.Helpers
                         new KeyValuePair<string, string> ("CreacionStop", "CreacionStop"),
                     };
                     string where = " where T.EstadoCupoId <> 4 and T.EstadoCupoId <> 5 and T.EstadoCupoId <> 8 ";
-                    repositorio.ActualizarTodos(actualizarCupos, columnas, "CupoSap",where);
                     
+                    var cuposSapStop = actualizarCupos.Select(a => a.CupoSap).ToList();
+                    var cuposModificados = repositorio.Listar<Cupo, CupoDto>(x => new CupoDto { Id = x.Id, EstadoCupoId = x.EstadoCupoId, CupoSap = x.CupoSap }, x => cuposSapStop.Contains(x.CupoSap));
+
+
+                    IEnumerable<int> query = from cm in cuposModificados
+                                             join ac in actualizarCupos on cm.CupoSap equals ac.CupoSap
+                                             where cm.EstadoCupoId != ac.EstadoCupoId
+                                             select cm.Id;
+
+                    repositorio.ActualizarTodos(actualizarCupos, columnas, "CupoSap", where);
+
                     repositorio.GuardarCambios();
 
+                    var cupoManager = cupoManagerInj();
+                    var cupos = cupoManager.ObtenerCupos(query.ToList(), null);
+                    var logs = new List<LogDataAgro>();
+                    foreach (var cupo in cupos)
+                    {
+                        var resolver = new IgnorePropertiesResolver(new[] { "EstadoOrden" });
+                        string descripcion = string.IsNullOrEmpty(cupo.CupoSap) ? cupo.Id.ToString() : cupo.CupoSap;
 
-                    //var cupoManager = cupoManagerInj();
-                    //if (cuposCambioStop.Count() > 0)
-                    //{
-                    //    logger.Debug("cupos actualizados por stop: " + string.Join(", ", cuposCambioStop));
-                    //}
-                    //foreach (var cupoId in cuposCambioStop)
-                    //{
-                    //    logDataAgroManager.LogCambiosDataAgro(cupoManager.ObtenerCupo(cupoId), TipoAccionLogDataAgro.Modificar);
-                    //}
-                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" + string.Join(", ",fechas.Select(a=>a.ToString("yyyy/MM/dd")).ToList()));
+                        string jsonObjeto = JsonConvert.SerializeObject(cupo, new JsonSerializerSettings()
+                        {
+                            ContractResolver = resolver,
+                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                            PreserveReferencesHandling = PreserveReferencesHandling.None,
+                            Formatting = Formatting.Indented,
+                        });
+                        var logAgregado = new LogDataAgro
+                        {
+                            Usuario = "STOP",
+                            Fecha = DateTime.Now,
+                            DatoModificado = jsonObjeto,
+                            Clase = "Cupo",
+                            Tipo = cupo.GetType().Name,
+                            AccionRealizada = TipoAccionLogDataAgro.Modificar.ToString(),
+                            ClaseId = cupo.Id,
+                            Descripcion = descripcion,
+                        };
+                        logs.Add(logAgregado);
+                    }
+                    repositorio.AgregarTodos(logs);
+                    repositorio.GuardarCambios();
+                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" + string.Join(", ", fechas.Select(a => a.ToString("yyyy/MM/dd")).ToList()));
 
                     return listaCuposStop.results;
                 }
@@ -436,7 +467,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        private ConsultaCuposStop  ObtenerDatosDeStop(Configuracion datosConfiguracion, HttpClient client, List<DateTime> fechas)
+        private ConsultaCuposStop ObtenerDatosDeStop(Configuracion datosConfiguracion, HttpClient client, List<DateTime> fechas)
         {
             CultureInfo provider;
             var token = ObtenerToken(datosConfiguracion.ClaveStop);

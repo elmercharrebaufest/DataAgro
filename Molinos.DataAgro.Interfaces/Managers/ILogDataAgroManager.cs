@@ -25,5 +25,6 @@ namespace Molinos.DataAgro.Interfaces
         List<int> ObtenerNegociosId(List<string> contratosSap);
         List<int> ObtenerCuposId(List<string> cupoSap);
         int LogCambiosDataAgro(HabilitacionCampañaDto habilitacionCampañaDto, TipoAccionLogDataAgro tipo);
+        void LogCambiosDataAgro(HabilitacionSustentableDto habilitacionSustentableDto, TipoAccionLogDataAgro tipo);
     }
 }

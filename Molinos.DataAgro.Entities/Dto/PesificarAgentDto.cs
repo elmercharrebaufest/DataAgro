@@ -30,6 +30,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Dolarizado { get; set; }
         public string Clasificacion { get; set; }
         public string Anticipo { get; set; }
+        public int USDPesificable { get; set; }
+        public int USDNoPesificable { get; set; }
+        public decimal KgTotales { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -76,7 +76,7 @@
             <label>Zona</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("ZonaCupoId", new SelectList(ViewBag.Zona, "Value", "Text"), "Seleccione el Zona", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "ZonaId" })
+            @Html.DropDownList("ZonaCupoId", new SelectList(ViewBag.Zona, "Value", "Text"), new { @class = "multiselect ocultarAnular", @id = "ZonaId" })
         </div>
     </div>
     <br />
@@ -86,14 +86,14 @@
             <label>Material</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "MaterialId" })
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), new { @class = "multiselect ocultarAnular", @id = "MaterialId" })
         </div>
 
         <div class="col-md-2">
             <label>Estado</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("EstadoCupoId", new SelectList(ViewBag.Estado, "Value", "Text"), "Seleccione el Estado", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "EstadoId" })
+            @Html.DropDownList("EstadoCupoId", new SelectList(ViewBag.Estado, "Value", "Text"), new { @class = "multiselect ocultarAnular", @id = "EstadoId" })
         </div>
 
     </div>
@@ -131,7 +131,7 @@
             <label>Comercial</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione un Comercial", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "ComercialId" })
+            @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"),  new { @class = "multiselect ocultarAnular", @id = "ComercialId" })
         </div>
 
 
@@ -139,7 +139,7 @@
             <label>Planta</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("CentroId", new SelectList(ViewBag.Centro, "Value", "Text"), "Seleccione una Planta", new { @class = "form-control filtroBusquedaPorId ocultarAnular", @id = "CentroId" })
+            @Html.DropDownList("CentroId", new SelectList(ViewBag.Centro, "Value", "Text"),  new { @class = "multiselect ocultarAnular", @id = "CentroId" })
         </div>
     </div>
     <br />

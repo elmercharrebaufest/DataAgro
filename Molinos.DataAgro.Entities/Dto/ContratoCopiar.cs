@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -18,6 +19,15 @@ namespace Molinos.DataAgro.Entities.Dto
         {
             get { return CantidadD.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")); }
         }
-
+        public string Precio
+        {
+            get { return PrecioD.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")); }
+        }
+        public string NegocioDescripcion { get; set; }
+        public decimal PrecioD { get; set; }
+        public string FechaDesde { get; set; }
+        public string FechaHasta { get; set; }
+        public string Moneda { get; set; }
+        public string MonedaId { get; set; }
     }
 }

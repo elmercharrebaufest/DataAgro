@@ -303,9 +303,11 @@
     <Build Include="dbo\Tables\ConfiguracionBolsa.sql" />
     <Build Include="dbo\Tables\HabilitacionPagoDiferido.sql" />
     <Build Include="dbo\Tables\MotivoAnterior.sql" />
-    <Build Include="dbo\Tables\TipoPosicionCBOT.sql" />
     <Build Include="dbo\Tables\TipoRangoConfirmacionAutomatica.sql" />
     <Build Include="dbo\Tables\EstadoPrecioMOA.sql" />
+    <Build Include="dbo\Tables\TipoPosicionCBOT.sql" />
+    <Build Include="dbo\Tables\HabilitacionSustentable.sql" />
+    <Build Include="dbo\Tables\FijacionVirtualSAP.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

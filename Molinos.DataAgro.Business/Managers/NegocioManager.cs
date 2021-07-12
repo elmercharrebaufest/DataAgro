@@ -57,7 +57,7 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnvioMailNegociosConDiaAnterior()
         {
             DateTime hoy = DateTime.Now.Date;
-            var contratos = repositorio.Listar<Negocio>(x => DbFunctions.TruncateTime(x.Fecha) != DbFunctions.TruncateTime(x.FechaOperacion) && x.Fecha >= hoy && x.Canje != true && x.PrestamoDevolucion != true && x.Venta != true && x.TipoNegocioId != 5);
+            var contratos = repositorio.Listar<Negocio>(x => DbFunctions.TruncateTime(x.Fecha) != DbFunctions.TruncateTime(x.FechaOperacion) && x.Fecha >= hoy && x.Canje != true && x.PrestamoDevolucion != true && x.Venta != true && x.TipoNegocioId != 5 && x.EstadoId == 5);
             var lista = new List<string>();
             var listaJefes = new List<string>();
             if (contratos.Count > 0)
@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Business.Managers
                     th + "Corredor" + "</td>" +
                     th + "Proveedor" + "</td>" +
                     th + "Tipo" + "</td>" +
-                    th + "Estado:" + "</td>" +
+                    //th + "Estado:" + "</td>" +
                     th + "Motivo:" + "</td>" +
                     "</tr>";
 
@@ -160,7 +160,6 @@ namespace Molinos.DataAgro.Business.Managers
                          (c.Corredor != null ? "<td " + style1 + c.Corredor.RazonSocial + "</td>" : "<td " + style1 + "</td>") +
                          "<td " + style1 + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
                          "<td " + style1 + (c.Virtual == true ? "FIJACION VIRTUAL" : c.TipoNegocio.Descripcion) + "</td>" +
-                         "<td " + style1 + c.Estado.Descripcion + "</td>" +
                          "<td " + style1 + (!String.IsNullOrEmpty(c.MotivoOperacionAnterior) ? c.MotivoOperacionAnterior : "") + "</td> </tr> ";
                 }
                 else
@@ -177,11 +176,9 @@ namespace Molinos.DataAgro.Business.Managers
                         (c.Corredor != null ? "<td " + style2 + c.Corredor.RazonSocial + "</td>" : "<td " + style2 + "</td>") +
                         "<td " + style2 + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
                         "<td " + style2 + (c.Virtual == true ? "FIJACION VIRTUAL" : c.TipoNegocio.Descripcion) + "</td>" +
-                        "<td " + style2 + c.Estado.Descripcion + "</td>" +
                         "<td " + style2 + (!String.IsNullOrEmpty(c.MotivoOperacionAnterior) ? c.MotivoOperacionAnterior : "") + "</td> </tr> ";
                 }
-            }
-
+            }      
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br /> <br />  Saludos Cordiales" +

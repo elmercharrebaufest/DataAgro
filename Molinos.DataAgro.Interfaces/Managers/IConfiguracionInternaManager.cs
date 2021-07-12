@@ -38,5 +38,9 @@ namespace Molinos.DataAgro.Interfaces
         bool TraerPausadoGeneral();
         List<EstadoPrecioMOADto> TraerEstadoPrecioMOA();
         void CambiarEstadoPrecioMOA(List<EstadoPrecioMOADto> precios);
+        Resultado GrabarSustentable(HabilitacionSustentable oConfiguracion, string active);
+        List<HabilitacionSustentableDto> TraerSustentables();
+        HabilitacionSustentableDto TraerSustentable(int id);
+        Resultado EliminarSustentable(int id);
     }
 }

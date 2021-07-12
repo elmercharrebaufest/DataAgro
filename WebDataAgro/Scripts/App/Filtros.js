@@ -167,7 +167,7 @@ function filtrosBusqFecha(listaDeFiltros) {
 function filtrosBusqSelectMultiple(listaDeFiltros) {
 
     //Solo Para Multiselect de Kendo
-    let filtroMultiselect = $(".multiselect input");
+    let filtroMultiselect = $(".multiselect input, .multiselect select");
     filtroMultiselect.each(function (e) {
 
         let listaSeleccionados = [];

@@ -3,11 +3,13 @@
     ViewBag.Title = "Cupo";
     var zonas = (List<SelectListItem>)ViewBag.Zona;
     var fleteProcedencia = PermisosHelper.Is(PermisosDataAgro.ReasignarFlete);
+    var reasignarCupo = PermisosHelper.Is(PermisosDataAgro.ReasignarProveedorPantallaCupo);
 }
 
 <script>
     BlockUi("Cargando...");
     fleteProcedencia = '@fleteProcedencia';
+    reasignarCupo = '@reasignarCupo';
 </script>
 
 <h3 id="titulo">@ViewBag.Titulo</h3>

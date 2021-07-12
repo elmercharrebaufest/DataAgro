@@ -57,5 +57,6 @@ namespace Molinos.DataAgro.Interfaces
 
         List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor);
         void AnulacionMasiva(List<int> equipo, string comercialId, DataSourceResult cupos, string path);
+        List<CupoDto> ObtenerCupos(List<int> list, RepositorioEF repositorio);
     }
 }

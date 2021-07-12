@@ -2759,6 +2759,8 @@
     <Content Include="Views\CompraNet\ModalConfirmarCostoFinanciero.cshtml" />
     <Content Include="Views\ConfiguracionInterna\ModalHabilitarMaterial.cshtml" />
     <Content Include="Views\LogServer\Index.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_ListaSustentable.cshtml" />
+    <Content Include="Views\ConfiguracionInterna\_GrabarSustentablePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

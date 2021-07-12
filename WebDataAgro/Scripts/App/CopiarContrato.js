@@ -694,6 +694,11 @@ function InicializarDatos() {
         }
         else {
             datosIniCrearContrato = data;
+            datosIniCrearContrato.Datos.Destino = datosIniCrearContrato.Datos.Destino.filter(function (x) { return (x => x.Id != 10 && x.Id != 9 ) });
+            //6	Prest Dev.Buenos Aires
+            //7	Prest Dev.Santa Fe 
+            //9	LE
+            //10	SAN LORENZO SUSTENTABLE / CALIDAD
             AsignarDatos();
         }
         if (Id != "" && esEdicion == "False") {

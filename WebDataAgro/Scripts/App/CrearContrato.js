@@ -3964,11 +3964,15 @@ function CargarDatosEditar(contrato, hijo) {
             $("#fechaCiertaDiv").hide();
         }
     }
-    if (contrato.SustentableTercero == true || contrato.CalidadTercero == true || contrato.DolarizadoTercero == true || contrato.PagoDiferidoTercero == true || contrato.ObservacionTercero != null) {
+    if (contrato.ProveedorCreador != null) {
         $("#datosCargaTercero").show();
-        var p = contrato.ObservacionTercero.split("|");
-
-        $("#visualizar_observacionTercero").text(p[0]);
+        var p = ""
+        if (contrato.ObservacionTercero != null) {
+            p = contrato.ObservacionTercero.split("|");
+            $("#visualizar_observacionTercero").text(p[0]);
+        } else {
+            $(".observacionTercero").hide();
+        }
         var datosTercero = "";
         if (contrato.CalidadTercero == true) {
             var n = "";
@@ -4006,6 +4010,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#visualizar_datosTercero").html(datosTercero);
     } else {
         $("#datosCargaTercero").hide();
+        $(".observacionTercero").hide();
+        
     }
 
     if (contrato.PagoDirectoVendedor == true) {

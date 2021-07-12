@@ -80,5 +80,7 @@ namespace Molinos.DataAgro.Interfaces
         //  int? precio, decimal? noPesificables, decimal? total, string vendedor, string corredor, bool? dolarizado, bool? dolarizadoExpress, bool? dolarizadoNoP);
         DataSourceResult TraerTodoDatoPesificado(DataSourceRequest filtro, List<int> equipo);
         DataSourceResult TraerTodoPrecioMoaPizarra(DataSourceRequest request);
+        ResultReportePagosDiferidos ObtenerDatosReportePagosDiferidos(DateTime desde, DateTime hasta);
+        void EnviarMailReportePagosDiferidos(byte[] datos, DateTime desde, DateTime hoy);
     }
 }
