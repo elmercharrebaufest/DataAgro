@@ -137,13 +137,13 @@ function Inicializar() {
             },
 
             {
-                field: "USDPesificable", title: "USD Kilos Pesificable", format: "{0:n0}"
+                field: "USDPesificable", title: "USD Pesificable", format: "{0:n0}"
             },
             {
-                field: "USDNoPesificable", title: "USD Kilos No Pesificables", format: "{0:n0}"
+                field: "USDNoPesificable", title: "USD No Pesificables", format: "{0:n0}"
             },
             {
-                field: "USDTotal", title: "USD Kilos Totales", format: "{0:n0}"
+                field: "USDTotal", title: "USD Totales", format: "{0:n0}"
             },
             {
                 field: "USDTotalizador", title: "Totalizador", format: "{0:n0}"
