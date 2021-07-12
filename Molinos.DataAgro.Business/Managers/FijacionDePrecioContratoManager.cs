@@ -242,7 +242,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
             }
-            if (oParam.ComercialId == 0)
+            if (oParam.ComercialId == 0 || oParam.ComercialId == null)
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
