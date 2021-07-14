@@ -72,6 +72,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracion.FechaCreacion = DateTime.Now;
                 var nuevoHabilitacionPizarra = (HabilitacionPizarra)oConfiguracion.Clone();
                 nuevoHabilitacionPizarra.Dia = day;
+                nuevoHabilitacionPizarra.DesdeVigencia = new DateTime(day.Year, day.Month, day.Day, nuevoHabilitacionPizarra.DesdeVigencia.Hour, nuevoHabilitacionPizarra.DesdeVigencia.Minute, nuevoHabilitacionPizarra.DesdeVigencia.Second);
+                nuevoHabilitacionPizarra.HastaVigencia = new DateTime(day.Year, day.Month, day.Day, nuevoHabilitacionPizarra.HastaVigencia.Hour, nuevoHabilitacionPizarra.HastaVigencia.Minute, nuevoHabilitacionPizarra.HastaVigencia.Second);
+
                 repositorio.Agregar(nuevoHabilitacionPizarra);
 
                 try
@@ -659,18 +662,18 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     foreach (var mon in monedas)
                     {
-                        if (tiponegocio == 3)
-                        {
-                            var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).FirstOrDefault();
-                            if (precio == null)
-                            {
-                                precio = new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId };
-                            }
-                            precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
-                            listaPrecio.Add(precio);
-                        }
-                        else
-                        {
+                        //if (tiponegocio == 3)
+                        //{
+                        //    var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).FirstOrDefault();
+                        //    if (precio == null)
+                        //    {
+                        //        precio = new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId };
+                        //    }
+                        //    precio.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
+                        //    listaPrecio.Add(precio);
+                        //}
+                        //else
+                        //{
                             if (neg.TipoNegocioId == 1 && mon.Descripcion == "ARP")
                             {
                                 continue;
@@ -702,7 +705,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 precio.Add(new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId });
                             }
                             listaPrecio.AddRange(precio);
-                        }
+                        //}
 
                     }
                 }

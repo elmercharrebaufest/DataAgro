@@ -446,7 +446,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoId = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacionSap);
 
             var tipoCambio = oFijacionDePrecio.Id != 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
-            var fechaDolarizado = oFijacionDePrecio.FechaDesde.AddDays(30);
+            var fechaDolarizado = oFijacionDePrecio.FechaOperacion.AddDays(30);
             var proveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oFijacionDePrecio.ProveedorId, x => x.CUIT);
             var corredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oFijacionDePrecio.CorredorId, x => x.CUIT);
             CargarDolarizado(oFijacionDePrecio, oFijacionDePrecioSave, oContratoId, fechaDolarizado, proveedor, corredor);
@@ -1337,7 +1337,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var Dolarizado = oContratoSave.Dolarizado ?? false;
                 var fechaDolarizado = oContratoSave.FechaDolarizado;
 
-                CargarDolarizado(oContrato, oContratoSave, oContratoId, oContrato.FechaDesde.AddDays(30), proveedor, corredor);
+                CargarDolarizado(oContrato, oContratoSave, oContratoId, oContrato.FechaOperacion.AddDays(30), proveedor, corredor);
                 error = ValidarLiquidacionParaFijacion(oContratoSave, DolarizadoExpress, DolarizadoCorredor, Dolarizado, fechaDolarizado);
                 if (error.HayError)
                 {
