@@ -271,7 +271,7 @@ namespace WebDataAgro.Services
 
             foreach (var desc in contratoSAP.DescuentoBonificaciones ?? new List<DescuentoBonificacionSap>())
             {
-                if (!(desc.TipoPeriodo == "I" && desc.TipoDescBon == "B") && !(desc.TipoPeriodo == "E" && desc.TipoDescBon == "A"))
+                if (!(desc.TipoPeriodo == "I" && desc.TipoDescBon == "B") && !(desc.TipoPeriodo == "E" && string.IsNullOrEmpty(desc.TipoDescBon)))
                 {
                     var descuento = new DescuentoBonificacion
                     {
@@ -286,7 +286,7 @@ namespace WebDataAgro.Services
                     };
                     descuentos.Add(descuento);
                 }
-                if (desc.TipoPeriodo == "E" && desc.TipoDescBon == "A")
+                if (desc.TipoPeriodo == "E" && string.IsNullOrEmpty( desc.TipoDescBon ))
                 {
                     var precio = new PrecioPactado
                     {

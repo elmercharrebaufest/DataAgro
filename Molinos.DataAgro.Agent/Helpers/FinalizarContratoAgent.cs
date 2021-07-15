@@ -86,7 +86,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         listaDescuentos.Add(new ZMPES5290
                         {
                             TIPO_PERIODO = "E",
-                            TIPO_DB = "A",
+                            TIPO_DB = "",
                             FEDESDE = p.FechaDesde?.ToString("yyyy-MM-dd"),
                             FEHASTA = p.FechaHasta?.ToString("yyyy-MM-dd"),
                             IMPORTE_DB = p.ImportePactado ?? 0,
@@ -270,8 +270,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     },
                     IM_TOPES_FIJ = new ZMPES5280
                     {
-                        FE_DESDE = contrato.DesdeFijacion?.ToString("yyyy-MM-dd"),
-                        FE_HASTA = contrato.HastaFijacion?.ToString("yyyy-MM-dd")
+                        FE_DESDE = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
+                        FE_HASTA = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
                     },
                     IM_DESC_BONIF = listaDescuentos.ToArray(),
                     IM_CALIDAD = listaCalidades.ToArray(),
