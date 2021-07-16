@@ -2095,7 +2095,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Calidad = cupoSAP.Calidad,
                     CupoSap = cupoSAP.CupoSap,
                     EstadoCupoId = cupoSAP.EstadoCupoId,
-                    FechaGeneracion = DateTime.Now
+                    FechaGeneracion = DateTime.Now,
+                    ComercialId = cupoSAP.ComercialId
                 };
                 repositorio.Agregar(cupoSave);
                 repositorio.GuardarCambios();
