@@ -1049,10 +1049,14 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Descuentos", "La fecha desde y hasta de descuento o bonificacion es obligatoria.");
                 }
-                if (oParam.Descuentos.Any(a => a.TipoPeriodoDBId == 3 || a.TipoPeriodoDBId == 2) && oParam.TipoNegocioId == 2)
+                if (!validacionesMinimas)
                 {
-                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación o de Entrega en un a precio.");
+                    if (oParam.Descuentos.Any(a => a.TipoPeriodoDBId == 3 || a.TipoPeriodoDBId == 2) && oParam.TipoNegocioId == 2)
+                    {
+                        oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación o de Entrega en un a precio.");
+                    }
                 }
+
                 if (oParam.Descuentos.Any(a => a.TipoDBId == 1 && (a.Importe > 0 || a.Porcentaje > 0)) && oParam.TipoNegocioId == 2 && oParam.Precio > 0)
                 {
                     oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion Sobre Precio cuando tiene precio.");
