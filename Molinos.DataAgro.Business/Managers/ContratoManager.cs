@@ -382,11 +382,12 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("PlanCanje", "El proveedor no está habilitado como Proveedor Plan canje");
                     }
-                    if (oParam.BoletoId == 4 && oParam.ProvinciaId != 1 && oParam.ProvinciaId != 12 && oParam.ProvinciaId != 21)
+                    var boletoCompraNetProvincias = repositorio.Listar<BoletoCompraNetProvincia>(x => x.BoletoCompraNetId == 4);
+                    if (oParam.BoletoId == 4 && !boletoCompraNetProvincias.Any(x=> x.ProvinciaId  == oParam.ProvinciaId))
                     {
                         oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
                     }
-                    else if (oParam.BoletoId == 4 && (oParam.ProvinciaId == 1 || oParam.ProvinciaId == 12 || oParam.ProvinciaId == 21) && alta.Carta == "NO")
+                    else if (oParam.BoletoId == 4 && boletoCompraNetProvincias.Any(x => x.ProvinciaId == oParam.ProvinciaId) && alta.Carta == "NO")
                     {
                         oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
                     }

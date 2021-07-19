@@ -308,6 +308,7 @@
     <Build Include="dbo\Tables\TipoPosicionCBOT.sql" />
     <Build Include="dbo\Tables\HabilitacionSustentable.sql" />
     <Build Include="dbo\Tables\FijacionVirtualSAP.sql" />
+    <Build Include="dbo\Tables\BoletoCompraNetProvincia.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
