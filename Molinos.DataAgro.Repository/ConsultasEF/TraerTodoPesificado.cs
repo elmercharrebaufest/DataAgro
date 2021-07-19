@@ -68,15 +68,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     USDNoPesificable = (item.KgNoPesificable  * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) > 0 ?
                     ((item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) /1000): 0,
                  
-                    USDTotal = (item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1) > 0 ?
-                    ((item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) / 1000): 0),
+                    USDTotal = (item.KgTotales * (item.Precio != null && item.Precio != 0 ? item.Precio : 1) > 0 ?
+                    ((item.KgTotales * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) / 1000): 0),
                    
                     USDTotalizador = (item.KgVencimientoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) > 0 ?
                     ((item.KgVencimientoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) / 1000) : 0 +
                     (item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) > 0 ?
                     ((item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) / 1000) : 0 +
-                    (item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1) > 0 ?
-                    ((item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) / 1000) : 0),
+                    (item.KgTotales * (item.Precio != null && item.Precio != 0 ? item.Precio : 1) > 0 ?
+                    ((item.KgTotales * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) / 1000) : 0),
                 };
 
             GridHelper.TruncateTime(request.Filter, ref queryRango);
