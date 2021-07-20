@@ -70,12 +70,12 @@ namespace WebDataAgro.Controllers
         public ActionResult ListarProveedor(string text = "")
         {
             var proveedores = proveedorManager.ListarProveedor(text);
-            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
+            return Json(proveedores.Select(x => new { x.CUIT, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
         public ActionResult ListarCorredor(string text = "")
         {
             var corredores = proveedorManager.ListarCorredor(text);
-            return Json(corredores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
+            return Json(corredores.Select(x => new { x.CUIT, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public ActionResult BuscaDatosTabla(DataSourceRequest filtro)

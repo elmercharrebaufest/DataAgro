@@ -417,7 +417,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var existe = repositorio.Existe<PrecioMoa>(x =>
                     ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
                     && ((precio.DesdeEntrega >= x.DesdeEntrega && precio.DesdeEntrega <= x.HastaEntrega) || (precio.HastaEntrega >= x.DesdeEntrega && precio.HastaEntrega <= x.HastaEntrega))
-                    && x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId && (x.DestinoId == precio.DestinoId || x.DestinoId == null));
+                    && x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId && x.DestinoId == precio.DestinoId);
 
                     if (existe)
                     {
@@ -429,7 +429,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var existe = repositorio.Existe<PrecioMoa>(x =>
                     ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
                     && ((precio.DesdeEntrega >= x.DesdeEntrega && precio.DesdeEntrega <= x.HastaEntrega) || (precio.HastaEntrega >= x.DesdeEntrega && precio.HastaEntrega <= x.HastaEntrega))
-                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId && (x.DestinoId == precio.DestinoId || x.DestinoId == null));
+                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId && x.DestinoId == precio.DestinoId);
 
                     if (existe)
                     {
@@ -440,7 +440,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var existe = repositorio.Existe<PrecioMoa>(x =>
                     ((precio.DesdeVigencia >= x.DesdeVigencia && precio.DesdeVigencia <= x.HastaVigencia) || (precio.HastaVigencia >= x.DesdeVigencia && precio.HastaVigencia <= x.HastaVigencia))
-                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId && (x.DestinoId == precio.DestinoId || x.DestinoId == null));
+                    && x.MaterialId == precio.MaterialId && x.MonedaId == precio.MonedaId && x.TipoNegocioId == precio.TipoNegocioId && x.DestinoId == precio.DestinoId);
 
                     if (existe)
                     {

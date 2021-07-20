@@ -25,6 +25,7 @@ function Inicializar() {
             parameterMap: function (options, operation) {
 
                 if (operation == "read") {
+                    options.take = 0;
                     return JSON.stringify(options)
                 }
                 if (options.filter) {
@@ -80,14 +81,22 @@ function Inicializar() {
             }
         },
 
-        serverPaging: true,
-        serverSorting: true,
-        serverFiltering: false,
+        serverPaging: false,
+        serverSorting: false,
+        serverFiltering: true,
         //sort: [
         //    { field: "Material", dir: "desc" }
         //],
-
         pageSize: 20,
+        aggregate: [
+            { field: "KgVencimientoPesificable", aggregate: "sum" },
+            { field: "KgNoPesificable", aggregate: "sum"},
+            { field: "USDPesificable", aggregate: "sum"},
+            { field: "USDNoPesificable", aggregate: "sum" },
+            { field: "KgTotales", aggregate: "sum" },
+            { field: "USDTotal", aggregate: "sum"},
+            { field: "USDTotalizador", aggregate: "sum" }
+        ]
     };
 
     $("#grid").kendoGrid({
@@ -127,28 +136,27 @@ function Inicializar() {
                 }
             },
             {
-                field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}"
+                field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}",  aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n0')#",
             },
             {
-                field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}"
+                field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n0')#",
             },  
             {
-                field: "KgTotales", title: "Kilos Totales", format: "{0:n0}"
+                field: "KgTotales", title: "Kilos Totales", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n0')#",
             },
 
             {
-                field: "USDPesificable", title: "USD Pesificable", format: "{0:n0}"
+                field: "USDPesificable", title: "USD Pesificable", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
             },
             {
-                field: "USDNoPesificable", title: "USD No Pesificables", format: "{0:n0}"
+                field: "USDNoPesificable", title: "USD No Pesificables", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
             },
             {
-                field: "USDTotal", title: "USD Totales", format: "{0:n0}"
+                field: "USDTotal", title: "USD Totales", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
             },
             {
-                field: "USDTotalizador", title: "Totalizador", format: "{0:n0}"
-            },
-            
+                field: "USDTotalizador", title: "Totalizador", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
+            },            
             {
                 field: "Precio", type: "number", format: "{0:n2}"
             },
@@ -193,7 +201,7 @@ function Inicializar() {
         },
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-
+            
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
                                
@@ -202,9 +210,8 @@ function Inicializar() {
                 if (row.cells[4].value == true) {
                     row.cells[4].value = "SI"
                 } else {
-                    row.cells[4].value = "NO"
+                    row.cells[4].value = "NO"                    
                 }
-
 
                 if (row.cells[5].value == true) {
                     row.cells[5].value = "SI"
@@ -241,6 +248,10 @@ function Inicializar() {
                 }
                 
             }
+
+            sheet.rows[sheet.rows.length -1].cells[4].value = "";
+            sheet.rows[sheet.rows.length -1].cells[5].value = "";
+            sheet.rows[sheet.rows.length -1].cells[6].value = "";
         },
     });
 
@@ -277,7 +288,7 @@ function Inicializar() {
     //});
 
     CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "CUIT", "/ReportePesificados/ListarProveedor");
-    CrearMultiSelectFiltro("#buscadorCorredor", "Corredor", "CuitCorredor", "/ReportePesificados/ListarCorredor");
+    CrearMultiSelectFiltro("#buscadorCorredor", "Proveedor", "CUIT", "/ReportePesificados/ListarCorredor");
 
 
     //$("#SustentableId").click(function () {
