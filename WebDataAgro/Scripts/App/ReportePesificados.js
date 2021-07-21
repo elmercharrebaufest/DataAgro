@@ -253,10 +253,10 @@ function Inicializar() {
                 }
                 
             }
-
-            sheet.rows[sheet.rows.length -1].cells[4].value = "";
-            sheet.rows[sheet.rows.length -1].cells[5].value = "";
-            sheet.rows[sheet.rows.length -1].cells[6].value = "";
+            //aggregates
+            //sheet.rows[sheet.rows.length -1].cells[4].value = "";
+            //sheet.rows[sheet.rows.length -1].cells[5].value = "";
+            //sheet.rows[sheet.rows.length -1].cells[6].value = "";
         },
     });
 
