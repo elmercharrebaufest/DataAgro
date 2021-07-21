@@ -91,11 +91,10 @@ function Inicializar() {
         aggregate: [
             { field: "KgVencimientoPesificable", aggregate: "sum" },
             { field: "KgNoPesificable", aggregate: "sum"},
+            { field: "KgTotales", aggregate: "sum" },
             { field: "USDPesificable", aggregate: "sum"},
             { field: "USDNoPesificable", aggregate: "sum" },
-            { field: "KgTotales", aggregate: "sum" },
-            { field: "USDTotal", aggregate: "sum"},
-            { field: "USDTotalizador", aggregate: "sum" }
+            { field: "USDTotal", aggregate: "sum"}
         ]
     };
 
@@ -107,7 +106,16 @@ function Inicializar() {
         },
         dataSource: ds,
         dataBound: function () {
-            var grid = $("#grid").data("kendoGrid");           
+            var grid = $("#grid").data("kendoGrid");
+            console.log(grid.dataSource._aggregateResult);
+            $("#KilosPesificable").html(kendo.toString(grid.dataSource._aggregateResult.KgVencimientoPesificable.sum, 'n0'));
+            $("#USDPesificable").html(kendo.toString(grid.dataSource._aggregateResult.USDPesificable.sum, 'n2'));
+
+            $("#KilosNoPesificables").html(kendo.toString(grid.dataSource._aggregateResult.KgNoPesificable.sum, 'n0'));
+            $("#USDNoPesificable").html(kendo.toString(grid.dataSource._aggregateResult.USDNoPesificable.sum, 'n2'));
+
+            $("#KilosTotales").html(kendo.toString(grid.dataSource._aggregateResult.KgTotales.sum, 'n0'));
+            $("#USDTotales").html(kendo.toString(grid.dataSource._aggregateResult.USDTotal.sum, 'n2'));
         },
         columns: [
             { field: "Contrato", type: "string", width: 150 },
@@ -136,23 +144,23 @@ function Inicializar() {
                 }
             },
             {
-                field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}",  aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n0')#",
+                field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}",  aggregates: ["sum"],/* footerTemplate: "#=kendo.toString(sum, 'n0')#",*/
             },
             {
-                field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n0')#",
+                field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n0')#",*/
             },  
             {
-                field: "KgTotales", title: "Kilos Totales", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n0')#",
+                field: "KgTotales", title: "Kilos Totales", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n0')#",*/
             },
 
             {
-                field: "USDPesificable", title: "USD Pesificable", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                field: "USDPesificable", title: "USD Pesificable", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n2')#",*/
             },
             {
-                field: "USDNoPesificable", title: "USD No Pesificables", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                field: "USDNoPesificable", title: "USD No Pesificables", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n2')#",*/
             },
             {
-                field: "USDTotal", title: "USD Totales", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
+                field: "USDTotal", title: "USD Totales", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n2')#",*/
             },                        
             {
                 field: "Precio", type: "number", format: "{0:n2}"

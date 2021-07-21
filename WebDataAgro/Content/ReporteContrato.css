@@ -134,3 +134,11 @@ div > label {
 .toolbar {
     float: right;
 }
+
+
+.grupo-totales {
+    border: 1px solid green;
+    color: #26337B;
+    border-radius: 5px !important;
+    display: inline-block;
+}
