@@ -153,10 +153,7 @@ function Inicializar() {
             },
             {
                 field: "USDTotal", title: "USD Totales", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
-            },
-            {
-                field: "USDTotalizador", title: "Totalizador", format: "{0:n0}", aggregates: ["sum"], footerTemplate: "#=kendo.toString(sum, 'n2')#",
-            },            
+            },                        
             {
                 field: "Precio", type: "number", format: "{0:n2}"
             },
