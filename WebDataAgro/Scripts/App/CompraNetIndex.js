@@ -414,9 +414,11 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Venta + "'" + ',' +
         "'" + dataItem.FechaDesde_SustentableFormateado + "'" + ',' +
         "'" + dataItem.FechaHasta_SustentableFormateado + "'" + ',' +
+        "'" + dataItem.ObligatoriedadCostoFinanciero + "'" + ',' +
         "'" + dataItem.PosicionCBOT + "'" + ',' +
-        "'" + dataItem.TipoPosicionCBOT + "'" + ',' +  
-        "'" + dataItem.ObligatoriedadCostoFinanciero + "'" + 
+        "'" + dataItem.TipoPosicionCBOT + "'" + ',' +
+        "'" + dataItem.ProveedorCreador + "'" +
+
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -1950,7 +1952,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
-    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, PosicionCBOT, TipoPosicionCBOT, obligatoriedad) {
+    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2373,8 +2375,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     if (ObservacionTercero == "" || ObservacionTercero == "null") {
         ObservacionTercero = null;
     }
+   
     if (SustentableTercero == "true" || CalidadTercero == "true" || DolarizadoTercero == "true" || PagoDiferidoTercero == "true" || ObservacionTercero != null) {
-        $("#datosCargaTercero").show();
         var p = ObservacionTercero.split("|");
 
         $("#visualizar_observacionTercero").text(p[0]);
@@ -2412,9 +2414,14 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
             datosTercero = datosTercero + '<strong style="float:left">Pago Diferido: </strong><span> Si ' + n + '</span><br>';
         }
         $("#visualizar_datosTercero").html(datosTercero);
+    }
+
+    if (ProveedorCreador != "" && ProveedorCreador != "null") {
+        $("#datosCargaTercero").show();
     } else {
         $("#datosCargaTercero").hide();
     }
+
     if (Canje == "true") {
         $("#canjeDiv").show();
         $("#canjeId").text("Si");
