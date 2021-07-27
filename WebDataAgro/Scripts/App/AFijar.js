@@ -375,6 +375,7 @@ function InicializarElementos() {
                 $("#contCorredorId").val("");
                 $("#contCorredorDiv").hide();
                 $("#pagoDirectoDiv").hide();
+                $("#pagoDirectoId").prop("checked", false);
                 //if (!$("#dolarizadoId").is(":checked") && /*$("#precioMonedaId").val() == "USDM " &&*/ /*$("#fechaCiertaId").val() == "" &&*/ $("#tipoId").val() != "6") {
                 //    $("#dolarizadoExpressDiv").show();
                 //    $("#dolarizadoExpressId").prop("disabled", false);
@@ -387,6 +388,7 @@ function InicializarElementos() {
                 //}
                 if ($("#AgenteCompraId").val() == "" && !$("#chequeElectronicoInput").is(":checked")) {
                     $("#pagoDirectoDiv").hide();
+                    $("#pagoDirectoId").prop("checked", false);
                     $("#pagoCbuDiv").show();
                     if ($("#tipoId").val() == "6" || $("#tipoId").val() == "3") {
                         $("#pagoCbuId").show();
@@ -3628,7 +3630,8 @@ function CargarDatosEditar(contrato, hijo) {
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
 
     if (contrato.PagoDirectoVendedor == true) {
-        $("#pagoDirectoDiv").hide();
+        $("#pagoDirectoDiv").show();
+        $("#pagoDirectoId").prop("checked", true);
     }
 
     if (contrato.Corredor != "") {
