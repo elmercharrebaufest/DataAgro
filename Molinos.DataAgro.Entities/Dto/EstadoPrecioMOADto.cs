@@ -10,5 +10,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int MaterialId { get; set; }
         public string Descripcion { get; set; }      
         public bool? Habilitado { get; set; }
+        public int TipoNegocioId { get; set; }
     }
 }

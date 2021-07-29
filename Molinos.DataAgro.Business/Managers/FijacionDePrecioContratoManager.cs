@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ITipoDeCambioAgent tipoDeCambioAgent;
         private readonly IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent;
         private readonly IFinalizarFijacionVirtualAgent finalizarFijacionVirtual;
+        private readonly IAnularFijacionVirtualAgent anularFijacionVirtual;
 
         public FijacionDePrecioContratoManager(
             ILogger logger,
@@ -51,9 +52,9 @@ namespace Molinos.DataAgro.Business.Managers
             IMailManager mailManager, ILogDataAgroManager logDataAgroManager,
             IValidarDocProcPagoAgent validarPagoAgente, IModificarFijacionAgent modificarFijacionAgent,
             IDiasHabilesAgent diasHabilesAgent, IConfiguracionManager configuracionManager,
-            IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent, 
+            IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent,
             ITipoDeCambioAgent tipoDeCambioAgent, IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent,
-            IFinalizarFijacionVirtualAgent finalizarFijacionVirtual)
+            IFinalizarFijacionVirtualAgent finalizarFijacionVirtual, IAnularFijacionVirtualAgent anularFijacionVirtual)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -73,6 +74,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.tipoDeCambioAgent = tipoDeCambioAgent;
             this.contratosParaFijacionVirtualAgent = contratosParaFijacionVirtualAgent;
             this.finalizarFijacionVirtual = finalizarFijacionVirtual;
+            this.anularFijacionVirtual = anularFijacionVirtual;
         }
 
         //--------------------------------------------------
@@ -206,8 +208,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (validacionesMinimas)
             {
-               
-                var fijacion = oParam.Virtual != true ? oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId, oParam.ContratoSAP, oParam.Id).FirstOrDefault():
+
+                var fijacion = oParam.Virtual != true ? oContratosParaFijacionAgent.ObtenerContratos(cuitProveedor, cuitCorredor, oParam.MaterialId, oParam.ContratoSAP, oParam.Id).FirstOrDefault() :
                    contratosParaFijacionVirtualAgent.ObtenerContratosCanje(cuitProveedor, cuitCorredor, oParam.MaterialId, oParam.ContratoSAP, oParam.Id).FirstOrDefault();
 
                 if (fijacion == null)
@@ -291,9 +293,9 @@ namespace Molinos.DataAgro.Business.Managers
                 //{
                 if (oParam.Pizarra.HasValue && !oParam.Pizarra.Value && oParam.FechaCierta == null)
                 {
-                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue 
-                        && oParam.DiasPesificado.Value != 0)) || (concepto == null && (!oParam.PagoDiferido.HasValue || 
-                        (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && 
+                    if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue
+                        && oParam.DiasPesificado.Value != 0)) || (concepto == null && (!oParam.PagoDiferido.HasValue ||
+                        (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) &&
                         (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
                     {
                         oErrorMessages.Error("", "Días de diferimiento/costo financiero es obligatorio con el pago diferido en pesos");
@@ -434,7 +436,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var oEntityErrors = new GrabarFijacionResult();
             this.Validar(oFijacionDePrecio, oEntityErrors, true);
-           
+
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
@@ -761,12 +763,12 @@ namespace Molinos.DataAgro.Business.Managers
                     string nroFijacionSAP = "";
                     if (oFijacionDePrecioSave.Virtual != true)
                     {
-                         nroFijacionSAP = SapFinalizarFijacion(oFijacionDePrecioSave);                     
-                    
+                        nroFijacionSAP = SapFinalizarFijacion(oFijacionDePrecioSave);
+
                     }
                     else
                     {
-                         nroFijacionSAP = SapFinalizarFijacionVirtual(oFijacionDePrecioSave);
+                        nroFijacionSAP = SapFinalizarFijacionVirtual(oFijacionDePrecioSave);
                         double nroFijacion = double.TryParse(nroFijacionSAP, out nroFijacion) ? nroFijacion : 0;
                         if (nroFijacion <= 0)
                         {
@@ -788,7 +790,7 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Error(e);
                     }
                     try
-                    {                        
+                    {
                         repositorio.GuardarCambios();
                         logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionDePrecioSave.Id), TipoAccionLogDataAgro.Crear, oFijacionDePrecioSave.GetType());
 
@@ -796,7 +798,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         if (oFijacionDePrecioSave.Virtual == true)
                         {
-                            mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionDePrecioSave, idActiveDirectory);
+                            mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionDePrecioSave, idActiveDirectory, false);
                         }
                         else
                         {
@@ -807,7 +809,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             EnviarNotificacion(comercialId, oFijacionDePrecioSave);
                         }
-                      
+
                     }
                     catch (Exception e)
                     {
@@ -1146,10 +1148,10 @@ namespace Molinos.DataAgro.Business.Managers
                 ImporteSobrePrecioContrato = fijac.ImporteSobrePrecioContrato,
                 PorcentajeSobrePrecioContrato = fijac.PorcentajeSobrePrecioContrato,
                 MonedaSobrePrecioContrato = fijac.MonedaSobrePrecioContrato,
-               
+
                 UsuarioId = fijac.UsuarioId,
                 UsuarioTercero = fijac.UsuarioTercero,
-                ProveedorCreador = fijac.ProveedorCreadorId, 
+                ProveedorCreador = fijac.ProveedorCreadorId,
                 Virtual = fijac.Virtual,
                 FechaCierta = fijac.FechaCierta,
                 FechaCiertaFormateado = fijac.FechaCierta != null ? SqlFunctions.DateName("day", fijac.FechaCierta).Trim() + "-" +
@@ -1165,7 +1167,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.DatosFijacion.KilosPendiente = (double.Parse(contrato.DatosFijacion.KilosPendiente)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"));
             }
             contrato.AperturaPrecios = TraerAperturaDePrecioPorFijacion(contrato.Id);
-            
+
             return contrato;
         }
         private DatosFijacionDeContratoDto FechaString(DatosFijacionDeContratoDto datos)
@@ -1582,7 +1584,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.Agregar(fijacionSave);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacionSave.Id), TipoAccionLogDataAgro.Crear, fijacionSave.GetType());
-                
+
             }
             catch (Exception e)
             {
@@ -1602,11 +1604,11 @@ namespace Molinos.DataAgro.Business.Managers
                 if (fijacionesVirtuales != null && fijacionesVirtuales.Count > 0)
                 {
                     logger.Error("Fijacion de canje" + JsonConvert.SerializeObject(fijacionesVirtuales));
-                    
+
                     foreach (var item in fijacionesVirtuales)
                     {
                         var f = new FijacionVirtualSap()
-                        {   
+                        {
                             FijacionVirtualId = repositorio.Obtener<FijacionDePrecioContrato, int?>(x => x.FijacionSAP == (fijacionSave.ContratoSAP + item.NumeroFijacionVirtual), x => x.Id),
                             Cantidad = item.Cantidad,
                             FijacionVirtualNro = item.NumeroFijacionVirtual
@@ -1625,14 +1627,23 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        public Resultado AnularFijacionSAP(FijacionSAP fijacion)
+        public Resultado AnularFijacionSAP(FijacionSAP fijacion, FijacionVirtualSAP fijacionVirtual)
         {
             logger.Debug("Inicializar AnularContratoSAP");
-
+            var oFijacionSave = new FijacionDePrecioContrato();
             var oEntityErrors = new Resultado();
-            var codigo = fijacion.Fijacion.PadLeft(10, '0');
-            var oFijacionSave = repositorio.ObtenerMayor<FijacionDePrecioContrato, int>(x => x.FijacionSAP == codigo, x => x.Id);
-
+            if (fijacion != null)
+            {
+                var codigo = fijacion.Fijacion.PadLeft(10, '0');
+                oFijacionSave = repositorio.ObtenerMayor<FijacionDePrecioContrato, int>(x => x.FijacionSAP == codigo, x => x.Id);
+            }
+            else if (fijacionVirtual != null)
+            {
+                //-> 000 2699076 + 06
+                //-> 2699076 06
+                var codigo = fijacionVirtual.Contrato.Substring(0, 7).PadLeft(10, '0') + fijacionVirtual.Contrato.Substring(7);
+                oFijacionSave = repositorio.ObtenerMayor<FijacionDePrecioContrato, int>(x => x.FijacionSAP == codigo && x.Virtual == true, x => x.Id);
+            }
             string jsonObjeto = JsonConvert.SerializeObject(fijacion, new JsonSerializerSettings()
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
@@ -1699,7 +1710,36 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+        public GrabarFijacionResult PreAnularFijacion(int contratoId, string motivo)
+        {
+            var oEntityErrors = new GrabarFijacionResult();
 
+            var oContratoSave = repositorio.Obtener<FijacionDePrecioContrato>(contratoId);
+
+            if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
+            {
+                oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+                return oEntityErrors;
+            }            
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado))
+            {
+                try
+                {
+                    oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
+                    oContratoSave.MotivoRechazo = motivo;
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oContratoSave.Id), TipoAccionLogDataAgro.Eliminar, oContratoSave.GetType());
+
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
+
+                }
+            }
+            return oEntityErrors;
+        }
         public void BuscarComision(BasicoContrato negocio)
         {
             if (negocio.TipoNegocioId == 3 && (negocio.ImporteComision ?? 0) == 0 && (negocio.PorcentajeComision ?? 0) == 0)
@@ -1756,9 +1796,68 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                             }
                         }
-                        }
+                    }
                 }
             }
+        }
+        public GrabarFijacionResult AnularFijacionVirtual(int fijacionId, string idActiveDirectory)
+        {
+            var oEntityErrors = new GrabarFijacionResult();
+
+            var oFijacionVirtualSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionId);
+
+            if (oFijacionVirtualSave != null && (oFijacionVirtualSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
+            {
+                var respuesta = anularFijacionVirtual.AnularFijacionVirtual(oFijacionVirtualSave, idActiveDirectory);
+                if (respuesta.Contains("OK"))
+                {
+                    try
+                    {
+                        oFijacionVirtualSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                        repositorio.GuardarCambios();                     
+                        logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacionId), TipoAccionLogDataAgro.Eliminar, oFijacionVirtualSave.GetType());
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e);
+                        oEntityErrors.Error("", e.Message);
+
+                    }
+                    mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionVirtualSave, idActiveDirectory, true);
+                }
+            }
+            return oEntityErrors;
+        }
+        public GrabarFijacionResult RechazarPreAnularFijacionVirtual(int contratoId/*, string motivo*/)
+        {
+            var oEntityErrors = new GrabarFijacionResult();
+
+            var fijacionSave = repositorio.Obtener<FijacionDePrecioContrato>(contratoId);
+            //if (string.IsNullOrEmpty(motivo) || string.IsNullOrWhiteSpace(motivo))
+            //{
+            //    oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
+            //    return oEntityErrors;
+            //}
+            if (fijacionSave != null && (fijacionSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
+            {
+                try
+                {
+                    fijacionSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                    //oContratoSave.MotivoRechazo = motivo;
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacionSave.Id), TipoAccionLogDataAgro.Crear, fijacionSave.GetType());
+
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
+
+                }
+
+            }
+
+            return oEntityErrors;
         }
     }
 }

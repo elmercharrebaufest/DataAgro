@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 .Returns(new List<CampañaDto>());
             centroManagerMock.Setup(x => x.TraerTodoCentro()).Returns(new ResultIniCentro() { Centro = new List<CentroIni>()});
             configuracionInternaMock.Setup(x => x.TraerPausadoGeneral())
-                .Returns(true);
+                .Returns(new List<EstadoPrecioMOADto>());
 
             var result = target.Index() as ViewResult;
             Assert.NotNull(result);
@@ -100,7 +100,7 @@ namespace Molinos.DataAgro.Test.Controllers
             campaniaMock.Setup(x => x.TraerTodoCampania())
                 .Returns(new List<CampañaDto>());
             configuracionInternaMock.Setup(x => x.TraerPausadoGeneral())
-                .Returns(true);
+                .Returns(new List<EstadoPrecioMOADto>());
             centroManagerMock.Setup(x => x.TraerTodoCentro()).Returns(new ResultIniCentro() { Centro = new List<CentroIni>() });
             var listaPrecio = new List<EstadoPrecioMOADto>() { new EstadoPrecioMOADto { Descripcion = "Soja", MaterialId = 3, Habilitado = true, Id = 1 } };
             configuracionInternaMock.Setup(x => x.CambiarEstadoPrecioMOA(listaPrecio));

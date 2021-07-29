@@ -231,5 +231,42 @@ namespace WebDataAgro.Controllers
             logger.Info("ReportePagosDiferidos - Finalizado");
             return Content("ok");
         }
+
+        public ActionResult ActualizarCumplimientoCupos()
+        {
+            logger.Info("ActualizarCumplimientoCupos - Iniciando");
+            try
+            {
+                cupoManager.ActualizarCumplimientoCupos(DateTime.Now.Date);
+            }
+            catch (Exception ex)
+            {
+                logger.Info("ActualizarCumplimientoCupos - Error");
+                logger.Error(ex);
+            }
+            logger.Info("ActualizarCumplimientoCupos - Finalizado");
+            return Content("ok");
+        }
+
+        public ActionResult ActualizarCumplimientoCuposMasivo(string fechaDesde, string fechaHasta)
+        {
+            logger.Info("ActualizarCumplimientoCuposMasivo - Iniciando");
+            DateTime desde = DateTime.ParseExact(fechaDesde, "yyyyMMdd", null);
+            DateTime hasta = DateTime.ParseExact(fechaHasta, "yyyyMMdd", null);
+            for (var dt = desde; dt <= hasta; dt = dt.AddDays(1))
+            {
+                try
+                {
+                    cupoManager.ActualizarCumplimientoCupos(dt);
+                }
+                catch (Exception ex)
+                {
+                    logger.Info("ActualizarCumplimientoCuposMasivo - Error en el dia " + dt.ToString("yyyyMMdd"));
+                    logger.Error(ex);
+                }
+            }
+            logger.Info("ActualizarCumplimientoCuposMasivo - Finalizado");
+            return Content("ok");
+        }
     }
 }

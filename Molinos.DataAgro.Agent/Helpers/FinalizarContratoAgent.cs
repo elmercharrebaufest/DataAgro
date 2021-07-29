@@ -195,7 +195,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "",
                         MONEDA = contrato.Moneda?.MonedaId,
                         NO_INFORMAR_SIO = noInformaSioString,
-                        PAGO_DIFERIDO = contrato.Dolarizado == true ? "X" : "",
+                        PAGO_DIFERIDO = (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) ? "X" : "",
                         MATERIAL = contrato.Material.Codigo,
                         PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
                         PRECIO_PIZARRA = contrato.Precio,

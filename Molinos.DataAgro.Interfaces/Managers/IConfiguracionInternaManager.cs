@@ -34,13 +34,14 @@ namespace Molinos.DataAgro.Interfaces
 
         Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active);
         Resultado EliminarHabilitacionPagoDiferido(int id);
-        void PausarCargaDePrecios(bool pausa);
-        bool TraerPausadoGeneral();
+        void PausarCargaDePrecios(bool pausa, int tipoNegocioId);
+        List<EstadoPrecioMOADto> TraerPausadoGeneral();
         List<EstadoPrecioMOADto> TraerEstadoPrecioMOA();
         void CambiarEstadoPrecioMOA(List<EstadoPrecioMOADto> precios);
         Resultado GrabarSustentable(HabilitacionSustentable oConfiguracion, string active);
         List<HabilitacionSustentableDto> TraerSustentables();
         HabilitacionSustentableDto TraerSustentable(int id);
         Resultado EliminarSustentable(int id);
+        Resultado ActualizarPrecio(int id, decimal precio, string idActiveDirectory);
     }
 }

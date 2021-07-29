@@ -103,5 +103,25 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(resultado);
             Assert.IsFalse(resultado.HayErrores);
         }
+
+        [Test]
+        public void EliminarCaunalOperacionOk()
+        {
+            var CanalOperacion = new CanalOperacion ();
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CanalOperacion, bool>>>())).Returns(false);
+            var resultado = target.ValidarCanalOperacion(CanalOperacion);
+            Assert.NotNull(resultado);
+            Assert.IsFalse(resultado.HayErrores);
+        }
+
+        [Test]
+        public void EliminarCaunalOperacionError()
+        {
+            var CanalOperacion = new CanalOperacion();
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CanalOperacion, bool>>>())).Returns(true);
+            var resultado = target.ValidarCanalOperacion(CanalOperacion);
+            Assert.NotNull(resultado);
+            Assert.IsTrue(resultado.HayErrores);
+        }
     }
 }

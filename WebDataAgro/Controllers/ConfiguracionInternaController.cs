@@ -1,4 +1,6 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using KendoGridBinder;
+using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
@@ -23,7 +25,7 @@ namespace WebDataAgro.Controllers
         private readonly ITipoNegocioManager tipoNegocioManager;
         private readonly ICentroManager centroManager;
 
-        public ConfiguracionInternaController(IConfiguracionInternaManager configuracionManager, IMaterialManager materialManager, 
+        public ConfiguracionInternaController(IConfiguracionInternaManager configuracionManager, IMaterialManager materialManager,
             IPrecioPizarraManager precioPizarraManager, ICampañaManager campañaManager, ITipoNegocioManager tipoNegocioManager, ICentroManager centroManager)
         {
             this.configuracionManager = configuracionManager;
@@ -128,7 +130,7 @@ namespace WebDataAgro.Controllers
             var entidad = new PrecioMoa
             {
                 MaterialId = configuracion.MaterialId,
-                DesdeVigencia =  DateTime.Parse(configuracion.DesdeVigencia),
+                DesdeVigencia = DateTime.Parse(configuracion.DesdeVigencia),
                 HastaVigencia = DateTime.Parse(configuracion.HastaVigencia),
                 MonedaId = configuracion.MonedaId,
                 Precio = configuracion.Precio,
@@ -180,6 +182,11 @@ namespace WebDataAgro.Controllers
             };
             return entidad;
         }
+        public ActionResult ModalHabilitarMaterial()
+        {
+            CargarViewBag();
+            return PartialView("ModalHabilitarMaterial");
+        }
         private void CargarViewBag()
         {
             var material = materialManager.TraerTodoMaterial();
@@ -210,7 +217,7 @@ namespace WebDataAgro.Controllers
                     }).OrderBy(x => x.Value);
             ViewBag.TipoNegocio = tiponegociolist;
 
-            var tiponegociopizarralist = tiponegocio.Where(a=>a.TipoNegocioId == 3 || a.TipoNegocioId == 2).Select(
+            var tiponegociopizarralist = tiponegocio.Where(a => a.TipoNegocioId == 3 || a.TipoNegocioId == 2).Select(
                     x => new SelectListItem
                     {
                         Text = x.Descripcion,
@@ -246,14 +253,16 @@ namespace WebDataAgro.Controllers
                    }).OrderBy(x => x.Value);
             ViewBag.Centro = centroListItems;
 
+          
         }
         public ActionResult EliminarPrecio(int id)
         {
-            return PartialView("_ListaPrecio", new ConfiguracionInternaModel
-            {
-                ResultadoPrecio = configuracionManager.EliminarPrecio(id),
-                PrecioMoa = configuracionManager.TraerPrecios()
-            });
+            //return PartialView("_ListaPrecio", new ConfiguracionInternaModel
+            //{
+            //    ResultadoPrecio = configuracionManager.EliminarPrecio(id),
+            //    PrecioMoa = configuracionManager.TraerPrecios()
+            //});
+            return Json(configuracionManager.EliminarPrecio(id));
         }
         public ActionResult EliminarPizarra(int id)
         {
@@ -296,7 +305,7 @@ namespace WebDataAgro.Controllers
         {
             var entidad = new HabilitacionCampaña
             {
-                
+
                 MaterialId = configuracion.MaterialCampañaId,
                 CampañaId = configuracion.CampañaId,
             };
@@ -319,8 +328,8 @@ namespace WebDataAgro.Controllers
                 ResultadoPago = configuracionManager.EliminarHabilitacionPagoDiferido(id),
                 HabilitacionPagoDiferido = configuracionManager.TraerPagoDiferido()
             });
-        }      
-        
+        }
+
         public ActionResult PausarPrecios(List<EstadoPrecioMOADto> lista)
         {
             configuracionManager.CambiarEstadoPrecioMOA(lista);
@@ -377,5 +386,20 @@ namespace WebDataAgro.Controllers
             return entidad;
         }
 
+        public JsonResult TraerPrecios(KendoGridMvcRequest request)
+        {
+            var result = new KendoGrid<PrecioMoaDto>(request, configuracionManager.TraerPrecios());
+            return Json(result);
+        }
+
+        [HttpPost]
+        public JsonResult UpdatePrecio(List<PrecioMoaDto> models)
+        {
+            foreach (var item in models)
+            {
+                Resultado ResultadoPrecio = configuracionManager.ActualizarPrecio(item.Id, item.Precio == null ? 0 : item.Precio.Value, GlobalVariables.IdActiveDirectory);
+            }
+            return Json("");
+        }
     }
 }

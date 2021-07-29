@@ -50,6 +50,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IServicioRepositorioScatoAgent> servicioScato;
         private Mock<IHttpContextManager> contextoManager;
         private Mock<IAltaTempranaAgent> altaTempranaAgent;
+        private Mock<ICumplimientoCuposAgent> cumplimientoCuposAgent;
 
         [SetUp]
         public void SetUp()
@@ -70,11 +71,13 @@ namespace Molinos.DataAgro.Test.Managers
             servicioScato = new Mock<IServicioRepositorioScatoAgent>();
             contextoManager = new Mock<IHttpContextManager>();
             altaTempranaAgent = new Mock<IAltaTempranaAgent>();
+            cumplimientoCuposAgent = new Mock<ICumplimientoCuposAgent>();
 
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
                 mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object,
-                logDataAgroManagerMock.Object, comercialManagerMock.Object, servicioScato.Object, contextoManager.Object, altaTempranaAgent.Object);
+                logDataAgroManagerMock.Object, comercialManagerMock.Object, servicioScato.Object, contextoManager.Object, altaTempranaAgent.Object,
+                cumplimientoCuposAgent.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
@@ -211,7 +214,7 @@ namespace Molinos.DataAgro.Test.Managers
             clienteStopMock.Verify(x => x.EliminarCupo(It.IsAny<Cupo>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             eliminarCupoAgentMock.Verify(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-           
+
         }
 
         [Test]
@@ -813,5 +816,19 @@ namespace Molinos.DataAgro.Test.Managers
 
 
         //}
+
+        [Test]
+        public void ActualizarCumplimientoCuposTest()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<Cupo>() { new Cupo { Id = 1, CupoSap = "1", FechaIngreso = DateTime.Now.Date } });
+
+            cumplimientoCuposAgent.Setup(x => x.Ejecutar(It.IsAny<List<string>>(),It.IsAny<DateTime>()))
+                .Returns(new List<CumplimientoCupoDto> { new CumplimientoCupoDto { Codigo = "1", Cumplimiento = true } });
+
+            target.ActualizarCumplimientoCupos(It.IsAny<DateTime>());
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
     }
 }

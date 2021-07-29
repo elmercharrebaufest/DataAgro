@@ -287,6 +287,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.DestinoId != contrato.DestinoId ||
                     contratoGuardado.DiasPesificado != contrato.DiasPesificado ||
                     contratoGuardado.Dolarizado != contrato.Dolarizado ||
+                    contratoGuardado.DolarizadoCorredor != contrato.DolarizadoCorredor ||
                     contratoGuardado.EstablecimientoPropio != contrato.EstablecimientoPropio ||
                     contratoGuardado.FechaDesde != contrato.FechaDesde ||
                     contratoGuardado.FechaDolarizado != contrato.FechaDolarizado ||
@@ -376,7 +377,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "",
                             MONEDA = contrato.MonedaId,
                             NO_INFORMAR_SIO = noInformaSioString,
-                            PAGO_DIFERIDO = contrato.Dolarizado == true ? "X" : "",
+                            PAGO_DIFERIDO = (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) == true ? "X" : "",
                             MATERIAL = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo),
                             PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
                             PRECIO_PIZARRA = contrato.Precio,

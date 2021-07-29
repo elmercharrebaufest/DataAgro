@@ -119,7 +119,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agent\ICapacidadProductivaDisponibleAgent.cs" />
     <Compile Include="Agent\IContratosParaFijacionVirtualAgent.cs" />
+    <Compile Include="Agent\ICumplimientoCuposAgent.cs" />
+    <Compile Include="Agent\IAnularFijacionVirtualAgent.cs" />
     <Compile Include="Agent\IFinalizarFijacionVirtualAgent.cs" />
     <Compile Include="Agent\IClientePrimariAPIAgent.cs" />
     <Compile Include="Agent\IContratosAPesificarAgent.cs" />

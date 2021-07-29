@@ -553,6 +553,14 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-5">
+            <div style="width:50px;display:none;" id="CapacidadProductivaPendienteDiv">
+                <span style="display:inline-block">
+                    <span class="k-button k-button-icontext" id="CapacidadProductivaPendienteBtn" data-toggle="tooltip" data-placement="top" title="Capacidad Productiva Pendiente">
+                        <i class="fa fa-tasks"></i>
+                    </span>
+                </span>
+
+            </div>
             <span id="planCanjeDiv" style="display:none">
                 <label id="lblPlan">Plan canje</label>
                 <input id="planCanjeId" class="campo-input-input" type="checkbox" />
@@ -1185,3 +1193,5 @@
 
 @Html.Partial("_ModalCCPPPendienteAplicar")
 @Html.Partial("ModalConfirmarBolsa")
+
+@Html.Partial("_ModalObtenerCapacidadProductivaPendiente")

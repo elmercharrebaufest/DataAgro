@@ -1,43 +1,115 @@
-﻿@*<link href="~/Content/rol.css" rel="stylesheet" />*@
+﻿@using Molinos.DataAgro.Entities.Dto
 <link href="~/Content/compraNet.css" rel="stylesheet" />
+@{
+    var estados = (List<EstadoPrecioMOADto>)ViewBag.Habilitado;
+    var materiales = (List<EstadoPrecioMOADto>)ViewBag.MaterialDesc;
+}
 
+<script>
+    $(document).ready(function () {
+        $("#modalHabilitarMaterial").on("hidden.bs.modal", function () {
+            cancelarEstado();           
+        });
+        $("#APRECIO").on("click", function () {
+            $(".aPrecio").prop("checked", this.checked);
+        });
+
+        // if all checkbox are selected, check the selectall checkbox and viceversa  
+        $(".aPrecio").on("click", function () {
+            if ($(".aPrecio").length == $(".aPrecio:checked").length) {
+                $("#APRECIO").prop("checked", true);
+            } else {
+                $("#APRECIO").prop("checked", false);
+            }
+        });
+
+
+        $("#AFIJAR").on("click", function () {
+            $(".aFijar").prop("checked", this.checked);
+        });
+        // if all checkbox are selected, check the selectall checkbox and viceversa  
+        $(".aFijar").on("click", function () {
+            if ($(".aFijar").length == $(".aFijar:checked").length) {
+                $("#AFIJAR").prop("checked", true);
+            } else {
+                $("#AFIJAR").prop("checked", false);
+            }
+        });
+
+
+
+        $("#FIJACION").on("click", function () {
+            $(".fijacion").prop("checked", this.checked);
+        });
+        // if all checkbox are selected, check the selectall checkbox and viceversa  
+        $(".fijacion").on("click", function () {
+            if ($(".fijacion").length == $(".fijacion:checked").length) {
+                $("#FIJACION").prop("checked", true);
+            } else {
+                $("#FIJACION").prop("checked", false);
+            }
+        });
+    });
+   
+</script>
 <div class="modal fade" id="modalHabilitarMaterial" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             @*<div class="modal-header ">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-                <h1 class="modal-title-confirmadoTilde" id="lineModalLabel"></h1>
-                <div class="status confirmado-modal">
-                    <div>Habilitacion Material</div>
-                </div>
-            </div>*@
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h1 class="modal-title-confirmadoTilde" id="lineModalLabel"></h1>
+                    <div class="status confirmado-modal">
+                        <div>Habilitacion Material</div>
+                    </div>
+                </div>*@
             <div class="modal-body clearfix ">
                 <div class="col-xs-12 noPadding">
                     <table class="table-striped tabla" id="tabla">
                         <thead>
                             <tr>
-                                <th>Habilitar Todos</th>
-                                <th>
-                                    <label class="content-input">
-                                        <input type="checkbox" id="selectall" @(ViewBag.Habilitado != false ? "checked" : "")>
-                                        <i></i>
-                                    </label>
-                                </th>
+                                <th></th>
+                                @foreach (var tipo in ViewBag.TipoNegocio)
+                                {
+                                   
+                                    <th  style="width:120px !important">
+                                        @tipo.Text
+                                        <label class="content-input">
+                                            <input type="checkbox" id="@tipo.Text.Replace(" ","")" @(estados.Where(x => x.TipoNegocioId.ToString() == tipo.Value).FirstOrDefault().Habilitado != false ? "checked" : "")>
+                                            <i></i>
+
+                                        </label>
+                                    </th>
+                                }
                             </tr>
                         </thead>
-                        @foreach (var mat in ViewBag.MaterialDesc)
+                        @foreach (var mat in materiales.GroupBy(x => x.MaterialId))
                         {
-                            var i = 0;
+
                             <tr>
-                                <td>@mat.Descripcion</td>
-                                <td style="width: 10px">
+                                <td>@mat.FirstOrDefault().Descripcion</td>
+                                <td>
+                                    <span>
+                                        <label class="content-input">
+                                            <input type="checkbox" class="aFijar" name="aFijar[]" id="@(mat.FirstOrDefault().Descripcion.Replace(" ","") + 1)" @(mat.Any(x => x.TipoNegocioId == 1 && x.Habilitado == true) ? "checked" : "")>
+                                            <i></i>
+                                        </label>
+                                    </span>
+                                </td>
+                                <td>
                                     <label class="content-input">
-                                        <input type="checkbox" class="case" name="case[]" id="@mat.MaterialId"  @(mat.Habilitado == true ? "checked" : "") value="@i">
+                                        <input type="checkbox" class="aPrecio" name="aPrecio[]" id="@(mat.FirstOrDefault().Descripcion.Replace(" ","") +2)" @(mat.Any(x => x.TipoNegocioId == 2 && x.Habilitado == true) ? "checked" : "")>
+                                        <i></i>
+                                    </label>
+                                </td>
+
+                                <td>
+                                    <label class="content-input">
+                                        <input type="checkbox" class="fijacion" name="fijacion[]" id="@(mat.FirstOrDefault().Descripcion.Replace(" ","") + 3)" @(mat.Any(x => x.TipoNegocioId == 3 && x.Habilitado == true) ? "checked" : "")>
                                         <i></i>
                                     </label>
                                 </td>
                             </tr>
-                            i++;
+
                         }
                     </table>
                 </div>
@@ -49,9 +121,18 @@
                     <button type="button" id="finalizarConfirmado" onclick="ObtenerDatosMaterialHabilitado()" class="myBtn" data-dismiss="modal">Confirmar</button>
                 </div>
                 <div class="col-xs-6 noPaddingRight">
-                    <button type="button" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="myBtn btnCancelar" data-dismiss="modal" >Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    td, th {
+        text-align: center !important;
+    }
+    i {
+        margin-top: 6px;
+    }
+</style>

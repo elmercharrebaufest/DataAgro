@@ -61,6 +61,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IHttpContextManager httpContextManager;
         private readonly IValidacionCreditoAgent validarCreditoAgente;
         private readonly ITipoDeCambioAgent tipoCambioAgent;
+        private readonly ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -81,7 +82,8 @@ namespace Molinos.DataAgro.Business.Managers
             IValidarDocProcPagoAgent validarPagoAgente,
             IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent,
             ICartasDePortePendienteAplicarAgent ccppAgent,
-            IHttpContextManager httpContextManager, IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent)
+            IHttpContextManager httpContextManager, IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent,
+            ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -114,6 +116,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.httpContextManager = httpContextManager;
             this.validarCreditoAgente = validarCreditoAgente;
             this.tipoCambioAgent = tipoCambioAgent;
+            this.capacidadProductivaDisponibleAgent = capacidadProductivaDisponibleAgent;
         }
 
         public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
@@ -183,7 +186,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var destinos = repositorio.Listar<Centro, CentroQry>(x => new CentroQry() { Id = x.Id, Descripcion = x.Descripcion });
             datosCombo.Destino = destinos.Where(x => x.Id == 1).ToList();
-            datosCombo.Destino.AddRange( destinos.Where(x => x.Id != 1).OrderBy(x => x.Descripcion).ToList());
+            datosCombo.Destino.AddRange(destinos.Where(x => x.Id != 1).OrderBy(x => x.Descripcion).ToList());
             datosCombo.Condicion = repositorio.Listar<CondicionFijacion, CondicionFijacionQry>(x => new CondicionFijacionQry() { Id = x.Id, Descripcion = x.Descripcion });
 
             datosCombo.Standard = repositorio.Listar<StandardDeCalidad, StandardDeCalidadQry>(x => new StandardDeCalidadQry() { Id = x.Id, Descripcion = x.Descripcion });
@@ -453,7 +456,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (centro.ValidaRedespacho == true && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) && oParam.Pizarra != true)
                     {
                         oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
-                    }                   
+                    }
 
                     if (centro.ValidaRedespacho == true && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoDBId == 1 && x.TipoPeriodoDBId == 1)) && oParam.Pizarra == true)
                     {
@@ -1239,6 +1242,12 @@ namespace Molinos.DataAgro.Business.Managers
                 AgregarAmpliacionAlAcuerdo(oEntityErrors, oContrato.Id, oContrato.Cantidad, 0, oContrato.ContratoAcuerdoId, oContratoSave.Cantidad);
                 if (oEntityErrors.HayError) return oEntityErrors;
             }
+            oContrato.DolarizadoCorredor = false;
+            if (oContrato.CorredorId.HasValue && oContrato.Dolarizado == true)
+            {
+                oContrato.Dolarizado = false;
+                oContrato.DolarizadoCorredor = true;
+            }
             oContratoSave.MaterialId = oContrato.MaterialId;
             oContratoSave.TipoNegocioId = oContrato.TipoNegocioId;
             oContratoSave.Cantidad = oContrato.Cantidad;
@@ -1299,6 +1308,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.TarifaFlete = oContrato.TarifaFlete;
             oContratoSave.NivelTarifaId = oContrato.NivelTarifaId == 0 ? null : oContrato.NivelTarifaId;
             oContratoSave.Dolarizado = oContrato.Dolarizado;
+            oContratoSave.DolarizadoCorredor = oContrato.DolarizadoCorredor;
             oContratoSave.Sustentable = oContrato.Sustentable;
             oContratoSave.FechaCierta = oContrato.FechaCierta;
             oContratoSave.PorcentajeDePago = oContrato.PorcentajeDePago;
@@ -1323,7 +1333,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ObligatoriedadCostoFinanciero = oContrato.FechaCierta.HasValue &&
              oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
              oContrato.ObligatoriedadCostoFinanciero.HasValue && !oContrato.ObligatoriedadCostoFinanciero.Value
-             ? null : oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null; 
+             ? null : oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null;
             oContratoSave.PosicionCBOT = oContrato.PosicionCBOT;
             oContratoSave.TipoPosicionCBOTId = oContrato.TipoPosicionCBOTId;
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
@@ -2393,7 +2403,7 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDolarizado) : "",
                 Dolarizado = x.Dolarizado,
-
+                DolarizadoCorredor = x.DolarizadoCorredor,
                 Dias_Pesificado = x.DiasPesificado,
                 NoInformaSIO = x.NoInformaSio,
                 TrigoEspecial = x.TrigoEspecial,
@@ -2550,7 +2560,8 @@ namespace Molinos.DataAgro.Business.Managers
                 ProveedorCreador = x.ProveedorCreadorId,
                 UsuarioId = x.UsuarioId,
                 UsuarioTercero = x.UsuarioTercero,
-                FechaCierta = x.FechaCierta
+                FechaCierta = x.FechaCierta,
+                Fecha_Dolarizado = x.FechaDolarizado,
             });
             return contrato;
         }
@@ -3069,7 +3080,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }).ToList(),
                 StandardCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
-                Dolarizado = x.Dolarizado,
+                Dolarizado = x.Dolarizado == true || x.DolarizadoCorredor == true,
                 PagoDiferido = x.PagoDiferido,
                 Fecha_DolarizadoFormateado = x.FechaDolarizado.HasValue ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
@@ -3284,6 +3295,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.PosicionCBOT = contrato.PosicionCBOT;
             contratoSave.TipoPosicionCBOTId = contrato.TipoPosicionCBOTId;
 
+
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoSave.Id), TipoAccionLogDataAgro.Modificar, contratoSave.GetType());
 
@@ -3300,6 +3312,13 @@ namespace Molinos.DataAgro.Business.Managers
                 if (error.Errores.Count > 0)
                 {
                     return error;
+                }
+
+                oContrato.DolarizadoCorredor = false;
+                if (oContrato.CorredorId.HasValue && oContrato.Dolarizado == true)
+                {
+                    oContrato.Dolarizado = false;
+                    oContrato.DolarizadoCorredor = true;
                 }
 
                 var oContratoSave = new Contrato();
@@ -5024,6 +5043,13 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
+        }
+
+        public List<CapacidadProductivaPendienteDto> ObtenerCapacidadProductivaPendiente(int proveedorId)
+        {
+            var cuit = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
+            var result = capacidadProductivaDisponibleAgent.ObtenerCapacidadProductivaPendiente(cuit);
+            return result;
         }
     }
 }

@@ -30,11 +30,13 @@ namespace Molinos.DataAgro.Interfaces
         DateTime UltimoDiaHabil();
         Resultado ActualizarFijacionSap(FijacionDePrecioContrato fijacion);
         Resultado AltaFijacionSap(FijacionDePrecioContrato fijacion, List<FijacionVirtualSAPDto> fijacionVirtuales);
-        Resultado AnularFijacionSAP(FijacionSAP fijacion);
+        Resultado AnularFijacionSAP(FijacionSAP fijacion, FijacionVirtualSAP fijacionVirtual);
         Resultado AnularFijacionCarga(int fijacionId, string motivoRechazo);
         void BuscarComision(BasicoContrato negocio);
         List<DatosFijacionDeContratoDto> TraerDatosFijacionVirtual(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId);
-     
+        GrabarFijacionResult AnularFijacionVirtual(int fijacionId, string idActiveDirectory);
+        GrabarFijacionResult RechazarPreAnularFijacionVirtual(int contratoId/*, string motivo*/);
+        GrabarFijacionResult PreAnularFijacion(int contratoId, string motivo);
     }
 }
 

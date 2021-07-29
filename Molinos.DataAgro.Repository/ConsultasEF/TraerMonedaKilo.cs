@@ -39,6 +39,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 (0 == centroId || x.DestinoId == centroId) 
                 && x.ContratoAcuerdo == null
                 && x.TipoAgenteCompraId == null
+                && (x.Canje != true)
+                && (x.PrestamoDevolucion != true)
+                && (x.Venta != true)
                 && x.Pizarra != true)
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
@@ -51,7 +54,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy 
                 && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana && 
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && 
-                (centroId == 0 || centroId == 1)
+                (centroId == 0 || centroId == 1) && x.Canje != true                 
                 && x.Pizarra != true)
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
@@ -67,6 +70,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
                 (0 == centroId || x.DestinoId == centroId)
                 && x.ContratoAcuerdo == null
+                && (x.Canje != true)
+                && (x.PrestamoDevolucion != true)
+                && (x.Venta != true)
                 && x.Pizarra == true)
                 .GroupBy(x => x.MaterialId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
@@ -81,6 +87,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
                 (centroId == 0 || centroId == 1)
+                && (x.Canje != true)
                 && x.Pizarra == true)
                 .GroupBy(x => x.MaterialId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()

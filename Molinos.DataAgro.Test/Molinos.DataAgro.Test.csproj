@@ -176,6 +176,7 @@
     <Compile Include="Controllers\TareasProgramadasControllerTest.cs" />
     <Compile Include="Controllers\ZonaCupoControllerTest.cs" />
     <Compile Include="Managers\ConfiguracionBolsaManagerTest.cs" />
+    <Compile Include="Managers\FacacopManagerTest.cs" />
     <Compile Include="Managers\RolManagerTest.cs" />
     <Compile Include="Managers\FechaFeriadoManagerTest.cs" />
     <Compile Include="Managers\CartaDePresentacionManagerTest.cs" />

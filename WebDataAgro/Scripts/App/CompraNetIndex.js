@@ -193,13 +193,13 @@ function FormatearString(string, moneda) {
 function botonPendiente(dataItem, icono) {
     if ((modificaNegocios || (dataItem.Canje == true && esCanje)) && !externo &&
         (dataItem.PrestamoDevolucion != true && dataItem.Venta != true && dataItem.Virtual != true &&
-        (dataItem.Canje == null || dataItem.Canje == false) ||  (dataItem.Canje == true && esCanje) ||
-        (dataItem.Canje != true && dataItem.Venta != true && dataItem.Virtual != true &&
-        (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) || (dataItem.PrestamoDevolucion == true && esPrestamo)) ||
-        (dataItem.Canje != true && dataItem.PrestamoDevolucion != true && dataItem.Virtual != true &&
-        (dataItem.Venta == null || dataItem.Venta == false) || (dataItem.Venta == true && esVenta)) ||
-        (dataItem.Canje != true && dataItem.Venta != true && dataItem.PrestamoDevolucion != true &&
-        (dataItem.Virtual == null || dataItem.Virtual == false) || (dataItem.Virtual == true && esVirtual)))) {
+            (dataItem.Canje == null || dataItem.Canje == false) || (dataItem.Canje == true && esCanje) ||
+            (dataItem.Canje != true && dataItem.Venta != true && dataItem.Virtual != true &&
+                (dataItem.PrestamoDevolucion == null || dataItem.PrestamoDevolucion == false) || (dataItem.PrestamoDevolucion == true && esPrestamo)) ||
+            (dataItem.Canje != true && dataItem.PrestamoDevolucion != true && dataItem.Virtual != true &&
+                (dataItem.Venta == null || dataItem.Venta == false) || (dataItem.Venta == true && esVenta)) ||
+            (dataItem.Canje != true && dataItem.Venta != true && dataItem.PrestamoDevolucion != true &&
+                (dataItem.Virtual == null || dataItem.Virtual == false) || (dataItem.Virtual == true && esVirtual)))) {
         return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
@@ -281,10 +281,10 @@ function botonConfirmadoTildeFinalizado(dataItem, icono) {
 function puedeConfirmarNegocio(dataItem) {
     return (
         ((dataItem.ComercialZonaId == 42 && confirmaNegocioOrigNorte)
-        || (dataItem.ComercialZonaId == 43 && confirmaNegocioOrigCentro)
-        || (dataItem.ComercialZonaId == 44 && confirmaNegocioOrigSur)
-        || (dataItem.ComercialZonaId == 45 && confirmaNegocioCorredoresBsAs)
-        || (dataItem.ComercialZonaId == 46 && confirmaNegocioCorredoresRosario))
+            || (dataItem.ComercialZonaId == 43 && confirmaNegocioOrigCentro)
+            || (dataItem.ComercialZonaId == 44 && confirmaNegocioOrigSur)
+            || (dataItem.ComercialZonaId == 45 && confirmaNegocioCorredoresBsAs)
+            || (dataItem.ComercialZonaId == 46 && confirmaNegocioCorredoresRosario))
         && ((dataItem.MaterialId == 1 && confirmarNegociosMaiz)
             || (dataItem.MaterialId == 2 && confirmarNegociosTrigo)
             || (dataItem.MaterialId == 3 && confirmarNegociosSoja)
@@ -458,10 +458,12 @@ function botonBorrarPreanulado(dataItem, icono) {
 }
 
 function botonPreAnular(dataItem, icono) {
-    if (preanular && dataItem.ContratoId) {
+    if (preanular && dataItem.ContratoId || (preanular && (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true))) {
         return '<button data-toggle="tooltip" title="PreAnular" onclick="ModalPreAnular(' +
             "'" + dataItem.ContratoId + "'" + ',' +
-            "'" + dataItem.Proveedor + "'" +
+            "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
+            "'" + dataItem.Proveedor + "'" + ',' +
+            "'" + dataItem.TipoNegocioId + "'" +
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else {
         return '<div></div>';
@@ -1022,12 +1024,12 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
-                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId || dataItem.FijacionDePrecioContratoId)) {
+                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId || (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true))) {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 botonPreAnular(dataItem, 'fa-trash fin') +
-                                botonModificarFinalizados(dataItem, 'fa-pencil fin');
+                                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
                         } else {
                             descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n cerrada" ' : '';
 
@@ -1709,7 +1711,14 @@ function ObtenerDatosModalPreAnular() {
     }
     var result;
     var id = $("#contratoModalAnular").val();
-    result = MSExecuteOnServer('/CompraNet/PreAnularContrato', { contratoId: id, motivo });
+    var tipoNegocio = $("#tipoNegocioModalBorrar").val();
+    var fijacionId = $("#fijacionModalAnular").val();
+    if (tipoNegocio === '3') {
+        result = MSExecuteOnServer('/CompraNet/PreAnularFijacionVirtual', { fijacionId: fijacionId, motivo });
+    } else {
+        result = MSExecuteOnServer('/CompraNet/PreAnularContrato', { contratoId: id, motivo });
+    }
+
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -1732,7 +1741,13 @@ function ObtenerDatosModalBorrarPreAnular() {
     //}
     var result;
     var id = $("#contratoModalBorrar").val();
-    result = MSExecuteOnServer('/CompraNet/RechazarPreAnularContrato', { contratoId: id/*, motivoRechazo*/ });
+    var fijacionId = $("#fijacionModalAnular").val();
+    var tipoNegocio = $("#tipoNegocioModalBorrar").val();
+    if (tipoNegocio === '3') {
+        result = MSExecuteOnServer('/CompraNet/RechazarPreAnularFijacionVirtual', { fijacionId: fijacionId/*, motivoRechazo*/ });
+    } else {
+        result = MSExecuteOnServer('/CompraNet/RechazarPreAnularContrato', { contratoId: id/*, motivoRechazo*/ });
+    }
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -1743,7 +1758,13 @@ function ObtenerDatosModalBorrarPreAnular() {
 function AnularContratoPreAnulado() {
     var result;
     var id = $("#contratoModalBorrar").val();
-    result = MSExecuteOnServer('/CompraNet/AnularContratoPreAnulado', { contratoId: id });
+    var fijacionId = $("#fijacionModalAnular").val();
+    var tipoNegocio = $("#tipoNegocioModalBorrar").val();
+    if (tipoNegocio === '3') {
+        result = MSExecuteOnServer('/CompraNet/AnularFijacionVirtual', { fijacionId: fijacionId/*, motivoRechazo*/ });
+    } else {
+        result = MSExecuteOnServer('/CompraNet/AnularContratoPreAnulado', { contratoId: id });
+    }
     if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
         MensErr(result.Errores[0].Message);
     }
@@ -2446,7 +2467,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#obligatorioDiv").show();
         $("#obligatorioId").text("Si");       
     } else {
-        if (fechaCierta != "null") {            
+        if (fechaCierta != "null") {
             if (obligatoriedad == "false") {
                 $("#obligatorioDiv").show();
                 $("#obligatorioId").text("No");
@@ -2564,6 +2585,8 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     $("#proveedorBorrarDivVisualizar").show();
     $("#agenteBorrarDivVisualizar").hide();
     $("#estadoModalBorrar").val(estado);
+    $("#fijacionModalAnular").val(fijacionDePrecioContratoId);
+    
     if (tipoNegocio === "3") {
         $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
     } else if (tipoNegocio === "4") {
@@ -2596,10 +2619,11 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     $("#modalBorrarPreanulado").modal('show');
 }
 
-function ModalPreAnular(id, proveedor) {
+function ModalPreAnular(id, fijacionId, proveedor, tipoNegocio) {
     $("#proveedor_a_preanular").text(proveedor);
     $("#contratoModalAnular").val(id);
-
+    $("#fijacionModalAnular").val(fijacionId);
+    $("#tipoNegocioModalBorrar").val(tipoNegocio);
     $("#modalPreAnular").modal('show');
 }
 

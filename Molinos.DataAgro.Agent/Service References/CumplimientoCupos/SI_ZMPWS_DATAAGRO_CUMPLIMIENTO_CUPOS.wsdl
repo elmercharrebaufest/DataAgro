@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" name="SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation />
+  <wsp:UsingPolicy wsdl:required="true" />
+  <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS" />
+  <wsdl:types>
+    <xsd:schema xmlns="urn:sap-com:document:sap:rfc:functions" targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="Z_MPRFC_CUMPLIMIENTO_CUPOS">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" name="IM_CUPOS" type="rfc:ZMPTT5100" />
+            <xsd:element minOccurs="0" name="IM_FECHA" type="rfc:date10" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Z_MPRFC_CUMPLIMIENTO_CUPOSResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="EX_SALIDA" type="rfc:ZMPTT5090" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char6">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="6" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char12">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="12" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char35">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="35" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="time">
+        <xsd:restriction base="xsd:time">
+          <xsd:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char16">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="16" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char18">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="18" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ZMPTT5090">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6560" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT5100">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:char18" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES6560">
+        <xsd:sequence>
+          <xsd:element name="NUMCARPOR" type="rfc:char12" />
+          <xsd:element name="CODIGO" type="rfc:char18" />
+          <xsd:element name="FECHA_INGRESO" type="rfc:date10" />
+          <xsd:element name="HORA_INRGESO" type="rfc:time" />
+          <xsd:element name="PROVEEDOR" type="rfc:char10" />
+          <xsd:element name="DESCPROV" type="rfc:char35" />
+          <xsd:element name="CUIT_PROVEEDOR" type="rfc:char16" />
+          <xsd:element name="REMITENTE_COM" type="rfc:char10" />
+          <xsd:element name="DESCREMIT" type="rfc:char35" />
+          <xsd:element name="CORREDOR" type="rfc:char10" />
+          <xsd:element name="DESCCORREDOR" type="rfc:char35" />
+          <xsd:element name="CUIT_CORREDOR" type="rfc:char16" />
+          <xsd:element name="AGENTE_DE_COMPRA" type="rfc:char10" />
+          <xsd:element name="DESCAGENTE" type="rfc:char35" />
+          <xsd:element name="CUIT_AGENTE_COMPRA" type="rfc:char16" />
+          <xsd:element name="DESTINATARIO" type="rfc:char10" />
+          <xsd:element name="DESCDESTINA" type="rfc:char35" />
+          <xsd:element name="CUIT_DESTINATARIO" type="rfc:char16" />
+          <xsd:element name="ESTABLECIMIENTO" type="rfc:char6" />
+          <xsd:element name="CENTRO" type="rfc:char4" />
+          <xsd:element name="MATERIAL" type="rfc:char18" />
+          <xsd:element name="FECHA_CUMPLI" type="rfc:date10" />
+          <xsd:element name="FECHA_TARA" type="rfc:date10" />
+          <xsd:element name="HORA_TARA" type="rfc:time" />
+          <xsd:element name="FECHA_EGRESO" type="rfc:date10" />
+          <xsd:element name="HORA_EGRESO" type="rfc:time" />
+          <xsd:element name="FECHA_ACTUALIZA" type="rfc:date10" />
+          <xsd:element name="HORA_ACTUALIZA" type="rfc:time" />
+          <xsd:element name="PROCESADO" type="rfc:char1" />
+          <xsd:element name="RECHAZADO" type="rfc:char1" />
+          <xsd:element name="CUMPLIMIENTO" type="rfc:char1" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="rfc.Z_MPRFC_CUMPLIMIENTO_CUPOS">
+    <wsdl:documentation />
+    <wsdl:part name="parameters" element="rfc:Z_MPRFC_CUMPLIMIENTO_CUPOS" />
+  </wsdl:message>
+  <wsdl:message name="rfc.Z_MPRFC_CUMPLIMIENTO_CUPOSResponse">
+    <wsdl:documentation />
+    <wsdl:part name="parameter" element="rfc:Z_MPRFC_CUMPLIMIENTO_CUPOSResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS">
+    <wsdl:documentation />
+    <wsdl:operation name="SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS">
+      <wsdl:documentation />
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS" />
+      </wsp:Policy>
+      <wsdl:input message="p1:rfc.Z_MPRFC_CUMPLIMIENTO_CUPOS" />
+      <wsdl:output message="p1:rfc.Z_MPRFC_CUMPLIMIENTO_CUPOSResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOSBinding" type="p1:SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS">
+    <binding transport="http://schemas.xmlsoap.org/soap/http" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    <wsdl:operation name="SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS">
+      <operation soapAction="http://sap.com/xi/WebService/soap1.1" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <wsdl:input>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:input>
+      <wsdl:output>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOSService">
+    <wsdl:port name="HTTP_Port" binding="p1:SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOSBinding">
+      <address location="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+    <wsdl:port name="HTTPS_Port" binding="p1:SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOSBinding">
+      <address location="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOS&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

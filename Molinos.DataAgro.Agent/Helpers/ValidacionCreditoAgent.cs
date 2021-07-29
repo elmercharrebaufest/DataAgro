@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Agent
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return new ValidarCreditoDto { Moneda = "ARP ", Monto = 1000};
+                return new ValidarCreditoDto { Moneda = "ARP ", Monto = 0};
             }
             else
             {

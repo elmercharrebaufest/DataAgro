@@ -1201,6 +1201,7 @@ function InicializarElementos() {
         dataValueField: "Id",
         change: function () {
             if (this.value() == 1) {
+                $("#CapacidadProductivaPendienteDiv").show();
                 $("#consignatarioDiv").hide();
                 $("#consignatarioId").prop("checked", false);
                 $("#planCanjeDiv").hide();
@@ -1225,6 +1226,7 @@ function InicializarElementos() {
                 }
 
             } else {
+                $("#CapacidadProductivaPendienteDiv").hide();
                 //if (!$("#pesificadoId").is(":checked")) {
                 //    $("#fechaCiertaDiv").show();
                 //}
@@ -1369,6 +1371,7 @@ function InicializarElementos() {
                 $("#boletoFisicoId").removeAttr("disabled");
                 $("#boletoCartaId").removeAttr("disabled");
             }
+            DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
         }
     });
 
@@ -2250,6 +2253,9 @@ function InicializarElementos() {
         dataValueField: "Id",
         dataBound: function () {
             this.select(0);
+        }, 
+        change: function () {
+            DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
         }
     });
 
@@ -2518,7 +2524,26 @@ function InicializarElementos() {
             dropdownlist.text("");
         }
     });
+    $("#CapacidadProductivaPendienteBtn").click(function () {
+        AbrirModalCapacidadProductivaPendiente();
+    });
+
     //FIN INICIALIZARELEMENTOS
+}
+
+function AbrirModalCapacidadProductivaPendiente() {
+    if ($("#proveedorId").val() > 0) {
+        var data = { proveedorId: $("#proveedorId").val() };
+        var datos = MSExecuteOnServer('/CompraNet/ObtenerCapacidadProductivaPendiente', data);
+
+        var viewmodel = {
+            ObtenerCapacidadProductivaPendiente: datos
+        }
+        kendo.bind($("#modalCapacidadProductivaPendiente"), viewmodel);
+        $("#modalCapacidadProductivaPendiente").modal("show");
+    } else {
+        MensErr("Seleccione el proveedor");
+    }
 }
 
 
@@ -2843,7 +2868,8 @@ function CrearViewModel() {
         ContratosPendientes: [],
         AperturaPrecio: [],
         MonedaPactadoCombo: [],
-        TipoPosicionCBOT: []
+        TipoPosicionCBOT: [],
+        ObtenerCapacidadProductivaPendiente: [],
     });
 
     kendo.bind($("#CrearContrato"), viewModel);
@@ -4799,6 +4825,18 @@ function EsconderCalidadSiHaySojaYCalidadEspecial() {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
     }
 
+}
+
+function DeshabilitarDescuentoSobrePrecioCuandoTieneAgente() {
+    if ($("#TipoDBId").data("kendoDropDownList").value() == 1 && $("#AgenteCompraId").val() != "") {
+        $("#ImporteDescuentoId").prop('disabled', true);
+        $("#PorcentajeDescuentoId").prop('disabled', true);
+        $("#descuentoMonedaId").data("kendoDropDownList").enable(false);
+    } else {
+        $("#ImporteDescuentoId").prop('disabled', false);
+        $("#PorcentajeDescuentoId").prop('disabled', false);
+        $("#descuentoMonedaId").data("kendoDropDownList").enable(true);
+    }
 }
 
 

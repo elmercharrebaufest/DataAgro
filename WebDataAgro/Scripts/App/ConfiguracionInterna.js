@@ -1,5 +1,6 @@
 ﻿var pausado;
 var material = [];
+var centros = [];
 $(document).ready(function () {
     kendo.culture("es-AR");
 
@@ -128,28 +129,286 @@ function InicializarElementos() {
         }
     });
     $("#TipoNegocioId").change();
-    $("#TipoNegocioIdPizarra").change();
-
-    $("#selectall").on("click", function () {
-        $(".case").prop("checked", this.checked);
-    });
-
-    // if all checkbox are selected, check the selectall checkbox and viceversa  
-    $(".case").on("click", function () {
-        if ($(".case").length == $(".case:checked").length) {
-            $("#selectall").prop("checked", true);
-        } else {
-            $("#selectall").prop("checked", false);
-        }
-    });
+    $("#TipoNegocioIdPizarra").change();   
 
     if (pausado == true) {
         $(".pausado").prop("checked", this.checked);
     }
+    var datos = result = MSExecuteOnServer('/Centro/Buscar', null);
 
-
+    for (var i = 0; i < datos.Datos.length; i++) {
+        centros.push({ Destino: datos.Datos[i].Descripcion });
+    }
+    //CargarTablePrecio();   
 }
 
+function CargarTablePrecio() {
+    var ds = {
+        transport: {
+            read: {
+                type: 'post',
+                dataType: 'json',
+                url: '/ConfiguracionInterna/TraerPrecios'
+            },
+            update: {
+                url: '/ConfiguracionInterna/UpdatePrecio',
+                type: 'post',
+                dataType: 'json',
+                // dataType: "jsonp"
+            },
+            parameterMap: function (options, operation) {
+                if (options.filter) {
+                    KendoGrid_FixFilter(ds, options.filter);
+                }
+                return options;
+            }
+        },
+        schema: {
+            data: 'Data',
+            total: 'Total',
+            model: {
+                id: 'Id',
+                fields: {
+                    DesdeVigencia: { type: "date" },
+                    HastaVigencia: { type: "date" },
+                    DesdeEntrega: { type: "date" },
+                    HastaEntrega: { type: "date" },
+                    DesdeFijacion: { type: "date" },
+                    HastaFijacion: { type: "date" },
+                    Precio: { type: "number" }
+                }
+            }
+        },
+        serverPaging: true,
+        serverSorting: true,
+        sort: [{ field: "Material", dir: "asc" }, { field: "DesdeVigencia", dir: "asc" }],
+        serverFiltering: true,
+        pageSize: 20,
+        batch: true,
+        autoSync: true,
+        error: function (e) {
+            $("#tablePrecio").data("kendoGrid").dataSource.read();
+            MensErr("Ha ocurrido un error. Por favor intente nuevamente");
+        }
+    };
+
+    $("#tablePrecio").kendoGrid({
+        dataSource: ds,
+        editable: true,
+        columns: [
+            //{ selectable: true, width: "50px" },
+            {
+                field: "TipoNegocio", type: "string", title: "Tipo <br> Negocio", filterable: {
+                    multi: true, dataSource: [{
+                        TipoNegocio: "A FIJAR"
+                    }, {
+                        TipoNegocio: "A PRECIO"
+                    }, {
+                        TipoNegocio: "FIJACION"
+                    }]
+                }, width: 100, template: "#=TipoNegocio#", editable: true,
+            },
+            {
+                field: "Material", title: "Material", filterable: {
+                    multi: true, dataSource: [{
+                        Material: "Maiz"
+                    }, {
+                        Material: "Trigo"
+                    }, {
+                        Material: "Soja"
+                    }, {
+                        Material: "Girasol"
+                    }, {
+                        Material: "Girasol AO"
+                    }]
+                }, width: 100, template: "#=Material#", editable: true,
+            },
+            {
+                field: "Destino", title: "Destino", filterable: {
+                    multi: true, dataSource: centros
+                }, width: 130, template: "#= (Destino == null) ? 'Todos' : Destino #", editable: true
+            },
+            { field: "Precio", format: "{0:n2}", width: 100, editable: false, editor: numberEditor },
+            { field: "MonedaId", title: "Moneda", editable: true, width: 70 },
+            { field: "DesdeEntrega", title: "Desde <br> Entrega", type: "date", format: "{0:dd-MMM}", editable: true, width: 70 },
+            { field: "HastaEntrega", title: "Hasta <br> Entrega", type: "date", format: "{0:dd-MMM}", editable: true },
+            { field: "DesdeFijacion", title: "Desde <br> Fijacion", type: "date", format: "{0:dd-MMM}", editable: true, width: 70 },
+            { field: "HastaFijacion", title: "Hasta <br> Fijacion", type: "date", format: "{0:dd-MMM}", editable: true },
+            { field: "DesdeVigencia", title: "Desde <br> Vigencia", type: "date", format: "{0:dd-MMM}", editable: true, width: 70 },
+            { field: "HastaVigencia", title: "Hasta <br> Vigencia", type: "date", format: "{0:dd-MMM}", editable: true },
+            {
+                field: "Id", title: " ", editable: true, filterable: false, sortable: false, width: 80, template: function (dataItem) {
+
+                    return (((dataItem.DesdeVigencia <= new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) && dataItem.HastaVigencia >= new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()))
+                        || dataItem.DesdeVigencia >= new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())) ?
+                        '<a data-toggle="tooltip" title="Limite Cupo" class="abrirModalLimite links-grid" onclick="EliminarPrecio(' + dataItem.Id + ')">' +
+                        '<span> <i class="fa fa-minus-circle danger"></i> </span ></a >' : "")
+                        +
+                        '<a href="#" class="fa fa-copy danger" onclick="copiarPrecioMOA(' + dataItem.Id + ')"></a>'
+
+
+                }
+            }
+        ],
+        dataBound: function (e) {
+            $(".cerrado").each(function (index) {
+                var dataItem = e.sender.dataItem($(this).parent());
+                if (dataItem.BloquearCupera == "Si") {
+                    $(this).addClass('line');
+                }
+            });
+            var items = this._data;
+            var tableRows = $(this.table).find("tbody tr");
+            tableRows.each(function (index) {
+                var row = $(this);
+                var Item = items[index];
+                if (Item != null) {
+                    if (Item.Material == "Maiz") {
+                        row.addClass('maiz');
+                    }
+                    if (Item.Material == "Soja") {
+                        row.addClass('soja');
+                    }
+                    if (Item.Material == "Trigo") {
+                        row.addClass('trigo');
+                    }
+                    if (Item.Material == "Girasol") {
+                        row.addClass('girasol');
+                    }
+                    if (Item.Material == "Girasol AO") {
+                        row.addClass('girasolAO');
+                    }
+                }
+            });
+            changeVerDiaAnterior();
+            changeVerVigencia();
+        },
+        pageable: {
+            messages: {
+                display: "{2} elementos",
+                empty: "No hay elementos para mostrar",
+                page: "P&aacute;gina",
+                allPages: "Todas",
+                of: "de {0}",
+                itemsPerPage: "Elementos por p&aacute;gina",
+                first: "Ir a la primer p&aacute;gina",
+                previous: "Ir a la p&aacute;gina anterior",
+                next: "Ir a la p&aacute;gina siguiente",
+                last: "Ir a la &uacute;ltima p&aacute;gina",
+                refresh: "Recargar"
+            },
+            input: true,
+            numeric: true
+        },
+        scrollable: false,
+        //sortable: {
+        //    mode: "multiple",
+        //    allowUnsort: true,
+        //    showIndexes: false
+        //},
+        sortable: false,
+        filterable: {
+            height: 350,
+            extra: false,
+            checkAll: false,
+
+            messages: {
+                info: "Filtros:",
+                filter: "Filtrar",
+                clear: "Limpiar",
+                isTrue: "SI",
+                isFalse: "NO",
+                and: "Y",
+                or: "O"
+            },
+            operators: {
+                string: {
+                    contains: "Contains"
+                },
+                date: {
+                    eq: "Igual",
+                    gte: "Despu&eacute;s o igual a",
+                    lte: "Antes o igual a"
+                },
+                number: {
+                    eq: "Igual a",
+                    gte: "Mayor que o igual a",
+                    lte: "Menor que o igual a"
+                }
+            }
+        },
+        //edit: function (e) {
+        //    //var index = e.sender.current().parent().index();
+
+        //    //if (rowIndex === null) {
+        //    //    rowIndex = index;
+        //    //} else {
+        //    //    if (rowIndex != index) {
+        //    //        rowIndex = null;
+        //    //        editCell = true;
+
+        //            e.sender.dataSource.sync();
+        //    //    }
+        //    //}
+        //},
+    });
+
+}
+function numberEditor(container, options) {
+    var hoy = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    var readonly = options.model.TipoNegocio == "A FIJAR" ||
+        !((options.model.DesdeVigencia <= hoy && options.model.HastaVigencia >= hoy) || options.model.DesdeVigencia >= hoy);
+    $('<input ' + (readonly == true ? 'disabled="disabled" ' : '') + ' data-bind="value:' + options.field + '"/>')
+        .appendTo(container)
+        .kendoNumericTextBox({
+            decimals: 2,
+            format: "n2",
+            step: 0.5,
+            change: function () {
+                console.log("Change :: " + this.value());
+            },
+        });
+}
+
+function changeVerVigencia() {
+    if ($('#verVigencia').prop("checked")) {
+        $("#tablePrecio").data("kendoGrid").showColumn("DesdeVigencia");
+        $("#tablePrecio").data("kendoGrid").showColumn("HastaVigencia");
+    } else {
+        $("#tablePrecio").data("kendoGrid").hideColumn("DesdeVigencia");
+        $("#tablePrecio").data("kendoGrid").hideColumn("HastaVigencia");
+    }
+}
+function changeVerDiaAnterior() {
+    if ($('#verDiaAnterior').prop("checked")) {
+        var items = $('#tablePrecio').data('kendoGrid').dataSource.data();
+        for (var i = 0; i < items.length; i++) {
+            var $row = $('#tablePrecio').find("[data-uid='" + items[i].uid + "']"); // find grid row by uid
+            $row.show();
+
+        }
+    } else {
+        var items = $('#tablePrecio').data('kendoGrid').dataSource.data();
+        var hoy = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+        for (var i = 0; i < items.length; i++) {
+            var visible = (items[i].DesdeVigencia <= hoy && items[i].HastaVigencia >= hoy) || items[i].DesdeVigencia >= hoy;
+            if (!visible) {
+                var $row = $('#tablePrecio').find("[data-uid='" + items[i].uid + "']"); // find grid row by uid
+                $row.hide();
+            }
+        }
+    }
+}
+
+function EliminarPrecio(id) {
+    var datos = MSExecuteOnServer('/ConfiguracionInterna/EliminarPrecio', { id: id });
+    if (datos.HayError == true && datos.Errores[0].Message != "Se eliminó correctamente") {
+        ShowErrorMessages(datos.Errores);
+    } else {
+        MensInfo("Se eliminó correctamente");
+        $("#tablePrecio").data("kendoGrid").dataSource.read();
+    }
+}
 function LimpiarPrecioForm() {
     $("#Precio").data("kendoNumericTextBox").value("0");
     $("#MonedaId").val("");
@@ -220,8 +479,19 @@ function mostrarocultar(element) {
     }
 }
 
-function copiarPrecioMOA(configuracion) {
-    configuracion = JSON.parse(configuracion);
+function copiarPrecioMOA(id) {
+    var configuracion = null;
+    var data = $("#tablePrecio").data("kendoGrid").dataSource.data();
+    for (item in data) {
+        if (data[item].Id == id) {
+            configuracion = data[item];
+            break;
+        }
+    }
+    if (configuracion == null) {
+        return;
+    }
+
     $("#TipoNegocioId").val(configuracion.TipoNegocioId);
     $("#TipoNegocioId").change();
     $("#MonedaId").val(configuracion.MonedaId);
@@ -269,16 +539,14 @@ function copiarPago(configuracion) {
 
 function ObtenerDatosMaterialHabilitado() {
 
-    var obj = {};
     var lista = [];
-    obj.MaterialId = 0;
-    obj.Habilitado = $("#selectall").is(":checked");
-    lista.push(obj);
-    for (var i = 0; i < material.length; i++) {
-        obj = {}
-        obj.MaterialId = material[i].MaterialId;
-        obj.Habilitado = $("#" + material[i].MaterialId).is(":checked");
-        lista.push(obj);
+    lista.push({ MaterialId: 0, TipoNegocioId: 1, Habilitado: $("#AFIJAR").is(":checked") });
+    lista.push({ MaterialId: 0, TipoNegocioId: 2, Habilitado: $("#APRECIO").is(":checked") });
+    lista.push({ MaterialId: 0, TipoNegocioId: 3, Habilitado: $("#FIJACION").is(":checked") });
+    for (var j = 1; j <= 3; j++) {
+        for (var i = 0; i < material.length; i++) {
+            lista.push({ MaterialId: material[i].Id, TipoNegocioId: j, Habilitado: $("#" + material[i].Descripcion.replace(" ","") + j).is(":checked") });                       
+        }
     }
 
     MSExecuteOnServer("ConfiguracionInterna/PausarPrecios", { lista: lista });
@@ -287,5 +555,12 @@ function ObtenerDatosMaterialHabilitado() {
 
 function AbrirModal() {
     $("#modalHabilitarMaterial").modal("show");
+}
+
+function cancelarEstado() {
+    $("#modalHabilitarMaterial").modal("hide");
+
+    var data = MSExecuteURLOnServer("ConfiguracionInterna/ModalHabilitarMaterial");
+    setTimeout(function () { $("#estadoHabilitacion").html(data); }, 500)
 }
 

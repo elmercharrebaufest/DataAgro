@@ -65,6 +65,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IHttpContextManager> contextoMock;
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
         private Mock<IValidacionCreditoAgent> validacionCreditoAgent;
+        private Mock<ICapacidadProductivaDisponibleAgent> capacidadProductivaDisponibleAgent;
 
 
 
@@ -111,6 +112,7 @@ namespace Molinos.DataAgro.Test.Managers
             contextoMock = new Mock<IHttpContextManager>();
             tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
             validacionCreditoAgent = new Mock<IValidacionCreditoAgent>();
+            capacidadProductivaDisponibleAgent = new Mock<ICapacidadProductivaDisponibleAgent>();
 
 
 
@@ -131,7 +133,9 @@ namespace Molinos.DataAgro.Test.Managers
                 mailManagerMock.Object, status.Object, logDataAgroManagerMock.Object,
                 validarPagoAgente.Object, cbuAgentMock.Object,
                 modificarFijacionAgentMock.Object, ccppPendienteAplicarAgentMock.Object,
-                contextoMock.Object, validacionCreditoAgent.Object, tipoDeCambioAgentMock.Object);
+                contextoMock.Object, validacionCreditoAgent.Object, tipoDeCambioAgentMock.Object,
+                capacidadProductivaDisponibleAgent.Object
+                );
         }
 
         [Test]
@@ -4467,6 +4471,38 @@ namespace Molinos.DataAgro.Test.Managers
 
             var resultado = target.GrabarContratoMasivo(contratos);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
+
+        [Test]
+        public void ObtenerCapacidadProductivaPendienteTest()
+        {
+            repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
+            capacidadProductivaDisponibleAgent.Setup(y => y.ObtenerCapacidadProductivaPendiente(It.IsAny<string>())).Returns(new List<CapacidadProductivaPendienteDto>());
+
+            var resultado = target.ObtenerCapacidadProductivaPendiente(It.IsAny<int>());
+
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+        }
+
+        [Test]
+        public void AnularContratoCargaTest()
+        {
+            var contrato = new Contrato
+            {
+                Id = 1,
+                Cantidad = 1000,
+                EstadoId = 9,
+                Estado = new EstadoContrato { EstadoContratoId = 9 }
+            };
+            repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(contrato);
+            repositorioMock.Setup(x => x.GuardarCambios()).Verifiable();
+
+            var res = target.AnularContratoCarga(1, "ok");
+
+            repositorioMock.Verify(y => y.Obtener<Contrato>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
     }

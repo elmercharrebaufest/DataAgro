@@ -230,6 +230,7 @@
     <Compile Include="Procesamiento\ProcesadorCriterioEsContratoAPrecio.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsEspacioDinamico.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioCDWarrant.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioCumplimientoCupo.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioProveedor.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioRaiz.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioContrato.cs" />

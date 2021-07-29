@@ -81,6 +81,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("TipoNegocioId")]
         public virtual TipoNegocio TipoNegocio { get; set; }
         public int? NegocioId { get; set; }
+        public bool? Cumplimiento { get; set; }
 
         public object Clone()
         {

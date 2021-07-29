@@ -6,7 +6,9 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -36,7 +38,15 @@ namespace Molinos.DataAgro.Agent
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
-
+                    var zonas = new List<ZMPES6540>();
+                    zonas = c.CantidadCupo.Select(a =>
+                        new ZMPES6540
+                        {
+                            IM_LIMITE_CUPOS = a.CantidadCupo.ToString(),
+                            IM_LIMITE_CUPOS_ANT = a.CantidadCupoAnterior.ToString(),
+                            IM_ZONA = a.ZonaCupo
+                        }
+                    ).ToList();
                     var rq = new Z_MPRFC_ADMIN_CUPOS()
                     {
                         IM_CIERRE = c.CierreCupera.HasValue && c.CierreCupera.Value ? "X" : "",
@@ -44,8 +54,9 @@ namespace Molinos.DataAgro.Agent
                         IM_LIMITE_CUPOS = c.LimiteCupo.ToString(),
                         IM_LIMITE_CUPOS_ANT = c.LimiteCupoAnterior.ToString(),
                         IM_MATNR = c.Material,
-                        IM_ZONA = c.ZonaCupo,
+                        //IM_ZONA = c.ZonaCupo,
                         IM_WERKS = c.Centro,
+                        IM_APERTURA = zonas.ToArray(),
                     };
 
                     var log = new Log

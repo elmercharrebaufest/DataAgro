@@ -11,5 +11,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ZonaCupoId { get; set; }
         public string ZonaCupo { get; set; }
         public int CantidadCupo { get; set; }
+        public int CantidadCupoAnterior { get; set; } = 0;
     }
 }

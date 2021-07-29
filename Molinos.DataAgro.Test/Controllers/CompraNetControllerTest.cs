@@ -681,7 +681,7 @@ namespace Molinos.DataAgro.Test.Controllers
             //a);
             var data = (BasicoContrato)((JsonResult)result).Data;
             Assert.NotNull(data);
-            Assert.AreEqual(data.FasonId,1);
+            Assert.AreEqual(data.FasonId, 1);
         }
         [Test]
         public void FinalizarFasonTest()
@@ -951,9 +951,9 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
 
             contratoManagerMock.Verify(x => x.TraerContratosAcuerdo(It.IsAny<string>()), Times.Once);
-          Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\",\"CantidadD\":1,\"Cantidad\":\"1\",\"Precio\":\"0\",\"NegocioDescripcion\":null,\"PrecioD\":0,\"FechaDesde\":null,\"FechaHasta\":null,\"Moneda\":null,\"MonedaId\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
-                a);
+            Assert.AreEqual(
+                  "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Comercial\":\"\",\"Material\":\"a\",\"Fecha\":\"a\",\"ContratoSap\":\"a\",\"Filtro\":\"a\",\"tipoNegocio\":\"a\",\"CantidadD\":1,\"Cantidad\":\"1\",\"Precio\":\"0\",\"NegocioDescripcion\":null,\"PrecioD\":0,\"FechaDesde\":null,\"FechaHasta\":null,\"Moneda\":null,\"MonedaId\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                  a);
         }
         [Test]
         public void BuscarGrupoDeComprasTest()
@@ -1005,7 +1005,7 @@ namespace Molinos.DataAgro.Test.Controllers
                     TotalTrigo = 1,
                     ContratoSAP = "a",
                     ContratoCorredor = "a"
-                    
+
                 });
 
 
@@ -1137,7 +1137,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CompararNegocioReconfirmadoTest()
         {
-            contratoManagerMock.Setup(x => x.CompararNegocioReconfirmado(It.IsAny<int>())).Returns( new List<BasicoContrato>());
+            contratoManagerMock.Setup(x => x.CompararNegocioReconfirmado(It.IsAny<int>())).Returns(new List<BasicoContrato>());
             var result = target.CompararNegocioReconfirmado(It.IsAny<int>());
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -1165,7 +1165,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void FechaFeriadosTest()
         {
-            fijacionManagerMock.Setup(x => x.FechaFeriados()).Returns(new List<DateTime>() { new DateTime(2020, 01, 20)});
+            fijacionManagerMock.Setup(x => x.FechaFeriados()).Returns(new List<DateTime>() { new DateTime(2020, 01, 20) });
             var result = target.FechaFeriados();
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -1196,7 +1196,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var contrato = new Contrato { ComercialId = 1, MaterialId = 1, CampanaId = 1, ComercialCreadorId = 1 };
             contratoManagerMock.Setup(x => x.BorrarContratoPreAprobacion(It.IsAny<int>(), It.IsAny<string>())).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
-            var result = target.BorrarContratoPreAprobacion(1,"ok");
+            var result = target.BorrarContratoPreAprobacion(1, "ok");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
@@ -1264,6 +1264,78 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":0,\"MaterialId\":0,\"Material\":null,\"TipoNegocioId\":0,\"TipoNegocio\":null,\"CantidadDia\":0,\"Tasa\":0,\"DesdeVigencia\":\"\\/Date(-62135586000000)\\/\",\"HastaVigencia\":\"\\/Date(-62135586000000)\\/\",\"Habilitado\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+        [Test]
+        public void ObtenerAcuerdoParaFasonTest()
+        {
 
+            fijacionManagerMock.Setup(x => x.TraerDatosFijacion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+                .Returns(new List<DatosFijacionDeContratoDto>());
+            var result = target.ObtenerAcuerdoParaFason(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), false);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.TraerDatosFijacion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ObtenerCapacidadProductivaPendienteTest()
+        {
+
+            contratoManagerMock.Setup(x => x.ObtenerCapacidadProductivaPendiente(It.IsAny<int>())).Returns(new List<CapacidadProductivaPendienteDto> { new CapacidadProductivaPendienteDto { MATERIAL = "Soja" } });
+            var result = target.ObtenerCapacidadProductivaPendiente(1) as JsonResult;
+            var model = serializer.Deserialize<List<CapacidadProductivaPendienteDto>>(serializer.Serialize(result.Data));
+            Assert.AreEqual(1, model.Count());
+            Assert.AreEqual("Soja", model.First().MATERIAL);
+            contratoManagerMock.Verify(x => x.ObtenerCapacidadProductivaPendiente(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+
+        }
+        [Test]
+        public void AnularFijacionVirtualTest()
+        {
+
+            fijacionManagerMock.Setup(x => x.AnularFijacionVirtual(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new GrabarFijacionResult());
+            var result = target.AnularFijacionVirtual(It.IsAny<int>());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.AnularFijacionVirtual(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"FijacionDePrecioContratoId\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void PreAnularFijacionVirtualTest()
+        {
+            fijacionManagerMock.Setup(x => x.PreAnularFijacion(It.IsAny<int>(), It.IsAny<string>()))
+                .Returns(new GrabarFijacionResult());
+            var result = target.PreAnularFijacionVirtual(It.IsAny<int>(), It.IsAny<string>());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.PreAnularFijacion(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"FijacionDePrecioContratoId\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void RechazarPreAnularFijacionVirtualTest()
+        {
+            fijacionManagerMock.Setup(x => x.RechazarPreAnularFijacionVirtual(It.IsAny<int>()))
+                .Returns(new GrabarFijacionResult());
+            var result = target.RechazarPreAnularFijacionVirtual(It.IsAny<int>());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.RechazarPreAnularFijacionVirtual(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"FijacionDePrecioContratoId\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalCapacidadProductivaPendiente" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="cerrar close blancoCerrarModalFinalizar" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmado" id="lineModalLabel" ></h1>
+                <div class="status finalizado-modal">
+                    <div>Capacidad Productiva Pendiente</div>
+                </div>
+            </div>
+            <div class="modal-body clearfix ">
+                <table id="tablacapPendientes" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td class="fuente600">Material</td>
+                            <td class="fuente600">Cap. Prod.</td>
+                            <td class="fuente600">% Cap. Prod.</td>
+                            <td class="fuente600">Compras Cos. Anterior</td>
+                            <td class="fuente600">Compras Cos. Actual</td>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-cap-pendientes" data-template="div-tablas-cap-pendientes" data-bind="source:ObtenerCapacidadProductivaPendiente" type="text/x-kendo-template">
+                    </tbody>
+                    <script id="div-tablas-cap-pendientes" type="text/x-kendo-template">
+                        <tr>
+                            <td>#=MATERIAL#</td>
+                            <td>#=kendo.toString(CAP_PROD, "n")#</td>
+                            <td>#=CAP_PROD_PORC#</td>
+                            <td>#=kendo.toString(COMPRAS_ANT, "n")#</td>
+                            <td>#=kendo.toString(COMPRAS_ACT, "n")#</td>
+                        </tr>
+                    </script>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

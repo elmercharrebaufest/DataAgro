@@ -1,4 +1,5 @@
-﻿@model WebDataAgro.Models.ConfiguracionInternaModel
+﻿@using Molinos.DataAgro.Entities.Dto
+@model WebDataAgro.Models.ConfiguracionInternaModel
 @{
     ViewBag.Title = "Configuracion";
 }
@@ -6,6 +7,7 @@
     <link href="~/Content/ConfiguracionInterna.css" rel="stylesheet" />
 }
 @section Scripts{
+    <script src="~/Scripts/KendoExtensions.js"></script>
     @Scripts.Render("~/bundles/ConfiguracionInterna")
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
 
@@ -13,7 +15,7 @@
 <script>
     pausado = '@ViewBag.Habilitado';
     $(document).ready(function () {
-       var model = '@Html.Raw(Json.Encode(@ViewBag.MaterialDesc))';
+       var model = '@Html.Raw(Json.Encode(((List<EstadoPrecioMOADto>)ViewBag.MaterialDesc).GroupBy(x=> x.MaterialId).Select(x=> new { Id = x.FirstOrDefault().MaterialId, Descripcion= x.FirstOrDefault().Descripcion})))';
     material = JSON.parse(model);
 
     });
@@ -89,7 +91,9 @@
     <div id="HabilitacionSustentable" hidden>
         @Html.Action("GrabarSustentablePartial", "ConfiguracionInterna")
     </div>
-    @Html.Partial("ModalHabilitarMaterial")
+    <div id="estadoHabilitacion">
+        @Html.Partial("ModalHabilitarMaterial")
+    </div>
 </div>
 
 <style>

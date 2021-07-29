@@ -23,12 +23,19 @@
     }
 </div>
 <div class="row">
-    <div class="col-xs-10 m-grid-col-xs-offset-1">
-        <div class="historial-desplegable" data-toggle="collapse" data-target="#historialPrecio" onclick="mostrarocultar('#mostrarPrecio')">
-            <span class="historial">Activos</span> <span id="mostrarPrecio" class="mostrar">Mostrar</span>
+    <div class="col-xs-12">
+        <span style="padding-right:100px;">
+            <label for="verVigencia">Ver vigencia</label> <input type="checkbox" id="verVigencia" name="verVigencia" onclick="changeVerVigencia();" />
+        </span> 
+        <span >
+            <label for="verDiaAnterior">Ver día anterior</label> <input type="checkbox" id="verDiaAnterior" name="verDiaAnterior" onclick="changeVerDiaAnterior();" />
+        </span>
+        <div class="historial-desplegable">
+            @*<span class="historial">Activos</span> <span id="mostrarPrecio" class="mostrar">Mostrar</span>*@
         </div>
-        <div id="historialPrecio" class="collapse tabla-research">
-            <table class="tabla-historial table">
+        @*<div id="historialPrecio" class="collapse tabla-research">  </div>*@
+        <div id="tablePrecio"></div>
+        @*<table>
                 <tr>
                     <th>Tipo Negocio</th>
                     <th>Material</th>
@@ -45,31 +52,36 @@
                 </tr>
                 @foreach (var pr in Model.PrecioMoa)
                 {
-            <tr>
-                <td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
-                <td>@Html.DisplayFor(model => pr.Material)</td>
-                <td>@Html.DisplayFor(model => pr.Destino)</td>
-                <td>@Html.DisplayFor(model => pr.Precio)</td>
-                <td>@Html.DisplayFor(model => pr.MonedaId)</td>
-                <td>@Html.DisplayFor(model => pr.DesdeVigencia)</td>
-                <td>@Html.DisplayFor(model => pr.HastaVigencia)</td>
-                <td>@Html.DisplayFor(model => pr.DesdeEntrega)</td>
-                <td>@Html.DisplayFor(model => pr.HastaEntrega)</td>
-                <td>@Html.DisplayFor(model => pr.DesdeFijacion)</td>
-                <td>@Html.DisplayFor(model => pr.HastaFijacion)</td>
-                <td>
-                    @if ((pr.DesdeVigencia <= DateTime.Now.Date && pr.HastaVigencia >= DateTime.Now.Date) || pr.DesdeVigencia >= DateTime.Now.Date)
-                    {
-                        @Ajax.ActionLink(" ", "EliminarPrecio", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaPrecio", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
-                    }
-                    @{
-                        var json = JsonConvert.SerializeObject(pr);
-                    }
-                    <a href="#" class="fa fa-copy danger" onclick="copiarPrecioMOA('@json')"></a>
-                </td>
-            </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(model => pr.TipoNegocio)</td>
+                        <td>@Html.DisplayFor(model => pr.Material)</td>
+                        <td>@Html.DisplayFor(model => pr.Destino)</td>
+                        <td>@Html.DisplayFor(model => pr.Precio)</td>
+                        <td>@Html.DisplayFor(model => pr.MonedaId)</td>
+                        <td>@Html.DisplayFor(model => pr.DesdeVigencia)</td>
+                        <td>@Html.DisplayFor(model => pr.HastaVigencia)</td>
+                        <td>@Html.DisplayFor(model => pr.DesdeEntrega)</td>
+                        <td>@Html.DisplayFor(model => pr.HastaEntrega)</td>
+                        <td>@Html.DisplayFor(model => pr.DesdeFijacion)</td>
+                        <td>@Html.DisplayFor(model => pr.HastaFijacion)</td>
+                        <td>
+                            @if ((pr.DesdeVigencia <= DateTime.Now.Date && pr.HastaVigencia >= DateTime.Now.Date) || pr.DesdeVigencia >= DateTime.Now.Date)
+                            {
+                                @Ajax.ActionLink(" ", "EliminarPrecio", new { @id = pr.Id }, new AjaxOptions { UpdateTargetId = "listaPrecio", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })
+                            }
+                            @{
+                                var json = JsonConvert.SerializeObject(pr);
+                            }
+                            <a href="#" class="fa fa-copy danger" onclick="copiarPrecioMOA('@json')"></a>
+                        </td>
+                    </tr>
                 }
-            </table>
-        </div>
+            </table>*@
+
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        CargarTablePrecio();
+    });
+</script>

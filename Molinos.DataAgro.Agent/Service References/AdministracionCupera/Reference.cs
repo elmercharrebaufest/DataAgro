@@ -32,6 +32,8 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_ADMIN_CUPOS : object, System.ComponentModel.INotifyPropertyChanged {
         
+        private ZMPES6540[] iM_APERTURAField;
+        
         private string iM_CIERREField;
         
         private string iM_FECHAField;
@@ -44,10 +46,21 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
         
         private string iM_WERKSField;
         
-        private string iM_ZONAField;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES6540[] IM_APERTURA {
+            get {
+                return this.iM_APERTURAField;
+            }
+            set {
+                this.iM_APERTURAField = value;
+                this.RaisePropertyChanged("IM_APERTURA");
+            }
+        }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
         public string IM_CIERRE {
             get {
                 return this.iM_CIERREField;
@@ -59,7 +72,7 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
         public string IM_FECHA {
             get {
                 return this.iM_FECHAField;
@@ -71,7 +84,7 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public string IM_LIMITE_CUPOS {
             get {
                 return this.iM_LIMITE_CUPOSField;
@@ -83,7 +96,7 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string IM_LIMITE_CUPOS_ANT {
             get {
                 return this.iM_LIMITE_CUPOS_ANTField;
@@ -95,7 +108,7 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string IM_MATNR {
             get {
                 return this.iM_MATNRField;
@@ -107,7 +120,7 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string IM_WERKS {
             get {
                 return this.iM_WERKSField;
@@ -118,8 +131,32 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
             }
         }
         
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES6540 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string iM_ZONAField;
+        
+        private string iM_LIMITE_CUPOSField;
+        
+        private string iM_LIMITE_CUPOS_ANTField;
+        
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string IM_ZONA {
             get {
                 return this.iM_ZONAField;
@@ -127,6 +164,30 @@ namespace Molinos.DataAgro.Agent.AdministracionCupera {
             set {
                 this.iM_ZONAField = value;
                 this.RaisePropertyChanged("IM_ZONA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string IM_LIMITE_CUPOS {
+            get {
+                return this.iM_LIMITE_CUPOSField;
+            }
+            set {
+                this.iM_LIMITE_CUPOSField = value;
+                this.RaisePropertyChanged("IM_LIMITE_CUPOS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string IM_LIMITE_CUPOS_ANT {
+            get {
+                return this.iM_LIMITE_CUPOS_ANTField;
+            }
+            set {
+                this.iM_LIMITE_CUPOS_ANTField = value;
+                this.RaisePropertyChanged("IM_LIMITE_CUPOS_ANT");
             }
         }
         

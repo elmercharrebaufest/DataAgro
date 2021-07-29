@@ -75,5 +75,6 @@ namespace Molinos.DataAgro.Interfaces
         string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda);
         List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId);
         List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos);
+        List<CapacidadProductivaPendienteDto> ObtenerCapacidadProductivaPendiente(int proveedorId);
     }
 }

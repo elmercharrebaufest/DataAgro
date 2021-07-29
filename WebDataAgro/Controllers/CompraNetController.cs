@@ -899,11 +899,14 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult TraerPrecioMoa(int? tipoNegocioId)
         {
-            return new JsonResult()
+          
+            var json = new JsonResult()
             {
                 Data = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId),
-                MaxJsonLength = Int32.MaxValue
+                MaxJsonLength = Int32.MaxValue,               
             };
+            json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return json;
         }
         public ActionResult TraerPrecioMOAPorMaterial(int materialId)
         {
@@ -1096,6 +1099,40 @@ namespace WebDataAgro.Controllers
                 Data = result != null ? result : new HabilitacionPagoDiferidoDto(),
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+    
+
+        public JsonResult ObtenerCapacidadProductivaPendiente(int proveedorId)
+        {
+            var lista = mobjContratoManager.ObtenerCapacidadProductivaPendiente(proveedorId);
+            return Json(lista, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult PreAnularFijacionVirtual(int fijacionId, string motivo)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.PreAnularFijacion(fijacionId, motivo),
+                MaxJsonLength = Int32.MaxValue
+            };
+
+        }
+        public ActionResult AnularFijacionVirtual(int fijacionId)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.AnularFijacionVirtual(fijacionId, GlobalVariables.IdActiveDirectory),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        public ActionResult RechazarPreAnularFijacionVirtual(int fijacionId/*, string motivoRechazo*/)
+        {
+            return new JsonResult()
+            {
+                Data = mobjFijacionDePrecioContratoManager.RechazarPreAnularFijacionVirtual(fijacionId/*, motivoRechazo*/),
+                MaxJsonLength = Int32.MaxValue
+            };
+
         }
     }
 }

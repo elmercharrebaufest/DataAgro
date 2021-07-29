@@ -3591,7 +3591,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#esCostoFinanciero").prop("checked", false);
     }
 
-    if (contrato.Dolarizado) {
+    if (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) {
         $("#dolarizadoId").prop("checked", true);
         $("#dolarizadoDiv").show();
         $("#dolarizadoFechaId").val(FormatearFecha(contrato.Fecha_DolarizadoFormateado));
@@ -3892,7 +3892,7 @@ function CargarDatosEditar(contrato, hijo) {
     }
     if (contrato.TipoNegocioId == 6) {
         $("#AgenteCompraId").data("kendoDropDownList").value(contrato.TipoAgenteCompraId);
-        if (contrato.Precio != null && !contrato.Dolarizado) {
+        if (contrato.Precio != null && !contrato.Dolarizado && !contrato.DolarizadoCorredor) {
             $("#fechaCiertaAcuerdoDiv").show();
             $("#fechaCiertaDiv").hide();
 

@@ -47,6 +47,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IServicioRepositorioScatoAgent servicioScato;
         private readonly IHttpContextManager httpContextManager;
         private readonly IAltaTempranaAgent altaTempranaAgent;
+        private readonly ICumplimientoCuposAgent cumplimientoCuposAgent;
 
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
@@ -54,7 +55,7 @@ namespace Molinos.DataAgro.Business.Managers
             IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios,
             IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
             IComercialManager comercialManager, IServicioRepositorioScatoAgent servicioScato, IHttpContextManager httpContextManager,
-            IAltaTempranaAgent altaTempranaAgent)
+            IAltaTempranaAgent altaTempranaAgent, ICumplimientoCuposAgent cumplimientoCuposAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -72,6 +73,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.servicioScato = servicioScato;
             this.httpContextManager = httpContextManager;
             this.altaTempranaAgent = altaTempranaAgent;
+            this.cumplimientoCuposAgent = cumplimientoCuposAgent;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
@@ -2552,35 +2554,43 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         try
                         {
-                            var resultado = eliminarcupoSap.Eliminar(c.CupoSap, comercialId);
-                            if (resultado == "OK")
-                            {
-                                c.EstadoCupoId = 4;
-                                logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
-                            }
-                            else
+                            var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
+                            errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
+
+                            if (errorStop.HayError)
                             {
                                 var cupoError = new CupoDto
                                 {
                                     CupoSap = c.CupoSap,
                                     Proveedor = c.Proveedor.RazonSocial,
                                     Material = c.Material.Descripcion,
-                                    MensajeError = "Error al anular el cupo en SAP",
+                                    MensajeError = "Error al anular en STOP: " + errorStop.ListaErrores.First().Message,
                                     ZonaCupo = c.ZonaCupo.Descripcion
                                 };
                                 listaCuposError.Add(cupoError);
                             }
-                            var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
-                            errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
-                            if (errorStop.HayError && resultado != "OK")
+                            else
                             {
-                                if (listaCuposError.Count() > 0 && listaCuposError.Any(x => x.CupoSap == c.CupoSap))
+                                c.EstadoCupoId = 4;
+                                logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
+
+                                var resultado = eliminarcupoSap.Eliminar(c.CupoSap, comercialId);
+                                if (resultado != "OK")
                                 {
-                                    var cupoConMotivo = listaCuposError.Where(x => x.CupoSap == c.CupoSap).First();
-                                    cupoConMotivo.MensajeError = errorStop.ListaErrores.First().Message;
+                                    var cupoError = new CupoDto
+                                    {
+                                        CupoSap = c.CupoSap,
+                                        Proveedor = c.Proveedor.RazonSocial,
+                                        Material = c.Material.Descripcion,
+                                        MensajeError = "Anulado Ok en STOP. Error al anular en SAP: " + resultado,
+                                        ZonaCupo = c.ZonaCupo.Descripcion
+                                    };
+                                    listaCuposError.Add(cupoError);
                                 }
+
                             }
-                            if (!errorStop.HayError && resultado == "OK")
+
+                            if (!errorStop.HayError)
                             {
                                 var cuposOk = new CupoDto
                                 {
@@ -2589,7 +2599,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     Material = c.Material.Descripcion,
                                     ZonaCupo = c.ZonaCupo.Descripcion,
                                     ComercialId = c.ComercialId,
-                                    ProveedorId = c.ProveedorId
+                                    ProveedorId = c.ProveedorId                                    
                                 };
                                 listaCuposOk.Add(cuposOk);
                             }
@@ -2597,7 +2607,18 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         catch (Exception e)
                         {
-                            logger.Error("Error al anular los cupos", e);
+                            logger.Error("Error al anular el cupo " + c.CupoSap, e);
+                            var cuposOk = new CupoDto
+                            {
+                                CupoSap = c.CupoSap,
+                                Proveedor = "",
+                                Material = "",
+                                ZonaCupo = "",
+                                ComercialId = 0,
+                                ProveedorId = 0,
+                                MensajeError = "Error al anular",
+                            };
+                            listaCuposOk.Add(cuposOk);
                         }
                     }
                     repo.GuardarCambios();
@@ -2916,6 +2937,23 @@ namespace Molinos.DataAgro.Business.Managers
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
             return alternateView;
+        }
+
+        public void ActualizarCumplimientoCupos(DateTime fecha)
+        {
+            var cuposSave = repositorio.Listar<Cupo>(x => x.FechaIngreso == fecha);
+            //var cupos = cuposSave.Select(x => x.CupoSap).ToList();
+            var resultado = cumplimientoCuposAgent.Ejecutar(new List<string>(),fecha);
+
+            foreach (var item in resultado)
+            {
+                var cupo = cuposSave.Where(x => x.CupoSap == item.Codigo).SingleOrDefault();
+                if (cupo != null)
+                {
+                    cupo.Cumplimiento = item.Cumplimiento;
+                }
+            }
+            repositorio.GuardarCambios();
         }
     }
 }

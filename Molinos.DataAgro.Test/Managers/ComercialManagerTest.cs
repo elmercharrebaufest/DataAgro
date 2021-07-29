@@ -259,5 +259,21 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.AreEqual(1, resultado.Count);
         }
+
+        [Test]
+        public void TraerZonaDelComercialAsociadoTestOk()
+        {
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ProveedorComercial, bool>>>(), It.IsAny<Expression<Func<ProveedorComercial, string>>>()))
+                             .Returns("a");
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<Expression<Func<ZonaCupo, int>>>()))
+                           .Returns(1);
+            var resultado = target.TraerZonaDelComercialAsociado();
+
+            repositorioMock.Verify(y => y.Obtener(It.IsAny<Expression<Func<ProveedorComercial, bool>>>(), It.IsAny<Expression<Func<ProveedorComercial, string>>>()), Times.Once);
+            repositorioMock.Verify(y => y.Obtener(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<Expression<Func<ZonaCupo, int>>>()), Times.Once);
+
+            Assert.AreEqual(1, resultado);
+        }
+        
     }
 }

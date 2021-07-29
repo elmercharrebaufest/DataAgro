@@ -357,6 +357,12 @@ namespace WebDataAgro.Services
             contrato.DiasPesificado = contratoSAP.DiasDiferimiento == 0 ? (int?)null : contratoSAP.DiasDiferimiento;
             contrato.PagoDiferido = contratoSAP.DiasDiferimiento > 0;
             contrato.Dolarizado = contratoSAP.DolarizadoExpress == "X" ? false : !string.IsNullOrEmpty(contratoSAP.FechaLimite);
+            contrato.DolarizadoCorredor = false;
+            if (contrato.CorredorId.HasValue && contrato.Dolarizado == true)
+            {
+                contrato.Dolarizado = false;
+                contrato.DolarizadoCorredor = true;
+            }
             contrato.EstablecimientoPropio = contratoSAP.EstabPropio == "X" ? true : contratoSAP.EstabArrendado == "X" ? false : (bool?)null;
             contrato.FechaDolarizado = !string.IsNullOrEmpty(contratoSAP.FechaLimite) ? DateTime.ParseExact(contratoSAP.FechaLimite, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
             contrato.FechaDesde = DateTime.ParseExact(contratoSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -688,7 +694,27 @@ namespace WebDataAgro.Services
             try
             {
                 logger.Debug("AnularFijacion");
-                var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(fijacionSAP);
+                var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(fijacionSAP, null);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message
+                });
+            }
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+        }
+
+        public ResultadoSap AnularFijacionVirtualSAP(FijacionVirtualSAP fijacionSAP)
+        {
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("AnularFijacion");
+                var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(null, fijacionSAP);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
             catch (Exception ex)

@@ -99,11 +99,5 @@ namespace Molinos.DataAgro.Business.Managers
                 throw;
             }
         }
-
-        private Proveedor TraerComercial(string CUIT)
-        {
-            return repositorio.Obtener<Proveedor>(x => x.CUIT == CUIT) ?? new Proveedor();
-        }
-
     }
 }

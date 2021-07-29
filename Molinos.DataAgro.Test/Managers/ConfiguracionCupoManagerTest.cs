@@ -215,8 +215,8 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var limites = new List<LimiteCupo>()
             {
-                new LimiteCupo{ Id = 0, ZonaCupoId = 1 , ConfiguracionCupoId = 1, CantidadCupo = 10 },
-                new LimiteCupo{ Id = 1, ZonaCupoId = 2 , ConfiguracionCupoId = 1, CantidadCupo = 10, LimiteAnterior = 9 }
+                new LimiteCupo{ Id = 0, ZonaCupoId = 1 , ConfiguracionCupoId = 1, CantidadCupo = 10,ZonaCupo=new ZonaCupo{Id=1,CodigoSap="",Descripcion="" } },
+                new LimiteCupo{ Id = 1, ZonaCupoId = 2 , ConfiguracionCupoId = 1, CantidadCupo = 10, LimiteAnterior = 9,ZonaCupo=new ZonaCupo{Id=1,CodigoSap="",Descripcion="" } }
             };
             var ids = new List<int> { 1 };
             var cupo = new ConfiguracionCupo

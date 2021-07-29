@@ -68,6 +68,7 @@ namespace WebDataAgro.Controllers
             {
                 dias.Add(new DiaCupo { Cantidad = cupo.CantidadCupo, Fecha = dt });
             }
+            //ok
             var resultado = configuracionCupoManager.GrabarConfiguracionCupo(new ConfiguracionCupo
             {
                 Id = cupo.Id,

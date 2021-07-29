@@ -77,7 +77,7 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarMailCanje(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial);
         void ActualizarRazonSocial();
         bool MostrarProveedorDeshabilitado(int proveedorId);
-        void EnviarMailFijacionVirtual(FijacionDePrecioContrato contrato, string comercial);
+        void EnviarMailFijacionVirtual(FijacionDePrecioContrato contrato, string comercial, bool eliminar);
         void EnviarMailPrestamoDevolucion(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial);
     }
 }

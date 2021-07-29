@@ -148,5 +148,25 @@ namespace Molinos.DataAgro.Test.Controllers
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
         }
+
+        [Test]
+        public void ActualizarCumplimientoCuposTest()
+        {
+            var result = target.ActualizarCumplimientoCupos() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ActualizarCumplimientoCuposMasivoTest()
+        {
+            var result = target.ActualizarCumplimientoCuposMasivo("20210101","20210201") as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+            cupoManagerMock.Verify(y => y.ActualizarCumplimientoCupos(It.IsAny<DateTime>()), Times.Exactly(32));
+
+        }
     }
 }

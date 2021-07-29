@@ -237,6 +237,14 @@ namespace Molinos.DataAgro.Business
             {
                 oContratoAcuerdo.FechaConfirmacion = DateTime.Now;
             }
+
+            oContratoAcuerdo.DolarizadoCorredor = false;
+            if (oContratoAcuerdo.CorredorId.HasValue && oContratoAcuerdo.Dolarizado == true)
+            {
+                oContratoAcuerdo.Dolarizado = false;
+                oContratoAcuerdo.DolarizadoCorredor = true;
+            }
+
             if (oContratoAcuerdo.Id == 0)
             {
                 oContratoAcuerdo.Fecha = DateTime.Now;
@@ -290,6 +298,7 @@ namespace Molinos.DataAgro.Business
                 objContratoAcuerdo.DiasPesificado = oContratoAcuerdo.DiasPesificado;
                 objContratoAcuerdo.PagoDiferido = oContratoAcuerdo.PagoDiferido;
                 objContratoAcuerdo.Dolarizado = oContratoAcuerdo.Dolarizado;
+                objContratoAcuerdo.DolarizadoCorredor = oContratoAcuerdo.DolarizadoCorredor;
                 objContratoAcuerdo.FechaDolarizado = oContratoAcuerdo.FechaDolarizado;
                 objContratoAcuerdo.ChequeElectronico = oContratoAcuerdo.ChequeElectronico;
                 objContratoAcuerdo.PagoCBU = oContratoAcuerdo.PagoCBU;
@@ -687,6 +696,8 @@ namespace Molinos.DataAgro.Business
                 StandardCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
                 Dolarizado = x.Dolarizado,
+                DolarizadoCorredor = x.DolarizadoCorredor,
+                Fecha_Dolarizado = x.FechaDolarizado,
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)x.FechaDolarizado.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaDolarizado) : "",
@@ -764,10 +775,6 @@ namespace Molinos.DataAgro.Business
             return contrato;
         }
 
-        public DatosIniAbmContratoAcuerdo TraerDatosIniciales()
-        {
-            throw new NotImplementedException();
-        }
         public DatosIniComboContratoAcuerdo TraerDatosCombo()
         {
             var datosCombo = new DatosIniComboContratoAcuerdo

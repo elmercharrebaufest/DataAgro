@@ -89,6 +89,7 @@
     padding: 5px 0 5px 60px; /* Damos un padding de 60px para posicionar 
         el elemento <i> en este espacio*/
     display: block;
+    margin-left: 33px;
 }
 
     /* Estas reglas se aplicarán a todos las elementos i 
@@ -104,15 +105,15 @@ después de cualquier input*/
     /* Estas reglas se aplicarán a todos los i despues 
 de un input de tipo checkbox*/
     .content-input input[type=checkbox ] + i {
-        width: 52px;
-        height: 30px;
+        width: 39px;
+        height: 23px;
         border-radius: 15px;
     }
 
         .content-input input[type=checkbox] + i:before {
             content: ''; /* No hay contenido */
-            width: 26px;
-            height: 26px;
+            width: 17px;
+            height: 18px;
             background: #fff;
             border-radius: 50%;
             position: absolute;
@@ -124,7 +125,7 @@ de un input de tipo checkbox*/
         }
 
     .content-input input[type=checkbox]:checked + i:before {
-        left: 22px;
+        left: 17px;
         -webkit-box-shadow: -3px 0 3px 0 rgba(0,0,0,0.2);
         box-shadow: 3px 0 -3px 0 rgba(0,0,0,0.2);
     }
@@ -158,5 +159,25 @@ de un input de tipo checkbox*/
 #tabla {
     border-collapse: collapse;
     width: 100%;
+}
+
+.maiz {
+    background: rgb(255, 204, 153, 0.5) !important;
+}
+
+.soja {
+    background: rgb(153, 204, 0, 0.5) !important;
+}
+
+.girasol {
+    background: rgb(211, 96, 212, 0.5) !important;
+}
+
+.trigo {
+    background: rgb(106, 230, 190, 0.5) !important;
+}
+
+.girasolAO {
+    background: rgb(153, 153, 255, 0.5) !important;
 }
 

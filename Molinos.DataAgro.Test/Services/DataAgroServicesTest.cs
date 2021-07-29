@@ -957,7 +957,7 @@ namespace Molinos.DataAgro.Test.Services
 
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
-            fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap))
+            fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap, null))
            .Returns(new Resultado());
             var result = target.AnularFijacionSAP(fijacionSap) as ResultadoSap;
             Assert.NotNull(result);
@@ -975,7 +975,7 @@ namespace Molinos.DataAgro.Test.Services
 
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<Expression<Func<Contrato, int>>>())).Returns(1);
-            fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap))
+            fijacionManager.Setup(y => y.AnularFijacionSAP(fijacionSap, null))
            .Returns(new Resultado { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "", Message = "" } } });
             var result = target.AnularFijacionSAP(fijacionSap) as ResultadoSap;
             Assert.NotNull(result);

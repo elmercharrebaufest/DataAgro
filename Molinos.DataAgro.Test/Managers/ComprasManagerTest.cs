@@ -101,5 +101,77 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(y => y.AgregarTodos(It.IsAny<List<CampañaMaterialPorMes>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Exactly(2));
             repositorioMock.Verify(y => y.AgregarTodos(It.IsAny<List<CampañaMaterial>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Exactly(2));
         }
+
+        [Test]
+        public void ActualizarComprasDetalleOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, string>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<string>() { "a" });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<Comercial>() { new Comercial { IdActiveDirectory = "A" } });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes { ComercialId = 1,Contrato="",ProveedorId=1 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CampañaMaterial>() { new CampañaMaterial { NroItem = 1, CampañaMaterialId = 1, CampañaId = 1, MaterialId = 1, ProveedorId = 1, ToneladasCompradas = 1 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorBasicoDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<ProveedorBasicoDto>() { new ProveedorBasicoDto { ProveedorId = 1, CUIT = "A" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campaña, CampañaDto>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CampañaDto>() { new CampañaDto { Descripcion = "19-20", CampañaId = 1 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialBasicoDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<MaterialBasicoDto>() { new MaterialBasicoDto { Codigo = "A", MaterialId = 1 } });
+            comprasDetalleAgentMock.Setup(y => y.ComprarIniciales(It.IsAny<List<string>>(), It.IsAny<string>()))
+                .Returns(new List<CompraDetalleAgentDto> {
+                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "A",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01" },
+                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01" }
+                });
+
+
+            target.ActualizarComprasDetalle("A", "a");
+
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Proveedor, string>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(1));
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialBasicoDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(1));
+            comprasDetalleAgentMock.Verify(y => y.ComprarIniciales(It.IsAny<List<string>>(), It.IsAny<string>()), Times.Exactly(1));
+            repositorioMock.Verify(y => y.AgregarTodos(It.IsAny<List<CampanaMaterialDetallePorMes>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Exactly(1));
+        }
+
+        [Test]
+        public void ActualizarComprasDetalleTestOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, string>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<string>() { "a" });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<Comercial>() { new Comercial { IdActiveDirectory = "A" } });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CampanaMaterialDetallePorMes>() );
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CampañaMaterial>() { new CampañaMaterial { NroItem = 1, CampañaMaterialId = 1, CampañaId = 1, MaterialId = 1, ProveedorId = 1, ToneladasCompradas = 1 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorBasicoDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<ProveedorBasicoDto>() { new ProveedorBasicoDto { ProveedorId = 1, CUIT = "A" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campaña, CampañaDto>>>(), It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CampañaDto>() { new CampañaDto { Descripcion = "19-20", CampañaId = 1 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialBasicoDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<MaterialBasicoDto>() { new MaterialBasicoDto { Codigo = "A", MaterialId = 1 } });
+            comprasDetalleAgentMock.Setup(y => y.ComprarIniciales(It.IsAny<List<string>>(), It.IsAny<string>()))
+                .Returns(new List<CompraDetalleAgentDto> {
+                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "A",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01" },
+                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01" }
+                });
+
+
+            target.ActualizarComprasDetalle("A", "a");
+
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Proveedor, string>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(1));
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialBasicoDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Exactly(1));
+            comprasDetalleAgentMock.Verify(y => y.ComprarIniciales(It.IsAny<List<string>>(), It.IsAny<string>()), Times.Exactly(1));
+            repositorioMock.Verify(y => y.AgregarTodos(It.IsAny<List<CampanaMaterialDetallePorMes>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Exactly(1));
+        }
     }
 }

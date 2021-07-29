@@ -269,6 +269,8 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<TipoNegocioDto>() { new TipoNegocioDto { TipoNegocioId = 1, Descripcion = "a" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialDto>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<MaterialDto>() { new MaterialDto { MaterialId = 1, Descripcion = "a" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<EstadoPrecioMOA, EstadoPrecioMOADto>>>(), It.IsAny<Expression<Func<EstadoPrecioMOA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+           .Returns(new List<EstadoPrecioMOADto>() { new EstadoPrecioMOADto { MaterialId = 1, Descripcion = "a" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Moneda, MonedaDto>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<MonedaDto>() { new MonedaDto { MonedaId = "a", Descripcion = "a" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<HabilitacionPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -462,5 +464,78 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.IsTrue(resultado.HayError);
             Assert.AreEqual(1, resultado.Errores.Count);
         }
+
+        [Test]
+        public void ActualizarPrecioTestOk()
+        {
+            repositorioMock.Setup(y => y.Obtener<PrecioMoa>(It.IsAny<int>()))
+                .Returns(new PrecioMoa { Id = 1 });
+            var resultado = target.ActualizarPrecio(1,1,"a");
+
+            repositorioMock.Verify(x => x.Obtener<PrecioMoa>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.IsFalse(resultado.HayError);
+            Assert.AreEqual(0, resultado.Errores.Count);
+        }
+
+        [Test]
+        public void GrabarPagoDiferidoTestOk()
+        {
+            var config = new HabilitacionPagoDiferido
+            {
+                Id = 0,
+                CantidadDia = 1,
+                Tasa = 20,
+                DesdeVigencia = new DateTime(2099, 1, 30),
+                HastaVigencia = new DateTime(2099, 1, 30),
+               
+            };
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<HabilitacionPagoDiferido, bool>>>()))
+             .Returns(false);
+
+            var resultado = target.GrabarPagoDiferido(config, "");
+
+            Assert.IsTrue(resultado.HayError);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<HabilitacionPagoDiferido>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.AreEqual(1, resultado.Errores.Count);
+        }
+
+        [Test]
+        public void GrabarPagoDiferidoTestError()
+        {
+            var config = new HabilitacionPagoDiferido
+            {
+                Id = 0,
+                CantidadDia = 0,
+                Tasa = 10,
+                DesdeVigencia = new DateTime(2099, 1, 30),
+                HastaVigencia = new DateTime(2011, 1, 30),
+
+            };
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<HabilitacionPagoDiferido, bool>>>()))
+             .Returns(true);
+
+            var resultado = target.GrabarPagoDiferido(config, "");
+
+            Assert.IsTrue(resultado.HayError);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<HabilitacionPagoDiferido>()), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+            Assert.AreEqual(4, resultado.Errores.Count);
+        }
+
+        [Test]
+        public void EliminarHabilitacionPagoDiferidoTestOk()
+        {
+            repositorioMock.Setup(y => y.Obtener<HabilitacionPagoDiferido>(It.IsAny<int>()))
+                .Returns(new HabilitacionPagoDiferido { Id = 1 });
+            var resultado = target.EliminarHabilitacionPagoDiferido(1);
+
+            repositorioMock.Verify(x => x.Obtener<HabilitacionPagoDiferido>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            Assert.IsTrue(resultado.HayError);
+            Assert.AreEqual(1, resultado.Errores.Count);
+        }
+        
     }
 }

@@ -633,7 +633,9 @@ namespace Molinos.DataAgro.Business.Managers
             var materiales = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto { MaterialId = x.MaterialId, Descripcion = x.Descripcion }, x => x.MaterialId != 5);
             var tipoNegocios = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion },
                 x => tiponegocio == 0 ? x.TipoNegocioId <= 3 : x.TipoNegocioId == 3);
-            var habilitado = repositorio.Listar<EstadoPrecioMOA, int>(x=> x.MaterialId, x => x.Habilitado.Value);
+            var habilitado = repositorio.Listar<EstadoPrecioMOA, EstadoPrecioMOADto>(x => new EstadoPrecioMOADto { TipoNegocioId = x.TipoNegocioId, MaterialId = x.MaterialId }, x => x.Habilitado == true);
+           
+           
             var monedas = repositorio.Listar<Moneda, MonedaDto>(x => new MonedaDto { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
             var ahora = DateTime.Now;
             var preciosMoa = repositorio.Listar<PrecioMoa, PrecioMoaCompraNetDto>(x => new PrecioMoaCompraNetDto
@@ -651,11 +653,16 @@ namespace Molinos.DataAgro.Business.Managers
                 DestinoId = x.DestinoId,
                 Destino = x.Destino.Descripcion
             }, x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora
-            && (x.TipoNegocioId == tiponegocio || tiponegocio == 0) && (habilitado.Contains(x.MaterialId) ||
-            (x.Habilitado.HasValue && x.Habilitado.Value)), 0, "DestinoId", Entities.Helpers.DirOrden.Desc);
+            && (x.TipoNegocioId == tiponegocio || tiponegocio == 0), 0, "DestinoId", Entities.Helpers.DirOrden.Desc);
+
+            preciosMoa = preciosMoa.Where(x => habilitado.Any(y => y.MaterialId == x.MaterialId && y.TipoNegocioId == x.TipoNegocioId)).ToList();
+
             var hoy = DateTime.Today;
-            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && (x.TipoNegocioId == tiponegocio || tiponegocio == 0) && (habilitado.Contains(x.MaterialId) ||
-            (x.Habilitado.HasValue && x.Habilitado.Value)));
+            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && 
+            (x.TipoNegocioId == tiponegocio || tiponegocio == 0));
+
+            existePizarra = existePizarra.Where(x => habilitado.Any(y => y.MaterialId == x.MaterialId && y.TipoNegocioId == x.TipoNegocioId)).ToList();
+
             foreach (var neg in tipoNegocios)
             {
                 foreach (var mat in materiales)
@@ -1047,13 +1054,13 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public void PausarCargaDePrecios(bool pausar)
+        public void PausarCargaDePrecios(bool pausar, int tipoNegocioId)
         {
             try
             {
                 var hoy = DateTime.Today;
-                var precio = repositorio.Listar<PrecioMoa>(x => x.HastaVigencia >= hoy);
-                var pizarra = repositorio.Listar<HabilitacionPizarra>(x => x.HastaVigencia >= hoy);
+                var precio = repositorio.Listar<PrecioMoa>(x => x.HastaVigencia >= hoy && x.TipoNegocioId == tipoNegocioId);
+                var pizarra = repositorio.Listar<HabilitacionPizarra>(x => x.HastaVigencia >= hoy && x.TipoNegocioId == tipoNegocioId);
                 precio.ForEach(m => m.Habilitado = pausar);
                 pizarra.ForEach(m => m.Habilitado = pausar);
                 repositorio.GuardarCambios();
@@ -1065,23 +1072,21 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }    
 
-        public bool TraerPausadoGeneral()
+        public List<EstadoPrecioMOADto> TraerPausadoGeneral()
         {
             var hoy = DateTime.Today;
-            var hayPizarra = false;
-            var hayPrecio = false;
-            var precio = repositorio.Listar<PrecioMoa>(x => x.HastaVigencia >= hoy).FirstOrDefault();
-            var pizarra = repositorio.Listar<HabilitacionPizarra>(x => x.HastaVigencia >= hoy).FirstOrDefault();
-            if(pizarra != null)
+            var estados = new List<EstadoPrecioMOADto>();
+            foreach (var item in repositorio.Listar<TipoNegocio>(x => x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3))
             {
-                hayPizarra = pizarra.Habilitado ?? true;
-            }
-            if (precio != null)
-            {
-                hayPrecio = precio.Habilitado ?? true;
-            }
-            return hayPrecio != false || hayPizarra != false ? true : false;           
-          
+                var habilitado = !repositorio.Existe<EstadoPrecioMOA>(x => x.TipoNegocioId == item.TipoNegocioId && x.Habilitado != true);                
+                var estado = new EstadoPrecioMOADto()
+                {
+                    Habilitado = habilitado,
+                    TipoNegocioId = item.TipoNegocioId
+                };
+                estados.Add(estado);
+             }
+            return estados;
         }
 
         public void CambiarEstadoPrecioMOA(List<EstadoPrecioMOADto> precios)
@@ -1095,13 +1100,28 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (precio.MaterialId == 0)
                         {
-                            PausarCargaDePrecios(precio.Habilitado.Value);
+                            PausarCargaDePrecios(precio.Habilitado.Value, precio.TipoNegocioId);
                         }
                         if (precio.MaterialId > 0)
                         {
-                           var estado = estadosPrecio.Where(x => x.MaterialId == precio.MaterialId).FirstOrDefault();
-                           estado.MaterialId = precio.MaterialId;
-                           estado.Habilitado = precio.Habilitado;                           
+                            var estado = estadosPrecio.Where(x => x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId).FirstOrDefault();
+                            if(estado != null)
+                            {
+                                estado.MaterialId = precio.MaterialId;
+                                estado.Habilitado = precio.Habilitado;
+                                estado.TipoNegocioId = precio.TipoNegocioId;
+                            }
+                            else
+                            {
+                                var nuevoEstado = new EstadoPrecioMOA()
+                                {
+                                    Habilitado = precio.Habilitado,
+                                    MaterialId = precio.MaterialId,
+                                    TipoNegocioId = precio.TipoNegocioId
+                                };
+                                repositorio.Agregar(nuevoEstado);
+                            }
+                        
                         }
                     }
 
@@ -1117,15 +1137,36 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<EstadoPrecioMOADto> TraerEstadoPrecioMOA()
         {
-          return  repositorio.Listar<EstadoPrecioMOA, EstadoPrecioMOADto>(x => 
-            new EstadoPrecioMOADto
-            {
-                Descripcion = x.Material.Descripcion,
-                MaterialId = x.MaterialId,
-                Habilitado = x.Habilitado
-            });
+            return repositorio.Listar<EstadoPrecioMOA, EstadoPrecioMOADto>(x =>
+             new EstadoPrecioMOADto
+             {
+                 Descripcion = x.Material.Descripcion,
+                 MaterialId = x.MaterialId,
+                 Habilitado = x.Habilitado, 
+                 TipoNegocioId = x.TipoNegocioId
+             });
         }
 
-        
+        public Resultado ActualizarPrecio(int id, decimal precio, string idActiveDirectory)
+        {
+            var oEntityErrors = new Resultado();
+            if (precio<=0)
+            {
+                throw new Exception("El precio tiene que ser mayor a 0.");
+            }
+            try
+            {
+                var pm = repositorio.Obtener<PrecioMoa>(id);
+                pm.Precio = precio;
+                repositorio.GuardarCambios();
+                logDataAgroManager.LogCambiosDataAgro(TraerPrecio(id), TipoAccionLogDataAgro.Modificar);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
+            return oEntityErrors;
+        }
     }
 }
