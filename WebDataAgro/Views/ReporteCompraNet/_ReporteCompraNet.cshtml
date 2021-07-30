@@ -144,24 +144,24 @@
 
                                 break;
                             case 21:
-                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.DispAPrecio + y.DispFijac + y.FrwAPrecio + y.FrwFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo").Sum(x => x.DispAgente + x.FrwAgente)).ToString("N0");
 
                                 sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
                                 sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListDispFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
                                 sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
                                 sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListFrwFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
 
-                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Select(mes => mes.ListDispAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
-                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Select(mes => mes.ListFrwAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo").Select(mes => mes.ListDispAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo").Select(mes => mes.ListFrwAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
 
                                 break;
                             case 22:
-                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Sum(x => x.NewAgente)).ToString("N0");
+                                sumaPricing = (Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(x => x.PosicionKilos.Sum(y => y.NewAPrecio + y.NewFijac)).Sum() + Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo" /*"Trigo Cámara" || x.Material == "Trigo Calidad*/).Sum(x => x.NewAgente)).ToString("N0");
 
                                 sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewAPrecio).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
                                 sumaPricingIds.AddRange(Model.PosicionCompras.Where(x => x.MaterialId == 2).Select(mes => mes.PosicionKilos).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().Select(a => a.ListNewFijac).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
 
-                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo Cámara" || x.Material == "Trigo Calidad").Select(mes => mes.ListNewAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
+                                sumaPricingIds.AddRange(Model.ToneladasGranoTipo.Where(x => x.Material == "Trigo").Select(mes => mes.ListNewAgente).Select(b => b.Select(c => c)).SelectMany(l => l).Distinct().ToList().ToList());
 
                                 break;
                             case 31:
