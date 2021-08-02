@@ -134,15 +134,16 @@ function InicializarElementos() {
     if (pausado == true) {
         $(".pausado").prop("checked", this.checked);
     }
+   
+    //CargarTablePrecio();   
+}
+
+function CargarTablePrecio() {
     var datos = result = MSExecuteOnServer('/Centro/Buscar', null);
 
     for (var i = 0; i < datos.Datos.length; i++) {
         centros.push({ Destino: datos.Datos[i].Descripcion });
     }
-    //CargarTablePrecio();   
-}
-
-function CargarTablePrecio() {
     var ds = {
         transport: {
             read: {
