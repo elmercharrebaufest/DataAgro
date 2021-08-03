@@ -335,5 +335,11 @@
                            /endpoint[@name='HTTP_Port35']
                            /@address" />
   </parameter>
+  <parameter name="HTTP_Port36 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+                    match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port36']
+                           /@address" />
+  </parameter>
   
 </parameters>
