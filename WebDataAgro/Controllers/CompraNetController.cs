@@ -247,14 +247,19 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+        static readonly object _lockFinalizarContrato = new object();
 
         public ActionResult FinalizarContrato(int contratoId)
         {
-            return new JsonResult()
+            lock (_lockFinalizarContrato)
             {
-                Data = mobjContratoManager.FinalizarContrato(contratoId, GlobalVariables.IdActiveDirectory),
-                MaxJsonLength = Int32.MaxValue
-            };
+                return new JsonResult()
+                {
+                    Data = mobjContratoManager.FinalizarContrato(contratoId, GlobalVariables.IdActiveDirectory),
+                    MaxJsonLength = Int32.MaxValue
+                };
+            }
+
         }
 
         [Autorizacion(PermisosDataAgro.ConfirmarNegocioCorredoresBsAs, PermisosDataAgro.ConfirmarNegocioCorredoresRosario, PermisosDataAgro.ConfirmarNegocioOrigCentro, PermisosDataAgro.ConfirmarNegocioOrigNorte, PermisosDataAgro.ConfirmarNegocioOrigSur)]
@@ -899,11 +904,11 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult TraerPrecioMoa(int? tipoNegocioId)
         {
-          
+
             var json = new JsonResult()
             {
                 Data = configuracionInternaManager.TraerPrecioCompraNet(tipoNegocioId),
-                MaxJsonLength = Int32.MaxValue,               
+                MaxJsonLength = Int32.MaxValue,
             };
             json.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             return json;

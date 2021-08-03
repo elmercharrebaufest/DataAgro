@@ -386,7 +386,7 @@ namespace Molinos.DataAgro.Business.Managers
                         oErrorMessages.Error("PlanCanje", "El proveedor no está habilitado como Proveedor Plan canje");
                     }
                     var boletoCompraNetProvincias = repositorio.Listar<BoletoCompraNetProvincia>(x => x.BoletoCompraNetId == 4);
-                    if (oParam.BoletoId == 4 && !boletoCompraNetProvincias.Any(x=> x.ProvinciaId  == oParam.ProvinciaId))
+                    if (oParam.BoletoId == 4 && !boletoCompraNetProvincias.Any(x => x.ProvinciaId == oParam.ProvinciaId))
                     {
                         oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
                     }
@@ -633,6 +633,11 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("", "El porcentaje del concepto Comisiones no puede ser mayor a 1%");
                     }
+                }
+
+                if (concepto != null && (concepto.Importe > 0 || concepto.Porcentaje > 0) && (oParam.MaterialId == 4 || oParam.MaterialId == 5))
+                {
+                    oErrorMessages.Error("", "En los negocios de Girasol la comisión debe ingresarse en descuentos y bonificaciones por fuera del precio.");
                 }
             }
             if (oParam.MonedaId != "USDM " && oParam.AperturaPrecio != null && oParam.TipoNegocioId == 2)
