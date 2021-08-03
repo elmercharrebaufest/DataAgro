@@ -237,7 +237,7 @@ namespace WebDataAgro.Controllers
             logger.Info("ActualizarCumplimientoCupos - Iniciando");
             try
             {
-                cupoManager.ActualizarCumplimientoCupos(DateTime.Now.Date);
+                cupoManager.ActualizarCumplimientoCupos(DateTime.Now.Date.AddDays(-1));
             }
             catch (Exception ex)
             {
