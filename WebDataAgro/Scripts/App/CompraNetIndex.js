@@ -1024,20 +1024,20 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
-                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId || (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true))) {
+                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId )) {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
-                                botonVisualizar(dataItem, 'fa-eye fin') +
-                                botonPreAnular(dataItem, 'fa-trash fin') +
-                                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
+                                botonVisualizar(dataItem, 'fa-eye fin') +                                
+                                ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin')) +
+                                ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
                         } else {
                             descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n cerrada" ' : '';
 
                             return '<div ' + descripcion + 'class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
-                                botonPreAnular(dataItem, 'fa-trash fin') +
-                                botonModificarFinalizados(dataItem, 'fa-pencil fin');
+                                ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin')) +
+                                ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
                         }
                     }
                     if (dataItem.Estado == 6) { //Rechazado

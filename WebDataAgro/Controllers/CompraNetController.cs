@@ -363,13 +363,20 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        static readonly object _lockFinalizarFijacion = new object();
+
         public ActionResult FinalizarFijacion(int fijacionDePrecioContratoId)
         {
-            return new JsonResult()
+            lock (_lockFinalizarFijacion)
             {
-                Data = mobjFijacionDePrecioContratoManager.FinalizarFijacion(fijacionDePrecioContratoId, GlobalVariables.IdActiveDirectory),
-                MaxJsonLength = Int32.MaxValue
-            };
+                return new JsonResult()
+                {
+                    Data = mobjFijacionDePrecioContratoManager.FinalizarFijacion(fijacionDePrecioContratoId, GlobalVariables.IdActiveDirectory),
+                    MaxJsonLength = Int32.MaxValue
+                };
+            }
+
         }
 
         public ActionResult ReenviarMails(Contrato oParam)
