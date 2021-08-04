@@ -1029,7 +1029,7 @@ function CreateGridInformeCompraNet() {
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +                                
                                 ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin')) +
-                                ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
+                                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
                         } else {
                             descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n cerrada" ' : '';
 
@@ -1037,7 +1037,7 @@ function CreateGridInformeCompraNet() {
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin')) +
-                                ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
+                                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
                         }
                     }
                     if (dataItem.Estado == 6) { //Rechazado
