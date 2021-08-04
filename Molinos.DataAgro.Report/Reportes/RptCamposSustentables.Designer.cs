@@ -65,8 +65,8 @@
             this.pageBreak1 = new DataDynamics.ActiveReports.PageBreak();
             this.label15 = new DataDynamics.ActiveReports.Label();
             this.label16 = new DataDynamics.ActiveReports.Label();
-            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
             this.label17 = new DataDynamics.ActiveReports.Label();
+            this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
             ((System.ComponentModel.ISupportInitialize)(this.label1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label9)).BeginInit();
@@ -116,9 +116,9 @@
             this.label1.Left = 2.338F;
             this.label1.Name = "label1";
             this.label1.Style = "color: Black; font-weight: bold; text-align: center";
-            this.label1.Text = "Declaración de Conformidad según criterios de sustentabilidad para la\r\nproducción" +
-    " de Biomasa, de acuerdo con los requisitos de la Directiva 2009/28/CE (modificad" +
-    "a por la Directiva 2015/1513)\r\n";
+            this.label1.Text = "Declaración de Conformidad según criterios de sustentabilidad para laproducción d" +
+    "e Biomasa, de acuerdo con los requisitos de la Directiva 2018/2001/EC (RED II)\r\n" +
+    "";
             this.label1.Top = 0.219F;
             this.label1.Width = 5.947001F;
             // 
@@ -601,12 +601,6 @@
             this.label16.Top = 6.35F;
             this.label16.Width = 1.758F;
             // 
-            // pageFooter
-            // 
-            this.pageFooter.Height = 0F;
-            this.pageFooter.Name = "pageFooter";
-            this.pageFooter.Format += new System.EventHandler(this.PageFooter_Format);
-            // 
             // label17
             // 
             this.label17.Height = 0.2F;
@@ -617,6 +611,12 @@
             this.label17.Text = "Todos los campos corresponden a Argentina";
             this.label17.Top = 8.575001F;
             this.label17.Width = 3.348F;
+            // 
+            // pageFooter
+            // 
+            this.pageFooter.Height = 0F;
+            this.pageFooter.Name = "pageFooter";
+            this.pageFooter.Format += new System.EventHandler(this.PageFooter_Format);
             // 
             // RptCamposSustentables
             // 

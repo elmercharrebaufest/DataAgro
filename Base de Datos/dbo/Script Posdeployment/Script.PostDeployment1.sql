@@ -203,11 +203,23 @@ IF NOT EXISTS (select 1 from MotivoAnterior where Descripcion = 'Me olvidé de c
 IF NOT EXISTS (select 1 from ConceptoAperturaPrecio where Descripcion = 'Basis') BEGIN insert into ConceptoAperturaPrecio (Descripcion,CodigoSap) values ('Basis','BA'); END
 
 --Configuracion precio Moa
-IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 1) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (1, 1); END
-IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 2) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (2, 1); END
-IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (3, 1); END
-IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 4) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (4, 1); END
-IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5) BEGIN insert into EstadoPrecioMOA (MaterialId, Habilitado) values (5, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 1 and TipoNegocioId = 1) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (1,1, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 2 and TipoNegocioId = 1) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (2,1, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 3 and TipoNegocioId = 1) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (3,1, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 4 and TipoNegocioId = 1) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (4,1, 1); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5 and TipoNegocioId = 1) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (5,1, 1); END
+
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 1 and TipoNegocioId = 2) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (1,1, 2); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 2 and TipoNegocioId = 2) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (2,1, 2); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 3 and TipoNegocioId = 2) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (3,1, 2); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 4 and TipoNegocioId = 2) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (4,1, 2); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5 and TipoNegocioId = 2) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (5,1, 2); END
+
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 1 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (1,1, 3); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 2 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (2,1, 3); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 3 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (3,1, 3); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 4 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (4,1, 3); END
+IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5 and TipoNegocioId = 3) BEGIN insert into EstadoPrecioMOA (MaterialId, TipoNegocioId, Habilitado) values (5,1, 3); END
 
 
 --TipoPosicionCBOT
