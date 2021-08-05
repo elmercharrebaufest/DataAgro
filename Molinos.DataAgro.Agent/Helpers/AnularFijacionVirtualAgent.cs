@@ -3,6 +3,7 @@ using Molinos.DataAgro.Agent.AnularFijacionVirtual;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
 using System;
 using System.Configuration;
 
@@ -10,12 +11,14 @@ namespace Molinos.DataAgro.Agent.Helpers
 {
     public class AnularFijacionVirtualAgent : IAnularFijacionVirtualAgent
     {
-        public AnularFijacionVirtualAgent(ILogger logger)
+        public AnularFijacionVirtualAgent(IRepositorio repositorio, ILogger logger)
         {
             this.logger = logger;
+            this.repositorio = repositorio;
         }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly IRepositorio repositorio;
         private readonly ILogger logger;
 
         public string AnularFijacionVirtual(FijacionDePrecioContrato fijacion, string comercial)
@@ -44,7 +47,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                           IM_UNAME = comercial
                        }
                     };
-
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
                     logger.Debug(rq.ToXml());
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_ANULAR_FIJ_VIR_CANJE(rq.Z_MPRFC_ANULAR_FIJ_VIR_CANJE);
                     logger.Debug(devolucion.ToXml());
