@@ -429,7 +429,7 @@ namespace Molinos.DataAgro.Business.Managers
                (x is FijacionDePrecioContrato && DbFunctions.TruncateTime((x as FijacionDePrecioContrato).FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime((x as FijacionDePrecioContrato).FechaOperacion) <= fechaManana) ||
                (x is AgenteCompra && DbFunctions.TruncateTime((x as AgenteCompra).FechaOperacion) >= fechaHoy && DbFunctions.TruncateTime((x as AgenteCompra).FechaOperacion) <= fechaManana) ||
                (!(x is Contrato) && !(x is FijacionDePrecioContrato) && !(x is AgenteCompra) && DbFunctions.TruncateTime(x.Fecha) >= fechaHoy && DbFunctions.TruncateTime(x.Fecha) <= fechaManana))
-               && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+               && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10)
                && (centroId == 0 || x.DestinoId == centroId)
                && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 6)
                && (x.TipoAgenteCompraId == null)
@@ -554,7 +554,7 @@ namespace Molinos.DataAgro.Business.Managers
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
             DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
             && x.TipoNegocioId == 2 && x.Venta != true &&
-            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId == null && x.TipoAgenteCompraId == null);
+            (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) && (centroId == 0 || centroId == x.DestinoId) && x.ContratoAcuerdoId == null && x.TipoAgenteCompraId == null);
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.Id,
@@ -567,7 +567,7 @@ namespace Molinos.DataAgro.Business.Managers
                 SanLorenzo = x.Destino.Acopio == false ? Math.Round(x.Cantidad / 1000) : 0,
                 Acopio = x.Destino.Acopio == true ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.Canje != true && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde &&
-            DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == x.DestinoId));
+            DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) && (centroId == 0 || centroId == x.DestinoId));
             var fasones = repositorio.Listar<Fason, PricingCampaniaDto>(x => new PricingCampaniaDto
             {
                 Id = x.Id,
@@ -921,7 +921,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contratos = negocios.Where(x =>
                 x.OcultarEnTablero == false
                 //&& x.Fecha >= fechaHoy && x.Fecha <= fechaManana
-                && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5)
+                && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5 || x.Estado == 10)
                 && x.MaterialId == materialId
                 && (calidad == null || (calidad != null && x.StandardCalidadId == standard))
                 && (centroId == 0 || x.DestinoId == centroId)
@@ -971,7 +971,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x => x.OcultarEnTablero == false
             //&& x.Fecha >= fechaHoy
             //&& x.Fecha <= fechaManana
-            && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5)
+            && (x.Estado == 2 || x.Estado == 4 || x.Estado == 5 || x.Estado == 10)
             && x.MaterialId == materialId
             && x.TipoNegocioId == 3
             && (calidad == null || (calidad == x.StandardCalidadId))
@@ -1772,7 +1772,7 @@ namespace Molinos.DataAgro.Business.Managers
             x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
              && x.OcultarEnTablero == false
-             && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+             && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.StandardDeCalidadId == calidad))
              && (centroId == 0 || x.DestinoId == centroId)
@@ -1832,7 +1832,7 @@ namespace Molinos.DataAgro.Business.Managers
             x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
              && x.OcultarEnTablero == false
-             && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+             && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10)
              && x.MaterialId == materialId
              && (calidad == null || (calidad != null && x.TrigoEspecial == true && calidad == 7) || (calidad != null && x.TrigoEspecial == false && calidad == 3))
              && (centroId == 0 || centroId == x.DestinoId) && x.Canje != true && x.PrestamoDevolucion != true && x.Venta != true);

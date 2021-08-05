@@ -96,7 +96,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Sustentable = (contrato is Contrato) && (contrato as Contrato).ImporteSustentable != null && (contrato as Contrato).ImporteSustentable > 0,
                         Dolarizado = contrato.Dolarizado.Value,
                         Pesificado = contrato.DiasPesificado != null,
-                        Negocio = contrato is ContratoAcuerdo ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
+                        Negocio = contrato is ContratoAcuerdo ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado || contrato.EstadoId == (int)EnumEstadoContrato.PreAnulado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                         DestinoId = contrato.DestinoId,
                         DestinoDescripcion = contrato.Destino.Descripcion,
                         CantidadCamiones = (contrato is Contrato) ? (contrato as Contrato).CantidadCamiones : (int?)null,

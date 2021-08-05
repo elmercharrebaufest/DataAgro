@@ -4198,7 +4198,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var lista = new List<string>();
             var email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
-            if (contrato.Comercial.IdActiveDirectory != comercial)
+            if (contrato.Comercial.IdActiveDirectory != comercial.ToUpper())
             {
                 lista.Add(email);
                 logger.Debug("Enviando mail a Comercial fijacion virtual" + email);

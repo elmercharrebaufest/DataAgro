@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Where(x =>materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoNegocioId == 2 && 
                 DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy && 
                 DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana && 
-                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && 
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) && 
                 (0 == centroId || x.DestinoId == centroId) 
                 && x.ContratoAcuerdo == null
                 && x.TipoAgenteCompraId == null

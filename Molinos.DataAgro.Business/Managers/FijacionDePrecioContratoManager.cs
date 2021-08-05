@@ -1569,6 +1569,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacionSave.ComercialCreadorId = fijacion.ComercialCreadorId;
                 fijacionSave.ComercialId = fijacion.ComercialId;
                 fijacionSave.Canje = fijacion.Canje;
+                fijacionSave.Virtual = fijacion.Virtual;
                 fijacionSave.Fecha = fijacion.Fecha;
                 fijacionSave.GrupoCompra = fijacion.GrupoCompra;
                 fijacionSave.MotivoOperacionAnterior = fijacion.MotivoOperacionAnterior;
