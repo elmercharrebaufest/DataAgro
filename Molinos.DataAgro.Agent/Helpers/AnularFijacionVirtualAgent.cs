@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                        {
                           IM_CONTRNUM = fijacion.ContratoSAP.Substring(3),
                           IM_NRO_FIJ = fijacion.FijacionSAP.Substring(10),
-                          IM_UNAME = comercial
+                          IM_UNAME = comercial.ToUpper()
                        }
                     };
                     var log = new Log
