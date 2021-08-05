@@ -286,7 +286,7 @@ namespace WebDataAgro.Services
                     };
                     descuentos.Add(descuento);
                 }
-                if (desc.TipoPeriodo == "E" && string.IsNullOrEmpty( desc.TipoDescBon ))
+                if (desc.TipoPeriodo == "E" && string.IsNullOrEmpty(desc.TipoDescBon))
                 {
                     var precio = new PrecioPactado
                     {
@@ -387,10 +387,10 @@ namespace WebDataAgro.Services
             }
             contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
             contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
-          
-            contrato.FechaDesdeSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null 
+
+            contrato.FechaDesdeSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null
             && !string.IsNullOrEmpty(contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").FechaDesde) ?
-            DateTime.ParseExact(contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").FechaDesde,"yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+            DateTime.ParseExact(contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
 
             contrato.FechaHastaSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null
             && !string.IsNullOrEmpty(contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").FechaHasta) ?
@@ -637,7 +637,7 @@ namespace WebDataAgro.Services
                 fijacion.ComercialId = comercial.ComercialId;
                 fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
                 fijacion.GrupoCompra = comercial.GrupoDeComprasId;
-               
+
                 fijacion.Canje = fijacionSAP.Canje == "X" ? true : false;
                 fijacion.Virtual = fijacionSAP.Virtual == "X" ? true : false;
                 logger.Debug("Alta fijacion Apertura");
@@ -660,7 +660,7 @@ namespace WebDataAgro.Services
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
                 }
-                
+
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
@@ -768,7 +768,14 @@ namespace WebDataAgro.Services
                 cupo.Calidad = cupoSAP.Calidad == "01" ? "Camara" : cupoSAP.Calidad == "03" ? "Fabrica" : "";
 
                 cupo.EstadoCupoId = cupoSAP.Borrado == "X" ? 4 : cupoOriginal.EstadoCupoId;
-
+                if (!string.IsNullOrEmpty(cupoSAP.Comercial))
+                {
+                    cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial, x => x.ComercialId);
+                }
+                if (cupo.ComercialId == null || cupo.ComercialId == 0)
+                {
+                    cupo.ComercialId = cupoOriginal.ComercialId;
+                }
                 logger.Debug("Actualizando CUPOSAP VALIDAR");
                 ValidarCupo(cupo, oEntityErrors);
                 if (oEntityErrors.HayError)
@@ -883,10 +890,10 @@ namespace WebDataAgro.Services
             {
                 oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Zona' es invalido" });
             }
-            //if (cupo.ComercialId == null || cupo.ComercialId == 0)
-            //{
-            //    oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Comercial' es invalido" });
-            //}
+            if (cupo.ComercialId == null || cupo.ComercialId == 0)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'Comercial' es invalido" });
+            }
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
         }

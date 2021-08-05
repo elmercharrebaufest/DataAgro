@@ -399,6 +399,7 @@ namespace Molinos.DataAgro.Test.Services
             {
                 Id = 1,
                 EstadoCupoId = 1,
+                ComercialId = 1
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(cupo);
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, int>>>())).Returns(1);

@@ -2107,7 +2107,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error(e.Message);
+                logger.Error(e);
             }
             return resultado;
         }
