@@ -21,6 +21,7 @@
                             <td class="fuente600">% Cap. Prod.</td>
                             <td class="fuente600">Compras Cos. Anterior</td>
                             <td class="fuente600">Compras Cos. Actual</td>
+                            <td class="fuente600">Unidad</td>
                         </tr>
                     </thead>
                     <tbody id="tabla-cap-pendientes" data-template="div-tablas-cap-pendientes" data-bind="source:ObtenerCapacidadProductivaPendiente" type="text/x-kendo-template">
@@ -28,10 +29,11 @@
                     <script id="div-tablas-cap-pendientes" type="text/x-kendo-template">
                         <tr>
                             <td>#=MATERIAL#</td>
-                            <td>#=kendo.toString(CAP_PROD, "n")#</td>
+                            <td>#=kendo.toString(CAP_PROD, "n0")#</td>
                             <td>#=CAP_PROD_PORC#</td>
-                            <td>#=kendo.toString(COMPRAS_ANT, "n")#</td>
-                            <td>#=kendo.toString(COMPRAS_ACT, "n")#</td>
+                            <td>#=kendo.toString(COMPRAS_ANT, "n0")#</td>
+                            <td>#=kendo.toString(COMPRAS_ACT, "n0")#</td>
+                            <td>#=UNIDAD#</td>
                         </tr>
                     </script>
                 </table>
