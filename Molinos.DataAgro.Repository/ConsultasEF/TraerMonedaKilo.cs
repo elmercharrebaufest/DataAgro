@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var fij = contexto.Set<FijacionDePrecioContrato>()
                 .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy 
                 && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana && 
-                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && 
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) && 
                 (centroId == 0 || centroId == 1) && x.Canje != true                 
                 && x.Pizarra != true)
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
@@ -67,7 +67,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoNegocioId == 2 &&
                 DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy &&
                 DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana &&
-                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) &&
+                (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) &&
                 (0 == centroId || x.DestinoId == centroId)
                 && x.ContratoAcuerdo == null
                 && (x.Canje != true)

@@ -1727,7 +1727,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var contratos = repositorio.Listar<Contrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
-                Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                Contrato = ((x.EstadoId == (int)EnumEstadoContrato.Finalizado || x.EstadoId == (int)EnumEstadoContrato.PreAnulado) && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
                 Cuit = x.Proveedor.CUIT,
                 RazonCorredor = x.Corredor.RazonSocial,
                 CuitCorredor = x.Corredor.CUIT,
@@ -1786,7 +1786,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
-                Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                Contrato = ((x.EstadoId == (int)EnumEstadoContrato.Finalizado || x.EstadoId == (int)EnumEstadoContrato.PreAnulado) && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cuit = x.Proveedor.CUIT,
                 RazonCorredor = x.Corredor.RazonSocial,
