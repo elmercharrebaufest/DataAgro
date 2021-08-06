@@ -1640,10 +1640,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else if (fijacionVirtual != null)
             {
-                //-> 000 2699076 + 06
-                //-> 2699076 06
-                var codigo = fijacionVirtual.Contrato.Substring(0, 7).PadLeft(10, '0') + fijacionVirtual.Contrato.Substring(7);
-                oFijacionSave = repositorio.ObtenerMayor<FijacionDePrecioContrato, int>(x => x.FijacionSAP == codigo && x.Virtual == true, x => x.Id);
+                oFijacionSave = repositorio.ObtenerMayor<FijacionDePrecioContrato, int>(x => x.FijacionSAP == fijacionVirtual.Contrato && x.Virtual == true, x => x.Id);
             }
             string jsonObjeto = JsonConvert.SerializeObject(fijacion, new JsonSerializerSettings()
             {

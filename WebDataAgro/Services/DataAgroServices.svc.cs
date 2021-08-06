@@ -693,7 +693,7 @@ namespace WebDataAgro.Services
             var oEntityErrors = new ResultadoSap();
             try
             {
-                logger.Debug("AnularFijacion");
+                logger.Debug("AnularFijacion " + fijacionSAP.Fijacion);
                 var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(fijacionSAP, null);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
@@ -713,7 +713,7 @@ namespace WebDataAgro.Services
             var oEntityErrors = new ResultadoSap();
             try
             {
-                logger.Debug("AnularFijacion");
+                logger.Debug("AnularFijacionVirtual " + fijacionSAP.Contrato);
                 var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(null, fijacionSAP);
                 oEntityErrors.ListaErrores.AddRange(resultado.Errores);
             }
