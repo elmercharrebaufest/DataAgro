@@ -1406,7 +1406,7 @@ namespace Molinos.DataAgro.Business.Managers
             var data = new List<DetalleContratoDto>();
             var contratos = repositorio.Listar<Contrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
-                Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                Contrato = ((x.EstadoId == (int)EnumEstadoContrato.Finalizado || x.EstadoId == (int)EnumEstadoContrato.PreAnulado) && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cuit = x.Proveedor.CUIT,
                 RazonCorredor = x.Corredor.RazonSocial,
@@ -1465,7 +1465,7 @@ namespace Molinos.DataAgro.Business.Managers
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
                 Id = x.Id,
-                Contrato = (x.EstadoId == (int)EnumEstadoContrato.Finalizado && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                Contrato = ((x.EstadoId == (int)EnumEstadoContrato.Finalizado || x.EstadoId == (int)EnumEstadoContrato.PreAnulado)   && x.FijacionSAP != null && x.FijacionSAP != "") ? x.FijacionSAP : x.Id.ToString(),
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cuit = x.Proveedor.CUIT,
                 RazonCorredor = x.Corredor.RazonSocial,
@@ -1786,7 +1786,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato, DetalleContratoDto>(x => new DetalleContratoDto
             {
-                Contrato = ((x.EstadoId == (int)EnumEstadoContrato.Finalizado || x.EstadoId == (int)EnumEstadoContrato.PreAnulado) && x.ContratoSAP != null && x.ContratoSAP != "") ? x.ContratoSAP : x.Id.ToString(),
+                Contrato = ((x.EstadoId == (int)EnumEstadoContrato.Finalizado || x.EstadoId == (int)EnumEstadoContrato.PreAnulado) && x.FijacionSAP != null && x.FijacionSAP != "") ? x.FijacionSAP : x.Id.ToString(),
                 RazonSocial = x.Proveedor.RazonSocial,
                 Cuit = x.Proveedor.CUIT,
                 RazonCorredor = x.Corredor.RazonSocial,
