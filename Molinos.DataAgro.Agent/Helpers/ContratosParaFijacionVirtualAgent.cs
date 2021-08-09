@@ -167,7 +167,7 @@ namespace Molinos.DataAgro.Agent
                         var contratoParaFijacion = new DatosFijacionDeContratoDto
                         {
                             ContratoId = contrato.CONTRNUM.TrimStart('0'),                            
-                            KilosAplicados = ((double)contrato.KILOS_FIJADOS).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
+                            KilosAplicados = ((double)contrato.KILOS_FIJADOS + cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             KilosPendiente = ((double)contrato.KILOS_A_FIJAR - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaHasta = DateTime.Parse(contrato.FECHA_HASTA).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
