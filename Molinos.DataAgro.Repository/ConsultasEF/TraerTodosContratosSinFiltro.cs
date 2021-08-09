@@ -89,7 +89,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
                         (contrato is Contrato && (contrato as Contrato).Canje == true) ? "CANJE" : (contrato is Contrato && (contrato as Contrato).PrestamoDevolucion == true) ? "PRÉSTAMO DEVOLUCIÓN" :
                         (contrato is Contrato && (contrato as Contrato).Venta == true) ? "VENTA" :
-                        (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Virtual == true) ? "FIJACION VIRTUAL" : contrato.TipoNegocio.Descripcion),
+                        (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Virtual == true) ? "FIJACION VIRTUAL" :
+                        (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Canje == true) ? "FIJACION CANJE"  : contrato.TipoNegocio.Descripcion),
                         Localidad = !(contrato is Contrato) || (contrato as Contrato).Localidad == null ? "" : (contrato as Contrato).Localidad.Nombre,
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,

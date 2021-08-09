@@ -41,6 +41,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 where (contrato.TipoNegocioId == 2 || contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6)
                 && contrato.OcultarEnTablero == false
                 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5 || contrato.EstadoId == 10)
+                && contrato.Canje != true
                 && ((contrato is Contrato && (contrato as Contrato).ContratoAcuerdo == null) || !(contrato is Contrato))
                 //&& ((contrato is Contrato && DbFunctions.TruncateTime((contrato as Contrato).FechaOperacion) == DbFunctions.TruncateTime((contrato as Contrato).Fecha)) || !(contrato is Contrato))
                 && ((contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId == null) || !(contrato is ContratoAcuerdo))

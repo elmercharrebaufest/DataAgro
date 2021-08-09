@@ -850,7 +850,8 @@ function CreateGridInformeCompraNet() {
                     }, {
                         TipoNegocio: "PR\u00C9STAMO DEVOLUCI\u00D3N"
                     }, { TipoNegocio: "VENTA" },
-                    { TipoNegocio: "FIJACION VIRTUAL" }
+                    { TipoNegocio: "FIJACION VIRTUAL" },
+                    { TipoNegocio: "FIJACION CANJE" }
                     ]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
@@ -1024,10 +1025,10 @@ function CreateGridInformeCompraNet() {
                     }
 
                     if (dataItem.Estado == 5) { //Finalizado
-                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId )) {
+                        if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId)) {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
-                                botonVisualizar(dataItem, 'fa-eye fin') +                                
+                                botonVisualizar(dataItem, 'fa-eye fin') +
                                 ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin')) +
                                 ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
                         } else {
@@ -2396,7 +2397,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     if (ObservacionTercero == "" || ObservacionTercero == "null") {
         ObservacionTercero = null;
     }
-   
+
     if (SustentableTercero == "true" || CalidadTercero == "true" || DolarizadoTercero == "true" || PagoDiferidoTercero == "true" || ObservacionTercero != null) {
         var p = ObservacionTercero.split("|");
 
@@ -2586,7 +2587,7 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     $("#agenteBorrarDivVisualizar").hide();
     $("#estadoModalBorrar").val(estado);
     $("#fijacionModalAnular").val(fijacionDePrecioContratoId);
-    
+
     if (tipoNegocio === "3") {
         $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
     } else if (tipoNegocio === "4") {
