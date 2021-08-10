@@ -1573,6 +1573,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacionSave.Fecha = fijacion.Fecha;
                 fijacionSave.GrupoCompra = fijacion.GrupoCompra;
                 fijacionSave.MotivoOperacionAnterior = fijacion.MotivoOperacionAnterior;
+                fijacionSave.ClasificacionContrato = fijacion.ClasificacionContrato;
 
                 if (fijacion.AperturaPrecio != null)
                 {
@@ -1610,7 +1611,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         var f = new FijacionVirtualSap()
                         {
-                            FijacionVirtualId = repositorio.Obtener<FijacionDePrecioContrato, int?>(x => x.FijacionSAP == (fijacionSave.ContratoSAP + item.NumeroFijacionVirtual), x => x.Id),
+                            FijacionVirtualId = repositorio.Obtener<FijacionDePrecioContrato, int?>(x => x.FijacionSAP == item.NumeroFijacionVirtual, x => x.Id),
                             Cantidad = item.Cantidad,
                             FijacionVirtualNro = item.NumeroFijacionVirtual
                         };
