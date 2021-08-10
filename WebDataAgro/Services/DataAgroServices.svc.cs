@@ -708,25 +708,27 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
-        //public ResultadoSap AnularFijacionVirtualSAP(FijacionVirtualSAP fijacionSAP)
-        //{
-        //    var oEntityErrors = new ResultadoSap();
-        //    try
-        //    {
-        //        logger.Debug("AnularFijacionVirtual " + fijacionSAP.Contrato);
-        //        var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(null, fijacionSAP);
-        //        oEntityErrors.ListaErrores.AddRange(resultado.Errores);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        oEntityErrors.ListaErrores.Add(new ErrorMessage()
-        //        {
-        //            Message = ex.Message
-        //        });
-        //    }
-        //    oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
-        //    return oEntityErrors;
-        //}
+        public ResultadoSap AnulaFijacionVirtualSAP(FijacionVirtualSAP fijacionSAP)
+        {
+            var oEntityErrors = new ResultadoSap();
+            try
+            {
+                logger.Debug("AnularFijacionVirtual " + fijacionSAP.Contrato);
+                var resultado = fijacionDePrecioContratoManager.AnularFijacionSAP(null, fijacionSAP);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message
+                });
+                logger.Error("AnularFijacionVirtual Error");
+                logger.Error(ex);
+            }
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+        }
 
         public ResultadoSap ActualizarCupoSAP(CupoSapDto cupoSAP)
         {

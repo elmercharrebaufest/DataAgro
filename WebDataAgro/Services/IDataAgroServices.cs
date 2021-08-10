@@ -47,8 +47,8 @@ namespace WebDataAgro.Services
         ResultadoSap AltaFijacionSAP(FijacionSAPDto fijacionSAP);
         [OperationContract]
         ResultadoSap AnularFijacionSAP(FijacionSAP fijacionSAP);
-        //[OperationContract]
-        //ResultadoSap AnularFijacionVirtualSAP(FijacionVirtualSAP fijacionSAP);
+        [OperationContract]
+        ResultadoSap AnulaFijacionVirtualSAP(FijacionVirtualSAP fijacionSAP);
         [OperationContract]
         bool ProveedorApocrifo(string cuit);
         [OperationContract]
