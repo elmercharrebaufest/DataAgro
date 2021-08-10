@@ -174,11 +174,11 @@ namespace WebDataAgro.Services
             contratoSAP.Apertura = contratoSAP.Apertura ?? new List<AperturaPrecioSap>();
             contratoSAP.Procedencia = contratoSAP.Procedencia != null ? contratoSAP.Procedencia.Trim() : contratoSAP.Procedencia;
             var oEntityErrors = new ResultadoSap();
+            var contrato = new Contrato();
             try
             {
                 logger.Debug("ActualizandoContrato" + contratoSAP.ToXml());
                 var contratoOriginal = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP);
-                var contrato = new Contrato();
                 CrearProyeccionContrato(contratoSAP, contrato, null, true);
                 logger.Debug("ActualizandoContrato5");
                 ValidarContrato(contrato, oEntityErrors);
@@ -199,7 +199,7 @@ namespace WebDataAgro.Services
                 });
                 oEntityErrors.HayError = true;
             }
-            logger.Debug("ActualizandoContrato7 CONTRATOSAP:" + JsonConvert.SerializeObject(contratoSAP));
+            logger.Debug("ActualizandoContrato7 CONTRATO:" + JsonConvert.SerializeObject(contrato));
             logger.Debug("ActualizandoContrato7 RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
@@ -213,6 +213,7 @@ namespace WebDataAgro.Services
             contratoSAP.Apertura = contratoSAP.Apertura ?? new List<AperturaPrecioSap>();
             contratoSAP.Procedencia = contratoSAP.Procedencia != null ? contratoSAP.Procedencia.Trim() : contratoSAP.Procedencia;
             var oEntityErrors = new ResultadoSap();
+            var contrato = new Contrato();
             try
             {
                 logger.Debug("Alta ContratoSap" + contratoSAP.ToXml());
@@ -222,7 +223,6 @@ namespace WebDataAgro.Services
                     oEntityErrors.ListaErrores.Add(new ErrorMessage("Contrato", "El contrato ya existe en DataAgro"));
                     return oEntityErrors;
                 }
-                var contrato = new Contrato();
 
                 CrearProyeccionContrato(contratoSAP, contrato, null, false);
 
@@ -248,7 +248,7 @@ namespace WebDataAgro.Services
                 });
                 oEntityErrors.HayError = true;
             }
-            logger.Debug("Alta CONTRATOSAP:" + JsonConvert.SerializeObject(contratoSAP));
+            logger.Debug("Alta CONTRATO:" + JsonConvert.SerializeObject(contrato));
             logger.Debug("Alta RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();

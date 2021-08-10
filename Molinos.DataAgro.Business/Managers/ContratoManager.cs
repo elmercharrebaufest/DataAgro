@@ -3229,6 +3229,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
             contratoSave.Dolarizado = contrato.Dolarizado;
+            contratoSave.DolarizadoCorredor = contrato.DolarizadoCorredor;
             contratoSave.DiasPesificado = contrato.DiasPesificado;
             contratoSave.PagoDiferido = contrato.PagoDiferido;
             contratoSave.NoInformaSio = contrato.NoInformaSio;
@@ -4203,6 +4204,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.MonedaSustentableId = contratoSap.MonedaSustentableId;
                 contrato.FechaDolarizado = contratoSap.FechaDolarizado;
                 contrato.Dolarizado = contratoSap.Dolarizado;
+                contrato.DolarizadoCorredor = contratoSap.DolarizadoCorredor;
                 contrato.DiasPesificado = contratoSap.DiasPesificado;
                 contrato.PagoDiferido = contratoSap.PagoDiferido;
                 contrato.NoInformaSio = contratoSap.NoInformaSio;
