@@ -1011,7 +1011,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
-            if (oParam.Dolarizado != true && oParam.DolarizadoExpress != true && oParam.FechaDolarizado != null)
+            if (oParam.DolarizadoCorredor != true && oParam.Dolarizado != true && oParam.DolarizadoExpress != true && oParam.FechaDolarizado != null)
             {
                 oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado si completó Fecha límite .");
             }
@@ -3202,6 +3202,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (contratoSave == null || contratoSave.Id == 0)
             {
                 error.Error("Contrato", "No existe contrato en DataAgro");
+                return error;
             }
             contrato.TipoNegocioId = contratoSave.TipoNegocioId;
             contrato.ComercialId = contratoSave.ComercialId;

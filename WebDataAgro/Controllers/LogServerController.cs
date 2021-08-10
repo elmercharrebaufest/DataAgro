@@ -65,7 +65,7 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        public string ViewLog(string log)
+        public ActionResult ViewLog(string log)
         {
             string text = "";
             string textFile = Path.Combine(_logDir, log);
@@ -78,9 +78,9 @@ namespace WebDataAgro.Controllers
                     text += line + "<br />";
                 }
             }
-            FileStream reader = new FileStream(textFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            
+            return File(Path.Combine(_logDir, log), "text/plain");
 
-            return text;
         }
     }
 }
