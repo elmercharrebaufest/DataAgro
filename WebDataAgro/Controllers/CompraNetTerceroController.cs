@@ -90,13 +90,13 @@ namespace WebDataAgro.Controllers
                 ImporteFinanciero = Redondear(ImporteFinanciero);
 
                 contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = ImporteFinanciero;
-                contrato.PrecioNeto = contrato.Precio + ImporteFinanciero;
+                contrato.PrecioNeto += ImporteFinanciero;
 
             }
 
             if ((contrato.CorredorId == null || contrato.CorredorId == 0) && proveedor.Comision > 0)
             {
-                contrato.PrecioNeto = contrato.Precio + ((contrato.Precio + contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe) * proveedor.Comision.Value / 100);
+                contrato.PrecioNeto += contrato.PrecioNeto * proveedor.Comision.Value / 100;
                 contrato.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = proveedor.Comision.Value;
             }
 

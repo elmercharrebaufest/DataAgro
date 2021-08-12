@@ -233,12 +233,12 @@ function CargarTablePrecio() {
             },
             { field: "Precio", format: "{0:n2}", width: 100, editable: false, editor: numberEditor },
             { field: "MonedaId", title: "Moneda", editable: true, width: 70 },
-            { field: "DesdeEntrega", title: "Desde <br> Entrega", type: "date", format: "{0:dd-MMM}", editable: true, width: 70 },
-            { field: "HastaEntrega", title: "Hasta <br> Entrega", type: "date", format: "{0:dd-MMM}", editable: true },
-            { field: "DesdeFijacion", title: "Desde <br> Fijacion", type: "date", format: "{0:dd-MMM}", editable: true, width: 70 },
-            { field: "HastaFijacion", title: "Hasta <br> Fijacion", type: "date", format: "{0:dd-MMM}", editable: true },
-            { field: "DesdeVigencia", title: "Desde <br> Vigencia", type: "date", format: "{0:dd-MMM}", editable: true, width: 70 },
-            { field: "HastaVigencia", title: "Hasta <br> Vigencia", type: "date", format: "{0:dd-MMM}", editable: true },
+            { field: "DesdeEntrega", title: "Desde <br> Entrega", type: "date", format: "{0:dd-MMM-yy}", editable: true, width: 70 },
+            { field: "HastaEntrega", title: "Hasta <br> Entrega", type: "date", format: "{0:dd-MMM-yy}", editable: true },
+            { field: "DesdeFijacion", title: "Desde <br> Fijacion", type: "date", format: "{0:dd-MMM-yy}", editable: true, width: 70 },
+            { field: "HastaFijacion", title: "Hasta <br> Fijacion", type: "date", format: "{0:dd-MMM-yy}", editable: true },
+            { field: "DesdeVigencia", title: "Desde <br> Vigencia", type: "date", format: "{0:dd-MMM-yy}", editable: true, width: 70 },
+            { field: "HastaVigencia", title: "Hasta <br> Vigencia", type: "date", format: "{0:dd-MMM-yy}", editable: true },
             {
                 field: "Id", title: " ", editable: true, filterable: false, sortable: false, width: 80, template: function (dataItem) {
 
