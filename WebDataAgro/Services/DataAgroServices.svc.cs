@@ -199,7 +199,7 @@ namespace WebDataAgro.Services
                 });
                 oEntityErrors.HayError = true;
             }
-            logger.Debug("ActualizandoContrato7 CONTRATO:" + JsonConvert.SerializeObject(contrato));
+            //logger.Debug("ActualizandoContrato7 CONTRATO:" + JsonConvert.SerializeObject(contrato));
             logger.Debug("ActualizandoContrato7 RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
@@ -248,7 +248,7 @@ namespace WebDataAgro.Services
                 });
                 oEntityErrors.HayError = true;
             }
-            logger.Debug("Alta CONTRATO:" + JsonConvert.SerializeObject(contrato));
+            //logger.Debug("Alta CONTRATO:" + JsonConvert.SerializeObject(contrato));
             logger.Debug("Alta RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
 
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
