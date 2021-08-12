@@ -129,12 +129,12 @@ function InicializarElementos() {
         }
     });
     $("#TipoNegocioId").change();
-    $("#TipoNegocioIdPizarra").change();   
+    $("#TipoNegocioIdPizarra").change();
 
     if (pausado == true) {
         $(".pausado").prop("checked", this.checked);
     }
-   
+
     //CargarTablePrecio();   
 }
 
@@ -142,7 +142,9 @@ function CargarTablePrecio() {
     var datos = result = MSExecuteOnServer('/Centro/Buscar', null);
 
     for (var i = 0; i < datos.Datos.length; i++) {
-        centros.push({ Destino: datos.Datos[i].Descripcion });
+        if (datos.Datos[i].Id != 6 && datos.Datos[i].Id != 7 && datos.Datos[i].Id != 9 && datos.Datos[i].Id != 10 && datos.Datos[i].Id != 13) {
+            centros.push({ Destino: datos.Datos[i].Descripcion });
+        }
     }
     var ds = {
         transport: {
@@ -546,7 +548,7 @@ function ObtenerDatosMaterialHabilitado() {
     lista.push({ MaterialId: 0, TipoNegocioId: 3, Habilitado: $("#FIJACION").is(":checked") });
     for (var j = 1; j <= 3; j++) {
         for (var i = 0; i < material.length; i++) {
-            lista.push({ MaterialId: material[i].Id, TipoNegocioId: j, Habilitado: $("#" + material[i].Descripcion.replace(" ","") + j).is(":checked") });                       
+            lista.push({ MaterialId: material[i].Id, TipoNegocioId: j, Habilitado: $("#" + material[i].Descripcion.replace(" ", "") + j).is(":checked") });
         }
     }
 
