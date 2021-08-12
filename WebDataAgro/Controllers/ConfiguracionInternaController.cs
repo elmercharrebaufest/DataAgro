@@ -244,7 +244,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Habilitado = configuracionManager.TraerPausadoGeneral();
 
             var centro = centroManager.TraerTodoCentro();
-            var centroListItems = centro.Centro.Where(x => x.Id != 9 && x.Id != 10 && x.Id != 13).Select(
+            var centroListItems = centro.Centro.Where(x => x.Id != 6 && x.Id != 7 && x.Id != 9 && x.Id != 10 && x.Id != 13).Select(
                    x => new SelectListItem
                    {
                        Text = x.Descripcion,
