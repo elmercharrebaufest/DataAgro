@@ -214,7 +214,12 @@ function cargarDatosAFijarEnFijacion(afijar) {
     //    $("#chequeElectronico").attr('disabled', false);
     //}
     //HayChequeElectronicoOtros();
-
+    if (fijacionVirtual == true) {
+        var contratoAFijarDataAgro = MSExecuteOnServer('/CompraNet/TraerContratoCompletoPorContratoSAP', { contratoSAP: afijar.ContratoId });
+        console.log(contratoAFijarDataAgro);
+        $("#comercialId").data("kendoDropDownList").value(contratoAFijarDataAgro.ComercialId);
+        $("#comercialFijacionId").data("kendoDropDownList").value(contratoAFijarDataAgro.ComercialId);
+    }
 }
 
 function ArmarAperturaDesdeAFijar(afijar) {
@@ -3522,7 +3527,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#dolarizadoDiv").show();
         $("#expressDiv").show();
     }
-    
+
     if (contrato.PagoDiferido === true && contrato.TipoNegocioId != 3) {
         $("#pesificadoId").prop("checked", true);
         $("#pesificadoDiv").show();

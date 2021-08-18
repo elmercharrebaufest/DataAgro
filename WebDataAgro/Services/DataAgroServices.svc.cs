@@ -610,7 +610,7 @@ namespace WebDataAgro.Services
                 fijacion.ContratoId = aFijar != null ? aFijar.Id : (int?)null;
                 fijacion.Precio = fijacionSAP.Precio;
                 fijacion.Cantidad = (double)fijacionSAP.Cantidad;
-                fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
+                //fijacion.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
                 fijacion.DestinoId = repositorio.Obtener<Centro, int>(x => x.CodigoSap == fijacionSAP.Centro, x => x.Id);
                 logger.Debug("Validacion Precio " + (fijacionSAP.Precio == 0));
                 fijacion.Pizarra = fijacionSAP.Pizarra == "X";
@@ -634,8 +634,9 @@ namespace WebDataAgro.Services
                 fijacion.EstadoId = 5;
                 fijacion.TipoNegocioId = 3;
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.Comercial);
+                var comercialCreador = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.ComercialCreador);
                 fijacion.ComercialId = comercial.ComercialId;
-                fijacion.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == fijacionSAP.Comercial, x => x.ComercialId);
+                fijacion.ComercialCreadorId = comercialCreador.ComercialId;
                 fijacion.GrupoCompra = comercial.GrupoDeComprasId;
 
                 fijacion.Canje = fijacionSAP.Canje == "X" ? true : false;

@@ -43,6 +43,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaCreacion { get; set; }
         public List<FijacionVirtualSAPDto> FijacionVirtuales { get; set; } = new List<FijacionVirtualSAPDto>();
         public string Virtual { get; set; }
+        public string ComercialCreador { get; set; }
     }
     
     public class FijacionVirtualSAPDto
