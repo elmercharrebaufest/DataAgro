@@ -88,7 +88,7 @@ namespace Molinos.DataAgro.Agent
                     var rq = new Z_MPRFC_INSERTAR_FIJ_VIR_CANJE()
                     {
                         IM_A_FIJAR = fijacion.Cantidad.ToString(),
-                        IM_COMERCIAL = fijacion.Comercial.IdActiveDirectory,
+                        IM_COMERCIAL = fijacion.ComercialCreador.IdActiveDirectory,// se informa el creador
                         IM_CONTRATO = fijacion.ContratoSAP,
                         IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd"),
                         IM_HORA = fijacion.Fecha.ToString("HH:mm:ss"),
