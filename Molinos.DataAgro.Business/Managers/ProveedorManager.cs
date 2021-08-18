@@ -2816,6 +2816,12 @@ namespace Molinos.DataAgro.Business.Managers
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
+        public List<ProveedorDto> ListarProveedorTodos(string proveedor)
+        {
+            var resultado = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, RazonSocial = x.RazonSocial, Alias = x.Alias }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.Alias.Contains(proveedor) || x.CUIT.Contains(proveedor)), 15);
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
+        }
         public List<ProveedorDto> ListarProveedorTodos()
         {
             return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, SegmentacionId = x.SegmentacionId });
@@ -4249,7 +4255,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "NEGOCIO</th>" + Td(ref linea) + "FIJACIÓN CANJE" + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea) + oFijacionDePrecioContrato.Fecha.ToShortDateString() + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oFijacionDePrecioContrato.Material.Descripcion + "</td></tr>";
-            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.FijacionSAP.TrimStart('0') + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + oFijacionDePrecioContrato.FijacionSAP.TrimStart('0').Substring(0, oFijacionDePrecioContrato.FijacionSAP.TrimStart('0').Length - 2) + "-" + oFijacionDePrecioContrato.FijacionSAP.TrimStart('0').Substring(oFijacionDePrecioContrato.FijacionSAP.TrimStart('0').Length - 2) + "</td></tr>";
             htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.RazonSocial + "</td></tr>";
             htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + oFijacionDePrecioContrato.Proveedor.CUIT + "</td></tr>";
             if (oFijacionDePrecioContrato.Corredor != null)
@@ -4258,7 +4264,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "CUIT CORREDOR</th>" + Td(ref linea) + Split(oFijacionDePrecioContrato.Corredor.CUIT.ToString()) + "</td></tr>";
             }
 
-            htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td></tr>";
+            htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + oFijacionDePrecioContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + " Kgs. </td></tr>";
 
             htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);
 
@@ -4303,18 +4309,67 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Pago con Cbu: " + oFijacionDePrecioContrato.PagoCBU + " <br />";
             }
-            //var conceptoApertura = oFijacionDePrecioContrato.AperturaPrecio;
-            //if ((oFijacionDePrecioContrato.AperturaPrecio.Count >0 || oFijacionDePrecioContrato.AperturaPrecio != null) && oFijacionDePrecioContrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 1).Select(x => x.Importe).First() > 0)
-            //{
-            //    htmlBody += "COSTO FINANCIERO: " + conceptoApertura.Select(x => x.Importe).First().ToString()+ "<br />";
-            //}
-            if(oFijacionDePrecioContrato.FechaOperacion != null && oFijacionDePrecioContrato.FechaOperacion != oFijacionDePrecioContrato.Fecha.Date)
+            var conceptoApertura = oFijacionDePrecioContrato.AperturaPrecio;
+
+
+
+            if (oFijacionDePrecioContrato.FechaOperacion != null && oFijacionDePrecioContrato.FechaOperacion != oFijacionDePrecioContrato.Fecha.Date)
             {
                 htmlBody += "Fecha Operacion: " + oFijacionDePrecioContrato.FechaOperacion.ToShortDateString() + "<br /> ";
             }
             var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP));
             if (contrato != null)
             {
+                if (contrato.AperturaPrecio.Count > 0 || contrato.AperturaPrecio != null)
+                {
+                    //if (contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero).Select(x => x.Importe).First() != 0)
+                    //{
+                    //    htmlBody += "COSTO FINANCIERO: " + contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero).Select(x => x.Importe).First().ToString() +
+                    //        contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis).Select(x => x.Moneda.Descripcion).First().ToString() + "<br />";
+                    //}
+                    //if (contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho).Select(x => x.Importe).First() != 0)
+                    //{
+                    //    htmlBody += "REDESPACHO: " + contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho).Select(x => x.Importe).First().ToString() +
+                    //        contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis).Select(x => x.Moneda.Descripcion).First().ToString() + "<br />";
+                    //}
+                    //if (contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones).Select(x => x.Importe).First() != 0)
+                    //{
+                    //    htmlBody += "BONIFICACION: " + contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones).Select(x => x.Importe).First().ToString() +
+                    //        contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis).Select(x => x.Moneda.Descripcion).First().ToString() + "<br />";
+                    //}
+                    //if (contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis).Select(x => x.Importe).First() != 0)
+                    //{
+                    //    htmlBody += "BASIS: " + contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis).Select(x => x.Importe).First().ToString() +
+                    //        contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis).Select(x => x.Moneda.Descripcion).First().ToString() + "<br />";
+                    //}
+                    //if (contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).Select(x => x.Porcentaje).First() > 0)
+                    //{
+                    //    htmlBody += "COMISION: " + contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).Select(x => x.Porcentaje).First().ToString() + " % <br />";
+                    //}
+                    if (contrato.Descuentos != null & contrato.Descuentos.Count > 0)
+                    {
+                        foreach (var desc in contrato.Descuentos)
+                        {
+                            if (desc.Importe > 0 || desc.Porcentaje > 0)
+                            {
+                                htmlBody += "BONIFICACIONES " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                            }
+                            else if (desc.Importe < 0 || desc.Porcentaje < 0)
+                            {
+                                htmlBody += "DESCUENTOS " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                            }
+                            if (desc.Importe != 0)
+                            {
+                                htmlBody += desc.Importe + " " + desc.Moneda.Descripcion + "<br />";
+                            }
+
+                            if (desc.Porcentaje != 0)
+                            {
+                                htmlBody += desc.Porcentaje + "%<br />";
+                            }
+                        }
+                    }
+                }
                 if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
                 {
                     htmlBody += "SUSTENTABLE <br />";

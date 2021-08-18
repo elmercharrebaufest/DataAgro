@@ -330,6 +330,12 @@ namespace WebDataAgro.Controllers
             var proveedores = proveedorManager.ListarProveedor(text);
             return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult ListarProveedorTodos(string text = "")
+        {
+            var proveedores = proveedorManager.ListarProveedorTodos(text);
+            return Json(proveedores.Select(x => new { x.ProveedorId, Proveedor = !string.IsNullOrEmpty(x.Alias) ? (x.Alias + " - " + x.RazonSocial) : x.RazonSocial }), JsonRequestBehavior.AllowGet);
+        }
         public ActionResult ListarComercial(string text = "")
         {
             var comerciales = comercialManager.ListarComercial(text, GlobalVariables.Equipo);

@@ -79,5 +79,6 @@ namespace Molinos.DataAgro.Interfaces
         bool MostrarProveedorDeshabilitado(int proveedorId);
         void EnviarMailFijacionVirtual(FijacionDePrecioContrato contrato, string comercial, bool eliminar);
         void EnviarMailPrestamoDevolucion(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial);
+        List<ProveedorDto> ListarProveedorTodos(string proveedor);
     }
 }

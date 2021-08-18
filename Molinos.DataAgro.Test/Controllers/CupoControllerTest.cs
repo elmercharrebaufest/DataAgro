@@ -387,5 +387,19 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Establecimiento\":\"Guard\",\"Cantidad\":300,\"Proveedor\":null,\"Cosecha\":\"20-21\"}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+
+        [Test]
+        public void ListarProveedorTodosTest()
+        {
+            proveedorManagerMock.Setup(x => x.ListarProveedorTodos(It.IsAny<string>()))
+                .Returns(new List<ProveedorDto> { new ProveedorDto { ProveedorId = 1 } });
+            var result = target.ListarProveedorTodos("");
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ProveedorId\":1,\"Proveedor\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

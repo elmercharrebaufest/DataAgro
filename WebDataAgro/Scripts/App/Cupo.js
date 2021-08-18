@@ -453,7 +453,7 @@ function InicializarCuposIndex() {
         }, 200);
     }
     function createMultiSelectProveedor(element) {
-        return createMultiSelect(element, "Proveedor", "Proveedor", "/Cupo/ListarProveedor");
+        return createMultiSelect(element, "Proveedor", "Proveedor", "/Cupo/ListarProveedorTodos");
     }
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "Comercial", "/Cupo/ListarComercial");

@@ -3811,5 +3811,18 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
         }
 
+        [Test]
+        public void ListarProveedorTodosFiltroOkTest()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<ProveedorDto> { new ProveedorDto {Alias="aa",CUIT="1",RazonSocial="1" }  });
+
+            var result = target.ListarProveedorTodos("aa");
+
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc), Times.Once);
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count);
+        }
+
     }
 }
