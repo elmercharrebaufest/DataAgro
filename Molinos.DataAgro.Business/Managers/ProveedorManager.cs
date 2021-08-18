@@ -1020,10 +1020,10 @@ namespace Molinos.DataAgro.Business.Managers
             var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP.Contains(oFijacionDePrecioContrato.ContratoSAP));
             if (contrato != null)
             {
-                if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
-                {
-                    htmlBody += "SUSTENTABLE <br />";
-                }
+                //if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
+                //{
+                //    htmlBody += "SUSTENTABLE <br />";
+                //}
                 if (contrato.StandardDeCalidadId != null && (contrato.StandardDeCalidad.Descripcion == "Grado 2" ||
                     (contrato.MaterialId == 1 && contrato.StandardDeCalidadId == 2 &&
                     repositorio.Existe<Calidad>(x => x.NegocioId == contrato.Id && x.CalidadEspecialId == 4 && x.Valor == 2))))
@@ -4370,10 +4370,10 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                     }
                 }
-                if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
-                {
-                    htmlBody += "SUSTENTABLE <br />";
-                }
+                //if (contrato.Sustentable.HasValue && contrato.Sustentable.Value)
+                //{
+                //    htmlBody += "SUSTENTABLE <br />";
+                //}
                 if (contrato.StandardDeCalidadId != null && (contrato.StandardDeCalidad.Descripcion == "Grado 2" ||
                     (contrato.MaterialId == 1 && contrato.StandardDeCalidadId == 2 &&
                     repositorio.Existe<Calidad>(x => x.NegocioId == contrato.Id && x.CalidadEspecialId == 4 && x.Valor == 2))))
