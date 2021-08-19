@@ -2587,18 +2587,23 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     $("#agenteBorrarDivVisualizar").hide();
     $("#estadoModalBorrar").val(estado);
     $("#fijacionModalAnular").val(fijacionDePrecioContratoId);
+    $("#tiponegocio_a_borrarPreanular").text("el Negocio");
 
     if (tipoNegocio === "3") {
         $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
+        $("#tiponegocio_a_borrarPreanular").text("la fijacion");
     } else if (tipoNegocio === "4") {
         $("#contratoModalBorrar").val(fasonId);
+        $("#tiponegocio_a_borrarPreanular").text("el Fason");
     } else if (tipoNegocio === "5") {
         $("#proveedorBorrarDivVisualizar").hide();
         $("#agenteBorrarDivVisualizar").show();
         $("#contratoModalBorrar").val(agenteId);
         $("#agente_a_borrar").text(agenteId);
+        $("#tiponegocio_a_borrarPreanular").text("el Negocio de Agente de Compras");
     } else if (tipoNegocio === "6") {
         $("#contratoModalBorrar").val(acuerdoId);
+        $("#tiponegocio_a_borrarPreanular").text("el Contrato Acuerdo");
     } else {
         $("#contratoModalBorrar").val(id);
     }
@@ -2626,6 +2631,17 @@ function ModalPreAnular(id, fijacionId, proveedor, tipoNegocio) {
     $("#fijacionModalAnular").val(fijacionId);
     $("#tipoNegocioModalBorrar").val(tipoNegocio);
     $("#modalPreAnular").modal('show');
+    $("#tiponegocio_a_Preanular").text("el Negocio");
+
+    if (tipoNegocio === "3") {
+        $("#tiponegocio_a_Preanular").text("la fijacion");
+    } else if (tipoNegocio === "4") {
+        $("#tiponegocio_a_Preanular").text("el Fason");
+    } else if (tipoNegocio === "5") {
+        $("#tiponegocio_a_Preanular").text("el Negocio de Agente de Compras");
+    } else if (tipoNegocio === "6") {
+        $("#tiponegocio_a_Preanular").text("el Contrato Acuerdo");
+    } 
 }
 
 function CrearViewModel() {
