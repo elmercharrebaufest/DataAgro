@@ -14,7 +14,8 @@
     [CantidadDiasDolarizadoLimiteMaximo] INT NULL DEFAULT 120, 
     [CantidadMaxima] INT NULL DEFAULT 15000000, 
     [CantidadDiasPesificadoLimite] INT NULL DEFAULT 120, 
-    [RedespachoMaximo] INT NULL DEFAULT 60, 
+    [RedespachoMaximoUSDM] INT NULL DEFAULT 60, 
+    [RedespachoMaximoARP] INT NULL DEFAULT 1000, 
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

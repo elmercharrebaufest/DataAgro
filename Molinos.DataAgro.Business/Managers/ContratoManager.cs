@@ -1100,12 +1100,29 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("Redespacho", "El redespacho debe cargarse en USDM.");
                     }
-                    if (redespacho.Importe < (Math.Abs(config.RedespachoMaximo) * -1))
+                    if (redespacho.Importe < (Math.Abs(config.RedespachoMaximoUSDM) * -1))
                     {
-                        oErrorMessages.Error("Redespacho", "El redespacho no puede ser superior a " + (Math.Abs(config.RedespachoMaximo) * -1).ToString() + ".");
+                        oErrorMessages.Error("Redespacho", "El redespacho no puede ser superior a " + (Math.Abs(config.RedespachoMaximoUSDM) * -1).ToString() + ".");
                     }
                 }
             }
+            if (!validacionesMinimas && oParam.TipoNegocioId == 2 && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
+            {
+                var redespacho = oParam.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho).SingleOrDefault();
+                if (redespacho != null && redespacho.Importe != 0)
+                {
+                    if (oParam.MonedaId == "USDM " && redespacho.Importe < (Math.Abs(config.RedespachoMaximoUSDM) * -1))
+                    {
+                        oErrorMessages.Error("Redespacho", "El redespacho en USDM no puede ser superior a " + (Math.Abs(config.RedespachoMaximoUSDM) * -1).ToString() + ".");
+                    }
+
+                    if (oParam.MonedaId == "ARP  " && redespacho.Importe < (Math.Abs(config.RedespachoMaximoARP) * -1))
+                    {
+                        oErrorMessages.Error("Redespacho", "El redespacho en ARP no puede ser superior a " + (Math.Abs(config.RedespachoMaximoARP) * -1).ToString() + ".");
+                    }
+                }
+            }
+
             return oErrorMessages;
         }
 

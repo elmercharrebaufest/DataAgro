@@ -714,4 +714,12 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="BoletoCompraNetId" />
   </Operation>
+  
+  <Operation Name="Rename Refactor" Key="80264b14-f0b7-43dd-b3f6-85600245fa16" ChangeDateTime="08/20/2021 17:47:23">
+    <Property Name="ElementName" Value="[dbo].[Configuracion].[RedespachoMaximo]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Configuracion]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="RedespachoMaximoUSDM" />
+  </Operation>
 </Operations>
