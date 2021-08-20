@@ -4603,7 +4603,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Sustentable = false,
                 PorcentajeDePago = 95,
                 Calidad = new List<Calidad>(),
-                AperturaPrecio = new List<AperturaPrecio> { new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Redespacho, Importe = -2000, MonedaId = "ARP  " } },
+                AperturaPrecio = new List<AperturaPrecio> { new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Redespacho, Importe = -200, MonedaId = "ARP  " } },
                 CondicionFijacionId = 1
             };
             repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
@@ -4669,7 +4669,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Sustentable = false,
                 PorcentajeDePago = 95,
                 Calidad = new List<Calidad>(),
-                AperturaPrecio = new List<AperturaPrecio> { new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Redespacho, Importe = -2000, MonedaId = "USDM " } },
+                AperturaPrecio = new List<AperturaPrecio> { new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Redespacho, Importe = -200, MonedaId = "USDM " } },
                 CondicionFijacionId = 1
             };
             repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");

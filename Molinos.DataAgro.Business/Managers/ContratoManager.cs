@@ -1116,9 +1116,9 @@ namespace Molinos.DataAgro.Business.Managers
                         oErrorMessages.Error("Redespacho", "El redespacho en USDM no puede ser superior a " + (Math.Abs(config.RedespachoMaximoUSDM) * -1).ToString() + ".");
                     }
 
-                    if (oParam.MonedaId == "ARP  " && redespacho.Importe < (Math.Abs(config.RedespachoMaximoARP) * -1))
+                    if (oParam.MonedaId == "ARP  " && redespacho.Importe > (Math.Abs(config.RedespachoMaximoARP) * -1))
                     {
-                        oErrorMessages.Error("Redespacho", "El redespacho en ARP no puede ser superior a " + (Math.Abs(config.RedespachoMaximoARP) * -1).ToString() + ".");
+                        oErrorMessages.Error("Redespacho", "El redespacho en ARP no puede ser menor a " + (Math.Abs(config.RedespachoMaximoARP) * -1).ToString() + ".");
                     }
                 }
             }
