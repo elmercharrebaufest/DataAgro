@@ -226,3 +226,5 @@ IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5 and TipoNegoci
 IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'CBOT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('CBOT'); END
 IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'MAT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('MAT'); END
 
+--Configuracion
+Update Configuracion set RedespachoMaximo = isnull(RedespachoMaximo, 60)

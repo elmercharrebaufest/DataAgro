@@ -38,6 +38,7 @@ namespace WebDataAgro.Controllers
                 CantidadDiasDolarizadoLimiteMaximo = conf != null ? conf.CantidadDiasDolarizadoLimiteMaximo : 0,
                 CantidadMaxima = conf != null ? conf.CantidadMaxima : 0,
                 CantidadDiasPesificadoLimite = conf != null ? conf.CantidadDiasPesificadoLimite : 0,
+                RedespachoMaximo = conf != null ? conf.RedespachoMaximo : 0,
             });
         }
         [HttpPost]
@@ -73,8 +74,8 @@ namespace WebDataAgro.Controllers
                 CantidadAcuerdo = configuracion.CantidadAcuerdo,
                 CantidadDiasDolarizadoLimiteMaximo = configuracion.CantidadDiasDolarizadoLimiteMaximo,
                 CantidadMaxima = configuracion.CantidadMaxima,
-                CantidadDiasPesificadoLimite = configuracion.CantidadDiasPesificadoLimite
-
+                CantidadDiasPesificadoLimite = configuracion.CantidadDiasPesificadoLimite,
+                RedespachoMaximo = configuracion.RedespachoMaximo
             };
             return entidad;
         }

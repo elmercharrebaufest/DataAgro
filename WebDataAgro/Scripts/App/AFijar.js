@@ -901,7 +901,7 @@ function InicializarElementos() {
                 //A FIJAR
                 if (this.value() == 1) {
                     //if ($("#precioMonedaId").data("kendoDropDownList")) $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
-                    if ($("#precioMonedaAFijarId").data("kendoDropDownList")) $("#precioMonedaAFijarId").data("kendoDropDownList").value("ARP  ");
+                    if ($("#precioMonedaAFijarId").data("kendoDropDownList")) $("#precioMonedaAFijarId").data("kendoDropDownList").value("USDM ");
                     $(".fechasAFijar").show();
                     $(".contratoAPrecio").hide();
                     $(".contratoAFijar").show();

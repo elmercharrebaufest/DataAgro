@@ -1090,6 +1090,22 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
 
+           
+            if (!validacionesMinimas && oParam.TipoNegocioId == 1 && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
+            {
+                var redespacho = oParam.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho).SingleOrDefault();
+                if (redespacho != null && redespacho.Importe != 0)
+                {
+                    if (redespacho.MonedaId != "USDM ")
+                    {
+                        oErrorMessages.Error("Redespacho", "El redespacho debe cargarse en USDM.");
+                    }
+                    if (redespacho.Importe < (Math.Abs(config.RedespachoMaximo) * -1))
+                    {
+                        oErrorMessages.Error("Redespacho", "El redespacho no puede ser superior a " + (Math.Abs(config.RedespachoMaximo) * -1).ToString() + ".");
+                    }
+                }
+            }
             return oErrorMessages;
         }
 

@@ -421,36 +421,36 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     repositorio.GuardarCambios();
 
-                    var cupoManager = cupoManagerInj();
-                    var cupos = cupoManager.ObtenerCupos(query.ToList(), null);
-                    var logs = new List<LogDataAgro>();
-                    foreach (var cupo in cupos)
-                    {
-                        var resolver = new IgnorePropertiesResolver(new[] { "EstadoOrden" });
-                        string descripcion = string.IsNullOrEmpty(cupo.CupoSap) ? cupo.Id.ToString() : cupo.CupoSap;
+                    //var cupoManager = cupoManagerInj();
+                    //var cupos = cupoManager.ObtenerCupos(query.ToList(), null);
+                    //var logs = new List<LogDataAgro>();
+                    //foreach (var cupo in cupos)
+                    //{
+                    //    var resolver = new IgnorePropertiesResolver(new[] { "EstadoOrden" });
+                    //    string descripcion = string.IsNullOrEmpty(cupo.CupoSap) ? cupo.Id.ToString() : cupo.CupoSap;
 
-                        string jsonObjeto = JsonConvert.SerializeObject(cupo, new JsonSerializerSettings()
-                        {
-                            ContractResolver = resolver,
-                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
-                            PreserveReferencesHandling = PreserveReferencesHandling.None,
-                            Formatting = Formatting.Indented,
-                        });
-                        var logAgregado = new LogDataAgro
-                        {
-                            Usuario = "STOP",
-                            Fecha = DateTime.Now,
-                            DatoModificado = jsonObjeto,
-                            Clase = "Cupo",
-                            Tipo = cupo.GetType().Name,
-                            AccionRealizada = TipoAccionLogDataAgro.Modificar.ToString(),
-                            ClaseId = cupo.Id,
-                            Descripcion = descripcion,
-                        };
-                        logs.Add(logAgregado);
-                    }
-                    repositorio.AgregarTodos(logs);
-                    repositorio.GuardarCambios();
+                    //    string jsonObjeto = JsonConvert.SerializeObject(cupo, new JsonSerializerSettings()
+                    //    {
+                    //        ContractResolver = resolver,
+                    //        ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                    //        PreserveReferencesHandling = PreserveReferencesHandling.None,
+                    //        Formatting = Formatting.Indented,
+                    //    });
+                    //    var logAgregado = new LogDataAgro
+                    //    {
+                    //        Usuario = "STOP",
+                    //        Fecha = DateTime.Now,
+                    //        DatoModificado = jsonObjeto,
+                    //        Clase = "Cupo",
+                    //        Tipo = cupo.GetType().Name,
+                    //        AccionRealizada = TipoAccionLogDataAgro.Modificar.ToString(),
+                    //        ClaseId = cupo.Id,
+                    //        Descripcion = descripcion,
+                    //    };
+                    //    logs.Add(logAgregado);
+                    //}
+                    //repositorio.AgregarTodos(logs);
+                    //repositorio.GuardarCambios();
                     logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" + string.Join(", ", fechas.Select(a => a.ToString("yyyy/MM/dd")).ToList()));
 
                     return listaCuposStop.results;
