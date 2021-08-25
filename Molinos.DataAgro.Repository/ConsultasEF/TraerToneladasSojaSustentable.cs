@@ -36,7 +36,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             (centroId == 0 || x.DestinoId == centroId) &&
             x.ContratoAcuerdo == null &&
             x.TipoAgenteCompraId == null && 
-            x.Venta != true
+            x.Venta != true &&
+            x.Canje != true 
             ).ToList();
             var result = new ReporteSojaSustDto();
             if (contratos.Count > 0)
