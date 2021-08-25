@@ -28,14 +28,16 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogger logger;
         private readonly IMailManager mailManager;
         private readonly IClientePrimariAPIAgent clientePrimariAPI;
+        private readonly IHttpContextManager httpContextManager;
 
 
-        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimariAPIAgent clientePrimariAPI)
+        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimariAPIAgent clientePrimariAPI, IHttpContextManager httpContextManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.mailManager = mailManager;
             this.clientePrimariAPI = clientePrimariAPI;
+            this.httpContextManager = httpContextManager;
         }
 
         public Resultado OcultarEnTablero(Negocio negocio)

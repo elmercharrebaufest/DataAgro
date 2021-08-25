@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IMailManager> mailManagerMock;
         private Mock<IClientePrimariAPIAgent> clientePrimariAPIAgentMock;
         private JavaScriptSerializer serializer;
+        private Mock<IHttpContextManager> contextoMock;
 
         [SetUp]
         public void SetUp()
@@ -41,8 +42,9 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock = new Mock<IMailManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             clientePrimariAPIAgentMock = new Mock<IClientePrimariAPIAgent>();
+            contextoMock = new Mock<IHttpContextManager>();
 
-            target = new NegocioManager(logger.Object, repositorioMock.Object, mailManagerMock.Object, clientePrimariAPIAgentMock.Object);
+            target = new NegocioManager(logger.Object, repositorioMock.Object, mailManagerMock.Object, clientePrimariAPIAgentMock.Object, contextoMock.Object);
         }
 
         [Test]
