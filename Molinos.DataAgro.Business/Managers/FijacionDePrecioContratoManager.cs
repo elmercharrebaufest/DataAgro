@@ -1854,7 +1854,7 @@ namespace Molinos.DataAgro.Business.Managers
                         oEntityErrors.Error("", e.Message);
 
                     }
-                    mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionVirtualSave, idActiveDirectory, true);
+                    //mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionVirtualSave, idActiveDirectory, true);
                 }
             }
             return oEntityErrors;
