@@ -1664,8 +1664,23 @@ namespace Molinos.DataAgro.Business.Managers
 
                 try
                 {
-
-                    oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                    if (fijacionVirtual != null)
+                    {
+                        var kilos = DevolverKilosPendientesAnularFijacionCanje(oFijacionSave.Id);
+                        if (kilos.KilosPendientes >= oFijacionSave.Cantidad)
+                        {
+                            oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                        }
+                        else
+                        {
+                            oFijacionSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                            oFijacionSave.Cantidad -= kilos.KilosPendientes;
+                        }
+                    }
+                    else
+                    {
+                        oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                    }
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerFijacion(oFijacionSave.Id), TipoAccionLogDataAgro.Eliminar, oFijacionSave.GetType());
                 }
