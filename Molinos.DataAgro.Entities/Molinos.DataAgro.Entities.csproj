@@ -138,6 +138,7 @@
     <Compile Include="Dto\CamposSustentables.cs" />
     <Compile Include="Dto\EstadoPrecioMOADto.cs" />
     <Compile Include="Dto\HabilitacionSustentableDto.cs" />
+    <Compile Include="Dto\ResultadoDevolverKilosPendientesAnularFijacionCanjeDto.cs" />
     <Compile Include="Dto\TipoRangoConfirmacionAutomaticaDto.cs" />
     <Compile Include="Dto\ValidarCreditoDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq.Expressions;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Script.Serialization;
 
@@ -61,6 +62,40 @@ namespace Molinos.DataAgro.Test.Managers
 
         }
 
+        
+
+        [Test]
+        public void EnviarMailErrorFinalizarNegocioTestOk()
+        {
+
+            var negocio = new Negocio()
+            {
+                Id = 1,
+                TipoNegocio = new TipoNegocio { Descripcion = "a" },
+                ProveedorId = 1,
+                Proveedor = new Proveedor { RazonSocial = "a" },
+                ContratoSAP = "12",
+                Fecha = DateTime.Now,
+                FechaOperacion = DateTime.Now.AddDays(-10),
+                TipoNegocioId = 1,
+                Cantidad = 11111,
+                Comercial = new Comercial { Nombres = "", Apellido = "" },
+                Material = new Material { Descripcion = "" },
+                Estado = new EstadoContrato { Descripcion = "a", EstadoContratoId = 1 },
+
+            };
+
+            repositorioMock.Setup(y => y.Obtener<Negocio>(It.IsAny<int>())).Returns(negocio);
+            mailManagerMock.Setup(x => x.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("emartin@baufest.com");
+            contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, string>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<string>() { "a" });
+
+            target.EnviarMailErrorFinalizarNegocio(1);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+            mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null,null), Times.Once);
+
+        }
     }
 
 }

@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IValidacionCreditoAgent validarCreditoAgente;
         private readonly ITipoDeCambioAgent tipoCambioAgent;
         private readonly ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent;
+        private readonly INegocioManager negocioManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -83,7 +84,8 @@ namespace Molinos.DataAgro.Business.Managers
             IListaCBUProveedorAgent cbuAgent, IModificarFijacionAgent modificarFijacionAgent,
             ICartasDePortePendienteAplicarAgent ccppAgent,
             IHttpContextManager httpContextManager, IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent,
-            ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent)
+            ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent,
+            INegocioManager negocioManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -117,6 +119,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.validarCreditoAgente = validarCreditoAgente;
             this.tipoCambioAgent = tipoCambioAgent;
             this.capacidadProductivaDisponibleAgent = capacidadProductivaDisponibleAgent;
+            this.negocioManager = negocioManager;
         }
 
         public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
@@ -1837,7 +1840,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarContratoResult();
             var oContratoSave = repositorio.Obtener<Contrato>(a => a.Id == contratoId);
 
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
+            if (oContratoSave != null && string.IsNullOrEmpty(oContratoSave.ContratoSAP)  && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado || oContratoSave.EstadoId == (int)EnumEstadoContrato.Con_Error))
             {
                 Nullable<DateTime> fecha = null;
 
@@ -1949,6 +1952,11 @@ namespace Molinos.DataAgro.Business.Managers
                 else if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta)
                 {
                     oEntityErrors.Error("", "El contrato debe ser Confirmado");
+                }
+                if (!string.IsNullOrEmpty(oContratoSave.ContratoSAP))
+                {
+                    oEntityErrors.Error("", "El contrato ya tiene ContratoSAP asignado, por favor comunicarse con sistemas.");
+                    negocioManager.EnviarMailErrorFinalizarNegocio(contratoId);
                 }
                 logger.Debug(" Error Intentando finalizar el contrato " + contratoId + " estado: " + oContratoSave.EstadoId);
             }
@@ -5092,5 +5100,6 @@ namespace Molinos.DataAgro.Business.Managers
             var result = capacidadProductivaDisponibleAgent.ObtenerCapacidadProductivaPendiente(cuit);
             return result;
         }
+
     }
 }

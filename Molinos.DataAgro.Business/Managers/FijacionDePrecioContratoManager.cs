@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent;
         private readonly IFinalizarFijacionVirtualAgent finalizarFijacionVirtual;
         private readonly IAnularFijacionVirtualAgent anularFijacionVirtual;
-
+        private readonly INegocioManager negocioManager;
         public FijacionDePrecioContratoManager(
             ILogger logger,
             IRepositorio repositorio,
@@ -54,7 +54,8 @@ namespace Molinos.DataAgro.Business.Managers
             IDiasHabilesAgent diasHabilesAgent, IConfiguracionManager configuracionManager,
             IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent,
             ITipoDeCambioAgent tipoDeCambioAgent, IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent,
-            IFinalizarFijacionVirtualAgent finalizarFijacionVirtual, IAnularFijacionVirtualAgent anularFijacionVirtual)
+            IFinalizarFijacionVirtualAgent finalizarFijacionVirtual, IAnularFijacionVirtualAgent anularFijacionVirtual,
+            INegocioManager negocioManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -75,6 +76,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.contratosParaFijacionVirtualAgent = contratosParaFijacionVirtualAgent;
             this.finalizarFijacionVirtual = finalizarFijacionVirtual;
             this.anularFijacionVirtual = anularFijacionVirtual;
+            this.negocioManager = negocioManager;
         }
 
         //--------------------------------------------------
@@ -734,7 +736,7 @@ namespace Molinos.DataAgro.Business.Managers
             var oEntityErrors = new GrabarFijacionResult();
             var oFijacionDePrecioSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionDePrecioContratoId);
 
-            if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
+            if (string.IsNullOrEmpty(oFijacionDePrecioSave.FijacionSAP) && (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Confirmado || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error))
             {
                 try
                 {
@@ -838,6 +840,11 @@ namespace Molinos.DataAgro.Business.Managers
                 else if (oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Pendiente || oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Oferta)
                 {
                     oEntityErrors.Error("", "La Fijación debe ser Confirmada");
+                }
+                if (!string.IsNullOrEmpty(oFijacionDePrecioSave.FijacionSAP))
+                {
+                    oEntityErrors.Error("", "La Fijación ya tiene ContratoSAP asignado, por favor comunicarse con sistemas.");
+                    negocioManager.EnviarMailErrorFinalizarNegocio(fijacionDePrecioContratoId);
                 }
             }
             return oEntityErrors;
@@ -1719,7 +1726,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
                 return oEntityErrors;
-            }            
+            }
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado))
             {
                 try
@@ -1812,8 +1819,18 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     try
                     {
-                        oFijacionVirtualSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
-                        repositorio.GuardarCambios();                     
+                        var kilos = DevolverKilosPendientesAnularFijacionCanje(fijacionId);
+                        if (kilos.KilosPendientes >= oFijacionVirtualSave.Cantidad)
+                        {
+                            oFijacionVirtualSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                        }
+                        else
+                        {
+                            oFijacionVirtualSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                            oFijacionVirtualSave.Cantidad -= kilos.KilosPendientes;
+                        }
+
+                        repositorio.GuardarCambios();
                         logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacionId), TipoAccionLogDataAgro.Eliminar, oFijacionVirtualSave.GetType());
                     }
                     catch (Exception e)
@@ -1857,6 +1874,31 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return oEntityErrors;
+        }
+
+        public ResultadoDevolverKilosPendientesAnularFijacionCanjeDto DevolverKilosPendientesAnularFijacionCanje(int id)
+        {
+            ResultadoDevolverKilosPendientesAnularFijacionCanjeDto result = new ResultadoDevolverKilosPendientesAnularFijacionCanjeDto();
+            try
+            {
+                var fijacionDePrecio = repositorio.Obtener<FijacionDePrecioContrato>(x => x.Id == id && x.Virtual == true);
+                if (fijacionDePrecio.EstadoId != (int)EnumEstadoContrato.Finalizado && fijacionDePrecio.EstadoId != (int)EnumEstadoContrato.PreAnulado)
+                {
+                    return result;
+                }
+                var asd = repositorio.Listar<FijacionVirtualSap>(x => x.FijacionVirtualId == id && x.FijacionCanje.EstadoId == (int)EnumEstadoContrato.Finalizado);
+                var kilosConsumidos = repositorio.Listar<FijacionVirtualSap>(x => x.FijacionVirtualId == id && x.FijacionCanje.EstadoId == (int)EnumEstadoContrato.Finalizado).Sum(a => a.Cantidad);
+                result.KilosPendientes = fijacionDePrecio.Cantidad - kilosConsumidos;
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                logger.Debug("Error al DevolverKilosPendientesAnularFijacionCanje id " + id);
+                logger.Debug(e);
+            }
+
+            return result;
         }
     }
 }

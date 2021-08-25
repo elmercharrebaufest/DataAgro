@@ -1146,5 +1146,11 @@ namespace WebDataAgro.Controllers
             };
 
         }
+
+        public JsonResult DevolverKilosPendientesAnularFijacionCanje(int id)
+        {
+            ResultadoDevolverKilosPendientesAnularFijacionCanjeDto kilos = mobjFijacionDePrecioContratoManager.DevolverKilosPendientesAnularFijacionCanje(id);
+            return Json(kilos, JsonRequestBehavior.AllowGet);
+        }
     }
 }

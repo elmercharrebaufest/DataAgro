@@ -45,6 +45,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IFinalizarFijacionVirtualAgent> finalizarFijacionMock;
         private Mock<IAnularFijacionVirtualAgent> anularFijacionVirtualMock;
         private JavaScriptSerializer serializer;
+        private Mock<INegocioManager> negocioManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -71,6 +72,7 @@ namespace Molinos.DataAgro.Test.Managers
             contratosFijacionVirtualMock = new Mock<IContratosParaFijacionVirtualAgent>();
             finalizarFijacionMock = new Mock<IFinalizarFijacionVirtualAgent>();
             anularFijacionVirtualMock = new Mock<IAnularFijacionVirtualAgent>();
+            negocioManagerMock = new Mock<INegocioManager>();
 
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
@@ -78,7 +80,8 @@ namespace Molinos.DataAgro.Test.Managers
                 contratosParaFijacionMock.Object, relacionCorredorProveedorAgentMock.Object,
                 mailManagerMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object,
                 modificarFijacionAgentMock.Object, diasHabilesAgente.Object, configuracionManagerMock.Object, validarLiquidacionParaFijacionAgentMock.Object,
-                tipoDeCamcioAgentMock.Object, contratosFijacionVirtualMock.Object, finalizarFijacionMock.Object, anularFijacionVirtualMock.Object);
+                tipoDeCamcioAgentMock.Object, contratosFijacionVirtualMock.Object, finalizarFijacionMock.Object, anularFijacionVirtualMock.Object,
+                negocioManagerMock.Object);
         }
 
         [Test]
@@ -1313,5 +1316,64 @@ namespace Molinos.DataAgro.Test.Managers
             target.BuscarComision(negocio);
             Assert.AreEqual(10, negocio.ImporteComision);
         }
+
+        [Test]
+        public void DevolverKilosPendientesAnularFijacionCanjeTestOk()
+        {
+            var fijacion = new FijacionDePrecioContrato
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Finalizado },
+                EstadoId = (int)EnumEstadoContrato.Finalizado,
+                Comercial = new Comercial { ComercialId = 1 },
+                Precio = 100,
+                MonedaId = "ARP  ",
+                Cantidad = 5000,
+                FijacionSAP = "1",
+                Virtual = true
+
+            };
+
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>())).Returns(fijacion);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionVirtualSap, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<FijacionVirtualSap> {
+                   new FijacionVirtualSap{ FijacionCanjeId =2,FijacionVirtualId=1,Cantidad=4000,Id=1,FijacionVirtualNro="1", FijacionCanje = new Negocio{EstadoId = (int)EnumEstadoContrato.Finalizado } }
+               });
+
+
+
+            var result = target.DevolverKilosPendientesAnularFijacionCanje(1);
+            Assert.AreEqual(1000, result.KilosPendientes);
+        }
+
+        [Test]
+        public void DevolverKilosPendientesAnularFijacionCanjeTestOk1()
+        {
+            var fijacion = new FijacionDePrecioContrato
+            {
+                Id = 1,
+                Estado = new EstadoContrato { EstadoContratoId = (int)EnumEstadoContrato.Confirmado },
+                EstadoId = (int)EnumEstadoContrato.Confirmado,
+                Comercial = new Comercial { ComercialId = 1 },
+                Precio = 100,
+                MonedaId = "ARP  ",
+                Cantidad = 5000,
+                FijacionSAP = "1",
+                Virtual = true
+
+            };
+
+            repositorioMock.Setup(y => y.Obtener<FijacionDePrecioContrato>(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>())).Returns(fijacion);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionVirtualSap, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<FijacionVirtualSap> {
+                   new FijacionVirtualSap{ FijacionCanjeId =2,FijacionVirtualId=1,Cantidad=4000,Id=1,FijacionVirtualNro="1", FijacionCanje = new Negocio{EstadoId = (int)EnumEstadoContrato.Finalizado } }
+               });
+
+
+
+            var result = target.DevolverKilosPendientesAnularFijacionCanje(1);
+            Assert.AreEqual(0, result.KilosPendientes);
+        }
+
     }
 }

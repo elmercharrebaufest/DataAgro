@@ -441,6 +441,11 @@ function botonBorrar(dataItem, icono) {
 
 function botonBorrarPreanulado(dataItem, icono) {
     if (anular) {
+        var KilosPendientes = 0;
+        if (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true) {
+            var kilospendientesFijacion = MSExecuteOnServer('/CompraNet/DevolverKilosPendientesAnularFijacionCanje', { id: dataItem.FijacionDePrecioContratoId });
+            KilosPendientes = kilospendientesFijacion.KilosPendientes;            
+        }
         return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrarPreAnulado(' +
             "'" + dataItem.Proveedor + "'" + ',' +
             "'" + dataItem.ContratoId + "'" + ',' +
@@ -450,7 +455,8 @@ function botonBorrarPreanulado(dataItem, icono) {
             "'" + dataItem.AgenteId + "'" + ',' +
             "'" + dataItem.AcuerdoId + "'" + ',' +
             "'" + dataItem.Estado + "'" + ',' +
-            "'" + $.trim((dataItem.Rechazo == null ? "" : dataItem.Rechazo.replace(/\n+/g, ' '))) + "'" +
+            "'" + $.trim((dataItem.Rechazo == null ? "" : dataItem.Rechazo.replace(/\n+/g, ' '))) + "'" + ',' +
+            "'" + KilosPendientes + "'" + 
             ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
     } else {
         return '<div></div>';
@@ -459,12 +465,30 @@ function botonBorrarPreanulado(dataItem, icono) {
 
 function botonPreAnular(dataItem, icono) {
     if (preanular && dataItem.ContratoId || (preanular && (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true))) {
-        return '<button data-toggle="tooltip" title="PreAnular" onclick="ModalPreAnular(' +
-            "'" + dataItem.ContratoId + "'" + ',' +
-            "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
-            "'" + dataItem.Proveedor + "'" + ',' +
-            "'" + dataItem.TipoNegocioId + "'" +
-            ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+        if (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true) {
+            var kilospendientesFijacion = MSExecuteOnServer('/CompraNet/DevolverKilosPendientesAnularFijacionCanje', { id: dataItem.FijacionDePrecioContratoId });
+            if (kilospendientesFijacion.KilosPendientes > 0) {
+                return '<button data-toggle="tooltip" title="PreAnular" onclick="ModalPreAnular(' +
+                    "'" + dataItem.ContratoId + "'" + ',' +
+                    "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
+                    "'" + dataItem.Proveedor + "'" + ',' +
+                    "'" + dataItem.TipoNegocioId + "'" + ',' +
+                    "'" + kilospendientesFijacion.KilosPendientes + "'" +
+                    ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+            }
+             else {
+                return '<div></div>';
+            }
+        } else {
+            return '<button data-toggle="tooltip" title="PreAnular" onclick="ModalPreAnular(' +
+                "'" + dataItem.ContratoId + "'" + ',' +
+                "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
+                "'" + dataItem.Proveedor + "'" + ',' +
+                "'" + dataItem.TipoNegocioId + "'" +
+                ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+        }
+
+
     } else {
         return '<div></div>';
     }
@@ -2581,7 +2605,7 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fas
     $("#modalBorrar").modal('show');
 }
 
-function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId, acuerdoId, estado, Rechazo) {
+function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId, acuerdoId, estado, Rechazo,kilos) {
     $("#proveedor_a_borrarPreanular").text(proveedor);
     $("#proveedorBorrarDivVisualizar").show();
     $("#agenteBorrarDivVisualizar").hide();
@@ -2589,9 +2613,13 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     $("#fijacionModalAnular").val(fijacionDePrecioContratoId);
     $("#tiponegocio_a_borrarPreanular").text("el Negocio");
 
+    var kilosMsg = "";
+    if (kilos && kilos > 0) {
+        kilosMsg = " el saldo de " + kendo.toString(kilos, "n") + " kg de ";
+    }
     if (tipoNegocio === "3") {
         $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
-        $("#tiponegocio_a_borrarPreanular").text("la fijacion");
+        $("#tiponegocio_a_borrarPreanular").text(kilosMsg + "la fijacion");
     } else if (tipoNegocio === "4") {
         $("#contratoModalBorrar").val(fasonId);
         $("#tiponegocio_a_borrarPreanular").text("el Fason");
@@ -2625,23 +2653,34 @@ function ModalBorrarPreAnulado(proveedor, id, tipoNegocio, fijacionDePrecioContr
     $("#modalBorrarPreanulado").modal('show');
 }
 
-function ModalPreAnular(id, fijacionId, proveedor, tipoNegocio) {
+function ModalPreAnular(id, fijacionId, proveedor, tipoNegocio, kilos) {
     $("#proveedor_a_preanular").text(proveedor);
     $("#contratoModalAnular").val(id);
     $("#fijacionModalAnular").val(fijacionId);
     $("#tipoNegocioModalBorrar").val(tipoNegocio);
     $("#modalPreAnular").modal('show');
     $("#tiponegocio_a_Preanular").text("el Negocio");
-
+    var kilosMsg = "";
+    if (kilos && kilos > 0) {
+        kilosMsg =" el saldo de " + kendo.toString(kilos,"n")+ " kg de ";
+    }
     if (tipoNegocio === "3") {
-        $("#tiponegocio_a_Preanular").text("la fijacion");
+        $("#tiponegocio_a_Preanular").text(kilosMsg + "la Fijacion");
     } else if (tipoNegocio === "4") {
         $("#tiponegocio_a_Preanular").text("el Fason");
     } else if (tipoNegocio === "5") {
         $("#tiponegocio_a_Preanular").text("el Negocio de Agente de Compras");
     } else if (tipoNegocio === "6") {
         $("#tiponegocio_a_Preanular").text("el Contrato Acuerdo");
-    } 
+    }
+    //if (kilos && kilos > 0) {
+    //    $("#espaciolineas").html("Usted está intentando preanular una <b>Fijación Virtual</b> de " + proveedor +
+    //        " con " + kendo.toString(kilos, "n") + " kg de saldo sobre " + + " kg." +
+    //        "<br>Si prosigue se hará una anulación parcial."+
+    //        "<br>¿Desea proseguir?"
+    //    );
+
+    //}
 }
 
 function CrearViewModel() {

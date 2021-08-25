@@ -474,8 +474,8 @@ namespace Molinos.DataAgro.Business
             && tipoRangos.Contains(x.TipoRangoId)) ?? new List<RangoConfirmacionAutomatica>();
 
             var rango = rangos.FirstOrDefault(
-                x => contrato.FechaDesde >= new DateTime(x.DesdeAnio, x.DesdeMes, 1) &&
-                   contrato.FechaHasta <= new DateTime(x.HastaAnio, x.HastaMes, DateTime.DaysInMonth(x.HastaAnio, x.HastaMes)));
+                 x => contrato.FechaDesde >= x.DesdeEntrega &&
+                    contrato.FechaHasta <= x.HastaEntrega);
 
 
             if (rango != null && contrato.Precio > 0)

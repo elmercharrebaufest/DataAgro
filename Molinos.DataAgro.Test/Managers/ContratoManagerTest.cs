@@ -66,7 +66,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
         private Mock<IValidacionCreditoAgent> validacionCreditoAgent;
         private Mock<ICapacidadProductivaDisponibleAgent> capacidadProductivaDisponibleAgent;
-
+        private Mock<INegocioManager> negocioManagerMock;
 
 
 
@@ -113,6 +113,7 @@ namespace Molinos.DataAgro.Test.Managers
             tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
             validacionCreditoAgent = new Mock<IValidacionCreditoAgent>();
             capacidadProductivaDisponibleAgent = new Mock<ICapacidadProductivaDisponibleAgent>();
+            negocioManagerMock = new Mock<INegocioManager>();
 
 
 
@@ -134,7 +135,7 @@ namespace Molinos.DataAgro.Test.Managers
                 validarPagoAgente.Object, cbuAgentMock.Object,
                 modificarFijacionAgentMock.Object, ccppPendienteAplicarAgentMock.Object,
                 contextoMock.Object, validacionCreditoAgent.Object, tipoDeCambioAgentMock.Object,
-                capacidadProductivaDisponibleAgent.Object
+                capacidadProductivaDisponibleAgent.Object, negocioManagerMock.Object
                 );
         }
 
