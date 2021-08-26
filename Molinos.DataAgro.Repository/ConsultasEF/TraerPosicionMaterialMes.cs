@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 5)
             && (((x is Contrato) && (x as Contrato).Canje != true) || !(x is Contrato))
             && (((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).Canje != true) || !(x is FijacionDePrecioContrato))
-            && !(((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).Canje != true && (x as FijacionDePrecioContrato).Virtual != true && (x as FijacionDePrecioContrato).Contrato.Canje == true) || !(x is FijacionDePrecioContrato))
+            && !(((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).Canje != true && (x as FijacionDePrecioContrato).Virtual != true && (x as FijacionDePrecioContrato).Contrato.Canje == true))
             ).DefaultIfEmpty()
                        .OrderBy(x => SqlFunctions.DatePart("month", x.Fecha)).Select(x => new ExcelPosicionMaterialDto
                        {
