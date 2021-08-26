@@ -2222,7 +2222,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
     var datos;
     console.log(tipo, contrato, id);
-    if (tipo == "AGENTE DE COMPRAS" || tipo == "FASON" || tipo == "FIJACION") {
+    if (tipo == "AGENTE DE COMPRAS" || tipo == "FASON" || tipo == "FIJACION" || tipo == "FIJACION CANJE") {
         datos = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato, acuerdoId: id });
     } else if (tipo == "CONTRATO ACUERDO") {
         datos = MSExecuteOnServer('/CompraNet/TraerDatosDeContratoAcuerdo', { contratoId: id });
@@ -2471,15 +2471,17 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     if (Canje == "true") {
         $("#canjeDiv").show();
         $("#canjeId").text("Si");
-        $("#insumoDiv").show();
-        $("#insumoId").text(Insumo);
-        $("#montoDiv").show();
-        $("#montoId").text(kendo.toString(parseFloat(Monto), "n2"));
-        $("#monedaCanjeDiv").show();
-        if (MonedaCanje == "USDM ") {
-            $("#monedaCanjeId").text(MonedaCanje.slice(0, -2));
-        } else {
-            $("#monedaCanjeId").text(MonedaCanje);
+        if (tipo === "A FIJAR") {
+            $("#insumoDiv").show();
+            $("#insumoId").text(Insumo);
+            $("#montoDiv").show();
+            $("#montoId").text(kendo.toString(parseFloat(Monto), "n2"));
+            $("#monedaCanjeDiv").show();
+            if (MonedaCanje == "USDM ") {
+                $("#monedaCanjeId").text(MonedaCanje.slice(0, -2));
+            } else {
+                $("#monedaCanjeId").text(MonedaCanje);
+            }
         }
     } else {
         $("#canjeDiv").hide();

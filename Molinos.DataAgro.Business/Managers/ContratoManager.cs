@@ -3319,11 +3319,6 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.ChequeElectronico = contrato.ChequeElectronico;
             contratoSave.DolarizadoExpress = contrato.DolarizadoExpress;
             contratoSave.PagoCBU = contrato.PagoCBU;
-            contratoSave.Canje = contrato.Canje;
-            contratoSave.Monto = contrato.Monto;
-            contratoSave.MonedaCanjeId = contrato.MonedaCanjeId;
-            contratoSave.Insumo = contrato.Insumo;
-            contratoSave.PrestamoDevolucion = contrato.PrestamoDevolucion;
             contratoSave.PlantaDestinoId = contrato.PlantaDestinoId;
 
             var calidades = repositorio.Listar<Calidad>(x => x.NegocioId == contratoSave.Id);
@@ -3343,6 +3338,13 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.PosicionCBOT = contrato.PosicionCBOT;
             contratoSave.TipoPosicionCBOTId = contrato.TipoPosicionCBOTId;
 
+
+            // no se deberian poder modificar
+            //contratoSave.Canje = contrato.Canje;
+            //contratoSave.PrestamoDevolucion = contrato.PrestamoDevolucion;
+            //contratoSave.Monto = contrato.Monto;
+            //contratoSave.MonedaCanjeId = contrato.MonedaCanjeId;
+            //contratoSave.Insumo = contrato.Insumo;
 
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoSave.Id), TipoAccionLogDataAgro.Modificar, contratoSave.GetType());
