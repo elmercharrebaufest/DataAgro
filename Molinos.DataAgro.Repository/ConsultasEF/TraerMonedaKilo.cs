@@ -91,13 +91,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             }
 
-            var fij = fijaciones.GroupBy(x => x.MonedaId).DefaultIfEmpty()
-                .Select(x => new PrecioCantidadDto()
-                {
-                    Moneda = x.Key,
-                    Cantidad = x.Sum(y => (y.PrecioNeto == null) ? (double)y.Precio * y.Cantidad / 1000 : (double)y.PrecioNeto.Value * y.Cantidad / 1000)
-                }).ToList();
+            var fij = new List<PrecioCantidadDto>();
 
+            //Agrego el if
+            if (fijaciones.Count > 0)
+            {
+                fij = fijaciones.GroupBy(x => x.MonedaId).DefaultIfEmpty()
+                                .Select(x => new PrecioCantidadDto()
+                                {
+                                    Moneda = x.Key,
+                                    Cantidad = x.Sum(y => (y.PrecioNeto == null) ? (double)y.Precio * y.Cantidad / 1000 : (double)y.PrecioNeto.Value * y.Cantidad / 1000)
+                                }).ToList();
+            }
 
             var contPizarra = contexto.Set<Contrato>()
                 .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoNegocioId == 2 &&
