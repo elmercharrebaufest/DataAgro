@@ -723,8 +723,8 @@ namespace Molinos.DataAgro.Business.Managers
                 fechaDesde = fechaDesde.Date;
                 var objetivos = repositorio.Listar<HedgeTC>(x => DbFunctions.TruncateTime(x.Fecha) == fechaDesde);
                 var contratos = repositorio.Listar<Contrato>(x =>
-                materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoAgenteCompraId == null &&
-                x.AnulaYReemplazaContratoId == null && DbFunctions.TruncateTime(x.FechaOperacion) == fechaDesde && x.MonedaId == "ARP  " &&
+                materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoAgenteCompraId == null 
+                && DbFunctions.TruncateTime(x.FechaOperacion) == fechaDesde && x.MonedaId == "ARP  " &&
                 x.CampanaId == x.Material.CampaniaTableroId && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) /*&& x.Canje != true*/)
                     .Sum(x => x.Precio);
                 var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x =>
