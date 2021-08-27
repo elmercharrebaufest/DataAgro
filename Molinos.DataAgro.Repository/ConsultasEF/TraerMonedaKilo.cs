@@ -39,7 +39,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 (0 == centroId || x.DestinoId == centroId)
                 && x.ContratoAcuerdo == null
                 && x.TipoAgenteCompraId == null
-                && (x.Canje != true)
+                //&& (x.Canje != true)
                 && (x.PrestamoDevolucion != true)
                 && (x.Venta != true)
                 && x.Pizarra != true)
