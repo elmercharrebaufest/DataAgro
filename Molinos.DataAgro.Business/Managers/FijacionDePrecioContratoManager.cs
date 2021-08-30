@@ -841,7 +841,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oEntityErrors.Error("", "La Fijación debe ser Confirmada");
                 }
-                if (!string.IsNullOrEmpty(oFijacionDePrecioSave.FijacionSAP))
+                if (!string.IsNullOrEmpty(oFijacionDePrecioSave.FijacionSAP) && oFijacionDePrecioSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "La Fijación ya tiene ContratoSAP asignado, por favor comunicarse con sistemas.");
                     negocioManager.EnviarMailErrorFinalizarNegocio(fijacionDePrecioContratoId);

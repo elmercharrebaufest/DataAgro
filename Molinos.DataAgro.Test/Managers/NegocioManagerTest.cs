@@ -92,6 +92,7 @@ namespace Molinos.DataAgro.Test.Managers
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, string>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<string>() { "a" });
+            ConfigurationManager.AppSettings["EmailDASoporte"] = "dataagro.baufest@gmail.com";
 
             target.EnviarMailErrorFinalizarNegocio(1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);

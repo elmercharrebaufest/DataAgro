@@ -1953,7 +1953,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oEntityErrors.Error("", "El contrato debe ser Confirmado");
                 }
-                if (!string.IsNullOrEmpty(oContratoSave.ContratoSAP))
+                if (!string.IsNullOrEmpty(oContratoSave.ContratoSAP) && oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
                 {
                     oEntityErrors.Error("", "El contrato ya tiene ContratoSAP asignado, por favor comunicarse con sistemas.");
                     negocioManager.EnviarMailErrorFinalizarNegocio(contratoId);

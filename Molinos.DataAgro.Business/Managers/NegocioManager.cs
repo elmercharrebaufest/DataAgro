@@ -218,7 +218,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 subject = "Mail de Pruebas - " + subject;
             }
-            mailManager.EnviarMail(new List<string> { ConfigurationManager.AppSettings["EmailDASoporte"], ConfigurationManager.AppSettings["EmailSAPSoporte"] }, subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), negocio));
+            mailManager.EnviarMail( ConfigurationManager.AppSettings["EmailDASoporte"].ToString().Split(';').ToList(), subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), negocio));
         }
 
         private AlternateView CuerpoMailContrato(string filePath, Negocio negocio)
