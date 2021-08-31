@@ -31,7 +31,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IHttpContextManager httpContextManager;
 
 
-        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimariAPIAgent clientePrimariAPI, IHttpContextManager httpContextManager)
+        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimariAPIAgent clientePrimariAPI,
+            IHttpContextManager httpContextManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -93,7 +94,9 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     subject = "Prueba Mail - Negocios con fecha anterior";
                 }
-                var cuerpoMail = CuerpoMailNegociosConDiaAnterior(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contratos);
+                var rutaMolinos = httpContextManager.ObtenerPathLogoMail();
+
+                var cuerpoMail = CuerpoMailNegociosConDiaAnterior(rutaMolinos, contratos);
                 mailManager.EnviarMail(lista, subject, "", listaJefes, cuerpoMail);
             }
 
@@ -129,11 +132,13 @@ namespace Molinos.DataAgro.Business.Managers
                     th + "Proveedor" + "</td>" +
                     th + "Tipo" + "</td>" +
                     //th + "Estado:" + "</td>" +
-                    th + "Motivo:" + "</td>" +
+                    th + "Anula y reemplaza" + "</td>" +
+                    th + "Motivo" + "</td>" +
                     "</tr>";
 
             foreach (var c in contratos)
             {
+                string style = "";
                 string style1 = "";
                 string style2 = "";
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
@@ -150,37 +155,28 @@ namespace Molinos.DataAgro.Business.Managers
                 linea += 1;
                 if (linea % 2 == 0)
                 {
-                    htmlBody += "<tr>" +
-                         "<td " + style1 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +
-                         "<td " + style1 + c.Material.Descripcion + "</td>" +
-                         "<td " + style1 + (c.Precio == 0 ? "" : c.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td>" +
-                         "<td " + style1 + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
-                         "<td " + style1 + c.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td>" +
-                         "<td " + style1 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
-                         "<td " + style1 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
-                         "<td " + style1 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
-                         (c.Corredor != null ? "<td " + style1 + c.Corredor.RazonSocial + "</td>" : "<td " + style1 + "</td>") +
-                         "<td " + style1 + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
-                         "<td " + style1 + (c.Virtual == true ? "FIJACION VIRTUAL" : c.TipoNegocio.Descripcion) + "</td>" +
-                         "<td " + style1 + (!String.IsNullOrEmpty(c.MotivoOperacionAnterior) ? c.MotivoOperacionAnterior : "") + "</td> </tr> ";
+                    style = style1;
                 }
                 else
                 {
-                    htmlBody += "<tr>" +
-                        "<td " + style2 + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +
-                        "<td " + style2 + c.Material.Descripcion + "</td>" +
-                        "<td " + style2 + (c.Precio == 0 ? "" : c.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td>" +
-                        "<td " + style2 + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
-                        "<td " + style2 + c.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td>" +
-                        "<td " + style2 + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
-                        "<td " + style2 + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
-                        "<td " + style2 + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
-                        (c.Corredor != null ? "<td " + style2 + c.Corredor.RazonSocial + "</td>" : "<td " + style2 + "</td>") +
-                        "<td " + style2 + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
-                        "<td " + style2 + (c.Virtual == true ? "FIJACION VIRTUAL" : c.TipoNegocio.Descripcion) + "</td>" +
-                        "<td " + style2 + (!String.IsNullOrEmpty(c.MotivoOperacionAnterior) ? c.MotivoOperacionAnterior : "") + "</td> </tr> ";
+                    style = style2;
                 }
-            }      
+                htmlBody += "<tr>" +
+                      "<td " + style + (c.TipoNegocioId != 3 ? c.ContratoSAP : c is FijacionDePrecioContrato ? (c as FijacionDePrecioContrato).FijacionSAP : "") + "</td>" +
+                      "<td " + style + c.Material.Descripcion + "</td>" +
+                      "<td " + style + (c.Precio == 0 ? "" : c.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td>" +
+                      "<td " + style + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
+                      "<td " + style + c.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td>" +
+                      "<td " + style + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
+                      "<td " + style + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
+                      "<td " + style + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
+                      (c.Corredor != null ? "<td " + style + c.Corredor.RazonSocial + "</td>" : "<td " + style + "</td>") +
+                      "<td " + style + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
+                      "<td " + style + (c.Virtual == true ? "FIJACION VIRTUAL" : c.TipoNegocio.Descripcion) + "</td>" +
+                      "<td " + style + (c is Contrato && (c as Contrato).AnulaYReemplazaContrato != null ? (c as Contrato).AnulaYReemplazaContrato.ContratoSAP : "") + "</td>" +
+                      "<td " + style + (c is Contrato && (c as Contrato).AnulaYReemplazaContrato != null ? (c as Contrato).MotivoReemplazo : (!String.IsNullOrEmpty(c.MotivoOperacionAnterior) ? c.MotivoOperacionAnterior : "")) + "</td> </tr> ";
+            }
+
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
             htmlBody += "<br /> <br />  Saludos Cordiales" +
@@ -195,6 +191,135 @@ namespace Molinos.DataAgro.Business.Managers
         public void ConsultarContratosPrimary()
         {
             clientePrimariAPI.ObtenerNegocios();
+        }
+
+
+        public void EnvioMailNegociosAnulaYReemplaza()
+        {
+            DateTime hoy = DateTime.Now.Date;
+            var contratos = repositorio.Listar<Contrato>(x =>
+                DbFunctions.TruncateTime(x.Fecha) == hoy &&
+                x.AnulaYReemplazaContratoId != null && x.EstadoId == 5
+            );
+            var listaJefes = new List<string>();
+
+            var idJefes = repositorio.Listar<Comercial, string>(x => x.IdActiveDirectory,
+                a => a.RolesAsociados.Any(b => b.PermisosAsociados.Any(c => c.Permiso == PermisosDataAgro.EnvioMailNegociosAnulaYReemplaza)));
+
+            foreach (var item in idJefes)
+            {
+                var email = mailManager.GetEmailUserActiveDirectory(item);
+                listaJefes.Add(email);
+            }
+
+            var subject = "";
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                subject = "Negocios con Anula y Reemplaza";
+            }
+            else
+            {
+                subject = "Prueba Mail - Negocios con Anula y Reemplaza";
+            }
+            var rutaMolinos = httpContextManager.ObtenerPathLogoMail();
+
+            var cuerpoMail = CuerpoMailNegociosAnulaYReemplaza(rutaMolinos, contratos);
+            mailManager.EnviarMail(listaJefes, subject, "", null, cuerpoMail);
+        }
+
+        private AlternateView CuerpoMailNegociosAnulaYReemplaza(string filePath, List<Contrato> contratos)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
+            var linea = 0;
+            string htmlBody = "";
+            if (contratos.Count() == 0)
+            {
+                htmlBody += "El dia " + DateTime.Now.ToString("dd/MM/yyyy") + " no se realizaron negocios Anula y Reemplaza. <br /><br />  ";
+            }
+            else
+            {
+                htmlBody += "En el presente mail, se detalla los negocios Anula y Reemplaza creados  el " + DateTime.Now.ToString("dd/MM/yyyy") + " <br /><br />  ";
+                htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+                htmlBody += "<tr>" +
+                        th + "Contrato" + "</td>" +
+                        th + "Material" + "</td>" +
+                        th + "Precio Base" + "</td>" +
+                        th + "Moneda" + "</td>" +
+                        th + "Cantidad (Kg)" + "</td>" +
+                        th + "Fecha de Carga" + "</td>" +
+                        th + "Fecha de Operacion" + "</td>" +
+                        th + "Comercial" + "</td>" +
+                        th + "Corredor" + "</td>" +
+                        th + "Proveedor" + "</td>" +
+                        th + "Tipo" + "</td>" +
+                        th + "Anula y reemplaza" + "</td>" +
+                        th + "Motivo" + "</td>" +
+                        "</tr>";
+
+                foreach (var c in contratos)
+                {
+                    string style = "";
+                    string style1 = "";
+                    string style2 = "";
+                    if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+                    {
+                        style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                        style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+                    }
+                    else
+                    {
+                        style1 = "style =\"border: 2px solid white; color:#017940; background-color: #dccdea; padding: 5px 0; width: 250px;\">";
+                        style2 = "style=\"border: 2px solid white; color:#017940; background-color: #bba7da; padding: 5px 0; width: 250px;\">";
+                    }
+                    logger.Debug($"contrato numero: {c.Id}");
+                    linea += 1;
+                    if (linea % 2 == 0)
+                    {
+                        style = style1;
+                    }
+                    else
+                    {
+                        style = style2;
+                    }
+                    htmlBody += "<tr>" +
+                          "<td " + style + c.ContratoSAP + "</td>" +
+                          "<td " + style + c.Material.Descripcion + "</td>" +
+                          "<td " + style + (c.Precio == 0 ? "" : c.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td>" +
+                          "<td " + style + (c.MonedaId == null ? "" : c.Moneda.Descripcion) + "</td>" +
+                          "<td " + style + c.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")) + "</td>" +
+                          "<td " + style + c.Fecha.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
+                          "<td " + style + c.FechaOperacion.ToString("dd/MM/yyyy hh:mm:ss") + "</td>" +
+                          "<td " + style + c.Comercial.Nombres + " " + c.Comercial.Apellido + "</td>" +
+                          (c.Corredor != null ? "<td " + style + c.Corredor.RazonSocial + "</td>" : "<td " + style + "</td>") +
+                          "<td " + style + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
+                          "<td " + style + c.TipoNegocio.Descripcion + "</td>" +
+                          "<td " + style + c.AnulaYReemplazaContrato.ContratoSAP + "</td>" +
+                          "<td " + style + c.MotivoReemplazo + "</td> </tr> ";
+                }
+
+                htmlBody += " </td></tr>";
+                htmlBody += "</td></tr></table>";
+            }
+
+            htmlBody += " </td></tr>";
+            htmlBody += "</td></tr></table>";
+            htmlBody += "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
         }
 
 

@@ -13,6 +13,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado OcultarEnTablero(Negocio negocio);
         void EnvioMailNegociosConDiaAnterior();
         void ConsultarContratosPrimary();
+        void EnvioMailNegociosAnulaYReemplaza();
         void EnviarMailErrorFinalizarNegocio(int contratoId);
     }
 }

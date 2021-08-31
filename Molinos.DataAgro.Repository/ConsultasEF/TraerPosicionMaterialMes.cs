@@ -14,14 +14,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly DateTime fechaDesde;
         private readonly DateTime fechaHasta;
-
-        public TraerPosicionMaterialMes(DateTime fechaDesde, DateTime fechaHasta)
+        private readonly bool verFijaciones;
+        public TraerPosicionMaterialMes(DateTime fechaDesde, DateTime fechaHasta, bool verFijaciones = true)
         {
             this.fechaDesde = fechaDesde;
             this.fechaHasta = fechaHasta;
+            this.verFijaciones = verFijaciones;
         }
 
-        private static List<ExcelPosicionMaterialDto> Query(DbContext contexto, DateTime fechaDesde, DateTime fechaHasta)
+        private static List<ExcelPosicionMaterialDto> Query(DbContext contexto, DateTime fechaDesde, DateTime fechaHasta, bool verFijaciones = true)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var fechaHoy = fechaDesde.Date;
@@ -75,7 +76,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            EstablecimientoPropio = x is Contrato ? ((x as Contrato).EstablecimientoPropio == true ? "Propio" : (x as Contrato).EstablecimientoPropio == false ? "Arrendado" : "") : "",
                            Observacion = x.Observacion ?? ""
                        }).ToList();
-
+            if (!verFijaciones)
+            {
+                contratos = contratos.Where(a => a.TipoNegocio != "FIJACION").ToList();
+            }
             return contratos;
         }
 
@@ -83,7 +87,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, fechaDesde, fechaHasta);
+                return Query(contexto, fechaDesde, fechaHasta, verFijaciones);
             }
         }
     }

@@ -925,6 +925,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Envio Mail Negocios Anula y Reemplaza.
+        /// </summary>
+        public static string EnvioMailNegociosAnulaYReemplaza {
+            get {
+                return ResourceManager.GetString("EnvioMailNegociosAnulaYReemplaza", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Envio Mail a Negocios Con Dia Anterior en Fijaciones.
         /// </summary>
         public static string EnvioMailNegociosConDiaAnteriorFijacion {

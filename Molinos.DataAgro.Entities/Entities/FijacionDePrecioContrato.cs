@@ -9,8 +9,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string FijacionSAP { get; set; }
         public bool? PagoDiferidoContrato { get; set; }
         [ForeignKey("ContratoId")]
-        public virtual Contrato Contrato { get; set; }
-        public bool? Cesion { get; set; }
+        public virtual Contrato Contrato { get; set; }        
         public bool? Anticipo { get; set; }
         public string ClasificacionContrato { get; set; }
         public decimal? ImporteAPrecioContrato { get; set; }

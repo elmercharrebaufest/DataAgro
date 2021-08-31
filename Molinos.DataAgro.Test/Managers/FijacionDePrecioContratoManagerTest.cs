@@ -208,7 +208,8 @@ namespace Molinos.DataAgro.Test.Managers
                 ComercialId = 1,
                 ContratoSAP = "1234",
                 CampanaId = 1,
-                FechaOperacion = DateTime.Now
+                FechaOperacion = DateTime.Now,
+                AperturaPrecio = new List<AperturaPrecio>()
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
 
@@ -258,7 +259,8 @@ namespace Molinos.DataAgro.Test.Managers
                 ComercialId = 1,
                 ContratoSAP = "1234",
                 CampanaId = 1,
-                FechaOperacion = DateTime.Now
+                FechaOperacion = DateTime.Now,
+                AperturaPrecio = new List<AperturaPrecio>()
             };
 
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>()));
@@ -986,7 +988,7 @@ namespace Molinos.DataAgro.Test.Managers
                 ComercialCreadorId = 1,
                 Canje = true,
                 Fecha = DateTime.Now,
-                AperturaPrecio = null
+                AperturaPrecio = new List<AperturaPrecio>()
             };
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
 

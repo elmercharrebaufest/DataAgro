@@ -54,6 +54,52 @@ function InicializarAutocompletar() {
     });
 
 
+    $("#contratoAReemplazarId").click(function () {
+        $("#AnulaYReemplazaContratoId").val("");
+        $("#contratoAReemplazarId").data("kendoAutoComplete").value("");
+        $("#contratoAReemplazarId").data("kendoAutoComplete").trigger("change");
+        $("#MotivoReemplazoDiv").hide();
+        $("#MotivoReemplazo").val("");
+    });
+
+    $("#contratoAReemplazarId").kendoAutoComplete({
+        template: function (data) {
+            if ($(window).width() > 768) {
+                return '<p class="buscar-nomb">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
+            } else {
+                return '<p class="buscar-nomb letra650">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + '</p>';
+            }
+        },
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "ContratoSap",
+        dataValueField: "Id",
+        autoWidth: true,
+        select: function (e) {
+            CargarCopiaContrato(e.dataItem.Id, "anulayreemplaza");
+        },
+        dataSource: {
+            serverFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/CompraNet/ObtenerContratosParaCopiar"
+                },
+                parameterMap: function (data, type) {
+                    var valor = $("#contratoAReemplazarId").val();
+                    return { filtro: valor };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+
 
     $("#contratoAcuerdoId").click(function () {
         $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
@@ -109,6 +155,7 @@ function CargarCopiaContrato(contratoId, tipo) {
         contratoCopia.ContratoAcuerdoId = contratoId;
         $("#contratoAcuerdoId").val(contratoId);
     }
+
     if (contratoCopia.HayError) {
         MensErr(contratoCopia.Errores[0].Message);
     } else {
@@ -123,9 +170,29 @@ function CargarCopiaContrato(contratoId, tipo) {
             contratoCopia.MotivoOperacionAnterior = null;
             contratoCopia.FechaOperacionFormateado = formatearFecha(new Date());
         }
-        
+        if (tipo == "anulayreemplaza") {
+            var datosStatus = { id: contratoId };
+            status = MSExecuteOnServer('/CompraNet/ValidarModificarFinalizado', datosStatus, function () { $.unblockUI(); });
+            if (status == "") {
+                MensErr("El contrato aún no ha sido confirmado en SAP, intente editarlo desde la pantalla de CompraNet");
+                $("#AnulaYReemplazaContratoId").val("");
+                $("#contratoAReemplazarId").val("");
+                return;
+            } else {
+                contratoCopia.MotivoOperacionAnterior = "Anula y reemplaza " + contratoCopia.ContratoSAP;
+                contratoCopia.AnulaYReemplazaContratoId = contratoId;
+                contratoCopia.contratoAReemplazarId = contratoCopia.ContratoSAP;
+            }
+        }
+
         modificarContrato(contratoCopia);
         CargarDatosEditar(contratoCopia);
+        if (contratoCopia.Venta == true) {
+            HayVenta();
+            $(".venta").show();
+            $(".venta").addClass("ampliar");
+            $(".datos-venta").hide();
+        }
         if (tipo == "acuerdo") {
             $("#fechaOperacionId").data("kendoDatePicker").enable(false);
             $("#chequeElectronicoId").show();
@@ -523,7 +590,7 @@ function ObtenerDatos(error) {
         obj.tipoAgenteCompraId = $("#tipoAgenteCompraId").val();
     }
 
-    obj.ObligatoriedadCostoFinanciero = $("#esCostoFinanciero").is(":checked") == true ? true : $("#esCostoFinanciero").is(":checked") == false ?  false : null;
+    obj.ObligatoriedadCostoFinanciero = $("#esCostoFinanciero").is(":checked") == true ? true : $("#esCostoFinanciero").is(":checked") == false ? false : null;
 
     obj.OperadorId = $("#operadorId").val();
     if ($("#madreId").is(":checked")) {
@@ -657,6 +724,37 @@ function ObtenerDatos(error) {
     obj.ImporteSobrePrecioContrato = $("#ImporteSobrePrecioContrato").val();
     obj.PorcentajeSobrePrecioContrato = $("#PorcentajeSobrePrecioContrato").val();
     obj.MonedaSobrePrecioContrato = $("#MonedaSobrePrecioContrato").val();
+
+    obj.AnulaYReemplazaContratoId = $("#AnulaYReemplazaContratoId").val();
+    obj.MotivoReemplazo = $("#MotivoReemplazo").val();
+
+    obj.CamaraId = $("#camaraListado").val();
+    obj.ComisionAFavorId = $("#comisionAFavorListado").val();
+    obj.PorcentajeComisionVenta = $("#porcentajeComisionVentaId").val();
+
+
+    if ($("#LocalidadVenta").val() != "" && $("#LocalidadVenta").val() != null) {
+        var localidadVentaAux = $("#LocalidadVenta").val().split('(');
+        if (localidadVentaAux[1]) {
+            var provinciaVentaAux = localidadVentaAux[1].split(')');
+            var LocalidadVenta = MSExecuteOnServer('/CompraNet/ObtenerLocalidadId', { localidad: localidadVentaAux[0], provincia: provinciaVentaAux[0] });
+            obj.ProcedenciaVentaId = LocalidadVenta.LocalidadId;
+        } else {
+            obj.ProcedenciaVentaId = -1;
+        }
+    }
+    obj.CreditoDisponible = $("#creditoId").val();
+    obj.FleteACargo = $("#FleteACargoListado").val();
+    obj.KgBalanza = $("#KgBalanzaListado").val();
+    obj.CondicionDePagoDiaPesificado = $("#cantidadDiaPesificacion").val();
+    obj.CondicionDePagoTipoPesificado = $("#CondicionPesificacionListado").val();
+    obj.CondicionDePagoPesificadoVentaId = $("#CondicionDePagoPesificadoVentaListado").val();
+    obj.Pago = $("#PagoListado").val();
+    obj.CondicionDePagoDiaFijacion = $("#cantidadDiaCondicion").val();
+    obj.CondicionDePagoTipoFijacion = $("#CondicionPagoListado").val();
+    obj.CondicionDePagoFijacionVentaId = $("#CondicionDePagoFijacionVentaListado").val();
+
+
     if ($("#ventaId").is(":checked") == true) {
         obj.Venta = true;
     }
@@ -694,7 +792,7 @@ function InicializarDatos() {
         }
         else {
             datosIniCrearContrato = data;
-            datosIniCrearContrato.Datos.Destino = datosIniCrearContrato.Datos.Destino.filter(function (x) { return (x => x.Id != 10 && x.Id != 9 ) });
+            datosIniCrearContrato.Datos.Destino = datosIniCrearContrato.Datos.Destino.filter(function (x) { return (x => x.Id != 10 && x.Id != 9) });
             //6	Prest Dev.Buenos Aires
             //7	Prest Dev.Santa Fe 
             //9	LE

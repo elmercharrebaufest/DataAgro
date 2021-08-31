@@ -226,5 +226,22 @@ IF NOT EXISTS (select 1 from EstadoPrecioMOA where MaterialId = 5 and TipoNegoci
 IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'CBOT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('CBOT'); END
 IF NOT EXISTS (select 1 from TipoPosicionCBOT where Descripcion = 'MAT') BEGIN insert into TipoPosicionCBOT (Descripcion) values ('MAT'); END
 
+--Camara
+IF NOT EXISTS (select 1 from Camara where Descripcion = 'Rosario') BEGIN insert into Camara (Descripcion) values ('Rosario'); END
+IF NOT EXISTS (select 1 from Camara where Descripcion = 'Santa Fe') BEGIN insert into Camara (Descripcion) values ('Santa Fe'); END
+IF NOT EXISTS (select 1 from Camara where Descripcion = 'Bahía Blanca') BEGIN insert into Camara (Descripcion) values ('Bahía Blanca'); END
+IF NOT EXISTS (select 1 from Camara where Descripcion = 'Buenos Aires') BEGIN insert into Camara (Descripcion) values ('Buenos Aires'); END
+
+--ComisionAFavor
+IF NOT EXISTS (select 1 from ComisionAFavor where Descripcion = 'Cliente') BEGIN insert into ComisionAFavor (Descripcion) values ('Cliente'); END
+IF NOT EXISTS (select 1 from ComisionAFavor where Descripcion = 'MOA') BEGIN insert into ComisionAFavor (Descripcion) values ('MOA'); END
+IF NOT EXISTS (select 1 from ComisionAFavor where Descripcion = 'Corredor') BEGIN insert into ComisionAFavor (Descripcion) values ('Corredor'); END
+
+--CondicionDePagoFijacionVenta
+IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir de la fecha de Entrega') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionFijacion, CondicionPesificado) values ('A partir de la fecha de entrega', 1, 1); END
+IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir de la fecha de Pesificación') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionFijacion) values ('A partir de la fecha de Pesificación', 1); END
+IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir de la fecha de Liquidación') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionFijacion) values ('A partir de la fecha de Liquidación', 1); END
+IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir de la fecha de Fijación') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionFijacion, CondicionPesificado) values ('A partir de la fecha de Fijación', 1, 1); END
+IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'Anteriores al pago') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionPesificado) values ('Anteriores al pago', 1); END
 --Configuracion
 Update Configuracion set RedespachoMaximoARP = isnull(RedespachoMaximoARP, 1000), RedespachoMaximoUSDM = isnull(RedespachoMaximoUSDM, 60)

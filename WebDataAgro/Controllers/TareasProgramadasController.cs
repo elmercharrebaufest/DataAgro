@@ -268,5 +268,14 @@ namespace WebDataAgro.Controllers
             logger.Info("ActualizarCumplimientoCuposMasivo - Finalizado");
             return Content("ok");
         }
+
+
+        public ActionResult EnvioMailNegociosAnulaYReemplaza()
+        {
+            logger.Info($"EnvioMailNegociosAnulaYReemplaza - Iniciando");
+            negocioManager.EnvioMailNegociosAnulaYReemplaza();
+            logger.Info($"EnvioMailNegociosAnulaYReemplaza - Finalizado");
+            return Content("ok");
+        }
     }
 }

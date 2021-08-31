@@ -50,7 +50,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Dolarizado { get; set; }
         public bool OcultarEnTablero { get; set; }
         public double? CantidadAmpliado { get; set; }
-
+        public int? CreditoDisponible { get; set; }
+        public string MonedaCreditoDisponible { get; set; }
 
         [JsonConverter(typeof(SinHora))]
         public DateTime? DesdeFijacion { get; set; }
@@ -103,6 +104,23 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaHastaSustentable { get; set; } // FechaHastaSustentable   
         public string PosicionCBOT { get; set; }
         public int? TipoPosicionCBOTId { get; set; }
+
+        public int? CamaraId { get; set; }
+        public int? ComisionAFavorId { get; set; }
+        public decimal? PorcentajeComisionVenta { get; set; }
+
+        public string FleteACargo { get; set; }
+        public string KgBalanza { get; set; }
+        public string Pago { get; set; }
+        public int? ProcedenciaVentaId { get; set; }
+
+        public int? CondicionDePagoDiaFijacion { get; set; }
+        public int? CondicionDePagoDiaPesificado { get; set; }
+        public string CondicionDePagoTipoFijacion { get; set; }
+        public string CondicionDePagoTipoPesificado { get; set; }
+        public int? CondicionDePagoFijacionVentaId { get; set; }
+        public int? CondicionDePagoPesificadoVentaId { get; set; }
+        public bool? Cesion { get; set; }
 
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
@@ -160,6 +178,18 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual List<FijacionVirtualSap> FijacionCanje { get; set; }
         [InverseProperty("FijacionVirtual")]
         public virtual List<FijacionVirtualSap> FijacionVirtual { get; set; }
+
+        [ForeignKey("CamaraId")]
+        public virtual Camara Camara { get; set; }
+        [ForeignKey("ComisionAFavorId")]
+        public virtual ComisionAFavor ComisionAFavor { get; set; }
+        [ForeignKey("ProcedenciaVentaId")]
+        public virtual Localidad ProcedenciaVenta { get; set; }
+        [ForeignKey("CondicionDePagoFijacionVentaId")]
+        public virtual CondicionDePagoVenta CondicionDePagoFijacionVenta { get; set; }
+        [ForeignKey("CondicionDePagoPesificadoVentaId")]
+        public virtual CondicionDePagoVenta CondicionDePagoPesificadoVenta { get; set; }
+
         public Negocio()
         {
             Cantidad = 0;

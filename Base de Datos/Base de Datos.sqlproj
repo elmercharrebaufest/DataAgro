@@ -309,6 +309,9 @@
     <Build Include="dbo\Tables\HabilitacionSustentable.sql" />
     <Build Include="dbo\Tables\FijacionVirtualSAP.sql" />
     <Build Include="dbo\Tables\BoletoCompraNetProvincia.sql" />
+    <Build Include="dbo\Tables\Camara.sql" />
+    <Build Include="dbo\Tables\ComisionAFavor.sql" />
+    <Build Include="dbo\Tables\CondicionDePagoVenta.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

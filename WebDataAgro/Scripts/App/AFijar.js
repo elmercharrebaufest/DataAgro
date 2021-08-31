@@ -1038,7 +1038,9 @@ function InicializarElementos() {
         change: function () {
             if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro") {
                 $("#motivoTexto").show();
-                $("#motivoOperacionAnteriorId").val("");
+                if (!$("#AnulaYReemplazaContratoId").val() > 0) {
+                    $("#motivoOperacionAnteriorId").val("");
+                }
             } else {
                 $("#motivoTexto").hide();
             }
@@ -3960,6 +3962,33 @@ function CargarDatosEditar(contrato, hijo) {
         }
     }
 
+    if (contrato.AnulaYReemplazaContratoId) {
+        $("#AnulaYReemplazaContratoId").val(contrato.AnulaYReemplazaContratoId);
+        $("#contratoAReemplazarId").val(contrato.AnulaYReemplazaContratoSAP);
+        $("#MotivoReemplazoDiv").show();
+        $("#MotivoReemplazo").val(contrato.MotivoReemplazo);
+
+        $("#tipoId").data("kendoDropDownList").readonly(true);
+        $("#motivoAnterior").data("kendoDropDownList").readonly(true);
+        $("#fechaOperacionId").data("kendoDatePicker").readonly(true);
+        $("#motivoOperacionAnteriorId").attr("readonly",true);
+        $("#noInformaSioId").prop("checked", true);
+        $("#noInformaSioId").attr('disabled', true);
+
+        $("#boletoNingunoId").click();
+        $("#boletoNingunoId").attr("disabled", true);
+        $("#boletoNingunoId").prop("checked", true);
+
+        $("#boletoConfirmaId").prop("checked", false);
+        $("#boletoFisicoId").prop("checked", false);
+        $("#boletoCartaId").prop("checked", false);
+        $("#boletoConfirmaId").attr("disabled", true);
+        $("#boletoFisicoId").attr("disabled", true);
+        $("#boletoCartaId").attr("disabled", true);
+
+
+
+    }
 }
 
 function LimpiarApertura() {
@@ -4276,6 +4305,7 @@ function AbrirModalAperturaDePrecio() {
     //CalcularMaximoComision();
 
     $("#precioAperturaOriginal").text(kendo.toString(Number(0), "n2") + " " + moneda);
+    DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
     CalcularPrecioTotalApertura();
     $("#modalAperturaPrecio").modal("show");
 }
@@ -4837,7 +4867,16 @@ function DeshabilitarDescuentoSobrePrecioCuandoTieneAgente() {
         $("#PorcentajeDescuentoId").prop('disabled', false);
         $("#descuentoMonedaId").data("kendoDropDownList").enable(true);
     }
+
+    if ($("#AgenteCompraId").val() != "" && $("#PorcentajeDescuentoAFijarId").val() != '0') {
+        $("#PorcentajeDescuentoAFijarId").val(0);
+    }
 }
+
+function LimpiarDatos() {
+    DeshabilitarDescuentoSobrePrecioCuandoTieneAgente()
+}
+
 
 
 

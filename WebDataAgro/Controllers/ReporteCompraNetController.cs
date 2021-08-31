@@ -34,34 +34,35 @@ namespace WebDataAgro.Controllers
         {
             return View();
         }
-        public ActionResult PartialReporteCompraNet(string fechaString, string fechaHastaString, List<int> materialId, string centroId = "0")
+        public ActionResult PartialReporteCompraNet(string fechaString, string fechaHastaString, List<int> materialId, string centroId = "0", string verFijaciones = "")
         {
             ViewBag.Fecha = fechaString;
             ViewBag.FechaHasta = fechaHastaString;
             ViewBag.CentroSeleccionado = centroId;
             ViewBag.Materiales = materialId == null ? "" : string.Join(",", materialId);
+            ViewBag.verFijaciones = verFijaciones == "on";
             DateTime fechaDesde = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             if (materialId == null || materialId.Count() == 0) materialId = materialManager.TraerDatosIniciales().Material.Select(x => x.MaterialId).ToList();
-            ReporteCompraNetModel model = mobjReportesManager.ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId ?? "0", materialId);
+            ReporteCompraNetModel model = mobjReportesManager.ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId ?? "0", materialId, verFijaciones == "on");
             return PartialView("_ReporteCompraNet", model);
 
         }
-        public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion, string centroId = "0")
+        public ExcelResult DetalleExcel(int mes, int anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion, string centroId = "0", bool verFijaciones = true)
         {
             DateTime fecha = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId));
+            var detalle = mobjReportesManager.DetallePosicion(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId),verFijaciones);
             return new ExcelResult(detalle.Headers, detalle.Data, detalle.Name, detalle.SheetName);
         }
-        public ActionResult ReporteComprasDelDia(string fechaString, string fechaHastaString, string materialId, string centroId = "0")
+        public ActionResult ReporteComprasDelDia(string fechaString, string fechaHastaString, string materialId, string centroId = "0", bool verFijaciones = true)
         {
             var listmaterialId = String.IsNullOrEmpty(materialId) ? new List<int>() : materialId.Split(',').Select(a => int.Parse(a)).ToList();
 
             DateTime fechaDesde = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-            var model = mobjReportesManager.ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId ?? "0", listmaterialId);
-            var posicion = mobjReportesManager.PosicionPorMaterial(fechaDesde, fechaHasta);
+            var model = mobjReportesManager.ObtenerDatosReporteCompraNet(fechaDesde, fechaHasta, centroId ?? "0", listmaterialId, verFijaciones);
+            var posicion = mobjReportesManager.PosicionPorMaterial(fechaDesde, fechaHasta, verFijaciones);
             return File(ExcelReporteCompleto.GenerarExcel(model, posicion, fechaDesde == fechaHasta), "application/vnd.ms-excel");
         }
 
@@ -94,14 +95,14 @@ namespace WebDataAgro.Controllers
         //}
 
 
-        public JsonResult DetalleExcelModal(int? mes, int? anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion, string centroId = "0")
+        public JsonResult DetalleExcelModal(int? mes, int? anio, int materialId, string fechaString, string fechaHastaString, int? clasificacion, string centroId = "0", bool verFijaciones = true)
         {
             DateTime fecha;
             DateTime.TryParse(fechaString, out fecha);
             DateTime fechaHasta;
             DateTime.TryParse(fechaHastaString, out fechaHasta);
 
-            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId)), JsonRequestBehavior.AllowGet);
+            return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId),verFijaciones), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult DetalleIdsModal(List<int> negocioids, string moneda)

@@ -647,6 +647,8 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         
         private string tERCEROField;
         
+        private string aNULA_Y_REEMPField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -1592,6 +1594,18 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
             set {
                 this.tERCEROField = value;
                 this.RaisePropertyChanged("TERCERO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=79)]
+        public string ANULA_Y_REEMP {
+            get {
+                return this.aNULA_Y_REEMPField;
+            }
+            set {
+                this.aNULA_Y_REEMPField = value;
+                this.RaisePropertyChanged("ANULA_Y_REEMP");
             }
         }
         

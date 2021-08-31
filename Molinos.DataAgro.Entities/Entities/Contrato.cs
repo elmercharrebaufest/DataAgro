@@ -48,6 +48,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal? PrecioAjusteComision { get; set; }
         public string MonedaAjusteComisionId { get; set; }
 
+        public int? AnulaYReemplazaContratoId { get; set; }
+        public string MotivoReemplazo { get; set; }
+
+        [ForeignKey("AnulaYReemplazaContratoId")]
+        public virtual Contrato AnulaYReemplazaContrato { get; set; }
         [ForeignKey("ProvinciaId")]
         public virtual Provincia Provincia { get; set; } // ProvinciaId
         [ForeignKey("LocalidadId")]

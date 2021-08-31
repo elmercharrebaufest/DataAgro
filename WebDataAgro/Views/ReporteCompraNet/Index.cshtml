@@ -52,13 +52,20 @@
                 </div>
             </div>
             <div class="row">
-                <button type="submit" id="buscar-reporte" class="k-button k-button-icontext sideMargin-15">Buscar</button>
-                @Html.ActionLink("Descargar Reporte", "ReporteComprasDelDia", "ReporteCompraNet", new { }, new { @class = "k-button k-button-icontext sideMargin-15", @id = "descargaReporte" })
+                <div class="col-sm-1 noRightPadding">
+                    <label for="verFijaciones">Fijaciones</label>
+                    <input id="verFijaciones" name="verFijaciones" type="checkbox" checked />
+                </div>
+                <div class="col-sm-4 col-md-3">
+                    <button type="submit" id="buscar-reporte" class="k-button k-button-icontext sideMargin-15">Buscar</button>
+                    @Html.ActionLink("Descargar Reporte", "ReporteComprasDelDia", "ReporteCompraNet", new { }, new { @class = "k-button k-button-icontext sideMargin-15", @id = "descargaReporte" })
+                </div>
+               
             </div>
         </div>
     }
     <div id="CuerpoCompraNet" class="container-reporte">
-        @Html.Action("PartialReporteCompraNet", new { fechaString = DateTime.Now.Date.ToString("dd-MM-yyyy"), fechaHastaString = DateTime.Now.Date.ToString("dd-MM-yyyy") })
+        @Html.Action("PartialReporteCompraNet", new { fechaString = DateTime.Now.Date.ToString("dd-MM-yyyy"), fechaHastaString = DateTime.Now.Date.ToString("dd-MM-yyyy"),verFijaciones = "on" })
     </div>
 </div>
 

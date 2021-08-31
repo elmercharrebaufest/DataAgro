@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Agent
                         Cosecha = x.Cosecha,
                         Establecimiento = x.NombreEstablecimiento          
                         
-                    }).OrderBy(x => x.Cantidad).Take(15).ToList();
+                    }).OrderBy(x => x.Cantidad).ToList();
 
                     return respuesta;
                 }

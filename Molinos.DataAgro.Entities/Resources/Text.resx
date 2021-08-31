@@ -844,4 +844,7 @@
   <data name="ReasignarProveedorPantallaCupo" xml:space="preserve">
     <value>Reasignar Proveedor Pantalla Cupo</value>
   </data>
+  <data name="EnvioMailNegociosAnulaYReemplaza" xml:space="preserve">
+    <value>Envio Mail Negocios Anula y Reemplaza</value>
+  </data>
 </root>

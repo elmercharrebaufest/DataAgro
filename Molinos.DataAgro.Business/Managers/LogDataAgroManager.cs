@@ -716,6 +716,7 @@ namespace Molinos.DataAgro.Business.Managers
             text = text.Replace("AcopioMaterialPorProveedores", "AcopioMaterial");
             text = text.Replace("CampoProduccionAcopioPorProveedores", "Produccion");
             text = text.Replace("ObjetivosTraerPorProveedorId", "Objetivos");
+            text = text.Replace("AnulaYReemplazaContratoSAP", "Anula y Reemplaza");
             text = text.Replace("_", " ");
             if (!text.StartsWith("Descripcion") && text.Contains("Descripcion"))
             {
@@ -751,9 +752,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string BuscaFechaYFormatea(string s, string campo)
         {
-            List<string> contratosap = new List<string> { "Contrato SAP", "ContratoSAP", "Contrato Vendedor", "ContratoVendedor" };
+            List<string> contratosap = new List<string> { "Contrato SAP", "ContratoSAP", "Contrato Vendedor", "ContratoVendedor", "AnulaYReemplazaContratoSAP" };
             List<string> noFormatear = new List<string> { "UsuarioTercero" };
-            List<string> noEsNumero = new List<string> { "CUIT", "CodigoPostal", "Telefono1", "Email1", "EstadoCuit", "Dias_Pesificado", "ContratoSAP", "FijacionSap", "Cuit", "Negocio" };
+            List<string> noEsNumero = new List<string> { "CUIT", "CodigoPostal", "Telefono1", "Email1", "EstadoCuit", "Dias_Pesificado", "ContratoSAP", "FijacionSap", "Cuit", "Negocio", "Contrato SAP", "Contrato Vendedor", "ContratoVendedor", "AnulaYReemplazaContratoSAP" };
             if (contratosap.Contains(campo))
             {
                 return s.TrimStart('0');

@@ -13,13 +13,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly DateTime fechaDesde;
         private readonly DateTime fechaHasta;
         private readonly int centroId;
+        private readonly bool verFijaciones;
         private List<int> materialId;
-        public TraerMonedaKilo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0)
+        public TraerMonedaKilo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool verFijaciones = true)
         {
             this.fechaDesde = fechaDesde;
             this.fechaHasta = fechaHasta;
             this.centroId = centroId;
             this.materialId = materialId;
+            this.verFijaciones = verFijaciones;
         }
 
         public List<PrecioCantidadDto> Ejecutar(DbContext contexto)
@@ -42,7 +44,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 //&& (x.Canje != true)
                 && (x.PrestamoDevolucion != true)
                 && (x.Venta != true)
-                && x.Pizarra != true)
+                && x.Pizarra != true
+                && x.AnulaYReemplazaContratoId == null
+                )
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
                 {
@@ -56,7 +60,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) &&
                 (centroId == 0 || centroId == 1) && x.Canje != true &&
                 !(x.Canje != true && x.Virtual != true && x.Contrato.Canje == true)
-                && x.Pizarra != true)
+                && x.Pizarra != true && verFijaciones)
                 .Select(x => new BasicoContrato()
                 {
                     Id = x.Id,
@@ -72,7 +76,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 if (item.Virtual == true)
                 {
                     var fijacionVirtual = contexto.Set<FijacionDePrecioContrato>().Where(x => x.Id == item.Id).Single();
-                    decimal precioNeto =  fijacionVirtual.Precio;
+                    decimal precioNeto = fijacionVirtual.Precio;
                     if (fijacionVirtual.Contrato != null)
                     {
                         var desc = fijacionVirtual.Contrato.Descuentos.Where(y => y.TipoDBId == 1 && y.TipoPeriodoDBId == 1 && (y.Porcentaje != 0 || y.Importe != 0)).SingleOrDefault();
@@ -85,10 +89,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             }
                         }
                     }
-
                     item.PrecioNeto = precioNeto;
                 }
-
             }
 
             var fij = new List<PrecioCantidadDto>();

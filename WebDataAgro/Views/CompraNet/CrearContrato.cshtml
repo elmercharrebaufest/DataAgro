@@ -82,6 +82,20 @@
                 <input type="text" class="k-textbox" style="width:100%" id="contratoAcuerdoId" />
             </div>
         </div>
+        <div class="row ampliar esconderTercero">
+            <div class="col-sm-6">
+                <div class="col-sm-4 noPadding">
+                    <label>Anula y Reemplaza</label>
+                </div>
+                <div class="col-sm-8 noPadding" style="padding-left: 10px;">
+                    <input type="text" class="k-textbox" style="width:100%" id="contratoAReemplazarId" />
+                    <input type="hidden" id="AnulaYReemplazaContratoId" />
+                </div>
+
+                <label style="color:orange;"><b><i>Recuerde consultar con el área de Administración MP antes de utilizar esta función</i></b></label>
+            </div>
+
+        </div>
         <input type="hidden" id="estado" />
     </div>
 
@@ -664,12 +678,22 @@
                 </div>
             </div>*@
     </div>
+    <div class="row noFason noAgente noAcuerdo" id="MotivoReemplazoDiv" hidden>
+        <div class="col-sm-2 ">
+            <label>Motivo de reemplazo</label>
+        </div>
+        <div class="col-sm-10 col-md-9">
+            <textarea type="text" class="campo-input-text k-textbox" id="MotivoReemplazo" rows="3" maxlength="100" placeholder="Por favor aclare los cambios realizados y motivo, cantidad y precio."></textarea>
+            <img id="errMotivoReemplazo" src="~/Content/Images/error.png" style="display:none" />
+        </div>
+    </div>
 
     <div class="ampliar noFason noAgente noAcuerdo">
         <div id="DatosAdicionales" class="btnagregar btnAzul widthButton" type="button">
             <i class="fa fa-plus"></i> Datos adicionales
         </div>
     </div>
+
     <div class="datos-adicionales ampliar-adicionales noFason noAgente acuerdo" display="block">
         <div class="row noAcuerdo">
             <div id="ordenarRow" class="col-sm-2" hidden></div>
@@ -1091,6 +1115,137 @@
             </div>
         </script>
     </div>
+
+    <div class="venta noFason noAgente noAcuerdo" hidden>
+        <div id="Venta" class="btnagregar btnAzul widthButton" type="button">
+            <i class="fa fa-plus"></i> Condiciones adicionales de la venta
+        </div>
+    </div>
+
+    <div class="datos-venta" hidden>
+        <div class="row">
+            <div class="col-md-6 camaraDiv">
+                <div class="col-md-4">
+                    <label id="camaraLabel">Camara</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="camaraListado" class="" data-bind="source: CamaraCombo, value: Parametros.camaraListado, disabled: isControlDisabled"></select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-sm-4">
+                    <label>Procedencia de la mercadería</label>
+                </div>
+                <div class="col-md-6">
+                    <input style="width:100% !important" type="text" id="LocalidadVenta" placeholder="Buscar por Localidad" onclick="LimpiarProcedencia()" />
+                    <input id="ProvinciaVentaId" hidden />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <label>Flete a Cargo de</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="FleteACargoListado" class="" data-bind="source: FleteACargoCombo, value: Parametros.FleteACargoListado, disabled: isControlDisabled"></select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <label>Kg Balanza</label>
+                </div>
+                <div class="col-md-6">
+                    <select id="KgBalanzaListado" class="" data-bind="source: KgBalanzaCombo, value: Parametros.KgBalanzaListado, disabled: isControlDisabled"></select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <label id="camaraLabel">Comisión a Favor</label>
+                </div>
+                <div class="col-md-5">
+                    <select id="comisionAFavorListado" class="" data-bind="source: ComisionAFavorCombo, value: Parametros.comisionAFavorListado, disabled: isControlDisabled"></select>
+                </div>
+                <div class="col-md-3">
+                    <input id="porcentajeComisionVentaId" placeholder="%" style="width:100%" />
+                </div>
+            </div>
+            <div class="col-md-6">               
+               
+                <div class="col-sm-5">
+                    <label>Importe de operación</label>
+                </div>
+                <div class="col-md-5">
+                    <input id="importeOperacionId" class="required-box" style="width:100%" disabled />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <label>Pago</label>
+                </div>
+                <div class="col-md-8">
+                    <select id="PagoListado" class="" data-bind="source: PagoCombo, value: Parametros.PagoListado, disabled: isControlDisabled"></select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-sm-5">
+                    <label>Crédito Disponible</label>
+                </div>
+                <div class="col-md-5">
+                    <input id="creditoId" style="width:100%" disabled />
+                </div>
+            </div>
+        </div>
+
+        <div class="row condicionDePago">
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <label><strong>Condición de pago</strong></label>
+                </div>
+                <div class="col-sm-4">
+                    <label>Cantidad de días</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="cantidadDiaCondicion" style="width:100%" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-5">
+                    <select id="CondicionPagoListado" class="" data-bind="source: CondicionPagoCombo, value: Parametros.CondicionPagoListado, disabled: isControlDisabled"></select>
+                </div>
+                <div class="col-md-5">
+                    <select id="CondicionDePagoFijacionVentaListado" class="" data-bind="source: CondicionDePagoFijacionVentaCombo, value: Parametros.CondicionDePagoFijacionVentaListado, disabled: isControlDisabled"></select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <label><strong>Condición pesificación</strong></label>
+                </div>
+                <div class="col-sm-4">
+                    <label>Cantidad de días</label>
+                </div>
+                <div class="col-md-4">
+                    <input id="cantidadDiaPesificacion" style="width:100%" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-5">
+                    <select id="CondicionPesificacionListado" class="" data-bind="source: CondicionPagoCombo, value: Parametros.CondicionPesificacionListado, disabled: isControlDisabled"></select>
+                </div>
+                <div class="col-md-5">
+                    <select id="CondicionDePagoPesificadoVentaListado" class="" data-bind="source: CondicionDePagoPesificadoVentaCombo, value: Parametros.CondicionDePagoPesificadoVentaListado, disabled: isControlDisabled"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <br />
 <div class="row">

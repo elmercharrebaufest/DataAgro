@@ -162,7 +162,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ConfirmarNegociosGirasolAO = 344,
         [Display(ResourceType = typeof(Text), Name = "ModificarFijacionVirtual")]
         ModificarFijacionVirtual = 345,
-
+        [Display(ResourceType = typeof(Text), Name = "EnvioMailNegociosAnulaYReemplaza")]
+        EnvioMailNegociosAnulaYReemplaza = 346,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

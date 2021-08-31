@@ -33,6 +33,7 @@ namespace Molinos.DataAgro.Test.Managers
         private JavaScriptSerializer serializer;
         private Mock<IHttpContextManager> contextoMock;
 
+
         [SetUp]
         public void SetUp()
         {
@@ -50,17 +51,97 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void OcultarEnTableroOk()
         {
-          
+
             var negocio = new Negocio()
             {
                 Id = 1,
-               OcultarEnTablero=true
+                OcultarEnTablero = true
             };
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Negocio, bool>>>())).Returns(negocio);
-            
+
             var resultado = target.OcultarEnTablero(negocio);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+
+        }
+
+        [Test]
+        public void EnvioMailNegociosAnulaYReemplazaTestOk()
+        {
+
+            var negocio = new Contrato()
+            {
+                Id = 1,
+                AnulaYReemplazaContratoId = 1,
+                AnulaYReemplazaContrato = new Contrato { ContratoSAP = "1" },
+                MotivoReemplazo = "a",
+                TipoNegocio = new TipoNegocio { Descripcion = "a" },
+                ProveedorId = 1,
+                Proveedor = new Proveedor { RazonSocial = "a" },
+                ContratoSAP = "12",
+                Fecha = DateTime.Now,
+                FechaOperacion = DateTime.Now.AddDays(-10),
+                TipoNegocioId = 1,
+                Cantidad = 11111,
+                Comercial = new Comercial { Nombres = "", Apellido = "" },
+                Material = new Material { Descripcion = "" },
+
+            };
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { negocio });
+            mailManagerMock.Setup(x => x.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("emartin@baufest.com");
+            contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, string>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<string>() { "a" });
+
+            target.EnvioMailNegociosAnulaYReemplaza();
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+        }
+
+        [Test]
+        public void EnvioMailNegociosAnulaYReemplazaTestOkSinContratos()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato>());
+            mailManagerMock.Setup(x => x.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("emartin@baufest.com");
+            contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, string>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<string>() { "a" });
+
+            target.EnvioMailNegociosAnulaYReemplaza();
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+
+        }
+
+        [Test]
+        public void EnvioMailNegociosConDiaAnteriorTestOk()
+        {
+
+            var negocio = new Negocio()
+            {
+                Id = 1,
+                TipoNegocio = new TipoNegocio { Descripcion = "a" },
+                ProveedorId = 1,
+                Proveedor = new Proveedor { RazonSocial = "a" },
+                ContratoSAP = "12",
+                Fecha = DateTime.Now,
+                FechaOperacion = DateTime.Now.AddDays(-10),
+                TipoNegocioId = 1,
+                Cantidad = 11111,
+                Comercial = new Comercial { Nombres = "", Apellido = "" },
+                Material = new Material { Descripcion = "" },
+
+            };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "a" });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Negocio> { negocio });
+            mailManagerMock.Setup(x => x.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("emartin@baufest.com");
+            contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, string>>>(), It.IsAny<Expression<Func<Comercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<string>() { "a" });
+
+            target.EnvioMailNegociosConDiaAnterior();
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
 
         }
 

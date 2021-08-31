@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ResultIndicadoresReportesmini> TraerComprasMapaExportacion(ParamReportes oParamReportes, List<int> equipo);
 
         List<ResultIndicadoresReportesTorta> TraerComprasTortaExportacion(ParamReportes filtrosconvertidos, List<int> equipo);
-        ReporteCompraNetModel ObtenerDatosReporteCompraNet(DateTime fechaDesde, DateTime fechaHasta, string centroId, List<int> materialId);
+        ReporteCompraNetModel ObtenerDatosReporteCompraNet(DateTime fechaDesde, DateTime fechaHasta, string centroId, List<int> materialId, bool verFijaciones = true);
         void GrabarDatosReporteCompraNet(DateTime fechaDesde, DateTime fechaHasta, string centroId, List<int> materialId);
         List<ResultComprasBarrasReportesmini> TraerComprasBarraExportacion(ParamReportes filtrosconvertidos, List<int> equipo);
 
@@ -57,18 +57,18 @@ namespace Molinos.DataAgro.Interfaces
         List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes, List<int> equipo);
         List<ToneladasGranoTipoDto> TraerToneladasGranoTipo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0);
         ReporteSojaSustDto TraerToneladasSojaSust(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);
-        List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0,bool TraerPosicionMaterialCampaña = false);
-        List<PricingCampaniaDto> TraerPricingCampania(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0);
-        List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0);
+        List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool TraerPosicionMaterialCampaña = false, bool verFijaciones = true);
+        List<PricingCampaniaDto> TraerPricingCampania(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool verFijaciones = true);
+        List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool verFijaciones = true);
         List<HedgeMaterialDto> TraerTodosHedgeMaterial(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId);
-        HedgeCargaObjetivoDto TraerHedgeObjetivo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId);
+        HedgeCargaObjetivoDto TraerHedgeObjetivo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, bool verFijaciones = true);
         HedgeCargaObjetivoDto TraerUltimoHedgeObjetivo();
-        HedgeTCPromedioDto TraerTcPromedio(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId);
+        HedgeTCPromedioDto TraerTcPromedio(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, bool verFijaciones = true);
         List<AgenteCompraDto> TraerAgenteDeCompra(DateTime fechaDesde, DateTime fechaHasta,List<int> materialId);
-        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0);
+        ExcelDetallePosicionDto DetallePosicion(int materialId, int mes, int anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad, int centroId = 0, bool verFijaciones = true);
         ExcelDetallePosicionDto DetalleAgente(DateTime fecha, List<int> materialId);
-        List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta);
-        string DetallePosicionModal(int materialId, int? mes, int? anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad,  int centroId = 0);
+        List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta, bool verFijaciones = true);
+        string DetallePosicionModal(int materialId, int? mes, int? anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad,  int centroId = 0, bool verFijaciones = true);
         string DetalleAgenteModal(DateTime fecha,List<int> materialId);
         string DetallePosicionModalIds(List<int> negocios,string moneda);
         void TraerPosicionNegocios(List<BasicoContrato> datos);

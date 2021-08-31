@@ -191,7 +191,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Virtual = contrato.Virtual,
                         ProveedorCreador = contrato.ProveedorCreadorId,
                         UsuarioTercero = contrato.UsuarioTercero,
-                        FechaCiertaTilde = contrato.FechaCierta.HasValue
+                        FechaCiertaTilde = contrato.FechaCierta.HasValue,
+                        AnulaYReemplazaContratoId = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContratoId : null,
+                        AnulaYReemplazaContratoSAP = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContrato.ContratoSAP : "",
+                        MotivoReemplazo = (contrato is Contrato) ? (contrato as Contrato).MotivoReemplazo : "",
+                        Cesion = contrato.Cesion,
                     };
 
                 return queryNegocios;
@@ -347,7 +351,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                        
                         VirtualDescripcion = contrato.Virtual == true ? "Si" : "No",
-                        Virtual = contrato.Virtual
+                        Virtual = contrato.Virtual,
+                        AnulaYReemplazaContratoId = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContratoId : null,
+                        AnulaYReemplazaContratoSAP = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContrato.ContratoSAP : "",
+                        MotivoReemplazo = (contrato is Contrato) ? (contrato as Contrato).MotivoReemplazo : "",
+                        Cesion = contrato.Cesion,
+
                     };
 
                 return queryNegocios;

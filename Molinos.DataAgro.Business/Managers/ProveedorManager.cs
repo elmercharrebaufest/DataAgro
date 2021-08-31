@@ -658,6 +658,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
+            if (oContrato.AnulaYReemplazaContrato != null && oContrato.AnulaYReemplazaContratoId != null)
+            {
+                htmlBody += "<tr>" + th + "ANULA Y REEMPLAZA</th>" + Td(ref linea) + Split(oContrato.AnulaYReemplazaContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
+            }
+
             if (oContrato.DestinoId != null)
             {
                 htmlBody += "<tr>" + th + "DESTINO</th>" + Td(ref linea) + oContrato.Destino.Descripcion.ToUpper() + "</td></tr>";
@@ -3572,9 +3577,11 @@ namespace Molinos.DataAgro.Business.Managers
                 "<td " + style2 + oContrato.Proveedor.Provincia.Nombre.ToUpper() + "</td> </tr>";
 
             htmlBody += " </td></tr>";
+
             htmlBody += "</td></tr></table><br /><br /> ";
 
             htmlBody += "<strong>Datos generales</strong> <br /><br />  ";
+
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "NEGOCIO</th>" + Td(ref linea) + "VENTA" + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea);
@@ -3826,6 +3833,26 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
+            htmlBody += "<br /><strong>Condiciones de Venta</strong> <br /><br />  ";
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+            htmlBody += "<tr>" + th + "CAMARA </th>" + Td(ref linea) + (oContrato.Camara != null ? oContrato.Camara.Descripcion : "NO") + "</td></tr>";
+            htmlBody += "<tr>" + th + "COMISION A FAVOR </th>" + Td(ref linea) + (oContrato.ComisionAFavor != null ? 
+                oContrato.ComisionAFavor.Descripcion + " " + oContrato.PorcentajeComisionVenta +"%"  : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "FLETE A CARGO </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.FleteACargo) ? oContrato.FleteACargo : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "KG BALANZA </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.KgBalanza) ? oContrato.KgBalanza : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "PAGO </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.Pago) ? oContrato.Pago : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "PROCEDENCIA MERCADERIA</th>" + Td(ref linea) + (oContrato.ProcedenciaVenta != null ?
+               oContrato.ProcedenciaVenta.Nombre + " (" + oContrato.ProcedenciaVenta.Provincia.Nombre + ")"  : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "IMPORTE DE LA OPERACION</th>" + Td(ref linea) + Split((oContrato.Precio * (decimal)oContrato.Cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td></tr>";
+
+            htmlBody += "<tr>" + th + "CREDITO DISPONIBLE</th>" + Td(ref linea) + (oContrato.CreditoDisponible.HasValue ? Split(oContrato.CreditoDisponible.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.MonedaCreditoDisponible: "") + "</td></tr>";
+
+            htmlBody += "<tr>" + th + "CONDICION DE PAGO</th>" + Td(ref linea) + (oContrato.CondicionDePagoFijacionVenta != null ?
+               oContrato.CondicionDePagoDiaFijacion +" dias "+ oContrato.CondicionDePagoTipoFijacion + " " + oContrato.CondicionDePagoFijacionVenta.Descripcion : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONDICION DE PESIFICACION</th>" + Td(ref linea) + (oContrato.CondicionDePagoPesificadoVenta != null ?
+              oContrato.CondicionDePagoDiaPesificado + " dias " + oContrato.CondicionDePagoTipoPesificado + " " + oContrato.CondicionDePagoPesificadoVenta.Descripcion : "") + "</td></tr>";
+            htmlBody += "</table>";
+
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +

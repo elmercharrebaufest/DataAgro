@@ -77,6 +77,7 @@ function CreateGridInformeCompraNet() {
                     FechaDesde_Sustentable: { type: "date" },
                     FechaHasta_Sustentable: { type: "date" },
                     Pesificado: { type: "boolean" },
+                    AnulaYReemplazaContratoSAP: { type: "number" },
                 }
             }
         },
@@ -296,6 +297,8 @@ function CreateGridInformeCompraNet() {
             { field: "PosicionCBOT", type: "string", title: "Posicion" },
             { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posicion" },
             { field: "UsuarioTercero", type: "string", title: "Usuario Tercero" },
+            { field: "AnulaYReemplazaContratoSAP", type: "string", title: "Anula y reemplaza" },
+            { field: "Cesion", type: "string", title: "Cesion", template: function (dataItem) { return dataItem.Cesion ? "Si" : "No"; } },
 
         ],
         excelExport: function (e) {
@@ -357,6 +360,8 @@ function CreateGridInformeCompraNet() {
                     row.cells[46].value = templatePesificado(dataItem);
                     row.cells[48].value = templateSIO(dataItem);
                     row.cells[49].value = templateTrigoEsp(dataItem);
+                    row.cells[66].value = row.cells[66].value ? "Si" : "";
+
                 }
             },
         pageable: {

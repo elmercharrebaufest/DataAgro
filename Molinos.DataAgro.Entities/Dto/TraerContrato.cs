@@ -215,6 +215,26 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ObligatoriedadCostoFinancieroDesc { get; set; }
         public DateTime? FechaCiertaHasta { get; set; }
         public bool FechaCiertaTilde { get; set; }
+        public int? AnulaYReemplazaContratoId { get; set; }
+        public string AnulaYReemplazaContratoSAP { get; set; }
+        public string MotivoReemplazo { get; set; }
+        public int? ProcedenciaVentaId { get; set; }
+        public int? CamaraId { get; set; }
+        public int? ComisionAFavorId { get; set; }
+        public decimal? PorcentajeComisionVenta { get; set; }
+        public string FleteACargo { get; set; }
+        public string KgBalanza { get; set; }
+        public int? CondicionDePagoDiaPesificado { get; set; }
+        public string CondicionDePagoTipoPesificado { get; set; }
+        public int? CondicionDePagoPesificadoVentaId { get; set; }
+        public string Pago { get; set; }
+        public int? CondicionDePagoDiaFijacion { get; set; }
+        public string CondicionDePagoTipoFijacion { get; set; }
+        public int? CondicionDePagoFijacionVentaId { get; set; }
+        public int? ProvinciaVentaId { get; set; }
+        public string ProvinciaVenta { get; set; }
+        public string LocalidadVenta { get; set; }
+        public int? CreditoDisponible { get; set; }
     }
 
     public class StoredPorContratoResult

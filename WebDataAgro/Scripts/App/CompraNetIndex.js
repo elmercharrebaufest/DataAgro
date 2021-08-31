@@ -417,7 +417,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.ObligatoriedadCostoFinanciero + "'" + ',' +
         "'" + dataItem.PosicionCBOT + "'" + ',' +
         "'" + dataItem.TipoPosicionCBOT + "'" + ',' +
-        "'" + dataItem.ProveedorCreador + "'" +
+        "'" + dataItem.ProveedorCreador + "'" + ',' +
+        "'" + dataItem.Cesion + "'" +
 
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
@@ -879,7 +880,7 @@ function CreateGridInformeCompraNet() {
                     ]
                 }, title: "Tipo", width: 70, attributes: {
                     "class": "mobile-sm"
-                }
+                }, template: "#if(AnulaYReemplazaContratoId != null){# <i class='fa fa-recycle fa-2x'></i> &nbsp;#}##=TipoNegocio#"
             },
             {
                 field: "Material", type: "string", filterable: {
@@ -1998,7 +1999,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
-    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador) {
+    Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
+    Cesion) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2521,6 +2523,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#ventaId").text("Si");
     } else {
         $("#ventaDiv").hide();
+    }
+    if (Cesion == "true") {
+        $("#CesionDiv").show();
+        $("#CesionId").text("Si");
+    } else {
+        $("#CesionDiv").hide();
     }
 }
 

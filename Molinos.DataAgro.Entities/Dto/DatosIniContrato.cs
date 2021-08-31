@@ -33,6 +33,21 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<MotivoAnteriorQry> MotivoAnterior { get; set; }
         public List<TipoPosicionCBOTQry> TipoPosicionCBOT { get; set; }
 
+        public List<CamaraQry> Camara { get; set; }
+        public List<ComisionAFavorQry> ComisionAFavor { get; set; }
+        public List<CondicionDePagoVentaQry> CondicionDePagoFijacionVenta { get; set; }
+        public List<CondicionDePagoVentaQry> CondicionDePagoPesificadoVenta { get; set; }
+
+        public List<FleteACargoQry> FleteACargo { get; set; }
+        public List<KgBalanzaQry> KgBalanza { get; set; }
+        public List<PagoQry> Pago { get; set; }
+        public List<CondicionPagoQry> CondicionPago { get; set; }
+
+
+        
+      
+        
+        
         public DatosIniContrato()
         {
             moneda = new List<MonedaQry>();
@@ -56,7 +71,15 @@ namespace Molinos.DataAgro.Entities.Dto
             TipoAgenteCompra = new List<TipoAgenteCompraQry>();
             Zona = new List<ZonaQry>();
             NivelTarifa = new List<NivelTarifaQry>();
-        }
+            Camara = new List<CamaraQry>();
+            CondicionDePagoFijacionVenta = new List<CondicionDePagoVentaQry>();
+            CondicionDePagoPesificadoVenta = new List<CondicionDePagoVentaQry>();
+            ComisionAFavor = new List<ComisionAFavorQry>();
+            FleteACargo = new List<FleteACargoQry>();
+            KgBalanza = new List<KgBalanzaQry>();
+            Pago = new List<PagoQry>();
+            CondicionPago = new List<CondicionPagoQry>();
+    }
     }
 
     public class NuevoContrato

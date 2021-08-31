@@ -284,7 +284,45 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int Id;
     }
+    public class CamaraQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
 
+    public class CondicionDePagoVentaQry
+    {
+        public int Id;
+        public string Descripcion;
+        public bool? CondicionFijacion;
+        public bool? CondicionPesificado;
+    }
+
+    public class ComisionAFavorQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
+    public class FleteACargoQry
+    {
+        public string Descripcion;
+    }
+
+    public class KgBalanzaQry
+    {
+        public string Descripcion;
+    }
+
+    public class PagoQry
+    {
+        public string Descripcion;
+    }
+
+    public class CondicionPagoQry
+    {
+        public string Descripcion;
+    }
+  
     public class RangoCombo
     {
         public int Id { get; set; }

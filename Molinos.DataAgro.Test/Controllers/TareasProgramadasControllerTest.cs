@@ -168,5 +168,14 @@ namespace Molinos.DataAgro.Test.Controllers
             cupoManagerMock.Verify(y => y.ActualizarCumplimientoCupos(It.IsAny<DateTime>()), Times.Exactly(32));
 
         }
+
+        [Test]
+        public void EnvioMailNegociosAnulaYReemplazaTest()
+        {
+            var result = target.EnvioMailNegociosAnulaYReemplaza() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
     }
 }

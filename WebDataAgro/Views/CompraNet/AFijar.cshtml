@@ -86,6 +86,20 @@
                 <input type="text" class="k-textbox" style="width:100%" id="contratoAcuerdoId" />
             </div>
         </div>
+        <div class="row ampliar esconderTercero">
+            <div class="col-sm-6">
+                <div class="col-sm-4 noPadding">
+                    <label>Anula y Reemplaza</label>
+                </div>
+                <div class="col-sm-8 noPadding" style="padding-left: 10px;">
+                    <input type="text" class="k-textbox" style="width:100%" id="contratoAReemplazarId" />
+                    <input type="hidden" id="AnulaYReemplazaContratoId" />
+                </div>
+
+                <label style="color:orange;"><b><i>Recuerde consultar con el área de Administración MP antes de utilizar esta función</i></b></label>
+            </div>
+
+        </div>
         <input type="hidden" id="estado" />
     </div>
 
@@ -680,7 +694,15 @@
                 </div>
             </div>*@
     </div>
-
+    <div class="row noFason noAgente noAcuerdo" id="MotivoReemplazoDiv" hidden>
+        <div class="col-sm-2 ">
+            <label>Motivo de reemplazo</label>
+        </div>
+        <div class="col-sm-10 col-md-9">
+            <textarea type="text" class="campo-input-text k-textbox" id="MotivoReemplazo" rows="3" maxlength="100" placeholder="Por favor aclare los cambios realizados y motivo, cantidad y precio."></textarea>
+            <img id="errMotivoReemplazo" src="~/Content/Images/error.png" style="display:none" />
+        </div>
+    </div>
     <div class="ampliar noFason noAgente noAcuerdo">
         <div id="DatosAdicionales" class="btnagregar btnAzul widthButton" type="button">
             <i class="fa fa-plus"></i> Datos adicionales
