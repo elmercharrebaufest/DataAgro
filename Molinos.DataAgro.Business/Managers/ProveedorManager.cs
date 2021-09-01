@@ -3502,7 +3502,17 @@ namespace Molinos.DataAgro.Business.Managers
                     catch (Exception e) { logger.Error(e); }
                 }
             }
-            var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+            var subject = "";
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+              subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+
+            }
+            else
+            {
+                subject = "Mail Prueba - Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+
+            }
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoVenta(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, comercialRegistrado, false));
         }
