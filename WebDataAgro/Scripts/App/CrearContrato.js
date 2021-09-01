@@ -5213,14 +5213,17 @@ function HayVenta() {
         $("#pagoCbuDiv").show();
         $(".venta").hide();
         $(".datos-venta").hide();
+
+        LimpiarValoresVenta();
+        LimpiarProcedencia();
     }
 }
 
 
 function LimpiarValoresVenta() {
+    $("#importeOperacionId").data("kendoNumericTextBox").value("");  
     $("#camaraListado").data("kendoDropDownList").value("");
     $("#comisionAFavorListado").data("kendoDropDownList").value("");
-    $("#LocalidadVenta").data("kendoDropDownList").value("");
     $("#FleteACargoListado").data("kendoDropDownList").value("");
     $("#KgBalanzaListado").data("kendoDropDownList").value("");
     $("#cantidadDiaPesificacion").data("kendoNumericTextBox").value("")
