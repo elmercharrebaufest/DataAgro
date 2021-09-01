@@ -53,6 +53,9 @@ namespace WebDataAgro.Services
         bool ProveedorApocrifo(string cuit);
         [OperationContract]
         decimal TraerTipoDeCambio(DateTime? fecha);
+
+        [OperationContract]
+        ResultadoSap ActualizarCesionContratoSAP(string contratoSAP, bool cesion);
         #endregion
     }
 }

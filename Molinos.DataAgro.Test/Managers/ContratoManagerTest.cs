@@ -4580,7 +4580,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = true, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
 
             var resultado = target.GrabarContrato(oContrato);
-            repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);            
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
             Assert.AreEqual(2, resultado.Errores.Count);
         }
@@ -4717,6 +4717,70 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, resultado.Errores.Count);
         }
 
+
+        [Test]
+        public void ActualizarCesionContratoSAPOk()
+        {
+            var oContrato = new Contrato()
+            {
+                Id = 1,
+                ContratoSAP = "0001234567",
+                ProveedorId = 1,
+                ClasificacionId = 1,
+                CorredorId = null,
+                MaterialId = 1,
+                Cantidad = 1,
+                Precio = 1000,
+                PrecioNeto = 1000,
+                TipoNegocioId = 2,
+                DestinoId = 1,
+                LocalidadId = 1,
+                ProvinciaId = 1,
+                FechaEntrega = DateTime.Now,
+                FechaOperacion = DateTime.Now.Date,
+                FechaDesde = new DateTime(2020, 02, 23),
+                FechaHasta = new DateTime(2021, 02, 23),
+                MonedaId = "ARS ",
+                CampanaId = 1,
+                ComercialId = 70,
+                EstablecimientoPropio = true,
+                BoletoId = 3,
+                StandardDeCalidadId = 1,
+                PagoDiferido = true,
+                DiasPesificado = 10,
+                Sustentable = false,
+                PorcentajeDePago = 95,
+                Descuentos = new List<DescuentoBonificacion>()
+                {
+                    new DescuentoBonificacion()
+                    {
+                        Id= 0
+                    }
+                },
+                Calidad = new List<Calidad>()
+                {
+                    new Calidad()
+                    {
+                        Id= 0,
+                    }
+                },
+                AperturaPrecio = new List<AperturaPrecio>()
+                {
+                    new AperturaPrecio()
+                    {
+                        ConceptoAperturaPrecioId= (int)EnumConceptoApertura.Redespacho,
+                        Importe = 300
+                    },
+                    new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
+                }
+            };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Contrato, bool>>>())).Returns(oContrato);
+
+            var resultado = target.ActualizarCesionContratoSAP(oContrato.ContratoSAP, false);
+            Assert.IsNotNull(resultado);
+            Assert.AreEqual(false, resultado.HayError);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
 
     }
 }

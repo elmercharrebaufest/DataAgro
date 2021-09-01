@@ -76,5 +76,6 @@ namespace Molinos.DataAgro.Interfaces
         List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId);
         List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos);
         List<CapacidadProductivaPendienteDto> ObtenerCapacidadProductivaPendiente(int proveedorId);
+        Resultado ActualizarCesionContratoSAP(string contratoSAP, bool cesion);
     }
 }

@@ -1003,6 +1003,13 @@ namespace Molinos.DataAgro.Test.Services
             var result = target.TraerTipoDeCambio(DateTime.Now.Date);
             Assert.IsNotNull(result);
         }
+
+        [Test]
+        public void ActualizarCesionContratoSAPTestOk()
+        {
+            var result = target.ActualizarCesionContratoSAP("", true) as ResultadoSap;
+            Assert.NotNull(result);
+        }
     }
 }
 

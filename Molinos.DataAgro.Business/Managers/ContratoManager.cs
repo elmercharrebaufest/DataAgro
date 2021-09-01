@@ -699,6 +699,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
             }
+
             if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
@@ -5263,5 +5264,25 @@ namespace Molinos.DataAgro.Business.Managers
             return result;
         }
 
+        public Resultado ActualizarCesionContratoSAP(string contratoSAP, bool cesion)
+        {
+            var error = new Resultado();
+            logger.Debug("Actualizando cesion contrato en BD DataAgro: " + contratoSAP);
+            var contratoSave = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP);
+            if (contratoSave == null || contratoSave.Id == 0)
+            {
+                error.Error("Contrato", "No existe contrato en DataAgro");
+                return error;
+            }
+            logger.Debug("Actualizando cesion contrato en BD DataAgro id: " + contratoSave.Id);
+
+            contratoSave.Cesion = cesion;
+
+            repositorio.GuardarCambios();
+
+            logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoSave.Id), TipoAccionLogDataAgro.Modificar, contratoSave.GetType());
+
+            return error;
+        }
     }
 }

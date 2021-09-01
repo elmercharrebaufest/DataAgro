@@ -1049,6 +1049,34 @@ namespace WebDataAgro.Services
         {
             return tipoDeCambioAgent.TraerTipoDeCambio(fecha);
         }
+
+
+        public ResultadoSap ActualizarCesionContratoSAP(string contratoSAP, bool cesion)
+        {
+            var oEntityErrors = new ResultadoSap();
+            var contrato = new Contrato();
+            try
+            {
+                logger.Debug("ActualizarCesionContratoSAP" + contratoSAP + " " + cesion.ToString());
+                Resultado resultado = contratoManager.ActualizarCesionContratoSAP(contratoSAP, cesion);
+                oEntityErrors.ListaErrores.AddRange(resultado.Errores);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+
+                oEntityErrors.ListaErrores.Add(new ErrorMessage()
+                {
+                    Message = ex.Message == "" ? (ex.InnerException != null ? ex.InnerException.Message : "") : ex.Message
+                });
+                oEntityErrors.HayError = true;
+            }
+            logger.Debug("ActualizarCesionContratoSAP RESULTADO:" + JsonConvert.SerializeObject(oEntityErrors));
+
+            oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
+            return oEntityErrors;
+        }
+
         #endregion
     }
 
