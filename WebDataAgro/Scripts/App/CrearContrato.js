@@ -5428,9 +5428,10 @@ function DeshabilitarDescuentoSobrePrecioCuandoTieneAgente() {
         $("#descuentoMonedaId").data("kendoDropDownList").enable(true);
     }
 
-    if ($("#AgenteCompraId").val() != "" && $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value() != '0') {
+    if ($("#AgenteCompraId").val() != "" && ($("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value() != '0' || $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value() != '0' )) {
         $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(0);
-        CalcularPrecioTotalApertura();
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+        GuardarAperturaDePrecio();
     }
 }
 
