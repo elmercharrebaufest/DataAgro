@@ -1395,10 +1395,14 @@ function InicializarElementos() {
                 $("#boletoFisicoId").removeAttr("disabled");
                 $("#boletoCartaId").removeAttr("disabled");
             }
+            DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
         },
         select: function () {
 
         }
+
+
+
     });
 
     $("#tipoAgenteCompraId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -2327,6 +2331,9 @@ function InicializarElementos() {
         dataValueField: "Id",
         dataBound: function () {
             this.select(0);
+        },
+        change: function () {
+            DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
         }
     });
 
@@ -3978,6 +3985,7 @@ function CargarDatosEditar(contrato, hijo) {
         }
     }
     MostrarFechaCierta();
+    DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
 }
 
 function LimpiarApertura() {
@@ -4158,6 +4166,7 @@ function InicializarAperturaDePrecios() {
 
     $("#aperturaPrecioBtn").click(function () {
         AbrirModalAperturaDePrecio();
+        DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
     });
 
     $(".aperturaPrecioInput").change(function () {
@@ -4229,7 +4238,10 @@ function InicializarAperturaDePrecios() {
         culture: "es-AR",
         format: "n2",
         spinners: false,
-        min: 0
+        min: 0,
+        change: function () {
+            DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
+        }
     });
 
     $("#aperturaPrecioImporteFinancieroId").change(function () { PonerEnCeroSiEsNulo("aperturaPrecioImporteFinancieroId"); });
@@ -4242,7 +4254,10 @@ function InicializarAperturaDePrecios() {
         format: "n2",
         spinners: false,
         min: 0,
-        max: 100
+        max: 100,
+        change: function () {
+            DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
+        }
     });
 
 
@@ -4286,6 +4301,7 @@ function AbrirModalAperturaDePrecio() {
     $("#precioAperturaOriginal").text(kendo.toString($("#precioId").val().replace(',', '.') ? Number($("#precioId").val().replace(',', '.')) : Number(0), "n2") + " " + moneda);
     CalcularPrecioTotalApertura();
     $("#modalAperturaPrecio").modal("show");
+    DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
 }
 
 function CalcularPrecioTotalApertura() {
@@ -4910,4 +4926,45 @@ function EstablecerCostoFinanciero() {
 }
 function SetearDiaPesificado() {
     $("#pesificadoDiasId").data("kendoNumericTextBox").value('');
+}
+
+function DeshabilitarDescuentoSobrePrecioCuandoTieneAgente() {
+    if ($("#TipoDBId").data("kendoDropDownList").value() == 1 && $("#AgenteCompraId").val() != "") {
+        $("#ImporteDescuentoId").prop('disabled', true);
+        $("#PorcentajeDescuentoId").prop('disabled', true);
+        $("#descuentoMonedaId").data("kendoDropDownList").enable(false);
+        LimpiarDescuentosConAgenteDeCompra();
+    } else {
+        $("#ImporteDescuentoId").prop('disabled', false);
+        $("#PorcentajeDescuentoId").prop('disabled', false);
+        $("#descuentoMonedaId").data("kendoDropDownList").enable(true);
+    } 
+    if ($("#AgenteCompraId").val() != "") {
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(0);
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+        var precioNeto = CalcularPrecioTotalApertura();
+        $("#precioTotalApertura").data("kendoNumericTextBox").value(precioNeto);
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
+        LimpiarDescuentosConAgenteDeCompra();
+    } else {
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
+    }
+}
+
+function LimpiarDescuentosConAgenteDeCompra() {
+    var iteracionesDescuentos = viewModel.Descuentos.length;
+    if (iteracionesDescuentos > 0) {
+        for (var i = 0; i < iteracionesDescuentos; i++) {
+            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 &&
+                viewModel.Descuentos[i].TipoDBId == 1) {
+                viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+            }
+        }
+    }
 }

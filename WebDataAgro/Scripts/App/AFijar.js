@@ -252,6 +252,7 @@ function InicializarElementos() {
 
             //}
             InicializarBordesRojos();
+            DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
         },
         select: function (e) {
             ObtenerAlta(e.dataItem.Id);
@@ -2255,7 +2256,7 @@ function InicializarElementos() {
         dataValueField: "Id",
         dataBound: function () {
             this.select(0);
-        }, 
+        },
         change: function () {
             DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
         }
@@ -2343,7 +2344,7 @@ function InicializarElementos() {
         culture: "es-AR",
         spinners: false,
         //change: function () { ConvertirDescuentoANegativo(); }
-    });
+    });    
 
     $("#TarifaFleteId").change(function () {
         $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
@@ -2979,7 +2980,7 @@ function AsignarDatos() {
     viewModel.set("CondicionFijacionComboModalPendiente", datosIniCrearContrato.Datos.Condicion);
     viewModel.set("StandardComboModalPendiente", datosIniCrearContrato.Datos.Standard);
     viewModel.set("MotivoComboModalPendiente", datosIniCrearContrato.Datos.MotivoAnterior);
-    viewModel.set("TipoPosicionCBOT", datosIniCrearContrato.Datos.TipoPosicionCBOT); 
+    viewModel.set("TipoPosicionCBOT", datosIniCrearContrato.Datos.TipoPosicionCBOT);
     viewModel.set("isControlDisabled", false);
 
     if ($("#tipoId").data("kendoDropDownList")) $("#tipoId").data("kendoDropDownList").value("1");
@@ -3162,6 +3163,7 @@ function AgregarDescuentos() {
             eliminarDescuento(this);
         }
     };
+ 
     if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {
         MensErr("Los descuentos generales sobre precio se deben agregar desde la apertura de precio.");
         //AbrirModalAperturaDePrecio();
@@ -3231,7 +3233,7 @@ function validarDescuento(descuento) {
                 if ((descD >= fechaD && descD < fechaH) || (descH >= fechaD && descH < fechaH)) {
                     sonIguales = true;
                     break;
-                }                
+                }
             }
 
 
@@ -3872,7 +3874,7 @@ function CargarDatosEditar(contrato, hijo) {
             p = contrato.ObservacionTercero.split("|");
             $("#visualizar_observacionTercero").text(p[0]);
         } else {
-           
+
             $(".observacionTercero").hide();
         }
 
@@ -3971,7 +3973,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#tipoId").data("kendoDropDownList").readonly(true);
         $("#motivoAnterior").data("kendoDropDownList").readonly(true);
         $("#fechaOperacionId").data("kendoDatePicker").readonly(true);
-        $("#motivoOperacionAnteriorId").attr("readonly",true);
+        $("#motivoOperacionAnteriorId").attr("readonly", true);
         $("#noInformaSioId").prop("checked", true);
         $("#noInformaSioId").attr('disabled', true);
 
@@ -3985,10 +3987,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#boletoConfirmaId").attr("disabled", true);
         $("#boletoFisicoId").attr("disabled", true);
         $("#boletoCartaId").attr("disabled", true);
-
-
-
     }
+    DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
 }
 
 function LimpiarApertura() {
@@ -4115,6 +4115,7 @@ function GuardarAperturaDePrecio() {
         }
     };
     viewModel.Descuentos.push(newdescuento);
+    DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
 
 }
 
@@ -4205,6 +4206,7 @@ function InicializarAperturaDePrecios() {
 
     $("#aperturaPrecioBtn").click(function () {
         AbrirModalAperturaDePrecio();
+        DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
     });
 
     $("#guardarAperturaPrecio").click(function () {
@@ -4862,20 +4864,38 @@ function DeshabilitarDescuentoSobrePrecioCuandoTieneAgente() {
         $("#ImporteDescuentoId").prop('disabled', true);
         $("#PorcentajeDescuentoId").prop('disabled', true);
         $("#descuentoMonedaId").data("kendoDropDownList").enable(false);
+        LimpiarDescuentosConAgenteDeCompra();
     } else {
         $("#ImporteDescuentoId").prop('disabled', false);
         $("#PorcentajeDescuentoId").prop('disabled', false);
         $("#descuentoMonedaId").data("kendoDropDownList").enable(true);
-    }
+    }  
 
-    if ($("#AgenteCompraId").val() != "" && $("#PorcentajeDescuentoAFijarId").val() != '0') {
+    if ($("#AgenteCompraId").val() != "") {
         $("#PorcentajeDescuentoAFijarId").val(0);
+        $("#PorcentajeDescuentoAFijarId").prop('disabled', true);
+        $("#PorcentajeDescuentoAFijarId").css("background-color", "lightgray");
+        LimpiarDescuentosConAgenteDeCompra();
+    } else {
+        $("#PorcentajeDescuentoAFijarId").css("background-color", "white");
+        $("#PorcentajeDescuentoAFijarId").prop('disabled', false);
     }
 }
-
-function LimpiarDatos() {
-    DeshabilitarDescuentoSobrePrecioCuandoTieneAgente()
+function LimpiarDescuentosConAgenteDeCompra() {
+    var iteracionesDescuentos = viewModel.Descuentos.length;
+    if (iteracionesDescuentos > 0) {
+        for (var i = 0; i < iteracionesDescuentos; i++) {
+            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 &&
+                viewModel.Descuentos[i].TipoDBId == 1) {
+                viewModel.Descuentos.remove(viewModel.Descuentos[i]);            
+            }
+        }
+    }
 }
+function LimpiarDatos() {
+    DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
+}
+
 
 
 
