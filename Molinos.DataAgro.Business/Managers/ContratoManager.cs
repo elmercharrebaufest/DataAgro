@@ -3413,7 +3413,6 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.FechaHasta = contrato.FechaHasta;
             contratoSave.ProveedorId = contrato.ProveedorId;
             contratoSave.MonedaId = contrato.MonedaId;
-            contratoSave.GrupoCompra = contrato.GrupoCompra;
             contratoSave.LocalidadId = contrato.LocalidadId;
             contratoSave.ProvinciaId = contrato.ProvinciaId;
             contratoSave.Base = contrato.Base;
@@ -3491,6 +3490,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.Cesion = contrato.Cesion;
 
             // no se deberian poder modificar
+            //contratoSave.GrupoCompra = contrato.GrupoCompra;
             //contratoSave.Canje = contrato.Canje;
             //contratoSave.PrestamoDevolucion = contrato.PrestamoDevolucion;
             //contratoSave.Monto = contrato.Monto;
