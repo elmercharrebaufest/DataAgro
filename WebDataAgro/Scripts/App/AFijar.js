@@ -32,6 +32,7 @@ $(document).ready(function () {
     $("#precioId").data("kendoNumericTextBox").value("");
     $("#precioTotalApertura").data("kendoNumericTextBox").value("");
     $(".precioMonedaAFijarIdDiv").show();
+    OcultarCamposAgente();
 });
 
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
@@ -1348,21 +1349,6 @@ function InicializarElementos() {
                     $("#pagoCbuId").show();
                 }
             }
-            //if (this.value() == "" && ($("#tipoId").val() == "2")) {
-            //    $("#chequeElectronicoDiv").show();
-            //    $("#pagoCbuDiv").show();
-            //}
-            //if (this.value() >= 1) {
-            //    $("#chequeElectronicoInput").prop("checked", false);
-            //    $("#chequeElectronicoDiv").hide();
-            //    $("#pagoCbuDiv").hide();
-            //    $("#chequeElectronico").prop("checked", false);
-            //    $("#chequeElectronicoId").hide();
-            //    $("#pagoCbuId").hide();
-            //    $("#pagoCbu").val("");
-            //    $("#pagoCbuInput").val("");
-            //}
-            OcultarCamposAgente();
             if (this.value() == 1) {
                 $("#boletoNingunoId").prop("checked", false);
                 $("#boletoNingunoId").click();
@@ -1378,6 +1364,7 @@ function InicializarElementos() {
                 $("#boletoCartaId").removeAttr("disabled");
             }
             DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
+            OcultarCamposAgente();
         }
     });
 
@@ -3864,6 +3851,7 @@ function CargarDatosEditar(contrato, hijo) {
             $("#boletoConfirmaId").attr("disabled", true);
             $("#boletoFisicoId").attr("disabled", true);
             $("#boletoCartaId").attr("disabled", true);
+            $(".ocultarAgenteDiv").show();
         } else {
             OcultarCamposAgente();
         }
@@ -4915,11 +4903,49 @@ function DeshabilitarDescuentoSobrePrecioCuandoTieneAgente() {
         $("#PorcentajeDescuentoAFijarId").prop('disabled', true);
         $("#PorcentajeDescuentoAFijarId").css("background-color", "lightgray");
         LimpiarDescuentosConAgenteDeCompra();
+
+        var Financiero = {
+            Id: 0,
+            ConceptoAperturaPrecioId: 1,
+            Importe: $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value()
+        };
+        var Redespacho = {
+            Id: 0,
+            ConceptoAperturaPrecioId: 2,
+            Importe: $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value()
+        };
+        var Comisiones = {
+            Id: 0,
+            ConceptoAperturaPrecioId: 3,
+            Importe: $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(),
+            Porcentaje: Number($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value())
+        };
+        var Bonificaciones = {
+            Id: 0,
+            ConceptoAperturaPrecioId: 4,
+            Importe: $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(),
+            Porcentaje: Number($("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value())
+        };
+        var Basis = {
+            Id: 0,
+            ConceptoAperturaPrecioId: 5,
+            Importe: $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value()
+        };
+
+        viewModel.AperturaPrecio = [];
+        viewModel.AperturaPrecio.push(Financiero);
+        viewModel.AperturaPrecio.push(Redespacho);
+        viewModel.AperturaPrecio.push(Comisiones);
+        viewModel.AperturaPrecio.push(Bonificaciones);
+        viewModel.AperturaPrecio.push(Basis);
     } else {
         $("#PorcentajeDescuentoAFijarId").css("background-color", "white");
         $("#PorcentajeDescuentoAFijarId").prop('disabled', false);
     }
+
+    
 }
+
 function LimpiarDescuentosConAgenteDeCompra() {
     var iteracionesDescuentos = viewModel.Descuentos.length;
     if (iteracionesDescuentos > 0) {

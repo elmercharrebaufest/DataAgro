@@ -965,7 +965,7 @@ function MostrarCcPpPendientesAplicar() {
 }
 
 function OcultarCamposAgente() {
-    if ($("#AgenteCompraId").data("kendoDropDownList").value() == "" && ($("#tipoId").data("kendoDropDownList").value() == "2") || $("#tipoId").data("kendoDropDownList").value() == "1") {
+    if ($("#AgenteCompraId").data("kendoDropDownList").value() == "" && ($("#tipoId").data("kendoDropDownList").value() == "2" || $("#tipoId").data("kendoDropDownList").value() == "1")) {
         $(".ocultarAgenteDiv").hide();
         $("#caratulaExtensionId").val("");
         $("#caratulaMATId").val("");

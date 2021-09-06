@@ -1344,10 +1344,10 @@ function SeleccionarElementos() {
 
 function editarContrato(id, tipoId, siguientes) {
     var result = MSExecuteOnServer('/CompraNet/ValidarModificarFinalizado', { id: id });
-    if (ExistsErrorMessages(result)) {
-        MensErr(result);
-    } else {
+    if ((result.Status == "" || result.Status == null) && result.NumeroSio == 0) {
         window.location.href = window.location.origin + "/CompraNet/CrearContrato?id=" + id + '&tipoId=' + tipoId + (siguientes != undefined ? "&siguientes=" + JSON.stringify(siguientes) : "");
+    } else {
+        MensErr("El contrato ya no se encuentra en slip o fue informado a SIO granos");
     }
 }
 
@@ -2228,7 +2228,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     console.log(tipo, contrato, id);
     if (tipo == "AGENTE DE COMPRAS" || tipo == "FASON" || tipo == "FIJACION" || tipo == "FIJACION CANJE") {
         datos = MSExecuteOnServer('/CompraNet/TraerCalidadesPorContrato', { contratoId: contrato, acuerdoId: id });
-    } else if (tipo == "CONTRATO ACUERDO") {
+    } else if (tipo == "CONTRATO ACUERDO" || tipo == 'ACUERDO AGENTE') {
         datos = MSExecuteOnServer('/CompraNet/TraerDatosDeContratoAcuerdo', { contratoId: id });
 
     } else if (tipo != 'FIJACION VIRTUAL') {

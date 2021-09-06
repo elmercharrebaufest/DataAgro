@@ -122,6 +122,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CondicionDePagoPesificadoVentaId { get; set; }
         public bool? Cesion { get; set; }
 
+
+
+        public string CaratulaMAT { get; set; }
+        public decimal? PrecioAjusteComision { get; set; }
+        public string MonedaAjusteComisionId { get; set; }
+
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }

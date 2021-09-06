@@ -549,11 +549,11 @@ namespace Molinos.DataAgro.Business
             {
                 oEntityErrors.Error("Dolarizado", "Se debe completar Dolarizado si completó Fecha límite .");
             }
-            if (oContratoAcuerdo.FechaCierta != null && oContratoAcuerdo.PagoDiferido == true )
+            if (oContratoAcuerdo.FechaCierta != null && oContratoAcuerdo.PagoDiferido == true)
             {
                 oEntityErrors.Error("", "Los campos fecha cierta y pago diferido son excluyentes");
             }
-           
+
             var conceptoFinanciero = oContratoAcuerdo.AperturaPrecio != null ?
                 oContratoAcuerdo.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0)) : null;
             if (oContratoAcuerdo.FechaCierta == null && oContratoAcuerdo.PagoDiferido != true && conceptoFinanciero != null)
@@ -571,16 +571,16 @@ namespace Molinos.DataAgro.Business
                     oEntityErrors.Error("", "Concepto Financiero es obligatorio con el Pago Diferido");
                 }
             }
-           
+
             if (oContratoAcuerdo.Pizarra.HasValue && !oContratoAcuerdo.Pizarra.Value && oContratoAcuerdo.FechaCierta == null)
             {
                 if (!((conceptoFinanciero != null && (oContratoAcuerdo.PagoDiferido.HasValue && oContratoAcuerdo.PagoDiferido.Value) && (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value != 0)) ||
-                    (conceptoFinanciero == null && (!oContratoAcuerdo.PagoDiferido.HasValue || (oContratoAcuerdo.PagoDiferido.HasValue && !oContratoAcuerdo.PagoDiferido.Value)) 
+                    (conceptoFinanciero == null && (!oContratoAcuerdo.PagoDiferido.HasValue || (oContratoAcuerdo.PagoDiferido.HasValue && !oContratoAcuerdo.PagoDiferido.Value))
                     && (!oContratoAcuerdo.DiasPesificado.HasValue || (oContratoAcuerdo.DiasPesificado.HasValue && oContratoAcuerdo.DiasPesificado.Value == 0)))))
                 {
                     oEntityErrors.Error("", "Días de diferimiento/costo financiero es obligatorio con el pago diferido en pesos");
                 }
-            }           
+            }
 
             if (oContratoAcuerdo.Calidad != null)
             {
@@ -602,8 +602,8 @@ namespace Molinos.DataAgro.Business
                 oEntityErrors.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
             }
             var centro = repositorio.Obtener<Centro>(x => x.Id == oContratoAcuerdo.DestinoId);
-            if (/*oContratoAcuerdo.DestinoId != 13 && oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.DestinoId != 6 && oContratoAcuerdo.DestinoId != 7 &&*/ 
-                oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho 
+            if (/*oContratoAcuerdo.DestinoId != 13 && oContratoAcuerdo.DestinoId != 1 && oContratoAcuerdo.DestinoId != 6 && oContratoAcuerdo.DestinoId != 7 &&*/
+                oContratoAcuerdo.AperturaPrecio != null && !oContratoAcuerdo.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho
                 && (x.Importe != 0 || x.Porcentaje != 0)) && centro.ValidaRedespacho != false)
             {
                 oEntityErrors.Error("", "Se debe completar Redespacho en Acopios");
@@ -771,6 +771,11 @@ namespace Molinos.DataAgro.Business
                 PagoCBU = x.PagoCBU,
                 ObligatoriedadCostoFinanciero = x.ObligatoriedadCostoFinanciero,
                 FechaCierta = x.FechaCierta,
+                TipoAgenteCompraId = x.TipoAgenteCompraId,
+                TipoAgenteCompra = x.TipoAgenteCompraId == null ? "" : x.TipoAgenteCompra.Descripcion,
+                CaratulaMAT = x.CaratulaMAT,
+                PrecioAjusteComision = x.PrecioAjusteComision,
+                MonedaAjusteComisionId = x.MonedaAjusteComisionId,
             });
             return contrato;
         }
