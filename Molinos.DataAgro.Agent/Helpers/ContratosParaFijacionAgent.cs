@@ -173,8 +173,8 @@ namespace Molinos.DataAgro.Agent
                 CultureInfo provider = CultureInfo.InvariantCulture;
                 foreach (var contrato in listaContratos)
                 {
-                    var cantidad = repositorio.Listar<Negocio>( x => x.TipoNegocioId == 3 && x.Virtual != true && x.ContratoSAP == contrato.CONTRATO && x.Id != idFijacion
-                      && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum(x => x.Cantidad + (x.Ampliaciones ?? 0));
+                    var cantidad = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 3 && x.Virtual != true && x.ContratoSAP == contrato.CONTRATO && x.Id != idFijacion
+                     && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum(x => x.Cantidad + (x.Ampliaciones ?? 0));
                     var centro = repositorio.Obtener<Centro>(x => x.CodigoSap == contrato.CENTRO);
                     var calidades = new List<CalidadDto>();
                     foreach (var calidad in contrato.CALIDADES)
@@ -259,24 +259,19 @@ namespace Molinos.DataAgro.Agent
                         Bonificaciones = bonificaciones,
                         Virtual = false
                     };
+                    var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.ContratoSAP == contrato.CONTRATO && x.AnulaYReemplazaContratoId != null);
 
-                    if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)
+
+                    if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                     {
                         datosContratos.Add(contratoParaFijacion);
                     }
-                    var contratoPend = repositorio.Obtener<Contrato, BasicoContrato>(x => x.ContratoSAP == contrato.CONTRATO, 
-                        x =>new BasicoContrato {Id = x.Id,ContratoSAP = x.ContratoSAP } );
 
-                    var contratoAnulado = repositorio.Obtener<Contrato, BasicoContrato>(x => x.AnulaYReemplazaContratoId == contratoPend.Id,
-                        x => new BasicoContrato { Id = x.Id, ContratoSAP = x.ContratoSAP });
 
-                    if (contratoAnulado != null)
-                    {
-                        listaContratos = listaContratos.Where(x => x.CONTRATO != contrato.CONTRATO);
-                    }
-                  
-            }             
                     
+
+                }
+
             }
             catch (Exception e)
             {
