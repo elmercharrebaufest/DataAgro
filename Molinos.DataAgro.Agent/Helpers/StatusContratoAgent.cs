@@ -22,11 +22,11 @@ namespace Molinos.DataAgro.Agent
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
-        public string ValidarEstado(string contratoSap)
+        public EstadoSAPDto ValidarEstado(string contratoSap)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return "";
+                return new EstadoSAPDto { Status = "", NumeroSio = 0 };
             }
             else
             {
@@ -58,14 +58,20 @@ namespace Molinos.DataAgro.Agent
                     long.TryParse(valor.EX_NUM_SIO, out numsio);
                     logger.Debug("valor.EX_STATUS: ." + valor.EX_STATUS + ".");
                     logger.Debug("numsio: ." + numsio + ".");
-                    if (string.IsNullOrEmpty(valor.EX_STATUS) && numsio == 0)
+                    var estado = new EstadoSAPDto()
                     {
-                        return "";
-                    }
-                    else
-                    {
-                        return "El contrato ya no se encuentra en slip o fue informado a SIO granos";
-                    }
+                        NumeroSio = numsio,
+                        Status = valor.EX_STATUS
+                    };
+                    return estado;
+                    //if (string.IsNullOrEmpty(valor.EX_STATUS) && numsio == 0)
+                    //{
+                    //    return "";
+                    //}
+                    //else
+                    //{
+                    //    return "El contrato ya no se encuentra en slip o fue informado a SIO granos";
+                    //}
 
                 }
                 catch (Exception e)
@@ -75,6 +81,6 @@ namespace Molinos.DataAgro.Agent
                 }
             }
         }
-
+      
     }
 }

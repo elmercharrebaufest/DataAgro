@@ -2808,7 +2808,7 @@ namespace Molinos.DataAgro.Test.Managers
                 ContratoSAP = "23422343"
             };
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContratoBase);
-            status.Setup(x => x.ValidarEstado(oContratoBase.ContratoSAP)).Returns("");
+            status.Setup(x => x.ValidarEstado(oContratoBase.ContratoSAP)).Returns(new EstadoSAPDto{ NumeroSio = 0, Status = "OK"});
             var resultado = target.PreAnularContrato(1, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -2849,7 +2849,7 @@ namespace Molinos.DataAgro.Test.Managers
                 ContratoSAP = "23422343"
             };
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContratoBase);
-            status.Setup(x => x.ValidarEstado(oContratoBase.ContratoSAP)).Returns("El contrato ya no se encuentra en slip o fue informado a SIO granos");
+            status.Setup(x => x.ValidarEstado(oContratoBase.ContratoSAP)).Returns(new EstadoSAPDto { NumeroSio = 0, Status = "OK" });
             var resultado = target.PreAnularContrato(1, "");
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
@@ -2971,6 +2971,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContratoBase);
             eliminarContratoAgentMock.Setup(x => x.Eliminar(oContratoBase)).Returns("");
+            status.Setup(x => x.ValidarEstado(It.IsAny<string>())).Returns(new EstadoSAPDto { NumeroSio = 0, Status = "" });
             var resultado = target.AnularContratoPreAnulado(1, "");
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Calidad, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Calidad>());
@@ -3021,7 +3022,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Apellido = "Melgarejo"
             };
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContratoBase);
-            status.Setup(x => x.ValidarEstado(It.IsAny<string>())).Returns("");
+            status.Setup(x => x.ValidarEstado(It.IsAny<string>())).Returns(new EstadoSAPDto { NumeroSio = 0, Status = "OK" });
             eliminarContratoAgentMock.Setup(x => x.Eliminar(It.IsAny<Contrato>())).Returns("Error SIO");
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
                 Returns(new List<Comercial>() { comercial });
@@ -3873,7 +3874,7 @@ namespace Molinos.DataAgro.Test.Managers
                   ContratoSAP = "23443",
                   Estado = 5
               });
-            status.Setup(x => x.ValidarEstado(It.IsAny<string>())).Returns("Ok");
+            status.Setup(x => x.ValidarEstado(It.IsAny<string>())).Returns(new EstadoSAPDto { NumeroSio = 0, Status = "OK" });
             var res = target.ValidarStatus(It.IsAny<int>());
             Assert.NotNull(res);
             status.Verify(x => x.ValidarEstado(It.IsAny<string>()), Times.Once);

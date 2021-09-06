@@ -51,7 +51,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult ActualizarContratoFinalizado(Contrato contrato);
         List<ContratoIdDto> TraerContratosSAP(string desde, string hasta);
         RangoPrecioDto ObtenerRangoDePrecios(int materialId, string monedaId);
-        string ValidarStatus(int contratoId);
+        EstadoSAPDto ValidarStatus(int contratoId);
         GrabarContratoResult PreAnularContrato(int contratoId, string motivo);
         GrabarContratoResult RechazarPreAnularContrato(int contratoId/*, string motivoRechazo*/);
         GrabarContratoResult ReconfirmarFinalizado(int contratoId, string mailComercial);
@@ -77,5 +77,6 @@ namespace Molinos.DataAgro.Interfaces
         List<GrabarContratoResult> GrabarContratoMasivo(List<BasicoContrato> contratos);
         List<CapacidadProductivaPendienteDto> ObtenerCapacidadProductivaPendiente(int proveedorId);
         Resultado ActualizarCesionContratoSAP(string contratoSAP, bool cesion);
+        Resultado ValidacionesAnulaYReemplaza(string contratoSap);
     }
 }

@@ -1854,7 +1854,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var res = status.ValidarEstado(oContratoSave.ContratoSAP);
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado) && String.IsNullOrEmpty(res))
+            var estado = (string.IsNullOrEmpty(res.Status) && res.NumeroSio == 0) ? "" : "El contrato ya no se encuentra en slip o fue informado a SIO granos";
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado) && String.IsNullOrEmpty(estado))
             {
                 try
                 {
@@ -1873,7 +1874,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oEntityErrors.Error("", res);
+                oEntityErrors.Error("", estado);
             }
 
             return oEntityErrors;
@@ -1916,8 +1917,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
             var res = status.ValidarEstado(oContratoSave.ContratoSAP);
-
-            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && String.IsNullOrEmpty(res))
+            var estado = (string.IsNullOrEmpty(res.Status) && res.NumeroSio == 0) ? "" : "El contrato ya no se encuentra en slip o fue informado a SIO granos";
+            if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && String.IsNullOrEmpty(estado))
             {
                 var respuesta = oEliminarContratoAgent.Eliminar(oContratoSave);
                 if (respuesta.Contains("Error"))
@@ -1959,7 +1960,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                oEntityErrors.Error("", res);
+                oEntityErrors.Error("", estado);
             }
 
             return oEntityErrors;
@@ -3673,9 +3674,9 @@ namespace Molinos.DataAgro.Business.Managers
                 });
         }
 
-        public string ValidarStatus(int contratoId)
+        public EstadoSAPDto ValidarStatus(int contratoId)
         {
-            var resultado = "";
+            var resultado = new EstadoSAPDto();
             var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, x => new BasicoContrato()
             {
                 ContratoSAP = x.ContratoSAP,
@@ -3686,10 +3687,8 @@ namespace Molinos.DataAgro.Business.Managers
                 if (contrato.Estado == 5)
                 {
                     resultado = status.ValidarEstado(contrato.ContratoSAP);
-                    if (!String.IsNullOrEmpty(resultado))
-                    {
-                        return resultado;
-                    }
+                    return resultado;
+                    
                 }
             }
 
@@ -5282,6 +5281,25 @@ namespace Molinos.DataAgro.Business.Managers
 
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoSave.Id), TipoAccionLogDataAgro.Modificar, contratoSave.GetType());
 
+            return error;
+        }
+
+        public Resultado ValidacionesAnulaYReemplaza(string contratoSap)
+        {
+            var error = new Resultado();
+            var fijacionesDeAfijar = repositorio.Listar<FijacionDePrecioContrato>(x => x.ContratoSAP == contratoSap).ToList();
+            var contratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contratoSap, x => x.Id);
+            var contratoAnulado = repositorio.Obtener<Contrato>(x => x.AnulaYReemplazaContratoId == contratoId);
+            if(contratoAnulado != null)
+            {
+                error.Error("Contrato", "Este contrato ya ha sido anulado y reemplazado");
+                return error;
+            }
+            if (fijacionesDeAfijar.Count > 0)
+            {
+                error.Error("Contrato A fijar", "El contrato A fijar seleccionado tiene hechas fijaciones, en caso de querer continuar con esta anulación, por favor comunicarse con administración");
+                return error;
+            }
             return error;
         }
     }

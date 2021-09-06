@@ -60,92 +60,107 @@ function InicializarAutocompletar() {
         $("#contratoAReemplazarId").data("kendoAutoComplete").trigger("change");
         $("#MotivoReemplazoDiv").hide();
         $("#MotivoReemplazo").val("");
+        $("#tipoId").data("kendoDropDownList").readonly(false);
+        $("#motivoAnterior").data("kendoDropDownList").readonly(false);
+        $("#fechaOperacionId").data("kendoDatePicker").enable(false);
+        $("#fechaOperacionId").data("kendoDatePicker").value(new Date());
+        $("#descripcionMotivoAnterior").attr("readonly", false);
+        $("#noInformaSioId").prop("checked", false);
+        $("#noInformaSioId").attr('disabled', false);
+        $("#boletoNingunoId").attr("disabled", false);
+        $("#boletoNingunoId").prop("checked", false);
+        $("#boletoConfirmaId").prop("checked", false);
+        $("#boletoFisicoId").prop("checked", false);
+        $("#boletoCartaId").prop("checked", false);
+        $("#boletoConfirmaId").attr("disabled", false);
+        $("#boletoFisicoId").attr("disabled", false);
+        $("#boletoCartaId").attr("disabled", false);    
     });
 
-    $("#contratoAReemplazarId").kendoAutoComplete({
-        template: function (data) {
-            if ($(window).width() > 768) {
-                return '<p class="buscar-nomb">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
-            } else {
-                return '<p class="buscar-nomb letra650">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + '</p>';
-            }
-        },
-        minLength: 3,
-        enforceMinLength: true,
-        dataTextField: "ContratoSap",
-        dataValueField: "Id",
-        autoWidth: true,
-        select: function (e) {
-            CargarCopiaContrato(e.dataItem.Id, "anulayreemplaza");
-        },
-        dataSource: {
-            serverFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/CompraNet/ObtenerContratosParaCopiar"
-                },
-                parameterMap: function (data, type) {
-                    var valor = $("#contratoAReemplazarId").val();
-                    return { filtro: valor };
-                }
-            }
-        },
-        filtering: function (e) {
-            if (!e.filter.value) {
-                e.preventDefault();
+$("#contratoAReemplazarId").kendoAutoComplete({
+    template: function (data) {
+        if ($(window).width() > 768) {
+            return '<p class="buscar-nomb">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
+        } else {
+            return '<p class="buscar-nomb letra650">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + '</p>';
+        }
+    },
+    minLength: 3,
+    enforceMinLength: true,
+    dataTextField: "ContratoSap",
+    dataValueField: "Id",
+    autoWidth: true,
+    select: function (e) {
+        CargarCopiaContrato(e.dataItem.Id, "anulayreemplaza");
+    },
+    dataSource: {
+        serverFiltering: true,
+        serverPaging: true,
+        transport: {
+            read: {
+                type: 'post',
+                dataType: 'json',
+                url: "/CompraNet/ObtenerContratosParaCopiar"
+            },
+            parameterMap: function (data, type) {
+                var valor = $("#contratoAReemplazarId").val();
+                return { filtro: valor };
             }
         }
-    });
+    },
+    filtering: function (e) {
+        if (!e.filter.value) {
+            e.preventDefault();
+        }
+    }
+});
 
 
-    $("#contratoAcuerdoId").click(function () {
-        $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
-        $("#contratoAcuerdoId").data("kendoAutoComplete").trigger("change");
-    });
+$("#contratoAcuerdoId").click(function () {
+    $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
+    $("#contratoAcuerdoId").data("kendoAutoComplete").trigger("change");
+});
 
-    $("#contratoAcuerdoId").kendoAutoComplete({
-        template: function (data) {
-            if ($(window).width() > 768) {
-                return '<p class="buscar-nomb">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
-            } else {
-                return '<p class="buscar-nomb letra650">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>'
-            }
-        },
-        minLength: 1,
-        enforceMinLength: true,
-        dataTextField: "Id",
-        dataValueField: "Id",
-        autoWidth: true,
-        change: function () {
+$("#contratoAcuerdoId").kendoAutoComplete({
+    template: function (data) {
+        if ($(window).width() > 768) {
+            return '<p class="buscar-nomb">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
+        } else {
+            return '<p class="buscar-nomb letra650">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>'
+        }
+    },
+    minLength: 1,
+    enforceMinLength: true,
+    dataTextField: "Id",
+    dataValueField: "Id",
+    autoWidth: true,
+    change: function () {
 
-        },
-        select: function (e) {
-            CargarCopiaContrato(e.dataItem.Id, "acuerdo");
-        },
-        dataSource: {
-            serverFiltering: true,
-            serverPaging: true,
-            transport: {
-                read: {
-                    type: 'post',
-                    dataType: 'json',
-                    url: "/CompraNet/ObtenerContratosAcuerdo"
-                },
-                parameterMap: function (data, type) {
-                    var valor = $("#contratoAcuerdoId").val();
-                    return { filtro: valor };
-                }
-            }
-        },
-        filtering: function (e) {
-            if (!e.filter.value) {
-                e.preventDefault();
+    },
+    select: function (e) {
+        CargarCopiaContrato(e.dataItem.Id, "acuerdo");
+    },
+    dataSource: {
+        serverFiltering: true,
+        serverPaging: true,
+        transport: {
+            read: {
+                type: 'post',
+                dataType: 'json',
+                url: "/CompraNet/ObtenerContratosAcuerdo"
+            },
+            parameterMap: function (data, type) {
+                var valor = $("#contratoAcuerdoId").val();
+                return { filtro: valor };
             }
         }
-    });
+    },
+    filtering: function (e) {
+        if (!e.filter.value) {
+            e.preventDefault();
+        }
+    }
+});
 }
 
 function CargarCopiaContrato(contratoId, tipo) {
@@ -172,9 +187,21 @@ function CargarCopiaContrato(contratoId, tipo) {
         }
         if (tipo == "anulayreemplaza") {
             var datosStatus = { id: contratoId };
-            status = MSExecuteOnServer('/CompraNet/ValidarModificarFinalizado', datosStatus, function () { $.unblockUI(); });
-            if (status == "") {
-                MensErr("El contrato aún no ha sido confirmado en SAP, intente editarlo desde la pantalla de CompraNet");
+            var validaciones = MSExecuteOnServer('/CompraNet/ValidacionesAnulaYReemplaza', { contratoSap: contratoCopia.ContratoSAP }, function () { $.unblockUI(); });
+            if (validaciones.ListaErrores.length > 0) {
+                MensErr(validaciones.Errores[0].Message);
+                $("#AnulaYReemplazaContratoId").val("");
+                $("#contratoAReemplazarId").val("");
+                return;
+            }
+            var status = MSExecuteOnServer('/CompraNet/ValidarModificarFinalizado', datosStatus, function () { $.unblockUI(); });
+            if (status.Status == "OK") {
+                MensErr("El contrato aún no ha sido confirmado en SAP y no tiene número de SIO, intente editarlo desde la pantalla de CompraNet");
+                $("#AnulaYReemplazaContratoId").val("");
+                $("#contratoAReemplazarId").val("");
+                return;
+            } else if (status.NumeroSio > 0) {
+                MensErr("El contrato tiene número de SIO Granos, en caso de querer continuar esta anulación, por favor comunicarse con administración");
                 $("#AnulaYReemplazaContratoId").val("");
                 $("#contratoAReemplazarId").val("");
                 return;

@@ -156,7 +156,7 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult ValidarModificarFinalizado(int? id)
         {
-            var resultado = id.HasValue ? mobjContratoManager.ValidarStatus(id.Value) : "";
+            var resultado = id.HasValue ? mobjContratoManager.ValidarStatus(id.Value) : new EstadoSAPDto();
             return Json(resultado);
         }
         [Autorizacion(PermisosDataAgro.NuevoNegocioExterno, PermisosDataAgro.ModificarNegocioExterno)]
@@ -1151,6 +1151,11 @@ namespace WebDataAgro.Controllers
         {
             ResultadoDevolverKilosPendientesAnularFijacionCanjeDto kilos = mobjFijacionDePrecioContratoManager.DevolverKilosPendientesAnularFijacionCanje(id);
             return Json(kilos, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ValidacionesAnulaYReemplaza(string contratoSap)
+        {
+            var tieneFijaciones = mobjContratoManager.ValidacionesAnulaYReemplaza(contratoSap);
+            return Json(tieneFijaciones, JsonRequestBehavior.AllowGet);
         }
     }
 }

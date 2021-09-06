@@ -264,7 +264,15 @@ namespace Molinos.DataAgro.Agent
                     {
                         datosContratos.Add(contratoParaFijacion);
                     }
-                }
+                    var contratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contrato.CONTRATO, x => x.Id);
+                    var contratoAnulado = repositorio.Obtener<Contrato>(x => x.AnulaYReemplazaContratoId == contratoId && x.EstadoId == 5);
+                    if (contratoAnulado != null)
+                    {
+                        listaContratos = listaContratos.Where(x => x.CONTRATO != contratoAnulado.ContratoSAP);
+                    }
+                  
+            }             
+                    
             }
             catch (Exception e)
             {

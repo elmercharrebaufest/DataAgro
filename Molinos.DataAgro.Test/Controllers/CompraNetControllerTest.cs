@@ -1068,13 +1068,13 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ValidarModificarFinalizadoTest()
         {
             contratoManagerMock.Setup(x => x.ValidarStatus(It.IsAny<int>()))
-                .Returns("");
+                .Returns(new EstadoSAPDto { NumeroSio = 0, Status = "OK" });
             var result = target.ValidarModificarFinalizado(1);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             contratoManagerMock.Verify(x => x.ValidarStatus(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Status\":\"OK\",\"NumeroSio\":0},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
 

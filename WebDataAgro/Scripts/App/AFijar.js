@@ -1041,6 +1041,9 @@ function InicializarElementos() {
                 $("#motivoTexto").show();
                 if (!$("#AnulaYReemplazaContratoId").val() > 0) {
                     $("#motivoOperacionAnteriorId").val("");
+                    $("#descripcionMotivoAnterior").val("");
+                } else {
+                    $("#descripcionMotivoAnterior").val("Anula y reemplaza" + $("#AnulaYReemplazaContratoId").val());
                 }
             } else {
                 $("#motivoTexto").hide();
@@ -1708,6 +1711,11 @@ function InicializarElementos() {
                 $("#fechaOperacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorId").val("");
                 //$("#noInformaSioId").attr("disabled", false);
+            }
+            if ($("#AnulaYReemplazaContratoId").val() > 0) {
+                $("#motivoAnterior").data("kendoDropDownList").text("Otro");
+                $("#motivoAnterior").data("kendoDropDownList").trigger("change");
+                $("#descripcionMotivoAnterior").val("Anula y reemplaza " + $("#contratoAReemplazarId").val());
             }
         }
     });
@@ -3972,8 +3980,36 @@ function CargarDatosEditar(contrato, hijo) {
 
         $("#tipoId").data("kendoDropDownList").readonly(true);
         $("#motivoAnterior").data("kendoDropDownList").readonly(true);
-        $("#fechaOperacionId").data("kendoDatePicker").readonly(true);
-        $("#motivoOperacionAnteriorId").attr("readonly", true);
+
+        var hoy = new Date();
+        var fechaContrato = FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado));
+        $("#fechaOperacionId").data("kendoDatePicker").setOptions({
+            month: {
+                content: '# if((data.date.getFullYear() == ' + hoy.getFullYear()
+                    + '&& data.date.getMonth() == ' + hoy.getMonth()
+                    + '&& data.date.getDate() == ' + hoy.getDate() + ')'
+                    + '|| (data.date.getFullYear() == ' + fechaop.getFullYear()
+                    + '&& data.date.getMonth() == ' + fechaop.getMonth()
+                    + '&& data.date.getDate() == ' + fechaop.getDate() + ')' +
+                    ') { #' +
+                    '#= data.value #' +
+                    '# } else { #' +
+                    '<div class="disabledDay">#= data.value #</div>' +
+                    '# } #'
+            }
+        });
+        var dateView = $("#fechaOperacionId").data("kendoDatePicker").dateView;
+        dateView._calendar();
+        var calendar = dateView.calendar;
+        calendar.bind("navigate", function () {
+            $(".disabledDay").parent().removeClass("k-link")
+            $(".disabledDay").parent().removeAttr("href")
+        });
+
+        $("#fechaOperacionId").val(fechaContrato);
+        $("#fechaOperacionId").data("kendoDatePicker").enable(true);
+        $("#descripcionMotivoAnterior").attr("readonly", true);
+
         $("#noInformaSioId").prop("checked", true);
         $("#noInformaSioId").attr('disabled', true);
 
@@ -3989,6 +4025,9 @@ function CargarDatosEditar(contrato, hijo) {
         $("#boletoCartaId").attr("disabled", true);
     }
     DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
+    if (contrato.TipoNegocioId != 1) {
+        $("#tipoId").data("kendoDropDownList").trigger("change");
+    }
 }
 
 function LimpiarApertura() {

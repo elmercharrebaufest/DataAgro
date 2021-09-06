@@ -1057,12 +1057,11 @@ function InicializarElementos() {
         dataValueField: "Id",
         change: function () {
             if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro") {
-                $("#motivoTexto").show();
+
                 if (!$("#AnulaYReemplazaContratoId").val() > 0) {
                     $("#motivoOperacionAnteriorId").val("");
-                }
-            } else {
-                $("#motivoTexto").hide();
+                    $("#descripcionMotivoAnterior").val("");
+                } 
             }
         },
         select: function () {
@@ -1769,6 +1768,10 @@ function InicializarElementos() {
         format: "dd-MM-yyyy",
         max: new Date(),
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+        open: function (e) {
+            $(".disabledDay").parent().removeClass("k-link")
+            $(".disabledDay").parent().removeAttr("href")
+        },
         change: function () {
             var hoy = new Date();
             var anio = hoy.getFullYear();
@@ -1791,6 +1794,12 @@ function InicializarElementos() {
                 $("#fechaOperacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorId").val("");
                 //$("#noInformaSioId").attr("disabled", false);              
+            }
+
+            if ($("#AnulaYReemplazaContratoId").val() > 0) {
+                $("#motivoAnterior").data("kendoDropDownList").text("Otro");
+                $("#motivoAnterior").data("kendoDropDownList").trigger("change");
+                $("#descripcionMotivoAnterior").val("Anula y reemplaza " + $("#contratoAReemplazarId").val());
             }
         }
     });
@@ -4320,14 +4329,45 @@ function CargarDatosEditar(contrato, hijo) {
     }
     if (contrato.AnulaYReemplazaContratoId) {
         $("#AnulaYReemplazaContratoId").val(contrato.AnulaYReemplazaContratoId);
-        $("#contratoAReemplazarId").val(contrato.contratoAReemplazarId);
+        $("#contratoAReemplazarId").val(contrato.AnulaYReemplazaContratoSAP);
         $("#MotivoReemplazoDiv").show();
         $("#MotivoReemplazo").val(contrato.MotivoReemplazo);
 
         $("#tipoId").data("kendoDropDownList").readonly(true);
         $("#motivoAnterior").data("kendoDropDownList").readonly(true);
-        $("#fechaOperacionId").data("kendoDatePicker").readonly(true);
-        $("#motivoOperacionAnteriorId").attr("readonly", true);
+        if (contrato.FechaOperacionFormateado != null) {          
+            var hoy = new Date();
+            var fechaContrato = FormatearFecha(formatearFecha(contrato.FechaOperacionFormateado));
+            $("#fechaOperacionId").data("kendoDatePicker").setOptions({
+                month: {
+                    content: '# if((data.date.getFullYear() == ' + hoy.getFullYear()
+                        + '&& data.date.getMonth() == ' + hoy.getMonth()
+                        + '&& data.date.getDate() == ' + hoy.getDate() + ')'
+                        + '|| (data.date.getFullYear() == ' + fechaop.getFullYear()
+                        + '&& data.date.getMonth() == ' + fechaop.getMonth()
+                        + '&& data.date.getDate() == ' + fechaop.getDate() + ')' +
+                        ') { #' +
+                        '#= data.value #' +
+                        '# } else { #' +
+                        '<div class="disabledDay">#= data.value #</div>' +                         
+                        '# } #'
+                }
+            });         
+            var dateView = $("#fechaOperacionId").data("kendoDatePicker").dateView;
+            dateView._calendar();
+            var calendar = dateView.calendar;
+            calendar.bind("navigate", function () {
+                $(".disabledDay").parent().removeClass("k-link") 
+                $(".disabledDay").parent().removeAttr("href") 
+            });
+
+            $("#fechaOperacionId").val(fechaContrato);
+            $("#fechaOperacionId").data("kendoDatePicker").enable(true);
+            $("#descripcionMotivoAnterior").attr("readonly", true);
+        }
+        //$("#motivoOperacionAnteriorId").attr("readonly", true);
+       
+
         $("#noInformaSioId").prop("checked", true);
         $("#noInformaSioId").attr('disabled', true);
 
@@ -4351,6 +4391,14 @@ function CargarDatosEditar(contrato, hijo) {
 
 }
 
+function compareDates(date, dates) {
+   
+    return dates.getDate() == date.getDate() &&
+        dates.getMonth() == date.getMonth() &&
+        dates.getYear() == date.getYear();          
+       
+  
+}
 function InsertarAperturasViewModelAFijar() {
     var Financiero = {
         Id: 0,
@@ -5231,7 +5279,7 @@ function HayVenta() {
 
 
 function LimpiarValoresVenta() {
-    $("#importeOperacionId").data("kendoNumericTextBox").value("");  
+    $("#importeOperacionId").data("kendoNumericTextBox").value("");
     $("#camaraListado").data("kendoDropDownList").value("");
     $("#comisionAFavorListado").data("kendoDropDownList").value("");
     $("#FleteACargoListado").data("kendoDropDownList").value("");

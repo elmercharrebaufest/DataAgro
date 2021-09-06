@@ -298,6 +298,7 @@ function CreateGridInformeCompraNet() {
             { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posicion" },
             { field: "UsuarioTercero", type: "string", title: "Usuario Tercero" },
             { field: "AnulaYReemplazaContratoSAP", type: "string", title: "Anula y reemplaza" },
+            { field: "MotivoReemplazo", type: "string", title: "Motivo" },
             { field: "Cesion", type: "string", title: "Cesion", template: function (dataItem) { return dataItem.Cesion ? "Si" : "No"; } },
 
         ],

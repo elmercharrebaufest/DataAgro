@@ -418,7 +418,9 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.PosicionCBOT + "'" + ',' +
         "'" + dataItem.TipoPosicionCBOT + "'" + ',' +
         "'" + dataItem.ProveedorCreador + "'" + ',' +
-        "'" + dataItem.Cesion + "'" +
+        "'" + dataItem.Cesion + "'" + ',' +
+        "'" + dataItem.MotivoReemplazo + "'" + ',' +
+        "'" + dataItem.AnulaYReemplazaContratoSAP + "'" +
 
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
@@ -2000,7 +2002,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
     Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
-    Cesion) {
+    Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2529,6 +2531,13 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#CesionId").text("Si");
     } else {
         $("#CesionDiv").hide();
+    }
+    if (AnulaYReemplazaContratoSAP != "" && AnulaYReemplazaContratoSAP != 'null' && MotivoReemplazo != "" && MotivoReemplazo != 'null') {
+        $("#AnulaYReemplazaDiv").show();
+        $("#AnulaYReemplazaId").text(AnulaYReemplazaContratoSAP);
+        $("#MotivoReemplazoId").text(MotivoReemplazo);
+    } else {
+        $("#AnulaYReemplazaDiv").hide();
     }
 }
 
