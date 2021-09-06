@@ -62,8 +62,9 @@ function InicializarAutocompletar() {
         $("#MotivoReemplazo").val("");
         $("#tipoId").data("kendoDropDownList").readonly(false);
         $("#motivoAnterior").data("kendoDropDownList").readonly(false);
-        $("#fechaOperacionId").data("kendoDatePicker").enable(false);
-        $("#fechaOperacionId").data("kendoDatePicker").value(new Date());
+        $("#fechaOperacionId").data("kendoDatePicker").enable(true);
+        $("#fechaOperacionId").data("kendoDatePicker").value(formatearFecha(new Date()));
+        $("#fechaOperacionId").data("kendoDatePicker").trigger("change");
         $("#descripcionMotivoAnterior").attr("readonly", false);
         $("#noInformaSioId").prop("checked", false);
         $("#noInformaSioId").attr('disabled', false);
