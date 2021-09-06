@@ -2808,7 +2808,7 @@ namespace Molinos.DataAgro.Test.Managers
                 ContratoSAP = "23422343"
             };
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContratoBase);
-            status.Setup(x => x.ValidarEstado(oContratoBase.ContratoSAP)).Returns(new EstadoSAPDto{ NumeroSio = 0, Status = "OK"});
+            status.Setup(x => x.ValidarEstado(oContratoBase.ContratoSAP)).Returns(new EstadoSAPDto{ NumeroSio = 0, Status = ""});
             var resultado = target.PreAnularContrato(1, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
