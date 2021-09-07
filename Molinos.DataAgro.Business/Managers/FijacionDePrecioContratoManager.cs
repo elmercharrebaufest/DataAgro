@@ -1210,10 +1210,18 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId)
         {
+            if (string.IsNullOrEmpty(CuitProveedor))
+            {
+                return new List<DatosFijacionDeContratoDto>();
+            }
             return oContratosParaFijacionAgent.ObtenerContratos(CuitProveedor, CuitCorredor, materialId, filtro, fijacionId);
         }
         public List<DatosFijacionDeContratoDto> TraerDatosFijacionVirtual(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId)
         {
+            if (string.IsNullOrEmpty(CuitProveedor))
+            {
+                return new List<DatosFijacionDeContratoDto>();
+            }
             return contratosParaFijacionVirtualAgent.ObtenerContratosCanje(CuitProveedor, CuitCorredor, materialId, filtro, fijacionId);
         }
 
