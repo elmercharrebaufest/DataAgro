@@ -183,8 +183,10 @@ namespace Molinos.DataAgro.Agent
                             KilosContrato = contrato.UNIME,
                             Virtual = true,
                         };
+                        var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.ContratoSAP == contrato.CONTRNUM && x.AnulaYReemplazaContratoId != null);
 
-                        if (double.Parse(contratoParaFijacion.KilosPendiente) > 0)
+
+                        if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                         {
                             datosContratos.Add(contratoParaFijacion);
                         }
