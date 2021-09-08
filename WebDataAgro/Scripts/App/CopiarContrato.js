@@ -190,9 +190,12 @@ function CargarCopiaContrato(contratoId, tipo) {
             var datosStatus = { id: contratoId };
             var validaciones = MSExecuteOnServer('/CompraNet/ValidacionesAnulaYReemplaza', { contratoSap: contratoCopia.ContratoSAP }, function () { $.unblockUI(); });
             if (validaciones.ListaErrores.length > 0) {
+                setTimeout(function () {
+                    $("#AnulaYReemplazaContratoId").val("");
+                    $("#contratoAReemplazarId").val("");
+                    $("#contratoAReemplazarId").click();
+                }, 300);
                 MensErr(validaciones.Errores[0].Message);
-                $("#AnulaYReemplazaContratoId").val("");
-                $("#contratoAReemplazarId").val("");
                 return;
             }
             var status = MSExecuteOnServer('/CompraNet/ValidarModificarFinalizado', datosStatus, function () { $.unblockUI(); });
