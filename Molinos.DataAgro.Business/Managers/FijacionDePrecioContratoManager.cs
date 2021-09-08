@@ -1210,7 +1210,8 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId)
         {
-            if (string.IsNullOrEmpty(CuitProveedor))
+            long l = 0;
+            if (string.IsNullOrEmpty(CuitProveedor) || !long.TryParse(CuitProveedor,out l))
             {
                 return new List<DatosFijacionDeContratoDto>();
             }
@@ -1218,7 +1219,9 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public List<DatosFijacionDeContratoDto> TraerDatosFijacionVirtual(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId)
         {
-            if (string.IsNullOrEmpty(CuitProveedor))
+
+            long l = 0;
+            if (string.IsNullOrEmpty(CuitProveedor) || !long.TryParse(CuitProveedor, out l))
             {
                 return new List<DatosFijacionDeContratoDto>();
             }

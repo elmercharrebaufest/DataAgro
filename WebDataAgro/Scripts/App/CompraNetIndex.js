@@ -179,7 +179,7 @@ $(document).ready(function () {
 
 });
 function htmlEncode(value) {
-    return $('<div/>').text(value.replace(/(\r\n|\n|\r)/gm, "")).html();
+    return $('<div/>').text(value.replace(/(\r\n|\n|\r)/gm, " ")).html();
 }
 
 function formatearFecha(fecha) {
@@ -419,7 +419,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.TipoPosicionCBOT + "'" + ',' +
         "'" + dataItem.ProveedorCreador + "'" + ',' +
         "'" + dataItem.Cesion + "'" + ',' +
-        "'" + dataItem.MotivoReemplazo + "'" + ',' +
+        "'" + htmlEncode(dataItem.MotivoReemplazo == null ? "" : dataItem.MotivoReemplazo) + "'" + ',' +
         "'" + dataItem.AnulaYReemplazaContratoSAP + "'" +
 
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';

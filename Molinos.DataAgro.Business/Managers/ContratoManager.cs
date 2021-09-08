@@ -3691,7 +3691,6 @@ namespace Molinos.DataAgro.Business.Managers
                     
                 }
             }
-
             return resultado;
         }
 
@@ -5287,7 +5286,7 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado ValidacionesAnulaYReemplaza(string contratoSap)
         {
             var error = new Resultado();
-            var fijacionesDeAfijar = repositorio.Listar<FijacionDePrecioContrato>(x => x.ContratoSAP == contratoSap).ToList();
+            var fijacionesDeAfijar = repositorio.Listar<FijacionDePrecioContrato>(x => x.ContratoSAP == contratoSap && x.EstadoId != 5).ToList();
             var contratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contratoSap, x => x.Id);
             var contratoAnulado = repositorio.Obtener<Contrato>(x => x.AnulaYReemplazaContratoId == contratoId);
             if(contratoAnulado != null)

@@ -197,16 +197,20 @@ function CargarCopiaContrato(contratoId, tipo) {
             }
             var status = MSExecuteOnServer('/CompraNet/ValidarModificarFinalizado', datosStatus, function () { $.unblockUI(); });
             if (status.Status == "" && status.NumeroSio == 0) {
+                setTimeout(function () {
+                    $("#AnulaYReemplazaContratoId").val("");
+                    $("#contratoAReemplazarId").val("");
+                    $("#contratoAReemplazarId").click();
+                }, 300);
                 MensErr("El contrato aún no ha sido confirmado en SAP y no tiene número de SIO, intente editarlo desde la pantalla de CompraNet");
-                $("#AnulaYReemplazaContratoId").val("");
-                $("#contratoAReemplazarId").val("");
-                $("#contratoAReemplazarId").click();
                 return;
             } else if (status.NumeroSio > 0) {
+                setTimeout(function () {
+                    $("#AnulaYReemplazaContratoId").val("");
+                    $("#contratoAReemplazarId").val("");
+                    $("#contratoAReemplazarId").click();
+                }, 300);
                 MensErr("El contrato tiene número de SIO Granos, en caso de querer continuar esta anulación, por favor comunicarse con administración");
-                $("#AnulaYReemplazaContratoId").val("");
-                $("#contratoAReemplazarId").val("");
-                $("#contratoAReemplazarId").click();
                 return;
             } else {
                 contratoCopia.MotivoOperacionAnterior = "Anula y reemplaza " + contratoCopia.ContratoSAP;
