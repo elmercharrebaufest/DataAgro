@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Agent
                     var material = repositorio.Obtener<Material>(x => x.MaterialId == materialId);
                     var rq = new Z_MPRFC_CONTRATO_CANJE_GENE()
                     {
-                        IM_CORREDOR = "C" + CuitCorredor.Remove(CuitCorredor.Length - 1).Remove(0, 2),
+                        IM_CORREDOR = !string.IsNullOrEmpty(CuitCorredor) ? "C" + CuitCorredor.Remove(CuitCorredor.Length - 1).Remove(0, 2) : "",
                         IM_CUIT = CuitProveedor,
                         IM_MATERIAL = material.Codigo                        
                     };
@@ -90,7 +90,7 @@ namespace Molinos.DataAgro.Agent
                             Virtual = true,
                         };
                         var idContratoConAnulaYReemplaza = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contrato.CONTRNUM, x => x.Id);
-                        var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.Id == idContratoConAnulaYReemplaza);
+                        var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == idContratoConAnulaYReemplaza);
 
                         if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                         {

@@ -260,7 +260,10 @@ namespace Molinos.DataAgro.Agent
                         Virtual = false
                     };
                     var idContratoConAnulaYReemplaza = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contrato.CONTRATO, x => x.Id);
-                    var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.Id == idContratoConAnulaYReemplaza);
+                    var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == idContratoConAnulaYReemplaza);
+                    //logger.Debug("contrato.CONTRATO:" + contrato.CONTRATO);
+                    //logger.Debug("idContratoConAnulaYReemplaza:" + idContratoConAnulaYReemplaza);
+                    //logger.Debug("contratoConAnulaYReemplaza:" + contratoConAnulaYReemplaza);
 
                     if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                     {
