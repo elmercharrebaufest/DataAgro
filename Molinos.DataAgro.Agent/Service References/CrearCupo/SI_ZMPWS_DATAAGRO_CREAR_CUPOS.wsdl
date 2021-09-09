@@ -20,6 +20,7 @@
             <xsd:element name="IM_COMERCIAL" type="rfc:char12" />
             <xsd:element name="IM_CUPO" type="rfc:ZMPES5500" />
             <xsd:element minOccurs="0" name="IM_DATAAGRO" type="rfc:char1" />
+            <xsd:element minOccurs="0" name="IM_PROPUESTA" type="rfc:char1" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>

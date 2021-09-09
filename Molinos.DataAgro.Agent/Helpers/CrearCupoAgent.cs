@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
-    public class CrearCupoAgent:ICrearCupoAgent
+    public class CrearCupoAgent : ICrearCupoAgent
     {
         public CrearCupoAgent(ILogger logger, IRepositorio repositorio)
         {
@@ -22,10 +22,10 @@ namespace Molinos.DataAgro.Agent.Helpers
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
-        public List<string> Crear(Cupo cupo,int cantidadCupos)
+        public List<string> Crear(Cupo cupo, int cantidadCupos)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
-            {                
+            {
                 var listaCupos = new List<string>();
                 var random = new Random();
 
@@ -56,14 +56,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FECHA_INGRESO = cupo.FechaIngreso.ToString("yyyy-MM-dd"),
                             MATNR = cupo.Material.Codigo,
                             PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
-                            DESCPROV = cupo.Proveedor.RazonSocial.Length>35? cupo.Proveedor.RazonSocial.Substring(0,35): cupo.Proveedor.RazonSocial,
+                            DESCPROV = cupo.Proveedor.RazonSocial.Length > 35 ? cupo.Proveedor.RazonSocial.Substring(0, 35) : cupo.Proveedor.RazonSocial,
                             PLANTA = cupo.Centro.CodigoSap,
                             ZONA = cupo.ZonaCupo.CodigoSap,
                             OBSERVACIONES = cupo.Observaciones,
                             DESTINATARIO = cupo.Destinatario,
                             FLETE_PROC = cupo.FleteProcedencia == true ? "S" : "N",
-                            CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""                                  
-                        }
+                            CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
+                        },
+                        IM_PROPUESTA = ""
                     };
 
                     var logId = repositorio.Agregar(new Log
