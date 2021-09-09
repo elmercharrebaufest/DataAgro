@@ -259,8 +259,8 @@ namespace Molinos.DataAgro.Agent
                         Bonificaciones = bonificaciones,
                         Virtual = false
                     };
-                    var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.ContratoSAP == contrato.CONTRATO && x.AnulaYReemplazaContratoId != null);
-
+                    var idContratoConAnulaYReemplaza = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contrato.CONTRATO, x => x.Id);
+                    var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.Id == idContratoConAnulaYReemplaza);
 
                     if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                     {
@@ -268,7 +268,7 @@ namespace Molinos.DataAgro.Agent
                     }
 
 
-                    
+
 
                 }
 

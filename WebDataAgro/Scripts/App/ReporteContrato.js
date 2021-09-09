@@ -314,6 +314,7 @@ function CreateGridInformeCompraNet() {
                 var templatePesificado = kendo.template(this.columns[38].columns[0].template);
                 var templateSIO = kendo.template(this.columns[39].template);
                 var templateTrigoEsp = kendo.template(this.columns[40].template);
+                var templateCesion = kendo.template(this.columns[59].template);
 
                 for (var i = 2; i < sheet.rows.length; i++) {
                     var row = sheet.rows[i];
@@ -328,6 +329,7 @@ function CreateGridInformeCompraNet() {
                         Pesificado: row.cells[46].value,
                         NoInformaSIO: row.cells[48].value,
                         TrigoEspecial: row.cells[49].value,
+                        Cesion: row.cells[68].value,
                     };
 
                     var operacionFecha = row.cells[5].value;
@@ -361,7 +363,7 @@ function CreateGridInformeCompraNet() {
                     row.cells[46].value = templatePesificado(dataItem);
                     row.cells[48].value = templateSIO(dataItem);
                     row.cells[49].value = templateTrigoEsp(dataItem);
-                    row.cells[66].value = row.cells[66].value ? "Si" : "";
+                    row.cells[68].value = templateCesion(dataItem);
 
                 }
             },
