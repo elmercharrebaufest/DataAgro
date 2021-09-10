@@ -1,6 +1,8 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
@@ -19,14 +21,25 @@ namespace WebDataAgro.Controllers
     public class CamposSustentablesController : Controller
     {
         private readonly IReportesManager reportesManager;
+        private ILogger logger;
 
-        public CamposSustentablesController(IReportesManager reportesManager)
+        public CamposSustentablesController(IReportesManager reportesManager, ILogger logger)
         {
             this.reportesManager = reportesManager;
+            this.logger = logger;
         }
 
         public async Task<ActionResult> Generar(DeclaracionCampoSustentable datos)
         {
+            try
+            {
+                logger.Debug("CamposSustentables Generar datos:");
+                logger.Debug(datos.ToJson());
+            }
+            catch (Exception)
+            {
+            }
+
 
             int i = 1;
             foreach (var item in datos.Campos)

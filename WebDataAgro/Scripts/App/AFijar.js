@@ -3963,7 +3963,6 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.AnulaYReemplazaContratoId) {
         $("#AnulaYReemplazaContratoId").val(contrato.AnulaYReemplazaContratoId);
         $("#contratoAReemplazarId").val(contrato.AnulaYReemplazaContratoSAP);
-        $("#MotivoReemplazoDiv").show();
         $("#MotivoReemplazo").val(contrato.MotivoReemplazo);
 
         $("#tipoId").data("kendoDropDownList").readonly(true);

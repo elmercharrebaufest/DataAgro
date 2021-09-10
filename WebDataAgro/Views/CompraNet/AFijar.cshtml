@@ -98,7 +98,15 @@
 
                 <label style="color:orange;"><b><i>Recuerde consultar con el área de Administración MP antes de utilizar la función Anula y Reemplaza</i></b></label>
             </div>
-
+            <div class="col-sm-6">
+                <div class="col-sm-2 noPadding">
+                    <label>Motivo de reemplazo</label>
+                </div>
+                <div class="col-sm-8 noPadding" style="padding-left: 7px;">
+                    <textarea type="text" class="campo-input-text k-textbox" id="MotivoReemplazo" rows="3" maxlength="100" placeholder="Por favor aclare los cambios realizados y motivo, cantidad y precio."></textarea>
+                    <img id="errMotivoReemplazo" src="~/Content/Images/error.png" style="display:none" />
+                </div>
+            </div>
         </div>
         <input type="hidden" id="estado" />
     </div>
@@ -693,16 +701,7 @@
                     <img id="errfechaHoyId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>*@
-    </div>
-    <div class="row noFason noAgente noAcuerdo" id="MotivoReemplazoDiv" hidden>
-        <div class="col-sm-2 ">
-            <label>Motivo de reemplazo</label>
-        </div>
-        <div class="col-sm-10 col-md-9">
-            <textarea type="text" class="campo-input-text k-textbox" id="MotivoReemplazo" rows="3" maxlength="100" placeholder="Por favor aclare los cambios realizados y motivo, cantidad y precio."></textarea>
-            <img id="errMotivoReemplazo" src="~/Content/Images/error.png" style="display:none" />
-        </div>
-    </div>
+    </div>    
     <div class="ampliar noFason noAgente noAcuerdo">
         <div id="DatosAdicionales" class="btnagregar btnAzul widthButton" type="button">
             <i class="fa fa-plus"></i> Datos adicionales
