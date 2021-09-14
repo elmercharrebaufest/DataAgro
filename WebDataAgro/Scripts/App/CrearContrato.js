@@ -2762,14 +2762,15 @@ function InicializarElementos() {
         select: function (e) {
             console.log(e.dataItem.Descripcion);
             if (e.dataItem.Descripcion == "Vendedor") {
-                var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#proveedorId").val() });
-                if (compraNet.LocalidadId != null) {
-                    if (compraNet.LocalidadId != "" && compraNet.ProvinciaId != "") {                        
-                        $("#LocalidadCrearContrato").val(compraNet.Localidad + " (" + compraNet.Provincia + ")");
-                    } 
-                } 
+                if ($("#proveedorId").val() != '') {
+                    var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#proveedorId").val() });
+                    if (compraNet.LocalidadId != null) {
+                        if (compraNet.LocalidadId != "" && compraNet.ProvinciaId != "") {
+                            $("#LocalidadCrearContrato").val(compraNet.Localidad + " (" + compraNet.Provincia + ")");
+                        }
+                    }
+                }
             }
-
             if (e.dataItem.Descripcion == "Comprador") {
                 var datosCentro = MSExecuteOnServer('/Centro/CentroCombo', { "Id": $("#destinoId").val() });
                 $("#LocalidadVenta").val(datosCentro.Centro.Localidad);
@@ -5580,7 +5581,7 @@ function LimpiarDescuentosConAgenteDeCompra() {
 
 function CalcularImporteDeOperacion(precio, cantidad) {
     var importe = 0;
-    if ((precio != null || precio > 0)  && (cantidad != '' || cantidad > 0)) {
+    if ((precio != null || precio > 0) && (cantidad != '' || cantidad > 0)) {
         importe = MSExecuteOnServer("/Compranet/CalcularImporteDeOperacion", {
             precio: precio,
             cantidad: cantidad,
