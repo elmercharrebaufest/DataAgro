@@ -1157,5 +1157,15 @@ namespace WebDataAgro.Controllers
             var tieneFijaciones = mobjContratoManager.ValidacionesAnulaYReemplaza(contratoSap);
             return Json(tieneFijaciones, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaOperacion, string monedaId)
+        {
+            var result = mobjContratoManager.CalcularImporteDeOperacion(precio, cantidad, materialId, fechaOperacion, monedaId);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

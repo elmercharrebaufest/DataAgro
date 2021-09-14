@@ -3,6 +3,7 @@ using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -78,5 +79,7 @@ namespace Molinos.DataAgro.Interfaces
         List<CapacidadProductivaPendienteDto> ObtenerCapacidadProductivaPendiente(int proveedorId);
         Resultado ActualizarCesionContratoSAP(string contratoSAP, bool cesion);
         Resultado ValidacionesAnulaYReemplaza(string contratoSap);
+
+        decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda);
     }
 }

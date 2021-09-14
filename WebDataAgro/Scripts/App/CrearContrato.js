@@ -2762,7 +2762,12 @@ function InicializarElementos() {
         select: function (e) {
             console.log(e.dataItem.Descripcion);
             if (e.dataItem.Descripcion == "Vendedor") {
-                $("#LocalidadVenta").val($("#LocalidadCrearContrato").val());
+                var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#proveedorId").val() });
+                if (compraNet.LocalidadId != null) {
+                    if (compraNet.LocalidadId != "" && compraNet.ProvinciaId != "") {                        
+                        $("#LocalidadCrearContrato").val(compraNet.Localidad + " (" + compraNet.Provincia + ")");
+                    } 
+                } 
             }
 
             if (e.dataItem.Descripcion == "Comprador") {

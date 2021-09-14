@@ -1498,7 +1498,10 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.AnulaYReemplazaContratoId = oContrato.AnulaYReemplazaContratoId;
             oContratoSave.MotivoReemplazo = oContrato.MotivoReemplazo;
 
-
+            //oContratoSave.ObligatoriedadBonificacion = oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 &&
+            // oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0)) &&
+            // oContrato.ObligatoriedadBonificacion.HasValue && !oContrato.ObligatoriedadBonificacion.Value
+            // ? null : oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 ? oContrato.ObligatoriedadBonificacion : null;
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 oContratoSave.CalidadTercero = oContrato.CalidadTercero;
@@ -2219,7 +2222,11 @@ namespace Molinos.DataAgro.Business.Managers
                             oContrato.ObligatoriedadCostoFinanciero.HasValue && !oContrato.ObligatoriedadCostoFinanciero.Value
                             ? null : oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null;
 
-                          
+                            //oContratoSave.ObligatoriedadBonificacion = oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 &&
+                            //oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0)) &&
+                            //oContrato.ObligatoriedadBonificacion.HasValue && !oContrato.ObligatoriedadBonificacion.Value
+                            //? null : oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 ? oContrato.ObligatoriedadBonificacion : null;
+
                             oContrato.Venta = oContrato.Venta;
 
 
@@ -2634,6 +2641,7 @@ namespace Molinos.DataAgro.Business.Managers
                 NivelTarifaId = x.NivelTarifaId,
                 TarifaFlete = x.TarifaFlete,
                 ObligatoriedadCostoFinanciero = x.ObligatoriedadCostoFinanciero,
+                //ObligatoriedadBonificacion = x.ObligatoriedadBonificacion,
                 Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
                 {
                     ContratoId = y.ContratoId,
@@ -3259,6 +3267,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoMadre = null,
                 FechaCierta = x.FechaCierta,
                 ObligatoriedadCostoFinanciero = x.ObligatoriedadCostoFinanciero,
+                //ObligatoriedadBonificacion = x.ObligatoriedadBonificacion,
                 Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
                 {
                     ContratoId = y.ContratoId,
@@ -4797,6 +4806,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.Insumo = negocio.Insumo;
             bc.SustentableTercero = negocio.SustentableTercero;
             bc.ObligatoriedadCostoFinanciero = negocio.ObligatoriedadCostoFinanciero;
+            //bc.ObligatoriedadBonificacion = negocio.ObligatoriedadBonificacion;
 
             bc.Descuentos = negocio.Descuentos.Select(y => new DescuentoBonificacionDto
             {
@@ -5309,9 +5319,56 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
             return error;
-        }   
+        }
 
-      
+        //public List<NegocioAsociadoDto> DevolverContratosParaAsociar(int contratoId, string numero)
+        //{
+        //    var aFijar = repositorio.Obtener<Contrato>(x => x.Id == contratoId);
+        //    if (aFijar != null)
+        //    {
+        //        var negociosQueYaEstanAsociados = DevolverContratoAsociadosPase(contratoId).Select(x => x.Id);
+        //        Int32.TryParse(numero, out int id);
+        //        var negocios = repositorio.Listar<Negocio, NegocioAsociadoDto>(
+        //            x => new NegocioAsociadoDto()
+        //            {
+        //                Id = x.Id,
+        //                TipoNegocioDesc = x.TipoNegocio.Descripcion,
+        //                Precio = x.Precio,
+        //                MonedaDesc = "USD",
+        //                MaterialDesc = x.Material.Descripcion,
+        //                Cantidad = x.Cantidad,
+        //                Campania = x.Campana.Descripcion,
+        //                Color = x.TipoNegocioId == 2 ? "" : "",
+        //                Posicion = x.TipoNegocioId == 2 ? (SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta)) : x.Posicion,
+        //            }, x => ((x.TipoNegocioId == 2 && x.TipoAgenteCompraId == null && x.ContratoSAP.Contains(numero)) || (x.TipoNegocioId == 5 && x.Id == id)) && x.MonedaId == "USDM "
+        //               && !negociosQueYaEstanAsociados.Contains(x.Id) && x.CampanaId == x.Material.CampaniaTableroId && x.MaterialId == aFijar.MaterialId);
+        //        return negocios;
+        //    }
+        //    return new List<NegocioAsociadoDto>();
+        //}
+
+        //public List<NegocioAsociadoDto> DevolverContratoAsociadosPase(int contratoSap)
+        //{
+        //    var aFijar = repositorio.Obtener<Contrato>(x => x.Id == contratoSap);
+        //    if (aFijar != null)
+        //    {
+        //        var negociosQueYaEstanAsociados = repositorio.Listar<NegocioAsociado, NegocioAsociadoDto>(
+        //            x => new NegocioAsociadoDto()
+        //            {
+        //                Id = x.Asociado.Id,
+        //                TipoNegocioDesc = x.Asociado.TipoNegocio.Descripcion,
+        //                Precio = x.Asociado.Precio,
+        //                MonedaDesc = "USD",
+        //                MaterialDesc = x.Asociado.Material.Descripcion,
+        //                Cantidad = x.Asociado.Cantidad,
+        //                Campania = x.Asociado.Campana.Descripcion,
+        //                Color = x.Asociado.TipoNegocioId == 2 ? "" : "",
+        //                Posicion = x.Asociado.TipoNegocioId == 2 ? (SqlFunctions.DateName("day", x.Asociado.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.Asociado.FechaHasta) + "/" + SqlFunctions.DateName("year", x.Asociado.FechaHasta)) : x.Asociado.Posicion,
+        //            }, x => x.AFijarId == aFijar.Id);
+        //        return negociosQueYaEstanAsociados;
+        //    }
+        //    return new List<NegocioAsociadoDto>();
+        //}
         public void EnviarMailVenta(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial)
         {
             var lista = new List<string>();
