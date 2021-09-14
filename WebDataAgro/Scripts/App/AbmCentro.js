@@ -16,6 +16,8 @@ $(document).ready(function () {
     AsignarBotones();
 
     InicializarBusquedaInicial();
+
+    AutocompleteProcedencia();
 });
 
 function InicializarElementos() {
@@ -51,6 +53,10 @@ function CrearResultadosDataSource(datos) {
                     Id: { type: "number", editable: false },
                     Descripcion: { type: "string", editable: false },
                     CodigoSap: { type: "string", editable: false },
+                    Localidad: { type: "string", editable: false },
+                    LocalidadId: { type: "string", editable: false },
+                    Direccion: { type: "string", editable: false },
+                    CodigoPostal: { type: "string", editable: false },
                 }
             }
         },
@@ -64,6 +70,9 @@ function CreateGridCentro() {
         columns: [
             { field: "Descripcion", title: "Centro", filterable: false },
             { field: "CodigoSap", title: "Codigo SAP", filterable: false },
+            { field: "Localidad", title: "Localidad", filterable: false },
+            { field: "Acopio", title: "Acopio", filterable: false, template: "# if(Acopio){#Si#}else{##}#" },
+            { field: "ValidaRedespacho", title: "ValidaRedespacho", filterable: false, template: "# if(ValidaRedespacho){#Si#}else{##}#" },
         ],
 
         sortable: true,
@@ -83,10 +92,10 @@ function CreateGridCentro() {
             },
             operators: {
                 string: {
+                    contains: "Contiene",
                     eq: "Igual",
                     neq: "Distinto",
                     startswith: "Comienza con",
-                    contains: "Contiene",
                     endswith: "Finaliza con"
                 },
                 date: {
@@ -195,7 +204,11 @@ function UpdateViewModel(model) {
         "Descripcion": model.Centro.Descripcion,
         "CodigoSap": model.Centro.CodigoSap,
         "Acopio": model.Centro.Acopio,
-        "ValidaRedespacho": model.Centro.ValidaRedespacho
+        "ValidaRedespacho": model.Centro.ValidaRedespacho,
+        "LocalidadId": model.Centro.LocalidadId,
+        "Localidad": model.Centro.Localidad,
+        "CodigoPostal": model.Centro.CodigoPostal,
+        "Direccion": model.Centro.Direccion,
     };
 
     viewModel.set("Centro", centro);
@@ -256,7 +269,7 @@ function Modificar() {
     };
 
     if (data.Id > 0) {
-        var datosCentro = MSExecuteOnServer('/Centro/CentroCombo', param);
+            var datosCentro = MSExecuteOnServer('/Centro/CentroCombo', param);
 
         if (datosCentro != null) {
             if (ExistsErrorMessages(datosCentro.Errores)) {
@@ -337,7 +350,10 @@ function Grabar() {
         "Descripcion": viewModel.get("Centro.Descripcion"),
         "CodigoSap": viewModel.get("Centro.CodigoSap"),
         "Acopio": viewModel.get("Centro.Acopio"),
-        "ValidaRedespacho": viewModel.get("Centro.ValidaRedespacho")
+        "ValidaRedespacho": viewModel.get("Centro.ValidaRedespacho"),
+        "LocalidadId": viewModel.get("Centro.LocalidadId"),
+        "CodigoPostal": viewModel.get("Centro.CodigoPostal"),
+        "Direccion": viewModel.get("Centro.Direccion"),
     };
 
     var result = MSExecuteOnServer('/Centro/Grabar', datos);
@@ -357,4 +373,53 @@ function Grabar() {
 
 function Cancelar() {
     $('#rootwizard').bootstrapWizard('show', 'tab1');
+}
+
+function AutocompleteProcedencia() {
+    //$("#LocalidadId").click(function () {
+    //    $("#LocalidadCrearContrato").data("kendoAutoComplete").value("");
+    //    $("#establecimientoDiv").hide();
+    //    $("#LocalidadCrearContrato").trigger("change");
+    //    $("#establecimientoPropioId").prop("checked", false);
+    //    $("#establecimientoArrendadoId").prop("checked", false);
+    //    DatosProveedor();
+    //});
+
+    $("#Localidad").kendoAutoComplete({
+        template: '<p class="buscar-nomb" >#: data.Localidad # (#: data.Provincia#)</p>',
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Filtro",
+        filter: "contains",
+        change: function () {
+            if ($("#Localidad").val().split('|').length > 1) {
+                $("#Localidad").val($("#Localidad").val().split('|')[1]);
+                //HabilitarEstablecimiento();
+            }
+
+        },
+        select: function (e) {           
+            viewModel.set("Centro.LocalidadId", e.dataItem.Id);
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarLocalidades"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: $('#Localidad').val() };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
 }

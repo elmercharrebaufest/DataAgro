@@ -21,11 +21,11 @@ $(document).ready(function () {
 function CreateGridMaterial() {
     $("#gridIni").kendoGrid({
         columns: [
-            { field: "Descripcion", title: "Material",  filterable: false },
+            { field: "Descripcion", title: "Material", filterable: false },
             { field: "Codigo", title: "Codigo", filterable: false },
             { field: "CampaniaActual", title: "Campaña", filterable: false },
-            { field: "CampaniaTablero", title: "Campaña Tablero", filterable: false }
-
+            { field: "CampaniaTablero", title: "Campaña Tablero", filterable: false },
+            { field: "IVA", title: "IVA", filterable: false }
         ],
 
         sortable: true,
@@ -112,7 +112,7 @@ function InicializarCombos() {
 function AsignarCombos() {
     viewModel.set("CampaniaCombo", datosIniAbmMaterial.Datos.Campania);
     viewModel.set("CampaniaTableroCombo", datosIniAbmMaterial.Datos.CampaniaTablero);
-    
+
 }
 
 function onChangeGridInicial() {
@@ -138,8 +138,8 @@ function CrearResultadosDataSource(datos) {
                     Descripcion: { type: "string", editable: false },
                     Codigo: { type: "string", editable: false },
                     CampaniaActual: { type: "string", editable: false },
-                    CampaniaTablero: { type: "string", editable: false }
-
+                    CampaniaTablero: { type: "string", editable: false },
+                    IVA: { type: "number", editable: false }
 
                 }
             }
@@ -160,6 +160,13 @@ function InicializarElementos() {
         if (e.keyCode == 46) {
             $("#CampaniaId").data("kendoDropDownList").text("");
         }
+    });
+
+    $(".number-input").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n2",
+        decimals: 2,
+        min: 0
     });
 
     $("#CampaniaTableroId").kendoDropDownList({
@@ -253,7 +260,8 @@ function UpdateViewModel(model) {
         "Descripcion": model.Material.Descripcion,
         "Codigo": model.Material.Codigo,
         "CampaniaId": model.Material.CampañaId,
-        "CampaniaTableroId": model.Material.CampaniaTableroId
+        "CampaniaTableroId": model.Material.CampaniaTableroId,
+        "IVA": model.Material.IVA
     };
 
     viewModel.set("Material", material);
@@ -403,9 +411,9 @@ function Grabar() {
         "Codigo": viewModel.get("Material.Codigo"),
         "CampañaId": GetDropDownValue(viewModel, "Material.CampaniaId.CampaniaId"),
         "CampaniaTableroId": GetDropDownValue(viewModel, "Material.CampaniaTableroId.CampaniaTableroId"),
+        "IVA": viewModel.get("Material.IVA"),
 
 
-        
     };
 
     var result = MSExecuteOnServer('/Material/Grabar', datos);

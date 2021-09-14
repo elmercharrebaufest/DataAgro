@@ -29,6 +29,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Descripcion { get; set; }                  
         public string CodigoSap { get; set; }
         public bool ValidaRedespacho { get; set; }
+        public int? LocalidadId { get; set; }
+        public string Localidad { get; set; }
+        public bool Acopio { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Direccion { get; set; }
     }
 }
 

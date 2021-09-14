@@ -157,7 +157,8 @@ namespace Molinos.DataAgro.Business
                 {
                     MaterialId = x.MaterialId,
                     Codigo = x.Codigo,
-                    Descripcion = x.Descripcion
+                    Descripcion = x.Descripcion,
+                    IVA = x.IVA
                 }, null, 0, "Descripcion");
             }
             catch (Exception ex)

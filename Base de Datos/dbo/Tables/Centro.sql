@@ -4,6 +4,11 @@
     [CodigoSap]           VARCHAR(20) NOT NULL
     CONSTRAINT [PK_Centro] PRIMARY KEY CLUSTERED ([Id] ASC), 
     [Acopio] BIT NOT NULL DEFAULT 0, 
-    [ValidaRedespacho] BIT NOT NULL DEFAULT 0
+    [ValidaRedespacho] BIT NOT NULL DEFAULT 0, 
+    [LocalidadId] INT NULL,
+	[CodigoPostal] VARCHAR(50) NULL, 
+    [Direccion] VARCHAR(550) NULL, 
+    CONSTRAINT [FK_Centro_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [Localidad]([LocalidadId]),
+
 );
 

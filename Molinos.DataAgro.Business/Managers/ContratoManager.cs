@@ -1125,49 +1125,55 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("MotivoReemplazo", "Complete el motivo de reemplazo.");
             }
-
-            if (oParam.CondicionDePagoDiaFijacion > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) || oParam.CondicionDePagoFijacionVentaId == null))
+            if (oParam.Venta == true)
             {
-                oErrorMessages.Error("DiaVenta", "Debe completar la condición de pago");
-            }
+                if (oParam.CondicionDePagoDiaFijacion > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) || oParam.CondicionDePagoFijacionVentaId == null))
+                {
+                    oErrorMessages.Error("DiaVenta", "Debe completar la condición de pago");
+                }
 
-            if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
-            {
-                oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pago");
-            }
+                if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
+                {
+                    oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pago");
+                }
 
-            if (oParam.CondicionDePagoFijacionVentaId.HasValue && oParam.CondicionDePagoFijacionVentaId > 0 && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
-            {
-                oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pago");
-            }
+                if (oParam.CondicionDePagoFijacionVentaId.HasValue && oParam.CondicionDePagoFijacionVentaId > 0 && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
+                {
+                    oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pago");
+                }
 
-            if (oParam.CondicionDePagoDiaPesificado > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) || oParam.CondicionDePagoPesificadoVentaId == null))
-            {
-                oErrorMessages.Error("DiaVenta", "Debe completar la condición de pesificación");
-            }
+                if (oParam.CondicionDePagoDiaPesificado > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) || oParam.CondicionDePagoPesificadoVentaId == null))
+                {
+                    oErrorMessages.Error("DiaVenta", "Debe completar la condición de pesificación");
+                }
 
-            if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
-            {
-                oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
-            }
+                if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
+                {
+                    oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
+                }
 
-            if (oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.CondicionDePagoPesificadoVentaId > 0 && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
-            {
-                oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
-            }
+                if (oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.CondicionDePagoPesificadoVentaId > 0 && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
+                {
+                    oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
+                }
 
-            if (oParam.ComisionAFavorId > 0 && (!oParam.PorcentajeComisionVenta.HasValue ||
-                (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value <= 0)))
-            {
-                oErrorMessages.Error("ComisionAFavor", "Debe completar el porcentaje de comisión en las condiciones de venta cuando Comision a Favor está completo");
-            }
+                if (!oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.MonedaId == "USDM ")
+                {
+                    oErrorMessages.Error("DiaVenta", "La condicion de pesificado en condiciones adicionales de venta es obligatoria con la moneda USD");
+                }
 
-            if (oParam.ComisionAFavorId == null && (oParam.PorcentajeComisionVenta.HasValue ||
-              (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value > 0)))
-            {
-                oErrorMessages.Error("ComisionAFavor", "Debe completar la Comisión a Favor en las condiciones de venta cuando Porcentaje de comision está completo");
-            }
+                if (oParam.ComisionAFavorId > 0 && (!oParam.PorcentajeComisionVenta.HasValue ||
+                    (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value <= 0)))
+                {
+                    oErrorMessages.Error("ComisionAFavor", "Debe completar el porcentaje de comisión en las condiciones de venta cuando Comision a Favor está completo");
+                }
 
+                if (oParam.ComisionAFavorId == null && (oParam.PorcentajeComisionVenta.HasValue ||
+                  (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value > 0)))
+                {
+                    oErrorMessages.Error("ComisionAFavor", "Debe completar la Comisión a Favor en las condiciones de venta cuando Porcentaje de comision está completo");
+                }
+            }
 
             if (proveedor != null && !string.IsNullOrEmpty(oParam.UsuarioTercero))
             {
@@ -1491,6 +1497,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.TipoPosicionCBOTId = oContrato.TipoPosicionCBOTId;
             oContratoSave.AnulaYReemplazaContratoId = oContrato.AnulaYReemplazaContratoId;
             oContratoSave.MotivoReemplazo = oContrato.MotivoReemplazo;
+
+
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 oContratoSave.CalidadTercero = oContrato.CalidadTercero;
@@ -2044,7 +2052,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         if (oContratoSave.Venta.HasValue && oContratoSave.Venta != false)
                         {
-                            mobjProveedorManager.EnviarMailVenta(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
+                            EnviarMailVenta(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
                         }
                         if (oContratoSave.Canje.HasValue && oContratoSave.Canje != false)
                         {
@@ -2210,6 +2218,8 @@ namespace Molinos.DataAgro.Business.Managers
                             oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
                             oContrato.ObligatoriedadCostoFinanciero.HasValue && !oContrato.ObligatoriedadCostoFinanciero.Value
                             ? null : oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null;
+
+                          
                             oContrato.Venta = oContrato.Venta;
 
 
@@ -3688,7 +3698,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     resultado = status.ValidarEstado(contrato.ContratoSAP);
                     return resultado;
-                    
+
                 }
             }
             return resultado;
@@ -4788,7 +4798,6 @@ namespace Molinos.DataAgro.Business.Managers
             bc.SustentableTercero = negocio.SustentableTercero;
             bc.ObligatoriedadCostoFinanciero = negocio.ObligatoriedadCostoFinanciero;
 
-
             bc.Descuentos = negocio.Descuentos.Select(y => new DescuentoBonificacionDto
             {
                 ContratoId = y.ContratoId,
@@ -5289,7 +5298,7 @@ namespace Molinos.DataAgro.Business.Managers
             var fijacionesDeAfijar = repositorio.Listar<FijacionDePrecioContrato>(x => x.ContratoSAP == contratoSap && x.EstadoId != 8 && x.EstadoId != 6).ToList();
             var contratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contratoSap, x => x.Id);
             var contratoAnulado = repositorio.Obtener<Contrato>(x => x.AnulaYReemplazaContratoId == contratoId);
-            if(contratoAnulado != null)
+            if (contratoAnulado != null)
             {
                 error.Error("Contrato", "Este contrato ya ha sido anulado y reemplazado");
                 return error;
@@ -5300,6 +5309,491 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
             return error;
+        }
+
+        public List<NegocioAsociadoDto> DevolverContratosParaAsociar(int contratoId, string numero)
+        {
+            var aFijar = repositorio.Obtener<Contrato>(x => x.Id == contratoId);
+            if (aFijar != null)
+            {
+                var negociosQueYaEstanAsociados = DevolverContratoAsociadosPase(contratoId).Select(x => x.Id);
+                Int32.TryParse(numero, out int id);
+                var negocios = repositorio.Listar<Negocio, NegocioAsociadoDto>(
+                    x => new NegocioAsociadoDto()
+                    {
+                        Id = x.Id,
+                        TipoNegocioDesc = x.TipoNegocio.Descripcion,
+                        Precio = x.Precio,
+                        MonedaDesc = "USD",
+                        MaterialDesc = x.Material.Descripcion,
+                        Cantidad = x.Cantidad,
+                        Campania = x.Campana.Descripcion,
+                        Color = x.TipoNegocioId == 2 ? "" : "",
+                        Posicion = x.TipoNegocioId == 2 ? (SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta)) : x.Posicion,
+                    }, x => ((x.TipoNegocioId == 2 && x.TipoAgenteCompraId == null && x.ContratoSAP.Contains(numero)) || (x.TipoNegocioId == 5 && x.Id == id)) && x.MonedaId == "USDM "
+                       && !negociosQueYaEstanAsociados.Contains(x.Id) && x.CampanaId == x.Material.CampaniaTableroId && x.MaterialId == aFijar.MaterialId);
+                return negocios;
+            }
+            return new List<NegocioAsociadoDto>();
+        }
+
+        public List<NegocioAsociadoDto> DevolverContratoAsociadosPase(int contratoSap)
+        {
+            var aFijar = repositorio.Obtener<Contrato>(x => x.Id == contratoSap);
+            if (aFijar != null)
+            {
+                var negociosQueYaEstanAsociados = repositorio.Listar<NegocioAsociado, NegocioAsociadoDto>(
+                    x => new NegocioAsociadoDto()
+                    {
+                        Id = x.Asociado.Id,
+                        TipoNegocioDesc = x.Asociado.TipoNegocio.Descripcion,
+                        Precio = x.Asociado.Precio,
+                        MonedaDesc = "USD",
+                        MaterialDesc = x.Asociado.Material.Descripcion,
+                        Cantidad = x.Asociado.Cantidad,
+                        Campania = x.Asociado.Campana.Descripcion,
+                        Color = x.Asociado.TipoNegocioId == 2 ? "" : "",
+                        Posicion = x.Asociado.TipoNegocioId == 2 ? (SqlFunctions.DateName("day", x.Asociado.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.Asociado.FechaHasta) + "/" + SqlFunctions.DateName("year", x.Asociado.FechaHasta)) : x.Asociado.Posicion,
+                    }, x => x.AFijarId == aFijar.Id);
+                return negociosQueYaEstanAsociados;
+            }
+            return new List<NegocioAsociadoDto>();
+        }
+        public void EnviarMailVenta(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial)
+        {
+            var lista = new List<string>();
+            var email = "";
+            if (contrato.Comercial.IdActiveDirectory != comercial)
+            {
+                email = mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory);
+                lista.Add(email);
+            }
+            var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(comercial);
+            lista.Add(comercialRegistrado);
+            var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
+            logger.Debug("Enviando mail a Comercial Venta" + email);
+            logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
+            var emailComerciales = "";
+
+            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarVenta)) && x.ComercialId == contrato.ComercialCreadorId) != null ? true : false;
+            logger.Debug("Usuario tiene permiso " + tienePermiso);
+            if (tienePermiso)
+            {
+                var comercialVenta = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarVenta))); ;
+                comercialVenta.Remove(contrato.Comercial);
+                comercialVenta.Remove(contrato.ComercialCreador);
+                logger.Debug("Enviando mail a " + string.Join(", ", comercialVenta.Select(x => x.IdActiveDirectory)));
+                foreach (Comercial corredorComercialCopia in comercialVenta)
+                {
+                    try
+                    {
+                        emailComerciales = mailManager.GetEmailUserActiveDirectory(corredorComercialCopia.IdActiveDirectory);
+                        logger.Debug("Mail encontrado para " + emailComerciales + "  " + corredorComercialCopia.IdActiveDirectory);
+                        if (!String.IsNullOrEmpty(emailComerciales))
+                        {
+
+                            lista.Add(emailComerciales);
+                        }
+                    }
+                    catch (Exception e) { logger.Error(e); }
+                }
+            }
+            var subject = "";
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+
+            }
+            else
+            {
+                subject = "Mail Prueba - Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+
+
+                var importe = CalcularImporteDeOperacion(contrato.PrecioNeto ?? contrato.Precio, contrato.Cantidad, contrato.MaterialId, contrato.FechaOperacion, contrato.MonedaId);
+                mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoVenta(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, comercialRegistrado, false, importe));
+            }
+        }
+
+
+        private AlternateView CuerpoMailContratoVenta(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar, decimal importe)
+        {
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            string style1 = "";
+            string style2 = "";
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+                style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+                style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
+            }
+
+            var linea = 0;
+
+            string htmlBody = "";
+            if (eliminar.HasValue && eliminar.Value)
+            {
+                htmlBody += "En el presente mail, se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
+            }
+            else
+            {
+                htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+            }
+
+            htmlBody += "<strong>Participantes </strong><br /><br />  ";
+
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+            htmlBody += "<tr>" +
+                    th + "" + "</td>" +
+                    th + "VENDEDOR" + "</td>" +
+                    th + "CORREDOR" + "</td>" +
+                    th + "COMPRADOR" + "</td>" +
+                    "</tr>";
+
+            htmlBody += "<tr>" +
+                 "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px; border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"> CUIT" + "</td>" +
+                 "<td " + style2 + ConfigurationManager.AppSettings["Cuit"] + "</td>" +
+                 "<td " + style2 + (oContrato.Corredor != null ? oContrato.Corredor.CUIT.ToUpper() : "") + "</td>" +
+                 "<td " + style2 + oContrato.Proveedor.CUIT.ToUpper() + "</td> </tr>";
+
+            htmlBody += "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px; border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"> RAZÓN SOCIAL" + "</td>" +
+                "<td " + style2 + ConfigurationManager.AppSettings["RazonSocial"] + "</td>" +
+                "<td " + style2 + (oContrato.Corredor != null ? oContrato.Corredor.RazonSocial.ToUpper() : "") + "</td>" +
+                "<td " + style2 + oContrato.Proveedor.RazonSocial.ToUpper() + "</td> </tr>";
+
+            htmlBody += "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px; border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"> DOMICILIO" + "</td>" +
+                "<td " + style2 + ConfigurationManager.AppSettings["Domicilio"] + "</td>" +
+                "<td " + style2 + (oContrato.Corredor != null ? oContrato.Corredor.Direccion.ToUpper() : "") + "</td>" +
+                "<td " + style2 + oContrato.Proveedor.Direccion.ToUpper() + "</td> </tr>";
+
+            htmlBody += "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px; border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"> LOCALIDAD" + "</td>" +
+                "<td " + style2 + ConfigurationManager.AppSettings["Localidad"] + "</td>" +
+                "<td " + style2 + (oContrato.Corredor != null ? oContrato.Corredor.Localidad.Nombre.ToUpper() : "") + "</td>" +
+                "<td " + style2 + oContrato.Proveedor.Localidad.Nombre.ToUpper() + "</td> </tr>";
+
+
+            htmlBody += "<td style=\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px; border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"> PROVINCIA" + "</td>" +
+                "<td " + style2 + ConfigurationManager.AppSettings["Provincia"] + "</td>" +
+                "<td " + style2 + (oContrato.Corredor != null ? oContrato.Corredor.Provincia.Nombre.ToUpper() : "") + "</td>" +
+                "<td " + style2 + oContrato.Proveedor.Provincia.Nombre.ToUpper() + "</td> </tr>";
+
+            htmlBody += " </td></tr>";
+
+            htmlBody += "</td></tr></table><br /><br /> ";
+
+            htmlBody += "<strong>Datos generales</strong> <br /><br />  ";
+
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+            htmlBody += "<tr>" + th + "NEGOCIO</th>" + Td(ref linea) + "VENTA" + "</td></tr>";
+            htmlBody += "<tr>" + th + "FECHA</th>" + Td(ref linea);
+            if (oContrato.ContratoAcuerdoId != null)
+            {
+                htmlBody += Split(oContrato.ContratoAcuerdo.Fecha.ToShortDateString()) + "</td></tr>";
+            }
+            else
+            {
+                htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
+            }
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
+            if (oContrato.DestinoId != null)
+            {
+                htmlBody += "<tr>" + th + "DESTINO</th>" + Td(ref linea) + (oContrato.ProcedenciaVenta != null ?
+                oContrato.ProcedenciaVenta.Nombre + " (" + oContrato.ProcedenciaVenta.Provincia.Nombre + ")" : "") + "</td></tr>";
+            }
+            //htmlBody += "<tr>" + th + "PROVEEDOR</th>" + Td(ref linea) + oContrato.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
+            //htmlBody += "<tr>" + th + "CUIT</th>" + Td(ref linea) + Split(oContrato.Proveedor.CUIT.ToString()) + "</td></tr>";
+            //if (oContrato.Corredor != null)
+            //{
+            //    htmlBody += "<tr>" + th + "CORREDOR</th>" + Td(ref linea) + oContrato.Corredor.RazonSocial.ToUpper() + "</td></tr>";
+            //    htmlBody += "<tr>" + th + "CUIT CORREDOR</th>" + Td(ref linea) + Split(oContrato.Corredor.CUIT.ToString()) + "</td></tr>";
+            //}
+            //htmlBody += "<tr>" + th + "FIGURA</th>" + Td(ref linea) + oContrato.Clasificacion.Descripcion.ToUpper();
+            if (oContrato.Consignatario == true)
+            {
+                htmlBody += " CONSIG";
+            }
+            htmlBody += "</td></tr>";
+
+            htmlBody += "<tr>" + th + "CANTIDAD</th>" + Td(ref linea) + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))
+                + " Kg.";
+            if (oContrato.CantidadCamiones != null)
+            {
+                htmlBody += " (" + oContrato.CantidadCamiones + " camiones)<br />";
+            }
+            htmlBody += "</td></tr>";
+            htmlBody += "<tr>" + th + "PRECIO</th>" + Td(ref linea);
+            if (oContrato.TipoNegocioId == 2)
+            {
+                if (oContrato.Pizarra.HasValue && oContrato.Pizarra.Value)
+                {
+                    htmlBody += "Pizarra</td></tr>";
+                }
+                else
+                {
+                    if (oContrato.PrecioNeto.HasValue)
+                    {
+                        htmlBody += Split(oContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
+                    }
+                    else
+                    {
+                        htmlBody += Split(oContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.Moneda.Descripcion.ToUpper() + "</td></tr>";
+                    }
+                }
+            }
+            else if (oContrato.TipoNegocioId == 1)
+            {
+                htmlBody += "A FIJAR HASTA: <br />" + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + "<br />" + Split(oContrato.CondicionFijacion.Descripcion.ToUpper()) + "</td></tr>";
+            }
+            htmlBody += "<tr>" + th + "PORCENTAJE DE PAGO</th>" + Td(ref linea) + oContrato.PorcentajeDePago.ToString() + "</td></tr>";
+            htmlBody += "<tr>" + th + "PROCEDENCIA</th>" + Td(ref linea) + (oContrato.Destino.Localidad != null ? 
+                oContrato.Destino.Localidad.Nombre.ToUpper() +" (" + oContrato.Destino.Localidad.Provincia.Nombre.ToUpper() + ")" : oContrato.Destino.Descripcion) + "</td></tr>";
+            htmlBody += "<tr>" + th + "ENT. DESDE</th>" + Td(ref linea) + Split(oContrato.FechaDesde.ToShortDateString()) + "</td></tr>";
+            htmlBody += "<tr>" + th + "ENT. HASTA</th>" + Td(ref linea) + Split(oContrato.FechaHasta.ToShortDateString()) + "</td></tr>";
+            htmlBody += "<tr>" + th + "COSECHA</th>" + Td(ref linea) + oContrato.Campana.Descripcion.ToUpper() + "</td></tr>";
+            if (!String.IsNullOrEmpty(oContrato.ContratoMadre))
+            {
+                htmlBody += "<tr>" + th + "CONTRATO MADRE</th>" + Td(ref linea) + oContrato.ContratoMadre.TrimStart('0').ToUpper() + "</td></tr>";
+            }
+
+            //if (oContrato.BoletoId != null && oContrato.BoletoId != 3)
+            //{
+            //    htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + " " + oContrato.Bolsa.Descripcion.ToUpper() + "</td></tr>";
+            //}
+            //else if (oContrato.BoletoId == 3)
+            //{
+            //    htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
+            //}
+            htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            if (oContrato.TipoNegocioId == 1)
+            {
+                if (oContrato.Cantidad < 30000)
+                {
+                    htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split(oContrato.Cantidad.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                }
+                else if (oContrato.Cantidad >= 30000 && oContrato.Cantidad <= 100000)
+                {
+                    htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                }
+                else if (oContrato.Cantidad >= 100000)
+                {
+                    htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.Cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                }
+            }
+            if (oContrato.EstablecimientoPropio == true)
+            {
+                htmlBody += "ESTABLECIMIENTO PROPIO<br />";
+            }
+            else if (oContrato.EstablecimientoPropio == false)
+            {
+                htmlBody += "ESTABLECIMIENTO ARRENDADO<br />";
+            }
+            if (oContrato.ImporteSustentable != null && oContrato.ImporteSustentable > 0)
+            {
+                htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+            }
+            if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
+            {
+                htmlBody += "DOLARIZADO MÍNIMO 30 DÍAS<br />";
+            }
+            if (oContrato.FechaDolarizado != null)
+            {
+                htmlBody += "FECHA DOLARIZADO " + Split(oContrato.FechaDolarizado.Value.ToShortDateString()) + "<br />";
+            }
+            if (oContrato.DiasPesificado != null)
+            {
+                htmlBody += "PAGO DIFERIDO <br />";
+                htmlBody += "DÍAS DE DIFERIMIENTO " + oContrato.DiasPesificado + "<br />";
+            }
+            if (oContrato.CD == true)
+            {
+                htmlBody += "PAGO CD<br />";
+            }
+            else if (oContrato.Warrant == true)
+            {
+                htmlBody += "PAGO WARRANT<br />";
+            }
+            if (oContrato.PagoDirectoVendedor == true)
+            {
+                htmlBody += "PAGO DIRECTO<br /> ";
+            }
+            if (oContrato.MercsDeposito == true)
+            {
+                htmlBody += "MERCADERIA EN DEPOSITO<br /> ";
+            }
+            if (objDescuento != null)
+            {
+                foreach (var desc in objDescuento)
+                {
+                    if (desc.Importe > 0 || desc.Porcentaje > 0)
+                    {
+                        htmlBody += "BONIFICACIONES " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                    }
+                    else if (desc.Importe < 0 || desc.Porcentaje < 0)
+                    {
+                        htmlBody += "DESCUENTOS " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                    }
+                    if (desc.Importe != 0)
+                    {
+                        htmlBody += desc.Importe + " " + desc.Moneda.Descripcion + "<br />";
+                    }
+
+                    if (desc.Porcentaje != 0)
+                    {
+                        htmlBody += desc.Porcentaje + "%<br />";
+                    }
+                }
+            }
+            if (oContrato.StandardDeCalidadId == 1)
+            {
+                htmlBody += "CAMARA<br />";
+            }
+            else if (oContrato.StandardDeCalidadId == 3)
+            {
+                htmlBody += "FABRICA<br />";
+            }
+            else if (oContrato.StandardDeCalidadId == 7)
+            {
+                htmlBody += "CALIDAD GRADO 2<br />";
+            }
+            else if (oContrato.TrigoEspecial == true)
+            {
+                htmlBody += "CALIDAD ESPECIAL ";
+            }
+            if (objCalidad != null && oContrato.StandardDeCalidadId != 7)
+            {
+                foreach (var cal in objCalidad)
+                {
+                    htmlBody += cal.CalidadEspecial.Descripcion.ToUpper() + " " + cal.Valor.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "<br />";
+                    if (cal.PorcentajeDesde != null && cal.PorcentajeHasta != null)
+                    {
+                        htmlBody += "Porc. Desde " + cal.PorcentajeDesde + "% Hasta " + cal.PorcentajeHasta + "%<br />";
+                    }
+                }
+            }
+            if (oContrato.PrecioPactado != null && oContrato.PrecioPactado.Count > 0)
+            {
+                htmlBody += "PRECIO PACTADO <br />";
+                foreach (var precio in oContrato.PrecioPactado)
+                {
+                    htmlBody += " Si la entrega se realiza entre el " + precio.FechaDesde.Value.ToString("dd/MM/yyyy") + " y el " + precio.FechaHasta.Value.ToString("dd/MM/yyyy") +
+                        " el precio será " + precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() +
+                        "<br />";
+
+                    if (precio.ImportePactado != null && precio.ImportePactado > 0 && precio.MonedaImportePactado != null)
+                    {
+                        htmlBody += "Importe Pactado " + precio.ImportePactado.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaImportePactado.Descripcion.ToUpper() + "<br />";
+                    }
+                    if (precio.Porcentaje != null)
+                    {
+                        htmlBody += "Porcentaje Pactado " + precio.Porcentaje.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "%<br />";
+                    }
+                }
+            }
+            if (oContrato.PlanCanje == true)
+            {
+                htmlBody += "PLAN CANJE" + "<br />";
+            }
+            if (oContrato.ContratoVendedor != null)
+            {
+                htmlBody += "Contrato Vendedor: " + oContrato.ContratoVendedor + "<br />";
+            }
+            if (oContrato.ContratoCorredor != null)
+            {
+                htmlBody += "Contrato Corredor: " + oContrato.ContratoCorredor + "<br />";
+            }
+            if (oContrato.SelCargoMOA == true)
+            {
+                htmlBody += " Sellado 100% a Cargo MOA " + "<br />";
+            }
+            if (oContrato.SelCargoVendedor == true)
+            {
+                htmlBody += " Sellado 100% a Cargo vendedor " + "<br />";
+            }
+            if (oContrato.Compensacion == true)
+            {
+                htmlBody += " NEGOCIO COMPENSACIÓN " + "<br />";
+            }
+            if ((oContrato.NivelTarifa != null) && oContrato.TarifaFlete > 0)
+            {
+                htmlBody += " NIVEL DE TARIFA: " + oContrato.NivelTarifa.Descripcion.ToUpper() + "<br />" +
+                    "TARIFA DE FLETE: " + oContrato.TarifaFlete + "<br />";
+            }
+            if (oContrato.Observacion != null)
+            {
+                htmlBody += oContrato.Observacion + "<br />";
+            }
+            if (oContrato.FechaCierta.HasValue)
+            {
+                htmlBody += "Fecha Cierta de pago: " + oContrato.FechaCierta.Value.ToString("dd/MM/yyyy") + "<br />";
+            }
+            if (oContrato.DolarizadoExpress == true)
+            {
+                htmlBody += "A pesificar en mes en curso mediante envió de mail a materias.primas@molinosagro.com.ar hasta las 13 hs. <br />";
+            }
+            if (oContrato.ChequeElectronico == true)
+            {
+                htmlBody += "Pago con Echeq <br />";
+            }
+            if (oContrato.PagoCBU != null)
+            {
+                htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
+            }
+            htmlBody += "</td></tr>";
+            htmlBody += "</table>";
+            htmlBody += "<br /><strong>Condiciones de Venta</strong> <br /><br />  ";
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+            htmlBody += "<tr>" + th + "CAMARA </th>" + Td(ref linea) + (oContrato.Camara != null ? oContrato.Camara.Descripcion : "NO") + "</td></tr>";
+            htmlBody += "<tr>" + th + "COMISION A FAVOR </th>" + Td(ref linea) + (oContrato.ComisionAFavor != null ?
+                oContrato.ComisionAFavor.Descripcion + " " + oContrato.PorcentajeComisionVenta + "%" : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "FLETE A CARGO </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.FleteACargo) ? oContrato.FleteACargo : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "KG BALANZA </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.KgBalanza) ? oContrato.KgBalanza : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "PAGO </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.Pago) ? oContrato.Pago : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "DESTINO MERCADERIA</th>" + Td(ref linea) + (oContrato.ProcedenciaVenta != null ?
+               oContrato.ProcedenciaVenta.Nombre + " (" + oContrato.ProcedenciaVenta.Provincia.Nombre + ")" : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "IMPORTE DE LA OPERACION</th>" + Td(ref linea) + Split(importe.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td></tr>";
+
+            //htmlBody += "<tr>" + th + "CREDITO DISPONIBLE</th>" + Td(ref linea) + (oContrato.CreditoDisponible.HasValue ? Split(oContrato.CreditoDisponible.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.MonedaCreditoDisponible : "") + "</td></tr>";
+
+            htmlBody += "<tr>" + th + "CONDICION DE PAGO</th>" + Td(ref linea) + (oContrato.CondicionDePagoFijacionVenta != null ?
+               oContrato.CondicionDePagoDiaFijacion + " dias " + oContrato.CondicionDePagoTipoFijacion + " " + oContrato.CondicionDePagoFijacionVenta.Descripcion : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONDICION DE PESIFICACION</th>" + Td(ref linea) + (oContrato.CondicionDePagoPesificadoVenta != null ?
+              oContrato.CondicionDePagoDiaPesificado + " dias " + oContrato.CondicionDePagoTipoPesificado + " " + oContrato.CondicionDePagoPesificadoVenta.Descripcion : "") + "</td></tr>";
+            htmlBody += "</table>";
+
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+
+        public decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda)
+        {
+            var diaAnterior = fechaoperacion.AddDays(-1);
+            var cambio = tipoCambioAgent.TraerTipoDeCambio(diaAnterior);
+            if (moneda == "ARP  ")
+            {
+                precio = precio / cambio;
+            }
+
+            var iva = mobjMaterialManager.DevolverIVAPorMaterial(materialId);
+            iva = iva / 100 + 1;
+            var importe = (precio * (decimal)cantidad / 1000) * iva;
+            return importe;
         }
     }
 }

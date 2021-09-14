@@ -90,8 +90,20 @@
                     <div class="col-md-6">
                     </div>
                 </div>
-                <br />
 
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>IVA</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="iva" class="number-input" data-bind="value: Material.IVA, disabled: isControlDisabled" maxlength="50" style="max-width:310px" />
+                        <img id="errApellido" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+
+                <br />
                 <div class="row">
                     <div class="col-md-12">
                         <button id="butAceptar" class="k-button" type="button" data-role="button">Aceptar</button>

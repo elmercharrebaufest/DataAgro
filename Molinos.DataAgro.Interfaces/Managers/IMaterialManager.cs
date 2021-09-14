@@ -16,6 +16,8 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarMaterial(Material oMaterial);
 
         Resultado EliminarMaterial(int intMaterialId);
+
+        decimal DevolverIVAPorMaterial(int materialId);
     }
 }
 

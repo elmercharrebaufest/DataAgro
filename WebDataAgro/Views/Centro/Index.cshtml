@@ -81,12 +81,44 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-2">
+                        <label>Localidad</label>
+                    </div>
+                    <div class="col-md-2">
+                        <input id="Localidad" placeholder="Buscar por Localidad" type="text" class="k-textbox" data-bind="value: Centro.Localidad, disabled: isControlDisabled" style="width:310px" />
+                        <input id="LocalidadId" type="hidden" class="k-textbox" data-bind="value: Centro.LocalidadId, disabled: isControlDisabled" style="width:310px" />
+                        <img id="errLocalidadId" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Codigo Postal</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="CodigoPostal" type="text" class="k-textbox" data-bind="value: Centro.CodigoPostal, disabled: isControlDisabled" maxlength="50" style="max-width:310px" />
+                        <img id="errNombres" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Direccion</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="Direccion" type="text" class="k-textbox" data-bind="value: Centro.Direccion, disabled: isControlDisabled" maxlength="50" style="max-width:310px" />
+                        <img id="errNombres" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
                         <button id="butAceptar" class="k-button" type="button" data-role="button">Aceptar</button>
                         <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

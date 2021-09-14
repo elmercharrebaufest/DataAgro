@@ -13,6 +13,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CampaniaTableroId { get; set; }
         public int? CodigoEspecie { get; set; }
 
+        public decimal? IVA { get; set; }
+
         [ForeignKey("CampañaId")]
         public virtual Campaña Campaña { get; set; }
         [ForeignKey("CampaniaTableroId")]

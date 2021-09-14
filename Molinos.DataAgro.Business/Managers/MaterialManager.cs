@@ -42,7 +42,16 @@ namespace Molinos.DataAgro.Business
 
         public MaterialDto TraerMaterial(int intMaterialId)
         {
-            return repositorio.Obtener<Material, MaterialDto>(x => x.MaterialId == intMaterialId, x => new MaterialDto { MaterialId = x.MaterialId, CampaniaTableroId = x.CampaniaTableroId, CampañaId = x.CampañaId, Codigo = x.Codigo, Descripcion = x.Descripcion}) ?? new MaterialDto();
+            return repositorio.Obtener<Material, MaterialDto>(x => x.MaterialId == intMaterialId, x =>
+            new MaterialDto
+            {
+                MaterialId = x.MaterialId,
+                CampaniaTableroId = x.CampaniaTableroId,
+                CampañaId = x.CampañaId,
+                Codigo = x.Codigo,
+                Descripcion = x.Descripcion,
+                IVA = x.IVA
+            }) ?? new MaterialDto();
         }
 
 
@@ -64,6 +73,7 @@ namespace Molinos.DataAgro.Business
                 oMaterialSave.Descripcion = oMaterial.Descripcion;
                 oMaterialSave.CampañaId = oMaterial.CampañaId;
                 oMaterialSave.CampaniaTableroId = oMaterial.CampaniaTableroId;
+                oMaterialSave.IVA = oMaterial.IVA;
             }
             else
             {
@@ -124,9 +134,15 @@ namespace Molinos.DataAgro.Business
                     CampaniaActual = x.Campaña.Descripcion,
                     CampaniaIdActual = x.CampañaId ?? 0,
                     CampaniaTablero = x.CampaniaTablero.Descripcion,
-                    CampaniaTableroId = x.CampaniaTableroId ?? 0
+                    CampaniaTableroId = x.CampaniaTableroId ?? 0,
+                    IVA = x.IVA                     
                 }, null, 0, "Descripcion")
             };
+        }
+        
+        public decimal DevolverIVAPorMaterial(int materialId)
+        {
+          return  repositorio.Obtener<Material, decimal>(x => x.MaterialId == materialId, x => x.IVA??0);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Molinos.DataAgro.Business
 {
 
     public class CentroManager : ICentroManager
-    { 
+    {
         private ILogger logger;
         private readonly IRepositorio repositorio;
 
@@ -40,14 +40,30 @@ namespace Molinos.DataAgro.Business
                     Id = x.Id,
                     Descripcion = x.Descripcion,
                     CodigoSap = x.CodigoSap,
-                    ValidaRedespacho = x.ValidaRedespacho
+                    ValidaRedespacho = x.ValidaRedespacho,
+                    Acopio = x.Acopio,
+                    Localidad = x.Localidad != null ? x.Localidad.Nombre + " (" + x.Localidad.Provincia.Nombre + ")" : "Sin asignar",
+                    LocalidadId = x.LocalidadId,
+                    CodigoPostal = x.CodigoPostal,
+                    Direccion = x.Direccion,
                 }, null, 0, "Descripcion")
             };
         }
 
         public CentroDto TraerCentro(int id)
         {
-            return repositorio.Obtener<Centro, CentroDto>(x => x.Id == id, x => new CentroDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion,Acopio= x.Acopio, ValidaRedespacho = x.ValidaRedespacho }) ?? new CentroDto();
+            return repositorio.Obtener<Centro, CentroDto>(x => x.Id == id, x => new CentroDto
+            {
+                Id = x.Id,
+                CodigoSap = x.CodigoSap,
+                Descripcion = x.Descripcion,
+                Acopio = x.Acopio,
+                ValidaRedespacho = x.ValidaRedespacho,
+                Localidad = x.Localidad != null ? x.Localidad.Nombre + " (" + x.Localidad.Provincia.Nombre + ")" : "Sin asignar",
+                LocalidadId = x.LocalidadId,
+                CodigoPostal = x.CodigoPostal,
+                Direccion = x.Direccion,
+            }) ?? new CentroDto();
         }
 
         public Resultado GrabarCentro(Centro oCentro)
@@ -68,6 +84,9 @@ namespace Molinos.DataAgro.Business
                 oCentroSave.CodigoSap = oCentro.CodigoSap;
                 oCentroSave.Acopio = oCentro.Acopio;
                 oCentroSave.ValidaRedespacho = oCentro.ValidaRedespacho;
+                oCentroSave.LocalidadId = oCentro.LocalidadId;
+                oCentroSave.Direccion = oCentro.Direccion;
+                oCentroSave.CodigoPostal = oCentro.CodigoPostal;
             }
             else
             {

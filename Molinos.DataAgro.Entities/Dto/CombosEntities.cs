@@ -23,6 +23,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Codigo { get; set; }
 
         public string Campaña { get; set; }
+
+        public decimal? IVA { get; set; }
     }
 
     public class MotivoCombo

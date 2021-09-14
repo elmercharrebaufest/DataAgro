@@ -841,4 +841,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="MonedaCreditoDisponible" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="80264b14-f0b7-43dd-b3f6-85600245fa16" ChangeDateTime="08/20/2021 17:47:23">
+    <Property Name="ElementName" Value="[dbo].[Configuracion].[RedespachoMaximo]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Configuracion]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="RedespachoMaximoUSDM" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="23a7060f-1cae-4e3c-8750-689bc28c6ad7" ChangeDateTime="09/13/2021 14:30:05">
+    <Property Name="ElementName" Value="[dbo].[Centro].[CodigoPosta]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Centro]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CodigoPostal" />
+  </Operation>
 </Operations>

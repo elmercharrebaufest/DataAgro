@@ -30,6 +30,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CampaniaActual { get; set; }
         public int CampaniaTableroId { get; set; }
         public string CampaniaTablero { get; set; }
+        public decimal? IVA { get; set; }
     }
 
     public class DataAbmMaterial : Resultado
