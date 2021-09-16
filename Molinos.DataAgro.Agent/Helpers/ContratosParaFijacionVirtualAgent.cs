@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Agent
                     var material = repositorio.Obtener<Material>(x => x.MaterialId == materialId);
                     var rq = new Z_MPRFC_CONTRATO_CANJE_GENE()
                     {
-                        IM_CORREDOR = !string.IsNullOrEmpty(CuitCorredor) ? "C" + CuitCorredor.Remove(CuitCorredor.Length - 1).Remove(0, 2) : "",
+                        IM_CORREDOR = CuitCorredor,
                         IM_CUIT = CuitProveedor,
                         IM_MATERIAL = material.Codigo                        
                     };
