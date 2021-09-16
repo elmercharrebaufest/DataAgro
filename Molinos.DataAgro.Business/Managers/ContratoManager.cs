@@ -1269,6 +1269,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado))
             {
+                string jsonContrato = JsonConvert.SerializeObject(oContratoSave, new JsonSerializerSettings()
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                });
+                oContratoSave.NegocioHistorico.Add(new NegocioHistorico { Datos = jsonContrato, Fecha = DateTime.Now, NegocioId = oContratoSave.Id, TipoNegocioId = oContratoSave.TipoNegocioId, ComercialId = oContratoSave.ComercialId });
                 oContratoSave.Ampliaciones = oContrato.Ampliaciones.Value;
                 oContratoSave.EstadoId = (int)EnumEstadoContrato.Reconfirmar;
                 if (oContratoSave.CantidadCamiones != null && oContratoSave.CantidadCamiones > 0)
