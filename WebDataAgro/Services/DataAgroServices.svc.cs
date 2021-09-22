@@ -388,6 +388,12 @@ namespace WebDataAgro.Services
             contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
             contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
 
+            //sap tiene problemas con la moneda USD y llega corrido los decimales  por eso el *10
+            if (contrato.ImporteSustentable.HasValue && !string.IsNullOrEmpty(contrato.MonedaSustentableId) && contrato.MonedaSustentableId == "USDM ")
+            {
+                contrato.ImporteSustentable = contrato.ImporteSustentable * 10;
+            }
+
             contrato.FechaDesdeSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null
             && !string.IsNullOrEmpty(contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").FechaDesde) ?
             DateTime.ParseExact(contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
