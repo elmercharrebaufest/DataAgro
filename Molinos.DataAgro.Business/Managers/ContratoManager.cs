@@ -1364,7 +1364,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
-                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId)
+                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId || ValidarCalidadModificada(oContrato, oContratoSave))
                     && (oContratoSave.EstadoId != (int)EnumEstadoContrato.Pendiente && oContratoSave.EstadoId != (int)EnumEstadoContrato.Oferta && oContratoSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion))
                 {
                     oContrato.EstadoId = 7;
@@ -1562,10 +1562,10 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oContrato.Descuentos == null || !oContrato.Descuentos.Any(x => x.Id == descExistente.Id))
                     {
                         repositorio.Remover(descExistente);
-                        if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
-                        {
-                            oContratoSave.EstadoId = 7;
-                        }
+                        //if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                        //{
+                        //    oContratoSave.EstadoId = 7;
+                        //}
                     }
                 }
             }
@@ -1575,10 +1575,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     descuento.Negocio = oContratoSave;
                     repositorio.Agregar(descuento);
-                    if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
-                    {
-                        oContratoSave.EstadoId = 7;
-                    }
+                    //if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                    //{
+                    //    oContratoSave.EstadoId = 7;
+                    //}
                 }
             }
 
@@ -1589,10 +1589,10 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oContrato.Calidad == null || !oContrato.Calidad.Any(x => x.Id == calExistente.Id))
                     {
                         repositorio.Remover(calExistente);
-                        if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
-                        {
-                            oContratoSave.EstadoId = 7;
-                        }
+                        //if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                        //{
+                        //    oContratoSave.EstadoId = 7;
+                        //}
                     }
                 }
             }
@@ -1602,10 +1602,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     calidad.Contrato = oContratoSave;
                     repositorio.Agregar(calidad);
-                    if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
-                    {
-                        oContratoSave.EstadoId = 7;
-                    }
+                    //if (oContratoSave.Id != 0 && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3))
+                    //{
+                    //    oContratoSave.EstadoId = 7;
+                    //}
                 }
             }
 
@@ -5768,25 +5768,25 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><strong>Condiciones de Venta</strong> <br /><br />  ";
-            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            htmlBody += "<tr>" + th + "CAMARA </th>" + Td(ref linea) + (oContrato.Camara != null ? oContrato.Camara.Descripcion : "NO") + "</td></tr>";
-            htmlBody += "<tr>" + th + "COMISION A FAVOR </th>" + Td(ref linea) + (oContrato.ComisionAFavor != null ?
-                oContrato.ComisionAFavor.Descripcion + " " + oContrato.PorcentajeComisionVenta + "%" : "") + "</td></tr>";
-            htmlBody += "<tr>" + th + "FLETE A CARGO </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.FleteACargo) ? oContrato.FleteACargo : "") + "</td></tr>";
-            htmlBody += "<tr>" + th + "KG BALANZA </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.KgBalanza) ? oContrato.KgBalanza : "") + "</td></tr>";
-            htmlBody += "<tr>" + th + "PAGO </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.Pago) ? oContrato.Pago : "") + "</td></tr>";
-            htmlBody += "<tr>" + th + "DESTINO MERCADERIA</th>" + Td(ref linea) + (oContrato.ProcedenciaVenta != null ?
-               oContrato.ProcedenciaVenta.Nombre + " (" + oContrato.ProcedenciaVenta.Provincia.Nombre + ")" : "") + "</td></tr>";
-            htmlBody += "<tr>" + th + "IMPORTE DE LA OPERACION</th>" + Td(ref linea) + Split(importe.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td></tr>";
+            //htmlBody += "<br /><strong>Condiciones de Venta</strong> <br /><br />  ";
+            //htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+            //htmlBody += "<tr>" + th + "CAMARA </th>" + Td(ref linea) + (oContrato.Camara != null ? oContrato.Camara.Descripcion : "NO") + "</td></tr>";
+            //htmlBody += "<tr>" + th + "COMISION A FAVOR </th>" + Td(ref linea) + (oContrato.ComisionAFavor != null ?
+            //    oContrato.ComisionAFavor.Descripcion + " " + oContrato.PorcentajeComisionVenta + "%" : "") + "</td></tr>";
+            //htmlBody += "<tr>" + th + "FLETE A CARGO </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.FleteACargo) ? oContrato.FleteACargo : "") + "</td></tr>";
+            //htmlBody += "<tr>" + th + "KG BALANZA </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.KgBalanza) ? oContrato.KgBalanza : "") + "</td></tr>";
+            //htmlBody += "<tr>" + th + "PAGO </th>" + Td(ref linea) + (!string.IsNullOrEmpty(oContrato.Pago) ? oContrato.Pago : "") + "</td></tr>";
+            //htmlBody += "<tr>" + th + "DESTINO MERCADERIA</th>" + Td(ref linea) + (oContrato.ProcedenciaVenta != null ?
+            //   oContrato.ProcedenciaVenta.Nombre + " (" + oContrato.ProcedenciaVenta.Provincia.Nombre + ")" : "") + "</td></tr>";
+            //htmlBody += "<tr>" + th + "IMPORTE DE LA OPERACION</th>" + Td(ref linea) + Split(importe.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + "</td></tr>";
 
-            //htmlBody += "<tr>" + th + "CREDITO DISPONIBLE</th>" + Td(ref linea) + (oContrato.CreditoDisponible.HasValue ? Split(oContrato.CreditoDisponible.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.MonedaCreditoDisponible : "") + "</td></tr>";
+            ////htmlBody += "<tr>" + th + "CREDITO DISPONIBLE</th>" + Td(ref linea) + (oContrato.CreditoDisponible.HasValue ? Split(oContrato.CreditoDisponible.Value.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oContrato.MonedaCreditoDisponible : "") + "</td></tr>";
 
-            htmlBody += "<tr>" + th + "CONDICION DE PAGO</th>" + Td(ref linea) + (oContrato.CondicionDePagoFijacionVenta != null ?
-               oContrato.CondicionDePagoDiaFijacion + " dias " + oContrato.CondicionDePagoTipoFijacion + " " + oContrato.CondicionDePagoFijacionVenta.Descripcion : "") + "</td></tr>";
-            htmlBody += "<tr>" + th + "CONDICION DE PESIFICACION</th>" + Td(ref linea) + (oContrato.CondicionDePagoPesificadoVenta != null ?
-              oContrato.CondicionDePagoDiaPesificado + " dias " + oContrato.CondicionDePagoTipoPesificado + " " + oContrato.CondicionDePagoPesificadoVenta.Descripcion : "") + "</td></tr>";
-            htmlBody += "</table>";
+            //htmlBody += "<tr>" + th + "CONDICION DE PAGO</th>" + Td(ref linea) + (oContrato.CondicionDePagoFijacionVenta != null ?
+            //   oContrato.CondicionDePagoDiaFijacion + " dias " + oContrato.CondicionDePagoTipoFijacion + " " + oContrato.CondicionDePagoFijacionVenta.Descripcion : "") + "</td></tr>";
+            //htmlBody += "<tr>" + th + "CONDICION DE PESIFICACION</th>" + Td(ref linea) + (oContrato.CondicionDePagoPesificadoVenta != null ?
+            //  oContrato.CondicionDePagoDiaPesificado + " dias " + oContrato.CondicionDePagoTipoPesificado + " " + oContrato.CondicionDePagoPesificadoVenta.Descripcion : "") + "</td></tr>";
+            //htmlBody += "</table>";
 
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +

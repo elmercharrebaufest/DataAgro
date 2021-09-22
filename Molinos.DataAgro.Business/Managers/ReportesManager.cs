@@ -491,7 +491,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Total = kilosPosicionMaiz.Sum(x => x.KilosPesos + x.KilosDolares)
             };
             var kilosPosicionTrigoCamara = materialId.Contains(2) ?
-                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, 1, precioPizarra, negocios, centroId) :
+                (TraerPosicionMaterialCampaña ? TraerPosicionMaterialPorCampaña(2, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId) :
                 TraerPosicionMaterial(2, fechaDesde, fechaHasta, null, precioPizarra, negocios, centroId)
                 ) : new List<PosicionKilos>();
             var posicionTrigoCamara = new PosicionComprasDto
