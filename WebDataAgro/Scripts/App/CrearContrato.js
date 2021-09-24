@@ -227,6 +227,7 @@ function InicializarElementos() {
         autoWidth: true,
         filter: "contains",
         change: function () {
+           
             if ($("#buscadorProveedor").val().split('|').length > 1) {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
             }
@@ -1123,6 +1124,7 @@ function InicializarElementos() {
             }
             VisualizarFechaCierta();
             var precioNeto = $("#precioTotalApertura").data("kendoNumericTextBox").value();
+
             CalcularImporteDeOperacion(precioNeto, $("#cantidadId").val());
         },
         select: function (e) {
@@ -5581,17 +5583,19 @@ function LimpiarDescuentosConAgenteDeCompra() {
 
 function CalcularImporteDeOperacion(precio, cantidad) {
     var importe = 0;
-    if ((precio != null || precio > 0) && (cantidad != '' || cantidad > 0)) {
-        importe = MSExecuteOnServer("/Compranet/CalcularImporteDeOperacion", {
-            precio: precio,
-            cantidad: cantidad,
-            fechaOperacion: $("#fechaOperacionId").val(),
-            materialId: $("#material").val(),
-            monedaId: $("#precioMonedaId").val()
-        })
+    if ($("#ventaId").is(":checked")) {
+        if ((precio != null || precio > 0) && (cantidad != '' || cantidad > 0)) {
+            importe = MSExecuteOnServer("/Compranet/CalcularImporteDeOperacion", {
+                precio: precio,
+                cantidad: cantidad,
+                fechaOperacion: $("#fechaOperacionId").val(),
+                materialId: $("#material").val(),
+                monedaId: $("#precioMonedaId").val()
+            })
 
+        }
+        $("#importeOperacionId").data("kendoNumericTextBox").value(kendo.toString(Number(importe), "n2") + " USD");
     }
-    $("#importeOperacionId").data("kendoNumericTextBox").value(kendo.toString(Number(importe), "n2") + " USD");
 
 }
 
