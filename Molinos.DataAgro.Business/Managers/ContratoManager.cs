@@ -465,23 +465,26 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no debe estar vacio cuando el contrato es 'A FIJAR'");
                 }
-                if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
+                if (oParam.Venta != true)
                 {
-                    if (centro.ValidaRedespacho == true && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) && oParam.Pizarra != true)
+                    if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                     {
-                        oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
-                    }
+                        if (centro.ValidaRedespacho == true && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) && oParam.Pizarra != true)
+                        {
+                            oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
+                        }
 
-                    if (centro.ValidaRedespacho == true && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoDBId == 1 && x.TipoPeriodoDBId == 1)) && oParam.Pizarra == true)
-                    {
-                        oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
-                    }
+                        if (centro.ValidaRedespacho == true && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoDBId == 1 && x.TipoPeriodoDBId == 1)) && oParam.Pizarra == true)
+                        {
+                            oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
+                        }
 
-                    if (centro.ValidaRedespacho == false && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho) && oParam.Pizarra != true)
-                    {
-                        oErrorMessages.Error("Descuentos", " Solo se debe completar Redespacho en Acopios.");
-                    }
+                        if (centro.ValidaRedespacho == false && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho) && oParam.Pizarra != true)
+                        {
+                            oErrorMessages.Error("Descuentos", " Solo se debe completar Redespacho en Acopios.");
+                        }
 
+                    }
                 }
 
             }
