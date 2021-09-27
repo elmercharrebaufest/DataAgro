@@ -4136,7 +4136,7 @@ namespace Molinos.DataAgro.Business.Managers
                 foreach (var precio in oContrato.PrecioPactado)
                 {
                     htmlBody += "Precio " + precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() + "<br />";
-                    if (precio.ImportePactado != null)
+                    if (precio.ImportePactado != null && precio.MonedaImportePactado != null)
                     {
                         htmlBody += "Importe Pactado " + precio.ImportePactado.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaImportePactado.Descripcion.ToUpper() + "<br />";
                     }
