@@ -491,6 +491,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             }
 
+
             if (oParam.Venta != true)
             {
                 if (oParam.ClasificacionId == 1)
@@ -707,19 +708,28 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
-                if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
+                //if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
+                //{
+                //    oErrorMessages.Error("", "Se debe completar Posicion CBOT con el concepto Basis");
+                //}
+
+
+                if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId != null && oParam.TipoPosicionCBOTId != 3)
                 {
-                    oErrorMessages.Error("", "Se debe completar Posicion CBOT con el concepto Basis");
+                    oErrorMessages.Error("", "Se debe completar el campo posicion con CBOT o MAT");
                 }
 
-                if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && (oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0))))
+                if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId == 3)
                 {
-                    oErrorMessages.Error("", "Se debe completar el concepto Basis con Posicion CBOT");
+                    oErrorMessages.Error("", "Se debe completar el campo posicion con a Fijar PASE");
                 }
-
                 if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && (oParam.TipoPosicionCBOTId == null || oParam.TipoPosicionCBOTId == 0))
                 {
-                    oErrorMessages.Error("", "Se debe completar el Tipo Posicion CBOT con Posicion CBOT");
+                    oErrorMessages.Error("", "Se debe completar MAT, CBOT o PASE cuando este completo el campo Posicion");
+                }
+                if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId != 3 && (oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0))))
+                {
+                    oErrorMessages.Error("", "Se debe completar el concepto Basis con Posicion CBOT o MAT");
                 }
             }
 
@@ -1215,7 +1225,6 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Usuario no registrado", "El usuario no esta habilitado para cargar negocios, por favor comunicarse con su comercial");
                 }
             }
-
 
             if (!validacionesMinimas && oParam.TipoNegocioId == 1 && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho))
             {
@@ -4940,10 +4949,10 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        //public List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
-        //{
-        //    return ccppAgent.ListarCartasDePortePendienteAplicar(req);
-        //}
+        public List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
+        {
+            return ccppAgent.ListarCartasDePortePendienteAplicar(req);
+        }
 
         public string ValidarCredito(string cuit, double cantidad, decimal precio, string moneda)
         {
@@ -4976,11 +4985,6 @@ namespace Molinos.DataAgro.Business.Managers
 
 
             return resultado;
-        }
-
-        public List<CcPpPerndienteAplicarDto> ListarCartasDePortePendienteAplicar(CcPpPerndienteAplicarDto req)
-        {
-            return ccppAgent.ListarCartasDePortePendienteAplicar(req);
         }
 
         public List<ContratoCopiar> TraerContratosAcuerdoPorCorredor(int corredorId)
@@ -5954,7 +5958,7 @@ namespace Molinos.DataAgro.Business.Managers
                 porcentajeComision = aFijar.Proveedor.ComisionPorcentaje.Value / 100;
             }
             //Redespacho 
-            var redespacho = aFijar.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 2 && x.Importe != 0).SingleOrDefault(); 
+            var redespacho = aFijar.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 2 && x.Importe != 0).SingleOrDefault();
             if (redespacho != null)
             {
                 precioNeto += redespacho.Importe;
