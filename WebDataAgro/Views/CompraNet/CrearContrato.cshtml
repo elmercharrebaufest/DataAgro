@@ -163,7 +163,7 @@
         </div>
     </div>
     <div class="row noAgente noFason noAcuerdo ampliar">
-        <div id="fechaOperacionMotivoDiv" style="display:none;">
+        <div id="fechaOperacionMotivoDiv" style="display:none;" hidden>
             <div class="col-sm-offset-6 col-sm-1">
                 <label>Motivo</label>
             </div>
@@ -171,10 +171,13 @@
                 <select id="motivoAnterior" class="" data-bind="source: MotivoAnteriorCombo, value: Parametros.motivoAnterior, disabled: isControlDisabled"></select>
                 <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-sm-4" style="margin-top: 7px" hidden id="motivoTexto">
-                <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="motivoOperacionAnteriorId" rows="3" maxlength="100"></textarea>
+            <div class="col-sm-4 descripcion" style="margin-top: 7px">
+                <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="descripcionMotivoAnterior" rows="3" maxlength="100"></textarea>
             </div>
         </div>
+    </div>
+    <div class="col-sm-4" style="margin-top: 7px" hidden id="motivoTexto">
+        <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="motivoOperacionAnteriorId" rows="3" maxlength="100"></textarea>
     </div>
 
     <div class="row">
@@ -1173,8 +1176,8 @@
                     <input id="porcentajeComisionVentaId" placeholder="%" style="width:100%" />
                 </div>
             </div>
-            <div class="col-md-6">               
-               
+            <div class="col-md-6">
+
                 <div class="col-sm-5">
                     <label>Importe de operación USD</label>
                 </div>

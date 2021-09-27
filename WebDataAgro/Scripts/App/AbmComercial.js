@@ -353,6 +353,7 @@ function UpdateViewModel(model) {
         "PerfilId": model.Comercial.PerfilId,
         "EmpleadorACargo": model.Comercial.EmpleadorACargoId,
         "IdActiveDirectory": model.Comercial.IdActiveDirectory,
+        "IdUsuarioSAP": model.Comercial.IdUsuarioSAP,
         "Administrador": model.Comercial.Administrador,
         "Cupera": model.Comercial.Cupera,        
         "Deshabilitado": model.Comercial.Deshabilitado,
@@ -394,6 +395,7 @@ function LimpiarValidaciones() {
     $("#errPerfilId").css("display", "none");
     $("#errEmpleadorACargo").css("display", "none");
     $("#errIdActiveDirectory").css("display", "none");
+    $("#errIdUsuarioSAP").css("display", "none");
     $("#errAdministrador").css("display", "none");
 }
 
@@ -523,6 +525,7 @@ function Grabar() {
         "PerfilId": GetDropDownValue(viewModel, "Comercial.PerfilId.PerfilId"),
         "EmpleadorACargoId": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),
+        "IdUsuarioSAP": viewModel.get("Comercial.IdUsuarioSAP"),
         "Administrador": viewModel.get("Comercial.Administrador"),
         "Cupera": viewModel.get("Comercial.Cupera")
         

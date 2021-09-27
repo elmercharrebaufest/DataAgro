@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -232,6 +232,7 @@
     <Compile Include="Controllers\CartaDePresentacionController.cs" />
     <Compile Include="Controllers\CampanaController.cs" />
     <Compile Include="Controllers\LogServerController.cs" />
+    <Compile Include="Controllers\ReporteContratosAFijarPaseController.cs" />
     <Compile Include="Controllers\ReporteEvolucionFijacionController.cs" />
     <Compile Include="Controllers\ReportePesificadosController.cs" />
     <Compile Include="Controllers\ReportePrecioMoaPizarraController.cs" />
@@ -1007,6 +1008,7 @@
     <Content Include="DEV.DeployParameters.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\App\PanelAsociarNegocios.js" />
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
     <Content Include="Scripts\App\AbmFechaFeriado.js" />
@@ -1026,6 +1028,7 @@
     <Content Include="Scripts\App\Filtros.js" />
     <Content Include="Scripts\App\CupoDisponibilidad.js" />
     <Content Include="Scripts\App\LogDataAgro.js" />
+    <Content Include="Scripts\App\ReporteContratosAFijarPase.js" />
     <Content Include="Scripts\App\ReportePesificados.js" />
     <Content Include="Scripts\App\ReporteEvolucionFijacion.js" />
     <Content Include="Scripts\App\reportePrecioMoaPizarra.js" />
@@ -2763,6 +2766,10 @@
     <Content Include="Views\ConfiguracionInterna\_GrabarSustentablePartial.cshtml" />
    
     <Content Include="Views\CompraNet\_ModalObtenerCapacidadProductivaPendiente.cshtml" />
+    <Content Include="Views\CompraNet\ModalContratosPendientes.cshtml" />
+    <Content Include="Views\CompraNet\ModalConfirmarBonificacion.cshtml" />
+    <Content Include="Views\CompraNet\PanelAsociarNegocios.cshtml" />
+    <Content Include="Views\ReporteContratosAFijarPase\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

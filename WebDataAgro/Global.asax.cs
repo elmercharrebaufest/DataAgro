@@ -17,6 +17,9 @@ using Molinos.DataAgro.Interfaces;
 using System.Data.Entity;
 using WebDataAgro.Services;
 using Autofac.Integration.Wcf;
+using System.Data.SqlClient;
+using System.Net.Mail;
+using System.Configuration;
 
 namespace WebDataAgro
 {
@@ -84,6 +87,11 @@ namespace WebDataAgro
         protected void Application_Error(object sender, EventArgs e)
         {
             Exception exception = Server.GetLastError();
+            if (exception is SqlException && (exception as SqlException).Number == -2)
+            {
+                EnviarMailTimeOut(exception as SqlException);
+            }
+
             Response.Clear();
 
             HttpException httpException = exception as HttpException;
@@ -147,7 +155,7 @@ namespace WebDataAgro
             {
                 get
                 {
-                    
+
                     return Equipo.Count > 0;
                 }
             }
@@ -204,6 +212,40 @@ namespace WebDataAgro
                     HttpContext.Current.Session["corredoresComercial"] = value;
                 }
             }
+        }
+
+        private static void EnviarMailTimeOut(SqlException filterContext)
+        {
+            SmtpClient oCliente = default(SmtpClient);
+            int Condicion = 0;
+            if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+            {
+                oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
+            }
+            else
+            {
+                oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"]);
+            }
+            if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
+            {
+                oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
+                oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
+                    ConfigurationManager.AppSettings["CredentialPassword"]);
+            }
+            oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+            MailMessage oMensaje = new MailMessage
+            {
+                From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]),
+                Subject = "ERROR " + (ConfigurationManager.AppSettings["AmbientePruebas"] != "1" ? "PRODUCCION" : "PRUEBA") + " TIME OUT DATAAGRO DB",
+                Body = filterContext.Message + ":<br>" + filterContext.StackTrace,
+                IsBodyHtml = true
+            };
+            foreach (var item in ConfigurationManager.AppSettings["EmailDASoporte"].Split(';'))
+            {
+                oMensaje.To.Add(item);
+            }
+
+            oCliente.Send(oMensaje);
         }
 
     }

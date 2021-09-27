@@ -312,6 +312,7 @@
     <Build Include="dbo\Tables\Camara.sql" />
     <Build Include="dbo\Tables\ComisionAFavor.sql" />
     <Build Include="dbo\Tables\CondicionDePagoVenta.sql" />
+    <Build Include="dbo\Tables\NegocioAsociado.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

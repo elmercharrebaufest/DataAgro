@@ -847,4 +847,10 @@
   <data name="EnvioMailNegociosAnulaYReemplaza" xml:space="preserve">
     <value>Envio Mail Negocios Anula y Reemplaza</value>
   </data>
+  <data name="AsociarNegocio" xml:space="preserve">
+    <value>Asociar Negocio</value>
+  </data>
+  <data name="VisualizarReporteContratosAFijarPase" xml:space="preserve">
+    <value>Visualizar Reporte Contratos A Fijar Pase</value>
+  </data>
 </root>

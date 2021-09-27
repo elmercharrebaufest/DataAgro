@@ -24,6 +24,9 @@ $(document).ready(function () {
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
+     $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
     CrearViewModel();
     InicializarElementos();
     InicializarDatos();
@@ -220,6 +223,15 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#comercialId").data("kendoDropDownList").value(contratoAFijarDataAgro.ComercialId);
         $("#comercialFijacionId").data("kendoDropDownList").value(contratoAFijarDataAgro.ComercialId);
     }
+
+    if (afijar.Pase == true) {        
+        $("#fijacionPaseDiv").show();
+        $("#fijacionPase").text(afijar.Posicion);    
+        $("#tipoPosicionCBOTId").val(3);
+    } else {
+        $("#fijacionPaseDiv").hide();
+        $("#tipoPosicionCBOTId").val("");
+    }
 }
 
 function ArmarAperturaDesdeAFijar(afijar) {
@@ -353,6 +365,8 @@ function HabilitarCamposApertura() {
 }
 function InicializarElementos() {
     kendo.culture("es-AR");
+
+    
     cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);
     tieneDolarizado = ConvertirStringABool(tieneDolarizado);
     modificarDolarizadoFinalizado = ConvertirStringABool(modificarDolarizadoFinalizado);
@@ -1907,7 +1921,7 @@ function InicializarElementos() {
             const diffTime = Math.abs(hoy - this.value());
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             if (this.value() < hoy) {
-                $("#fechaFijacionMotivoDiv").show();
+                $(".fechaFijacionMotivoDiv").show();
                 if (diffDays > 1) {
                     //$("#noInformaSioId").prop("checked", true);
                     //$("#noInformaSioId").attr("disabled", true);
@@ -1917,8 +1931,9 @@ function InicializarElementos() {
                 }
 
             } else {
-                $("#fechaFijacionMotivoDiv").hide();
+                $(".fechaFijacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorFijacion").val("");
+                $("#descripcionMotivoAnterior").val("");
                 //$("#noInformaSioId").attr("disabled", false);
             }
         },
@@ -2569,7 +2584,7 @@ function InicializarElementos() {
         $("#virtualId").prop("checked", true);
         OcultarCamposSiEsVirtual();
     }
-
+    $("#contratoId").data("kendoAutoComplete").enable(false);
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -3407,23 +3422,33 @@ function CargarDatosEditar(contrato, hijo) {
 
     }
 
-    if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
+    var hoy = new Date();
+    var anio = hoy.getFullYear();
+    var mes = hoy.getMonth();
+    var dia = hoy.getDate();
+    hoy = new Date(anio, mes, dia);
+
+    var fechaop = new Date(parseInt(contrato.FechaOperacion.substr(6)));
+    if (fechaop < hoy) {
         var listMotivos = $("#motivoAnterior").data("kendoDropDownList").dataSource.data().filter(function (x) { return x.Descripcion == contrato.MotivoOperacionAnterior });
         if (listMotivos != null && listMotivos.length > 0) {
             $("#motivoOperacionAnteriorFijacion").val(contrato.MotivoOperacionAnterior);
             $("#motivoAnterior").data("kendoDropDownList").value(listMotivos[0].Id);
             $("#motivoAnterior").data("kendoDropDownList").trigger("change");
+            $("#descripcionMotivoAnterior").val(contrato.DescripcionOperacionAnterior);
         } else {
             $("#motivoAnterior").data("kendoDropDownList").text("Otro");
             $("#motivoAnterior").data("kendoDropDownList").trigger("change");
             $("#motivoOperacionAnteriorFijacion").val(contrato.MotivoOperacionAnterior);
+            $("#descripcionMotivoAnterior").val(contrato.DescripcionOperacionAnterior);
         }
-        $("#fechaFijacionMotivoDiv").show();
+        $(".fechaFijacionMotivoDiv").show();
     } else {
         $("#motivoOperacionAnteriorId").val("");
         $("#fechaOperacionMotivoDiv").hide();
         $("#motivoOperacionAnteriorFijacion").val("");
-        $("#fechaFijacionMotivoDiv").hide();
+        $("#descripcionMotivoAnterior").val("");
+        $(".fechaFijacionMotivoDiv").hide();
     }
 
     $("#fechaDesdeId").val(FormatearFecha(formatearFecha(contrato.FechaDesdeFormateado)));
@@ -3782,6 +3807,7 @@ function CargarDatosEditar(contrato, hijo) {
         }
     }
     if (contrato.Estado == 5 && contrato.TipoNegocioId == 3) {
+        $("#boton-search").attr("disabled", true);
         $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
         $("#buscadorCorredor").data("kendoAutoComplete").enable(false);
         $("#buscadorProveedor").data("kendoAutoComplete").enable(false);
@@ -3912,7 +3938,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#ImporteSobrePrecioContrato").val(contrato.ImporteSobrePrecioContrato);
         $("#PorcentajeSobrePrecioContrato").val(contrato.PorcentajeSobrePrecioContrato);
         $("#MonedaSobrePrecioContrato").val(contrato.MonedaSobrePrecioContrato);
-
+        $("#tipoPosicionCBOTId").val(contrato.TipoPosicionCBOTId);
         //if (contrato.ClasificacionContrato == "PRODUCTOR" && contrato.Corredor == "") {
         //    $("#chequeElectronico").prop("checked", false);
         //    $("#chequeElectronico").attr('readonly', true);
@@ -4866,6 +4892,204 @@ function RechazarCostoFinanciero() {
     } else {
         $.unblockUI();
     }
+}
+
+
+function AbrirModalContratosPendientes() {
+    $('#contratoId').val("");
+    $("#contratoId").data("kendoAutoComplete").trigger("change");
+    $(".datoscontrato").hide();
+    $("#datosContrato").hide();
+    ArmarGrillaContratosPendientes();
+    $("#modalContratosPendientes").modal("show");
+}
+
+
+function ArmarGrillaContratosPendientes() {
+   
+    $(document).ready(function () {
+        $("#grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        type: 'post',
+                        dataType: 'json',
+                        url: "/CompraNet/ObtenerFijacionesAutomaticas"
+                    },
+                    parameterMap: function (data, type) {
+                        var cuitProv = $("#buscadorProveedor").val().split('(');
+                        if (cuitProv[1] != null) {
+                            var cuitP = cuitProv[1].split(')');
+                        }
+                        else {
+                            cuitP = cuitProv;
+                        }
+                        var cuitCorr = $("#buscadorCorredor").val().split('(');
+                        if (cuitCorr[1] != null) {
+                            var cuitC = cuitCorr[1].split(')');
+                        }
+                        else {
+                            cuitC = cuitCorr;
+                        }
+                        Id = Id != "" ? Id : 0;
+                        var esVirtual = $("#virtualId").is(":checked") ? true : false;
+                        return { cuitProveedor: cuitP[0], cuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val(), fijacionId: Id, esVirtual: esVirtual };
+                    }
+                }
+            },
+            dataBound: function () {
+                var grid = $("#grid").data("kendoGrid");
+                var view = grid.dataSource.view();
+                for (var i = 0; i < view.length; i++) {
+                    if (view[i].Calidad == true) {
+                        grid.tbody.find("tr[data-uid='" + view[i].uid + "'] td:eq(0)")
+                            .addClass("colorCalidad");
+                    }                   
+                }
+                if ($("#virtualId").is(":checked") == true) {
+                    grid.thead.find("[data-title='Kgs Aplicados']").html("Kg Fijados Virtuales");
+
+                } else {
+                    grid.thead.find("[data-title='Kgs Aplicados']").html("Kgs Aplicados");
+                }
+                grid.tbody.find("tr").dblclick(function (e) {
+                    var data = grid.dataItem(this);
+                    $("#contratoId").val(data.ContratoId);
+                    $("#contratoId").data("kendoAutoComplete").trigger("change");
+                    $(".datoscontrato").show();
+                    $("#datosContrato").show();
+                    $("#modalContratosPendientes").modal("hide");
+                    cargarDatosAFijarEnFijacion(data);  
+                });
+              
+
+            },
+            height: 550,
+            toolbar: [{ template: kendo.template($("#template").html()) }],
+            pageable: false,
+            columns: [
+                {
+                    field: "", title: "", width: "10px"
+                },
+                {
+
+                    field: "ContratoId", title: "Contrato", template: function (dataItem) {
+                        if (dataItem.Calidades != null && dataItem.Calidades.length > 0) {
+                            var texto = "";
+                            for (var cal = 0; cal < dataItem.Calidades.length; cal++) {
+                                if (dataItem.Calidades[cal].PorcentajeDesde != null && dataItem.Calidades[cal].PorcentajeHasta != null) {
+                                    texto = "Porc. desde " + dataItem.Calidades[cal].PorcentajeDesde + " Hasta " + dataItem.Calidades[cal].PorcentajeHasta;
+                                }
+                            }
+                         
+                            return "<label  style='color: " + (dataItem.Color != null ? dataItem.Color : "") + "'>  " + dataItem.ContratoId + " <i data-toggle='tooltip' data-placement='top' title=' " + texto + "'  class='icono fa fa-exclamation-triangle' aria-hidden='true'  onmouseover='MostrarTooltip(this)'></label>"
+                        } else {
+                            return "<label  style='color: " + (dataItem.Color != null ? dataItem.Color : "") + "'> " + dataItem.ContratoId + "</label>"
+
+                        }
+                    }
+                },
+                {
+                    field: "Clasificacion", title: "Clasificacion", template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.Clasificacion + "</label>"
+                        } else {
+                            return dataItem.Clasificacion;
+                        }
+                    }
+                },
+                {
+                    field: "KilosContrato", title: "Kgs contrato", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosContrato + "</label>"
+                        } else {
+                            return dataItem.KilosContrato;
+                        }
+                    }
+                },
+                {
+                    field: "KilosPendiente", title: "Kgs Pendientes", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosPendiente + "</label>"
+                        } else {
+                            return dataItem.KilosPendiente;
+                        }
+                    }
+                },
+                {
+                    field: "KilosAplicados", title: "Kgs Aplicados", template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosAplicados + "</label>"
+                        } else {
+                            return dataItem.KilosAplicados;
+                        }
+                    }
+                },
+                {
+                    field: "FechaDesde", title: "Fecha Desde", template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.FechaDesde + "</label>"
+                        } else {
+                            return dataItem.FechaDesde;
+                        }
+                    }
+                },
+                {
+                    field: "FechaHasta", title: "Fecha Hasta", template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.FechaHasta + "</label>"
+                        } else {
+                            return dataItem.FechaHasta;
+                        }
+                    }
+                },
+                {
+                    field: "PorcentajeSobrePrecio", title: "Porc. Sobre Precio", template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + (dataItem.PorcentajeSobrePrecio != 0 ? dataItem.PorcentajeSobrePrecio : "") + "</label>"
+                        } else {
+                            return (dataItem.PorcentajeSobrePrecio != 0 ? dataItem.PorcentajeSobrePrecio : "")
+                        }
+                    }
+                },
+                {
+                    field: "CondicionFijacionDescripcion", title: "Condic. Fijacion", template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + (dataItem.CondicionFijacionDescripcion != null ? dataItem.CondicionFijacionDescripcion : "") + "</label>"
+                        } else {
+                            return (dataItem.CondicionFijacionDescripcion != null ? dataItem.CondicionFijacionDescripcion : "");
+                        }
+                    }
+                },
+                {
+                    field: "Pase", title: "Pase", template: function (dataItem) {                      
+                        return "<label  style='color: " + dataItem.Color + "'> " +
+                            (dataItem.Pase == true ? "Pase <br>" + dataItem.Posicion : "")
+                            + "</label>"                        
+                    }
+                },
+                {
+                    field: "", template: function (dataItem) {
+                        var data = dataItem;
+                        return '<button class="seleccionar" data-toggle="tooltip" title="Seleccionar" onclick="Seleccionar(\''+data.uid+'\')"> Seleccionar</button>';
+                    }
+                }
+            ],
+        }).data("kendoGrid");
+    });
+
+
+}
+
+function MostrarTooltip(tooltip) {
+    $(tooltip).tooltip('show');
+}
+
+function Seleccionar(data) {
+    //var grid = $("#grid").data("kendoGrid");
+    //var data = grid.dataItem(e);
+    var grid = $("#grid").data("kendoGrid");
+    grid.tbody.find("tr[data-uid= '" + data + "']").trigger('dblclick');
 }
 
 

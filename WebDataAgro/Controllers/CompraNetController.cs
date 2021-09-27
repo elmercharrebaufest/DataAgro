@@ -1158,9 +1158,59 @@ namespace WebDataAgro.Controllers
             return Json(tieneFijaciones, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult DevolverContratosParaAsociar(int contratoId, string numero)
+        {
+            var result = mobjContratoManager.DevolverContratosParaAsociar(contratoId, numero);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult DevolverContratoAsociadosPase(int contratoId)
+        {
+            var result = mobjContratoManager.DevolverContratoAsociadosPase(contratoId);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
         public ActionResult CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaOperacion, string monedaId)
         {
             var result = mobjContratoManager.CalcularImporteDeOperacion(precio, cantidad, materialId, fechaOperacion, monedaId);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult ActualizarNegociosAsociados(List<NegocioAsociadoDto> negocio, int contratoId, decimal precioPonderado)
+        {
+            var result = mobjContratoManager.GrabarNegociosAsociados(negocio, contratoId, precioPonderado);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult DevolverSiTieneAsociados(int contratoId)
+        {
+            var result = mobjContratoManager.TieneAsociados(contratoId);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult EsUnContratoAsociado(int negocioId)
+        {
+            var result = mobjContratoManager.EsUnContratoAsociado(negocioId);
             return new JsonResult()
             {
                 Data = result,

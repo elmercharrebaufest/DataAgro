@@ -37,6 +37,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? USDNoPesificable { get; set; }
         public decimal? USDTotal { get; set; }
         public decimal? USDTotalizador { get; set; }
+        public bool Pase { get; set; }
+        public double? KgTotalesPase { get; set; }
+        public decimal? Plus { get; set; }
+        public string Posicion { get; set; }
     }
 
 }

@@ -78,6 +78,17 @@
                     </span>
                     <span>Propios</span>
                 </div>
+                <div class="float-left" style="width:100px; margin-left:12px">
+                    <span style="width:100px;">Elementos por pagina</span>
+                </div>
+                <div class="float-left" style="width:100px; margin-left:12px">
+                    <select id="pageSize" onchange="setPageSize()" style="width:100px;">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20" selected>20</option>
+                        <option value="40">40</option>
+                    </select>
+                </div>
                 <div class="float-right margen-15">
                     @if (anularCupo || anularCentro || anularOtrasZonas || anularRosario ||
             anularSur || anularNorte || anularSur)
@@ -128,16 +139,16 @@
     </button>
 
     <div id="demo" class="row no-margin collapse" style="margin-top: -25px;">
-             <div class="col-md-8"></div>
-            <div class="col-xs-12 col-md-2">
-                @Html.TextBox("CupoSap", "", new { placeholder = "Código de Cupo", @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "CupoSAPId" })
-            </div>
-            <div class="col-xs-12 col-md-2">
-                <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="Filtrar()">
-                </button>
-                <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
-                </button>
-            
+        <div class="col-md-8"></div>
+        <div class="col-xs-12 col-md-2">
+            @Html.TextBox("CupoSap", "", new { placeholder = "Código de Cupo", @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "CupoSAPId" })
+        </div>
+        <div class="col-xs-12 col-md-2">
+            <button type="button" id="filtrar" class="k-button k-button-icontext fa fa-filter" style="height:34px" onclick="Filtrar()">
+            </button>
+            <button type="button" id="borrarFiltro" class="k-button k-button-icontext fa fa-times" style="height:34px" onclick="BorrarFiltro()">
+            </button>
+
         </div>
     </div>
 
@@ -149,8 +160,10 @@
 <br />
 <div id="cupos">
     <div class="row" id="nuevotab">
-        <div class="col-xs-12">
-            <div id="gridCupo"></div>
+        <div class="col-xs-12" id="parent">
+            <div style="height:450px;">
+                <div id="gridCupo"></div>
+            </div>
         </div>
     </div>
 </div>

@@ -32,6 +32,7 @@ namespace WebDataAgro.Services
         private readonly IMailManager mailManager;
         private readonly IFijacionDePrecioContratoManager fijacionDePrecioContratoManager;
         private readonly ITipoDeCambioAgent tipoDeCambioAgent;
+        private readonly IProveedorManager proveedorManager;
 
         public DataAgroServices(ILogger logger,
             IRiesgoComercialManager riesgoComercial,
@@ -43,7 +44,8 @@ namespace WebDataAgro.Services
             ICupoManager cupoManager,
             IMailManager mailManager,
             IFijacionDePrecioContratoManager fijacionDePrecioContratoManager,
-            ITipoDeCambioAgent tipoDeCambioAgent
+            ITipoDeCambioAgent tipoDeCambioAgent,
+            IProveedorManager proveedorManager
             )
         {
             this.logger = logger;
@@ -57,6 +59,7 @@ namespace WebDataAgro.Services
             this.mailManager = mailManager;
             this.fijacionDePrecioContratoManager = fijacionDePrecioContratoManager;
             this.tipoDeCambioAgent = tipoDeCambioAgent;
+            this.proveedorManager = proveedorManager;
         }
         #region Servicios de DataAgro
 
@@ -389,7 +392,7 @@ namespace WebDataAgro.Services
             contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
 
             //sap tiene problemas con la moneda USD y llega corrido los decimales  por eso el *10
-            if (contrato.ImporteSustentable.HasValue && !string.IsNullOrEmpty(contrato.MonedaSustentableId) && contrato.MonedaSustentableId == "USDM ")
+            if (contrato.ImporteSustentable.HasValue && !string.IsNullOrEmpty(contrato.MonedaSustentableId) && contrato.MonedaSustentableId.Contains("USDM"))
             {
                 contrato.ImporteSustentable = contrato.ImporteSustentable * 10;
             }
@@ -527,11 +530,11 @@ namespace WebDataAgro.Services
             contrato.PrecioPactado = preciosPactados;
             if (!esActualizar)
             {
-                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == contratoSAP.Comercial);
+                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == contratoSAP.Comercial || x.IdUsuarioSAP == contratoSAP.Comercial);
                 contrato.GrupoCompra = comercial.GrupoDeComprasId;
                 contrato.ComercialId = comercial.ComercialId;
                 contrato.UsuarioId = contratoSAP.Comercial;
-                contrato.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.ComercialCreador, x => x.ComercialId);
+                contrato.ComercialCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == contratoSAP.ComercialCreador || x.IdUsuarioSAP == contratoSAP.ComercialCreador, x => x.ComercialId);
             }
 
 
@@ -608,6 +611,10 @@ namespace WebDataAgro.Services
                 if (aFijar != null)
                 {
                     fijacion.ClasificacionContrato = aFijar.Clasificacion.Descripcion.ToUpper();
+                    if (aFijar.TipoPosicionCBOTId == 3)
+                    {
+                        fijacion.TipoPosicionCBOTId = 3;
+                    }
                 }
                 fijacion.FijacionSAP = fijacionSAP.FijacionSAP;
                 fijacion.ChequeElectronico = fijacionSAP.ZLSCH == "=";
@@ -640,8 +647,8 @@ namespace WebDataAgro.Services
                 fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);
                 fijacion.EstadoId = 5;
                 fijacion.TipoNegocioId = 3;
-                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.Comercial);
-                var comercialCreador = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.ComercialCreador);
+                var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.Comercial || x.IdUsuarioSAP == fijacionSAP.Comercial);
+                var comercialCreador = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == fijacionSAP.ComercialCreador || x.IdUsuarioSAP == fijacionSAP.ComercialCreador);
                 fijacion.ComercialId = comercial.ComercialId;
                 fijacion.ComercialCreadorId = comercialCreador.ComercialId;
                 fijacion.GrupoCompra = comercial.GrupoDeComprasId;
@@ -780,7 +787,7 @@ namespace WebDataAgro.Services
                 cupo.EstadoCupoId = cupoSAP.Borrado == "X" ? 4 : cupoOriginal.EstadoCupoId;
                 if (!string.IsNullOrEmpty(cupoSAP.Comercial))
                 {
-                    cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial, x => x.ComercialId);
+                    cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial || x.IdUsuarioSAP == cupoSAP.Comercial, x => x.ComercialId);
                 }
                 if (cupo.ComercialId == null || cupo.ComercialId == 0)
                 {
@@ -851,7 +858,7 @@ namespace WebDataAgro.Services
                 cupo.Destinatario = cupoSAP.Destinatario ?? "";
                 cupo.FleteProcedencia = cupoSAP.FleteProcedencia == "S";
                 cupo.Calidad = cupoSAP.Calidad == "01" ? "Camara" : cupoSAP.Calidad == "03" ? "Fabrica" : "";
-                cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial, x => x.ComercialId);
+                cupo.ComercialId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == cupoSAP.Comercial || x.IdUsuarioSAP == cupoSAP.Comercial, x => x.ComercialId);
                 cupo.EstadoCupoId = 1;
 
                 logger.Debug("Alta CUPOSAP VALIDAR");
@@ -1082,6 +1089,70 @@ namespace WebDataAgro.Services
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
             return oEntityErrors;
         }
+
+        public Resultado AltaCampoSustentable(CampoDetalleMoa campo)
+        {
+            Resultado resultado = new Resultado();
+            try
+            {
+                var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == campo.ProveedorCUIT);
+                if (proveedor == null)
+                {
+                    resultado.Error("ProveedorCUIT", "El proveedor no existe");
+                }
+                if (!repositorio.Existe<Localidad>(x => x.LocalidadId == campo.LocalidadId))
+                {
+                    resultado.Error("LocalidadId", "La localidad no existe");
+                }
+
+                var campaña = repositorio.Obtener<Campaña>(x => x.Descripcion == campo.Campania);
+                if (campaña == null)
+                {
+                    resultado.Error("Campania", "La campaña no existe");
+                }
+                if (resultado.HayError)
+                {
+                    return resultado;
+                }
+                int? comercialAsociadoId = null;
+                var comercialAsociado = proveedor.ProveedorComercialAsociados.FirstOrDefault();
+                if (comercialAsociado != null)
+                {
+                    comercialAsociadoId = comercialAsociado.ComercialId;
+                }
+
+                CampoDetalle campoSave = new CampoDetalle
+                {
+                    ComercialId = comercialAsociadoId,
+                    HectareasCultivables = campo.HectareasCultivables,
+                    HectareasTotales = campo.HectareasTotales,
+                    Rinde = campo.ToneladasAprobadas,
+                    ImportId = null,
+                    KMZfile = campo.KMZfileBase64, // ej: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAA...
+                    KMZnombre = @"C:\fakepath\" + campo.KMZnombre,
+                    Latitud = campo.Latitud,
+                    Longitud = campo.Longitud,
+                    LocalidadId = campo.LocalidadId,
+                    MaterialId = 3,
+                    Nombre = campo.Nombre,
+                    NroItem = 1,
+                    ProveedorId = proveedor.ProveedorId,
+                    CampañaId = campaña.CampañaId
+                };
+
+                resultado = proveedorManager.AltaCampoSustentable(campoSave);
+
+
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error en AltaCampoSustentable");
+                logger.Error(e);
+                resultado.Error("Error", "Error");
+            }
+            return resultado;
+        }
+
 
         #endregion
     }

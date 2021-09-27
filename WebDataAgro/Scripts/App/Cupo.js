@@ -98,8 +98,6 @@ function InicializarCuposIndex() {
         { field: "FechaIngreso", operator: "gte", value: new Date()},
     ];
     var ds = {
-
-
         transport: {
 
             parameterMap: function (options, operation) {
@@ -149,7 +147,8 @@ function InicializarCuposIndex() {
         serverSorting: true,
         sort: [
             { field: "FechaIngreso", dir: "asc" },
-            { field: "EstadoOrden", dir: "asc" }
+            { field: "Material", dir: "asc" },
+            { field: "EstadoOrden", dir: "asc" },
 
         ],
         serverFiltering: true,
@@ -157,8 +156,9 @@ function InicializarCuposIndex() {
         //,
         //filter: defaultFilter
     };
+    $("#pageSize").kendoDropDownList();    
 
-    $("#gridCupo").kendoGrid({
+    $("#gridCupo").kendoGrid({        
         dataSource: ds,
         dataBound: function () {           
             $("td:has(div.statusexterno)").attr('id', 'border-turquoise');
@@ -183,7 +183,6 @@ function InicializarCuposIndex() {
                 $('[data-toggle="tooltip"]').tooltip();
             }
         },
-        sortable: true,
         columns: [
             { selectable: true },
             {
@@ -221,8 +220,9 @@ function InicializarCuposIndex() {
             { field: "Centro", type: "string", width: 150 },
             { field: "Calidad", type: "string", width: 150 },
             //{ field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 50, format: _DefaultDateTemplate },
-            { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 50, format: _DefaultDateTemplate },
-            { field: "Hora", title: "Hora", type: "date", width: 150 },
+            //{ field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 50, format: _DefaultDateTemplate },
+            { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 150, template: function (dataItem) { return kendo.toString(dataItem.FechaRegistro, "dd/MM/yyyy") + " " + dataItem.Hora; } },
+            //{ field: "Hora", title: "Hora", type: "date", width: 150 },
             {
                 field: "ZonaCupo", title: "Zona", type: "string", width: 150,
                 filterable: {
@@ -247,9 +247,9 @@ function InicializarCuposIndex() {
                 },
             },
             {
-                field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
+                field: "FleteProcedencia", title: "Flete", type: "string", width: 70, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
             },
-            { field: "Observaciones", type: "string", width: 150, hidden: externo },
+            //{ field: "Observaciones", type: "string", width: 150, hidden: externo },
             { field: "Comercial", type: "string", width: 150, filterable: { ui: createMultiSelectComercial } },
             { field: "EstadoOrden", type: "number", hidden: true },
             {
@@ -325,24 +325,11 @@ function InicializarCuposIndex() {
 
 
         ],
-        pageable: {
-            messages: {
-                display: "{2} elementos",
-                empty: "No hay elementos para mostrar",
-                page: "P&aacute;gina",
-                allPages: "Todas",
-                of: "de {0}",
-                itemsPerPage: "Elementos por p&aacute;gina",
-                first: "Ir a la primer p&aacute;gina",
-                previous: "Ir a la p&aacute;gina anterior",
-                next: "Ir a la p&aacute;gina siguiente",
-                last: "Ir a la &uacute;ltima p&aacute;gina",
-                refresh: "Recargar"
-            },
-            input: true,
-            numeric: true
+        filterMenuInit: function (e) {
+            if (e.field == "Proveedor" || e.field == "Comercial") {
+                $(e.container).css("width", "300px");
+            }
         },
-        scrollable: false,
         sortable: {
             mode: "multiple",
             allowUnsort: true,
@@ -381,13 +368,33 @@ function InicializarCuposIndex() {
                 }
             }
         },
-        filterMenuInit: function (e) {
-            if (e.field == "Proveedor" || e.field == "Comercial") {
-                $(e.container).css("width", "300px");
-            }
-        }
-    });
+        pageable: {
+            messages: {
+                display: "{2} elementos",
+                empty: "No hay elementos para mostrar",
+                page: "P&aacute;gina",
+                allPages: "Todas",
+                of: "de {0}",
+                itemsPerPage: "Elementos por p&aacute;gina",
+                first: "Ir a la primer p&aacute;gina",
+                previous: "Ir a la p&aacute;gina anterior",
+                next: "Ir a la p&aacute;gina siguiente",
+                last: "Ir a la &uacute;ltima p&aacute;gina",
+                refresh: "Recargar"
+            },
+            input: true,
+            numeric: true,
+            pageSize: 20,
+            //pageSizes: [5, 10, 20, 40]
+        },
+        scrollable: true,
 
+        height: 550,
+    });
+    //$("#gridCupo .k-grid-content").css({
+    //    "overflow-y": "scroll"
+    //});
+    
 
 
     var checkInputs = function (elements) {
@@ -1002,6 +1009,11 @@ function BorrarFiltro() {
     }
     dataSource.filter(filters);
 }
-  
+
+function setPageSize() {
+    var grid = $("#gridCupo").data("kendoGrid");
+    grid.dataSource.pageSize($("#pageSize").val());
+    grid.refresh();
+}  
    
 

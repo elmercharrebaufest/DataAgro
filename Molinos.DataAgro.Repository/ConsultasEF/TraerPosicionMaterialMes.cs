@@ -35,6 +35,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3 || x.TipoNegocioId == 4 || x.TipoNegocioId == 5)
             //&& (((x is Contrato) && (x as Contrato).Canje != true) || !(x is Contrato))
             && (((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).Canje != true) || !(x is FijacionDePrecioContrato))
+            && (((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).TipoPosicionCBOTId != 3) || !(x is FijacionDePrecioContrato))
             && !(((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).Canje != true && (x as FijacionDePrecioContrato).Virtual != true && (x as FijacionDePrecioContrato).Contrato.Canje == true))
             ).DefaultIfEmpty()
                        .OrderBy(x => SqlFunctions.DatePart("month", x.Fecha)).Select(x => new ExcelPosicionMaterialDto
@@ -44,15 +45,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            RazonSocial = x is AgenteCompra ? ((x as AgenteCompra).Operador.Descripcion ?? "") : x.Proveedor.RazonSocial ?? "",
                            Cuit = x.Proveedor.CUIT ?? "",
                            Material = x.MaterialId == 1 ? "Maiz" : x.MaterialId == 2 ? "Trigo" : x.MaterialId == 3 ? "Soja" : x.MaterialId == 4 ? "Girasol" : x.MaterialId == 5 ? "Girasol Alto Oleico" : "",
-                           TipoNegocio = x.TipoNegocio.Descripcion ?? "",
+                           TipoNegocio = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "A PRECIO" : (x.TipoNegocio.Descripcion ?? ""),
                            Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido ?? "",
                            Cantidad = (x != null) ? x.Cantidad : 0,
                            CantidadCamiones = x is Contrato ? (x as Contrato).CantidadCamiones ?? 0 : 0,
                            Campana = x.Campana.Descripcion ?? "",
                            FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) != null ? SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde) : "",
                            FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) != null ? SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta) : "",
-                           Precio = (x != null) ? x.Precio : 0,
-                           Moneda = x.Moneda.Descripcion ?? "",
+                           Precio = (x != null) ? (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? (x.PrecioNetoPonderado ?? 0): x.Precio : 0,
+                           Moneda = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USD" : (x.Moneda.Descripcion ?? ""),
                            Fecha = SqlFunctions.DateName("day", x.Fecha) != null ? SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha) : "",
                            Provincia = x is Contrato ? (x as Contrato).Provincia.Nombre ?? "" : "",
                            Localidad = x is Contrato ? (x as Contrato).Localidad.Nombre ?? "" : "",

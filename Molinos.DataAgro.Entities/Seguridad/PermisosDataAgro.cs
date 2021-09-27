@@ -164,6 +164,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ModificarFijacionVirtual = 345,
         [Display(ResourceType = typeof(Text), Name = "EnvioMailNegociosAnulaYReemplaza")]
         EnvioMailNegociosAnulaYReemplaza = 346,
+        [Display(ResourceType = typeof(Text), Name = "AsociarNegocio")]
+        AsociarNegocio = 347,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]
@@ -200,6 +202,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarReportePrecioMoaPizarra = 416,
         [Display(ResourceType = typeof(Text), Name = "VisualizarReportePagoDiferido")]
         VisualizarReportePagoDiferido = 417,
+        [Display(ResourceType = typeof(Text), Name = "VisualizarReporteContratosAFijarPase")]
+        VisualizarReporteContratosAFijarPase = 418,
 
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]

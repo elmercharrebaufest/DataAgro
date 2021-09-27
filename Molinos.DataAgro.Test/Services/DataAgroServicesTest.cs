@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Test.Services
         private Mock<IMailManager> mailManagerMock;
         private Mock<IFijacionDePrecioContratoManager> fijacionManager;
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgent;
-
+        private Mock<IProveedorManager> proveedorManager;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -54,11 +54,12 @@ namespace Molinos.DataAgro.Test.Services
             mailManagerMock = new Mock<IMailManager>();
             fijacionManager = new Mock<IFijacionDePrecioContratoManager>();
             tipoDeCambioAgent = new Mock<ITipoDeCambioAgent>();
+            proveedorManager = new Mock<IProveedorManager>();
 
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new DataAgroServices(loggerMock.Object, riesgoComercialManagerMock.Object, campaniaAcutalManagerMock.Object,
                 camaniaMaterialManagerMock.Object, informeComercialManagerMock.Object, contratoManagerMock.Object, repositorioMock.Object, cupoManagerMock.Object
-                , mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object);
+                , mailManagerMock.Object, fijacionManager.Object, tipoDeCambioAgent.Object, proveedorManager.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
@@ -623,7 +624,7 @@ namespace Molinos.DataAgro.Test.Services
               Returns(new SISA { CBU = "000923", EstadoCuit = 1, SituacionCategoria = "aaaa", CodCategoria = 1 });
             repositorioMock.Setup(y => y.ObtenerMayor<Negocio, DateTime>(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<Expression<Func<Negocio, DateTime>>>()))
                    .Returns(new Negocio() { MaterialId = 1, MonedaId = "ARS ", Fecha = DateTime.Now });
-            var result = target.ValidarProveedorComercial("00023434",true) as ResultadoValidarProveedorComercial;
+            var result = target.ValidarProveedorComercial("00023434", true) as ResultadoValidarProveedorComercial;
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
             Assert.AreEqual(result.ListaErrores.Count, 1);
@@ -1009,6 +1010,38 @@ namespace Molinos.DataAgro.Test.Services
         {
             var result = target.ActualizarCesionContratoSAP("", true) as ResultadoSap;
             Assert.NotNull(result);
+        }
+
+        [Test]
+        public void AltaCampoSustentableTestOk()
+        {
+            var campo = new CampoDetalleMoa
+            {
+                HectareasCultivables = 1,
+                Campania = "20-21",
+                HectareasTotales = 1,
+                KMZfileBase64 = "",
+                KMZnombre = "",
+                Latitud = "45",
+                LocalidadId = 1,
+                Longitud = "11",
+                Nombre = "a",
+                ProveedorCUIT = "30345456230",
+                ToneladasAprobadas = 1
+            };
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>()))
+                .Returns(new Proveedor { ProveedorId = 1, ProveedorComercialAsociados = new List<ProveedorComercial> { new ProveedorComercial { ComercialId = 1, ProveedorId = 1, ProveedorComercialId = 1, NroItem = 1 } } });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>()))
+                .Returns(new Campaña { CampañaId = 1, Descripcion = "20-21" });
+            repositorioMock.Setup(x => x.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
+            proveedorManager.Setup(x => x.AltaCampoSustentable(It.IsAny<CampoDetalle>())).Returns(new Resultado());
+
+            var result = target.AltaCampoSustentable(campo) as Resultado;
+
+            proveedorManager.Verify(x => x.AltaCampoSustentable(It.IsAny<CampoDetalle>()), Times.Once);
+
+            Assert.NotNull(result);
+            Assert.AreEqual(false, result.HayError);
         }
     }
 }

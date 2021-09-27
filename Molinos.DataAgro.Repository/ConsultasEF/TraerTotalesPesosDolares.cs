@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var precioPizarraPorMaterial = contexto.Set<PrecioPizarra>().GroupBy(x => x.MaterialId).Select(x => new { MaterialId = x.Key, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().MonedaId, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().Precio });
             var queryContratos =
                 from contrato in contexto.Set<Negocio>()
-                where (contrato.TipoNegocioId == 2 || contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6)
+                where (contrato.TipoNegocioId == 2 ||(contrato.TipoPosicionCBOTId == 3 && contrato.TipoNegocioId == 1)|| contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6)
                 && contrato.OcultarEnTablero == false
                 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5 || contrato.EstadoId == 10)
                 && contrato.Canje != true
@@ -48,6 +48,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 && ((contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId == null) || !(contrato is Contrato))
                 && ((contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).PrecioNeto > 0) || !(contrato is ContratoAcuerdo))
                  && ((contrato is Contrato && (contrato as Contrato).AnulaYReemplazaContratoId == null) || !(contrato is Contrato))
+                 && ((contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).TipoPosicionCBOTId != 3) || !(contrato is FijacionDePrecioContrato))
                  && (
                 !corredor ? (equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
                 equipo.Contains(contrato.ComercialCreadorId != null ? contrato.ComercialCreadorId.Value : 0)) :
@@ -73,12 +74,16 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
                     Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                     Campania = contrato.Campana == null ? "" : contrato.Campana.Descripcion,
-                    TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" : contrato.TipoNegocio.Descripcion),
+                    TipoNegocio = (contrato.TipoNegocio == null ? "" : (contrato.TipoPosicionCBOTId == 3 && contrato.TipoNegocioId == 1) ? "A PRECIO" : (contrato is Contrato && (contrato as Contrato).Madre == true) ? "CONVENIO" : (contrato is Contrato && (contrato as Contrato).Madre == false) ? "FIJ. CONVENIO" : (contrato is Contrato && (contrato as Contrato).EsFason == true) ? "FASON MP" : (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" : (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" : contrato.TipoNegocio.Descripcion),
                     Negocio = (contrato is FijacionDePrecioContrato && contrato.EstadoId == (int)EnumEstadoContrato.Finalizado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     ComercialId = contrato.ComercialId,
                     ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
-                    TotalDolares = contrato.Pizarra == true ? (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "USDM " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0) : (contrato.MonedaId == "USDM " ? contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
+                    TotalDolares = contrato.Pizarra == true ? 
+                    (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "USDM " ?
+                    precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0) : (contrato.TipoPosicionCBOTId == 3 && contrato.TipoNegocioId == 1) ?
+                    ((double)(contrato.PrecioNetoPonderado ?? 0)) : (contrato.MonedaId == "USDM " ? 
+                    contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
                     TotalPesos = contrato.Pizarra == true ? (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "ARP  " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0) : (contrato.MonedaId == "ARP  " ? contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
                     TotalGirasolAlto = contrato.MaterialId == 5 ? contrato.Cantidad : 0,
                     TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad : 0,

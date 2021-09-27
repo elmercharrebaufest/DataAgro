@@ -130,6 +130,8 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
+    <Compile Include="Dto\CampoDetalleMoa.cs" />
+    <Compile Include="Dto\NegocioAsociadoDto.cs" />
     <Compile Include="Dto\EstadoSAPDto.cs" />
     <Compile Include="Dto\CondicionDePagoVentaDto.cs" />
     <Compile Include="Dto\ComisionAFavorDto.cs" />
@@ -142,6 +144,7 @@
     <Compile Include="Dto\EstadoPrecioMOADto.cs" />
     <Compile Include="Dto\HabilitacionSustentableDto.cs" />
     <Compile Include="Dto\CamaraDto.cs" />
+    <Compile Include="Dto\ReporteAfijarPaseDto.cs" />
     <Compile Include="Dto\ResultadoDevolverKilosPendientesAnularFijacionCanjeDto.cs" />
     <Compile Include="Dto\TipoRangoConfirmacionAutomaticaDto.cs" />
     <Compile Include="Dto\ValidarCreditoDto.cs" />
@@ -330,6 +333,7 @@
     <Compile Include="Entities\BoletoCompraNetProvincia.cs" />
     <Compile Include="Entities\CondicionDePagoVenta.cs" />
     <Compile Include="Entities\ComisionAFavor.cs" />
+    <Compile Include="Entities\NegocioAsociado.cs" />
     <Compile Include="Entities\CriterioCumplimientoCupo.cs" />
     <Compile Include="Entities\FijacionVirtualSAP.cs" />
     <Compile Include="Entities\AdministracionCupo.cs" />

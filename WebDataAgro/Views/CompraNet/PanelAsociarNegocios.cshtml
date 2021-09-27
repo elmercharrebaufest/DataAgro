@@ -1,0 +1,159 @@
+﻿@{
+    Layout = null;
+}
+<link rel="stylesheet" href="styles/kendo.default.min.css" />
+<link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
+
+
+
+<div class="modal fade" id="PanelAsociados" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" href="#">
+    <div class="modal-dialog">
+        <div class="modal-content" style="position: absolute; margin-left: -150px;">
+            <div class="modal-header ">
+                <button type="button" class="cerrar close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
+                <div class="status finalizado-modal">
+                    <div style="background:#76ae7e !important; padding: 4px !important">Asociar Negocios</div>
+                </div>
+            </div>
+            <div id="paseId"></div>
+            <div id="sePuedeEditar"></div>
+            <div class="modal-body clearfix ">
+                <br />
+                <div class="row">
+                    <div class="col-md-10">
+                        <input type="number" class="k-textbox" id="asociadoId" style="width: 100%;" />
+                    </div>
+                    <div class="col-md-2 botonAgregar">
+                        <div class="col-md-1"><button onclick="AgregarAViewModel()" id="boton-search">Agregar</button></div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-4">
+                        <label style="margin-bottom: 0px  !important">Negocios Asociados</label>
+                    </div>
+                    <div class="col-md-offset-7">
+                        <label style="margin-bottom: 0px  !important"><strong>Precio Ponderado:</strong></label>
+                        <input id="precioPonderadoId" readonly> USD
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="status finalizado-modal col-md-12">
+                        <div style="background:#76ae7e !important;"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="div1">
+                            <div id="gridAsociarNegocios"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="modal-footer clearfix ">
+                <div class="col-md-6"></div>
+                <div class="col-md-3 noPaddingLeft">
+                    <span id="idBolsa"></span>
+                    <button type="button" id="confirmar" onclick="GrabarCambios()" class="myBtn" data-dismiss="modal">Guardar Cambios</button>
+                </div>
+                <div class="col-md-3 noPaddingRight">
+                    <button type="button" class="myBtn btnCancelar" onclick="Cerrar()" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+  
+</div>
+
+    <style>
+
+
+        #div1 {
+            width: 880px;
+        }
+
+        #gridAsociarNegocios .k-grid {
+            font-size: 7px;
+        }
+
+            #gridAsociarNegocios .k-grid td {
+                line-height: 1.1em;
+                text-align: center;
+            }
+
+        #gridAsociarNegocios .k-grid-header th.k-header {
+            line-height: 1.3em;
+            text-align: center;
+            background: #f0fff0
+        }
+
+        #gridAsociarNegocios .k-grid .k-grid-search {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        #gridAsociarNegocios .k-textbox .k-icon {
+            top: 50%;
+            margin: -9px 101px -1px;
+            position: absolute;
+        }
+
+        #gridAsociarNegocios .k-grid tr td {
+            border-width: 0;
+            border-style: solid;
+        }
+
+        #gridAsociarNegocios div.k-grid-header {
+            background: #f0fff0
+        }
+
+        .colorCalidad {
+            background: #14b6b7
+        }
+
+        #gridAsociarNegocios .k-grid td.k-state-selected:hover, .k-grid tr:hover td label {
+            color: white !important;
+        }
+
+        #boton-search {
+            border: none;
+            padding: 4px 25px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 17px;
+            background-color: #ddebdf;
+            color: #7f7f7f
+        }
+
+            #boton-search:active {
+                background-color: #ddebdf;
+              
+            }
+
+            #boton-search:active {
+                background-color: #76ae7e;
+                color: #ffff
+            }
+        .k-grid-content {
+            font-size: 13px !important;
+            text-align: center !important;
+        }
+
+        .botones {
+            border: none;
+            padding: 4px 17px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            background-color: #ddebdf;
+            color: #7f7f7f;
+
+        }
+    </style>

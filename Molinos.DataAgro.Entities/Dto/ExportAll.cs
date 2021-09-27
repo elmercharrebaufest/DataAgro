@@ -164,10 +164,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? Rinde { get; set; }
         public string Comercial { get; set; }
         public int? ImportId { get; set; }
-
-
-
-
-
+        public string Campaña { get; set; }
     }
 }

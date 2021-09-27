@@ -45,6 +45,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<DescuentoBonificacionDto> Bonificaciones { get; set; }
         public bool Virtual { get; set; }
         public decimal KgContratoTotal { get; set; }
+        public bool Pase { get; set; }
     }
 }
 

@@ -1,0 +1,128 @@
+﻿@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Reporte de contratos";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ReporteAfijarIndex")
+}
+
+@section Styles {
+    <link href="~/Content/ReporteContrato.css" rel="stylesheet" />
+}
+
+<div class="Titulo">
+    <h5> Reporte de Contratos a fijar Pase </h5>
+
+    <br />
+</div>
+<div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+    <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+</div>
+<br />
+
+<div id="filtrar" class="container collapse">
+    <div class="row">
+        <div class="col-md-2">
+            <label>Corredor</label>
+        </div>
+        <div class="col-md-4">
+            <input id="buscadorCorredor" name="CorredorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+        </div>
+
+        <div class="col-md-2">
+            <label>Proveedor</label>
+        </div>
+        <div class="col-md-4">
+            <input id="buscadorProveedor" name="ProveedorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Contrato SAP</label>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-xs-5 noRightPadding">
+                    @Html.TextBox("ContratoSAP", "", new { @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
+                </div>
+                <div class="col-xs-5">
+                    @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+                </div>
+                <div class="col-xs-2 noLeftPadding">
+                    <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+                </div>
+                <div class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label>Material</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Fecha de Carga</label>
+        </div>
+        <div class="col-md-2">
+            <span id="fechaDeCarga">
+                <input id="fechaCargaId" class="filtroFecha" name="Fecha-desde" type="date" style="width: 100%" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <span id="fechaDeCargaHasta">
+                <input id="fechaCargaHastaId" class="filtroFecha" name="Fecha-hasta" type="date" style="width: 100%" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <label>Entrega Desde-Hasta</label>
+        </div>
+        <div class="col-md-2">
+            <span id="fechaDesdeTopeDiv">
+                <input id="fechaDesdeTopeId" class="filtroFecha" name="FechaDesde-desde" type="date" style="width: 100%" />
+                <img id="errfechaDesdeTopeId" src="~/Content/Images/error.png" style="display:none" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <span id="fechaHastaTopeDiv">
+                <input id="fechaHastaTopeId" class="filtroFecha" name="FechaHasta-hasta" type="date" style="width: 100%" />
+                <img id="errfechaHastaTopeId" src="~/Content/Images/error.png" style="display:none" />
+            </span>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Fecha Hasta Fijación</label>
+        </div>
+        <div class="col-md-4">
+            <span id="fechaHastaFijacionDiv">
+                <input id="fechaHastaFijacionId" class="filtroFecha" name="HastaFijacion-hasta" type="date" style="width: 50%" />
+            </span>
+        </div>        
+    </div>
+    <br />    
+    <div class="row">
+
+        <div class="col-md-12" style="text-align:right">
+            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
+        </div>
+    </div>
+
+</div>
+
+<br />
+<script type="text/x-kendo-template" id="templateToolbar">
+    <div class="">
+        <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Export to Excel</a>
+    </div>
+</script>
+<div class="resultado">
+    <div id="grid" class="tabla-result">
+    </div>
+</div>

@@ -184,6 +184,7 @@ function CargarCopiaContrato(contratoId, tipo) {
 
         if (tipo == "sap") {
             contratoCopia.MotivoOperacionAnterior = null;
+            contratoCopia.DescripcionOperacionAnterior = null;
             contratoCopia.FechaOperacionFormateado = formatearFecha(new Date());
         }
         if (tipo == "anulayreemplaza") {
@@ -216,7 +217,7 @@ function CargarCopiaContrato(contratoId, tipo) {
                 MensErr("El contrato tiene número de SIO Granos, en caso de querer continuar esta anulación, por favor comunicarse con administración");
                 return;
             } else {
-                contratoCopia.MotivoOperacionAnterior = "Anula y reemplaza " + contratoCopia.ContratoSAP;
+                contratoCopia.DescripcionOperacionAnterior = "Anula y reemplaza " + contratoCopia.ContratoSAP;
                 contratoCopia.AnulaYReemplazaContratoId = contratoId;
                 contratoCopia.contratoAReemplazarId = contratoCopia.ContratoSAP;
             }
@@ -628,7 +629,7 @@ function ObtenerDatos(error) {
     }
 
     obj.ObligatoriedadCostoFinanciero = $("#esCostoFinanciero").is(":checked") == true ? true : $("#esCostoFinanciero").is(":checked") == false ? false : null;
-
+    obj.ObligatoriedadBonificacion = $("#esBonificacion").is(":checked") == true ? true : $("#esBonificacion").is(":checked") == false ? false : null;
     obj.OperadorId = $("#operadorId").val();
     if ($("#madreId").is(":checked")) {
         obj.Madre = true;
@@ -708,21 +709,26 @@ function ObtenerDatos(error) {
     if (obj.TipoNegocioId == 1 || obj.TipoNegocioId == 2) {
         obj.FechaOperacion = $("#fechaOperacionId").val() == null || $("#fechaOperacionId").val() == undefined || $("#fechaOperacionId").val() == "" ? formatearFecha(hoy) : $("#fechaOperacionId").val();
         if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "") {
-            obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
+            obj.MotivoOperacionAnterior = "Otro";
+            obj.DescripcionOperacionAnterior = $("#descripcionMotivoAnterior").val();
         } else {
             $("#motivoOperacionAnteriorId").val($('#motivoAnterior').data("kendoDropDownList").text());
             obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorId").val();
+            obj.DescripcionOperacionAnterior = $("#descripcionMotivoAnterior").val();
         }
+
 
     }
     if (obj.TipoNegocioId == 3) {
         obj.FechaOperacion = $("#fechaFijacionId").val() == null || $("#fechaFijacionId").val() == undefined || $("#fechaFijacionId").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionId").val();
 
         if ($('#motivoAnterior').data("kendoDropDownList").text() == "Otro" || $('#motivoAnterior').data("kendoDropDownList").value() == "") {
-            obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
+            obj.MotivoOperacionAnterior = "Otro";
+            obj.DescripcionOperacionAnterior = $("#descripcionMotivoAnterior").val();
         } else {
             $("#motivoOperacionAnteriorFijacion").val($('#motivoAnterior').data("kendoDropDownList").text());
             obj.MotivoOperacionAnterior = $("#motivoOperacionAnteriorFijacion").val();
+            obj.DescripcionOperacionAnterior = $("#descripcionMotivoAnterior").val();
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿#grid {
-    overflow-x: auto;
+    /*overflow-x: auto;*/
     white-space: nowrap;
 }
 .k-grid {

@@ -3043,6 +3043,7 @@ function armarEstablecimiento(establecimiento) {
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialId = establecimiento[i].materialId;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].materialNom = establecimiento[i].material;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partidoNom = establecimiento[i].partido;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].campaña = establecimiento[i].campaña;
 
 
 
@@ -3081,6 +3082,7 @@ function armarEstablecimiento(establecimiento) {
             obj.rinde = grupoestablecimiento[0][i].rinde;
             obj.htotales = grupoestablecimiento[0][i].htotales;
             obj.hcultivables = grupoestablecimiento[0][i].hcultivables;
+            obj.campaña = grupoestablecimiento[0][i].campaña;
             var file = "";
             if (obj.archivoFileResult && obj.archivoFileResult != null) {
                 var aux = obj.archivo.split("\\").length - 1;
@@ -3102,6 +3104,7 @@ function armarEstablecimiento(establecimiento) {
                 
                 + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
                 //+ "<br>"
+                + (obj.campaña != "" && obj.campaña != null ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Campaña</b>:' + obj.campaña : "")
                 + (obj.materialId > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Material</b>:' + obj.materialNom : "")
                 + (obj.rinde > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Rinde</b>:' +obj.rinde : "")
                 + (obj.htotales > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Has Totales</b>:' + obj.htotales : "")

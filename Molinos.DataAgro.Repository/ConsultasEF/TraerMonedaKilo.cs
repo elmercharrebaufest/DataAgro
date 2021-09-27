@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var precioPizarraPorMaterial = contexto.Set<PrecioPizarra>().GroupBy(x => x.MaterialId).Select(x => new { MaterialId = x.Key, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().MonedaId, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().Precio });
 
             var cont = contexto.Set<Contrato>()
-                .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && x.TipoNegocioId == 2 &&
+                .Where(x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && (x.TipoNegocioId == 2 || x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) &&
                 DbFunctions.TruncateTime(x.FechaOperacion) >= fechaHoy &&
                 DbFunctions.TruncateTime(x.FechaOperacion) <= fechaManana &&
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) &&
@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 && (x.Venta != true)
                 && x.Pizarra != true
                 && x.AnulaYReemplazaContratoId == null
-                )
+                ).Select(x=> new { MonedaId = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USDM " : x.MonedaId, Precio = x.Precio, PrecioNeto = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? x.PrecioNetoPonderado : x.PrecioNeto ?? x.Precio, Cantidad = x.Cantidad })
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
                 {
@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) &&
                 (centroId == 0 || centroId == 1) && x.Canje != true &&
                 !(x.Canje != true && x.Virtual != true && x.Contrato.Canje == true)
-                && x.Pizarra != true && verFijaciones)
+                && x.Pizarra != true && verFijaciones && x.TipoPosicionCBOTId != 3)
                 .Select(x => new BasicoContrato()
                 {
                     Id = x.Id,

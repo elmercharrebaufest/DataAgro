@@ -13,6 +13,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CampoDetalleDto> establecimiento { get; set; }
         public int? ProveedorId { get; set; }
         public int? ProveedorCorredorId { get; set; }
+        public int? CampañaId { get; set; }
     }
 
     public class Basico
@@ -200,6 +201,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public int materialId { get; set; }
         public string material { get; set; }
         public int? ImportId  { get; set; }
+        public string campaña { get; set; }
+        public int? campañaId { get; set; }
+
     }
 
 

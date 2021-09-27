@@ -598,6 +598,8 @@ function armarEstablecimiento(establecimiento) {
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].material = establecimiento[i].material;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].partido = establecimiento[i].partido;
             grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].ImportId = establecimiento[i].ImportId;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].campaña = establecimiento[i].campaña;
+            grupoestablecimiento["Establecimiento" + establecimiento[i].CampoId].campañaId = establecimiento[i].campañaId;
 
 
 
@@ -638,6 +640,9 @@ function armarEstablecimiento(establecimiento) {
             obj.htotales = grupoestablecimiento[0][i].htotales;
             obj.hcultivables = grupoestablecimiento[0][i].hcultivables;
 
+            obj.campaña = grupoestablecimiento[0][i].campaña;
+            obj.campañaId = grupoestablecimiento[0][i].campañaId;
+
             var html = "";
             html += '<div class="datos-produccion-cap-prod-guardados-contenedor" id="establecimientocontenedor' + capProdCantEstablecimiento + '">'
                 + '<div>'
@@ -658,6 +663,7 @@ function armarEstablecimiento(establecimiento) {
                 + (obj.latitud != "" && obj.longitud != "" ? (' <b>Latitud</b>:' + obj.latitud + " <b>Longitud</b>: " + obj.longitud) : "")
                 + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercial : "")
                 + "<br>"
+                + (obj.campaña != "" && obj.campaña != null ? ' <b>Campaña</b>:' + obj.campaña : "")
                 + (obj.materialId > 0 ? ' <b>Material</b>:' + obj.material : "")
                 + (obj.rinde > 0 ? ' <b>Rinde</b>:' + obj.rinde : "")
                 + (obj.htotales > 0 ? ' <b>Has Totales</b>:' + obj.htotales : "")

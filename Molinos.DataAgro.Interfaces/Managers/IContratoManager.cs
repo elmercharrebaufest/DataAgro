@@ -60,6 +60,7 @@ namespace Molinos.DataAgro.Interfaces
         List<BasicoContrato> CompararNegocioReconfirmado(int contratoId);
         bool DiferenciaEnCalidades(int contratoId);
         Resultado AnularContratoSAP(ContratoSAP contrato);
+        DataSourceResult TraerContratosReporteAFijarPase(DataSourceRequest filtro, List<int> equipo);
         DatosContratoDto TraerDatosDeContratoAcuerdo(int contratoId);
         List<PagoCBUDto> ListarCBU(string cuitProveedor, string filtro);
         string ObtenerSapContrato(int contrato);
@@ -79,7 +80,12 @@ namespace Molinos.DataAgro.Interfaces
         List<CapacidadProductivaPendienteDto> ObtenerCapacidadProductivaPendiente(int proveedorId);
         Resultado ActualizarCesionContratoSAP(string contratoSAP, bool cesion);
         Resultado ValidacionesAnulaYReemplaza(string contratoSap);
-
+        List<NegocioAsociadoDto> DevolverContratosParaAsociar(int contratoId, string numero);
+        List<NegocioAsociadoDto> DevolverContratoAsociadosPase(int id);
         decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda);
+        Resultado GrabarNegociosAsociados(List<NegocioAsociadoDto> negocios, int contratoId, decimal precioPonderado);
+        bool TieneAsociados(int contratoId);
+
+        bool EsUnContratoAsociado(int negocioId);
     }
 }

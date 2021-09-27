@@ -79,6 +79,7 @@ namespace Molinos.DataAgro.Business
                  new ComercialDto
                  {
                      IdActiveDirectory = x.IdActiveDirectory,
+                     IdUsuarioSAP = x.IdUsuarioSAP,
                      GrupoDeComprasId = x.GrupoDeComprasId,
                      GrupoDeCompras = x.GrupoDeCompras.Descripcion,
                      Administrador = x.Administrador,
@@ -180,6 +181,7 @@ namespace Molinos.DataAgro.Business
                 oComercialSave.Perfil = oComercial.Perfil;
                 oComercialSave.EmpleadorACargoId = oComercial.EmpleadorACargoId;
                 oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
+                oComercialSave.IdUsuarioSAP = oComercial.IdUsuarioSAP;
                 oComercialSave.Administrador = oComercial.Administrador;
                 oComercialSave.GrupoDeCompras = oComercial.GrupoDeCompras;
                 oComercialSave.Deshabilitado = oComercial.Deshabilitado;

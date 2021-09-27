@@ -63,6 +63,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ITipoDeCambioAgent tipoCambioAgent;
         private readonly ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent;
         private readonly INegocioManager negocioManager;
+        private readonly IContratosParaFijacionAgent contratosParaFijacionAgent;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -85,7 +86,7 @@ namespace Molinos.DataAgro.Business.Managers
             ICartasDePortePendienteAplicarAgent ccppAgent,
             IHttpContextManager httpContextManager, IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent,
             ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent,
-            INegocioManager negocioManager)
+            INegocioManager negocioManager, IContratosParaFijacionAgent contratosParaFijacionAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -120,6 +121,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.tipoCambioAgent = tipoCambioAgent;
             this.capacidadProductivaDisponibleAgent = capacidadProductivaDisponibleAgent;
             this.negocioManager = negocioManager;
+            this.contratosParaFijacionAgent = contratosParaFijacionAgent;
         }
 
         public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
@@ -626,7 +628,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 }
             }
-            if (cantidadMaxima < oParam.Cantidad)
+            if (cantidadMaxima < oParam.Cantidad && !(oParam.EsFason == true || oParam.PrestamoDevolucion == true))
             {
                 oErrorMessages.Error("", "Cantidad del negocio excedida (" + cantidadMaxima.ToString("N0") + " kg)");
             }
@@ -866,12 +868,12 @@ namespace Molinos.DataAgro.Business.Managers
                                     oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
                                 }
 
-                                if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                                if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                                 {
                                     oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                                 }
 
-                                if (!string.IsNullOrEmpty(oParam.MotivoOperacionAnterior) && oParam.MotivoOperacionAnterior.Length <= 5)
+                                if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
                                 {
                                     oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
                                 }
@@ -901,12 +903,12 @@ namespace Molinos.DataAgro.Business.Managers
                                     oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
                                 }
 
-                                if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                                if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                                 {
                                     oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                                 }
 
-                                if (!string.IsNullOrEmpty(oParam.MotivoOperacionAnterior) && oParam.MotivoOperacionAnterior.Length <= 5)
+                                if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
                                 {
                                     oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
                                 }
@@ -1309,7 +1311,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var cantidadTodoAcuerdo = repositorio.Listar<Contrato>(d => d.ContratoAcuerdoId == oContratoSave.ContratoAcuerdoId.Value && (d.EstadoId == 1 || d.EstadoId == 2 || d.EstadoId == 3 || d.EstadoId == 4 || d.EstadoId == 5 || d.EstadoId == 7)).Sum(d => d.Cantidad);
                 var tolerancia = (config != null ? config.CantidadAcuerdo.Value * 1000 : 0);
                 var totalAcuerdo = cantidadAcuerdo + tolerancia - (cantidadAmpliadoAcuerdo ?? 0);
-                if (cantidadMaxima < cantidadTodoAcuerdo + oContrato.Ampliaciones)
+                if (cantidadMaxima < cantidadTodoAcuerdo + oContrato.Ampliaciones && (oContratoSave.EsFason == true || oContratoSave.PrestamoDevolucion == true))
                 {
                     oEntityErrors.Error("", "Cantidad del negocio excedida (" + cantidadMaxima.ToString("N0") + " kg)");
                     return oEntityErrors;
@@ -1489,6 +1491,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.ContratoAcuerdoId = oContrato.ContratoAcuerdoId;
             oContratoSave.FechaOperacion = oContrato.FechaOperacion;
             oContratoSave.MotivoOperacionAnterior = oContrato.MotivoOperacionAnterior;
+            oContratoSave.DescripcionOperacionAnterior = oContrato.DescripcionOperacionAnterior;
             oContratoSave.ChequeElectronico = oContrato.ChequeElectronico;
             oContratoSave.DolarizadoExpress = oContrato.DolarizadoExpress;
             oContratoSave.PagoCBU = oContrato.PagoCBU;
@@ -1508,10 +1511,10 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.AnulaYReemplazaContratoId = oContrato.AnulaYReemplazaContratoId;
             oContratoSave.MotivoReemplazo = oContrato.MotivoReemplazo;
 
-            //oContratoSave.ObligatoriedadBonificacion = oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 &&
-            // oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0)) &&
-            // oContrato.ObligatoriedadBonificacion.HasValue && !oContrato.ObligatoriedadBonificacion.Value
-            // ? null : oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 ? oContrato.ObligatoriedadBonificacion : null;
+            oContratoSave.ObligatoriedadBonificacion = oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 &&
+             oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0)) &&
+             oContrato.ObligatoriedadBonificacion.HasValue && !oContrato.ObligatoriedadBonificacion.Value
+             ? null : oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 ? oContrato.ObligatoriedadBonificacion : null;
             if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 oContratoSave.CalidadTercero = oContrato.CalidadTercero;
@@ -2232,10 +2235,10 @@ namespace Molinos.DataAgro.Business.Managers
                             oContrato.ObligatoriedadCostoFinanciero.HasValue && !oContrato.ObligatoriedadCostoFinanciero.Value
                             ? null : oContrato.FechaCierta.HasValue ? oContrato.ObligatoriedadCostoFinanciero : null;
 
-                            //oContratoSave.ObligatoriedadBonificacion = oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 &&
-                            //oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0)) &&
-                            //oContrato.ObligatoriedadBonificacion.HasValue && !oContrato.ObligatoriedadBonificacion.Value
-                            //? null : oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 ? oContrato.ObligatoriedadBonificacion : null;
+                            oContratoSave.ObligatoriedadBonificacion = oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 &&
+                            oContrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0)) &&
+                            oContrato.ObligatoriedadBonificacion.HasValue && !oContrato.ObligatoriedadBonificacion.Value
+                            ? null : oContrato.TipoPosicionCBOTId.HasValue && oContrato.TipoPosicionCBOTId == 3 ? oContrato.ObligatoriedadBonificacion : null;
 
                             oContrato.Venta = oContrato.Venta;
 
@@ -2651,7 +2654,7 @@ namespace Molinos.DataAgro.Business.Managers
                 NivelTarifaId = x.NivelTarifaId,
                 TarifaFlete = x.TarifaFlete,
                 ObligatoriedadCostoFinanciero = x.ObligatoriedadCostoFinanciero,
-                //ObligatoriedadBonificacion = x.ObligatoriedadBonificacion,
+                ObligatoriedadBonificacion = x.ObligatoriedadBonificacion,
                 Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
                 {
                     ContratoId = y.ContratoId,
@@ -2735,6 +2738,7 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.StringConvert((double)x.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", x.FechaOperacion),
                 MotivoOperacionAnterior = x.MotivoOperacionAnterior,
+                DescripcionOperacionAnterior = x.DescripcionOperacionAnterior,
                 ChequeElectronico = x.ChequeElectronico,
                 DolarizadoExpress = x.DolarizadoExpress,
                 PagoCBU = x.PagoCBU,
@@ -3045,6 +3049,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("Rechazo", "Debe indicar motivo de rechazo");
                 return oEntityErrors;
             }
+            EliminarNegociosAsociados(oContrato.Id);
             var oContratoSave = repositorio.Obtener<Contrato>(oContrato.Id);
             oContratoSave.MotivoRechazo = oContrato.MotivoRechazo;
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado))
@@ -3277,7 +3282,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoMadre = null,
                 FechaCierta = x.FechaCierta,
                 ObligatoriedadCostoFinanciero = x.ObligatoriedadCostoFinanciero,
-                //ObligatoriedadBonificacion = x.ObligatoriedadBonificacion,
+                ObligatoriedadBonificacion = x.ObligatoriedadBonificacion,
                 Descuentos = x.Descuentos.Select(y => new DescuentoBonificacionDto
                 {
                     ContratoId = y.ContratoId,
@@ -4497,7 +4502,8 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.Insumo = contratoSap.Insumo;
                 contrato.PrestamoDevolucion = contratoSap.PrestamoDevolucion;
                 contrato.PlantaDestinoId = contratoSap.PlantaDestinoId;
-                contrato.MotivoOperacionAnterior = contratoSap.MotivoOperacionAnterior;
+                contrato.DescripcionOperacionAnterior = contratoSap.MotivoOperacionAnterior;
+                contrato.MotivoOperacionAnterior = "Otro";
                 contrato.PosicionCBOT = contratoSap.PosicionCBOT;
                 contrato.TipoPosicionCBOTId = contratoSap.TipoPosicionCBOTId;
                 contrato.Cesion = contratoSap.Cesion;
@@ -4802,6 +4808,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.FechaOperacion = negocio.FechaOperacion.Date;
             bc.FechaOperacionFormateado = negocio.FechaOperacion.ToString("dd-MM-yyyy");
             bc.MotivoOperacionAnterior = negocio.MotivoOperacionAnterior;
+            bc.DescripcionOperacionAnterior = negocio.DescripcionOperacionAnterior;
             bc.FechaConfirmacion = negocio.FechaConfirmacion.HasValue ? negocio.FechaConfirmacion.Value.Date : (DateTime?)null;
             bc.ChequeElectronicoValor = negocio.ChequeElectronico.HasValue ? (negocio.ChequeElectronico.Value ? "Si" : "No") : "";
             bc.DolarizadoExpress = negocio.DolarizadoExpress.Value;
@@ -4816,7 +4823,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.Insumo = negocio.Insumo;
             bc.SustentableTercero = negocio.SustentableTercero;
             bc.ObligatoriedadCostoFinanciero = negocio.ObligatoriedadCostoFinanciero;
-            //bc.ObligatoriedadBonificacion = negocio.ObligatoriedadBonificacion;
+            bc.ObligatoriedadBonificacion = negocio.ObligatoriedadBonificacion;
 
             bc.Descuentos = negocio.Descuentos.Select(y => new DescuentoBonificacionDto
             {
@@ -5573,8 +5580,8 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "A FIJAR HASTA: <br />" + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + "<br />" + Split(oContrato.CondicionFijacion.Descripcion.ToUpper()) + "</td></tr>";
             }
             htmlBody += "<tr>" + th + "PORCENTAJE DE PAGO</th>" + Td(ref linea) + oContrato.PorcentajeDePago.ToString() + "</td></tr>";
-            htmlBody += "<tr>" + th + "PROCEDENCIA</th>" + Td(ref linea) + (oContrato.Destino.Localidad != null ? 
-                oContrato.Destino.Localidad.Nombre.ToUpper() +" (" + oContrato.Destino.Localidad.Provincia.Nombre.ToUpper() + ")" : oContrato.Destino.Descripcion) + "</td></tr>";
+            htmlBody += "<tr>" + th + "PROCEDENCIA</th>" + Td(ref linea) + (oContrato.Destino.Localidad != null ?
+                oContrato.Destino.Localidad.Nombre.ToUpper() + " (" + oContrato.Destino.Localidad.Provincia.Nombre.ToUpper() + ")" : oContrato.Destino.Descripcion) + "</td></tr>";
             htmlBody += "<tr>" + th + "ENT. DESDE</th>" + Td(ref linea) + Split(oContrato.FechaDesde.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "ENT. HASTA</th>" + Td(ref linea) + Split(oContrato.FechaHasta.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "COSECHA</th>" + Td(ref linea) + oContrato.Campana.Descripcion.ToUpper() + "</td></tr>";
@@ -5801,6 +5808,77 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
+        public List<NegocioAsociadoDto> DevolverContratosParaAsociar(int contratoId, string numero)
+        {
+            var aFijar = repositorio.Obtener<Contrato>(x => x.Id == contratoId);
+            if (aFijar != null)
+            {
+
+                Int32.TryParse(numero, out int id);
+                var contratoSap = "000" + numero;
+                var negociosAsociados = repositorio.Listar<NegocioAsociado, int>(x => x.AsociadoId);
+                var negocios = repositorio.Listar<Negocio, NegocioAsociadoDto>(
+                    x => new NegocioAsociadoDto()
+                    {
+                        Id = x.Id,
+                        Contrato = !string.IsNullOrEmpty(x.ContratoSAP) ? x.ContratoSAP : x.Id.ToString(),
+                        ContratoSap = x.ContratoSAP,
+                        TipoNegocioDesc = x.TipoNegocio.Descripcion,
+                        Precio = x.Precio,
+                        MonedaDesc = "USD",
+                        MaterialDesc = x.Material.Descripcion,
+                        Cantidad = x.Cantidad,
+                        Campania = x.Campana.Descripcion,
+                        Color = x.TipoNegocioId == 2 ? "" : "",
+                        Posicion = x.TipoNegocioId == 2 ? (SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta)) : x.Posicion,
+                    }, x => ((x.TipoNegocioId == 2 && x.TipoAgenteCompraId == null && x.ContratoSAP.StartsWith(contratoSap) && (x.EstadoId == 5 || x.EstadoId == 11 || x.EstadoId == 10)) ||
+                     (x.TipoNegocioId == 5 && x.EstadoId == 2 && x.Id.ToString().StartsWith(id.ToString()))) && x.MaterialId == aFijar.MaterialId && x.MonedaId == "USDM " &&
+                     x.CampanaId == x.Material.CampaniaTableroId && !negociosAsociados.Contains(x.Id));
+                negocios = negocios.Where(x => EstaConfirmadoEnSAP(x.ContratoSap)).ToList();
+                if (negocios.Count > 0)
+                {
+                    foreach (var item in negocios)
+                    {
+                        item.Identificador = (!string.IsNullOrEmpty(item.ContratoSap) ? item.ContratoSap.Substring(3, contratoSap.Length - 3) : item.Id.ToString()) + " - " + item.TipoNegocioDesc + " - " + item.Precio.ToString("N2") + " USD - " + item.MaterialDesc + " - " + item.Cantidad.ToString("N0") + " Kg - " + item.Posicion;
+                        item.Contrato = !string.IsNullOrEmpty(item.ContratoSap) ? item.ContratoSap.Substring(3, contratoSap.Length - 3) : item.Id.ToString();
+                    }
+                }
+
+                return negocios;
+            }
+            return new List<NegocioAsociadoDto>();
+        }
+
+        private bool EstaConfirmadoEnSAP(string contratoSAP)
+        {
+            var estado = status.ValidarEstado(contratoSAP);
+            return string.IsNullOrEmpty(estado.Status) ? false : true;
+        }
+
+        public List<NegocioAsociadoDto> DevolverContratoAsociadosPase(int contratoId)
+        {
+            var aFijar = repositorio.Obtener<Contrato>(x => x.Id == contratoId);
+            if (aFijar != null)
+            {
+                var negociosQueYaEstanAsociados = repositorio.Listar<NegocioAsociado, NegocioAsociadoDto>(
+                    x => new NegocioAsociadoDto()
+                    {
+                        Id = x.Asociado.Id,
+                        Contrato = !string.IsNullOrEmpty(x.Asociado.ContratoSAP) ? x.Asociado.ContratoSAP : x.Asociado.Id.ToString(),
+                        TipoNegocioDesc = x.Asociado.TipoNegocio.Descripcion,
+                        Precio = x.Asociado.Precio,
+                        MonedaDesc = "USD",
+                        MaterialDesc = x.Asociado.Material.Descripcion,
+                        Cantidad = x.Asociado.Cantidad,
+                        Campania = x.Asociado.Campana.Descripcion,
+                        Color = x.Asociado.TipoNegocioId == 2 ? "" : "",
+                        Posicion = x.Asociado.TipoNegocioId == 2 ? (SqlFunctions.DateName("day", x.Asociado.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.Asociado.FechaHasta) + "/" + SqlFunctions.DateName("year", x.Asociado.FechaHasta)) : x.Asociado.Posicion,
+                    }, x => x.AFijarId == aFijar.Id);
+                return negociosQueYaEstanAsociados;
+            }
+            return new List<NegocioAsociadoDto>();
+        }
+
         public decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda)
         {
             var diaAnterior = fechaoperacion.AddDays(-1);
@@ -5814,6 +5892,116 @@ namespace Molinos.DataAgro.Business.Managers
             iva = iva / 100 + 1;
             var importe = (precio * (decimal)cantidad / 1000) * iva;
             return importe;
+        }
+
+        public Resultado EliminarNegociosAsociados(int contratoId)
+        {
+            var oEntityErrors = new Resultado();
+            try
+            {
+                repositorio.RemoverTodos<NegocioAsociado>(x => x.AFijarId == contratoId);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                oEntityErrors.Error("", e.Message);
+
+            }
+
+            return oEntityErrors;
+        }
+
+        public Resultado GrabarNegociosAsociados(List<NegocioAsociadoDto> negocios, int contratoId, decimal precioPonderado)
+        {
+            var oEntityErrors = EliminarNegociosAsociados(contratoId);
+            var listaEntidad = new List<NegocioAsociado>();
+            if (negocios != null && negocios.Count > 0)
+            {
+                foreach (var item in negocios)
+                {
+                    var asociado = new NegocioAsociado
+                    {
+                        AFijarId = contratoId,
+                        AsociadoId = item.Id
+                    };
+                    listaEntidad.Add(asociado);
+                }
+                try
+                {
+                    var aFijar = repositorio.Obtener<Negocio>(x => x.Id == contratoId);
+                    aFijar.PrecioPonderado = precioPonderado;
+                    aFijar.PrecioNetoPonderado = CalcularPrecioPonderadoEnAFijarPaseNeto(aFijar, precioPonderado);
+                    repositorio.AgregarTodos(listaEntidad);
+                    repositorio.GuardarCambios();
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e);
+                    oEntityErrors.Error("", e.Message);
+
+                }
+            }
+            return oEntityErrors;
+        }
+
+        public decimal CalcularPrecioPonderadoEnAFijarPaseNeto(Negocio aFijar, decimal precioPonderado)
+        {
+            decimal precioNeto = precioPonderado;
+            decimal porcentajeComision = 0;
+            if ((aFijar.CorredorId == null || aFijar.CorredorId == 0) && aFijar.Proveedor.ComisionPorcentaje > 0)
+            {
+                porcentajeComision = aFijar.Proveedor.ComisionPorcentaje.Value / 100;
+            }
+            //Redespacho 
+            var redespacho = aFijar.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 2 && x.Importe != 0).SingleOrDefault(); 
+            if (redespacho != null)
+            {
+                precioNeto += redespacho.Importe;
+            }
+            //Bonificacion
+            var desc = aFijar.Descuentos.Where(y => y.TipoDBId == 1 && y.TipoPeriodoDBId == 1 && (y.Porcentaje != 0 || y.Importe != 0)).SingleOrDefault();
+            if (desc != null)
+            {
+                precioNeto += desc.Importe;
+            }
+            if (porcentajeComision > 0)
+            {
+                precioNeto += precioNeto * porcentajeComision;
+            }
+            return precioNeto;
+        }
+        public bool TieneAsociados(int contratoId)
+        {
+            var lista = DevolverContratoAsociadosPase(contratoId);
+            return lista.Count > 0;
+        }
+
+        public DataSourceResult TraerContratosReporteAFijarPase(DataSourceRequest filtro, List<int> equipo)
+        {
+            var result = repositorio.ObtenerConsultaEscalar(new TraerContratosReporteAFijarPase(filtro, equipo));
+
+            foreach (var dataItem in result.Data)
+            {
+                var item = (dataItem as ReporteAfijarPaseDto);
+                var pendiente = contratosParaFijacionAgent.ObtenerContratos(
+                    item.Cuit,
+                    item.CUITCorredor,
+                    item.MaterialId,
+                    item.Negocio, 0);
+                if (pendiente != null && pendiente.Count == 1)
+                {
+                    item.KilosPendiente = double.Parse(pendiente.First().KilosPendiente);
+                }
+            }
+            result.Data = (result.Data as List<ReporteAfijarPaseDto>).Where(x => x.KilosPendiente > 0).ToList();
+            result.Total = (result.Data as List<ReporteAfijarPaseDto>).Where(x => x.KilosPendiente > 0).Count();
+            return result;
+        }
+
+        public bool EsUnContratoAsociado(int negocioId)
+        {
+            return repositorio.Obtener<NegocioAsociado>(x => x.AsociadoId == negocioId) == null ? false : true;
         }
     }
 }

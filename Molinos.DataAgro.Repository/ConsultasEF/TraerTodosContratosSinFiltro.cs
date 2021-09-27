@@ -53,8 +53,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Hora = SqlFunctions.DateName("hh", contrato.Fecha) + ":" + SqlFunctions.DateName("mi", contrato.Fecha),
                         Fecha_Order = contrato.Fecha,
                         GrupoCompra = (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).ComercialId.HasValue) ? (contrato as FijacionDePrecioContrato).Comercial.GrupoDeComprasId.Value :
+                        (contrato is Contrato && (contrato as Contrato).ComercialId.HasValue) ? (contrato as Contrato).Comercial.GrupoDeComprasId.Value :
                                         contrato.GrupoCompra.HasValue ? contrato.GrupoCompra.Value : 0,
                         GrupoCompraDescripcion = (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).ComercialId.HasValue) ? (contrato as FijacionDePrecioContrato).Comercial.GrupoDeCompras.Descripcion :
+                         (contrato is Contrato && (contrato as Contrato).ComercialId.HasValue) ? (contrato as Contrato).Comercial.GrupoDeCompras.Descripcion :
                                                     contrato.GrupoDeCompras.Descripcion,
                         ProvinciaId = contrato is Contrato ? (contrato as Contrato).ProvinciaId : null,
                         LocalidadId = contrato is Contrato ? (contrato as Contrato).LocalidadId : null,
@@ -88,16 +90,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         (contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId > 0) ? "AGENTE DE COMPRAS MP" :
                         (contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).TipoAgenteCompraId > 0) ? "ACUERDO AGENTE" :
                         (contrato is Contrato && (contrato as Contrato).Canje == true) ? "CANJE" : (contrato is Contrato && (contrato as Contrato).PrestamoDevolucion == true) ? "PRÉSTAMO DEVOLUCIÓN" :
-                        (contrato is Contrato && (contrato as Contrato).Venta == true) ? "VENTA" :
+                        (contrato is Contrato && (contrato as Contrato).Venta == true) ? "VENTA" : (contrato is Contrato && (contrato as Contrato).TipoPosicionCBOTId == 3) ? "A FIJAR PASE" :
                         (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Virtual == true) ? "FIJACION VIRTUAL" :
-                        (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Canje == true) ? "FIJACION CANJE"  : contrato.TipoNegocio.Descripcion),
+                        (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Canje == true) ? "FIJACION CANJE" :
+                        (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).TipoPosicionCBOTId == 3) ? "FIJACION PASE" :
+                        contrato.TipoNegocio.Descripcion),
                         Localidad = !(contrato is Contrato) || (contrato as Contrato).Localidad == null ? "" : (contrato as Contrato).Localidad.Nombre,
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
                         Sustentable = (contrato is Contrato) && (contrato as Contrato).ImporteSustentable != null && (contrato as Contrato).ImporteSustentable > 0,
                         Dolarizado = contrato.Dolarizado.Value,
                         Pesificado = contrato.DiasPesificado != null,
-                        Negocio = contrato is ContratoAcuerdo ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado || contrato.EstadoId == (int)EnumEstadoContrato.PreAnulado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
+                        Negocio = (contrato is ContratoAcuerdo || contrato is AgenteCompra) ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado || contrato.EstadoId == (int)EnumEstadoContrato.PreAnulado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
                         DestinoId = contrato.DestinoId,
                         DestinoDescripcion = contrato.Destino.Descripcion,
                         CantidadCamiones = (contrato is Contrato) ? (contrato as Contrato).CantidadCamiones : (int?)null,
@@ -162,6 +166,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PorcentajeDePago = contrato is Contrato ? (contrato as Contrato).PorcentajeDePago : null,
                         FechaOperacion = DbFunctions.TruncateTime((contrato as Negocio).FechaOperacion),
                         MotivoOperacionAnterior = contrato.MotivoOperacionAnterior,
+                        DescripcionOperacionAnterior = contrato.DescripcionOperacionAnterior,
                         UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null ? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido : "Automática",
                         FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion : (DateTime?)null,
                         ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
@@ -196,6 +201,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         AnulaYReemplazaContratoSAP = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContrato.ContratoSAP : "",
                         MotivoReemplazo = (contrato is Contrato) ? (contrato as Contrato).MotivoReemplazo : "",
                         Cesion = contrato.Cesion,
+                        ObligatoriedadBonificacionDesc = !contrato.ObligatoriedadBonificacion.HasValue ? "" : contrato.ObligatoriedadBonificacion.HasValue && contrato.ObligatoriedadBonificacion.Value == true ? "Si" : "No",
+                        PrecioPonderado = contrato.PrecioPonderado ?? 0,
+                        PrecioNetoPonderado = contrato.PrecioNetoPonderado ?? 0,
                     };
 
                 return queryNegocios;
@@ -330,6 +338,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PorcentajeDePago = contrato is Contrato ? (contrato as Contrato).PorcentajeDePago : null,
                         FechaOperacion = DbFunctions.TruncateTime((contrato as Negocio).FechaOperacion),
                         MotivoOperacionAnterior = contrato.MotivoOperacionAnterior,
+                        DescripcionOperacionAnterior = contrato.DescripcionOperacionAnterior,
                         UsuarioConfirmador = contrato.EstadoId == 1 ? "" : contrato.ComercialConfirmador != null ? contrato.ComercialConfirmador.Nombres + " " + contrato.ComercialConfirmador.Apellido : "Automática",
                         FechaConfirmacion = contrato.FechaConfirmacion != null ? contrato.FechaConfirmacion : (DateTime?)null,
                         ChequeElectronicoValor = contrato.ChequeElectronico.HasValue ? (contrato.ChequeElectronico.Value ? "Si" : "No") : "",
@@ -348,15 +357,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
                         ProveedorCreador = contrato.ProveedorCreadorId,
                         UsuarioTercero = contrato.UsuarioTercero,
-
-                       
+                        ObligatoriedadBonificacionDesc = !contrato.ObligatoriedadBonificacion.HasValue ? "" : contrato.ObligatoriedadBonificacion.HasValue && contrato.ObligatoriedadBonificacion.Value == true ? "Si" : "No",
                         VirtualDescripcion = contrato.Virtual == true ? "Si" : "No",
                         Virtual = contrato.Virtual,
                         AnulaYReemplazaContratoId = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContratoId : null,
                         AnulaYReemplazaContratoSAP = (contrato is Contrato) ? (contrato as Contrato).AnulaYReemplazaContrato.ContratoSAP : "",
                         MotivoReemplazo = (contrato is Contrato) ? (contrato as Contrato).MotivoReemplazo : "",
                         Cesion = contrato.Cesion,
-
+                        PrecioPonderado = contrato.PrecioPonderado,
+                        PrecioNetoPonderado = contrato.PrecioNetoPonderado,
                     };
 
                 return queryNegocios;

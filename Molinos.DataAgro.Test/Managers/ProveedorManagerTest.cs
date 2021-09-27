@@ -3824,5 +3824,17 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, result.Count);
         }
 
+        [Test]
+        public void AltaCampoSustentableTestOk()
+        {
+            var result = target.AltaCampoSustentable(It.IsAny<CampoDetalle>());
+
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<CampoDetalle>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayErrores);
+        }
+
     }
 }

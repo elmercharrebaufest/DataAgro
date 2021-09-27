@@ -39,12 +39,14 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal? HectareasCultivables { get; set; }
 
         public int? ImportId { get; set; }
+        public int? CampañaId { get; set; }
 
+        [ForeignKey("CampañaId")]
+        public virtual Campaña Campaña { get; set; }
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }
         [ForeignKey("LocalidadId")]
         public virtual Localidad Localidad { get; set; }
-
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; }
         [ForeignKey("MaterialId")]

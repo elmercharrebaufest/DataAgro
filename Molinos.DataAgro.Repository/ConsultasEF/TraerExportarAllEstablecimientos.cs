@@ -37,7 +37,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            Localidad = x.Localidad.Nombre,
                            Provincia = x.Localidad.Provincia.Nombre,
                            Partido = x.Localidad.Partido.Descripcion,
-                           Rinde = x.Rinde
+                           Rinde = x.Rinde,
+                           Campaña = x.Campaña.Descripcion
                        });
             return resultado.Distinct().ToList();
         }

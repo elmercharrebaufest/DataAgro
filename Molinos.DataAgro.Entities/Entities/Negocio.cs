@@ -127,6 +127,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public string CaratulaMAT { get; set; }
         public decimal? PrecioAjusteComision { get; set; }
         public string MonedaAjusteComisionId { get; set; }
+        public bool? ObligatoriedadBonificacion { get; set; }
+
+        public decimal? PrecioPonderado { get; set; } // Precio
+        public decimal? PrecioNetoPonderado { get; set; } // PrecioNeto
+        
+        public string DescripcionOperacionAnterior { get; set; }
 
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]

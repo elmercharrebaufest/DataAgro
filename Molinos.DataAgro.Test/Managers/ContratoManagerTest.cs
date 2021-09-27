@@ -67,7 +67,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IValidacionCreditoAgent> validacionCreditoAgent;
         private Mock<ICapacidadProductivaDisponibleAgent> capacidadProductivaDisponibleAgent;
         private Mock<INegocioManager> negocioManagerMock;
-
+        private Mock<IContratosParaFijacionAgent> contratosParaFijacionAgent;
 
 
         [SetUp]
@@ -114,6 +114,7 @@ namespace Molinos.DataAgro.Test.Managers
             validacionCreditoAgent = new Mock<IValidacionCreditoAgent>();
             capacidadProductivaDisponibleAgent = new Mock<ICapacidadProductivaDisponibleAgent>();
             negocioManagerMock = new Mock<INegocioManager>();
+            contratosParaFijacionAgent = new Mock<IContratosParaFijacionAgent>();
 
 
 
@@ -135,8 +136,8 @@ namespace Molinos.DataAgro.Test.Managers
                 validarPagoAgente.Object, cbuAgentMock.Object,
                 modificarFijacionAgentMock.Object, ccppPendienteAplicarAgentMock.Object,
                 contextoMock.Object, validacionCreditoAgent.Object, tipoDeCambioAgentMock.Object,
-                capacidadProductivaDisponibleAgent.Object, negocioManagerMock.Object
-                );
+                capacidadProductivaDisponibleAgent.Object, negocioManagerMock.Object,
+                contratosParaFijacionAgent.Object);
         }
 
         [Test]
@@ -455,7 +456,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Comercial = new Comercial { GrupoDeComprasId = 1 },
                 PorcentajeDePago = 95,
                 MotivoOperacionAnterior = "aaaaaa",
-                AperturaPrecio = new List<AperturaPrecio>()
+                AperturaPrecio = new List<AperturaPrecio>(),
+                DescripcionOperacionAnterior = "aaaaaaa"
             };
             repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
@@ -2301,7 +2303,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.IsNotNull(resultado);
             Assert.That(!resultado.HayError);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
         }
 
         [Test]
@@ -2342,7 +2344,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.IsNotNull(resultado);
             Assert.That(resultado.HayError);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
         [Test]
         public void AnularContratoErrorSio()
@@ -2363,7 +2365,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.IsNotNull(resultado);
             Assert.That(resultado.HayError);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
 
         [Test]

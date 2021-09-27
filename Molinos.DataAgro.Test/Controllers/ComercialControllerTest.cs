@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Comercial\":[{\"ComercialId\":1,\"Apellido\":\"A\"}],\"Perfil\":[{\"PerfilId\":1,\"Descripcion\":\"Mesa\"}],\"GrupoDeCompras\":[{\"Id\":1,\"Descripcion\":\"A\"}],\"Rol\":null},\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"AsignarNegocios\":false,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"Comercial\":[{\"ComercialId\":1,\"Apellido\":\"A\"}],\"Perfil\":[{\"PerfilId\":1,\"Descripcion\":\"Mesa\"}],\"GrupoDeCompras\":[{\"Id\":1,\"Descripcion\":\"A\"}],\"Rol\":null},\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"AsignarNegocios\":false,\"IdUsuarioSAP\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -114,7 +114,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":1,\"Apellido\":\"B\",\"Nombres\":\"A\",\"PerfilId\":1,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"ba\",\"GrupoDeComprasId\":44,\"GrupoDeCompras\":null,\"Administrador\":false,\"Cupera\":null,\"RolesAsociados\":null,\"NombreCompleto\":\"B A\",\"Deshabilitado\":false,\"FechaDeshabilitado\":null,\"AsignarNegocios\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}"
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":1,\"Apellido\":\"B\",\"Nombres\":\"A\",\"PerfilId\":1,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"ba\",\"GrupoDeComprasId\":44,\"GrupoDeCompras\":null,\"Administrador\":false,\"Cupera\":null,\"RolesAsociados\":null,\"NombreCompleto\":\"B A\",\"Deshabilitado\":false,\"FechaDeshabilitado\":null,\"AsignarNegocios\":false,\"IdUsuarioSAP\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}"
                 , a);
         }
 
@@ -141,7 +141,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"AsignarNegocios\":false,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"AsignarNegocios\":false,\"IdUsuarioSAP\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -169,7 +169,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"AsignarNegocios\":false,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Comercial\":{\"ComercialId\":0,\"Apellido\":\"\",\"Nombres\":\"\",\"PerfilId\":null,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":\"\",\"GrupoDeComprasId\":null,\"Administrador\":null,\"Cupera\":null,\"Deshabilitado\":null,\"FechaDeshabilitado\":null,\"AsignarNegocios\":false,\"IdUsuarioSAP\":null,\"Perfil\":null,\"EmpleadorACargo\":null,\"GrupoDeCompras\":null,\"RolesAsociados\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

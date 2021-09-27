@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
-    
+
     kendo.culture("es-AR");
-    
+
     inicializarTodosKendoDate($(".filtroFecha"));
     $("#fechaCargaId").data("kendoDatePicker").value(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
     CreateGridInformeCompraNet();
@@ -61,7 +61,7 @@ function CreateGridInformeCompraNet() {
                     FechaEntrega: { type: "date" },
                     Fecha_Dolarizado: { type: "date" },
                     FechaConfirmacion: { type: "date" },
-                    UsuarioConfirmador: {type: "string"},
+                    UsuarioConfirmador: { type: "string" },
                     Cantidad: { type: "number" },
                     CantidadAmpliado: { type: "number" },
                     Precio: { type: "number", format: "n2" },
@@ -78,6 +78,7 @@ function CreateGridInformeCompraNet() {
                     FechaHasta_Sustentable: { type: "date" },
                     Pesificado: { type: "boolean" },
                     AnulaYReemplazaContratoSAP: { type: "number" },
+                    Precio: { type: "number", format: "n2" },
                 }
             }
         },
@@ -149,7 +150,7 @@ function CreateGridInformeCompraNet() {
             },
             { field: "Fecha", title: "Carga", width: 80, format: _DefaultDateTemplate },
             {
-                field: "Hora", value: "Hora", title: "Hora", template:
+                field: "Hora", value: "Hora", title: "Hora", width: 50, template:
                     function (dataItem) {
                         var numeros = dataItem.Hora.split(":");
                         if (numeros[0] < 10) {
@@ -162,43 +163,43 @@ function CreateGridInformeCompraNet() {
                     }
             },
             {
-                field: "TipoNegocio", title: "Tipo", width: 70
+                field: "TipoNegocio", title: "Tipo", width: 100
             },
             {
-                field: "Material", width: 130, template: "#=Material#"
+                field: "Material", width: 60, template: "#=Material#"
             },
-            
+
             {
-                field: "Cantidad", format: "{0:n0}"
-            },
-            {
-                field: "CantidadAmpliado", title: "Ampliado", format: "{0:n0}"
-            }, 
-            {
-                field: "Precio", type: "number", format: "{0:n2}"
+                field: "Cantidad", format: "{0:n0}", width: 80
             },
             {
-                field: "Moneda", title: "Moneda"
+                field: "CantidadAmpliado", title: "Ampliado", format: "{0:n0}", width: 80
             },
-            { field: "PrecioNeto", title: "Precio Neto", type: "number", format: "{0:n2}" },
-            { field: "DestinoDescripcion", title: "Centro" },
-            { field: "Pizarra", title: "Pizarra", template: function (dataItem) { return dataItem.Pizarra ? "Si" : "No"; } },
-            { field: "ImporteFinanciero", title: "Importe Financiero", type: "number", format: "{0:n2}" },
-            { field: "MonedaFinanciero", title: "Moneda", type: "string" },
-            { field: "ImporteRedespacho", title: "Importe Redespacho", type: "number", format: "{0:n2}" },
-            { field: "MonedaRedespacho", title: "Moneda", type: "string" },
-            { field: "PorcentajeComision", title: "Porcentaje Comision", type: "number", format: "{0:n2}" },
-            { field: "ImporteComision", title: "Importe Comision", type: "number", format: "{0:n2}" },
-            { field: "MonedaComision", title: "Moneda", type: "string" },
-            { field: "ImporteBonificacion", title: "Importe Bonificacion", type: "number", format: "{0:n2}" },
-            { field: "PorcentajeBonificacion", title: "Porcentaje Bonificacion", type: "number", format: "{0:n2}" },
-            { field: "MonedaBonificacion", title: "Moneda", type: "string" },
-            { field: "ImporteBasis", title: "Importe Basis", type: "number", format: "{0:n2}" },
-            { field: "MonedaBasis", title: "Moneda", type: "string" },
-            
-            { field: "Provincia" },
-            { field: "Localidad" },
-            { field: "Campania", value: "Campania", title: "Campaña" },//30
+            {
+                field: "Precio", type: "number", format: "{0:n2}", width: 80
+            },
+            {
+                field: "Moneda", title: "Moneda", width: 70
+            },
+            { field: "PrecioNeto", title: "Precio Neto", type: "number", format: "{0:n2}", width: 80 },
+            { field: "DestinoDescripcion", title: "Centro", width: 80 },
+            { field: "Pizarra", title: "Pizarra", template: function (dataItem) { return dataItem.Pizarra ? "Si" : "No"; }, width: 70 },
+            { field: "ImporteFinanciero", title: "Importe <br>Financiero", type: "number", format: "{0:n2}", width: 80 },
+            { field: "MonedaFinanciero", title: "Moneda", type: "string", width: 70 },
+            { field: "ImporteRedespacho", title: "Importe<br>Redespacho", type: "number", format: "{0:n2}", width: 80 },
+            { field: "MonedaRedespacho", title: "Moneda", type: "string", width: 80 },
+            { field: "PorcentajeComision", title: "Porcentaje<br> Comision", type: "number", format: "{0:n2}", width: 80 },
+            { field: "ImporteComision", title: "Importe<br> Comision", type: "number", format: "{0:n2}", width: 80 },
+            { field: "MonedaComision", title: "Moneda", type: "string", width: 80 },
+            { field: "ImporteBonificacion", title: "Importe<br> Bonificacion", type: "number", format: "{0:n2}", width: 80 },
+            { field: "PorcentajeBonificacion", title: "Porcentaje<br> Bonificacion", type: "number", format: "{0:n2}", width: 80 },
+            { field: "MonedaBonificacion", title: "Moneda", type: "string", width: 80 },
+            { field: "ImporteBasis", title: "Importe<br> Basis", type: "number", format: "{0:n2}", width: 80 },
+            { field: "MonedaBasis", title: "Moneda", type: "string", width: 80 },
+
+            { field: "Provincia", width: 80 },
+            { field: "Localidad", width: 80 },
+            { field: "Campania", value: "Campania", title: "Campaña", width: 80 },//30
             {
                 title: "Fecha", columns: [
                     { field: "FechaDesde", type: "date", title: "Desde", format: _DefaultDateTemplate, width: 80 },
@@ -206,13 +207,13 @@ function CreateGridInformeCompraNet() {
                 ]
             },
 
-            { field: "Comercial", title: "Comercial" },
-            { field: "ComercialCreador", title: "Registro Comercial" },
+            { field: "Comercial", title: "Comercial", width: 180 },
+            { field: "ComercialCreador", title: "Registro <br>Comercial", width: 180 },
             {
                 field: "Sustentable", columns: [
-                    { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
-                    { field: "Importe_Sustentable", title: "Importe", filterable: false },
-                    { field: "Moneda_Sustentable", title: "Moneda", filterable: false },
+                    { field: "Sustentable", title: "Sust.", template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; }, width: 80 },
+                    { field: "Importe_Sustentable", title: "Importe", filterable: false, width: 80 },
+                    { field: "Moneda_Sustentable", title: "Moneda", filterable: false, width: 80 },
                     {
                         field: "FechaDesde_Sustentable", title: "Desde", filterable: false, width: 80, format: _DefaultDateTemplate, template: function (dataItem) {
                             return dataItem.FechaDesde_Sustentable ? kendo.toString(kendo.parseDate(dataItem.FechaDesde_Sustentable, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
@@ -229,18 +230,18 @@ function CreateGridInformeCompraNet() {
             },
             {
                 field: "Dolarizado", columns: [
-                    { field: "Dolarizado", title: "Dolar.", template: function (dataItem) { return dataItem.Dolarizado ? "Si" : "No"; } },
+                    { field: "Dolarizado", title: "Dolar.", template: function (dataItem) { return dataItem.Dolarizado ? "Si" : "No"; }, width: 80 },
                     {
                         field: "Fecha_Dolarizado", title: "Fecha", filterable: false, width: 80, format: _DefaultDateTemplate, template: function (dataItem) {
-                            return dataItem.Dolarizado ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy')  : "";
-                             
+                            return dataItem.Dolarizado ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
+
                         }
                     }
                 ]
             },
             {
-                field: "Dolarizado Express", columns: [//48
-                    { field: "DolarizadoExpress", title: "Dolar. Express", template: function (dataItem) { return dataItem.DolarizadoExpress ? "Si" : "No"; } },
+                field: "Dolarizado <br>Express", columns: [//48
+                    { field: "DolarizadoExpress", title: "Dolar. Express", template: function (dataItem) { return dataItem.DolarizadoExpress ? "Si" : "No"; }, width: 80 },
                     {
                         field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
                             return dataItem.DolarizadoExpress ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
@@ -250,8 +251,8 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
-                field: "Dolarizado Corredor", columns: [
-                    { field: "DolarizadoCorredor", title: "Dolar. Corredor", template: function (dataItem) { return dataItem.DolarizadoCorredor ? "Si" : "No"; } },
+                field: "Dolarizado <br>Corredor", columns: [
+                    { field: "DolarizadoCorredor", title: "Dolar. Corredor", template: function (dataItem) { return dataItem.DolarizadoCorredor ? "Si" : "No"; }, width: 80 },
                     {
                         field: "Fecha_Dolarizado", title: "Fecha", format: _DefaultDateTemplate, filterable: false, width: 80, template: function (dataItem) {
                             return dataItem.DolarizadoCorredor ? kendo.toString(kendo.parseDate(dataItem.Fecha_Dolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
@@ -261,26 +262,26 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             {
-                field: "Pago Diferido en pesos", columns: [
-                    { field: "Pesificado", title: "Pago Dif.", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; } },
-                    { field: "Dias_Pesificado", title: "Dias", filterable: false }
+                field: "Pago Diferido<br> en pesos", columns: [
+                    { field: "Pesificado", title: "Pago Dif.", template: function (dataItem) { return dataItem.Pesificado ? "Si" : "No"; }, width: 80 },
+                    { field: "Dias_Pesificado", title: "Dias", filterable: false, width: 80 }
                 ]
             },
-            { field: "NoInformaSIO", title: "No informa SIO", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.NoInformaSIO ? "Si" : "No"; } },
-            { field: "TrigoEspecial", title: "Trigo Especial", headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.TrigoEspecial ? "Si" : "No"; } },
+            { field: "NoInformaSIO", title: "No informa SIO", width: 80, headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.NoInformaSIO ? "Si" : "No"; } },
+            { field: "TrigoEspecial", title: "Trigo<br>Especial", width: 60, headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.TrigoEspecial ? "Si" : "No"; } },
             {
                 field: "Estado_Contrato", title: "Estado", width: 90, sortable: false
             },
-            { field: "Observacion", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" } },
-            { field: "FechaCierta", type: "date", title: "Fecha Cierta", format: _DefaultDateTemplate, width: 80 },
-            { field: "Rechazo", type: "string", title: "Motivo Rechazo" },
-            { field: "ClasificacionDescripcion", type: "string", title: "Clasificación" },
-            { field: "FechaOperacion", type: "date", title: "Fecha Operacion", format: _DefaultDateTemplate, width: 80 },
-            { field: "MotivoOperacionAnterior", type: "string", title: "Motivo Operación Anterior" },
-            
-            { field: "UsuarioConfirmador", type: "string", title: "Usuario Confirmador" },
+            { field: "Observacion", type: "string", filterable: false, attributes: { "class": "ColumnaObservacion" }, width: 80 },
+            { field: "FechaCierta", type: "date", title: "Fecha<br> Cierta", format: _DefaultDateTemplate, width: 80 },
+            { field: "Rechazo", type: "string", title: "Motivo<br> Rechazo", width: 80 },
+            { field: "ClasificacionDescripcion", type: "string", title: "Clasificación", width: 80 },
+            { field: "FechaOperacion", type: "date", title: "Fecha <br>Operacion", format: _DefaultDateTemplate, width: 80 },
+            { field: "MotivoOperacionAnterior", type: "string", title: "Motivo <br>Operación<br> Anterior", width: 80 },
+            { field: "DescripcionOperacionAnterior", type: "string", title: "Descripcion <br>Operación<br> Anterior", width: 80 },
+            { field: "UsuarioConfirmador", type: "string", title: "Usuario <br>Confirmador", width: 80 },
             {
-                field: "FechaConfirmacion", type: "date", title: "Fecha Confirmación", format: _DefaultDateTemplate,
+                field: "FechaConfirmacion", type: "date", title: "Fecha <br>Confirmación", format: _DefaultDateTemplate, width: 120,
 
                 template: function (dataItem) {
                     if (dataItem.FechaConfirmacion != null) {
@@ -288,85 +289,84 @@ function CreateGridInformeCompraNet() {
                     } else return "";
                 }
             },
-            
-            { field: "ChequeElectronicoValor", type: "string", title: "Cheque Electrónico" },
-            { field: "PagoCBU", type: "string", title: "Pago Cbu" },
-            { field: "ObligatoriedadCostoFinancieroDesc", title: "Obligatoriedad Costo Financiero" },
 
-
-            { field: "PosicionCBOT", type: "string", title: "Posicion" },
-            { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posicion" },
-            { field: "UsuarioTercero", type: "string", title: "Usuario Tercero" },
-            { field: "AnulaYReemplazaContratoSAP", type: "string", title: "Anula y reemplaza" },
-            { field: "MotivoReemplazo", type: "string", title: "Motivo" },
-            { field: "Cesion", type: "string", title: "Cesion", template: function (dataItem) { return dataItem.Cesion ? "Si" : "No"; } },
-
+            { field: "ChequeElectronicoValor", type: "string", title: "Cheque <br>Electrónico", width: 80 },
+            { field: "PagoCBU", type: "string", title: "Pago Cbu", width: 470 },
+            { field: "ObligatoriedadCostoFinancieroDesc", title: "Obligatoriedad <br>Costo <br>Financiero", width: 80 },
+            { field: "PosicionCBOT", type: "string", title: "Posicion", width: 80 },
+            { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posicion", width: 80 },
+            { field: "UsuarioTercero", type: "string", title: "Usuario <br>Tercero", width: 150 },
+            { field: "AnulaYReemplazaContratoSAP", type: "string", title: "Anula y<br>reemplaza", width: 180 },
+            { field: "MotivoReemplazo", type: "string", title: "Motivo", width: 180 },
+            { field: "Cesion", type: "string", title: "Cesion", template: function (dataItem) { return dataItem.Cesion ? "Si" : "No"; }, width: 80 },
+            { field: "ObligatoriedadBonificacionDesc", title: "Obligatoriedad<br> bonificacion", width: 80},
+            { field: "PrecioPonderado", title: "Precio<br> Ponderado", type: "number", format: "{0:n2}", width: 100 },
         ],
         excelExport: function (e) {
-                var sheet = e.workbook.sheets[0];
+            var sheet = e.workbook.sheets[0];
 
-                var templateHora = kendo.template(this.columns[6].template);
-                var templatePizarra = kendo.template(this.columns[15].template);
-                var templateSustentable = kendo.template(this.columns[34].columns[0].template);
-                var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
-                var templateDolarizadoExpress = kendo.template(this.columns[36].columns[0].template);
-                var templateDolarizadoCorredor = kendo.template(this.columns[37].columns[0].template);
-                var templatePesificado = kendo.template(this.columns[38].columns[0].template);
-                var templateSIO = kendo.template(this.columns[39].template);
-                var templateTrigoEsp = kendo.template(this.columns[40].template);
-            var templateCesion = kendo.template(this.columns[58].template);//agregar uno cuando se suba  DescripcionOperacionAnterior
+            var templateHora = kendo.template(this.columns[6].template);
+            var templatePizarra = kendo.template(this.columns[15].template);
+            var templateSustentable = kendo.template(this.columns[34].columns[0].template);
+            var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
+            var templateDolarizadoExpress = kendo.template(this.columns[36].columns[0].template);
+            var templateDolarizadoCorredor = kendo.template(this.columns[37].columns[0].template);
+            var templatePesificado = kendo.template(this.columns[38].columns[0].template);
+            var templateSIO = kendo.template(this.columns[39].template);
+            var templateTrigoEsp = kendo.template(this.columns[40].template);
+            var templateCesion = kendo.template(this.columns[59].template);
 
-                for (var i = 2; i < sheet.rows.length; i++) {
-                    var row = sheet.rows[i];
+            for (var i = 2; i < sheet.rows.length; i++) {
+                var row = sheet.rows[i];
 
-                    var dataItem = {
-                        Hora: row.cells[6].value,
-                        Pizarra: row.cells[15].value,
-                        Sustentable: row.cells[35].value,
-                        Dolarizado: row.cells[40].value,
-                        DolarizadoExpress: row.cells[42].value,
-                        DolarizadoCorredor: row.cells[44].value,
-                        Pesificado: row.cells[46].value,
-                        NoInformaSIO: row.cells[48].value,
-                        TrigoEspecial: row.cells[49].value,
-                        Cesion: row.cells[67].value,//agregar uno cuando se suba  DescripcionOperacionAnterior
-                    };
+                var dataItem = {
+                    Hora: row.cells[6].value,
+                    Pizarra: row.cells[15].value,
+                    Sustentable: row.cells[35].value,
+                    Dolarizado: row.cells[40].value,
+                    DolarizadoExpress: row.cells[42].value,
+                    DolarizadoCorredor: row.cells[44].value,
+                    Pesificado: row.cells[46].value,
+                    NoInformaSIO: row.cells[48].value,
+                    TrigoEspecial: row.cells[49].value,
+                    Cesion: row.cells[68].value,
+                };
 
-                    var operacionFecha = row.cells[5].value;
-                    operacionFecha.setHours(operacionFecha.getHours() + 1);
-                    row.cells[5].value = operacionFecha;
+                var operacionFecha = row.cells[5].value;
+                operacionFecha.setHours(operacionFecha.getHours() + 1);
+                row.cells[5].value = operacionFecha;
 
-                    var fechaDesde = row.cells[31].value;
-                    var fechaHasta = row.cells[32].value;
+                var fechaDesde = row.cells[31].value;
+                var fechaHasta = row.cells[32].value;
 
-                    if (fechaDesde != null) {
-                        fechaDesde.setHours(fechaDesde.getHours() + 1);
-                        row.cells[31].value = fechaDesde;
-                    }
-
-                    if (fechaHasta != null) {
-
-                        fechaHasta.setHours(fechaHasta.getHours() + 1);
-                        row.cells[32].value = fechaHasta;
-                    }
-
-
-                    row.cells[6].value = templateHora(dataItem);
-                    row.cells[15].value = templatePizarra(dataItem);
-                    row.cells[35].value = templateSustentable(dataItem);
-                    row.cells[40].value = templateDolarizado(dataItem);
-                    row.cells[41].value = row.cells[40].value == "Si" ? row.cells[41].value : "";
-                    row.cells[42].value = templateDolarizadoExpress(dataItem);
-                    row.cells[43].value = row.cells[42].value == "Si" ? row.cells[43].value : "";
-                    row.cells[44].value = templateDolarizadoCorredor(dataItem);
-                    row.cells[45].value = row.cells[44].value == "Si" ? row.cells[45].value : "";
-                    row.cells[46].value = templatePesificado(dataItem);
-                    row.cells[48].value = templateSIO(dataItem);
-                    row.cells[49].value = templateTrigoEsp(dataItem);
-                    row.cells[67].value = templateCesion(dataItem);//agregar uno cuando se suba  DescripcionOperacionAnterior
-
+                if (fechaDesde != null) {
+                    fechaDesde.setHours(fechaDesde.getHours() + 1);
+                    row.cells[31].value = fechaDesde;
                 }
-            },
+
+                if (fechaHasta != null) {
+
+                    fechaHasta.setHours(fechaHasta.getHours() + 1);
+                    row.cells[32].value = fechaHasta;
+                }
+
+
+                row.cells[6].value = templateHora(dataItem);
+                row.cells[15].value = templatePizarra(dataItem);
+                row.cells[35].value = templateSustentable(dataItem);
+                row.cells[40].value = templateDolarizado(dataItem);
+                row.cells[41].value = row.cells[40].value == "Si" ? row.cells[41].value : "";
+                row.cells[42].value = templateDolarizadoExpress(dataItem);
+                row.cells[43].value = row.cells[42].value == "Si" ? row.cells[43].value : "";
+                row.cells[44].value = templateDolarizadoCorredor(dataItem);
+                row.cells[45].value = row.cells[44].value == "Si" ? row.cells[45].value : "";
+                row.cells[46].value = templatePesificado(dataItem);
+                row.cells[48].value = templateSIO(dataItem);
+                row.cells[49].value = templateTrigoEsp(dataItem);
+                row.cells[68].value = templateCesion(dataItem);
+
+            }
+        },
         pageable: {
             messages: {
                 display: "{2} elementos",
@@ -384,14 +384,14 @@ function CreateGridInformeCompraNet() {
             input: true,
             numeric: true
         },
-        scrollable: false,
+        scrollable: true,
         sortable: {
             mode: "multiple",
             allowUnsort: true,
             showIndexes: false
         },
         selectable: "row",
-
+        height: 550,
         filterable: false,
         filterMenuInit: function (e) {
             if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Provincia" || e.field == "Localidad") {
@@ -472,7 +472,7 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
-   
+
     CrearMultiSelectFiltro("#buscadorProveedor", "Proveedor", "ProveedorId", "/Contrato/ListarProveedor");
     CrearMultiSelectFiltro("#buscadorCorredor", "Corredor", "CorredorId", "/Contrato/ListarCorredor");
     CrearMultiSelectFiltro("#ClasificacionId", "Clasificacion", "ClasificacionId", "/Contrato/ListarClasificacion");

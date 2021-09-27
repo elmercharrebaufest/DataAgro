@@ -112,7 +112,9 @@ namespace Molinos.DataAgro.Business.Managers
                     provinciaId = x.Localidad.ProvinciaId,
                     provincia = x.Localidad.Provincia.Nombre,
                     partido = x.Localidad.Partido.Descripcion,
-                    rinde = x.Rinde
+                    rinde = x.Rinde,
+                    campañaId = x.CampañaId,
+                    campaña = x.Campaña.Descripcion
                 }, x => x.ProveedorId == ProveedorId);
 
                 res.ProveedorCorredor = ListarProveedorCorredor(ProveedorId);
@@ -1469,7 +1471,8 @@ namespace Molinos.DataAgro.Business.Managers
                         KMZnombre = param.archivo,
                         LocalidadId = param.localidadId,
                         MaterialId = param.materialId,
-                        Proveedor = proveedor
+                        Proveedor = proveedor,
+                        CampañaId = param.campañaId
                     });
                     itemEst++;
                 }
@@ -2640,7 +2643,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 LocalidadId = param.localidadId,
                                 MaterialId = param.materialId,
                                 NroItem = 1,
-                                ProveedorId = (int)oParam.ProveedorId
+                                ProveedorId = (int)oParam.ProveedorId,
+                                CampañaId = oParam.CampañaId,
                             });
                         }
                     }
@@ -2672,6 +2676,8 @@ namespace Molinos.DataAgro.Business.Managers
                             campo.ImportId = mod.ImportId;
                             campo.Rinde = mod.rinde;
                             campo.ProveedorId = (int)oParam.ProveedorId;
+                            campo.CampañaId = mod.campañaId;
+
                             #endregion
                         }
                     }
@@ -3328,6 +3334,7 @@ namespace Molinos.DataAgro.Business.Managers
                         campoDetalle.HectareasCultivables = campo.hcultivables;
                         campoDetalle.ComercialId = campo.comercialId;
                         campoDetalle.Rinde = campo.rinde;
+                        campoDetalle.CampañaId = campo.campañaId;
                         repositorio.Agregar(campoDetalle);
                     }
                     else
@@ -3341,6 +3348,7 @@ namespace Molinos.DataAgro.Business.Managers
                         campoDetalle.HectareasCultivables = campo.hcultivables;
                         campoDetalle.ComercialId = campo.comercialId;
                         campoDetalle.Rinde = campo.rinde;
+                        campoDetalle.CampañaId = campo.campañaId;
                     }
                 }
                 repositorio.GuardarCambios();
@@ -4372,6 +4380,23 @@ namespace Molinos.DataAgro.Business.Managers
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
             return alternateView;
+        }
+
+        public Resultado AltaCampoSustentable(CampoDetalle campo)
+        {
+            var resultado = new Resultado();
+            try
+            {
+                repositorio.Agregar(campo);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error("error AltaCampoSustentable");
+                logger.Error(e);
+                resultado.Error("", e.Message);
+            }
+            return resultado;
         }
     }
 

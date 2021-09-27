@@ -90,11 +90,11 @@ function Inicializar() {
         pageSize: 20,
         aggregate: [
             { field: "KgVencimientoPesificable", aggregate: "sum" },
-            { field: "KgNoPesificable", aggregate: "sum"},
+            { field: "KgNoPesificable", aggregate: "sum" },
             { field: "KgTotales", aggregate: "sum" },
-            { field: "USDPesificable", aggregate: "sum"},
+            { field: "USDPesificable", aggregate: "sum" },
             { field: "USDNoPesificable", aggregate: "sum" },
-            { field: "USDTotal", aggregate: "sum"}
+            { field: "USDTotal", aggregate: "sum" }
         ]
     };
 
@@ -122,60 +122,37 @@ function Inicializar() {
             { field: "Fijacion", type: "string", width: 150 },
             {
                 field: "FechaFijacion", title: "Fecha Fijación", type: "date", width: 150, format: _DefaultDateTemplate, template: function (dataItem) {
-                    
                     return dataItem.FechaFijacion != null ? kendo.toString(kendo.parseDate(dataItem.FechaFijacion, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
                 }
             },
             {
                 field: "FechaUltimaAplicacion", title: "Fecha Ultima Aplicacion", type: "date", width: 150, format: _DefaultDateTemplate, template: function (dataItem) {
-
-                    
                     return dataItem.FechaUltimaAplicacion != null ? kendo.toString(kendo.parseDate(dataItem.FechaUltimaAplicacion, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
                 }
             },
-
-            { field: "Dolarizado", title: "Dolarizado", type: "string", width: 150, template: function (dataItem) { return dataItem.Dolarizado == true  ? "Si" : "No"; } },
-            { field: "DolarizadoNoProductor", title: "Dolarizado No Productor", type: "string", width: 150, template: function (dataItem) { return dataItem.DolarizadoNoProductor == true  ? "Si" : "No"; } },
+            { field: "Dolarizado", title: "Dolarizado", type: "string", width: 150, template: function (dataItem) { return dataItem.Dolarizado == true ? "Si" : "No"; } },
+            { field: "DolarizadoNoProductor", title: "Dolarizado No Productor", type: "string", width: 150, template: function (dataItem) { return dataItem.DolarizadoNoProductor == true ? "Si" : "No"; } },
             { field: "DolarizadoExpress", title: "Dolarizado Express", type: "string", width: 150, template: function (dataItem) { return dataItem.DolarizadoExpress == true ? "Si" : "No"; } },
             {
                 field: "FechaHastaDolarizado", title: "Fecha Hasta Dolarizado", type: "date", width: 150, format: _DefaultDateTemplate, template: function (dataItem) {
-
                     return dataItem.FechaHastaDolarizado != null ? kendo.toString(kendo.parseDate(dataItem.FechaHastaDolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
                 }
             },
-            {
-                field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}",  aggregates: ["sum"],/* footerTemplate: "#=kendo.toString(sum, 'n0')#",*/
-            },
-            {
-                field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n0')#",*/
-            },  
-            {
-                field: "KgTotales", title: "Kilos Totales", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n0')#",*/
-            },
-
-            {
-                field: "USDPesificable", title: "USD Pesificable", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n2')#",*/
-            },
-            {
-                field: "USDNoPesificable", title: "USD No Pesificables", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n2')#",*/
-            },
-            {
-                field: "USDTotal", title: "USD Totales", format: "{0:n0}", aggregates: ["sum"], /*footerTemplate: "#=kendo.toString(sum, 'n2')#",*/
-            },                        
-            {
-                field: "Precio", type: "number", format: "{0:n2}"
-            },
-            {
-                field: "MonedaId", title: "Moneda"
-            }, 
-           
+            { field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}", aggregates: ["sum"], width: 150},
+            { field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}", aggregates: ["sum"], width: 150 },
+            { field: "KgTotales", title: "Kilos Totales", format: "{0:n0}", aggregates: ["sum"], width: 150 },
+            { field: "USDPesificable", title: "USD Pesificable", format: "{0:n0}", aggregates: ["sum"], width: 150 },
+            { field: "USDNoPesificable", title: "USD No Pesificables", format: "{0:n0}", aggregates: ["sum"], width: 150 },
+            { field: "USDTotal", title: "USD Totales", format: "{0:n0}", aggregates: ["sum"], },
+            { field: "Precio", type: "number", format: "{0:n2}", width: 150 },
+            { field: "MonedaId", title: "Moneda", width: 150 },
             { field: "CuitVendedor", title: "CUIT Vendedor", type: "string", width: 150 },
-            { field: "NombreVendedor", title: "Vendedor", type: "string", width: 150 },
+            { field: "NombreVendedor", title: "Vendedor", type: "string", width: 300 },
             { field: "CuitCorredor", title: "CUIT Corredor", type: "string", width: 150 },
-            { field: "NombreCorredor", title: "Corredor", type: "string", width: 150 },
-            { field: "Clasificacion", type: "string", width: 150 },          
+            { field: "NombreCorredor", title: "Corredor", type: "string", width: 300 },
+            { field: "Clasificacion", type: "string", width: 150 },
             { field: "MaterialDesc", title: "Material Descripción", type: "string", width: 150 },
-            { field: "ComercialDesc", title: "Comercial", title: "Comercial", type: "string", width: 150 },                 
+            { field: "ComercialDesc", title: "Comercial", title: "Comercial", type: "string", width: 150 },
             { field: "Unidad", type: "string", width: 150 },
             //{
             //    field: "CantidadPendiente", format: "{0:n0}"
@@ -198,7 +175,8 @@ function Inicializar() {
             input: true,
             numeric: true
         },
-        scrollable: false,
+        scrollable: true,
+        height:550,
         sortable: {
             mode: "multiple",
             allowUnsort: true,
@@ -206,16 +184,16 @@ function Inicializar() {
         },
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-            
+
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
-                               
+
                 //la Fecha en Chrome aparece corrida un dia, solucion:
 
                 if (row.cells[4].value == true) {
                     row.cells[4].value = "SI"
                 } else {
-                    row.cells[4].value = "NO"                    
+                    row.cells[4].value = "NO"
                 }
 
                 if (row.cells[5].value == true) {
@@ -251,7 +229,7 @@ function Inicializar() {
                     row.cells[3].value = ultimaAplicacion;
                     row.cells[3].format = 'dd/MM/yyyy'
                 }
-                
+
             }
             //aggregates
             //sheet.rows[sheet.rows.length -1].cells[4].value = "";
@@ -387,8 +365,8 @@ function DeshabilitarTildeExcluyenteKgVencimientoPesificable() {
     if ($("#KgVencimientoPesificable").is(":checked")) {
         $("#KgNoPesificable").prop("checked", false)
         $("#KgTotales").prop("checked", false)
-    }  
-    
+    }
+
 }
 
 function DeshabilitarTildeExcluyenteKgNoPesificable() {

@@ -1798,6 +1798,7 @@ function InicializarElementos() {
             } else {
                 $("#fechaOperacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorId").val("");
+                $("#descripcionMotivoAnterior").val("");
                 //$("#noInformaSioId").attr("disabled", false);              
             }
 
@@ -3800,41 +3801,49 @@ function CargarDatosEditar(contrato, hijo) {
             $("#fechaFijacionId").val(FormatearFecha((contrato.FechaOperacionFormateado)));
             $("#fechaOperacionAgenteId").val(FormatearFecha((contrato.FechaOperacionFormateado)));
 
-            if (contrato.MotivoOperacionAnterior != null && contrato.MotivoOperacionAnterior != "") {
+            var hoy = new Date();
+            var anio = hoy.getFullYear();
+            var mes = hoy.getMonth();
+            var dia = hoy.getDate();
+            hoy = new Date(anio, mes, dia);
+
+            var fechaop = new Date(parseInt(contrato.FechaOperacion.substr(6)));
+            if (fechaop < hoy) {
                 if (contrato.TipoNegocioId != 3) {
                     var listMotivos = $("#motivoAnterior").data("kendoDropDownList").dataSource.data().filter(function (x) { return x.Descripcion == contrato.MotivoOperacionAnterior });
                     if (listMotivos != null && listMotivos.length > 0) {
                         $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
                         $("#motivoAnterior").data("kendoDropDownList").value(listMotivos[0].Id);
                         $("#motivoAnterior").data("kendoDropDownList").trigger("change");
+                        $("#descripcionMotivoAnterior").val(contrato.DescripcionOperacionAnterior);
 
                     } else {
                         $("#motivoAnterior").data("kendoDropDownList").text("Otro");
                         $("#motivoAnterior").data("kendoDropDownList").trigger("change");
-                        $("#motivoOperacionAnteriorId").val(contrato.MotivoOperacionAnterior);
+                        $("#descripcionMotivoAnterior").val(contrato.DescripcionOperacionAnterior);
                     }
 
                     $("#fechaOperacionMotivoDiv").show();
-                    var hoy = new Date();
-                    var anio = hoy.getFullYear();
-                    var mes = hoy.getMonth();
-                    var dia = hoy.getDate();
-                    hoy = new Date(anio, mes, dia);
-                    var fechaop = new Date(parseInt(contrato.FechaOperacion.substr(6)));
-                    const diffTime = Math.abs(hoy - fechaop);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    if (fechaop < hoy) {
-                        if (Id > 0 && diffDays > 1) {
-                            //$("#noInformaSioId").attr("disabled", true);
-                        }
-                    }
+                    //var hoy = new Date();
+                    //var anio = hoy.getFullYear();
+                    //var mes = hoy.getMonth();
+                    //var dia = hoy.getDate();
+                    //hoy = new Date(anio, mes, dia);
+                    //var fechaop = new Date(parseInt(contrato.FechaOperacion.substr(6)));
+                    //const diffTime = Math.abs(hoy - fechaop);
+                    //const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    //if (fechaop < hoy) {
+                    //    if (Id > 0 && diffDays > 1) {
+                    //        //$("#noInformaSioId").attr("disabled", true);
+                    //    }
+                    //}
                 } else {
                     $("#motivoOperacionAnteriorFijacion").val(contrato.MotivoOperacionAnterior);
                     $("#fechaFijacionMotivoDiv").show();
                 }
-
             } else {
                 $("#motivoOperacionAnteriorId").val("");
+                $("#descripcionMotivoAnterior").val("");
                 $("#fechaOperacionMotivoDiv").hide();
                 $("#motivoOperacionAnteriorFijacion").val("");
                 $("#fechaFijacionMotivoDiv").hide();
@@ -4332,6 +4341,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#CondicionDePagoFijacionVentaListado").data("kendoDropDownList").value(contrato.CondicionDePagoFijacionVentaId);
         var precioNeto = $("#precioTotalApertura").data("kendoNumericTextBox").value();
 
+
     } else {
         $("#ventaId").prop("checked", false);
         $(".venta").removeClass("ampliar");
@@ -4352,6 +4362,7 @@ function CargarDatosEditar(contrato, hijo) {
     if (contrato.AnulaYReemplazaContratoId) {
         $("#AnulaYReemplazaContratoId").val(contrato.AnulaYReemplazaContratoId);
         $("#contratoAReemplazarId").val(contrato.AnulaYReemplazaContratoSAP);
+        $("#MotivoReemplazoDiv").show();
         $("#MotivoReemplazo").val(contrato.MotivoReemplazo);
 
         $("#tipoId").data("kendoDropDownList").readonly(true);
@@ -4409,7 +4420,18 @@ function CargarDatosEditar(contrato, hijo) {
     }
     VisualizarFechaCierta();
     DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
-
+    if (contrato.TipoNegocioId == 5) {
+        var asociados = MSExecuteOnServer('/CompraNet/EsUnContratoAsociado', { negocioId: contrato.Id });
+        if (asociados == true && contrato.Estado == 2) {
+            $("#campanaId").data("kendoDropDownList").enable(false);
+            $("#cantidadId").data("kendoNumericTextBox").enable(false);
+            $("#precioId").data("kendoNumericTextBox").enable(false);
+            $("#precioMonedaId").data("kendoDropDownList").enable(false);
+            $("#tipoId").data("kendoDropDownList").enable(false);            
+        }
+    }
+   
+    $("#monedaPactadoId").data("kendoDropDownList").value($("#precioMonedaId").data("kendoDropDownList").value());
 }
 
 function compareDates(date, dates) {

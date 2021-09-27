@@ -174,7 +174,7 @@ namespace Molinos.DataAgro.Business.Managers
                       "<td " + style + (c.ProveedorId == null ? "" : c.Proveedor.RazonSocial) + "</td>" +
                       "<td " + style + (c.Virtual == true ? "FIJACION VIRTUAL" : c.TipoNegocio.Descripcion) + "</td>" +
                       "<td " + style + (c is Contrato && (c as Contrato).AnulaYReemplazaContrato != null ? (c as Contrato).AnulaYReemplazaContrato.ContratoSAP : "") + "</td>" +
-                      "<td " + style + (c is Contrato && (c as Contrato).AnulaYReemplazaContrato != null ? (c as Contrato).MotivoReemplazo : (!String.IsNullOrEmpty(c.MotivoOperacionAnterior) ? c.MotivoOperacionAnterior : "")) + "</td> </tr> ";
+                      "<td " + style + (c is Contrato && (c as Contrato).AnulaYReemplazaContrato != null ? (c as Contrato).MotivoReemplazo : (!String.IsNullOrEmpty(c.MotivoOperacionAnterior) ? c.MotivoOperacionAnterior + " - " + c.DescripcionOperacionAnterior : "")) + "</td> </tr> ";
             }
 
             htmlBody += " </td></tr>";

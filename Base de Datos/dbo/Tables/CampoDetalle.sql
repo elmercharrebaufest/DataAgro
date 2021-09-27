@@ -14,11 +14,14 @@
     [HectareasCultivables] DECIMAL(11, 2) NULL, 
     [MaterialId] INT NOT NULL, 
     [ImportId] INT NULL, 
+    [CampañaId] INT NULL, 
     CONSTRAINT [PK_CampoDetalle] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_CampoDetalle_Contacto] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),
     CONSTRAINT [FK_CampoDetalle_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [dbo].[Localidad] ([LocalidadId]),
     CONSTRAINT [FK_CampoDetalle_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
-	CONSTRAINT [FK_CampoDetalle_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId])
+	CONSTRAINT [FK_CampoDetalle_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
+	CONSTRAINT [FK_CampoDetalle_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId])
+
 
 );
 

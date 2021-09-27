@@ -6,7 +6,7 @@
     var modificarPesificadoFinalizado = PermisosHelper.Is(PermisosDataAgro.ModificarLimitePesificadoFinalizado);
     var fijacionVirtual = PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual);
 }
-
+<link rel="stylesheet" href="styles/kendo.default.min.css" />
 <script>
     Id = '@ViewBag.Id';
     TipoId = '@ViewBag.TipoId';
@@ -55,6 +55,7 @@
 <input type="hidden" id="PorcentajeSobrePrecioContrato" />
 <input type="hidden" id="MonedaSobrePrecioContrato" />
 <input type="hidden" id="idProveedor" />
+<input type="hidden" id="tipoPosicionCBOTId" />
 
 
 @Html.Hidden("crearContrato", Url.Action("CrearContrato", "CompraNet"))
@@ -299,17 +300,21 @@
             </div>
         </div>
 
-        <div id="fechaFijacionMotivoDiv" style="display:none;">
+        <div class="fechaFijacionMotivoDiv" style="display:none;">
             <div class="col-sm-1">
                 <label>Motivo</label>
             </div>
-            <div class="col-sm-3">
-                <select id="motivoAnterior" class="" data-bind="source: MotivoAnteriorCombo, value: Parametros.motivoAnterior, disabled: isControlDisabled"></select>
+            <div class="col-sm-3 fechaFijacionMotivoDiv">
+                <select id="motivoAnterior" data-bind="source: MotivoAnteriorCombo, value: Parametros.motivoAnterior, disabled: isControlDisabled"></select>
                 <img id="errmaterial" src="~/Content/Images/error.png" style="display:none" />
             </div>
-            <div class="col-sm-5 col-md-4" hidden id="motivoTexto" style="margin-top: 7px">
-                <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="motivoOperacionAnteriorFijacion" rows="3" maxlength="100"></textarea>
+            <div class="col-sm-4 descripcion fechaFijacionMotivoDiv" style="margin-top: 7px" hidden>
+                <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="descripcionMotivoAnterior" rows="3" maxlength="100"></textarea>
             </div>
+        </div>
+
+        <div class="col-sm-5 col-md-4 hide" hidden style="margin-top: 7px">
+            <textarea type="text" class="campo-input-text k-textbox" placeholder="Ingrese un motivo" id="motivoOperacionAnteriorFijacion" rows="3" maxlength="100"></textarea>
         </div>
 
         <div id="campanaDiv" class="fason acuerdo">
@@ -327,20 +332,31 @@
         <div class="col-sm-2 ">
             <label>Contrato</label>
         </div>
-        <div class="col-sm-10 col-md-4">
+        <div class="col-sm-10 col-md-3">
             <input type="number" class="k-textbox" style="width:100%" id="contratoId" />
+
             <img id="contratoId" src="~/Content/Images/error.png" style="display:none" />
             <input type="checkbox" id="trigoEspecialFijacion" hidden />
         </div>
-       
+        <div class="col-md-1"><button onclick="AbrirModalContratosPendientes()" id="boton-search"><i class="fa fa-search" aria-hidden="true" style="color:slategray"></i></button></div>
         <div class="col-sm-6" id="datosContrato" hidden>
             <div class="datoscontrato row">
-                <div class="col-xs-12">                    
+                <div class="col-xs-12">
+                    <div style="display:inline-block" id="fijacionPaseDiv">
+                        <label class="aplicados">
+                            Fijacion PASE:
+                        </label>
+                        <span class="aplicados">El precio debe ser el de la fecha del término</span>
+                        <label class="aplicados">
+                            Posición:
+                        </label>
+                        <span id="fijacionPase"></span>
+                    </div>
                     <div style="display:inline-block">
                         <label class="aplicados">
                             Clasificacion:
                         </label>
-                        <span  class="aplicados" id="clasficacionContrato"></span>
+                        <span class="aplicados" id="clasficacionContrato"></span>
                     </div>
                     <div style="display:inline-block" class="fijados" hidden>
                         <label>
@@ -440,25 +456,25 @@
                         <span class="">Canje</span>
                     </div>
                 </div>
-                    <div style="display:inline-block" id="gridDescuentosPorFechadiv">
-                        <div class="condicion" style="display:inline-block">
-                            <div id="gridDescuentosPorFecha" data-template="gridDescuentosPorFecha-template" data-bind="source:DescuentosPorFechaList">
-                            </div>
-                            <script id="gridDescuentosPorFecha-template" type="text/x-kendo-template">
-                                <div>
-                                    <div style="display:inline-block">
-                                        Desc por Fecha de Fijacion Desde: <span> #: FechaDesde#  </span>
-                                        Hasta: <span> #:FechaHasta#</span>
-                                        # if(Importe >0){# Importe: <span> #:Importe# #:MonedaId#</span> #}#
-                                        # if(Porcentaje >0){# Porcentaje: <span> #:Porcentaje#</span> #}#
-                                    </div>
-                                    <br />
-                                </div>
-                            </script>
+                <div style="display:inline-block" id="gridDescuentosPorFechadiv">
+                    <div class="condicion" style="display:inline-block">
+                        <div id="gridDescuentosPorFecha" data-template="gridDescuentosPorFecha-template" data-bind="source:DescuentosPorFechaList">
                         </div>
+                        <script id="gridDescuentosPorFecha-template" type="text/x-kendo-template">
+                            <div>
+                                <div style="display:inline-block">
+                                    Desc por Fecha de Fijacion Desde: <span> #: FechaDesde#  </span>
+                                    Hasta: <span> #:FechaHasta#</span>
+                                    # if(Importe >0){# Importe: <span> #:Importe# #:MonedaId#</span> #}#
+                                    # if(Porcentaje >0){# Porcentaje: <span> #:Porcentaje#</span> #}#
+                                </div>
+                                <br />
+                            </div>
+                        </script>
                     </div>
                 </div>
             </div>
+        </div>
         <div id="CantidadCamionesDiv" class="noFason noAgente noAcuerdo">
             <div class="col-sm-1">
                 <label>Camiones</label>
@@ -541,8 +557,8 @@
                 <img id="errdiasDiferidoId" src="~/Content/Images/error.png" style="display:none" />
                 <div id="diasDiferidoFijacionDiv" class="pagoFijacion" hidden>
                     <input id="diasDiferidoFijacionId" placeholder="Días" onfocus="SetearDiaPesificado()" />
-                    @*<label id="nota" style="color:orange; font-size:11px; margin-left: 100px"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> 
-                    Al cambiar los días de diferimiento se modificará automáticamente el costo financiero a partir de la tasa configurada </label>*@
+                    @*<label id="nota" style="color:orange; font-size:11px; margin-left: 100px"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                        Al cambiar los días de diferimiento se modificará automáticamente el costo financiero a partir de la tasa configurada </label>*@
                 </div>
             </div>
         </div>
@@ -842,7 +858,7 @@
             </div>
         </div>
 
-        <div class="row">           
+        <div class="row">
             <div class="noAcuerdo">
                 <div class="col-sm-2">
                     <label>Porcentaje de Pago</label>
@@ -1121,8 +1137,40 @@
         cursor: default;
         opacity: 0.5;
     }
+
+    #boton-search {
+        background-color: #fff;
+        border: none;
+        color: white;
+        padding: 4px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 17px;
+    }
+
+        #boton-search:active {
+            background-color: #cac8c8;
+        }
+
+    .seleccionar {
+        background-color: mistyrose;
+        border: none;
+        color: darkslategray;
+        padding: 6px 14px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 9px;
+    }
+
+        #boton-search:active, .seleccionar:active {
+            background-color: #cac8c8;
+        }
 </style>
 <!-- Modal Apertura Precio-->
 @Html.Partial("ModalAperturaPrecio")
 
 @Html.Partial("ModalConfirmarCostoFinanciero")
+
+@Html.Partial("ModalContratosPendientes")

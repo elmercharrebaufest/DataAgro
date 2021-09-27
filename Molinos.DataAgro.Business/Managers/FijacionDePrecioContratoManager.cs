@@ -336,12 +336,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                         }
 
-                        if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                        if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                         {
                             oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                         }
 
-                        if (!string.IsNullOrEmpty(oParam.MotivoOperacionAnterior) && oParam.MotivoOperacionAnterior.Length <= 5)
+                        if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
                         {
                             oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
                         }
@@ -362,11 +362,11 @@ namespace Molinos.DataAgro.Business.Managers
                             oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
 
                         }
-                        if (string.IsNullOrEmpty(oParam.MotivoOperacionAnterior))
+                        if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                         {
                             oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
                         }
-                        if (!string.IsNullOrEmpty(oParam.MotivoOperacionAnterior) && oParam.MotivoOperacionAnterior.Length <= 5)
+                        if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
                         {
                             oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
                         }
@@ -550,6 +550,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecioSave.ChequeElectronico = oFijacionDePrecio.ChequeElectronico;
                 oFijacionDePrecioSave.PagoCBU = oFijacionDePrecio.PagoCBU;
                 oFijacionDePrecioSave.MotivoOperacionAnterior = oFijacionDePrecio.MotivoOperacionAnterior;
+                oFijacionDePrecioSave.DescripcionOperacionAnterior = oFijacionDePrecio.DescripcionOperacionAnterior;
                 oFijacionDePrecioSave.Anticipo = oFijacionDePrecio.Anticipo;
                 oFijacionDePrecioSave.Cesion = oFijacionDePrecio.Cesion;
                 oFijacionDePrecioSave.ClasificacionContrato = oFijacionDePrecio.ClasificacionContrato;
@@ -565,7 +566,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecio.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Importe > 0 || x.Porcentaje > 0)) &&
                 oFijacionDePrecio.ObligatoriedadCostoFinanciero.HasValue && !oFijacionDePrecio.ObligatoriedadCostoFinanciero.Value
                 ? null : oFijacionDePrecio.FechaCierta.HasValue ? oFijacionDePrecio.ObligatoriedadCostoFinanciero : null;
-
+                oFijacionDePrecioSave.TipoPosicionCBOTId = oFijacionDePrecio.TipoPosicionCBOTId;
                 if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     oFijacionDePrecioSave.ObservacionTercero = oFijacionDePrecio.ObservacionTercero;
@@ -1144,6 +1145,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ChequeElectronico = fijac.ChequeElectronico,
                 PagoCBU = fijac.PagoCBU,
                 MotivoOperacionAnterior = fijac.MotivoOperacionAnterior,
+                DescripcionOperacionAnterior = fijac.DescripcionOperacionAnterior,
                 FechaOperacionFormateado = SqlFunctions.DateName("day", fijac.FechaOperacion).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)fijac.FechaOperacion.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.FechaOperacion),
@@ -1173,7 +1175,8 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaCiertaFormateado = fijac.FechaCierta != null ? SqlFunctions.DateName("day", fijac.FechaCierta).Trim() + "-" +
                                            SqlFunctions.StringConvert((double)fijac.FechaCierta.Value.Month).TrimStart() + "-" +
                                            SqlFunctions.DateName("year", fijac.FechaCierta) : "",
-                ObligatoriedadCostoFinanciero = fijac.ObligatoriedadCostoFinanciero
+                ObligatoriedadCostoFinanciero = fijac.ObligatoriedadCostoFinanciero,
+                TipoPosicionCBOTId = fijac.TipoPosicionCBOTId,
             });
             contrato.DatosFijacion.ContratoId = contrato.DatosFijacion.ContratoId.TrimStart('0');
             if (contrato.ContratoId != 0)
@@ -1599,8 +1602,10 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacionSave.Virtual = fijacion.Virtual;
                 fijacionSave.Fecha = fijacion.Fecha;
                 fijacionSave.GrupoCompra = fijacion.GrupoCompra;
-                fijacionSave.MotivoOperacionAnterior = fijacion.MotivoOperacionAnterior;
+                fijacionSave.DescripcionOperacionAnterior = fijacion.MotivoOperacionAnterior;
+                fijacionSave.MotivoOperacionAnterior = "Otro";
                 fijacionSave.ClasificacionContrato = fijacion.ClasificacionContrato;
+                fijacionSave.TipoPosicionCBOTId = fijacion.TipoPosicionCBOTId;
 
                 if (fijacion.AperturaPrecio != null)
                 {

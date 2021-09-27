@@ -198,7 +198,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MonedaSobrePrecioContrato { get; set; }
         public bool? Venta { get; set; }
         public double CantidadAmpliado { get; set; }
-
+        public bool? ObligatoriedadCostoFinanciero { get; set; }
+        public bool? ObligatoriedadBonificacion { get; set; }
+        public string ObligatoriedadCostoFinancieroDesc { get; set; }
         public string PosicionCBOT { get; set; }
         public int? ProveedorCreador { get; set; }
         public decimal? ImporteBasis { get; set; }
@@ -211,8 +213,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string UsuarioTercero { get; set; }
         public int? TipoPosicionCBOTId { get; set; }
         public string TipoPosicionCBOT { get; set; }
-        public bool? ObligatoriedadCostoFinanciero { get; set; }
-        public string ObligatoriedadCostoFinancieroDesc { get; set; }
         public DateTime? FechaCiertaHasta { get; set; }
         public bool FechaCiertaTilde { get; set; }
         public int? AnulaYReemplazaContratoId { get; set; }
@@ -235,6 +235,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ProvinciaVenta { get; set; }
         public string LocalidadVenta { get; set; }
         public int? CreditoDisponible { get; set; }
+        public string DescripcionOperacionAnterior { get; set; }
+        public string ObligatoriedadBonificacionDesc { get; set; }
+        public decimal? PrecioPonderado { get; set; }
+        public decimal? PrecioNetoPonderado { get; set; }
     }
 
     public class StoredPorContratoResult
