@@ -16,6 +16,7 @@
         public string Texto { get; set; }
         public string Contrato { get; set; }
         public string ContratoSap { get; set; }
+        public int TipoNegocioId { get; set; }
     }
 }
    

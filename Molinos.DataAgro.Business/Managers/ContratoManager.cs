@@ -5831,6 +5831,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Contrato = !string.IsNullOrEmpty(x.ContratoSAP) ? x.ContratoSAP : x.Id.ToString(),
                         ContratoSap = x.ContratoSAP,
                         TipoNegocioDesc = x.TipoNegocio.Descripcion,
+                        TipoNegocioId = x.TipoNegocioId,
                         Precio = x.Precio,
                         MonedaDesc = "USD",
                         MaterialDesc = x.Material.Descripcion,
@@ -5841,7 +5842,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }, x => ((x.TipoNegocioId == 2 && x.TipoAgenteCompraId == null && x.ContratoSAP.StartsWith(contratoSap) && (x.EstadoId == 5 || x.EstadoId == 11 || x.EstadoId == 10)) ||
                      (x.TipoNegocioId == 5 && x.EstadoId == 2 && x.Id.ToString().StartsWith(id.ToString()))) && x.MaterialId == aFijar.MaterialId && x.MonedaId == "USDM " &&
                      x.CampanaId == x.Material.CampaniaTableroId && !negociosAsociados.Contains(x.Id));
-                negocios = negocios.Where(x => EstaConfirmadoEnSAP(x.ContratoSap)).ToList();
+                negocios = negocios.Where(x => EstaConfirmadoEnSAP(x.ContratoSap, x.TipoNegocioId)).ToList();
                 if (negocios.Count > 0)
                 {
                     foreach (var item in negocios)
@@ -5856,8 +5857,9 @@ namespace Molinos.DataAgro.Business.Managers
             return new List<NegocioAsociadoDto>();
         }
 
-        private bool EstaConfirmadoEnSAP(string contratoSAP)
+        private bool EstaConfirmadoEnSAP(string contratoSAP, int TipoNegocioId)
         {
+            if (TipoNegocioId != 2) return true;
             var estado = status.ValidarEstado(contratoSAP);
             return string.IsNullOrEmpty(estado.Status) ? false : true;
         }
