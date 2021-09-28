@@ -15,11 +15,14 @@ namespace Molinos.DataAgro.Agent.Helpers
     public class FinalizarFijacionAgent : IFinalizarFijacionAgent
     {
         private readonly IContratosParaFijacionAgent contratosParaFijacionAgent;
-        public FinalizarFijacionAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionAgent contratosParaFijacionAgent)
+        private readonly ITipoDeCambioAgent tipoCambioAgent;
+
+        public FinalizarFijacionAgent(ILogger logger, IRepositorio repositorio, IContratosParaFijacionAgent contratosParaFijacionAgent, ITipoDeCambioAgent tipoCambioAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.contratosParaFijacionAgent = contratosParaFijacionAgent;
+            this.tipoCambioAgent = tipoCambioAgent;
         }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
@@ -48,9 +51,21 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var listaApertura = new List<ZMPES5440>();
                     var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
                     var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
-
+                    if (oContrato.ImporteSobrePrecio != 0 && !string.IsNullOrEmpty(fijacion.MonedaId) && oContrato.MonedaSobrePrecio?.Trim() != fijacion.MonedaId.Trim())
+                    {
+                        var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date), 2, MidpointRounding.AwayFromZero);
+                        
+                        if (fijacion.MonedaId.Trim() == "ARP")
+                        {
+                            oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio * cotizacion;
+                        }
+                        if (fijacion.MonedaId.Trim() == "USMD")
+                        {
+                            oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio / cotizacion;
+                        }
+                    }
                     var importeComisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault().Importe;
-                    var modificoImporteComisionesAFijarViejo = (oContrato.Aperturas == null || oContrato.Aperturas.Count == 0)
+                    var modificoImporteComisionesAFijarViejo = (oContrato != null && oContrato.Aperturas == null || oContrato.Aperturas.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).ToList().Count == 0)
                                                             && importeComisiones != 0
                                                             && oContrato.ImporteSobrePrecio != 0
                                                             && importeComisiones != oContrato.ImporteSobrePrecio;
