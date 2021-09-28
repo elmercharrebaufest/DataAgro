@@ -430,9 +430,12 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("MateriasPrimas", "El proveedor es un vendedor eventual");
                     }
-                    if (alta.BoletoFisico == "NO" && oParam.BoletoId == 2)
+                    if (!validacionesMinimas)
                     {
-                        oErrorMessages.Error("BoletoFisico", "No está habilitado Boleto Físico");
+                        if (alta.BoletoFisico == "NO" && oParam.BoletoId == 2)
+                        {
+                            oErrorMessages.Error("BoletoFisico", "No está habilitado Boleto Físico");
+                        }
                     }
                 }
                 else
