@@ -770,7 +770,7 @@ function CreateGridInformeCompraNet() {
     };
     var classExterno = externo ? "hide" : "";
 
-    $("#pageSize").kendoDropDownList();    
+    $("#pageSize").kendoDropDownList();
 
     $("#gridInformeCompraNet").kendoGrid({
         dataSource: ds,
@@ -1090,7 +1090,7 @@ function CreateGridInformeCompraNet() {
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin')) +
-                                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin')) + 
+                                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin')) +
                                 botonAsociarContratos(dataItem, 'fa fa-inbox fin');
 
                         } else {
@@ -1140,7 +1140,7 @@ function CreateGridInformeCompraNet() {
                             botonPendiente(dataItem, 'fa-pencil reconf') +
                             botonConfirmadoTildeFinalizado(dataItem, 'fa-check reconf') +
                             botonVisualizar(dataItem, 'fa-eye reconf') +
-                            botonBorrar(dataItem, 'fa-trash reconf') + 
+                            botonBorrar(dataItem, 'fa-trash reconf') +
                             botonAsociarContratos(dataItem, 'fa fa-inbox reconf');
                     }
                 }
@@ -1755,14 +1755,16 @@ function Confirmar(confirmarContratoFijacion) {
         result = MSExecuteOnServer('/CompraNet/ConfirmarFason', confirmarContratoFijacion);
     } else if ($("#tipoNegocioModalConTilde").val() === '2') {
         result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
+    } else if ($("#tipoNegocioModalConTilde").val() === '1') {    
+        var asociados = MSExecuteOnServer('/CompraNet/DevolverSiTieneAsociados', confirmarContratoFijacion);
+        if ($("#posicion").val() != null && $("#posicion").val() == "PASE" && asociados == false) {
+            confirmar = false;
+        }
+        else {
+            result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
+        }
     }
-    var asociados = MSExecuteOnServer('/CompraNet/DevolverSiTieneAsociados', confirmarContratoFijacion);
-    if ($("#tipoNegocioModalConTilde").val() === '1' && $("#posicion").val() != null && $("#posicion").val() == "PASE" && asociados == false) {       
-        confirmar = false;
-    }
-    else {
-        result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
-    }
+
     if (confirmar == true) {
         if (result != null && result.Errores != null && ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
@@ -1944,9 +1946,9 @@ function ActualizarAsociados(contrato) {
     var dataSource = new kendo.data.DataSource({
         data: asociados
     });
-    grid.setDataSource(dataSource);    
-    CalcularPonderado();   
-    setTimeout(function () { grid.setOptions({ height: 200 })}, 200);
+    grid.setDataSource(dataSource);
+    CalcularPonderado();
+    setTimeout(function () { grid.setOptions({ height: 200 }) }, 200);
     if ($("#sePuedeEditar").val() == true) {
         $(".botonAgregar").show();
     } else {
@@ -2697,42 +2699,42 @@ function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fas
         idAsociado = agenteId
     } else {
         idAsociado = id;
-    } 
+    }
     var asociados = MSExecuteOnServer('/CompraNet/EsUnContratoAsociado', { negocioId: idAsociado });
     if (asociados == true) {
         MensErr("Los contratos asociados a un A Fijar Pase no pueden ser anulados")
     } else {
-    $("#proveedor_a_borrar").text(proveedor);
-    $("#proveedorBorrarDivVisualizar").show();
-    $("#agenteBorrarDivVisualizar").hide();
-    $("#estadoModalBorrar").val(estado);
-    if (tipoNegocio === "3") {
-        $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
-    } else if (tipoNegocio === "4") {
-        $("#contratoModalBorrar").val(fasonId);
-    } else if (tipoNegocio === "5") {
-        $("#proveedorBorrarDivVisualizar").hide();
-        $("#agenteBorrarDivVisualizar").show();
-        $("#contratoModalBorrar").val(agenteId);
-        $("#agente_a_borrar").text(agenteId);
-    } else if (tipoNegocio === "6") {
-        $("#contratoModalBorrar").val(acuerdoId);
-    } else {
-        $("#contratoModalBorrar").val(id);
-    }
+        $("#proveedor_a_borrar").text(proveedor);
+        $("#proveedorBorrarDivVisualizar").show();
+        $("#agenteBorrarDivVisualizar").hide();
+        $("#estadoModalBorrar").val(estado);
+        if (tipoNegocio === "3") {
+            $("#contratoModalBorrar").val(fijacionDePrecioContratoId);
+        } else if (tipoNegocio === "4") {
+            $("#contratoModalBorrar").val(fasonId);
+        } else if (tipoNegocio === "5") {
+            $("#proveedorBorrarDivVisualizar").hide();
+            $("#agenteBorrarDivVisualizar").show();
+            $("#contratoModalBorrar").val(agenteId);
+            $("#agente_a_borrar").text(agenteId);
+        } else if (tipoNegocio === "6") {
+            $("#contratoModalBorrar").val(acuerdoId);
+        } else {
+            $("#contratoModalBorrar").val(id);
+        }
 
-    $("#motivo-rechazo").val("");
-    //if (estado == 9) {
-    //    $("#motivo-rechazo").show();
-    //} else {
-    //    $("#motivo-rechazo").hide();
-    //}
-    $("#motivo-rechazo").show();
-    $("#tipoNegocioModalBorrar").val(tipoNegocio);
+        $("#motivo-rechazo").val("");
+        //if (estado == 9) {
+        //    $("#motivo-rechazo").show();
+        //} else {
+        //    $("#motivo-rechazo").hide();
+        //}
+        $("#motivo-rechazo").show();
+        $("#tipoNegocioModalBorrar").val(tipoNegocio);
 
         $("#modalBorrar").modal('show');
 
-    }     
+    }
 
 }
 
@@ -2809,7 +2811,7 @@ function ModalPreAnular(id, fijacionId, proveedor, tipoNegocio, kilos) {
             $("#tiponegocio_a_Preanular").text("el Contrato Acuerdo");
         }
     }
-    
+
     //if (kilos && kilos > 0) {
     //    $("#espaciolineas").html("Usted está intentando preanular una <b>Fijación Virtual</b> de " + proveedor +
     //        " con " + kendo.toString(kilos, "n") + " kg de saldo sobre " + + " kg." +
