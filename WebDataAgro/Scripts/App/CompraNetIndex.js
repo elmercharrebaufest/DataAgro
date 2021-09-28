@@ -820,9 +820,9 @@ function CreateGridInformeCompraNet() {
         },
 
         columns: [
-            { selectable: true, width: "50px" },
+            { selectable: true, width: "35px" },
             {
-                field: "Proveedor", type: "string", width: 150,
+                field: "Proveedor", type: "string", width: 100,
                 headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
                 template: function (dataItem) {
                     if (dataItem.Estado == 1) {
@@ -852,7 +852,7 @@ function CreateGridInformeCompraNet() {
                 filterable: { ui: createMultiSelectProveedor }
             },
             {
-                field: "Corredor", type: "string", width: 150, filterable: { ui: createMultiSelectCorredor },
+                field: "Corredor", type: "string", width: 100, filterable: { ui: createMultiSelectCorredor },
                 headerAttributes: {
                     "class": classExterno
                 },
@@ -861,7 +861,7 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "FechaDesde", type: "date", width: 90, title: "Desde"/*, format: _DefaultDateTemplate*/, attributes: {
+                field: "FechaDesde", type: "date", width: 80, title: "Desde"/*, format: _DefaultDateTemplate*/, attributes: {
                     "class": "mobile-sm"
                 }, template: function (dataItem) {
                     var p = ArmarFechaDesde(dataItem);
@@ -869,7 +869,7 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "FechaHasta", type: "date", width: 90, title: "Hasta"/*, format: _DefaultDateTemplate*/, attributes: {
+                field: "FechaHasta", type: "date", width: 80, title: "Hasta"/*, format: _DefaultDateTemplate*/, attributes: {
                     "class": "mobile-sm"
                 }, template: function (dataItem) {
                     var p = ArmarFechaHasta(dataItem);
@@ -928,14 +928,14 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Material: "Girasol AO"
                     }]
-                }, width: 90, attributes: {
+                }, width: 60, attributes: {
                     "class": "mobile-xs"
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
                 }, template: "#=Material#"
             },
             {
-                field: "Cantidad", type: "number", width: 110, format: "{0:n0}", attributes: {
+                field: "Cantidad", type: "number", width: 80, format: "{0:n0}", attributes: {
                     "class": "mobile-xs"
                 }
             },
@@ -954,14 +954,14 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 90, filterable: false, sortable: false, template: function (dataItem) {
+                field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 85, filterable: false, sortable: false, template: function (dataItem) {
                     var p = ArmarPrecio(dataItem);
                     return p;
                 }
             },
-            { field: "Campania", type: "string", title: "Cos", width: 70, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
+            { field: "Campania", type: "string", title: "Cos", width: 60, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
             {
-                field: "Negocio", type: "number", title: "N&deg; Negocio", width: 70, attributes: { "class": "mobile-md" },
+                field: "Negocio", type: "number", title: "N&deg; Negocio", width: 80, attributes: { "class": "mobile-md" },
                 template: function (dataItem) {
                     if (dataItem.Negocio !== "" && dataItem.Negocio !== null) {
                         return kendo.parseInt(dataItem.Negocio);
@@ -971,7 +971,7 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "Fecha", type: "date", title: "Carga", width: 90, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" },
+                field: "Fecha", type: "date", title: "Carga", width: 80, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" },
                 template: function (dataItem) {
                     if (dataItem.FechaOperacion != null && kendo.toString(dataItem.FechaOperacion, "dd/MM/yyyy") != kendo.toString(dataItem.Fecha, "dd/MM/yyyy")) {
                         return "<b style='color:darkblue;'>" + kendo.toString(dataItem.FechaOperacion, "dd/MM/yyyy") + "</b>";
@@ -991,22 +991,22 @@ function CreateGridInformeCompraNet() {
                 attributes: { "class": "mobile-xs mobile-md " + classExterno }
             },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 120, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                field: "Comercial", type: "string", title: "Comercial", width: 90, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "ComercialCreador", type: "string", title: "Creador", width: 120, filterable: { ui: createMultiSelectComercialCreador }, headerAttributes: {
+                field: "ComercialCreador", type: "string", title: "Creador", width: 90, filterable: { ui: createMultiSelectComercialCreador }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "DestinoDescripcion", type: "string", title: "Destino", width: 120, attributes: { "class": "mobile-xs mobile-md" }
+                field: "DestinoDescripcion", type: "string", title: "Destino", width: 90, attributes: { "class": "mobile-xs mobile-md" }
             },
             {
-                field: "Estado_Contrato", sortable: false, title: "Estado", width: 150, filterable: {
+                field: "Estado_Contrato", sortable: false, title: "Estado", width: 87, filterable: {
                     multi: true,
                     dataSource: [{
                         Estado_Contrato: "Pendiente"
@@ -2482,7 +2482,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         });
         if (tipo === "A FIJAR") {
             $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
-        }
+        } 
+       
+    }
+   if (tipo === "A FIJAR PASE") {
+       $("#visualizar_PosicionCBOT").text(PosicionCBOT);
+       $("#divPosicionCBOT").show();
     }
     if ((nivelTarifa == "" || nivelTarifa == "null") && tarifaFlete == "null") {
         $("#fleteDivVisualizar").hide();
