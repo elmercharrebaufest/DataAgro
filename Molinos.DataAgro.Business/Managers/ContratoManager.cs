@@ -2370,7 +2370,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.Rechazado;
                     tipoAccion = TipoAccionLogDataAgro.Eliminar;
                 }
-
+                EliminarNegociosAsociados(oContrato.Id);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipoAccion, oContratoSave.GetType());
 
