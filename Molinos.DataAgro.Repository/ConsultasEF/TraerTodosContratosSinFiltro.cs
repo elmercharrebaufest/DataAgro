@@ -204,6 +204,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ObligatoriedadBonificacionDesc = !contrato.ObligatoriedadBonificacion.HasValue ? "" : contrato.ObligatoriedadBonificacion.HasValue && contrato.ObligatoriedadBonificacion.Value == true ? "Si" : "No",
                         PrecioPonderado = contrato.PrecioPonderado ?? 0,
                         PrecioNetoPonderado = contrato.PrecioNetoPonderado ?? 0,
+                        TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
                     };
 
                 return queryNegocios;
