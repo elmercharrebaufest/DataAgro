@@ -1371,7 +1371,7 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>());
             var resultado = target.BorrarContrato(new Contrato() { Id = 1, EstadoId = (int)EnumEstadoContrato.Pendiente, MotivoRechazo = "test" });
 
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
         }
 
         [Test]
@@ -1580,7 +1580,7 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>());
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
             var resultado = target.BorrarContrato(oContrato);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
         }
         [Test]
         public void BorrarContratoEstadoSinAmpliacionOk()
@@ -1777,7 +1777,7 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock.Setup(y => y.CadenaComerciales(It.IsAny<int>())).Returns(new List<int>());
             repositorioMock.Setup(y => y.Obtener<Contrato>(It.IsAny<int>())).Returns(oContrato);
             var resultado = target.BorrarContrato(oContrato);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
         }
         [Test]
         public void TraerDescuentosPorContratoOk()
@@ -2111,7 +2111,7 @@ namespace Molinos.DataAgro.Test.Managers
             diasHabilesMock.Setup(y => y.ObtenerDiasHabiles()).Returns(new List<DateTime>() { DateTime.Today.AddDays(-2) });
 
             target.BorradoAutomatico();
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
         }
 
         [Test]

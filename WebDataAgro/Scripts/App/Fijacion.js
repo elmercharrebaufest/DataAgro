@@ -24,14 +24,14 @@ $(document).ready(function () {
     $('#rootwizard').bootstrapWizard({
         'withVisible': false
     });
-     $(function () {
+    $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
     CrearViewModel();
     InicializarElementos();
     InicializarDatos();
     AutocompleteProcedencia();
-
+    inicializarGrillaContratosPendientes();
 });
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
@@ -224,9 +224,9 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#comercialFijacionId").data("kendoDropDownList").value(contratoAFijarDataAgro.ComercialId);
     }
 
-    if (afijar.Pase == true) {        
+    if (afijar.Pase == true) {
         $("#fijacionPaseDiv").show();
-        $("#fijacionPase").text(afijar.Posicion);    
+        $("#fijacionPase").text(afijar.Posicion);
         $("#tipoPosicionCBOTId").val(3);
     } else {
         $("#fijacionPaseDiv").hide();
@@ -366,7 +366,7 @@ function HabilitarCamposApertura() {
 function InicializarElementos() {
     kendo.culture("es-AR");
 
-    
+
     cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);
     tieneDolarizado = ConvertirStringABool(tieneDolarizado);
     modificarDolarizadoFinalizado = ConvertirStringABool(modificarDolarizadoFinalizado);
@@ -416,7 +416,8 @@ function InicializarElementos() {
 
             }
             InicializarBordesRojos();
-            consultarBonificacionAfijar(datosAfijar());
+            limpiarContrato();
+            //consultarBonificacionAfijar(datosAfijar());
         },
         select: function (e) {
             ObtenerAlta(e.dataItem.Id);
@@ -444,31 +445,31 @@ function InicializarElementos() {
                     }
                 }
 
-                if (compraNet.BoletoCompraNetId !== null) {
-                    LimpiarBoleto();
-                    if (compraNet.BoletoCompraNetId === 1) {
-                        $("#boletoConfirmaId").prop("checked", true);
-                        $("#BolsaConfirmaDiv").show();
-                        $("#bolsaConfirmaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 2) {
-                        $("#boletoFisicoId").prop("checked", true);
-                        $("#BolsaFisicoDiv").show();
-                        $("#bolsaFisicoId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaFisicoId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 4) {
-                        $("#boletoCartaId").prop("checked", true);
-                        $("#BolsaCartaDiv").show();
-                        $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 3) {
-                        $("#boletoNingunoId").prop("checked", true);
+                    if (compraNet.BoletoCompraNetId !== null) {
+                        LimpiarBoleto();
+                        if (compraNet.BoletoCompraNetId === 1) {
+                            $("#boletoConfirmaId").prop("checked", true);
+                            $("#BolsaConfirmaDiv").show();
+                            $("#bolsaConfirmaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 2) {
+                            $("#boletoFisicoId").prop("checked", true);
+                            $("#BolsaFisicoDiv").show();
+                            $("#bolsaFisicoId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaFisicoId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 4) {
+                            $("#boletoCartaId").prop("checked", true);
+                            $("#BolsaCartaDiv").show();
+                            $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 3) {
+                            $("#boletoNingunoId").prop("checked", true);
+                        }
                     }
-                }
 
-                consultarBonificacionAfijar(datosAfijar(), compraNet);
-                //if ($("#tipoId").val() == "6") 
-                //    $("#dolarizadoExpressDiv").hide();
+                    //consultarBonificacionAfijar(datosAfijar(), compraNet);
+                    //if ($("#tipoId").val() == "6") 
+                    //    $("#dolarizadoExpressDiv").hide();
 
                 //}
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
@@ -1095,7 +1096,7 @@ function InicializarElementos() {
             $("#contratoId").val("");
             $(".datoscontrato").hide();
             $("#datosContrato").hide();
-            consultarBonificacionAfijar(datosAfijar());
+            //consultarBonificacionAfijar(datosAfijar());
             //if ()) {
             //    var cuitAux = $("#buscadorProveedor").val().split('(');
             //    if (cuitAux[0] != "") {
@@ -1109,7 +1110,7 @@ function InicializarElementos() {
             //    }
             //    InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             //}
-
+            limpiarContrato();
         }
     });
 
@@ -4896,46 +4897,91 @@ function RechazarCostoFinanciero() {
 
 
 function AbrirModalContratosPendientes() {
-    $('#contratoId').val("");
-    $("#contratoId").data("kendoAutoComplete").trigger("change");
-    $(".datoscontrato").hide();
-    $("#datosContrato").hide();
+    limpiarContrato();
+   
     ArmarGrillaContratosPendientes();
     $("#modalContratosPendientes").modal("show");
 }
 
+function limpiarContrato() {
+    $('#contratoId').val("");
+    $("#contratoId").data("kendoAutoComplete").trigger("change");
+    $(".datoscontrato").hide();
+    $("#datosContrato").hide();
+}
+
+function MostrarTooltip(tooltip) {
+    $(tooltip).tooltip('show');
+}
+
+function Seleccionar(data) {
+    //var grid = $("#grid").data("kendoGrid");
+    //var data = grid.dataItem(e);
+    var grid = $("#grid").data("kendoGrid");
+    grid.tbody.find("tr[data-uid= '" + data + "']").trigger('dblclick');
+}
+
+function ValidarProveedorSisa() {
+    var mensaje = MSExecuteOnServer("/Compranet/ValidarProveedorSISA", {
+        proveedorId: $("#proveedorId").val(),
+        clasificacion: $("#clasificacion").val() != "" ? $("#clasificacion").val() : "0",
+        planCanje: $("#ventaId").is(":checked") != true ? $("#planCanjeId").is(':checked') : false,
+        consignatario: $("#ventaId").is(":checked") != true ? $("#consignatarioId").is(':checked') : false
+    });
+    if (mensaje != "" && mensaje != null) {
+        MensErr(mensaje);
+        $("#mensaje").show();
+        $("#mensaje").text(mensaje);
+    } else {
+        $("#mensaje").hide();
+        $("#mensaje").val("");
+    }
+}
+
 
 function ArmarGrillaContratosPendientes() {
-   
+    var grid = $("#grid").data("kendoGrid");
+    var dataSource = new kendo.data.DataSource({
+        data: []
+    });
+    grid.setDataSource(dataSource);
+    var cuitProv = $("#buscadorProveedor").val().split('(');
+    if (cuitProv[1] != null) {
+        var cuitP = cuitProv[1].split(')');
+    }
+    else {
+        cuitP = cuitProv;
+    }
+    var cuitCorr = $("#buscadorCorredor").val().split('(');
+    if (cuitCorr[1] != null) {
+        var cuitC = cuitCorr[1].split(')');
+    }
+    else {
+        cuitC = cuitCorr;
+    }
+    Id = Id != "" ? Id : 0;
+    var esVirtual = $("#virtualId").is(":checked") ? true : false;
+    var contratos = MSExecuteOnServer("/Compranet/ObtenerFijacionesAutomaticas", {
+
+        cuitProveedor: cuitP[0],
+        cuitCorredor: cuitC[0],
+        materialId: $('#material').data("kendoDropDownList").value(),
+        filtro: $('#contratoId').val(),
+        fijacionId: Id,
+        esVirtual: esVirtual
+    });
+    consultarBonificacionAfijar(contratos);   
+
+    var data = new kendo.data.DataSource({
+        data: contratos
+    });
+    grid.setDataSource(data);
+}
+function inicializarGrillaContratosPendientes() {
     $(document).ready(function () {
         $("#grid").kendoGrid({
             dataSource: {
-                transport: {
-                    read: {
-                        type: 'post',
-                        dataType: 'json',
-                        url: "/CompraNet/ObtenerFijacionesAutomaticas"
-                    },
-                    parameterMap: function (data, type) {
-                        var cuitProv = $("#buscadorProveedor").val().split('(');
-                        if (cuitProv[1] != null) {
-                            var cuitP = cuitProv[1].split(')');
-                        }
-                        else {
-                            cuitP = cuitProv;
-                        }
-                        var cuitCorr = $("#buscadorCorredor").val().split('(');
-                        if (cuitCorr[1] != null) {
-                            var cuitC = cuitCorr[1].split(')');
-                        }
-                        else {
-                            cuitC = cuitCorr;
-                        }
-                        Id = Id != "" ? Id : 0;
-                        var esVirtual = $("#virtualId").is(":checked") ? true : false;
-                        return { cuitProveedor: cuitP[0], cuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val(), fijacionId: Id, esVirtual: esVirtual };
-                    }
-                }
+                data: [],
             },
             dataBound: function () {
                 var grid = $("#grid").data("kendoGrid");
@@ -4944,7 +4990,7 @@ function ArmarGrillaContratosPendientes() {
                     if (view[i].Calidad == true) {
                         grid.tbody.find("tr[data-uid='" + view[i].uid + "'] td:eq(0)")
                             .addClass("colorCalidad");
-                    }                   
+                    }
                 }
                 if ($("#virtualId").is(":checked") == true) {
                     grid.thead.find("[data-title='Kgs Aplicados']").html("Kg Fijados Virtuales");
@@ -4959,12 +5005,12 @@ function ArmarGrillaContratosPendientes() {
                     $(".datoscontrato").show();
                     $("#datosContrato").show();
                     $("#modalContratosPendientes").modal("hide");
-                    cargarDatosAFijarEnFijacion(data);  
+                    cargarDatosAFijarEnFijacion(data);
                 });
-              
+
 
             },
-            height: 550,
+            height: 480,
             toolbar: [{ template: kendo.template($("#template").html()) }],
             pageable: false,
             columns: [
@@ -4981,7 +5027,7 @@ function ArmarGrillaContratosPendientes() {
                                     texto = "Porc. desde " + dataItem.Calidades[cal].PorcentajeDesde + " Hasta " + dataItem.Calidades[cal].PorcentajeHasta;
                                 }
                             }
-                         
+
                             return "<label  style='color: " + (dataItem.Color != null ? dataItem.Color : "") + "'>  " + dataItem.ContratoId + " <i data-toggle='tooltip' data-placement='top' title=' " + texto + "'  class='icono fa fa-exclamation-triangle' aria-hidden='true'  onmouseover='MostrarTooltip(this)'></label>"
                         } else {
                             return "<label  style='color: " + (dataItem.Color != null ? dataItem.Color : "") + "'> " + dataItem.ContratoId + "</label>"
@@ -4999,7 +5045,7 @@ function ArmarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "KilosContrato", title: "Kgs contrato", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
+                    field: "KilosContrato", title: "Kgs <br/> Contrato", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosContrato + "</label>"
                         } else {
@@ -5008,7 +5054,7 @@ function ArmarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "KilosPendiente", title: "Kgs Pendientes", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
+                    field: "KilosPendiente", title: "Kgs <br/> Pendientes", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosPendiente + "</label>"
                         } else {
@@ -5017,7 +5063,7 @@ function ArmarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "KilosAplicados", title: "Kgs Aplicados", template: function (dataItem) {
+                    field: "KilosAplicados", title: "Kgs <br/> Aplicados", template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosAplicados + "</label>"
                         } else {
@@ -5044,7 +5090,7 @@ function ArmarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "PorcentajeSobrePrecio", title: "Porc. Sobre Precio", template: function (dataItem) {
+                    field: "PorcentajeSobrePrecio", title: "Porc. <br/> Sobre Precio", template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + (dataItem.PorcentajeSobrePrecio != 0 ? dataItem.PorcentajeSobrePrecio : "") + "</label>"
                         } else {
@@ -5053,7 +5099,7 @@ function ArmarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "CondicionFijacionDescripcion", title: "Condic. Fijacion", template: function (dataItem) {
+                    field: "CondicionFijacionDescripcion", title: "Condic. <br/> Fijacion", template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + (dataItem.CondicionFijacionDescripcion != null ? dataItem.CondicionFijacionDescripcion : "") + "</label>"
                         } else {
@@ -5062,16 +5108,16 @@ function ArmarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "Pase", title: "Pase", template: function (dataItem) {                      
+                    field: "Pase", title: "Pase", template: function (dataItem) {
                         return "<label  style='color: " + dataItem.Color + "'> " +
                             (dataItem.Pase == true ? "Pase <br>" + dataItem.Posicion : "")
-                            + "</label>"                        
+                            + "</label>"
                     }
                 },
                 {
                     field: "", template: function (dataItem) {
                         var data = dataItem;
-                        return '<button class="seleccionar" data-toggle="tooltip" title="Seleccionar" onclick="Seleccionar(\''+data.uid+'\')"> Seleccionar</button>';
+                        return '<button class="seleccionar" data-toggle="tooltip" title="Seleccionar" onclick="Seleccionar(\'' + data.uid + '\')"> Seleccionar</button>';
                     }
                 }
             ],
