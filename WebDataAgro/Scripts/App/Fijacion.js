@@ -4899,8 +4899,8 @@ function RechazarCostoFinanciero() {
 function AbrirModalContratosPendientes() {
     limpiarContrato();
     BlockUi('Consultando...'); 
-    ArmarGrillaContratosPendientes();
-    $("#modalContratosPendientes").modal("show");
+    setTimeout(function () { ArmarGrillaContratosPendientes(); }, 1000);    
+  
     setTimeout(function () { $.unblockUI() }, 1000);
 }
 
@@ -4980,6 +4980,7 @@ function ArmarGrillaContratosPendientes() {
     });
     grid.setDataSource(data);
     setTimeout(function () { grid.setOptions({ height: 480 }) }, 200);
+    $("#modalContratosPendientes").modal("show");
     
 }
 function inicializarGrillaContratosPendientes() {
