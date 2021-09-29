@@ -4992,29 +4992,36 @@ function ActualizarAperturas() {
     var Financiero = {
         Id: 0,
         ConceptoAperturaPrecioId: 1,
-        Importe: $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value()
+        Importe: $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(),
+        MonedaId: $("#precioMonedaAFijarId").val()
     };
     var Redespacho = {
         Id: 0,
         ConceptoAperturaPrecioId: 2,
-        Importe: $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value()
+        Importe: $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(),
+        MonedaId: $("#precioMonedaAFijarId").val()
     };
     var Comisiones = {
         Id: 0,
         ConceptoAperturaPrecioId: 3,
         Importe: $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(),
-        Porcentaje: Number($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value())
+        MonedaId: $("#precioMonedaAFijarId").val(),
+        //Porcentaje: Number($("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value())
     };
     var Bonificaciones = {
         Id: 0,
         ConceptoAperturaPrecioId: 4,
         Importe: $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(),
-        Porcentaje: Number($("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value())
+        MonedaId: $("#precioMonedaAFijarId").val(),
+        //Porcentaje: Number($("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value())
     };
+
     var Basis = {
         Id: 0,
         ConceptoAperturaPrecioId: 5,
-        Importe: $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value()
+        Importe: $("#aperturaPrecioImporteBasisId").data("kendoNumericTextBox").value(),
+        MonedaId: $("#precioMonedaAFijarId").val(),
+        //Porcentaje: Number($("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").value())
     };
 
     viewModel.AperturaPrecio = [];
@@ -5057,6 +5064,8 @@ function RechazarBonificacion() {
     }
 
 }
+
+
 
 
 
