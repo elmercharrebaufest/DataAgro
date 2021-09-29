@@ -4898,9 +4898,10 @@ function RechazarCostoFinanciero() {
 
 function AbrirModalContratosPendientes() {
     limpiarContrato();
-   
+    BlockUi('Consultando...'); 
     ArmarGrillaContratosPendientes();
     $("#modalContratosPendientes").modal("show");
+    setTimeout(function () { $.unblockUI() }, 1000);
 }
 
 function limpiarContrato() {
@@ -4940,6 +4941,8 @@ function ValidarProveedorSisa() {
 
 
 function ArmarGrillaContratosPendientes() {
+      
+   
     var grid = $("#grid").data("kendoGrid");
     var dataSource = new kendo.data.DataSource({
         data: []
@@ -4976,6 +4979,8 @@ function ArmarGrillaContratosPendientes() {
         data: contratos
     });
     grid.setDataSource(data);
+    setTimeout(function () { grid.setOptions({ height: 480 }) }, 200);
+    
 }
 function inicializarGrillaContratosPendientes() {
     $(document).ready(function () {
