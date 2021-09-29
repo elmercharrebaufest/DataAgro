@@ -508,7 +508,7 @@ function botonPreAnular(dataItem, icono) {
 
 
 function botonAsociarContratos(dataItem, icono) {
-    if (asociarNegocios && dataItem.ContratoId && dataItem.TipoPosicionCBOT == 'PASE') {
+    if (asociarNegocios && dataItem.ContratoId && dataItem.TipoPosicionCBOT == 'PASE' && dataItem.TipoNegocioId == 1) {
         return '<button data-toggle="tooltip" title="Asociar Negocios" onclick="ModalAsociarNegocios(' +
             "'" + dataItem.ContratoId + "'" + ',' +
             "'" + dataItem.Estado + "'" +

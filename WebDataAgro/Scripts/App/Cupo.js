@@ -389,7 +389,7 @@ function InicializarCuposIndex() {
         },
         scrollable: true,
 
-        height: 550,
+        height: 450,
     });
     //$("#gridCupo .k-grid-content").css({
     //    "overflow-y": "scroll"
