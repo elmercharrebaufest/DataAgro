@@ -405,7 +405,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaHasta = DbFunctions.TruncateTime(x.FechaHasta),
                 Fecha = DbFunctions.TruncateTime(x.Fecha),
                 Cantidad = x.Cantidad,
-                Precio = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? (x.PrecioNetoPonderado ?? 0): x.Precio,
+                Precio = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? (x.PrecioNetoPonderado ?? 0) : x.Precio,
                 Pizarra = x.Pizarra,
                 TipoNegocioId = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? 2 : x.TipoNegocioId,
                 CampanaMaterialId = x.Material.CampaniaTableroId,
@@ -967,7 +967,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CampanaId = x.CampanaId,
                 Campana = x.Campania,
                 CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
-                MonedaId = x.Pizarra == true ?  precio.MonedaId : (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USDM " : x.MonedaId
+                MonedaId = x.Pizarra == true ? precio.MonedaId : (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USDM " : x.MonedaId
             }).ToList();
 
             foreach (var cont in contratos)
@@ -1451,7 +1451,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
                 FechaHasta = SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta),
                 Precio = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? (x.PrecioNetoPonderado ?? 0).ToString() : x.Precio.ToString(),
-                Moneda =  x.Moneda != null ? x.Moneda.Descripcion : (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USD" : "",
+                Moneda = x.Moneda != null ? x.Moneda.Descripcion : (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USD" : "",
                 Fecha = SqlFunctions.DateName("day", x.Fecha) + "/" + SqlFunctions.DatePart("month", x.Fecha) + "/" + SqlFunctions.DateName("year", x.Fecha),
                 FechaDate = x.Fecha,
                 Provincia = x.Provincia != null ? x.Provincia.Nombre : "",
@@ -2708,7 +2708,11 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = item.Moneda,
                 Precio = item.Precio,
                 NombreCorredor = item.NombreCorredor,
-                NombreVendedor = item.NombreVendedor
+                NombreVendedor = item.NombreVendedor,
+                Pase = item.Pase,
+                Plus = item.Plus,
+                Posicion = item.Posicion,
+                KgTotalesPase = item.KgTotalesPase
             }).ToList();
         }
 
@@ -2782,21 +2786,6 @@ namespace Molinos.DataAgro.Business.Managers
 
 
             var result = repositorio.ObtenerConsultaEscalar(new TraerTodoPesificado(filtro, equipo));
-
-            foreach (var dataItem in result.Data)
-            {
-                var item = (dataItem as ReportePesificadoDto);
-                if (item.Pase)
-                {
-                    item.KgTotales = Convert.ToDecimal(item.KgTotalesPase);
-                    item.USDTotal = item.KgTotales * item.Precio;
-                    if (!string.IsNullOrEmpty(item.Posicion))
-                    {
-                        item.FechaHastaDolarizado = new DateTime(int.Parse(item.Posicion.Split('.').Last()), int.Parse(item.Posicion.Split('.').First()), 01);
-                    }
-                }
-
-            }
 
             return result;
         }

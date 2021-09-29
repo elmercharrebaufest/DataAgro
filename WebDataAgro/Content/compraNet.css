@@ -1257,3 +1257,6 @@ body {
      margin-right: 0;
      margin-left: 0;
 }
+.k-grid td {
+    text-overflow: unset;
+}

@@ -43,6 +43,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public double? KilosPendiente { get; set; }
         public string Moneda { get; set; }
         public string Posicion { get; set; }
-        public decimal Plus { get; set; }
+        public decimal? Plus { get; set; }
     }
 }

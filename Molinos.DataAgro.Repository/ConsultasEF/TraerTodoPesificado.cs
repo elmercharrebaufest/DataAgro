@@ -77,54 +77,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ((item.KgNoPesificable * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) / 1000) : 0) +
                     (item.KgTotales * (item.Precio != null && item.Precio != 0 ? item.Precio : 1) > 0 ?
                     ((item.KgTotales * (item.Precio != null && item.Precio != 0 ? item.Precio : 1)) / 1000) : 0),
-                    Pase = false,
-                    KgTotalesPase = null,
-                    Plus = null,
-                    Posicion = "",
+                    Pase = item.Pase,
+                    Plus = item.Plus,
+                    Posicion = item.Posicion,
+                    KgTotalesPase = item.KgTotalesPase
                 };
-            var queryRango2 =
-                from contrato in contexto.Set<Contrato>()
-                where contrato.TipoNegocioId == 1 && contrato.TipoPosicionCBOTId == 3 && contrato.EstadoId == 5
-                select new ReportePesificadoDto
-                {
-                    Id = contrato.Id,
-                    MaterialDesc = contrato.Material.Descripcion,
-                    MaterialId = contrato.MaterialId,
-                    MonedaId = "USD",
-                    CantidadPendiente = 0,
-                    Clasificacion = contrato.Clasificacion.Descripcion,
-                    ComercialDesc = contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
-                    ComercialId = contrato.ComercialId,
-                    Contrato = contrato.ContratoSAP,
-                    CuitCorredor = contrato.Corredor == null ? "" : contrato.Corredor.CUIT,
-                    CuitVendedor = contrato.Proveedor == null ? "" : contrato.Proveedor.CUIT,
-                    Dolarizado = null,
-                    DolarizadoExpress = null,
-                    FechaFijacion = null,
-                    DolarizadoNoProductor = null,
-                    FechaHastaDolarizado = (DateTime?)null,
-                    FechaUltimaAplicacion = (DateTime?)null,
-                    Fijacion = "",
-                    KgNoPesificable = null,
-                    KgVencimientoPesificable = null,
-                    KgTotales = null,
-                    Unidad = "KG",
-                    Precio = contrato.PrecioPonderado,
-                    NombreCorredor = contrato.Corredor == null ? "" : !string.IsNullOrEmpty(contrato.Corredor.Alias) ? contrato.Corredor.Alias + " - " + contrato.Corredor.RazonSocial : contrato.Corredor.RazonSocial,
-                    NombreVendedor = contrato.Proveedor == null ? "" : !string.IsNullOrEmpty(contrato.Proveedor.Alias) ? contrato.Proveedor.Alias + " - " + contrato.Proveedor.RazonSocial : contrato.Proveedor.RazonSocial,
-                    NingunDolarizado = false,
-                    USDPesificable = null,
-                    USDNoPesificable = null,
-                    USDTotal = null,
-                    USDTotalizador = null,
-                    Pase = true,
-                    KgTotalesPase = contrato.Cantidad,
-                    Plus = contrato.Descuentos.FirstOrDefault(t => t.TipoPeriodoDBId == 1 && t.TipoDBId == 1).Importe,
-                    Posicion = contrato.PosicionCBOT,
-                };
-            var list = queryRango.Concat(queryRango2);
-            GridHelper.TruncateTime(request.Filter, ref list);
-            return list.ToDataSourceResult<ReportePesificadoDto>(request);
+            
+            GridHelper.TruncateTime(request.Filter, ref queryRango);
+            return queryRango.ToDataSourceResult<ReportePesificadoDto>(request);
         }
 
         public virtual DataSourceResult Ejecutar(DbContext contexto)

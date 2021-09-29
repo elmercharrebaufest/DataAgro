@@ -33,6 +33,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public int USDPesificable { get; set; }
         public int USDNoPesificable { get; set; }
         public decimal KgTotales { get; set; }
+        public bool Pase { get; set; }
+        public decimal? Plus { get; set; }
+        public string Posicion { get; set; }
+        public double? KgTotalesPase { get; set; }
 
         public override bool Equals(object obj)
         {

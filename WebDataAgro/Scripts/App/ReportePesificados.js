@@ -154,6 +154,14 @@ function Inicializar() {
             { field: "MaterialDesc", title: "Material Descripción", type: "string", width: 150 },
             { field: "ComercialDesc", title: "Comercial", title: "Comercial", type: "string", width: 150 },
             { field: "Unidad", type: "string", width: 150 },
+            {
+                field: "Pase", type: "boolean", width: 150, template: function (dataItem) {
+                    return dataItem.Pase ? "Si" : "No";
+                }
+            },
+            { field: "Plus", type: "number", width: 150 },
+            { field: "Posicion", type: "number", width: 150 },
+            { field: "KgTotalesPase", type: "number", title: "Kg Totales Pase", width: 150 },
             //{
             //    field: "CantidadPendiente", format: "{0:n0}"
             //},

@@ -200,7 +200,7 @@ function InicializarCuposIndex() {
 
             { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
             {
-                field: "Material", type: "string", width: 150,
+                field: "Material", type: "string", width: 80,
 
                 filterable: {
                     multi: true,
@@ -215,10 +215,10 @@ function InicializarCuposIndex() {
                     }
                 },
             },
-            { field: "Proveedor", type: "string", width: 150, filterable: { ui: createMultiSelectProveedor } },
-            { field: "Destinatario", type: "string", width: 150 },
-            { field: "Centro", type: "string", width: 150 },
-            { field: "Calidad", type: "string", width: 150 },
+            { field: "Proveedor", type: "string", width: 100, filterable: { ui: createMultiSelectProveedor } },
+            { field: "Destinatario", type: "string", width: 100 },
+            { field: "Centro", type: "string", width: 100 },
+            { field: "Calidad", type: "string", width: 100 },
             //{ field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 50, format: _DefaultDateTemplate },
             //{ field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 50, format: _DefaultDateTemplate },
             { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 150, template: function (dataItem) { return kendo.toString(dataItem.FechaRegistro, "dd/MM/yyyy") + " " + dataItem.Hora; } },
@@ -259,7 +259,7 @@ function InicializarCuposIndex() {
                     dataSource: externo ? estadoExterno : estados
                 },
 
-                width: 200,
+                width: 120,
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoCupo|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoCupo#'/></label></span>";
                 },

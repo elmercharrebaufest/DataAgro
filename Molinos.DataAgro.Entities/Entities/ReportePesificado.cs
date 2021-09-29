@@ -37,7 +37,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Comercial Comercial { get; set; } // ComercialId
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; } // MaterialId
-      
+        public bool Pase { get; set; }
+        public decimal? Plus { get; set; }
+        public string Posicion { get; set; }
+        public double? KgTotalesPase { get; set; }
     }
 
 }

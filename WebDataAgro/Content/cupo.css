@@ -393,5 +393,9 @@ span.k-widget.k-numerictextbox.cantidad-masiva {
     width: 100%;
 }
 
-
-
+.k-grid td {
+    text-overflow: unset;
+}
+.k-grid-header th.k-header > .k-link {
+    text-overflow: unset;
+}
