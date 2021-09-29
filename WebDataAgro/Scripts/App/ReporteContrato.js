@@ -304,7 +304,12 @@ function CreateGridInformeCompraNet() {
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
-
+            for (var i = 0; i < sheet.rows[0].cells.length; i++) {
+                sheet.rows[0].cells[i].value = sheet.rows[0].cells[i].value.replace("<br>", "").replace("<br>", "").replace("<br>", "");
+            }
+            for (var i = 0; i < sheet.rows[1].cells.length; i++) {
+                sheet.rows[1].cells[i].value = sheet.rows[1].cells[i].value.replace("<br>", "").replace("<br>", "").replace("<br>", "");
+            }
             var templateHora = kendo.template(this.columns[6].template);
             var templatePizarra = kendo.template(this.columns[15].template);
             var templateSustentable = kendo.template(this.columns[34].columns[0].template);

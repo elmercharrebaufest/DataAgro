@@ -100,13 +100,13 @@ function CreateGridInformeCompraNet() {
             { field: "FechaHasta", type: "date", title: "Fecha de <br> Entrega", format: _DefaultDateTemplate, width: 80, width: 90 },
             { field: "HastaFijacion", type: "date", title: "Fecha de <br> Fijacion", format: _DefaultDateTemplate, width: 80, width: 90 },
             { field: "Posicion", width: 90 },
-            { field: "Negocio", width: 90, title:"Contrato MOA" },
+            { field: "Negocio", width: 90, title: "Contrato MOA" },
             { field: "Proveedor", type: "string", width: 300, },
             { field: "Corredor", type: "string", width: 300, },
             { field: "Material", width: 90, template: "#=Material#" },
-            { field: "Cantidad", format: "{0:n0}", width: 90 },
+            { field: "Cantidad (Kg)", format: "{0:n0}", width: 90 },
             { field: "Plus", title: "Plus", type: "number", format: "{0:n2}", width: 90 },
-            { field: "PrecioPonderado",title:"Precio MAT", type: "number", format: "{0:n2}", width: 90 },
+            { field: "PrecioPonderado", title: "Precio MAT", type: "number", format: "{0:n2}", width: 90 },
             { field: "PrecioNetoPonderado", title: "Precio Dispo", type: "number", format: "{0:n2}", width: 90 },
 
             //{ field: "KilosPendiente",title: "Pendientes", format: "{0:n0}", width: 90 },
@@ -128,71 +128,73 @@ function CreateGridInformeCompraNet() {
             //{ field: "MonedaBasis", title: "Moneda", type: "string", width: 90  },
 
         ],
-        //excelExport: function (e) {
-        //    var sheet = e.workbook.sheets[0];
+        excelExport: function (e) {
+            var sheet = e.workbook.sheets[0];
+            for (var i = 0; i < sheet.rows[0].cells.length; i++) {
+                sheet.rows[0].cells[i].value = sheet.rows[0].cells[i].value.replace("<br>", "");;
+            }
+            //    var templateHora = kendo.template(this.columns[6].template);
+            //    var templatePizarra = kendo.template(this.columns[15].template);
+            //    var templateSustentable = kendo.template(this.columns[34].columns[0].template);
+            //    var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
+            //    var templateDolarizadoExpress = kendo.template(this.columns[36].columns[0].template);
+            //    var templateDolarizadoCorredor = kendo.template(this.columns[37].columns[0].template);
+            //    var templatePesificado = kendo.template(this.columns[38].columns[0].template);
+            //    var templateSIO = kendo.template(this.columns[39].template);
+            //    var templateTrigoEsp = kendo.template(this.columns[40].template);
+            //    var templateCesion = kendo.template(this.columns[58].template);//agregar uno cuando se suba  DescripcionOperacionAnterior
 
-        //    var templateHora = kendo.template(this.columns[6].template);
-        //    var templatePizarra = kendo.template(this.columns[15].template);
-        //    var templateSustentable = kendo.template(this.columns[34].columns[0].template);
-        //    var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
-        //    var templateDolarizadoExpress = kendo.template(this.columns[36].columns[0].template);
-        //    var templateDolarizadoCorredor = kendo.template(this.columns[37].columns[0].template);
-        //    var templatePesificado = kendo.template(this.columns[38].columns[0].template);
-        //    var templateSIO = kendo.template(this.columns[39].template);
-        //    var templateTrigoEsp = kendo.template(this.columns[40].template);
-        //    var templateCesion = kendo.template(this.columns[58].template);//agregar uno cuando se suba  DescripcionOperacionAnterior
+            //    for (var i = 2; i < sheet.rows.length; i++) {
+            //        var row = sheet.rows[i];
 
-        //    for (var i = 2; i < sheet.rows.length; i++) {
-        //        var row = sheet.rows[i];
+            //        var dataItem = {
+            //            Hora: row.cells[6].value,
+            //            Pizarra: row.cells[15].value,
+            //            Sustentable: row.cells[35].value,
+            //            Dolarizado: row.cells[40].value,
+            //            DolarizadoExpress: row.cells[42].value,
+            //            DolarizadoCorredor: row.cells[44].value,
+            //            Pesificado: row.cells[46].value,
+            //            NoInformaSIO: row.cells[48].value,
+            //            TrigoEspecial: row.cells[49].value,
+            //            Cesion: row.cells[67].value,//agregar uno cuando se suba  DescripcionOperacionAnterior
+            //        };
 
-        //        var dataItem = {
-        //            Hora: row.cells[6].value,
-        //            Pizarra: row.cells[15].value,
-        //            Sustentable: row.cells[35].value,
-        //            Dolarizado: row.cells[40].value,
-        //            DolarizadoExpress: row.cells[42].value,
-        //            DolarizadoCorredor: row.cells[44].value,
-        //            Pesificado: row.cells[46].value,
-        //            NoInformaSIO: row.cells[48].value,
-        //            TrigoEspecial: row.cells[49].value,
-        //            Cesion: row.cells[67].value,//agregar uno cuando se suba  DescripcionOperacionAnterior
-        //        };
+            //        var operacionFecha = row.cells[5].value;
+            //        operacionFecha.setHours(operacionFecha.getHours() + 1);
+            //        row.cells[5].value = operacionFecha;
 
-        //        var operacionFecha = row.cells[5].value;
-        //        operacionFecha.setHours(operacionFecha.getHours() + 1);
-        //        row.cells[5].value = operacionFecha;
+            //        var fechaDesde = row.cells[31].value;
+            //        var fechaHasta = row.cells[32].value;
 
-        //        var fechaDesde = row.cells[31].value;
-        //        var fechaHasta = row.cells[32].value;
+            //        if (fechaDesde != null) {
+            //            fechaDesde.setHours(fechaDesde.getHours() + 1);
+            //            row.cells[31].value = fechaDesde;
+            //        }
 
-        //        if (fechaDesde != null) {
-        //            fechaDesde.setHours(fechaDesde.getHours() + 1);
-        //            row.cells[31].value = fechaDesde;
-        //        }
+            //        if (fechaHasta != null) {
 
-        //        if (fechaHasta != null) {
-
-        //            fechaHasta.setHours(fechaHasta.getHours() + 1);
-        //            row.cells[32].value = fechaHasta;
-        //        }
+            //            fechaHasta.setHours(fechaHasta.getHours() + 1);
+            //            row.cells[32].value = fechaHasta;
+            //        }
 
 
-        //        row.cells[6].value = templateHora(dataItem);
-        //        row.cells[15].value = templatePizarra(dataItem);
-        //        row.cells[35].value = templateSustentable(dataItem);
-        //        row.cells[40].value = templateDolarizado(dataItem);
-        //        row.cells[41].value = row.cells[40].value == "Si" ? row.cells[41].value : "";
-        //        row.cells[42].value = templateDolarizadoExpress(dataItem);
-        //        row.cells[43].value = row.cells[42].value == "Si" ? row.cells[43].value : "";
-        //        row.cells[44].value = templateDolarizadoCorredor(dataItem);
-        //        row.cells[45].value = row.cells[44].value == "Si" ? row.cells[45].value : "";
-        //        row.cells[46].value = templatePesificado(dataItem);
-        //        row.cells[48].value = templateSIO(dataItem);
-        //        row.cells[49].value = templateTrigoEsp(dataItem);
-        //        row.cells[67].value = templateCesion(dataItem);//agregar uno cuando se suba  DescripcionOperacionAnterior
+            //        row.cells[6].value = templateHora(dataItem);
+            //        row.cells[15].value = templatePizarra(dataItem);
+            //        row.cells[35].value = templateSustentable(dataItem);
+            //        row.cells[40].value = templateDolarizado(dataItem);
+            //        row.cells[41].value = row.cells[40].value == "Si" ? row.cells[41].value : "";
+            //        row.cells[42].value = templateDolarizadoExpress(dataItem);
+            //        row.cells[43].value = row.cells[42].value == "Si" ? row.cells[43].value : "";
+            //        row.cells[44].value = templateDolarizadoCorredor(dataItem);
+            //        row.cells[45].value = row.cells[44].value == "Si" ? row.cells[45].value : "";
+            //        row.cells[46].value = templatePesificado(dataItem);
+            //        row.cells[48].value = templateSIO(dataItem);
+            //        row.cells[49].value = templateTrigoEsp(dataItem);
+            //        row.cells[67].value = templateCesion(dataItem);//agregar uno cuando se suba  DescripcionOperacionAnterior
 
-        //    }
-        //},
+            //    }
+        },
         pageable: {
             messages: {
                 display: "{2} elementos",
