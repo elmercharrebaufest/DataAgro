@@ -627,9 +627,11 @@ function ObtenerDatos(error) {
     if (obj.TipoNegocioId == 5) {
         obj.tipoAgenteCompraId = $("#tipoAgenteCompraId").val();
     }
+    if (obj.TipoNegocioId == 1) {
+        obj.ObligatoriedadBonificacion = $("#esBonificacion").is(":checked") == true ? true : $("#esBonificacion").is(":checked") == false ? false : null;
 
+    }
     obj.ObligatoriedadCostoFinanciero = $("#esCostoFinanciero").is(":checked") == true ? true : $("#esCostoFinanciero").is(":checked") == false ? false : null;
-    obj.ObligatoriedadBonificacion = $("#esBonificacion").is(":checked") == true ? true : $("#esBonificacion").is(":checked") == false ? false : null;
     obj.OperadorId = $("#operadorId").val();
     if ($("#madreId").is(":checked")) {
         obj.Madre = true;
