@@ -4979,7 +4979,7 @@ function ArmarGrillaContratosPendientes() {
         data: contratos
     });
     grid.setDataSource(data);
-    setTimeout(function () { grid.setOptions({ height: 480 }) }, 200);
+    setTimeout(function () { grid.setOptions({ height: 450 }) }, 200);
     $("#modalContratosPendientes").modal("show");
     
 }
@@ -5016,7 +5016,7 @@ function inicializarGrillaContratosPendientes() {
 
 
             },
-            height: 480,
+            height: 450,
             toolbar: [{ template: kendo.template($("#template").html()) }],
             pageable: false,
             columns: [
