@@ -104,7 +104,7 @@ function CreateGridInformeCompraNet() {
             { field: "Proveedor", type: "string", width: 300, },
             { field: "Corredor", type: "string", width: 300, },
             { field: "Material", width: 90, template: "#=Material#" },
-            { field: "Cantidad (Kg)", format: "{0:n0}", width: 90 },
+            { field: "Cantidad", title: "Cantidad (Kg)", format: "{0:n0}", width: 90 },
             { field: "Plus", title: "Plus", type: "number", format: "{0:n2}", width: 90 },
             { field: "PrecioPonderado", title: "Precio MAT", type: "number", format: "{0:n2}", width: 90 },
             { field: "PrecioNetoPonderado", title: "Precio Dispo", type: "number", format: "{0:n2}", width: 90 },
