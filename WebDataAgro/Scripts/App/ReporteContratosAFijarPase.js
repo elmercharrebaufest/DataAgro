@@ -56,6 +56,7 @@ function CreateGridInformeCompraNet() {
                     Fecha: { type: "date" },
                     FechaDesde: { type: "date" },
                     FechaHasta: { type: "date" },
+                    HastaFijacion: { type: "date" },
                     FechaEntrega: { type: "date" },
                     Cantidad: { type: "number" },
                     PrecioPonderado: { type: "number", format: "n2" },
@@ -95,17 +96,20 @@ function CreateGridInformeCompraNet() {
         //    $("td:has(div.statusreconfirmarfinalizado)").css('border-bottom', '5px solid #ac67ca');
         //},
         columns: [
-            { field: "Cuit", title: "CUIT", width: 90 },
+            { field: "FechaOperacion", type: "date", title: "Fecha <br>Operacion", format: _DefaultDateTemplate, width: 80, width: 90 },
+            { field: "FechaHasta", type: "date", title: "Fecha de <br> Entrega", format: _DefaultDateTemplate, width: 80, width: 90 },
+            { field: "HastaFijacion", type: "date", title: "Fecha de <br> Fijacion", format: _DefaultDateTemplate, width: 80, width: 90 },
+            { field: "Posicion", width: 90 },
+            { field: "Negocio", width: 90, title:"Contrato MOA" },
             { field: "Proveedor", type: "string", width: 300, },
             { field: "Corredor", type: "string", width: 300, },
-            { field: "Negocio", width: 90 },
-            { field: "Fecha", title: "Carga", width: 80, format: _DefaultDateTemplate },
             { field: "Material", width: 90, template: "#=Material#" },
-            { field: "Posicion", width: 90 },
             { field: "Cantidad", format: "{0:n0}", width: 90 },
-            { field: "KilosPendiente",title: "Pendientes", format: "{0:n0}", width: 90 },
-            { field: "PrecioPonderado",title:"Precio", type: "number", format: "{0:n2}", width: 90 },
-            //{ field: "PrecioNetoPonderado", title: "Precio Neto", type: "number", format: "{0:n2}", width: 90 },
+            { field: "Plus", title: "Plus", type: "number", format: "{0:n2}", width: 90 },
+            { field: "PrecioPonderado",title:"Precio MAT", type: "number", format: "{0:n2}", width: 90 },
+            { field: "PrecioNetoPonderado", title: "Precio Dispo", type: "number", format: "{0:n2}", width: 90 },
+
+            //{ field: "KilosPendiente",title: "Pendientes", format: "{0:n0}", width: 90 },
             //{ field: "Moneda", title: "Moneda", type: "string", width: 90 },
 
             //{ field: "ImporteFinanciero", title: "Importe Financiero", type: "number", format: "{0:n2}", width: 90 },
@@ -119,12 +123,9 @@ function CreateGridInformeCompraNet() {
             //{ field: "PorcentajeBonificacion", title: "Porcentaje Bonificacion", type: "number", format: "{0:n2}", width: 90  },
             //{ field: "MonedaBonificacion", title: "Moneda", type: "string", width: 90  },
 
-            { field: "Plus", title: "Plus", type: "number", format: "{0:n2}", width: 90 },
 
             //{ field: "ImporteBasis", title: "Importe Basis", type: "number", format: "{0:n2}", width: 90 },
             //{ field: "MonedaBasis", title: "Moneda", type: "string", width: 90  },
-            { field: "FechaHasta", type: "date", title: "Hasta", format: _DefaultDateTemplate, width: 80, width: 90  },
-            { field: "FechaOperacion", type: "date", title: "Fecha Operacion", format: _DefaultDateTemplate, width: 80, width: 90  },
 
         ],
         //excelExport: function (e) {
