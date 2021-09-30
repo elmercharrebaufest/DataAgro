@@ -3086,7 +3086,7 @@ function GrabarContrato(nuevoContrato) {
             MensErr("El Contrato Madre es Obligatorio al Fijar el Convenio");
             $.unblockUI();
         } else {
-            if ($("#aperturaPrecioImporteBonificacionesId").val() == "0" && $("#tipoPosicionCBOTId").data("kendoDropDownList").value() == "3" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
+            if ($("#aperturaPrecioImporteBonificacionesId").val() == "0" && $("#tipoPosicionCBOTId").data("kendoDropDownList").value() == "3" && $("#estado").val() != "5" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
                 $("#ModalConfirmarBonificacion").modal('show');
             } else {
                 result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
