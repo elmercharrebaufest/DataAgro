@@ -558,8 +558,8 @@ function Filtrar() {
         //var contratoCorredorFilters = { logic: 'or', filters: [] };
 
         for (var i = 0; i < filtroSap.filter.filters[0].filters.length; i++) {
-            contratoSapFilters.filters.push({ field: 'ContratoSAP', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
-            contratoSapFilters.filters.push({ field: 'Negocio', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
+            contratoSapFilters.filters.push({ field: 'ContratoSAP', operator: 'contains', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
+            contratoSapFilters.filters.push({ field: 'Negocio', operator: 'contains', value: filtroSap.filter.filters[0].filters[i].value.padStart(10, '0') });
 
             contratoSapFilters.filters.push({ field: 'ContratoCorredor', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value });
             //contratoCorredorFilters.filters.push({ field: 'ContratoCorredor', operator: 'eq', value: filtroSap.filter.filters[0].filters[i].value });
@@ -967,6 +967,14 @@ function CreateGridInformeCompraNet() {
                         return kendo.parseInt(dataItem.Negocio);
                     } else {
                         return "";
+                    }
+                },
+                filterable: {
+                    operators: {
+                        string: {
+                            eq: "Es Igual",
+                            contains: "Contine"
+                        }
                     }
                 }
             },

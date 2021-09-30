@@ -461,6 +461,10 @@ namespace WebDataAgro.Controllers
                     if (item.Field == "Negocio" && item.Operator == "eq")
                     {
                         item.Value = item.Value.ToString().PadLeft(10, '0');
+                        if (item.Value.ToString().TrimStart('0').Length > 7)
+                        {
+                            item.Operator = "contains";
+                        }
                     }
                     if (item.Filters != null)
                     {
@@ -469,10 +473,19 @@ namespace WebDataAgro.Controllers
                             if (item2.Field == "Negocio" && item.Operator == "eq")
                             {
                                 item2.Value = item2.Value.ToString().PadLeft(10, '0');
+                                if (item2.Value.ToString().TrimStart('0').Length > 7)
+                                {
+                                    item2.Operator = "contains";
+                                }
                             }
                         }
                     }
                 }
+            }
+            if (request.Filter != null && !string.IsNullOrEmpty(request.Filter.Logic) && request.Filter.Filters == null)
+            {
+                return Json(null);
+
             }
             var model = mobjContratoManager.TraerTodosContratos(request, PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial), equipo, GlobalVariables.CorredoresComercial);
 
