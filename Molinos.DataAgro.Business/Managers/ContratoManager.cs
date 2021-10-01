@@ -1764,6 +1764,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", "El contrato no se puede confirmar");
                 return oEntityErrors;
             }
+            if (!TieneAsociados(contratoId))
+            {
+                oEntityErrors.Error("", "El contrato no se puede confirmar por que no tiene negocios asociados.");
+                return oEntityErrors;
+            }
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente ||
                                           oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta ||
