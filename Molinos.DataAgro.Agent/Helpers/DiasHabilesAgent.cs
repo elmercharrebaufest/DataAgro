@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Agent
             var anterior = DateTime.Today.AddMonths(-1);
             for (int i = 1; i <= DateTime.DaysInMonth(anterior.Year, anterior.Month); i++)
             {
-                DateTime.TryParse(i.ToString() + "/" + DateTime.Now.Month.ToString() + "/" + DateTime.Now.Year.ToString(), out DateTime dia);
+                DateTime.TryParse(i.ToString() + "/" + anterior.Month.ToString() + "/" + anterior.Year.ToString(), out DateTime dia);
                 if (dia.DayOfWeek != DayOfWeek.Saturday && dia.DayOfWeek != DayOfWeek.Sunday && !repositorio.Listar<FechaFeriado>().Select(x=>x.Feriado).Contains(dia))
                 {
                     fecha.Add(dia);
@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Agent
             }
             for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
             {
-                DateTime.TryParse(i.ToString() + "/" + DateTime.Now.Month.ToString() + "/" + DateTime.Now.Year.ToString(), out DateTime dia);
+                DateTime.TryParse(i.ToString() + "/" + anterior.Month.ToString() + "/" + anterior.Year.ToString(), out DateTime dia);
                 if (dia.DayOfWeek != DayOfWeek.Saturday && dia.DayOfWeek != DayOfWeek.Sunday && !repositorio.Listar<FechaFeriado>().Select(x => x.Feriado).Contains(dia))
                 {
                     fecha.Add(dia);

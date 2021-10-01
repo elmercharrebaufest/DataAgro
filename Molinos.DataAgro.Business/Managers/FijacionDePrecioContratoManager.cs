@@ -306,15 +306,15 @@ namespace Molinos.DataAgro.Business.Managers
                 //}
 
             }
-            else
-            {
-                var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
+            //else
+            //{
+            //    var concepto = oParam.AperturaPrecio.Find(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero && (x.Porcentaje != 0 || x.Importe != 0));
 
-                if (concepto != null)
-                {
-                    oErrorMessages.Error("", "El concepto financiero se debe completar solo cuando la moneda es ARP");
-                }
-            }
+            //    if (concepto != null)
+            //    {
+            //        oErrorMessages.Error("", "El concepto financiero se debe completar solo cuando la moneda es ARP");
+            //    }
+            //}
 
             Negocio fijacionSave = null;
             if (oParam.Id > 0)
