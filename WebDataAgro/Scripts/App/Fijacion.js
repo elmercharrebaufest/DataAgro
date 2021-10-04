@@ -5060,15 +5060,6 @@ function inicializarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "KilosPendiente", title: "Kgs <br/> Pendientes", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
-                        if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosPendiente + "</label>"
-                        } else {
-                            return dataItem.KilosPendiente;
-                        }
-                    }
-                },
-                {
                     field: "KilosAplicados", title: "Kgs <br/> Aplicados", template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosAplicados + "</label>"
@@ -5078,7 +5069,26 @@ function inicializarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "FechaDesde", title: "Fecha Desde", template: function (dataItem) {
+                    field: "RecibidoSinFijar", title: "Kgs <br/> Aplicados<br> sin Fijar", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.RecibidoSinFijar + "</label>"
+                        } else {
+                            return dataItem.RecibidoSinFijar;
+                        }
+                    }
+                },
+                {
+                    field: "KilosPendiente", title: "Kgs <br/> Pendientes <br> a Fijar", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosPendiente + "</label>"
+                        } else {
+                            return dataItem.KilosPendiente;
+                        }
+                    }
+                },
+                
+                {
+                    field: "FechaDesde", title: "Fecha<br/> Desde", template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + dataItem.FechaDesde + "</label>"
                         } else {
@@ -5087,7 +5097,7 @@ function inicializarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "FechaHasta", title: "Fecha Hasta", template: function (dataItem) {
+                    field: "FechaHasta", title: "Fecha<br/> Hasta", template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + dataItem.FechaHasta + "</label>"
                         } else {
@@ -5096,7 +5106,7 @@ function inicializarGrillaContratosPendientes() {
                     }
                 },
                 {
-                    field: "PorcentajeSobrePrecio", title: "Porc. <br/> Sobre Precio", template: function (dataItem) {
+                    field: "PorcentajeSobrePrecio", title: "Porc. <br/> Sobre<br/> Precio", template: function (dataItem) {
                         if (dataItem.Color != "") {
                             return "<label  style='color: " + dataItem.Color + "'> " + (dataItem.PorcentajeSobrePrecio != 0 ? dataItem.PorcentajeSobrePrecio : "") + "</label>"
                         } else {
@@ -5111,6 +5121,12 @@ function inicializarGrillaContratosPendientes() {
                         } else {
                             return (dataItem.CondicionFijacionDescripcion != null ? dataItem.CondicionFijacionDescripcion : "");
                         }
+                    }
+                },               
+                {
+                    field: "CentroDescripcion", title: "Centro", template: function (dataItem) {
+                        return "<label  style='color: " + dataItem.Color + "'> " +
+                            dataItem.CentroDescripcion + "</label>"
                     }
                 },
                 {

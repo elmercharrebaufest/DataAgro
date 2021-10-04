@@ -4967,7 +4967,9 @@ function LimpiarDatos() {
 
 function DeshabilitarConPase() {
     if ($("#tipoPosicionCBOTId").data("kendoDropDownList").value() == '3') {
-        MensAlerta("El campo agente se deshabilitó automaticamente. Agente es exluyente con A Fijar Pase");
+        if ($("#AgenteCompraId").data("kendoDropDownList").value() > 0) {
+            MensAlerta("El campo Agente de Compra se deshabilitó automaticamente. Agente de Compra es excluyente con A Fijar Pase");
+        }
         $("#AgenteCompraId").data("kendoDropDownList").enable(false);
         $("#AgenteCompraId").data("kendoDropDownList").value('');
         $("#AgenteCompraId").data("kendoDropDownList").trigger("change");

@@ -465,6 +465,11 @@ namespace WebDataAgro.Controllers
                         {
                             item.Operator = "contains";
                         }
+                        else if (item.Value.ToString().TrimStart('0').Length <= 6)
+                        {
+                            item.Value = item.Value.ToString().TrimStart('0');
+                            item.Operator = "eq";
+                        }
                     }
                     if (item.Filters != null)
                     {
@@ -476,6 +481,11 @@ namespace WebDataAgro.Controllers
                                 if (item2.Value.ToString().TrimStart('0').Length > 7)
                                 {
                                     item2.Operator = "contains";
+                                }
+                                else if (item.Value.ToString().TrimStart('0').Length <= 6)
+                                {
+                                    item.Value = item.Value.ToString().TrimStart('0');
+                                    item.Operator = "eq";
                                 }
                             }
                         }

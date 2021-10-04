@@ -5827,7 +5827,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
 
                 Int32.TryParse(numero, out int id);
-                var contratoSap = "000" + numero;
+                var contratoSap = "000" + id.ToString();
                 var negociosAsociados = repositorio.Listar<NegocioAsociado, int>(x => x.AsociadoId);
                 var negocios = repositorio.Listar<Negocio, NegocioAsociadoDto>(
                     x => new NegocioAsociadoDto()
@@ -5843,7 +5843,8 @@ namespace Molinos.DataAgro.Business.Managers
                         Cantidad = x.Cantidad,
                         Campania = x.Campana.Descripcion,
                         Color = x.TipoNegocioId == 2 ? "" : "",
-                        Posicion = x.TipoNegocioId == 2 ? (SqlFunctions.DateName("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta)) : x.Posicion,
+                        Posicion = x.TipoNegocioId == 2 ? (SqlFunctions.DatePart("day", x.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DatePart("year", x.FechaHasta)) : x.Posicion,
+
                     }, x => ((x.TipoNegocioId == 2 && x.TipoAgenteCompraId == null && x.ContratoSAP.StartsWith(contratoSap) && (x.EstadoId == 5 || x.EstadoId == 11 || x.EstadoId == 10)) ||
                      (x.TipoNegocioId == 5 && x.EstadoId == 2 && x.Id.ToString().StartsWith(id.ToString()))) && x.MaterialId == aFijar.MaterialId && x.MonedaId == "USDM " &&
                      x.CampanaId == x.Material.CampaniaTableroId && !negociosAsociados.Contains(x.Id));
@@ -5852,7 +5853,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     foreach (var item in negocios)
                     {
-                        item.Identificador = (!string.IsNullOrEmpty(item.ContratoSap) ? item.ContratoSap.Substring(3, contratoSap.Length - 3) : item.Id.ToString()) + " - " + item.TipoNegocioDesc + " - " + item.Precio.ToString("N2") + " USD - " + item.MaterialDesc + " - " + item.Cantidad.ToString("N0") + " Kg - " + item.Posicion;
+                        item.Identificador = (!string.IsNullOrEmpty(item.ContratoSap) ? item.ContratoSap : item.Id.ToString()) + " - " + item.TipoNegocioDesc + " - " + item.Precio.ToString("N2") + " USD - " + item.MaterialDesc + " - " + item.Cantidad.ToString("N0") + " Kg - " + item.Posicion;
                         item.Contrato = !string.IsNullOrEmpty(item.ContratoSap) ? item.ContratoSap.Substring(3, contratoSap.Length - 3) : item.Id.ToString();
                     }
                 }

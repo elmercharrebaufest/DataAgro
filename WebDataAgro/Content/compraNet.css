@@ -1260,3 +1260,10 @@ body {
 .k-grid td {
     text-overflow: unset;
 }
+
+.k-filter-row th, .k-grid-header th.k-header {
+    text-overflow: unset;
+}
+.k-grid-header th.k-header {
+    line-height: 1.1em!important;
+}
