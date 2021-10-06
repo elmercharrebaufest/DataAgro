@@ -2236,7 +2236,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 ToneladasGranoTipo = TraerToneladasGranoTipo(fechaDesde, fechaHasta, materialId, idCentro),
                 SojaSustentable = (materialId == null || materialId.Contains(3)) ? TraerToneladasSojaSust(fechaDesde, fechaHasta, idCentro) : new ReporteSojaSustDto(),
-                PosicionCompras = TraerPosicionCompras(fechaDesde, fechaHasta, materialId, idCentro, true, verFijaciones),
+                PosicionCompras = TraerPosicionCompras(fechaDesde, fechaHasta, materialId, idCentro, false, verFijaciones),
                 PricingCampania = TraerPricingCampania(fechaDesde, fechaHasta, materialId, idCentro, verFijaciones),
                 PrecioCantidad = TraerMonedaCantidad(fechaDesde, fechaHasta, materialId, idCentro, verFijaciones),
                 HedgeMaterial = TransformarAModel(TraerTodosHedgeMaterial(fechaDesde, fechaHasta, materialId)),
