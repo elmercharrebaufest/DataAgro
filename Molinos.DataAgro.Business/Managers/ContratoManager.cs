@@ -1794,11 +1794,19 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("", "El contrato no se puede confirmar");
                 return oEntityErrors;
             }
-            if (!TieneAsociados(contratoId) && oContratoSave.TipoNegocioId == 1 && oContratoSave.TipoPosicionCBOTId == 3)
+            if (oContratoSave.TipoNegocioId == 1 && oContratoSave.TipoPosicionCBOTId == 3)
             {
-                oEntityErrors.Error("", "El contrato no se puede confirmar por que no tiene negocios asociados.");
-                return oEntityErrors;
+                if (!TieneAsociados(contratoId))
+                {
+                    oEntityErrors.Error("", "El contrato no se puede confirmar por que no tiene negocios asociados.");
+                    return oEntityErrors;
+                }
+                else
+                {
+                    oContratoSave.PrecioNetoPonderado = CalcularPrecioPonderadoEnAFijarPaseNeto(oContratoSave, oContratoSave.PrecioPonderado.Value);
+                }
             }
+
 
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente ||
                                           oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta ||
@@ -6002,18 +6010,14 @@ namespace Molinos.DataAgro.Business.Managers
         {
             decimal precioNeto = precioPonderado;
             decimal porcentajeComision = 0;
-            if ((aFijar.CorredorId == null || aFijar.CorredorId == 0) && aFijar.Proveedor.ComisionPorcentaje > 0)
+            var comision = aFijar.Descuentos.Where(y => y.TipoDBId == 1 && y.TipoPeriodoDBId == 1 && (y.Porcentaje != 0)).SingleOrDefault();
+            if ((aFijar.CorredorId == null || aFijar.CorredorId == 0) && aFijar.Proveedor.ComisionPorcentaje > 0 && comision != null)
             {
-                porcentajeComision = aFijar.Proveedor.ComisionPorcentaje.Value / 100;
+                porcentajeComision = comision.Porcentaje / 100;
             }
-            //Redespacho 
-            var redespacho = aFijar.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == 2 && x.Importe != 0).SingleOrDefault();
-            if (redespacho != null)
-            {
-                precioNeto += redespacho.Importe;
-            }
+            
             //Bonificacion
-            var desc = aFijar.Descuentos.Where(y => y.TipoDBId == 1 && y.TipoPeriodoDBId == 1 && (y.Porcentaje != 0 || y.Importe != 0)).SingleOrDefault();
+            var desc = aFijar.Descuentos.Where(y => y.TipoDBId == 1 && y.TipoPeriodoDBId == 1 && (y.Importe != 0)).SingleOrDefault();
             if (desc != null)
             {
                 precioNeto += desc.Importe;
