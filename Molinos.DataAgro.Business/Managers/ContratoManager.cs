@@ -6008,10 +6008,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         public decimal CalcularPrecioPonderadoEnAFijarPaseNeto(Negocio aFijar, decimal precioPonderado)
         {
+            logger.Debug("CalcularPrecioPonderadoEnAFijarPaseNeto precioPonderado " + precioPonderado);
             decimal precioNeto = precioPonderado;
             decimal porcentajeComision = 0;
             var comision = aFijar.Descuentos.Where(y => y.TipoDBId == 1 && y.TipoPeriodoDBId == 1 && (y.Porcentaje != 0)).SingleOrDefault();
-            if ((aFijar.CorredorId == null || aFijar.CorredorId == 0) && aFijar.Proveedor.ComisionPorcentaje > 0 && comision != null)
+            if ((aFijar.CorredorId == null || aFijar.CorredorId == 0) && comision != null)
             {
                 porcentajeComision = comision.Porcentaje / 100;
             }
@@ -6021,11 +6022,14 @@ namespace Molinos.DataAgro.Business.Managers
             if (desc != null)
             {
                 precioNeto += desc.Importe;
+                logger.Debug("CalcularPrecioPonderadoEnAFijarPaseNeto desc.Importe " + desc.Importe);
             }
             if (porcentajeComision > 0)
             {
                 precioNeto += precioNeto * porcentajeComision;
             }
+            logger.Debug("CalcularPrecioPonderadoEnAFijarPaseNeto precioNeto " + precioNeto);
+
             return precioNeto;
         }
         public bool TieneAsociados(int contratoId)
