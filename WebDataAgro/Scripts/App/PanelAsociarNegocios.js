@@ -167,7 +167,7 @@ function AgregarAViewModel() {
     if (mensaje == "") {
         var datos = { contratoSAP: dataItem.ContratoSap, TipoNegocioId: dataItem.TipoNegocioId };
         result = MSExecuteOnServer('/CompraNet/EstaConfirmadoEnSAP', datos);
-        if (result == true) {
+        if (result != true) {
             MensErr("El contrato no esta confirmado en SAP.");
             return;
         }
