@@ -87,5 +87,8 @@ namespace Molinos.DataAgro.Interfaces
         bool TieneAsociados(int contratoId);
 
         bool EsUnContratoAsociado(int negocioId);
+
+
+        bool EstaConfirmadoEnSAP(string contratoSAP, int TipoNegocioId);
     }
 }

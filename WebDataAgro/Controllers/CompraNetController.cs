@@ -1240,5 +1240,13 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        
+        public JsonResult EstaConfirmadoEnSAP(string contratoSAP, int TipoNegocioId)
+        {
+            var estado = mobjContratoManager.EstaConfirmadoEnSAP(contratoSAP, TipoNegocioId);
+            return Json(estado, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

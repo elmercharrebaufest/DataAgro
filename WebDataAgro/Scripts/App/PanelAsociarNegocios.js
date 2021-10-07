@@ -10,7 +10,7 @@ $(document).ready(function () {
         spinners: false,
         min: 0
     });
-    
+
     $("#asociadoId").kendoAutoComplete({
         footerTemplate: 'Total #: instance.dataSource.total() # Negocios encontrados',
         template: '<span class="k-state-default"></span>' +
@@ -163,7 +163,14 @@ function AgregarAViewModel() {
     var autocomplete = $("#asociadoId").data("kendoAutoComplete");
     var dataItem = autocomplete.dataItem();
     var mensaje = ValidarViewModel(dataItem);
+    
     if (mensaje == "") {
+        var datos = { contratoSAP: dataItem.ContratoSap, TipoNegocioId: dataItem.TipoNegocioId };
+        result = MSExecuteOnServer('/CompraNet/EstaConfirmadoEnSAP', datos);
+        if (result == true) {
+            MensErr("El contrato no esta confirmado en SAP.");
+            return;
+        }
         viewModelAsociados.Asociados.push(dataItem);
     } else {
         MensErr(mensaje)
