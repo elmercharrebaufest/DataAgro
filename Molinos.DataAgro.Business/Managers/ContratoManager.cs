@@ -1223,6 +1223,36 @@ namespace Molinos.DataAgro.Business.Managers
                         listaEmail.Add(contacto.Email3);
                 }
 
+                if (oParam.CorredorId.HasValue && corredor != null)
+                {
+                    var contactosCorredor = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == oParam.CorredorId);
+                    if (!string.IsNullOrEmpty(corredor.Email1))
+                    {
+                        listaEmail.Add(corredor.Email1);
+                    }
+                    if (!string.IsNullOrEmpty(corredor.Email2))
+                    {
+                        listaEmail.Add(corredor.Email2);
+                    }
+                    if (!string.IsNullOrEmpty(corredor.Email3))
+                    {
+                        listaEmail.Add(corredor.Email3);
+                    }
+                    if (!string.IsNullOrEmpty(corredor.Email4))
+                    {
+                        listaEmail.Add(corredor.Email4);
+                    }
+                    foreach (var contacto in contactosCorredor)
+                    {
+                        if (!string.IsNullOrEmpty(contacto.Email1))
+                            listaEmail.Add(contacto.Email1);
+                        if (!string.IsNullOrEmpty(contacto.Email2))
+                            listaEmail.Add(contacto.Email2);
+                        if (!string.IsNullOrEmpty(contacto.Email3))
+                            listaEmail.Add(contacto.Email3);
+                    }
+                }
+
                 if (!listaEmail.Any(x => x.Contains(oParam.UsuarioTercero)))
                 {
                     oErrorMessages.Error("Usuario no registrado", "El usuario no esta habilitado para cargar negocios, por favor comunicarse con su comercial");
