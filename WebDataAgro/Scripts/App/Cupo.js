@@ -184,9 +184,9 @@ function InicializarCuposIndex() {
             }
         },
         columns: [
-            { selectable: true },
+            { selectable: true, width: 40},
             {
-                field: "FechaIngreso", title: externo ? "Fecha de Cupo": "Fecha de ingreso", type: "date", width: 150, format: _DefaultDateTemplate,
+                field: "FechaIngreso", title: externo ? "Fecha de Cupo" : "Ingreso", type: "date", width: 80, format: _DefaultDateTemplate,
                 template: function (dataItem) {
                     if (dataItem.UsuarioCreador != null) {
                         return '<div class="statusexterno "></div>' + kendo.toString(dataItem.FechaIngreso, "dd/MM/yyyy");
@@ -198,7 +198,7 @@ function InicializarCuposIndex() {
             },
             
 
-            { field: "CupoSap", title: "Cupo", type: "string", width: 150 },
+            { field: "CupoSap", title: "Cupo", type: "string", width: 130 },
             {
                 field: "Material", type: "string", width: 80,
 
@@ -215,16 +215,16 @@ function InicializarCuposIndex() {
                     }
                 },
             },
-            { field: "Proveedor", type: "string", width: 100, filterable: { ui: createMultiSelectProveedor } },
+            { field: "Proveedor", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectProveedor } },
             { field: "Destinatario", type: "string", width: 100 },
             { field: "Centro", type: "string", width: 100 },
-            { field: "Calidad", type: "string", width: 100 },
+            { field: "Calidad", type: "string", width: 80 },
             //{ field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 50, format: _DefaultDateTemplate },
             //{ field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 50, format: _DefaultDateTemplate },
-            { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 150, template: function (dataItem) { return kendo.toString(dataItem.FechaRegistro, "dd/MM/yyyy") + " " + dataItem.Hora; } },
+            { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 130, template: function (dataItem) { return kendo.toString(dataItem.FechaRegistro, "dd/MM/yyyy") + " " + dataItem.Hora; } },
             //{ field: "Hora", title: "Hora", type: "date", width: 150 },
             {
-                field: "ZonaCupo", title: "Zona", type: "string", width: 150,
+                field: "ZonaCupo", title: "Zona", type: "string", width: 120,
                 filterable: {
                     multi: true,
 
@@ -247,10 +247,10 @@ function InicializarCuposIndex() {
                 },
             },
             {
-                field: "FleteProcedencia", title: "Flete", type: "string", width: 70, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
+                field: "FleteProcedencia", title: "Flete", type: "string", width: 60, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
             },
             //{ field: "Observaciones", type: "string", width: 150, hidden: externo },
-            { field: "Comercial", type: "string", width: 150, filterable: { ui: createMultiSelectComercial } },
+            { field: "Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectComercial } },
             { field: "EstadoOrden", type: "number", hidden: true },
             {
                 field: "EstadoCupo", title: "Estado",
@@ -259,7 +259,7 @@ function InicializarCuposIndex() {
                     dataSource: externo ? estadoExterno : estados
                 },
 
-                width: 120,
+                width: 110,
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoCupo|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoCupo#'/></label></span>";
                 },
@@ -394,7 +394,30 @@ function InicializarCuposIndex() {
     //$("#gridCupo .k-grid-content").css({
     //    "overflow-y": "scroll"
     //});
-    
+    var minTableWidth;
+    var minColumnWidth = 100;
+    var th;
+    var idx;
+    var grid;
+
+    $("#gridCupo").data("kendoGrid").resizable.bind("start", function (e) {
+        th = $(e.currentTarget).data("th");
+        idx = th.index();
+        grid = th.closest(".k-grid").data("kendoGrid");
+    });
+
+    $("#gridCupo").data("kendoGrid").resizable.bind("resize", function (e) {
+        if (th.width() >= minColumnWidth) {
+            minTableWidth = grid.tbody.closest("table").width();
+        }
+
+        if (th.width() < minColumnWidth) {
+            // the next line is ONLY needed if Grid scrolling is enabled
+            grid.thead.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
+
+            grid.tbody.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
+        }
+    });
 
 
     var checkInputs = function (elements) {

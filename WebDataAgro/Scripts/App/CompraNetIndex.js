@@ -822,8 +822,8 @@ function CreateGridInformeCompraNet() {
         columns: [
             { selectable: true, width: "35px" },
             {
-                field: "Proveedor", type: "string", width: 100,
-                headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
+                field: "Proveedor", type: "string", minResizableWidth: 100,
+                headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno, style: "font-size: 10px" },
                 template: function (dataItem) {
                     if (dataItem.Estado == 1) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor + " " + dataItem.TipoAgenteCompra;
@@ -852,12 +852,13 @@ function CreateGridInformeCompraNet() {
                 filterable: { ui: createMultiSelectProveedor }
             },
             {
-                field: "Corredor", type: "string", width: 100, filterable: { ui: createMultiSelectCorredor },
+                field: "Corredor", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectCorredor },
                 headerAttributes: {
                     "class": classExterno
                 },
                 attributes: {
-                    "class": classExterno
+                    "class": classExterno,
+                    style: "font-size: 10px" 
                 }
             },
             {
@@ -911,12 +912,12 @@ function CreateGridInformeCompraNet() {
                     { TipoNegocio: "FIJACION CANJE" },
                     { TipoNegocio: "FIJACION PASE" },
                     ]
-                }, title: "Tipo", width: 80, attributes: {
+                }, title: "Tipo", minResizableWidth: 80, attributes: {
                     "class": "mobile-sm"
                 }, template: "#if(AnulaYReemplazaContratoId != null){# <i class='fa fa-recycle fa-2x'></i> &nbsp;#}##=TipoNegocio#"
             },
             {
-                field: "Material", type: "string", filterable: {
+                field: "Material", title: "Mat.", type: "string", filterable: {
                     multi: true, dataSource: [{
                         Material: "Maiz"
                     }, {
@@ -928,14 +929,14 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Material: "Girasol AO"
                     }]
-                }, width: 60, attributes: {
+                }, width: 80, attributes: {
                     "class": "mobile-xs"
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
                 }, template: "#=Material#"
             },
             {
-                field: "Cantidad", type: "number", width: 80, format: "{0:n0}", attributes: {
+                field: "Cantidad", type: "number", minResizableWidth: 80, format: "{0:n0}", attributes: {
                     "class": "mobile-xs"
                 }
             },
@@ -954,14 +955,14 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 85, filterable: false, sortable: false, template: function (dataItem) {
+                field: "PrecioPlazo", type: "string", title: "Precio/Plazo", minResizableWidth: 85, filterable: false, sortable: false, template: function (dataItem) {
                     var p = ArmarPrecio(dataItem);
                     return p;
                 }
             },
             { field: "Campania", type: "string", title: "Cos", width: 60, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
             {
-                field: "Negocio", type: "number", title: "N&deg; Negocio", width: 80, attributes: { "class": "mobile-md" },
+                field: "Negocio", type: "number", title: "N&deg; Negocio", minResizableWidth: 80, attributes: { "class": "mobile-md" },
                 template: function (dataItem) {
                     if (dataItem.Negocio !== "" && dataItem.Negocio !== null) {
                         return kendo.parseInt(dataItem.Negocio);
@@ -992,26 +993,26 @@ function CreateGridInformeCompraNet() {
                 field: "GrupoCompraDescripcion", type: "string", filterable: {
                     multi: true, dataSource: GrupoCompraDescripcionDatos
                 }
-                , title: "Zona", width: 90,
+                , title: "Zona", minResizableWidth: 90,
                 headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs mobile-md " + classExterno }
             },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 90, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                field: "Comercial", type: "string", title: "Comercial", minResizableWidth: 90, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "ComercialCreador", type: "string", title: "Creador", width: 90, filterable: { ui: createMultiSelectComercialCreador }, headerAttributes: {
+                field: "ComercialCreador", type: "string", title: "Creador", minResizableWidth: 90, filterable: { ui: createMultiSelectComercialCreador }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "DestinoDescripcion", type: "string", title: "Destino", width: 90, attributes: { "class": "mobile-xs mobile-md" }
+                field: "DestinoDescripcion", type: "string", title: "Destino", minResizableWidth: 90, attributes: { "class": "mobile-xs mobile-md" }
             },
             {
                 field: "Estado_Contrato", sortable: false, title: "Estado", width: 87, filterable: {
@@ -1233,6 +1234,30 @@ function CreateGridInformeCompraNet() {
     });
     $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoSAP");
     $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoCorredor");
+    var minTableWidth;
+    var minColumnWidth = 100;
+    var th;
+    var idx;
+    var grid;
+
+    $("#gridInformeCompraNet").data("kendoGrid").resizable.bind("start", function (e) {
+        th = $(e.currentTarget).data("th");
+        idx = th.index();
+        grid = th.closest(".k-grid").data("kendoGrid");
+    });
+
+    $("#gridInformeCompraNet").data("kendoGrid").resizable.bind("resize", function (e) {
+        if (th.width() >= minColumnWidth) {
+            minTableWidth = grid.tbody.closest("table").width();
+        }
+
+        if (th.width() < minColumnWidth) {
+            // the next line is ONLY needed if Grid scrolling is enabled
+            grid.thead.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
+
+            grid.tbody.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
+        }
+    });
 
     var checkInputs = function (elements) {
         elements.each(function () {
