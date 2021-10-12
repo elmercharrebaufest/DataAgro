@@ -1234,30 +1234,30 @@ function CreateGridInformeCompraNet() {
     });
     $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoSAP");
     $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoCorredor");
-    var minTableWidth;
-    var minColumnWidth = 100;
-    var th;
-    var idx;
-    var grid;
+    //var minTableWidth;
+    //var minColumnWidth = 100;
+    //var th;
+    //var idx;
+    //var grid;
 
-    $("#gridInformeCompraNet").data("kendoGrid").resizable.bind("start", function (e) {
-        th = $(e.currentTarget).data("th");
-        idx = th.index();
-        grid = th.closest(".k-grid").data("kendoGrid");
-    });
+    //$("#gridInformeCompraNet").data("kendoGrid").resizable.bind("start", function (e) {
+    //    th = $(e.currentTarget).data("th");
+    //    idx = th.index();
+    //    grid = th.closest(".k-grid").data("kendoGrid");
+    //});
 
-    $("#gridInformeCompraNet").data("kendoGrid").resizable.bind("resize", function (e) {
-        if (th.width() >= minColumnWidth) {
-            minTableWidth = grid.tbody.closest("table").width();
-        }
+    //$("#gridInformeCompraNet").data("kendoGrid").resizable.bind("resize", function (e) {
+    //    if (th.width() >= minColumnWidth) {
+    //        minTableWidth = grid.tbody.closest("table").width();
+    //    }
 
-        if (th.width() < minColumnWidth) {
-            // the next line is ONLY needed if Grid scrolling is enabled
-            grid.thead.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
+    //    if (th.width() < minColumnWidth) {
+    //        // the next line is ONLY needed if Grid scrolling is enabled
+    //        grid.thead.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
 
-            grid.tbody.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
-        }
-    });
+    //        grid.tbody.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
+    //    }
+    //});
 
     var checkInputs = function (elements) {
         elements.each(function () {

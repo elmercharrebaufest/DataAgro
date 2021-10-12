@@ -48,6 +48,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 && ((contrato is Contrato && (contrato as Contrato).TipoAgenteCompraId == null) || !(contrato is Contrato))
                 && ((contrato is ContratoAcuerdo && (contrato as ContratoAcuerdo).PrecioNeto > 0) || !(contrato is ContratoAcuerdo))
                  && ((contrato is Contrato && (contrato as Contrato).AnulaYReemplazaContratoId == null) || !(contrato is Contrato))
+                 && ((contrato is Contrato && (contrato as Contrato).Venta != true) || !(contrato is Contrato))
                  && ((contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).TipoPosicionCBOTId != 3) || !(contrato is FijacionDePrecioContrato))
                  && (
                 !corredor ? (equipo.Contains(contrato.ComercialId != null ? contrato.ComercialId.Value : 0) ||
