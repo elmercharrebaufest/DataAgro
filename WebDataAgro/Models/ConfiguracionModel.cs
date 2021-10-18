@@ -33,8 +33,8 @@ namespace WebDataAgro.Models
         public int CantidadDiasDolarizadoLimiteMaximo { get; set; }
         public int CantidadMaxima { get; set; }
         public int CantidadDiasPesificadoLimite { get; set; }
-        public int RedespachoMaximoUSDM { get; internal set; }
-        public int RedespachoMaximoARP { get; internal set; }
+        public int RedespachoMaximoUSDM { get; set; }
+        public int RedespachoMaximoARP { get; set; }
 
     }
 }

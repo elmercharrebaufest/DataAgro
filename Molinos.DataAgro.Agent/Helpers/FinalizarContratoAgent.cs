@@ -196,7 +196,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
                             FECHA_LIMITE = fechaDolarizadoString,
                             GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "",
-                            MONEDA = contrato.Moneda?.MonedaId,
+                            MONEDA = contrato.Pizarra == true ? "ARP  " : contrato.MonedaId,
                             NO_INFORMAR_SIO = noInformaSioString,
                             PAGO_DIFERIDO = (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) ? "X" : "",
                             MATERIAL = contrato.Material.Codigo,
