@@ -300,7 +300,8 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.Virtual = false;
 
                     var existeConAnulaYReemplaza = false;
-                    var contDA = contratos.Where(x => x.ContratoSAP == contrato.CONTRATO).SingleOrDefault();
+                    logger.Debug("contrato.CONTRATO " + contrato.CONTRATO);
+                    var contDA = contratos.Where(x => x.ContratoSAP == contrato.CONTRATO).FirstOrDefault();
                     if (contDA != null)
                     {
                         contratoParaFijacion.Pase = contDA.TipoPosicionCBOTId == 3;
