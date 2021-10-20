@@ -269,8 +269,8 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.HastaEntrega = DateTime.Parse(contrato.ENTREGA_HASTA).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
                     contratoParaFijacion.Calidad = (((materialId == 3 || materialId == 4 || materialId == 5) && contrato.CALIDAD == "X") || ((materialId == 1 || materialId == 2) && contrato.CALIDAD != "X")) ? true : false;
                     contratoParaFijacion.Campana = contrato.COSECHA;
-                    contratoParaFijacion.CampanaId = campañas.Where(x => x.Descripcion == contrato.COSECHA).SingleOrDefault() != null ?
-                        campañas.Where(x => x.Descripcion == contrato.COSECHA).SingleOrDefault().CampañaId : 0;
+                    contratoParaFijacion.CampanaId = campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault() != null ?
+                        campañas.Where(x => x.Descripcion == contrato.COSECHA).FirstOrDefault().CampañaId : 0;
                     contratoParaFijacion.Posicion = contrato.POSICION;
                     contratoParaFijacion.PagoDiferido = contrato.PAGO_DIF_ARP == "X" ? true : false;
                     contratoParaFijacion.Centro = centro.Id;
@@ -285,8 +285,8 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.PorcentajeSobrePrecio = contrato.PORC_S_PRECIO;
                     contratoParaFijacion.CondicionFijacionCod = contrato.COND_FIJACION;
                     contratoParaFijacion.CondicionPagoCod = contrato.COND_PAGO;
-                    contratoParaFijacion.CondicionFijacionDescripcion = condicionFijaciones.Where(x => x.CodigoSap == contrato.COND_FIJACION).SingleOrDefault() != null ?
-                        condicionFijaciones.Where(x => x.CodigoSap == contrato.COND_FIJACION).SingleOrDefault().Descripcion : "";
+                    contratoParaFijacion.CondicionFijacionDescripcion = condicionFijaciones.Where(x => x.CodigoSap == contrato.COND_FIJACION).FirstOrDefault() != null ?
+                        condicionFijaciones.Where(x => x.CodigoSap == contrato.COND_FIJACION).FirstOrDefault().Descripcion : "";
                     contratoParaFijacion.CondicionPagoDescripcion = condicionPagos.Where(x => x.CodigoSap == contrato.COND_PAGO).SingleOrDefault() != null ?
                         condicionPagos.Where(x => x.CodigoSap == contrato.COND_PAGO).SingleOrDefault().Descripcion : "";
                     contratoParaFijacion.Filtro = filtro + "|" + contrato.CONTRATO.TrimStart('0');
@@ -300,8 +300,9 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.Virtual = false;
 
                     var existeConAnulaYReemplaza = false;
-                    logger.Debug("contrato.CONTRATO " + contrato.CONTRATO);
                     var contDA = contratos.Where(x => x.ContratoSAP == contrato.CONTRATO).FirstOrDefault();
+                    logger.Debug("contrato.CONTRATO " + contrato.CONTRATO);
+
                     if (contDA != null)
                     {
                         contratoParaFijacion.Pase = contDA.TipoPosicionCBOTId == 3;
