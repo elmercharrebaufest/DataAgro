@@ -4427,7 +4427,8 @@ function CargarDatosEditar(contrato, hijo) {
             $("#cantidadId").data("kendoNumericTextBox").enable(false);
             $("#precioId").data("kendoNumericTextBox").enable(false);
             $("#precioMonedaId").data("kendoDropDownList").enable(false);
-            $("#tipoId").data("kendoDropDownList").enable(false);            
+            $("#tipoId").data("kendoDropDownList").enable(false);
+            $('#material').data("kendoDropDownList").enable(false);
         }
     }
    

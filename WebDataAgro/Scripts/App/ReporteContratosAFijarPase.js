@@ -59,6 +59,7 @@ function CreateGridInformeCompraNet() {
                     HastaFijacion: { type: "date" },
                     FechaEntrega: { type: "date" },
                     Cantidad: { type: "number" },
+                    KilosPendiente: { type: "number" },
                     PrecioPonderado: { type: "number", format: "n2" },
                     PrecioNetoPonderado: { type: "number", format: "n2" },
                     FechaOperacion: { type: "date" },
@@ -96,105 +97,21 @@ function CreateGridInformeCompraNet() {
         //    $("td:has(div.statusreconfirmarfinalizado)").css('border-bottom', '5px solid #ac67ca');
         //},
         columns: [
-            { field: "FechaOperacion", type: "date", title: "Fecha <br>Operacion", format: _DefaultDateTemplate, width: 80, width: 90 },
-            { field: "FechaHasta", type: "date", title: "Fecha de <br> Entrega", format: _DefaultDateTemplate, width: 80, width: 90 },
-            { field: "HastaFijacion", type: "date", title: "Fecha de <br> Fijacion", format: _DefaultDateTemplate, width: 80, width: 90 },
+            { field: "FechaOperacion", type: "date", title: "Fecha Operacion", format: _DefaultDateTemplate, width: 100 },
+            { field: "FechaHasta", type: "date", title: "Fecha de  Entrega", format: _DefaultDateTemplate, width: 100 },
+            { field: "HastaFijacion", type: "date", title: "Fecha de  Fijacion", format: _DefaultDateTemplate, width: 100 },
             { field: "Posicion", width: 90 },
             { field: "Negocio", width: 90, title: "Contrato MOA" },
-            { field: "Proveedor", type: "string", width: 300, },
-            { field: "Corredor", type: "string", width: 300, },
+            { field: "Destino", type: "string" },
+            { field: "Proveedor", type: "string" },
+            { field: "Corredor", type: "string" },
             { field: "Material", width: 90, template: "#=Material#" },
             { field: "Cantidad", title: "Cantidad (Kg)", format: "{0:n0}", width: 90 },
+            { field: "KilosPendiente", title: "Pendiente (Kg)", format: "{0:n0}", width: 90 },            
             { field: "Plus", title: "Plus", type: "number", format: "{0:n2}", width: 90 },
             { field: "PrecioPonderado", title: "Precio MAT", type: "number", format: "{0:n2}", width: 90 },
             { field: "PrecioNetoPonderado", title: "Precio Dispo", type: "number", format: "{0:n2}", width: 90 },
-
-            //{ field: "KilosPendiente",title: "Pendientes", format: "{0:n0}", width: 90 },
-            //{ field: "Moneda", title: "Moneda", type: "string", width: 90 },
-
-            //{ field: "ImporteFinanciero", title: "Importe Financiero", type: "number", format: "{0:n2}", width: 90 },
-            //{ field: "MonedaFinanciero", title: "Moneda", type: "string", width: 90  },
-            //{ field: "ImporteRedespacho", title: "Importe Redespacho", type: "number", format: "{0:n2}", width: 90 },
-            //{ field: "MonedaRedespacho", title: "Moneda", type: "string", width: 90 },
-            //{ field: "PorcentajeComision", title: "Porcentaje Comision", type: "number", format: "{0:n2}", width: 90  },
-            //{ field: "ImporteComision", title: "Importe Comision", type: "number", format: "{0:n2}", width: 90  },
-            //{ field: "MonedaComision", title: "Moneda", type: "string", width: 90 },
-            //{ field: "ImporteBonificacion", title: "Importe Bonificacion", type: "number", format: "{0:n2}", width: 90  },
-            //{ field: "PorcentajeBonificacion", title: "Porcentaje Bonificacion", type: "number", format: "{0:n2}", width: 90  },
-            //{ field: "MonedaBonificacion", title: "Moneda", type: "string", width: 90  },
-
-
-            //{ field: "ImporteBasis", title: "Importe Basis", type: "number", format: "{0:n2}", width: 90 },
-            //{ field: "MonedaBasis", title: "Moneda", type: "string", width: 90  },
-
-        ],
-        excelExport: function (e) {
-            var sheet = e.workbook.sheets[0];
-            for (var i = 0; i < sheet.rows[0].cells.length; i++) {
-                sheet.rows[0].cells[i].value = sheet.rows[0].cells[i].value.replace("<br>", "");;
-            }
-            //    var templateHora = kendo.template(this.columns[6].template);
-            //    var templatePizarra = kendo.template(this.columns[15].template);
-            //    var templateSustentable = kendo.template(this.columns[34].columns[0].template);
-            //    var templateDolarizado = kendo.template(this.columns[35].columns[0].template);
-            //    var templateDolarizadoExpress = kendo.template(this.columns[36].columns[0].template);
-            //    var templateDolarizadoCorredor = kendo.template(this.columns[37].columns[0].template);
-            //    var templatePesificado = kendo.template(this.columns[38].columns[0].template);
-            //    var templateSIO = kendo.template(this.columns[39].template);
-            //    var templateTrigoEsp = kendo.template(this.columns[40].template);
-            //    var templateCesion = kendo.template(this.columns[58].template);//agregar uno cuando se suba  DescripcionOperacionAnterior
-
-            //    for (var i = 2; i < sheet.rows.length; i++) {
-            //        var row = sheet.rows[i];
-
-            //        var dataItem = {
-            //            Hora: row.cells[6].value,
-            //            Pizarra: row.cells[15].value,
-            //            Sustentable: row.cells[35].value,
-            //            Dolarizado: row.cells[40].value,
-            //            DolarizadoExpress: row.cells[42].value,
-            //            DolarizadoCorredor: row.cells[44].value,
-            //            Pesificado: row.cells[46].value,
-            //            NoInformaSIO: row.cells[48].value,
-            //            TrigoEspecial: row.cells[49].value,
-            //            Cesion: row.cells[67].value,//agregar uno cuando se suba  DescripcionOperacionAnterior
-            //        };
-
-            //        var operacionFecha = row.cells[5].value;
-            //        operacionFecha.setHours(operacionFecha.getHours() + 1);
-            //        row.cells[5].value = operacionFecha;
-
-            //        var fechaDesde = row.cells[31].value;
-            //        var fechaHasta = row.cells[32].value;
-
-            //        if (fechaDesde != null) {
-            //            fechaDesde.setHours(fechaDesde.getHours() + 1);
-            //            row.cells[31].value = fechaDesde;
-            //        }
-
-            //        if (fechaHasta != null) {
-
-            //            fechaHasta.setHours(fechaHasta.getHours() + 1);
-            //            row.cells[32].value = fechaHasta;
-            //        }
-
-
-            //        row.cells[6].value = templateHora(dataItem);
-            //        row.cells[15].value = templatePizarra(dataItem);
-            //        row.cells[35].value = templateSustentable(dataItem);
-            //        row.cells[40].value = templateDolarizado(dataItem);
-            //        row.cells[41].value = row.cells[40].value == "Si" ? row.cells[41].value : "";
-            //        row.cells[42].value = templateDolarizadoExpress(dataItem);
-            //        row.cells[43].value = row.cells[42].value == "Si" ? row.cells[43].value : "";
-            //        row.cells[44].value = templateDolarizadoCorredor(dataItem);
-            //        row.cells[45].value = row.cells[44].value == "Si" ? row.cells[45].value : "";
-            //        row.cells[46].value = templatePesificado(dataItem);
-            //        row.cells[48].value = templateSIO(dataItem);
-            //        row.cells[49].value = templateTrigoEsp(dataItem);
-            //        row.cells[67].value = templateCesion(dataItem);//agregar uno cuando se suba  DescripcionOperacionAnterior
-
-            //    }
-        },
+        ],       
         pageable: {
             messages: {
                 display: "{2} elementos",

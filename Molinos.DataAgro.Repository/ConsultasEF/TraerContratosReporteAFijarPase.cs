@@ -74,7 +74,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Estado = contrato.EstadoId,
                         Estado_Contrato = contrato.Estado.Descripcion,
 
-
+                        Destino =contrato.Destino.Descripcion
 
                     };
 

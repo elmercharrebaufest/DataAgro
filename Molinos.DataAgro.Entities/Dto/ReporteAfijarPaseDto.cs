@@ -44,5 +44,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Moneda { get; set; }
         public string Posicion { get; set; }
         public decimal? Plus { get; set; }
+        public string Destino { get; set; }
     }
 }

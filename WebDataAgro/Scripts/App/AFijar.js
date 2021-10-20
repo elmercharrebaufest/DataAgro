@@ -4026,6 +4026,7 @@ function CargarDatosEditar(contrato, hijo) {
                 $("#tipoPosicionCBOTId").data("kendoDropDownList").enable(false);
                 $("#tipoId").data("kendoDropDownList").enable(false);
                 $('#material').data("kendoDropDownList").enable(false);
+                $("#posicionCBOTId").prop("disabled", true);
             }
 
         }
