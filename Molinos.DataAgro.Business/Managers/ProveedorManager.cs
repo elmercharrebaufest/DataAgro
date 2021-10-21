@@ -1425,30 +1425,38 @@ namespace Molinos.DataAgro.Business.Managers
                     repositorio.Agregar(acopio);
 
                     int itemCM = 1;
-                    foreach (var grn in cmp.granosAlmacenamiento)
+                    if (cmp.granosAlmacenamiento != null)
                     {
-                        repositorio.Agregar(new AcopioCampaña
+                        foreach (var grn in cmp.granosAlmacenamiento)
                         {
-                            Acopio = acopio,
-                            CampañaId = grn.campañaId,
-                            HasArrendadas = grn.hasArrendadas,
-                            NroItem = itemCM++,
-                            Toneladas = grn.toneladasAlmacenamiento
-                        });
+                            repositorio.Agregar(new AcopioCampaña
+                            {
+                                Acopio = acopio,
+                                CampañaId = grn.campañaId,
+                                HasArrendadas = grn.hasArrendadas,
+                                NroItem = itemCM++,
+                                Toneladas = grn.toneladasAlmacenamiento
+                            });
+                        }
                     }
 
+
                     itemCM = 1;
-                    foreach (var grn in cmp.granosAlmacenamientoGrano)
+                    if (cmp.granosAlmacenamientoGrano != null)
                     {
-                        repositorio.Agregar(new AcopioMaterial
+                        foreach (var grn in cmp.granosAlmacenamientoGrano)
                         {
-                            Acopio = acopio,
-                            CampañaId = grn.campañaId,
-                            MaterialId = grn.granoId,
-                            NroItem = itemCM++,
-                            Toneladas = grn.toneladasAlmacenamiento
-                        });
+                            repositorio.Agregar(new AcopioMaterial
+                            {
+                                Acopio = acopio,
+                                CampañaId = grn.campañaId,
+                                MaterialId = grn.granoId,
+                                NroItem = itemCM++,
+                                Toneladas = grn.toneladasAlmacenamiento
+                            });
+                        }
                     }
+
                 }
             }
             if (oParam.establecimiento != null && oParam.establecimiento.Count > 0)

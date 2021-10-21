@@ -711,10 +711,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
-                //if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
-                //{
-                //    oErrorMessages.Error("", "Se debe completar Posicion CBOT con el concepto Basis");
-                //}
+                if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId != 3 && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
+                {
+                    oErrorMessages.Error("", "Se debe completar la Posicion con el concepto Basis");
+                }
 
 
                 if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId != null && oParam.TipoPosicionCBOTId != 3)
