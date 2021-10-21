@@ -1112,5 +1112,16 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.ObtenerDatosReportePagosDiferidos(new DateTime(2021, 5, 29), new DateTime(2021, 6, 4));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Negocio, ReportePagosDiferidos>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
         }
+
+        [Test]
+        public void TraerTodoDatoPesificadoTestOk()
+        {
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodoPesificado>())).Returns(new DataSourceResult());
+
+            target.TraerTodoDatoPesificado(It.IsAny<DataSourceRequest>(), It.IsAny<List<int>>());
+
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodoPesificado>()), Times.Once);
+
+        }
     }
 }

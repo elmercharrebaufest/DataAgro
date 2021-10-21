@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Material = contrato.Material == null ? "" : contrato.Material.Descripcion,
                         MaterialId = contrato.MaterialId,
 
-                        Posicion = SqlFunctions.DatePart("month", contrato.FechaHasta) +"."+ SqlFunctions.DateName("year", contrato.FechaHasta),
+                        Posicion = SqlFunctions.DatePart("month", contrato.FechaHasta) + "." + SqlFunctions.DateName("year", contrato.FechaHasta),
                         Moneda = contrato.Moneda.Descripcion,
                         PrecioPonderado = contrato.PrecioPonderado,
                         PrecioNetoPonderado = contrato.PrecioNetoPonderado,
@@ -74,9 +74,28 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Estado = contrato.EstadoId,
                         Estado_Contrato = contrato.Estado.Descripcion,
 
-                        Destino =contrato.Destino.Descripcion
+                        Destino = contrato.Destino.Descripcion
 
                     };
+
+            List<string> contratosAFijarPaseSAPList = queryContratos.Select(a => a.Negocio).ToList();
+            var fijacionesPase = from a in contexto.Set<FijacionDePrecioContrato>() where a.EstadoId == 5 && contratosAFijarPaseSAPList.Contains(a.ContratoSAP) select new { ContratoSAP = a.ContratoSAP, Cantidad = a.Cantidad };
+            var fijacionesKilos = fijacionesPase.GroupBy(a => a.ContratoSAP).Select(x => new BasicoContrato { ContratoSAP = x.Key, Cantidad = x.Sum(y => y.Cantidad) }).ToList();
+
+            List<string> contratoSAPAFijarPasePendientes = new List<string>();
+            foreach (var item in queryContratos)
+            {
+                var cont = fijacionesKilos.Where(x => x.ContratoSAP == item.Negocio).SingleOrDefault();
+                if (cont == null || item.Cantidad > cont.Cantidad)
+                {
+                    contratoSAPAFijarPasePendientes.Add(item.Negocio);
+                }
+            }
+
+            queryContratos.Where(x => contratoSAPAFijarPasePendientes.Contains(x.Negocio));
+
+
+
 
             GridHelper.TruncateTime(request.Filter, ref queryContratos);
 
@@ -103,6 +122,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             }
             return result;
         }
+
 
         public virtual DataSourceResult Ejecutar(DbContext contexto)
         {

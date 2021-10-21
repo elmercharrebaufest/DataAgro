@@ -2660,6 +2660,7 @@ namespace Molinos.DataAgro.Business.Managers
                     proveedores.RemoveRange(0, index);
                     datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).Distinct().ToList()));
                 }
+                datos = BuscarPase(datos);
 
                 List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").Distinct().ToList());
                 items = items.Distinct().ToList();
@@ -2677,6 +2678,65 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(e);
                 throw;
             }
+        }
+
+        private List<PesificarAgentDto> BuscarPase(List<PesificarAgentDto> pesificado)
+        {
+            var contratosAFijarPase = repositorio.Listar<Contrato>(a => a.TipoPosicionCBOTId == 3 && a.TipoNegocioId == 1 && a.EstadoId == 5);
+            List<string> contratosAFijarPaseSAPList = contratosAFijarPase.Select(a => a.ContratoSAP).ToList();
+
+            var fijacionesPase = repositorio.Listar<FijacionDePrecioContrato>(a => a.EstadoId == 5 && contratosAFijarPaseSAPList.Contains(a.ContratoSAP));
+
+            var fijacionesKilos = fijacionesPase.GroupBy(a => a.ContratoSAP).Select(x => new BasicoContrato { ContratoSAP = x.Key, Cantidad = x.Sum(y => y.Cantidad) });
+
+            List<Contrato> contratosAFijarPasePendientes = new List<Contrato>();
+            List<string> contratoSAPAFijarPasePendientes = new List<string>();
+            foreach (var item in contratosAFijarPase)
+            {
+                var cont = fijacionesKilos.Where(x => x.ContratoSAP == item.ContratoSAP).SingleOrDefault();
+                if (cont == null || item.Cantidad > cont.Cantidad)
+                {
+                    contratosAFijarPasePendientes.Add(item);
+                    contratoSAPAFijarPasePendientes.Add(item.ContratoSAP);
+                }
+            }
+
+            pesificado = pesificado.Where(x => !contratoSAPAFijarPasePendientes.Contains(x.Contrato)).ToList();
+            foreach (var item in contratosAFijarPasePendientes)
+            {
+                pesificado.Add(new PesificarAgentDto
+                {
+                    CantidadPendiente = Convert.ToInt32(item.Cantidad),
+                    Clasificacion = item.Clasificacion.Descripcion,
+                    Comercial = item.Comercial.IdActiveDirectory,
+                    Contrato = item.ContratoSAP,
+                    CuitCorredor = item.Corredor == null ? "" : item.Corredor.CUIT,
+                    CuitVendedor = item.Proveedor.CUIT,
+                    Dolarizado = item.Corredor == null ? true : false,
+                    DolarizadoExpress = false,
+                    FechaFijacion = item.HastaFijacion,
+                    DolarizadoNoProductor = item.Corredor == null ? false : true,
+                    FechaUltimaAplicacion = null,
+                    Fijacion = "",
+                    KgNoPesificable = 0,
+                    KgVencimientoPesificable = 0,
+                    KgTotales = Convert.ToInt32(item.Cantidad),
+                    Material = item.Material.Codigo,
+                    Unidad = "Kg",
+                    Moneda = "USDM ",
+                    Precio = item.PrecioPonderado.Value,
+                    NombreCorredor = item.Corredor == null ? "" : item.Corredor.RazonSocial,
+                    NombreVendedor = item.Proveedor.RazonSocial,
+                    Pase = true,
+                    Plus = item.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault() != null ?
+                        item.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault().Importe : 0,
+                    Posicion = item.PosicionCBOT,
+                    KgTotalesPase = item.Cantidad,
+                    FechaHastaDolarizado = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01),
+                });
+            }
+
+            return pesificado;
         }
 
         private List<ReportePesificado> ConvertPesificarAgent(List<PesificarAgentDto> datos)
@@ -2757,6 +2817,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 prov = prov.Distinct().ToList();
                 var datosNuevo = pesificarAgent.ConsultarTodo(prov.Select(x => x.Cuit).Distinct().ToList());
+                repositorio.RemoverTodos<ReportePesificado>(a => a.Pase == true);
+                datosNuevo = BuscarPase(datosNuevo);
                 try
                 {
                     var cuitsVendedorCorredor = datosNuevo.Select(a => new { a.CuitVendedor, a.CuitCorredor }).Distinct().ToList();

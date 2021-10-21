@@ -6016,7 +6016,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 porcentajeComision = comision.Porcentaje / 100;
             }
-            
+
             //Bonificacion
             var desc = aFijar.Descuentos.Where(y => y.TipoDBId == 1 && y.TipoPeriodoDBId == 1 && (y.Importe != 0)).SingleOrDefault();
             if (desc != null)
@@ -6042,21 +6042,18 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var result = repositorio.ObtenerConsultaEscalar(new TraerContratosReporteAFijarPase(filtro, equipo));
 
-            foreach (var dataItem in result.Data)
+            List<string> contratosAFijarPaseSAPList = ((List<ReporteAfijarPaseDto>)result.Data).Select(x => x.Negocio).ToList();
+            var fijacionesPase = repositorio.Listar<FijacionDePrecioContrato, BasicoContrato>(a => new BasicoContrato { ContratoSAP = a.ContratoSAP, Cantidad = a.Cantidad }, a => a.EstadoId == 5 && contratosAFijarPaseSAPList.Contains(a.ContratoSAP));
+            var fijacionesKilos = fijacionesPase.GroupBy(a => a.ContratoSAP).Select(x => new BasicoContrato { ContratoSAP = x.Key, Cantidad = x.Sum(y => y.Cantidad) }).ToList();
+
+            foreach (var afijar in (List<ReporteAfijarPaseDto>)result.Data)
             {
-                var item = (dataItem as ReporteAfijarPaseDto);
-                var pendiente = contratosParaFijacionAgent.ObtenerContratos(
-                    item.Cuit,
-                    item.CUITCorredor,
-                    item.MaterialId,
-                    item.Negocio, 0);
-                if (pendiente != null && pendiente.Count == 1)
+                var fijado = fijacionesKilos.Where(x => x.ContratoSAP == afijar.Negocio).SingleOrDefault();
+                if (fijado == null || afijar.Cantidad > fijado.Cantidad)
                 {
-                    item.KilosPendiente = double.Parse(pendiente.First().KilosPendiente);
+                    afijar.KilosPendiente = afijar.Cantidad - (fijado == null ? 0 : fijado.Cantidad);
                 }
             }
-            result.Data = (result.Data as List<ReporteAfijarPaseDto>).Where(x => x.KilosPendiente > 0).ToList();
-            result.Total = (result.Data as List<ReporteAfijarPaseDto>).Where(x => x.KilosPendiente > 0).Count();
             return result;
         }
 

@@ -61,8 +61,6 @@ namespace Molinos.DataAgro.Agent
                     }
                 }
 
-                BuscarPase(pesificado);
-
                 return pesificado;
             }
             catch (Exception e)
@@ -101,8 +99,6 @@ namespace Molinos.DataAgro.Agent
                     }
                 }
 
-                BuscarPase(pesificado);
-
                 logger.Debug("Pesificado total " + pesificado.Count());
                 return pesificado;
             }
@@ -113,30 +109,6 @@ namespace Molinos.DataAgro.Agent
             }
         }
 
-        private void BuscarPase(List<PesificarAgentDto> pesificado)
-        {
-            List<string> contratoSapList = pesificado.Where(a => a.Fijacion == null || a.Fijacion == "").Select(a => a.Contrato).ToList();
-
-            var contratosAFijarPase = repositorio.Listar<Contrato>(a => a.TipoPosicionCBOTId == 3 && a.TipoNegocioId == 1 && contratoSapList.Contains(a.ContratoSAP));
-
-            foreach (var item in pesificado.Where(a => a.Fijacion == null || a.Fijacion == "").ToList())
-            {
-                var pase = contratosAFijarPase.Where(a => a.ContratoSAP == item.Contrato).SingleOrDefault();
-                if (pase != null)
-                {
-                    item.Pase = true;
-                    item.Precio = pase.Precio;
-                    item.KgTotalesPase = pase.Cantidad;
-                    item.Plus = pase.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault() != null ?
-                        pase.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault().Importe : 0;
-                    item.Posicion = pase.PosicionCBOT;
-                    if (!string.IsNullOrEmpty(item.Posicion))
-                    {
-                        item.FechaHastaDolarizado = new DateTime(int.Parse(item.Posicion.Split('.').Last()), int.Parse(item.Posicion.Split('.').First()), 01);
-                    }
-                }
-            }
-        }
 
         private PesificarAgentDto ConvertirADto(ZMPES6360 dev)
         {
