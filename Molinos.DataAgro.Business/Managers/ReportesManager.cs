@@ -2706,7 +2706,6 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 pesificado.Add(new PesificarAgentDto
                 {
-                    CantidadPendiente = Convert.ToInt32(item.Cantidad),
                     Clasificacion = item.Clasificacion.Descripcion,
                     Comercial = item.Comercial.IdActiveDirectory,
                     Contrato = item.ContratoSAP,
@@ -2718,9 +2717,12 @@ namespace Molinos.DataAgro.Business.Managers
                     DolarizadoNoProductor = item.Corredor == null ? false : true,
                     FechaUltimaAplicacion = null,
                     Fijacion = "",
-                    KgNoPesificable = 0,
-                    KgVencimientoPesificable = 0,
+                    KgNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad) : 0,
+                    USDNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad) * Convert.ToInt32(item.PrecioPonderado) : 0,
+                    KgVencimientoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad) : 0,
+                    USDPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad) * Convert.ToInt32(item.PrecioPonderado) : 0,
                     KgTotales = Convert.ToInt32(item.Cantidad),
+                    CantidadPendiente = Convert.ToInt32(item.Cantidad),
                     Material = item.Material.Codigo,
                     Unidad = "Kg",
                     Moneda = "USDM ",
