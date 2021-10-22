@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var queryContratos =
                     from contrato in contexto.Set<Contrato>()
-                    where contrato.TipoNegocioId == 1 && contrato.TipoPosicionCBOTId == 3 && contrato.EstadoId != 6 && contrato.EstadoId != 8
+                    where contrato.TipoNegocioId == 1 && contrato.TipoPosicionCBOTId == 3 && contrato.EstadoId == 5
                     select new ReporteAfijarPaseDto()
                     {
                         Id = contrato.Id,
