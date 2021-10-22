@@ -2665,6 +2665,8 @@ namespace Molinos.DataAgro.Business.Managers
                 List<ReportePesificado> items = ConvertPesificarAgent(datos.Where(x => x.Anticipo != "X").Distinct().ToList());
                 items = items.Distinct().ToList();
                 repositorio.TruncarTabla<ReportePesificado>();
+
+                
                 if (items.Count > 0)
                 {
                     repositorio.AgregarTodos(items);
