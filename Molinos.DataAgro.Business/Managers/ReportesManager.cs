@@ -2692,53 +2692,45 @@ namespace Molinos.DataAgro.Business.Managers
             var fijacionesKilos = fijacionesPase.GroupBy(a => a.ContratoSAP).Select(x => new BasicoContrato { ContratoSAP = x.Key, Cantidad = x.Sum(y => y.Cantidad) });
 
             List<Contrato> contratosAFijarPasePendientes = new List<Contrato>();
-            List<string> contratoSAPAFijarPasePendientes = new List<string>();
             foreach (var item in contratosAFijarPase)
             {
                 var cont = fijacionesKilos.Where(x => x.ContratoSAP == item.ContratoSAP).SingleOrDefault();
                 if (cont == null || item.Cantidad > cont.Cantidad)
                 {
-                    contratosAFijarPasePendientes.Add(item);
-                    contratoSAPAFijarPasePendientes.Add(item.ContratoSAP);
-                }
-            }
-
-            pesificado = pesificado.Where(x => !contratoSAPAFijarPasePendientes.Contains(x.Contrato)).ToList();
-            foreach (var item in contratosAFijarPasePendientes)
-            {
-                pesificado.Add(new PesificarAgentDto
-                {
-                    Clasificacion = item.Clasificacion.Descripcion,
-                    Comercial = item.Comercial.IdActiveDirectory,
-                    Contrato = item.ContratoSAP,
-                    CuitCorredor = item.Corredor == null ? "" : item.Corredor.CUIT,
-                    CuitVendedor = item.Proveedor.CUIT,
-                    Dolarizado = item.Corredor == null ? true : false,
-                    DolarizadoExpress = false,
-                    FechaFijacion = item.HastaFijacion,
-                    DolarizadoNoProductor = item.Corredor == null ? false : true,
-                    FechaUltimaAplicacion = null,
-                    Fijacion = "",
-                    KgNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad) : 0,
-                    USDNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad) * Convert.ToInt32(item.PrecioPonderado) : 0,
-                    KgVencimientoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad) : 0,
-                    USDPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad) * Convert.ToInt32(item.PrecioPonderado) : 0,
-                    KgTotales = Convert.ToInt32(item.Cantidad),
-                    CantidadPendiente = Convert.ToInt32(item.Cantidad),
-                    Material = item.Material.Codigo,
-                    Unidad = "Kg",
-                    Moneda = "USDM ",
-                    Precio = item.PrecioPonderado.Value,
-                    NombreCorredor = item.Corredor == null ? "" : item.Corredor.RazonSocial,
-                    NombreVendedor = item.Proveedor.RazonSocial,
-                    Pase = true,
-                    Plus = item.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault() != null ?
+                    pesificado.Add(new PesificarAgentDto
+                    {
+                        Clasificacion = item.Clasificacion.Descripcion,
+                        Comercial = item.Comercial.IdActiveDirectory,
+                        Contrato = item.ContratoSAP,
+                        CuitCorredor = item.Corredor == null ? "" : item.Corredor.CUIT,
+                        CuitVendedor = item.Proveedor.CUIT,
+                        Dolarizado = item.Corredor == null ? true : false,
+                        DolarizadoExpress = false,
+                        FechaFijacion = item.HastaFijacion,
+                        DolarizadoNoProductor = item.Corredor == null ? false : true,
+                        FechaUltimaAplicacion = null,
+                        Fijacion = "",
+                        KgNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) : 0,
+                        USDNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) * Convert.ToInt32(item.PrecioPonderado) : 0,
+                        KgVencimientoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) : 0,
+                        USDPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) * Convert.ToInt32(item.PrecioPonderado) : 0,
+                        KgTotales = Convert.ToInt32(item.Cantidad - (cont == null?0:cont.Cantidad)),
+                        CantidadPendiente = Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)),
+                        Material = item.Material.Codigo,
+                        Unidad = "Kg",
+                        Moneda = "USDM ",
+                        Precio = item.PrecioPonderado.Value,
+                        NombreCorredor = item.Corredor == null ? "" : item.Corredor.RazonSocial,
+                        NombreVendedor = item.Proveedor.RazonSocial,
+                        Pase = true,
+                        Plus = item.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault() != null ?
                         item.Descuentos.Where(a => a.TipoPeriodoDBId == 1 && a.TipoDBId == 1).SingleOrDefault().Importe : 0,
-                    Posicion = item.PosicionCBOT,
-                    KgTotalesPase = item.Cantidad,
-                    FechaHastaDolarizado = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01),
-                });
-            }
+                        Posicion = item.PosicionCBOT,
+                        KgTotalesPase = item.Cantidad,
+                        FechaHastaDolarizado = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01),
+                    });
+                }
+            }                      
 
             return pesificado;
         }
