@@ -6163,7 +6163,7 @@ namespace Molinos.DataAgro.Business.Managers
                 permisos = true;
                 return permisos;
             }
-            if(contrato.Canje != true && contrato.Venta != true && contrato.PrestamoDevolucion != true)
+            if(contrato.Canje != true && contrato.Venta != true && contrato.PrestamoDevolucion != true && !PermisosHelper.Is(PermisosDataAgro.ModificarCanje))
             {
                 permisos = true;
                 return permisos;
