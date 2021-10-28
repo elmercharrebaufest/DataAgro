@@ -108,18 +108,21 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 {
                                     item.Estado = "No Operable por Estado de CUIT 3";
                                     item.Color = "red";
+                                    item.Deshabilitar = true;
                                     continue;
                                 }
                                 else if (sisa.EstadoCuit == 0)
                                 {
                                     item.Estado = "No Operable por Estado de CUIT Inactivo";
                                     item.Color = "red";
+                                    item.Deshabilitar = true;
                                     continue;
                                 }
                                 if (sisa.SituacionCategoria != "AL")
                                 {
                                     item.Estado = "No Operable por Situación Categoría BA";
                                     item.Color = "red";
+                                    item.Deshabilitar = true;
                                     continue;
                                 }
                             }
@@ -127,6 +130,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             {
                                 item.Estado = "No Operable por CUIT o Categoria Inactivo";
                                 item.Color = "red";
+                                item.Deshabilitar = true;
                                 continue;
                             }
                         }
