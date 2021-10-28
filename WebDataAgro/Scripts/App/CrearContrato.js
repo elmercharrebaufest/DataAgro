@@ -323,6 +323,7 @@ function InicializarElementos() {
                 InsertarAperturasViewModel(CalcularPrecioTotalApertura());
 
                 SeleccionAutomaticaBolsa();
+                }
             }
         },
         dataSource: {
