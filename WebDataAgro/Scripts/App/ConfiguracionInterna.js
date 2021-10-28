@@ -1,12 +1,13 @@
 ﻿var pausado;
 var material = [];
 var centros = [];
+var fila = 0;
 $(document).ready(function () {
     kendo.culture("es-AR");
 
     kendo.culture();
     InicializarElementos();
-
+  
 });
 
 
@@ -30,7 +31,8 @@ function InicializarElementos() {
     $("#CantidadDia").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
-        spinners: false
+        spinners: false,
+        min: 0
     });
     $("#Tasa").kendoNumericTextBox({
         culture: "es-AR",
@@ -427,13 +429,14 @@ function LimpiarPrecioForm() {
 }
 function LimpiarPagoForm() {
     $("#CantidadDia").data("kendoNumericTextBox").value("0");
-    $("#Importe").data("kendoNumericTextBox").value("0");
+    $("#Tasa").data("kendoNumericTextBox").value("0");
     $("#TipoNegocioIdPago").val("");
     $("#MaterialIdPago").val("");
     var hoy = new Date();
     var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
     $("#DesdeVigenciaPago").val(stringDia + " " + "00:00");
     $("#HastaVigenciaPago").val(stringDia + " " + "23:59");
+    LimpiarDiaDiferido();
 }
 function LimpiarPizarraForm() {
     var hoy = new Date();
@@ -566,4 +569,57 @@ function cancelarEstado() {
     var data = MSExecuteURLOnServer("ConfiguracionInterna/ModalHabilitarMaterial");
     setTimeout(function () { $("#estadoHabilitacion").html(data); }, 500)
 }
+
+function AgregarPagoDiferido() {     
+        if (fila <= 3) {
+
+            fila = fila + 1;
+            // Añadir caja de texto.            
+            $(".agregarTasa" + fila).append('<div class="col-md-2"> <label>Días Hasta</label></div > <div class="col-sm-3"><input name="DiasPagoDiferido[' + fila + '].Cantidad" value="' + (fila == 3 ? 0 : fila + 1) + '0" type=text class="input w100" id=dia' + fila + '></div>');
+            $(".agregarTasa" + fila).append('<div class="col-md-1"><label> Tasa</label > </div> <div class="col-sm-3"><input name="DiasPagoDiferido[' + fila + '].Tasa" value="0" type=text class="input w100" id=tasa' + fila + '></div>');
+            $(".agregarTasa" + fila).append('<div class="col-md-1" onclick="EliminarPagoDiferido(' + fila + ')" id="icono' + fila + '"><i class="fa fa-minus-circle" aria-hidden="true"></i></div> ');
+            $("#icono" + fila).show();
+            $(".agregarTasa" + fila).show();
+            $("#dia" + fila).kendoNumericTextBox({
+                culture: "es-AR",
+                format: "n0",
+                spinners: false,
+                min: 0
+            });
+            $("#tasa" + fila).kendoNumericTextBox({
+                culture: "es-AR",
+                format: "n2",
+                spinners: false,
+                min: 0
+            });
+            $(".agregarTasa" + fila).show();
+            if (fila == 2) {
+                $("#icono" + 1).hide();
+            } else if (fila == 3) {
+                $("#icono" + 1).hide();
+                $("#icono" + 2).hide();               
+            }
+            if (fila > 3) {
+                fila = 3;
+            }
+    }
+
+        
+}
+
+function EliminarPagoDiferido(item) {      
+    $("#dia" + item).data("kendoNumericTextBox").destroy();
+    $("#tasa" + item).data("kendoNumericTextBox").destroy();
+    $(".agregarTasa" + fila).html('');
+    fila = fila - 1;
+    $("#icono" + fila).show();
+}
+
+function LimpiarDiaDiferido() {
+    for (var i = 1; i <= fila; i++) {
+       $("#dia" + i).data("kendoNumericTextBox").value("0");
+       $("#tasa" + i).data("kendoNumericTextBox").value("0");     
+    }
+}
+
 

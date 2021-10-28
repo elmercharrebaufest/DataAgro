@@ -798,6 +798,14 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
                     }
+                    else
+                    {
+                        fechaLimite = oParam.FechaDesde.AddDays(30);
+                        if (oParam.DolarizadoExpress == true && oParam.FechaDolarizado.Value > fechaLimite.Date)
+                        {
+                            oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado express debe ser menor o igual que los 30 días");
+                        }
+                    }
                 }
             }
 
@@ -6061,5 +6069,96 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.Obtener<NegocioAsociado>(x => x.AsociadoId == negocioId) == null ? false : true;
         }
+
+        public string ValidarProveedor(int proveedorId, int clasificacion, bool planCanje = false, bool consignatario = false)
+        {
+            var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == proveedorId);
+            var mensaje = "";
+            var sisa = new SISA();
+            if (proveedor != null && clasificacion != 0)
+            {
+                if (clasificacion == 1)
+                {
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 1 && x.SituacionCategoria == "AL");
+                }
+                else if (clasificacion == 2)
+                {
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria == 6 && x.SituacionCategoria == "AL");
+                }
+                else if (clasificacion == 3)
+                {
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.SituacionCategoria == "AL");
+                }
+                if (sisa != null)
+                {
+                    if (sisa.EstadoCuit == 3 && proveedor.RiesgoComercialSap != "E")
+                    {
+                        mensaje = "Proveedor No Operable por Estado de CUIT 3";
+                        return mensaje;
+                    }
+                    else if (sisa.EstadoCuit == 0)
+                    {
+                        mensaje = "Proveedor No Operable por Estado de CUIT Inactivo";
+                        return mensaje;
+                    }
+                    if (sisa.SituacionCategoria != "AL")
+                    {
+                        mensaje = "Proveedor No Operable por Situación Categoría BA";
+                        return mensaje;
+                    }
+                }
+                else
+                {
+                    mensaje = "Proveedor No Operable por CUIT o Categoria Inactivo";
+                    return mensaje;
+                }
+                if (planCanje || consignatario)
+                {
+                    var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+
+                    if (string.IsNullOrEmpty(alta.Mensaje))
+                    {
+                        if (consignatario && alta.Consignatario == "NO")
+                        {
+                            mensaje = "El proveedor no está habilitado como Consignatario";
+                        }
+                        if (planCanje && alta.PlanCanje == "NO")
+                        {
+                            mensaje = "El proveedor no está habilitado como Proveedor Plan canje";
+                        }
+                    }
+                }
+            }
+            return mensaje;
+        }
+
+        public bool ValidarCopiarContrato(int id)
+        {
+            var contrato = repositorio.Obtener<Contrato>(id);
+            var permisos = false;
+            if (PermisosHelper.Is(PermisosDataAgro.ModificarCanje) && contrato.Canje == true)
+            {
+                permisos = true;
+                return permisos;
+            }
+            if (PermisosHelper.Is(PermisosDataAgro.ModificarVenta) && contrato.Venta == true)
+            {
+                permisos = true;
+                return permisos;
+            }
+            if (PermisosHelper.Is(PermisosDataAgro.ModificarPrestamoDevolucion) && contrato.PrestamoDevolucion == true)
+            {
+                permisos = true;
+                return permisos;
+            }
+            if(contrato.Canje != true && contrato.Venta != true && contrato.PrestamoDevolucion != true)
+            {
+                permisos = true;
+                return permisos;
+            }
+
+            return permisos;
+        }
+     
     }
 }

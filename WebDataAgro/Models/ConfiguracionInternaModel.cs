@@ -65,5 +65,6 @@ namespace WebDataAgro.Models
             HabilitacionCampaña = new List<HabilitacionCampañaDto>();
             HabilitacionPagoDiferido = new List<HabilitacionPagoDiferidoDto>();
         }
+        public List<DiaDiferido> DiasPagoDiferido { get; set; }
     }
 }

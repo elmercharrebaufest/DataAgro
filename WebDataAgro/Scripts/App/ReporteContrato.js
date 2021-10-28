@@ -301,6 +301,7 @@ function CreateGridInformeCompraNet() {
             { field: "Cesion", type: "string", title: "Cesion", template: function (dataItem) { return dataItem.Cesion ? "Si" : "No"; }, width: 80 },
             { field: "ObligatoriedadBonificacionDesc", title: "Obligatoriedad<br> bonificacion", width: 80},
             { field: "PrecioPonderado", title: "Precio<br> Ponderado", type: "number", format: "{0:n2}", width: 100 },
+            { field: "Condicional", title: "Importe<br> Condicional", type: "number", format: "{0:n2}", width: 80 },
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];

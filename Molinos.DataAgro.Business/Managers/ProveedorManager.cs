@@ -31,10 +31,12 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogger logger;
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IHttpContextManager httpContextManager;
+        private readonly IAltaTempranaAgent altaTempranaAgent;
 
         public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
             IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent,
-            IMailManager mailManager, ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager)
+            IMailManager mailManager, ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager,
+            IAltaTempranaAgent altaTempranaAgent)
         {
             this.logger = logger;
             mobComercial = oComercial;
@@ -44,6 +46,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.repositorio = repositorio;
             this.logDataAgroManager = logDataAgroManager;
             this.httpContextManager = httpContextManager;
+            this.altaTempranaAgent = altaTempranaAgent;
         }
 
         public StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string actividadId)
@@ -2805,7 +2808,8 @@ namespace Molinos.DataAgro.Business.Managers
         public List<BusquedaHome> DevolverProveedoresConCorredor(string filtro, string cuitCorredor)
         {
             var resultado = repositorio.ListarConsulta(new DevolverProveedoresConCorredor(filtro, cuitCorredor));
-            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
+            CompletarEstadoAltaTemprana(listaOrdenada);
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<BusquedaHome> DevolverProveedores(string filtro, int corredor, List<int> equipo)
@@ -2814,25 +2818,59 @@ namespace Molinos.DataAgro.Business.Managers
             var lista = resultado.GroupBy(x => new { x.Cuit, x.Filtro }).ToList();
             resultado = lista.Select(x => new BusquedaHome
             {
+                Corredor = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Corredor,
+                Deshabilitar = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Deshabilitar,
+                Color = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Color,
+                Estado = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Estado,
                 Cuit = x.Key.Cuit,
                 Filtro = x.Key.Filtro,
                 RazonSocial = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).RazonSocial,
                 Alias = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Alias,
                 Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id
             }).ToList();
-            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
+            CompletarEstadoAltaTemprana(listaOrdenada);
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
+        }
+
+        private void CompletarEstadoAltaTemprana(List<BusquedaHome> listaOrdenada)
+        {
+            if (listaOrdenada.Count > 0)
+            {
+                foreach (var item in listaOrdenada)
+                {
+                    if (item.Corredor == "")
+                    {
+                        var alta = altaTempranaAgent.ObtenerAlta(item.Cuit);
+
+                        if (string.IsNullOrEmpty(alta.Mensaje))
+                        {
+                            if (item.Consignatario.HasValue && item.Consignatario.Value && alta.Consignatario == "NO")
+                            {
+                                item.Estado = "El proveedor no está habilitado como Consignatario";
+                                continue;
+                            }
+                            if (item.PlanCanje.HasValue && item.PlanCanje.Value && alta.PlanCanje == "NO")
+                            {
+                                item.Estado = "El proveedor no está habilitado como Proveedor Plan canje";
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
         }
         public List<BusquedaHome> DevolverProveedoresCorredores(string filtro)
         {
             var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro));
-            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
+            CompletarEstadoAltaTemprana(listaOrdenada);
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<ProveedorDto> ListarProveedor(string proveedor)
         {
             var resultado = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, Alias = x.Alias }, x => proveedor == "" || (x.RazonSocial.Contains(proveedor) || x.Alias.Contains(proveedor) || x.CUIT.Contains(proveedor)) && x.Segmentacion.Grupo != "Corredores", 15);
-            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial);
+            var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<ProveedorDto> ListarProveedorTodos(string proveedor)

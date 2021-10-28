@@ -191,7 +191,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Destino = x.Destino.Descripcion,
                 DestinoId = x.DestinoId
             },
-           x => (x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy) || x.DesdeVigencia >= hoy || 
+           x => (x.DesdeVigencia <= hoy && x.HastaVigencia >= hoy) || x.DesdeVigencia >= hoy ||
            (x.DesdeVigencia <= ultimoDiaHabil && x.HastaVigencia >= ultimoDiaHabil))
                 .OrderBy(x => x.DesdeVigencia).ThenBy(x => x.MaterialId).ToList();
             return lista;
@@ -522,25 +522,39 @@ namespace Molinos.DataAgro.Business.Managers
             return error;
         }
 
-        private Resultado ValidarPagoDiferido(HabilitacionPagoDiferido pago)
+        private Resultado ValidarPagoDiferido(HabilitacionPagoDiferido pago, List<DiaDiferido> dia)
         {
             var error = new Resultado();
 
-            if (pago.CantidadDia <= 0)
+            for (int i = 0; i < dia.Count; i++)
             {
-                error.Error("CantidadDia", "El campo Cantidad de Días es obligatorio");
-            }
-            if (pago.Tasa <= 10)
-            {
-                error.Error("Importe", "El valor minimo para la tasa es 10");
-            }
-            if (pago.DesdeVigencia > pago.HastaVigencia)
-            {
-                error.Error("Vigencia", "La vigencia desde no puede ser mayor al hasta");
-            }
-            if (repositorio.Existe<HabilitacionPagoDiferido>(x => x.CantidadDia == pago.CantidadDia && x.HastaVigencia > pago.DesdeVigencia /*&& x.MaterialId == pago.MaterialId && pago.TipoNegocioId == x.TipoNegocioId*/ && x.Habilitado))
-            {
-                error.Error("Vigencia", "Ya existe habilitación con ese rango para esa fecha y material");
+                if (dia[i].Cantidad <= 0)
+                {
+                    error.Error("Importe", "El valor minimo para la cantidad de dias es 1");
+                    return error;
+                }
+                if (dia[i].Tasa < 10)
+                {
+                    error.Error("Importe", "El valor minimo para la tasa es 10");
+                    return error;
+                }
+                if (dia.Any(x => x != dia[i] && x.Cantidad == dia[i].Cantidad))
+                {
+                    error.Error("Vigencia", "Ya existe una configuracion en pantalla con la misma cantidad de dias");
+                    return error;
+                }
+
+                if (pago.DesdeVigencia > pago.HastaVigencia)
+                {
+                    error.Error("Vigencia", "La vigencia desde no puede ser mayor al hasta");
+                    return error;
+                }
+                var habilitacion = repositorio.Listar<HabilitacionPagoDiferido>(x => x.HastaVigencia > pago.DesdeVigencia && x.Habilitado).ToList();
+                if (habilitacion != null && habilitacion.Count > 0 && habilitacion.Exists(x => x.CantidadDia == dia[i].Cantidad))
+                {
+                    error.Error("Vigencia", "Ya existe habilitación con ese rango para esa fecha");
+                    return error;
+                }
             }
             return error;
         }
@@ -625,7 +639,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return error;
         }
-        
+
         public IEnumerable<IGrouping<int, PrecioMoaCompraNetDto>> TraerPrecioCompraNet(int? tiponegocio = null)
         {
             tiponegocio = tiponegocio == null ? 3 : 0;
@@ -634,8 +648,8 @@ namespace Molinos.DataAgro.Business.Managers
             var tipoNegocios = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion },
                 x => tiponegocio == 0 ? x.TipoNegocioId <= 3 : x.TipoNegocioId == 3);
             var habilitado = repositorio.Listar<EstadoPrecioMOA, EstadoPrecioMOADto>(x => new EstadoPrecioMOADto { TipoNegocioId = x.TipoNegocioId, MaterialId = x.MaterialId }, x => x.Habilitado == true);
-           
-           
+
+
             var monedas = repositorio.Listar<Moneda, MonedaDto>(x => new MonedaDto { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
             var ahora = DateTime.Now;
             var preciosMoa = repositorio.Listar<PrecioMoa, PrecioMoaCompraNetDto>(x => new PrecioMoaCompraNetDto
@@ -658,7 +672,7 @@ namespace Molinos.DataAgro.Business.Managers
             preciosMoa = preciosMoa.Where(x => habilitado.Any(y => y.MaterialId == x.MaterialId && y.TipoNegocioId == x.TipoNegocioId)).ToList();
 
             var hoy = DateTime.Today;
-            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora && 
+            var existePizarra = repositorio.Listar<HabilitacionPizarra>(x => x.DesdeVigencia <= ahora && x.HastaVigencia >= ahora &&
             (x.TipoNegocioId == tiponegocio || tiponegocio == 0));
 
             existePizarra = existePizarra.Where(x => habilitado.Any(y => y.MaterialId == x.MaterialId && y.TipoNegocioId == x.TipoNegocioId)).ToList();
@@ -681,37 +695,37 @@ namespace Molinos.DataAgro.Business.Managers
                         //}
                         //else
                         //{
-                            if (neg.TipoNegocioId == 1 && mon.Descripcion == "ARP")
-                            {
-                                continue;
-                            }
-                            var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).ToList();
+                        if (neg.TipoNegocioId == 1 && mon.Descripcion == "ARP")
+                        {
+                            continue;
+                        }
+                        var precio = preciosMoa.Where(x => (x.MonedaId == mon.Descripcion || neg.TipoNegocioId == 1) && x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId).ToList();
 
-                            foreach (var item in precio)
+                        foreach (var item in precio)
+                        {
+                            item.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
+                        }
+                        if (existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId) && mon.Descripcion == "ARP")
+                        {
+                            var pizarra = existePizarra.FirstOrDefault();
+                            precio.Add(new PrecioMoaCompraNetDto
                             {
-                                item.Pizarra = existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId);
-                            }
-                            if (existePizarra.Any(x => x.MaterialId == mat.MaterialId && x.TipoNegocioId == neg.TipoNegocioId) && mon.Descripcion == "ARP")
-                            {
-                                var pizarra = existePizarra.FirstOrDefault();
-                                precio.Add(new PrecioMoaCompraNetDto
-                                {
-                                    DesdeEntrega = pizarra.DesdeEntrega,
-                                    HastaEntrega = pizarra.HastaEntrega,
-                                    Pizarra = true,
-                                    MaterialId = mat.MaterialId,
-                                    MonedaId = "Pizarra",
-                                    Material = mat.Descripcion,
-                                    Retirado = false,
-                                    TipoNegocio = neg.Descripcion,
-                                    TipoNegocioId = neg.TipoNegocioId
-                                });
-                            }
-                            if (precio.Count == 0)
-                            {
-                                precio.Add(new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId });
-                            }
-                            listaPrecio.AddRange(precio);
+                                DesdeEntrega = pizarra.DesdeEntrega,
+                                HastaEntrega = pizarra.HastaEntrega,
+                                Pizarra = true,
+                                MaterialId = mat.MaterialId,
+                                MonedaId = "Pizarra",
+                                Material = mat.Descripcion,
+                                Retirado = false,
+                                TipoNegocio = neg.Descripcion,
+                                TipoNegocioId = neg.TipoNegocioId
+                            });
+                        }
+                        if (precio.Count == 0)
+                        {
+                            precio.Add(new PrecioMoaCompraNetDto { MaterialId = mat.MaterialId, MonedaId = mon.Descripcion, Material = mat.Descripcion, Retirado = true, TipoNegocio = neg.Descripcion, TipoNegocioId = neg.TipoNegocioId });
+                        }
+                        listaPrecio.AddRange(precio);
                         //}
 
                     }
@@ -996,40 +1010,77 @@ namespace Molinos.DataAgro.Business.Managers
             }, x => x.MaterialId == material);
         }
 
-        public Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active)
+        public Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active, List<DiaDiferido> dias)
         {
-            var oEntityErrors = ValidarPagoDiferido(oConfiguracion);
+            var oEntityErrors = ValidarPagoDiferido(oConfiguracion, dias);
             if (oEntityErrors.HayErrores)
             {
                 return oEntityErrors;
             }
             else
             {
-                oConfiguracion.UsuarioCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
-                oConfiguracion.FechaCreacion = DateTime.Now;
-                oConfiguracion.Habilitado = true;
-                repositorio.Agregar(oConfiguracion);
-            }
-            try
-            {
-                var tipo = oConfiguracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
-                repositorio.GuardarCambios();
-                logDataAgroManager.LogCambiosDataAgro(TraerPagoDiferido(oConfiguracion.Id), tipo);
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-                oEntityErrors.Error(ex.Source, ex.Message);
-                throw;
-            }
-            if (!oEntityErrors.HayError)
-            {
-                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se guardó correctamente"));
-                logger.Debug("Se guardó correctamente");
-            }
+                if (oConfiguracion.Id == 0)
+                {
+                    foreach (var item in dias)
+                    {
+                        var configuracion = new HabilitacionPagoDiferido
+                        {
+                            UsuarioCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId),
+                            FechaCreacion = DateTime.Now,
+                            Habilitado = true,
+                            DesdeVigencia = oConfiguracion.DesdeVigencia,
+                            HastaVigencia = oConfiguracion.HastaVigencia,
+                            CantidadDia = item.Cantidad,
+                            Tasa = item.Tasa
+                        };
+                        repositorio.Agregar(configuracion);
 
-            return oEntityErrors;
+
+                        try
+                        {
+                            
+                            var tipo = configuracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
+                            repositorio.GuardarCambios();
+                            logDataAgroManager.LogCambiosDataAgro(TraerPagoDiferido(configuracion.Id), tipo);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error(ex);
+                            oEntityErrors.Error(ex.Source, ex.Message);
+                            throw;
+                        }
+                    }
+
+                }
+                else
+                {
+                    try
+                    {
+                        oConfiguracion.UsuarioCreadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
+                        oConfiguracion.FechaCreacion = DateTime.Now;
+                        oConfiguracion.Habilitado = true;
+                        var tipo = oConfiguracion.Id > 0 ? TipoAccionLogDataAgro.Modificar : TipoAccionLogDataAgro.Crear;
+                        repositorio.GuardarCambios();
+                        logDataAgroManager.LogCambiosDataAgro(TraerPagoDiferido(oConfiguracion.Id), tipo);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex);
+                        oEntityErrors.Error(ex.Source, ex.Message);
+                        throw;
+                    }
+                }
+                if (!oEntityErrors.HayError)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage(200, "Se guardó correctamente"));
+                    logger.Debug("Se guardó correctamente");
+                }
+            
+                return oEntityErrors;
+            }
         }
+
+
         public Resultado EliminarHabilitacionPagoDiferido(int id)
         {
             var oEntityErrors = new Resultado();
@@ -1078,14 +1129,14 @@ namespace Molinos.DataAgro.Business.Managers
             var estados = new List<EstadoPrecioMOADto>();
             foreach (var item in repositorio.Listar<TipoNegocio>(x => x.TipoNegocioId == 1 || x.TipoNegocioId == 2 || x.TipoNegocioId == 3))
             {
-                var habilitado = !repositorio.Existe<EstadoPrecioMOA>(x => x.TipoNegocioId == item.TipoNegocioId && x.Habilitado != true);                
+                var habilitado = !repositorio.Existe<EstadoPrecioMOA>(x => x.TipoNegocioId == item.TipoNegocioId && x.Habilitado != true);
                 var estado = new EstadoPrecioMOADto()
                 {
                     Habilitado = habilitado,
                     TipoNegocioId = item.TipoNegocioId
                 };
                 estados.Add(estado);
-             }
+            }
             return estados;
         }
 
@@ -1105,7 +1156,7 @@ namespace Molinos.DataAgro.Business.Managers
                         if (precio.MaterialId > 0)
                         {
                             var estado = estadosPrecio.Where(x => x.MaterialId == precio.MaterialId && x.TipoNegocioId == precio.TipoNegocioId).FirstOrDefault();
-                            if(estado != null)
+                            if (estado != null)
                             {
                                 estado.MaterialId = precio.MaterialId;
                                 estado.Habilitado = precio.Habilitado;
@@ -1121,7 +1172,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 };
                                 repositorio.Agregar(nuevoEstado);
                             }
-                        
+
                         }
                     }
 
@@ -1142,7 +1193,7 @@ namespace Molinos.DataAgro.Business.Managers
              {
                  Descripcion = x.Material.Descripcion,
                  MaterialId = x.MaterialId,
-                 Habilitado = x.Habilitado, 
+                 Habilitado = x.Habilitado,
                  TipoNegocioId = x.TipoNegocioId
              });
         }
@@ -1150,7 +1201,7 @@ namespace Molinos.DataAgro.Business.Managers
         public Resultado ActualizarPrecio(int id, decimal precio, string idActiveDirectory)
         {
             var oEntityErrors = new Resultado();
-            if (precio<=0)
+            if (precio <= 0)
             {
                 throw new Exception("El precio tiene que ser mayor a 0.");
             }

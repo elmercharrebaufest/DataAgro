@@ -313,6 +313,7 @@
     <Build Include="dbo\Tables\ComisionAFavor.sql" />
     <Build Include="dbo\Tables\CondicionDePagoVenta.sql" />
     <Build Include="dbo\Tables\NegocioAsociado.sql" />
+    <Build Include="dbo\Tables\CierreDelDiaMailExternos.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

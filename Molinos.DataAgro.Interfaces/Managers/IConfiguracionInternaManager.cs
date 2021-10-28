@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Interfaces
         List<HabilitacionPagoDiferidoDto> TraerPagosDiferido();
         List<HabilitacionPagoDiferidoDto> TraerPagoDiferido();
 
-        Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active);
+        Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active, List<DiaDiferido> dia);
         Resultado EliminarHabilitacionPagoDiferido(int id);
         void PausarCargaDePrecios(bool pausa, int tipoNegocioId);
         List<EstadoPrecioMOADto> TraerPausadoGeneral();

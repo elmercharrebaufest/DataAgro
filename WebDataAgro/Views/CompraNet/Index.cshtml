@@ -78,7 +78,11 @@
     <style>
         .k-grid td {
             line-height: 1.2em;
-            font-size: 10px;
+            font-size: 12px;
+        }
+
+        .k-filter-row th, .k-grid-header th.k-header {
+            padding: .5em 0.6em .4em .1em;
         }
     </style>
 }
@@ -213,13 +217,13 @@
                         {
 
                             @*<div class="col-xs-6 col-md-4">
-                <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
-                    <span class="botonVarios">
-                        <i class="fa fa-search varios" aria-hidden="true"></i>
-                    </span>
-                    <span>Buscar</span>
-                </div>
-            </div>*@
+                                    <div id="buscarDiv" data-toggle="tooltip" onclick="filtrarZona()">
+                                        <span class="botonVarios">
+                                            <i class="fa fa-search varios" aria-hidden="true"></i>
+                                        </span>
+                                        <span>Buscar</span>
+                                    </div>
+                                </div>*@
                             <div class="col-xs-6 col-sm-4">
                                 <div id="negociosPropiosDiv" data-toggle="tooltip" onclick="filtrarMesa()">
                                     <span class="botonVarios">
@@ -309,7 +313,7 @@
             <br />
             <div class="row" id="nuevotab">
                 <div class="col-xs-12">
-                        <div id="gridInformeCompraNet"></div>
+                    <div id="gridInformeCompraNet"></div>
                 </div>
             </div>
         </div>
@@ -390,7 +394,8 @@
         font-size: 22px;
         color: #387941;
     }
-    .k-grid-header th.k-header>.k-link {
+
+    .k-grid-header th.k-header > .k-link {
         text-overflow: unset !important;
     }
 </style>

@@ -350,7 +350,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -364,7 +364,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -378,7 +378,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

@@ -131,6 +131,7 @@
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\CampoDetalleMoa.cs" />
+    <Compile Include="Dto\DiaDiferido.cs" />
     <Compile Include="Dto\NegocioAsociadoDto.cs" />
     <Compile Include="Dto\EstadoSAPDto.cs" />
     <Compile Include="Dto\CondicionDePagoVentaDto.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\BoletoCompraNetProvincia.cs" />
+    <Compile Include="Entities\CierreDelDiaMailExternos.cs" />
     <Compile Include="Entities\CondicionDePagoVenta.cs" />
     <Compile Include="Entities\ComisionAFavor.cs" />
     <Compile Include="Entities\NegocioAsociado.cs" />

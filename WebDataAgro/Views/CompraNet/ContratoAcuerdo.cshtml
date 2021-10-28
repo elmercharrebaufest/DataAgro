@@ -115,17 +115,18 @@
             <div class="col-sm-4">
                 <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
                 <div id="buscadorResult"></div>
+                <label id="mensaje" style="color:#ff5175; font-size: 12px"></label>
             </div>
         </div>
     </div>
 
     <div class="row noAgente noFason acuerdo ampliar">
         <div class="col-sm-2">
-            <label>Agente de Compra</label>
+            <label class="hidden">Agente de Compra</label>
         </div>
         <div class="col-md-4 col-sm-5">
             @*<select id="AgenteCompraId" data-bind="source: tipoAgenteCompraCombo, value: Parametros.TipoAgenteCompra"></select>*@
-            <select id="AgenteCompraId" data-bind="value: Parametros.TipoAgenteCompra">
+            <select class="hidden"  id="AgenteCompraId" data-bind="value: Parametros.TipoAgenteCompra">
                 <option value="1">MATBA ROFEX SA</option>
             </select>
         </div>

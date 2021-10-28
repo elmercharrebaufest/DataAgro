@@ -161,7 +161,7 @@ function Inicializar() {
             },
             { field: "Plus", type: "number", width: 150 },
             { field: "Posicion", type: "number", width: 150 },
-            { field: "KgTotalesPase", type: "number", title: "Kg Totales Pase", width: 150 },
+            { field: "KgTotalesPase", type: "number", title: "Kg Totales Pase", width: 150, format: "{0:n0}" },
             //{
             //    field: "CantidadPendiente", format: "{0:n0}"
             //},

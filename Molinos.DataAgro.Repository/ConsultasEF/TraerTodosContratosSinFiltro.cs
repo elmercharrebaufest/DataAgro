@@ -147,7 +147,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ImporteRedespacho = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 2).Importe,
                         PorcentajeComision = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje,
                         ImporteComision = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Importe,
-                        ImporteBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe,
+                        ImporteBonificacion = contrato.TipoNegocioId != 2 ? contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Importe : 0,
                         PorcentajeBonificacion = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 4).Porcentaje,
                         ImporteBasis = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 5).Importe,
                         MonedaFinanciero = contrato.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 1).Moneda.Descripcion,
@@ -205,6 +205,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrecioPonderado = contrato.PrecioPonderado ?? 0,
                         PrecioNetoPonderado = contrato.PrecioNetoPonderado ?? 0,
                         TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
+                        EsUsuarioExterno = string.IsNullOrEmpty(contrato.UsuarioTercero) ? (bool?)null : true 
                     };
 
                 return queryNegocios;

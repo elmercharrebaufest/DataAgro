@@ -239,6 +239,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ObligatoriedadBonificacionDesc { get; set; }
         public decimal? PrecioPonderado { get; set; }
         public decimal? PrecioNetoPonderado { get; set; }
+        public bool? EsUsuarioExterno { get; set; }
+        public decimal Condicional { get; set; }
     }
 
     public class StoredPorContratoResult

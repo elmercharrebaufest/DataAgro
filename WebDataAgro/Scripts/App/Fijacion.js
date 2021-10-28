@@ -395,7 +395,8 @@ function InicializarElementos() {
 
     $("#buscadorProveedor").kendoAutoComplete({
         template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
+            '<p class="buscar-nomb #: data.Deshabilitar ? \'k-state-disabled\': \'\' #"  style="color:#: data.Color#">#: data.RazonSocial#(#: data.Cuit#) #if(data.Estado != null) {# ' +
+            ' #: data.Estado #    #}else{# #}#</p>',
         minLength: 3,
         enforceMinLength: true,
         dataTextField: "Filtro",
@@ -420,6 +421,12 @@ function InicializarElementos() {
             //consultarBonificacionAfijar(datosAfijar());
         },
         select: function (e) {
+            if (e.dataItem.Deshabilitar) {
+                $("#buscadorProveedor").val("")
+                $("#mensaje").hide();
+                $("#mensaje").val("");
+                e.preventDefault();
+            } else {
             ObtenerAlta(e.dataItem.Id);
             ValidarFason();
             $("#idProveedor").val(e.dataItem.Id);
@@ -474,6 +481,7 @@ function InicializarElementos() {
                 //}
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+                }
             }
         },
         dataSource: {
@@ -508,12 +516,15 @@ function InicializarElementos() {
 
     $("#buscadorCorredor").click(function () {
         SetearComisionCorredor();
+        $("#mensaje").hide();
+        $("#mensaje").val("");
         $("#buscadorCorredor").data("kendoAutoComplete").value("");
         $("#buscadorCorredor").data("kendoAutoComplete").trigger("change");
     });
     $("#buscadorCorredor").kendoAutoComplete({
         template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
+            '<p class="buscar-nomb  #: data.Deshabilitar ? \'k-state-disabled\': \'\' #"  style="color:#: data.Color#">#: data.RazonSocial#(#: data.Cuit#) #if(data.Estado != null) {# ' +
+            ' #: data.Estado #    #}else{# #}# </p > ',
         minLength: 3,
         enforceMinLength: true,
         dataTextField: "Filtro",
@@ -565,6 +576,10 @@ function InicializarElementos() {
             $("#datosContrato").hide();
         },
         select: function (e) {
+            if (e.dataItem.Deshabilitar) {
+                $("#buscadorCorredor").val("")
+                e.preventDefault();
+            } else {
             if ($("#estado").val() !== "5") {
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
                 LimpiarBoleto();
@@ -595,7 +610,8 @@ function InicializarElementos() {
                     $('#pagoDirectoDiv').show();
                 }
             }
-            ValidarCorredor(e.dataItem.Id);
+                ValidarCorredor(e.dataItem.Id);
+            }
         },
         dataSource: {
             severFiltering: true,
@@ -1397,12 +1413,14 @@ function InicializarElementos() {
             $("#consignatarioId").prop("checked", false);
         }
         ValidarAlta();
+        ValidarProveedorSisa();
     });
     $("#consignatarioId").click(function () {
         if (this.checked) {
             $("#planCanjeId").prop("checked", false);
         }
         ValidarAlta();
+        ValidarProveedorSisa();
     });
 
     $("#destinoId").kendoDropDownList({
@@ -5024,6 +5042,12 @@ function inicializarGrillaContratosPendientes() {
                     field: "", title: "", width: "10px"
                 },
                 {
+                    field: "", template: function (dataItem) {
+                        var data = dataItem;
+                        return '<button class="seleccionar" data-toggle="tooltip" title="Seleccionar" onclick="Seleccionar(\'' + data.uid + '\')"> Seleccionar</button>';
+                    }
+                },
+                {
 
                     field: "ContratoId", title: "Contrato", template: function (dataItem) {
                         if (dataItem.Calidades != null && dataItem.Calidades.length > 0) {
@@ -5135,13 +5159,7 @@ function inicializarGrillaContratosPendientes() {
                             (dataItem.Pase == true ? "Pase <br>" + dataItem.Posicion : "")
                             + "</label>"
                     }
-                },
-                {
-                    field: "", template: function (dataItem) {
-                        var data = dataItem;
-                        return '<button class="seleccionar" data-toggle="tooltip" title="Seleccionar" onclick="Seleccionar(\'' + data.uid + '\')"> Seleccionar</button>';
-                    }
-                }
+                }                
             ],
         }).data("kendoGrid");
     });
@@ -5160,6 +5178,22 @@ function Seleccionar(data) {
     grid.tbody.find("tr[data-uid= '" + data + "']").trigger('dblclick');
 }
 
+function ValidarProveedorSisa() {
+    var mensaje = MSExecuteOnServer("/Compranet/ValidarProveedorSISA", {
+        proveedorId: $("#proveedorId").val(),
+        clasificacion: $("#clasificacion").val() != "" ? $("#clasificacion").val() : "0",
+        planCanje: $("#ventaId").is(":checked") != true ? $("#planCanjeId").is(':checked') : false,
+        consignatario: $("#ventaId").is(":checked") != true ? $("#consignatarioId").is(':checked') : false
+    });
+    if (mensaje != "" && mensaje != null) {
+        MensErr(mensaje);
+        $("#mensaje").show();
+        $("#mensaje").text(mensaje);
+    } else {
+        $("#mensaje").hide();
+        $("#mensaje").val("");
+    }
+}
 
 
 

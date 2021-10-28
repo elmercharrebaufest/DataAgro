@@ -862,7 +862,7 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "FechaDesde", type: "date", width: 80, title: "Desde"/*, format: _DefaultDateTemplate*/, attributes: {
+                field: "FechaDesde", type: "date", width: 75, minResizableWidth: 75, title: "Desde"/*, format: _DefaultDateTemplate*/, attributes: {
                     "class": "mobile-sm"
                 }, template: function (dataItem) {
                     var p = ArmarFechaDesde(dataItem);
@@ -870,7 +870,7 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "FechaHasta", type: "date", width: 80, title: "Hasta"/*, format: _DefaultDateTemplate*/, attributes: {
+                field: "FechaHasta", type: "date", width: 75, minResizableWidth: 75, title: "Hasta"/*, format: _DefaultDateTemplate*/, attributes: {
                     "class": "mobile-sm"
                 }, template: function (dataItem) {
                     var p = ArmarFechaHasta(dataItem);
@@ -912,7 +912,7 @@ function CreateGridInformeCompraNet() {
                     { TipoNegocio: "FIJACION CANJE" },
                     { TipoNegocio: "FIJACION PASE" },
                     ]
-                }, title: "Tipo", minResizableWidth: 80, attributes: {
+                }, title: "Tipo", width: 80, minResizableWidth: 80, attributes: {
                     "class": "mobile-sm"
                 }, template: "#if(AnulaYReemplazaContratoId != null){# <i class='fa fa-recycle fa-2x'></i> &nbsp;#}##=TipoNegocio#"
             },
@@ -929,19 +929,19 @@ function CreateGridInformeCompraNet() {
                     }, {
                         Material: "Girasol AO"
                     }]
-                }, width: 80, attributes: {
+                }, width: 60, minResizableWidth: 60, attributes: {
                     "class": "mobile-xs"
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
                 }, template: "#=Material#"
             },
             {
-                field: "Cantidad", type: "number", minResizableWidth: 80, format: "{0:n0}", attributes: {
+                field: "Cantidad", type: "number", width: 80, minResizableWidth: 80, format: "{0:n0}", attributes: {
                     "class": "mobile-xs"
                 }
             },
             {
-                field: "Ampliaciones", type: "number", width: 80, title: "Ampl.", attributes: {
+                field: "Ampliaciones", type: "number", width: 60, minResizableWidth: 60, title: "Ampl.", attributes: {
                     "class": "mobile-sm " + classExterno
                 }, headerAttributes: {
                     "class": classExterno
@@ -955,14 +955,14 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "PrecioPlazo", type: "string", title: "Precio/Plazo", minResizableWidth: 85, filterable: false, sortable: false, template: function (dataItem) {
+                field: "PrecioPlazo", type: "string", title: "Precio/Plazo", width: 85, minResizableWidth: 58, filterable: false, sortable: false, template: function (dataItem) {
                     var p = ArmarPrecio(dataItem);
                     return p;
                 }
             },
-            { field: "Campania", type: "string", title: "Cos", width: 60, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
+            { field: "Campania", type: "string", title: "Cos", width: 60, minResizableWidth: 60, attributes: { "class": "mobile-md" } /*title: "Campa&ntilde;a"*/ },
             {
-                field: "Negocio", type: "number", title: "N&deg; Negocio", minResizableWidth: 80, attributes: { "class": "mobile-md" },
+                field: "Negocio", type: "number", title: "Negocio", width: 80, minResizableWidth: 70, attributes: { "class": "mobile-md" },
                 template: function (dataItem) {
                     if (dataItem.Negocio !== "" && dataItem.Negocio !== null) {
                         return kendo.parseInt(dataItem.Negocio);
@@ -980,7 +980,7 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "Fecha", type: "date", title: "Carga", width: 80, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" },
+                field: "Fecha", type: "date", title: "Carga", width: 75, minResizableWidth: 75, format: _DefaultDateTemplate, attributes: { "class": "mobile-xs" },
                 template: function (dataItem) {
                     if (dataItem.FechaOperacion != null && kendo.toString(dataItem.FechaOperacion, "dd/MM/yyyy") != kendo.toString(dataItem.Fecha, "dd/MM/yyyy")) {
                         return "<b style='color:darkblue;'>" + kendo.toString(dataItem.FechaOperacion, "dd/MM/yyyy") + "</b>";
@@ -990,32 +990,32 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "GrupoCompraDescripcion", type: "string", filterable: {
+                field: "GrupoCompraDescripcion", type: "string", width: 90, minResizableWidth: 90,filterable: {
                     multi: true, dataSource: GrupoCompraDescripcionDatos
                 }
-                , title: "Zona", minResizableWidth: 90,
+                , title: "Zona", 
                 headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs mobile-md " + classExterno }
             },
             {
-                field: "Comercial", type: "string", title: "Comercial", minResizableWidth: 90, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                field: "Comercial", type: "string", title: "Comercial", width: 85, minResizableWidth: 85, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "ComercialCreador", type: "string", title: "Creador", minResizableWidth: 90, filterable: { ui: createMultiSelectComercialCreador }, headerAttributes: {
+                field: "ComercialCreador", type: "string", title: "Creador", width: 85, minResizableWidth: 85, filterable: { ui: createMultiSelectComercialCreador }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "DestinoDescripcion", type: "string", title: "Destino", minResizableWidth: 90, attributes: { "class": "mobile-xs mobile-md" }
+                field: "DestinoDescripcion", type: "string", title: "Destino", width: 80, minResizableWidth: 80, attributes: { "class": "mobile-xs mobile-md" }
             },
             {
-                field: "Estado_Contrato", sortable: false, title: "Estado", width: 87, filterable: {
+                field: "Estado_Contrato", sortable: false, title: "Estado", width: 87, minResizableWidth: 87, filterable: {
                     multi: true,
                     dataSource: [{
                         Estado_Contrato: "Pendiente"
@@ -1228,37 +1228,55 @@ function CreateGridInformeCompraNet() {
             if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Corredor" || e.field == "ComercialCreador") {
                 $(e.container).css("width", "300px");
             }
-        }
-
+        },
+        resizable: true
 
     });
     $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoSAP");
     $('#gridInformeCompraNet').data('kendoGrid').hideColumn("ContratoCorredor");
-    //var minTableWidth;
-    //var minColumnWidth = 100;
-    //var th;
-    //var idx;
-    //var grid;
 
-    //$("#gridInformeCompraNet").data("kendoGrid").resizable.bind("start", function (e) {
-    //    th = $(e.currentTarget).data("th");
-    //    idx = th.index();
-    //    grid = th.closest(".k-grid").data("kendoGrid");
-    //});
 
-    //$("#gridInformeCompraNet").data("kendoGrid").resizable.bind("resize", function (e) {
-    //    if (th.width() >= minColumnWidth) {
-    //        minTableWidth = grid.tbody.closest("table").width();
-    //    }
+    var minTableWidth;
+    var minColumnWidth = 300;
+    var th;
+    var idx;
+    var grid;
 
-    //    if (th.width() < minColumnWidth) {
-    //        // the next line is ONLY needed if Grid scrolling is enabled
-    //        grid.thead.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
 
-    //        grid.tbody.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
-    //    }
-    //});
+    $("#gridInformeCompraNet").data("kendoGrid").resizable.bind("start", function (e) {
+        th = $(e.currentTarget).data("th");
+        idx = th.index();
+        grid = th.closest(".k-grid").data("kendoGrid");
 
+        field = th.data("field");
+
+        var column = $.grep(grid.columns, function (item) {
+            return item.field === field;
+        })[0];
+
+        minColumnWidth = parseInt(column.minResizableWidth, 10);
+    });
+
+    $("#gridInformeCompraNet").data("kendoGrid").resizable.bind("resize", function (e) {
+        if (th.width() >= minColumnWidth) {
+            minTableWidth = grid.tbody.closest("table").width();
+        }
+
+        if (th.width() < minColumnWidth) {
+            // the next line is ONLY needed if Grid scrolling is enabled
+            grid.thead.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
+
+            grid.tbody.closest("table").width(minTableWidth).children("colgroup").find("col").eq(idx).width(minColumnWidth);
+        }
+    });
+
+    if ($("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width() <100) {
+        $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width(100);
+        $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(1).width(100);
+        $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(2).width(100);
+        $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(2).width(100);
+    }
+    
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);
@@ -2491,6 +2509,11 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                     if (concepto.Importe || concepto.Porcentaje) {
                         $("#visualizar_aperturaBonificaciones").text((concepto.Importe ? (kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda) : "") + (concepto.Porcentaje ? (" - " + concepto.Porcentaje + "%") : ""));
                         if (precioNeto > 0) {
+                            if (tipo == "A PRECIO") {
+                                $("#condicional").text("Condicional: ");
+                            } else {
+                                $("#condicional").text("Bonificacion: ");
+                            }
                             $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                         }
 

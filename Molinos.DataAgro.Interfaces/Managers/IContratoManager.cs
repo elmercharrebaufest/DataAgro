@@ -90,5 +90,9 @@ namespace Molinos.DataAgro.Interfaces
 
 
         bool EstaConfirmadoEnSAP(string contratoSAP, int TipoNegocioId);
+
+        string ValidarProveedor(int cuitProveedor, int clasificacion, bool planCanje, bool consignatario);
+
+        bool ValidarCopiarContrato(int id);
     }
 }

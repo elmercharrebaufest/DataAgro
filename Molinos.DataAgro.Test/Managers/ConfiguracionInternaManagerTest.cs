@@ -490,15 +490,12 @@ namespace Molinos.DataAgro.Test.Managers
                 HastaVigencia = new DateTime(2099, 1, 30),
                
             };
-            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<HabilitacionPagoDiferido, bool>>>()))
-             .Returns(false);
-
-            var resultado = target.GrabarPagoDiferido(config, "");
-
+            var dia = new List<DiaDiferido>() { new DiaDiferido() { Cantidad = 13, Tasa = 11 } };
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<HabilitacionPagoDiferido, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+              .Returns(new List<HabilitacionPagoDiferido>());
+            var resultado = target.GrabarPagoDiferido(config, "", dia);
             Assert.IsTrue(resultado.HayError);
-            repositorioMock.Verify(x => x.Agregar(It.IsAny<HabilitacionPagoDiferido>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
-            Assert.AreEqual(1, resultado.Errores.Count);
         }
 
         [Test]
@@ -513,15 +510,14 @@ namespace Molinos.DataAgro.Test.Managers
                 HastaVigencia = new DateTime(2011, 1, 30),
 
             };
+            var dia = new List<DiaDiferido>() { new DiaDiferido() { Cantidad = 10, Tasa = 11 } };
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<HabilitacionPagoDiferido, bool>>>()))
              .Returns(true);
 
-            var resultado = target.GrabarPagoDiferido(config, "");
+            var resultado = target.GrabarPagoDiferido(config, "", dia);
 
             Assert.IsTrue(resultado.HayError);
-            repositorioMock.Verify(x => x.Agregar(It.IsAny<HabilitacionPagoDiferido>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-            Assert.AreEqual(4, resultado.Errores.Count);
         }
 
         [Test]

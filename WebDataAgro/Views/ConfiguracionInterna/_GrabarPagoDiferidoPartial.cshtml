@@ -1,8 +1,8 @@
 ﻿@model WebDataAgro.Models.ConfiguracionInternaModel
 @using (Ajax.BeginForm("GuardarPagoDiferido", null, new AjaxOptions { UpdateTargetId = "listaPago", InsertionMode = InsertionMode.Replace }, new { }))
 {
-    <div id="form-precio">
-        @*<div class="row-botones-material row">
+<div id="form-precio">
+    @*<div class="row-botones-material row">
             <div class="col-md-2">
                 <label>Tipo de Negocio</label>
             </div>
@@ -16,39 +16,71 @@
                 @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Material", new { @class = "form-control", @id = "MaterialIdPago"})
             </div>
         </div>*@
-        <div class="row-botones-material row" style="margin-top:10px;">
-            <div class="col-md-2">
-                <label>Días Hasta</label>
-            </div>
-            <div class="col-md-3" id="CantidadDiasId">
-                @Html.TextBoxFor(m => m.CantidadDia, new { @class = "w100" })
-            </div>
-            <div class="col-md-1">
-                <label>Tasa</label>
-            </div>
-            <div class="col-sm-3">
-                @Html.TextBoxFor(m => m.Tasa, new { @class = "w100" })
-            </div>
+    <div class="row-botones-material row" style="margin-top:10px;">
+        <div class="col-md-2">
+            <label>Días Hasta</label>
         </div>
-        <div class="row-botones-material row">
-
-            <div class="col-md-2">
-                <label>Vigencia Desde/Hasta</label>
-            </div>
-            <div class="col-md-3">
-                @Html.TextBoxFor(m => m.DesdeVigencia, new { @class = "w100" , @id = "DesdeVigenciaPago"})
-            </div>
-            <div class="col-md-3">
-                @Html.TextBoxFor(m => m.HastaVigencia, new { @class = "w100", @id = "HastaVigenciaPago" })
-            </div>
-        </div>       
-        <div class="row" style="margin-top:10px;">
-            <div class="col-md-3 col-md-offset-9">
-                <button type="submit" class="k-button k-button-icontext float-right">Guardar</button>
-            </div>
+        <div class="col-md-3" id="CantidadDiasId">
+            @Html.TextBox("DiasPagoDiferido[0].Cantidad", "10", new { @class = "w100", @id = "CantidadDia" })
+        </div>
+        <div class="col-md-1">
+            <label>Tasa</label>
+        </div>
+        <div class="col-sm-3">
+            @Html.TextBox("DiasPagoDiferido[0].Tasa", "0", new { @class = "w100", @id = "Tasa" })
         </div>
     </div>
-}
-<div id="listaPago">
-    @Html.Partial("_ListaPago", Model)
+
+    <div class="row-botones-material row agregarTasa1" style="margin-top:10px;"></div>
+    <div class="row-botones-material row agregarTasa2" style="margin-top:10px;"></div>
+    <div class="row-botones-material row agregarTasa3" style="margin-top:10px;"></div>
+    <div class="row-botones-material row">
+        <div class="col-md-4"><label type="button" onclick="AgregarPagoDiferido()" style="cursor: pointer"  id="boton-search"><span><i class="fa fa-plus" aria-hidden="true"></i></span>&nbsp AGREGAR ELEMENTO</label></div>
+    </div>
+    <br />
+    <div class="row-botones-material row">
+
+        <div class="col-md-2">
+            <label>Vigencia Desde/Hasta</label>
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => m.DesdeVigencia, new { @class = "w100", @id = "DesdeVigenciaPago" })
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => m.HastaVigencia, new { @class = "w100", @id = "HastaVigenciaPago" })
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+        <div class="col-md-3 col-md-offset-9">
+            <button type="submit" class="k-button k-button-icontext float-right">Guardar</button>
+        </div>
+    </div>
 </div>
+    }
+    <div id="listaPago">
+        @Html.Partial("_ListaPago", Model)
+    </div>
+
+<style>
+    #boton-search {
+        padding: 4px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 17px;
+        background-color: white;
+        color: gray;
+        font-size: 12px;
+        border-style:;
+        border: lightgray 1px solid;
+    }
+
+        #boton-search:active {
+            background-color: gray;
+        }
+
+        #boton-search:active {
+            background-color: gray;
+            color: white
+        }
+</style>

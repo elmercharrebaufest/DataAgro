@@ -114,7 +114,7 @@ namespace WebDataAgro.Controllers
             var resultado = new Resultado();
             if (!string.IsNullOrEmpty(configuracion.DesdeVigencia) && !string.IsNullOrEmpty(configuracion.HastaVigencia))
             {
-                configuracion.ResultadoPago = configuracionManager.GrabarPagoDiferido(TransformarAEntidadPago(configuracion), GlobalVariables.IdActiveDirectory);
+                configuracion.ResultadoPago = configuracionManager.GrabarPagoDiferido(TransformarAEntidadPago(configuracion), GlobalVariables.IdActiveDirectory, configuracion.DiasPagoDiferido);
             }
             else
             {

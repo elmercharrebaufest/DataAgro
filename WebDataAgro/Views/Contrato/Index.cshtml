@@ -230,6 +230,10 @@
             <label>Dolarizado Express</label>
             @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", @id = "DolarizadoExpress" })
         </div>
+        <div class="col-md-2">
+            <label>Usuario Externo</label>
+            @Html.CheckBox("EsUsuarioExterno", false, new { @class = "filtroBoleano", @id = "EsUsuarioExterno" })
+        </div>
     </div>
     <div class="row">
         <div class="col-md-2">
@@ -246,6 +250,7 @@
                 <input id="FechaCiertaHasta" class="filtroFecha" name="FechaCierta-hasta" type="date" style="width: 100%" />
             </span>
         </div>
+       
     </div>
     <br />
     <br />

@@ -41,6 +41,7 @@
 <input type="hidden" id="comercialCreador" value="@ViewBag.ComercialId" />
 <input id="proveedorId" hidden />
 <input id="posicionCBOTId" hidden />
+
 <input id="tipoPosicionCBOTId" hidden />
 @Html.Hidden("crearContrato", Url.Action("CrearContrato", "CompraNet"))
 
@@ -139,6 +140,7 @@
             <div class="col-sm-4">
                 <input id="buscadorProveedor" class="k-textbox required-box required-box-parent" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
                 <div id="buscadorResult"></div>
+                <label id="mensaje" style="color:#ff5175; font-size: 12px"></label> 
             </div>
         </div>
     </div>

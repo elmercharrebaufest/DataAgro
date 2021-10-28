@@ -29,7 +29,8 @@ function InicializarCargaCupos() {
 
     $("#buscadorProveedor").kendoAutoComplete({
         template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
-            '<p class="#:data.Corredor# buscar-nomb" value="#:data.RazonSocial#" >#: data.RazonSocial#(#: data.Cuit#)</p>',
+            '<p class="#:data.Corredor# buscar-nomb #: data.Estado != "" ? \'k-state-disabled\': \'\' #"  style="color:#: data.Color#" value="#:data.RazonSocial#" >#: data.RazonSocial#(#: data.Cuit#)#if(data.Estado != null) {# ' +
+            ' #: data.Estado #    #}else{# #}# </p > ',
         minLength: 3,
         enforceMinLength: true,
         dataTextField: "Filtro",
@@ -43,7 +44,13 @@ function InicializarCargaCupos() {
             MostrarVisualizarStock();
         },
         select: function (e) {
-            $("#Proveedor").val(e.dataItem.Id);
+            if (e.dataItem.Deshabilitar) {
+                $("#buscadorProveedor").val("")
+                e.preventDefault();
+            } else {
+                $("#Proveedor").val(e.dataItem.Id);
+            }
+          
         },
         dataSource: {
             severFiltering: true,

@@ -29,7 +29,14 @@ function InicializarAutocompletar() {
         dataValueField: "Id",
         autoWidth: true,
         select: function (e) {
-            CargarCopiaContrato(e.dataItem.Id, "sap");
+            var datos = { id: e.dataItem.Id };
+            var puedeCopiar = MSExecuteOnServer('/CompraNet/ValidarCopiarContrato', datos);
+            if (puedeCopiar) {
+                CargarCopiaContrato(e.dataItem.Id, "sap");
+            } else {
+                MensErr("No posee permisos para copiar el contrato")
+            }
+          
         },
         dataSource: {
             serverFiltering: true,

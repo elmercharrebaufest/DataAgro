@@ -397,17 +397,17 @@ function armarBusquedaResult(value) {
         var html = "";
         for (var i = 0; i < result.length; i++) {
             var valor = "";
-
-            valor = result[i].RazonSocial + ' (' + result[i].Cuit + ')';
+            var colorEstado = result[i].Color;
+            valor = result[i].RazonSocial + ' (' + result[i].Cuit + ') ' + (result[i].Estado != null ? result[i].Estado : "");
 
             valor = valor.toUpperCase().split(txt).join("<strong>" + txt + "</strong>");
 
             var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
 
             html += '<a href=' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[i].Id) + '>'
-                + '<div class="buscar-result-linea">'
+                + '<div class="buscar-result-linea" >'
                 + '<img class="buscar-cont" src="..' + url + '" /> '
-                + '<p class="buscar-nomb">' + valor + '</p>'
+                + '<p class="buscar-nomb" style="color:' + colorEstado + '">' + valor + '</p>'
                 + '</div>'
                 + '</a>';
         }

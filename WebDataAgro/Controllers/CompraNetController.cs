@@ -1248,5 +1248,21 @@ namespace WebDataAgro.Controllers
             return Json(estado, JsonRequestBehavior.AllowGet);
         }
 
+
+        public ActionResult ValidarProveedorSISA(int proveedorId, int clasificacion, bool planCanje = false, bool consignatario = false)
+        {
+            var result = mobjContratoManager.ValidarProveedor(proveedorId, clasificacion, planCanje, consignatario);
+            return new JsonResult()
+            {
+                Data = result,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+        
+        public JsonResult ValidarCopiarContrato(int id)
+        {
+            var estado = mobjContratoManager.ValidarCopiarContrato(id);
+            return Json(estado, JsonRequestBehavior.AllowGet);
+        }
     }
 }
