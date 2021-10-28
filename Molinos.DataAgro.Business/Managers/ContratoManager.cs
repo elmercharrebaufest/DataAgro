@@ -793,19 +793,31 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (config != null)
                 {
-                    var fechaLimite = oParam.FechaDesde.AddDays(cantidadDias);
+                    var fechaLimite = oParam.FechaDesde.AddDays(30);
+                    if (oParam.DolarizadoExpress == true && oParam.FechaDolarizado.Value > fechaLimite.Date)
+                    {
+                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado express debe ser menor o igual que los 30 días");
+                    }
+
+                    fechaLimite = oParam.FechaDesde.AddDays(cantidadDias);
                     if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
                         oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
                     }
-                    else
-                    {
-                        fechaLimite = oParam.FechaDesde.AddDays(30);
-                        if (oParam.DolarizadoExpress == true && oParam.FechaDolarizado.Value > fechaLimite.Date)
-                        {
-                            oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado express debe ser menor o igual que los 30 días");
-                        }
-                    }
+
+                    //var fechaLimite = oParam.FechaDesde.AddDays(cantidadDias);
+                    //if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
+                    //{
+                    //    oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
+                    //}
+                    //else
+                    //{
+                    //    fechaLimite = oParam.FechaDesde.AddDays(30);
+                    //    if (oParam.DolarizadoExpress == true && oParam.FechaDolarizado.Value > fechaLimite.Date)
+                    //    {
+                    //        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado express debe ser menor o igual que los 30 días");
+                    //    }
+                    //}
                 }
             }
 
