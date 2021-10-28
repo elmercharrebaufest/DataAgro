@@ -1012,6 +1012,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public Resultado GrabarPagoDiferido(HabilitacionPagoDiferido oConfiguracion, string active, List<DiaDiferido> dias)
         {
+            dias = dias.Where(a => a.Tasa > 0 && a.Cantidad > 0).ToList();
             var oEntityErrors = ValidarPagoDiferido(oConfiguracion, dias);
             if (oEntityErrors.HayErrores)
             {

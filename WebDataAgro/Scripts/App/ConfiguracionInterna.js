@@ -535,7 +535,9 @@ function copiarPago(configuracion) {
     var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
     $("#DesdeVigenciaPago").val(stringDia + " " + "00:00");
     $("#HastaVigenciaPago").val(stringDia + " " + "23:59");
-
+    if (configuracion.Tasa > 0) {
+        $("#Tasa").data("kendoNumericTextBox").value(configuracion.Tasa);
+    }
 }
 
 //function Pausar() {  
@@ -616,9 +618,12 @@ function EliminarPagoDiferido(item) {
 }
 
 function LimpiarDiaDiferido() {
-    for (var i = 1; i <= fila; i++) {
-       $("#dia" + i).data("kendoNumericTextBox").value("0");
-       $("#tasa" + i).data("kendoNumericTextBox").value("0");     
+    var filas = fila;
+    for (var i = filas; i <= filas; i--) {   
+        if (i == 0) {
+            break;
+        }
+        EliminarPagoDiferido(i);
     }
 }
 
