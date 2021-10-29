@@ -711,6 +711,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += "En el presente mail, se detalla los cupos generados con Molinos Agro S.A.: <br /><br />  ";
 
+            if (cupo.MaterialId == 2)
+            {
+                htmlBody += "<b style=\"font-size: 18px;text-decoration: underline;background-color: yellow;\">Trigo libre de HB4</b>" + "<br />";
+
+            }
             foreach (var c in listaCupos)
             {
                 htmlBody += c + "<br />";
