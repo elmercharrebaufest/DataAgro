@@ -391,6 +391,11 @@ function InicializarCuposIndex() {
 
         height: 450,
     });
+
+    if ($("#gridCupo .k-grid-header-wrap").find("colgroup col").eq(4).width() < 100) {
+        $("#gridCupo .k-grid-header-wrap").find("colgroup col").eq(4).width(100);
+        $("#gridCupo .k-grid-content").find("colgroup col").eq(4).width(100);       
+    }
     //$("#gridCupo .k-grid-content").css({
     //    "overflow-y": "scroll"
     //});

@@ -256,7 +256,9 @@ function cuposCreados(error, lista) {
             $("#error-modal").html(makeUL(listaError));
             $("#error-modal").show();
         }
-
+        if ($("#MaterialId").val() == 2 && lista.length > 0) {
+            lista.unshift("Trigo libre de HB4");
+        }
         $("#cupos-generados-modal").html(lista.join("</br>"));
         $('#resultadoCupo').modal('toggle');
 
