@@ -2991,7 +2991,9 @@ function ClickEnPizarra() {
         $("#diasDiferidoId").prop("checked", false);
         $("#pesificadoId").prop("checked", false);
         $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
-        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+        if ($("#precioMonedaId").data("kendoDropDownList").value() == 0 || $("#precioMonedaId").data("kendoDropDownList").value() == "") {
+            $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+        }
         if ($("#tipoId").val() == 3) {
             $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
             $("#pagoDiferidoFijacionDiv").removeClass("hide-fijacion");

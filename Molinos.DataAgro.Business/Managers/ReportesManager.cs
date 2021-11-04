@@ -1479,7 +1479,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Pizarra = x.Pizarra
             },
             x => negocios.Contains(x.Id)
-                && (moneda == "" || x.MonedaId == moneda || (moneda == "USDM " && x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1))
+                && (moneda == "" || x.MonedaId == moneda || (moneda == "USDM " && x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) || (x.Pizarra == true && moneda == "ARP  "))
             );
 
             if (contratos != null)
@@ -1538,7 +1538,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Pizarra = x.Pizarra
             },
              x => negocios.Contains(x.Id)
-                && (moneda == "" || x.MonedaId == moneda)
+                && (moneda == "" || x.MonedaId == moneda || (x.Pizarra == true && moneda == "ARP  "))
             );
 
             foreach (var item in fijaciones.Where(a => a.TipoNegocio == "FIJACION VIRTUAL"))
