@@ -42,6 +42,8 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         
         private ZMPES5570 iM_MODIFICACIONField;
         
+        private ZMPES6620[] iM_SERVICIOSField;
+        
         private ZMPES5280 iM_TOPES_FIJField;
         
         /// <remarks/>
@@ -108,7 +110,20 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES6620[] IM_SERVICIOS {
+            get {
+                return this.iM_SERVICIOSField;
+            }
+            set {
+                this.iM_SERVICIOSField = value;
+                this.RaisePropertyChanged("IM_SERVICIOS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public ZMPES5280 IM_TOPES_FIJ {
             get {
                 return this.iM_TOPES_FIJField;
@@ -255,6 +270,122 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES6620 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string cODIGOField;
+        
+        private decimal pORC_DESDEField;
+        
+        private decimal pORC_HASTAField;
+        
+        private decimal vALORField;
+        
+        private string mONEDAField;
+        
+        private string fECHAACTField;
+        
+        private System.DateTime hORAACTField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string CODIGO {
+            get {
+                return this.cODIGOField;
+            }
+            set {
+                this.cODIGOField = value;
+                this.RaisePropertyChanged("CODIGO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public decimal PORC_DESDE {
+            get {
+                return this.pORC_DESDEField;
+            }
+            set {
+                this.pORC_DESDEField = value;
+                this.RaisePropertyChanged("PORC_DESDE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public decimal PORC_HASTA {
+            get {
+                return this.pORC_HASTAField;
+            }
+            set {
+                this.pORC_HASTAField = value;
+                this.RaisePropertyChanged("PORC_HASTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public decimal VALOR {
+            get {
+                return this.vALORField;
+            }
+            set {
+                this.vALORField = value;
+                this.RaisePropertyChanged("VALOR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string MONEDA {
+            get {
+                return this.mONEDAField;
+            }
+            set {
+                this.mONEDAField = value;
+                this.RaisePropertyChanged("MONEDA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string FECHAACT {
+            get {
+                return this.fECHAACTField;
+            }
+            set {
+                this.fECHAACTField = value;
+                this.RaisePropertyChanged("FECHAACT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=6)]
+        public System.DateTime HORAACT {
+            get {
+                return this.hORAACTField;
+            }
+            set {
+                this.hORAACTField = value;
+                this.RaisePropertyChanged("HORAACT");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class ZMPES5570 : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string cONTRATOField;
@@ -266,6 +397,8 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         private string aPERTURAField;
         
         private string tOPES_FIJField;
+        
+        private string sERVICIOSField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -324,6 +457,18 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
             set {
                 this.tOPES_FIJField = value;
                 this.RaisePropertyChanged("TOPES_FIJ");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string SERVICIOS {
+            get {
+                return this.sERVICIOSField;
+            }
+            set {
+                this.sERVICIOSField = value;
+                this.RaisePropertyChanged("SERVICIOS");
             }
         }
         
@@ -648,6 +793,36 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         private string tERCEROField;
         
         private string aNULA_Y_REEMPField;
+        
+        private string cONDICIONALField;
+        
+        private decimal pRECIO_CONDField;
+        
+        private string mONEDA_CONDField;
+        
+        private string fECHA_CONDField;
+        
+        private string cONTRATO_CONDField;
+        
+        private string bLOQUEOField;
+        
+        private string cODIGO_TCField;
+        
+        private string cOND_PAGOField;
+        
+        private string pORC_MULTAField;
+        
+        private decimal tIPO_CAMBIO_FIJOField;
+        
+        private string pOSICIONField;
+        
+        private decimal tOL_INFField;
+        
+        private decimal tOL_SUPField;
+        
+        private string pIZARRAField;
+        
+        private string mES_COND_MATField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -1609,6 +1784,186 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=80)]
+        public string CONDICIONAL {
+            get {
+                return this.cONDICIONALField;
+            }
+            set {
+                this.cONDICIONALField = value;
+                this.RaisePropertyChanged("CONDICIONAL");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=81)]
+        public decimal PRECIO_COND {
+            get {
+                return this.pRECIO_CONDField;
+            }
+            set {
+                this.pRECIO_CONDField = value;
+                this.RaisePropertyChanged("PRECIO_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=82)]
+        public string MONEDA_COND {
+            get {
+                return this.mONEDA_CONDField;
+            }
+            set {
+                this.mONEDA_CONDField = value;
+                this.RaisePropertyChanged("MONEDA_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=83)]
+        public string FECHA_COND {
+            get {
+                return this.fECHA_CONDField;
+            }
+            set {
+                this.fECHA_CONDField = value;
+                this.RaisePropertyChanged("FECHA_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=84)]
+        public string CONTRATO_COND {
+            get {
+                return this.cONTRATO_CONDField;
+            }
+            set {
+                this.cONTRATO_CONDField = value;
+                this.RaisePropertyChanged("CONTRATO_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=85)]
+        public string BLOQUEO {
+            get {
+                return this.bLOQUEOField;
+            }
+            set {
+                this.bLOQUEOField = value;
+                this.RaisePropertyChanged("BLOQUEO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=86)]
+        public string CODIGO_TC {
+            get {
+                return this.cODIGO_TCField;
+            }
+            set {
+                this.cODIGO_TCField = value;
+                this.RaisePropertyChanged("CODIGO_TC");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=87)]
+        public string COND_PAGO {
+            get {
+                return this.cOND_PAGOField;
+            }
+            set {
+                this.cOND_PAGOField = value;
+                this.RaisePropertyChanged("COND_PAGO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=88)]
+        public string PORC_MULTA {
+            get {
+                return this.pORC_MULTAField;
+            }
+            set {
+                this.pORC_MULTAField = value;
+                this.RaisePropertyChanged("PORC_MULTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=89)]
+        public decimal TIPO_CAMBIO_FIJO {
+            get {
+                return this.tIPO_CAMBIO_FIJOField;
+            }
+            set {
+                this.tIPO_CAMBIO_FIJOField = value;
+                this.RaisePropertyChanged("TIPO_CAMBIO_FIJO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=90)]
+        public string POSICION {
+            get {
+                return this.pOSICIONField;
+            }
+            set {
+                this.pOSICIONField = value;
+                this.RaisePropertyChanged("POSICION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=91)]
+        public decimal TOL_INF {
+            get {
+                return this.tOL_INFField;
+            }
+            set {
+                this.tOL_INFField = value;
+                this.RaisePropertyChanged("TOL_INF");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=92)]
+        public decimal TOL_SUP {
+            get {
+                return this.tOL_SUPField;
+            }
+            set {
+                this.tOL_SUPField = value;
+                this.RaisePropertyChanged("TOL_SUP");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=93)]
+        public string PIZARRA {
+            get {
+                return this.pIZARRAField;
+            }
+            set {
+                this.pIZARRAField = value;
+                this.RaisePropertyChanged("PIZARRA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=94)]
+        public string MES_COND_MAT {
+            get {
+                return this.mES_COND_MATField;
+            }
+            set {
+                this.mES_COND_MATField = value;
+                this.RaisePropertyChanged("MES_COND_MAT");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -1636,6 +1991,36 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         private string fIJ_CBOT_MATField;
         
         private string tERCEROField;
+        
+        private string cONDICIONALField;
+        
+        private decimal pRECIO_CONDField;
+        
+        private string mONEDA_CONDField;
+        
+        private string fECHA_CONDField;
+        
+        private string cONTRATO_CONDField;
+        
+        private string bLOQUEOField;
+        
+        private string cODIGO_TCField;
+        
+        private string cOND_PAGOField;
+        
+        private string pORC_MULTAField;
+        
+        private string pIZARRAField;
+        
+        private decimal tIPO_CAMBIO_FIJOField;
+        
+        private string pOSICIONField;
+        
+        private decimal tOL_INFField;
+        
+        private decimal tOL_SUPField;
+        
+        private string mES_COND_MATField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -1694,6 +2079,186 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
             set {
                 this.tERCEROField = value;
                 this.RaisePropertyChanged("TERCERO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string CONDICIONAL {
+            get {
+                return this.cONDICIONALField;
+            }
+            set {
+                this.cONDICIONALField = value;
+                this.RaisePropertyChanged("CONDICIONAL");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public decimal PRECIO_COND {
+            get {
+                return this.pRECIO_CONDField;
+            }
+            set {
+                this.pRECIO_CONDField = value;
+                this.RaisePropertyChanged("PRECIO_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        public string MONEDA_COND {
+            get {
+                return this.mONEDA_CONDField;
+            }
+            set {
+                this.mONEDA_CONDField = value;
+                this.RaisePropertyChanged("MONEDA_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        public string FECHA_COND {
+            get {
+                return this.fECHA_CONDField;
+            }
+            set {
+                this.fECHA_CONDField = value;
+                this.RaisePropertyChanged("FECHA_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        public string CONTRATO_COND {
+            get {
+                return this.cONTRATO_CONDField;
+            }
+            set {
+                this.cONTRATO_CONDField = value;
+                this.RaisePropertyChanged("CONTRATO_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public string BLOQUEO {
+            get {
+                return this.bLOQUEOField;
+            }
+            set {
+                this.bLOQUEOField = value;
+                this.RaisePropertyChanged("BLOQUEO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
+        public string CODIGO_TC {
+            get {
+                return this.cODIGO_TCField;
+            }
+            set {
+                this.cODIGO_TCField = value;
+                this.RaisePropertyChanged("CODIGO_TC");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=12)]
+        public string COND_PAGO {
+            get {
+                return this.cOND_PAGOField;
+            }
+            set {
+                this.cOND_PAGOField = value;
+                this.RaisePropertyChanged("COND_PAGO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=13)]
+        public string PORC_MULTA {
+            get {
+                return this.pORC_MULTAField;
+            }
+            set {
+                this.pORC_MULTAField = value;
+                this.RaisePropertyChanged("PORC_MULTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=14)]
+        public string PIZARRA {
+            get {
+                return this.pIZARRAField;
+            }
+            set {
+                this.pIZARRAField = value;
+                this.RaisePropertyChanged("PIZARRA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=15)]
+        public decimal TIPO_CAMBIO_FIJO {
+            get {
+                return this.tIPO_CAMBIO_FIJOField;
+            }
+            set {
+                this.tIPO_CAMBIO_FIJOField = value;
+                this.RaisePropertyChanged("TIPO_CAMBIO_FIJO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=16)]
+        public string POSICION {
+            get {
+                return this.pOSICIONField;
+            }
+            set {
+                this.pOSICIONField = value;
+                this.RaisePropertyChanged("POSICION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=17)]
+        public decimal TOL_INF {
+            get {
+                return this.tOL_INFField;
+            }
+            set {
+                this.tOL_INFField = value;
+                this.RaisePropertyChanged("TOL_INF");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=18)]
+        public decimal TOL_SUP {
+            get {
+                return this.tOL_SUPField;
+            }
+            set {
+                this.tOL_SUPField = value;
+                this.RaisePropertyChanged("TOL_SUP");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=19)]
+        public string MES_COND_MAT {
+            get {
+                return this.mES_COND_MATField;
+            }
+            set {
+                this.mES_COND_MATField = value;
+                this.RaisePropertyChanged("MES_COND_MAT");
             }
         }
         

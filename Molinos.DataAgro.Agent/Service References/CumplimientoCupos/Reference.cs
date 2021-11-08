@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Agent.CumplimientoCupos {
         
         private string fECHA_INGRESOField;
         
-        private System.DateTime hORA_INRGESOField;
+        private string hORA_INRGESOField;
         
         private string pROVEEDORField;
         
@@ -125,21 +125,25 @@ namespace Molinos.DataAgro.Agent.CumplimientoCupos {
         
         private string fECHA_TARAField;
         
-        private System.DateTime hORA_TARAField;
+        private string hORA_TARAField;
         
         private string fECHA_EGRESOField;
         
-        private System.DateTime hORA_EGRESOField;
+        private string hORA_EGRESOField;
         
         private string fECHA_ACTUALIZAField;
         
-        private System.DateTime hORA_ACTUALIZAField;
+        private string hORA_ACTUALIZAField;
         
         private string pROCESADOField;
         
         private string rECHAZADOField;
         
         private string cUMPLIMIENTOField;
+        
+        private string sECUENCIAField;
+        
+        private string cUIT_SOLICITANTEField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -178,8 +182,8 @@ namespace Molinos.DataAgro.Agent.CumplimientoCupos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=3)]
-        public System.DateTime HORA_INRGESO {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string HORA_INRGESO {
             get {
                 return this.hORA_INRGESOField;
             }
@@ -418,8 +422,8 @@ namespace Molinos.DataAgro.Agent.CumplimientoCupos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=23)]
-        public System.DateTime HORA_TARA {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=23)]
+        public string HORA_TARA {
             get {
                 return this.hORA_TARAField;
             }
@@ -442,8 +446,8 @@ namespace Molinos.DataAgro.Agent.CumplimientoCupos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=25)]
-        public System.DateTime HORA_EGRESO {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=25)]
+        public string HORA_EGRESO {
             get {
                 return this.hORA_EGRESOField;
             }
@@ -466,8 +470,8 @@ namespace Molinos.DataAgro.Agent.CumplimientoCupos {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=27)]
-        public System.DateTime HORA_ACTUALIZA {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=27)]
+        public string HORA_ACTUALIZA {
             get {
                 return this.hORA_ACTUALIZAField;
             }
@@ -510,6 +514,30 @@ namespace Molinos.DataAgro.Agent.CumplimientoCupos {
             set {
                 this.cUMPLIMIENTOField = value;
                 this.RaisePropertyChanged("CUMPLIMIENTO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=31)]
+        public string SECUENCIA {
+            get {
+                return this.sECUENCIAField;
+            }
+            set {
+                this.sECUENCIAField = value;
+                this.RaisePropertyChanged("SECUENCIA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=32)]
+        public string CUIT_SOLICITANTE {
+            get {
+                return this.cUIT_SOLICITANTEField;
+            }
+            set {
+                this.cUIT_SOLICITANTEField = value;
+                this.RaisePropertyChanged("CUIT_SOLICITANTE");
             }
         }
         

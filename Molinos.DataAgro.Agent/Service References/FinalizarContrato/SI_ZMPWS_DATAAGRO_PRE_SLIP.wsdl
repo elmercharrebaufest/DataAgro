@@ -12,6 +12,7 @@
             <xsd:element name="IM_CALIDAD" type="rfc:ZMPTT7820" />
             <xsd:element name="IM_CONTRATO" type="rfc:ZMPES5270" />
             <xsd:element name="IM_DESC_BONIF" type="rfc:ZMPTT7810" />
+            <xsd:element name="IM_SERVICIOS" type="rfc:ZMPTT9370" />
             <xsd:element name="IM_TIPO_NEGOCIO" type="rfc:string" />
             <xsd:element name="IM_TOPES_FIJ" type="rfc:ZMPES5280" />
           </xsd:sequence>
@@ -77,6 +78,11 @@
           <xsd:maxLength value="12" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="time">
+        <xsd:restriction base="xsd:time">
+          <xsd:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
@@ -101,15 +107,15 @@
           <xsd:maxLength value="18" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="char2">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="2" />
-        </xsd:restriction>
-      </xsd:simpleType>
       <xsd:simpleType name="date10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
           <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="numeric3">
@@ -140,9 +146,27 @@
           <xsd:maxLength value="4" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="decimal6.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="6" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char79">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="79" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal3.1">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="3" />
+          <xsd:fractionDigits value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal9.5">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="9" />
+          <xsd:fractionDigits value="5" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char120">
@@ -150,6 +174,22 @@
           <xsd:maxLength value="120" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:complexType name="ZMPES6620">
+        <xsd:sequence>
+          <xsd:element name="CODIGO" type="rfc:char3" />
+          <xsd:element name="PORC_DESDE" type="rfc:decimal6.2" />
+          <xsd:element name="PORC_HASTA" type="rfc:decimal6.2" />
+          <xsd:element name="VALOR" type="rfc:curr13.2" />
+          <xsd:element name="MONEDA" type="rfc:cuky5" />
+          <xsd:element name="FECHAACT" type="rfc:date10" />
+          <xsd:element name="HORAACT" type="rfc:time" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT9370">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6620" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:complexType name="ZMPTT7820">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5300" />
@@ -250,6 +290,21 @@
           <xsd:element name="FIJ_CBOT_MAT" type="rfc:char1" />
           <xsd:element name="TERCERO" type="rfc:char1" />
           <xsd:element name="ANULA_Y_REEMP" type="rfc:char10" />
+          <xsd:element name="CONDICIONAL" type="rfc:char1" />
+          <xsd:element name="PRECIO_COND" type="rfc:curr11.2" />
+          <xsd:element name="MONEDA_COND" type="rfc:cuky5" />
+          <xsd:element name="FECHA_COND" type="rfc:date10" />
+          <xsd:element name="CONTRATO_COND" type="rfc:char10" />
+          <xsd:element name="BLOQUEO" type="rfc:char1" />
+          <xsd:element name="CODIGO_TC" type="rfc:char2" />
+          <xsd:element name="COND_PAGO" type="rfc:char2" />
+          <xsd:element name="PORC_MULTA" type="rfc:numeric3" />
+          <xsd:element name="TIPO_CAMBIO_FIJO" type="rfc:decimal9.5" />
+          <xsd:element name="POSICION" type="rfc:char7" />
+          <xsd:element name="TOL_INF" type="rfc:decimal3.1" />
+          <xsd:element name="TOL_SUP" type="rfc:decimal3.1" />
+          <xsd:element name="PIZARRA" type="rfc:char4" />
+          <xsd:element name="MES_COND_MAT" type="rfc:char7" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

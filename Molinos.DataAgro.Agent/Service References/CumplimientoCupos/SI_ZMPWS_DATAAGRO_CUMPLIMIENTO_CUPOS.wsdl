@@ -31,6 +31,17 @@
           <xsd:maxLength value="1" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="numeric2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
+          <xsd:pattern value="\d*" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char8">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="8" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char6">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="6" />
@@ -51,14 +62,14 @@
           <xsd:maxLength value="35" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="time">
-        <xsd:restriction base="xsd:time">
-          <xsd:pattern value="[0-9]{2}:[0-9]{2}:[0-9]{2}" />
-        </xsd:restriction>
-      </xsd:simpleType>
       <xsd:simpleType name="char10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char11">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="11" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char16">
@@ -86,7 +97,7 @@
           <xsd:element name="NUMCARPOR" type="rfc:char12" />
           <xsd:element name="CODIGO" type="rfc:char18" />
           <xsd:element name="FECHA_INGRESO" type="rfc:date10" />
-          <xsd:element name="HORA_INRGESO" type="rfc:time" />
+          <xsd:element name="HORA_INRGESO" type="rfc:char8" />
           <xsd:element name="PROVEEDOR" type="rfc:char10" />
           <xsd:element name="DESCPROV" type="rfc:char35" />
           <xsd:element name="CUIT_PROVEEDOR" type="rfc:char16" />
@@ -106,14 +117,16 @@
           <xsd:element name="MATERIAL" type="rfc:char18" />
           <xsd:element name="FECHA_CUMPLI" type="rfc:date10" />
           <xsd:element name="FECHA_TARA" type="rfc:date10" />
-          <xsd:element name="HORA_TARA" type="rfc:time" />
+          <xsd:element name="HORA_TARA" type="rfc:char8" />
           <xsd:element name="FECHA_EGRESO" type="rfc:date10" />
-          <xsd:element name="HORA_EGRESO" type="rfc:time" />
+          <xsd:element name="HORA_EGRESO" type="rfc:char8" />
           <xsd:element name="FECHA_ACTUALIZA" type="rfc:date10" />
-          <xsd:element name="HORA_ACTUALIZA" type="rfc:time" />
+          <xsd:element name="HORA_ACTUALIZA" type="rfc:char8" />
           <xsd:element name="PROCESADO" type="rfc:char1" />
           <xsd:element name="RECHAZADO" type="rfc:char1" />
           <xsd:element name="CUMPLIMIENTO" type="rfc:char1" />
+          <xsd:element name="SECUENCIA" type="rfc:numeric2" />
+          <xsd:element name="CUIT_SOLICITANTE" type="rfc:char11" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

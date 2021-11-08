@@ -138,6 +138,10 @@ namespace Molinos.DataAgro.Agent.CartasDePortePendienteAplicar {
         
         private string fECHA_INGRESOField;
         
+        private string cTGField;
+        
+        private string cUIT_SOLICITANTEField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string PROVEEDOR {
@@ -243,6 +247,30 @@ namespace Molinos.DataAgro.Agent.CartasDePortePendienteAplicar {
             set {
                 this.fECHA_INGRESOField = value;
                 this.RaisePropertyChanged("FECHA_INGRESO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        public string CTG {
+            get {
+                return this.cTGField;
+            }
+            set {
+                this.cTGField = value;
+                this.RaisePropertyChanged("CTG");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public string CUIT_SOLICITANTE {
+            get {
+                return this.cUIT_SOLICITANTEField;
+            }
+            set {
+                this.cUIT_SOLICITANTEField = value;
+                this.RaisePropertyChanged("CUIT_SOLICITANTE");
             }
         }
         
