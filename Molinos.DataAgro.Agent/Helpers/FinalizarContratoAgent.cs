@@ -182,6 +182,9 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     string localidadString = RellenarEspaciosSAP(contrato.Localidad.CodLocalidad, 5);
                     decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
+
+                    var servicios = new List<ZMPES6620>();
+
                     logger.Debug("Cargando contrato");
                     var rq = new Z_MPRFC_PRE_SLIP()
                     {
@@ -288,7 +291,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" :
                         contrato.EsFason == true ? "FASON" : contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" :
                         contrato.Venta == true ? "VENTA" : contrato.TipoNegocio.Descripcion,
-                        IM_APERTURA = listaApertura.ToArray()
+                        IM_APERTURA = listaApertura.ToArray(),
+                        IM_SERVICIOS = servicios.ToArray()
                     };
                     logger.Debug(rq.ToXml());
 

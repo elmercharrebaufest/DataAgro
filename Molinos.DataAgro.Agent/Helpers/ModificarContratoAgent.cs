@@ -265,6 +265,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Localidad obtenida");
                 string localidadString = RellenarEspaciosSAP(localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
+
+                var servicios = new List<ZMPES6620>();
+
                 logger.Debug("Cargando contrato");
                 var conModificado =
                     contratoGuardado.BoletoId != contrato.BoletoId ||
@@ -481,6 +484,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq.IM_DESC_BONIF = listaDescuentos.ToArray();
                 rq.IM_CALIDAD = listaCalidades.ToArray();
                 rq.IM_APERTURA = listaApertura.ToArray();
+                rq.IM_SERVICIOS = servicios.ToArray();
 
                 logger.Debug(rq.ToXml());
 
