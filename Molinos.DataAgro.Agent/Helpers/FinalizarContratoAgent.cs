@@ -269,7 +269,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                             POSICION_CBOT = contrato.PosicionCBOT ?? "",
                             FIJ_CBOT_MAT = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "",
                             TERCERO = contrato.ProveedorCreadorId != null ? "X" : "",
-                            ANULA_Y_REEMP = contrato.AnulaYReemplazaContratoId == null ? "" : contrato.AnulaYReemplazaContrato.ContratoSAP
+                            ANULA_Y_REEMP = contrato.AnulaYReemplazaContratoId == null ? "" : contrato.AnulaYReemplazaContrato.ContratoSAP,
+
+                            CONDICIONAL = "",
+                            FECHA_COND = "",
+                            MES_COND_MAT = "",
+                            MONEDA_COND = "",
+                            PRECIO_COND = 0,
+                            CONTRATO_COND = "",
                         },
                         IM_TOPES_FIJ = new ZMPES5280
                         {
