@@ -4786,24 +4786,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(false, resultado.HayError);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
-
         
-
-        [Test]
-        public void TraerContratosReporteAFijarPaseTestOk()
-        {
-            var result = new DataSourceResult();
-            result.Data = new List<ReporteAfijarPaseDto> { new ReporteAfijarPaseDto { Negocio = "1", Cantidad = 10 } };
-            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerContratosReporteAFijarPase>())).Returns(result);
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, BasicoContrato>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
-               .Returns(new List<BasicoContrato>() { new BasicoContrato { ContratoSAP = "1", Cantidad = 1 } });
-
-            var resultado = target.TraerContratosReporteAFijarPase(It.IsAny<DataSourceRequest>(), It.IsAny<List<int>>());
-
-            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerContratosReporteAFijarPase>()), Times.Once);
-
-        }
-
         [Test]
         public void GrabarContratoErrorDolarizadoExpress()
         {
