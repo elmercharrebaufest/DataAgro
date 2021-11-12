@@ -96,9 +96,9 @@
                     <input type="hidden" id="AnulaYReemplazaContratoId" />
                 </div>
 
-                <label style="color:orange;"><b><i>Recuerde consultar con el área de Administración MP antes de utilizar la función Anula y Reemplaza</i></b></label>
+                <label class="mostrarConPase" hidden style="color:orange;"><b><i>Recuerde consultar con el área de Administración MP antes de utilizar la función Anula y Reemplaza</i></b></label>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6  mostrarConPase" hidden>
                 <div class="col-sm-2 noPadding">
                     <label>Motivo de reemplazo</label>
                 </div>
@@ -106,6 +106,15 @@
                     <textarea type="text" class="campo-input-text k-textbox" id="MotivoReemplazo" rows="3" maxlength="100" placeholder="Por favor aclare los cambios realizados y motivo, cantidad y precio."></textarea>
                     <img id="errMotivoReemplazo" src="~/Content/Images/error.png" style="display:none" />
                 </div>
+            </div>
+        </div>
+        <div class="row ampliar esconderTercero">
+            <div class="col-sm-2">
+                <label>Contrato Condicional</label>
+            </div>
+            <div class="col-md-4 col-sm-5">
+                <input type="text" class="k-textbox" style="width:100%" id="contratoCondicional" />
+                <input type="hidden" id="contratoCondicionalId" />
             </div>
         </div>
         <input type="hidden" id="estado" />
@@ -1187,6 +1196,12 @@
 <label style="display:none;">
     @*campos para poder completar el contrato a precio*@
     <input id="precioId" style="display:none !important;" value="0" />
+    <input id="condicionalId" style="display:none !important;" type="checkbox" />
+    <input id="condicionalPrecioId" style="display:none !important;"  />
+    <input id="condicionalMonedaId" style="display:none !important;"  />
+    <input id="condicionalCantidadId" style="display:none !important;"  />
+    <input id="condicionalFechaId" style="display:none !important;"  />
+    <input id="CondicionalPosicion" style="display:none !important;"  />
 
 </label>
 <style>

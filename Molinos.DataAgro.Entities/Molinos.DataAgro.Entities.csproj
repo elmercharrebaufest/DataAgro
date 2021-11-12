@@ -130,6 +130,7 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
+    <Compile Include="Dto\BoletoVentaDto.cs" />
     <Compile Include="Dto\CampoDetalleMoa.cs" />
     <Compile Include="Dto\DiaDiferido.cs" />
     <Compile Include="Dto\NegocioAsociadoDto.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\BoletoVenta.cs" />
     <Compile Include="Entities\BoletoCompraNetProvincia.cs" />
     <Compile Include="Entities\CierreDelDiaMailExternos.cs" />
     <Compile Include="Entities\CondicionDePagoVenta.cs" />

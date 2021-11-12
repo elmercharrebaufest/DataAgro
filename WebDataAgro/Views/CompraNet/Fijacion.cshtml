@@ -1168,6 +1168,11 @@
         #boton-search:active, .seleccionar:active {
             background-color: #cac8c8;
         }
+    @@media screen and (max-width: 600px) {
+        .ocultar-div {
+            display: none;
+        }
+    }
 </style>
 <!-- Modal Apertura Precio-->
 @Html.Partial("ModalAperturaPrecio")

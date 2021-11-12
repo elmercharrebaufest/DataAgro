@@ -246,3 +246,13 @@ IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'A partir 
 IF NOT EXISTS (select 1 from CondicionDePagoVenta where Descripcion = 'Anteriores al pago') BEGIN insert into CondicionDePagoVenta (Descripcion, CondicionPesificado) values ('Anteriores al pago', 1); END
 --Configuracion
 Update Configuracion set RedespachoMaximoARP = isnull(RedespachoMaximoARP, 1000), RedespachoMaximoUSDM = isnull(RedespachoMaximoUSDM, 60)
+
+--BoletoVenta
+
+--CondicionDePagoFijacionVenta
+IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Confirma') BEGIN insert into BoletoVenta (Descripcion) values ('Confirma'); END
+IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Físico') BEGIN insert into BoletoVenta (Descripcion) values ('Físico'); END
+IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Carta Oferta') BEGIN insert into BoletoVenta (Descripcion) values ('Carta Oferta'); END
+IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Confirmación de Negocio') BEGIN insert into BoletoVenta (Descripcion) values ('Confirmación de Negocio'); END
+IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'A Convenir') BEGIN insert into BoletoVenta (Descripcion) values ('A Convenir'); END
+

@@ -358,10 +358,12 @@ function HabilitarCamposApertura() {
     //$("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
     //$("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
     //$("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
-    $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
-    $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
-    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
-    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+    if ($("#material").val() != "4" && $("#material").val() != "5") {
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
+        $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+    }
 }
 function InicializarElementos() {
     kendo.culture("es-AR");
@@ -1126,6 +1128,19 @@ function InicializarElementos() {
             //    }
             //    InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             //}
+            if (($("#material").val() === "4" || $("#material").val() === "5")) {
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").value(0);
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+            } else {
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
+            }
             limpiarContrato();
         }
     });
@@ -2603,7 +2618,12 @@ function InicializarElementos() {
         $("#virtualId").prop("checked", true);
         OcultarCamposSiEsVirtual();
     }
-    $("#contratoId").data("kendoAutoComplete").enable(false);
+    if ($(window).width() <= 768) {
+        $("#contratoId").data("kendoAutoComplete").enable(true);
+    } else {
+        $("#contratoId").data("kendoAutoComplete").enable(false);
+    }
+
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -4916,9 +4936,9 @@ function RechazarCostoFinanciero() {
 
 function AbrirModalContratosPendientes() {
     limpiarContrato();
-    BlockUi('Consultando...'); 
-    setTimeout(function () { ArmarGrillaContratosPendientes(); }, 1000);    
-  
+    BlockUi('Consultando...');
+    setTimeout(function () { ArmarGrillaContratosPendientes(); }, 1000);
+
     setTimeout(function () { $.unblockUI() }, 1000);
 }
 
@@ -4959,8 +4979,8 @@ function ValidarProveedorSisa() {
 
 
 function ArmarGrillaContratosPendientes() {
-      
-   
+
+
     var grid = $("#grid").data("kendoGrid");
     var dataSource = new kendo.data.DataSource({
         data: []
@@ -4991,7 +5011,7 @@ function ArmarGrillaContratosPendientes() {
         fijacionId: Id,
         esVirtual: esVirtual
     });
-    consultarBonificacionAfijar(contratos);   
+    consultarBonificacionAfijar(contratos);
 
     var data = new kendo.data.DataSource({
         data: contratos
@@ -4999,7 +5019,7 @@ function ArmarGrillaContratosPendientes() {
     grid.setDataSource(data);
     setTimeout(function () { grid.setOptions({ height: 400 }) }, 200);
     $("#modalContratosPendientes").modal("show");
-    
+
 }
 function inicializarGrillaContratosPendientes() {
     $(document).ready(function () {
@@ -5058,9 +5078,9 @@ function inicializarGrillaContratosPendientes() {
                                 }
                             }
 
-                            return "<label  style='color: " + (dataItem.Color != null ? dataItem.Color : "") + "'>  " + dataItem.ContratoId + " <i data-toggle='tooltip' data-placement='top' title=' " + texto + "'  class='icono fa fa-exclamation-triangle' aria-hidden='true'  onmouseover='MostrarTooltip(this)'></label>"
+                            return "<label  style='font-weight: bold; color: " + (dataItem.Color != null ? dataItem.Color : "") + "'>  <strong>" + dataItem.ContratoId + "</strong> <i data-toggle='tooltip' data-placement='top' title=' " + texto + "'  class='icono fa fa-exclamation-triangle' aria-hidden='true'  onmouseover='MostrarTooltip(this)'></label>"
                         } else {
-                            return "<label  style='color: " + (dataItem.Color != null ? dataItem.Color : "") + "'> " + dataItem.ContratoId + "</label>"
+                            return "<label  style='font-weight: bold; color: " + (dataItem.Color != null ? dataItem.Color : "") + "'> <strong>" + dataItem.ContratoId + "</strong></label>"
 
                         }
                     }
@@ -5068,98 +5088,98 @@ function inicializarGrillaContratosPendientes() {
                 {
                     field: "Clasificacion", title: "Clasificacion", template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.Clasificacion + "</label>"
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + dataItem.Clasificacion + "</strong></label>"
                         } else {
-                            return dataItem.Clasificacion;
+                            return "<label  style='font-weight: bold;'> <strong>" + dataItem.Clasificacion + "</strong></label>"
                         }
                     }
                 },
                 {
                     field: "KilosContrato", title: "Kgs <br/> Contrato", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosContrato + "</label>"
+                            return "<label  style='font-weight: bold;color: " + dataItem.Color + "'> <strong>" + dataItem.KilosContrato + "</strong></label>"
                         } else {
-                            return dataItem.KilosContrato;
+                            return "<label  style='font-weight: bold;'> <strong>" + dataItem.KilosContrato + "</strong></label>"
                         }
                     }
                 },
                 {
                     field: "KilosAplicados", title: "Kgs <br/> Aplicados", template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosAplicados + "</label>"
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + dataItem.KilosAplicados + "</strong></label>"
                         } else {
-                            return dataItem.KilosAplicados;
+                            return "<label  style='font-weight: bold;'> <strong>" + dataItem.KilosAplicados + "</strong></label>"
                         }
                     }
                 },
                 {
                     field: "RecibidoSinFijar", title: "Kgs <br/> Aplicados<br> sin Fijar", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.RecibidoSinFijar + "</label>"
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + dataItem.RecibidoSinFijar + "</strong></label>"
                         } else {
-                            return dataItem.RecibidoSinFijar;
+                            return "<label  style='font-weight: bold;'> <strong>" + dataItem.RecibidoSinFijar + "</strong></label>"
                         }
                     }
                 },
                 {
                     field: "KilosPendiente", title: "Kgs <br/> Pendientes <br> a Fijar", attributes: { style: 'white-space: nowrap ' }, template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.KilosPendiente + "</label>"
+                            return "<label  style='color: " + dataItem.Color + "'> <strong>" + dataItem.KilosPendiente + "</strong></label>"
                         } else {
-                            return dataItem.KilosPendiente;
+                            return "<label> <strong>" + dataItem.KilosPendiente + "</strong></label>"
                         }
                     }
                 },
-                
+
                 {
                     field: "FechaDesde", title: "Fecha<br/> Desde", template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.FechaDesde + "</label>"
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + dataItem.FechaDesde + "</strong></label>"
                         } else {
-                            return dataItem.FechaDesde;
+                            return "<label  style='font-weight: bold;'> " + dataItem.FechaDesde + "</label>"
                         }
                     }
                 },
                 {
                     field: "FechaHasta", title: "Fecha<br/> Hasta", template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + dataItem.FechaHasta + "</label>"
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + dataItem.FechaHasta + "</strong></label>"
                         } else {
-                            return dataItem.FechaHasta;
+                            return "<label  style='font-weight: bold;'> <strong>" + dataItem.FechaHasta + "</strong></label>"
                         }
                     }
                 },
                 {
                     field: "PorcentajeSobrePrecio", title: "Porc. <br/> Sobre<br/> Precio", template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + (dataItem.PorcentajeSobrePrecio != 0 ? dataItem.PorcentajeSobrePrecio : "") + "</label>"
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + (dataItem.PorcentajeSobrePrecio != 0 ? dataItem.PorcentajeSobrePrecio : "") + "</strong></label>"
                         } else {
-                            return (dataItem.PorcentajeSobrePrecio != 0 ? dataItem.PorcentajeSobrePrecio : "")
+                            return "<label  style='font-weight: bold'> <strong>" + (dataItem.PorcentajeSobrePrecio != 0 ? dataItem.PorcentajeSobrePrecio : "") + "</strong></label>"
                         }
                     }
                 },
                 {
                     field: "CondicionFijacionDescripcion", title: "Condic. <br/> Fijacion", template: function (dataItem) {
                         if (dataItem.Color != "") {
-                            return "<label  style='color: " + dataItem.Color + "'> " + (dataItem.CondicionFijacionDescripcion != null ? dataItem.CondicionFijacionDescripcion : "") + "</label>"
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + (dataItem.CondicionFijacionDescripcion != null ? dataItem.CondicionFijacionDescripcion : "") + "</strong></label>"
                         } else {
-                            return (dataItem.CondicionFijacionDescripcion != null ? dataItem.CondicionFijacionDescripcion : "");
+                            return "<label  style='font-weight: bold'> <strong>" + (dataItem.CondicionFijacionDescripcion != null ? dataItem.CondicionFijacionDescripcion : "") + "</strong></label>"
                         }
                     }
-                },               
+                },
                 {
                     field: "CentroDescripcion", title: "Centro", template: function (dataItem) {
-                        return "<label  style='color: " + dataItem.Color + "'> " +
-                            dataItem.CentroDescripcion + "</label>"
+                        return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" +
+                            dataItem.CentroDescripcion + "</strong></label>"
                     }
                 },
                 {
                     field: "Pase", title: "Pase", template: function (dataItem) {
-                        return "<label  style='color: " + dataItem.Color + "'> " +
+                        return "<label  style=' font-weight: bold; color: " + dataItem.Color + "'> <strong>" +
                             (dataItem.Pase == true ? "Pase <br>" + dataItem.Posicion : "")
-                            + "</label>"
+                            + "</strong></label>"
                     }
-                }                
+                }
             ],
         }).data("kendoGrid");
     });

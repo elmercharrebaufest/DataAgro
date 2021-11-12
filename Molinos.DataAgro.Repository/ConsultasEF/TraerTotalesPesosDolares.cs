@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var precioPizarraPorMaterial = contexto.Set<PrecioPizarra>().GroupBy(x => x.MaterialId).Select(x => new { MaterialId = x.Key, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().MonedaId, x.OrderByDescending(y => y.FechaHasta).FirstOrDefault().Precio });
             var queryContratos =
                 from contrato in contexto.Set<Negocio>()
-                where (contrato.TipoNegocioId == 2 ||(contrato.TipoPosicionCBOTId == 3 && contrato.TipoNegocioId == 1)|| contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6)
+                where (contrato.TipoNegocioId == 2 || (contrato.TipoPosicionCBOTId == 3 && contrato.TipoNegocioId == 1) || contrato.TipoNegocioId == 3 || contrato.TipoNegocioId == 4 || contrato.TipoNegocioId == 5 || contrato.TipoNegocioId == 6)
                 && contrato.OcultarEnTablero == false
                 && (contrato.EstadoId == 2 || contrato.EstadoId == 4 || contrato.EstadoId == 5 || contrato.EstadoId == 10)
                 && contrato.Canje != true
@@ -80,12 +80,22 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     DestinoDescripcion = contrato.Destino.Descripcion,
                     ComercialId = contrato.ComercialId,
                     ComercialCreador = contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
-                    TotalDolares = contrato.Pizarra == true ? 
-                    (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "USDM " ?
-                    precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0) : (contrato.TipoPosicionCBOTId == 3 && contrato.TipoNegocioId == 1) ?
-                    ((double)(contrato.PrecioNetoPonderado ?? 0)) : (contrato.MonedaId == "USDM " ? 
-                    contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
-                    TotalPesos = contrato.Pizarra == true ? (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "ARP  " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0) : (contrato.MonedaId == "ARP  " ? contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
+                    TotalDolares = contrato.Pizarra == true ?
+                    (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "USDM " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0)
+                    : (contrato.TipoPosicionCBOTId == 3 && contrato.TipoNegocioId == 1) ?
+                        ((double)(contrato.PrecioNetoPonderado ?? 0))
+                        : (contrato.MonedaId == "USDM " ?
+                        (contrato is Contrato) && (contrato as Contrato).Condicional == true ?
+                        (contrato as Contrato).AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
+                         /*calculo con %*/((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + (((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * (double)(contrato as Contrato).AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
+                        /*calculo sin % */(double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
+                        :
+                        contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
+                    TotalPesos = contrato.Pizarra == true ?
+                        (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "ARP  " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0)
+                        : (contrato.MonedaId == "ARP  " ?
+                        (contrato is Contrato) && (contrato as Contrato).Condicional == true ? 1 :
+                        contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
                     TotalGirasolAlto = contrato.MaterialId == 5 ? contrato.Cantidad : 0,
                     TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad : 0,
                     TotalMaiz = contrato.MaterialId == 1 ? contrato.Cantidad : 0,
@@ -97,13 +107,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             GridHelper.ProcessFilters(request.Filter, ref queryContratos);
 
-         
+
             var result2 = from a in queryContratos
                           group a by 0 into g
                           select new
                           {
-                              TotalDolares = Math.Round(g.Sum(x => x.TotalDolares * x.Cantidad)/1000),
-                              TotalPesos = Math.Round(g.Sum(x => x.TotalPesos * x.Cantidad) /1000),
+                              TotalDolares = Math.Round(g.Sum(x => x.TotalDolares * x.Cantidad) / 1000),
+                              TotalPesos = Math.Round(g.Sum(x => x.TotalPesos * x.Cantidad) / 1000),
                               TotalSoja = g.Sum(x => Math.Round(x.TotalSoja / 1000)),
                               TotalMaiz = g.Sum(x => Math.Round(x.TotalMaiz / 1000)),
                               TotalTrigo = g.Sum(x => Math.Round(x.TotalTrigo / 1000)),

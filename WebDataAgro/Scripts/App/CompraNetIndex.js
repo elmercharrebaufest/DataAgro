@@ -429,7 +429,16 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Cesion + "'" + ',' +
         "'" + htmlEncode(dataItem.MotivoReemplazo == null ? "" : dataItem.MotivoReemplazo) + "'" + ',' +
         "'" + dataItem.AnulaYReemplazaContratoSAP + "'" + ',' +
-        "'" + dataItem.ObligatoriedadBonificacionDesc + "'" +
+        "'" + dataItem.ObligatoriedadBonificacionDesc + "'" + ',' +
+
+        "'" + dataItem.Condicional + "'" + ',' +
+        "'" + dataItem.CondicionalCantidad + "'" + ',' +
+        "'" + dataItem.CondicionalFechaFormateado + "'" + ',' +
+        "'" + dataItem.CondicionalMonedaId + "'" + ',' +
+        "'" + dataItem.CondicionalPosicion + "'" + ',' +
+        "'" + dataItem.CondicionalPrecio + "'" + ',' +
+        "'" + dataItem.CondicionalContratoSAP + "'" + ',' +
+        "'" + dataItem.MailVentaBoleto + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -859,7 +868,7 @@ function CreateGridInformeCompraNet() {
                 },
                 attributes: {
                     "class": classExterno,
-                    style: "font-size: 10px" 
+                    style: "font-size: 10px"
                 }
             },
             {
@@ -991,10 +1000,10 @@ function CreateGridInformeCompraNet() {
                 }
             },
             {
-                field: "GrupoCompraDescripcion", type: "string", width: 90, minResizableWidth: 90,filterable: {
+                field: "GrupoCompraDescripcion", type: "string", width: 90, minResizableWidth: 90, filterable: {
                     multi: true, dataSource: GrupoCompraDescripcionDatos
                 }
-                , title: "Zona", 
+                , title: "Zona",
                 headerAttributes: {
                     "class": classExterno
                 },
@@ -1271,13 +1280,13 @@ function CreateGridInformeCompraNet() {
         }
     });
 
-    if ($("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width() <100) {
+    if ($("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width() < 100) {
         $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width(100);
         $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(1).width(100);
         $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(2).width(100);
         $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(2).width(100);
     }
-    
+
     var checkInputs = function (elements) {
         elements.each(function () {
             var element = $(this);
@@ -1816,7 +1825,7 @@ function Confirmar(confirmarContratoFijacion) {
         result = MSExecuteOnServer('/CompraNet/ConfirmarFason', confirmarContratoFijacion);
     } else if ($("#tipoNegocioModalConTilde").val() === '2') {
         result = MSExecuteOnServer('/CompraNet/ConfirmarContrato', confirmarContratoFijacion);
-    } else if ($("#tipoNegocioModalConTilde").val() === '1') {    
+    } else if ($("#tipoNegocioModalConTilde").val() === '1') {
         var asociados = MSExecuteOnServer('/CompraNet/DevolverSiTieneAsociados', confirmarContratoFijacion);
         if ($("#posicion").val() != null && $("#posicion").val() == "PASE" && asociados == false) {
             confirmar = false;
@@ -2143,7 +2152,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, descripcionOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
     Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
-    Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond) {
+    Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional,
+    CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2550,12 +2560,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         });
         if (tipo === "A FIJAR") {
             $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
-        } 
-       
+        }
+
     }
-   if (tipo === "A FIJAR PASE") {
-       $("#visualizar_PosicionCBOT").text(PosicionCBOT);
-       $("#divPosicionCBOT").show();
+    if (tipo === "A FIJAR PASE") {
+        $("#visualizar_PosicionCBOT").text(PosicionCBOT);
+        $("#divPosicionCBOT").show();
     }
     if ((nivelTarifa == "" || nivelTarifa == "null") && tarifaFlete == "null") {
         $("#fleteDivVisualizar").hide();
@@ -2686,12 +2696,14 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#plantaDestinoDiv").hide();
     }
 
-    if (Venta == true) {
-        $("#ventaDiv").show();
-        $("#ventaId").text("Si");
-    } else {
-        $("#ventaDiv").hide();
-    }
+    if (Venta == 'true') {
+        if (mailVenta != null && mailVenta != "") {
+            $("#ventaBoletoDiv").show();
+            $("#mailVentaId").text("Si");
+        } else {
+            $("#ventaBoletoDiv").hide();
+        }
+    } 
     if (Cesion == "true") {
         $("#CesionDiv").show();
         $("#CesionId").text("Si");
@@ -2704,6 +2716,23 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#MotivoReemplazoId").text(MotivoReemplazo);
     } else {
         $("#AnulaYReemplazaDiv").hide();
+    }
+    if (Condicional == "true") {
+        $("#CondicionalDiv").show();
+        $("#AnulaYReemplazaId").text("Si");
+        $("#CondicionalPrecioId").text(kendo.toString(parseFloat(CondicionalPrecio), "n2") + " " + CondicionalMonedaId);
+        $("#CondicionalCantidadId").text(kendo.toString(parseFloat(CondicionalCantidad), "n0"));
+        $("#CondicionalFechaFormateadoId").text(CondicionalFechaFormateado);
+        $("#CondicionalPosicionId").text(CondicionalPosicion);
+        
+    } else {
+        $("#CondicionalDiv").hide();
+    }
+    if (CondicionalContratoSAP != "" && CondicionalContratoSAP != 'null') {
+        $("#visualizar_CondicionalDiv").show();
+        $("#visualizar_Condicional").text(CondicionalContratoSAP);
+    } else {
+        $("#visualizar_CondicionalDiv").hide();
     }
 }
 

@@ -73,6 +73,7 @@ function CreateGridCentro() {
             { field: "Localidad", title: "Localidad", filterable: false },
             { field: "Acopio", title: "Acopio", filterable: false, template: "# if(Acopio){#Si#}else{##}#" },
             { field: "ValidaRedespacho", title: "ValidaRedespacho", filterable: false, template: "# if(ValidaRedespacho){#Si#}else{##}#" },
+            { field: "Comision", title: "Comision", filterable: false, template: "# if(Comision){#Si#}else{##}#" },
         ],
 
         sortable: true,
@@ -209,6 +210,7 @@ function UpdateViewModel(model) {
         "Localidad": model.Centro.Localidad,
         "CodigoPostal": model.Centro.CodigoPostal,
         "Direccion": model.Centro.Direccion,
+        "Comision": model.Centro.Comision,
     };
 
     viewModel.set("Centro", centro);
@@ -354,6 +356,7 @@ function Grabar() {
         "LocalidadId": viewModel.get("Centro.LocalidadId"),
         "CodigoPostal": viewModel.get("Centro.CodigoPostal"),
         "Direccion": viewModel.get("Centro.Direccion"),
+        "Comision": viewModel.get("Centro.Comision"),
     };
 
     var result = MSExecuteOnServer('/Centro/Grabar', datos);

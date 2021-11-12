@@ -43,11 +43,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<PagoQry> Pago { get; set; }
         public List<CondicionPagoQry> CondicionPago { get; set; }
 
+        public List<BoletoVentaQry> BoletoVenta { get; set; }
 
-        
-      
-        
-        
+
+
+
         public DatosIniContrato()
         {
             moneda = new List<MonedaQry>();
@@ -79,7 +79,8 @@ namespace Molinos.DataAgro.Entities.Dto
             KgBalanza = new List<KgBalanzaQry>();
             Pago = new List<PagoQry>();
             CondicionPago = new List<CondicionPagoQry>();
-    }
+            BoletoVenta = new List<BoletoVentaQry>();
+        }
     }
 
     public class NuevoContrato

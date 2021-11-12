@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Interfaces
         ContratoResult TraerContratoMadre(string sap);
         GrabarContratoResult AnularContrato(Contrato oContrato, string idActiveDirectory);
         List<ContratoCopiar> TraerContratosPorSap(string nrocontratoSap);
+        List<ContratoCopiar> TraerContratosCondicionalPorSap(string nrocontratoSap);
         List<ContratoCopiar> TraerContratosAcuerdo(string filtro);
         BasicoContrato TraerContratoAcuerdoACopiar(int contratoId);
         List<AperturaPrecioDto> TraerAperturaDePrecioPorContrato(int contratoId);
@@ -94,5 +95,8 @@ namespace Molinos.DataAgro.Interfaces
         string ValidarProveedor(int cuitProveedor, int clasificacion, bool planCanje, bool consignatario);
 
         bool ValidarCopiarContrato(int id);
+
+        GrabarContratoResult GrabarContratoAPrecioTercero(Contrato oContrato);
+        GrabarContratoResult GrabarContratoAFijarTercero(Contrato oContrato);
     }
 }

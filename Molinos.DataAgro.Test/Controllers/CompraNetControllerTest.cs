@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IConfiguracionInternaManager> configuracionInternaMock;
         private Mock<IConfiguracionManager> configuracionMock;
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
-
+        private Mock<ICentroManager> centroManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -67,13 +67,14 @@ namespace Molinos.DataAgro.Test.Controllers
             configuracionInternaMock = new Mock<IConfiguracionInternaManager>();
             configuracionMock = new Mock<IConfiguracionManager>();
             tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
+            centroManagerMock = new Mock<ICentroManager>();
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new CompraNetController(homeManagerMock.Object, localidadManagerMock.Object, proveedorManagerMock.Object,
                 materialManagerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, compranetManagerMock.Object,
                 comercialManagerMock.Object, campanaManagerMock.Object, logger.Object, fasonManagerMock.Object, agenteManagerMock.Object,
                 acuerdoManagerMock.Object, configuracionInternaMock.Object, configuracionMock.Object, operadorManagerMock.Object,
-                negocioManagerMock.Object, tipoDeCambioAgentMock.Object);
+                negocioManagerMock.Object, tipoDeCambioAgentMock.Object, centroManagerMock.Object);
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
@@ -127,7 +128,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int?>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"localidad\":null,\"moneda\":[],\"tiponegocio\":[],\"material\":[],\"prov\":[],\"loc\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[],\"MotivoAnterior\":null,\"TipoPosicionCBOT\":null,\"Camara\":[],\"ComisionAFavor\":[],\"CondicionDePagoFijacionVenta\":[],\"CondicionDePagoPesificadoVenta\":[],\"FleteACargo\":[],\"KgBalanza\":[],\"Pago\":[],\"CondicionPago\":[]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"localidad\":null,\"moneda\":[],\"tiponegocio\":[],\"material\":[],\"prov\":[],\"loc\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[],\"MotivoAnterior\":null,\"TipoPosicionCBOT\":null,\"Camara\":[],\"ComisionAFavor\":[],\"CondicionDePagoFijacionVenta\":[],\"CondicionDePagoPesificadoVenta\":[],\"FleteACargo\":[],\"KgBalanza\":[],\"Pago\":[],\"CondicionPago\":[],\"BoletoVenta\":[]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1336,6 +1337,111 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"FijacionDePrecioContratoId\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
+        }
+
+        [Test]
+        public void DevolverKilosPendientesAnularFijacionCanjeTest()
+        {
+            fijacionManagerMock.Setup(x => x.DevolverKilosPendientesAnularFijacionCanje(It.IsAny<int>()))
+                .Returns(new ResultadoDevolverKilosPendientesAnularFijacionCanjeDto());
+            var result = target.DevolverKilosPendientesAnularFijacionCanje(It.IsAny<int>());
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.DevolverKilosPendientesAnularFijacionCanje(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"KilosPendientes\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void ValidacionesAnulaYReemplazaTest()
+        {
+
+            contratoManagerMock.Setup(x => x.ValidacionesAnulaYReemplaza(It.IsAny<string>())).Returns(new Resultado());
+            var result = target.ValidacionesAnulaYReemplaza("") as JsonResult;
+            contratoManagerMock.Verify(x => x.ValidacionesAnulaYReemplaza(It.IsAny<string>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void DevolverContratosParaAsociarTest()
+        {
+
+            contratoManagerMock.Setup(x => x.DevolverContratosParaAsociar(It.IsAny<int>(), It.IsAny<string>())).Returns(new List<NegocioAsociadoDto>());
+            var result = target.DevolverContratosParaAsociar(1,"") as JsonResult;
+            contratoManagerMock.Verify(x => x.DevolverContratosParaAsociar(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void DevolverContratoAsociadosPaseTest()
+        {
+
+            contratoManagerMock.Setup(x => x.DevolverContratoAsociadosPase(It.IsAny<int>())).Returns(new List<NegocioAsociadoDto>());
+            var result = target.DevolverContratoAsociadosPase(1) as JsonResult;
+            contratoManagerMock.Verify(x => x.DevolverContratoAsociadosPase(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void ActualizarNegociosAsociadosTest()
+        {
+
+            contratoManagerMock.Setup(x => x.GrabarNegociosAsociados(It.IsAny<List<NegocioAsociadoDto>>(), It.IsAny<int>(), It.IsAny<decimal>())).Returns(new Resultado());
+            var result = target.ActualizarNegociosAsociados(null, 1, 1) as JsonResult;
+            contratoManagerMock.Verify(x => x.GrabarNegociosAsociados(It.IsAny<List<NegocioAsociadoDto>>(), It.IsAny<int>(), It.IsAny<decimal>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void EsUnContratoAsociadoTest()
+        {
+
+            contratoManagerMock.Setup(x => x.EsUnContratoAsociado(It.IsAny<int>())).Returns(true);
+            var result = target.EsUnContratoAsociado(1) as JsonResult;
+            contratoManagerMock.Verify(x => x.EsUnContratoAsociado(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void ValidarProveedorSISATest()
+        {
+
+            contratoManagerMock.Setup(x => x.ValidarProveedor(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns("");
+            var result = target.ValidarProveedorSISA(1, 1) as JsonResult;
+            contratoManagerMock.Verify(x => x.ValidarProveedor(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void EstaConfirmadoEnSAPTest()
+        {
+
+            contratoManagerMock.Setup(x => x.EstaConfirmadoEnSAP(It.IsAny<string>(), It.IsAny<int>())).Returns(false);
+            var result = target.EstaConfirmadoEnSAP("", 1) as JsonResult;
+            contratoManagerMock.Verify(x => x.EstaConfirmadoEnSAP(It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void ValidarCopiarContratoTest()
+        {
+
+            contratoManagerMock.Setup(x => x.ValidarCopiarContrato(It.IsAny<int>())).Returns(false);
+            var result = target.ValidarCopiarContrato(1) as JsonResult;
+            contratoManagerMock.Verify(x => x.ValidarCopiarContrato( It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public void ValidarComisionEnCentroTest()
+        {
+
+            centroManagerMock.Setup(x => x.TraerCentro(It.IsAny<int>())).Returns(new CentroDto());
+            var result = target.ValidarComisionEnCentro(1) as JsonResult;
+            centroManagerMock.Verify(x => x.TraerCentro(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
         }
     }
 }

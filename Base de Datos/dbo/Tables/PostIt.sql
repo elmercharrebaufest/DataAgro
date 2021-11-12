@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[PostIt] (
-    [ComercialId] INT  IDENTITY (1, 1) NOT NULL,
+    [Id] INT  IDENTITY (1, 1) NOT NULL,
+	[ComercialId] INT  NOT NULL,
     [Texto]       NVARCHAR (255) NULL,
-    CONSTRAINT [PK_PostIt] PRIMARY KEY CLUSTERED ([ComercialId] ASC)
+    CONSTRAINT [PK_PostIt] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 

@@ -35,6 +35,9 @@ namespace WebDataAgro.Models
         public int CantidadDiasPesificadoLimite { get; set; }
         public int RedespachoMaximoUSDM { get; set; }
         public int RedespachoMaximoARP { get; set; }
+        public int ToleranciaPaseMax { get; set; }
+        public int ToleranciaPaseMin { get; set; }
+        
 
     }
 }

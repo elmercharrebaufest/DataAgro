@@ -36,7 +36,7 @@ function InicializarAutocompletar() {
             } else {
                 MensErr("No posee permisos para copiar el contrato")
             }
-          
+
         },
         dataSource: {
             serverFiltering: true,
@@ -82,93 +82,163 @@ function InicializarAutocompletar() {
         $("#boletoCartaId").prop("checked", false);
         $("#boletoConfirmaId").attr("disabled", false);
         $("#boletoFisicoId").attr("disabled", false);
-        $("#boletoCartaId").attr("disabled", false);    
+        $("#boletoCartaId").attr("disabled", false);
+        $(".mostrarConPase").hide();
     });
 
-$("#contratoAReemplazarId").kendoAutoComplete({
-    template: function (data) {
-        if ($(window).width() > 768) {
-            return '<p class="buscar-nomb">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
-        } else {
-            return '<p class="buscar-nomb letra650">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + '</p>';
-        }
-    },
-    minLength: 3,
-    enforceMinLength: true,
-    dataTextField: "ContratoSap",
-    dataValueField: "Id",
-    autoWidth: true,
-    select: function (e) {
-        CargarCopiaContrato(e.dataItem.Id, "anulayreemplaza");
-    },
-    dataSource: {
-        serverFiltering: true,
-        serverPaging: true,
-        transport: {
-            read: {
-                type: 'post',
-                dataType: 'json',
-                url: "/CompraNet/ObtenerContratosParaCopiar"
-            },
-            parameterMap: function (data, type) {
-                var valor = $("#contratoAReemplazarId").val();
-                return { filtro: valor };
+    $("#contratoAReemplazarId").kendoAutoComplete({
+        template: function (data) {
+            if ($(window).width() > 768) {
+                return '<p class="buscar-nomb">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
+            } else {
+                return '<p class="buscar-nomb letra650">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + '</p>';
+            }
+        },
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "ContratoSap",
+        dataValueField: "Id",
+        autoWidth: true,
+        select: function (e) {
+            CargarCopiaContrato(e.dataItem.Id, "anulayreemplaza");
+            $(".mostrarConPase").show();
+        },
+        dataSource: {
+            serverFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/CompraNet/ObtenerContratosParaCopiar"
+                },
+                parameterMap: function (data, type) {
+                    var valor = $("#contratoAReemplazarId").val();
+                    return { filtro: valor };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
             }
         }
-    },
-    filtering: function (e) {
-        if (!e.filter.value) {
-            e.preventDefault();
-        }
-    }
-});
+    });
 
 
-$("#contratoAcuerdoId").click(function () {
-    $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
-    $("#contratoAcuerdoId").data("kendoAutoComplete").trigger("change");
-});
+    $("#contratoAcuerdoId").click(function () {
+        $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
+        $("#contratoAcuerdoId").data("kendoAutoComplete").trigger("change");
+    });
 
-$("#contratoAcuerdoId").kendoAutoComplete({
-    template: function (data) {
-        if ($(window).width() > 768) {
-            return '<p class="buscar-nomb">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
-        } else {
-            return '<p class="buscar-nomb letra650">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>'
-        }
-    },
-    minLength: 1,
-    enforceMinLength: true,
-    dataTextField: "Id",
-    dataValueField: "Id",
-    autoWidth: true,
-    change: function () {
+    $("#contratoAcuerdoId").kendoAutoComplete({
+        template: function (data) {
+            if ($(window).width() > 768) {
+                return '<p class="buscar-nomb">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
+            } else {
+                return '<p class="buscar-nomb letra650">' + data.Id + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>'
+            }
+        },
+        minLength: 1,
+        enforceMinLength: true,
+        dataTextField: "Id",
+        dataValueField: "Id",
+        autoWidth: true,
+        change: function () {
 
-    },
-    select: function (e) {
-        CargarCopiaContrato(e.dataItem.Id, "acuerdo");
-    },
-    dataSource: {
-        serverFiltering: true,
-        serverPaging: true,
-        transport: {
-            read: {
-                type: 'post',
-                dataType: 'json',
-                url: "/CompraNet/ObtenerContratosAcuerdo"
-            },
-            parameterMap: function (data, type) {
-                var valor = $("#contratoAcuerdoId").val();
-                return { filtro: valor };
+        },
+        select: function (e) {
+            CargarCopiaContrato(e.dataItem.Id, "acuerdo");
+        },
+        dataSource: {
+            serverFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/CompraNet/ObtenerContratosAcuerdo"
+                },
+                parameterMap: function (data, type) {
+                    var valor = $("#contratoAcuerdoId").val();
+                    return { filtro: valor };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
             }
         }
-    },
-    filtering: function (e) {
-        if (!e.filter.value) {
-            e.preventDefault();
+    });
+
+    $("#contratoCondicional").click(function () {
+        $("#contratoCondicionalId").val("");
+        $("#contratoCondicional").data("kendoAutoComplete").value("");
+        $("#contratoCondicional").data("kendoAutoComplete").trigger("change");
+        $("#condicionalId").removeProp("disabled");
+        $("#condicionalId").prop("checked", false);
+        $("#aperturaPrecioConceptoBonificaciones").hide();
+        $("#condicionalDiv").hide();
+        $("#condicionalPrecioId").val("");
+        $("#condicionalMonedaId").val("");
+        $("#condicionalCantidadId").val("");
+        $("#condicionalFechaId").val("");
+        $("#condicionalPosicionId").val("");
+        if ($("#tipoId").val() == 2) {
+            $("#condicionalPrecioId").data("kendoNumericTextBox").value("");
+            $("#condicionalCantidadId").data("kendoNumericTextBox").value("");
+            var total = CalcularPrecioTotalApertura();
+            $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").value(0);
+            $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
+            $("#precioId").data("kendoNumericTextBox").enable(true);
+            $("#precioMonedaId").data("kendoDropDownList").enable(true);
         }
-    }
-});
+        $("#buscadorProveedor").prop('disabled', false);
+        $("#buscadorCorredor").prop('disabled', false);
+        $('#material').data("kendoDropDownList").enable(true);
+        $("#cantidadId").data("kendoNumericTextBox").enable(true);
+
+    });
+
+    $("#contratoCondicional").kendoAutoComplete({
+        template: function (data) {
+            if ($(window).width() > 768) {
+                return '<p class="buscar-nomb">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + ' - ' + data.Cantidad + ' Kg. </p>';
+            } else {
+                return '<p class="buscar-nomb letra650">' + data.ContratoSap + ' - ' + data.Material + ' - ' + data.RazonSocial + ' - ' + data.Fecha + '</p>';
+            }
+        },
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "ContratoSap",
+        dataValueField: "Id",
+        autoWidth: true,
+        select: function (e) {
+            CargarCopiaContrato(e.dataItem.Id, "contratoCondicional");
+        },
+        dataSource: {
+            serverFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/CompraNet/ObtenerContratosCondicional"
+                },
+                parameterMap: function (data, type) {
+                    var valor = $("#contratoCondicional").val();
+                    return { filtro: valor };
+                }
+            }
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
+
 }
 
 function CargarCopiaContrato(contratoId, tipo) {
@@ -194,6 +264,7 @@ function CargarCopiaContrato(contratoId, tipo) {
             contratoCopia.DescripcionOperacionAnterior = null;
             contratoCopia.FechaOperacionFormateado = formatearFecha(new Date());
         }
+
         if (tipo == "anulayreemplaza") {
             var datosStatus = { id: contratoId };
             var validaciones = MSExecuteOnServer('/CompraNet/ValidacionesAnulaYReemplaza', { contratoSap: contratoCopia.ContratoSAP }, function () { $.unblockUI(); });
@@ -230,6 +301,31 @@ function CargarCopiaContrato(contratoId, tipo) {
             }
         }
 
+        if (tipo == "contratoCondicional") {
+            contratoCopia.TipoNegocioId = $("#tipoId").val();
+            contratoCopia.MotivoOperacionAnterior = null;
+            contratoCopia.DescripcionOperacionAnterior = null;
+            contratoCopia.FechaOperacionFormateado = formatearFecha(new Date());
+            contratoCopia.FechaOperacion = "/Date(" + new Date().getTime() + ")/";
+            contratoCopia.Cantidad = contratoCopia.CondicionalCantidad;
+            if (contratoCopia.TipoNegocioId == 1) {
+                contratoCopia.MonedaId = null;
+                contratoCopia.Precio = 0;
+                contratoCopia.PrecioNeto = null;
+            }
+            if (contratoCopia.TipoNegocioId == 2) {
+                contratoCopia.MonedaId = contratoCopia.CondicionalMonedaId;
+                contratoCopia.Precio = contratoCopia.CondicionalPrecio;
+                contratoCopia.PrecioNeto = null;
+            }
+            objIndex = contratoCopia.AperturaPrecios.findIndex((obj => obj.ConceptoAperturaPrecioId == 4));
+            contratoCopia.AperturaPrecios[objIndex].Importe = 0;
+            contratoCopia.AperturaPrecios[objIndex].Porcentaje = 0;
+            $("#condicionalId").prop("disabled", "disabled");
+            contratoCopia.Condicional = false;
+            contratoCopia.CondicionalContratoId = contratoCopia.Id;
+            contratoCopia.CondicionalContratoSAP = contratoCopia.ContratoSAP;
+        }
         modificarContrato(contratoCopia);
         CargarDatosEditar(contratoCopia);
         if (contratoCopia.Venta == true) {
@@ -804,8 +900,20 @@ function ObtenerDatos(error) {
     obj.Pago = $("#PagoListado").val();
     obj.CondicionDePagoDiaFijacion = $("#cantidadDiaCondicion").val();
     obj.CondicionDePagoTipoFijacion = $("#CondicionPagoListado").val();
+    obj.BoletoVentaId = $("#BoletoVenta").val();
+    obj.MailVentaBoleto = $("#mailVenta").val(); 
     obj.CondicionDePagoFijacionVentaId = $("#CondicionDePagoFijacionVentaListado").val();
 
+    if (obj.TipoNegocioId == 2) {
+        obj.Condicional = $("#condicionalId").is(":checked");
+        obj.CondicionalPrecio = $("#condicionalPrecioId").val();
+        obj.CondicionalMonedaId = $("#condicionalMonedaId").val();
+        obj.CondicionalCantidad = $("#condicionalCantidadId").val();
+        obj.CondicionalFecha = $("#condicionalFechaId").val();
+        obj.CondicionalPosicion = $("#condicionalPosicionId").val();
+    }
+    obj.CondicionalContratoId = $("#contratoCondicionalId").val();
+    obj.CondicionalContratoSAP = $("#contratoCondicional").val();
 
     if ($("#ventaId").is(":checked") == true) {
         obj.Venta = true;

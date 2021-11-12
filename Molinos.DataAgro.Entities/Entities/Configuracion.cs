@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int CantidadDiasPesificadoLimite { get; set; }
         public int RedespachoMaximoUSDM { get; set; }
         public int RedespachoMaximoARP { get; set; }
-
-
+        public int ToleranciaPaseMin { get; set; }
+        public int ToleranciaPaseMax { get; set; }
     }
 }

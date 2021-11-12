@@ -378,7 +378,7 @@ function guardarPost() {
 
     obj.Texto = $("#texto-postit").val();
 
-    var result = MSExecuteOnServer('/Home/GuardarPostItAsync', obj);
+    var result = MSExecuteOnServer('/Home/GuardarPostIt', obj);
 
     if (result) {
         $("#modalPostit").modal('hide');

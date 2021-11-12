@@ -268,7 +268,7 @@ function CreateGridInformeCompraNet() {
                 ]
             },
             { field: "NoInformaSIO", title: "No informa SIO", width: 80, headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.NoInformaSIO ? "Si" : "No"; } },
-            { field: "TrigoEspecial", title: "Trigo<br>Especial", width: 60, headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.TrigoEspecial ? "Si" : "No"; } },
+            { field: "TrigoEspecial", title: "Trigo<br> Especial", width: 60, headerAttributes: { style: "white-space: normal" }, template: function (dataItem) { return dataItem.TrigoEspecial ? "Si" : "No"; } },
             {
                 field: "Estado_Contrato", title: "Estado", width: 90, sortable: false
             },
@@ -296,12 +296,19 @@ function CreateGridInformeCompraNet() {
             { field: "PosicionCBOT", type: "string", title: "Posicion", width: 80 },
             { field: "TipoPosicionCBOT", type: "string", title: "Tipo Posicion", width: 80 },
             { field: "UsuarioTercero", type: "string", title: "Usuario <br>Tercero", width: 150 },
-            { field: "AnulaYReemplazaContratoSAP", type: "string", title: "Anula y<br>reemplaza", width: 180 },
+            { field: "AnulaYReemplazaContratoSAP", type: "string", title: "Anula y <br>reemplaza", width: 180 },
             { field: "MotivoReemplazo", type: "string", title: "Motivo", width: 180 },
             { field: "Cesion", type: "string", title: "Cesion", template: function (dataItem) { return dataItem.Cesion ? "Si" : "No"; }, width: 80 },
             { field: "ObligatoriedadBonificacionDesc", title: "Obligatoriedad<br> bonificacion", width: 80},
             { field: "PrecioPonderado", title: "Precio<br> Ponderado", type: "number", format: "{0:n2}", width: 100 },
-            { field: "Condicional", title: "Importe<br> Condicional", type: "number", format: "{0:n2}", width: 80 },
+
+            { field: "Condicional", title: "Condicional", type: "string", template: function (dataItem) { return dataItem.Condicional ? "Si" : "No"; }, width: 80 },
+            { field: "CondicionalPrecio", title: "Precio<br> Strike", type: "number", format: "{0:n2}", width: 80 },
+            { field: "CondicionalMonedaId", title: "Moneda", width: 80 },
+            { field: "CondicionalCantidad", title: "Cantidad", type: "number", format: "{0:n0}", width: 80 },
+            { field: "CondicionalFechaFormateado", title: "Fecha", type: "date", format: _DefaultDateTemplate, width: 80 },
+            { field: "CondicionalPosicion", title: "Posicion", type: "string", width: 80 },
+            { field: "CondicionalContratoSAP", title: "Condicional<br> Contrato", type: "string", width: 80 },
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
@@ -321,6 +328,7 @@ function CreateGridInformeCompraNet() {
             var templateSIO = kendo.template(this.columns[39].template);
             var templateTrigoEsp = kendo.template(this.columns[40].template);
             var templateCesion = kendo.template(this.columns[59].template);
+            var templateCondicional = kendo.template(this.columns[62].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
@@ -336,6 +344,7 @@ function CreateGridInformeCompraNet() {
                     NoInformaSIO: row.cells[48].value,
                     TrigoEspecial: row.cells[49].value,
                     Cesion: row.cells[68].value,
+                    Condicional: row.cells[71].value,
                 };
 
                 var operacionFecha = row.cells[5].value;
@@ -370,6 +379,7 @@ function CreateGridInformeCompraNet() {
                 row.cells[48].value = templateSIO(dataItem);
                 row.cells[49].value = templateTrigoEsp(dataItem);
                 row.cells[68].value = templateCesion(dataItem);
+                row.cells[71].value = templateCondicional(dataItem);
 
             }
         },

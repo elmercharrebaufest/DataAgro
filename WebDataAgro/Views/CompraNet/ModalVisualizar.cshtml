@@ -418,6 +418,10 @@
                             <strong>Venta</strong>
                             <span id="ventaId"></span>
                         </div>
+                        <div id="ventaBoletoDiv" hidden class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong>Boleto Venta - A convenir: </strong>
+                            <span id="mailVentaId"></span>
+                        </div>
                     </div>
                     <div class="row marginCero">
                         <div id="CesionDiv" hidden class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
@@ -443,8 +447,35 @@
                             <span id="MotivoReemplazoId"></span>
                         </div>
                     </div>
+                    <div id="CondicionalDiv" class="bordeSeccionVisualizar">
 
-
+                        <div class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales noFason noAgente aperturaPrecio">
+                            <strong style="float:left">Condicional: </strong>
+                            <span></span>
+                        </div>
+                        <div class="row marginCero clearfix noFason noAgente">
+                            <div class="dobleColumna col-sm-6 col-xs-12 noPadding clearfix ">
+                                <strong style="float:left">Precio Strike:</strong>
+                                <span id="CondicionalPrecioId"></span>
+                            </div>
+                            <div class="dobleColumna col-sm-6 col-xs-12 noPadding clearfix">
+                                <strong style="float:left">Cantidad:</strong>
+                                <span id="CondicionalCantidadId"></span>
+                            </div>
+                            <div class="dobleColumna col-sm-6 col-xs-12 noPadding clearfix">
+                                <strong style="float:left">Fecha:</strong>
+                                <span id="CondicionalFechaFormateadoId"></span>
+                            </div>
+                            <div class="dobleColumna col-sm-6 col-xs-12 noPadding clearfix ">
+                                <strong style="float:left">Mes Precio MAT:</strong>
+                                <span id="CondicionalPosicionId"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="visualizar_CondicionalDiv" class="row marginCero clearfix campo col-xs-12 noPadding campoAdicionales noFason noAgente aperturaPrecio bordeSeccionVisualizar">
+                        <strong style="float:left">Condicional: </strong>
+                        <span id="visualizar_Condicional"></span>
+                    </div>
                 </div>
             </div>
 

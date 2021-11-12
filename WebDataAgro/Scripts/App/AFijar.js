@@ -323,6 +323,12 @@ function InicializarElementos() {
                 //    $("#dolarizadoExpressDiv").hide();
 
                 //}
+                if (ValidarComisionEnCentro()) {
+                    CargarAutomaticamenteLaComision(compraNet);
+                } else {
+                    BorrarComisionSiEsAcopio();
+                }
+
                 //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 //InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
@@ -1038,6 +1044,116 @@ function InicializarElementos() {
             $("#contratoId").val("");
             $(".datoscontrato").hide();
             $("#datosContrato").hide();
+            if (($("#material").val() === "4" || $("#material").val() === "5")) {
+                $("#PorcentajeDescuentoAFijarId").prop('disabled', true);
+                $("#PorcentajeDescuentoAFijarId").css("background-color", "lightgray");
+            } else {
+                $("#PorcentajeDescuentoAFijarId").prop('disabled', false);
+                $("#PorcentajeDescuentoAFijarId").css("background-color", "white");
+            }
+
+            var cuitAux = $("#buscadorProveedor").val().split('(');
+            if (cuitAux[0] != "") {
+                var cuit = cuitAux[1].split(')');
+                var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+                var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
+
+                if (($("#material").val() === "4" || $("#material").val() === "5")) {
+                    if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje > 0 && !$("#buscadorCorredor").val()) {
+                        $("#tipoPeriodoDBId").data("kendoDropDownList").value("1");
+                        $("#TipoDBId").data("kendoDropDownList").value("2");
+                        $("#PorcentajeDescuentoId").val(compraNet.ComisionPorcentaje);
+                        AgregarDescuentos();
+                    } else {
+                        for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
+                                viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+                            }
+                        }
+                    }
+                    $("#PorcentajeDescuentoAFijarId").val(0);
+                    ActualizarAperturas();
+                    var total = CalcularPrecioTotalApertura();
+                    InsertarAperturasViewModel(total);
+                    for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                        if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 1) {
+                            viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+                        }
+                    }
+                    if (total != 0) {
+                        var newdescuento = {
+                            Id: 0,
+                            TipoPeriodoDBDesc: "Generales",
+                            TipoPeriodoDBId: 1,
+                            TipoDBDesc: "Sobre el precio",
+                            TipoDBId: 1,
+                            FechaDesde: null,
+                            FechaHasta: null,
+                            Importe: total,
+                            MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
+                            Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                            Borrar: function () {
+                                eliminarDescuento(this);
+                            }
+                        };
+                        viewModel.Descuentos.push(newdescuento);
+                    }
+                } else {
+                    $("#PorcentajeDescuentoAFijarId").val(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
+                    ActualizarAperturas();
+                    var total = CalcularPrecioTotalApertura();
+                    InsertarAperturasViewModel(total);
+                    for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                        if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 1) {
+                            viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+                        }
+                    }
+                    if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje > 0 && !$("#buscadorCorredor").val()) {
+                        var newdescuento = {
+                            Id: 0,
+                            TipoPeriodoDBDesc: "Generales",
+                            TipoPeriodoDBId: 1,
+                            TipoDBDesc: "Sobre el precio",
+                            TipoDBId: 1,
+                            FechaDesde: null,
+                            FechaHasta: null,
+                            Importe: total,
+                            MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
+                            Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                            Borrar: function () {
+                                eliminarDescuento(this);
+                            }
+                        };
+                        viewModel.Descuentos.push(newdescuento);
+                    } else {
+                        if (total != 0) {
+                            var newdescuento = {
+                                Id: 0,
+                                TipoPeriodoDBDesc: "Generales",
+                                TipoPeriodoDBId: 1,
+                                TipoDBDesc: "Sobre el precio",
+                                TipoDBId: 1,
+                                FechaDesde: null,
+                                FechaHasta: null,
+                                Importe: total,
+                                MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
+                                Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                                Borrar: function () {
+                                    eliminarDescuento(this);
+                                }
+                            };
+                            viewModel.Descuentos.push(newdescuento);
+                        }
+                    }
+
+                    for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                        if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
+                            viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+                        }
+                    }
+                }
+            }
+
         }
     });
 
@@ -1306,6 +1422,19 @@ function InicializarElementos() {
             }
             //aca
             SeleccionAutomaticaBolsa();
+            
+
+            if (ValidarComisionEnCentro()) {
+                if ($("#proveedorId").val() > 0) {
+                    var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: $("#proveedorId").val() });
+                    CargarAutomaticamenteLaComision(compraNet);
+                }
+                if ($("#buscadorCorredor").val() != "") {
+                    $("#porcentajeComision").data("kendoNumericTextBox").value(1);
+                }
+            } else {
+                BorrarComisionSiEsAcopio();
+            }
         }
     });
 
@@ -3978,7 +4107,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#AnulaYReemplazaContratoId").val(contrato.AnulaYReemplazaContratoId);
         $("#contratoAReemplazarId").val(contrato.AnulaYReemplazaContratoSAP);
         $("#MotivoReemplazo").val(contrato.MotivoReemplazo);
-
+        $(".mostrarConPase").show();
         $("#tipoId").data("kendoDropDownList").readonly(true);
         $("#motivoAnterior").data("kendoDropDownList").readonly(true);
 
@@ -4026,6 +4155,14 @@ function CargarDatosEditar(contrato, hijo) {
         $("#boletoCartaId").attr("disabled", true);
     }
     DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
+    if (contrato.TipoNegocioId == 2 && contrato.Condicional == true) {
+        $("#condicionalId").prop("checked", true);
+        $("#condicionalPrecioId").val(contrato.CondicionalPrecio);
+        $("#condicionalMonedaId").val(contrato.CondicionalMonedaId );
+        $("#condicionalCantidadId").val(contrato.CondicionalCantidad);
+        $("#condicionalFechaId").val(contrato.CondicionalFecha);
+        $("#condicionalPosicionId").val(contrato.CondicionalPosicion);
+    }
     if (contrato.TipoNegocioId != 1) {
         $("#tipoId").data("kendoDropDownList").trigger("change");
     }
@@ -4072,6 +4209,14 @@ function CargarDatosEditar(contrato, hijo) {
         $("#bolsaCartaId").data("kendoDropDownList").value(contrato.BolsaId);
     }
 
+    if (contrato.CondicionalContratoId != null && contrato.CondicionalContratoId > 0) {        
+        $("#buscadorProveedor").prop('disabled', true);
+        $("#buscadorCorredor").prop('disabled', true);
+        $('#material').data("kendoDropDownList").enable(false);
+        $("#cantidadId").data("kendoNumericTextBox").enable(false);
+        $("#contratoCondicionalId").val(contrato.CondicionalContratoId);
+        $("#contratoCondicional").val(contrato.CondicionalContratoSAP);
+    }
 
 }
 
@@ -4967,7 +5112,14 @@ function DeshabilitarDescuentoSobrePrecioCuandoTieneAgente() {
         $("#PorcentajeDescuentoAFijarId").css("background-color", "white");
         $("#PorcentajeDescuentoAFijarId").prop('disabled', false);
     }
-
+    if (($("#material").val() === "4" || $("#material").val() === "5")) {
+        $("#PorcentajeDescuentoAFijarId").val(0);
+        $("#PorcentajeDescuentoAFijarId").prop('disabled', true);
+        $("#PorcentajeDescuentoAFijarId").css("background-color", "lightgray");
+    } else {
+        $("#PorcentajeDescuentoAFijarId").prop('disabled', false);
+        $("#PorcentajeDescuentoAFijarId").css("background-color", "white");
+    }
 
 }
 
@@ -5104,6 +5256,137 @@ function ValidarProveedorSisa() {
     } else {
         $("#mensaje").hide();
         $("#mensaje").val("");
+    }
+}
+
+function ValidarComisionEnCentro() {
+    var centro = MSExecuteOnServer("/Compranet/ValidarComisionEnCentro", {
+        Id: $("#destinoId").val()
+    });
+
+    if (centro && centro.Comision && centro.Comision == 1) {
+        return true;
+    }
+    return false;
+}
+
+
+function BorrarComisionSiEsAcopio() {
+    $("#PorcentajeDescuentoAFijarId").val(0);
+    $("#porcentajeComision").data("kendoNumericTextBox").value(0);
+    ActualizarAperturas();
+    var total = CalcularPrecioTotalApertura();
+    InsertarAperturasViewModel(total);
+    if ($("#material").val() === "4" || $("#material").val() === "5") {
+        for (var i = 0; i < viewModel.Descuentos.length; i++) {
+            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
+                viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+            }
+        }
+    } else {
+       
+        for (var i = 0; i < viewModel.Descuentos.length; i++) {
+            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 1) {
+                viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+            }
+        }
+    }
+}
+
+function CargarAutomaticamenteLaComision(compraNet) {
+    if (($("#material").val() === "4" || $("#material").val() === "5")) {
+        if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje > 0 && !$("#buscadorCorredor").val()) {
+            $("#tipoPeriodoDBId").data("kendoDropDownList").value("1");
+            $("#TipoDBId").data("kendoDropDownList").value("2");
+            $("#PorcentajeDescuentoId").val(compraNet.ComisionPorcentaje);
+            AgregarDescuentos();
+        } else {
+            for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
+                    viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+                }
+            }
+        }
+        $("#PorcentajeDescuentoAFijarId").val(0);
+        ActualizarAperturas();
+        var total = CalcularPrecioTotalApertura();
+        InsertarAperturasViewModel(total);
+        for (var i = 0; i < viewModel.Descuentos.length; i++) {
+            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 1) {
+                viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+            }
+        }
+        if (total != 0) {
+            var newdescuento = {
+                Id: 0,
+                TipoPeriodoDBDesc: "Generales",
+                TipoPeriodoDBId: 1,
+                TipoDBDesc: "Sobre el precio",
+                TipoDBId: 1,
+                FechaDesde: null,
+                FechaHasta: null,
+                Importe: total,
+                MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
+                Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                Borrar: function () {
+                    eliminarDescuento(this);
+                }
+            };
+            viewModel.Descuentos.push(newdescuento);
+        }
+    } else {
+        $("#PorcentajeDescuentoAFijarId").val(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
+        ActualizarAperturas();
+        var total = CalcularPrecioTotalApertura();
+        InsertarAperturasViewModel(total);
+        for (var i = 0; i < viewModel.Descuentos.length; i++) {
+            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 1) {
+                viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+            }
+        }
+        if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje > 0 && !$("#buscadorCorredor").val()) {
+            var newdescuento = {
+                Id: 0,
+                TipoPeriodoDBDesc: "Generales",
+                TipoPeriodoDBId: 1,
+                TipoDBDesc: "Sobre el precio",
+                TipoDBId: 1,
+                FechaDesde: null,
+                FechaHasta: null,
+                Importe: total,
+                MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
+                Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                Borrar: function () {
+                    eliminarDescuento(this);
+                }
+            };
+            viewModel.Descuentos.push(newdescuento);
+        } else {
+            if (total != 0) {
+                var newdescuento = {
+                    Id: 0,
+                    TipoPeriodoDBDesc: "Generales",
+                    TipoPeriodoDBId: 1,
+                    TipoDBDesc: "Sobre el precio",
+                    TipoDBId: 1,
+                    FechaDesde: null,
+                    FechaHasta: null,
+                    Importe: total,
+                    MonedaId: $("#precioMonedaAFijarId").data("kendoDropDownList").value(),
+                    Porcentaje: $("#PorcentajeDescuentoAFijarId").val(),
+                    Borrar: function () {
+                        eliminarDescuento(this);
+                    }
+                };
+                viewModel.Descuentos.push(newdescuento);
+            }
+        }
+
+        for (var i = 0; i < viewModel.Descuentos.length; i++) {
+            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
+                viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+            }
+        }
     }
 }
 

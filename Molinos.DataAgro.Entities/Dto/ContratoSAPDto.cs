@@ -95,6 +95,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public string PosicionCBOT { get; set; }
         public int? TipoPosicionCBOTId { get; set; }
         public string Cesion { get; set; }
+
+        public string Condicional { get; set; }
+        public decimal? CondicionalPrecio { get; set; }
+        public string CondicionalMonedaId { get; set; }
+        public string CondicionalFecha { get; set; }
+        public string CondicionalPosicion { get; set; }
+        public string CondicionalContratoSAP { get; set; }
+
     }
 
     public class CalidadSAP

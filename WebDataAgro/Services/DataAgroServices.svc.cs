@@ -184,7 +184,7 @@ namespace WebDataAgro.Services
                 var contratoOriginal = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contratoSAP.ContratoSAP);
                 CrearProyeccionContrato(contratoSAP, contrato, null, true);
                 logger.Debug("ActualizandoContrato5");
-                ValidarContrato(contrato, oEntityErrors);
+                ValidarContrato(contrato, oEntityErrors, contratoSAP);
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
@@ -230,7 +230,7 @@ namespace WebDataAgro.Services
                 CrearProyeccionContrato(contratoSAP, contrato, null, false);
 
                 logger.Debug("Validacion alta contrato");
-                ValidarContrato(contrato, oEntityErrors);
+                ValidarContrato(contrato, oEntityErrors, contratoSAP);
                 if (oEntityErrors.HayError)
                 {
                     return oEntityErrors;
@@ -552,6 +552,22 @@ namespace WebDataAgro.Services
             contrato.PosicionCBOT = contratoSAP.PosicionCBOT;
             contrato.TipoPosicionCBOTId = contratoSAP.TipoPosicionCBOTId;
             contrato.Cesion = contratoSAP.Cesion == "X";
+
+            contrato.Condicional = contratoSAP.Condicional == "X";
+            contrato.CondicionalPrecio = contratoSAP.CondicionalPrecio;
+            contrato.CondicionalMonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.CondicionalMonedaId, x => x.MonedaId);
+            contrato.CondicionalFecha = !string.IsNullOrEmpty(contratoSAP.CondicionalFecha) ? DateTime.ParseExact(contratoSAP.CondicionalFecha, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
+            contrato.CondicionalPosicion = contratoSAP.CondicionalPosicion;
+
+            if (!string.IsNullOrEmpty(contratoSAP.CondicionalContratoSAP))
+            {
+                string num = contratoSAP.CondicionalContratoSAP.PadLeft(10, '0');
+                var condicional = repositorio.Obtener<Contrato>(x => x.ContratoSAP == num);
+                if (contrato != null)
+                {
+                    contrato.CondicionalContratoId = condicional.Id;
+                }
+            }
         }
 
         public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)
@@ -915,7 +931,7 @@ namespace WebDataAgro.Services
             oEntityErrors.HayError = oEntityErrors.ListaErrores.Any();
         }
 
-        private void ValidarContrato(Contrato oParam, ResultadoSap oErrorMessages)
+        private void ValidarContrato(Contrato oParam, ResultadoSap oErrorMessages, ContratoSAPDto contratoSAP)
         {
             if (oParam.LocalidadId == 0)
             {
@@ -929,6 +945,11 @@ namespace WebDataAgro.Services
                     repositorio.Agregar(new CorredorProveedor { CorredorId = oParam.CorredorId.Value, ProveedorId = oParam.ProveedorId.Value });
 
                 }
+            }
+
+            if (oParam.CondicionalContratoId == null && !string.IsNullOrEmpty(contratoSAP.CondicionalContratoSAP))
+            {
+                oErrorMessages.ListaErrores.Add(new ErrorMessage() { Message = "El campo 'CondicionalContratoSAP' no es valido, no existe en DataAgro el contrato nro. " + contratoSAP.CondicionalContratoSAP });
             }
         }
 

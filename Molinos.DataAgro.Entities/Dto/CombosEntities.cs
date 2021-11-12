@@ -324,7 +324,13 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public string Descripcion;
     }
-  
+
+    public class BoletoVentaQry
+    {
+        public int Id;
+        public string Descripcion;
+    }
+
     public class RangoCombo
     {
         public int Id { get; set; }

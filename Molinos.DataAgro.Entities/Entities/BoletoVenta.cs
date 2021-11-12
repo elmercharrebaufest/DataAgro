@@ -2,11 +2,13 @@
 
 namespace Molinos.DataAgro.Entities.Entities
 {
-    public class PostIt
+    public partial class BoletoVenta
     {
         [Key]
         public int Id { get; set; }
-        public int ComercialId { get; set; }
-        public string Texto { get; set; }
+        public string Descripcion { get; set; }
     }
 }
+   
+
+

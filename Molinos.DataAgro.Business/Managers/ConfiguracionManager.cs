@@ -51,7 +51,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.CantidadDiasPesificadoLimite = oConfiguracion.CantidadDiasPesificadoLimite;
                 oConfiguracionSave.RedespachoMaximoUSDM = oConfiguracion.RedespachoMaximoUSDM;
                 oConfiguracionSave.RedespachoMaximoARP = oConfiguracion.RedespachoMaximoARP;
-
+                oConfiguracionSave.ToleranciaPaseMax = oConfiguracion.ToleranciaPaseMax;
+                oConfiguracionSave.ToleranciaPaseMin = oConfiguracion.ToleranciaPaseMin;
             }
 
             else

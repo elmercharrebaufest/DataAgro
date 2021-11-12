@@ -47,8 +47,28 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? AnulaYReemplazaContratoId { get; set; }
         public string MotivoReemplazo { get; set; }
 
+        public bool? Condicional { get; set; }
+        public decimal? CondicionalPrecio { get; set; }
+        public string CondicionalMonedaId { get; set; }
+        public double? CondicionalCantidad { get; set; }
+        [JsonConverter(typeof(SinHora))]
+        public DateTime? CondicionalFecha { get; set; }
+        public string CondicionalPosicion { get; set; }
+        public int? CondicionalContratoId { get; set; }
+                    
+        [ForeignKey("CondicionalMonedaId")]
+        public virtual Moneda CondicionalMoneda { get; set; }
+
+        [ForeignKey("CondicionalContratoId")]
+        public virtual Contrato CondicionalContrato { get; set; }
+        [InverseProperty("CondicionalContrato")]
+        public virtual ICollection<Contrato> CondicionalContratos { get; set; }
+
         [ForeignKey("AnulaYReemplazaContratoId")]
         public virtual Contrato AnulaYReemplazaContrato { get; set; }
+        [InverseProperty("AnulaYReemplazaContrato")]
+        public virtual ICollection<Contrato> AnulaYReemplazaContratos { get; set; }
+
         [ForeignKey("ProvinciaId")]
         public virtual Provincia Provincia { get; set; } // ProvinciaId
         [ForeignKey("LocalidadId")]

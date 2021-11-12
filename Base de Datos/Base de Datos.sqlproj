@@ -314,6 +314,7 @@
     <Build Include="dbo\Tables\CondicionDePagoVenta.sql" />
     <Build Include="dbo\Tables\NegocioAsociado.sql" />
     <Build Include="dbo\Tables\CierreDelDiaMailExternos.sql" />
+    <Build Include="dbo\Tables\BoletoVenta.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

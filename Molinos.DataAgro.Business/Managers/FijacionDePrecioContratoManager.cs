@@ -40,6 +40,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IFinalizarFijacionVirtualAgent finalizarFijacionVirtual;
         private readonly IAnularFijacionVirtualAgent anularFijacionVirtual;
         private readonly INegocioManager negocioManager;
+        private readonly IConfiguracionInternaManager configuracionInternaManager;
+
         public FijacionDePrecioContratoManager(
             ILogger logger,
             IRepositorio repositorio,
@@ -55,7 +57,7 @@ namespace Molinos.DataAgro.Business.Managers
             IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent,
             ITipoDeCambioAgent tipoDeCambioAgent, IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent,
             IFinalizarFijacionVirtualAgent finalizarFijacionVirtual, IAnularFijacionVirtualAgent anularFijacionVirtual,
-            INegocioManager negocioManager)
+            INegocioManager negocioManager, IConfiguracionInternaManager configuracionInternaManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -77,6 +79,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.finalizarFijacionVirtual = finalizarFijacionVirtual;
             this.anularFijacionVirtual = anularFijacionVirtual;
             this.negocioManager = negocioManager;
+            this.configuracionInternaManager = configuracionInternaManager;
         }
 
         //--------------------------------------------------
@@ -439,6 +442,10 @@ namespace Molinos.DataAgro.Business.Managers
             if (PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual) && oParam.Virtual != true)
             {
                 oErrorMessages.Error("Virtual", "Es obligatorio completar el campo fijacion virtual");
+            }
+            if ((oParam.MaterialId == 4 || oParam.MaterialId == 5) && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (a.Importe > 0 || a.Porcentaje > 0)))
+            {
+                oErrorMessages.Error("Comisiones", "No se puede cargar el concepto comisiones en apertura de precio para negocios de Girasol");
             }
             return oErrorMessages;
         }
@@ -1214,7 +1221,7 @@ namespace Molinos.DataAgro.Business.Managers
         public List<DatosFijacionDeContratoDto> TraerDatosFijacion(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId)
         {
             long l = 0;
-            if (string.IsNullOrEmpty(CuitProveedor) || !long.TryParse(CuitProveedor,out l))
+            if (string.IsNullOrEmpty(CuitProveedor) || !long.TryParse(CuitProveedor, out l))
             {
                 return new List<DatosFijacionDeContratoDto>();
             }
@@ -1939,6 +1946,99 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return result;
+        }
+
+        private decimal Redondear(decimal numero)
+        {
+            double final;
+            double d10 = decimal.ToDouble(numero) / 10.00;
+            final = Math.Round(d10 * 2, MidpointRounding.AwayFromZero) / 2;
+            final = final * 10;
+            return Convert.ToDecimal(final);
+        }
+
+        public GrabarFijacionResult GrabarFijacionDePrecioTercero(FijacionDePrecioContrato fijacion)
+        {
+            if (fijacion.ComercialId == null || fijacion.ComercialId == 0)
+            {
+                fijacion.ComercialId = mobjComercialManager.ComercialAsociado(fijacion.CorredorId.HasValue && fijacion.CorredorId != 0 ? fijacion.CorredorId.Value : fijacion.ProveedorId ?? 0);
+            }
+            var comercial = mobjComercialManager.TraerComercial(fijacion.ComercialId.Value);
+            var proveedorCreador = mobjProveedorManager.TraerProveedor(fijacion.ProveedorCreadorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+            var proveedor = mobjProveedorManager.TraerProveedor(fijacion.ProveedorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
+            var cuitCorredor = "";
+            if (fijacion.CorredorId > 0)
+            {
+                cuitCorredor = mobjProveedorManager.TraerProveedor(fijacion.CorredorId.Value, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First().CUIT;
+            }
+            fijacion.UsuarioId = proveedorCreador.RazonSocial;
+
+            if (fijacion.AperturaPrecio == null)
+            {
+                fijacion.AperturaPrecio = new List<AperturaPrecio>();
+
+                foreach (EnumConceptoApertura concepto in (EnumConceptoApertura[])Enum.GetValues(typeof(EnumConceptoApertura)))
+                {
+                    fijacion.AperturaPrecio.Add(new AperturaPrecio { ConceptoAperturaPrecioId = (int)concepto, Importe = 0, MonedaId = null, Porcentaje = 0 });
+                }
+            }
+
+            if (fijacion.PagoDiferidoTercero == true)
+            {
+                var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia >= fijacion.DiasPesificado).OrderBy(x => x.CantidadDia).FirstOrDefault();
+                if (pago == null)
+                {
+                    return new GrabarFijacionResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } }  };
+                }
+                fijacion.PagoDiferido = fijacion.PagoDiferidoTercero;
+                decimal ImporteFinanciero = Redondear(Math.Round(fijacion.Precio * (pago.Tasa / 100) * (fijacion.DiasPesificado.Value - 3) / 365));
+                fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 1).Importe = ImporteFinanciero;
+                fijacion.PrecioNeto = fijacion.Precio + ImporteFinanciero;
+
+
+            }
+
+            var afijar = TraerDatosFijacion(proveedor.CUIT, cuitCorredor, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id);
+            if (afijar != null && afijar.Count > 0)
+            {
+                fijacion.ClasificacionContrato = afijar[0].Clasificacion;
+                fijacion.ImporteSobrePrecioContrato = afijar[0].ImporteSobrePrecio;
+                fijacion.MonedaSobrePrecioContrato = afijar[0].MonedaSobrePrecio;
+                fijacion.PorcentajeSobrePrecioContrato = afijar[0].PorcentajeSobrePrecio;
+                fijacion.ImporteAPrecioContrato = afijar[0].ImporteAPrecio;
+                fijacion.MonedaAPrecioContrato = afijar[0].MonedaAPrecio;
+                fijacion.PorcentajeAPrecioContrato = afijar[0].PorcentajeAPrecio;
+
+                if (afijar[0].ImporteSobrePrecio > 0)
+                {
+                    if (afijar[0].MonedaSobrePrecio?.Trim() == fijacion.MonedaId.Trim())
+                    {
+                        fijacion.PrecioNeto += afijar[0].ImporteSobrePrecio;
+                    }
+                    else
+                    {
+                        var cambio = tipoDeCambioAgent.TraerTipoDeCambio(fijacion.FechaOperacion);
+                        if (fijacion.MonedaId.Trim() == "ARP")
+                        {
+                            fijacion.PrecioNeto += afijar[0].ImporteSobrePrecio * cambio;
+                        }
+                        else
+                        {
+                            fijacion.PrecioNeto += afijar[0].ImporteSobrePrecio / cambio;
+                        }
+                    }
+
+                }
+
+                if (afijar[0].PorcentajeSobrePrecio > 0)
+                {
+                    fijacion.PrecioNeto += fijacion.PrecioNeto * afijar[0].PorcentajeSobrePrecio / 100;
+                }
+            }
+            fijacion.PagoDiferidoTerceroId = fijacion.PagoDiferidoTerceroId == -1 ? (int?)null : fijacion.PagoDiferidoTerceroId;
+            fijacion.ContratoId = null;
+
+            return GrabarFijacionDePrecio(fijacion);
         }
     }
 }

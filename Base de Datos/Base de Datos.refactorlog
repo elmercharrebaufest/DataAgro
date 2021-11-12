@@ -855,4 +855,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CodigoPostal" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="af73672b-6eea-42c7-a497-673ef2c076af" ChangeDateTime="11/02/2021 18:44:51">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[CondicionalMoneda]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CondicionalMonedaId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="83e1020b-b4b9-4b39-a3c8-bf6eb76cf0a3" ChangeDateTime="11/04/2021 17:54:04">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[ConcidionalContratoId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CondicionalContratoId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="896fd62e-6722-49aa-bb7b-eb91706377e3" ChangeDateTime="11/08/2021 20:43:27">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[BoletoVentaIfd]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="BoletoVentaIId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="07ebc46d-bc21-4774-b492-10e08c55ef49" ChangeDateTime="11/08/2021 20:43:37">
+    <Property Name="ElementName" Value="[dbo].[Negocio].[BoletoVentaIId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Negocio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="BoletoVentaId" />
+  </Operation>
 </Operations>

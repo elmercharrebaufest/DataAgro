@@ -1474,7 +1474,11 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecial = x.StandardDeCalidadId == 2 || x.StandardDeCalidadId == 6 || x.StandardDeCalidadId == 7 ? "X" : "",
                 EstablecimientoPropio = x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
                 Observacion = x.Observacion ?? "",
-                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
+                PrecioNeto = x.Condicional == true ?
+                        (x.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
+                         /*calculo con %*/(x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + ((x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * x.AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
+                        /*calculo sin % */x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
+                        ).ToString() : (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
                 MercsDeposito = x.MercsDeposito == true ? "X" : "",
                 Pizarra = x.Pizarra
             },
@@ -1819,7 +1823,11 @@ namespace Molinos.DataAgro.Business.Managers
                 CalidadEspecial = x.StandardDeCalidadId == 2 || x.StandardDeCalidadId == 6 || x.StandardDeCalidadId == 7 ? "X" : "",
                 EstablecimientoPropio = x.EstablecimientoPropio == true ? "Propio" : x.EstablecimientoPropio == false ? "Arrendado" : "",
                 Observacion = x.Observacion ?? "",
-                PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
+                PrecioNeto = x.Condicional == true ?
+                        (x.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
+                         /*calculo con %*/(x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + ((x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * x.AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
+                        /*calculo sin % */x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
+                        ).ToString() : (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString()
             },
             x => DbFunctions.TruncateTime(x.Fecha) >= fechaHoy
              && DbFunctions.TruncateTime(x.Fecha) <= fechaManana
@@ -2666,7 +2674,7 @@ namespace Molinos.DataAgro.Business.Managers
                 items = items.Distinct().ToList();
                 repositorio.TruncarTabla<ReportePesificado>();
 
-                
+
                 if (items.Count > 0)
                 {
                     repositorio.AgregarTodos(items);
@@ -2714,7 +2722,7 @@ namespace Molinos.DataAgro.Business.Managers
                         USDNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) * Convert.ToInt32(item.PrecioPonderado) : 0,
                         KgVencimientoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) : 0,
                         USDPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) * Convert.ToInt32(item.PrecioPonderado) : 0,
-                        KgTotales = Convert.ToInt32(item.Cantidad - (cont == null?0:cont.Cantidad)),
+                        KgTotales = Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)),
                         CantidadPendiente = Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)),
                         Material = item.Material.Codigo,
                         Unidad = "Kg",
@@ -2730,7 +2738,7 @@ namespace Molinos.DataAgro.Business.Managers
                         FechaHastaDolarizado = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01),
                     });
                 }
-            }                      
+            }
 
             return pesificado;
         }

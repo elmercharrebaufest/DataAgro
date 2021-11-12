@@ -240,7 +240,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? PrecioPonderado { get; set; }
         public decimal? PrecioNetoPonderado { get; set; }
         public bool? EsUsuarioExterno { get; set; }
-        public decimal Condicional { get; set; }
+        public bool? Condicional { get; set; }
+        public double? CondicionalCantidad { get; set; }
+        public DateTime? CondicionalFecha { get; set; }
+        public string CondicionalMonedaId { get; set; }
+        public string CondicionalPosicion { get; set; }
+        public decimal? CondicionalPrecio { get; set; }
+        public string CondicionalFechaFormateado { get; set; }
+        public int? CondicionalContratoId { get; set; }
+        public string CondicionalContratoSAP { get; set; }
+        public int? BoletoVentaId { get; set; }
+        public string MailVentaBoleto { get; set; }
     }
 
     public class StoredPorContratoResult

@@ -46,7 +46,17 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 && (x.Venta != true)
                 && x.Pizarra != true
                 && x.AnulaYReemplazaContratoId == null
-                ).Select(x=> new { MonedaId = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USDM " : x.MonedaId, Precio = x.Precio, PrecioNeto = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? x.PrecioNetoPonderado : x.PrecioNeto ?? x.Precio, Cantidad = x.Cantidad })
+                ).Select(x=> new {
+                    MonedaId = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? "USDM " : x.MonedaId,
+                    Precio = x.Precio,
+                    PrecioNeto = (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) ? x.PrecioNetoPonderado :
+                    x.Condicional == true ?
+                        x.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
+                         /*calculo con %*/(x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + ((x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * x.AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
+                        /*calculo sin % */x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
+                        :
+                    x.PrecioNeto ?? x.Precio,
+                    Cantidad = x.Cantidad })
                 .GroupBy(x => x.MonedaId).DefaultIfEmpty()
                 .Select(x => new PrecioCantidadDto()
                 {

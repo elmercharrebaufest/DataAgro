@@ -38,6 +38,9 @@ namespace Molinos.DataAgro.Interfaces
         GrabarFijacionResult RechazarPreAnularFijacionVirtual(int contratoId/*, string motivo*/);
         GrabarFijacionResult PreAnularFijacion(int contratoId, string motivo);
         ResultadoDevolverKilosPendientesAnularFijacionCanjeDto DevolverKilosPendientesAnularFijacionCanje(int id);
+
+        GrabarFijacionResult GrabarFijacionDePrecioTercero(FijacionDePrecioContrato oFijacionDePrecio);
+
     }
 }
 

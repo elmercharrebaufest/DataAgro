@@ -204,8 +204,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ObligatoriedadBonificacionDesc = !contrato.ObligatoriedadBonificacion.HasValue ? "" : contrato.ObligatoriedadBonificacion.HasValue && contrato.ObligatoriedadBonificacion.Value == true ? "Si" : "No",
                         PrecioPonderado = contrato.PrecioPonderado ?? 0,
                         PrecioNetoPonderado = contrato.PrecioNetoPonderado ?? 0,
+                        EsUsuarioExterno = string.IsNullOrEmpty(contrato.UsuarioTercero) ? (bool?)null : true,
+                        Condicional = (contrato is Contrato) ? (contrato as Contrato).Condicional : null,
+                        CondicionalCantidad = (contrato is Contrato) ? (contrato as Contrato).CondicionalCantidad : null,
+                        CondicionalFecha = (contrato is Contrato) ? (contrato as Contrato).CondicionalFecha : null,
+                        CondicionalFechaFormateado = (contrato is Contrato) ? (contrato as Contrato).CondicionalFecha != null ? SqlFunctions.DateName("day", (contrato as Contrato).CondicionalFecha) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).CondicionalFecha) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).CondicionalFecha) : "":"",
+                        CondicionalMonedaId = (contrato is Contrato) ? (contrato as Contrato).CondicionalMonedaId : null,
+                        CondicionalPosicion = (contrato is Contrato) ? (contrato as Contrato).CondicionalPosicion : null,
+                        CondicionalPrecio = (contrato is Contrato) ? (contrato as Contrato).CondicionalPrecio : null,
+                        CondicionalContratoId = (contrato is Contrato) ? (contrato as Contrato).CondicionalContratoId : null,
+                        CondicionalContratoSAP = (contrato is Contrato) ? (contrato as Contrato).CondicionalContrato.ContratoSAP : "",
                         TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
-                        EsUsuarioExterno = string.IsNullOrEmpty(contrato.UsuarioTercero) ? (bool?)null : true 
+                        MailVentaBoleto = contrato.MailVentaBoleto
                     };
 
                 return queryNegocios;

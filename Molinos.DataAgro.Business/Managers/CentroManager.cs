@@ -46,6 +46,7 @@ namespace Molinos.DataAgro.Business
                     LocalidadId = x.LocalidadId,
                     CodigoPostal = x.CodigoPostal,
                     Direccion = x.Direccion,
+                    Comision = x.Comision
                 }, null, 0, "Descripcion")
             };
         }
@@ -63,6 +64,7 @@ namespace Molinos.DataAgro.Business
                 LocalidadId = x.LocalidadId,
                 CodigoPostal = x.CodigoPostal,
                 Direccion = x.Direccion,
+                Comision = x.Comision
             }) ?? new CentroDto();
         }
 
@@ -87,6 +89,7 @@ namespace Molinos.DataAgro.Business
                 oCentroSave.LocalidadId = oCentro.LocalidadId;
                 oCentroSave.Direccion = oCentro.Direccion;
                 oCentroSave.CodigoPostal = oCentro.CodigoPostal;
+                oCentroSave.Comision = oCentro.Comision;
             }
             else
             {
@@ -128,7 +131,7 @@ namespace Molinos.DataAgro.Business
         }
         public CentroDto ObtenerCentroPorCodigoSap(string codigoSap)
         {
-            return repositorio.Obtener<Centro, CentroDto>(x => x.CodigoSap == codigoSap, x => new CentroDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, Acopio = x.Acopio, ValidaRedespacho = x.ValidaRedespacho }) ?? new CentroDto();
+            return repositorio.Obtener<Centro, CentroDto>(x => x.CodigoSap == codigoSap, x => new CentroDto { Id = x.Id, CodigoSap = x.CodigoSap, Descripcion = x.Descripcion, Acopio = x.Acopio, Comision = x.Comision, ValidaRedespacho = x.ValidaRedespacho }) ?? new CentroDto();
         }
     }
 }

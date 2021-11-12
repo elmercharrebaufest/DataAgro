@@ -40,6 +40,8 @@ namespace WebDataAgro.Controllers
                 CantidadDiasPesificadoLimite = conf != null ? conf.CantidadDiasPesificadoLimite : 0,
                 RedespachoMaximoUSDM = conf != null ? conf.RedespachoMaximoUSDM : 0,
                 RedespachoMaximoARP = conf != null ? conf.RedespachoMaximoARP : 0,
+                ToleranciaPaseMin = conf != null ? conf.ToleranciaPaseMin : 0,
+                ToleranciaPaseMax = conf != null ? conf.ToleranciaPaseMax : 0,
             });
         }
         [HttpPost]
@@ -78,6 +80,8 @@ namespace WebDataAgro.Controllers
                 CantidadDiasPesificadoLimite = configuracion.CantidadDiasPesificadoLimite,
                 RedespachoMaximoUSDM = configuracion.RedespachoMaximoUSDM,
                 RedespachoMaximoARP = configuracion.RedespachoMaximoARP,
+                ToleranciaPaseMin = configuracion.ToleranciaPaseMin,
+                ToleranciaPaseMax = configuracion.ToleranciaPaseMax,
             };
             return entidad;
         }

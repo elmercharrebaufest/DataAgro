@@ -11,6 +11,7 @@
         public string Localidad { get; set; }
         public string CodigoPostal { get; set; }
         public string Direccion { get; set; }
+        public bool Comision { get; set; }
     }
 
 }

@@ -57,6 +57,7 @@ namespace WebDataAgro.Controllers
         private readonly IConfiguracionInternaManager configuracionInternaManager;
         private IConfiguracionManager mobjConfiguracionManager;
         private ITipoDeCambioAgent tipoDeCambioAgent;
+        private ICentroManager centroManager;
 
 
         //-----------------------------------------------------
@@ -70,7 +71,7 @@ namespace WebDataAgro.Controllers
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
             IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager,
             IOperadorManager oOperadorManager, INegocioManager oNegocioManager,
-            ITipoDeCambioAgent tipoDeCambioAgent)
+            ITipoDeCambioAgent tipoDeCambioAgent, ICentroManager centroManager)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -90,6 +91,7 @@ namespace WebDataAgro.Controllers
             mobjNegocioManager = oNegocioManager;
             this.configuracionInternaManager = configuracionInternaManager;
             this.tipoDeCambioAgent = tipoDeCambioAgent;
+            this.centroManager = centroManager;
         }
 
         //-----------------------------------------------------
@@ -902,6 +904,11 @@ namespace WebDataAgro.Controllers
             return Json(mobjContratoManager.TraerContratosPorSap(filtro), JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult ObtenerContratosCondicional(string filtro)
+        {
+            return Json(mobjContratoManager.TraerContratosCondicionalPorSap(filtro), JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult ObtenerContratosAcuerdo(string filtro)
         {
             return Json(mobjContratoManager.TraerContratosAcuerdo(filtro), JsonRequestBehavior.AllowGet);
@@ -1262,6 +1269,12 @@ namespace WebDataAgro.Controllers
         public JsonResult ValidarCopiarContrato(int id)
         {
             var estado = mobjContratoManager.ValidarCopiarContrato(id);
+            return Json(estado, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult ValidarComisionEnCentro(int id)
+        {
+            var estado = centroManager.TraerCentro(id);
             return Json(estado, JsonRequestBehavior.AllowGet);
         }
     }

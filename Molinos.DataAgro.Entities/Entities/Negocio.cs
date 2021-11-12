@@ -131,6 +131,11 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public decimal? PrecioPonderado { get; set; } // Precio
         public decimal? PrecioNetoPonderado { get; set; } // PrecioNeto
+
+        public int? BoletoVentaId { get; set; }
+        public string MailVentaBoleto { get; set; }
+        
+
         
         public string DescripcionOperacionAnterior { get; set; }
 
@@ -201,7 +206,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual CondicionDePagoVenta CondicionDePagoFijacionVenta { get; set; }
         [ForeignKey("CondicionDePagoPesificadoVentaId")]
         public virtual CondicionDePagoVenta CondicionDePagoPesificadoVenta { get; set; }
-
+        [ForeignKey("BoletoVentaId")]
+        public virtual BoletoVenta BoletoVenta { get; set; }
         public Negocio()
         {
             Cantidad = 0;

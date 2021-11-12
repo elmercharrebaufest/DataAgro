@@ -274,12 +274,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                             TERCERO = contrato.ProveedorCreadorId != null ? "X" : "",
                             ANULA_Y_REEMP = contrato.AnulaYReemplazaContratoId == null ? "" : contrato.AnulaYReemplazaContrato.ContratoSAP,
 
-                            CONDICIONAL = "",
-                            FECHA_COND = "",
-                            MES_COND_MAT = "",
-                            MONEDA_COND = "",
-                            PRECIO_COND = 0,
-                            CONTRATO_COND = "",
+                            CONDICIONAL = contrato.Condicional == true ? "X" : "",
+                            FECHA_COND = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "",
+                            MES_COND_MAT = contrato.CondicionalPosicion != null ? contrato.CondicionalPosicion : "",
+                            MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "",
+                            PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0,
+                            CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "",
+                            
+
                         },
                         IM_TOPES_FIJ = new ZMPES5280
                         {

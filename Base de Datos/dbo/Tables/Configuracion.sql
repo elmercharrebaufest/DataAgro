@@ -16,6 +16,8 @@
     [CantidadDiasPesificadoLimite] INT NULL DEFAULT 120, 
     [RedespachoMaximoUSDM] INT NULL DEFAULT 60, 
     [RedespachoMaximoARP] INT NULL DEFAULT 1000, 
+    [ToleranciaPaseMin] INT NULL DEFAULT 10, 
+    [ToleranciaPaseMax] INT NULL DEFAULT 10, 
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

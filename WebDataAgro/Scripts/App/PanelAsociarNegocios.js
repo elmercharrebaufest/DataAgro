@@ -48,6 +48,8 @@ $(document).ready(function () {
     $("#asociadoId").click(function (e) {
         $("#asociadoId").val("");
         $("#asociadoId").data("kendoAutoComplete").value("");
+        $("#asociadoId").data("kendoAutoComplete").search("");
+
     });
     $("#asociadoId").on("keypress keyup blur", function (event) {
         $(this).val($(this).val().replace(/[^\d].+/, ""));

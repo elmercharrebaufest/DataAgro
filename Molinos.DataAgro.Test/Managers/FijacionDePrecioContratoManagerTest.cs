@@ -46,6 +46,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IAnularFijacionVirtualAgent> anularFijacionVirtualMock;
         private JavaScriptSerializer serializer;
         private Mock<INegocioManager> negocioManagerMock;
+        private Mock<IConfiguracionInternaManager> configuracionInternaManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -73,6 +74,7 @@ namespace Molinos.DataAgro.Test.Managers
             finalizarFijacionMock = new Mock<IFinalizarFijacionVirtualAgent>();
             anularFijacionVirtualMock = new Mock<IAnularFijacionVirtualAgent>();
             negocioManagerMock = new Mock<INegocioManager>();
+            configuracionInternaManagerMock = new Mock<IConfiguracionInternaManager>();
 
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
@@ -81,7 +83,7 @@ namespace Molinos.DataAgro.Test.Managers
                 mailManagerMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object,
                 modificarFijacionAgentMock.Object, diasHabilesAgente.Object, configuracionManagerMock.Object, validarLiquidacionParaFijacionAgentMock.Object,
                 tipoDeCamcioAgentMock.Object, contratosFijacionVirtualMock.Object, finalizarFijacionMock.Object, anularFijacionVirtualMock.Object,
-                negocioManagerMock.Object);
+                negocioManagerMock.Object, configuracionInternaManagerMock.Object);
         }
 
         [Test]
