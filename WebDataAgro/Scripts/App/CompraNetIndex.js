@@ -817,6 +817,7 @@ function CreateGridInformeCompraNet() {
             filasSeleccionadas = {};
             BuscarTotales();
             $('[data-toggle="tooltip"]').tooltip();
+            ajustarTamanio();
         },
 
         columns: [
@@ -1338,7 +1339,16 @@ function CreateGridInformeCompraNet() {
             $(".k-multiselect").parent().children("div").find('button').remove();
         }, 200);
     }
-
+    function ajustarTamanio() {
+        if ($("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width() < 100) {
+            $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width(100);
+            $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(1).width(100);
+        }
+        if ($("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(2).width() < 100) {
+            $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(2).width(100);
+            $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(2).width(100);
+        }
+    }
     function createMultiSelectProveedor(element) {
         return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedor");
     }

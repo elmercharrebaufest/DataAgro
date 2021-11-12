@@ -263,68 +263,68 @@ function InicializarElementos() {
                 $("#mensaje").val("");
                 e.preventDefault();
             } else {
-            ObtenerAlta(e.dataItem.Id);
-            ValidarFason();
-            if ($("#estado").val() !== "5") {
-                if ($("#tipoId").val() != 3 && (Id == 0 || Id == null || Id == "")) {
-                    $("#clasificacion").data("kendoDropDownList").value("");
-                    $("#consignatarioId").prop("checked", false);
-                }
-
-                var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
-
-                $("#proveedorId").val(compraNet.ProveedorId);
-                $("#clasificacion").data("kendoDropDownList").value(compraNet.ClasificacionCompraNetId);
-                if ($("#clasificacion").val() == 2 || $("#clasificacion").val() == 3) {
-                    $("#consignatarioId").prop("checked", compraNet.Consignatario);
-                    $("#planCanjeId").prop("checked", compraNet.PlanCanje);
-                }
-                $("#clasificacion").data("kendoDropDownList").trigger("change");
-                if (compraNet.LocalidadId != null) {
-                    if (compraNet.LocalidadId != "" && compraNet.ProvinciaId != "") {
-                        $("#ProvinciaId").val(compraNet.ProvinciaId);
-                        $("#LocalidadCrearContrato").val(compraNet.Localidad + " (" + compraNet.Provincia + ")");
-                        HabilitarEstablecimiento();
-                    } else {
-                        $("#LocalidadCrearContrato").val("");
-                        $("#ProvinciaId").val("");
-                        HabilitarEstablecimiento();
+                ObtenerAlta(e.dataItem.Id);
+                ValidarFason();
+                if ($("#estado").val() !== "5") {
+                    if ($("#tipoId").val() != 3 && (Id == 0 || Id == null || Id == "")) {
+                        $("#clasificacion").data("kendoDropDownList").value("");
+                        $("#consignatarioId").prop("checked", false);
                     }
-                }
 
-                if (compraNet.BoletoCompraNetId !== null) {
-                    LimpiarBoleto();
-                    if (compraNet.BoletoCompraNetId === 1) {
-                        $("#boletoConfirmaId").prop("checked", true);
-                        $("#BolsaConfirmaDiv").show();
-                        $("#bolsaConfirmaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 2) {
-                        $("#boletoFisicoId").prop("checked", true);
-                        $("#BolsaFisicoDiv").show();
-                        $("#bolsaFisicoId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaFisicoId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 4) {
-                        $("#boletoCartaId").prop("checked", true);
-                        $("#BolsaCartaDiv").show();
-                        $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 3) {
-                        $("#boletoNingunoId").prop("checked", true);
+                    var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
+
+                    $("#proveedorId").val(compraNet.ProveedorId);
+                    $("#clasificacion").data("kendoDropDownList").value(compraNet.ClasificacionCompraNetId);
+                    if ($("#clasificacion").val() == 2 || $("#clasificacion").val() == 3) {
+                        $("#consignatarioId").prop("checked", compraNet.Consignatario);
+                        $("#planCanjeId").prop("checked", compraNet.PlanCanje);
                     }
-                }
-                if ($("#tipoId").val() == 3) {
-                    compraNet.ComisionPorcentaje = 0;
-                }
+                    $("#clasificacion").data("kendoDropDownList").trigger("change");
+                    if (compraNet.LocalidadId != null) {
+                        if (compraNet.LocalidadId != "" && compraNet.ProvinciaId != "") {
+                            $("#ProvinciaId").val(compraNet.ProvinciaId);
+                            $("#LocalidadCrearContrato").val(compraNet.Localidad + " (" + compraNet.Provincia + ")");
+                            HabilitarEstablecimiento();
+                        } else {
+                            $("#LocalidadCrearContrato").val("");
+                            $("#ProvinciaId").val("");
+                            HabilitarEstablecimiento();
+                        }
+                    }
 
-                SeleccionAutomaticaBolsa();
-            }
-            //if ($("#tipoId").val() == "6") {
-            //    $("#dolarizadoExpressDiv").hide();
+                    if (compraNet.BoletoCompraNetId !== null) {
+                        LimpiarBoleto();
+                        if (compraNet.BoletoCompraNetId === 1) {
+                            $("#boletoConfirmaId").prop("checked", true);
+                            $("#BolsaConfirmaDiv").show();
+                            $("#bolsaConfirmaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 2) {
+                            $("#boletoFisicoId").prop("checked", true);
+                            $("#BolsaFisicoDiv").show();
+                            $("#bolsaFisicoId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaFisicoId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 4) {
+                            $("#boletoCartaId").prop("checked", true);
+                            $("#BolsaCartaDiv").show();
+                            $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 3) {
+                            $("#boletoNingunoId").prop("checked", true);
+                        }
+                    }
+                    if ($("#tipoId").val() == 3) {
+                        compraNet.ComisionPorcentaje = 0;
+                    }
 
-            //}
-            //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
-            //InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+                    SeleccionAutomaticaBolsa();
+                }
+                //if ($("#tipoId").val() == "6") {
+                //    $("#dolarizadoExpressDiv").hide();
+
+                //}
+                //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
+                //InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
         },
         dataSource: {
@@ -425,43 +425,43 @@ function InicializarElementos() {
                 $("#buscadorCorredor").val("")
                 e.preventDefault();
             } else {
-            if ($("#estado").val() !== "5") {
-                var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
-                LimpiarBoleto();
-                if (compraNet.BoletoCompraNetId !== null) {
-                    if (compraNet.BoletoCompraNetId === 1) {
-                        $("#boletoConfirmaId").prop("checked", true);
-                        $("#BolsaConfirmaDiv").show();
-                        $("#bolsaConfirmaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 2) {
-                        $("#boletoFisicoId").prop("checked", true);
-                        $("#BolsaFisicoDiv").show();
-                        $("#bolsaFisicoId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaFisicoId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 4) {
-                        $("#boletoCartaId").prop("checked", true);
-                        $("#BolsaCartaDiv").show();
-                        $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                        $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
-                    } else if (compraNet.BoletoCompraNetId === 3) {
-                        $("#boletoNingunoId").prop("checked", true);
+                if ($("#estado").val() !== "5") {
+                    var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
+                    LimpiarBoleto();
+                    if (compraNet.BoletoCompraNetId !== null) {
+                        if (compraNet.BoletoCompraNetId === 1) {
+                            $("#boletoConfirmaId").prop("checked", true);
+                            $("#BolsaConfirmaDiv").show();
+                            $("#bolsaConfirmaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaConfirmaId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 2) {
+                            $("#boletoFisicoId").prop("checked", true);
+                            $("#BolsaFisicoDiv").show();
+                            $("#bolsaFisicoId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaFisicoId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 4) {
+                            $("#boletoCartaId").prop("checked", true);
+                            $("#BolsaCartaDiv").show();
+                            $("#bolsaCartaId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
+                            $("#bolsaCartaId").data("kendoDropDownList").trigger("change");
+                        } else if (compraNet.BoletoCompraNetId === 3) {
+                            $("#boletoNingunoId").prop("checked", true);
+                        }
+                    }
+                    //if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje != 0) {
+                    //    $("#porcentajeComision").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje);
+                    //}
+                    //else {
+                    $("#porcentajeComision").data("kendoNumericTextBox").value(1);
+                    //}
+                    $('#porcentajeComisionDiv').show();
+                    $('#contCorredorDiv').show();
+
+                    if ($("#tipoId").val() != "3" && $("#tipoId").val() != "6" && $("#boton-ampliar").text() != "+ AMPLIAR") {
+                        $('#pagoDirectoDiv').show();
                     }
                 }
-                //if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje != 0) {
-                //    $("#porcentajeComision").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje);
-                //}
-                //else {
-                $("#porcentajeComision").data("kendoNumericTextBox").value(1);
-                //}
-                $('#porcentajeComisionDiv').show();
-                $('#contCorredorDiv').show();
-
-                if ($("#tipoId").val() != "3" && $("#tipoId").val() != "6" && $("#boton-ampliar").text() != "+ AMPLIAR") {
-                    $('#pagoDirectoDiv').show();
-                }
-            }
-            SeleccionAutomaticaBolsa();
+                SeleccionAutomaticaBolsa();
                 ValidarCorredor(e.dataItem.Id);
             }
         },
@@ -2534,7 +2534,7 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "Id",
         change: function () {
-           
+
             DeshabilitarConPase();
         }
     });
@@ -3626,7 +3626,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.TrigoEspecial == true) {
         $("#trigoEspecialFasonId").prop("checked", true);
-    }  
+    }
 
     if (contrato.CD) {
         $("#CDId").prop("checked", true);
@@ -3714,7 +3714,7 @@ function CargarDatosEditar(contrato, hijo) {
     $("#tipoFasonId").data("kendoDropDownList").value(contrato.TipoFasonId);
     $("#operadorId").data("kendoDropDownList").value(contrato.OperadorId);
     $("#posicionFasonId").val(contrato.Posicion);
-  
+
 
     if (contrato.Canje == true) {
         ocultarSiHayCanje();
@@ -4275,14 +4275,16 @@ function InsertarAperturasViewModel(total) {
     //$("#ImporteDescuentoId").data("kendoNumericTextBox").value(total);
 }
 function eliminarDescuento(descuento) {
-    //if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {
-    //    LimpiarApertura();
-    //    $("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
-    //    $("#posicionCBOTDiv").hide();
-    //    $("#posicionCBOTId").val("");
-    //    $("#tipoPosicionCBOTId").data("kendoDropDownList").value("");
-    //}
-    //viewModel.Descuentos.remove(descuento);
+    if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {
+        //LimpiarApertura();
+        //$("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
+        //$("#posicionCBOTDiv").hide();
+        //$("#posicionCBOTId").val("");
+        //$("#tipoPosicionCBOTId").data("kendoDropDownList").value("");
+        //viewModel.Descuentos.remove(descuento);
+    } else {
+        viewModel.Descuentos.remove(descuento);
+    }
 
 }
 
@@ -4494,7 +4496,7 @@ function ValidarCorredor(Id) {
 }
 function ValidarAlta() {
     if (altaTemprana) {
-      
+
         if ($("#clasificacion").val() == 2 &&
             (($("#planCanjeId").is(':checked') && altaTemprana.Ruca.Acopiador.PlanCanje == "NO") ||
                 ($("#consignatarioId").is(':checked') && altaTemprana.Ruca.Acopiador.Consignatario == "NO") ||
@@ -5001,8 +5003,8 @@ function DeshabilitarConPase() {
             $("#fechaHastaTopeId").data("kendoDatePicker").enable(false);
             $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
             $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly(true);
-            $("#eliminar-descuento").hide();    
-            $(".descuentos").hide(); 
+            $("#eliminar-descuento").hide();
+            $(".descuentos").hide();
         }
     } else {
         $("#AgenteCompraId").data("kendoDropDownList").enable(true);

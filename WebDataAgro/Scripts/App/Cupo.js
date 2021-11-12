@@ -182,6 +182,10 @@ function InicializarCuposIndex() {
                 }
                 $('[data-toggle="tooltip"]').tooltip();
             }
+            if ($("#gridCupo .k-grid-header-wrap").find("colgroup col").eq(4).width() < 100) {
+                $("#gridCupo .k-grid-header-wrap").find("colgroup col").eq(4).width(100);
+                $("#gridCupo .k-grid-content").find("colgroup col").eq(4).width(100);
+            }
         },
         columns: [
             { selectable: true, width: 40},
