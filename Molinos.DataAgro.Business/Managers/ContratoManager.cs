@@ -1901,12 +1901,14 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (cantidad < (oContratoSave.Cantidad - cantidadMinima))
                 {
-                    oEntityErrors.Error("", "El contrato no se puede confirmar porque no cumple la cantidad de tolerancia minima. Faltante:" + (oContratoSave.Cantidad - cantidadMinima - cantidad));
+                    oEntityErrors.Error("", "El contrato no se puede confirmar porque no cumple la cantidad de tolerancia minima." +
+                        " Kg Contrato: " + oContratoSave.Cantidad.ToString("N0") +". Kg Mínimo: " + (oContratoSave.Cantidad - cantidadMinima).ToString("N0"));
                     return oEntityErrors;
                 }
                 if (cantidad > (oContratoSave.Cantidad + cantidadMaxima))
                 {
-                    oEntityErrors.Error("", "El contrato no se puede confirmar porque excede la cantidad de tolerancia maxima. Excedente: " + (cantidad - oContratoSave.Cantidad + cantidadMaxima));
+                    oEntityErrors.Error("", "El contrato no se puede confirmar porque excede la cantidad de tolerancia máxima. " +
+                       "Kg Contrato: " + oContratoSave.Cantidad.ToString("N0") + ". Kg Máximo: " + (oContratoSave.Cantidad + cantidadMaxima).ToString("N0"));
                     return oEntityErrors;
                 }
             }
