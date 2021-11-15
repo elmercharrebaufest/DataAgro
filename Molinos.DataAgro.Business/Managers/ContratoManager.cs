@@ -1332,7 +1332,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.Insumo != null && oParam.Insumo.Length > 78)
             {
-                oErrorMessages.Error("Observacion", "El campo Insumo no puede ser mas lago de 79 caracteres.");
+                oErrorMessages.Error("Observacion", "El campo Insumo no debe superar los 79 caracteres.");
             }
 
             if (oParam.Condicional == true)
@@ -3657,7 +3657,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.HastaFijacion = contrato.HastaFijacion;
             contratoSave.MercsDeposito = contrato.MercsDeposito;
             contratoSave.CorredorId = contrato.CorredorId;
-            contratoSave.PorcentajeComision = contrato.PorcentajeComision;
+            //contratoSave.PorcentajeComision = contrato.PorcentajeComision;
             contratoSave.ContratoVendedor = contrato.ContratoVendedor;
             contratoSave.ContratoCorredor = contrato.ContratoCorredor;
             contratoSave.SelCargoVendedor = contrato.SelCargoVendedor;
