@@ -2699,7 +2699,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     if (Venta == 'true') {
         if (mailVenta != null && mailVenta != "") {
             $("#ventaBoletoDiv").show();
-            $("#mailVentaId").text("Si");
+            $("#mailVentaId").text(mailVenta);
         } else {
             $("#ventaBoletoDiv").hide();
         }
