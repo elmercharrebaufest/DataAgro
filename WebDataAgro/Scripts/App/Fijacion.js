@@ -1135,6 +1135,7 @@ function InicializarElementos() {
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
+                GuardarAperturaDePrecio();
             } else {
                 $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
                 $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
