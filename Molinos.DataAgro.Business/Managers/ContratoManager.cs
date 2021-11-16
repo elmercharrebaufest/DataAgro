@@ -3657,7 +3657,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.HastaFijacion = contrato.HastaFijacion;
             contratoSave.MercsDeposito = contrato.MercsDeposito;
             contratoSave.CorredorId = contrato.CorredorId;
-            //contratoSave.PorcentajeComision = contrato.PorcentajeComision;
+            contratoSave.PorcentajeComision = contrato.PorcentajeComision;
             contratoSave.ContratoVendedor = contrato.ContratoVendedor;
             contratoSave.ContratoCorredor = contrato.ContratoCorredor;
             contratoSave.SelCargoVendedor = contrato.SelCargoVendedor;
