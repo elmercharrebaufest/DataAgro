@@ -5296,6 +5296,9 @@ function CargarAutomaticamenteLaComision(compraNet) {
             }
         }
     }
+    if (!ValidarComisionEnCentro()) {
+        BorrarComisionSiEsAcopio();
+    }
 }
 
 
