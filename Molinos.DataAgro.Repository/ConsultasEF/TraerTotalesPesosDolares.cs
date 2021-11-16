@@ -94,7 +94,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     TotalPesos = contrato.Pizarra == true ?
                         (precioPizarraPorMaterial.Any(y => y.MaterialId == contrato.MaterialId) && precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).MonedaId == "ARP  " ? precioPizarraPorMaterial.FirstOrDefault(y => y.MaterialId == contrato.MaterialId).Precio : 0)
                         : (contrato.MonedaId == "ARP  " ?
-                        (contrato is Contrato) && (contrato as Contrato).Condicional == true ? 1 :
+                        (contrato is Contrato) && (contrato as Contrato).Condicional == true ?
+                        (contrato as Contrato).AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == 3 && a.Porcentaje > 0) ?
+                         /*calculo con %*/((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe) + (((double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)) * (double)(contrato as Contrato).AperturaPrecio.FirstOrDefault(a => a.ConceptoAperturaPrecioId == 3).Porcentaje / 100)) :
+                        /*calculo sin % */(double)contrato.Precio + (double)(contrato as Contrato).AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
+                        :
                         contrato.PrecioNeto != null ? (double)contrato.PrecioNeto.Value : (double)contrato.Precio : 0),
                     TotalGirasolAlto = contrato.MaterialId == 5 ? contrato.Cantidad : 0,
                     TotalGirasol = contrato.MaterialId == 4 ? contrato.Cantidad : 0,

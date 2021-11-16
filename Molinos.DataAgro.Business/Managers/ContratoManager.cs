@@ -2963,7 +2963,10 @@ namespace Molinos.DataAgro.Business.Managers
                                            SqlFunctions.DateName("year", x.CondicionalFecha) : "",
                 CondicionalMonedaId = x.CondicionalMonedaId,
                 CondicionalPosicion = x.CondicionalPosicion,
-                CondicionalPrecio = x.CondicionalPrecio
+                CondicionalPrecio = x.CondicionalPrecio,
+                CondicionalContratoId = x.CondicionalContratoId,
+                CondicionalContratoSAP = x.CondicionalContrato.ContratoSAP,
+
 
             });
             return contrato;
@@ -3711,6 +3714,7 @@ namespace Molinos.DataAgro.Business.Managers
             //contratoSave.Insumo = contrato.Insumo;
 
             contratoSave.Condicional = contrato.Condicional;
+            contratoSave.CondicionalCantidad = contrato.CondicionalCantidad;
             contratoSave.CondicionalPrecio = contrato.CondicionalPrecio;
             contratoSave.CondicionalMonedaId = contrato.CondicionalMonedaId;
             contratoSave.CondicionalFecha = contrato.CondicionalFecha;

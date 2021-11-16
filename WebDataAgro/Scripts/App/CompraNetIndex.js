@@ -2721,7 +2721,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#CondicionalDiv").show();
         $("#AnulaYReemplazaId").text("Si");
         $("#CondicionalPrecioId").text(kendo.toString(parseFloat(CondicionalPrecio), "n2") + " " + CondicionalMonedaId);
-        $("#CondicionalCantidadId").text(kendo.toString(parseFloat(CondicionalCantidad), "n0"));
+        $("#CondicionalCantidadId").text(kendo.toString(parseFloat(CondicionalCantidad), "n0") + " Kg" );
         $("#CondicionalFechaFormateadoId").text(CondicionalFechaFormateado);
         $("#CondicionalPosicionId").text(CondicionalPosicion);
         
