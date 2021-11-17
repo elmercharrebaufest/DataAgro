@@ -23,8 +23,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private static List<ContratoCopiar> Query(DbContext contexto, string nroSap, bool? condicional)
         {
             var resultado = (from c in contexto.Set<Contrato>()
-                             where (c.ContratoSAP.Contains(nroSap) && (condicional == null || condicional == c.Condicional) )
-                              && (condicional == null || (condicional == c.Condicional && !c.CondicionalContratos.Any(x=> x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado)))
+                             where c.ContratoSAP.Contains(nroSap)
+                             && (condicional == null || (condicional == c.Condicional && c.EstadoId == (int)EnumEstadoContrato.Finalizado && !c.CondicionalContratos.Any(x => x.EstadoId != (int)EnumEstadoContrato.Rechazado && x.EstadoId != (int)EnumEstadoContrato.Eliminado)))
                              select new ContratoCopiar
                              {
                                  Id = c.Id,
