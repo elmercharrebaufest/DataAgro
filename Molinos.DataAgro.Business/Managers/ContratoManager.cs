@@ -1350,6 +1350,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Condicional", "Debe completar el campo Cantidad en Condicional.");
                 }
+                else
+                {
+                    if (oParam.CondicionalCantidad < oParam.Cantidad)
+                    {
+                        oErrorMessages.Error("Condicional", "Los Cantidad en Condicional debe ser mayor o igual a la Cantidad del contrato.");
+                    }
+                }
 
                 if (oParam.CondicionalFecha == null)
                 {
