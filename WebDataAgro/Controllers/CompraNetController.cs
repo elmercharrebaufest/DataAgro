@@ -1277,5 +1277,12 @@ namespace WebDataAgro.Controllers
             var estado = centroManager.TraerCentro(id);
             return Json(estado, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult Tiene2doCondicionalAsociado(int contratoId)
+        {
+            bool estado = mobjContratoManager.Tiene2doCondicionalAsociado(contratoId);
+            return Json(estado, JsonRequestBehavior.AllowGet);
+        }
+        
     }
 }

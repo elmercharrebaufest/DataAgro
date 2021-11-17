@@ -558,7 +558,8 @@ namespace Molinos.DataAgro.Test.Managers
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
                     new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
-                }
+                },
+                Fecha = DateTime.Now.Date
             };
             var oContratoBase = new Contrato()
             {
@@ -588,7 +589,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Descuentos = new List<DescuentoBonificacion>(),
                 Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>(),
-                PrecioPactado = new List<PrecioPactado>()
+                PrecioPactado = new List<PrecioPactado>(),
+                Fecha = DateTime.Now.Date
             };
             repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
@@ -2702,10 +2704,12 @@ namespace Molinos.DataAgro.Test.Managers
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
                     new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
-                }
+                },
+                Fecha = DateTime.Now.Date
             };
             var oContratoBase = new Contrato()
             {
+                Fecha = DateTime.Now.Date,
                 Id = 1,
                 ProveedorId = 1,
                 ClasificacionId = 1,
@@ -3074,7 +3078,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Sustentable = false,
                 PorcentajeDePago = 95,
                 ContratoSAP = "23422343",
-                EstadoId = (int)EnumEstadoContrato.Finalizado,                
+                EstadoId = (int)EnumEstadoContrato.Finalizado,
+                Fecha = DateTime.Now.Date,
                 Descuentos = new List<DescuentoBonificacion>()
                 {
                     new DescuentoBonificacion()
@@ -3119,7 +3124,7 @@ namespace Molinos.DataAgro.Test.Managers
                 Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>(),
                 PrecioPactado = new List<PrecioPactado>(),
-
+                Fecha = DateTime.Now.Date,
                 ContratoSAP = "434343",
                 ChequeElectronico = true
             };
@@ -3216,7 +3221,8 @@ namespace Molinos.DataAgro.Test.Managers
                 AperturaPrecio = new List<AperturaPrecio>()
                 {
                     new AperturaPrecio { ConceptoAperturaPrecioId = (int)EnumConceptoApertura.Financiero, Importe =100 }
-                }
+                },
+                Fecha = DateTime.Now.Date
             };
             var oContratoBase = new Contrato()
             {
@@ -3254,6 +3260,7 @@ namespace Molinos.DataAgro.Test.Managers
                         Id= 0,
                     }
                 },
+                Fecha = DateTime.Now.Date
             };
             repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
@@ -3665,6 +3672,7 @@ namespace Molinos.DataAgro.Test.Managers
                 DiasPesificado = 10,
                 Sustentable = false,
                 PorcentajeDePago = 95,
+                Fecha = DateTime.Now.Date,
                 Descuentos = new List<DescuentoBonificacion>()
                 {
                     new DescuentoBonificacion()
@@ -3712,7 +3720,8 @@ namespace Molinos.DataAgro.Test.Managers
                 Descuentos = new List<DescuentoBonificacion>(),
                 Calidad = new List<Calidad>(),
                 AperturaPrecio = new List<AperturaPrecio>(),
-                PrecioPactado = new List<PrecioPactado>()
+                PrecioPactado = new List<PrecioPactado>(),
+                Fecha = DateTime.Now.Date
             };
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
@@ -4292,7 +4301,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             var res = target.AprobarContrato(1);
 
-            repositorioMock.Verify(y => y.Obtener<Contrato>(It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(y => y.Obtener<Contrato>(It.IsAny<int>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
 

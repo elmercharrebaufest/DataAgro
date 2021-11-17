@@ -1,6 +1,7 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using System;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
@@ -42,6 +43,7 @@ namespace WebDataAgro.Controllers
                 RedespachoMaximoARP = conf != null ? conf.RedespachoMaximoARP : 0,
                 ToleranciaPaseMin = conf != null ? conf.ToleranciaPaseMin : 0,
                 ToleranciaPaseMax = conf != null ? conf.ToleranciaPaseMax : 0,
+                CondicionalFechaStrike = conf != null ? conf.CondicionalFechaStrike: DateTime.Now.Date
             });
         }
         [HttpPost]
@@ -82,6 +84,7 @@ namespace WebDataAgro.Controllers
                 RedespachoMaximoARP = configuracion.RedespachoMaximoARP,
                 ToleranciaPaseMin = configuracion.ToleranciaPaseMin,
                 ToleranciaPaseMax = configuracion.ToleranciaPaseMax,
+                CondicionalFechaStrike = configuracion.CondicionalFechaStrike,
             };
             return entidad;
         }

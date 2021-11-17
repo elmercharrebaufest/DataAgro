@@ -37,7 +37,6 @@ namespace WebDataAgro.Models
         public int RedespachoMaximoARP { get; set; }
         public int ToleranciaPaseMax { get; set; }
         public int ToleranciaPaseMin { get; set; }
-        
-
+        public DateTime CondicionalFechaStrike { get; set; }
     }
 }

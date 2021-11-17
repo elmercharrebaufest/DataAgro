@@ -4546,8 +4546,26 @@ function CargarDatosEditar(contrato, hijo) {
         $("#cantidadId").data("kendoNumericTextBox").enable(false);
         $("#contratoCondicionalId").val(contrato.CondicionalContratoId);
         $("#contratoCondicional").val(contrato.CondicionalContratoSAP);
+    } else {
+        $("#precioId").data("kendoNumericTextBox").enable(true);
+        $("#precioMonedaId").data("kendoDropDownList").enable(true);
+        $("#buscadorProveedor").prop('disabled', false);
+        $("#buscadorCorredor").prop('disabled', false);
+        $('#material').data("kendoDropDownList").enable(true);
+        $("#cantidadId").data("kendoNumericTextBox").enable(true);
+        $("#contratoCondicionalId").val("");
+        $("#contratoCondicional").val("");
+        $("#condicionalId").removeAttr("disabled");
+
     }
 
+    if (contrato.Estado == 5 && contrato.Condicional == true) {
+        $(".mostrarSiEscondicionalFinalizado").show();
+        var tieneAsociados = MSExecuteOnServer('/CompraNet/Tiene2doCondicionalAsociado', { contratoId: contrato.Id });
+        if (tieneAsociados) {
+            $("#condicionalId").attr("disabled", true);
+        }
+    }
 }
 
 function compareDates(date, dates) {

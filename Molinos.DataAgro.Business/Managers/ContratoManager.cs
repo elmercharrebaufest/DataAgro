@@ -619,7 +619,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            var contrato = repositorio.Obtener<Negocio>(oParam.Id);
+            var contrato = repositorio.Obtener<Contrato>(oParam.Id);
 
             var cantidadMaxima = config.CantidadMaxima * 1000;
             if (oParam.ContratoAcuerdoId != null && oParam.ContratoAcuerdoId > 0)
@@ -1355,6 +1355,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Condicional", "Debe completar el campo Fecha en Condicional.");
                 }
+                else
+                {
+                    if (config.CondicionalFechaStrike != oParam.CondicionalFecha)
+                    {
+                        oErrorMessages.Error("Condicional", "La Fecha Condicional es incorrecta.");
+                    }
+                }
                 if (string.IsNullOrEmpty(oParam.CondicionalPosicion))
                 {
                     oErrorMessages.Error("Condicional", "Debe completar el campo Posicion en Condicional.");
@@ -1367,6 +1374,26 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Condicional", "El contrato Condicional ya fue cargado.");
                 }
+            }
+            if (oParam.Id > 0 && oParam.Condicional == true && oParam.EstadoId == (int)EnumEstadoContrato.Finalizado)
+            {
+                if (contrato != null && contrato.CondicionalContratos.Any(x => x.EstadoId == (int)EnumEstadoContrato.Finalizado))
+                {
+                    if (contrato.CondicionalCantidad != oParam.CondicionalCantidad || contrato.CondicionalPrecio != oParam.CondicionalPrecio || contrato.ProveedorId != oParam.ProveedorId || contrato.CorredorId != oParam.CorredorId)
+                    {
+                        var segundoContrato = contrato.CondicionalContratos.Where(x => x.EstadoId == (int)EnumEstadoContrato.Finalizado).FirstOrDefault();
+                        var res = status.ValidarEstado(segundoContrato.ContratoSAP);
+                        var estado = (string.IsNullOrEmpty(res.Status) && res.NumeroSio == 0) ? "" :
+                            "El contrato asociado al condicional ya no se encuentra en slip o fue informado a SIO granos";
+                        if (estado != "")
+                        {
+                            oErrorMessages.Error("Condicional", estado);
+                        }
+                    }
+
+                }
+
+
             }
             return oErrorMessages;
         }
@@ -1902,7 +1929,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (cantidad < (oContratoSave.Cantidad - cantidadMinima))
                 {
                     oEntityErrors.Error("", "El contrato no se puede confirmar porque no cumple la cantidad de tolerancia minima." +
-                        " Kg Contrato: " + oContratoSave.Cantidad.ToString("N0") +". Kg Mínimo: " + (oContratoSave.Cantidad - cantidadMinima).ToString("N0"));
+                        " Kg Contrato: " + oContratoSave.Cantidad.ToString("N0") + ". Kg Mínimo: " + (oContratoSave.Cantidad - cantidadMinima).ToString("N0"));
                     return oEntityErrors;
                 }
                 if (cantidad > (oContratoSave.Cantidad + cantidadMaxima))
@@ -2103,6 +2130,10 @@ namespace Molinos.DataAgro.Business.Managers
             var oContratoSave = repositorio.Obtener<Contrato>(contratoId);
             var res = status.ValidarEstado(oContratoSave.ContratoSAP);
             var estado = (string.IsNullOrEmpty(res.Status) && res.NumeroSio == 0) ? "" : "El contrato ya no se encuentra en slip o fue informado a SIO granos";
+            if (oContratoSave.Condicional == true && oContratoSave.CondicionalContratos.Any(x => x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado))
+            {
+                oEntityErrors.Error("", "El contrato no se puede anular ya que tiene un contrato condicional asociado.");
+            }
             if (oContratoSave != null && (oContratoSave.EstadoId == (int)EnumEstadoContrato.PreAnulado) && String.IsNullOrEmpty(estado))
             {
                 var respuesta = oEliminarContratoAgent.Eliminar(oContratoSave);
@@ -3804,7 +3835,42 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         logger.Debug("Actualizacion SAP ok");
 
+                        if (oContrato.Condicional == true && oContratoSave.CondicionalContratos.Any(x => x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado))
+                        {
+                            if (oContrato.CondicionalCantidad != oContratoSave.CondicionalCantidad ||
+                                oContrato.CondicionalPrecio != oContratoSave.CondicionalPrecio ||
+                                oContrato.ProveedorId != oContratoSave.ProveedorId ||
+                                oContrato.CorredorId != oContratoSave.CorredorId)
+                            {
 
+                                var condicional = oContratoSave.CondicionalContratos.Where(x => x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado).SingleOrDefault();
+                                var condicionalGuardado = repositorio.ObtenerNoTracking<Contrato>(x => x.Id == condicional.Id);
+
+                                condicional.ProveedorId = oContrato.ProveedorId;
+                                condicional.CorredorId = oContrato.CorredorId;
+                                condicional.Precio = condicional.TipoNegocioId == 1 ? 0 : oContrato.CondicionalPrecio.Value;
+                                if (condicional.TipoNegocioId == 2)
+                                {
+                                    condicional.PrecioNeto = condicional.Precio + condicional.AperturaPrecio.Sum(a => a.Importe);
+                                    var comision = condicional.AperturaPrecio.Where(x => x.Porcentaje > 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault();
+                                    if (comision != null)
+                                    {
+                                        condicional.PrecioNeto += condicional.PrecioNeto * comision.Porcentaje / 100;
+                                    }
+                                }
+                                condicional.Cantidad = oContrato.CondicionalCantidad.Value;
+                                if (condicional.EstadoId == (int)EnumEstadoContrato.Finalizado)
+                                {
+                                    res = modificarContratoAgent.Modificar(condicional, condicionalGuardado);
+                                    if (res.Contains("Error"))
+                                    {
+                                        error.Error("SAP Condicional", res);
+                                    }
+                                    logger.Debug("Actualizacion SAP ok");
+                                }                                
+
+                            }
+                        }
                     }
                 }
                 var listaErrores = ActualizarContratoSAP(oContrato, false);
@@ -6492,5 +6558,9 @@ namespace Molinos.DataAgro.Business.Managers
             return Convert.ToDecimal(final);
         }
 
+        public bool Tiene2doCondicionalAsociado(int contratoId)
+        {
+            return repositorio.Existe<Contrato>(x => x.Condicional == true && x.Id == contratoId && x.CondicionalContratos.Any(a => a.EstadoId != (int)EnumEstadoContrato.Eliminado || a.EstadoId != (int)EnumEstadoContrato.Rechazado));
+        }
     }
 }

@@ -1443,5 +1443,15 @@ namespace Molinos.DataAgro.Test.Controllers
             centroManagerMock.Verify(x => x.TraerCentro(It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
         }
+
+        [Test]
+        public void Tiene2doCondicionalAsociadoTest()
+        {
+
+            contratoManagerMock.Setup(x => x.Tiene2doCondicionalAsociado(It.IsAny<int>())).Returns(true);
+            var result = target.EsUnContratoAsociado(1) as JsonResult;
+            contratoManagerMock.Verify(x => x.EsUnContratoAsociado(It.IsAny<int>()), Times.Once);
+            Assert.NotNull(result);
+        }
     }
 }

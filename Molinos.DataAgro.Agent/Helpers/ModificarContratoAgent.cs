@@ -340,7 +340,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.PrestamoDevolucion != contrato.PrestamoDevolucion ||
                     contratoGuardado.PosicionCBOT != contrato.PosicionCBOT ||
                     contratoGuardado.TipoPosicionCBOTId != contrato.TipoPosicionCBOTId ||
-                    contratoGuardado.PlantaDestinoId != contrato.PlantaDestinoId;
+                    contratoGuardado.PlantaDestinoId != contrato.PlantaDestinoId ||
+                    contratoGuardado.Condicional != contrato.Condicional ||
+                    contratoGuardado.CondicionalFecha != contrato.CondicionalFecha ||
+                    contratoGuardado.CondicionalPosicion != contrato.CondicionalPosicion ||
+                    contratoGuardado.CondicionalMonedaId != contrato.CondicionalMonedaId ||
+                    contratoGuardado.CondicionalPrecio != contrato.CondicionalPrecio ||
+                    contratoGuardado.CondicionalContratoId != contrato.CondicionalContratoId
+
+                    ;
 
 
                 if ((descuentosGenerales == null && contratoGuardado.Descuentos.Where(x => x.TipoPeriodoDBId != 1).ToList().Count > 0) ||

@@ -4122,6 +4122,17 @@ function CargarDatosEditar(contrato, hijo) {
         $("#cantidadId").data("kendoNumericTextBox").enable(false);
         $("#contratoCondicionalId").val(contrato.CondicionalContratoId);
         $("#contratoCondicional").val(contrato.CondicionalContratoSAP);
+    } else {
+        $("#precioId").data("kendoNumericTextBox").enable(true);
+        $("#precioMonedaId").data("kendoDropDownList").enable(true);
+        $("#buscadorProveedor").prop('disabled', false);
+        $("#buscadorCorredor").prop('disabled', false);
+        $('#material').data("kendoDropDownList").enable(true);
+        $("#cantidadId").data("kendoNumericTextBox").enable(true);
+        $("#contratoCondicionalId").val("");
+        $("#contratoCondicional").val("");
+        $("#condicionalId").removeAttr("disabled");
+
     }
 
     if ((contrato.Id == 0 || contrato.Id == null) && contrato.ProveedorId > 0) {
