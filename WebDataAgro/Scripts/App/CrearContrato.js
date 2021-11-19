@@ -12,6 +12,7 @@ var MonedaSobrePrecio = "";
 var PorcentajeSobrePrecio = 0;
 var cargaFijacionAyer;
 var esEdicion;
+var feriados = [];
 $(document).ready(function () {
     $('#menuproveedor').hide();
     $('#rootwizard').bootstrapWizard({
@@ -192,6 +193,13 @@ function cargarDatosAFijarEnFijacion(afijar) {
 }
 
 function InicializarElementos() {
+    feriados = MSExecuteOnServer('/CompraNet/FechaFeriados');
+    if (feriados == null) {
+        feriados = [];
+    }
+    for (var i = 0; i < feriados.length; i++) {
+        feriados[i] = new Date(parseInt(feriados[i].substr(6)));
+    }
     kendo.culture("es-AR");
 
     cargaFijacionAyer = ConvertirStringABool(cargaFijacionAyer);
@@ -2958,6 +2966,7 @@ function InicializarElementos() {
     $("#condicionalPosicionId").mask("00.0000", { placeholder: "MM.AAAA" });
     $("#condicionalPosicionId").change(function () {
         var posicion = $("#condicionalPosicionId").val();
+
         if (posicion.length == 7) {
             var anio = parseInt(posicion.split('.')[1]);
             var mes = parseInt(posicion.split('.')[0]);
@@ -2971,12 +2980,19 @@ function InicializarElementos() {
 }
 
 function restarDiasHabiles(fecha, cantidad) {
+
     while (cantidad > 0) {
         fecha = addDaysToDate(fecha, -1);
         if (fecha.getDay() == 6 || fecha.getDay() == 0) {
             fecha = addDaysToDate(fecha, -1);
         }
         if (fecha.getDay() == 6 || fecha.getDay() == 0) {
+            fecha = addDaysToDate(fecha, -1);
+        }
+        for (var i = 0; i < length; i++) {
+
+        }
+        while ($.inArray(fecha, feriados) > -1) {
             fecha = addDaysToDate(fecha, -1);
         }
         cantidad = cantidad - 1;
