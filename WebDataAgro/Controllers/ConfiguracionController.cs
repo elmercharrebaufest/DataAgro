@@ -43,7 +43,6 @@ namespace WebDataAgro.Controllers
                 RedespachoMaximoARP = conf != null ? conf.RedespachoMaximoARP : 0,
                 ToleranciaPaseMin = conf != null ? conf.ToleranciaPaseMin : 0,
                 ToleranciaPaseMax = conf != null ? conf.ToleranciaPaseMax : 0,
-                CondicionalFechaStrike = conf != null ? conf.CondicionalFechaStrike: DateTime.Now.Date
             });
         }
         [HttpPost]
@@ -84,7 +83,6 @@ namespace WebDataAgro.Controllers
                 RedespachoMaximoARP = configuracion.RedespachoMaximoARP,
                 ToleranciaPaseMin = configuracion.ToleranciaPaseMin,
                 ToleranciaPaseMax = configuracion.ToleranciaPaseMax,
-                CondicionalFechaStrike = configuracion.CondicionalFechaStrike,
             };
             return entidad;
         }

@@ -317,7 +317,7 @@ function InicializarElementos() {
                         CargarAutomaticamenteLaComision(compraNet);
                     } else {
                         BorrarComisionSiEsAcopio();
-                    }    
+                    }
                     InsertarAperturasViewModel(CalcularPrecioTotalApertura());
                     SeleccionAutomaticaBolsa();
                 }
@@ -1070,7 +1070,7 @@ function InicializarElementos() {
                     }
                 }
             }
-            InsertarAperturasViewModel(CalcularPrecioTotalApertura());            
+            InsertarAperturasViewModel(CalcularPrecioTotalApertura());
         }
     });
 
@@ -2953,12 +2953,41 @@ function InicializarElementos() {
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
-    $("#condicionalPosicionId").mask("00.0000", { placeholder: "MM.AAAA" });
+    $("#condicionalFechaId").data("kendoDatePicker").enable(false);
 
+    $("#condicionalPosicionId").mask("00.0000", { placeholder: "MM.AAAA" });
+    $("#condicionalPosicionId").change(function () {
+        var posicion = $("#condicionalPosicionId").val();
+        if (posicion.length == 7) {
+            var anio = parseInt(posicion.split('.')[1]);
+            var mes = parseInt(posicion.split('.')[0]);
+            var fecha = new Date(anio, mes - 1, 1);
+            fecha = restarDiasHabiles(fecha, 6);
+            $("#condicionalFechaId").data("kendoDatePicker").value(fecha);
+        }
+    });
 
     //FIN INICIALIZARELEMENTOS
 }
 
+function restarDiasHabiles(fecha, cantidad) {
+    while (cantidad > 0) {
+        fecha = addDaysToDate(fecha, -1);
+        if (fecha.getDay() == 6 || fecha.getDay() == 0) {
+            fecha = addDaysToDate(fecha, -1);
+        }
+        if (fecha.getDay() == 6 || fecha.getDay() == 0) {
+            fecha = addDaysToDate(fecha, -1);
+        }
+        cantidad = cantidad - 1;
+    }
+    return fecha;
+}
+function addDaysToDate(date, days) {
+    var res = new Date(date);
+    res.setDate(res.getDate() + days);
+    return res;
+}
 function AbrirModalCapacidadProductivaPendiente() {
     if ($("#proveedorId").val() > 0) {
         var data = { proveedorId: $("#proveedorId").val() };
@@ -4559,11 +4588,20 @@ function CargarDatosEditar(contrato, hijo) {
 
     }
 
-    if (contrato.Estado == 5 && contrato.Condicional == true) {
-        $(".mostrarSiEscondicionalFinalizado").show();
+    if (contrato.Condicional == true) {
+        //if (contrato.Estado == 5) {
+        //    $(".mostrarSiEscondicionalFinalizado").show();
+        //}
         var tieneAsociados = MSExecuteOnServer('/CompraNet/Tiene2doCondicionalAsociado', { contratoId: contrato.Id });
         if (tieneAsociados) {
             $("#condicionalId").attr("disabled", true);
+            $("#buscadorProveedor").prop('disabled', true);
+            $("#buscadorCorredor").prop('disabled', true);
+            $('#material').data("kendoDropDownList").enable(false);
+            $("#condicionalPrecioId").data("kendoNumericTextBox").enable(false);
+            $("#condicionalMonedaId").data("kendoDropDownList").enable(false);
+            $("#condicionalCantidadId").data("kendoNumericTextBox").enable(false);
+            $("#condicionalPosicionId").prop('disabled', true);
         }
     }
 }
@@ -5825,7 +5863,7 @@ function BorrarComisionSiEsAcopio() {
     }
 
     $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
-   
+
     if (viewModel.AperturaPrecio[2]) {
         viewModel.AperturaPrecio[2].Porcentaje = 0;
     }

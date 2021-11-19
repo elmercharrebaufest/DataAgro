@@ -19,5 +19,4 @@ function InicializarElementos() {
         spinners: false,
         min: 0
     });
-    $("#CondicionalFechaStrike").kendoDatePicker({ format:"dd-MM-yyyy"});
 }

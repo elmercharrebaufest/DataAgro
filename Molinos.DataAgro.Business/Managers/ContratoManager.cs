@@ -1362,13 +1362,6 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Condicional", "Debe completar el campo Fecha en Condicional.");
                 }
-                else
-                {
-                    if (config.CondicionalFechaStrike != oParam.CondicionalFecha)
-                    {
-                        oErrorMessages.Error("Condicional", "La Fecha Condicional es incorrecta.");
-                    }
-                }
                 if (string.IsNullOrEmpty(oParam.CondicionalPosicion))
                 {
                     oErrorMessages.Error("Condicional", "Debe completar el campo Posicion en Condicional.");
@@ -1382,26 +1375,26 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("Condicional", "El contrato Condicional ya fue cargado.");
                 }
             }
-            if (oParam.Id > 0 && oParam.Condicional == true && oParam.EstadoId == (int)EnumEstadoContrato.Finalizado)
-            {
-                if (contrato != null && contrato.CondicionalContratos.Any(x => x.EstadoId == (int)EnumEstadoContrato.Finalizado))
-                {
-                    if (contrato.CondicionalCantidad != oParam.CondicionalCantidad || contrato.CondicionalPrecio != oParam.CondicionalPrecio || contrato.ProveedorId != oParam.ProveedorId || contrato.CorredorId != oParam.CorredorId)
-                    {
-                        var segundoContrato = contrato.CondicionalContratos.Where(x => x.EstadoId == (int)EnumEstadoContrato.Finalizado).FirstOrDefault();
-                        var res = status.ValidarEstado(segundoContrato.ContratoSAP);
-                        var estado = (string.IsNullOrEmpty(res.Status) && res.NumeroSio == 0) ? "" :
-                            "El contrato asociado al condicional ya no se encuentra en slip o fue informado a SIO granos";
-                        if (estado != "")
-                        {
-                            oErrorMessages.Error("Condicional", estado);
-                        }
-                    }
+            //if (oParam.Id > 0 && oParam.Condicional == true && oParam.EstadoId == (int)EnumEstadoContrato.Finalizado)
+            //{
+            //    if (contrato != null && contrato.CondicionalContratos.Any(x => x.EstadoId == (int)EnumEstadoContrato.Finalizado))
+            //    {
+            //        if (contrato.CondicionalCantidad != oParam.CondicionalCantidad || contrato.CondicionalPrecio != oParam.CondicionalPrecio || contrato.ProveedorId != oParam.ProveedorId || contrato.CorredorId != oParam.CorredorId)
+            //        {
+            //            var segundoContrato = contrato.CondicionalContratos.Where(x => x.EstadoId == (int)EnumEstadoContrato.Finalizado).FirstOrDefault();
+            //            var res = status.ValidarEstado(segundoContrato.ContratoSAP);
+            //            var estado = (string.IsNullOrEmpty(res.Status) && res.NumeroSio == 0) ? "" :
+            //                "El contrato asociado al condicional ya no se encuentra en slip o fue informado a SIO granos";
+            //            if (estado != "")
+            //            {
+            //                oErrorMessages.Error("Condicional", estado);
+            //            }
+            //        }
 
-                }
+            //    }
 
 
-            }
+            //}
             return oErrorMessages;
         }
 
@@ -3842,42 +3835,42 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         logger.Debug("Actualizacion SAP ok");
 
-                        if (oContrato.Condicional == true && oContratoSave.CondicionalContratos.Any(x => x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado))
-                        {
-                            if (oContrato.CondicionalCantidad != oContratoSave.CondicionalCantidad ||
-                                oContrato.CondicionalPrecio != oContratoSave.CondicionalPrecio ||
-                                oContrato.ProveedorId != oContratoSave.ProveedorId ||
-                                oContrato.CorredorId != oContratoSave.CorredorId)
-                            {
+                        //if (oContrato.Condicional == true && oContratoSave.CondicionalContratos.Any(x => x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado))
+                        //{
+                        //    if (oContrato.CondicionalCantidad != oContratoSave.CondicionalCantidad ||
+                        //        oContrato.CondicionalPrecio != oContratoSave.CondicionalPrecio ||
+                        //        oContrato.ProveedorId != oContratoSave.ProveedorId ||
+                        //        oContrato.CorredorId != oContratoSave.CorredorId)
+                        //    {
 
-                                var condicional = oContratoSave.CondicionalContratos.Where(x => x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado).SingleOrDefault();
-                                var condicionalGuardado = repositorio.ObtenerNoTracking<Contrato>(x => x.Id == condicional.Id);
+                        //        var condicional = oContratoSave.CondicionalContratos.Where(x => x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado).SingleOrDefault();
+                        //        var condicionalGuardado = repositorio.ObtenerNoTracking<Contrato>(x => x.Id == condicional.Id);
 
-                                condicional.ProveedorId = oContrato.ProveedorId;
-                                condicional.CorredorId = oContrato.CorredorId;
-                                condicional.Precio = condicional.TipoNegocioId == 1 ? 0 : oContrato.CondicionalPrecio.Value;
-                                if (condicional.TipoNegocioId == 2)
-                                {
-                                    condicional.PrecioNeto = condicional.Precio + condicional.AperturaPrecio.Sum(a => a.Importe);
-                                    var comision = condicional.AperturaPrecio.Where(x => x.Porcentaje > 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault();
-                                    if (comision != null)
-                                    {
-                                        condicional.PrecioNeto += condicional.PrecioNeto * comision.Porcentaje / 100;
-                                    }
-                                }
-                                condicional.Cantidad = oContrato.CondicionalCantidad.Value;
-                                if (condicional.EstadoId == (int)EnumEstadoContrato.Finalizado)
-                                {
-                                    res = modificarContratoAgent.Modificar(condicional, condicionalGuardado);
-                                    if (res.Contains("Error"))
-                                    {
-                                        error.Error("SAP Condicional", res);
-                                    }
-                                    logger.Debug("Actualizacion SAP ok");
-                                }                                
+                        //        condicional.ProveedorId = oContrato.ProveedorId;
+                        //        condicional.CorredorId = oContrato.CorredorId;
+                        //        condicional.Precio = condicional.TipoNegocioId == 1 ? 0 : oContrato.CondicionalPrecio.Value;
+                        //        if (condicional.TipoNegocioId == 2)
+                        //        {
+                        //            condicional.PrecioNeto = condicional.Precio + condicional.AperturaPrecio.Sum(a => a.Importe);
+                        //            var comision = condicional.AperturaPrecio.Where(x => x.Porcentaje > 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault();
+                        //            if (comision != null)
+                        //            {
+                        //                condicional.PrecioNeto += condicional.PrecioNeto * comision.Porcentaje / 100;
+                        //            }
+                        //        }
+                        //        condicional.Cantidad = oContrato.CondicionalCantidad.Value;
+                        //        if (condicional.EstadoId == (int)EnumEstadoContrato.Finalizado)
+                        //        {
+                        //            res = modificarContratoAgent.Modificar(condicional, condicionalGuardado);
+                        //            if (res.Contains("Error"))
+                        //            {
+                        //                error.Error("SAP Condicional", res);
+                        //            }
+                        //            logger.Debug("Actualizacion SAP ok");
+                        //        }                                
 
-                            }
-                        }
+                        //    }
+                        //}
                     }
                 }
                 var listaErrores = ActualizarContratoSAP(oContrato, false);
