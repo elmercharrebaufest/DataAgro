@@ -132,11 +132,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
+                        configuracionSave.LimiteAnterior = configuracionSave.LimiteCupo;
                         configuracionSave.LimiteCupo = configuracion.LimiteCupo;
                         configuracionSave.LimiteAlgoritmo = configuracion.LimiteAlgoritmo;
                         configuracionSave.CierreCupera = configuracion.CierreCupera;
                         configuracionSave.LiberarCupera = configuracion.LiberarCupera;
-                        configuracionSave.LimiteAnterior = configuracionSave.LimiteCupo;
                     }
 
                     repositorio.GuardarCambios();
