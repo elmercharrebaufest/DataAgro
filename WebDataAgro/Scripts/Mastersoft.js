@@ -54,6 +54,7 @@ function MSExecuteOnServer(url, datos, onCallBack) {
         async: false,
         url: MSGetUrl(url),
         type: 'POST',
+        cache: false,
         data: kendo.stringify(datos),
         dataType: "json",
         contentType: "application/json; charset=utf-8",

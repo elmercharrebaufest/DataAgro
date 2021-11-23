@@ -47,6 +47,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 join pc in contexto.Set<ProveedorCondicion>() on prove.ProveedorId equals pc.Proveedor.ProveedorId into pcs
                 from pc in pcs.DefaultIfEmpty()
                 where prove.ProveedorId == proveedorId
+                orderby pco.NroItem ascending
                 select new BasicoProveedor()
                 {
                     ProveedorId = prove.ProveedorId,

@@ -19,10 +19,10 @@ namespace WebDataAgro.Models
         public int CantidadCupo { get; set; }
         public Resultado Resultado { get; set; }
         public bool CierreCupera { get; set; }
-
+        public bool LiberarCupera { get; set; }
+        public int CantidadAlgoritmo { get; set; }
         public List<DiaCupo> Dias { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaRequerido")]
         public DateTime FechaHasta { get; set; }
-
     }
 }

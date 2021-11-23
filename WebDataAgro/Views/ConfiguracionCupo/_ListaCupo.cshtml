@@ -1,39 +1,49 @@
 ﻿@model WebDataAgro.Models.ConfiguracionCupoModel
 <br />
-
 <div class="row">
-    <div class="col-xs-10 m-grid-col-xs-offset-1">
+    <div class="col-xs-12">
         <div class="cupo">
             <span class="historial">Configuracion</span>
         </div>
-        <div class="row alinear-derecha">
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-10">
+        @*<div class="cupo">
+                <span class="historial">Configuracion</span>
+            </div>*@
+        <div class="row">
             @*<div id="variosDiv" class="col-xs-12 col-md-5">*@
-                <div class="col-xs-12 col-md-3 col-sm-4">
-                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick=" AbrirModal()">
-                        <span class="botonVarios">
-                            <i class="fa fa-align-justify varios" aria-hidden="true"></i>
-                        </span>
-                        <span>Edición Masiva</span>
-                    </div>
+            <div class="col-xs-12 col-md-3 col-sm-4">
+                <div id="finalizarVariosDiv" data-toggle="tooltip" onclick=" AbrirModal()">
+                    <span class="botonVarios">
+                        <i class="fa fa-cog varios" aria-hidden="true"></i>
+                    </span>
+                    <span style="color:gray">Configurar Zonas</span>
                 </div>
-                <div class="col-xs-12 col-md-3 col-sm-4">
-                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick=" AbrirMasivo()">
-                        <span class="botonVarios">
-                            <i class="fa fa-calendar-plus-o varios" aria-hidden="true"></i>
-                        </span>
-                        <span>Abrir Cupera</span>
-                    </div>
+            </div>
+            <div class="col-xs-12 col-md-3 col-sm-4">
+                <div id="finalizarVariosDiv" data-toggle="tooltip" onclick=" CierreMasivoAceptar()">
+                    <span class="botonVarios">
+                        <i class="fa fa-unlock varios" aria-hidden="true"></i>
+                    </span>
+                    <span style="color:gray">Abrir todas las cuperas</span>
                 </div>
-                <div class="col-xs-12 col-md-3 col-sm-4">
-                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick="CierreMasivo()">
-                        <span class="botonVarios">
-                            <i class="fa fa-calendar-times-o varios" aria-hidden="true"></i>
-                        </span>
-                        <span>Cerrar Cupera</span>
-                    </div>
+            </div>
+            <div class="col-xs-12 col-md-3 col-sm-4">
+                <div id="finalizarVariosDiv" data-toggle="tooltip" onclick="CierreMasivoCerrar()">
+                    <span class="botonVarios">
+                        <i class="fa fa-lock varios" aria-hidden="true"></i>
+                    </span>
+                    <span style="color:gray">Bloquear todas las cuperas</span>
                 </div>
+            </div>
             @*</div>*@
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
         <div id="gridConfiguracionCupo" class="table-responsive">
 
         </div>
@@ -41,11 +51,117 @@
 </div>
 
 <style>
-    .fa{
-        font-size: inherit !important;
-    }
-    .botonVarios{
+        .fa {
+            font-size: inherit !important;
+        }
+
+        .botonVarios {
             font-size: 22px !important;
-    }
-    
+        }
+
+        .varios {
+            color: gray;
+        }
+
+        .content-input input,
+        .content-select select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .content-input input {
+            visibility: hidden;
+            position: absolute;
+            right: 0;
+        }
+
+        .content-input {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 5px 0 5px 60px; /* Damos un padding de 60px para posicionar
+            el elemento <i> en este espacio*/
+            display: block;
+            margin-left: 33px;
+        }
+
+            /* Estas reglas se aplicarán a todos las elementos i
+    después de cualquier input*/
+            .content-input input + i {
+                background: gray;
+                border: 2px solid rgba(0,0,0,0.2);
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+
+            /* Estas reglas se aplicarán a todos los i despues
+    de un input de tipo checkbox*/
+            .content-input input[type=checkbox ] + i {
+                width: 36px;
+                height: 19px;
+                border-radius: 15px;
+            }
+
+                .content-input input[type=checkbox] + i:before {
+                    content: ''; /* No hay contenido */
+                    width: 17px;
+                    height: 18px;
+                    background: #fff;
+                    border-radius: 50%;
+                    position: absolute;
+                    z-index: 1;
+                    left: 0px;
+                    top: 0px;
+                    -webkit-box-shadow: 3px 0 3px 0 rgba(0,0,0,0.2);
+                    box-shadow: 3px 0 3px 0 rgba(0,0,0,0.2);
+                }
+
+            .content-input input[type=checkbox]:checked + i:before {
+                left: 17px;
+                -webkit-box-shadow: -3px 0 3px 0 rgba(0,0,0,0.2);
+                box-shadow: 3px 0 -3px 0 rgba(0,0,0,0.2);
+            }
+
+            .content-input input[type=checkbox]:checked + i {
+                background: #0080FF;
+            }
+
+            .content-input input[type=checkbox] + i:after {
+                content: '';
+                position: absolute;
+                font-size: 10px;
+                color: rgba(255,255,255,0.6);
+                top: 8px;
+                left: 4px;
+                opacity: 0 /* Ocultamos este elemento */;
+                transition: all 0.25s ease 0.25s;
+            }
+
+            /* Cuando esté checkeado cambiamos la opacidad a 1 y lo mostramos */
+            .content-input input[type=checkbox]:checked + i:after {
+                opacity: 1;
+            }
+
+        .k-grid-header .k-header > .k-link {
+            color: white
+        }
+
+        .k-grid-header .k-header {
+            background: gray !important;
+        }
+        /*  .k-block, .k-button, .k-draghandle, .k-grid-header, .k-grouping-header, .k-header, .k-pager-wrap, .k-toolbar, .k-treemap-tile, html .km-pane-wrapper .k-header {
+                    background: gray !important;
+                }*/
+        .k-button.k-button-icon .k-icon, .k-grid-filter .k-icon, .k-header .k-icon {
+            color: white !important;
+        }
+
+        .k-grid table {
+            text-align: center;
+        }
+
+        .k-grid-filter.k-state-active {
+            background-color: gray;
+        }
 </style>

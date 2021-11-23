@@ -6560,7 +6560,13 @@ namespace Molinos.DataAgro.Business.Managers
 
         public bool Tiene2doCondicionalAsociado(int contratoId)
         {
-            return repositorio.Existe<Contrato>(x => x.Condicional == true && x.Id == contratoId && x.CondicionalContratos.Any(a => a.EstadoId != (int)EnumEstadoContrato.Eliminado || a.EstadoId != (int)EnumEstadoContrato.Rechazado));
+            return repositorio.Existe<Contrato>(x => 
+            x.Id == contratoId && 
+            x.Condicional == true && 
+            x.CondicionalContratos.Any(a => 
+                a.EstadoId != (int)EnumEstadoContrato.Eliminado || 
+                a.EstadoId != (int)EnumEstadoContrato.Rechazado)
+            );
         }
     }
 }

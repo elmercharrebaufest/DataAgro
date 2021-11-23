@@ -73,7 +73,8 @@ namespace Molinos.DataAgro.Agent
                                     Consumidos = int.Parse(item.CONSUMIDOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.CONSUMIDOS.TrimStart(new Char[] { '0' })),
                                     Limite = int.Parse(item.LIMITE_CUPOS.TrimStart(new Char[] { '0' }).Length == 0 ? "0" : item.LIMITE_CUPOS.TrimStart(new Char[] { '0' })),
                                     CentroCodigo = centro,
-                                    CentroNombre = centros.FirstOrDefault(a => a.CodigoSap == centro) == null ? centro : centros.FirstOrDefault(a => a.CodigoSap == centro).Descripcion
+                                    CentroNombre = centros.FirstOrDefault(a => a.CodigoSap == centro) == null ? centro : centros.FirstOrDefault(a => a.CodigoSap == centro).Descripcion,
+
                                 });
                             }
                             logger.Debug(devolucion.ToXml());

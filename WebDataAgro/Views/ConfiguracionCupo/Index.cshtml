@@ -1,6 +1,6 @@
 ﻿@model WebDataAgro.Models.ConfiguracionCupoModel
 @{
-    ViewBag.Title = "Configuración Cupos";
+    ViewBag.Title = "Administración de Cupos";
 }
 
 @section Styles {
@@ -34,11 +34,20 @@
         <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
         <span>Grabación Correcta</span>
     </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="desplegable" id="desplegable">
+            <span class="historial">Alta</span>
+        </div>
+    </div>
+</div>
+<div class="container">
     <div class="row">
-        <div class="col-xs-10 m-grid-col-xs-offset-1">
-            <div class="desplegable" id="desplegable">
-                <span class="historial">Alta</span>
-            </div>
+        <div class="col-xs-10">
+            @*<div class="desplegable" id="desplegable">
+                    <span class="historial">Alta</span>
+                </div>*@
 
             @using (Html.BeginForm("GrabarCupos", null, FormMethod.Post, new { id = "formGrabarCupos" }))
             {
@@ -79,7 +88,13 @@
                         <span>Límite Cupo</span>
                     </div>
                     <div class="col-sm-4">
-                        @Html.TextBoxFor(x => x.CantidadCupo, new { @class = "w100" })
+                        @Html.TextBoxFor(x => x.CantidadCupo, new { @class = "w100", @onchange = "SetearEnCero()" })
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Límite Algoritmo</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(x => x.CantidadAlgoritmo, new { @class = "w100", @onchange = "SetearEnCero()" })
                     </div>
                     <div hidden>
                         <div class="col-xs-2">
@@ -89,25 +104,35 @@
                             <input id="CierreCupera" name="CierreCupera" type="checkbox" value="true">
                         </div>
                     </div>
-                    <div class="col-xs-2">
+                    <div>
+                        <div class="col-xs-2">
+                            <span>Liberar Cupera</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <input id="LiberarCupera" name="LiberarCupera" type="checkbox" value="true">
+                        </div>
+                    </div>
+                </div>
 
+
+                <br />
+                <div class="row" style="padding-top:5px;">
+
+                    <div class="col-sm-2">
+                        <button class="btn btnSubmit cancelar" type="button" onclick="Cancelar()">Cancelar</button>
                     </div>
                     <div class="col-sm-2">
-                        <button class="btn btnSubmit" type="button" onclick="Cancelar()">Cancelar</button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btnSubmit" type="submit">Grabar</button>
+                        <button class="btn btnSubmit guardar" type="submit">Grabar</button>
                     </div>
                 </div>
             }
         </div>
     </div>
-    <div id="tablaCupos">
-
-        @Html.Action("TablaCuposPartial", "ConfiguracionCupo")
-    </div>
 </div>
+<div id="tablaCupos">
 
+    @Html.Action("TablaCuposPartial", "ConfiguracionCupo")
+</div>
 <!-- Modal Limite-->
 @Html.Partial("ModalLimite")
 
@@ -116,8 +141,50 @@
         border-bottom: 5px solid #d21515 !important;
     }
 
+    .maiz {
+        background: rgb(255, 204, 153, 0.5) !important;
+    }
+
+    .soja {
+        background: rgb(153, 204, 0, 0.5) !important;
+    }
+
+    .girasol {
+        background: rgb(211, 96, 212, 0.5) !important;
+    }
+
+    .trigo {
+        background: rgb(106, 230, 190, 0.5) !important;
+    }
+
+    .girasolAO {
+        background: rgb(153, 153, 255, 0.5) !important;
+    }
+
     .btn {
         margin-left: 0px !important;
         width: 100%;
+    }
+
+    .container {
+        margin-right: 0;
+        margin-left: 0;
+        max-width: 100%;
+    }
+
+    .cancelar {
+        background: red;
+        color: white;
+        border-radius: 5px !important
+    }
+
+    .guardar {
+        background: green;
+        color: white;
+        border-radius: 5px !important
+    }
+
+    .finalizarVariosDiv {
+        border: 1px solid #bdbdbd;
     }
 </style>

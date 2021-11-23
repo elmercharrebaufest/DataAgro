@@ -253,7 +253,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
             }
-            if (validacionesMinimas)
+            if (validacionesMinimas && oParam.Pizarra != true)
             {
                 var rangosPrecio = repositorio.Listar<RangoPrecio>();
                 if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))

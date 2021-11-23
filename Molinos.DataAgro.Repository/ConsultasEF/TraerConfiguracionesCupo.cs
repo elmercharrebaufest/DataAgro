@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
         public TraerConfiguracionesCupo(KendoGridMvcRequest request)
         {
-            this.request = request;            
+            this.request = request;
         }
 
         private static KendoGrid<ConfiguracionCupoDto> Query(DbContext contexto, KendoGridMvcRequest request)
@@ -23,20 +23,27 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var hoy = DateTime.Today;
             var query =
-                from cupo in contexto.Set<ConfiguracionCupo>() 
+                from cupo in contexto.Set<ConfiguracionCupo>()
                 where cupo.Fecha >= hoy
                 select new ConfiguracionCupoDto()
                 {
                     Id = cupo.Id,
                     LimiteCupo = cupo.LimiteCupo,
+                    LimiteAlgoritmo = cupo.LimiteAlgoritmo,
                     Fecha = cupo.Fecha,
                     Material = cupo.Material.Descripcion,
                     Centro = cupo.Centro.Descripcion,
                     CentroId = cupo.CentroId,
                     MaterialId = cupo.MaterialId,
-                    BloquearCupera = cupo.CierreCupera ? "Si":"No"
+                    BloquearCupera = cupo.CierreCupera ? "Si" : "No",
+                    LiberarCuperaDesc = cupo.LiberarCupera ? "Si" : "No",
+                    CentroCodigoSap = cupo.Centro.CodigoSap,
+                    MaterialCodigoSap = cupo.Material.Codigo,
+                    LimiteCupoAnterior = cupo.LimiteAnterior,
+                    Bloquear = cupo.CierreCupera,
+                    LiberarCupera = cupo.LiberarCupera
                 };
-            
+
             return new KendoGrid<ConfiguracionCupoDto>(request, query);
         }
 

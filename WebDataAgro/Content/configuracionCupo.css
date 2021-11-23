@@ -1,9 +1,11 @@
 ﻿.mostrar {
-    font-size: 12px !important 
+    font-size: 12px !important
 }
-.w100{
+
+.w100 {
     width: 100%
 }
+
 .w48 {
     width: 48.07%
 }
@@ -21,29 +23,34 @@
     margin-bottom: 10px;
     padding: 0 0 5px 20px;
 }
+
 .mostrar-historial {
     margin-left: 15px;
     font-size: 12px;
 }
+
 .alert {
     z-index: 100;
     border-radius: 5px !important;
     width: 600px;
 }
+
 .k-grid {
     font-size: 12px;
 }
 
-.k-input, .k-autocomplete{
-    font-size:14px;
+.k-input, .k-autocomplete {
+    font-size: 14px;
 }
 
-.k-widget.k-numerictextbox.number-input{
+.k-widget.k-numerictextbox.number-input {
     margin-bottom: 0;
 }
+
 .fa {
     font-size: 14px;
 }
+
 #tablaLimite td {
     padding-bottom: 0;
     padding-top: 0;
@@ -56,8 +63,9 @@
     border-color: #dbdbdb;
     background-color: #fff;
     cursor: pointer;
-    margin-left:30px;
+    margin-left: 30px;
 }
+
     .btn:hover {
         color: #fff;
         border-color: #017940;
@@ -70,11 +78,11 @@
     padding: 0 0 5px 20px;
 }
 
-.links-grid{
-    margin-left:5px;
+.links-grid {
+    margin-left: 5px;
 }
 
-.alert{
-    margin-left:auto;
-    margin-right:auto;
+.alert {
+    margin-left: auto;
+    margin-right: auto;
 }

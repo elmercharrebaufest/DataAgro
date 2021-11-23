@@ -48,23 +48,23 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["EsCupera"] = true;
             HttpContext.Current.Session["comercialId"] = 1;
-            materialManagerMock.Setup(x => x.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>()});
-            centroManagerMock.Setup(x => x.TraerTodoCentro()).Returns(new ResultIniCentro { Centro = new List<CentroIni>()});
+            materialManagerMock.Setup(x => x.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>() });
+            centroManagerMock.Setup(x => x.TraerTodoCentro()).Returns(new ResultIniCentro { Centro = new List<CentroIni>() });
 
         }
 
         [Test]
         public void IndexOk()
-        {            
+        {
             var result = target.Index() as ViewResult;
-            
+
             Assert.NotNull(result);
             Assert.IsEmpty(result.ViewName);
         }
         [Test]
         public void TablaCuposPartialTest()
         {
-            
+
             var result = target.TablaCuposPartial() as PartialViewResult;
 
             Assert.NotNull(result);
@@ -95,14 +95,14 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             configuracionCupoManagerMock.Verify(x => x.TraerTodaConfiguracionCupo(It.IsAny<KendoGridMvcRequest>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
         [Test]
         public void TraerZonaCupoTest()
         {
             zonaCupoManagerMock.Setup(x => x.TraerTodoZonaCupo())
-                .Returns(new ResultIniZonaCupo { ZonaCupo=new List<ZonaCupoIni>() { new ZonaCupoIni {Id=1,Descripcion="a",CodigoSap="a" } } });
+                .Returns(new ResultIniZonaCupo { ZonaCupo = new List<ZonaCupoIni>() { new ZonaCupoIni { Id = 1, Descripcion = "a", CodigoSap = "a" } } });
             var result = target.TraerZonaCupo();
 
             Assert.NotNull(result);
@@ -130,21 +130,21 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EditarConfiguracionCupoTest()
         {
             configuracionCupoManagerMock.Setup(x => x.TraerConfiguracionCupo(It.IsAny<int>()))
-                .Returns(new ConfiguracionCupoDto { Id=1,CentroId=1,MaterialId=1,LimiteCupo=1});
+                .Returns(new ConfiguracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, LimiteCupo = 1 });
             var result = target.EditarConfiguracionCupo(1);
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             configuracionCupoManagerMock.Verify(x => x.TraerConfiguracionCupo(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
 
         [Test]
         public void CambioMasivoTest()
         {
-            configuracionCupoManagerMock.Setup(x => x.CambioMasivo(It.IsAny<List<int>>(), It.IsAny<bool>()))
+            configuracionCupoManagerMock.Setup(x => x.CambioMasivo(It.IsAny<bool>()))
                 .Returns(new Resultado());
             var result = target.EditarConfiguracionCupo(1);
 

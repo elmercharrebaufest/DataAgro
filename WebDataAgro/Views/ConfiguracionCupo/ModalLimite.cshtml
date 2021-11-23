@@ -2,35 +2,89 @@
     Layout = null;
 }
 <div class="modal fade" id="ModalLimiteCupo" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-mio">
+    <div class="modal-dialog modal-lg modal-mio">
         <div class="modal-content">
             <div class="alert alert-danger alert-dismissible" role="alert" hidden>
                 <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
                 <span id="error-alert"></span>
             </div>
 
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
             <div class="modal-header ">
+                <div style="color: green; font-weight: bold;">Configurar Zonas</div>
                 <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
                 <div class="status confirmado-modal">
-                    <div id="tituloAgente" class="tituloPosicion">Configuración Cupos</div>
+                    <div id="tituloAgente" class="tituloPosicion" style="padding: 1px;margin: 0px !important;  margin-left: -16px !important; margin-right:-16px !important;"></div>
                 </div>
             </div>
             <div class="modal-body clearfix scrollInside">
                 <input id="configuracionCupoId" hidden />
+                <div class="row">
+                    <div id="tabla-configuracion" class="table-responsive">
+                        <table id="tablaConfiguracion" class="table configuracionTabla table-striped ">
+                        </table>
+                    </div>
+                </div>
                 <div class="row">
                     <div id="tabla-limite" class="table-responsive">
                         <table id="tablaLimite" class="table table-bordered table-striped ">
                         </table>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-5">
+
+                    </div>
+                    <div class="col-md-1" style="margin-left:23px">
+                        <span>Total</span>
+                    </div>
+                    <div class="col-md-2">
+                        <input id="totalId" disabled />
+                    </div>
+                </div>
             </div>
-            <div class="modal-footer clearfix ">
-                <div class="align-right">
-                    <button type="button" id="grabarLimiteCupo" class="btn btnSubmit">Guardar</button>
-                    <button type="button" id="cancelar" class="btn" data-dismiss="modal">Cerrar</button>
+            <div class="modal-footer clearfix row">
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <button type="button" style="background: green; color: white;" id="grabarLimiteCupo" class="btn btnSubmit">Guardar</button>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" style="background: red; color: white;" id="cancelar" class="btn" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .configuracionTabla tbody > tr > th {
+        border-top: 0px !important;
+        border-right: 0px;
+        border-bottom: 4px solid #e7ab50;
+        border-left: 0px;
+        text-align: center;
+    }
+
+    .table {
+        text-align: center;
+    }
+
+    #tablaConfiguracion, #tablaLimite {
+        margin-bottom: 0px !important;
+    }
+
+
+    span.k-numerictextbox {
+        width: 90% !important;
+    }
+
+    .modal .modal-footer {
+        padding: 0px !important;
+    }
+
+    @@media screen and (min-width: 768px) {
+        .modal-dialog {
+            padding-top: 0px !important;
+        }
+    }
+</style>

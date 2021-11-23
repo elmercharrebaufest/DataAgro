@@ -3072,16 +3072,16 @@ function ClickEnPizarra() {
     if ($("#pizarraId").is(':checked')) {
         LimpiarApertura();
         $("#precioId").data("kendoNumericTextBox").enable(false);
-        $("#precioMonedaId").data("kendoDropDownList").enable(false);
+        //$("#precioMonedaId").data("kendoDropDownList").enable(false);
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(false);
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(false);
-        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
+        // $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
         $("#precioId").data("kendoNumericTextBox").value("");
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
         $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
         $("#precioId").trigger('change');
         $("#precioTotalApertura").data("kendoNumericTextBox").value("");
-        $("#precioMonedaId").data("kendoDropDownList").value(0);
+        //$("#precioMonedaId").data("kendoDropDownList").value(0);
 
         $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
         $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
@@ -3090,15 +3090,25 @@ function ClickEnPizarra() {
         $("#diasDiferidoFijacionDiv").removeClass("inline-fijacion");
         $("#diasDiferidoFijacionDiv").addClass("hide-fijacion");
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value("");
-        precioRojo.removeClass("required-border");
+
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").readonly();
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+
     }
     else {
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").readonly(false);
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+
         $("#precioId").data("kendoNumericTextBox").enable(true);
-        $("#precioMonedaId").data("kendoDropDownList").enable(true);
+        //$("#precioMonedaId").data("kendoDropDownList").enable(true);
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(true);
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(true);
-        $("#diasDiferidoId").prop("checked", false);
-        $("#pesificadoId").prop("checked", false);
+        //$("#diasDiferidoId").prop("checked", false);
+        //$("#pesificadoId").prop("checked", false);
         $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
         if ($("#precioMonedaId").data("kendoDropDownList").value() == 0 || $("#precioMonedaId").data("kendoDropDownList").value() == "") {
             $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
@@ -4321,9 +4331,9 @@ function CargarDatosEditar(contrato, hijo) {
             InsertarAperturasViewModelAFijar();
         } else {
             InicializarEditarContratoApertura();
-            if (Number($("#precioId").val().replace(',', '.')) > 0) {
-                GuardarAperturaDePrecio();
-            }
+            //if (Number($("#precioId").val().replace(',', '.')) > 0) {
+            GuardarAperturaDePrecio();
+            //}
         }
 
 
@@ -5005,31 +5015,35 @@ function AbrirModalAperturaDePrecio() {
 }
 
 function CalcularPrecioTotalApertura() {
-    var bonificacion = Number($("#precioId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
-    var precioOriginal = Number($("#precioId").val().replace(',', '.'));
-
-    if ((ImporteSobrePrecio != 0 || PorcentajeSobrePrecio > 0) && Number($("#precioId").val().replace(',', '.')) > 0) {
-        precioOriginal = CalcularNetoFijacionConDescuentos();
+    if ($("#pizarraId").is(':checked')) {
+        $("#totalApertura").text("");
+        $("#importeOperacionId").data("kendoNumericTextBox").value("");
+        return null;
     } else {
-        var porcentajeComision = Math.min(Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')), $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").max());
-        var precioTarifaFlete = Number($("#TarifaFleteId").val().replace(',', '.'));
-        precioOriginal += Math.min(Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')), Number($("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").max()));
-        precioOriginal += Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
-        CalcularMaximoComision();
-        precioOriginal += Number($("#aperturaPrecioImporteBonificacionesId").val().replace(',', '.'));
+        var bonificacion = Number($("#precioId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')) + Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
+        var precioOriginal = Number($("#precioId").val().replace(',', '.'));
 
-        precioOriginal += Number($("#aperturaPrecioPorcentajeBonificacionesId").val().replace(',', '.')) * Number($("#precioId").val().replace(',', '.')) / 100;
+        if ((ImporteSobrePrecio != 0 || PorcentajeSobrePrecio > 0) && Number($("#precioId").val().replace(',', '.')) > 0) {
+            precioOriginal = CalcularNetoFijacionConDescuentos();
+        } else {
+            var porcentajeComision = Math.min(Number($("#aperturaPrecioPorcentajeComisionesId").val().replace(',', '.')), $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").max());
+            var precioTarifaFlete = Number($("#TarifaFleteId").val().replace(',', '.'));
+            precioOriginal += Math.min(Number($("#aperturaPrecioImporteFinancieroId").val().replace(',', '.')), Number($("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").max()));
+            precioOriginal += Number($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
+            CalcularMaximoComision();
+            precioOriginal += Number($("#aperturaPrecioImporteBonificacionesId").val().replace(',', '.'));
 
-        porcentajeComision = porcentajeComision / 100;
-        precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
-        precioOriginal += Number($("#aperturaPrecioImporteComisionesId").val().replace(',', '.'));
+            precioOriginal += Number($("#aperturaPrecioPorcentajeBonificacionesId").val().replace(',', '.')) * Number($("#precioId").val().replace(',', '.')) / 100;
 
-        $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
-        CalcularImporteDeOperacion(precioOriginal, $("#cantidadId").val());
+            porcentajeComision = porcentajeComision / 100;
+            precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
+            precioOriginal += Number($("#aperturaPrecioImporteComisionesId").val().replace(',', '.'));
+
+            $("#totalApertura").text(kendo.toString(precioOriginal, "n2") + " " + ($("#precioMonedaId").val() ? $("#precioMonedaId").data("kendoDropDownList").text() : ""));
+            CalcularImporteDeOperacion(precioOriginal, $("#cantidadId").val());
+        }
+        return precioOriginal;
     }
-
-
-    return precioOriginal;
 }
 
 function CalcularMaximoComision() {
@@ -5063,10 +5077,14 @@ function ConvertirDescuentoANegativo() {
 }
 function ConvertirRedespachoANegativo() {
     var valorAbsoluto = Math.abs($("#aperturaPrecioImporteRedespachoId").val().replace(',', '.'));
-    if (valorAbsoluto > Number($("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").max())) {
-        $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(-1 * $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").max());
-    } else {
+    if ($("#pizarraId").is(':checked')) {
         $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(-1 * valorAbsoluto);
+    } else {
+        if (valorAbsoluto > Number($("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").max())) {
+            $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(-1 * $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").max());
+        } else {
+            $("#aperturaPrecioImporteRedespachoId").data("kendoNumericTextBox").value(-1 * valorAbsoluto);
+        }
     }
     CalcularPrecioTotalApertura();
 }

@@ -15,11 +15,15 @@ namespace Molinos.DataAgro.Entities.Entities
         public int LimiteCupo { get; set; }
         public bool CierreCupera { get; set; }
 
+        public int LimiteAlgoritmo { get; set; }
+        public bool LiberarCupera { get; set; }
+
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("CentroId")]
         public virtual Centro Centro { get; set; }
         [InverseProperty("ConfiguracionCupo")]
         public virtual ICollection<LimiteCupo> CantidadCupo { get; set; }
+        public int LimiteAnterior { get; set; }
     }
 }

@@ -22,6 +22,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public int CantidadSugerenciaPendiente { get; set; }
         public int CantidadSolicitudesAceptadas { get; set; }
         public int CantidadSolicitudesPendientes { get; set; }
+        public int? CantidadAlgoritmo { get; set; }
+        public int MaterialId { get; set; }
+        public string Material { get; set; }
+        public int CantidadDisponibilidadPlanta { get; set; }
     }
 }
 

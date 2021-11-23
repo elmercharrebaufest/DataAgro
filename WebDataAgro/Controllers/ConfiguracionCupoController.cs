@@ -1,4 +1,5 @@
-﻿using KendoGridBinder.ModelBinder.Mvc;
+﻿using KendoGridBinder.Containers;
+using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Extensions;
@@ -44,7 +45,7 @@ namespace WebDataAgro.Controllers
 
             ViewBag.comercialId = GlobalVariables.ComercialId;
             CargarViewBag();
-            return View();
+            return View(new ConfiguracionCupoModel());
         }
         public ActionResult TablaCuposPartial()
         {
@@ -66,7 +67,7 @@ namespace WebDataAgro.Controllers
             var dias = new List<DiaCupo>() { };
             for (var dt = cupo.Fecha; dt <= cupo.FechaHasta; dt = dt.AddDays(1))
             {
-                dias.Add(new DiaCupo { Cantidad = cupo.CantidadCupo, Fecha = dt });
+                dias.Add(new DiaCupo { Cantidad = cupo.CantidadCupo, Fecha = dt, CantidadAlgoritmo = cupo.CantidadAlgoritmo });
             }
             //ok
             var resultado = configuracionCupoManager.GrabarConfiguracionCupo(new ConfiguracionCupo
@@ -76,7 +77,9 @@ namespace WebDataAgro.Controllers
                 MaterialId = cupo.MaterialId,
                 Fecha = cupo.Fecha,
                 LimiteCupo = cupo.CantidadCupo,
-                CierreCupera = cupo.CierreCupera
+                CierreCupera = cupo.CierreCupera,
+                LimiteAlgoritmo = cupo.CantidadAlgoritmo,
+                LiberarCupera = cupo.LiberarCupera
             }, dias);
             if (resultado.HayError)
             {
@@ -90,6 +93,15 @@ namespace WebDataAgro.Controllers
         }
         public ActionResult DatosConfiguracion(KendoGridMvcRequest request)
         {
+            //if (request.SortObjects != null)
+            //{
+            //    request.SortObjects = request.SortObjects.Concat(new[] { new SortObject ("Material", "asc" ) });
+            //}
+            //else
+            //{
+            //    request.SortObjects = new[] { new SortObject("Material", "asc") };
+            //}
+            //request.SortObjects = request.SortObjects.Concat(new[] { new SortObject("Fecha", "asc") });
             var model = configuracionCupoManager.TraerTodaConfiguracionCupo(request);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
@@ -124,7 +136,7 @@ namespace WebDataAgro.Controllers
             var model = configuracionCupoManager.TraerLimites(id);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
-        public ActionResult GrabarLimitesCupo(List<LimiteCupo> limites )
+        public ActionResult GrabarLimitesCupo(List<LimiteCupo> limites)
         {
             var model = configuracionCupoManager.GrabarLimites(limites);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
@@ -141,10 +153,22 @@ namespace WebDataAgro.Controllers
             return new JsonResult() { Data = cupo, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 
-        public ActionResult CambioMasivo(List<int> ids, bool aceptar)
+        public ActionResult CambioMasivo(bool cambio)
         {
-            var resultado = configuracionCupoManager.CambioMasivo(ids, aceptar);
+            var resultado = configuracionCupoManager.CambioMasivo(cambio);
             return new JsonResult() { Data = resultado, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
+        public ActionResult ModificarConfiguracion(int? id, int? limite, int? algoritmo, bool? bloquear, bool? liberar)
+        {
+            var resultado = configuracionCupoManager.ModificarConfiguracion(id, limite, algoritmo, bloquear, liberar);
+            return new JsonResult() { Data = resultado, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
+        public ActionResult TraerConfiguracionCupo(int id)
+        {
+            var cupo = configuracionCupoManager.TraerConfiguracionCupo(id);
+            return new JsonResult() { Data = cupo, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
     }
 }

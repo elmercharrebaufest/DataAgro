@@ -1866,7 +1866,6 @@ namespace Molinos.DataAgro.Business.Managers
             return disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde, fechaHasta, zonaId, centroId, materialId);
         }
 
-
         public CupoResult RechazarCupo(Cupo cupo, string idActiveDirectory)
         {
             var oEntityErrors = new CupoResult();
