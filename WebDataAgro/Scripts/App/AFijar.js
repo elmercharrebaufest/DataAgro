@@ -4124,14 +4124,14 @@ function CargarDatosEditar(contrato, hijo) {
         $("#contratoCondicional").val(contrato.CondicionalContratoSAP);
     } else {
         $("#precioId").data("kendoNumericTextBox").enable(true);
-        $("#precioMonedaId").data("kendoDropDownList").enable(true);
+        //$("#precioMonedaId").data("kendoDropDownList").enable(true);
         $("#buscadorProveedor").prop('disabled', false);
         $("#buscadorCorredor").prop('disabled', false);
         $('#material').data("kendoDropDownList").enable(true);
         $("#cantidadId").data("kendoNumericTextBox").enable(true);
         $("#contratoCondicionalId").val("");
         $("#contratoCondicional").val("");
-        $("#condicionalId").removeAttr("disabled");
+        //$("#condicionalId").removeAttr("disabled");
 
     }
 
