@@ -2704,8 +2704,8 @@ function ClickEnPizarra() {
         LimpiarApertura();
         cargarContratoAFijarSeleccionado();
         $("#precioId").data("kendoNumericTextBox").enable(false);
-        //$("#precioMonedaId").data("kendoDropDownList").enable(false);
-        //$("#precioMonedaId").data("kendoDropDownList").trigger("change");
+        $("#precioMonedaId").data("kendoDropDownList").enable(false);
+        $("#precioMonedaId").data("kendoDropDownList").trigger("change");
 
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(false);
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(false);
@@ -2715,7 +2715,7 @@ function ClickEnPizarra() {
         $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
         $("#precioId").trigger('change');
         $("#precioTotalApertura").data("kendoNumericTextBox").value("");
-        //$("#precioMonedaId").data("kendoDropDownList").value(0);
+        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
 
         $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
         $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
