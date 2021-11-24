@@ -5788,9 +5788,15 @@ function DeshabilitarDescuentoSobrePrecioCuandoTieneAgente() {
         viewModel.AperturaPrecio.push(Basis);
 
     } else {
-        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+        if ($("#pizarraId").is(':checked')) {
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+        } else {
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+        }
+
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
-        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
     }
 }

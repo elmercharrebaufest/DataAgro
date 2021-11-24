@@ -84,8 +84,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
                     }
 
-                    if (fijacion.Pizarra != true)
-                    {
+                    //if (fijacion.Pizarra != true)
+                    //{
                         foreach (AperturaPrecio apertura in fijacion.AperturaPrecio.Where(x => conceptosCargados.Contains(x.ConceptoAperturaPrecioId)))
                         {
                             if (apertura.Importe != 0 || apertura.Porcentaje != 0)
@@ -100,7 +100,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 listaApertura.Add(a);
                             }
                         }
-                    }
+                    //}
 
 
                     decimal precioApertura = 0;

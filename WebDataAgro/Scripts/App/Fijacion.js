@@ -1175,9 +1175,9 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "MonedaId",
         change: function () {
-            if ($("#pizarraId").is(':checked')) {
-                $("#precioMonedaId").data("kendoDropDownList").value("");
-            }
+            //if ($("#pizarraId").is(':checked')) {
+            //    $("#precioMonedaId").data("kendoDropDownList").value("");
+            //}
             if ($("#precioMonedaId").val() === "ARP  " && $("#tipoId").val() === "3") {
                 $("#pagoDolarizadoDiv").hide();
                 $("#dolarizadoDiv").hide();
