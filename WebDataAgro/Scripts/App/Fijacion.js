@@ -274,9 +274,14 @@ function ArmarAperturaDesdeAFijar(afijar) {
         }
         else {
             $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
-            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
-            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
             $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+            if ($("#pizarraId").is(':checked')) {
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+            } else {
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+            }
         }
     }
     $.each(afijar.Aperturas, function (key, apertura) {
@@ -310,9 +315,14 @@ function ArmarAperturaDesdeAFijar(afijar) {
             }
             else {
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
-                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
-                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                if ($("#pizarraId").is(':checked')) {
+                    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+                    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+                } else {
+                    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+                }
             }
         }
         if (apertura.ConceptoAperturaPrecioId == 4) {
@@ -361,8 +371,13 @@ function HabilitarCamposApertura() {
     if ($("#material").val() != "4" && $("#material").val() != "5") {
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
-        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
-        $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+        if ($("#pizarraId").is(':checked')) {
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+        } else {
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+        }
     }
 }
 function InicializarElementos() {
@@ -1137,8 +1152,13 @@ function InicializarElementos() {
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
                 GuardarAperturaDePrecio();
             } else {
-                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
-                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+                if ($("#pizarraId").is(':checked')) {
+                    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+                    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+                } else {
+                    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                    $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
+                }
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
             }
@@ -2709,7 +2729,6 @@ function ClickEnPizarra() {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").readonly();
         $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
         $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
-
     }
     else {
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
