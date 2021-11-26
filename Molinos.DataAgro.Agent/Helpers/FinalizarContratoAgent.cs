@@ -175,15 +175,31 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //}
                     logger.Debug("Apertura: " + contrato.AperturaPrecio);
                     var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
-                    if (contrato.Pizarra == true && contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0))
+                    if (contrato.Pizarra == true &&
+                        (contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0)
+                            || contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && x.Porcentaje > 0)
+                            )
+                        )
                     {
                         descuentoGeneralSobrePrecio = new DescuentoBonificacion
                         {
                             TipoPeriodoDBId = 1,
                             TipoDBId = 1,
-                            Importe = contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0).Single().Importe,
+                            Importe = 0,
+                            Porcentaje = 0,
                             MonedaId = "ARP  "
                         };
+                        var red = contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0).SingleOrDefault();
+                        if (red != null)
+                        {
+                            descuentoGeneralSobrePrecio.Importe = red.Importe;
+                        }
+                        var com = contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && x.Porcentaje > 0).SingleOrDefault();
+                        if (com != null)
+                        {
+                            descuentoGeneralSobrePrecio.Porcentaje = com.Porcentaje;
+                        }
+
                     }
                     var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                     string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");

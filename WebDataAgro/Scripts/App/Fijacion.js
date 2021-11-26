@@ -109,9 +109,12 @@ function ObtenerFechaHasta(fechaBase) {
 
 function cargarContratoAFijarSeleccionado() {
     var afijar = datosAfijar();
-    aFijar = afijar[0];
-    cargarDatosAFijarEnFijacion(afijar[0])
+    if (afijar != null && afijar.length > 0) {
+        aFijar = afijar[0];
+        cargarDatosAFijarEnFijacion(afijar[0])
+    }
 }
+
 function cargarDatosAFijarEnFijacion(afijar) {
 
     if (afijar == null || typeof afijar === "undefined") {
@@ -4812,6 +4815,9 @@ function datosAfijar() {
     Id = Id != "" ? Id : 0;
     var esVirtual = $("#virtualId").is(":checked") ? true : false;
     var datos = { cuitProveedor: cuitP[0], cuitCorredor: cuitC[0], materialId: $('#material').data("kendoDropDownList").value(), filtro: $('#contratoId').val(), fijacionId: Id, esVirtual: esVirtual };
+    if (datos.materialId == "") {
+        return null;
+    }
     return MSExecuteOnServer('/CompraNet/ObtenerFijacionesAutomaticas', datos);
 }
 
