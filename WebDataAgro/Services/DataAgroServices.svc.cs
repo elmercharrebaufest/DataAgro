@@ -568,6 +568,7 @@ namespace WebDataAgro.Services
                     contrato.CondicionalContratoId = condicional.Id;
                 }
             }
+            contrato.Pizarra = contratoSAP.Pizarra == "X";
         }
 
         public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)
@@ -658,6 +659,10 @@ namespace WebDataAgro.Services
                 fijacion.FechaDesde = DateTime.ParseExact(fijacionSAP.FechaDesde, "yyyy-MM-dd", CultureInfo.InvariantCulture);
                 fijacion.MaterialId = repositorio.Obtener<Material, int>(x => x.Codigo == fijacionSAP.Material, x => x.MaterialId);
                 fijacion.MonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == fijacionSAP.Moneda, x => x.MonedaId);
+                if (fijacion.Pizarra == true)
+                {
+                    fijacion.MonedaId = "ARP  ";
+                }
                 fijacion.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == fijacionSAP.Cosecha, x => x.CampañaId);
                 fijacion.PrecioNeto = fijacionSAP.PrecioNeto;
                 fijacion.ProveedorId = repositorio.Obtener<Proveedor, int>(x => x.CUIT == fijacionSAP.Proveedor && x.SegmentacionId != 5 && x.SegmentacionId != 7, x => x.ProveedorId);

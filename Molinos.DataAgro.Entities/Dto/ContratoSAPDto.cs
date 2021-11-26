@@ -102,7 +102,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CondicionalFecha { get; set; }
         public string CondicionalPosicion { get; set; }
         public string CondicionalContratoSAP { get; set; }
-
+        public string Pizarra { get; set; }
     }
 
     public class CalidadSAP
