@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.FinalizarContrato;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -174,6 +175,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //}
                     logger.Debug("Apertura: " + contrato.AperturaPrecio);
                     var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+                    if (contrato.Pizarra == true && contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0))
+                    {
+                        descuentoGeneralSobrePrecio = new DescuentoBonificacion
+                        {
+                            TipoPeriodoDBId = 1,
+                            TipoDBId = 1,
+                            Importe = contrato.AperturaPrecio.Where(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0).Single().Importe,
+                            MonedaId = "ARP  "
+                        };
+                    }
                     var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                     string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
                     string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
@@ -280,7 +291,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "",
                             PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0,
                             CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "",
-                            
+
 
                         },
                         IM_TOPES_FIJ = new ZMPES5280
