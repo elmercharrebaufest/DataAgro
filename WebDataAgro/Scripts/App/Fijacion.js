@@ -2741,7 +2741,7 @@ function ClickEnPizarra() {
         cargarContratoAFijarSeleccionado();
 
         $("#precioId").data("kendoNumericTextBox").enable(true);
-        //$("#precioMonedaId").data("kendoDropDownList").enable(true);
+        $("#precioMonedaId").data("kendoDropDownList").enable(true);
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(true);
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(true);
         $("#diasDiferidoId").prop("checked", false);
