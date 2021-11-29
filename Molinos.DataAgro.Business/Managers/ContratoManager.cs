@@ -845,14 +845,19 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de la Entrega");
             }
 
-            if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null || oParam.NivelTarifaId == 0))
+            if (!validacionesMinimas)
             {
-                oErrorMessages.Error("", "Se debe cargar Nivel de Tarifa cuando hay Tarifa");
+                if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null || oParam.NivelTarifaId == 0))
+                {
+                    oErrorMessages.Error("", "Se debe cargar Nivel de Tarifa cuando hay Tarifa");
+                }
+                if (oParam.NivelTarifaId != null && oParam.NivelTarifaId != 0 && oParam.TarifaFlete == null)
+                {
+                    oErrorMessages.Error("", "Se debe cargar Tarifa cuando hay Nivel de Tarifa");
+                }
             }
-            if (oParam.NivelTarifaId != null && oParam.NivelTarifaId != 0 && oParam.TarifaFlete == null)
-            {
-                oErrorMessages.Error("", "Se debe cargar Tarifa cuando hay Nivel de Tarifa");
-            }
+
+
             if (oParam.FechaCierta != null && oParam.FechaCierta.Value < DateTime.Now.Date)
             {
                 oErrorMessages.Error("FechaCierta", "La Fecha Cierta debe ser mayor o igual al día de la fecha.");

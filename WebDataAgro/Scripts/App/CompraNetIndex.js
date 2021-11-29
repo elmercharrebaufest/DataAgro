@@ -2493,8 +2493,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#divPosicionCBOT").hide();
 
     if (precioNeto != 0 || tipo === "A FIJAR" || tipo === "FIJACION" || tipo === "A PRECIO") {
-        $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
-        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+        if (parseFloat(precioNeto) >= 0) {
+            $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
+            $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+        } else {
+            $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
+        }
 
         var aperturaPrecio = MSExecuteOnServer('/CompraNet/TraerAperturaPrecioPorContrato', { contratoId: id, tipo: tipo });
         $.each(aperturaPrecio, function (key, concepto) {
@@ -2504,7 +2508,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                     if (concepto.Importe) {
                         $("#aperturaFinancieroDivVisualizar").show();
                         $("#aperturaDePrecioVisualizarDiv").show();
-                        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                        //$("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                         $("#visualizar_aperturaFinanciero").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                     }
                     break;
@@ -2512,7 +2516,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                     if (concepto.Importe) {
                         $("#aperturaRedespachoDivVisualizar").show();
                         $("#aperturaDePrecioVisualizarDiv").show();
-                        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                        //$("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                         $("#visualizar_aperturaRedespacho").text(kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda);
                     }
                     break;
@@ -2520,7 +2524,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                     if (concepto.Importe || concepto.Porcentaje) {
                         $("#aperturaComisionesDivVisualizar").show();
                         $("#aperturaDePrecioVisualizarDiv").show();
-                        $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                        //$("#aperturaDePrecioVisualizarDivPrecioNeto").show();
 
                         $("#visualizar_aperturaComisiones").text(concepto.Importe ? kendo.toString(parseFloat(concepto.Importe), "n2") + " " + moneda : concepto.Porcentaje + "%");
                     }
@@ -2534,7 +2538,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
                             } else {
                                 $("#condicional").text("Bonificacion: ");
                             }
-                            $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
+                            //$("#aperturaDePrecioVisualizarDivPrecioNeto").show();
                         }
 
                         break;
@@ -2703,7 +2707,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         } else {
             $("#ventaBoletoDiv").hide();
         }
-    } 
+    }
     if (Cesion == "true") {
         $("#CesionDiv").show();
         $("#CesionId").text("Si");
@@ -2721,10 +2725,10 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#CondicionalDiv").show();
         $("#AnulaYReemplazaId").text("Si");
         $("#CondicionalPrecioId").text(kendo.toString(parseFloat(CondicionalPrecio), "n2") + " " + CondicionalMonedaId);
-        $("#CondicionalCantidadId").text(kendo.toString(parseFloat(CondicionalCantidad), "n0") + " Kg" );
+        $("#CondicionalCantidadId").text(kendo.toString(parseFloat(CondicionalCantidad), "n0") + " Kg");
         $("#CondicionalFechaFormateadoId").text(CondicionalFechaFormateado);
         $("#CondicionalPosicionId").text(CondicionalPosicion);
-        
+
     } else {
         $("#CondicionalDiv").hide();
     }

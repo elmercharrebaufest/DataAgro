@@ -1240,7 +1240,10 @@ function InicializarElementos() {
                 $("#dolarizadoDiv").hide();
             }
             if ($("#tipoId").val() === "3") {
-                CambiarAperturaAMonedaActual();
+                if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val()) && !primeraCargaEdit) {
+                    CambiarAperturaAMonedaActual();
+                }
+
                 InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
 
