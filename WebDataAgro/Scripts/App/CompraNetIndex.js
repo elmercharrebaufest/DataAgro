@@ -2493,7 +2493,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#divPosicionCBOT").hide();
 
     if (precioNeto != 0 || tipo === "A FIJAR" || tipo === "FIJACION" || tipo === "A PRECIO") {
-        if (parseFloat(precioNeto) >= 0) {
+        if (parseFloat(precioNeto) > 0) {
             $("#visualizar_aperturaFinancieroPrecioNeto").text(kendo.toString(parseFloat(precioNeto), "n2") + " " + moneda);
             $("#aperturaDePrecioVisualizarDivPrecioNeto").show();
         } else {
