@@ -1240,10 +1240,7 @@ function InicializarElementos() {
                 $("#dolarizadoDiv").hide();
             }
             if ($("#tipoId").val() === "3") {
-                if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val()) && !primeraCargaEdit) {
-                    CambiarAperturaAMonedaActual();
-                }
-
+                CambiarAperturaAMonedaActual();
                 InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
 
@@ -2708,10 +2705,11 @@ function ClickEnPizarra() {
     if ($("#pizarraId").is(':checked')) {
         Cancelar();
         LimpiarApertura();
-        cargarContratoAFijarSeleccionado();
         $("#precioId").data("kendoNumericTextBox").enable(false);
+        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
         $("#precioMonedaId").data("kendoDropDownList").enable(false);
         $("#precioMonedaId").data("kendoDropDownList").trigger("change");
+        cargarContratoAFijarSeleccionado();
 
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").enable(false);
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(false);
@@ -2721,7 +2719,6 @@ function ClickEnPizarra() {
         $("#pesificadoDiasId").data("kendoNumericTextBox").value("");
         $("#precioId").trigger('change');
         $("#precioTotalApertura").data("kendoNumericTextBox").value("");
-        $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
 
         $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
         $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");
