@@ -230,6 +230,16 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private string fE_HASTAField;
         
+        private decimal cANT_MAXField;
+        
+        private decimal cANT_MINField;
+        
+        private string vALORField;
+        
+        private string fECHAACTField;
+        
+        private System.DateTime hORAACTField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string FE_DESDE {
@@ -251,6 +261,66 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.fE_HASTAField = value;
                 this.RaisePropertyChanged("FE_HASTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public decimal CANT_MAX {
+            get {
+                return this.cANT_MAXField;
+            }
+            set {
+                this.cANT_MAXField = value;
+                this.RaisePropertyChanged("CANT_MAX");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public decimal CANT_MIN {
+            get {
+                return this.cANT_MINField;
+            }
+            set {
+                this.cANT_MINField = value;
+                this.RaisePropertyChanged("CANT_MIN");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string VALOR {
+            get {
+                return this.vALORField;
+            }
+            set {
+                this.vALORField = value;
+                this.RaisePropertyChanged("VALOR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string FECHAACT {
+            get {
+                return this.fECHAACTField;
+            }
+            set {
+                this.fECHAACTField = value;
+                this.RaisePropertyChanged("FECHAACT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=6)]
+        public System.DateTime HORAACT {
+            get {
+                return this.hORAACTField;
+            }
+            set {
+                this.hORAACTField = value;
+                this.RaisePropertyChanged("HORAACT");
             }
         }
         
@@ -721,6 +791,8 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         private string pIZARRAField;
         
         private string mES_COND_MATField;
+        
+        private decimal cANTIDAD_CONDField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -1859,6 +1931,18 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.mES_COND_MATField = value;
                 this.RaisePropertyChanged("MES_COND_MAT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=95)]
+        public decimal CANTIDAD_COND {
+            get {
+                return this.cANTIDAD_CONDField;
+            }
+            set {
+                this.cANTIDAD_CONDField = value;
+                this.RaisePropertyChanged("CANTIDAD_COND");
             }
         }
         

@@ -307,7 +307,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "",
                             PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0,
                             CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "",
-
+                            CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0,
 
                         },
                         IM_TOPES_FIJ = new ZMPES5280

@@ -346,7 +346,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.CondicionalPosicion != contrato.CondicionalPosicion ||
                     contratoGuardado.CondicionalMonedaId != contrato.CondicionalMonedaId ||
                     contratoGuardado.CondicionalPrecio != contrato.CondicionalPrecio ||
-                    contratoGuardado.CondicionalContratoId != contrato.CondicionalContratoId
+                    contratoGuardado.CondicionalContratoId != contrato.CondicionalContratoId ||
+                    contratoGuardado.CondicionalCantidad != contrato.CondicionalCantidad
 
                     ;
 
@@ -470,6 +471,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "",
                             PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0,
                             CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "",
+                            CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0,
 
                         }
                     }

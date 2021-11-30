@@ -118,6 +118,11 @@
           <xsd:maxLength value="2" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="unit3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="numeric3">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="3" />
@@ -139,6 +144,12 @@
       <xsd:simpleType name="char8">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="8" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="quantum13.3">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="3" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char4">
@@ -305,12 +316,18 @@
           <xsd:element name="TOL_SUP" type="rfc:decimal3.1" />
           <xsd:element name="PIZARRA" type="rfc:char4" />
           <xsd:element name="MES_COND_MAT" type="rfc:char7" />
+          <xsd:element name="CANTIDAD_COND" type="rfc:decimal25.0" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">
         <xsd:sequence>
           <xsd:element name="FE_DESDE" type="rfc:date10" />
           <xsd:element name="FE_HASTA" type="rfc:date10" />
+          <xsd:element name="CANT_MAX" type="rfc:quantum13.3" />
+          <xsd:element name="CANT_MIN" type="rfc:quantum13.3" />
+          <xsd:element name="VALOR" type="rfc:unit3" />
+          <xsd:element name="FECHAACT" type="rfc:date10" />
+          <xsd:element name="HORAACT" type="rfc:time" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5290">
