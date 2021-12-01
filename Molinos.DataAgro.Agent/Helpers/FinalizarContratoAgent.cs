@@ -314,6 +314,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             FE_DESDE = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
                             FE_HASTA = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
+                            HORAACT = "00:00:00"
                         },
                         IM_DESC_BONIF = listaDescuentos.ToArray(),
                         IM_CALIDAD = listaCalidades.ToArray(),

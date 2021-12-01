@@ -2912,7 +2912,7 @@ namespace Molinos.DataAgro.Business.Managers
             decimal tna = decimal.Parse(ConfigurationManager.AppSettings["TNAReportePagosDiferidos"]) / 100;
             var dias = new List<DateTime>();
             var desdeDias = new DateTime(hoy.Year, hoy.Month, 1);
-            var hastaDias = new DateTime(hoy.Year, hoy.Month + 1, 1).AddDays(-1);
+            var hastaDias = new DateTime(hoy.Year, hoy.Month, 1).AddMonths(1).AddDays(-1);
             while (desdeDias <= hastaDias)
             {
                 dias.Add(desdeDias);

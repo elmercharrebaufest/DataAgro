@@ -327,7 +327,7 @@
           <xsd:element name="CANT_MIN" type="rfc:quantum13.3" />
           <xsd:element name="VALOR" type="rfc:unit3" />
           <xsd:element name="FECHAACT" type="rfc:date10" />
-          <xsd:element name="HORAACT" type="rfc:time" />
+          <xsd:element name="HORAACT" type="rfc:char8" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5290">
