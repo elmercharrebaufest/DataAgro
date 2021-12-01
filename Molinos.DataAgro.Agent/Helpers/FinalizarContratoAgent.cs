@@ -317,8 +317,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                             HORAACT = "00:00:00",
                             CANT_MAX = contrato.TipoNegocioId == 1 ? contrato.Cantidad < 30000 ? Convert.ToDecimal(contrato.Cantidad) : contrato.Cantidad <= 100000 ? 30000 : Convert.ToDecimal(contrato.Cantidad) : 0,
                             CANT_MIN = contrato.TipoNegocioId == 1 ? contrato.Cantidad < 30000 ? Convert.ToDecimal(contrato.Cantidad) : 30000 : 0,
-                            FECHAACT = "",
-                            VALOR = ""
+                            FECHAACT = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
+                            repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
+                            VALOR = "KG"
 
                         },
                         IM_DESC_BONIF = listaDescuentos.ToArray(),
