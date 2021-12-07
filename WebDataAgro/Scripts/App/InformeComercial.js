@@ -4,6 +4,7 @@ var datosIniInformeComercial;
 var estaModificando = false;
 var datosModificacion;
 var activo = 0;
+var variablesUltima = "";
 $(document).ready(function () {
     $("#tabstrip").kendoTabStrip();
 
@@ -294,11 +295,12 @@ function ModificarInformeComercial(InformeComercialId) {
 
 function EliminarInformeComercial(InformeComercialId) {
     Confirma("¿Desea eliminar el registro?", function (dialogItself) {
-        dialogItself.close();
+        this.close();
         function funcReturn(datos) {
             var grilla = $("#gridInformeComercialNuevo").data("kendoGrid");
             var elemento = grilla.dataItem(grilla.select());
             grilla.dataSource.remove(elemento);
+            llenarInput(variablesUltima);
         }
 
         MSExecuteOnServerAsync('/InformeComercial/EliminarInformeComercial', { InformeComercialId: InformeComercialId }, funcReturn, false);
@@ -403,6 +405,7 @@ function CrearViewModel() {
 }
 
 function llenarInput(variables) {
+    variablesUltima = variables;
     var razon = variables.split("|||")[1];
     var cuit = variables.split("|||")[0];
     var id = variables.split("|||")[2];

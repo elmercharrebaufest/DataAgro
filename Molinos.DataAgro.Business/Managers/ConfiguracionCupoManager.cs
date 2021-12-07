@@ -298,14 +298,18 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var configuraciones = repositorio.ObtenerConsultaEscalar(new TraerConfiguracionesCupo(request));
             //var listaConfiguraciones = configuraciones.Data.ToList();
+            var desde = configuraciones.Data.Min(a => a.Fecha);
+            var hasta = configuraciones.Data.Max(a => a.Fecha);
+            var centros = configuraciones.Data.Select(a => a.CentroCodigoSap).Distinct().ToList();
+            var disponibilidades = cupoManager.TraerCupoDisponibilidad(desde, hasta, "", centros, "");
+
             foreach (var configuracion in configuraciones.Data.ToList())
             {
                 var listaZonas = repositorio.Listar<ZonaCupo, string>(x => x.CodigoSap);
-                foreach (var zona in listaZonas)
-                {
-                    var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, zona, new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
-                    configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
-                }
+
+                var disponibilidad = disponibilidades.Where(a => a.Fecha == configuracion.Fecha && a.CentroCodigo == configuracion.CentroCodigoSap && a.MaterialCodigo == configuracion.MaterialCodigoSap).ToList();
+
+                configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
 
             }
             return configuraciones;

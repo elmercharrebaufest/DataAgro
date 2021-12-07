@@ -126,6 +126,9 @@ function cargarDatosAFijarEnFijacion(afijar) {
     $("#kgsTotalesContrato").text(afijar.KgContratoTotal);
     $("#kgspendientescontrato").text(afijar.KilosPendiente);
     $("#kgsaplicadoscontrato").text(afijar.KilosAplicados);
+
+    $("#kgsaplicadossinfijarcontrato").text(afijar.RecibidoSinFijar);
+
     $("#desdecontrato").text(afijar.FechaDesde);
     $("#hastacontrato").text(afijar.FechaHasta);
 

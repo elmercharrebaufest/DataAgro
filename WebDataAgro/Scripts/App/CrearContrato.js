@@ -4602,6 +4602,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#cantidadId").data("kendoNumericTextBox").enable(false);
         $("#contratoCondicionalId").val(contrato.CondicionalContratoId);
         $("#contratoCondicional").val(contrato.CondicionalContratoSAP);
+        $("#condicionalId").prop('disabled', true);
     } else {
         //$("#precioId").data("kendoNumericTextBox").enable(true);
         //$("#precioMonedaId").data("kendoDropDownList").enable(true);
