@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -63,6 +64,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? NegocioId { get; set; }
 
         public bool CDWarrant { get; set; }
+        public double KgNegocio { get; set; }
+        public double KgPendienteAplicar { get; set; }
 
         public object Clone()
         {

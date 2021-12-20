@@ -147,7 +147,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 
             };
             cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
-                .Returns(new Resultado { Errores = new List<ErrorMessage>() });
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
             cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
             centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
@@ -178,7 +178,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Siguientes = null
             };
             cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
-                .Returns(new Resultado { Errores = new List<ErrorMessage>() });
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
             cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>()))
                 .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
             centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
@@ -341,7 +341,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -355,7 +355,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
 

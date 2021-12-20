@@ -320,7 +320,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         DisponibilidadDeCupos = 729,
         [Display(ResourceType = typeof(Text), Name = "Habilitacion_De_Cupos")]
         HabilitacionDeCupos = 730,
-        
+        [Display(ResourceType = typeof(Text), Name = "Ver_Todas_Las_Sugerencias")]
+        VerTodasLasSugerencias = 731,
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]

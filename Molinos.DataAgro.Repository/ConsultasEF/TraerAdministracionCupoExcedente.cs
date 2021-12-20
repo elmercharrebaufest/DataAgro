@@ -1,5 +1,6 @@
 ﻿using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
+using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using System.Data.Entity;
@@ -11,34 +12,43 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     public class TraerAdministracionCupoExcedente : IConsultaEscalar<KendoGrid<AdministracionCupoDto>>
     {
         private readonly KendoGridMvcRequest request;
+        private readonly int? comercialId;
 
-        public TraerAdministracionCupoExcedente(KendoGridMvcRequest request)
+        public TraerAdministracionCupoExcedente(KendoGridMvcRequest request, int? comercialId)
         {
-            this.request = request;            
+            this.request = request;
+            this.comercialId = comercialId;
         }
 
-        private static KendoGrid<AdministracionCupoDto> Query(DbContext contexto, KendoGridMvcRequest request)
+        private static KendoGrid<AdministracionCupoDto> Query(DbContext contexto, KendoGridMvcRequest request, int? comercialId)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var query =
-                from cupo in contexto.Set<AdministracionCupo>()    
-                where cupo.Excedente == true
+                from cupo in contexto.Set<AdministracionCupo>()
+                where cupo.Excedente == true && (cupo.ComercialId == comercialId || comercialId == null)
                 select new AdministracionCupoDto()
                 {
-                    Id = cupo.Id,                    
+                    Id = cupo.Id,
                     Fecha = cupo.Fecha,
+                    Estado = cupo.EstadoId == 1 ? "Aceptado" : cupo.EstadoId == 3 ? "Pendiente" : "Rechazado",
                     EstadoId = cupo.EstadoId,
                     CantidadFleteProcedencia = cupo.CantidadFleteProcedencia,
-                    CantidadCupo = cupo.CantidadCupo,
-                    Comercial  = cupo.Comercial.Nombres +" "+cupo.Comercial.Apellido,
+                    CantidadDeCupo = cupo.CantidadCupo,
+                    CantidadFleteProcedenciaMax = cupo.CantidadFleteProcedencia,
+                    CantidadDeCupoMax = cupo.CantidadCupo,
+                    Comercial = cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido,
+                    ComercialId = cupo.ComercialId,
                     Proveedor = cupo.Proveedor.RazonSocial,
                     Material = cupo.Material.Descripcion,
                     Centro = cupo.Centro.Descripcion,
                     Zona = cupo.Zona.Descripcion,
-                    Excedente = cupo.Excedente
+                    Excedente = cupo.Excedente,
+                    TipoAdministracionCupo = cupo.TipoAdministracionCupo.Descripcion,
+                    TipoAdministracionCupoId = cupo.TipoAdministracionCupoId,
+                    Observacion = cupo.Observacion
                 };
-            
+
             return new KendoGrid<AdministracionCupoDto>(request, query);
         }
 
@@ -46,7 +56,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, request);
+                return Query(contexto, request, comercialId);
             }
         }
     }

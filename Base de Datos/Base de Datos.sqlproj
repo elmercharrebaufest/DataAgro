@@ -315,6 +315,9 @@
     <Build Include="dbo\Tables\NegocioAsociado.sql" />
     <Build Include="dbo\Tables\CierreDelDiaMailExternos.sql" />
     <Build Include="dbo\Tables\BoletoVenta.sql" />
+    <Build Include="dbo\Tables\CierreCupera.sql" />
+    <Build Include="dbo\Tables\TipoAdministracionCupo.sql" />
+    <Build Include="dbo\Tables\MensajeCupo.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />
@@ -323,6 +326,7 @@
     <None Include="dbo\Deploys\202002.sql" />
     <None Include="Molinos.DataAgro.Database.gvicsqlTest2016.PreProd.publish.xml" />
     <None Include="Molinos.DataAgro.DatabaseQa2.gvicsqlTest2016.publish.xml" />
+    <None Include="Molinos.DataAgro.Database.local.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="dbo\Script Posdeployment\Script.PostDeployment1.sql" />

@@ -10,18 +10,22 @@ namespace Molinos.DataAgro.Entities.Entities
         public int Id { get; set; }
         [ForeignKey("Criterio")]
         public int CriterioId { get; set; }
-        public virtual Criterio Criterio { get; set; }
-        public int Inicio { get; set; }
-        public int CantDias { get; set; }
+        public virtual Criterio Criterio { get; set; }        
         
-        public DateTime FechaDesde { get { return DateTime.Now.Date.AddDays(Inicio); } }
-        public DateTime FechaHasta { get { return DateTime.Now.Date.AddDays(Inicio + CantDias); } }
+        public DateTime CuposDesde { get; set; }
+        public DateTime CuposHasta { get; set; }
+
+        public DateTime NegociosDesde { get; set; }
+        public DateTime NegociosHasta { get; set; }
 
         public int CentroId { get; set; }
 
         public DateTime Fecha { get; set; }
         public bool? Usada { get; set; }
 
+        [ForeignKey("Material")]
+        public int MaterialId { get; set; }
+        public virtual Material Material { get; set; }
         //public object Clone()
         //{
         //    return this.MemberwiseClone();

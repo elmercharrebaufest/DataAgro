@@ -12,8 +12,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public int ProveedorId { get; set; }
         public int? ComercialId { get; set; }
         public DateTime Fecha { get; set; }
-        public int CantidadCupo { get; set; }
+        public int CantidadDeCupo { get; set; }
         public int CantidadFleteProcedencia { get; set; }
+        public int CantidadDeCupoMax { get; set; }
+        public int CantidadFleteProcedenciaMax { get; set; }
         public int EstadoId { get; set; }       
         public int CentroId { get; set; }
         public int ZonaId { get; set; }
@@ -29,5 +31,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? NegocioId { get; set; }
         public int? ConfiguracionEspacioDinamicoId { get; set; }
         public bool Excedente { get; set; }
+        public string Estado { get; set; }
+        public string TipoAdministracionCupo { get; set; }
+        public int TipoAdministracionCupoId { get; set; }
+        public string Observacion { get; set; }
     }
 }

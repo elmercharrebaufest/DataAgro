@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -1012,6 +1012,7 @@
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
     <Content Include="Scripts\App\AbmFechaFeriado.js" />
+    <Content Include="Scripts\App\SolicitudCupo.js" />
     <Content Include="Scripts\App\AdministracionCupoGrilla.js" />
     <Content Include="Scripts\App\AdministracionProveedor.js" />
     <Content Include="Scripts\App\AbmContratoAcuerdo.js" />
@@ -2770,6 +2771,10 @@
     <Content Include="Views\CompraNet\ModalConfirmarBonificacion.cshtml" />
     <Content Include="Views\CompraNet\PanelAsociarNegocios.cshtml" />
     <Content Include="Views\ReporteContratosAFijarPase\Index.cshtml" />
+    <Content Include="Views\AdministracionCupo\PartialPanel.cshtml" />
+    <Content Include="Views\SugerenciaCupo\PartialSolicitud.cshtml" />
+    <Content Include="Views\SugerenciaCupo\SolicitudExtraordinaria.cshtml" />
+    <Content Include="Views\SugerenciaCupo\MensajesSugerencia.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

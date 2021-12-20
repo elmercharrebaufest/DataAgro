@@ -256,3 +256,7 @@ IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Carta Oferta') BEG
 IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'Confirmación de Negocio') BEGIN insert into BoletoVenta (Descripcion) values ('Confirmación de Negocio'); END
 IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'A Convenir') BEGIN insert into BoletoVenta (Descripcion) values ('A Convenir'); END
 
+
+--TipoAdministracionCupo
+IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Algoritmo') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Algoritmo'); END
+IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraordinaria') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Extraordinaria'); END

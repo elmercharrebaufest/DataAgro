@@ -27,7 +27,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IComercialManager comercialManager;
         private readonly IHttpContextManager httpContextManager;
 
-        public AdministracionCupoManager(ILogger logger, IRepositorio repositorio, ICupoManager cupoManager, 
+        public AdministracionCupoManager(ILogger logger, IRepositorio repositorio, ICupoManager cupoManager,
             IMailManager mailManager, IComercialManager comercialManager, IHttpContextManager httpContextManager)
         {
             this.logger = logger;
@@ -38,9 +38,9 @@ namespace Molinos.DataAgro.Business.Managers
             this.httpContextManager = httpContextManager;
         }
 
-        public KendoGrid<AdministracionCupoDto> TraerTodaAdministracionCupo(KendoGridMvcRequest request)
+        public KendoGrid<AdministracionCupoDto> TraerTodaAdministracionCupo(KendoGridMvcRequest request, int? comercialId)
         {
-            return repositorio.ObtenerConsultaEscalar(new TraerAdministracionCupoExcedente(request));
+            return repositorio.ObtenerConsultaEscalar(new TraerAdministracionCupoExcedente(request, comercialId));
         }
         public AdministracionCupoDto TraerAdministracionCupo(int id)
         {
@@ -56,96 +56,149 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 CupoResult resultado = new CupoResult();
                 var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
-                var sugerenciasParaAceptar = cupoManager.SugerenciasParaAceptar(solicitud.ProveedorId.Value, solicitud.ComercialId.Value, solicitud.Centro.CodigoSap, solicitud.MaterialId);
-                //var sugerenciaPorComercial = cupoManager.ObtenerSugerenciaPorComercial(solicitud.Fecha, solicitud.ComercialId.Value, solicitud.MaterialId, solicitud.Centro.CodigoSap);
-                var cantidadIngresada = cantidad + cantidadFp;
-                
-                foreach (var s in sugerenciasParaAceptar)
+                if (solicitud.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo)
                 {
-                    if (cantidadIngresada > 0)
+                    //var sugerenciasParaAceptar = cupoManager.SugerenciasParaAceptar(solicitud.ProveedorId.Value, solicitud.ComercialId.Value, solicitud.Centro.CodigoSap, solicitud.MaterialId, null);
+
+                    //var sugerenciaPorComercial = cupoManager.ObtenerSugerenciaPorComercial(solicitud.Fecha, solicitud.ComercialId.Value, solicitud.MaterialId, solicitud.Centro.CodigoSap);
+                    var cantidadIngresada = cantidad + cantidadFp;
+                    AceptarSugerencia(solicitud, cantidadIngresada);
+                    //foreach (var s in sugerenciasParaAceptar.Where(x => x.FechaSugerida == solicitud.Fecha))
+                    //{
+                    //    cantidadIngresada = AceptarSugerencia(solicitud, cantidadIngresada, s);
+                    //}
+
+                    //if (cantidadIngresada > 0)
+                    //{
+                    //    foreach (var s in sugerenciasParaAceptar)
+                    //    {
+                    //        cantidadIngresada = AceptarSugerencia(solicitud, cantidadIngresada, s);
+                    //    }
+                    //}
+                    CupoResult result = new CupoResult();
+                    Cupo cupo = new Cupo
                     {
-                        //Acepto o resto las sugerencias, en base a las sugerencias creo los cupos
-                        var aceptarSugerencia = cantidadIngresada >= s.CantidadDeCupos;
-                        var datos = new List<string>();
-                        if (aceptarSugerencia)
+                        ProveedorId = solicitud.ProveedorId.Value,//---Agentecompra no tiene proveedor
+                        CentroId = solicitud.CentroId,
+                        MaterialId = solicitud.MaterialId,
+                        FechaIngreso = solicitud.Fecha,
+                        ZonaCupoId = solicitud.ZonaId,
+                        ComercialId = solicitud.ComercialId,
+                        Calidad = "",
+                        Fason = false,
+                        Destinatario = "",
+                        FechaGeneracion = DateTime.Now,
+                        Observaciones = null,//---
+                        CupoSap = "",//---
+                        FleteProcedencia = false,//---
+                        EstadoCupoId = 1,//---
+                        CupoStop = null,//---
+                        CreacionStop = "",//---
+                        ErrorStop = "",//---
+                        NegocioId = solicitud.SugerenciaCupo.NegocioId,
+                        ConfiguracionEspacioDinamicoId = solicitud.SugerenciaCupo.ConfiguracionEspacioDinamicoId,
+                        TipoNegocioId = solicitud.SugerenciaCupo.TipoNegocioId,
+                    };
+                    if (cantidad > 0)
+                    {
+                        result = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidad, Fecha = solicitud.Fecha } });
+                    }
+
+
+                    if (cantidadFp > 0)
+                    {
+                        cupo.FleteProcedencia = true;
+                        CupoResult result2 = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadFp, Fecha = solicitud.Fecha } });
+
+                        result.Errores.AddRange(result2.Errores);
+                        for (int i = 0; i < result2.ListaCupos.Count; i++)
                         {
-                            s.Aceptado = true;
-                            s.FechaSugerida = solicitud.Fecha;
-                            cantidadIngresada -= s.CantidadDeCupos;
-                          
+                            result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
                         }
-                        else
+                        result.ListaCupos.AddRange(result2.ListaCupos);
+
+                    }
+                    if (!result.HayError)
+                    {
+                        solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo;
+                        EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, result.ListaCupos, active);
+                        solicitud.CantidadCupo = cantidad;
+                        solicitud.CantidadFleteProcedencia = cantidadFp;
+                    }
+                    else
+                    {
+                        if (result.ListaCupos.Count > 0)
                         {
-                          
-                            var cantidadOriginal = cantidadIngresada;
-                            s.CantidadDeCupos -= cantidadOriginal;
-                            var nuevaSugerencia = CopiarEntidad.ShallowCopyEntity(s);
-                            nuevaSugerencia.FechaSugerida = solicitud.Fecha;
-                            nuevaSugerencia.CantidadDeCupos = cantidadIngresada;
-                            nuevaSugerencia.MonedaId = !String.IsNullOrWhiteSpace(s.MonedaId) ? s.MonedaId : null;
-                            nuevaSugerencia.Aceptado = true;
-                            repositorio.Agregar(nuevaSugerencia);
-                            cantidadIngresada = 0;
+                            solicitud.CantidadCupo -= result.ListaCupos.Count;
                         }
                     }
-                }
-
-               
-                Cupo cupo = new Cupo
-                {
-                    ProveedorId = solicitud.ProveedorId.Value,//---Agentecompra no tiene proveedor
-                    CentroId = solicitud.CentroId,
-                    MaterialId = solicitud.MaterialId,
-                    FechaIngreso = solicitud.Fecha,
-                    ZonaCupoId = solicitud.ZonaId,
-                    ComercialId = solicitud.ComercialId,
-                    Calidad = "",
-                    Fason = false,
-                    Destinatario = "",
-                    FechaGeneracion = DateTime.Now,
-                    Observaciones = null,//---
-                    CupoSap = "",//---
-                    FleteProcedencia = false,//---
-                    EstadoCupoId = 1,//---
-                    CupoStop = null,//---
-                    CreacionStop = "",//---
-                    ErrorStop = "",//---
-                    NegocioId = 7,
-                    ConfiguracionEspacioDinamicoId = null,
-                    TipoNegocioId = null,
-                };
-                CupoResult result = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidad, Fecha = solicitud.Fecha } });
-
-                if (cantidadFp > 0)
-                {
-                    cupo.FleteProcedencia = true;
-                    CupoResult result2 = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadFp, Fecha = solicitud.Fecha } });
-
-                    result.Errores.AddRange(result2.Errores);
-                    for (int i = 0; i < result2.ListaCupos.Count; i++)
-                    {
-                        result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
-                    }
-                    result.ListaCupos.AddRange(result2.ListaCupos);
-                   
-                }
-                if (!result.HayError)
-                {
-                    solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo;                   
-                    EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, result.ListaCupos, active);
-                    solicitud.CantidadCupo = cantidad;
-                    solicitud.CantidadFleteProcedencia = cantidadFp;
+                    resultado.Errores.AddRange(result.Errores);
+                    resultado.ListaCupos.AddRange(result.ListaCupos);
+                    repositorio.GuardarCambios();
                 }
                 else
                 {
-                    if (result.ListaCupos.Count > 0)
+                    Cupo cupo = new Cupo
                     {
-                        solicitud.CantidadCupo -= result.ListaCupos.Count;                      
+                        ProveedorId = solicitud.ProveedorId.Value,//---Agentecompra no tiene proveedor
+                        CentroId = solicitud.CentroId,
+                        MaterialId = solicitud.MaterialId,
+                        FechaIngreso = solicitud.Fecha,
+                        ZonaCupoId = solicitud.ZonaId,
+                        ComercialId = solicitud.ComercialId,
+                        Calidad = "",
+                        Fason = false,
+                        Destinatario = "",
+                        FechaGeneracion = DateTime.Now,
+                        Observaciones = null,//---
+                        CupoSap = "",//---
+                        FleteProcedencia = false,//---
+                        EstadoCupoId = 1,//---
+                        CupoStop = null,//---
+                        CreacionStop = "",//---
+                        ErrorStop = "",//---
+                        NegocioId = null,
+                        ConfiguracionEspacioDinamicoId = null,
+                        TipoNegocioId = null,
+                    };
+
+                    if (cantidad > 0)
+                    {
+                        CupoResult result = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidad, Fecha = solicitud.Fecha } });
+                        if (result.HayError)
+                            resultado.Errores.AddRange(result.Errores);
+                        if (result.ListaCupos.Count > 0)
+                            resultado.ListaCupos.AddRange(result.ListaCupos);
+                    }
+
+                    if (cantidadFp > 0)
+                    {
+                        cupo.FleteProcedencia = true;
+                        CupoResult result = cupoManager.GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadFp, Fecha = solicitud.Fecha } });
+                        if (result.HayError)
+                            resultado.Errores.AddRange(result.Errores);
+                        if (result.ListaCupos.Count > 0)
+                        {
+                            for (int i = 0; i < result.ListaCupos.Count; i++)
+                            {
+                                result.ListaCupos[i] = "<strong>" + result.ListaCupos[i] + " *</strong>";
+                            }
+                            resultado.ListaCupos.AddRange(result.ListaCupos);
+                        }
+                    }
+
+                    if (resultado.ListaCupos.Count > 0)
+                        EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, resultado.ListaCupos, active);
+
+                    if (!resultado.HayError)
+                    {
+                        solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo;
+                        repositorio.GuardarCambios();
                     }
                 }
-                resultado.Errores.AddRange(result.Errores);
-                resultado.ListaCupos.AddRange(result.ListaCupos);
-                repositorio.GuardarCambios();
+
+
+
 
                 return resultado;
             }
@@ -153,6 +206,25 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 logger.Error(e.Message);
                 return null;
+            }
+        }
+
+        private void AceptarSugerencia(AdministracionCupo solicitud, int cantidadIngresada)
+        {
+
+            if (cantidadIngresada > 0)
+            {
+                solicitud.SugerenciaCupo.Aceptado = true;
+                if (cantidadIngresada < solicitud.SugerenciaCupo.CantidadDeCupos)                
+                {
+                    var nuevaSugerencia = cupoManager.ClonarSugerencia(solicitud.SugerenciaCupo);
+                    solicitud.SugerenciaCupo.CantidadDeCupos = cantidadIngresada;
+                    nuevaSugerencia.FechaSugerida = solicitud.Fecha;
+                    nuevaSugerencia.CantidadDeCupos -= cantidadIngresada;
+                    nuevaSugerencia.MonedaId = !String.IsNullOrWhiteSpace(solicitud.SugerenciaCupo.MonedaId) ? solicitud.SugerenciaCupo.MonedaId : null;
+                    nuevaSugerencia.Aceptado = null;
+                    repositorio.Agregar(nuevaSugerencia);
+                }
             }
         }
 
@@ -203,7 +275,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "FECHA SOLICITUD: </th>" + cupoManager.Td(ref linea) + cupoManager.Split(solicitud.Fecha.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "CUPOS SIN FLETE: </th>" + cupoManager.Td(ref linea) + cantidad + " de " + solicitud.CantidadCupo + "</td></tr>";
             htmlBody += "<tr>" + th + "CUPOS CON FLETE: </th>" + cupoManager.Td(ref linea) + cantidadFp + " de " + solicitud.CantidadFleteProcedencia + "</td></tr>";
-            htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + cupoManager.Td(ref linea) + solicitud.Proveedor.RazonSocial.ToUpper() + "</td></tr>";           
+            htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + cupoManager.Td(ref linea) + solicitud.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + cupoManager.Td(ref linea) + solicitud.Material.Descripcion.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "CUPOS GENERADOS: </th>" + cupoManager.Td(ref linea);
 
@@ -229,13 +301,20 @@ namespace Molinos.DataAgro.Business.Managers
             var resultado = new Resultado();
             try
             {
-                var administacion = repositorio.Obtener<AdministracionCupo>(idAdministracion);
-                administacion.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo;
+                var solicitud = repositorio.Obtener<AdministracionCupo>(idAdministracion);
+                solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo;
+                //var sugerenciasParaAceptar = cupoManager.SugerenciasParaAceptar(solicitud.ProveedorId.Value, solicitud.ComercialId.Value, solicitud.Centro.CodigoSap, solicitud.MaterialId, null);
+
+                //foreach (var s in sugerenciasParaAceptar.Where(x => x.FechaSugerida == solicitud.Fecha))
+                //{
+                //    s.Aceptado = false;
+                //}
                 repositorio.GuardarCambios();
-                EnviarMailSolicitudRechazo(administacion, active);
+                EnviarMailSolicitudRechazo(solicitud, active);
                 return resultado;
 
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Error(e.Message);
                 resultado.Error("", e.Message);
@@ -274,10 +353,10 @@ namespace Molinos.DataAgro.Business.Managers
         private AlternateView CuerpoMailSolicitudRechazo(String filePath, AdministracionCupo solicitud, Comercial comercial)
         {
             var emailAdmin = "";
-            if(comercial.IdActiveDirectory != "")
+            if (comercial.IdActiveDirectory != "")
             {
                 emailAdmin = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
-            }            
+            }
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string th;
@@ -294,24 +373,24 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "En el presente mail, se detalla las solicitud rechazada por Molinos Agro S.A: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA SOLICITUD: </th>" + cupoManager.Td(ref linea) + cupoManager.Split(solicitud.Fecha.ToShortDateString()) + "</td></tr>";
-            htmlBody += "<tr>" + th + "CUPOS SIN FLETE: </th>" + cupoManager.Td(ref linea) +  solicitud.CantidadCupo + "</td></tr>";
-            htmlBody += "<tr>" + th + "CUPOS CON FLETE: </th>" + cupoManager.Td(ref linea) +  solicitud.CantidadFleteProcedencia + "</td></tr>";
+            htmlBody += "<tr>" + th + "CUPOS SIN FLETE: </th>" + cupoManager.Td(ref linea) + solicitud.CantidadCupo + "</td></tr>";
+            htmlBody += "<tr>" + th + "CUPOS CON FLETE: </th>" + cupoManager.Td(ref linea) + solicitud.CantidadFleteProcedencia + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + cupoManager.Td(ref linea) + solicitud.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
-            htmlBody += "<tr>" + th + "GRANO: </th>" + cupoManager.Td(ref linea) + solicitud.Material.Descripcion.ToUpper() + "</td></tr>";            
+            htmlBody += "<tr>" + th + "GRANO: </th>" + cupoManager.Td(ref linea) + solicitud.Material.Descripcion.ToUpper() + "</td></tr>";
             htmlBody += "</table>";
-           //"<br /><br /> En el caso que sea necesario, comuníquese con  " + (comercial.IdActiveDirectory != ""? (comercial.Nombres + " " + comercial.Apellido + (emailAdmin != "" && emailAdmin != null ? "(" + emailAdmin + ")." : ".")): "un administrador" )+
-              htmlBody += "<br /> <br />  Saludos Cordiales" +
-                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
-                @"<img src='cid:" + res.ContentId + @"'/>" +
-                "<br /> <br /> www.molinosagro.com.ar";
+            //"<br /><br /> En el caso que sea necesario, comuníquese con  " + (comercial.IdActiveDirectory != ""? (comercial.Nombres + " " + comercial.Apellido + (emailAdmin != "" && emailAdmin != null ? "(" + emailAdmin + ")." : ".")): "un administrador" )+
+            htmlBody += "<br /> <br />  Saludos Cordiales" +
+              " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+              @"<img src='cid:" + res.ContentId + @"'/>" +
+              "<br /> <br /> www.molinosagro.com.ar";
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
             return alternateView;
         }
 
         public void RechazarSolicitudesVencidas()
-        {          
-            var administacion = repositorio.Listar<AdministracionCupo>(x=> x.Fecha < DateTime.Now && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo);
+        {
+            var administacion = repositorio.Listar<AdministracionCupo>(x => x.Fecha < DateTime.Now && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo);
             foreach (var item in administacion)
             {
                 CambiarEstadoRechazado(item.Id, "");

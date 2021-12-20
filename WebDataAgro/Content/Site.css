@@ -701,3 +701,7 @@ li.mis-postit.postit-mobile {
 .puntero {
     cursor: pointer;
 }
+
+.blockUI {
+    z-index: 100000 !important;
+}

@@ -5,7 +5,8 @@
 
 <html lang="en">
 <head>
-    <title>DataAgro</title>
+    @*<title>DataAgro @(!string.IsNullOrEmpty(ViewBag.Title) ? " - " : "") @ViewBag.Title</title>*@
+    <title>@ViewBag.Title</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
@@ -501,7 +502,7 @@
                                 {
                                     <li>
                                         <a href="~/AdministracionCupo" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Solicitud de Cupos
+                                            <i class="icon-bar-chart"></i> Panel de Cupos
                                         </a>
                                     </li>
                                 }

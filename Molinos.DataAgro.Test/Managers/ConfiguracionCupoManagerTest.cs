@@ -132,8 +132,8 @@ namespace Molinos.DataAgro.Test.Managers
                         ZonaCupoId = 1,
                     }
                 },
-                Centro = new Centro { CodigoSap = "ASF" },
-                Material = new Material { Codigo = "aa" }
+                Centro = new Centro { CodigoSap = "ASF"},
+                Material = new Material { Codigo = "aa"}
             };
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<LimiteCupo, LimiteCupoDto>>>(), It.IsAny<Expression<Func<LimiteCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<LimiteCupoDto>() { new LimiteCupoDto { Id = 1, CantidadCupo = 1, ZonaCupoId = 1, ZonaCupo = "aaa" } });

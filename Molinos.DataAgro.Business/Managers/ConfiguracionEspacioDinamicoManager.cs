@@ -42,16 +42,39 @@ namespace Molinos.DataAgro.Business.Managers
                                 oEntityErrors.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
                                 continue;
                             }
+                            var configuracionCupo = repositorio.Obtener<ConfiguracionCupo>(x => x.Fecha == d.Fecha && !x.CierreCupera &&
+                                                    x.MaterialId == espacioDinamico.MaterialId && x.CentroId == espacioDinamico.CentroId);
+                            if (configuracionCupo != null)
+                            {
+                                if (configuracionCupo.LimiteCupo < (configuracionCupo.LimiteAlgoritmo + espacioDinamico.CantidadDeCupo))
+                                {
+                                    oEntityErrors.Error("espacioDinamico", "No se puede crear el espacio dinamico porque se excede del limite cupo configurado " + configuracionCupo.LimiteCupo);
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                oEntityErrors.Error("espacioDinamico", "No hay cupera configurada para el día " + d.Fecha);
+                                continue;
+                            }
+
                             espacioDinamico.CantidadDeCupo = d.Cantidad.Value;
                             espacioDinamico.Fecha = d.Fecha;
                             repositorio.Agregar(espacioDinamico);
                             repositorio.GuardarCambios();
+                            CrearSugerenciaDeEspacioDinamico(espacioDinamico);
+                            ConfigurarLimiteAlgoritmo(espacioDinamico, oEntityErrors);
                         }
                     }
                 }
                 else
                 {
                     var espacioDinamicoSave = repositorio.Obtener<ConfiguracionEspacioDinamico>(espacioDinamico.Id);
+                    ConfigurarLimiteAlgoritmo(espacioDinamicoSave, oEntityErrors);
+                    if (oEntityErrors.HayError)
+                    {
+                        return oEntityErrors;
+                    }
                     espacioDinamicoSave.MaterialId = espacioDinamico.MaterialId;
                     espacioDinamicoSave.CentroId = espacioDinamico.CentroId;
                     espacioDinamicoSave.MaterialId = espacioDinamico.MaterialId;
@@ -59,6 +82,8 @@ namespace Molinos.DataAgro.Business.Managers
                     espacioDinamicoSave.ProveedorId = espacioDinamico.ProveedorId;
                     espacioDinamicoSave.ComercialId = espacioDinamico.ComercialId;
                     espacioDinamicoSave.Calidad = espacioDinamico.Calidad;
+                    CrearSugerenciaDeEspacioDinamico(espacioDinamicoSave);
+            
 
                 }
                 repositorio.GuardarCambios();
@@ -106,6 +131,7 @@ namespace Molinos.DataAgro.Business.Managers
                     errores.Error("espacioDinamico", "Ya existe configuración para ese Comercial, Proveedor, Material, Centro y Fecha");
                 }
             }
+
             return errores;
         }
         public KendoGrid<ConfiguracionEspacioDinamicoDto> TraerTodaConfiguracionEspacioDinamico(KendoGridMvcRequest request)
@@ -162,7 +188,85 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return errores;
         }
-
-
+        private void CrearDiaComercialParaElAlgortimo(SugerenciaCupo sugerencia)
+        {
+            var comercialDia = repositorio.Obtener<SugerenciaPorComercial>(x => x.Fecha == sugerencia.FechaSugerida
+            && x.ComercialId == sugerencia.ComercialId && x.CentroId == x.CentroId && x.MaterialId == sugerencia.MaterialId);
+            if (comercialDia != null)
+            {
+                comercialDia.Total += sugerencia.CantidadDeCupos;
+            }
+            else
+            {
+                var sugerenciaPorComercial = new SugerenciaPorComercial()
+                {
+                    ComercialId = sugerencia.ComercialId,
+                    CentroId = sugerencia.CentroId,
+                    MaterialId = sugerencia.MaterialId,
+                    Fecha = sugerencia.FechaSugerida,
+                    Total = sugerencia.CantidadDeCupos
+                };
+                repositorio.Agregar(sugerenciaPorComercial);
+            }
+        }
+        private void CrearSugerenciaDeEspacioDinamico(ConfiguracionEspacioDinamico x)
+        {
+            Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula(x.MaterialId));
+            if (formula != null)
+            {
+                var fechaConfiguracion = x.Fecha.Date;
+                if (formula.CuposDesde <= fechaConfiguracion && fechaConfiguracion <= formula.CuposHasta && formula.CentroId == x.CentroId)
+                {
+                    var tipoNegocioEspacioDinamico = repositorio.ObtenerPrimero<TipoNegocio>(a => a.Descripcion == "ESPACIO DINAMICO");
+                    var zonaComercial = repositorio.Obtener<Comercial, string>(y => y.ComercialId == x.ComercialId, y => y.GrupoDeCompras.Descripcion);
+                    var zona = repositorio.Obtener<ZonaCupo>(y => y.Descripcion == zonaComercial).Id;
+                    var puntuacion = "{'Criterios':0.0}";
+                    var sugerencia = new SugerenciaCupo
+                    {
+                        CentroId = x.CentroId,
+                        StandardDeCalidad = x.Calidad,
+                        ComercialId = x.ComercialId,
+                        ProveedorId = x.ProveedorId,
+                        CantidadDeCupos = x.CantidadDeCupo,
+                        ConfiguracionEspacioDinamicoId = x.Id,
+                        MaterialId = x.MaterialId,
+                        MonedaId = null,
+                        Precio = null,
+                        ContratoSAP = null,
+                        FechaSugerida = x.Fecha,
+                        ZonaCupoId = zona,
+                        TipoNegocioId = tipoNegocioEspacioDinamico.TipoNegocioId,
+                        Puntuaciones = puntuacion
+                    };
+                    logger.Debug("Se creo una sugerencia para el dia: " + sugerencia.FechaSugerida);
+                    repositorio.Agregar(sugerencia);
+                    CrearDiaComercialParaElAlgortimo(sugerencia);
+                }
+            }
+        }
+        private Resultado ConfigurarLimiteAlgoritmo(ConfiguracionEspacioDinamico espacioDinamico, Resultado oEntityErrors)
+        {           
+            var configuracionCupo = repositorio.Obtener<ConfiguracionCupo>(x => x.Fecha == espacioDinamico.Fecha && !x.CierreCupera &&
+           x.MaterialId == espacioDinamico.MaterialId && x.CentroId == espacioDinamico.CentroId);
+            if (configuracionCupo != null)
+            {
+                var limiteAlgoritmo = configuracionCupo.LimiteAlgoritmo;
+                if (configuracionCupo.LimiteCupo > limiteAlgoritmo + espacioDinamico.CantidadDeCupo)
+                {
+                    configuracionCupo.LimiteAlgoritmo += espacioDinamico.CantidadDeCupo;
+                }
+                else
+                {
+                    oEntityErrors.Error("espacioDinamico", "No se puede editar el espacio dinamico porque se excede del limite cupo configurado " + configuracionCupo.LimiteCupo);
+                    return oEntityErrors;
+                }
+            }
+            else
+            {
+                 oEntityErrors.Error("espacioDinamico", "No hay cupera configurada para el día " + espacioDinamico.Fecha);
+                return oEntityErrors;
+            }
+            return oEntityErrors;
+        }
     }
 }

@@ -1,0 +1,230 @@
+﻿
+@using Molinos.DataAgro.Entities.Dto
+@{
+    ViewBag.Title = "PartialTabla";
+    var mensajes = (List<MensajeCupoDto>)ViewBag.Mensajes;
+    var fechas = (List<DateTime>)ViewBag.Fechas;
+    var muestraModal = ViewBag.MuestraModal;
+}
+<script>
+    var mostrar = '@muestraModal';
+   
+    $(document).ready(function () {
+        if (mostrar == 'True') {
+            $("#mensajes").modal("show");
+        }
+
+    });
+    
+</script>
+<div class="modal fade .modal-xl" id="mensajes" style="overflow-x: auto;" tabindex="-1" role="dialog" aria-labelledby="CargaCuposLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title" id="sugerencia"></h1>
+                <div class="status confirmado-modal">
+                    <div></div>
+                </div>
+            </div>
+            <div class="modal-body report-pre modal-body report-modal-body" style=" max-width: 100%; overflow-x: auto;">
+                <div id="tabla-wrapper">
+                    <div id="tabla-scroll">
+                        <table id="miTablaPersonalizada" style="font-size:11px">
+                            <thead>
+                                <tr style="border-block-start: none; border-block-end: none; background: darkgray;">
+                                    <th colspan="1"><span class="texto"></span></th>
+                                    @foreach (var f in fechas)
+                                    {
+                                        var fecha = f.ToString("dd/MM/yyyy");
+                                        <th colspan="3"><span class="texto">@fecha</span></th>
+                                    }
+                                </tr>
+
+
+                                <tr style="border-block-start: none; border-block-end: none; background: lightgray;">
+                                    <th><span class="texto">Proveedor</span> </th>
+                                    @for (int i = 0; i < fechas.Count; i++)
+                                    {
+                                        <th style="border-left:1px solid #dddddd"><span class="texto">Cupos</span></th>
+                                        <th><span class="texto">Solicitudes</span></th>
+                                        <th  style="border-right:1px solid #dddddd"><span class="texto">Errores</span></th>
+                                    }
+
+                                </tr>
+                            </thead>
+                            <tbody data-html="true">
+                                @foreach (var p in mensajes.GroupBy(x => x.Proveedor))
+                                {
+                                    <tr>
+                                        <td style="border-left:1px solid #dddddd">@p.Key</td>
+                                        @foreach (var fecha in fechas)
+                                        {
+                                            var mostrarBoton = true;
+                                            var a = 1;
+                                            if (p.Any(x => x.Fecha == fecha))
+                                            {
+
+
+                                                <td style="border-left:1px solid #dddddd">
+                                                    <div>
+
+                                                        <label>
+                                                            @foreach (var c in p.Where(x => x.Fecha == fecha).Select(x => x.Cupos))
+                                                            {
+                                                                for (var i = 0; i < c.Count(); i++)
+                                                                {
+                                                                    if (!string.IsNullOrEmpty(c[i]))
+                                                                    {                                                                     
+                                                                        
+                                                                        @Html.Raw(c[i])
+                                                                        <br />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        mostrarBoton = false;
+                                                                    }
+
+                                                                }
+                                                            }
+
+                                                        </label>
+                                                    </div>
+                                                    @if (mostrarBoton)
+                                                    {
+                                                        <button type="button" style="width:125px" class="btn k-button" onclick="copiarCuposGenerados(this)"><i class="fa fa-copy"></i></button>
+                                                    }
+                                                </td>
+                                                <td style="">
+                                                    <label>
+                                                        @foreach (var s in p.Where(x => x.Fecha == fecha).Select(x => x.Solicitudes))
+                                                        {
+
+                                                            for (var i = 0; i < s.Count(); i++)
+                                                            {
+                                                                if (!string.IsNullOrEmpty(s[i]))
+                                                                {
+                                                                    @Html.Raw(s[i]);
+
+                                                                }
+                                                                <br />
+                                                            }
+                                                        }
+                                                    </label>
+                                                </td>
+                                                <td style="border-right:1px solid #dddddd">
+                                                    <label>
+                                                        @foreach (var e in p.Where(x => x.Fecha == fecha).Select(x => x.Error))
+                                                        {
+                                                            for (var i = 0; i < e.Count(); i++)
+                                                            {
+                                                                if (!string.IsNullOrEmpty(e[i].Message))
+                                                                {
+                                                                    @Html.Raw(e[i].Message);
+
+                                                                }
+                                                                <br />
+                                                            }
+                                                        }
+                                                    </label>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td style="border-left:1px solid #dddddd"><label></label></td>
+                                                <td style=""><label></label></td>
+                                                <td style="border-right:1px solid #dddddd"><label></label></td>
+                                            }
+
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+
+
+
+    #tabla-scroll {
+        height: 320px;
+    }
+
+
+    #tabla-wrapper table * {
+        color: black;
+    }
+
+    .row {
+        padding: 2px !important;
+    }
+    /*   #modalSolicitudExtraordinaria {
+        width: 750px;
+        margin: auto;
+    }*/
+    #mensajes td {
+        text-align: center;
+        border-block-start-color: #dddddd;
+        border-block-end-color: #dddddd;
+        border-left: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+    }
+
+    #mensajes th {
+        text-align: center;
+        border-block-start-color: #dddddd;
+        border-block-end-color: #dddddd;
+        border-left: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+    }
+
+    #mensajes tr {
+        text-align: center;
+        border-top: none;
+        border: 1px solid #dddddd;
+    }
+
+   /* #mensajes th:first-of-type {
+        vertical-align: middle;
+        border: 1px solid #dddddd;
+    }*/
+
+    #mensajes {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        text-align: center;
+    }
+    /*    .report-modal-body {
+        max-height:calc(100vh - 150px);
+        overflow-y:auto;
+        overflow-x:auto;
+    }*/
+    .report-pre {
+        width: 100%;
+        overflow-x: auto;
+        word-wrap: normal;
+        margin: 1px;
+    }
+
+    #miTablaPersonalizada td {
+        width: 150px !important;
+        overflow: auto;
+    }
+    .bordes {
+        border-left: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+    }
+</style>
+

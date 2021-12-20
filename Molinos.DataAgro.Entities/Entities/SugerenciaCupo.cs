@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -64,6 +65,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Puntuaciones { get; set; }
         public string MotivoRechazo { get; set; }
         public bool CDWarrant { get; set; }
+
+        [InverseProperty("SugerenciaCupo")]
+        public virtual List<AdministracionCupo> Solicitudes { get; set; }
+        public double KgNegocio { get; set; }
+        public double KgPendienteAplicar { get; set; }
 
         public object Clone()
         {

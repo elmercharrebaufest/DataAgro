@@ -1,9 +1,65 @@
 ﻿$(document).ready(function () {
     $('#menuproveedor').hide();
     kendo.culture("es-AR");
-    CargarGrillaConfig();
+    //CargarGrillaConfig();
     CargarEventos();
-   
+
+
+    $(".kNumeric").each(function (index) {
+        var max = $(this).attr("max");
+        if (!max) {
+            max = 999;
+        }
+        $(this).kendoNumericTextBox({
+            step: 1,
+            min: 0,
+            spinners: true,
+            max: max,
+            format: "0"
+        });
+    });
+
+    $("#buscadorProveedor").kendoAutoComplete({
+        template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
+            '<p class="buscar-nomb">#: data.RazonSocial#(#: data.Cuit#)</p>',
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Id",
+        autoWidth: true,
+        filter: "contains",
+        change: function () {
+            if ($("#buscadorProveedor").val().split('|').length > 1) {
+                $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
+            }
+        },
+        select: function (e) {
+            closeAll();
+            $('.pall').hide();
+            $('.p' + e.dataItem.Cuit).show();
+            $('#proveedorCUIT').val(e.dataItem.Cuit);
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarProveedoresConCorredor"
+                },
+                parameterMap: function (data, type) {
+                    return { filtro: "", filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
+                }
+            }
+
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
 
 });
 $(document).on('click', '.list > li ', function () {
@@ -12,6 +68,8 @@ $(document).on('click', '.list > li ', function () {
         $(this).toggleClass('multi-opened');
     }
 })
+var itemsConfirmados;
+var aceptar;
 function CargarEventos() {
     $("#btnCancelar").click(function () {
         $("#motivoRechazo").val("");
@@ -25,8 +83,8 @@ function CargarEventos() {
             MensErr("Debe seleccionar al menos una sugerencia.");
 
         } else {
-            $("#ModalRechazo").modal('show');          
-            
+            $("#ModalRechazo").modal('show');
+
         }
 
     });
@@ -57,6 +115,7 @@ function CargarEventos() {
 
         if (errores.length == 0) {
             MensInfo("Se grabo correctamente.");
+            location.reload();
         } else {
             //alert(errores.join());
             ShowErrorMessages(errores);
@@ -85,7 +144,7 @@ function CargarEventos() {
         if (grid.selectedKeyNames().length == 0) {
             MensErr("Debe seleccionar al menos una sugerencia.");
 
-        }else {
+        } else {
             $("#fleteProcedenciaModal").modal("show");
         }
 
@@ -95,92 +154,264 @@ function CargarEventos() {
     });
 
     $("#boton-si").click(function () {
-        var sugerencias = ListarSugerencias();
+        $("#fleteProcedenciaModal").modal("hide");
+        $("#cuerpo-carga-cupos").empty();
         var fila = '';
-        for (var i = 0; i < sugerencias.length; i++) {
-            fila = '<tr><td>' + sugerencias[i].ProveedorDesc + '</td> <td>'
-                + kendo.toString(sugerencias[i].FechaSugerida, "dd/MM/yyyy")
-                + '</td> <td><input id="fleteProcedencia' + i + '" name="' + sugerencias[i].CantidadFleteProcedencia + '" min="1" max="' + sugerencias[i].CantidadDeCupos
-                + '" class="cantidad" value="' + sugerencias[i].CantidadFleteProcedencia + '"/> </td> <td>'
-                + 'Max. de cupos: ' + sugerencias[i].CantidadDeCupos + '</td></tr>'
+        for (var i = 0; i < itemsConfirmados.length; i++) {
+            fila = '<tr><td>' + itemsConfirmados[i].razonSocial + '</td> <td>'
+                + kendo.toString(itemsConfirmados[i].fecha, "dd/MM/yyyy")
+                + '</td> <td><input id="flete' + itemsConfirmados[i].nro + '" name="flete' + itemsConfirmados[i].nro + '" min="0" max="' + itemsConfirmados[i].cantidad
+                + '" class="cantidad-masiva" value="' + itemsConfirmados[i].cantidadFleteProcedencia + '"/> </td> <td>'
+                + 'Max. de cupos: ' + itemsConfirmados[i].cantidad + '</td></tr>'
             $("#cuerpo-carga-cupos").append(fila);
         }
-        $(".cantidad").kendoNumericTextBox({
+        $(".cantidad-masiva").kendoNumericTextBox({
             culture: "es-AR",
             format: "n0",
             spinners: false,
-            min: 0
+            min: 0,
+            step: 0
         });
         $("#fleteProcedenciaModal").modal("hide");
-        $("#CargaCupos").modal("show");       
+        $("#CargaCupos").modal("show");
     });
-
-    $("#aceptar").click(function () {
-        var grid = $('#gridSugerenciaCupo').data('kendoGrid');
-        var sugerencias = ListarSugerencias();
-        for (var j = 0; j < sugerencias.length; j++) {
-            sugerencias[j].CantidadFleteProcedencia = $("#fleteProcedencia" + j).val();
-            sugerencias[j].CantidadDeCupos = sugerencias[j].CantidadDeCupos - sugerencias[j].CantidadFleteProcedencia;
-
-        }
-        BlockUi("Grabando...");
-        result = MSExecuteOnServer('/SugerenciaCupo/Aceptar', sugerencias);// grid.selectedKeyNames());
-        $("#CargaCupos").modal("hide");
-
-        $.unblockUI();
-        var errores = new Array();
-        var cuposGenerados = new Array();
-        for (var i = 0; i < result.length; i++) {
-            if (result[i].HayError) {
-                errores = errores.concat(result[i].ListaErrores);
-            }
-            if (result[i].ListaCupos != null && result[i].ListaCupos.length > 0) {
-                cuposGenerados = cuposGenerados.concat(result[i].ListaCupos);
-            }
-        }
-        if (cuposGenerados.length > 0) {
-            cuposCreados(cuposGenerados);
-            grid._selectedIds = {};
-            grid.clearSelection();
-            grid.dataSource.read();
-        }
-        if (errores.length > 0) {
-            ShowErrorMessages(errores);
-        }
-    });
-
     $("#boton-no").click(function () {
-        var grid = $('#gridSugerenciaCupo').data('kendoGrid');
-        $("#fleteProcedenciaModal").modal("hide");
-        BlockUi("Grabando...");
-        var lista = ListarSugerencias();
-        result = MSExecuteOnServer('/SugerenciaCupo/Aceptar', lista);
-        $.unblockUI();
-        var error = new Array();
-        var cupos = new Array();
-        for (var i = 0; i < result.length; i++) {
-            if (result[i].HayError) {
-                error = error.concat(result[i].ListaErrores);
+        BlockUi('Cargando...');
+        setTimeout(function () {
+            $("#fleteProcedenciaModal").modal("hide");
+            var url = '/SugerenciaCupo/AceptarSugerenciaCupo';
+            var data = itemsConfirmados[0];
+            if (aceptar != true) {
+                url = '/SugerenciaCupo/ModificarSugerenciaCupo';
+                data = itemsConfirmados;
             }
-            if (result[i].ListaCupos != null && result[i].ListaCupos.length > 0) {
-                cupos = cupos.concat(result[i].ListaCupos);
+            var resultados = MSExecuteOnServer(url, data);
+            $.unblockUI();
+            mostrarResultados(resultados)
+        }, 250);
+
+    });
+    $("#aceptar").click(function () {
+        BlockUi('Cargando...');
+        setTimeout(function () {
+            for (var j = 0; j < itemsConfirmados.length; j++) {
+                itemsConfirmados[j].cantidadFleteProcedencia = $("#flete" + j).val();
+                itemsConfirmados[j].cantidad = itemsConfirmados[j].cantidad - itemsConfirmados[j].cantidadFleteProcedencia;
             }
+            var url = '/SugerenciaCupo/AceptarSugerenciaCupo';
+            var data = itemsConfirmados[0];
+            if (aceptar != true) {//modificacion o aceptar sugerencias
+                url = '/SugerenciaCupo/ModificarSugerenciaCupo';
+                data = itemsConfirmados;
+            }
+            var resultados = MSExecuteOnServer(url, data);
+            mostrarResultados(resultados);
+            $.unblockUI();
+        }, 250);
+
+    });
+
+    $("#aceptarModificar").click(function () {
+        aceptar = false;
+        var maximo = $("#modCantidad").html();
+        var total = 0;
+        var fecha = $("#modFecha").html();
+        itemsConfirmados = new Array();
+        var i = 0;
+        $("input:text.dia").each(function (index) {
+            if (this.id != "") {
+                console.log(this);
+                total = total + $(this).data("kendoNumericTextBox").value();
+                var fechaSolicitud = this.id.substr(1, 2) + "/" + this.id.substr(3, 2) + "/" + this.id.substr(5, 4);
+                if ($(this).data("kendoNumericTextBox").value() > 0) {
+                    itemsConfirmados.push({
+                        nro: i++,
+                        cantidad: $(this).data("kendoNumericTextBox").value(),
+                        idSugerencia: $("#modSugerenciaId").val(),
+                        fecha: fechaSolicitud,
+                        fechaOriginal: fecha,
+                        proveedorId: $("#modProveedorId").val(),
+                        razonSocial: $("#modProveedor").html(),
+                        cantidadFleteProcedencia: 0,
+                        materialId: $("#modMaterialId").val(),
+                        comercialId: $("#ComercialSeleccionado1").val(),
+                        centroId: $("#CentroId").val(),
+
+                    });
+                }
+
+            }
+
+        });
+        if (total == 0) {
+            MensErr("Ingrese la cantidad de sugerencias que desea cambiar de dia.");
+            return;
         }
-        if (cupos.length > 0) {
-            //MensInfo("Cupos generados: " + cuposGenerados.join());
-            cuposCreados(cupos);
-            //grid._selectedIds = {};
-            //grid.clearSelection();
-            //grid.dataSource.read();
-        }
-        if (error.length > 0) {
-            ShowErrorMessages(error);
+        if (total > maximo) {
+            MensErr("El maximo de sugerencias a modificar es " + maximo);
+        } else {
+            $("#modificarSugerenciaModal").modal("hide");
+            $("#fleteProcedenciaModal").modal("show");
         }
     });
+
     $("#resultadoCupo").on('hidden.bs.modal', function () {
         BlockUi("Cargando...");
         location.reload();
     });
+
+    $(".ComercialSeleccionado").on('change', function () {
+        var comercial = $(this).data("kendoDropDownList").value();
+        var material = $("input[name='materialId']:checked").val();
+        redirect(comercial, material)
+    });
+
+    $("input[name='materialId']").on('change', function () {
+        var material = $("input[name='materialId']:checked").val();
+        var comercial = $("#ComercialSeleccionado1").data("kendoDropDownList").value();
+        redirect(comercial, material);
+    });
+
+    $("#buscadorProveedor").click(function () {
+        $("#buscadorProveedor").data("kendoAutoComplete").value("");
+        $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
+        $(".pall").show();
+        $('#proveedorCUIT').val("");
+        closeAll();
+    });
+}
+function redirect(comercial, material, mostrarResultado) {
+    BlockUi("Cargando...");
+    var search = "?ComercialSeleccionado=" + comercial + "&materialId=" + material;
+    if (mostrarResultado == true) {
+        search = search + "&muestraModal=true";
+    }
+    var newURL = window.location.protocol + "//" + window.location.host + window.location.pathname + search;
+    window.location.href = newURL;
+}
+
+function AceptarSugerenciaProvDia(id, fecha, material, proveedorId, razonSocial) {
+    aceptar = true;
+    itemsConfirmados = new Array();
+    itemsConfirmados.push({
+        nro: 0,
+        cantidad: $("#" + id).data("kendoNumericTextBox").value(),
+        idSugerencia: 0,
+        fecha: fecha,
+        proveedorId: proveedorId,
+        razonSocial: razonSocial,
+        cantidadFleteProcedencia: 0,
+        materialId: material,
+        comercialId: $("#ComercialSeleccionado1").val(),
+        centroId: $("#CentroId").val(),
+
+    });
+    $("#fleteProcedenciaModal").modal("show");
+}
+
+function AceptarSugerencia(id, fecha, proveedorId, razonSocial) {
+    aceptar = true;
+    itemsConfirmados = new Array();
+    itemsConfirmados.push({
+        nro: 0,
+        cantidad: $("#" + id).data("kendoNumericTextBox").value(),
+        idSugerencia: id.replace('s', ''),
+        fecha: fecha,
+        proveedorId: proveedorId,
+        razonSocial: razonSocial,
+        cantidadFleteProcedencia: 0
+    });
+    $("#fleteProcedenciaModal").modal("show");
+}
+function DevolverSugerencia(id) {
+    BlockUi('Cargando...');
+    setTimeout(function () {
+        var cantidad = $("#" + id).data("kendoNumericTextBox").value();
+        if (cantidad == null || cantidad == "" || cantidad == 0 ) {
+            MensErr("Ingrese la cantidad de cupos a devolver");
+            $.unblockUI();
+            return;
+        }
+        id = id.replace('d', '');
+        $("#fleteProcedenciaModal").modal("hide");
+        var resultado = MSExecuteOnServer('/SugerenciaCupo/RechazarSugerenciaCupo', { idSugerencia: id, cantidad: cantidad });
+        mostrarResultado(resultado);
+        $.unblockUI();
+
+    }, 250);
+}
+
+function ModificarSugerencia(id, fecha, proveedorId, razonSocial, cantidad, materialId, materialDesc) {
+    aceptar = false;
+    $("#modSugerenciaId").val(id);
+    $("#modMaterialId").val(materialId);
+    $("#modProveedorId").val(proveedorId);
+    $("#modMaterial").html(materialDesc);
+    $("#modProveedor").html(razonSocial);
+    $("#modFecha").html(fecha);
+    $("#modCantidad").html(cantidad);
+    $("input:text.dia").each(function (index) {
+        if (this.id != "") {
+            $(this).data("kendoNumericTextBox").value("");
+        }
+    });
+    $("#modificarSugerenciaModal").modal("show");
+}
+
+function ModificarSugerenciaProv(id, fecha, proveedorId, razonSocial, cantidad, materialId, materialDesc) {
+    aceptar = false;
+    $("#modSugerenciaId").val(0);
+    $("#modMaterialId").val(materialId);
+    $("#modProveedorId").val(proveedorId);
+    $("#modMaterial").html(materialDesc);
+    $("#modProveedor").html(razonSocial);
+    $("#modFecha").html(fecha);
+    $("#modCantidad").html(cantidad);
+    $("input:text.dia").each(function (index) {
+        if (this.id != "") {
+            $(this).data("kendoNumericTextBox").value("");
+        }
+    });
+    $("#modificarSugerenciaModal").modal("show");
+}
+
+function mostrarResultado(result) {
+    if (result == null) {
+        return;
+    }
+    var errores = new Array();
+    for (var i = 0; i < result.length; i++) {
+        if (result[i].HayError) {
+            errores = errores.concat(result[i].ListaErrores);
+        }
+    }
+    if (errores.length == 0) {
+        MensInfoReload("Se grabo correctamente.");
+    } else {
+        ShowErrorMessages(errores);
+    }
+}
+function mostrarResultados(result) {
+    var error = new Array();
+    var cupos = new Array();
+    for (var i = 0; i < result.length; i++) {
+        if (result[i].HayError) {
+            error = error.concat(result[i].ListaErrores);
+        }
+        if (result[i].ListaCupos != null && result[i].ListaCupos.length > 0) {
+            cupos = cupos.concat(result[i].ListaCupos);
+        }
+    }
+    if (cupos.length > 0) {
+        //MensInfo("Cupos generados: " + cuposGenerados.join());
+        cuposCreados(cupos);
+        //grid._selectedIds = {};
+        //grid.clearSelection();
+        //grid.dataSource.read();
+    }
+    if (error.length > 0) {
+        ShowErrorMessages(error);
+    }
 }
 
 function cuposCreados(lista) {
@@ -215,7 +446,8 @@ function CargarGrillaConfig() {
             read: {
                 type: 'post',
                 dataType: 'json',
-                url: '/SugerenciaCupo/DatosConfiguracion'
+                url: '/SugerenciaCupo/DatosConfiguracion',
+                data: additionalInfo()
             },
             parameterMap: function (options, operation) {
                 if (options.filter) {
@@ -243,6 +475,7 @@ function CargarGrillaConfig() {
                     ZonaDescrip: { type: "string", editable: false },
                     CantidadDeCupos: { type: "number", editable: true, validation: { required: true, min: 1 } },
                     CantidadDeCuposMax: { type: "number", editable: false },
+                    KgNegocio: { type: "number", editable: false },
                 }
             }
         },
@@ -262,8 +495,9 @@ function CargarGrillaConfig() {
             { field: "FechaSugerida", type: "date", format: _DefaultDateTemplate, title: "Fecha <br> Sugerida", width: "110px" },
             { field: "ProveedorCUIT", title: "CUIT", width: "100px" },
             { field: "ProveedorDesc", title: "Razon Social" },
-            { field: "MonedaId", title: "Moneda", width: "88px"},            
+            { field: "MonedaId", title: "Moneda", width: "88px" },
             { field: "Precio", width: "88px", format: "{0:n0}" },
+            { field: "KgNegocio", title: "Kg", width: "88px", format: "{0:n0}" },
             { field: "TipoNegocioDesc", title: "Negocio", width: "100px" },
             { field: "ContratoSAP", title: "ContratoSAP", width: "125px" },
             {
@@ -349,7 +583,7 @@ function CargarGrillaConfig() {
             var datos2 = JSON.stringify(dataItem.Puntuaciones, undefined, 4).replace(/,/gi, ',').replace(/"/gi, '').replace(/{/gi, '').replace(/}/gi, '');
             datos2 = datos2.split(",");
             var result = "<div style='text-align: left;'>";
-            
+
             result = result + datos + "</div>";
             console.log(result);
             return result;
@@ -361,5 +595,75 @@ function recargarGrilla() {
     $('#gridSugerenciaCupo').data('kendoGrid').dataSource.read();
 }
 
+function additionalInfo() {
+    return {
+        ComercialId: $("#ComercialSeleccionado1").val()
+    }
+}
 
+function copiarCuposGenerados(elem) {
+    var listaCupos = $(elem).parent().children('div').children().html().replace(/<br>/g, "\n");
+    listaCupos = listaCupos.split('<strong>').join("");
+    listaCupos = listaCupos.split('</strong>').join("");
+    //como un replaceall 
+    var copy = function (e) {
+        e.preventDefault();
+        console.log('copy');
 
+        if (e.clipboardData) {
+            e.clipboardData.setData('text/plain', listaCupos);
+        } else if (window.clipboardData) {
+            window.clipboardData.setData('Text', listaCupos);
+        }
+    };
+    window.addEventListener('copy', copy);
+    document.execCommand('copy');
+    window.removeEventListener('copy', copy);
+}
+
+function MostrarMensaje() {
+    $("#mensajes").modal("show");
+}
+
+function verOcultar(el, classname, verSugerencias) {
+
+    var clase = "fa fa-caret-square-o-down";
+    console.log(classname);
+    if ($(el).hasClass(clase)) {
+        //ver
+        $("." + classname).show("slice");
+        $(el).removeClass("fa fa-caret-square-o-down")
+        $(el).addClass("fa fa-caret-square-o-right")
+    } else {
+        //ocultar
+        $("." + classname).hide("slice");
+        $(el).removeClass("fa fa-caret-square-o-right")
+        $(el).addClass("fa fa-caret-square-o-down")
+    }
+    if (verSugerencias == false) {
+        $(".sugerencia").hide();
+        var ps = document.getElementsByName("p" + classname);
+        ps.forEach((p) => {
+            if ($(p).hasClass("fa fa-caret-square-o-right")) {
+                $(p).removeClass("fa fa-caret-square-o-right");
+                $(p).addClass("fa fa-caret-square-o-down");
+            }
+
+        })
+
+    }
+    if ($('#proveedorCUIT').val() != "") {
+        $('.pall').hide();
+        $('.p' + $('#proveedorCUIT').val()).show();
+    }
+}
+
+function closeAll() {
+    $(".fa .fa-caret-square-o-down").each(function (index) {
+        $(this).removeClass("fa fa-caret-square-o-right");
+        $(this).addClass("fa fa-caret-square-o-down");
+    });
+
+    $(".todo").hide();
+
+}

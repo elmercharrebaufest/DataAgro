@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using Moq;
 using NUnit.Framework;
@@ -21,6 +22,7 @@ namespace Molinos.DataAgro.Test.Controllers
     {
         private FormulaController target;
         private Mock<IFormulaManager> formulaManagerMock;
+        private Mock<IMaterialManager> materialManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -28,44 +30,50 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             this.serializer = new JavaScriptSerializer();
             formulaManagerMock = new Mock<IFormulaManager>();
-            target = new FormulaController(formulaManagerMock.Object);
+            materialManagerMock = new Mock<IMaterialManager>();
+            target = new FormulaController(formulaManagerMock.Object, materialManagerMock.Object);
         }
         [Test]
         public void InicializarTest()
         {
-            formulaManagerMock.Setup(x => x.todosLosCriterios()).Returns(new List<CriterioIni>()
+            materialManagerMock.Setup(x => x.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>() });
+
+            formulaManagerMock.Setup(x => x.TodosLosCriterios()).Returns(new List<CriterioIni>()
             {
                 new CriterioIni{ Id=0,Descripcion="CriterioRaiz",DisplayName="Criterios" },
                 new CriterioIni{ Id=0,Descripcion="CriterioEsFason",DisplayName="Fason" }
             });
-            formulaManagerMock.Setup(x => x.ultimaFormula()).Returns(new ResultIniFormula()
+            formulaManagerMock.Setup(x => x.UltimaFormula(1)).Returns(new ResultIniFormula()
             {
                 Formula = new FormulaIni
                 {
                     Id = 1,
-                    Inicio = 1,
-                    CantDias = 6,
-                    CriterioId = 1
+                    CuposDesde = new DateTime(2021, 3, 15),
+                    CuposHasta = new DateTime(2021, 3, 15),
+                    NegociosDesde = new DateTime(2021, 3, 15),
+                    NegociosHasta = new DateTime(2021, 3, 15),
+                    CriterioId = 1,
+                    MaterialId = 1
                 }
             });
-            var result = target.Inicializar();
+            var result = target.Inicializar(1);
 
             Assert.NotNull(result);
 
             var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"ultimaFormulaTraida\":{\"Formula\":{\"Id\":1,\"Criterio\":null,\"Inicio\":1,\"CantDias\":6,\"CriterioId\":1,\"Fecha\":\"\\/Date(-62135586000000)\\/\"}},\"Criterios\":{\"Criterios\":[{\"Id\":0,\"Padre\":null,\"PadreId\":null,\"Hijos\":null,\"Prioridad\":0,\"Descripcion\":\"CriterioRaiz\",\"Concreta\":false,\"DisplayName\":\"Criterios\"},{\"Id\":0,\"Padre\":null,\"PadreId\":null,\"Hijos\":null,\"Prioridad\":0,\"Descripcion\":\"CriterioEsFason\",\"Concreta\":false,\"DisplayName\":\"Fason\"}]}},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            var data = (ResultIniFormulaModel)((JsonResult)result).Data;
+            Assert.AreEqual(data.Datos.ultimaFormulaTraida.Formula.Id, 1);
+            Assert.AreEqual(data.Datos.Criterios.Criterios.Count, 2);
         }
         [Test]
         public void BuscarTest()
         {
-            formulaManagerMock.Setup(x => x.TraerCriteriosGuardados()).Returns(new ResultIniCriterio
+            formulaManagerMock.Setup(x => x.TraerCriteriosGuardados(1)).Returns(new ResultIniCriterio
             {
 
                 Criterios = new List<CriterioIni> { new CriterioIni { Id = 1, Descripcion = "CriterioRaizTest" } }
             });
-            var result = target.Buscar();
+            var result = target.Buscar(1);
 
             Assert.NotNull(result);
 
@@ -99,7 +107,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             CriterioIni criterioAEliminar = new CriterioIni { Id = 1, Descripcion = "CriterioEliminarTest" };
 
-            formulaManagerMock.Setup(x => x.eliminarCriterio(It.IsAny<CriterioIni>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            formulaManagerMock.Setup(x => x.EliminarCriterio(It.IsAny<CriterioIni>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             var result = target.Eliminar(criterioAEliminar);
 
             Assert.NotNull(result);
@@ -114,10 +122,12 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var DiasNuevos = new FormulaIni
             {
-                Inicio = 1,
-                CantDias = 5
+                CuposDesde = DateTime.Now.Date,
+                CuposHasta = DateTime.Now.Date,
+                NegociosDesde = DateTime.Now.Date,
+                NegociosHasta = DateTime.Now.Date
             };
-            formulaManagerMock.Setup(x => x.actualizarDias(It.IsAny<FormulaIni>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            formulaManagerMock.Setup(x => x.ActualizarDias(It.IsAny<FormulaIni>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
 
             var result = target.ActualizarDiasFormula(DiasNuevos);
 
@@ -125,7 +135,29 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
 
             var a = serializer.Serialize(result);
-            
+
+            var data = (AbmFormulaResult)((JsonResult)result).Data;
+            Assert.IsNotNull(data);
+        }
+        [Test]
+        public void ActualizarCierreTest()
+        {
+            var DiasNuevos = new FormulaIni
+            {
+                CuposDesde = DateTime.Now.Date,
+                CuposHasta = DateTime.Now.Date,
+                NegociosDesde = DateTime.Now.Date,
+                NegociosHasta = DateTime.Now.Date,
+                Cierre = true
+            };
+            formulaManagerMock.Setup(x => x.ActualizarCierre(It.IsAny<FormulaIni>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+
+            var result = target.ActualizarCierre(DiasNuevos);
+
+            Assert.NotNull(result);
+
+            var a = serializer.Serialize(result);
+
             var data = (AbmFormulaResult)((JsonResult)result).Data;
             Assert.IsNotNull(data);
         }

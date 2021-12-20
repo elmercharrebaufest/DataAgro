@@ -100,7 +100,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CrearSugerenciaCupo()
         {
-            cupoManagerMock.Setup(x => x.CrearSugerenciaCupo(It.IsAny<ConfiguracionCupo>()));
+            cupoManagerMock.Setup(x => x.CrearSugerenciaCupo(It.IsAny<int>(),It.IsAny<ConfiguracionCupo>()));
             var result = target.CrearSugerenciaCupo() as ContentResult;
 
             Assert.NotNull(result);
@@ -114,6 +114,26 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock.Setup(x => x.GrabarDatosReporteCompraNet(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<int>>()));
             var result = target.GrabarDatosReporteCompraNet("") as ContentResult;
 
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+        
+        [Test]
+        public void EnviarMailSugerenciasPendientesPorComercialTest()
+        {
+            cupoManagerMock.Setup(x => x.EnviarMailSugerenciasPendientesPorComercial());
+            var result = target.EnviarMailSugerenciasPendientesPorComercial() as ContentResult;
+
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ActualizarCumplimientoCuposTest()
+        {
+            var result = target.ActualizarCumplimientoCupos() as ContentResult;
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
@@ -148,16 +168,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
         }
-
-        [Test]
-        public void ActualizarCumplimientoCuposTest()
-        {
-            var result = target.ActualizarCumplimientoCupos() as ContentResult;
-            Assert.NotNull(result);
-            var expectedResult = new ContentResult { Content = "ok" };
-            Assert.AreEqual(result.Content, expectedResult.Content);
-        }
-
+        
         [Test]
         public void ActualizarCumplimientoCuposMasivoTest()
         {

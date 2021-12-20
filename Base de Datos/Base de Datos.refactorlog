@@ -883,4 +883,95 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="BoletoVentaId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="2859082f-2ffa-455b-9261-19d7f0b58ce9" ChangeDateTime="03/15/2021 14:04:38">
+    <Property Name="ElementName" Value="[dbo].[Formula].[CantDias]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaDesde" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0357dd27-25e2-4929-a47c-30a673396a23" ChangeDateTime="03/15/2021 14:04:56">
+    <Property Name="ElementName" Value="[dbo].[Formula].[FechaDesde]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaHasta" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="087ee0e9-e428-4d7b-8f17-e6907c8ba8c7" ChangeDateTime="03/15/2021 14:04:58">
+    <Property Name="ElementName" Value="[dbo].[Formula].[Inicio]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaDesde" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4a3624be-9877-4858-a91e-03795c851a80" ChangeDateTime="03/15/2021 14:07:02">
+    <Property Name="ElementName" Value="[dbo].[Formula].[FechaDesde]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CuposDesde" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4c4c906f-377a-4d98-ba80-1f1d717e448f" ChangeDateTime="03/15/2021 14:07:24">
+    <Property Name="ElementName" Value="[dbo].[Formula].[FechaHasta]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CuposHasta" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b8b61c2e-f204-4fa4-8393-f9601060e1ca" ChangeDateTime="03/15/2021 14:13:30">
+    <Property Name="ElementName" Value="[dbo].[Formula].[ContratosDesde]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NegociosDesde" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7ead9ac0-a645-4fa0-a4be-2a7595cd09ab" ChangeDateTime="03/15/2021 14:13:33">
+    <Property Name="ElementName" Value="[dbo].[Formula].[ContratosHasta]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Formula]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NegociosHasta" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1bacd181-b32f-4959-8501-fb52f34fb3cd" ChangeDateTime="03/12/2021 19:50:24">
+    <Property Name="ElementName" Value="[dbo].[CierreCupera].[Habilitado]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CierreCupera]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Cierre" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8ea53ca5-b621-4879-b7f4-20351d1f3c3c" ChangeDateTime="07/06/2021 16:01:44">
+    <Property Name="ElementName" Value="[dbo].[ConfiguracionCupo].[Liberar Cupera]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ConfiguracionCupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LiberarCupera" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="eafb2ae8-14de-484b-88d7-c8c1a1a54f53" ChangeDateTime="08/13/2021 18:37:23">
+    <Property Name="ElementName" Value="[dbo].[MensajeCupo].[CorredorVendedor]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[MensajeCupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Datos" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="96386fda-e116-402c-a371-8529f1f718fd" ChangeDateTime="10/18/2021 18:30:14">
+    <Property Name="ElementName" Value="[dbo].[AdministracionCupo].[SugerenciaId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AdministracionCupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SugerenciaCupoId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e4467b6f-0f50-497c-87ab-9c82643e0039" ChangeDateTime="10/26/2021 14:40:32">
+    <Property Name="ElementName" Value="[dbo].[Configuracion].[Algoritmo_KilosMinimosParaSugerencia]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Configuracion]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AlgoritmoKilosMinimosParaSugerencia" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d5b7a113-6c2b-4583-b9f9-4779bbe89ac1" ChangeDateTime="12/15/2021 21:47:23">
+    <Property Name="ElementName" Value="[dbo].[Proveedor].[ComisionistaProveedorId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Proveedor]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ComisionistaId" />
+  </Operation>
 </Operations>

@@ -853,4 +853,8 @@
   <data name="VisualizarReporteContratosAFijarPase" xml:space="preserve">
     <value>Visualizar Reporte Contratos A Fijar Pase</value>
   </data>
+
+  <data name="Ver_Todas_Las_Sugerencias" xml:space="preserve">
+    <value>Ver Todas Las Sugerencias</value>
+  </data>
 </root>

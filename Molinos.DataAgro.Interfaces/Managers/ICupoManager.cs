@@ -14,7 +14,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias);
         DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo);
-        List<DateTime> FechasComprendidas();
+        List<DateTime> FechasComprendidas(int? materialId);
         Resultado EliminarCupo(int id, string comerciall, bool enviarMail);
         //Task ObtenerToken();
         Resultado Validar(Cupo cupo, int cantidadCupos, DateTime? fechaHasta);
@@ -24,8 +24,8 @@ namespace Molinos.DataAgro.Interfaces
         CupoDto ObtenerCupo(int id, RepositorioEF repo);
         Resultado EliminarVarios(List<int> cupos, string comercial);
         string ObtenerCodigoSap(int id);
-        void CrearSugerenciaCupo(ConfiguracionCupo configuracion);
-        List<SugerenciaCupoDto> ObtenerSugerenciaCupo(int ComercialId);
+        void CrearSugerenciaCupo(int MaterialId, ConfiguracionCupo configuracion);
+        List<SugerenciaCupoDto> ObtenerSugerenciaCupo(int ComercialId, int? materialId);
         IList<SugerenciaCupoDto> ObtenerSugerenciaCupoAgrupadasPorProveedor(int comercialId, int materialId, string centroId);
         List<SugerenciaPorComercialDto> ObtenerSugerenciaPorComercialFecha(int comercialId, int materialId, string centroId);
         SugerenciaCupoDto ObtenerSugerencia(int sugerenciaId);
@@ -44,20 +44,31 @@ namespace Molinos.DataAgro.Interfaces
         List<BasicoContrato> TraerNegocioConCupoDisponible(string proveedorCuit, int material, int centro, string filtro, DateTime desde, DateTime hasta);
         Resultado AltaCupoSAP(Cupo cupoSAP);
 
-        void CargarDatosSugerenciasPorComercial(List<SugerenciaCupo> sugerencias);
-
         string Td(ref int linea, int largo = 1);
         string Split(string str);
 
         SugerenciaPorComercial ObtenerSugerenciaPorComercial(DateTime fecha, int comercialId, int materialId, string centro);
-        List<SugerenciaCupo> SugerenciasParaAceptar(int proveedorId, int comercialId, string centro, int materialId);
+        List<SugerenciaCupo> SugerenciasParaAceptar(int proveedorId, int comercialId, string centro, int materialId, DateTime? fecha);
         CupoResult ConfirmarSugerencia(List<ConfirmacionSugerenciaCupoDto> datosTablaPorProveedor, List<DiaCupo> devoluciones, int materialId, string centroId, int comercialId);
 
         List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId, DateTime fecha);
 
         List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor);
         void AnulacionMasiva(List<int> equipo, string comercialId, DataSourceResult cupos, string path);
+        List<CierreCupera> DevolverTodoCierreCupera();
+        void CrearSugerenciaCupo();
+        void EnviarMailSugerenciasPendientesPorComercial();
+        CupoResult GenerarSolicitudExtraordinaria(AdministracionCupo solicitud);
+        void EliminarSugerenciaDeCupos(ConfiguracionCupo configuracion);
+
+        List<MensajeCupoDto> MostrarDetalle(int comercialSeleccionado, string centroId, int materialId);
+        List<CupoResult> AceptarSugerenciaCupo(int idSugerencia, int cantidad, int cantidadFlete, bool poProveedor = false);
+        CupoResult RechazarSugerenciaCupo(int id, int cantidad);
+        List<CupoResult> AceptarSugerenciaCupoPorProveedor(int proveedorId, int materialId, DateTime fecha, int cupoNormalSolicitud, int fleteSolicitud, int comercialId, string centroCodigo);
+        List<CupoResult> ModificarSugerenciaCupo(List<AceptarSugerenciaCupoDto> items);
+        List<CupoResult> ModificarSugerenciaCupoPorProveedor(List<AceptarSugerenciaCupoDto> items);
         List<CupoDto> ObtenerCupos(List<int> list, RepositorioEF repositorio);
         void ActualizarCumplimientoCupos(DateTime date);
+        SugerenciaCupo ClonarSugerencia(SugerenciaCupo s);
     }
 }

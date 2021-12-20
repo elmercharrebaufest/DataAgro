@@ -30,7 +30,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private static IList<SugerenciaCupoDto> Query(DbContext contexto, DateTime desde, DateTime hasta, int comercialId, int materialId, string centroId)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            var temp = contexto.Set<SugerenciaCupo>()
+            var sugerencias = contexto.Set<SugerenciaCupo>()
                 .Where(x => x.Centro.CodigoSap == centroId && x.FechaSugerida >= desde
                 && x.FechaSugerida <= hasta && x.MaterialId == materialId
                 && x.ComercialId == comercialId && x.Aceptado == null)
@@ -43,12 +43,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CantidadDeCupos = sugerido.Sum(x => x.CantidadDeCupos),
                     ComercialId = sugerido.Select(x => x.Comercial.ComercialId).FirstOrDefault(),
                     MaterialId = sugerido.Select(x => x.Material.MaterialId).FirstOrDefault(),
+                    MaterialDesc = sugerido.Select(x => x.Material.Descripcion).FirstOrDefault(),
                     Aceptado = sugerido.Select(x => x.Aceptado).FirstOrDefault(),
+                    PuntuacionesString = sugerido.Select(x => x.Puntuaciones).FirstOrDefault(),
+                    MonedaDesc = sugerido.Select(x => x.Moneda.Descripcion).FirstOrDefault(),
+                    ProveedorCUIT = sugerido.Select(x => x.Proveedor.CUIT).FirstOrDefault(),
+                    TipoNegocioDesc = sugerido.Select(x => x.TipoNegocio.Descripcion).FirstOrDefault(),
+                    ContratoSAP = sugerido.Select(x => x.ContratoSAP).FirstOrDefault(),
                 }).ToList();
 
-            var adm = contexto.Set<AdministracionCupo>()
+            var solicitudes = contexto.Set<AdministracionCupo>()
                 .Where(x => x.Centro.CodigoSap == centroId && x.MaterialId == materialId
-                && x.ComercialId == comercialId && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo)
+                && x.ComercialId == comercialId && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo
+                && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo)
                 .GroupBy(x => new { x.ProveedorId, x.Fecha })
                 .Select(sugerido => new SugerenciaCupoDto
                 {
@@ -57,15 +64,15 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CantidadDeCupos = sugerido.Sum(x => x.CantidadCupo) + sugerido.Sum(x => x.CantidadFleteProcedencia),
                 }).ToList();
 
-            foreach (var t in temp)
+            foreach (var sugerencia in sugerencias)
             {
-                var a = adm.Where(x => x.Id == t.Id);
+                var a = solicitudes.Where(x => x.Id == sugerencia.Id);
                 if(a != null)
                 {
-                    t.CantidadDeCupos -= a.Sum(x => x.CantidadDeCupos);
+                    sugerencia.CantidadDeCupos -= a.Sum(x => x.CantidadDeCupos);
                 }
             }
-            return temp;
+            return sugerencias.ToList(); 
         }
 
         public virtual IList<SugerenciaCupoDto> Ejecutar(DbContext contexto)

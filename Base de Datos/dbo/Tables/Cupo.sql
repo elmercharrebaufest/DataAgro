@@ -43,7 +43,7 @@
     [CuitOrigenAfip] NVARCHAR(MAX) NULL, 
     [CodLocalidadOrigen] NVARCHAR(MAX) NULL, 
     [NroEstablecimientoOrigen] NVARCHAR(MAX) NULL, 
-    [Cumplimiento] BIT NULL, 
+	[Cumplimiento] BIT NULL, 
     CONSTRAINT [PK_Cupo] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Cupo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
     CONSTRAINT [FK_Cupo_Centro] FOREIGN KEY (CentroId) REFERENCES [Centro]([Id]),

@@ -60,5 +60,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string NroEstablecimientoOrigen { get; set; }
         public int? NegocioId { get; set; }
         public string CentroCodigo { get; set; }
+        public bool? Cumplimiento { get; set; }
     }
 }

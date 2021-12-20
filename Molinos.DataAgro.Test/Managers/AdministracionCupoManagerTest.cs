@@ -58,7 +58,7 @@ namespace Molinos.DataAgro.Test.Managers
         {
             repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerAdministracionCupoExcedente>()))
              .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 } }, 1));
-            var resultado = target.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>());
+            var resultado = target.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), null);
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
@@ -94,9 +94,29 @@ namespace Molinos.DataAgro.Test.Managers
                     Material = new Material { Descripcion = "Trigo" },
                     Centro = new Centro { Acopio = false, CodigoSap = "1", Descripcion = "", Id = 1 }
                 });
+            cupoManagerMock.Setup(x => x.SugerenciasParaAceptar(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), null))
+                .Returns(new List<SugerenciaCupo>() {
+                    new SugerenciaCupo {
+                        FechaSugerida = DateTime.Now,
+                        MaterialId = 1,
+                        Aceptado = false,
+                        CantidadCupoOriginal = 10,
+                        CantidadDeCupos = 10,
+                        CDWarrant = false,
+                        CentroId = 1,
+                        ComercialId = 63,
+                        ConfiguracionEspacioDinamicoId = 1,
+                        MonedaId = "USDM",
+                        Id = 1,
+                        ProveedorId = 1,
+                        TipoNegocioId = 1,
+                        ZonaCupoId = 1,
+                        Puntuaciones = "{\"CriterioRaiz\":0.4}",
+                    }
+                });
 
             cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>())).
-                Returns(new CupoResult() { ListaCupos = new List<string>() { "MOL/123223", "MOL/232323" } });
+               Returns(new CupoResult() { ListaCupos = new List<string>() { "MOL/123223", "MOL/232323" } });
 
             repositorioMock.Setup(y => y.Obtener<Comercial>(It.IsAny<int>()))
               .Returns(new Comercial { ComercialId = 1, IdActiveDirectory = "bmelgarejo" });
@@ -108,7 +128,7 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
                  It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>())).Verifiable();
             repositorioMock.Setup(x => x.AgregarTodos(It.IsAny<List<Cupo>>(), null)).Verifiable();
-            cupoManagerMock.Setup(x => x.SugerenciasParaAceptar(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+            cupoManagerMock.Setup(x => x.SugerenciasParaAceptar(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()))
                 .Returns(new List<SugerenciaCupo> { new SugerenciaCupo { CantidadCupoOriginal = 1, CantidadDeCupos = 1, CDWarrant = true, Aceptado = null, CentroId = 1, ComercialId = 1, ConfiguracionEspacioDinamicoId = 1, ContratoSAP = "", Destinatario = "", FechaSugerida = DateTime.Now.Date, Id = 1, MaterialId = 1, MonedaId = "ARP", MotivoRechazo = "", NegocioId = 1, Precio = 1, ProveedorId = 1, Puntuaciones = "", StandardDeCalidad = "", TipoNegocioId = 1, ZonaCupoId = 1, Puntuacion = 1 } });
             var resultado = target.AceptarCupoExcedente(It.IsAny<int>(), 1, 3, "bmelgarejo");
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
@@ -124,6 +144,7 @@ namespace Molinos.DataAgro.Test.Managers
                     CantidadCupo = 5,
                     CantidadFleteProcedencia = 2,
                     CentroId = 1,
+                    Centro = new Centro { CodigoSap = "1", Id = 1, Descripcion = "" },
                     ComercialId = 1,
                     Comercial = new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 },
                     EstadoId = 1,
@@ -142,6 +163,8 @@ namespace Molinos.DataAgro.Test.Managers
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
                  It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>())).Verifiable();
+            cupoManagerMock.Setup(x => x.SugerenciasParaAceptar(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime?>()))
+                            .Returns(new List<SugerenciaCupo> { new SugerenciaCupo { CantidadCupoOriginal = 1, CantidadDeCupos = 1, CDWarrant = true, Aceptado = null, CentroId = 1, ComercialId = 1, ConfiguracionEspacioDinamicoId = 1, ContratoSAP = "", Destinatario = "", FechaSugerida = DateTime.Now.Date, Id = 1, MaterialId = 1, MonedaId = "ARP", MotivoRechazo = "", NegocioId = 1, Precio = 1, ProveedorId = 1, Puntuaciones = "", StandardDeCalidad = "", TipoNegocioId = 1, ZonaCupoId = 1, Puntuacion = 1 } });
             var resultado = target.CambiarEstadoRechazado(It.IsAny<int>(), "bmelgarejo");
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }

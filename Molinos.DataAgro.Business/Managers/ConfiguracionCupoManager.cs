@@ -141,14 +141,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                     repositorio.GuardarCambios();
                 }
-                //if (configuracion.LiberarCupera == true)
-                //{
-                //    cupoManager.EliminarSugerenciaDeCupos(configuracion);
-                //}
-                //else
-                //{
-                //    cupoManager.CrearSugerenciaCupo(configuracion.MaterialId, configuracion);
-                //}
+                if (configuracion.LiberarCupera == true)
+                {
+                    cupoManager.EliminarSugerenciaDeCupos(configuracion);
+                }
+                else
+                {
+                    cupoManager.CrearSugerenciaCupo(configuracion.MaterialId, configuracion);
+                }
             }
             catch (Exception ex)
             {

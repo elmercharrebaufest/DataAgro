@@ -8,6 +8,7 @@ using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Linq;
 
 namespace Molinos.DataAgro.Agent
@@ -30,7 +31,7 @@ namespace Molinos.DataAgro.Agent
             {
                 var contrato = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato {
                     ContratoSAP = x.ContratoSAP,                    
-                }, x => x.Fecha >= desde && x.Fecha <= hasta);
+                }, x => DbFunctions.TruncateTime(x.Fecha) >= desde && DbFunctions.TruncateTime(x.Fecha) <= hasta);
                 return contrato;
             }
             else
@@ -53,7 +54,7 @@ namespace Molinos.DataAgro.Agent
                     };
                     var logId = repositorio.Agregar(log);
                     repositorio.GuardarCambios();
-                    logger.Debug(rq.ToXml());
+                    //logger.Debug(rq.ToXml());
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_CD_WARRANTS(rq);
                     var listaResp = valor.EX_SALIDA.Select(x=> new BasicoContrato {
@@ -64,7 +65,7 @@ namespace Molinos.DataAgro.Agent
                         Moneda = x.MONEDA
                     }).ToList();
 
-                    logger.Debug(valor.ToXml());
+                    //logger.Debug(valor.ToXml());
                     log = repositorio.Obtener<Log>(logId.Id);
                     log.Xml += valor.ToXml();
                     repositorio.GuardarCambios();

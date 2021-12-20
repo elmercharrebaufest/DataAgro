@@ -21,21 +21,31 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int Id { get; set; }
         public CriterioIni Criterio { get; set; }
-        public int Inicio { get; set; }
-        public int CantDias { get; set; }
+        public DateTime CuposDesde { get; set; }
+        public DateTime CuposHasta { get; set; }
+        public DateTime NegociosDesde { get; set; }
+        public DateTime NegociosHasta { get; set; }
+        public bool Cierre { get; set; }
 
         //agrgadosRecien
         public int CriterioId { get; set; }
         public DateTime Fecha { get; set; }
+        public int MaterialId { get; set; }
+        public string Material { get; set; }
     }
 
+    public class CriterioModel
+    {
+        public CriterioIni CriterioIni { get; set; }
+        public int MaterialId { get; set; }
+    }
 
     public class CriterioIni
     {
         public int Id { get; set; }
         public CriterioIni Padre { get; set; }
-        public  int? PadreId { get; set; }
-        public  ICollection<CriterioIni> Hijos { get; set; }
+        public int? PadreId { get; set; }
+        public ICollection<CriterioIni> Hijos { get; set; }
 
         public int Prioridad { get; set; }
 
@@ -54,6 +64,8 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class DatosIniAbmFormula
     {
+        public List<MaterialIni> materiales;
+
         public ResultIniFormula ultimaFormulaTraida { get; set; }
 
         public ResultIniCriterio Criterios { get; set; }

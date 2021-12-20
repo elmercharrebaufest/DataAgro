@@ -6,19 +6,19 @@ var data = new Array();
 
 $(document).ready(function () {
 
-
+    kendo.culture("es-AR");
     $('[data-toggle="popover"]').popover();
     traerDatosIniciales();
     CrearViewModel();
     crearArbol();
-    
+
     crearPopupAgregarHijo();
-    iniciarCamposInicioCantDias();
+    iniciarCampos();
 
 
 });
 
-function traerDatosIniciales() {
+function traerDatosIniciales(MaterialId) {
 
     var funcionRetornada = function (data) {
         if (ExistsErrorMessages(data.Errores)) {
@@ -29,15 +29,32 @@ function traerDatosIniciales() {
             viewModel.set("DatosDeInicio", data.Datos);
 
 
-            var iniciotextbox = $("#inicio").data("kendoNumericTextBox");
-            iniciotextbox.value(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.Inicio);
+            var cuposDesde = $("#cuposDesde").data("kendoDatePicker");
+            cuposDesde.value(new Date(parseInt(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.CuposDesde.substr(6))));
 
-            var cantdiastextbox = $("#cantdias").data("kendoNumericTextBox");
-            cantdiastextbox.value(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.CantDias);
+            var cuposHasta = $("#cuposHasta").data("kendoDatePicker");
+            cuposHasta.value(new Date(parseInt(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.CuposHasta.substr(6))));
+
+            var negociosDesde = $("#negociosDesde").data("kendoDatePicker");
+            negociosDesde.value(new Date(parseInt(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.NegociosDesde.substr(6))));
+
+            var negociosHasta = $("#negociosHasta").data("kendoDatePicker");
+            negociosHasta.value(new Date(parseInt(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.NegociosHasta.substr(6))));
+
+
+            $("#deshabilitar").prop("checked", viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.Cierre);
+
+            $("#MaterialId").data("kendoDropDownList").dataSource.data(data.Datos.materiales);
+            $("#MaterialId").data("kendoDropDownList").value(viewModel.DatosDeInicio.ultimaFormulaTraida.Formula.MaterialId);
+
+
         }
     };
-
-    MSExecuteURLOnServerAsync('/Formula/Inicializar', funcionRetornada, '');
+    var url = '/Formula/Inicializar';
+    if (MaterialId > 0) {
+        url = url + "?MaterialId=" + MaterialId;
+    }
+    MSExecuteURLOnServerAsync(url, funcionRetornada, '');
 }
 
 function CrearViewModel() {
@@ -63,17 +80,26 @@ function crearArbol() {
             transport: {
                 read: {
                     url: MSGetUrl('/Formula/Buscar'),
-                    cache: false
+                    cache: false,
+                    data: function () {
+                        $("#treelist").data("kendoTreeList").dataSource.data([]);
+                        return {
+                            MaterialId: $("#MaterialId").val()
+                        };
+                    }
                 },
                 update: {
                     url: MSGetUrl('/Formula/update'),
+                    type: "POST"
                 },
                 destroy: {
                     url: MSGetUrl('/Formula/eliminar'),
+                    type: "POST"
                 },
                 create: {
                     url: MSGetUrl('/Formula/update'),
-                },
+                    type: "POST"
+                }
             },
 
             schema: {
@@ -107,8 +133,8 @@ function crearArbol() {
                 }
 
 
-                if (dataItem.PadreId != idCriterioRaiz && dataItem.PadreId !=null ) {
-                    
+                if (dataItem.PadreId != idCriterioRaiz && dataItem.PadreId != null) {
+
                     var padreDeEsteItem = $("#treelist").data("kendoTreeList").dataSource.data().filter(function (x) { return x.Id == dataItem.PadreId })[0];
                     $("#treelist").find("[data-uid='" + padreDeEsteItem.uid + "']").find(".k-grid-delete").hide();
                 }
@@ -126,7 +152,7 @@ function crearArbol() {
         remove: function (e) {
             //console.log(e);
             //e.sender.dataSource.options.transport.destroy.data = datosDias();
-            location.reload();
+            //recargarPantalla();
 
         },
 
@@ -135,7 +161,7 @@ function crearArbol() {
         },
 
 
-        autoSync:false,
+        autoSync: false,
         editable: {
             mode: "popup",
             window: {
@@ -152,7 +178,7 @@ function crearArbol() {
             {
                 command: [
 
-                    { name: "edit", iconClass: "k-icon k-i-copy"},
+                    { name: "edit", iconClass: "k-icon k-i-copy" },
                     { name: "destroy" },
                     { name: "qw", text: "Agregar Criterio", click: abrirVentanaAgregarHijo, className: "k-grid-agregarhijo" }], title: " ", width: "480px"
             }
@@ -193,27 +219,43 @@ function crearPopupAgregarHijo() {
     });
 }
 
-function iniciarCamposInicioCantDias() {
+function iniciarCampos() {
 
-    $("#inicio").kendoNumericTextBox({
-        format: "0",
-        decimals: 0,
-        min: 0,
-        max: 30,
+    $("#cuposDesde").kendoDatePicker({
+        format: "dd-MM-yyyy",
         change: function () {
             actualizarDias();
         }
     });
 
-    $("#cantdias").kendoNumericTextBox({
-        format: "0",
-        decimals: 0,
-        min: 0,
-        max: 30,
+    $("#cuposHasta").kendoDatePicker({
+        format: "dd-MM-yyyy",
         change: function () {
             actualizarDias();
         }
     });
+
+    $("#negociosDesde").kendoDatePicker({
+        format: "dd-MM-yyyy",
+        change: function () {
+            actualizarDias();
+        }
+    });
+
+    $("#negociosHasta").kendoDatePicker({
+        format: "dd-MM-yyyy",
+        change: function () {
+            actualizarDias();
+        }
+    });
+    $("#MaterialId").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "MaterialId",
+        change: function () {
+            recargarPantalla();
+        }
+    });
+
 }
 
 function iniciarDatosComboAgregarCriterios() {
@@ -225,6 +267,19 @@ function iniciarDatosComboAgregarCriterios() {
 function actualizarDias() {
     var cambioDeLosDias = datosDias();
     var result = MSExecuteOnServer('/Formula/ActualizarDiasFormula', cambioDeLosDias);
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            ShowTooltipMessages("err", result.Errores);
+        }
+        if (!ExistsErrorMessages(result.Errores)) {
+            recargarPantalla();
+        }
+    }
+}
+
+function actualizarCierre() {
+    var cambioDeLosDias = datosDias();
+    var result = MSExecuteOnServer('/Formula/ActualizarCierre', cambioDeLosDias);
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             ShowTooltipMessages("err", result.Errores);
@@ -274,7 +329,7 @@ function agregar(e) {
             ShowTooltipMessages("err", result.Errores);
         }
         if (!ExistsErrorMessages(result.Errores)) {
-            location.reload();
+            recargarPantalla();
         }
     }
 
@@ -285,12 +340,20 @@ function agregar(e) {
 
 function datosDias() {
 
-    var inicioFormula = $("#inicio").val();
-    var cantdiasFormula = $("#cantdias").val();
+    var cuposDesde = $("#cuposDesde").val();
+    var cuposHasta = $("#cuposHasta").val();
+    var negociosDesde = $("#negociosDesde").val();
+    var negociosHasta = $("#negociosHasta").val();
+    var MaterialId = $("#MaterialId").val();
+    var cierre = $("#deshabilitar").is(":checked");
 
     formulaDias = {
-        "Inicio": inicioFormula,
-        "CantDias": cantdiasFormula
+        "CuposDesde": cuposDesde,
+        "CuposHasta": cuposHasta,
+        "NegociosDesde": negociosDesde,
+        "NegociosHasta": negociosHasta,
+        "Cierre": cierre,
+        MaterialId: MaterialId
     };
 
 
@@ -350,9 +413,9 @@ function cargarCombo() {
 
     var criteriosAgregados = $("#treelist").data("kendoTreeList").dataSource.data();
 
-    criteriosAgregados.forEach(function(criAgregado) {
+    criteriosAgregados.forEach(function (criAgregado) {
 
-      return  criteriosParaAgregar = criteriosParaAgregar.filter(function (criterio) { return criterio.Descripcion != criAgregado.Descripcion });
+        return criteriosParaAgregar = criteriosParaAgregar.filter(function (criterio) { return criterio.Descripcion != criAgregado.Descripcion });
     });
 
 
@@ -382,3 +445,20 @@ function PopUpError(mensaje) {
 }
 
 $("#agregarCriterio").kendoButton();
+
+function Deshabilitar() {
+    actualizarDias();
+}
+
+function recargarPantalla() {
+    $("#treelist").data("kendoTreeList").dataSource.data([]);
+    traerDatosIniciales($("#MaterialId").val());
+    $("#treelist").data("kendoTreeList").dataSource.read();
+}
+$(document)
+    .ajaxStart(function () {
+        BlockUi('Cargando...');
+    })
+    .ajaxStop(function () {
+        $.unblockUI();
+    });

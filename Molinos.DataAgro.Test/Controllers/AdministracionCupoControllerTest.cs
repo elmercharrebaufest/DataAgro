@@ -35,7 +35,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();           
+            this.serializer = new JavaScriptSerializer();
             cupoManagerMock = new Mock<ICupoManager>();
             administracionManagerMock = new Mock<IAdministracionCupoManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
@@ -52,8 +52,8 @@ namespace Molinos.DataAgro.Test.Controllers
             cupoManagerMock.Setup(x => x.Panel())
                 .Returns(new List<DiaCupo>());
 
-            cupoManagerMock.Setup(x => x.FechasComprendidas())
-                .Returns(new List<DateTime> { new DateTime(2018, 10, 26), new DateTime(2018, 10, 27) , new DateTime(2018, 10, 28) });
+            cupoManagerMock.Setup(x => x.FechasComprendidas(null))
+                .Returns(new List<DateTime> { new DateTime(2018, 10, 26), new DateTime(2018, 10, 27), new DateTime(2018, 10, 28) });
 
             cupoManagerMock.Setup(x => x.SugerenciasNoAceptadas())
                 .Returns(new List<SugerenciaNoAceptada>());
@@ -66,15 +66,15 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void DatosAdministracion()
         {
-            administracionManagerMock.Setup(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>()))
-              .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 } },1));
+            administracionManagerMock.Setup(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), null))
+              .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 } }, 1));
             var result = target.DatosAdministracion(new KendoGridMvcRequest());
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            administracionManagerMock.Verify(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>()), Times.Once);
+            administracionManagerMock.Verify(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), null), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ProveedorId\":1,\"ComercialId\":1,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"CantidadCupo\":0,\"CantidadFleteProcedencia\":0,\"EstadoId\":0,\"CentroId\":1,\"ZonaId\":0,\"MaterialId\":1,\"Comercial\":null,\"Proveedor\":null,\"Centro\":null,\"Zona\":null,\"Material\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"Destinatario\":null,\"NegocioId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"Excedente\":false}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ProveedorId\":1,\"ComercialId\":1,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"CantidadDeCupo\":0,\"CantidadFleteProcedencia\":0,\"CantidadDeCupoMax\":0,\"CantidadFleteProcedenciaMax\":0,\"EstadoId\":0,\"CentroId\":1,\"ZonaId\":0,\"MaterialId\":1,\"Comercial\":null,\"Proveedor\":null,\"Centro\":null,\"Zona\":null,\"Material\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"Destinatario\":null,\"NegocioId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"Excedente\":false,\"Estado\":null,\"TipoAdministracionCupo\":null,\"TipoAdministracionCupoId\":0,\"Observacion\":null}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
 
@@ -82,12 +82,12 @@ namespace Molinos.DataAgro.Test.Controllers
         public void AceptarTest()
         {
             administracionManagerMock.Setup(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
-            var result = target.Aceptar(1, 1 ,1);
+            var result = target.Aceptar(1, 1, 1);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             administracionManagerMock.Verify(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -100,8 +100,103 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
+        [Test]
+        public void AceptarMasivoTest()
+        {
+            var adm = new List<AdministracionCupoDto>() {
+                new AdministracionCupoDto
+                {
+                    CantidadFleteProcedencia = 1,
+                    CantidadDeCupo = 10,
+                    CentroId = 1,
+                    ComercialId = 63,
+                    ConfiguracionEspacioDinamicoId = 1,
+                    EstadoId = 1,
+                    Id = 234,
+                    MaterialId = 1,
+                    Fecha = DateTime.Now,
+                    Excedente = false,
+                    TipoNegocioId = 1,
+                    ZonaId = 1,
+                }
+            };
+            administracionManagerMock.Setup(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
+            var result = target.AceptarMasivo(adm);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void RechazarMasivoTest()
+        {
+            var adm = new List<AdministracionCupoDto>() {
+                new AdministracionCupoDto
+                {
+                    CantidadFleteProcedencia = 1,
+                    CantidadDeCupo = 10,
+                    CentroId = 1,
+                    ComercialId = 63,
+                    ConfiguracionEspacioDinamicoId = 1,
+                    EstadoId = 1,
+                    Id = 234,
+                    MaterialId = 1,
+                    Fecha = DateTime.Now,
+                    Excedente = false,
+                    TipoNegocioId = 1,
+                    ZonaId = 1,
+                }
+            };
+            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
+            var result = target.RechazarMasivo(adm);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            administracionManagerMock.Setup(x => x.CambiarEstadoRechazado(It.IsAny<int>(), It.IsAny<string>())).Returns(new CupoResult());
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+
+        [Test]
+        public void PartialPanelTest()
+        {
+            cupoManagerMock.Setup(x => x.Panel()).Returns(new List<DiaCupo> { });
+            cupoManagerMock.Setup(x => x.FechasComprendidas(It.IsAny<int?>())).Returns(new List<DateTime> { });
+            cupoManagerMock.Setup(x => x.SugerenciasNoAceptadas()).Returns(new List<SugerenciaNoAceptada> { });
+
+            var result = target.PartialPanel() as PartialViewResult;
+
+            Assert.NotNull(result);
+
+            cupoManagerMock.Verify(x => x.Panel(), Times.Once);
+            cupoManagerMock.Verify(x => x.FechasComprendidas(It.IsAny<int?>()), Times.Once);
+            cupoManagerMock.Verify(x => x.SugerenciasNoAceptadas(), Times.Once);
+
+            Assert.AreEqual("PartialPanel", result.ViewName);
+        }
+
+        [Test]
+        public void BuscarDatosSolicitudCupoTest()
+        {
+            administracionManagerMock.Setup(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), It.IsAny<int?>()))
+              .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 } }, 1));
+            var result = target.BuscarDatosSolicitudCupo(new KendoGridMvcRequest(),It.IsAny<int?>());
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            administracionManagerMock.Verify(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), It.IsAny<int?>()), Times.Once);
+            Assert.AreEqual(
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"ProveedorId\":1,\"ComercialId\":1,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"CantidadDeCupo\":0,\"CantidadFleteProcedencia\":0,\"CantidadDeCupoMax\":0,\"CantidadFleteProcedenciaMax\":0,\"EstadoId\":0,\"CentroId\":1,\"ZonaId\":0,\"MaterialId\":1,\"Comercial\":null,\"Proveedor\":null,\"Centro\":null,\"Zona\":null,\"Material\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"Destinatario\":null,\"NegocioId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"Excedente\":false,\"Estado\":null,\"TipoAdministracionCupo\":null,\"TipoAdministracionCupoId\":0,\"Observacion\":null}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               a);
+        }
+
+
+
     }
 }

@@ -6,23 +6,27 @@ $(document).ready(function () {
     });
     inicializarElementos();
 });
-function CalcularTotal(elem) {
+
+function ReestablecerValidaciones(fila, col) {
+    var cantidadCambio = $('label[data-row="' + fila + '"][data-column="' + col + '"]').text();
+    var cantidadSinCambio = $('span[data-rowContenido="' + fila + '"][data-columnContenido="' + col + '"]').text();
+    if (cantidadCambio != cantidadSinCambio) {
+        $('span[data-mostrarCruzFila="' + fila + '"][data-mostrarCruzColumna="' + col + '"]').show();
+        $('label[data-row="' + fila + '"][data-column="' + col + '"]').attr('contenteditable', false);
+        $('input[data-row="' + fila + '"][data-column="' + col + '"]').prop('checked', true);
+        $('input[data-row="' + fila + '"][data-column="' + col + '"]').prop('disabled', true);
+        $('td[data-row="' + fila + '"][data-column="' + col + '"]').addClass("blueClass");
+    }
+}
+
+function CalcularTotal(elem, fila, col) {
 
     if (elem != null) {
         var fila = elem.getAttribute("data-row");
         var col = elem.getAttribute("data-column");
-        var cantidadCambio = $('label[data-row="' + fila + '"][data-column="' + col + '"]').text();
-        var cantidadSinCambio = $('span[data-rowContenido="' + fila + '"][data-columnContenido="' + col + '"]').text();
-        if (cantidadCambio != cantidadSinCambio) {
-            $('span[data-mostrarCruzFila="' + fila + '"][data-mostrarCruzColumna="' + col + '"]').show();
-            $('label[data-row="' + fila + '"][data-column="' + col + '"]').attr('contenteditable', false);
-            $('input[data-row="' + fila + '"][data-column="' + col + '"]').prop('checked', true);
-            $('input[data-row="' + fila + '"][data-column="' + col + '"]').prop('disabled', true);
-            $('td[data-row="' + fila + '"][data-column="' + col + '"]').addClass("blueClass");
-
-        }
+        ReestablecerValidaciones(fila, col);
     }
-   
+
 
     var $filasEncabezado = $("#tabla tr:not('.encabezado')");
     var nColumnas = $("#tabla tr:last td").length;
@@ -36,7 +40,7 @@ function CalcularTotal(elem) {
     for (var i = 1; i < nColumnas; i++) {
         totales.push(0);
     }
-    
+
     $filasEncabezado.each(function () {
         var valorFila = 0
         $(this).find('td').each(function (i) {
@@ -53,18 +57,18 @@ function CalcularTotal(elem) {
     for (var i = 0; i < totales.length; i++) {
         $(".col" + (i + 1)).removeClass("redClass");
         $('#check' + (i + 1)).prop('disabled', false);
-        if (totales[i] > cuposAsignadosPorDia[i] || isNaN(totales[i])) {             
+        if (totales[i] > cuposAsignadosPorDia[i] || isNaN(totales[i])) {
             cuposExcedidos = totales[i] - cuposAsignadosPorDia[i];
-            if (!isNaN(cuposExcedidos)) {           
+            if (!isNaN(cuposExcedidos)) {
 
                 $('#popover' + "col" + (i + 1))[0].dataset.content = "Cupos pendientes a Confirmar: " + cuposExcedidos;
-                $('#popover' + "col" + (i + 1)).popover("show");                
+                //$('#popover' + "col" + (i + 1)).popover("show");                
                 $("." + (i + 1)).prop('disabled', false);
                 habilita = true;
 
             } else {
-                $('#popover' + "col" + (i + 1))[0].dataset.content = "Los campos no deben estar vacíos";               
-                $('#popover' + "col" + (i + 1)).popover("show");
+                $('#popover' + "col" + (i + 1))[0].dataset.content = "Los campos no deben estar vacíos";
+                //$('#popover' + "col" + (i + 1)).popover("show");
                 $('#check' + (i + 1)).prop('disabled', true);
                 $(".col" + (i + 1)).addClass("redClass");
                 $("." + (i + 1)).prop('disabled', true);
@@ -72,20 +76,20 @@ function CalcularTotal(elem) {
                 OcultarPopover($('#popover' + "col" + (i + 1)));
                 habilita = false;
             }
-           
+
         } else if (totales[i] < cuposAsignadosPorDia[i] || isNaN(totales[i])) {
             cuposDisponibles = cuposAsignadosPorDia[i] - totales[i];
             $(".col" + (i + 1)).removeClass("redClass");
 
             if (!isNaN(cuposDisponibles)) {
                 $('#popover' + "col" + (i + 1))[0].dataset.content = "Cupos disponibles:" + cuposDisponibles;
-                $('#popover' + "col" + (i + 1)).popover("show");
+                //$('#popover' + "col" + (i + 1)).popover("show");
                 $("." + (i + 1)).prop('disabled', false);
                 OcultarPopover($('#popover' + "col" + (i + 1)));
                 habilita = true;
             } else {
                 $('#popover' + "col" + (i + 1))[0].dataset.content = "Los campos no deben estar vacíos";
-                $('#popover' + "col" + (i + 1)).popover("show");
+                //$('#popover' + "col" + (i + 1)).popover("show");
                 $(".col" + (i + 1)).addClass("redClass");
                 $("." + (i + 1)).prop('disabled', true);
                 $("#label" + (i + 1)).attr('contenteditable', true);
@@ -93,7 +97,7 @@ function CalcularTotal(elem) {
                 habilita = false;
             }
 
-        } else {           
+        } else {
             $('#popover' + "col" + (i + 1)).popover('hide');
             $(".col" + (i + 1)).removeClass("redClass");
             $("." + (i + 1)).prop('disabled', false);
@@ -101,21 +105,21 @@ function CalcularTotal(elem) {
     }
 
     for (var j = 0; j < cuposProveedor.length; j++) {
-        $(".fila" + (j + 1) + " > td").removeClass("redClass");   
+        $(".fila" + (j + 1) + " > td").removeClass("redClass");
         $('.checkFila' + (j + 1)).prop('disabled', false);
-        if (cuposAsignados[j] < cuposProveedor[j] || isNaN(cuposProveedor[j])) {           
+        if (cuposAsignados[j] < cuposProveedor[j] || isNaN(cuposProveedor[j])) {
             cuposExcedidosPorFila = cuposProveedor[j] - cuposAsignados[j];
-            if (!isNaN(cuposExcedidosPorFila)) {          
+            if (!isNaN(cuposExcedidosPorFila)) {
                 $('#popoverFila' + "fila" + (j + 1))[0].dataset.content = "Cupos excedidos: " + cuposExcedidosPorFila;
-                $('#popoverFila' + "fila" + (j + 1)).popover("show");    
+                //$('#popoverFila' + "fila" + (j + 1)).popover("show");    
                 $(".fila" + (j + 1) + " > td").addClass("redClass");
                 $('.checkFila' + (j + 1)).prop('disabled', true);
                 $("." + (j + 1)).prop('disabled', true);
                 $("#label" + (j + 1)).attr('contenteditable', true);
                 OcultarPopover($('#popoverFila' + "col" + (j + 1)));
-            } else {               
+            } else {
                 $('#popoverFila' + "fila" + (j + 1))[0].dataset.content = "Los campos no deben estar vacíos";
-                $('#popoverFila' + "fila" + (j + 1)).popover("show");
+                //$('#popoverFila' + "fila" + (j + 1)).popover("show");
                 $(".fila" + (j + 1) + " > td").addClass("redClass");
                 $('.checkFila' + (j + 1)).prop('disabled', true);
                 $("#label" + (j + 1)).attr('contenteditable', true);
@@ -123,18 +127,18 @@ function CalcularTotal(elem) {
 
                 OcultarPopover($('#popoverFila' + "fila" + (j + 1)));
             }
-                habilita = false;
-        } else if (cuposAsignados[j] > cuposProveedor[j] || isNaN(cuposAsignados[j])) {           
+            habilita = false;
+        } else if (cuposAsignados[j] > cuposProveedor[j] || isNaN(cuposAsignados[j])) {
             cuposDisponiblesPorFila = cuposAsignados[j] - cuposProveedor[j];
             if (!isNaN(cuposDisponiblesPorFila)) {
                 $('#popoverFila' + "fila" + (j + 1))[0].dataset.content = "Cupos disponibles:" + cuposDisponiblesPorFila;
-                $('#popoverFila' + "fila" + (j + 1)).popover("show");
+                //$('#popoverFila' + "fila" + (j + 1)).popover("show");
                 $("." + (j + 1)).prop('disabled', false);
 
                 OcultarPopover($('#popoverFila' + "fila" + (j + 1)));
-            } else {                
+            } else {
                 $('#popoverFila' + "fila" + (j + 1))[0].dataset.content = "Los campos no deben estar vacíos";
-                $('#popoverFila' + "fila" + (j + 1)).popover("show");
+                //$('#popoverFila' + "fila" + (j + 1)).popover("show");
                 $(".fila" + (j + 1) + " > td").addClass("redClass");
                 $("." + (j + 1)).prop('disabled', true);
                 OcultarPopover($('#popoverFila' + "fila" + (j + 1)));
@@ -142,11 +146,11 @@ function CalcularTotal(elem) {
                 habilita = false;
             }
 
-        }else {          
+        } else {
             $('#popoverFila' + "fila" + (j + 1)).popover('hide');
             $(".fila" + (j + 1) + " > td").removeClass("redClass");
             $("." + (j + 1)).prop('disabled', false);
-            
+
         }
     }
 
@@ -161,7 +165,7 @@ function OcultarPopover($popover) {
     $popover.on('shown.bs.popover', function () {
         setTimeout(function () {
             $popover.popover('hide');
-            
+
         }, 10000);
     });
 }
@@ -177,15 +181,25 @@ function BloquearCelda(elem) {
 }
 
 function Reestablecer(elem) {
-    var fila = elem.getAttribute("data-reestablecerFila");
-    var col = elem.getAttribute("data-reestablecerColumna");
+    var fila = 0;
+    var col = 0;
+    if (elem) {
+        fila = elem.getAttribute("data-reestablecerFila");
+        col = elem.getAttribute("data-reestablecerColumna");
+        $('label[data-row="' + fila + '"][data-column="' + col + '"]').text($('span[data-rowContenido="' + fila + '"][data-columnContenido="' + col + '"]').text());
+        ReestableceFilasColumnas(fila, col);
+    }
+}
+
+function ReestableceFilasColumnas(fila, col) {
     $('span[data-mostrarCruzFila="' + fila + '"][data-mostrarCruzColumna="' + col + '"]').hide();
-    $('label[data-row="' + fila + '"][data-column="' + col + '"]').text($('span[data-rowContenido="' + fila + '"][data-columnContenido="' + col + '"]').text());  
+    //$('label[data-row="' + fila + '"][data-column="' + col + '"]').text($('span[data-rowContenido="' + fila + '"][data-columnContenido="' + col + '"]').text());
     $('input[data-row="' + fila + '"][data-column="' + col + '"]').prop('disabled', false);
     $('input[data-row="' + fila + '"][data-column="' + col + '"]').prop('checked', false);
     $('label[data-row="' + fila + '"][data-column="' + col + '"]').attr('contenteditable', true);
     $('td[data-row="' + fila + '"][data-column="' + col + '"]').removeClass("blueClass");
-    CalcularTotal(null);
+    OcultarPopover($('#popoverFila' + "col" + (fila + 1)));
+    CalcularTotal(null, fila, col);
 }
 
 function MarcarFila(elem) {
@@ -218,6 +232,7 @@ function ConfirmarSeleccionados() {
     var id = 0;
     var respuesta = {};
     var obj = {};
+    var devueltos = [];
     var $filas = $("#tabla tr:not('.encabezado')");
     for (var j = 1; j <= $filas.length; j++) {
         var cantidadCupos = "";
@@ -225,25 +240,25 @@ function ConfirmarSeleccionados() {
         var cantidadDevueltos = "";
         obj = {};
         var detalleCupo = [];
-        var devueltos = [];
+        devueltos = [];
         var k = $('label[data-row=' + j + ']').length;
-        for (var i = 0; i < k; i++) {            
+        for (var i = 0; i < k; i++) {
             idProveedor = $('label[data-row=' + j + ']')[0].attributes["data-proveedor"].textContent;
             idComercial = $('label[data-rowComercial=' + j + ']')[0].attributes["data-comercial"].textContent;
             proveedorDesc = $('label[data-proveedorDesc=' + j + ']')[0].attributes["data-proveedorDescripcion"].textContent;
-          
-           
+
+
             if ($('input[data-row="' + j + '"][data-column="' + i + '"]').length > 0 && $('input[data-row="' + j + '"][data-column="' + i + '"]').prop('checked') && $('input[data-row="' + j + '"][data-column="' + i + '"]').length > 0) {
                 //$('div[data-row="' + j + '"][data-column="' + i + '"]').remove();
                 fecha = $('.fecha' + i).text();
                 cantidadCupos = $('label[data-row="' + j + '"][data-column="' + i + '"]')[0].innerText;
                 if (fecha != "" && cantidadCupos != "" || cantidadDevueltos != "") {
-                    detalleCupo.push({ Fecha: fecha, Cantidad: cantidadCupos, CantidadFleteProcedencia: 0, CantidadSugerencia: cantidadCupos});
-                   
+                    detalleCupo.push({ Fecha: fecha, Cantidad: cantidadCupos, CantidadFleteProcedencia: 0, CantidadSugerencia: cantidadCupos });
+
                 }
-            }           
+            }
         }
-      
+
         if (detalleCupo.length > 0) {
             obj.ProveedorId = idProveedor;
             obj.ComercialId = idComercial;
@@ -251,10 +266,10 @@ function ConfirmarSeleccionados() {
             obj.Detalles = detalleCupo;
             datosTabla.push(obj);
         }
-    
+
     }
     var nColumnas = $("#tabla tr:last td").length;
-    for (var i = 0; i < nColumnas; i++) {
+    for (var i = 1; i < nColumnas; i++) {
         fecha = $('.fecha' + i).text();
         cantidadDevueltos = $('.devuelto' + i).text();
         if (fecha != "" && cantidadDevueltos != "") {
@@ -263,16 +278,31 @@ function ConfirmarSeleccionados() {
         }
     }
 
-    if (devueltos.length > 0) {   
+    if (devueltos.length > 0) {
         respuesta.Devueltos = devueltos;
     }
 
     respuesta.DatosTabla = datosTabla;
- 
+
     return respuesta;
 }
 
 function inicializarElementos() {
+
+    $('#CargaCuposTabla').on('hidden.bs.modal', function () {
+        $("#cuerpo-carga-cupos-tabla").empty()
+    })
+    $('#fleteProcedenciaModal').modal({
+        show: false,
+        backdrop: 'static',
+        keyboard: false
+
+    });
+    $('#CargaCuposTabla').modal({
+        show: false,
+        backdrop: 'static',
+        keyboard: false
+    });
 
     $("#confirmarSugerencia").click(function () {
         var lista = ConfirmarSeleccionados();
@@ -302,30 +332,33 @@ function inicializarElementos() {
             $("#fleteProcedenciaTabla").modal("show");
 
         } else if (hayDevolucion) {
-            result = MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: lista, devoluciones: devoluciones, materialId: $("#MaterialId").val(), centroId: $("#CentroId").val() });
-            ListarErrores(result);
+            MSExecuteURLOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: lista, devoluciones: devoluciones, materialId: $("#MaterialId").val(), centroId: $("#CentroId").val(), comercialId: $("#ComercialSeleccionado2").val() });
+            window.location.href = '/SugerenciaCupo/Index?materialId=' + $("#MaterialId").val() + '&centroId=' + $("#CentroId").val() + '&ComercialSeleccionado=' + $("#ComercialSeleccionado2").val() + '&muestraModal=true'; 
+
         }
         else {
             MensErr("Debe seleccionar al menos una sugerencia.");
         }
-        
+
     });
 
     $("#boton-siTabla").click(function () {
         $("#fleteProcedenciaTabla").modal("hide");
         var lista = ConfirmarSeleccionados();
-        var sugerencias = lista.DatosTabla;        
+        var sugerencias = lista.DatosTabla;
 
         var fila = '';
         for (var i = 0; i < sugerencias.length; i++) {
-            if (sugerencias[i].Detalles != undefined) {            
-            for (var j = 0; j < sugerencias[i].Detalles.length; j++) {
-                fila = '<tr><td>' + sugerencias[i].ProveedorDesc + '</td> <td>'
-                    + kendo.toString(sugerencias[i].Detalles[j].Fecha, "dd/MM/yyyy")
-                    + '</td> <td><input id="flete' + i + '" name="' + sugerencias[i].Detalles[j].CantidadFleteProcedencia + '" min="0" max="' + sugerencias[i].Detalles[j].Cantidad
-                    + '" class="cantidad-masiva" value="' + sugerencias[i].Detalles[j].CantidadFleteProcedencia + '"/> </td> <td>'
-                    + 'Max. de cupos: ' + sugerencias[i].Detalles[j].Cantidad + '</td></tr>'
-                $("#cuerpo-carga-cupos-tabla").append(fila);
+            if (sugerencias[i].Detalles != undefined) {
+                for (var j = 0; j < sugerencias[i].Detalles.length; j++) {
+                    if (Number(sugerencias[i].Detalles[j].Cantidad) > 0 || Number(sugerencias[i].Detalles[j].CantidadFleteProcedencia) > 0) {
+                        fila = '<tr><td>' + sugerencias[i].ProveedorDesc + '</td> <td>'
+                            + kendo.toString(sugerencias[i].Detalles[j].Fecha, "dd/MM/yyyy")
+                            + '</td> <td><input id="flete' + i + "_" + j + '" name="' + sugerencias[i].Detalles[j].CantidadFleteProcedencia + '" min="0" max="' + sugerencias[i].Detalles[j].Cantidad
+                            + '" class="cantidad-masiva" value="' + sugerencias[i].Detalles[j].CantidadFleteProcedencia + '"/> </td> <td>'
+                            + 'Max. de cupos: ' + sugerencias[i].Detalles[j].Cantidad + '</td></tr>'
+                        $("#cuerpo-carga-cupos-tabla").append(fila);
+                    }
                 }
             }
         }
@@ -333,53 +366,89 @@ function inicializarElementos() {
             culture: "es-AR",
             format: "n0",
             spinners: false,
-            min: 0
+            min: 0,
+            step: 0
         });
         $("#fleteProcedenciaModal").modal("hide");
         $("#CargaCuposTabla").modal("show");
     });
 
     $("#boton-noTabla").click(function () {
-        $("#fleteProcedenciaTabla").modal("hide");
-        var lista = ConfirmarSeleccionados();
-        var sugerencias = lista.DatosTabla;
-        var devoluciones = lista.Devueltos;
-        result = MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: sugerencias, devoluciones: devoluciones , materialId: $("#MaterialId").val(), centroId: $("#CentroId").val() });
+        BlockUi('Cargando...');
+        setTimeout(function () {
+            $("#fleteProcedenciaTabla").modal("hide");
+            var lista = ConfirmarSeleccionados();
+            var sugerencias = lista.DatosTabla;
+            var devoluciones = lista.Devueltos;
+            MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', {
+                datosTabla: sugerencias, devoluciones: devoluciones, materialId: $("#MaterialId").val(), centroId: $("#CentroId").val(), comercialId: $("#ComercialSeleccionado2").val()});
+            /*  ListarErrores(result);*/
+            window.location.href = '/SugerenciaCupo/Index?materialId=' + $("#MaterialId").val() + '&centroId=' + $("#CentroId").val() + '&ComercialSeleccionado=' + $("#ComercialSeleccionado2").val() + '&muestraModal=true'; 
 
-        ListarErrores(result);
+            $.unblockUI();
+        }, 250);
+     
     });
 
     $("#aceptarTabla").click(function () {
-        var lista = ConfirmarSeleccionados();
-        var sugerencias = lista.DatosTabla;
-        var devoluciones = lista.Devueltos;
-        for (var j = 0; j < sugerencias.length; j++) {
-            if (sugerencias[i].Detalles != undefined) {
-                for (var a = 0; a < sugerencias[j].Detalles.length; a++) {
-                    sugerencias[j].Detalles[a].CantidadFleteProcedencia = $("#flete" + j).val();
-                    sugerencias[j].Detalles[a].Cantidad = sugerencias[j].Detalles[a].Cantidad - sugerencias[j].Detalles[a].CantidadFleteProcedencia;
+        BlockUi('Cargando...');
+        setTimeout(function () {
+            var lista = ConfirmarSeleccionados();
+            var sugerencias = lista.DatosTabla;
+            var devoluciones = lista.Devueltos;
+            for (var j = 0; j < sugerencias.length; j++) {
+                if (sugerencias[i] != undefined && sugerencias[i].Detalles != undefined) {
+                    for (var a = 0; a < sugerencias[j].Detalles.length; a++) {
+                        sugerencias[j].Detalles[a].CantidadFleteProcedencia = $("#flete" + j + "_" +a).val();
+                        sugerencias[j].Detalles[a].Cantidad = sugerencias[j].Detalles[a].Cantidad - sugerencias[j].Detalles[a].CantidadFleteProcedencia;
 
+                    }
                 }
             }
-        }
-        result = MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: sugerencias, devoluciones: devoluciones, materialId: $("#MaterialId").val(), centroId : $("#CentroId").val() });
+            MSExecuteOnServer('/SugerenciaCupo/DatosConfirmar', { datosTabla: sugerencias, devoluciones: devoluciones, materialId: $("#MaterialId").val(), centroId: $("#CentroId").val(), comercialId: $("#ComercialSeleccionado2").val() });
+            window.location.href = '/SugerenciaCupo/Index?materialId=' + $("#MaterialId").val() + '&centroId=' + $("#CentroId").val() + '&ComercialSeleccionado=' + $("#ComercialSeleccionado2").val() + '&muestraModal=true'; 
 
-        ListarErrores(result);
+            $.unblockUI();
+        }, 250);
+
     });
 
     $("#MaterialId").change(function () {
+        BlockUi('Cargando...');
         $("#filtrarMaterial").trigger("click");
-        
     });
     $("#CentroId").change(function () {
         $("#filtrarMaterial").trigger("click");
 
     });
 
+    $("#ComercialSeleccionado").change(function () {
+        $("#filtrarMaterial").trigger("click");
+
+    });
+    
     $("#resultadoCupo").on('hidden.bs.modal', function () {
         $("#filtrarMaterial").trigger("click");
     });
 
+    $("#tabla").keypress(function (e) {
+        DesabilitarBoton(e);
+    });
+
+    $("#CargaCuposTabla").keypress(function (e) {
+        DesabilitarBoton(e);
+    });
+
+}
+
+function DesabilitarBoton(e) {
+
+    if (e.which == 13 || e.which == 32 || e.which == 38 || e.which == 40) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }
+    return true;
 }
 
 function ListarErrores(result) {
@@ -395,8 +464,8 @@ function ListarErrores(result) {
         for (var i = 0; i < result.ListaErrores.length; i++) {
             cuposGeneradosTabla = cuposGeneradosTabla.concat(result.ListaErrores[i].Message);
         }
-        
-    }
+
+    } 
 
     if (cuposGeneradosTabla.length > 0) {
         cuposCreados(cuposGeneradosTabla);
@@ -405,13 +474,28 @@ function ListarErrores(result) {
         for (var i = 0; i < result.ListaErrores.length; i++) {
             erroresTabla = erroresTabla.concat(result.ListaErrores[i].Message);
         }
-        
+
     }
     if (erroresTabla.length > 0 && cuposGeneradosTabla.length < 0) {
         ShowErrorMessages(erroresTabla);
     }
 }
-   
+
+function CargarValorSugerencia() {
+    if ($("#cargaValorSugerenciaId").is(":checked")) {
+        var $filasEncabezado = $("#tabla tr:not('.encabezado')").length;
+        var nColumnas = $("#tabla tr:last td").length;
+
+        for (var j = 1; j <= $filasEncabezado; j++) {
+            for (var i = 0; i < nColumnas; i++) {
+                $(".labelFila" + (i + 1)).text("0");
+                ReestableceFilasColumnas(j, i);
+            }
+        }
+    } else {
+        $("#filtrarMaterial").trigger("click");
+    }
+}
 
 
 

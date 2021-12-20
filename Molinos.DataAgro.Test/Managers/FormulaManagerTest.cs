@@ -31,36 +31,60 @@ namespace Molinos.DataAgro.Test.Managers
         private FormulaManager target;
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
+        private Mock<ICupoManager> cupoManagerMock;
 
         [SetUp]
         public void SetUp()
         {
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
+            cupoManagerMock = new Mock<ICupoManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
-            target = new FormulaManager(logger.Object, repositorioMock.Object);
+            target = new FormulaManager(logger.Object, repositorioMock.Object, cupoManagerMock.Object);
         }
         [Test]
-        public void ultimaFormulaTestOk()
+        public void UltimaFormulaTestOk()
         {
             repositorioMock.Setup(y => y.Listar<Formula>(It.IsAny<Expression<Func<Formula, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Formula>() { new Formula { Id = 1, CantDias = 88, Inicio = 4, CriterioId = 2 }, new Formula { Id = 2, CantDias = 3, Inicio = 1, CriterioId = 2 } });
+                            .Returns(new List<Formula>() { new Formula { Material = new Material { MaterialId = 1, Descripcion = "a" }, Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, CriterioId = 2 }, new Formula { Id = 2, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, CriterioId = 2 } });
+            cupoManagerMock.Setup(x => x.DevolverTodoCierreCupera()).Returns(new List<CierreCupera>());
+            var result = target.UltimaFormula(1);
 
-            var result = target.ultimaFormula();
-
-            FormulaIni ultimaFormula = new FormulaIni { CantDias = 3, Inicio = 1, CriterioId = 2 };
+            FormulaIni ultimaFormula = new FormulaIni { CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, CriterioId = 2 };
 
             Assert.NotNull(result);
-            Assert.AreEqual(ultimaFormula.CantDias, result.Formula.CantDias);
+            Assert.AreEqual(ultimaFormula.CuposHasta, result.Formula.CuposHasta);
         }
         [Test]
         public void TraerTodoCriterioOk()
         {
-            repositorioMock.Setup(y => y.Listar<Criterio>(It.IsAny<Expression<Func<Criterio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 2 }, new CriterioContrato { Id = 2, Prioridad = 30, PadreId = 1 } });
-
-            var result = target.TraerCriteriosGuardados();
+            repositorioMock.Setup(y => y.Listar<Formula>(It.IsAny<Expression<Func<Formula, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                           .Returns(new List<Formula>() {
+                               new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, CriterioId = 1 },
+                               new Formula { Id = 2, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, CriterioId = 2,
+                                             Criterio = new CriterioRaiz{Id = 2, Concreta = false, Prioridad = 100,
+                                                 Hijos = new List<Criterio>() { new CriterioDeltaDePrecio { Id = 3, Prioridad = 30, PadreId = 2 } }}
+                               } });
+            repositorioMock.Setup(y => y.ObtenerConsultaEscalar<Formula>(It.IsAny<ObtenerUltimaFormula>()))
+                          .Returns(new Formula
+                          {
+                              Id = 2,
+                              CuposDesde = DateTime.Now.Date,
+                              CuposHasta = DateTime.Now.Date,
+                              NegociosDesde = DateTime.Now.Date,
+                              NegociosHasta = DateTime.Now.Date,
+                              CriterioId = 2,
+                              Criterio = new CriterioRaiz
+                              {
+                                  Id = 2,
+                                  Concreta = false,
+                                  Prioridad = 100,
+                                  Hijos = new List<Criterio>() { new CriterioDeltaDePrecio { Id = 3, Prioridad = 30, PadreId = 2 } }
+                              }
+                          });
+         
+            var result = target.TraerCriteriosGuardados(1);
 
             Assert.NotNull(result);
             Assert.AreEqual(2, result.Criterios.Count);
@@ -68,15 +92,16 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarCriterioHijoOk()
         {
+            repositorioMock.Setup(y => y.Obtener<Criterio>(It.IsAny<int>())).Returns(new CriterioRaiz() { PadreId = null, Id = 1 });
 
             repositorioMock.Setup(y => y.ObtenerConsultaEscalar<Formula>(It.IsAny<ObtenerUltimaFormula>()))
-                .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
+                .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
 
 
-            var criterioNuevo = new CriterioIni { Prioridad = 20, PadreId = 1, Descripcion = "CriterioContrato" };
+            var criterioNuevo = new CriterioIni { Prioridad = 20, PadreId = 1, Descripcion = "CriterioDeltaDePrecio" };
 
             repositorioMock.Setup(y => y.Agregar<Formula>(It.IsAny<Formula>()))
-                .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4 });
+                .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date });
 
             var resultado = target.GrabarCriterio(criterioNuevo);
 
@@ -88,11 +113,13 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ModificarCriterioPrioridadExcedidaOk()
         {
+            repositorioMock.Setup(y => y.Obtener<Criterio>(It.IsAny<int>())).Returns(new CriterioRaiz() { PadreId = null, Id = 1 });
+
             repositorioMock.Setup(y => y.ObtenerConsultaEscalar<Formula>(It.IsAny<ObtenerUltimaFormula>()))
-                .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
+                .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
 
             repositorioMock.Setup(y => y.Listar<Criterio>(It.IsAny<Expression<Func<Criterio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100 }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioContrato { Id = 3, Prioridad = 70, PadreId = 1 } });
+                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100 }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioDeltaDePrecio { Id = 3, Prioridad = 70, PadreId = 1 } });
 
             repositorioMock.Setup(y => y.Agregar<Formula>(It.IsAny<Formula>()))
                 .Returns(new Formula { Id = 2 });
@@ -111,11 +138,13 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void CriterioNuevoPrioridadCeroOk()
         {
+            repositorioMock.Setup(y => y.Obtener<Criterio>(It.IsAny<int>())).Returns(new CriterioRaiz() { PadreId = null, Id = 1 });
+
             repositorioMock.Setup(y => y.ObtenerConsultaEscalar<Formula>(It.IsAny<ObtenerUltimaFormula>()))
-                .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
+                .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
 
             repositorioMock.Setup(y => y.Listar<Criterio>(It.IsAny<Expression<Func<Criterio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100 }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioContrato { Id = 3, Prioridad = 70, PadreId = 1 } });
+                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100 }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioDeltaDePrecio { Id = 3, Prioridad = 70, PadreId = 1 } });
 
             repositorioMock.Setup(y => y.Agregar<Formula>(It.IsAny<Formula>()))
                 .Returns(new Formula { Id = 2 });
@@ -134,15 +163,16 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ModificarCriterioDescripcionNulaOk()
         {
+            repositorioMock.Setup(y => y.Obtener<Criterio>(It.IsAny<int>())).Returns(new CriterioRaiz() { PadreId = null, Id = 1 });
 
             repositorioMock.Setup(y => y.ObtenerConsultaEscalar<Formula>(It.IsAny<ObtenerUltimaFormula>()))
-                .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
+                .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
 
             repositorioMock.Setup(y => y.Listar<Criterio>(It.IsAny<Expression<Func<Criterio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                           .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioContrato { Id = 3, Prioridad = 70, PadreId = 1 } });
+                           .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioDeltaDePrecio { Id = 3, Prioridad = 70, PadreId = 1 } });
 
             repositorioMock.Setup(y => y.Agregar<Formula>(It.IsAny<Formula>()))
-               .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4 });
+               .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date });
 
 
             var criterioNuevo = new CriterioIni { Id = 2, Prioridad = 20, PadreId = 1 };
@@ -157,12 +187,13 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ModificarCriterioPrioridadCerooOk()
         {
+            repositorioMock.Setup(y => y.Obtener<Criterio>(It.IsAny<int>())).Returns(new CriterioRaiz() { PadreId = null, Id = 1 });
 
             repositorioMock.Setup(y => y.ObtenerConsultaEscalar<Formula>(It.IsAny<ObtenerUltimaFormula>()))
-                .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
+                .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() } });
 
             repositorioMock.Setup(y => y.Listar<Criterio>(It.IsAny<Expression<Func<Criterio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100 }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioContrato { Id = 3, Prioridad = 70, PadreId = 1 } });
+                            .Returns(new List<Criterio>() { new CriterioRaiz { Id = 1, Prioridad = 100 }, new CriterioEsFason { Id = 2, Prioridad = 10, PadreId = 1 }, new CriterioDeltaDePrecio { Id = 3, Prioridad = 70, PadreId = 1 } });
 
             repositorioMock.Setup(y => y.Agregar<Formula>(It.IsAny<Formula>()))
                 .Returns(new Formula { Id = 2 });
@@ -181,15 +212,17 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EliminarCriterioOk()
         {
+            repositorioMock.Setup(y => y.Obtener<Criterio>(It.IsAny<int>())).Returns(new CriterioRaiz() { PadreId = null, Id = 1 });
+
             repositorioMock.Setup(y => y.ObtenerConsultaEscalar<Formula>(It.IsAny<ObtenerUltimaFormula>()))
-                .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() { new CriterioContrato { Id = 7, Prioridad = 55 } } } });
+                .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date, Criterio = new CriterioRaiz { Id = 1, Prioridad = 100, Hijos = new List<Criterio>() { new CriterioDeltaDePrecio { Id = 7, Prioridad = 55 } } } });
 
             repositorioMock.Setup(y => y.Agregar<Formula>(It.IsAny<Formula>()))
-               .Returns(new Formula { Id = 1, CantDias = 88, Inicio = 4 });
+               .Returns(new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date });
 
 
-            CriterioIni criterioAEliminar = new CriterioIni { Id = 7, Prioridad = 55, Descripcion = "CriterioContrato" };
-            var resultado = target.eliminarCriterio(criterioAEliminar);
+            CriterioIni criterioAEliminar = new CriterioIni { Id = 7, Prioridad = 55, Descripcion = "CriterioDeltaDePrecio" };
+            var resultado = target.EliminarCriterio(criterioAEliminar);
 
 
 
@@ -201,14 +234,14 @@ namespace Molinos.DataAgro.Test.Managers
         {
 
             repositorioMock.Setup(y => y.Listar<Formula>(It.IsAny<Expression<Func<Formula, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                    .Returns(new List<Formula>() { new Formula { Id = 5, CantDias = 3, Inicio = 5 }, new Formula { Id = 1, CantDias = 10, Inicio = 11 } });
+                    .Returns(new List<Formula>() { new Formula { Id = 5, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date }, new Formula { Id = 1, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date } });
 
             repositorioMock.Setup(y => y.ObtenerConsultaEscalar(It.IsAny<ObtenerUltimaFormula>()))
-                  .Returns(new Formula { Id = 5, CantDias = 3, Inicio = 5 });
+                  .Returns(new Formula { Id = 5, CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date });
 
-            var nuevosDias = new FormulaIni { CantDias = 7, Inicio = 7 };
+            var nuevosDias = new FormulaIni { CuposDesde = DateTime.Now.Date, CuposHasta = DateTime.Now.Date, NegociosDesde = DateTime.Now.Date, NegociosHasta = DateTime.Now.Date };
 
-            var resultado = target.actualizarDias(nuevosDias);
+            var resultado = target.ActualizarDias(nuevosDias);
 
 
             Assert.NotNull(resultado);

@@ -3,12 +3,13 @@ $(document).ready(function () {
     $('#menuproveedor').hide();
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
-    })  
-   
+    })
+
     CargarGrillaConfig();
     $('#CargaCupos').on('hidden.bs.modal', function () {
         $("#cuerpo-carga-cupos").empty();
     });
+    AutoRecargarSolicitudes();
 
 });
 function CargarGrillaConfig() {
@@ -24,7 +25,7 @@ function CargarGrillaConfig() {
                     KendoGrid_FixFilter(ds, options.filter);
                 }
                 return options;
-            }, 
+            },
         },
         schema: {
             data: 'Data',
@@ -33,15 +34,23 @@ function CargarGrillaConfig() {
                 id: 'Id',
                 fields: {
                     Fecha: { type: "date" },
-                    LimiteCupo: { type: "number" }
+                    LimiteCupo: { type: "number" },
+                    Proveedor: { type: "string" },
+                    Comercial: { type: "string" },
+                    Material: { type: "string" },
+                    Zona: { type: "string" },
+                    Centro: { type: "string" },
+                    Fecha: { type: "date" },
+                    Estado: { type: "string" },
+
                 }
             }
         },
         serverPaging: true,
         serverSorting: true,
-        sort: [{ field: "Fecha", dir: "desc" }],
+        sort: [{ field: "EstadoId", dir: "desc" }, { field: "Fecha", dir: "asc" }],
         serverFiltering: true,
-        pageSize: 20
+        pageSize: 20,
     };
     var classExterno = externo ? "hide" : "";
     $("#gridInformeCompraNet").kendoGrid({
@@ -60,9 +69,22 @@ function CargarGrillaConfig() {
             $("td:has(div.statuspendiente)").attr('id', 'border-orange');
             $("td:has(div.statusconfirmado)").attr('id', 'border-green');
             $("td:has(div.statuseliminado)").attr('id', 'border-grey');
+            var grid = $("#gridInformeCompraNet").data("kendoGrid");
+            var view = grid.dataSource.view();
+            for (var i = 0; i < view.length; i++) {
+                if (view[i].TipoAdministracionCupo == "Extraordinaria") {
+                    grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
+                        .addClass("tipoExtraordinario");
+                }
+            }
         },
         columns: [
-            //{ selectable: true, width: "50px" },
+            { selectable: true, width: "50px" },
+            {
+                field: "TipoAdministracionCupo", type: "string", title: "Tipo", width: 70,
+                editable: function (dataItem) { return false; },
+                attributes: { "class": "mobile-xs " + classExterno }
+            },
             {
                 field: "Proveedor", type: "string", width: 150,
                 editable: function (dataItem) {
@@ -136,23 +158,24 @@ function CargarGrillaConfig() {
             {
                 field: "Centro", type: "string", title: "Destino", editable: function (dataItem) {
                     return false;
-                }, attributes: { "class": "mobile-xs mobile-md" } },
+                }, attributes: { "class": "mobile-xs mobile-md" }
+            },
             {
                 field: "Fecha", title: "Fecha Solicitud", type: "date", editable: function (dataItem) {
                     return false;
-                }, format: _DefaultDateTemplate },
+                }, format: _DefaultDateTemplate
+            },
             {
-                field: "CantidadCupo", title: "Cantidad de Cupos", width: "110px",               
+                field: "CantidadDeCupo", title: "Cantidad de Cupos", width: "110px",
                 editor: function (container, options) {
                     // create an input element
                     var input = $("<input name='" + options.field + "'/>");
                     // append it to the container
                     input.appendTo(container);
-
-                    $("#CantidadCupo").val(options.model.CantidadCupo);
+                    $("#CantidadDeCupo").val(options.model.CantidadDeCupo);
                     // initialize a Kendo UI numeric text box and set max value
                     input.kendoNumericTextBox({
-                        max: options.model.CantidadCupo,
+                        max: options.model.CantidadDeCupoMax,
                         min: 0
                     });
                 }
@@ -160,31 +183,31 @@ function CargarGrillaConfig() {
             {
                 field: "CantidadFleteProcedencia", title: "Cantidad Flete Procedencia",
                 editor: function (container, options) {
-                // create an input element
-                var input = $("<input name='" + options.field + "'/>");
-                // append it to the container
-                input.appendTo(container);
+                    // create an input element
+                    var input = $("<input name='" + options.field + "'/>");
+                    // append it to the container
+                    input.appendTo(container);
 
                     $("#CantidadCupoFlete").val(options.model.CantidadFleteProcedencia);
-                // initialize a Kendo UI numeric text box and set max value
-                input.kendoNumericTextBox({
-                    max: options.model.CantidadFleteProcedencia,
-                    min: 0
-                });
-            }
+                    // initialize a Kendo UI numeric text box and set max value
+                    input.kendoNumericTextBox({
+                        max: options.model.CantidadFleteProcedenciaMax,
+                        min: 0
+                    });
+                }
             },
             {
-                field: "EstadoId", title: "Estado", editable: function (dataItem) {
+                field: "Estado", title: "Estado", editable: function (dataItem) {
                     return false;
                 },
                 filterable: {
                     multi: true,
 
                     dataSource: [
-                        { EstadoId: "Aceptado" },
-                        { EstadoId: "Rechazado" },
-                        { EstadoId: "Pendiente" }]              
-                 },               
+                        { Estado: "Aceptado" },
+                        { Estado: "Rechazado" },
+                        { Estado: "Pendiente" }]
+                },
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
@@ -192,16 +215,16 @@ function CargarGrillaConfig() {
                         return '<div class="status pendiente">Pendiente</div>' +
                             botonAprobar(dataItem, 'fa-check pend') +
                             botonBorrar(dataItem, 'fa-trash pend');
-                           
+
                     }
                     if (dataItem.EstadoId == 1) { //confirmado                       
                         return '<div class="status confirmado">Confirmado</div>';
-                    }  
+                    }
                     if (dataItem.EstadoId == 2) { //Rechazado
                         return '<div class="status borrado">Rechazado</div>';
-                    }     
+                    }
                 }
-            }      
+            }
         ],
         editable: true,
         pageable: {
@@ -257,7 +280,29 @@ function CargarGrillaConfig() {
                 }
             }
         }
+
+        //,
+        //filter: defaultFilter
     });
+    $("#gridInformeCompraNet").kendoTooltip({
+        filter: "td",
+        position: "top",
+        content: function (e) {
+            var dataItem = $("#gridInformeCompraNet").data("kendoGrid").dataItem(e.target.closest("tr"));
+            var content = dataItem.Observacion;
+            return content;
+        },
+        show: function (e) {
+            if (this.content.text() != "") {
+                $('[role="tooltip"]').css("visibility", "visible");
+            }
+        },
+        hide: function () {
+            $('[role="tooltip"]').css("visibility", "hidden");
+        }
+    }).data("kendoTooltip");
+
+
     var fecha = new Date();
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
     addOrRemoveFilter(grilla, "Fecha", "gte", fecha);
@@ -269,7 +314,7 @@ function CargarGrillaConfig() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
-    function createMultiSelect(element, textField, valueField, url,columna) {
+    function createMultiSelect(element, textField, valueField, url, columna) {
         element.removeAttr("data-bind");
         columna = columna == null ? valueField : columna;
         console.log(columna);
@@ -314,7 +359,7 @@ function CargarGrillaConfig() {
                 });
 
                 if (values.length === 0) {
-                    addOrRemoveFilter(grilla, columna, "eq", "");
+                    addOrRemoveFilter(grilla, columna, "eq", null);
                 }
             }
         });
@@ -334,18 +379,18 @@ function CargarGrillaConfig() {
 
 function botonAprobar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalAceptarSugerencia(' + dataItem.id + ')"><i class="fa ' + icono + '"></i></button>';
-    
+
 }
 function botonBorrar(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalRechazarSugerencia(' + dataItem.id +') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';   
+    return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalRechazarSugerencia(' + dataItem.id + ') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
 }
 
 function ModalAceptarSugerencia(id) {
-    $("#modalAceptarSolicitud").modal("show");    
+    $("#modalAceptarSolicitud").modal("show");
     var grid = $("#gridInformeCompraNet").data("kendoGrid").dataSource.data();
     var solicitudSeleccionada = grid.filter(function (x) { return (x.Id == id) });
-    $("#CantidadCupo").val(solicitudSeleccionada[0].CantidadCupo);
-    $("#CantidadCupoFlete").val(solicitudSeleccionada[0].CantidadFleteProcedencia);
+    $("#CantidadDeCupoAceptado").val(solicitudSeleccionada[0].CantidadDeCupo);
+    $("#CantidadCupoFleteAceptado").val(solicitudSeleccionada[0].CantidadFleteProcedencia);
     $("#solicitudId").val(id);
 }
 function ModalRechazarSugerencia(id) {
@@ -356,12 +401,19 @@ function ModalRechazarSugerencia(id) {
 function AceptarSolicitud() {
     var id = $("#solicitudId").val();
 
-    var cantidad = $("#CantidadCupo").val();
-    var cantidadFp = $("#CantidadCupoFlete").val();
+    var cantidad = $("#CantidadDeCupoAceptado").val();
+    if (cantidad === undefined) {
+        cantidad = 0;
+    }
+    var cantidadFp = $("#CantidadCupoFleteAceptado").val();
+    if (cantidadFp === undefined) {
+        cantidadFp = 0;
+    }
     if (cantidad == 0 && cantidadFp == 0) {
         MensErr("La solicitud no se puede aceptar");
+        return;
     }
-    result = MSExecuteOnServer('/AdministracionCupo/Aceptar', { administracionId: id, cantidadCupo: cantidad, cantidadFleteProcedencia : cantidadFp });
+    result = MSExecuteOnServer('/AdministracionCupo/Aceptar', { administracionId: id, cantidadCupo: cantidad, cantidadFleteProcedencia: cantidadFp });
 
     $.unblockUI();
     var errores = new Array();
@@ -369,17 +421,12 @@ function AceptarSolicitud() {
     if (result.HayError) {
         errores = errores.concat(result.ListaErrores);
     }
-    if (result.ListaCupos != null && result.ListaCupos.length > 0) {
-        cuposGenerados = cuposGenerados.concat(result.ListaCupos);
-    }
-    if (cuposGenerados.length > 0) {
-        cuposCreados(cuposGenerados);
-
-    }
-    if (errores.length > 0) {
+    if (errores.length == 0) {
+        MensInfo("Se grabo correctamente.");
+    } else {
         ShowErrorMessages(errores);
     }
-    window.location.reload();
+    recargarGrilla();
 }
 
 
@@ -404,7 +451,7 @@ function cuposCreados(lista) {
     $("#cupos-generados-modal").html(lista.join("</br>"));
     $('#resultadoCupo').modal('toggle');
 
-   
+
 }
 
 function resultadoCupo() {
@@ -477,4 +524,85 @@ function recargarAceptar() {
 }
 function recargarGrilla() {
     $('#gridInformeCompraNet').data('kendoGrid').dataSource.read();
+}
+
+function AutoRecargarSolicitudes() {
+    setInterval(function () {
+        if (document.getElementById('checkRecarga').checked == true) {
+            recargarGrilla();
+            $("#panel").html(MSExecuteURLOnServer('/AdministracionCupo/PartialPanel'));
+        }
+    }, 30000);
+
+}
+
+function SeleccionarElementos() {
+    var grid = $("#gridInformeCompraNet").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        if (selectedItem.EstadoId == 3) {
+            obj.push(selectedItem);
+        }
+    });
+    return obj;
+}
+function DeseleccionarElementos() {
+    var grid = $("#gridInformeCompraNet").data("kendoGrid");
+    grid.clearSelection();
+}
+
+function RechazarMasivo() {
+    BlockUi('Procesando...');
+    var solicitudes = SeleccionarElementos();
+    var ids = [];
+    //for (var i = 0; i < configuraciones.length; i++) {
+    //    ids.push(configuraciones[i].id);
+    //}
+    if (solicitudes.length <= 0) {
+        MensErr("No se seleccionó ninguna solicitud pendiente.");
+    } else {
+        var limites = MSExecuteOnServer("/AdministracionCupo/RechazarMasivo", { solicitudes: solicitudes });
+        MensInfo("Se guardó correctamente");
+        recargarGrilla();
+    }
+    $.unblockUI();
+}
+
+function AceptarMasivo() {
+    BlockUi('Procesando...');
+
+    setTimeout(
+        function () {
+            var solicitudes = SeleccionarElementos();
+            var ids = [];
+            if (solicitudes.length <= 0) {
+                MensErr("No se seleccionó ninguna solicitud pendiente.");
+            } else {
+                var result = MSExecuteOnServer("/AdministracionCupo/AceptarMasivo", { solicitudes: solicitudes });
+                var errores = new Array();
+                var cuposGenerados = new Array();
+                if (result.HayError) {
+                    errores = errores.concat(result.ListaErrores);
+                }
+                if (result.ListaCupos != null && result.ListaCupos.length > 0) {
+                    cuposGenerados = cuposGenerados.concat(result.ListaCupos);
+                }
+                if (cuposGenerados.length > 0) {
+                    cuposCreados(cuposGenerados);
+
+                }
+                if (errores.length > 0) {
+                    ShowErrorMessages(errores);
+                }
+                recargarGrilla();
+
+            }
+            $.unblockUI();
+        }
+        , 200);
+
+
 }

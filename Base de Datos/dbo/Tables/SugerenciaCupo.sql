@@ -21,6 +21,8 @@
     [NegocioId] INT NULL, 
     [CDWarrant] BIT NULL, 
     [CantidadCupoOriginal] INT NULL, 
+    [KgNegocio] FLOAT NOT NULL DEFAULT 0, 
+    [KgPendienteAplicar] FLOAT NOT NULL DEFAULT 0, 
     CONSTRAINT [PK_SugerenciaCupo] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

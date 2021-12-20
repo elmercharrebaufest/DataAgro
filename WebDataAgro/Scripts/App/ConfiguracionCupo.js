@@ -381,7 +381,9 @@ function recargarGrilla() {
 }
 
 function AbrirModal(id) {
-    $("#gridConfiguracionCupo").data("kendoGrid").clearSelection();
+    if (id) {
+        $("#gridConfiguracionCupo").data("kendoGrid").clearSelection();
+    }
     $('#ModalLimiteCupo').on('hidden.bs.modal', function () {
         EliminarTablaConfiguracion(id);
     });

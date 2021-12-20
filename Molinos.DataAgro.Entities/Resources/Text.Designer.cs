@@ -1964,6 +1964,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ver Todas Las Sugerencias.
+        /// </summary>
+        public static string Ver_Todas_Las_Sugerencias {
+            get {
+                return ResourceManager.GetString("Ver_Todas_Las_Sugerencias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ver Todo Comercial.
         /// </summary>
         public static string Ver_Todos_Comercial {

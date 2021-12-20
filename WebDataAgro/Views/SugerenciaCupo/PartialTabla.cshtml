@@ -1,11 +1,5 @@
 ﻿@using Molinos.DataAgro.Entities.Dto
-@using Molinos.DataAgro.Entities.Dto
 
-@{
-    ViewBag.Title = "PartialTabla";
-    var lista = (List<SugerenciaCupoDto>)ViewBag.Lista;
-    var sugerencia = (List<SugerenciaPorComercialDto>)ViewBag.Sugerencia;
-}
 
 <link href="~/Content/Sugerencia.css" rel="stylesheet" />
 <script>
@@ -17,11 +11,25 @@
     for (var i = 0; i < cupos; i++) {
         cuposAsignados.pop();
     }
+    $(document).ready(function () {
+       
+            setTimeout(function () {
+                $.unblockUI();
+            }, 250);
+      
+    });
 
 </script>
+
+@{
+    ViewBag.Title = "PartialTabla";
+    var lista = (List<SugerenciaCupoDto>)ViewBag.Lista;
+    var sugerencia = (List<SugerenciaPorComercialDto>)ViewBag.Sugerencia;
+}
+
 <div class="card">
     <div class="card-body">
-        <div id="table-scroll" class="table-scroll">
+        <div id="table-scroll" class="table-scroll" style="overflow-x:auto;">
             <div id="tabla" class="table-editable table-responsive">
                 <table class="table-bordered  tabla" id="tabla">
                     <thead>
@@ -40,7 +48,7 @@
                                                 <input type="checkbox" class="@(i)" onclick="MarcarColumna(this)" hidden>
                                                 <div class="popover-cabecera">
                                                     <span class="@("fecha" + i)">@fecha</span>
-                                                    <br data-toggle="popover" data-placement="top" data-trigger="manual" id="popover@("col" + i)" data-container="body" data-content="" /><strong>Cupos pendientes por día: @cant</strong>
+                                                    <br data-toggle="popover" data-placement="top" data-trigger="manual" id="popover@("col" + i)" data-container="body" data-content="" /><strong>Sugerencias pendientes por día: @cant</strong>
                                                 </div>
                                             </label>
                                         </div>
@@ -67,7 +75,7 @@
                                                 <label data-row="@(j)" data-proveedor="@k.Select(x => x.Id).FirstOrDefault()" hidden></label>
                                                 <label hidden data-rowComercial="@(j)" data-comercial="@k.Select(x => x.ComercialId).FirstOrDefault()"></label>
                                                 <label class="aca" data-proveedordesc="@(j)" style="text-overflow: ellipsis; overflow: hidden;white-space: nowrap;" data-proveedorDescripcion="@k.Key">@k.Key</label>
-                                                <br data-toggle="popover" data-placement="top" data-trigger="manual" id="popoverFila@("fila" + j)" data-content="" /><strong>Cupos pendientes: @k.Sum(x => x.CantidadDeCupos)</strong>
+                                                <br data-toggle="popover" data-placement="top" data-trigger="manual" id="popoverFila@("fila" + j)" data-content="" /><strong>Sugerencias pendientes: @k.Sum(x => x.CantidadDeCupos)</strong>
                                             </div>
                                         </label>
                                     </div>
@@ -84,10 +92,10 @@
                                         {
                                             <td class="pt-3-half @("col" + i)" id="celda@(i)" data-column="@i" data-row="@j">
                                                 <div class="row">
-                                                    <label class="col-sm-9 borde @("labelFila" + i)" id="@("label" + i)" onblur="CalcularTotal(this)" contenteditable="true" data-column="@i" data-row="@j">0</label>
+                                                    <label class="col-sm-9 borde @("labelFila" + i)" id="@("label" + i) cargarSugerencia" onblur="CalcularTotal(this)" contenteditable="true" data-column="@i" data-row="@j">@sugerenciaPorDia.CantidadDeCupos</label>
                                                     <span class="col-sm-2 @("reestablecerCelda" + i)" data-mostrarCruzColumna="@i" data-mostrarCruzFila="@j" hidden style="margin-top:7px;"><i class="fa fa-times @("reestablecerCelda" + i)" aria-hidden="true" data-reestablecerColumna="@i" data-reestablecerFila="@j" onclick="Reestablecer(this)"></i></span>
                                                 </div>
-                                                <span hidden class="@("contenidoFila" + i)" id="@("contenidolabel" + i)" data-columnContenido="@i" data-rowContenido="@j">0</span>
+                                                <span hidden class="@("contenidoFila" + i)" id="@("contenidolabel" + i)" data-columnContenido="@i" data-rowContenido="@j">@sugerenciaPorDia.CantidadDeCupos</span>
                                                 <div class="checkbox" data-column="@i" data-row="@j">
                                                     <label style="font-size: 1em">
                                                         <input type="checkbox" onclick="BloquearCelda(this)" id="@("check" + i)" class="@("checkFila" + j) @("checkCelda" + c)" data-column="@i" data-row="@j">
@@ -125,10 +133,10 @@
                         }
 
                     </tbody>
-                    <tfoot>
+                    @*<tfoot>
 
                         <tr class="detalle encabezado">
-                            <td class="text-center">Devolución de Cupos</td>
+                            <td class="text-center">Devolución de Sugerencias</td>
                             @{
                                 i = 1;
                                 foreach (var r in ViewBag.Fechas)
@@ -138,13 +146,13 @@
                                             <label class="col-sm-9 borde @("devuelto" + i)" contenteditable="true"></label>
                                         </div>
                                     </td>
-                                     i++;
+                                    i++;
                                 }
-                               
+
                             }
                         </tr>
 
-                    </tfoot>
+                    </tfoot>*@
                 </table>
             </div>
         </div>

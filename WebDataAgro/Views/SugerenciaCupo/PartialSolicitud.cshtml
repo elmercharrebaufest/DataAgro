@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "PartialSolicitud";
+}
+@*<script src="~/Scripts/App/SolicitudCupo.js"></script>*@
+@*<link href="~/Content/compraNet.css" rel="stylesheet" />*@
+
+<div class="row-fluid" style="padding-bottom:20px;">
+    <div class="col-md-3 col-xs-6">
+        @Html.DropDownList("ComercialSeleccionado3", ViewBag.ComercialSeleccionado as SelectList, new { @class = "form-control ComercialSeleccionado", @id = "ComercialSeleccionado3"  })
+    </div>
+    <div class="col-md-2 col-md-offset-7">
+        <label>Autorecargar</label>
+        <input id="checkRecarga" class="campo-input-input" data-bind="" type="checkbox" checked />
+    </div>
+</div>
+<br />
+<div class="row-fluid" id="Tabla">
+    <div class="col-xs-12">
+        <div id="gridInformeCompraNet" class="table-responsive"></div>
+        <input id="CantidadDeCupoAceptado" type="hidden" />
+        <input id="CantidadCupoFleteAceptado" type="hidden" />
+    </div>
+</div>
+
+<style>
+    #border-orange {
+        border-bottom: 5px solid #ffc100;
+    }
+
+    #border-green {
+        border-bottom: 5px solid #179e2b;
+    }
+
+    #border-grey {
+        border-bottom: 5px solid #848484;
+    }
+
+    .status.pendiente {
+        background-color: #ffc100;
+        color: #000000;
+    }
+
+    .status.confirmado {
+        background-color: #179e2b;
+        color: #ffffff;
+    }
+
+    .status.borrado {
+        background-color: #848484;
+        color: #ffffff;
+    }
+
+    #gridInformeCompraNet td {
+        text-align: right;
+    }
+
+        #gridInformeCompraNet td button {
+            border: 0;
+            margin: 5px;
+            padding: 0;
+            background-color: transparent;
+            color: #aaa;
+            font-size: 23px;
+        }
+
+            #gridInformeCompraNet td button:hover {
+                color: #fff;
+            }
+
+    #gridInformeCompraNet {
+        font-size: 12px;
+        overflow-x: scroll;
+    }
+
+        #gridInformeCompraNet td .status,
+        #gridInformeCompraNet td .status:hover {
+            /*background:#787878;*/
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: 1px 5px 1px 8px;
+            /*border-right: 6px solid;*/
+            font-weight: 700;
+            text-align: right;
+            /*color: #4c4b4b;*/
+            margin-bottom: 3px;
+            line-height: 1.2em;
+        }
+
+    .page-container {
+        padding: 0 !important;
+    }
+
+    #gridInformeCompraNet td {
+        text-align: center !important;
+    }
+
+    #gridInformeCompraNet td {
+        text-align: right;
+    }
+
+    #gridSugerenciaCupo td button {
+        border: 0;
+        margin: 5px;
+        padding: 0;
+        background-color: transparent;
+        color: #aaa;
+        font-size: 23px;
+    }
+
+    #gridSugerenciaCupo td button:hover {
+        color: #fff;
+    }
+
+    #gridSugerenciaCupo {
+        font-size: 12px;
+        overflow-x: scroll;
+    }
+
+    #gridSugerenciaCupo td .status,
+    #gridSugerenciaCupo td .status:hover {
+        /*background:#787878;*/
+        font-size: 10px;
+        text-transform: uppercase;
+        padding: 1px 5px 1px 8px;
+        /*border-right: 6px solid;*/
+        font-weight: 700;
+        text-align: right;
+        /*color: #4c4b4b;*/
+        margin-bottom: 3px;
+        line-height: 1.2em;
+    }
+    
+</style>

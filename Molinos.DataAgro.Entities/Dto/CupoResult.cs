@@ -6,5 +6,8 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public List<string> ListaCupos { get; set; } = new List<string>();
 
+        public int CuposNormales { get; set; }
+        public int CuposFlete { get; set; }
+
     }
 }

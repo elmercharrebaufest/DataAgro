@@ -11,11 +11,12 @@ namespace Molinos.DataAgro.Interfaces.Managers
 {
     public interface IFormulaManager
     {
-        ResultIniCriterio TraerCriteriosGuardados();
+        ResultIniCriterio TraerCriteriosGuardados(int MaterialId);
         Resultado GrabarCriterio(CriterioIni criterio);
-        Resultado eliminarCriterio(CriterioIni criterio);
-        ResultIniFormula ultimaFormula();
-        Resultado actualizarDias(FormulaIni formulaDias);
-        List<CriterioIni> todosLosCriterios();
+        Resultado EliminarCriterio(CriterioIni criterio);
+        ResultIniFormula UltimaFormula(int MaterialId);
+        Resultado ActualizarDias(FormulaIni formulaDias);
+        List<CriterioIni> TodosLosCriterios();
+        Resultado ActualizarCierre(FormulaIni formulaDias);
     }
 }

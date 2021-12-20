@@ -14,11 +14,11 @@ namespace Molinos.DataAgro.Entities.Entities
         public int Id { get; set; }
         [ForeignKey("Padre")]
         public int? PadreId { get; set; }
-        
+
         public Criterio Padre { get; set; }
 
         [InverseProperty("Padre")]
-        public virtual ICollection<Criterio> Hijos { get; set; }
+        public virtual ICollection<Criterio> Hijos { get; set; } = new List<Criterio>();
 
         public int Prioridad { get; set; }
 

@@ -136,7 +136,32 @@ function MSExecuteURLOnServer(url) {
     return respuesta;
 }
 
+function MSRedirectURLOnServer(url, datos) {
 
+    var respuesta = null;
+
+    //alert(MSGetUrl(url));
+
+    $.ajax({
+        async: false,
+        url: MSGetUrl(url),
+        type: 'POST',
+        data: kendo.stringify(datos),
+        contentType: "application/json; charset=utf-8", 
+        success: function (data) {
+            if (data) {
+                respuesta = data;
+              
+            }
+        },
+        error: function (error) {
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+
+        }
+    });
+
+    return respuesta;
+}
 function MSExecuteURLOnServerAsync(url, fncallback, htmlloading) {
 
     //alert(MSGetUrl(url));

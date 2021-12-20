@@ -120,6 +120,7 @@
     <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
     <Compile Include="Common\Enums\EnumEstadoAdministracionCupo.cs" />
+    <Compile Include="Common\Enums\EnumTipoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
     <Compile Include="Common\Enums\EnumEstadoContrato.cs" />
     <Compile Include="Common\Enums\EnumMeses.cs" />
@@ -149,6 +150,8 @@
     <Compile Include="Dto\ReporteAfijarPaseDto.cs" />
     <Compile Include="Dto\ResultadoDevolverKilosPendientesAnularFijacionCanjeDto.cs" />
     <Compile Include="Dto\TipoRangoConfirmacionAutomaticaDto.cs" />
+    <Compile Include="Dto\AceptarSugerenciaCupoDto.cs" />
+    <Compile Include="Dto\MensajeCupoDto.cs" />
     <Compile Include="Dto\ValidarCreditoDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMesDto.cs" />
     <Compile Include="Dto\CampanaMaterialDetallePorMeseExcelDto.cs" />
@@ -347,6 +350,8 @@
     <Compile Include="Entities\ReportePagosDiferidos.cs" />
     <Compile Include="Entities\TipoPosicionCBOT.cs" />
     <Compile Include="Entities\TipoRangoConfirmacionAutomatica.cs" />
+    <Compile Include="Entities\CierreCupera.cs" />
+    <Compile Include="Entities\MensajeCupo.cs" />
     <Compile Include="Entities\MotivoAnterior.cs" />
     <Compile Include="Entities\CampanaMaterialDetallePorMes.cs" />
     <Compile Include="Entities\CampoDetalle.cs" />
@@ -370,6 +375,7 @@
     <Compile Include="Entities\ReporteCompraNetPricingCampania.cs" />
     <Compile Include="Entities\ReporteCompraNetSojaSustentable.cs" />
     <Compile Include="Entities\SugerenciaPorComercial.cs" />
+    <Compile Include="Entities\TipoAdministracionCupo.cs" />
     <Compile Include="Entities\UsuarioExterno.cs" />
     <Compile Include="Entities\TokenAuth.cs" />
     <Compile Include="Entities\AgenteCompra.cs" />

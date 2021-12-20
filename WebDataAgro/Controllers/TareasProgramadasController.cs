@@ -98,7 +98,7 @@ namespace WebDataAgro.Controllers
         public ActionResult CrearSugerenciaCupo()
         {
             logger.Info($"CrearSugerenciaCupo");
-            cupoManager.CrearSugerenciaCupo(null);
+            cupoManager.CrearSugerenciaCupo();
             logger.Info($"CrearSugerenciaCupo - Finalizado");
             return Content("ok");
         }
@@ -275,6 +275,14 @@ namespace WebDataAgro.Controllers
             logger.Info($"EnvioMailNegociosAnulaYReemplaza - Iniciando");
             negocioManager.EnvioMailNegociosAnulaYReemplaza();
             logger.Info($"EnvioMailNegociosAnulaYReemplaza - Finalizado");
+            return Content("ok");
+        }
+
+        public ActionResult EnviarMailSugerenciasPendientesPorComercial()
+        {
+            logger.Info($"EnviarMailSugerenciasPendientesPorComercial - inicio");
+            cupoManager.EnviarMailSugerenciasPendientesPorComercial();
+            logger.Info($"EnviarMailSugerenciasPendientesPorComercial - Finalizado");
             return Content("ok");
         }
     }

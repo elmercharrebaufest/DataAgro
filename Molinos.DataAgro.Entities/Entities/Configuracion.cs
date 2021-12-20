@@ -29,5 +29,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public int RedespachoMaximoARP { get; set; }
         public int ToleranciaPaseMin { get; set; }
         public int ToleranciaPaseMax { get; set; }
+
+
+        public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
     }
 }

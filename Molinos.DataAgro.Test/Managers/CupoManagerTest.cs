@@ -52,6 +52,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IAltaTempranaAgent> altaTempranaAgent;
         private Mock<ICumplimientoCuposAgent> cumplimientoCuposAgent;
 
+
         [SetUp]
         public void SetUp()
         {
@@ -127,6 +128,9 @@ namespace Molinos.DataAgro.Test.Managers
             crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>()))
                 .Returns(new List<string>() { "a" });
             repositorioMock.Setup(x => x.Agregar(It.IsAny<Cupo>()));
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<Expression<Func<ConfiguracionCupo, int>>>()))
+               .Returns(20);
+
             var result = target.GrabarCupo(cupo, new List<DiaCupo>() {
                 new DiaCupo { Cantidad=1, Fecha = new DateTime(2099,11,10)},
                 new DiaCupo { Fecha= new DateTime(2099,11,10),Cantidad=0},
@@ -370,8 +374,33 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void ObtenerSugerenciaCupoTest()
         {
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SugerenciaCupo, SugerenciaCupoDto>>>(), It.IsAny<Expression<Func<SugerenciaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<SugerenciaCupoDto>() {new SugerenciaCupoDto
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, MaterialIni>>>(), It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+              .Returns(new List<MaterialIni>() { new MaterialIni { MaterialId = 1, Descripcion = "Soja" } });
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<ObtenerUltimaFormula>()))
+               .Returns(new Formula
+               {
+                   Id = 1,
+                   CuposDesde = DateTime.Now.Date,
+                   CuposHasta = DateTime.Now.Date,
+                   NegociosDesde = DateTime.Now.Date,
+                   NegociosHasta = DateTime.Now.Date,
+                   Fecha = DateTime.Now.Date,
+                   CentroId = 1,
+                   CriterioId = 1,
+                   Criterio =
+               new CriterioRaiz
+               {
+                   Id = 1,
+                   Prioridad = 100,
+                   Hijos = new List<Criterio> {
+                       new CriterioEsContratoAFijar { Id = 3, PadreId = 2, Prioridad = 60 },
+                        new CriterioEsContratoAPrecio { Id = 4, PadreId = 2, Prioridad = 40 },
+                    }
+               }
+               });
+
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<ObtenerSugerencias>()))
+               .Returns(new List<SugerenciaCupoDto>() {new SugerenciaCupoDto
                 {
                     Id = 1,
                     CentroId = 1,
@@ -380,11 +409,18 @@ namespace Molinos.DataAgro.Test.Managers
                     MaterialId = 1,
                     ProveedorId = 1,
                     ZonaCupoId = 2,
-                    PuntuacionesString = "{\"CriterioRaiz\":0.4}"
-                }});
-            var result = target.ObtenerSugerenciaCupo(1);
+                    PuntuacionesString = "{\"CriterioRaiz\":0.4}",
+                    ProveedorDesc = "Parisi",
+                    CantidadDeCupos = 1,
+                    Aceptado = true,
+                    MonedaDesc = "USDM",
+                    ProveedorCUIT = "23343434",
+                    TipoNegocioDesc = "ESPACIO DINAMICO",
+                    ContratoSAP = "3343434",
+               }
+               });
 
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SugerenciaCupo, SugerenciaCupoDto>>>(), It.IsAny<Expression<Func<SugerenciaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            var result = target.ObtenerSugerenciaCupo(1, null);
             Assert.IsNotNull(result);
         }
 
@@ -401,8 +437,13 @@ namespace Molinos.DataAgro.Test.Managers
                     MaterialId = 1,
                     ProveedorId = 1,
                     ZonaCupoId = 2,
-                    Puntuaciones = "{\"CriterioRaiz\":0.4}"
+                    Puntuaciones = "{\"CriterioRaiz\":0.4}",
+                    FechaSugerida = DateTime.Now.Date
                 }});
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CierreCupera, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                        .Returns(new List<CierreCupera>());
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SugerenciaPorComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                        .Returns(new List<SugerenciaPorComercial> { new SugerenciaPorComercial { Total = 99, CentroId = 1, ComercialId = 1, Fecha = DateTime.Now.Date, MaterialId = 1, Id = 1 } });
             var result = target.RechazarSugerenciaCupo(new List<int> { 1 }, "");
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SugerenciaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())
@@ -415,6 +456,15 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void AceptarSugerenciaCupo()
         {
+
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<ZonaCupo>() { new ZonaCupo { Id = 1, Descripcion = "Bs As" } });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<Comercial>() { new Comercial { ComercialId = 1, GrupoDeCompras = new GrupoDeCompras { Descripcion = "Bs As" } } });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SugerenciaPorComercial, bool>>>())).Returns(new SugerenciaPorComercial { Id = 1, Total = 10 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CierreCupera, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CierreCupera>());
             //sugerencias
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SugerenciaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<SugerenciaCupo>() {new SugerenciaCupo
@@ -428,7 +478,10 @@ namespace Molinos.DataAgro.Test.Managers
                     ZonaCupoId = 1,
                     ZonaCupo =  new ZonaCupo {CodigoSap="",Descripcion="",Id=1 } ,
                     Puntuaciones = "{\"CriterioRaiz\":0.4}",
-                    FechaSugerida = DateTime.Now.Date
+                    FechaSugerida = DateTime.Now.Date,
+                    Centro = new Centro { CodigoSap = "0002321"},
+                    CantidadDeCupos = 10,
+                    Proveedor = new Proveedor {RazonSocial = "PARISI"}
                 }});
             var configuracion = new ConfiguracionCupoDto()
             {
@@ -473,8 +526,10 @@ namespace Molinos.DataAgro.Test.Managers
                .Returns(new Formula
                {
                    Id = 1,
-                   CantDias = 5,
-                   Inicio = 0,
+                   CuposDesde = DateTime.Now.Date,
+                   CuposHasta = DateTime.Now.Date,
+                   NegociosDesde = DateTime.Now.Date,
+                   NegociosHasta = DateTime.Now.Date,
                    Fecha = DateTime.Now.Date,
                    CentroId = 1,
                    CriterioId = 1,
@@ -484,15 +539,13 @@ namespace Molinos.DataAgro.Test.Managers
                    Id = 1,
                    Prioridad = 100,
                    Hijos = new List<Criterio> {
-                       new CriterioContrato { Id = 2, PadreId = 1, Prioridad = 100,Hijos =
-                           new List<Criterio>{
-                               new CriterioEsContratoAFijar { Id = 3, PadreId = 2, Prioridad = 60 },
-                               new CriterioEsContratoAPrecio { Id = 4, PadreId = 2, Prioridad = 40 },
-                           } } }
+                       new CriterioEsContratoAFijar { Id = 3, PadreId = 2, Prioridad = 60 },
+                        new CriterioEsContratoAPrecio { Id = 4, PadreId = 2, Prioridad = 40 },
+                    }
                }
                });
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
-            .Returns(new Proveedor { ProveedorId = 1 });
+            .Returns(new Proveedor { ProveedorId = 1, RazonSocial = "Parisi" });
             repositorioMock.Setup(y => y.Obtener<Material>(It.IsAny<int>()))
                 .Returns(new Material { MaterialId = 1 });
             repositorioMock.Setup(y => y.Obtener<Centro>(It.IsAny<int>()))
@@ -510,14 +563,13 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new CupoDto { Id = 1 });
             repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<Expression<Func<Cupo, bool>>>())).Returns(new Cupo { Id = 1 });
 
-            var result = target.AceptarSugerenciaCupo(new List<SugerenciaCupoDto> { new SugerenciaCupoDto { Id = 1, CantidadDeCupos = 1, MaterialId = 1, FechaSugerida = DateTime.Now.Date, CentroId = 1, ZonaCupoId = 1, ZonaDescrip = "" } });
+            var result = target.AceptarSugerenciaCupo(new List<SugerenciaCupoDto> { new SugerenciaCupoDto { Id = 1, CantidadDeCupos = 1, CantidadFleteProcedencia = 1, MaterialId = 1, FechaSugerida = DateTime.Now.Date, CentroId = 1, ZonaCupoId = 1, ZonaDescrip = "" } });
 
 
             //repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SugerenciaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())
             //    , Times.Once);
             //repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.NotNull(result);
-            Assert.IsFalse(result.First().HayError);
         }
 
         [Test]
@@ -545,8 +597,9 @@ namespace Molinos.DataAgro.Test.Managers
                     MaterialId = 1,
                     Fecha=DateTime.Now.Date,
                     LimiteCupo=10,
-                    CantidadCupo = new List<LimiteCupo>(){ new LimiteCupo {CantidadCupo=10,ZonaCupoId=1, ZonaCupo = new ZonaCupo {CodigoSap="",Descripcion="",Id=1 } } }
-                }});
+                    CantidadCupo = new List<LimiteCupo>(){ new LimiteCupo {CantidadCupo=10,ZonaCupoId=1, ZonaCupo = new ZonaCupo {CodigoSap="",Descripcion="",Id=1 } } },
+                    LimiteAlgoritmo = 10
+                } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<Cupo>() {new Cupo
                 {
@@ -557,14 +610,32 @@ namespace Molinos.DataAgro.Test.Managers
                     MaterialId = 1,
                     ProveedorId = 1,
                     ZonaCupoId = 1,
+                    NegocioId = 44,
+                    ConfiguracionEspacioDinamicoId=66,
                     FechaIngreso = DateTime.Now.Date,
                     FechaGeneracion = DateTime.Now.Date
+                }});
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Cupo, CupoDto>>>(), It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<CupoDto>() {new CupoDto
+                {
+                    Id = 1,
+                    CentroId = 1,
+                    ComercialId = 1,
+                    Destinatario = "a",
+                    MaterialId = 1,
+                    ProveedorId = 1,
+                    ZonaCupoId = 1,
+                    FechaIngreso = DateTime.Now.Date,
+                    FechaGeneracion = DateTime.Now.Date,
+                    NegocioId = 56,
                 }});
             var formula = new Formula
             {
                 Id = 1,
-                CantDias = 5,
-                Inicio = 0,
+                CuposDesde = DateTime.Now.Date,
+                CuposHasta = DateTime.Now.Date,
+                NegociosDesde = DateTime.Now.Date,
+                NegociosHasta = DateTime.Now.Date,
                 Fecha = DateTime.Now.Date,
                 CentroId = 1,
                 CriterioId = 1,
@@ -574,10 +645,8 @@ namespace Molinos.DataAgro.Test.Managers
                    Id = 1,
                    Prioridad = 100,
                    Hijos = new List<Criterio> {
-                       new CriterioContrato { Id = 2, PadreId = 1, Prioridad = 100,Hijos =
-                           new List<Criterio>{
-                               new CriterioEsContratoAFijar { Id = 3, PadreId = 2, Prioridad = 100 }
-                           } } }
+                        new CriterioEsContratoAFijar { Id = 3, PadreId = 2, Prioridad = 100 }
+                    }
                }
             };
             criterioCDWarrantAgentMock.Setup(x => x.ConsultarContratoWarrant(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(new List<BasicoContrato>());
@@ -587,8 +656,6 @@ namespace Molinos.DataAgro.Test.Managers
            .Returns(formula);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
             .Returns(new List<PrecioPizarra>() { new PrecioPizarra { Id = 1, FechaDesde = DateTime.Now.Date, FechaHasta = DateTime.Now.Date.AddDays(1), MaterialId = 1, MonedaId = "ARP  ", PizarraId = 1, Precio = 600, UnidadMedida = "Tons" } });
-            repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
-           .Returns(new Proveedor { ProveedorId = 1 });
             repositorioMock.Setup(y => y.Obtener<Material>(It.IsAny<int>()))
                 .Returns(new Material { MaterialId = 1 });
             repositorioMock.Setup(y => y.ObtenerPrimero<TipoNegocio>(It.IsAny<Expression<Func<TipoNegocio, bool>>>()))
@@ -613,7 +680,9 @@ namespace Molinos.DataAgro.Test.Managers
                     FechaDesde = DateTime.Now.Date,
                     FechaHasta = DateTime.Now.Date.AddDays(1),
                     TipoNegocioId =2,
-                    ContratoSAP = ""
+                    ContratoSAP = "aa",
+                    KgNegocio = 60000,
+                    KgPendienteAplicar = 60000
                 }});
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConfiguracionEspacioDinamico, SugerenciaCupoDto>>>(), It.IsAny<Expression<Func<ConfiguracionEspacioDinamico, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
               .Returns(new List<SugerenciaCupoDto>() {new SugerenciaCupoDto
@@ -637,7 +706,23 @@ namespace Molinos.DataAgro.Test.Managers
 
             servicioCriterioMock.SetupSequence(y => y.Calcular(It.IsAny<Criterio>())).Returns(4).Returns(1);
 
-            target.CrearSugerenciaCupo(It.IsAny<ConfiguracionCupo>());
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                          .Returns(new List<Comercial>() { new Comercial { ComercialId = 1, GrupoDeComprasId = 44, GrupoDeCompras = new GrupoDeCompras { Descripcion = "a" } } });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
+
+
+            repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
+            repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
+                .Returns(new SISA { EstadoCuit = 1 });
+            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AdministracionCupo, int>>>(), It.IsAny<Expression<Func<AdministracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<int>());
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AdministracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<AdministracionCupo>());
+
+            target.CrearSugerenciaCupo(It.IsAny<int>(), It.IsAny<ConfiguracionCupo>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             repositorioMock.Verify(x => x.AgregarTodos(It.Is<List<SugerenciaCupo>>(y => y.First().NegocioId == 1 && y.First().CantidadDeCupos == 2), null), Times.Once);
@@ -818,12 +903,73 @@ namespace Molinos.DataAgro.Test.Managers
         //}
 
         [Test]
+        public void GenerarSolicitudExtraordinariaTest()
+        {
+            var solicitud = new AdministracionCupo
+            {
+                CantidadCupo = 1,
+                CantidadFleteProcedencia = 0,
+                CentroId = 1,
+                ComercialCreadorId = 1,
+                ComercialId = 1,
+                EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                Excedente = true,
+                MaterialId = 3,
+                Observacion = "",
+                TipoAdministracionCupoId = (int)EnumTipoAdministracionCupo.Extraordinaria,
+                ProveedorId = 1,
+                ZonaId = 1,
+                Fecha = DateTime.Now.Date
+            };
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                          .Returns(new List<Comercial>() { new Comercial { ComercialId = 1, GrupoDeComprasId = 44, GrupoDeCompras = new GrupoDeCompras { Descripcion = "a" } } });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>())).Returns(1);
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                         .Returns(new List<ZonaCupo>() { new ZonaCupo { Id = 1, Descripcion = "a" } });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                        .Returns(new List<Cupo>() { new Cupo { Centro = new Centro { CodigoSap = "" } } });
+            repositorioMock.Setup(y => y.Obtener<Centro>(It.IsAny<int>()))
+                .Returns(new Centro { CodigoSap = "" });
+            //repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+            //          .Returns(new List<Material>() { new Material { Codigo = "" } });
+            crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>())).Returns(new List<string> { });
+            repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
+               .Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
+            repositorioMock.Setup(y => y.Obtener<ConfiguracionCupo>(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>()))
+                .Returns(new ConfiguracionCupo { LiberarCupera = true, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<Expression<Func<ConfiguracionCupo, int>>>())).Returns(90);
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<ConfiguracionCupo>() { new ConfiguracionCupo { LiberarCupera = true, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 } });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, ConfiguracionCupoDto>>>(), It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<ConfiguracionCupoDto>() { new ConfiguracionCupoDto { LiberarCupera = true, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 } });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<LimiteCupo, ConfiguracionCupoDto>>>(), It.IsAny<Expression<Func<LimiteCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+               .Returns(new List<ConfiguracionCupoDto>());
+
+            repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<Expression<Func<Proveedor, bool>>>()))
+              .Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
+                .Returns(new SISA { EstadoCuit = 1 });
+            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
+
+            var resultado = target.GenerarSolicitudExtraordinaria(solicitud);
+
+            Assert.IsNotNull(resultado);
+            Assert.AreEqual(resultado.HayError, true);
+            Assert.AreEqual(resultado.Errores.Count(), 1);
+            //repositorioMock.Verify(x => x.Agregar(It.IsAny<AdministracionCupo>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
+        [Test]
         public void ActualizarCumplimientoCuposTest()
         {
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                .Returns(new List<Cupo>() { new Cupo { Id = 1, CupoSap = "1", FechaIngreso = DateTime.Now.Date } });
 
-            cumplimientoCuposAgent.Setup(x => x.Ejecutar(It.IsAny<List<string>>(),It.IsAny<DateTime>()))
+            cumplimientoCuposAgent.Setup(x => x.Ejecutar(It.IsAny<List<string>>(), It.IsAny<DateTime>()))
                 .Returns(new List<CumplimientoCupoDto> { new CumplimientoCupoDto { Codigo = "1", Cumplimiento = true } });
 
             target.ActualizarCumplimientoCupos(It.IsAny<DateTime>());
