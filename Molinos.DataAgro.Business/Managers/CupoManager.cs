@@ -1292,7 +1292,7 @@ namespace Molinos.DataAgro.Business.Managers
             var warrant = cdWarrant.ConsultarContratoWarrant(formula.NegociosDesde, formula.NegociosHasta);
             foreach (var c in contratos)
             {
-                var item = warrant.Where(x => x.ContratoSAP == c.ContratoSAP).SingleOrDefault();
+                var item = warrant.Where(x => x.ContratoSAP == c.ContratoSAP).FirstOrDefault();
                 if (item != null)
                 {
                     c.CDWarrant = true;
