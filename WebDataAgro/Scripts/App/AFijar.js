@@ -5192,7 +5192,7 @@ function ValidarComisionEnCentro() {
 
 function BorrarComisionSiEsAcopio() {
     $("#PorcentajeDescuentoAFijarId").val(0);
-    $("#porcentajeComision").data("kendoNumericTextBox").value(0);
+    //$("#porcentajeComision").data("kendoNumericTextBox").value(0);
     ActualizarAperturas();
     var total = CalcularPrecioTotalApertura();
     InsertarAperturasViewModel(total);

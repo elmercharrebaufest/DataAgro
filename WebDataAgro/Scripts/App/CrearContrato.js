@@ -5887,7 +5887,7 @@ function ValidarComisionEnCentro() {
     return false;
 }
 function BorrarComisionSiEsAcopio() {
-    $("#porcentajeComision").data("kendoNumericTextBox").value(0);
+    //$("#porcentajeComision").data("kendoNumericTextBox").value(0);
     if ($("#material").val() === "4" || $("#material").val() === "5") {
         $("#PorcentajeDescuentoId").val("");
         for (var i = 0; i < viewModel.Descuentos.length; i++) {
