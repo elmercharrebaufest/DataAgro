@@ -166,6 +166,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         EnvioMailNegociosAnulaYReemplaza = 346,
         [Display(ResourceType = typeof(Text), Name = "AsociarNegocio")]
         AsociarNegocio = 347,
+        [Display(ResourceType = typeof(Text), Name = "ImporteSustentableEspecial")]
+        ImporteSustentableEspecial = 348,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

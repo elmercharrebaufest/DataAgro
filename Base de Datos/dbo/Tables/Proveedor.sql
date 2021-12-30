@@ -46,6 +46,8 @@
     [PlanCanje] BIT NULL, 
     [Deshabilitado] BIT NULL DEFAULT 0, 
     [Alias] VARCHAR(100) NULL, 
+    [ComisionistaId] INT NULL, 
+    [CuposConRiesgo] BIT NULL DEFAULT 0, 
     CONSTRAINT [FK_Contacto_AreaInfluencia] FOREIGN KEY ([AreaInfluenciaId]) REFERENCES [dbo].[AreaInfluencia] ([AreaInfluenciaId]),
     CONSTRAINT [FK_Contacto_Estado] FOREIGN KEY ([EstadoId]) REFERENCES [dbo].[Estado] ([EstadoId]),
     CONSTRAINT [FK_Contacto_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [dbo].[Localidad] ([LocalidadId]),
@@ -53,6 +55,7 @@
     CONSTRAINT [FK_Contacto_TipoTelefono] FOREIGN KEY ([TipoTelefono1Id]) REFERENCES [dbo].[TipoTelefono] ([TipoTelefonoId]),
     CONSTRAINT [FK_Contacto_TipoTelefono1] FOREIGN KEY ([TipoTelefono2Id]) REFERENCES [dbo].[TipoTelefono] ([TipoTelefonoId]),
     CONSTRAINT [FK_Contacto_TipoTelefono2] FOREIGN KEY ([TipoTelefono3Id]) REFERENCES [dbo].[TipoTelefono] ([TipoTelefonoId]),
-    CONSTRAINT [FK_Proveedor_TipoTelefono] FOREIGN KEY ([TipoTelefono4Id]) REFERENCES [dbo].[TipoTelefono] ([TipoTelefonoId])
+    CONSTRAINT [FK_Proveedor_TipoTelefono] FOREIGN KEY ([TipoTelefono4Id]) REFERENCES [dbo].[TipoTelefono] ([TipoTelefonoId]),
+    CONSTRAINT [FK_Comisionista_Proveedor] FOREIGN KEY ([ComisionistaId]) REFERENCES [dbo].[Proveedor] ([ProveedorId])
 );
 

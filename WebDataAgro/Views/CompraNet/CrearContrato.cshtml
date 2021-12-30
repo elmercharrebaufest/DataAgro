@@ -113,7 +113,7 @@
             <div class="col-md-4 col-sm-5">
                 <input type="text" class="k-textbox" style="width:100%" id="contratoCondicional" />
                 <input type="hidden" id="contratoCondicionalId" />
-            </div>
+            </div>            
         </div>
         <input type="hidden" id="estado" />
     </div>
@@ -788,6 +788,18 @@
                         <img id="errfechaHastaSustentableId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-sm-2" id="operaComisionistaDiv">
+                <label class="" style="width:120px">Opera a través de Comisionista</label>
+                <input id="comisionistaCheckId" disabled class="campo-input-input" data-bind="checked:Parametros.comisionistaCheckId, disabled: isControlDisabled" type="checkbox" onclick="EsComisionista(null)" />
+                <img id="errcondicionalId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+            <div class="col-md-3 col-sm-9" id="ocultarComisionista">
+                <input id="razonSocialComisionista" class="k-input contratoinput disabled" disabled type="text" data-bind="value: Parametros.razonSocialComisionista" maxlength="10" />
+                <input id="comisionistaId" hidden />
+                <img id="errcontVendedorId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
         <div class="row noAcuerdo">

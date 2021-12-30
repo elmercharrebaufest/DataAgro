@@ -4,6 +4,7 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
+using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using static WebDataAgro.MvcApplication;
@@ -14,15 +15,18 @@ namespace WebDataAgro.Controllers
     public class DiferencialController : Controller
     {
         private readonly IDiferencialManager mobjDiferencialManager;
+        private ITipoNegocioManager tipoNegocioManager;
 
-        public DiferencialController(IDiferencialManager oDiferencialManager)
+        public DiferencialController(IDiferencialManager oDiferencialManager, ITipoNegocioManager tipoNegocioManager)
         {
             mobjDiferencialManager = oDiferencialManager;
+            this.tipoNegocioManager = tipoNegocioManager;
         }
         [Autorizacion(PermisosDataAgro.ConfiguracionDiferencial)]
         public ActionResult Index()
         {
             var model = mobjDiferencialManager.TraerDiferencial();
+            
             model = model ?? new DiferencialDto { };
             return View(model);
         }
@@ -34,7 +38,8 @@ namespace WebDataAgro.Controllers
             {
                 DiferencialDefault = diferencialDto.DiferencialDefault,
                 Fecha = DateTime.Now,
-                ComercialId = GlobalVariables.ComercialId
+                ComercialId = GlobalVariables.ComercialId,
+                TipoNegocioId = diferencialDto.TipoNegocioId
             };
             var res = mobjDiferencialManager.GrabarDiferencial(diferencial);
             return AbmDiferencialPartial(res);
@@ -46,7 +51,15 @@ namespace WebDataAgro.Controllers
                var model = mobjDiferencialManager.TraerDiferencial();
                 model = model ?? new DiferencialDto { };
                 model.Resultado = res;
-                return PartialView("_AbmDiferencial", model);
+            var tipos = tipoNegocioManager.TraerTodoTipoNegocio().Where(x => x.TipoNegocioId == 1 || x.TipoNegocioId == 2).ToList();
+            ViewBag.TipoNegocioList = tipos.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.TipoNegocioId.ToString(),
+                        Selected = false
+                    });
+            return PartialView("_AbmDiferencial", model);
            
 
         }

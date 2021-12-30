@@ -528,12 +528,17 @@ function recargarGrilla() {
 
 function AutoRecargarSolicitudes() {
     setInterval(function () {
-        if (document.getElementById('checkRecarga').checked == true) {
+        if ($('#checkRecarga').is(":checked") == true) {
             recargarGrilla();
             $("#panel").html(MSExecuteURLOnServer('/AdministracionCupo/PartialPanel'));
         }
     }, 30000);
 
+}
+
+function Recargar() {
+    recargarGrilla();
+    $("#panel").html(MSExecuteURLOnServer('/AdministracionCupo/PartialPanel'));
 }
 
 function SeleccionarElementos() {

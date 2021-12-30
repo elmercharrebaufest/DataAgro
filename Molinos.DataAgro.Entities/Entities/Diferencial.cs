@@ -13,8 +13,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public int DiferencialDefault { get; set; } 
         public DateTime Fecha { get; set; } // Fecha
         public int? ComercialId { get; set; } // ComercialId
+        public int TipoNegocioId { get; set; } 
         [ForeignKey("ComercialId")]
         public virtual Comercial Comercial { get; set; } // ComercialId
+
+        [ForeignKey("TipoNegocioId")]
+        public virtual TipoNegocio TipoNegocio { get; set; } 
     }
 }
 

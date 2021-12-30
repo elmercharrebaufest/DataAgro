@@ -18,6 +18,7 @@
     [RedespachoMaximoARP] INT NULL DEFAULT 1000, 
     [ToleranciaPaseMin] INT NULL DEFAULT 10, 
     [ToleranciaPaseMax] INT NULL DEFAULT 10, 
+    [ImporteSustentableEspecial] DECIMAL(11, 2) NULL DEFAULT 20, 
 
     [AlgoritmoKilosMinimosParaSugerencia] INT NOT NULL DEFAULT 20000, 
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),

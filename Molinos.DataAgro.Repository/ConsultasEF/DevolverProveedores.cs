@@ -46,7 +46,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 PlanCanje = provs.Key.PlanCanje,
                                 Deshabilitar = false,
                                 Color = "",
-                                Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")"
+                                Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")",
+                                ComisionistaId = provs.Key.ComisionistaId
                             };
             var lista = DevolverEstadoSisa(contexto, resultado.ToList(), corredor);
             return lista.Distinct().Take(15).ToList();

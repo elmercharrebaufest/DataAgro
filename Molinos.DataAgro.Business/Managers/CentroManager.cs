@@ -46,7 +46,9 @@ namespace Molinos.DataAgro.Business
                     LocalidadId = x.LocalidadId,
                     CodigoPostal = x.CodigoPostal,
                     Direccion = x.Direccion,
-                    Comision = x.Comision
+                    Comision = x.Comision,
+                    CargaNegocios = x.CargaNegocios,
+                    CargaCupos = x.CargaCupos,
                 }, null, 0, "Descripcion")
             };
         }
@@ -64,7 +66,9 @@ namespace Molinos.DataAgro.Business
                 LocalidadId = x.LocalidadId,
                 CodigoPostal = x.CodigoPostal,
                 Direccion = x.Direccion,
-                Comision = x.Comision
+                Comision = x.Comision,
+                CargaNegocios = x.CargaNegocios,
+                CargaCupos = x.CargaCupos,
             }) ?? new CentroDto();
         }
 
@@ -90,6 +94,8 @@ namespace Molinos.DataAgro.Business
                 oCentroSave.Direccion = oCentro.Direccion;
                 oCentroSave.CodigoPostal = oCentro.CodigoPostal;
                 oCentroSave.Comision = oCentro.Comision;
+                oCentroSave.CargaNegocios = oCentro.CargaNegocios;
+                oCentroSave.CargaCupos = oCentro.CargaCupos;
             }
             else
             {

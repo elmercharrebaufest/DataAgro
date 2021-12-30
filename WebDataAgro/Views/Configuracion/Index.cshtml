@@ -79,9 +79,17 @@
                     @Html.TextBoxFor(m => m.ImporteSustentable, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
                 <div class="col-md-2">
-                    <label>Apertura de Precio Porcentaje de Comisión Máximo</label>
+                    <label>Validación Sustentable Especial</label>
                 </div>
                 <div class="col-md-1">
+                    @Html.TextBoxFor(m => m.ImporteSustentableEspecial, new { @class = "CantidadDeDias number-input form-control", name = "ImporteSustentableEspecial", id = "ImporteSustentableEspecial" })
+                </div>
+            </div>
+            <div class="row-botones-material row padding">
+                <div class="col-md-2">
+                    <label>Apertura de Precio Porcentaje de Comisión Máximo</label>
+                </div>
+                <div class="col-md-1 col-md-offset-1">
                     @Html.TextBoxFor(m => m.ContratoAperturaPrecioPorcentajeDeComisionMaximo, new { @class = "number form-control" })
                 </div>
                 <div class="col-md-2">
@@ -90,13 +98,11 @@
                 <div class="col-md-1">
                     @Html.TextBoxFor(m => m.RedespachoMaximoUSDM, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
-            </div>
-            <div class="row-botones-material row padding">
 
                 <div class="col-md-2">
                     <label>Redespacho Minimo ARP</label>
                 </div>
-                <div class="col-md-1 col-md-offset-1">
+                <div class="col-md-1">
                     @Html.TextBoxFor(m => m.RedespachoMaximoARP, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
             </div>
@@ -113,8 +119,8 @@
                 <div class="col-md-1">
                     @Html.TextBoxFor(m => m.ToleranciaPaseMax, new { @class = "CantidadDeDias number-input form-control" })
                 </div>
-                
-                
+
+
             </div>
 
             <h4>Stop</h4>

@@ -399,6 +399,10 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
+            if (oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero) /*&& oParam.Pizarra != true*/)
+            {
+                oErrorMessages.Error("Descuentos", "El costo financiero no puede ser negativo");
+            }
 
             if (oParam.PagoDiferido == true && oParam.DiasPesificado != null)
             {
@@ -574,6 +578,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oFijacionDePrecio.ObligatoriedadCostoFinanciero.HasValue && !oFijacionDePrecio.ObligatoriedadCostoFinanciero.Value
                 ? null : oFijacionDePrecio.FechaCierta.HasValue ? oFijacionDePrecio.ObligatoriedadCostoFinanciero : null;
                 oFijacionDePrecioSave.TipoPosicionCBOTId = oFijacionDePrecio.TipoPosicionCBOTId;
+                oFijacionDePrecioSave.ProveedorComisionistaId = oFijacionDePrecio.ProveedorComisionistaId;
                 if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     oFijacionDePrecioSave.ObservacionTercero = oFijacionDePrecio.ObservacionTercero;
@@ -674,7 +679,7 @@ namespace Molinos.DataAgro.Business.Managers
                 tipoRangos.Add((int)EnumTipoRangoConfirmacionAutomatica.Reconfirmacion);
             }
             var rangos = repositorio.Listar<RangoConfirmacionAutomatica>(x =>
-           x.TipoNegocioId == 3 &&
+            (x.TipoNegocioId == (int)EnumTipoNegocioRangoConfirmacionAutomatica.Fijacion || x.TipoNegocioId == (int)EnumTipoNegocioRangoConfirmacionAutomatica.APrecioYFijacion) &&
            x.FechaDesde <= hoy &&
            x.FechaHasta >= hoy &&
            x.MaterialId == contrato.MaterialId &&

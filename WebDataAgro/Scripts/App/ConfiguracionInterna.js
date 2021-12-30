@@ -421,7 +421,7 @@ function LimpiarPrecioForm() {
     var hoy = new Date();
     var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
     $("#DesdeVigencia").val(stringDia + " " + "00:00");
-    $("#HastaVigencia").val(stringDia + " " + "23:59");
+    $("#HastaVigencia").val(stringDia + " " + "19:00");
     $("#DesdeEntrega").data("kendoDatePicker").value("");
     $("#HastaEntrega").data("kendoDatePicker").value("");
     $("#DesdeFijacion").data("kendoDatePicker").value("");
@@ -435,7 +435,7 @@ function LimpiarPagoForm() {
     var hoy = new Date();
     var stringDia = hoy.getDate().toString() + "/" + (hoy.getMonth() + 1).toString() + "/" + hoy.getFullYear().toString();
     $("#DesdeVigenciaPago").val(stringDia + " " + "00:00");
-    $("#HastaVigenciaPago").val(stringDia + " " + "23:59");
+    $("#HastaVigenciaPago").val(stringDia + " " + "19:00");
     LimpiarDiaDiferido();
 }
 function LimpiarPizarraForm() {

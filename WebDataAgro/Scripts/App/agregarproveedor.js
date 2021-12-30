@@ -21,6 +21,7 @@ var aEliminarGranos = [];
 var aEliminarGranosEstablecimiento = [];
 var aEliminarGranosAlmacenamiento = [];
 var aEliminarGranosAlmacenamientoGrano = [];
+var comisionista = null;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -267,6 +268,7 @@ function armarSelects(result) {
     $(".campo-segmentacion").append(htmlSegmentacion);
     $('#segmentacion').change(function () {
         CrearCorredor();
+        checkComisionista();
     });
     CrearCorredor();
 
@@ -2678,6 +2680,63 @@ function InicializarDatos() {
         AutocompleteProcedenciaAlmacenamiento();
         AutocompleteProcedenciaEstablecimiento();
     }
+
+
+    $("#buscadorProveedor").click(function () {
+        $("#buscadorProveedor").data("kendoAutoComplete").value("");
+        $("#Proveedor").val("");
+        $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
+    });
+
+    $("#buscadorProveedor").kendoAutoComplete({
+        template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
+            '<p class="#:data.Corredor# buscar-nomb #: data.Estado != "" ? \'k-state-disabled\': \'\' #"  style="color:#: #" value="#:data.RazonSocial#" >#: data.RazonSocial#(#: data.Cuit#)#if(data.Estado != null) {# ' +
+            ' #: data.Estado #    #}else{# #}# </p > ',
+        minLength: 3,
+        enforceMinLength: true,
+        dataTextField: "Filtro",
+        dataValueField: "Id",
+        autoWidth: true,
+        filter: "contains",
+        change: function () {
+            if ($("#buscadorProveedor").val().split('|').length > 1) {
+                $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
+            } else {
+                //$("#buscadorProveedor").val("");
+             //   comisionista = null;
+            }
+        },
+        select: function (e) {
+            if (e.dataItem.Deshabilitar) {
+                $("#buscadorProveedor").val("")
+                e.preventDefault();
+            } else {
+                //$("#Comisionista").val(e.dataItem.Id);
+                comisionista = e.dataItem.Id;
+            }
+
+        },
+        dataSource: {
+            severFiltering: true,
+            serverPaging: true,
+            transport: {
+                read: {
+                    type: 'post',
+                    dataType: 'json',
+                    url: "/Proveedor/BuscarProveedor"
+                },
+                parameterMap: function (data, type) {
+                    return { filtroProveedor: $('#buscadorProveedor').val(), segmentacionId: 16 };
+                }
+            }
+
+        },
+        filtering: function (e) {
+            if (!e.filter.value) {
+                e.preventDefault();
+            }
+        }
+    });
 }
 function AutocompleteProcedenciaEstablecimiento() {
     $("#localidad-establecimiento").click(function () {
@@ -2892,9 +2951,14 @@ function ObtenerDatos() {
     obj.basicos.Consignatario = $("#consignatario-compranet").is(":checked");
     obj.basicos.PlanCanje = $("#planCanje-compranet").is(":checked");
     obj.basicos.Comision = Number($("#comision-compranet").val().replace(',', '.'));
+    obj.basicos.CuposConRiesgo = $("#cupoConRiesgo-compranet").is(":checked");
 
     obj.basicos.comentario = $("#comentario").val();
 
+    if ($("#buscadorProveedor").val().length < 4) {        
+        comisionista = null;
+    }
+    obj.basicos.comisionista = comisionista; //comisionista
     obj.contacto.provincia = $("#provincia").val();
 
     obj.contacto.localidad = $("#localidad").val();
@@ -3405,5 +3469,16 @@ function mostrarConsignatarioProveedor() {
     else {
         $("#consignatarioProveedorDiv").show();
         $("#planCanjeProveedorDiv").show();
+    }
+}
+
+
+function checkComisionista() {
+    if ($('#segmentacion :selected').parent().attr('label') === "Comisionistas") {
+        $("#comisionistaDiv").hide();
+        comisionista = null;
+        $("#buscadorProveedor").val("");
+    } else {
+        $("#comisionistaDiv").show();
     }
 }

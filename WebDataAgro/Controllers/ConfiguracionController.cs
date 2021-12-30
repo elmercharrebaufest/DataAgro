@@ -45,6 +45,8 @@ namespace WebDataAgro.Controllers
                 ToleranciaPaseMax = conf != null ? conf.ToleranciaPaseMax : 0,
 
                 AlgoritmoKilosMinimosParaSugerencia = conf != null ? conf.AlgoritmoKilosMinimosParaSugerencia : 0,
+                ImporteSustentableEspecial = conf.ImporteSustentableEspecial,
+
             });
         }
         [HttpPost]
@@ -87,6 +89,8 @@ namespace WebDataAgro.Controllers
                 ToleranciaPaseMax = configuracion.ToleranciaPaseMax,
 
                 AlgoritmoKilosMinimosParaSugerencia = configuracion.AlgoritmoKilosMinimosParaSugerencia,
+                ImporteSustentableEspecial = configuracion.ImporteSustentableEspecial,
+
             };
             return entidad;
         }

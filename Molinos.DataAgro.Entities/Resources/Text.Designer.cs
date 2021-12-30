@@ -1249,6 +1249,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importe Sustentable Especial.
+        /// </summary>
+        public static string ImporteSustentableEspecial {
+            get {
+                return ResourceManager.GetString("ImporteSustentableEspecial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generar Informe Comercial.
         /// </summary>
         public static string Informe_Comercial {

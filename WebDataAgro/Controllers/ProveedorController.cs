@@ -164,6 +164,7 @@ namespace WebDataAgro.Controllers
         {
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var data = mobjProveedorManager.TraerProveedor(ProveedorId, GlobalVariables.IdActiveDirectory, equipo);
+
             return new JsonResult()
             {
                 Data = data,
@@ -336,6 +337,10 @@ namespace WebDataAgro.Controllers
             {
                 return Json(mobjProveedorManager.DevolverProveedoresConCorredor(filtroProveedor, filtro), JsonRequestBehavior.AllowGet);
             }
+        }
+        public JsonResult BuscarProveedor(string filtroProveedor, int? segmentacionId)
+        {
+            return Json(mobjProveedorManager.DevolverProveedoresCorredores(filtroProveedor, segmentacionId), JsonRequestBehavior.AllowGet);
         }
         public JsonResult BuscarLocalidades(string filtro)
         {

@@ -36,6 +36,7 @@ function InicializarEdit() {
             $("#establecimiento").click();
         }
     }
+    comisionista = basico[0].ComisionistaId;
 
 }
 
@@ -45,6 +46,10 @@ function armarBasico(basico) {
     $("#razonsocial").val(basico.RazonSocial);
     $("#Alias").val(basico.Alias);
     $("#segmentacion").val($('#segmentacion option').filter(function () { return $(this).html() == basico.Segmentacion; }).val());
+    $("#buscadorProveedor").val(basico.Comisionista);
+    if ($('#segmentacion :selected').parent().attr('label') === "Comisionistas") {
+        $("#comisionistaDiv").hide();
+    }
     $("#Operable-agregar").val(basico.Operable);
     if (basico.Estado === "Sin interés de operar") {
         $("#nocliente").attr("checked", true);
@@ -134,6 +139,9 @@ function armarBasico(basico) {
         $("#comision-compranet").val(basico.Comision);
     } else {
         $("#comision-compranet").val("");
+    }
+    if (basico.CuposConRiesgo) {
+        $("#cupoConRiesgo-compranet").prop("checked", true);
     }
 }
 

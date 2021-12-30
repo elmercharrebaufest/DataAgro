@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? HastaEntrega { get; set; }
 
         [ForeignKey("TipoNegocioId")]
-        public virtual TipoNegocio TipoNegocio { get; set; }
+        public virtual TipoNegocioRangoConfirmacionAutomatica TipoNegocio { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         [ForeignKey("MonedaId")]

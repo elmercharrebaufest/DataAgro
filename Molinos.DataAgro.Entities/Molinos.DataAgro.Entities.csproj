@@ -126,6 +126,7 @@
     <Compile Include="Common\Enums\EnumMeses.cs" />
     <Compile Include="Common\Enums\EnumClasificacionNegocio.cs" />
     <Compile Include="Common\Enums\EnumPerfil.cs" />
+    <Compile Include="Common\Enums\EnumNegocioTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="Common\Enums\InformeComercial.cs" />
     <Compile Include="Common\Enums\InformeEstado.cs" />
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
@@ -349,6 +350,7 @@
     <Compile Include="Entities\Camara.cs" />
     <Compile Include="Entities\ReportePagosDiferidos.cs" />
     <Compile Include="Entities\TipoPosicionCBOT.cs" />
+    <Compile Include="Entities\TipoNegocioRangoConfirmacionAutomatica.cs" />
     <Compile Include="Entities\TipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="Entities\CierreCupera.cs" />
     <Compile Include="Entities\MensajeCupo.cs" />

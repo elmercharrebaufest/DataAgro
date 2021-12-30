@@ -438,7 +438,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.CondicionalPosicion + "'" + ',' +
         "'" + dataItem.CondicionalPrecio + "'" + ',' +
         "'" + dataItem.CondicionalContratoSAP + "'" + ',' +
-        "'" + dataItem.MailVentaBoleto + "'" +
+        "'" + dataItem.MailVentaBoleto + "'" + ',' +
+        "'" + htmlEncode(dataItem.RazonSocialProveedorComisionista == null ? "" : dataItem.RazonSocialProveedorComisionista) + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -2153,7 +2154,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, descripcionOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
     Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
     Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional,
-    CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta) {
+    CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta, RazonsocialProveedorComisionista
+) {
     $("#modalVisualizar").modal('show');
 
     $("#contrato").text(contrato);
@@ -2737,6 +2739,12 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#visualizar_Condicional").text(CondicionalContratoSAP);
     } else {
         $("#visualizar_CondicionalDiv").hide();
+    }
+    if (RazonsocialProveedorComisionista != null && RazonsocialProveedorComisionista != "") {
+        $("#comisionistaProveedorDivVisualizar").show();
+        $("#visualizar_comisionistaProveedor").text(RazonsocialProveedorComisionista);
+    } else {
+        $("#comisionistaProveedorDivVisualizar").hide();
     }
 }
 

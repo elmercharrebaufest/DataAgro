@@ -25,7 +25,7 @@ CONSTRAINT [FK_RangoConfirmacionAutomatica_TipoRangoId] FOREIGN KEY ([TipoRangoI
 	CONSTRAINT [FK_Confirmacion_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]),
 	CONSTRAINT [FK_Confirmacion_Material] FOREIGN KEY ([MaterialId]) REFERENCES [Material]([MaterialId]),
 	CONSTRAINT [FK_Confirmacion_GrupoCompras] FOREIGN KEY ([ZonaId]) REFERENCES [GrupoDeCompras]([Id]),
-	CONSTRAINT [FK_Confirmacion_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId])
+	CONSTRAINT [FK_Confirmacion_TipoNegcioRangoConfirmacionAutomatica] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocioRangoConfirmacionAutomatica]([Id])
 
 );
 

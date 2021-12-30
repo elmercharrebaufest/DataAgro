@@ -235,6 +235,7 @@ campo-granos-almacenamiento button,
 .campo-destinatario button,
 .campo-operacion button,
 .campo-calificacion button,
+.campo-comisionista button,
 /*.campo-tiptelefono button,*/
 .campo-input-select {
     color: rgb(117, 117, 117);
@@ -1353,4 +1354,8 @@ button span img.multSelktrImg {
 ul p.buscar-nomb, #buscadorResultModalPendiente p.buscar-nomb {
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.k-icon.k-i-close {
+    display: none !important;
 }

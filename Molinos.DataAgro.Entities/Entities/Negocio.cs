@@ -134,10 +134,14 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public int? BoletoVentaId { get; set; }
         public string MailVentaBoleto { get; set; }
-        
+
+        public int? KgMinimo { get; set; }
+        public int? KgMaximo { get; set; }
 
         
         public string DescripcionOperacionAnterior { get; set; }
+
+        public int? ProveedorComisionistaId { get; set; }
 
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
@@ -208,6 +212,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual CondicionDePagoVenta CondicionDePagoPesificadoVenta { get; set; }
         [ForeignKey("BoletoVentaId")]
         public virtual BoletoVenta BoletoVenta { get; set; }
+
+        [ForeignKey("ProveedorComisionistaId")]
+        public virtual Proveedor ProveedorComisionista { get; set; } // ProveedorId
         public Negocio()
         {
             Cantidad = 0;

@@ -9,6 +9,8 @@
 	[CodigoPostal] VARCHAR(50) NULL, 
     [Direccion] VARCHAR(550) NULL, 
     [Comision] BIT NOT NULL DEFAULT 0, 
+    [CargaNegocios] BIT NOT NULL DEFAULT 1, 
+    [CargaCupos] BIT NOT NULL DEFAULT 1, 
     CONSTRAINT [FK_Centro_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [Localidad]([LocalidadId]),
 
 );

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net.Mail;
+using System.Web.Mvc;
 
 namespace Molinos.DataAgro.Business
 {
@@ -21,8 +22,10 @@ namespace Molinos.DataAgro.Business
         private IMailManager mailManager;
         private IReportesManager mobjReportesManager;
         private IHedgeManager hedgeManager;
+    
 
-        public DiferencialManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IReportesManager mobjReportesManager, IHedgeManager hedgeManager)
+        public DiferencialManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, 
+            IReportesManager mobjReportesManager, IHedgeManager hedgeManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -39,12 +42,35 @@ namespace Molinos.DataAgro.Business
                                               Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                                               DiferencialDefault = x.DiferencialDefault,
                                               Id = x.Id,
-                                              Fecha = x.Fecha
+                                              Fecha = x.Fecha,
+                                              TipoNegocioDescripcion = x.TipoNegocio.Descripcion,
+                                              TipoNegocioId = (int)x.TipoNegocioId
+                                          });
+            if (diferencial != null)
+            {
+                diferencial.historialDiferencial = TraerHistorial();
+            }          
+            
+            return diferencial;
+        }
+
+        public DiferencialDto TraerDiferencial(int tipoNegocioId)
+        {
+            var diferencial = repositorio.ObtenerMayor<Diferencial, int, DiferencialDto>(x => x.TipoNegocioId == tipoNegocioId, x => x.Id, x =>
+                                          new DiferencialDto
+                                          {
+                                              Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                                              DiferencialDefault = x.DiferencialDefault,
+                                              Id = x.Id,
+                                              Fecha = x.Fecha,
+                                              TipoNegocioDescripcion = x.TipoNegocio.Descripcion,
+                                              TipoNegocioId = (int)x.TipoNegocioId
                                           });
             if (diferencial != null)
             {
                 diferencial.historialDiferencial = TraerHistorial();
             }
+
             return diferencial;
         }
 
@@ -56,7 +82,7 @@ namespace Molinos.DataAgro.Business
                 resultado.Errores.Add(new ErrorMessage(400, "El diferencial no puede ser cero"));
                 return resultado;
             }
-            var anterior = repositorio.ObtenerMayor<Diferencial, int>(x => true, x => x.Id);
+            var anterior = repositorio.ObtenerMayor<Diferencial, int>(x => x.TipoNegocioId == diferencial.TipoNegocioId, x => x.Id);
             if (anterior != null)
             {
                 if (diferencial.DiferencialDefault == anterior.DiferencialDefault)
@@ -86,7 +112,9 @@ namespace Molinos.DataAgro.Business
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                 DiferencialDefault = x.DiferencialDefault,
                 Id = x.Id,
-                Fecha = x.Fecha
+                Fecha = x.Fecha,
+                TipoNegocioDescripcion = x.TipoNegocio.Descripcion,
+                TipoNegocioId = x.TipoNegocioId
             }, null, ultimosN, "Fecha", Entities.Helpers.DirOrden.Desc);
         }
 
@@ -97,13 +125,20 @@ namespace Molinos.DataAgro.Business
                 if (hedgeManager.Dia() != null)
                 {
                     logger.Debug("hedgeManager.Dia() "+ hedgeManager.Dia().ToJson());
-                    var cantidad = repositorio.Listar<Contrato, double>(x => x.Cantidad,
+                    var cantidadAFijar = repositorio.Listar<Contrato, double>(x => x.Cantidad,
                         x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(DateTime.Now)
                         && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
                         && x.FinDelDia == null).Sum();
-                    logger.Debug("cantidad "+ cantidad);
 
-                    if (cantidad > this.TraerDiferencial().DiferencialDefault)
+                    var cantidadAPrecio = repositorio.Listar<Contrato, double>(x => x.Cantidad,
+                        x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(DateTime.Now)
+                        && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)
+                        && x.FinDelDia == null).Sum();
+
+                    logger.Debug("cantidadAFijar "+ cantidadAFijar);
+                    logger.Debug("cantidadAPrecio " + cantidadAPrecio);
+
+                    if (cantidadAFijar > this.TraerDiferencial(1).DiferencialDefault || cantidadAPrecio > this.TraerDiferencial(2).DiferencialDefault)
                     {
                         logger.Debug("envia mail " );
                         var cuerpo = hedgeManager.GenerarCuerpoMail("");

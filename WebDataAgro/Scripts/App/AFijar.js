@@ -33,6 +33,7 @@ $(document).ready(function () {
     $("#precioTotalApertura").data("kendoNumericTextBox").value("");
     $(".precioMonedaAFijarIdDiv").show();
     OcultarCamposAgente();
+   
 });
 
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
@@ -318,6 +319,7 @@ function InicializarElementos() {
                     }
 
                     SeleccionAutomaticaBolsa();
+                   
                 }
                 //if ($("#tipoId").val() == "6") {
                 //    $("#dolarizadoExpressDiv").hide();
@@ -328,7 +330,9 @@ function InicializarElementos() {
                 } else {
                     BorrarComisionSiEsAcopio();
                 }
-
+                if ($("#buscadorProveedor").val() != "") {
+                    EsComisionista(compraNet);
+                }
                 //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 //InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
@@ -1573,8 +1577,29 @@ function InicializarElementos() {
             } else {
                 $("#cantidadTooltip").tooltip('destroy');
             }
+            CalcularMaximo();
         }
     });
+
+    $("#minimoId").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        value: 30000,
+        spinners: false,
+        change: function () {           
+        }
+    });
+
+    $("#maximaId").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        change: function () {     
+            
+        }
+    });
+    $("#minimoId").data("kendoNumericTextBox").enable(false);
+    $("#maximaId").data("kendoNumericTextBox").enable(false);
 
     $("#cargarCantidadCamiones").change(function () {
         if ($("#cargarCantidadCamiones").is(':checked')) {
@@ -2583,7 +2608,7 @@ function InicializarElementos() {
     $("#CapacidadProductivaPendienteBtn").click(function () {
         AbrirModalCapacidadProductivaPendiente();
     });
-
+   
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -4115,6 +4140,13 @@ function CargarDatosEditar(contrato, hijo) {
         $("#bolsaCartaId").data("kendoDropDownList").value(contrato.BolsaId);
     }
 
+    if (contrato.Id > 0) {
+        $("#maximaId").data("kendoNumericTextBox").value(contrato.KgMaximo);
+    } else {
+        CalcularMaximo();
+    }
+   
+
     if (contrato.CondicionalContratoId != null && contrato.CondicionalContratoId > 0) {        
         $("#buscadorProveedor").prop('disabled', true);
         $("#buscadorCorredor").prop('disabled', true);
@@ -4139,6 +4171,13 @@ function CargarDatosEditar(contrato, hijo) {
         var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: contrato.ProveedorId });
         CargarAutomaticamenteLaComision(compraNet);
     }
+  
+    if (contrato.ProveedorComisionistaId != null) {
+        $("#comisionistaCheckId").prop("checked", true);
+        EsComisionista(null);
+    } else {
+        $("#comisionistaCheckId").prop("checked", false);
+    } 
 }
 
 function LimpiarApertura() {
@@ -5310,6 +5349,39 @@ function CargarAutomaticamenteLaComision(compraNet) {
     if (!ValidarComisionEnCentro()) {
         BorrarComisionSiEsAcopio();
     }
+}
+
+function CalcularMaximo() {
+    if ($("#cantidadId").val() > 0) {
+        var cantidadMaxima = 30 * $("#cantidadId").val() / 100;
+        $("#maximaId").data("kendoNumericTextBox").value(cantidadMaxima);
+    } else {
+        $("#maximaId").val("");
+    }
+}
+
+function ObtenerDatosProveedor() {
+    var cuitAux = $("#buscadorProveedor").val().split('(');
+    if (cuitAux[0] != "") {
+        var cuit = cuitAux[1].split(')');
+        var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+        return compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
+    }
+
+    return null;
+}
+
+function EsComisionista(compranet) {
+    var datos = compranet != null ? compranet : ObtenerDatosProveedor();
+    if (datos != null && $("#comisionistaCheckId").is(":checked") && datos.RazonSocialComisionista != "") {
+        $("#ocultarComisionista").show();
+        $("#comisionistaId").val(datos.ComisionistaId);
+        $("#razonSocialComisionista").val(datos.RazonSocialComisionista);
+    } else {
+        $("#ocultarComisionista").hide();
+        $("#comisionistaId").val();
+    }
+
 }
 
 

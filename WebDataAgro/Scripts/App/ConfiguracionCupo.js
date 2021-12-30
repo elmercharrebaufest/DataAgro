@@ -59,6 +59,26 @@ function InicializarElementos() {
         value: 0
     });
 
+    $("#totalConsumidos").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0,
+        value: 0
+    });
+
+    $("#totalDisponibles").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0,
+        value: 0
+    });
+
     $("#CantidadAlgoritmo").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
@@ -508,6 +528,8 @@ function CargarConfiguracion(id, mostrarFecha) {
         min: 0,
         step: 0
     });
+    $('#totalConsumidos').data("kendoNumericTextBox").value(configuracion.CuposConsumidos);
+    $('#totalDisponibles').data("kendoNumericTextBox").value(configuracion.CuposDisponibles);
 }
 
 function EliminarTablaConfiguracion(idConfiguracion) {

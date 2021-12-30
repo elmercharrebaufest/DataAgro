@@ -78,7 +78,7 @@ namespace Molinos.DataAgro.Business.Managers
                     CupoResult result = new CupoResult();
                     Cupo cupo = new Cupo
                     {
-                        ProveedorId = solicitud.ProveedorId.Value,//---Agentecompra no tiene proveedor
+                        ProveedorId = solicitud.SugerenciaCupo.Negocio != null && solicitud.SugerenciaCupo.Negocio.ProveedorComisionistaId != null ? solicitud.SugerenciaCupo.Negocio.ProveedorComisionistaId.Value : solicitud.ProveedorId.Value,
                         CentroId = solicitud.CentroId,
                         MaterialId = solicitud.MaterialId,
                         FechaIngreso = solicitud.Fecha,

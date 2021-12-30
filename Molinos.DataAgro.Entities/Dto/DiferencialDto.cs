@@ -11,6 +11,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public List<DiferencialDto> historialDiferencial { get; set; }
         public Resultado Resultado { get; set; }
+        public string TipoNegocioDescripcion { get; set; }
+        public int TipoNegocioId { get; set; }
     }
 }
 

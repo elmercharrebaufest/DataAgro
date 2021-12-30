@@ -57,6 +57,8 @@ function CrearResultadosDataSource(datos) {
                     LocalidadId: { type: "string", editable: false },
                     Direccion: { type: "string", editable: false },
                     CodigoPostal: { type: "string", editable: false },
+                    CargaNegocios: { type: "boolean", editable: false },
+                    CargaCupos: { type: "boolean", editable: false },
                 }
             }
         },
@@ -74,6 +76,8 @@ function CreateGridCentro() {
             { field: "Acopio", title: "Acopio", filterable: false, template: "# if(Acopio){#Si#}else{##}#" },
             { field: "ValidaRedespacho", title: "ValidaRedespacho", filterable: false, template: "# if(ValidaRedespacho){#Si#}else{##}#" },
             { field: "Comision", title: "Comision", filterable: false, template: "# if(Comision){#Si#}else{##}#" },
+            { field: "CargaNegocios", title: "Carga Negocios", filterable: false, template: "# if(CargaNegocios){#Si#}else{##}#" },
+            { field: "CargaCupos", title: "Carga Cupos", filterable: false, template: "# if(CargaCupos){#Si#}else{##}#" },
         ],
 
         sortable: true,
@@ -211,6 +215,8 @@ function UpdateViewModel(model) {
         "CodigoPostal": model.Centro.CodigoPostal,
         "Direccion": model.Centro.Direccion,
         "Comision": model.Centro.Comision,
+        "CargaNegocios": model.Centro.CargaNegocios,
+        "CargaCupos": model.Centro.CargaCupos,
     };
 
     viewModel.set("Centro", centro);
@@ -357,6 +363,8 @@ function Grabar() {
         "CodigoPostal": viewModel.get("Centro.CodigoPostal"),
         "Direccion": viewModel.get("Centro.Direccion"),
         "Comision": viewModel.get("Centro.Comision"),
+        "CargaNegocios": viewModel.get("Centro.CargaNegocios"),
+        "CargaCupos": viewModel.get("Centro.CargaCupos"),
     };
 
     var result = MSExecuteOnServer('/Centro/Grabar', datos);

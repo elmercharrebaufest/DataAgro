@@ -46,6 +46,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 from pd in pds.DefaultIfEmpty()
                 join pc in contexto.Set<ProveedorCondicion>() on prove.ProveedorId equals pc.Proveedor.ProveedorId into pcs
                 from pc in pcs.DefaultIfEmpty()
+                    //join pcom in contexto.Set<Proveedor>() on prove.ComisionistaId equals pcom.ProveedorId into pcoms
+                    //from pcom in pcoms.DefaultIfEmpty()
                 where prove.ProveedorId == proveedorId
                 orderby pco.NroItem ascending
                 select new BasicoProveedor()
@@ -97,8 +99,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Consignatario = prove.Consignatario,
                     Comision = prove.ComisionPorcentaje,
                     PlanCanje = prove.PlanCanje,
-                    Deshabilitado = prove.Deshabilitado
-                    
+                    Comisionista = (prove.Comisionista == null) ? null : prove.Comisionista.RazonSocial,//(prove.ComisionistaId == null) ? "" : "Opera con comisionista.",
+                    ComisionistaId = prove.ComisionistaId,
+                    Deshabilitado = prove.Deshabilitado,
+                    CuposConRiesgo = prove.CuposConRiesgo
 
                 };
 

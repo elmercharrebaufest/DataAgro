@@ -46,6 +46,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Virtual { get; set; }
         public decimal KgContratoTotal { get; set; }
         public bool Pase { get; set; }
+
+        public int? ProveedorComisionistaId { get; set; }
     }
 }
 

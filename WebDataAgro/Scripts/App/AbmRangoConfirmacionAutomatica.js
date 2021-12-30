@@ -485,7 +485,7 @@ function Eliminar() {
     Confirma('¿ Confirma la eliminación de este registro ?',
         function (dialogItself) {
             EjecutarEliminar();
-            dialogItself.close();
+            this.close();
         });
 }
 

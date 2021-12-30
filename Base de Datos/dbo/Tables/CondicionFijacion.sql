@@ -3,6 +3,7 @@
     [Descripcion]         VARCHAR(50) NOT NULL,
     [CodigoSap]           VARCHAR(20) NOT NULL
 
-    CONSTRAINT [PK_CondicionFijacion] PRIMARY KEY CLUSTERED ([Id] ASC)
+    CONSTRAINT [PK_CondicionFijacion] PRIMARY KEY CLUSTERED ([Id] ASC), 
+    [Habilitado] BIT NOT NULL DEFAULT 1
 );
 

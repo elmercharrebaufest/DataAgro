@@ -72,7 +72,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"Acopio\":false,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":[{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"Acopio\":false,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -112,7 +112,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":1,\"Descripcion\":\"A\",\"CodigoSap\":\"A\",\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -132,7 +132,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -160,7 +160,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Centro\":{\"Id\":0,\"Descripcion\":null,\"CodigoSap\":null,\"Acopio\":false,\"ValidaRedespacho\":false,\"LocalidadId\":null,\"Localidad\":null,\"CodigoPostal\":null,\"Direccion\":null,\"Comision\":false,\"CargaNegocios\":false,\"CargaCupos\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

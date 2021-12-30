@@ -191,13 +191,13 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BuscarProveedorTest()
         {
-            proveedorManagerMock.Setup(x => x.DevolverProveedoresCorredores(It.IsAny<string>())).Returns(new List<BusquedaHome>() { new BusquedaHome {Id=1,Cuit="1",RazonSocial="a" } });
+            proveedorManagerMock.Setup(x => x.DevolverProveedoresCorredores(It.IsAny<string>(), null)).Returns(new List<BusquedaHome>() { new BusquedaHome {Id=1,Cuit="1",RazonSocial="a" } });
             var result = target.BuscarProveedor("a");
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Cuit\":\"1\",\"Corredor\":null,\"Filtro\":null,\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"a\",\"Cuit\":\"1\",\"Corredor\":null,\"Filtro\":null,\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         //[Test]

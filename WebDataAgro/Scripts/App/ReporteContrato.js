@@ -309,6 +309,8 @@ function CreateGridInformeCompraNet() {
             { field: "CondicionalFechaFormateado", title: "Fecha", type: "date", format: _DefaultDateTemplate, width: 80 },
             { field: "CondicionalPosicion", title: "Posicion", type: "string", width: 80 },
             { field: "CondicionalContratoSAP", title: "Condicional<br> Contrato", type: "string", width: 80 },
+
+            { field: "RazonSocialProveedorComisionista", title: "Comisionista", type: "string", width: 300 },
         ],
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];

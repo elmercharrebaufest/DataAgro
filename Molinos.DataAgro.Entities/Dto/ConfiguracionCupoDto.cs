@@ -27,5 +27,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MaterialCodigoSap { get; set; }
         public string Color { get; set; }
         public bool Bloquear { get; set; }
+        public int CuposDisponibles { get; set; }
     }
 }

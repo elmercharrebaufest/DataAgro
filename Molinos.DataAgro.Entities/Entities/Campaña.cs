@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
@@ -7,6 +8,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [Key]
         public int CampañaId { get; set; }
         public string Descripcion { get; set; }
+        public DateTime? Hasta { get; set; }
     }
 }
    

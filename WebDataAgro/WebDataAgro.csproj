@@ -409,9 +409,12 @@
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
     <Content Include="Content\diffPlex.css" />
+    <Content Include="Content\Images\Circular.PNG" />
     <Content Include="Content\Images\logo-sharepoint.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\molinosCircular.PNG" />
+    <Content Include="Content\Images\storeCircular.PNG" />
     <Content Include="Content\logDataAgro.css" />
     <Content Include="Content\ReporteEvolucionFijacion.css" />
     <Content Include="Content\Sugerencia.css" />

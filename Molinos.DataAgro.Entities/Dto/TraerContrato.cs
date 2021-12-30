@@ -251,6 +251,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CondicionalContratoSAP { get; set; }
         public int? BoletoVentaId { get; set; }
         public string MailVentaBoleto { get; set; }
+        public int KgMinimo { get; set; }
+        public int KgMaximo { get; set; }
+        public int? ProveedorComisionistaId { get; set; }
+        public string RazonSocialProveedorComisionista { get; set; }
     }
 
     public class StoredPorContratoResult

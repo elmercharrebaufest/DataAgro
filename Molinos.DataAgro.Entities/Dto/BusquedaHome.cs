@@ -16,5 +16,8 @@
         public bool? PlanCanje { get; set; }
         public bool Deshabilitar { get; set; }
         public string Color { get; set; }
+
+        public int? ComisionistaId { get; set; }
+        public bool? CuposConRiesgo { get; set; }
     }
 }

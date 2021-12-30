@@ -238,6 +238,8 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#fijacionPaseDiv").hide();
         $("#tipoPosicionCBOTId").val("");
     }
+    $("#comisionistaId").val(afijar.ProveedorComisionistaId);
+
 }
 
 function ArmarAperturaDesdeAFijar(afijar) {
@@ -2749,10 +2751,9 @@ function ClickEnPizarra() {
         $("#pesificadoDiasId").data("kendoNumericTextBox").enable(true);
         $("#diasDiferidoId").prop("checked", false);
         $("#pesificadoId").prop("checked", false);
-        //if (fijacionVirtual != true) {
-        //    $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
-        //    $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
-        //}
+        if (fijacionVirtual == true) {
+            $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        }
 
         if ($("#tipoId").val() == 3) {
             $("#pagoDiferidoFijacionDiv").addClass("inline-fijacion");
@@ -4892,8 +4893,9 @@ function OcultarCamposSiEsVirtual() {
         $("#dolarizadoFechaId").data("kendoDatePicker").value("");
         $("#chequeElectronicoId").hide();
         $("#chequeElectronico").prop("checked", false);
-        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
-        Cancelar();
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(0);
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").readonly();
         InsertarAperturasViewModel(CalcularPrecioTotalApertura());
     } else {
         //$("#pizarraDiv").hide();
@@ -4908,6 +4910,8 @@ function OcultarCamposSiEsVirtual() {
         //$("#pizarraDiv").show();
         //ClickEnPizarra();
         //$(".visualizar-canje").hide();
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+        $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").readonly(false);
     }
 }
 function EsVirtual() {

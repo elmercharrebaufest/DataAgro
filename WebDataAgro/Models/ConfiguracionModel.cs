@@ -40,5 +40,6 @@ namespace WebDataAgro.Models
 
         public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
 
+        public decimal ImporteSustentableEspecial { get;  set; }
     }
 }

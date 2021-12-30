@@ -155,6 +155,9 @@ EstablecimientoPropio BIT NULL,
 [CondicionalContratoId] INT NULL,
 [BoletoVentaId] INT NULL, 
 [MailVentaBoleto] VARCHAR(50) NULL, 
+[KgMaximo] INT NULL, 
+[KgMinimo] INT NULL, 
+[ProveedorComisionistaId] INT NULL, 
 CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]),
 CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),
@@ -193,6 +196,7 @@ CONSTRAINT [FK_Negocio_CondicionDePagoPesificadoVenta] FOREIGN KEY ([CondicionDe
 CONSTRAINT [FK_Negocio_CondicionalContrato] FOREIGN KEY ([CondicionalContratoId]) REFERENCES [Negocio]([Id]),
 CONSTRAINT [FK_Negocio_CondicionalMonedaId] FOREIGN KEY ([CondicionalMonedaId]) REFERENCES [Moneda]([MonedaId]),
 CONSTRAINT [FK_Negocio_BoletoVenta] FOREIGN KEY ([BoletoVentaId]) REFERENCES [BoletoVenta]([Id]),
+CONSTRAINT [FK_Negocio_ProveedorComisionita] FOREIGN KEY ([ProveedorComisionistaId]) REFERENCES [Proveedor]([ProveedorId]),
 )
 
 GO

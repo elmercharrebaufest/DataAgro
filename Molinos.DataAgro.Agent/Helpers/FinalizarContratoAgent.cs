@@ -309,13 +309,27 @@ namespace Molinos.DataAgro.Agent.Helpers
                             CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "",
                             CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0,
 
+                            //BLOQUEO = "",
+                            //CODIGO_TC= "",
+                            //COND_PAGO ="",
+                            //PIZARRA= "",
+                            //PORC_MULTA="",
+                            //POSICION="",
+                            //TIPO_CAMBIO_FIJO=0,
+                            //TOL_INF=0,
+                            //TOL_SUP=0,
+
                         },
                         IM_TOPES_FIJ = new ZMPES5280
                         {
                             FE_DESDE = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
                             FE_HASTA = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
                             HORAACT = "00:00:00",
-                            CANT_MAX = contrato.TipoNegocioId == 1 ? contrato.Cantidad < 30000 ? Convert.ToDecimal(contrato.Cantidad) : contrato.Cantidad <= 100000 ? 30000 : Convert.ToDecimal(contrato.Cantidad) : 0,
+                            CANT_MAX = contrato.TipoNegocioId == 1 ? 
+                            contrato.Cantidad < 30000 ? 
+                            Convert.ToDecimal(contrato.Cantidad) : 
+                            (contrato.Cantidad >= 30000 &&  contrato.Cantidad <= 100000) ? 30000 
+                            : Convert.ToDecimal(contrato.KgMaximo) : 0,                           
                             CANT_MIN = contrato.TipoNegocioId == 1 ? contrato.Cantidad < 30000 ? Convert.ToDecimal(contrato.Cantidad) : 30000 : 0,
                             FECHAACT = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
                             repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),

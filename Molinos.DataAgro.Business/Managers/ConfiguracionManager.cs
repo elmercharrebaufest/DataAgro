@@ -53,6 +53,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.RedespachoMaximoARP = oConfiguracion.RedespachoMaximoARP;
                 oConfiguracionSave.ToleranciaPaseMax = oConfiguracion.ToleranciaPaseMax;
                 oConfiguracionSave.ToleranciaPaseMin = oConfiguracion.ToleranciaPaseMin;
+                oConfiguracionSave.ImporteSustentableEspecial = oConfiguracion.ImporteSustentableEspecial;
+
 
 
                 oConfiguracionSave.AlgoritmoKilosMinimosParaSugerencia = oConfiguracion.AlgoritmoKilosMinimosParaSugerencia;

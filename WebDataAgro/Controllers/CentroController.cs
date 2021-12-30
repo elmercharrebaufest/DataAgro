@@ -20,7 +20,7 @@ namespace WebDataAgro.Controllers
         [Autorizacion(PermisosDataAgro.ConfiguracionCentros)]
         public ActionResult Index()
         {
-            return View( );
+            return View();
         }
 
         public ActionResult Inicializar()
@@ -85,7 +85,20 @@ namespace WebDataAgro.Controllers
             model.Errores = entityErrors.Errores;
             if (model.HayErrores)
             {
-                model.Centro = new CentroDto { CodigoSap= oCentro.CodigoSap, Descripcion = oCentro.Descripcion, Id = oCentro.Id, Acopio = oCentro.Acopio};
+                model.Centro = new CentroDto
+                {
+                    CodigoSap = oCentro.CodigoSap,
+                    Descripcion = oCentro.Descripcion,
+                    Id = oCentro.Id,
+                    Acopio = oCentro.Acopio,
+                    CargaCupos = oCentro.CargaCupos,
+                    CargaNegocios = oCentro.CargaNegocios,
+                    CodigoPostal = oCentro.CodigoPostal,
+                    Comision = oCentro.Comision,
+                    Direccion = oCentro.Direccion,
+                    LocalidadId = oCentro.LocalidadId,
+                    ValidaRedespacho = oCentro.ValidaRedespacho
+                };
             }
 
             return new JsonResult()

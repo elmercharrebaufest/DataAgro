@@ -318,6 +318,7 @@
     <Build Include="dbo\Tables\CierreCupera.sql" />
     <Build Include="dbo\Tables\TipoAdministracionCupo.sql" />
     <Build Include="dbo\Tables\MensajeCupo.sql" />
+    <Build Include="dbo\Tables\TipoNegocioRangoConfirmacionAutomatica.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

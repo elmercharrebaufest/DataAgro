@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Agent
                         IM_CONTRATO = fijacion.ContratoSAP,
                         IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd"),
                         IM_HORA = fijacion.Fecha.ToString("HH:mm:ss"),
-                        IM_PRECIO = fijacion.Precio,
+                        IM_PRECIO = fijacion.PrecioNeto ?? fijacion.Precio,
                         IM_MONEDA = fijacion.MonedaId.TrimEnd(),
                         IM_UNIME = "KG",
                         IM_FECHA_OPERACION = fijacion.FechaOperacion.ToString("yyyy-MM-dd"),                        

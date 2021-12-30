@@ -15,6 +15,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public string CodigoPostal { get; set; }
         public string Direccion { get; set; }
         public bool Comision { get; set; }
+        public bool CargaNegocios { get; set; }
+        public bool CargaCupos { get; set; }
 
         [ForeignKey("LocalidadId")]
         public virtual Localidad Localidad { get; set; }

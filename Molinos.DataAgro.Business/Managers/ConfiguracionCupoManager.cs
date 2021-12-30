@@ -310,7 +310,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var disponibilidad = disponibilidades.Where(a => a.Fecha == configuracion.Fecha && a.CentroCodigo == configuracion.CentroCodigoSap && a.MaterialCodigo == configuracion.MaterialCodigoSap).ToList();
 
                 configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
-
+                configuracion.CuposDisponibles += disponibilidad.Sum(X => X.Disponibles);
             }
             return configuraciones;
         }

@@ -56,7 +56,7 @@
 <input type="hidden" id="MonedaSobrePrecioContrato" />
 <input type="hidden" id="idProveedor" />
 <input type="hidden" id="tipoPosicionCBOTId" />
-
+<input type="hidden" id="comisionistaId" />
 
 @Html.Hidden("crearContrato", Url.Action("CrearContrato", "CompraNet"))
 <input id="esCostoFinanciero" class="campo-input-input" data-bind="" hidden type="checkbox" />
@@ -344,6 +344,7 @@
             <div class="datoscontrato row">
                 <div class="col-xs-12">
                     <div style="display:inline-block" id="fijacionPaseDiv">
+                        <div><strong>Las fijaciones deben hacerse por MATBA.</strong></div>
                         <label class="aplicados">
                             Fijacion PASE:
                         </label>
@@ -1174,6 +1175,7 @@
         #boton-search:active, .seleccionar:active {
             background-color: #cac8c8;
         }
+
     @@media screen and (max-width: 600px) {
         .ocultar-div {
             display: none;

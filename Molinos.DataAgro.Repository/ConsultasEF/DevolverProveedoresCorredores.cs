@@ -11,21 +11,23 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     public class DevolverProveedoresCorredores : IConsulta<BusquedaHome>
     {
         private readonly string filtro;
+        private readonly int? segmentacionId;
 
-        public DevolverProveedoresCorredores(string filtro)
+        public DevolverProveedoresCorredores(string filtro, int? segmentacionId = null)
         {
             this.filtro = filtro;
+            this.segmentacionId = segmentacionId;
         }
 
-        private static List<BusquedaHome> Query(DbContext contexto, string filtro)
+        private static List<BusquedaHome> Query(DbContext contexto, string filtro, int? segmentacionId = null)
         {
             var resultado = from Proveedor in contexto.Set<Proveedor>()
                             join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
                             from p in rgs.DefaultIfEmpty()
                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
                             from c in rg.DefaultIfEmpty()
-                            where Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
-                            c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)
+                            where (Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
+                            c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) && (segmentacionId == null || Proveedor.SegmentacionId == segmentacionId)
                             group c by Proveedor into provs
                             select new BusquedaHome
                             {
@@ -42,6 +44,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 PlanCanje = provs.Key.PlanCanje,
                                 Deshabilitar = false,
                                 Color = "",
+                                CuposConRiesgo = provs.Key.CuposConRiesgo
                             };
             var lista = DevolverEstadoSisa(contexto, resultado.ToList());
             return lista.Distinct().Take(15).ToList();
@@ -51,7 +54,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, filtro);
+                return Query(contexto, filtro, segmentacionId);
             }
         }
 

@@ -107,34 +107,34 @@ namespace Molinos.DataAgro.Business.Managers
                                     error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
                                     continue;
                                 }
-                                //CierreCupera
-                                var limitePorZona = this.TraerTodaConfiguracionCupoPorDia(cupo.ZonaCupoId, cupo.MaterialId, cupo.CentroId, d.Fecha);
-                                if (limitePorZona.Count() <= 0)
-                                {
-                                    error.Error("Cupera", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
-                                    continue;
-                                }
-                                //else if (limitePorZona.All(x => (x.LimiteCupo) <= 0))
+                                ////CierreCupera
+                                //var limitePorZona = this.TraerTodaConfiguracionCupoPorDia(cupo.ZonaCupoId, cupo.MaterialId, cupo.CentroId, d.Fecha);
+                                //if (limitePorZona.Count() <= 0)
                                 //{
-                                //    error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                //    error.Error("Cupera", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
+                                //    continue;
                                 //}
+                                ////else if (limitePorZona.All(x => (x.LimiteCupo) <= 0))
+                                ////{
+                                ////    error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                ////}
                                 cupo.FechaIngreso = d.Fecha;
 
-                                if (cupo.NegocioId == null && cupo.ConfiguracionEspacioDinamicoId == null)
-                                {
-                                    var creados = repositorio.Contar<Cupo>(
-                                        x => x.NegocioId == null && x.ConfiguracionEspacioDinamicoId == null && x.FechaIngreso == cupo.FechaIngreso
-                                        && x.MaterialId == cupo.MaterialId && x.CentroId == cupo.CentroId && x.EstadoCupoId != 9);
-                                    var fechaIngreso = cupo.FechaIngreso.Date;
-                                    var total = repositorio.Obtener<ConfiguracionCupo, int>(
-                                        x => x.MaterialId == cupo.MaterialId && x.Fecha == fechaIngreso && x.CentroId == cupo.CentroId && x.CierreCupera == false,
-                                        x => x.LimiteCupo - x.LimiteAlgoritmo);
-                                    if (d.Cantidad > total - creados)
-                                    {
-                                        error.Error("Cupera", "La cantidad de cupos solicitada excede la cantidad disponible para el día " + cupo.FechaIngreso.ToString("dd/MM/yyyy"));
-                                        continue;
-                                    }
-                                }
+                                //if (cupo.NegocioId == null && cupo.ConfiguracionEspacioDinamicoId == null)
+                                //{
+                                //    var creados = repositorio.Contar<Cupo>(
+                                //        x => x.NegocioId == null && x.ConfiguracionEspacioDinamicoId == null && x.FechaIngreso == cupo.FechaIngreso
+                                //        && x.MaterialId == cupo.MaterialId && x.CentroId == cupo.CentroId && x.EstadoCupoId != 9);
+                                //    var fechaIngreso = cupo.FechaIngreso.Date;
+                                //    var total = repositorio.Obtener<ConfiguracionCupo, int>(
+                                //        x => x.MaterialId == cupo.MaterialId && x.Fecha == fechaIngreso && x.CentroId == cupo.CentroId && x.CierreCupera == false,
+                                //        x => x.LimiteCupo - x.LimiteAlgoritmo);
+                                //    if (d.Cantidad > total - creados)
+                                //    {
+                                //        error.Error("Cupera", "La cantidad de cupos solicitada excede la cantidad disponible para el día " + cupo.FechaIngreso.ToString("dd/MM/yyyy"));
+                                //        continue;
+                                //    }
+                                //}
 
                                 var listaCupos = new List<string>();
                                 var errorSap = new Resultado();
@@ -667,7 +667,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), listaCupos, cupo, emailComercial));
+                oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/storeCircular.PNG"), listaCupos, cupo, emailComercial,
+                    System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/Circular.PNG"), System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/molinosCircular.PNG")));
                 var subject = "";
 
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
@@ -710,9 +711,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        private AlternateView CuerpoMail(String filePath, List<string> listaCupos, Cupo cupo, string emailComercial)
+        private AlternateView CuerpoMail(String filePath, List<string> listaCupos, Cupo cupo, string emailComercial, String circular, String molinos)
         {
-            LinkedResource res = new LinkedResource(filePath);
+            LinkedResource store = new LinkedResource(filePath);
+            store.ContentId = Guid.NewGuid().ToString();
+            LinkedResource img = new LinkedResource(circular);
+            img.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(molinos);
             res.ContentId = Guid.NewGuid().ToString();
             string th;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
@@ -778,11 +783,22 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales" +
-                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
-                @"<img src='cid:" + res.ContentId + @"'/>" +
-                "<br /> <br /> www.molinosagro.com.ar";
+                " <br /> <br />   Molinos Agro S.A.  <br />" +
+                "<br /> www.molinosagro.com.ar <br />" +
+                "<table>" +
+                "<tr >" +
+                "<td rowspan='2'>" + @"<img src='cid:" + img.ContentId + @"'/> " + "</td> " +
+                "<td>" + @"<a href='https://play.google.com/store/apps/details?id=com.appcircular'><img src='cid:" + store.ContentId + @"'/></a>" + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td>" + @"<a href='www.molinosagro.com.ar'><img src='cid:" + res.ContentId + @"'/></a>" + " </td>" +
+                "</tr>" +
+                "</table>" +
+                " ";
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
+            alternateView.LinkedResources.Add(img);
+            alternateView.LinkedResources.Add(store);
             return alternateView;
         }
         public string Split(string str)
@@ -1609,7 +1625,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             Cupo cupo = new Cupo
             {
-                ProveedorId = s.ProveedorId.Value,//---Agentecompra no tiene proveedor
+                ProveedorId = s.Negocio != null && s.Negocio.ProveedorComisionistaId != null ? s.Negocio.ProveedorComisionistaId.Value : s.ProveedorId.Value,
                 CentroId = s.CentroId,
                 MaterialId = s.MaterialId,
                 FechaIngreso = s.FechaSugerida,
@@ -2596,10 +2612,10 @@ namespace Molinos.DataAgro.Business.Managers
         private CupoResult CrearCupos(DiaCupo detalle, SugerenciaCupo sugerencia, SugerenciaPorComercial sugerenciaPorComercial)
         {
             var resultado = new CupoResult();
-
+            
             var cupo = new Cupo
             {
-                ProveedorId = sugerencia.ProveedorId.Value,
+                ProveedorId = sugerencia.Negocio != null && sugerencia.Negocio.ProveedorComisionistaId != null? sugerencia.Negocio.ProveedorComisionistaId.Value : sugerencia.ProveedorId.Value,
                 MaterialId = sugerencia.MaterialId,
                 FechaIngreso = detalle.Fecha,
                 ZonaCupoId = sugerencia.ZonaCupoId.Value,
@@ -2620,6 +2636,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocioId = sugerencia.TipoNegocioId,
                 CentroId = sugerencia.CentroId
             };
+
             var cuposGenerados = detalle.Cantidad > sugerencia.CantidadDeCupos ? sugerencia.CantidadDeCupos : detalle.Cantidad;
             cuposGenerados = cuposGenerados > sugerenciaPorComercial.Total ? sugerenciaPorComercial.Total : cuposGenerados;
             //si tengo al menos un cupo normal para crear...

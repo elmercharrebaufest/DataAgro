@@ -915,9 +915,14 @@ function ObtenerDatos(error) {
     obj.CondicionalContratoId = $("#contratoCondicionalId").val();
     obj.CondicionalContratoSAP = $("#contratoCondicional").val();
 
+    if (obj.TipoNegocioId == 1) {
+        obj.KgMinimo = $("#minimoId").val();
+        obj.KgMaximo = $("#maximaId").val();
+    }
     if ($("#ventaId").is(":checked") == true) {
         obj.Venta = true;
     }
+    obj.ProveedorComisionistaId = $("#comisionistaId").val();
     return obj;
 }
 

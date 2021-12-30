@@ -773,7 +773,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else if (oContrato.Cantidad >= 100000)
                 {
                     htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.Cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.KgMaximo ?? 0).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
                 }
             }
             if (oContrato.EstablecimientoPropio == true)
@@ -1279,6 +1279,8 @@ namespace Molinos.DataAgro.Business.Managers
                 PlanCanje = oParam.basicos.PlanCanje,
                 Deshabilitado = oParam.basicos.Deshabilitado,
                 Alias = oParam.basicos.Alias,
+                ComisionistaId = oParam.basicos.comisionista,
+                CuposConRiesgo = oParam.basicos.CuposConRiesgo
             };
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
             var oEstados = repositorio.Listar<Estado>();
@@ -1730,6 +1732,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.RazonSocial = oParam.basicos.RazonSocial;
                 oProveedorSave.Deshabilitado = oParam.basicos.Deshabilitado;
                 oProveedorSave.Alias = oParam.basicos.Alias;
+                oProveedorSave.ComisionistaId = oParam.basicos.comisionista;
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
                 var oEstados = repositorio.Listar<Estado>();
@@ -2826,7 +2829,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Filtro = x.Key.Filtro,
                 RazonSocial = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).RazonSocial,
                 Alias = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Alias,
-                Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id
+                Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id,
+                ComisionistaId = resultado.FirstOrDefault(y=> y.Cuit == x.Key.Cuit).ComisionistaId
             }).ToList();
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
             CompletarEstadoAltaTemprana(listaOrdenada);
@@ -2860,9 +2864,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
-        public List<BusquedaHome> DevolverProveedoresCorredores(string filtro)
+        public List<BusquedaHome> DevolverProveedoresCorredores(string filtro, int? segmentacionId = null)
         {
-            var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro));
+            var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro, segmentacionId));
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
             CompletarEstadoAltaTemprana(listaOrdenada);
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
@@ -4263,7 +4267,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else if (oContrato.Cantidad >= 100000)
                 {
                     htmlBody += "CANTIDAD MÍNIMA A FIJAR " + Split(30000.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
-                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.Cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
+                    htmlBody += "CANTIDAD MÁXIMA A FIJAR " + Split((oContrato.KgMaximo ?? 0).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR"))) + " kg<br />";
                 }
             }
             if (oContrato.EstablecimientoPropio == true)

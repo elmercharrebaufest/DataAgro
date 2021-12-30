@@ -190,6 +190,7 @@ function cargarDatosAFijarEnFijacion(afijar) {
         $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
         $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
     }
+   
 }
 
 function InicializarElementos() {
@@ -328,6 +329,9 @@ function InicializarElementos() {
                     }
                     InsertarAperturasViewModel(CalcularPrecioTotalApertura());
                     SeleccionAutomaticaBolsa();
+                    if ($("#buscadorProveedor").val() != "") {
+                        EsComisionista(compraNet);
+                    }
                 }
             }
         },
@@ -4632,6 +4636,13 @@ function CargarDatosEditar(contrato, hijo) {
             $("#condicionalPosicionId").prop('disabled', true);
         }
     }
+
+    if (contrato.ProveedorComisionistaId != null) {
+        $("#comisionistaCheckId").prop("checked", true);
+        EsComisionista(null);
+    } else {
+        $("#comisionistaCheckId").prop("checked", false);
+    } 
 }
 
 function compareDates(date, dates) {
@@ -5943,5 +5954,27 @@ function CargarAutomaticamenteLaComision(compraNet) {
     }
 }
 
+function ObtenerDatosProveedor() {
+    var cuitAux = $("#buscadorProveedor").val().split('(');
+    if (cuitAux[0] != "") {
+        var cuit = cuitAux[1].split(')');
+        var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+        return compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
+    }
 
+    return null;
+}
+
+function EsComisionista(compranet) {
+    var datos = compranet != null ? compranet : ObtenerDatosProveedor();
+    if (datos != null && $("#comisionistaCheckId").is(":checked") && datos.RazonSocialComisionista != "") {
+        $("#ocultarComisionista").show();
+        $("#comisionistaId").val(datos.ComisionistaId);
+        $("#razonSocialComisionista").val(datos.RazonSocialComisionista);
+    } else {
+        $("#ocultarComisionista").hide();
+        $("#comisionistaId").val();
+    }
+    
+}
 

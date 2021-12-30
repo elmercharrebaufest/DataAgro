@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Business
                 Material = qry.GetMaterialCombo(),
                 Moneda = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion }),
                 Zona = repositorio.Listar<GrupoDeCompras, ZonaQry>(x => new ZonaQry() { Id = x.Id, Descripcion = x.Descripcion }),
-                TipoNegocio = repositorio.Listar<TipoNegocio, TipoNegocioDto>(x => new TipoNegocioDto() { TipoNegocioId = x.TipoNegocioId, Descripcion = x.Descripcion }, x => x.TipoNegocioId == 2 || x.TipoNegocioId == 3),
+                TipoNegocio = repositorio.Listar<TipoNegocioRangoConfirmacionAutomatica, TipoNegocioDto>(x => new TipoNegocioDto() { TipoNegocioId = x.Id, Descripcion = x.Descripcion }),
                 TipoRango = repositorio.Listar<TipoRangoConfirmacionAutomatica, TipoRangoConfirmacionAutomaticaDto>(x => new TipoRangoConfirmacionAutomaticaDto() { TipoRangoId = x.Id, Descripcion = x.Descripcion }),
             };
         }
@@ -241,6 +241,22 @@ namespace Molinos.DataAgro.Business
                 rangos.Add((int)EnumTipoRangoConfirmacionAutomatica.ConfirmacionYReconfirmacion);
             }
 
+            var tipos = new List<int>();
+            tipos.Add((int)EnumTipoNegocioRangoConfirmacionAutomatica.APrecioYFijacion);
+            if (oRango.TipoNegocioId == (int)EnumTipoNegocioRangoConfirmacionAutomatica.APrecio)
+            {
+                tipos.Add((int)EnumTipoNegocioRangoConfirmacionAutomatica.APrecio);
+            }
+            if (oRango.TipoNegocioId == (int)EnumTipoNegocioRangoConfirmacionAutomatica.Fijacion)
+            {
+                tipos.Add((int)EnumTipoNegocioRangoConfirmacionAutomatica.Fijacion);
+            }
+            if (oRango.TipoNegocioId == (int)EnumTipoNegocioRangoConfirmacionAutomatica.APrecioYFijacion)
+            {
+                tipos.Add((int)EnumTipoNegocioRangoConfirmacionAutomatica.APrecio);
+                tipos.Add((int)EnumTipoNegocioRangoConfirmacionAutomatica.Fijacion);
+            }
+
             var rangosExistentes = repositorio.Listar<RangoConfirmacionAutomatica>();
             if (rangosExistentes.Exists(x =>
             x.Id != oRango.Id &&
@@ -249,14 +265,11 @@ namespace Molinos.DataAgro.Business
             x.FechaDesde == oRango.FechaDesde &&
             x.FechaHasta == oRango.FechaHasta &&
             x.ZonaId == oRango.ZonaId &&
-            x.DesdeMes == oRango.DesdeMes &&
-            x.HastaMes == oRango.HastaMes &&
-            x.DesdeAnio == oRango.DesdeAnio &&
-            x.HastaAnio == oRango.HastaAnio &&
-            x.DesdeEntrega == oRango.DesdeEntrega &&
-            x.HastaEntrega == oRango.HastaEntrega &&
+            (x.DesdeEntrega == oRango.DesdeEntrega || oRango.DesdeEntrega == null || x.DesdeEntrega == null) &&
+            (x.HastaEntrega == oRango.HastaEntrega || oRango.HastaEntrega == null || x.HastaEntrega == null) &&
             rangos.Contains(x.TipoRangoId) &&
-            x.TipoNegocioId == oRango.TipoNegocioId))
+            tipos.Contains(x.TipoNegocioId) 
+            ))
             {
                 oEntityErrors.Error("Rango", "Ya existe un rango para los valores seleccionados");
             }

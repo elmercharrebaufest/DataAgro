@@ -260,3 +260,14 @@ IF NOT EXISTS (select 1 from BoletoVenta where Descripcion = 'A Convenir') BEGIN
 --TipoAdministracionCupo
 IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Algoritmo') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Algoritmo'); END
 IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraordinaria') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Extraordinaria'); END
+--TipoNegocioRangoConfirmacionAutomatica
+IF NOT EXISTS (select 1 from TipoNegocioRangoConfirmacionAutomatica where Descripcion = 'A PRECIO Y FIJACION') BEGIN insert into TipoNegocioRangoConfirmacionAutomatica (Descripcion) values ('A PRECIO Y FIJACION'); END
+IF NOT EXISTS (select 1 from TipoNegocioRangoConfirmacionAutomatica where Descripcion = 'A PRECIO') BEGIN insert into TipoNegocioRangoConfirmacionAutomatica (Descripcion) values ('A PRECIO'); END
+IF NOT EXISTS (select 1 from TipoNegocioRangoConfirmacionAutomatica where Descripcion = 'FIJACION') BEGIN insert into TipoNegocioRangoConfirmacionAutomatica (Descripcion) values ('FIJACION'); END
+
+--TipoAdministracionCupo
+IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Algoritmo') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Algoritmo'); END
+IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraordinaria') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Extraordinaria'); END
+
+--Comisionista
+IF NOT EXISTS (select 1 from Segmentacion where Descripcion = 'Comisionista') BEGIN insert into Segmentacion(Descripcion, Grupo) values ('Comisionista','Comisionistas'); END

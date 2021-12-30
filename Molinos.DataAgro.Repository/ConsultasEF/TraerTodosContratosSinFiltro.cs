@@ -214,8 +214,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CondicionalPrecio = (contrato is Contrato) ? (contrato as Contrato).CondicionalPrecio : null,
                         CondicionalContratoId = (contrato is Contrato) ? (contrato as Contrato).CondicionalContratoId : null,
                         CondicionalContratoSAP = (contrato is Contrato) ? (contrato as Contrato).CondicionalContrato.ContratoSAP : "",
+                        MailVentaBoleto = contrato.MailVentaBoleto,
+                        ProveedorComisionistaId = contrato.ProveedorComisionistaId,
+                        RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial
                         TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
-                        MailVentaBoleto = contrato.MailVentaBoleto
                     };
 
                 return queryNegocios;
@@ -378,6 +380,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Cesion = contrato.Cesion,
                         PrecioPonderado = contrato.PrecioPonderado,
                         PrecioNetoPonderado = contrato.PrecioNetoPonderado,
+                        ProveedorComisionistaId = contrato.ProveedorComisionistaId,
+                        RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial
                     };
 
                 return queryNegocios;

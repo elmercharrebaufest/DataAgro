@@ -45,8 +45,12 @@ function InicializarCargaCupos() {
         },
         select: function (e) {
             if (e.dataItem.Deshabilitar) {
-                $("#buscadorProveedor").val("")
-                e.preventDefault();
+                if (e.dataItem.CuposConRiesgo == true && e.dataItem.RiesgoComercialSap == 'A') {
+                    $("#Proveedor").val(e.dataItem.Id);
+                } else {
+                    $("#buscadorProveedor").val("")
+                    e.preventDefault();
+                }
             } else {
                 $("#Proveedor").val(e.dataItem.Id);
             }

@@ -35,6 +35,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CodigoPostal { get; set; }
         public string Direccion { get; set; }
         public bool Comision { get; set; }
+        public bool CargaNegocios { get; set; }
+        public bool CargaCupos { get; set; }
     }
 }
 

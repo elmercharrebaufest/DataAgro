@@ -15,13 +15,22 @@
 
                     <tr>
                         <td class="td-input">
-                            @Html.TextBoxFor(model => Model.DiferencialDefault, new { @class = "number-input number-input-diferencial" })
-                            @{ if (Model.Resultado!= null && Model.Resultado.Errores.Count != 0)
-                                {
-                                    @Model.Resultado.Errores[0];
+                            <div class="row">
+                                @Html.TextBoxFor(model => Model.DiferencialDefault, new { @class = "number-input number-input-diferencial" })
+                                <div class="col-sm-6 col-md-6">
+                                    @Html.DropDownListFor(model => Model.TipoNegocioId, new SelectList((IEnumerable<SelectListItem>)ViewBag.TipoNegocioList ?? new List<SelectListItem>(), "Value", "Text"), "Seleccione Tipo Negocio", new { @class = "form-control", @id = "TipoNegocioId" })
+                                    @Html.HiddenFor(model => Model.TipoNegocioId)
+                                </div>
+                            </div>
+                            <div>
+                                @{ if (Model.Resultado != null && Model.Resultado.Errores.Count != 0)
+                                    {
+                                        @Model.Resultado.Errores[0];
+                                    }
                                 }
-                            }
+                            </div>
                         </td>
+
                     </tr>
 
                 </tbody>
@@ -40,6 +49,7 @@
                 <div id="historialMaterial" class="collapse">
                     <table class="tabla-historial table">
                         <tr>
+                            <th>Tipo Negocio</th>
                             <th>Diferencial</th>
                             <th>Fecha</th>
                             <th>Comercial</th>
@@ -49,6 +59,7 @@
                                 foreach (var mat in Model.historialDiferencial)
                                 {
                                     <tr>
+                                        <td>@Html.DisplayFor(model => mat.TipoNegocioDescripcion)</td>
                                         <td>@Html.DisplayFor(model => mat.DiferencialDefault)</td>
                                         <td>@Html.DisplayFor(model => mat.Fecha)</td>
                                         <td>@Html.DisplayFor(model => mat.Comercial)</td>
