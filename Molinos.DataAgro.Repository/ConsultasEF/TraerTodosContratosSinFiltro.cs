@@ -216,7 +216,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CondicionalContratoSAP = (contrato is Contrato) ? (contrato as Contrato).CondicionalContrato.ContratoSAP : "",
                         MailVentaBoleto = contrato.MailVentaBoleto,
                         ProveedorComisionistaId = contrato.ProveedorComisionistaId,
-                        RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial
+                        RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial,
                         TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
                     };
 
