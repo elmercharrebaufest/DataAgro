@@ -262,8 +262,10 @@ namespace Molinos.DataAgro.Business
             x.Id != oRango.Id &&
             x.MaterialId == oRango.MaterialId &&
             x.MonedaId == oRango.MonedaId &&
-            x.FechaDesde == oRango.FechaDesde &&
-            x.FechaHasta == oRango.FechaHasta &&
+            //x.FechaDesde == oRango.FechaDesde &&
+            //x.FechaHasta == oRango.FechaHasta &&
+            ((x.FechaDesde <= oRango.FechaDesde && x.FechaHasta >= oRango.FechaDesde) ||
+            (x.FechaDesde <= oRango.FechaHasta && x.FechaHasta >= oRango.FechaHasta)) &&
             x.ZonaId == oRango.ZonaId &&
             (x.DesdeEntrega == oRango.DesdeEntrega || oRango.DesdeEntrega == null || x.DesdeEntrega == null) &&
             (x.HastaEntrega == oRango.HastaEntrega || oRango.HastaEntrega == null || x.HastaEntrega == null) &&
