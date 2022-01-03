@@ -113,7 +113,7 @@ namespace Molinos.DataAgro.Business.Managers
                         result.Errores.AddRange(result2.Errores);
                         for (int i = 0; i < result2.ListaCupos.Count; i++)
                         {
-                            result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
+                            result2.ListaCupos[i] = "<strong>* " + result2.ListaCupos[i] + " *</strong>";
                         }
                         result.ListaCupos.AddRange(result2.ListaCupos);
 
@@ -181,7 +181,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             for (int i = 0; i < result.ListaCupos.Count; i++)
                             {
-                                result.ListaCupos[i] = "<strong>" + result.ListaCupos[i] + " *</strong>";
+                                result.ListaCupos[i] = "<strong>* " + result.ListaCupos[i] + " *</strong>";
                             }
                             resultado.ListaCupos.AddRange(result.ListaCupos);
                         }

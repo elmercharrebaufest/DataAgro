@@ -1572,7 +1572,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         for (int i = 0; i < result2.ListaCupos.Count; i++)
                         {
-                            result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
+                            result2.ListaCupos[i] = "<strong>* " + result2.ListaCupos[i] + " *</strong>";
                         }
 
 
@@ -2014,7 +2014,7 @@ namespace Molinos.DataAgro.Business.Managers
         //        resultado.Errores.AddRange(result2.Errores);
         //        for (int i = 0; i < result2.ListaCupos.Count; i++)
         //        {
-        //            result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
+        //            result2.ListaCupos[i] = "<strong>* " + result2.ListaCupos[i] + " *</strong>";
         //        }
         //        resultado.ListaCupos.AddRange(result2.ListaCupos);
         //    }
@@ -2664,7 +2664,7 @@ namespace Molinos.DataAgro.Business.Managers
                     resultado.Errores.AddRange(result2.Errores);
                     for (int i = 0; i < result2.ListaCupos.Count; i++)
                     {
-                        result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
+                        result2.ListaCupos[i] = "<strong>* " + result2.ListaCupos[i] + " *</strong>";
                     }
                     resultado.ListaCupos.AddRange(result2.ListaCupos);
                     detalle.CantidadFleteProcedencia -= cuposGenerados;
@@ -3630,7 +3630,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (configuracion == null)
                 {
-                    result.Error("Configuracion", "No hay cupera creada para el dia seleccinado.");
+                    result.Error("Configuracion", "No hay cupera creada para el dia seleccionado.");
                     return result;
                 }
                 if (configuracion != null && configuracion.LiberarCupera == true)
@@ -3859,7 +3859,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             for (int i = 0; i < result2.ListaCupos.Count; i++)
             {
-                result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
+                result2.ListaCupos[i] = "<strong>* " + result2.ListaCupos[i] + " *</strong>";
             }
             result.Errores.AddRange(result2.Errores);
             result.ListaCupos.AddRange(result2.ListaCupos);
@@ -4115,7 +4115,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             //    for (int i = 0; i < result2.ListaCupos.Count; i++)
             //    {
-            //        result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
+            //        result2.ListaCupos[i] = "<strong>* " + result2.ListaCupos[i] + " *</strong>";
             //    }
             //    result.Errores.AddRange(result2.Errores);
             //    result.ListaCupos.AddRange(result2.ListaCupos);
@@ -4378,7 +4378,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 for (int i = 0; i < result2.ListaCupos.Count; i++)
                 {
-                    result2.ListaCupos[i] = "<strong>" + result2.ListaCupos[i] + " *</strong>";
+                    result2.ListaCupos[i] = "<strong>* " + result2.ListaCupos[i] + " *</strong>";
                 }
                 result.Errores.AddRange(result2.Errores);
                 result.ListaCupos.AddRange(result2.ListaCupos);
@@ -4567,7 +4567,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         for (int i = 0; i < resultFletes.ListaCupos.Count; i++)
                         {
-                            resultFletes.ListaCupos[i] = "<strong>" + resultFletes.ListaCupos[i] + " *</strong>";
+                            resultFletes.ListaCupos[i] = "<strong>* " + resultFletes.ListaCupos[i] + " *</strong>";
                         }
                         resultNormales.Errores.AddRange(resultFletes.Errores);
                         resultNormales.ListaCupos.AddRange(resultFletes.ListaCupos);
