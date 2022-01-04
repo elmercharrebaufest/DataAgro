@@ -159,7 +159,7 @@ namespace Molinos.DataAgro.Business.Managers
                         ErrorStop = "",//---
                         NegocioId = null,
                         ConfiguracionEspacioDinamicoId = null,
-                        TipoNegocioId = null,
+                        TipoNegocioId = 7,//para que lo envie a SAP como cupo con marca de propuesta y no valide limites en SAP
                     };
 
                     if (cantidad > 0)

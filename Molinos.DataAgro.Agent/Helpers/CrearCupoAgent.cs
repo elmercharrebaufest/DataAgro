@@ -64,7 +64,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FLETE_PROC = cupo.FleteProcedencia == true ? "S" : "N",
                             CALIDAD = cupo.Calidad == "Camara" ? "01" : cupo.Calidad == "Fabrica" ? "03" : ""
                         },
-                        IM_PROPUESTA = cupo.NegocioId != null || cupo.ConfiguracionEspacioDinamicoId != null ? "X" : ""
+                        IM_PROPUESTA = cupo.TipoNegocioId != null || cupo.NegocioId != null || cupo.ConfiguracionEspacioDinamicoId != null ? "X" : ""
 
                     };
 
