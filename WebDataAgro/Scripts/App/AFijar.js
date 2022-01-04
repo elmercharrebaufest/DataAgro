@@ -4247,11 +4247,11 @@ function HabilitarEstablecimiento() {
     if ($("#LocalidadCrearContrato").val() != "") {
         let provAux = $("#LocalidadCrearContrato").val().split('(');
         let prov = provAux[1].split(')');
-        if (prov[0] === "BUENOS AIRES") {
-            $("#establecimientoDiv").show();
-        } else {
-            $("#establecimientoDiv").hide();
-        }
+        //if (prov[0] === "BUENOS AIRES") {
+        //    $("#establecimientoDiv").show();
+        //} else {
+        //    $("#establecimientoDiv").hide();
+        //}
     }
 }
 

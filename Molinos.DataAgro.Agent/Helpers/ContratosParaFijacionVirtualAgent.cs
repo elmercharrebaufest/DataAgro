@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Agent
                         IM_MATERIAL = material.Codigo
                     };
                     logger.Debug(rq.ToXml());
-
+                    CultureInfo provider = CultureInfo.InvariantCulture;
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE(rq);
                     logger.Debug("Numero de contratos pendientes:" + devolucion.EX_SALIDA.Count());
                     var listaContratos = devolucion.EX_SALIDA.Where(x => x.CONTRNUM.StartsWith("000" + filtro.TrimStart('0')));
@@ -107,7 +107,24 @@ namespace Molinos.DataAgro.Agent
                                 };
                                 aperturas.Add(a);
                             }
+                            var bonificaciones = new List<DescuentoBonificacionDto>();
+
+                            foreach (var bonif in contratoDeBase.Descuentos)
+                            {
+                                bonif.MonedaId = bonif.MonedaId ?? "";
+                                var a = new DescuentoBonificacionDto()
+                                {
+                                    FechaDesde = bonif.FechaDesde.Value.ToString("dd-MM-yyyy"),
+                                    FechaHasta = bonif.FechaHasta.Value.ToString("dd-MM-yyyy"),
+                                    Importe = bonif.Importe,
+                                    Porcentaje = bonif.Porcentaje,
+                                    MonedaId = bonif.MonedaId,
+                                    Moneda = bonif.Moneda.Descripcion == "" ? "" : monedas.Where(x => x.MonedaId.Trim() == bonif.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
+                                };
+                                bonificaciones.Add(a);
+                            }
                             contratoParaFijacion.Aperturas = aperturas;
+                            contratoParaFijacion.Bonificaciones = bonificaciones;
                             var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == contratoDeBase.Id);
 
                             if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
