@@ -125,6 +125,16 @@ namespace Molinos.DataAgro.Agent
                             }
                             contratoParaFijacion.Aperturas = aperturas;
                             contratoParaFijacion.Bonificaciones = bonificaciones;
+                            contratoParaFijacion.CentroDescripcion = centro.Descripcion;
+                            var descuentoGeneralFueraPrecio = contratoDeBase.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
+                            var descuentoGeneralSobrePrecio = contratoDeBase.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+                            contratoParaFijacion.ImporteSobrePrecio = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe : 0;
+                            contratoParaFijacion.MonedaSobrePrecio = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId : null;
+                            contratoParaFijacion.PorcentajeSobrePrecio = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0;
+                            contratoParaFijacion.ImporteAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0;
+                            contratoParaFijacion.MonedaAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null;
+                            contratoParaFijacion.PorcentajeAPrecio = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0;                          
+                            contratoParaFijacion.Clasificacion = contratoDeBase.Proveedor.ClasificacionCompraNet.Descripcion;
                             var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == contratoDeBase.Id);
 
                             if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
