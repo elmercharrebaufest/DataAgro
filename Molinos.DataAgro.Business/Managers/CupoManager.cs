@@ -286,7 +286,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                if (!string.IsNullOrEmpty(proveedor.RiesgoComercialSap) && proveedor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
+                if (!string.IsNullOrEmpty(proveedor.RiesgoComercialSap) && proveedor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"] && proveedor.CuposConRiesgo != true)
                 {
                     error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Riesgo Comercial Alto"));
                 }

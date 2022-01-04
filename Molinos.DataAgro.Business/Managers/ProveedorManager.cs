@@ -1733,6 +1733,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.Deshabilitado = oParam.basicos.Deshabilitado;
                 oProveedorSave.Alias = oParam.basicos.Alias;
                 oProveedorSave.ComisionistaId = oParam.basicos.comisionista;
+                oProveedorSave.CuposConRiesgo = oParam.basicos.CuposConRiesgo;
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
                 var oEstados = repositorio.Listar<Estado>();
