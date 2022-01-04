@@ -247,7 +247,11 @@ namespace Molinos.DataAgro.Business
                     replyMessage.To.Add(new MailboxAddress(item, item));
 
                 }
-
+                var lista2 = repositorio.Listar<CierreDelDiaMailExternos, string>(x => x.Mail);
+                foreach (var item in lista2)
+                {
+                    replyMessage.To.Add(new MailboxAddress(item, item));
+                }
                 replyMessage.Subject = asuntoNuevoMail;
                 replyMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
                 {

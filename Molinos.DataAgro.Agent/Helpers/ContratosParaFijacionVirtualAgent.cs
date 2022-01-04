@@ -38,7 +38,7 @@ namespace Molinos.DataAgro.Agent
                 DatosFijacionDeContratoDto contrato = json.FromJson<DatosFijacionDeContratoDto>();
                 datosContratos.Add(contrato);
 
-              
+
             }
             else
             {
@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Agent
                     {
                         IM_CORREDOR = CuitCorredor,
                         IM_CUIT = CuitProveedor,
-                        IM_MATERIAL = material.Codigo                        
+                        IM_MATERIAL = material.Codigo
                     };
                     logger.Debug(rq.ToXml());
 
@@ -63,16 +63,16 @@ namespace Molinos.DataAgro.Agent
                     var conceptoAperturas = repositorio.Listar<ConceptoAperturaPrecio>();
                     var monedas = repositorio.Listar<Moneda>();
                     foreach (var contrato in listaContratos)
-                    {                     
-                         var cantidad = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 3 && x.Virtual == true && x.ContratoSAP == contrato.CONTRNUM && x.Id != idFijacion
-                         && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum(x => x.Cantidad + (x.Ampliaciones ?? 0));
+                    {
+                        var cantidad = repositorio.Listar<Negocio>(x => x.TipoNegocioId == 3 && x.Virtual == true && x.ContratoSAP == contrato.CONTRNUM && x.Id != idFijacion
+                        && (x.EstadoId != (int)EnumEstadoContrato.Finalizado && x.EstadoId != (int)EnumEstadoContrato.Eliminado && x.EstadoId != (int)EnumEstadoContrato.Rechazado)).Sum(x => x.Cantidad + (x.Ampliaciones ?? 0));
 
                         var centro = repositorio.Obtener<Centro>(x => x.CodigoSap == contrato.CENTRO);
                         //var cantidadFijacion = idFijacion != 0 ? repositorio.Obtener<Negocio, double>(x => x.TipoNegocioId == 3 && x.Id == idFijacion && x.ContratoSAP == contrato.CONTRATO, x => x.Cantidad + (x.Ampliaciones ?? 0)) : 0;
                         //var calidades = new List<CalidadDto>();                       
                         var contratoParaFijacion = new DatosFijacionDeContratoDto
                         {
-                            ContratoId = contrato.CONTRNUM.TrimStart('0'),                            
+                            ContratoId = contrato.CONTRNUM.TrimStart('0'),
                             KilosAplicados = ((double)contrato.KILOS_FIJADOS + cantidad).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             KilosPendiente = ((double)contrato.KILOS_A_FIJAR - (cantidad /*+ cantidadFijacion*/)).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")),
                             FechaDesde = DateTime.Parse(contrato.FECHA_DESDE).ToString("dd-MM-yyyy", CultureInfo.CreateSpecificCulture("es-AR")),
@@ -89,12 +89,31 @@ namespace Molinos.DataAgro.Agent
                             KilosContrato = contrato.UNIME,
                             Virtual = true,
                         };
-                        var idContratoConAnulaYReemplaza = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contrato.CONTRNUM, x => x.Id);
-                        var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == idContratoConAnulaYReemplaza);
-
-                        if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
+                        var contratoDeBase = repositorio.Obtener<Contrato>(x => x.ContratoSAP == contrato.CONTRNUM);
+                        if (contratoDeBase != null)
                         {
-                            datosContratos.Add(contratoParaFijacion);
+                            var aperturas = new List<AperturaPrecioDto>();
+                            foreach (var apertura in contratoDeBase.AperturaPrecio)
+                            {
+                                apertura.MonedaId = apertura.MonedaId ?? "";
+                                var a = new AperturaPrecioDto()
+                                {
+                                    ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId,
+                                    ConceptoAperturaPrecio = apertura.ConceptoAperturaPrecio.Descripcion,
+                                    Importe = apertura.Importe,
+                                    Porcentaje = apertura.Porcentaje,
+                                    MonedaId = apertura.MonedaId,
+                                    Moneda = monedas.Where(x => x.MonedaId.Trim() == apertura.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
+                                };
+                                aperturas.Add(a);
+                            }
+                            contratoParaFijacion.Aperturas = aperturas;
+                            var contratoConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == contratoDeBase.Id);
+
+                            if (!contratoConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
+                            {
+                                datosContratos.Add(contratoParaFijacion);
+                            }
                         }
                         var contratoId = repositorio.Obtener<Contrato, int>(x => x.ContratoSAP == contrato.CONTRNUM, x => x.Id);
                         var contratoAnulado = repositorio.Obtener<Contrato>(x => x.AnulaYReemplazaContratoId == contratoId && x.EstadoId == 5);
