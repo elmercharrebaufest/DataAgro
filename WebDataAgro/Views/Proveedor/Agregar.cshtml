@@ -124,46 +124,48 @@
                     
             </div>
         </div>
-        <div @(ocultarCamposEditar ? "hidden" : "")>
+        <div >
             <h2 id="datos">Datos proveedor</h2>
-            <div class="datos-basicos-comentario">
-                Domicilio Actividad
-            </div>
-            <div class="formulario-campo campo-provincia">
-
-            </div>
-            <div class="formulario-campo campo-localidad">
-
-            </div>
-            <div class="formulario-campo">
-                <input type="text" placeholder="Dirección" class="campo-input-text" id="direccion" />
-                <input type="text" placeholder="Código postal" class="campo-input-text" id="codpost" />
-            </div>
-            <div class="noCorredor">
+            <div @(ocultarCamposEditar ? "hidden" : "")>
                 <div class="datos-basicos-comentario">
-                    Información comercial
+                    Domicilio Actividad
                 </div>
-                <div class="formulario-campo campo-operacion">
-                    <span class="campo-span">Canales de operación</span>
+                <div class="formulario-campo campo-provincia">
 
                 </div>
-                <div class="formulario-campo campo-destinatario">
-                    <span class="campo-span">Entrega a</span>
-
-                </div>
-                <div class="formulario-campo campo-condicion">
-                    <span class="campo-span">Condiciones preferentes</span>
+                <div class="formulario-campo campo-localidad">
 
                 </div>
                 <div class="formulario-campo">
-                    <span class="campo-span">Intermediario</span>
-                    <input type="text" class="campo-input-text" id="intermediario" />
+                    <input type="text" placeholder="Dirección" class="campo-input-text" id="direccion" />
+                    <input type="text" placeholder="Código postal" class="campo-input-text" id="codpost" />
                 </div>
-                <div class="formulario-campo">
-                    <span class="campo-span">Area de influencia</span>
-                    <div class="formulario-campo-radio">
-                        <label for="influencia-zona-unica"><input id="influencia-zona-unica" type="radio" name="influencia" value="1"> Zona única</label>
-                        <label for="influencia-multizona"><input id="influencia-multizona" type="radio" name="influencia" value="2"> Multizona</label>
+                <div class="noCorredor">
+                    <div class="datos-basicos-comentario">
+                        Información comercial
+                    </div>
+                    <div class="formulario-campo campo-operacion">
+                        <span class="campo-span">Canales de operación</span>
+
+                    </div>
+                    <div class="formulario-campo campo-destinatario">
+                        <span class="campo-span">Entrega a</span>
+
+                    </div>
+                    <div class="formulario-campo campo-condicion">
+                        <span class="campo-span">Condiciones preferentes</span>
+
+                    </div>
+                    <div class="formulario-campo">
+                        <span class="campo-span">Intermediario</span>
+                        <input type="text" class="campo-input-text" id="intermediario" />
+                    </div>
+                    <div class="formulario-campo">
+                        <span class="campo-span">Area de influencia</span>
+                        <div class="formulario-campo-radio">
+                            <label for="influencia-zona-unica"><input id="influencia-zona-unica" type="radio" name="influencia" value="1"> Zona única</label>
+                            <label for="influencia-multizona"><input id="influencia-multizona" type="radio" name="influencia" value="2"> Multizona</label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -172,32 +174,35 @@
             </div>
 
             <div class="datos-produccion-cap-prod-editor-contenedor">
-                <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
-                    <div class="formulario-campo campo-clasificacion-compranet noCorredor">
-                        <span class="campo-span">Clasificación</span>
-                    </div>
-                    <div class="formulario-campo campo-tipo-boleto-compranet">
-                        <span class="campo-span">Tipo de Boleto</span>
 
-                    </div>
-                    <div class="formulario-campo campo-bolsa-compranet">
-                        <span class="campo-span">Bolsa</span>
+                <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde" >
+                    <div @(ocultarCamposEditar ? "hidden" : "")>
+                        <div class="formulario-campo campo-clasificacion-compranet noCorredor" >
+                            <span class="campo-span">Clasificación</span>
+                        </div>
+                        <div class="formulario-campo campo-tipo-boleto-compranet" >
+                            <span class="campo-span">Tipo de Boleto</span>
 
-                    </div>
-                    <div class="formulario-campo campo-provincia-compranet noCorredor">
-                        <span class="campo-span">Provincia</span>
-                    </div>
-                    <div class="formulario-campo campo-localidad-compranet noCorredor">
-                        <span class="campo-span">Localidad</span>
-                    </div>
-                    <div id="consignatarioCompraNet" class="formulario-campo campo-consignatario-compranet" hidden>
-                        <span class="campo-span">Consignatario </span>
-                    </div>
-                    <div id="planCanjeCompraNet" class="formulario-campo campo-planCanje-compranet noCorredor">
-                        <span class="campo-span">Plan Canje</span>
-                    </div>
-                    <div id="comisionCompraNet" class="formulario-campo campo-comision-compranet noCorredor">
-                        <span class="campo-span">Comisión %</span>
+                        </div>
+                        <div class="formulario-campo campo-bolsa-compranet" >
+                            <span class="campo-span">Bolsa</span>
+
+                        </div>
+                        <div class="formulario-campo campo-provincia-compranet noCorredor" >
+                            <span class="campo-span">Provincia</span>
+                        </div>
+                        <div class="formulario-campo campo-localidad-compranet noCorredor">
+                            <span class="campo-span">Localidad</span>
+                        </div>
+                        <div id="consignatarioCompraNet" class="formulario-campo campo-consignatario-compranet" hidden>
+                            <span class="campo-span">Consignatario </span>
+                        </div>
+                        <div id="planCanjeCompraNet" class="formulario-campo campo-planCanje-compranet noCorredor">
+                            <span class="campo-span">Plan Canje</span>
+                        </div>
+                        <div id="comisionCompraNet" class="formulario-campo campo-comision-compranet noCorredor">
+                            <span class="campo-span">Comisión %</span>
+                        </div>
                     </div>
                     <div id="cuposConRiesgoCompraNet" class="formulario-campo campo-cuposConRiesgo-compranet">
                         <span class="campo-span">Habilitado Cupos con Riesgo </span>
@@ -205,37 +210,41 @@
                     </div>
                 </div>
             </div>
-            <div class="noCorredor">
-                <div class="datos-basicos-comentario">
-                    Objetivos
-                </div>
+            <div @(ocultarCamposEditar ? "hidden" : "")>
+                <div class="noCorredor">
+                    <div class="datos-basicos-comentario">
+                        Objetivos
+                    </div>
 
-                <div class="datos-produccion-cap-prod-editor-contenedor">
-                    <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
-                        <div class="datos-produccion-cap-prod-editor-granos-titulos">
-                            <div class="produccion-titulo-grano">Grano</div>
-                            <div class="produccion-titulo-grano">Campaña</div>
-                            <div class="produccion-titulo-grano">Toneladas Objetivo</div>
-                        </div>
-                        <div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">
-                            <div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">
-                                <div class="lineaObjetivos0 campo-granos-objetivo ObjetivoGranos">
-
-                                    <img src="../Content/Images/eliminar-tel-mail.png" class="eliminarObjetivo" id="eliminarObjetivo0" />
-                                </div>
+                    <div class="datos-produccion-cap-prod-editor-contenedor">
+                        <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
+                            <div class="datos-produccion-cap-prod-editor-granos-titulos">
+                                <div class="produccion-titulo-grano">Grano</div>
+                                <div class="produccion-titulo-grano">Campaña</div>
+                                <div class="produccion-titulo-grano">Toneladas Objetivo</div>
                             </div>
-                            <div class="agregargranoObjetivo">
-                                + Agregar Objetivo
+                            <div class="datos-produccion-cap-prod-editor-granos-cantidades-contenedor">
+                                <div class="datos-produccion-cap-prod-editor-granos-cantidades-grupo">
+                                    <div class="lineaObjetivos0 campo-granos-objetivo ObjetivoGranos">
+
+                                        <img src="../Content/Images/eliminar-tel-mail.png" class="eliminarObjetivo" id="eliminarObjetivo0" />
+                                    </div>
+                                </div>
+                                <div class="agregargranoObjetivo">
+                                    + Agregar Objetivo
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="datos-basicos-comentario">
-                Comentario
-            </div>
-            <div class="formulario-campo">
-                <textarea id="comentario"></textarea>
+            <div @(ocultarCamposEditar ? "hidden" : "")>
+                <div class="datos-basicos-comentario">
+                    Comentario
+                </div>
+                <div class="formulario-campo">
+                    <textarea id="comentario"></textarea>
+                </div>
             </div>
         </div>
     </div>

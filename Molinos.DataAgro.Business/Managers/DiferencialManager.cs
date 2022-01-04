@@ -137,10 +137,10 @@ namespace Molinos.DataAgro.Business
 
                     logger.Debug("cantidadAFijar "+ cantidadAFijar);
                     logger.Debug("cantidadAPrecio " + cantidadAPrecio);
-
-                    if (cantidadAFijar > this.TraerDiferencial(1).DiferencialDefault || cantidadAPrecio > this.TraerDiferencial(2).DiferencialDefault)
+                    var enviarMail = false;
+                    if (cantidadAFijar > this.TraerDiferencial(1).DiferencialDefault)
                     {
-                        logger.Debug("envia mail " );
+                        logger.Debug("envia mail a fijar" );
                         var cuerpo = hedgeManager.GenerarCuerpoMail("");
                         logger.Debug("GenerarCuerpoMail ");
 
@@ -148,7 +148,18 @@ namespace Molinos.DataAgro.Business
                                                             "Actualización Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
                                                             cuerpo);
                         logger.Debug("ya envio ");
+                        enviarMail = true;
+                    }
+                    if (cantidadAPrecio > this.TraerDiferencial(2).DiferencialDefault && !enviarMail)
+                    {
+                        logger.Debug("envia mail a precio");
+                        var cuerpo = hedgeManager.GenerarCuerpoMail("");
+                        logger.Debug("GenerarCuerpoMail ");
 
+                        mailManager.ReenviarMailCierreDia("Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
+                                                            "Actualización Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
+                                                            cuerpo);
+                        logger.Debug("ya envio ");
                     }
                 }
                 return new Resultado();
