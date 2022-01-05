@@ -366,7 +366,8 @@ namespace Molinos.DataAgro.Business.Managers
                 LiberarCupera = x.LiberarCupera,
                 Centro = x.Centro.Descripcion,
                 Material = x.Material.Descripcion,
-
+                CentroCodigoSap = x.Centro.CodigoSap,
+                MaterialCodigoSap = x.Material.Codigo
             });
 
              var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
