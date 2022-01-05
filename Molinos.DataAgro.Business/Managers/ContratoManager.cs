@@ -1460,9 +1460,9 @@ namespace Molinos.DataAgro.Business.Managers
                 var campania = repositorio.Obtener<Campaña>(oParam.CampanaId);
 
 
-                if (campania.Hasta != null && oParam.FechaHasta < campania.Hasta.Value)
+                if (campania.Hasta != null && oParam.FechaHasta > campania.Hasta.Value)
                 {
-                    oErrorMessages.Error("Condicional", "La fecha entrega no puede abarcar días anteriores al " + campania.Hasta.Value.ToString("dd-MM-yyyy") + " para la campaña " + campania.Descripcion);
+                    oErrorMessages.Error("Condicional", "La fecha entrega no puede abarcar días posteriores al " + campania.Hasta.Value.ToString("dd-MM-yyyy") + " para la campaña " + campania.Descripcion);
                 }
             }
             //if (oParam.Id > 0 && oParam.Condicional == true && oParam.EstadoId == (int)EnumEstadoContrato.Finalizado)

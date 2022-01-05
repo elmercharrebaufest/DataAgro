@@ -137,8 +137,7 @@ namespace Molinos.DataAgro.Business
 
                     logger.Debug("cantidadAFijar "+ cantidadAFijar);
                     logger.Debug("cantidadAPrecio " + cantidadAPrecio);
-                    var enviarMail = false;
-                    if (cantidadAFijar > this.TraerDiferencial(1).DiferencialDefault)
+                    if (cantidadAFijar > (this.TraerDiferencial(1).DiferencialDefault * 1000))
                     {
                         logger.Debug("envia mail a fijar" );
                         var cuerpo = hedgeManager.GenerarCuerpoMail("");
@@ -148,9 +147,8 @@ namespace Molinos.DataAgro.Business
                                                             "Actualización Cierre del dia " + DateTime.Now.Day + "/" + DateTime.Now.Month,
                                                             cuerpo);
                         logger.Debug("ya envio ");
-                        enviarMail = true;
                     }
-                    if (cantidadAPrecio > this.TraerDiferencial(2).DiferencialDefault && !enviarMail)
+                    else if (cantidadAPrecio > (this.TraerDiferencial(2).DiferencialDefault * 1000))
                     {
                         logger.Debug("envia mail a precio");
                         var cuerpo = hedgeManager.GenerarCuerpoMail("");

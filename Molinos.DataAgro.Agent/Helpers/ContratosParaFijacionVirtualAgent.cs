@@ -103,7 +103,7 @@ namespace Molinos.DataAgro.Agent
                                     Importe = apertura.Importe,
                                     Porcentaje = apertura.Porcentaje,
                                     MonedaId = apertura.MonedaId,
-                                    Moneda = monedas.Where(x => x.MonedaId.Trim() == apertura.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
+                                    Moneda = monedas.Where(x => x.Descripcion.Trim() == apertura.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
                                 };
                                 aperturas.Add(a);
                             }
@@ -114,12 +114,12 @@ namespace Molinos.DataAgro.Agent
                                 bonif.MonedaId = bonif.MonedaId ?? "";
                                 var a = new DescuentoBonificacionDto()
                                 {
-                                    FechaDesde = bonif.FechaDesde.Value.ToString("dd-MM-yyyy"),
-                                    FechaHasta = bonif.FechaHasta.Value.ToString("dd-MM-yyyy"),
+                                    FechaDesde = bonif.FechaDesde != null ? bonif.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
+                                    FechaHasta = bonif.FechaHasta != null ? bonif.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
                                     Importe = bonif.Importe,
                                     Porcentaje = bonif.Porcentaje,
                                     MonedaId = bonif.MonedaId,
-                                    Moneda = bonif.Moneda.Descripcion == "" ? "" : monedas.Where(x => x.MonedaId.Trim() == bonif.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
+                                    Moneda = bonif.Moneda.Descripcion == "" ? "" : monedas.Where(x => x.Descripcion.Trim() == bonif.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
                                 };
                                 bonificaciones.Add(a);
                             }

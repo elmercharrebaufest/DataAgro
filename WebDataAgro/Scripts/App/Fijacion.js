@@ -5067,7 +5067,7 @@ function ArmarGrillaContratosPendientes() {
         fijacionId: Id,
         esVirtual: esVirtual
     });
-    consultarBonificacionAfijar(contratos);
+    //consultarBonificacionAfijar(contratos);
 
     var data = new kendo.data.DataSource({
         data: contratos
