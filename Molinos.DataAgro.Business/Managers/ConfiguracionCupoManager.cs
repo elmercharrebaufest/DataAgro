@@ -374,6 +374,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, zona, new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
                 configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
+                configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
+                configuracion.CuposDisponibles += disponibilidad.Sum(X => X.Disponibles);
             }
             return configuracion;
         }

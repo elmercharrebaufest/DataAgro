@@ -329,9 +329,8 @@ function InicializarElementos() {
                     }
                     InsertarAperturasViewModel(CalcularPrecioTotalApertura());
                     SeleccionAutomaticaBolsa();
-                    if ($("#buscadorProveedor").val() != "") {
-                        EsComisionista(compraNet);
-                    }
+                    EsComisionista(compraNet);
+                   
                 }
             }
         },
@@ -5973,8 +5972,8 @@ function EsComisionista(compranet) {
         $("#razonSocialComisionista").val(datos.RazonSocialComisionista);
     } else {
         $("#ocultarComisionista").hide();
-        $("#comisionistaId").val();
+        $("#comisionistaCheckId").prop("checked", false);
+        $("#comisionistaId").val("");
     }
-    
-}
 
+}

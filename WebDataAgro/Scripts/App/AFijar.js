@@ -330,11 +330,10 @@ function InicializarElementos() {
                 } else {
                     BorrarComisionSiEsAcopio();
                 }
-                if ($("#buscadorProveedor").val() != "") {
-                    EsComisionista(compraNet);
-                }
+                 EsComisionista(compraNet);
                 //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 //InsertarAperturasViewModel(CalcularPrecioTotalApertura());
+             
             }
         },
         dataSource: {
@@ -5379,7 +5378,8 @@ function EsComisionista(compranet) {
         $("#razonSocialComisionista").val(datos.RazonSocialComisionista);
     } else {
         $("#ocultarComisionista").hide();
-        $("#comisionistaId").val();
+        $("#comisionistaCheckId").prop("checked", false);
+        $("#comisionistaId").val("");
     }
 
 }
