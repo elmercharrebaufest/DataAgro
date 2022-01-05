@@ -125,15 +125,14 @@ namespace Molinos.DataAgro.Business
                 if (hedgeManager.Dia() != null)
                 {
                     logger.Debug("hedgeManager.Dia() "+ hedgeManager.Dia().ToJson());
-                    var cantidadAFijar = repositorio.Listar<Contrato, double>(x => x.Cantidad,
+                    var cantidadAFijar = repositorio.Listar<Contrato>(
                         x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(DateTime.Now)
                         && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.TipoNegocioId == 1
-                        && x.FinDelDia == null).Sum();
+                        && x.FinDelDia == null).ToList().Sum(x => x.Cantidad);
 
-                    var cantidadAPrecio = repositorio.Listar<Contrato, double>(x => x.Cantidad,
-                        x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(DateTime.Now)
+                    var cantidadAPrecio = repositorio.Listar<Contrato>(x => DbFunctions.TruncateTime(x.Fecha) == DbFunctions.TruncateTime(DateTime.Now)
                         && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && x.TipoNegocioId == 2
-                        && x.FinDelDia == null).Sum();
+                        && x.FinDelDia == null).ToList().Sum(x => x.Cantidad);
 
                     logger.Debug("cantidadAFijar "+ cantidadAFijar);
                     logger.Debug("cantidadAPrecio " + cantidadAPrecio);
