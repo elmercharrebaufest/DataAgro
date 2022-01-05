@@ -369,14 +369,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             });
 
-            var listaZonas = repositorio.Listar<ZonaCupo, string>(x => x.CodigoSap);
-            foreach (var zona in listaZonas)
-            {
-                var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, zona, new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
-                configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
-                configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
-                configuracion.CuposDisponibles += disponibilidad.Sum(X => X.Disponibles);
-            }
+             var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
+             configuracion.CuposConsumidos = disponibilidad.Sum(x => x.Consumidos);
+             configuracion.CuposDisponibles = disponibilidad.Sum(x => x.Disponibles);
+          
             return configuracion;
         }
         public Resultado CambioMasivo(bool aceptar)
