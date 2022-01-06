@@ -569,6 +569,15 @@ namespace WebDataAgro.Services
                 }
             }
             contrato.Pizarra = contratoSAP.Pizarra == "X";
+
+            foreach (var desc in contrato.Descuentos)
+            {
+                // los importes en USDM que llegan de sap tienen un 0 de mas, solo para generales por fuera
+                if (desc.Importe != 0 && desc.MonedaId.Trim() == "USDM" && desc.TipoPeriodoDBId == 1 && desc.TipoDBId == 2)
+                {
+                    desc.Importe = desc.Importe / 10;
+                }
+            }
         }
 
         public ResultadoSap ActualizarFijacionSAP(FijacionSAPDto fijacionSAP)

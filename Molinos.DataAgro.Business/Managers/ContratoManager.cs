@@ -1485,7 +1485,10 @@ namespace Molinos.DataAgro.Business.Managers
 
 
             //}
-
+            if (!repositorio.Existe<Localidad>(a => a.LocalidadId == oParam.LocalidadId && a.ProvinciaId == oParam.ProvinciaId))
+            {
+                oErrorMessages.Error("Localidad", "La localidad ingresada no corresponde a la provincia.");
+            }
             return oErrorMessages;
         }
 
