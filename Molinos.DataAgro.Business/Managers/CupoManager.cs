@@ -973,7 +973,7 @@ namespace Molinos.DataAgro.Business.Managers
                     KgNegocio = a.KgNegocio,
                     KgPendienteAplicar = a.KgPendienteAplicar,
                 }).ToList();
-                var solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x=> x.SugerenciaCupoId != null);
+                var solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null);
 
                 var solicitudesRechazadas = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo);
 
@@ -2612,10 +2612,10 @@ namespace Molinos.DataAgro.Business.Managers
         private CupoResult CrearCupos(DiaCupo detalle, SugerenciaCupo sugerencia, SugerenciaPorComercial sugerenciaPorComercial)
         {
             var resultado = new CupoResult();
-            
+
             var cupo = new Cupo
             {
-                ProveedorId = sugerencia.Negocio != null && sugerencia.Negocio.ProveedorComisionistaId != null? sugerencia.Negocio.ProveedorComisionistaId.Value : sugerencia.ProveedorId.Value,
+                ProveedorId = sugerencia.Negocio != null && sugerencia.Negocio.ProveedorComisionistaId != null ? sugerencia.Negocio.ProveedorComisionistaId.Value : sugerencia.ProveedorId.Value,
                 MaterialId = sugerencia.MaterialId,
                 FechaIngreso = detalle.Fecha,
                 ZonaCupoId = sugerencia.ZonaCupoId.Value,
@@ -3100,11 +3100,13 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         try
                         {
+                            c.EstadoCupoId = 4;
                             var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
                             errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
 
                             if (errorStop.HayError)
                             {
+                                c.EstadoCupoId = 1;
                                 var cupoError = new CupoDto
                                 {
                                     CupoSap = c.CupoSap,
@@ -3117,12 +3119,13 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                             else
                             {
-                                c.EstadoCupoId = 4;
-                                logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
-
                                 var resultado = eliminarcupoSap.Eliminar(c.CupoSap, comercialId);
                                 if (resultado != "OK")
                                 {
+                                    if (c.Centro.Acopio)
+                                    {
+                                        c.EstadoCupoId = 1;
+                                    }
                                     var cupoError = new CupoDto
                                     {
                                         CupoSap = c.CupoSap,
@@ -3138,6 +3141,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                             if (!errorStop.HayError)
                             {
+                                logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
+
                                 var cuposOk = new CupoDto
                                 {
                                     CupoSap = c.CupoSap,
@@ -3145,10 +3150,11 @@ namespace Molinos.DataAgro.Business.Managers
                                     Material = c.Material.Descripcion,
                                     ZonaCupo = c.ZonaCupo.Descripcion,
                                     ComercialId = c.ComercialId,
-                                    ProveedorId = c.ProveedorId                                    
+                                    ProveedorId = c.ProveedorId
                                 };
                                 listaCuposOk.Add(cuposOk);
                             }
+
 
                         }
                         catch (Exception e)
@@ -4623,6 +4629,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             repositorio.GuardarCambios();
         }
-        
+
     }
 }

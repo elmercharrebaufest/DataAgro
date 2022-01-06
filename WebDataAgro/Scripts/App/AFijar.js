@@ -5353,6 +5353,9 @@ function CargarAutomaticamenteLaComision(compraNet) {
 function CalcularMaximo() {
     if ($("#cantidadId").val() > 0) {
         var cantidadMaxima = 30 * $("#cantidadId").val() / 100;
+        if (cantidadMaxima < 30000) {
+            cantidadMaxima = 30000;
+        }
         $("#maximaId").data("kendoNumericTextBox").value(cantidadMaxima);
     } else {
         $("#maximaId").val("");
