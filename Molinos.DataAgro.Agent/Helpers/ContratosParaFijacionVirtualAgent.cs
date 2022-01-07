@@ -98,12 +98,12 @@ namespace Molinos.DataAgro.Agent
                                 apertura.MonedaId = apertura.MonedaId ?? "";
                                 var a = new AperturaPrecioDto()
                                 {
-                                    ConceptoAperturaPrecioId = apertura.ConceptoAperturaPrecioId,
-                                    ConceptoAperturaPrecio = apertura.ConceptoAperturaPrecio.Descripcion,
-                                    Importe = apertura.Importe,
-                                    Porcentaje = apertura.Porcentaje,
+                                    ConceptoAperturaPrecioId = apertura != null ? apertura.ConceptoAperturaPrecioId : 0,
+                                    ConceptoAperturaPrecio = apertura != null ? apertura.ConceptoAperturaPrecio.Descripcion : "",
+                                    Importe = apertura.Importe != 0 ? apertura.Importe : 0,
+                                    Porcentaje = apertura.Porcentaje != 0 ? apertura.Porcentaje : 0,
                                     MonedaId = apertura.MonedaId,
-                                    Moneda = monedas.Where(x => x.Descripcion.Trim() == apertura.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
+                                    Moneda = apertura.Moneda != null ? monedas.Where(x => x.Descripcion.Trim() == apertura.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion : ""
                                 };
                                 aperturas.Add(a);
                             }
@@ -116,10 +116,10 @@ namespace Molinos.DataAgro.Agent
                                 {
                                     FechaDesde = bonif.FechaDesde != null ? bonif.FechaDesde.Value.ToString("dd-MM-yyyy") : "",
                                     FechaHasta = bonif.FechaHasta != null ? bonif.FechaHasta.Value.ToString("dd-MM-yyyy") : "",
-                                    Importe = bonif.Importe,
-                                    Porcentaje = bonif.Porcentaje,
+                                    Importe = bonif.Importe != 0 ? bonif.Importe : 0,
+                                    Porcentaje = bonif.Porcentaje != 0 ? bonif.Porcentaje : 0,
                                     MonedaId = bonif.MonedaId,
-                                    Moneda = bonif.Moneda.Descripcion == "" ? "" : monedas.Where(x => x.Descripcion.Trim() == bonif.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
+                                    Moneda = bonif.Moneda == null ? "" : bonif.Moneda.Descripcion == "" ? "" : monedas.Where(x => x.Descripcion.Trim() == bonif.Moneda.Descripcion.Trim()).FirstOrDefault().Descripcion
                                 };
                                 bonificaciones.Add(a);
                             }
