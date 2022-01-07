@@ -4788,10 +4788,11 @@ function formatDate(date) {
 function consultarBonificacionAfijar(afijar, compraNet) {
     var hayBonificacion = true;
     if ((afijar.ImporteAPrecio != undefined && afijar.ImporteSobrePrecio != undefined && afijar.PorcentajeAPrecio != undefined && afijar.PorcentajeSobrePrecio != undefined)) {
-        if (afijar.ImporteAPrecio != 0 || afijar.ImporteSobrePrecio != 0 || afijar.PorcentajeAPrecio != 0 || afijar.PorcentajeSobrePrecio != 0) {
+        if (afijar.ImporteAPrecio == 0 && afijar.ImporteSobrePrecio == 0 && afijar.PorcentajeAPrecio == 0 && afijar.PorcentajeSobrePrecio == 0) {
             if (compraNet) {
-                compraNet.ComisionPorcentaje = 0;
-                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
+                //compraNet.ComisionPorcentaje = 0;
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(
+                    compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 InsertarAperturasViewModel(CalcularPrecioTotalApertura());
                 hayBonificacion = false;
             }
