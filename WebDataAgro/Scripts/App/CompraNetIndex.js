@@ -439,7 +439,9 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.CondicionalPrecio + "'" + ',' +
         "'" + dataItem.CondicionalContratoSAP + "'" + ',' +
         "'" + dataItem.MailVentaBoleto + "'" + ',' +
-        "'" + htmlEncode(dataItem.RazonSocialProveedorComisionista == null ? "" : dataItem.RazonSocialProveedorComisionista) + "'" +
+        "'" + htmlEncode(dataItem.RazonSocialProveedorComisionista == null ? "" : dataItem.RazonSocialProveedorComisionista) + "'" + ',' +
+        "'" + dataItem.KgMinimo + "'" + ',' +
+        "'" + dataItem.KgMaximo + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -2154,7 +2156,7 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, descripcionOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
     Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
     Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional,
-    CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta, RazonsocialProveedorComisionista
+    CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta, RazonsocialProveedorComisionista, minimo, maximo
 ) {
     $("#modalVisualizar").modal('show');
 
@@ -2493,6 +2495,14 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     $("#aperturaDePrecioVisualizarDivPrecioNeto").hide();
     $("#aperturaBasisDivVisualizar").hide();
     $("#divPosicionCBOT").hide();
+
+    if (tipo === "A FIJAR") {
+        $(".rangos").show();
+        $("#maximoId").text(maximo);
+        $("#minimoId").text(minimo);        
+    } else {
+        $(".rangos").hide();
+    }
 
     if (precioNeto != 0 || tipo === "A FIJAR" || tipo === "FIJACION" || tipo === "A PRECIO") {
         if (parseFloat(precioNeto) > 0) {

@@ -2750,6 +2750,7 @@ namespace Molinos.DataAgro.Business.Managers
         public DatosContratoDto TraerDatosDeContrato(int contratoId)
         {
             return repositorio.Obtener<Contrato, DatosContratoDto>(x => x.Id == contratoId,
+
                 x => new DatosContratoDto()
                 {
                     Calidades = x.Calidad.Select(cal => new CalidadDto()
@@ -2799,8 +2800,8 @@ namespace Molinos.DataAgro.Business.Managers
                         MonedaPactadoId = pre.MonedaPactadoId,
                         Porcentaje = pre.Porcentaje,
                         Precio = pre.Precio
-                    }).ToList()
-                });
+                    }).ToList(),
+                }); 
         }
         public DatosContratoDto TraerDatosDeContratoAcuerdo(int contratoId)
         {

@@ -4141,6 +4141,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.Id > 0) {
         $("#maximaId").data("kendoNumericTextBox").value(contrato.KgMaximo);
+        $("#minimoId").data("kendoNumericTextBox").value(contrato.KgMinimo);
     } else {
         CalcularMaximo();
     }
@@ -5353,10 +5354,15 @@ function CargarAutomaticamenteLaComision(compraNet) {
 function CalcularMaximo() {
     if ($("#cantidadId").val() > 0) {
         var cantidadMaxima = 30 * $("#cantidadId").val() / 100;
-        if (cantidadMaxima < 30000) {
+        var cantidadMinima = 30000;
+        if ($("#cantidadId").val() < 30000) {
+            cantidadMaxima = $("#cantidadId").val();
+            cantidadMinima = $("#cantidadId").val();
+        }else if (cantidadMaxima < 30000) {
             cantidadMaxima = 30000;
         }
         $("#maximaId").data("kendoNumericTextBox").value(cantidadMaxima);
+        $("#minimoId").data("kendoNumericTextBox").value(cantidadMinima);
     } else {
         $("#maximaId").val("");
     }

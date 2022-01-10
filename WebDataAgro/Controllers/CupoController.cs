@@ -17,6 +17,7 @@ using Filter = Kendo.DynamicLinq.Filter;
 using KendoGridBinder.Containers;
 using System.Collections;
 using System.Globalization;
+using System.Configuration;
 
 namespace WebDataAgro.Controllers
 {
@@ -152,6 +153,12 @@ namespace WebDataAgro.Controllers
                                  != null ? cupo.CantidadCupos : 0;
             var cupoNuevo = TransformarAEntidad(cupo);
             var error = cupoManager.Validar(cupoNuevo, cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
+            if (cupoNuevo.MaterialId == 3 && cupoNuevo.CentroId != 10 && ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
+            {
+                if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                error.Errores.Add(new ErrorMessage("Los cupos de soja no sustentable los deben gestionar por la pantalla de “Sugerencias de cupos”"));
+
+            }
             if (error.HayError)
             {
                 foreach (var e in error.Errores)

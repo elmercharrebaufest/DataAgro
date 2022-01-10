@@ -217,7 +217,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         MailVentaBoleto = contrato.MailVentaBoleto,
                         ProveedorComisionistaId = contrato.ProveedorComisionistaId,
                         RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial,
-                        TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
+                        KgMaximo = contrato.KgMaximo ?? 0,
+                        KgMinimo = contrato.KgMinimo ?? 0
                     };
 
                 return queryNegocios;
