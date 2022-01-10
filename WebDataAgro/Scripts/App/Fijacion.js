@@ -262,6 +262,11 @@ function ArmarAperturaDesdeAFijar(afijar) {
         if (!primeraCargaEdit) {
             if (afijar.PorcentajeSobrePrecio > 0 && afijar.PorcentajeSobrePrecio <= 1) {
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").max(1);
+                $.each(afijar.Aperturas, function (key, apertura) {
+                    if (apertura.ConceptoAperturaPrecioId == 3) {
+                        apertura.Porcentaje = afijar.PorcentajeSobrePrecio;
+                    }
+                });
             }
             else {
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").max(afijar.PorcentajeSobrePrecio);
