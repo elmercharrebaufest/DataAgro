@@ -1597,8 +1597,7 @@ function InicializarElementos() {
             
         }
     });
-    $("#minimoId").data("kendoNumericTextBox").enable(false);
-    $("#maximaId").data("kendoNumericTextBox").enable(false);
+    $("#minimoId").data("kendoNumericTextBox").enable(false);  
 
     $("#cargarCantidadCamiones").change(function () {
         if ($("#cargarCantidadCamiones").is(':checked')) {
