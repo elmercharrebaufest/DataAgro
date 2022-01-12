@@ -1106,13 +1106,13 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado si completó Fecha límite .");
             }
 
-            if (!validacionesMinimas)
-            {
-                if (oParam.TipoNegocioId == 1 && oParam.Descuentos != null && oParam.Descuentos.Any(a => a.Importe != 0 && a.TipoDBId == 2))
-                {
-                    oErrorMessages.Error("Descuentos y Bonificaciones", "No se puede completar importe en un descuento o bonificacion fuera de precio.");
-                }
-            }
+            //if (!validacionesMinimas)
+            //{
+            //    if (oParam.TipoNegocioId == 1 && oParam.Descuentos != null && oParam.Descuentos.Any(a => a.Importe != 0 && a.TipoDBId == 2))
+            //    {
+            //        oErrorMessages.Error("Descuentos y Bonificaciones", "No se puede completar importe en un descuento o bonificacion fuera de precio.");
+            //    }
+            //}
 
 
             if ((oParam.MaterialId == 4 || oParam.MaterialId == 5) && oParam.Descuentos != null && oParam.Descuentos.Any(a => a.Porcentaje > 0 && a.TipoDBId == 1))
