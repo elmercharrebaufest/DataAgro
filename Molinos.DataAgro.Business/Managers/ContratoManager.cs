@@ -1208,25 +1208,32 @@ namespace Molinos.DataAgro.Business.Managers
                     oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pago");
                 }
 
-                if (oParam.CondicionDePagoDiaPesificado > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) || oParam.CondicionDePagoPesificadoVentaId == null))
-                {
-                    oErrorMessages.Error("DiaVenta", "Debe completar la condición de pesificación");
-                }
-
-                if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
-                {
-                    oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
-                }
-
-                if (oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.CondicionDePagoPesificadoVentaId > 0 && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
-                {
-                    oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
-                }
+              
 
                 if (!oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.MonedaId == "USDM ")
-                {
+                {                  
+                
                     oErrorMessages.Error("DiaVenta", "La condicion de pesificado en condiciones adicionales de venta es obligatoria con la moneda USD");
                 }
+
+                if (oParam.MonedaId == "USDM ")
+                {
+                    if (oParam.CondicionDePagoDiaPesificado > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) || oParam.CondicionDePagoPesificadoVentaId == null))
+                    {
+                        oErrorMessages.Error("DiaVenta", "Debe completar la condición de pesificación");
+                    }
+
+                    if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
+                    {
+                        oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
+                    }
+
+                    if (oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.CondicionDePagoPesificadoVentaId > 0 && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
+                    {
+                        oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
+                    }
+                }
+
 
                 if (oParam.BoletoVentaId == 5 && string.IsNullOrEmpty(oParam.MailVentaBoleto))
                 {
