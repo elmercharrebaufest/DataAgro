@@ -344,6 +344,12 @@ function ArmarAperturaDesdeAFijar(afijar) {
                     $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
                 }
             }
+            if (fijacionVirtual == true && (apertura.Porcentaje > 0) {
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+                $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+            }
         }
         if (apertura.ConceptoAperturaPrecioId == 4) {
             if (!primeraCargaEdit) { //no viene del editar
