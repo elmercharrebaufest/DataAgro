@@ -4654,11 +4654,11 @@ namespace Molinos.DataAgro.Business.Managers
                     Cantidad = x.Cantidad,
                     Precio = x.Precio,
                     StandardCalidadId = x.StandardDeCalidadId,
-                    StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
+                    StandardDeCalidadDescripcion = x.StandardDeCalidad != null ? x.StandardDeCalidad.Descripcion : "",
                     Calidades = x.Calidad.Select(y => new CalidadDto
                     {
                         Id = y.Id,
-                        CalidadEspecialDesc = y.CalidadEspecial.Descripcion,
+                        CalidadEspecialDesc = y.CalidadEspecial != null ? y.CalidadEspecial.Descripcion : "",
                         CalidadEspecialId = y.CalidadEspecialId,
                         PorcentajeDesde = y.PorcentajeDesde,
                         PorcentajeHasta = y.PorcentajeHasta,
