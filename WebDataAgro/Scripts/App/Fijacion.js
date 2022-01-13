@@ -344,7 +344,7 @@ function ArmarAperturaDesdeAFijar(afijar) {
                     $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
                 }
             }
-            if (fijacionVirtual == true && (apertura.Porcentaje > 0) {
+            if (fijacionVirtual == true && apertura.Porcentaje > 0) {
                 $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
                 $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
                 $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
