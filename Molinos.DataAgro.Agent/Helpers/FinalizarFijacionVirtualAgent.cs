@@ -94,7 +94,7 @@ namespace Molinos.DataAgro.Agent
                        if(fijacionComision > 0)
                         {
                             fijacionComision = fijacionComision / 100;
-                            precioNeto += (precioNeto * fijacionComision);
+                            precioNeto = precioNeto + (precioNeto * fijacionComision);
                         }
                     }
                     var rq = new Z_MPRFC_INSERTAR_FIJ_VIR_CANJE()
@@ -104,7 +104,7 @@ namespace Molinos.DataAgro.Agent
                         IM_CONTRATO = fijacion.ContratoSAP,
                         IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd"),
                         IM_HORA = fijacion.Fecha.ToString("HH:mm:ss"),
-                        IM_PRECIO = comision > 0 ? fijacion.Precio : precioNeto,
+                        IM_PRECIO = comision > 0 ? fijacion.Precio : decimal.Parse(precioNeto.ToString("n2")),
                         IM_MONEDA = fijacion.MonedaId.TrimEnd(),
                         IM_UNIME = "KG",
                         IM_FECHA_OPERACION = fijacion.FechaOperacion.ToString("yyyy-MM-dd"),                        
