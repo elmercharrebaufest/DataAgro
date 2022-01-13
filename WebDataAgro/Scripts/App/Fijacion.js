@@ -363,10 +363,12 @@ function ArmarAperturaDesdeAFijar(afijar) {
                 $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
             }
             else {
-                $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly(false);
-                $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
-                $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
-                $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                if (fijacionVirtual == false) {
+                    $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").readonly(false);
+                    $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").readonly(false);
+                    $("#aperturaPrecioImporteBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                    $("#aperturaPrecioPorcentajeBonificacionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
+                }
             }
         }
         if (apertura.ConceptoAperturaPrecioId == 5 && !primeraCargaEdit) {
