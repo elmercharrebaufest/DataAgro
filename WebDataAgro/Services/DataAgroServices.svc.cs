@@ -558,8 +558,8 @@ namespace WebDataAgro.Services
             contrato.CondicionalMonedaId = repositorio.Obtener<Moneda, string>(x => x.MonedaId == contratoSAP.CondicionalMonedaId, x => x.MonedaId);
             contrato.CondicionalFecha = !string.IsNullOrEmpty(contratoSAP.CondicionalFecha) ? DateTime.ParseExact(contratoSAP.CondicionalFecha, "yyyy-MM-dd", CultureInfo.InvariantCulture) : (DateTime?)null;
             contrato.CondicionalPosicion = contratoSAP.CondicionalPosicion;
-            contrato.KgMaximo = contratoSAP.KGMaximo;
-            contrato.KgMinimo = contratoSAP.KGMinimo;
+            //contrato.KgMaximo = contratoSAP.KGMaximo;
+            //contrato.KgMinimo = contratoSAP.KGMinimo;
             if (!string.IsNullOrEmpty(contratoSAP.CondicionalContratoSAP))
             {
                 string num = contratoSAP.CondicionalContratoSAP.PadLeft(10, '0');

@@ -3860,11 +3860,11 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.CondicionalFecha = contrato.CondicionalFecha;
             contratoSave.CondicionalPosicion = contrato.CondicionalPosicion;
             contratoSave.CondicionalContratoId = contrato.CondicionalContratoId;
-            if(contratoSave.TipoNegocioId == 1)
-            {
-                contratoSave.KgMinimo = contrato.KgMinimo ?? contratoSave.KgMinimo;
-                contratoSave.KgMaximo = contrato.KgMaximo ?? contratoSave.KgMaximo;
-            }
+            //if(contratoSave.TipoNegocioId == 1)
+            //{
+            //    contratoSave.KgMinimo = contrato.KgMinimo ?? contratoSave.KgMinimo;
+            //    contratoSave.KgMaximo = contrato.KgMaximo ?? contratoSave.KgMaximo;
+            //}
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoSave.Id), TipoAccionLogDataAgro.Modificar, contratoSave.GetType());
 
@@ -4875,11 +4875,11 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.PosicionCBOT = contratoSap.PosicionCBOT;
                 contrato.TipoPosicionCBOTId = contratoSap.TipoPosicionCBOTId;
                 contrato.Cesion = contratoSap.Cesion;
-                if (contrato.TipoNegocioId == 1)
-                {
-                    contrato.KgMinimo = contratoSap.KgMinimo ?? contrato.KgMinimo;
-                    contrato.KgMaximo = contratoSap.KgMaximo ?? contrato.KgMaximo;
-                }
+                //if (contrato.TipoNegocioId == 1)
+                //{
+                //    contrato.KgMinimo = contratoSap.KgMinimo ?? contrato.KgMinimo;
+                //    contrato.KgMaximo = contratoSap.KgMaximo ?? contrato.KgMaximo;
+                //}
                 repositorio.Agregar(contrato);
                 repositorio.GuardarCambios();
                 logDataAgroManager.LogCambiosDataAgro(TraerContrato(contrato.Id), TipoAccionLogDataAgro.Crear, contrato.GetType());
