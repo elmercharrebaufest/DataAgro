@@ -84,7 +84,15 @@ namespace Molinos.DataAgro.Agent
                     //}
 
                     //decimal im_precio = fijacion.Precio + precioApertura;
-
+                    var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == fijacion.ContratoSAP);
+                    var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+                    var comision = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0;
+                    var precioNeto = fijacion.Precio;
+                    if(comision <= 0)
+                    {
+                        comision = comision / 100;
+                        precioNeto += (precioNeto * comision);
+                    }
                     var rq = new Z_MPRFC_INSERTAR_FIJ_VIR_CANJE()
                     {
                         IM_A_FIJAR = fijacion.Cantidad.ToString(),
@@ -92,7 +100,7 @@ namespace Molinos.DataAgro.Agent
                         IM_CONTRATO = fijacion.ContratoSAP,
                         IM_FECHA = fijacion.Fecha.ToString("yyyy-MM-dd"),
                         IM_HORA = fijacion.Fecha.ToString("HH:mm:ss"),
-                        IM_PRECIO = fijacion.PrecioNeto ?? fijacion.Precio,
+                        IM_PRECIO = comision > 0 ? fijacion.Precio : precioNeto,
                         IM_MONEDA = fijacion.MonedaId.TrimEnd(),
                         IM_UNIME = "KG",
                         IM_FECHA_OPERACION = fijacion.FechaOperacion.ToString("yyyy-MM-dd"),                        
