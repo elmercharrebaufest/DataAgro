@@ -93,6 +93,7 @@ namespace Molinos.DataAgro.Agent
                        var fijacionComision = fijacion.AperturaPrecio.Count() > 0 ? fijacion.AperturaPrecio.FirstOrDefault(t => t.ConceptoAperturaPrecioId == 3).Porcentaje : 0;
                        if(fijacionComision > 0)
                         {
+                            fijacionComision = fijacionComision / 100;
                             precioNeto += (precioNeto * fijacionComision);
                         }
                     }
