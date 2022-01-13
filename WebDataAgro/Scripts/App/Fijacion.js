@@ -285,12 +285,6 @@ function ArmarAperturaDesdeAFijar(afijar) {
             $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
             $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
         }
-        if (fijacionVirtual == true && afijar.PorcentajeSobrePrecio > 0) {
-            $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
-            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
-            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
-            $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
-        }
         else {
             $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly(false);
             $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
@@ -301,6 +295,13 @@ function ArmarAperturaDesdeAFijar(afijar) {
                 $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
                 $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly(false);
             }
+        }
+
+        if (fijacionVirtual == true && afijar.PorcentajeSobrePrecio > 0) {
+            $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").readonly();
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").readonly();
+            $("#aperturaPrecioImporteComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
+            $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "lightgray");
         }
     }
     $.each(afijar.Aperturas, function (key, apertura) {
