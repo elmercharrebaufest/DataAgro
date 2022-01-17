@@ -478,7 +478,7 @@ function grabarSolicitudExtraordinaria() {
     if ($("#FasonES").is(':checked') && $("#CuitES").val() == "") {
         MensErr("Complete el CUIT del destinatario"); return;
     }
-
+    
     BlockUi('Grabando...');
     setTimeout(function () {
         var solicitud = {
@@ -489,10 +489,11 @@ function grabarSolicitudExtraordinaria() {
             CantidadCupo: $("#FleteAcarreoES").is(':checked') ? 0 : $("#CantidadCupoSE").data("kendoNumericTextBox").value(),
             CantidadFleteProcedencia: $("#FleteAcarreoES").is(':checked') ? $("#CantidadCupoSE").data("kendoNumericTextBox").value() : 0,
             TipoAdministracionCupoId: 2,
-            Fazon: $("#FasonES").is(':checked'),
+            Fason: $("#FasonES").is(':checked'),
             Destinatario: $("#CuitES").val(),
             Observacion: $("#ObservacionSE").val(),
-            CentroId: $("#CentroIdSE").data("kendoDropDownList").value()
+            CentroId: $("#CentroIdSE").data("kendoDropDownList").value(),
+            Calidad: $("#MaterialIdSE").data("kendoDropDownList").value() == 3 ? $("#CalidadIdSE").data("kendoDropDownList").text() : ""
         };
         result = MSExecuteOnServer('/SugerenciaCupo/GenerarSolicitudExtraordinaria', solicitud);
         ListarRespuesta(result);

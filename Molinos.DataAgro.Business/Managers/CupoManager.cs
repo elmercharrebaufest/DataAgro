@@ -26,6 +26,8 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using OfficeOpenXml;
+using System.IO;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -880,12 +882,47 @@ namespace Molinos.DataAgro.Business.Managers
         public void CrearSugerenciaCupo()
         {
             var materiales = repositorio.Listar<Material, MaterialIni>(x => new MaterialIni { MaterialId = x.MaterialId, Descripcion = x.Descripcion });
+            var sugerencias = new List<SugerenciaCupoDto>();
             foreach (var material in materiales)
             {
-                CrearSugerenciaCupo(material.MaterialId);
+                sugerencias.AddRange(CrearSugerenciaCupo(material.MaterialId));
             }
+            EnviarMailNegociosDeAlgoritmo(GenerarExcelNegociosAlgoritmo(ConvertirADtoExcel(sugerencias)));
+
+            //EnviarMail
         }
-        public void CrearSugerenciaCupo(int MaterialId, ConfiguracionCupo configuracion = null)
+        public List<SugerenciaCupoExcel> ConvertirADtoExcel(List<SugerenciaCupoDto> dto)
+        {
+            var listaExcel = new List<SugerenciaCupoExcel>();
+            foreach (var item in dto)
+            {
+                var excel = new SugerenciaCupoExcel
+                {
+                    TipoNegocio = item.TipoNegocioDesc,
+                    ContratoSAP = item.ContratoSAP,
+                    RazonSocial = item.ProveedorDesc,
+                    CUIT = item.ProveedorCUIT,
+                    Destinatario = item.Destinatario,
+                    Precio = item.Precio,
+                    KgNegocio = item.KgNegocio,
+                    Material = item.MaterialDesc,
+                    Moneda = String.IsNullOrEmpty(item.MonedaId) ? "" : item.MonedaId,
+                    FechaDesde = item.FechaDesde,
+                    FechaHasta = item.FechaHasta,
+                    Comercial = item.ComercialDesc,
+                    Zona = item.ZonaDescrip,
+                    Centro = item.CentroDesc,
+                    CDWarrant = item.CDWarrant == true ? "SI" : "NO",
+                    Fason = item.Fason == true ? "SI" : "NO",
+                    Priorizado = item.Priorizado == true ? "SI" : "NO",
+                    Puntaje = item.PuntuacionTotal
+                };
+                listaExcel.Add(excel);
+            }
+            return listaExcel;
+        }
+
+        public List<SugerenciaCupoDto> CrearSugerenciaCupo(int MaterialId, ConfiguracionCupo configuracion = null)
         {
             try
             {
@@ -904,7 +941,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug("desde" + formulaDto.CuposDesde + " hasta " + formulaDto.CuposHasta + "- Configuracion: " + configuracion.Fecha);
                     if (!(formulaDto.CuposDesde <= configuracion.Fecha && formulaDto.CuposHasta >= configuracion.Fecha))
                     {
-                        return;
+                        return new List<SugerenciaCupoDto>();
                     }
                 }
                 logger.Debug("Inicio Algoritmo");
@@ -969,10 +1006,14 @@ namespace Molinos.DataAgro.Business.Managers
                     Aceptado = null,
                     Puntuaciones = JsonConvert.SerializeObject(a.Puntuaciones),
                     ContratoSAP = a.ContratoSAP,
-                    CDWarrant = a.CDWarrant,
+                    CDWarrant = a.CDWarrant == true ? true : false,
                     KgNegocio = a.KgNegocio,
                     KgPendienteAplicar = a.KgPendienteAplicar,
+
                 }).ToList();
+
+                //mandar mail
+
                 var solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null);
 
                 var solicitudesRechazadas = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo);
@@ -980,12 +1021,14 @@ namespace Molinos.DataAgro.Business.Managers
                 var sugerenciasPendientes = repositorio.Listar<SugerenciaCupo>(a => a.Aceptado != false && a.MaterialId == formulaDto.MaterialId && solicitudesRechazadas.Contains(a.Id));
                 sugerenciasPendientes.ForEach(a => a.Aceptado = false);
 
-                repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado != false && a.MaterialId == formulaDto.MaterialId && !solicitudesSugerenciasId.Contains(a.Id));
+                //repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado != false && a.MaterialId == formulaDto.MaterialId && !solicitudesSugerenciasId.Contains(a.Id));
+                repositorio.RemoverTodos<SugerenciaCupo>(a => a.Aceptado == null && a.MaterialId == formulaDto.MaterialId && !solicitudesSugerenciasId.Contains(a.Id));
                 repositorio.AgregarTodos(sugerencias);
                 CargarDatosSugerenciasPorComercial(sugerencias, formulaDto.MaterialId);
                 repositorio.GuardarCambios();
 
                 logger.Debug("CrearSugerenciaCupo - GuardarCambios.");
+                return negocios;
             }
             catch (Exception e)
             {
@@ -1014,7 +1057,7 @@ namespace Molinos.DataAgro.Business.Managers
             List<Cupo> cupos = repositorio.Listar<Cupo>(x =>
                 x.FechaIngreso >= formula.CuposDesde && x.FechaIngreso <= formula.CuposHasta &&
                 x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
-                x.EstadoCupoId != 1 && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 &&
+                x.EstadoCupoId != 4 && x.EstadoCupoId != 9 &&
                 (x.NegocioId != null || x.ConfiguracionEspacioDinamicoId != null)
             );
             logger.Debug("CrearSugerenciaCupo - se obtuvieron " + cupos.Count + " cupos.");
@@ -1224,7 +1267,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     StandardDeCalidad = x.StandardDeCalidadId.HasValue ? x.StandardDeCalidad.Descripcion : "",
                     ComercialId = x.ComercialId.Value,
-                    Destinatario = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.CUIT : x.Proveedor.CUIT,
+                    Destinatario = "30715118773",
+                    ProveedorCUIT = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.CUIT : x.Proveedor.CUIT,
                     ProveedorId = x.CorredorId > 0 && x.Corredor != null ? x.CorredorId : x.ProveedorId,
                     ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion,
                     CantidadDeCupos = (int)Math.Ceiling(x.Cantidad / 30000),
@@ -1239,6 +1283,13 @@ namespace Molinos.DataAgro.Business.Managers
                     ContratoSAP = x.ContratoSAP,
                     KgNegocio = x.Cantidad,
                     KgPendienteAplicar = x.Cantidad,
+                    MaterialDesc = x.Material.Descripcion,
+                    ProveedorDesc = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.RazonSocial : x.Proveedor.RazonSocial,
+                    ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                    TipoNegocioDesc = x.TipoNegocio.Descripcion,
+                    CDWarrant = x.Warrant == true ? true : false,
+                    Fason = x.EsFason,
+                    CentroDesc = x.Destino.Descripcion,
                 },
                     x =>
                     //(formula.NegociosDesde >= x.FechaDesde && formula.NegociosHasta < x.FechaHasta) || (formula.NegociosHasta <= x.FechaHasta &&
@@ -1322,7 +1373,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 StandardDeCalidad = x.Calidad,
                 ComercialId = x.ComercialId,
-                Destinatario = x.Proveedor.CUIT,
+                Destinatario = "30715118773",
+                ProveedorCUIT = x.Proveedor.CUIT,
                 ProveedorId = x.ProveedorId,
                 ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion,
                 ZonaCupoId = null,
@@ -1338,6 +1390,10 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoSAP = null,
                 KgPendienteAplicar = x.CantidadDeCupo * 30000,
                 KgNegocio = x.CantidadDeCupo * 30000,
+                MaterialDesc = x.Material.Descripcion,
+                ProveedorDesc = x.Proveedor.RazonSocial,
+                ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                TipoNegocioDesc = "Espacio Dinamico"
             }, x => formula.CuposDesde <= x.Fecha && formula.CuposHasta >= x.Fecha && x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId);
 
             var espacioDinamicoIds = espacioDinamicoLista.Select(a => a.Id).ToList();
@@ -2087,8 +2143,10 @@ namespace Molinos.DataAgro.Business.Managers
                                 CantidadCuposDevueltos = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && !x.Excedente && x.MaterialId == material.MaterialId),
                                 //Solicitudes Aceptadas
                                 CantidadSolicitudesAceptadas = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 1 && x.MaterialId == material.MaterialId),
-                                //Solicitudes Pendientes
-                                CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId),
+                                //Solicitudes Pendientes Sugerencias
+                                CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo),
+                                //Solicitudes Pendientes Extra
+                                CantidadSolicitudesPendientesExtra = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Extraordinaria),
 
 
                                 CantidadSugerenciaPendiente = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null && x.MaterialId == material.MaterialId),
@@ -2524,7 +2582,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             try
             {
-                repositorio.RemoverTodos<SugerenciaPorComercial>(x => x.MaterialId == configuracion.MaterialId && x.CentroId == configuracion.CentroId);
+                repositorio.RemoverTodos<SugerenciaPorComercial>(x => x.MaterialId == configuracion.MaterialId && x.CentroId == configuracion.CentroId
+                && x.Fecha == configuracion.Fecha);
             }
             catch (Exception e)
             {
@@ -3628,6 +3687,9 @@ namespace Molinos.DataAgro.Business.Managers
                 string active = PermisosHelper.ObtenerUsuario();
                 var creadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
 
+                if (string.IsNullOrEmpty(solicitud.Destinatario))
+                    solicitud.Destinatario = "30715118773";
+
 
                 if (zona == null)
                 {
@@ -3649,8 +3711,8 @@ namespace Molinos.DataAgro.Business.Managers
                         FechaIngreso = solicitud.Fecha,
                         ZonaCupoId = zona.Id,
                         ComercialId = solicitud.ComercialId,
-                        Calidad = "",
-                        Fason = solicitud.Fazon.HasValue ? solicitud.Fazon.Value : false,
+                        Calidad = solicitud.Calidad,
+                        Fason = solicitud.Fason.HasValue ? solicitud.Fason.Value : false,
                         Destinatario = solicitud.Destinatario,
                         FechaGeneracion = DateTime.Now,
                         Observaciones = null,//---
@@ -4630,5 +4692,211 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.GuardarCambios();
         }
 
+        private void EnviarMailNegociosDeAlgoritmo(ExcelPackage excel)
+        {
+            try
+            {
+                var path = httpContextManager.ObtenerPathLogoMail();
+                var alterView = CuerpoMailNegociosAlgoritmo(path);
+                var comerciales = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.AlgoritimoDeCupos)));
+                var mail = new List<string>();
+                foreach (var item in comerciales)
+                {
+                    try
+                    {
+                        var emailAdicional = mailManager.GetEmailUserActiveDirectory(item.IdActiveDirectory);
+                        mail.Add(emailAdicional);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
+
+                mailManager.EnviarMail(mail, "Resultado Algoritmo de cupos", "", null, alterView, excel.GetAsByteArray(), "Reporte Algoritmo.xlsx");
+
+            }
+            catch (Exception e)
+            {
+
+                logger.Error("Error al enviar el mail EnviarMailNegociosDeAlgoritmo", e.Message);
+            }
+        }
+
+
+        private AlternateView CuerpoMailNegociosAlgoritmo(String filePath)
+        {
+            //var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
+            var linea = 0;
+            string htmlBody = "";
+            htmlBody += "En el presente mail, se detalla el adjuntado el resultado de los negocios que el algoritmo tomo para priorizar <br />";
+
+            htmlBody += "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+        public ExcelPackage GenerarExcelNegociosAlgoritmo(List<SugerenciaCupoExcel> oDatos)
+        {
+
+            var excel = new ExcelPackage();
+
+            var oColumnas = oDatos;
+
+
+            var oPropRow = oColumnas.GetType().GetProperties();
+
+            var cantColumns = oPropRow.Count();
+
+            var workSheet9 = excel.Workbook.Worksheets.Add("Detalle Soja");
+            workSheet9.Cells[1, 1].LoadFromCollection(oDatos.Where(x => x.Material == "Soja").ToList(), true);
+
+            var workSheet10 = excel.Workbook.Worksheets.Add("Detalle Maíz");
+            workSheet10.Cells[1, 1].LoadFromCollection(oDatos.Where(x => x.Material == "Maiz").ToList(), true);
+
+            var workSheet11 = excel.Workbook.Worksheets.Add("Detalle Girasol");
+            workSheet11.Cells[1, 1].LoadFromCollection(oDatos.Where(x => x.Material == "Girasol" || x.Material == "Girasol AO").ToList(), true);
+
+            var workSheet12 = excel.Workbook.Worksheets.Add("Detalle Trigo");
+            workSheet12.Cells[1, 1].LoadFromCollection(oDatos.Where(x => x.Material == "Trigo").ToList(), true);
+
+            //Soja
+            var j = 1;
+            if (oDatos.Count > 0)
+            {
+                oPropRow = oDatos[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
+                {
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet9.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheet9.Column(i).AutoFit();
+                };
+            }
+
+            j = 1;
+            while (workSheet9.Cells[1, j].Value != null)
+            {
+                workSheet9.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet9.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet9.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+            //Maiz
+            if (oDatos.Count > 0)
+            {
+                oPropRow = oDatos[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
+                {
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet10.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheet10.Column(i).AutoFit();
+                };
+            }
+
+            j = 1;
+            while (workSheet10.Cells[1, j].Value != null)
+            {
+                workSheet10.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet10.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet10.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+
+            if (oDatos.Count > 0)
+            {
+                oPropRow = oDatos[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
+                {
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet11.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheet11.Column(i).AutoFit();
+                };
+            }
+
+            j = 1;
+            while (workSheet11.Cells[1, j].Value != null)
+            {
+                workSheet11.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet11.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet11.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+
+            if (oDatos.Count > 0)
+            {
+                oPropRow = oDatos[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
+                {
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheet12.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheet12.Column(i).AutoFit();
+                };
+            }
+
+            j = 1;
+            while (workSheet12.Cells[1, j].Value != null)
+            {
+                workSheet12.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet12.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet12.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                excel.SaveAs(ms);
+            }
+
+            return excel;
+        }
     }
 }

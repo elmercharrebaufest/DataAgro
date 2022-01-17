@@ -46,6 +46,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     configuracion.LimiteAlgoritmo = 0;
                 }
+                bool actualizarSugerencia = false;
                 var error = new CupoResult { ListaCupos = new List<string>() };
                 var materiales = repositorio.Listar<Material>();
                 var zonas = repositorio.Listar<ZonaCupo>();
@@ -132,6 +133,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
+                        actualizarSugerencia = configuracionSave.LimiteAlgoritmo != configuracion.LimiteAlgoritmo;
                         configuracionSave.LimiteAnterior = configuracionSave.LimiteCupo;
                         configuracionSave.LimiteCupo = configuracion.LimiteCupo;
                         configuracionSave.LimiteAlgoritmo = configuracion.LimiteAlgoritmo;
@@ -147,7 +149,10 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    cupoManager.CrearSugerenciaCupo(configuracion.MaterialId, configuracion);
+                    if (actualizarSugerencia)
+                    {
+                        cupoManager.CrearSugerenciaCupo(configuracion.MaterialId, configuracion);
+                    }
                 }
             }
             catch (Exception ex)
@@ -370,10 +375,10 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialCodigoSap = x.Material.Codigo
             });
 
-             var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
-             configuracion.CuposConsumidos = disponibilidad.Sum(x => x.Consumidos);
-             configuracion.CuposDisponibles = disponibilidad.Sum(x => x.Disponibles);
-          
+            var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
+            configuracion.CuposConsumidos = disponibilidad.Sum(x => x.Consumidos);
+            configuracion.CuposDisponibles = disponibilidad.Sum(x => x.Disponibles);
+
             return configuracion;
         }
         public Resultado CambioMasivo(bool aceptar)

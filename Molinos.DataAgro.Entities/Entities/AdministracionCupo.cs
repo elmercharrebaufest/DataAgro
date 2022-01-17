@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int ZonaId { get; set; }
         public int MaterialId { get; set; }
         public bool Excedente { get; set; }
-        public bool? Fazon { get; set; }
+        public bool? Fason { get; set; }
         public string Destinatario { get; set; }
         public int TipoAdministracionCupoId { get; set; }
         public int? ComercialCreadorId { get; set; }
@@ -46,6 +46,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual ZonaCupo Zona { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
+        public string Calidad { get; set; }
     }
 }
 

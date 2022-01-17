@@ -9,75 +9,75 @@
 
 }
 
-    <ul class="nav nav-tabs" id="myTab"  style="margin-bottom:0 !important">
-        @foreach (var m in panel.GroupBy(x => x.Material.Replace(" ", "")))
-        {
-            <li class="@(m.Key.Replace(" ","") == activo?"active":"")"><a data-target="#@m.Key.Replace(" ","")" data-toggle="tab"><strong>@m.Key.Replace(" ", "").ToUpper()</strong></a></li>
-        }
-    </ul>
+<ul class="nav nav-tabs" id="myTab" style="margin-bottom:0 !important">
+    @foreach (var m in panel.GroupBy(x => x.Material.Replace(" ", "")))
+    {
+        <li class="@(m.Key.Replace(" ","") == activo?"active":"")"><a data-target="#@m.Key.Replace(" ","")" data-toggle="tab"><strong>@m.Key.Replace(" ", "").ToUpper()</strong></a></li>
+    }
+</ul>
 
-    @*<div class="panel active" id="method">
-            <div class="row-fluid" id="Tabla">
-                <div class="col-xs-12">
-                    <div id="gridInformeCompraNet" class="table-responsive"></div>
-                </div>
+@*<div class="panel active" id="method">
+        <div class="row-fluid" id="Tabla">
+            <div class="col-xs-12">
+                <div id="gridInformeCompraNet" class="table-responsive"></div>
             </div>
-        </div>*@
+        </div>
+    </div>*@
 
-<div class="tab-content">        
+<div class="tab-content">
 
-        @foreach (var m in panel.GroupBy(x => x.Material.Replace(" ", "")))
-        {
-            <div class="tab-pane panel @(m.Key.Replace(" ","") == activo?" active":"")" id="@m.Key.Replace(" ","")">
+    @foreach (var m in panel.GroupBy(x => x.Material.Replace(" ", "")))
+    {
+        <div class="tab-pane panel @(m.Key.Replace(" ","") == activo?" active":"")" id="@m.Key.Replace(" ","")">
 
-                <div class="table-editable table-responsive">
-                    <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="@(m.Key.Replace(" ","") + "tabla")">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                @foreach (var r in m.GroupBy(x => x.Fecha))
-                                {
-                                    var fecha = r.Key.ToString("dd/MM/yyyy");
-                                    <th class="text-center">
-                                        <span>@fecha</span>
-                                    </th>
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad en planta por cada día pactado en Administración de cupos">Disponibilidad en planta</span></td>
-                                @foreach (var d in m.GroupBy(x => x.Fecha))
-                                {
-                                    <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadPlanta = 0 }).Sum(x => x.CantidadDisponibilidadPlanta)/@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadDia = 0 }).Sum(x => x.CantidadDisponibilidadDia)</td>
-                                }
+            <div class="table-editable table-responsive">
+                <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="@(m.Key.Replace(" ","") + "tabla")">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            @foreach (var r in m.GroupBy(x => x.Fecha))
+                            {
+                                var fecha = r.Key.ToString("dd/MM/yyyy");
+                                <th class="text-center">
+                                    <span>@fecha</span>
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad en planta por cada día pactado en Administración de cupos">Disponibilidad en planta</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadPlanta = 0 }).Sum(x => x.CantidadDisponibilidadPlanta)/@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadDia = 0 }).Sum(x => x.CantidadDisponibilidadDia)</td>
+                            }
 
-                            </tr>
-                            <tr>
-                                <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad del algoritmo por cada día pactado en Administración de cupos">Disponibilidad algoritmo </span></td>
-                                @foreach (var d in m.GroupBy(x => x.Fecha))
-                                {
-                                    <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadPlanta = 0 }).Sum(x => x.CantidadDisponibilidadPlanta)/@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadAlgoritmo = 0 }).Sum(x => x.CantidadAlgoritmo)</td>
-                                }
+                        </tr>
+                        <tr>
+                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad del algoritmo por cada día pactado en Administración de cupos">Disponibilidad algoritmo </span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadPlanta = 0 }).Sum(x => x.CantidadDisponibilidadPlanta)/@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadAlgoritmo = 0 }).Sum(x => x.CantidadAlgoritmo)</td>
+                            }
 
-                            </tr>
-                            <tr>
-                                <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es la diferencia entre la capacidad total de la planta y las sugerencias pendientes mas los cupos creados. (Libres = Planta - (Sugerencias Pendientes + Cupos Creados))">Cupos Libres</span></td>
-                                @foreach (var d in m.GroupBy(x => x.Fecha))
-                                {
-                                    <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadCuposLibres = 0 }).Sum(x => x.CantidadCuposLibres)</td>
-                                }
-                            </tr>
+                        </tr>
+                        <tr>
+                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es la diferencia entre la capacidad total de la planta y las sugerencias pendientes mas los cupos creados. (Libres = Planta - (Sugerencias Pendientes + Cupos Creados))">Cupos Libres</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadCuposLibres = 0 }).Sum(x => x.CantidadCuposLibres)</td>
+                            }
+                        </tr>
 
-                            <tr>
-                                <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cupos confirmados por los comerciales.">Sugerencias Aceptadas</span></td>
-                                @foreach (var d in m.GroupBy(x => x.Fecha))
-                                {
-                                    <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSugerenciaAceptadaDia = 0 }).Sum(x => x.CantidadSugerenciaAceptadaDia)</td>
-                                }
+                        <tr>
+                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cupos confirmados por los comerciales.">Sugerencias Aceptadas</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSugerenciaAceptadaDia = 0 }).Sum(x => x.CantidadSugerenciaAceptadaDia)</td>
+                            }
 
-                            </tr>
-                            @*<tr>
+                        </tr>
+                        @*<tr>
                                 <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cupos que no fueron confirmados en su totalidad.">Sugerencias Devueltas</span></td>
                                 @foreach (var d in m.GroupBy(x => x.Fecha))
                                 {
@@ -93,62 +93,69 @@
                                 }
 
                             </tr>*@
-                            <tr>
-                                <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="">Solicitudes Pendientes</span></td>
-                                @foreach (var d in m.GroupBy(x => x.Fecha))
-                                {
-                                    <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSolicitudesPendientes = 0 }).Sum(x => x.CantidadSolicitudesPendientes)</td>
-                                }
-
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-                <br />
-                <div id="@(m.Key.Replace(" ","") + "panel")" class="table-editable table-responsive">
-                    <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="@(m.Key.Replace(" ","") + "tablaComercial")">
-                        <caption  style="padding: 10px;border: 1px solid #dddddd;"><strong>Sugerencias Pendientes</strong></caption>
-                        <thead>
-                            @{
-                                var dias = noAceptadas.Where(x => x.Material.Replace(" ", "") == m.Key.Replace(" ", "")).SelectMany(x => x.Diacupo.Select(y => y.Fecha)).Distinct().OrderBy(x => x).ToList();
-                            }
-                            <tr>
-                                <th></th>
-                                @foreach (var r in dias)
-                                {
-                                    var fecha = r.ToString("dd/MM/yyyy");
-                                    <th class="text-center">
-                                        <span>@fecha</span>
-                                    </th>
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            @foreach (var c in noAceptadas.Where(x => x.Material.Replace(" ", "") == m.Key.Replace(" ", "")).ToList())
+                        <tr>
+                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="">Solicitudes Sugerencias Pendientes</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
                             {
-                                <tr>
-                                    <td>@c.NombreComercial</td>
-                                    @foreach (var d in dias)
-                                    {
-                                        <td>@c.Diacupo.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
-                                    }
-
-                                </tr>
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSolicitudesPendientes = 0 }).Sum(x => x.CantidadSolicitudesPendientes)</td>
                             }
-                            <tr>
-                                <td><strong>Total</strong></td>
 
+                        </tr>
+                        <tr>
+                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="">Solicitudes Extraordinarias Pendientes</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSolicitudesPendientesExtra = 0 }).Sum(x => x.CantidadSolicitudesPendientesExtra)</td>
+                            }
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <div id="@(m.Key.Replace(" ","") + "panel")" class="table-editable table-responsive">
+                <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="@(m.Key.Replace(" ","") + "tablaComercial")">
+                    <caption style="padding: 10px;border: 1px solid #dddddd;"><strong>Sugerencias Pendientes</strong></caption>
+                    <thead>
+                        @{
+                            var dias = noAceptadas.Where(x => x.Material.Replace(" ", "") == m.Key.Replace(" ", "")).SelectMany(x => x.Diacupo.Select(y => y.Fecha)).Distinct().OrderBy(x => x).ToList();
+                        }
+                        <tr>
+                            <th></th>
+                            @foreach (var r in dias)
+                            {
+                                var fecha = r.ToString("dd/MM/yyyy");
+                                <th class="text-center">
+                                    <span>@fecha</span>
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var c in noAceptadas.Where(x => x.Material.Replace(" ", "") == m.Key.Replace(" ", "")).ToList())
+                        {
+                            <tr>
+                                <td>@c.NombreComercial</td>
                                 @foreach (var d in dias)
                                 {
-                                    <td>@noAceptadas.Where(x => x.Material.Replace(" ", "") == m.Key.Replace(" ", "")).SelectMany(x => x.Diacupo).Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
+                                    <td>@c.Diacupo.Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
                                 }
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
 
+                            </tr>
+                        }
+                        <tr>
+                            <td><strong>Total</strong></td>
+
+                            @foreach (var d in dias)
+                            {
+                                <td>@noAceptadas.Where(x => x.Material.Replace(" ", "") == m.Key.Replace(" ", "")).SelectMany(x => x.Diacupo).Where(x => x.Fecha == d).DefaultIfEmpty(new DiaCupo { Cantidad = 0 }).Sum(x => x.Cantidad)</td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        }
-    </div>
+
+        </div>
+    }
+</div>

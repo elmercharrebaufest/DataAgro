@@ -84,9 +84,9 @@ namespace Molinos.DataAgro.Business.Managers
                         FechaIngreso = solicitud.Fecha,
                         ZonaCupoId = solicitud.ZonaId,
                         ComercialId = solicitud.ComercialId,
-                        Calidad = "",
+                        Calidad = solicitud.SugerenciaCupo.StandardDeCalidad,
                         Fason = false,
-                        Destinatario = "",
+                        Destinatario = solicitud.SugerenciaCupo.Destinatario,
                         FechaGeneracion = DateTime.Now,
                         Observaciones = null,//---
                         CupoSap = "",//---
@@ -146,9 +146,9 @@ namespace Molinos.DataAgro.Business.Managers
                         FechaIngreso = solicitud.Fecha,
                         ZonaCupoId = solicitud.ZonaId,
                         ComercialId = solicitud.ComercialId,
-                        Calidad = "",
-                        Fason = false,
-                        Destinatario = "",
+                        Calidad = solicitud.Calidad,
+                        Fason = solicitud.Fason ?? false,
+                        Destinatario = solicitud.Destinatario,
                         FechaGeneracion = DateTime.Now,
                         Observaciones = null,//---
                         CupoSap = "",//---
@@ -215,7 +215,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (cantidadIngresada > 0)
             {
                 solicitud.SugerenciaCupo.Aceptado = true;
-                if (cantidadIngresada < solicitud.SugerenciaCupo.CantidadDeCupos)                
+                if (cantidadIngresada < solicitud.SugerenciaCupo.CantidadDeCupos)
                 {
                     var nuevaSugerencia = cupoManager.ClonarSugerencia(solicitud.SugerenciaCupo);
                     solicitud.SugerenciaCupo.CantidadDeCupos = cantidadIngresada;
@@ -237,6 +237,32 @@ namespace Molinos.DataAgro.Business.Managers
                 var comercial = new List<string>();
                 var c = repositorio.Obtener<Comercial>(comercialManager.ComercialAsociado(solicitud.ProveedorId.Value));
                 comercial.Add(c.IdActiveDirectory);
+                if (solicitud.Comercial != null)
+                {
+                    comercial.Add(solicitud.Comercial.IdActiveDirectory);
+                }
+                else
+                {
+                    if (solicitud.ComercialId != null)
+                    {
+                        var comercial1 = repositorio.Obtener<Comercial>(x => x.ComercialId == solicitud.ComercialId);
+                        comercial.Add(comercial1.IdActiveDirectory);
+                    }
+                }
+
+                if (solicitud.ComercialCreador != null)
+                {
+                    comercial.Add(solicitud.ComercialCreador.IdActiveDirectory);
+                }
+                else
+                {
+                    if (solicitud.ComercialCreadorId != null)
+                    {
+                        var comercial1 = repositorio.Obtener<Comercial>(x => x.ComercialId == solicitud.ComercialCreadorId);
+                        comercial.Add(comercial1.IdActiveDirectory);
+                    }
+                }
+
                 if (comercial.Count <= 0)
                 {
                     return;

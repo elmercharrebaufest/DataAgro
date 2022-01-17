@@ -66,6 +66,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool CDWarrant { get; set; }
         public double KgNegocio { get; set; }
         public double KgPendienteAplicar { get; set; }
+        public string ComercialDesc { get; set; }
+        public bool? Fason { get; set; }
+        public string CentroDesc { get; set; }
 
         public object Clone()
         {

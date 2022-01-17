@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Interfaces
         CupoDto ObtenerCupo(int id, RepositorioEF repo);
         Resultado EliminarVarios(List<int> cupos, string comercial);
         string ObtenerCodigoSap(int id);
-        void CrearSugerenciaCupo(int MaterialId, ConfiguracionCupo configuracion);
+        List<SugerenciaCupoDto> CrearSugerenciaCupo(int MaterialId, ConfiguracionCupo configuracion);
         List<SugerenciaCupoDto> ObtenerSugerenciaCupo(int ComercialId, int? materialId);
         IList<SugerenciaCupoDto> ObtenerSugerenciaCupoAgrupadasPorProveedor(int comercialId, int materialId, string centroId);
         List<SugerenciaPorComercialDto> ObtenerSugerenciaPorComercialFecha(int comercialId, int materialId, string centroId);
