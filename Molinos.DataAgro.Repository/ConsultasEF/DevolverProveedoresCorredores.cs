@@ -46,8 +46,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 Color = "",
                                 CuposConRiesgo = provs.Key.CuposConRiesgo
                             };
-            var lista = DevolverEstadoSisa(contexto, resultado.ToList());
-            return lista.Distinct().Take(15).ToList();
+            var lista = resultado.Distinct().Take(15).ToList(); 
+            return DevolverEstadoSisa(contexto, lista);
         }
 
         public virtual List<BusquedaHome> Ejecutar(DbContext contexto)

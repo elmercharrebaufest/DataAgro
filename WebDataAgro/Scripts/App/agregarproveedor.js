@@ -268,7 +268,7 @@ function armarSelects(result) {
     $(".campo-segmentacion").append(htmlSegmentacion);
     $('#segmentacion').change(function () {
         CrearCorredor();
-        checkComisionista();
+    /*    checkComisionista();*/
     });
     CrearCorredor();
 
@@ -2712,7 +2712,7 @@ function InicializarDatos() {
                 e.preventDefault();
             } else {
                 //$("#Comisionista").val(e.dataItem.Id);
-                comisionista = e.dataItem.Id;
+                //comisionista = e.dataItem.Id;
             }
 
         },
@@ -2955,10 +2955,11 @@ function ObtenerDatos() {
 
     obj.basicos.comentario = $("#comentario").val();
 
-    if ($("#buscadorProveedor").val().length < 4) {        
-        comisionista = null;
-    }
-    obj.basicos.comisionista = comisionista; //comisionista
+    //if ($("#buscadorProveedor").val().length < 4) {        
+    //    comisionista = null;
+    //}
+    //obj.basicos.comisionista = comisionista; //comisionista
+
     obj.contacto.provincia = $("#provincia").val();
 
     obj.contacto.localidad = $("#localidad").val();
@@ -3473,12 +3474,12 @@ function mostrarConsignatarioProveedor() {
 }
 
 
-function checkComisionista() {
-    if ($('#segmentacion :selected').parent().attr('label') === "Comisionistas") {
-        $("#comisionistaDiv").hide();
-        comisionista = null;
-        $("#buscadorProveedor").val("");
-    } else {
-        $("#comisionistaDiv").show();
-    }
-}
+//function checkComisionista() {
+//    if ($('#segmentacion :selected').parent().attr('label') === "Comisionistas") {
+//        //$("#comisionistaDiv").hide();
+//        //comisionista = null;
+//        //$("#buscadorProveedor").val("");
+//    } else {
+//        //$("#comisionistaDiv").show();
+//    }
+//}

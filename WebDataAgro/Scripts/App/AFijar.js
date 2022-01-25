@@ -4285,7 +4285,7 @@ function GuardarAperturaDePrecio() {
         var descuentos = viewModel.Descuentos.filter(el => el.TipoDBId == 1 && el.TipoPeriodoDBId == 1)[0];
         viewModel.Descuentos.remove(descuentos);
     }
-    if ($("#PorcentajeDescuentoAFijarId").val() > 0 || total > 0) {
+    if ($("#PorcentajeDescuentoAFijarId").val() > 0 || total != 0) {
         var newdescuento = {
             Id: 0,
             TipoPeriodoDBDesc: "Generales",
