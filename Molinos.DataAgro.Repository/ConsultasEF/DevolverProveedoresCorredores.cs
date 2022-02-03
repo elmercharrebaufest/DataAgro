@@ -12,14 +12,16 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     {
         private readonly string filtro;
         private readonly int? segmentacionId;
+        private readonly bool? validarSisa;
 
-        public DevolverProveedoresCorredores(string filtro, int? segmentacionId = null)
+        public DevolverProveedoresCorredores(string filtro, int? segmentacionId = null, bool? validarSisa = true)
         {
             this.filtro = filtro;
             this.segmentacionId = segmentacionId;
+            this.validarSisa = validarSisa;
         }
 
-        private static List<BusquedaHome> Query(DbContext contexto, string filtro, int? segmentacionId = null)
+        private static List<BusquedaHome> Query(DbContext contexto, string filtro, int? segmentacionId = null, bool? validarSisa = true)
         {
             var resultado = from Proveedor in contexto.Set<Proveedor>()
                             join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
@@ -46,15 +48,19 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 Color = "",
                                 CuposConRiesgo = provs.Key.CuposConRiesgo
                             };
-            var lista = resultado.Distinct().Take(15).ToList(); 
-            return DevolverEstadoSisa(contexto, lista);
+            var lista = resultado.Distinct().Take(15).ToList();
+            if (validarSisa == true)
+            {
+                return DevolverEstadoSisa(contexto, lista);
+            }
+            return lista;
         }
 
         public virtual List<BusquedaHome> Ejecutar(DbContext contexto)
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, filtro, segmentacionId);
+                return Query(contexto, filtro, segmentacionId, validarSisa);
             }
         }
 

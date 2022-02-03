@@ -11,12 +11,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Puntaje { get; set; }
         public string TipoNegocio { get; set; }
         public string ContratoSAP { get; set; }
+        public DateTime FechaSugerida { get; set; }
         public string RazonSocial { get; set; }
         public string CUIT { get; set; }
         public decimal? Precio { get; set; }
         public string Moneda { get; set; }
         public double KgNegocio { get; set; }
-        public string Material { get; set; }     
+        public string Material { get; set; }
+      
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
         public string Comercial { get; set; }
@@ -26,5 +28,15 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Fason { get; set; }
         public string Priorizado { get; set; }
         public string Destinatario { get; set; }
+        public int CantidadSugerida { get; set; }
+      
+    }
+
+    public partial class SugerenciaCupoAgrupadasExcel
+    {
+        public string Material { get; set; }
+        public string RazonSocial { get; set; }
+      
+        public List<DiaCupo> DiaCupo { get; set; }
     }
 }

@@ -23,5 +23,6 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public DateTime Fecha { get; set; }
         public int MaterialId { get; set; }
+        public string Material { get; set; }
     }
 }

@@ -82,7 +82,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 else
                 {
                     ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject.data.ToString());
-                    //logger.Debug(error.ToJson());
+                    logger.Error("ObtenerToken Error al obtener token");
+                    logger.Debug(error.ToJson());
                     throw new Exception(error.userMessage);
                 }
             }
@@ -240,6 +241,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         }
         public int ConsultarCupo(string cupo, int terminalId, string token)
         {
+            return 1;//parche por que no funciona la consulta de cupos por idStop
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(urlStop);
             client.DefaultRequestHeaders.Accept.Clear();
@@ -544,10 +546,16 @@ namespace Molinos.DataAgro.Agent.Helpers
                     else
                     {
                         ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                        cupo.ErrorStop = error.userMessage;
-                        cupo.EstadoCupoId = 7;
-                        logger.Debug(error.ToJson());
-                        throw new Exception("Cupo Grabado en SAP, error Stop: " + error.userMessage);
+                        if (error == null)
+                        {
+                            error = new ErrorStop
+                            {
+                                userMessage = "No se pudo anular en STOP."
+                            };
+                        }
+                        cupo.ErrorStop = error.userMessage;                        
+                        logger.Debug("No se pudo anular en STOP." + cupo.CupoSap);
+                        throw new Exception("Error Stop: " + error.userMessage);
                     }
 
                     repositorio.GuardarCambios();

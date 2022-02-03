@@ -18,7 +18,7 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarLimites(List<LimiteCupo> limite);
         ConfiguracionCupoDto TraerConfiguracionCupo(int id);
         Resultado CambioMasivo(bool aceptar);
-        Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds);
+        Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds, int limiteAlgoritmo);
         Resultado ModificarConfiguracion(int? id, int? limite, int? algoritmo, bool? bloquear, bool? liberar);
 
     }

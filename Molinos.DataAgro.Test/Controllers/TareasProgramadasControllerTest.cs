@@ -100,7 +100,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CrearSugerenciaCupo()
         {
-            cupoManagerMock.Setup(x => x.CrearSugerenciaCupo(It.IsAny<int>(),It.IsAny<ConfiguracionCupo>()));
+            cupoManagerMock.Setup(x => x.CrearSugerenciaCupo(It.IsAny<int>(), It.IsAny<FormulaDto>(),It.IsAny<ConfiguracionCupo>()));
             var result = target.CrearSugerenciaCupo() as ContentResult;
 
             Assert.NotNull(result);

@@ -2865,11 +2865,14 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
-        public List<BusquedaHome> DevolverProveedoresCorredores(string filtro, int? segmentacionId = null)
+        public List<BusquedaHome> DevolverProveedoresCorredores(string filtro, int? segmentacionId = null, bool? validar = true)
         {
-            var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro, segmentacionId));
+            var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro, segmentacionId, validar));
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
-            CompletarEstadoAltaTemprana(listaOrdenada);
+            if (validar == true)
+            {
+                CompletarEstadoAltaTemprana(listaOrdenada);
+            }         
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<ProveedorDto> ListarProveedor(string proveedor)

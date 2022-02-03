@@ -513,8 +513,8 @@ function CargarConfiguracion(id, mostrarFecha) {
         '<td>' + fecha + '</td>' +
         '<td>' + configuracion.LimiteCupo + '</td>' +
         '<td>' + configuracion.LimiteAlgoritmo + '</td>' +
-        '<td style="text-align: left; width: 15%;"><input min="' + configuracion.Consumidos + '" id="limiteCupo' + configuracion.Id + '" class="number" /></td>' +
-        '<td style="text-align: left; width: 15%;"><input id="limiteAlgoritmo' + configuracion.Id + '" class="number" /></td>' +
+        '<td style="text-align: left; width: 15%;"><input min="' + configuracion.Consumidos + '" value="' + configuracion.LimiteCupo + '" id="limiteCupo' + configuracion.Id + '" class="number"  /></td>' +
+        '<td style="text-align: left; width: 15%;"><input value="' + configuracion.LimiteAlgoritmo + '" id="limiteAlgoritmo' + configuracion.Id + '" class="number" /></td>' +
         '</tr>';
     $("#tablaConfiguracion").append(fila);
 
@@ -528,6 +528,8 @@ function CargarConfiguracion(id, mostrarFecha) {
         min: 0,
         step: 0
     });
+    $('#limiteCupo' + configuracion.Id).data("kendoNumericTextBox").value(configuracion.LimiteCupo);
+    $('#limiteAlgoritmo' + configuracion.Id).data("kendoNumericTextBox").value(configuracion.LimiteAlgoritmo);
     $('#totalConsumidos').data("kendoNumericTextBox").value(configuracion.CuposConsumidos);
     $('#totalDisponibles').data("kendoNumericTextBox").value(configuracion.CuposDisponibles);
 }
@@ -571,14 +573,16 @@ function GuardarLimiteCupo() {
 
     var configuraciones = SeleccionarElementos();
     var configuracionesIds = [];
+
+    if (configuraciones.length > 0 && total != Number($("#limiteCupo" + configuraciones[0].Id).val())) {
+        MensErr("La cantidad ingresada es diferente al limite configurado.");
+        $.unblockUI();
+        return false;
+    }
+
     for (var i = 0; i < configuraciones.length; i++) {
         configuracionesIds.push(configuraciones[i].id);
-        if (total != configuraciones[i].LimiteCupo) {
-            MensErr("La cantidad ingresada es diferente al limite configurado.");
-            $.unblockUI();
-            return false;
-        }
-    }
+    } 
     if ($("#configuracionCupoId").val() != "") {
         var limitesSAP = MSExecuteOnServer("/ConfiguracionCupo/TraerLimitesCupo", { id: $("#configuracionCupoId").val() });
         for (var i = 0; i < 10; i++) {
@@ -626,8 +630,8 @@ function GuardarLimiteCupo() {
         }
 
     } else {
-
-        resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds });
+        var limiteAlgoritmo = $('#limiteAlgoritmo' + configuraciones[0].Id).val();
+        resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo});
     }
 
     if (resultado.HayError) {

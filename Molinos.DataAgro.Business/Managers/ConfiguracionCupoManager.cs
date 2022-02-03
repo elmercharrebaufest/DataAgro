@@ -151,7 +151,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (actualizarSugerencia)
                     {
-                        cupoManager.CrearSugerenciaCupo(configuracion.MaterialId, configuracion);
+                        
+                        cupoManager.CrearSugerenciaCupo(configuracion.MaterialId, cupoManager.ObtenerFormulaDto(configuracion.MaterialId), configuracion);
                     }
                 }
             }
@@ -413,7 +414,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return errorSap;
         }
-        public Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds)
+        public Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds, int limiteAlgoritmo)
         {
             var erroresSap = new Resultado();
             //var configuracionesCupo = repositorio.Listar<ConfiguracionCupo>(x => configuracionesIds.Contains(x.Id));
@@ -423,14 +424,16 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var id in configuracionesIds)
             {
-                ConfiguracionCupo configuracionCupo = repositorio.Obtener<ConfiguracionCupo>(id);
+                var configuracionCupo = repositorio.Obtener<ConfiguracionCupo>(id);
 
                 foreach (var item in configuracionCupo.CantidadCupo)
                 {
                     item.LimiteAnterior = item.CantidadCupo;
                     item.CantidadCupo = limite.Where(a => a.ZonaCupoId == item.ZonaCupoId).First().CantidadCupo;
                 }
-
+                configuracionCupo.LimiteAnterior = configuracionCupo.LimiteCupo;
+                configuracionCupo.LimiteCupo = limite.Sum(x => x.CantidadCupo);
+                configuracionCupo.LimiteAlgoritmo = limiteAlgoritmo;
                 var errorSap = EnviarConfiguracion(configuracionCupo, null, configuracionCupo.LimiteCupo, materiales, zonas, centros);
                 if (errorSap.HayError)
                 {
