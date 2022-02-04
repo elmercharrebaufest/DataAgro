@@ -4723,8 +4723,13 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                     }
                 }
-
-                mailManager.EnviarMail(mail, "Resultado Algoritmo de cupos", "", null, alterView, excel, "Reporte Algoritmo.xlsx");
+                mail.Add("dataagro@baufest.com");
+                var asunto = "Prueba - Resultado Algoritmo de cupos";
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+                {
+                    asunto = "Resultado Algoritmo de cupos";
+                }
+                mailManager.EnviarMail(mail, asunto, "", null, alterView, excel, "Reporte Algoritmo.xlsx");
 
             }
             catch (Exception e)
