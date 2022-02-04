@@ -927,13 +927,13 @@ namespace Molinos.DataAgro.Business.Managers
                     CDWarrant = item.CDWarrant == true ? "SI" : "NO",
                     Fason = item.Fason == true ? "SI" : "NO",
                     Priorizado = item.Priorizado == true ? "SI" : "NO",
-                    Puntaje = item.PuntuacionTotal,
+                    Puntaje = item.PuntuacionTotal <= 0 ? 0 : item.PuntuacionTotal,
                     CantidadSugerida = item.CantidadDeCupos,
                     FechaSugerida = item.FechaSugerida
                 };
                 listaExcel.Add(excel);
             }
-            return listaExcel.OrderBy(x => x.Puntaje).ToList();
+            return listaExcel.OrderByDescending(x => x.Puntaje).ToList();
         }
 
         public List<SugerenciaCupoDto> CrearSugerenciaCupo(int MaterialId, FormulaDto formula, ConfiguracionCupo configuracion = null)
