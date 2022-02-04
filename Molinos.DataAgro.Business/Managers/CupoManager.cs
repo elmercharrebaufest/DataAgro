@@ -890,7 +890,7 @@ namespace Molinos.DataAgro.Business.Managers
                 sugerencias.AddRange(CrearSugerenciaCupo(material.MaterialId, dto, null));
                 formulas.Add(dto);
             }
-
+            logger.Debug("Enviando Mail EnviarMailNegociosDeAlgoritmo");
             EnviarMailNegociosDeAlgoritmo(GenerarExcelNegociosAlgoritmo(ConvertirADtoExcel(sugerencias), formulas));
 
             //EnviarMail

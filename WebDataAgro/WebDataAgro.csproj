@@ -221,6 +221,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
+    <Compile Include="Controllers\BoletoController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
