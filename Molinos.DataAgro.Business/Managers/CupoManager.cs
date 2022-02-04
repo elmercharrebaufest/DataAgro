@@ -4910,7 +4910,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         var f = 1;
                         var c = 3;
-                        workSheet13.Cells[(f + i), (c + k)].Value = agrupacion.FirstOrDefault().DiaCupo[k].Cantidad;
+                        workSheet13.Cells[(f + i), (c + k)].Value = agrupacion[i-1].DiaCupo[k].Cantidad;
                         workSheet13.Column((c + k)).AutoFit();
 
                     }
