@@ -14,7 +14,7 @@
             <xsd:element name="IM_DESC_BONIF" type="rfc:ZMPTT7810" />
             <xsd:element name="IM_MODIFICACION" type="rfc:ZMPES5570" />
             <xsd:element name="IM_SERVICIOS" type="rfc:ZMPTT9370" />
-            <xsd:element name="IM_TOPES_FIJ" type="rfc:ZMPES5280" />
+            <xsd:element name="IM_TOPES_FIJ" type="rfc:ZMPTT8170" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -215,6 +215,11 @@
       <xsd:complexType name="ZMPTT7820">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5300" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT8170">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES5280" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5440">

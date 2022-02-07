@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         
         private ZMPES6620[] iM_SERVICIOSField;
         
-        private ZMPES5280 iM_TOPES_FIJField;
+        private ZMPES5280[] iM_TOPES_FIJField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -123,8 +123,9 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
-        public ZMPES5280 IM_TOPES_FIJ {
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES5280[] IM_TOPES_FIJ {
             get {
                 return this.iM_TOPES_FIJField;
             }
