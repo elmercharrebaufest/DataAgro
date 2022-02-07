@@ -34,6 +34,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 agent.ClientCredentials.UserName.Password = PassSap;
                 logger.Debug("Modificando Contrato Nro: " + contrato.Id);
                 var listaDescuentos = new List<ZMPES5290>();
+                var topesFijacion = new List<ZMPES5280>();
                 logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);
 
                 var descModificado = false;
@@ -370,6 +371,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
+                topesFijacion.Add(new ZMPES5280
+                {
+                    FE_DESDE = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
+                    FE_HASTA = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
+                    HORAACT = "00:00:00",
+                    CANT_MAX = contrato.TipoNegocioId == 1 ?
+                           contrato.Cantidad < 30000 ?
+                           Convert.ToDecimal(contrato.Cantidad) :
+                           (contrato.Cantidad >= 30000 && contrato.Cantidad <= 100000) ? 30000
+                           : Convert.ToDecimal(contrato.KgMaximo) : 0,
+                    CANT_MIN = contrato.TipoNegocioId == 1 ? contrato.Cantidad < 30000 ? Convert.ToDecimal(contrato.Cantidad) : 30000 : 0,
+                    FECHAACT = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
+                           repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
+                    VALOR = "KG"
+                });
+
                 var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.Id == contrato.Id, x => x.Fecha);
                 var rq = new Z_MPRFC_MODIFICAR_CONTRATO
                 {
@@ -479,21 +496,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var topFija =
                     contratoGuardado.DesdeFijacion != contrato.DesdeFijacion ||
                     contratoGuardado.HastaFijacion != contrato.HastaFijacion;
-                rq.IM_TOPES_FIJ = new ZMPES5280
-                {
-                    FE_DESDE = contrato.TipoNegocioId == 1 && contrato.DesdeFijacion.HasValue ? contrato.DesdeFijacion.Value.ToString("yyyy-MM-dd") : "",
-                    FE_HASTA = contrato.TipoNegocioId == 1 && contrato.HastaFijacion.HasValue ? contrato.HastaFijacion.Value.ToString("yyyy-MM-dd") : "",
-                    HORAACT = "00:00:00",
-                    CANT_MAX = contrato.TipoNegocioId == 1 ?
-                            contrato.Cantidad < 30000 ?
-                            Convert.ToDecimal(contrato.Cantidad) :
-                            (contrato.Cantidad >= 30000 && contrato.Cantidad <= 100000) ? 30000
-                            : Convert.ToDecimal(contrato.KgMaximo) : 0,
-                    CANT_MIN = contrato.TipoNegocioId == 1 ? contrato.Cantidad < 30000 ? Convert.ToDecimal(contrato.Cantidad) : 30000 : 0,
-                    FECHAACT = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
-                            repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
-                    VALOR = "KG"
-                };
+                rq.IM_TOPES_FIJ = topesFijacion.ToArray();
                 rq.IM_MODIFICACION = new ZMPES5570
                 {
                     CONTRATO = conModificado ? "X" : "",
