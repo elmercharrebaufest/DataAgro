@@ -235,8 +235,9 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var lista = new List<string>();
                 var comercial = new List<string>();
-                var c = repositorio.Obtener<Comercial>(comercialManager.ComercialAsociado(solicitud.ProveedorId.Value));
-                comercial.Add(c.IdActiveDirectory);
+                var c =  repositorio.Obtener<Comercial, string>(x => x.ComercialId == solicitud.ComercialCreadorId, x => x.IdActiveDirectory);
+
+                comercial.Add(c);
                 if (solicitud.Comercial != null)
                 {
                     comercial.Add(solicitud.Comercial.IdActiveDirectory);

@@ -430,6 +430,7 @@ function AceptarSolicitud() {
                 ShowErrorMessages(errores);
             }
             recargarGrilla();
+            $.unblockUI();
         }
         , 200);
    
@@ -455,6 +456,7 @@ function RechazarSolicitud() {
                 ShowErrorMessages(errores);
             }
             recargarGrilla();
+            $.unblockUI();
         }
         , 200);
   

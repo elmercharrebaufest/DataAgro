@@ -1512,7 +1512,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
             var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
-
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId); 
             List<CupoResult> resultado = new List<CupoResult>();
             var result = new CupoResult();
             var result2 = new CupoResult();
@@ -1544,6 +1545,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         var devolucion = new AdministracionCupo()
                         {
+                            ComercialCreadorId = comercialCreador,
                             CantidadCupo = s.CantidadDeCupos - cantidadIngresada,
                             ComercialId = s.ComercialId,
                             Fecha = s.FechaSugerida,
@@ -1597,6 +1599,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var solicitud = new AdministracionCupo()
                         {
                             CantidadCupo = 0,
+                            ComercialCreadorId = comercialCreador,
                             ComercialId = s.ComercialId,
                             Fecha = s.FechaSugerida,
                             EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
@@ -1876,6 +1879,8 @@ namespace Molinos.DataAgro.Business.Managers
             var resultado = new CupoResult();
             try
             {
+                var activeCreador = PermisosHelper.ObtenerUsuario();
+                var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
                 var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
                 var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
                 if (validarSiHayCierre)
@@ -1899,6 +1904,7 @@ namespace Molinos.DataAgro.Business.Managers
                     sugerencia.MotivoRechazo = motivo;
                     admCupos.Add(new AdministracionCupo
                     {
+                        ComercialCreadorId = comercialCreador,
                         CantidadCupo = spc.Total < sugerencia.CantidadDeCupos ? spc.Total : sugerencia.CantidadDeCupos,
                         CentroId = sugerencia.CentroId,
                         ComercialId = sugerencia.ComercialId,
@@ -2791,6 +2797,8 @@ namespace Molinos.DataAgro.Business.Managers
             var comerciales = repositorio.Listar<Comercial>();
             var centro = repositorio.Obtener<Centro, int>(x => x.CodigoSap == centroId, x => x.Id);
             var proveedores = repositorio.Listar<Proveedor>();
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
             var hoy = DateTime.Now.Date;
             try
             {
@@ -2931,6 +2939,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     var grupoDeCompras = comerciales.Where(x => x.ComercialId == p.ComercialId).First().GrupoDeCompras.Descripcion;
                                     var autorizacion = new AdministracionCupo()
                                     {
+                                        ComercialCreadorId = comercialCreador,
                                         CantidadCupo = f.Cantidad.Value,
                                         ComercialId = p.ComercialId,
                                         Fecha = f.Fecha,
@@ -2984,6 +2993,7 @@ namespace Molinos.DataAgro.Business.Managers
                             var grupoDeCompras = comerciales.Where(x => x.ComercialId == comercialId).First().GrupoDeCompras.Descripcion;
                             var autorizacion = new AdministracionCupo()
                             {
+                                ComercialCreadorId = comercialCreador,
                                 CantidadCupo = d.CantidadCuposDevueltos,
                                 ComercialId = comercialId,
                                 Fecha = d.Fecha,
@@ -3057,6 +3067,8 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var lista = ObtenerSugerenciasAgrupadasPorProveedor(comercialId, materialId, centroId);
             var sugerenciaPorComercial = ObtenerSugerenciaPorComercialFecha(comercialId, materialId, centroId);
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
             if (sugerenciaPorComercial != null && sugerenciaPorComercial.Count() > 0 && lista != null && lista.Count() > 0)
             {
                 foreach (var s in sugerenciaPorComercial)
@@ -3070,6 +3082,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 var zona = comerciales.Where(x => x.ComercialId == comercialId).First().GrupoDeCompras.Descripcion;
                                 var a = new AdministracionCupo()
                                 {
+                                    ComercialCreadorId = comercialCreador,
                                     CantidadCupo = s.Total,
                                     ComercialId = comercialId,
                                     Fecha = item.FechaSugerida,
@@ -3793,8 +3806,9 @@ namespace Molinos.DataAgro.Business.Managers
             var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
             var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
             var solicitudes = new List<string>();
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
             List<CupoResult> resultado = new List<CupoResult>();
-
             var result = new CupoResult();
             var result2 = new CupoResult();
             if (validarSiHayCierre)
@@ -3845,7 +3859,8 @@ namespace Molinos.DataAgro.Business.Managers
                 s.CantidadDeCupos = sugerenciaPorComercial.Total;
 
                 var solicitud = new AdministracionCupo()
-                {
+                { 
+                    ComercialCreadorId = comercialCreador,
                     CantidadCupo = 0,
                     CantidadFleteProcedencia = 0,
                     ComercialId = s.ComercialId,
@@ -3993,6 +4008,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
                 var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+                var activeCreador = PermisosHelper.ObtenerUsuario();
+                var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
                 if (validarSiHayCierre)
                 {
                     resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
@@ -4014,6 +4031,7 @@ namespace Molinos.DataAgro.Business.Managers
                 sugerencia.MotivoRechazo = "";
                 admCupos.Add(new AdministracionCupo
                 {
+                    ComercialCreadorId = comercialCreador,
                     CantidadCupo = cantidad,
                     CentroId = sugerencia.CentroId,
                     ComercialId = sugerencia.ComercialId,
@@ -4305,7 +4323,8 @@ namespace Molinos.DataAgro.Business.Managers
             var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
             var solicitudes = new List<string>();
             List<CupoResult> resultado = new List<CupoResult>();
-
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
             var result = new CupoResult();
             var result2 = new CupoResult();
             if (validarSiHayCierre)
@@ -4379,6 +4398,7 @@ namespace Molinos.DataAgro.Business.Managers
                     sugerenciaFecha.CantidadDeCupos = totalPorDia.Total;
                     var solicitud = new AdministracionCupo()
                     {
+                        ComercialCreadorId = comercialCreador,
                         CantidadCupo = 0,
                         CantidadFleteProcedencia = 0,
                         ComercialId = sugerenciaFecha.ComercialId,
@@ -4483,7 +4503,8 @@ namespace Molinos.DataAgro.Business.Managers
             var solicitudes = new List<string>();
             var solicitudesDto = new List<AdministracionCupoDto>();
             List<CupoResult> resultado = new List<CupoResult>();
-
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
             var resultNormales = new CupoResult();
             var resultFletes = new CupoResult();
             var resultFinal = new CupoResult();
@@ -4554,6 +4575,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             var solicitud = new AdministracionCupo()
                             {
+                                ComercialCreadorId = comercialCreador,
                                 CantidadCupo = 0,
                                 CantidadFleteProcedencia = 0,
                                 ComercialId = sugerencia.ComercialId,
