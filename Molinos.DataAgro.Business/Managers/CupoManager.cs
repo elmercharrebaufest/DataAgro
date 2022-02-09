@@ -1715,7 +1715,7 @@ namespace Molinos.DataAgro.Business.Managers
             };
 
             result = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadACrear, Fecha = s.FechaSugerida } });
-            sugerenciaPorComercial.Total -= cantidadACrear;
+            sugerenciaPorComercial.Total -= result.ListaCupos.Count();
             return result;
         }
 
@@ -2135,7 +2135,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (fecha >= formula.CuposDesde && fecha <= formula.CuposHasta)
                         {
-                            var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                            var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
                             var hoy = DateTime.Now.Date;
                             var cupo = new DiaCupo()
                             {
@@ -2161,7 +2161,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 CantidadSolicitudesPendientesExtra = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Extraordinaria),
 
 
-                                CantidadSugerenciaPendiente = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null && x.MaterialId == material.MaterialId),
+                                CantidadSugerenciaPendiente = (int)repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == null && x.MaterialId == material.MaterialId).Sum(x => x.CantidadDeCupos),
                                 // no se usa
                                 //CantidadSugerencia = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId),
                             };
@@ -2174,6 +2174,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                             var sugerenciasPendientes = sugerenciasPorComercial.Where(a => a.Fecha == fecha && a.MaterialId == material.MaterialId).Sum(a => a.Total);
                             //Cupos Libres
+                            logger.Debug($"Cantidad Planta : {cupo.CantidadDisponibilidadPlanta}, sug Pendientes: {cupo.CantidadSugerenciaPendiente}, Cupos creados: {CantidadCuposGenerados}");
                             cupo.CantidadCuposLibres = cupo.CantidadDisponibilidadPlanta - (cupo.CantidadSugerenciaPendiente + CantidadCuposGenerados);
                             lista.Add(cupo);
                         }
@@ -4883,7 +4884,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 j++;
             }
-           
+
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -4910,7 +4911,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         var f = 1;
                         var c = 3;
-                        workSheet13.Cells[(f + i), (c + k)].Value = agrupacion[i-1].DiaCupo[k].Cantidad;
+                        workSheet13.Cells[(f + i), (c + k)].Value = agrupacion[i - 1].DiaCupo[k].Cantidad;
                         workSheet13.Column((c + k)).AutoFit();
 
                     }

@@ -413,39 +413,51 @@ function AceptarSolicitud() {
         MensErr("La solicitud no se puede aceptar");
         return;
     }
-    result = MSExecuteOnServer('/AdministracionCupo/Aceptar', { administracionId: id, cantidadCupo: cantidad, cantidadFleteProcedencia: cantidadFp });
+    BlockUi('Procesando...');
+    setTimeout(
+        function () {
+            result = MSExecuteOnServer('/AdministracionCupo/Aceptar', { administracionId: id, cantidadCupo: cantidad, cantidadFleteProcedencia: cantidadFp });
 
-    $.unblockUI();
-    var errores = new Array();
-    var cuposGenerados = new Array();
-    if (result.HayError) {
-        errores = errores.concat(result.ListaErrores);
-    }
-    if (errores.length == 0) {
-        MensInfo("Se grabo correctamente.");
-    } else {
-        ShowErrorMessages(errores);
-    }
-    recargarGrilla();
+            $.unblockUI();
+            var errores = new Array();
+            var cuposGenerados = new Array();
+            if (result.HayError) {
+                errores = errores.concat(result.ListaErrores);
+            }
+            if (errores.length == 0) {
+                MensInfo("Se grabo correctamente.");
+            } else {
+                ShowErrorMessages(errores);
+            }
+            recargarGrilla();
+        }
+        , 200);
+   
 }
 
 
 function RechazarSolicitud() {
     var id = $("#solicitudId").val();
-    result = MSExecuteOnServer('/AdministracionCupo/Rechazar', { administracionId: id });
-    var errores = new Array();
-    for (var i = 0; i < result.length; i++) {
-        if (result[i].HayError) {
-            errores = errores.concat(result[i].ListaErrores);
-        }
-    }
+    BlockUi('Procesando...');
+    setTimeout(
+        function () {
+            result = MSExecuteOnServer('/AdministracionCupo/Rechazar', { administracionId: id });
+            var errores = new Array();
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].HayError) {
+                    errores = errores.concat(result[i].ListaErrores);
+                }
+            }
 
-    if (errores.length == 0) {
-        MensInfo("Se grabo correctamente.");
-    } else {
-        ShowErrorMessages(errores);
-    }
-    recargarGrilla();
+            if (errores.length == 0) {
+                MensInfo("Se grabo correctamente.");
+            } else {
+                ShowErrorMessages(errores);
+            }
+            recargarGrilla();
+        }
+        , 200);
+  
 }
 function cuposCreados(lista) {
     $("#cupos-generados-modal").html(lista.join("</br>"));
