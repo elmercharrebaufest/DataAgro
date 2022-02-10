@@ -627,13 +627,15 @@ function GuardarLimiteCupo() {
             }
         } else {
             MensErr("La cantidad configurada de las zonas(" + $('#totalId').data("kendoNumericTextBox").value() + ") excede el limite de cupos(" + $("#limiteCupo" + idConfiguracion).val() + ")")
+            $.unblockUI();
+            return false;
         }
 
     } else {
         var limiteAlgoritmo = $('#limiteAlgoritmo' + configuraciones[0].Id).val();
         resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo});
     }
-
+    
     if (resultado.HayError) {
         //$("#error-alert").text(resultado.Errores[0].Message);
         //$(".alert-danger").show();
@@ -647,6 +649,7 @@ function GuardarLimiteCupo() {
         recargarGrilla();
         EliminarTablaConfiguracion(idConfiguracion);
     }
+
     $.unblockUI();
 }
 
