@@ -2,14 +2,17 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Report;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Web;
+using System.Net;
 using System.Web.Mvc;
+using WebDataAgro.Core;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
@@ -18,12 +21,14 @@ namespace WebDataAgro.Controllers
     public class BoletoController : Controller
     {
         private IBoletoManager mobjBoletoManager;
-        private readonly string _logDir ;
+        private readonly IReportesManager reportesManager;
+        private readonly string _logDir;
 
-        public BoletoController(IBoletoManager oBoletoManager)
+        public BoletoController(IBoletoManager oBoletoManager, IReportesManager reportesManager)
         {
             mobjBoletoManager = oBoletoManager;
-            _logDir = ConfigurationManager.AppSettings["BoletosGeneradosPDF"].ToString();
+            reportesManager = reportesManager;
+            _logDir = ConfigurationManager.AppSettings["PathBoletos"].ToString();
         }
         public ActionResult Index()
         {
@@ -51,12 +56,12 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerarBoletos(/*bool enviarMail, DataSourceRequest request*/ BoletoGeneradoDto boleto)
+        public ActionResult GenerarBoletos(BoletoGeneradoDto boleto)
         {
             CompletarVista();
             //List<string> contratos = new List<string>();
             var tipoNegocios = new List<int>();
-            if(boleto.TipoNegocioId == 1)
+            if (boleto.TipoNegocioId == 1)
             {
                 tipoNegocios.Add(1);
                 tipoNegocios.Add(2);
@@ -65,7 +70,12 @@ namespace WebDataAgro.Controllers
             {
                 tipoNegocios.Add(3);
             }
-            var boletos = mobjBoletoManager.GrabarBoleto(tipoNegocios, GlobalVariables.ComercialId, boleto.ContratoSAP.Split(';').ToList(), boleto.Mail, GlobalVariables.EquipoReal);
+            List<string> contratos = new List<string>();
+            foreach(string itemContrato in boleto.ContratoSAP.Split(';').ToList())
+            {
+                contratos.Add(itemContrato.PadLeft(10, '0'));
+            }
+            var boletos = mobjBoletoManager.GrabarBoleto(tipoNegocios, GlobalVariables.ComercialId, contratos, boleto.Mail, GlobalVariables.EquipoReal);
             //var boletos = new BoletoGeneradoDto { ContratoSAP = "000036363", Generado = true };
             return new JsonResult()
             {
@@ -95,27 +105,22 @@ namespace WebDataAgro.Controllers
         [HttpPost]
         public ActionResult ListarBoletos()
         {
-            //if (!string.IsNullOrEmpty(log))
-            //{
-            //    return File(Path.Combine(_logDir, log), "text/plain");
-            //}
 
-            //var boletos = Directory.GetFiles(_logDir)
-            //    .Where(path => path.EndsWith(".pdf"))
-            //    .Select(path => new FileInfo(path))
-            //    .Select(file => new BoletoArchivoDto
-            //    {
-            //        Nombre = file.Name,
-            //        FechaUltimaEscritura = file.LastWriteTime.ToString("yyyy/MM/dd HH:mm"),
-            //        Url = _logDir + "\\\\" + file.Name,
-            //        Tamano = GetFriendlyFileSize(file.Length)
-            //    })
-            //    .OrderByDescending(x => x.Nombre)
-            //    .ToList();
+            var boletos = Directory.GetFiles(_logDir)
+                .Where(path => path.EndsWith(".pdf"))
+                .Select(path => new FileInfo(path))
+                .Select(file => new BoletoArchivoDto
+                {
+                    Nombre = file.Name,
+                    FechaUltimaEscritura = file.LastWriteTime.ToString("yyyy/MM/dd HH:mm"),
+                    Url = _logDir + file.Name,
+                    Tamano = GetFriendlyFileSize(file.Length)
+                })
+                .OrderByDescending(x => x.Nombre)
+                .ToList();
 
-            //CorrectSortOrder(logs);
 
-            return Json(null);
+            return Json(boletos);
         }
 
         private string GetFriendlyFileSize(long lengthInBytes)
@@ -124,6 +129,38 @@ namespace WebDataAgro.Controllers
             var groupSeparator = NumberFormatInfo.CurrentInfo.NumberGroupSeparator;
             var friendly = kb.ToString("N0").Replace(groupSeparator, " ") + " KB";
             return friendly;
+        }
+
+        public ActionResult ObtenerDownloadKey(oParamBusqueda filtro)
+        {
+
+            var identif = mobjBoletoManager.ObtenerIdentDescarga();
+
+            return Json(Util.GetDownloadKey(identif));
+        }
+
+        //[HttpPost]
+        public ActionResult DescargarArchivoBoleto(string nombre)
+        {
+            try
+            {
+                Byte[] fileBytes = mobjBoletoManager.BoletoEnByte(_logDir  + nombre);
+
+                if (fileBytes == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    //return Json(fileBytes); 
+                    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf,nombre);
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
         }
     }
 }

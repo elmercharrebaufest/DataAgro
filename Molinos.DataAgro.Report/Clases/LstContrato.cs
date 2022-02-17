@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Report
                     Zona = x.ComercialZonaDescripcion,
                     Nombre = x.Proveedor,
                     CUIT = x.Cuit,
-                    NombreCorredor = x.Corredor,
+                    NombreCorredor = x.RazonSocialCorredor,
                     CUITCorredor = x.CUITCorredor,
                     Figura = x.ClasificacionDescripcion,
                     Cantidad = x.Cantidad,

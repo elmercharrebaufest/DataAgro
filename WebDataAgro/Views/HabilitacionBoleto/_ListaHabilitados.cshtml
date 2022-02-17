@@ -1,0 +1,97 @@
+﻿@using Molinos.DataAgro.Entities.Dto
+@model WebDataAgro.Models.HabilitacionBoletoModel
+@{
+    var habilitados = (List<TipoNegocioDetalleDto>)ViewBag.ListaHabilitacion;
+    ViewBag.Title = "Habilitacion Boleto";
+}
+<script>
+    var data = '@Html.Raw(Json.Encode(ViewBag.ListaHabilitacion))';
+    habilitados = JSON.parse(data);
+</script>
+<script src="~/Scripts/App/HabilitacionBoleto.js"></script>
+<div class="col-md-12">
+    <table class="tabla-historial table">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Descripcion</th>
+                <th>Carta Oferta</th>
+                <th>Confirma</th>
+                <th>Físico</th>
+                <th></th>
+            </tr>
+        </thead>
+        @{var i = 0; }
+        @foreach (var mat in habilitados)
+        {
+            <input name="TipoNegocioDetalles[@i].Id" value="@mat.Id" hidden />
+            <tr>
+                <td>@mat.TipoNegocioDescripcion</td>
+                <td>@mat.Descripcion</td>
+                <td>
+                    <span>
+                        <label class="content-input">
+                            <input type="checkbox" class="check" name="TipoNegocioDetalles[@i].CartaOferta" id="@("Carta" + mat.Id)" @(mat.CartaOferta ? "checked" : "") onchange="actualizarListado(@("Carta" + mat.Id))">
+                            <i></i>
+                        </label>
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        <label class="content-input">
+                            <input type="checkbox" class="check" name="TipoNegocioDetalles[@i].Confirma" id="@("Confirma" + mat.Id)" @(mat.Confirma ? "checked" : "") onchange="actualizarListado(@("Confirma" + mat.Id))">
+                            <i></i>
+                        </label>
+                    </span>
+                </td>
+                <td>
+                    <span>
+                        <label class="content-input">
+                            <input type="checkbox" class="check" name="TipoNegocioDetalles[@i].BoletoFisico" id="@("Fisico" + mat.Id)" @(mat.BoletoFisico ? "checked" : "") onchange="actualizarListado(@("Fisico" + mat.Id))">
+                            <i></i>
+                        </label>
+                    </span>
+                </td>
+                <td class="fin-dia">
+                    @* @Ajax.ActionLink(" ", "EliminarAvanceSiembra", new { @id = mat.Id }, new AjaxOptions { UpdateTargetId = "listaAvanceSiembra", InsertionMode = InsertionMode.Replace }, new { @class = "fa fa-minus-circle danger" })*@
+                </td>
+            </tr>
+            i += 1;
+        }
+    </table>
+</div>
+<style>
+    td, th {
+        text-align: center !important;
+    }
+
+    i {
+        margin-top: 6px;
+    }
+    .tableFixHead {
+        overflow: auto;
+        height: 500px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+        }
+
+    /* Just common table stuff. Really. */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 8px 16px;
+    }
+
+    th {
+        background: #eee;
+    }
+</style>
+
+

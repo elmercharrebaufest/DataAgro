@@ -1353,7 +1353,8 @@ namespace Molinos.DataAgro.Business.Managers
                         TipoTelefono2Id = (param.telefonos[1].tipoTelefono.HasValue ? (int?)param.telefonos[1].tipoTelefono.Value : null),
                         TipoTelefono3Id = (param.telefonos[2].tipoTelefono.HasValue ? (int?)param.telefonos[2].tipoTelefono.Value : null),
                         CompraNet = param.CompraNet,
-                        Cupo = param.Cupo
+                        Cupo = param.Cupo,
+                        Boleto = param.Boleto
                     };
                     repositorio.Agregar(contactoComercial);
                     EnviarMailInvitacionMOAOperaciones(contactoComercial, oParam);
@@ -2108,7 +2109,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 Email3 = can.emails[2],
                                 ProveedorId = (int)oParam.ProveedorId,
                                 CompraNet = can.CompraNet,
-                                Cupo = can.Cupo
+                                Cupo = can.Cupo,
+                                Boleto = can.Boleto
                             };
                             repositorio.Agregar(contacto);
                             EnviarMailInvitacionMOAOperaciones(contacto, oParam);
@@ -2155,6 +2157,7 @@ namespace Molinos.DataAgro.Business.Managers
                         con.Cargo = mod.cargo;
                         con.CompraNet = mod.CompraNet;
                         con.Cupo = mod.Cupo;
+                        con.Boleto = mod.Boleto;
 
                         #region Eliminar Intereses Contactos
                         var oContactosInteresesSave = repositorio.Listar<ContactoComercialInteres>(x => x.ContactoComercial.ContactoComercialId == mod.contactoComercialId);
@@ -3879,14 +3882,14 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        public bool MostrarProveedorDeshabilitado(int proveedorId)
-        {
-            return repositorio.Obtener<Proveedor, bool>(x => x.ProveedorId == proveedorId, x => x.Deshabilitado ?? false);
-        }
-
         public List<ProveedorDto> TraerProveedoresPorCuit(string cuit)
         {
             return repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, CUIT = x.CUIT }, x => x.CUIT == cuit);
+        }
+
+        public bool MostrarProveedorDeshabilitado(int proveedorId)
+        {
+            return repositorio.Obtener<Proveedor, bool>(x => x.ProveedorId == proveedorId, x => x.Deshabilitado ?? false);
         }
 
         public void EnviarMailFijacionVirtual(FijacionDePrecioContrato contrato, string comercial, bool eliminar)

@@ -271,3 +271,71 @@ IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraor
 
 --Comisionista
 IF NOT EXISTS (select 1 from Segmentacion where Descripcion = 'Comisionista') BEGIN insert into Segmentacion(Descripcion, Grupo) values ('Comisionista','Comisionistas'); END
+IF NOT EXISTS (select 1 from TipoAdministracionCupo where Descripcion = 'Extraordinaria') BEGIN insert into TipoAdministracionCupo(Descripcion) values ('Extraordinaria'); END
+
+-- TipoNegocioDetalle
+
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'A FIJAR') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('A FIJAR', 1); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'A FIJAR PASE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('A FIJAR PASE', 1); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'CANJE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('CANJE', 1); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'A PRECIO') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('A PRECIO', 2); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJACION') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FIJACION', 3); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'CONVENIO') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('CONVENIO', 1); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJ. CONVENIO') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FIJ. CONVENIO', 2); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FASON') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FASON', 4); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FASON MP') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FASON MP', 1); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'PRESTAMO DEVOLUCION') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('PRESTAMO DEVOLUCION', 1); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'VENTA') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('VENTA', 2); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJACION VIRTUAL') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FIJACION VIRTUAL', 3); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJACION CANJE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FIJACION CANJE', 3); END
+IF NOT EXISTS (select 1 from TipoNegocioDetalle where Descripcion = 'FIJACION PASE') BEGIN insert into TipoNegocioDetalle(Descripcion, TipoNegocioId) values ('FIJACION PASE', 3); END
+
+-- Clausula
+
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaUno', 1, 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDos') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDos', 2, 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTres') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTres', 3, 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuatro') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuatro', 4 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCinco') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCinco', 5 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSeis') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaSeis', 6 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaSiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaSiete', 7 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOcho') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaOcho', 8 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaNueve') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaNueve', 9 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDiez') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDiez', 10 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaOnce') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaOnce', 11 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDoce') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDoce', 12 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTrece') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTrece', 13 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCatorce') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCatorce', 14 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaQuince') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaQuince', 15 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDieciseis') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDieciseis',16 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDiecisiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDiecisiete',17 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDieciocho') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDieciocho',18 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaDiecinueve') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaDiecinueve',19 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeinte') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeinte',20 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeintiuno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeintiuno',21 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeintidos') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeintidos',22 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeintitres') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeintitres',23 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeinticuatro') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeinticuatro',24 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeinticinco') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeinticinco',25 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeintiseis') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeintiseis',26 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeintisiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeintisiete',27 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeintiocho') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeintiocho',28 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaVeintinueve') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaVeintinueve',29 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreinta') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreinta',30 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYUno',31 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYDos') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYDos',32 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYTres') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYTres',33 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYCuatro') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYCuatro',34 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYCinco') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYCinco',35 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYSeis') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYSeis',36 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYSiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYSiete',37 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYOcho') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYOcho',38 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaTreintaYNueve') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaTreintaYNueve',39 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarenta') BEGIN insert into Clausula(Discriminator, Orden, Estado)values ('ClausulaCuarenta',40 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYUno') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYUno',41 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYDos') BEGIN insert into Clausula(Discriminator, Orden, Estado)values ('ClausulaCuarentaYDos',42 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYTres') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYTres',43 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYCuatro') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYCuatro',44 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYCinco') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYCinco',45 , 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSeis') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSeis',46, 1); END
+IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSiete',47 , 1); END

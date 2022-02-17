@@ -208,7 +208,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Condicional = (contrato is Contrato) ? (contrato as Contrato).Condicional : null,
                         CondicionalCantidad = (contrato is Contrato) ? (contrato as Contrato).CondicionalCantidad : null,
                         CondicionalFecha = (contrato is Contrato) ? (contrato as Contrato).CondicionalFecha : null,
-                        CondicionalFechaFormateado = (contrato is Contrato) ? (contrato as Contrato).CondicionalFecha != null ? SqlFunctions.DateName("day", (contrato as Contrato).CondicionalFecha) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).CondicionalFecha) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).CondicionalFecha) : "":"",
+                        CondicionalFechaFormateado = (contrato is Contrato) ? (contrato as Contrato).CondicionalFecha != null ? SqlFunctions.DateName("day", (contrato as Contrato).CondicionalFecha) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).CondicionalFecha) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).CondicionalFecha) : "" : "",
                         CondicionalMonedaId = (contrato is Contrato) ? (contrato as Contrato).CondicionalMonedaId : null,
                         CondicionalPosicion = (contrato is Contrato) ? (contrato as Contrato).CondicionalPosicion : null,
                         CondicionalPrecio = (contrato is Contrato) ? (contrato as Contrato).CondicionalPrecio : null,
@@ -216,9 +216,22 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CondicionalContratoSAP = (contrato is Contrato) ? (contrato as Contrato).CondicionalContrato.ContratoSAP : "",
                         MailVentaBoleto = contrato.MailVentaBoleto,
                         ProveedorComisionistaId = contrato.ProveedorComisionistaId,
-                        RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial,
+                        RazonSocialProveedorComisionista = contrato.ProveedorComisionistaId != null ? contrato.ProveedorComisionista.RazonSocial : "",
                         KgMaximo = contrato.KgMaximo ?? 0,
-                        KgMinimo = contrato.KgMinimo ?? 0
+                        KgMinimo = contrato.KgMinimo ?? 0,
+                        BoletoContratoId = (contrato is Contrato) ? (contrato as Contrato).BoletoId : (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.BoletoId : (int?)null,
+                        BolsaContratoId = (contrato is Contrato) ? (contrato as Contrato).BolsaId : (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.BolsaId : (int?)null,
+                        ProveedorDireccion = contrato.Proveedor.Direccion,
+                        ProveedorLocalidad = contrato.Proveedor.Localidad != null ? contrato.Proveedor.Localidad.Nombre : contrato.Proveedor.LocalidadCompraNet != null ? contrato.Proveedor.LocalidadCompraNet.Nombre : "",
+                        ProveedorProvincia = (contrato.Proveedor.Localidad != null && contrato.Proveedor.Localidad.Provincia != null) ? 
+                        contrato.Proveedor.Localidad.Provincia.Nombre : contrato.Proveedor.LocalidadCompraNet != null && contrato.Proveedor.LocalidadCompraNet.Provincia != null ? contrato.Proveedor.LocalidadCompraNet.Provincia.Nombre : "",                   
+                        DestinoLocalidad = contrato.Destino.Localidad.Nombre,
+                        DestinoProvincia = contrato.Destino.Localidad.Provincia.Nombre,
+                        MonedaCanjeDescripcion = contrato.MonedaCanjeId != null ? contrato.MonedaCanje.Descripcion : "",
+                        CondicionalMonedaDescripcion = (contrato is Contrato) ? (contrato as Contrato).CondicionalMonedaId != null ? (contrato is Contrato) ? (contrato as Contrato).CondicionalMoneda.Descripcion : "" : "" : "",
+                        RazonSocialProveedor = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : contrato.Proveedor == null ? "" : contrato.Proveedor.RazonSocial,
+                        RazonSocialCorredor = contrato.Corredor == null ? "" :  contrato.Corredor.RazonSocial,
+                        ProveedorCP = contrato.Proveedor.CodigoPostal
                     };
 
                 return queryNegocios;
@@ -280,7 +293,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Ampliaciones = contrato.Ampliaciones,
                         Cuit = contrato.Proveedor == null ? "" : contrato.Proveedor.CUIT,
                         Proveedor = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : contrato.Proveedor == null ? "" : !string.IsNullOrEmpty(contrato.Proveedor.Alias) ? contrato.Proveedor.Alias + " - " + contrato.Proveedor.RazonSocial : contrato.Proveedor.RazonSocial,
-                        Corredor = contrato.Corredor == null ? "" : !string.IsNullOrEmpty(contrato.Corredor.Alias) ? contrato.Corredor.Alias + " - " + contrato.Corredor.RazonSocial : contrato.Corredor.RazonSocial,
+                        RazonSocialCorredor = contrato.Corredor == null ? "" : !string.IsNullOrEmpty(contrato.Corredor.Alias) ? contrato.Corredor.Alias + " - " + contrato.Corredor.RazonSocial : contrato.Corredor.RazonSocial,
                         CUITCorredor = contrato.Corredor == null ? "" : contrato.Corredor.CUIT,
                         Comercial = contrato.Comercial == null ? "" : contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido,
                         Material = contrato.Material == null ? "" : contrato.Material.Descripcion,

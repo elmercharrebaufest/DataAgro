@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="j/sf0JIZabTuiQscYdo2qiPO5KZhIeXSfe0IQ7DyIpY=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="LzD8i6FU//eljYOl/0REC2MJufY=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding">
+    <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding1">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding</serializedValue>
+          <serializedValue>SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding1</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -110,10 +110,10 @@
         </property>
       </properties>
     </bindingConfiguration>
-    <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding1">
+    <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding2">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding1</serializedValue>
+          <serializedValue>SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding2</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -221,7 +221,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="HTTP_Port31" contract="ContratosParaFijacionVirtual.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE" bindingType="basicHttpBinding" address="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding">
+    <endpoint name="HTTP_Port43" contract="ContratosParaFijacionVirtual.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE" bindingType="basicHttpBinding" address="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding1">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
@@ -233,7 +233,7 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding</serializedValue>
+          <serializedValue>SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding1</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>ContratosParaFijacionVirtual.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE</serializedValue>
@@ -296,7 +296,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>HTTP_Port31</serializedValue>
+          <serializedValue>HTTP_Port43</serializedValue>
         </property>
         <property path="/kind" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
@@ -306,7 +306,7 @@
         </property>
       </properties>
     </endpoint>
-    <endpoint name="HTTPS_Port30" contract="ContratosParaFijacionVirtual.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE" bindingType="basicHttpBinding" address="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding1">
+    <endpoint name="HTTPS_Port30" contract="ContratosParaFijacionVirtual.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE" bindingType="basicHttpBinding" address="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro" bindingConfiguration="SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding2">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro</serializedValue>
@@ -318,7 +318,7 @@
           <serializedValue>basicHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding1</serializedValue>
+          <serializedValue>SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEBinding2</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>ContratosParaFijacionVirtual.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE</serializedValue>

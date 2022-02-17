@@ -9,13 +9,21 @@ namespace Molinos.DataAgro.Entities.Helpers
     {
         public static string ToJson<T>(this T data)
         {
-            var serializer = new DataContractJsonSerializer(typeof(T));
-
-            using (var ms = new MemoryStream())
+            try
             {
-                serializer.WriteObject(ms, data);
-                return Encoding.UTF8.GetString(ms.ToArray());
+                var serializer = new DataContractJsonSerializer(typeof(T));
+
+                using (var ms = new MemoryStream())
+                {
+                    serializer.WriteObject(ms, data);
+                    return Encoding.UTF8.GetString(ms.ToArray());
+                }
             }
+            catch (System.Exception)
+            {
+                return "error al serializar el objeto.";
+            }
+
         }
 
         public static string ToXml<T>(this T data)

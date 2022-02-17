@@ -28,6 +28,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Cargo { get; set; }
         public bool? CompraNet { get; set; }
         public bool? Cupo { get; set; }
+        public bool? Boleto { get; set; }
 
         [ForeignKey("ProveedorId")]
         public virtual Proveedor Proveedor { get; set; }

@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.ContratosAPesificar {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -58,7 +58,7 @@ namespace Molinos.DataAgro.Agent.ContratosAPesificar {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -108,6 +108,22 @@ namespace Molinos.DataAgro.Agent.ContratosAPesificar {
         private string cLASIFICACIONField;
         
         private string aNTICIPOField;
+        
+        private string cESIONField;
+        
+        private string sTATUSField;
+        
+        private decimal cANTIDADField;
+        
+        private string cON_PRECIOField;
+        
+        private decimal cANT_RECIBIDAField;
+        
+        private decimal iMP_RECIBIDOField;
+        
+        private decimal cANT_LIQUIDADAField;
+        
+        private decimal mONTO_PENDIENTEField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -373,6 +389,102 @@ namespace Molinos.DataAgro.Agent.ContratosAPesificar {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=22)]
+        public string CESION {
+            get {
+                return this.cESIONField;
+            }
+            set {
+                this.cESIONField = value;
+                this.RaisePropertyChanged("CESION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=23)]
+        public string STATUS {
+            get {
+                return this.sTATUSField;
+            }
+            set {
+                this.sTATUSField = value;
+                this.RaisePropertyChanged("STATUS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=24)]
+        public decimal CANTIDAD {
+            get {
+                return this.cANTIDADField;
+            }
+            set {
+                this.cANTIDADField = value;
+                this.RaisePropertyChanged("CANTIDAD");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=25)]
+        public string CON_PRECIO {
+            get {
+                return this.cON_PRECIOField;
+            }
+            set {
+                this.cON_PRECIOField = value;
+                this.RaisePropertyChanged("CON_PRECIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=26)]
+        public decimal CANT_RECIBIDA {
+            get {
+                return this.cANT_RECIBIDAField;
+            }
+            set {
+                this.cANT_RECIBIDAField = value;
+                this.RaisePropertyChanged("CANT_RECIBIDA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=27)]
+        public decimal IMP_RECIBIDO {
+            get {
+                return this.iMP_RECIBIDOField;
+            }
+            set {
+                this.iMP_RECIBIDOField = value;
+                this.RaisePropertyChanged("IMP_RECIBIDO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=28)]
+        public decimal CANT_LIQUIDADA {
+            get {
+                return this.cANT_LIQUIDADAField;
+            }
+            set {
+                this.cANT_LIQUIDADAField = value;
+                this.RaisePropertyChanged("CANT_LIQUIDADA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=29)]
+        public decimal MONTO_PENDIENTE {
+            get {
+                return this.mONTO_PENDIENTEField;
+            }
+            set {
+                this.mONTO_PENDIENTEField = value;
+                this.RaisePropertyChanged("MONTO_PENDIENTE");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -384,7 +496,7 @@ namespace Molinos.DataAgro.Agent.ContratosAPesificar {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

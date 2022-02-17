@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.ListadoCCPPendiente {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -113,7 +113,7 @@ namespace Molinos.DataAgro.Agent.ListadoCCPPendiente {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -137,6 +137,12 @@ namespace Molinos.DataAgro.Agent.ListadoCCPPendiente {
         private string fECHA_NETOField;
         
         private string fECHA_INGRESOField;
+        
+        private string cTGField;
+        
+        private string cUIT_SOLICITANTEField;
+        
+        private string aLMACENField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -246,6 +252,42 @@ namespace Molinos.DataAgro.Agent.ListadoCCPPendiente {
             }
         }
         
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        public string CTG {
+            get {
+                return this.cTGField;
+            }
+            set {
+                this.cTGField = value;
+                this.RaisePropertyChanged("CTG");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        public string CUIT_SOLICITANTE {
+            get {
+                return this.cUIT_SOLICITANTEField;
+            }
+            set {
+                this.cUIT_SOLICITANTEField = value;
+                this.RaisePropertyChanged("CUIT_SOLICITANTE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
+        public string ALMACEN {
+            get {
+                return this.aLMACENField;
+            }
+            set {
+                this.aLMACENField = value;
+                this.RaisePropertyChanged("ALMACEN");
+            }
+        }
+        
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         protected void RaisePropertyChanged(string propertyName) {
@@ -257,7 +299,7 @@ namespace Molinos.DataAgro.Agent.ListadoCCPPendiente {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

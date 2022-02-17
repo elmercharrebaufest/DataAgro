@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="P+QyfY2G2IbGNf9uWJuY95oRSODvb4lPWBAeUEzW+b4=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="tbMFS2VbUo29AjbJ4xQtWqE4mls=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_PRE_SLIPBinding">
       <properties>

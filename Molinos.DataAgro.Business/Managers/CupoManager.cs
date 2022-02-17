@@ -50,14 +50,14 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IHttpContextManager httpContextManager;
         private readonly IAltaTempranaAgent altaTempranaAgent;
         private readonly ICumplimientoCuposAgent cumplimientoCuposAgent;
-
+        private readonly IContratoKgPendienteAgent contratoKgPendienteAgent;
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
             IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios,
             IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
             IComercialManager comercialManager, IServicioRepositorioScatoAgent servicioScato, IHttpContextManager httpContextManager,
-            IAltaTempranaAgent altaTempranaAgent, ICumplimientoCuposAgent cumplimientoCuposAgent)
+            IAltaTempranaAgent altaTempranaAgent, ICumplimientoCuposAgent cumplimientoCuposAgent, IContratoKgPendienteAgent contratoKgPendienteAgent)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -76,6 +76,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.httpContextManager = httpContextManager;
             this.altaTempranaAgent = altaTempranaAgent;
             this.cumplimientoCuposAgent = cumplimientoCuposAgent;
+            this.contratoKgPendienteAgent = contratoKgPendienteAgent;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
@@ -404,6 +405,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private Resultado AnularCupoStop(Cupo cupoSap, Configuracion datosConfiguracion, ClienteStopAgent cliente)
         {
+            logger.Debug("AnularCupoStop " + cupoSap.CupoSap + " " + cupoSap.ToJson());
             var nuevoResultado = new Resultado();
             if (!cupoSap.Centro.Acopio && cupoSap.EstadoCupoId == 4 && cupoSap.CupoStop != null)
             {
@@ -415,6 +417,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var resultadoStop = cliente != null ? cliente.EliminarCupo(cupoSap) : clienteStopAgent.EliminarCupo(cupoSap);
                 if (resultadoStop.HayError)
                 {
+                    logger.Debug("AnularCupoStop HayError " + cupoSap.CupoSap + " " + resultadoStop.Errores.Select(a => a.Message).ToJson());
                     foreach (var e in resultadoStop.Errores)
                     {
                         nuevoResultado.Error("Error", $"Error al anular el cupo { cupoSap.CupoSap } en STOP: {e.Message}."); ;
@@ -968,7 +971,7 @@ namespace Molinos.DataAgro.Business.Managers
                 formulaSave.Fecha = formulaDto.Fecha;
                 formulaSave.Usada = true;
 
-                formulaDto.CuposDesde = hoy;
+                formulaDto.CuposDesde = formulaDto.CuposDesde < hoy ? hoy : formulaDto.CuposDesde;
 
                 logger.Debug("CrearSugerenciaCupo - inicio de disponibilidad en planta.");
                 List<ConfiguracionCupoDto> disponibilidadEnPlantas = ObtenerDisponibilidadEnPlantas(formulaDto);
@@ -1293,7 +1296,7 @@ namespace Molinos.DataAgro.Business.Managers
                     TipoNegocioId = x.TipoNegocioId,
                     ContratoSAP = x.ContratoSAP,
                     KgNegocio = x.Cantidad,
-                    KgPendienteAplicar = x.Cantidad,
+                    KgPendienteAplicar = 0,
                     MaterialDesc = x.Material.Descripcion,
                     ProveedorDesc = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.RazonSocial : x.Proveedor.RazonSocial,
                     ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
@@ -1317,15 +1320,23 @@ namespace Molinos.DataAgro.Business.Managers
             contratos = contratos.Where(x => !solicitudesSugerenciasId.Contains(x.NegocioId.Value)).ToList();
             var negociosId = contratos.Where(x => x.ContratoSAP != null && x.ContratoSAP != "").Select(a => a.NegocioId).ToList();
             var antesDeAyer = DateTime.Now.Date.AddDays(-2);
-            var cuposNoCumplidos = repositorio.Listar<Cupo, CupoDto>(
-                x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId },
-                x => x.Cumplimiento == false && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.FechaIngreso <= antesDeAyer);
+            var ayer = DateTime.Now.Date.AddDays(-1);
 
-            Dictionary<int, int> negociosUsados = repositorio.Listar<Cupo>(x =>
-                  x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) &&
-                  x.EstadoCupoId != 1 && x.EstadoCupoId != 4 && x.EstadoCupoId != 9
-                  && x.Cumplimiento != false
-                  && x.NegocioId != null && x.ComercialId != null).GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
+            //var cuposNoCumplidos = repositorio.Listar<Cupo, CupoDto>(
+            //    x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId },
+            //    x => x.Cumplimiento == false && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.FechaIngreso <= antesDeAyer);
+
+            var cuposPendientes = repositorio.Listar<Cupo, CupoDto>(
+                x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId },
+                x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.FechaIngreso >= ayer)
+                .GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
+
+
+            //Dictionary<int, int> cuposCumplidos = repositorio.Listar<Cupo>(x =>
+            //      x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) &&
+            //      x.EstadoCupoId != 4 && x.EstadoCupoId != 9
+            //      && x.Cumplimiento != false
+            //      && x.NegocioId != null && x.ComercialId != null).GroupBy(x => x.NegocioId.Value).ToDictionary(a => a.Key, a => a.Count());
 
             //solicitudes pendientes
             List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(x =>
@@ -1336,26 +1347,39 @@ namespace Molinos.DataAgro.Business.Managers
                 && x.SugerenciaCupoId != null
             );
 
-
+            List<ContratoKgPendiente> contratosKgPendiente = contratos.Select(a => new ContratoKgPendiente { ContratoId = a.Id, ContratoSAP = a.ContratoSAP }).ToList();
+            contratosKgPendiente = contratoKgPendienteAgent.Consultar(contratosKgPendiente);
+                var minimo = Convert.ToSingle(kilosMinimosParaSugerencia * 100) / 30000;
             foreach (var item in contratos)
             {
                 item.ZonaCupoId = zonas.Where(a => a.Descripcion == item.ZonaDescrip).Select(a => a.Id).SingleOrDefault();
-                var minimo = Convert.ToSingle(kilosMinimosParaSugerencia * 100) / 30000;
-                var cantidadcupos = Convert.ToSingle(item.KgNegocio) / 30000;
-                var excedente = (cantidadcupos - Math.Truncate(cantidadcupos)) * 100;
-                if (excedente < minimo)
+
+                var kgp = contratosKgPendiente.Where(a => a.ContratoSAP == item.ContratoSAP).FirstOrDefault().KgPendiente;
+                if (kgp >= kilosMinimosParaSugerencia)
                 {
-                    item.CantidadDeCupos -= 1;
+                    item.KgPendienteAplicar = kgp;
+                    var cantidadcupos = Convert.ToSingle(kgp) / 30000;
+                    item.CantidadDeCupos = cantidadcupos < 1 ? 1 : kgp / 30000;
+                    var excedente = (cantidadcupos - Math.Truncate(cantidadcupos)) * 100;
+                    if (excedente < minimo && excedente != 0)
+                    {
+                        item.CantidadDeCupos -= 1;
+                    }
                 }
-                if (negociosUsados.Any(a => a.Key == item.NegocioId))
+                else
                 {
-                    item.CantidadDeCupos -= negociosUsados.Where(a => a.Key == item.NegocioId).Single().Value;
+                    item.CantidadDeCupos = 0;
+                }
+                if (cuposPendientes.Any(a => a.Key == item.NegocioId))
+                {
+                    item.CantidadDeCupos -= cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
                 }
 
-                if (cuposNoCumplidos.Any(x => x.NegocioId == item.NegocioId))
-                {
-                    item.CantidadDeCupos += cuposNoCumplidos.Count(x => x.NegocioId == item.NegocioId);
-                }
+                //analizar si tiene sentido por que ahora la cantiad depende de los kg pendientes y no de la cantidad de cupos por negocios
+                //if (cuposNoCumplidos.Any(x => x.NegocioId == item.NegocioId))
+                //{
+                //    item.CantidadDeCupos += cuposNoCumplidos.Count(x => x.NegocioId == item.NegocioId);
+                //}
                 if (solicitudesPendientes.Any(a => a.SugerenciaCupo != null && a.SugerenciaCupo.NegocioId == item.NegocioId))
                 {
                     item.CantidadDeCupos -= solicitudesPendientes
@@ -1414,9 +1438,9 @@ namespace Molinos.DataAgro.Business.Managers
                  x.EstadoCupoId != 1 && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.Cumplimiento != false
                  && x.ComercialId != null).GroupBy(x => x.ConfiguracionEspacioDinamicoId.Value).ToDictionary(a => a.Key, a => a.Count());
 
-            cuposNoCumplidos = repositorio.Listar<Cupo, CupoDto>(
-                x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.ConfiguracionEspacioDinamicoId, },
-                x => x.Cumplimiento == false && x.ConfiguracionEspacioDinamicoId != null && espacioDinamicoIds.Contains(x.ConfiguracionEspacioDinamicoId ?? 0) && x.FechaIngreso <= antesDeAyer);
+            //cuposNoCumplidos = repositorio.Listar<Cupo, CupoDto>(
+            //    x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.ConfiguracionEspacioDinamicoId, },
+            //    x => x.Cumplimiento == false && x.ConfiguracionEspacioDinamicoId != null && espacioDinamicoIds.Contains(x.ConfiguracionEspacioDinamicoId ?? 0) && x.FechaIngreso <= antesDeAyer);
 
             foreach (var item in espacioDinamicoLista)
             {
@@ -1426,10 +1450,11 @@ namespace Molinos.DataAgro.Business.Managers
                     item.CantidadDeCupos -= espacioDinamicoUsados.Where(a => a.Key == item.ConfiguracionEspacioDinamicoId).Single().Value;
                 }
 
-                if (cuposNoCumplidos.Any(x => x.NegocioId == item.ConfiguracionEspacioDinamicoId))
-                {
-                    item.CantidadDeCupos += cuposNoCumplidos.Count(x => x.NegocioId == item.ConfiguracionEspacioDinamicoId);
-                }
+                //if (cuposNoCumplidos.Any(x => x.NegocioId == item.ConfiguracionEspacioDinamicoId))
+                //{
+                //    item.CantidadDeCupos += cuposNoCumplidos.Count(x => x.NegocioId == item.ConfiguracionEspacioDinamicoId);
+                //}
+
                 if (solicitudesPendientes.Any(a => a.SugerenciaCupo != null && a.SugerenciaCupo.ConfiguracionEspacioDinamicoId == item.ConfiguracionEspacioDinamicoId))
                 {
                     item.CantidadDeCupos -= solicitudesPendientes

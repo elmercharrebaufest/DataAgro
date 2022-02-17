@@ -76,10 +76,10 @@ namespace Molinos.DataAgro.Agent
                     };
                     var logId = repositorio.Agregar(log);
                     repositorio.GuardarCambios();
-                    logger.Debug(rq.ToXml());
+                    //logger.Debug(rq.ToXml());
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO(rq);
-                    logger.Debug(valor.ToXml());
+                    //logger.Debug(valor.ToXml());
                     log = repositorio.Obtener<Log>(logId.Id);
                     log.Xml += valor.ToXml();
                     repositorio.GuardarCambios();

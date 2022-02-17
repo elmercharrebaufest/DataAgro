@@ -212,6 +212,7 @@ function armarComercial(comerciales) {
             obj.principal = comerciales[i].EsPrincipal;
             obj.CompraNet = comerciales[i].CompraNet;
             obj.Cupo = comerciales[i].Cupo;
+            obj.Boleto = comerciales[i].Boleto;
             obj.item = cantContactoComercial;
             aGuardarContactoComercial.push(obj);
 
@@ -245,7 +246,7 @@ function armarComercial(comerciales) {
                 (comerciales[i].Telefono1 ? comerciales[i].Telefono1 + (comerciales[i].Telefono2 ? " - " + comerciales[i].Telefono2 : "") + (comerciales[i].Telefono3 ? " - " + comerciales[i].Telefono3 : "") : "No especifica teléfono") +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-mails">' +
-                (comerciales[i].Email1 ? comerciales[i].Email1 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "") + (comerciales[i].Email2 ? " - " + comerciales[i].Email2 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "") : "") + (comerciales[i].Email3 ? " - " + comerciales[i].Email3 + (obj.CompraNet == true ? " &#10004;" : "") + (obj.Cupo === true ? '<i class="fa fa-truck"></i>' : "") : "") : "No especifica mails") +
+                (comerciales[i].Email1 ? comerciales[i].Email1 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck"></i>' : "") + (comerciales[i].Email2 ? " - " + comerciales[i].Email2 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck"></i>' : "") : "") + (comerciales[i].Email3 ? " - " + comerciales[i].Email3 + (obj.Boleto == true ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet == true ? " <b title=\"CompraNet\">&#10004;</b>" : "") + (obj.Cupo === true ? '<i title="Cupos" class="fa fa-truck"></i>' : "") : "") : "No especifica mails") +
                 '</div>' +
                 '<div class="contenedor-contacto-comercial-extras">' +
                 '<div class="row">' +

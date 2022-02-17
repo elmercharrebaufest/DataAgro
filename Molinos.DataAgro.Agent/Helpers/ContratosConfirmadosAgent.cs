@@ -1,0 +1,90 @@
+﻿using Autofac.Extras.NLog;
+using Molinos.DataAgro.Agent.ContratosConfirmados;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Molinos.DataAgro.Agent.Helpers
+{
+    public class ContratosConfirmadosAgent : IContratosConfirmadosAgent
+    {
+        private readonly IRepositorio repositorio;
+        public ContratosConfirmadosAgent(ILogger logger, IRepositorio repositorio)
+        {
+            this.logger = logger;
+            this.repositorio = repositorio;
+        }
+        String UserSap = ConfigurationManager.AppSettings["SapUser"];
+        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly ILogger logger;
+
+        public List<Contrato> ConfirmarContrato(Contrato contrato)
+        {
+            logger.Debug("Eviando Contrato Nro: " + contrato.Id);
+            var contratos = new List<Contrato>();
+            if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
+            {
+
+                contratos.Add(new Contrato { ContratoSAP = "1234560", Fecha = DateTime.Now });
+                return contratos;
+            }
+            try
+            {
+
+                SI_ZMPWS_DATAAGRO_CONTRATOS_CONFIRMADOSClient agent = new SI_ZMPWS_DATAAGRO_CONTRATOS_CONFIRMADOSClient();
+
+                agent.ClientCredentials.UserName.UserName = UserSap;
+                agent.ClientCredentials.UserName.Password = PassSap;
+
+
+                logger.Debug("Cargando contrato");
+                var rq = new Z_MPRFC_CONTRATOS_CONFIRMADOS()
+                {
+                    IM_FECHA = new string[] { contrato.Fecha.ToString("yyyy-MM-dd") }
+                };
+                logger.Debug(rq.ToXml());
+
+                var log = new Log
+                {
+                    Fecha = DateTime.Now,
+                    Xml = rq.ToXml()
+                };
+
+                var logId = repositorio.Agregar(log);
+                repositorio.GuardarCambios();
+
+                var devolucion = agent.SI_ZMPWS_DATAAGRO_CONTRATOS_CONFIRMADOS(rq);
+                logger.Debug(devolucion.ToXml());
+
+                log = repositorio.Obtener<Log>(logId.Id);
+                log.Xml += devolucion.ToXml();
+                repositorio.GuardarCambios();
+
+                //if (devolucion.EX_SALIDA[0]. != "Ok")
+                //{
+                //    throw new Exception(devolucion.EX_MENSAJE);
+                //}
+                foreach(var item in devolucion.EX_SALIDA)
+                {
+                    Contrato contratoTemp = new Contrato();
+                    contratoTemp.ContratoSAP = item.CONTRNUM;
+                    contratoTemp.Fecha = String.IsNullOrEmpty(item.FECHA_CONFIR)? DateTime.Now: Convert.ToDateTime(item.FECHA_CONFIR);
+                }
+                return contratos;
+
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error comunicacion SAP", e);
+                throw e;
+            }
+        }
+    }
+}

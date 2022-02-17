@@ -142,6 +142,8 @@ namespace Molinos.DataAgro.Agent.CartasDePortePendienteAplicar {
         
         private string cUIT_SOLICITANTEField;
         
+        private string aLMACENField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string PROVEEDOR {
@@ -271,6 +273,18 @@ namespace Molinos.DataAgro.Agent.CartasDePortePendienteAplicar {
             set {
                 this.cUIT_SOLICITANTEField = value;
                 this.RaisePropertyChanged("CUIT_SOLICITANTE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
+        public string ALMACEN {
+            get {
+                return this.aLMACENField;
+            }
+            set {
+                this.aLMACENField = value;
+                this.RaisePropertyChanged("ALMACEN");
             }
         }
         

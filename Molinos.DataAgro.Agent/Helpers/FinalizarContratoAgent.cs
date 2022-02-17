@@ -316,7 +316,6 @@ namespace Molinos.DataAgro.Agent.Helpers
                             FIJ_CBOT_MAT = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "",
                             TERCERO = contrato.ProveedorCreadorId != null ? "X" : "",
                             ANULA_Y_REEMP = contrato.AnulaYReemplazaContratoId == null ? "" : contrato.AnulaYReemplazaContrato.ContratoSAP,
-
                             CONDICIONAL = contrato.Condicional == true ? "X" : "",
                             FECHA_COND = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "",
                             MES_COND_MAT = contrato.CondicionalPosicion != null ? contrato.CondicionalPosicion : "",
@@ -324,7 +323,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0,
                             CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "",
                             CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0,
-
+                            COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "",
+                            PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "",
+                            TOL_INF = 3,
+                            TOL_SUP = 3,
+                            PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "",
+                            CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " ? "02" : ""
                             //BLOQUEO = "",
                             //CODIGO_TC= "",
                             //COND_PAGO ="",

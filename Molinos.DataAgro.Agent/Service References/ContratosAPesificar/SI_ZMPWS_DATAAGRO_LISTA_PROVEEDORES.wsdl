@@ -82,6 +82,12 @@
           <xsd:maxLength value="16" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="quantum17.3">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="17" />
+          <xsd:fractionDigits value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char18">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="18" />
@@ -121,6 +127,14 @@
           <xsd:element name="MONEDA" type="rfc:cuky5" />
           <xsd:element name="CLASIFICACION" type="rfc:char20" />
           <xsd:element name="ANTICIPO" type="rfc:char1" />
+          <xsd:element name="CESION" type="rfc:char1" />
+          <xsd:element name="STATUS" type="rfc:char1" />
+          <xsd:element name="CANTIDAD" type="rfc:quantum17.3" />
+          <xsd:element name="CON_PRECIO" type="rfc:char1" />
+          <xsd:element name="CANT_RECIBIDA" type="rfc:quantum13.3" />
+          <xsd:element name="IMP_RECIBIDO" type="rfc:curr13.2" />
+          <xsd:element name="CANT_LIQUIDADA" type="rfc:quantum13.3" />
+          <xsd:element name="MONTO_PENDIENTE" type="rfc:curr13.2" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

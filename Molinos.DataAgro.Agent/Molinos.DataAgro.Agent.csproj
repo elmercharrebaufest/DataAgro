@@ -81,9 +81,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ContratoKgPendienteAgent.cs" />
     <Compile Include="Helpers\CapacidadProductivaDisponibleAgent .cs" />
+    <Compile Include="Helpers\ConsultarEstadoBoletoAgent.cs" />
+    <Compile Include="Helpers\ContratosConfirmadosAgent.cs" />
     <Compile Include="Helpers\ContratosParaFijacionVirtualAgent.cs" />
     <Compile Include="Helpers\AnularFijacionVirtualAgent.cs" />
+    <Compile Include="Helpers\EnviarBoletoAgent.cs" />
     <Compile Include="Helpers\FinalizarFijacionVirtualAgent.cs" />
     <Compile Include="Helpers\CumplimientoCuposAgent.cs" />
     <Compile Include="Helpers\ContratosAPesificarAgent.cs" />
@@ -120,7 +124,21 @@
     <Compile Include="Helpers\RiesgoComercialAgent.cs" />
     <Compile Include="Helpers\ValidarLiquidacionParaFijacionAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    
+    <Compile Include="Service References\AcuerdosGenerados\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\AcuerdosGenerados\Reference1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\AnulaBoleto\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\AnularFijacionVirtual\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -136,7 +154,22 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ConsultarEstadoBoleto\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ContratoKgPendientes\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\ContratosAPesificar\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ContratosConfirmados\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -162,6 +195,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\DisponibilidadCupos\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\EnviarBoleto\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -310,6 +348,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Service References\AcuerdosGenerados\Molinos.DataAgro.Agent.AcuerdosGenerados.SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOSResponse.datasource" />
+    <None Include="Service References\AcuerdosGenerados\Molinos.DataAgro.Agent.AcuerdosGenerados.Z_MPRFC_ACUERDOS_GENERADOSResponse.datasource" />
+    <None Include="Service References\AcuerdosGenerados\SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS.wsdl" />
     <None Include="Service References\AdministracionCupera\Molinos.DataAgro.Agent.AdministracionCupera.SI_ZMPWS_DATAAGRO_ADMIN_CUPOSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -319,6 +360,13 @@
     <None Include="Properties\DataSources\System.Diagnostics.EventLogEntry.datasource" />
     <None Include="Service References\AdministracionCupera\SI_ZMPWS_DATAAGRO_ADMIN_CUPOS11.wsdl" />
     <None Include="Service References\AltaTempranaNosisBolsaRuca\SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO1.wsdl" />
+    <None Include="Service References\AnulaBoleto\Molinos.DataAgro.Agent.AnulaBoleto.SI_ZMPWS_DATAAGRO_ANULAR_BOLETOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AnulaBoleto\Molinos.DataAgro.Agent.AnulaBoleto.Z_MPRFC_ANULAR_BOLETOResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AnulaBoleto\SI_ZMPWS_DATAAGRO_ANULAR_BOLETO.wsdl" />
     <None Include="Service References\AnularFijacionVirtual\Molinos.DataAgro.Agent.AnularFijacionVirtual.SI_ZMPWS_DATAAGRO_ANULAR_FIJ_VIR_CANJEResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -346,6 +394,20 @@
     <None Include="Service References\ComprasDetalle\Molinos.DataAgro.Agent.ComprasDetalle.Z_MPRFC_DATOS_COMPRAS_DETALLEResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ConsultarEstadoBoleto\Molinos.DataAgro.Agent.ConsultarEstadoBoleto.SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConsultarEstadoBoleto\Molinos.DataAgro.Agent.ConsultarEstadoBoleto.Z_MPRFC_CONSULTAR_ESTADO_BOLETResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ConsultarEstadoBoleto\SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLET.wsdl" />
+    <None Include="Service References\ContratoKgPendientes\Molinos.DataAgro.Agent.ContratoKgPendientes.SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTESResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ContratoKgPendientes\Molinos.DataAgro.Agent.ContratoKgPendientes.Z_MPRFC_INDICAR_KG_PENDIENTESResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ContratoKgPendientes\SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTES.wsdl" />
     <None Include="Service References\ContratosAPesificar\Molinos.DataAgro.Agent.ContratosAPesificar.SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORESResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -353,6 +415,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ContratosAPesificar\SI_ZMPWS_DATAAGRO_LISTA_PROVEEDORES.wsdl" />
+    <None Include="Service References\ContratosConfirmados\Molinos.DataAgro.Agent.ContratosConfirmados.SI_ZMPWS_DATAAGRO_CONTRATOS_CONFIRMADOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ContratosConfirmados\Molinos.DataAgro.Agent.ContratosConfirmados.Z_MPRFC_CONTRATOS_CONFIRMADOSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ContratosConfirmados\SI_ZMPWS_DATAAGRO_CONTRATOS_CONFIRMADOS.wsdl" />
     <None Include="Service References\ContratosParaFijacionVirtual\Molinos.DataAgro.Agent.ContratosParaFijacionVirtual.SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENEResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -384,6 +453,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\DisponibilidadCupos\SI_ZMPWS_DATAAGRO_DISPONIBILIDAD_CUPOS.wsdl" />
+    <None Include="Service References\EnviarBoleto\Molinos.DataAgro.Agent.EnviarBoleto.SI_ZMPWS_DATAAGRO_ENVIAR_BOLETOS_GENEResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EnviarBoleto\Molinos.DataAgro.Agent.EnviarBoleto.Z_MPRFC_ENVIAR_BOLETOS_GENEResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EnviarBoleto\SI_ZMPWS_DATAAGRO_ENVIAR_BOLETOS_GENE.wsdl" />
     <None Include="Service References\FinalizarContrato\SI_ZMPWS_DATAAGRO_PRE_SLIP.wsdl" />
     <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION1.wsdl" />
     <None Include="Service References\InsertarFijacionesVirtuales\Molinos.DataAgro.Agent.InsertarFijacionesVirtuales.SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJEResponse.datasource">
@@ -462,7 +538,6 @@
     <None Include="Service References\ContratosParaFijacion\Molinos.DataAgro.Agent.ContratosParaFijacion.Z_MPRFC_CONTRATO_PEND_FIJACIONResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\ContratosParaFijacion\SI_ZMPWS_DATAAGRO_CONTRATO_PEND_FIJACION1.wsdl" />
     <None Include="Service References\CrearCupo\Molinos.DataAgro.Agent.CrearCupo.SI_ZMPWS_DATAAGRO_CREAR_CUPOSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1600,16 +1675,21 @@
     <None Include="Service References\ValidarLiquidacionParaFijacion\SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION.wsdl" />
   </ItemGroup>
   <ItemGroup>
-   
+    <WCFMetadataStorage Include="Service References\AcuerdosGenerados\" />
+    <WCFMetadataStorage Include="Service References\AnulaBoleto\" />
     <WCFMetadataStorage Include="Service References\AnularFijacionVirtual\" />
     <WCFMetadataStorage Include="Service References\CapacidadProductivaDisponible\" />
     <WCFMetadataStorage Include="Service References\CartasDePortePendienteAplicar\" />
+    <WCFMetadataStorage Include="Service References\ConsultarEstadoBoleto\" />
+    <WCFMetadataStorage Include="Service References\ContratoKgPendientes\" />
     <WCFMetadataStorage Include="Service References\ContratosAPesificar\" />
+    <WCFMetadataStorage Include="Service References\ContratosConfirmados\" />
     <WCFMetadataStorage Include="Service References\ContratosParaFijacionVirtual\" />
     <WCFMetadataStorage Include="Service References\CriterioCDWarrant\" />
     <WCFMetadataStorage Include="Service References\ComprasDetalle\" />
     <WCFMetadataStorage Include="Service References\CumplimientoCupos\" />
     <WCFMetadataStorage Include="Service References\DisponibilidadCupos\" />
+    <WCFMetadataStorage Include="Service References\EnviarBoleto\" />
     <WCFMetadataStorage Include="Service References\InsertarFijacionesVirtuales\" />
     <WCFMetadataStorage Include="Service References\ListaCBUProveedor\" />
     <WCFMetadataStorage Include="Service References\ListadoCCPPendiente\" />
@@ -2048,7 +2128,6 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  
   <ItemGroup>
     <None Include="Service References\CapacidadProductivaDisponible\configuration91.svcinfo" />
   </ItemGroup>
@@ -2084,6 +2163,74 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EnviarBoleto\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EnviarBoleto\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EnviarBoleto\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosConfirmados\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosConfirmados\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratosConfirmados\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ConsultarEstadoBoleto\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ConsultarEstadoBoleto\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ConsultarEstadoBoleto\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratoKgPendientes\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratoKgPendientes\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ContratoKgPendientes\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnulaBoleto\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnulaBoleto\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\AnulaBoleto\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Service References\AcuerdosGenerados\configuration.svcinfo" />
+    <Content Include="Service References\AcuerdosGenerados\configuration91.svcinfo" />
+    <Content Include="Service References\AcuerdosGenerados\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference1.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

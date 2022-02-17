@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Transactions;
 using Molinos.DataAgro.Entities.Helpers;
+using System.Linq;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {

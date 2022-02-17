@@ -75,6 +75,11 @@
                     match="/configuration/appSettings/add[@key='Rg2300']
                            /@value" />
   </parameter>
+	<parameter name="PathBoletos Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='PathBoletos']
+                           /@value" />
+	</parameter>
   <parameter name="SISA Key">
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/appSettings/add[@key='SISA']
@@ -339,6 +344,30 @@
     <parameterEntry kind="XmlFile" scope="Web.config"
                     match="/configuration/system.serviceModel/client
                            /endpoint[@name='HTTP_Port36']
+                           /@address" />
+  </parameter>
+	<parameter name="HTTP_Port37 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port37']
+                           /@address" />
+	</parameter>
+	<parameter name="HTTP_Port38 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port38']
+                           /@address" />
+	</parameter>
+	<parameter name="HTTP_Port39 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port39']
+                           /@address" />
+	</parameter>
+  <parameter name="HTTP_Port41 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port41']
                            /@address" />
   </parameter>
   

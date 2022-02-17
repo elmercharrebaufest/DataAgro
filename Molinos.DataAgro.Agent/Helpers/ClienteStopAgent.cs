@@ -278,6 +278,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+                logger.Debug("datosConfiguracion: " + (datosConfiguracion == null ? "null" : datosConfiguracion.ToJson()));
                 var token = ObtenerToken(datosConfiguracion.ClaveStop);
 
                 var codigoCupo = cupo.CupoStop != null ? cupo.CupoStop.ToString() : cupo.CupoSap;
@@ -409,7 +410,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         new KeyValuePair<string, string> ("CreacionStop", "CreacionStop"),
                     };
                     string where = " where T.EstadoCupoId <> 4 and T.EstadoCupoId <> 5 and T.EstadoCupoId <> 8 ";
-                    
+
                     var cuposSapStop = actualizarCupos.Select(a => a.CupoSap).ToList();
                     var cuposModificados = repositorio.Listar<Cupo, CupoDto>(x => new CupoDto { Id = x.Id, EstadoCupoId = x.EstadoCupoId, CupoSap = x.CupoSap }, x => cuposSapStop.Contains(x.CupoSap));
 

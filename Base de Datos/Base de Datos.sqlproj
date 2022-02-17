@@ -319,6 +319,9 @@
     <Build Include="dbo\Tables\TipoAdministracionCupo.sql" />
     <Build Include="dbo\Tables\MensajeCupo.sql" />
     <Build Include="dbo\Tables\TipoNegocioRangoConfirmacionAutomatica.sql" />
+    <Build Include="dbo\Tables\TipoNegocioDetalle.sql" />
+    <Build Include="dbo\Tables\Boleto.sql" />
+    <Build Include="dbo\Tables\Clausula.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

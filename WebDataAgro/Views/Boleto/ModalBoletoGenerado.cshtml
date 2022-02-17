@@ -1,0 +1,58 @@
+﻿@model WebDataAgro.Models.RolModel
+@{
+    Layout = null;
+}
+<link href="~/Content/compraNet.css" rel="stylesheet" />
+
+
+
+<div class="modal fade" id="ModalBoleto" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-mio mod">
+        <div class="modal-content">
+            <div class="alert alert-danger alert-dismissible" role="alert" hidden>
+                <a href="#" class="close" data-hide="alert" aria-label="close">&times;</a>
+                <span id="error-alert"></span>
+            </div>
+
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <div class="modal-header" style="margin-left: -1%;padding-right: 2px;">
+                <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
+                <div class="status confirmado-modal">
+                    <div id="tituloAgente" class="tituloPosicion">Boletos Generados</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body clearfix ">
+                    <table id="tablacapPendientes" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <td class="fuente600">Numero SAP</td>
+                                <td class="fuente600">Versión</td>
+                                <td class="fuente600">Generado</td>
+                                <td class="fuente600">Mensaje</td>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-cap-pendientes" data-template="div-tablas-cap-pendientes" data-bind="source:ObtenerBoletos" type="text/x-kendo-template">
+                        </tbody>
+                        <script id="div-tablas-cap-pendientes" type="text/x-kendo-template">
+                            <tr>
+                                <td>#=ContratoSAP#</td>
+                                <td>#=Version#</td>
+                                <td>#=Generado ? '<i class="fa fa-check" aria-hidden="true" style="color:green; text-align: center"></i>' : '<i class="fa fa-times" aria-hidden="true" style="color:red; text-align: center"></i>'#</td>
+                                <td>#=Mensaje#</td>
+                            </tr>
+                        </script>
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer clearfix ">
+                <div class="align-right">                  
+                    <button type="button" id="cancelar" class="btn" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

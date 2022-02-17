@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Telefono = ContactoComercial.Telefono1,
                     CompraNet = ContactoComercial.CompraNet.HasValue && ContactoComercial.CompraNet.Value ? "SI" : "NO",
                     Cupo = ContactoComercial.Cupo.HasValue && ContactoComercial.Cupo.Value ? "SI" : "NO",
-
+                    Boleto = ContactoComercial.Boleto.HasValue && ContactoComercial.Boleto.Value ? "SI" : "NO"
                 };
 
             return resultado.Distinct().ToList();

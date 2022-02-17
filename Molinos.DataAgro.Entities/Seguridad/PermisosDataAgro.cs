@@ -250,6 +250,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         Administracion_Proveedores = 520,
         [Display(ResourceType = typeof(Text), Name = "Administracion_LogServer")]
         LogServer = 521,
+        [Display(ResourceType = typeof(Text), Name = "Habilitacion_Boleto")]
+        Habilitacion_Boleto = 522,
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]
@@ -338,6 +340,10 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarReporteCompraNetExterno = 805,
         [Display(ResourceType = typeof(Text), Name = "AltaCupo_Externo")]
         AltaCupo_Externo = 806,
+
+        //Boletos
+        [Display(ResourceType = typeof(Text), Name = "GenerarBoleto")]
+        GenerarBoleto = 900,
 
     }
 }

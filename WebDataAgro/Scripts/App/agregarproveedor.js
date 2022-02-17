@@ -2464,6 +2464,7 @@ function armarFuncionalidades() {
         obj.principal = $("#concom-principal").is(":checked") ? 1 : 0;
         obj.CompraNet = $("#concom-compranet").is(":checked") ? 1 : 0;
         obj.Cupo = $("#concom-cupo").is(":checked") ? 1 : 0;
+        obj.Boleto = $("#concom-boleto").is(":checked") ? 1 : 0;
         obj.item = cantContactoComercial;
 
         if (obj.principal) {
@@ -2507,7 +2508,7 @@ function armarFuncionalidades() {
             (obj.telefonos[0].telefono ? obj.telefonos[0].telefono + (obj.telefonos[1].telefono ? " - " + obj.telefonos[1].telefono : "") + (obj.telefonos[2].telefono ? " - " + obj.telefonos[2].telefono : "") : "No especifica teléfono") +
             '</div>' +
             '<div class="contenedor-contacto-comercial-mails">' +
-            (obj.emails[0] ? obj.emails[0] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? '<i class="fa fa-truck"></i>' : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? '<i class="fa fa-truck"></i>' : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.CompraNet === 1 ? " &#x2714;" : "") + (obj.Cupo === 1 ? '<i class="fa fa-truck"></i>' : "") : "") : "No especifica mails") +
+            (obj.emails[0] ? obj.emails[0] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? '<i title="Cupo" class="fa fa-truck"></i>' : "") + (obj.emails[1] ? " - " + obj.emails[1] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? ' <i title="Cupo" class="fa fa-truck"></i>' : "") : "") + (obj.emails[2] ? " - " + obj.emails[2] + (obj.Boleto === 1 ? ' <i title="Boleto" class="fa fa-file-text" aria-hidden="true"></i>' : '') + (obj.CompraNet === 1 ? " <b title=\"CompraNet\">&#x2714;</b>" : "") + (obj.Cupo === 1 ? ' <i title="Cupo" class="fa fa-truck"></i>' : "") : "") : "No especifica mails") +
             '</div>' +
             '<div class="contenedor-contacto-comercial-extras">' +
             '<div class="row">' +
@@ -2566,6 +2567,7 @@ function armarFuncionalidades() {
         $("#concom-principal").prop("checked", false);
         $("#concom-compranet").prop("checked", false);
         $("#concom-cupo").prop("checked", false);
+        $("#concom-boleto").prop("checked", false);
     });
 }
 
@@ -2609,6 +2611,12 @@ function editarContactoComercial(id) {
     } else {
         $("#concom-cupo").prop("checked", false);
     }
+    if (obj.Boleto == 1) {
+        $("#concom-boleto").prop("checked", true);
+    } else {
+        $("#concom-boleto").prop("checked", false);
+    }
+
     var cantEmails = obj.emails.length;
     $("#concom-email1").val(obj.emails[0]);
     for (var i = 2; i <= cantEmails; i++) {

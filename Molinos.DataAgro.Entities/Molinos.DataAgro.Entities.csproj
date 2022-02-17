@@ -55,6 +55,12 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.13\lib\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
     <Reference Include="Kendo.DynamicLinq, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Kendo.DynamicLinq.1.1.2.0\lib\net40\Kendo.DynamicLinq.dll</HintPath>
     </Reference>
@@ -75,6 +81,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Linq.Dynamic.1.0.0\lib\net40\System.Linq.Dynamic.dll</HintPath>
     </Reference>
@@ -132,8 +139,14 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
-    
+    <Compile Include="Dto\BoletoArchivoDto.cs" />
+    <Compile Include="Dto\BoletoGeneradoDto.cs" />
+    <Compile Include="Dto\ContratoIdKgPendiente.cs" />
     <Compile Include="Dto\SugerenciaCupoExcel.cs" />
+    <Compile Include="Dto\BoletoResult.cs" />
+    <Compile Include="Dto\DatosEstadoBoletoDto.cs" />
+    <Compile Include="Dto\ResultadoClausula.cs" />
+    <Compile Include="Dto\TipoNegocioDetalleDto.cs" />
     <Compile Include="Dto\BoletoVentaDto.cs" />
     <Compile Include="Dto\CampoDetalleMoa.cs" />
     <Compile Include="Dto\DiaDiferido.cs" />
@@ -338,11 +351,61 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\Boleto.cs" />
     <Compile Include="Entities\BoletoVenta.cs" />
     <Compile Include="Entities\BoletoCompraNetProvincia.cs" />
     <Compile Include="Entities\CierreDelDiaMailExternos.cs" />
+    <Compile Include="Entities\ClausulaCinco.cs" />
+    <Compile Include="Entities\ClausulaSeis.cs" />
+    <Compile Include="Entities\ClausulaSiete.cs" />
+    <Compile Include="Entities\ClausulaOcho.cs" />
+    <Compile Include="Entities\ClausulaNueve.cs" />
+    <Compile Include="Entities\ClausulaDiez.cs" />
+    <Compile Include="Entities\ClausulaOnce.cs" />
+    <Compile Include="Entities\ClausulaDoce.cs" />
+    <Compile Include="Entities\ClausulaTrece.cs" />
+    <Compile Include="Entities\ClausulaCatorce.cs" />
+    <Compile Include="Entities\ClausulaQuince.cs" />
+    <Compile Include="Entities\ClausulaDieciseis.cs" />
+    <Compile Include="Entities\ClausulaDiecisiete.cs" />
+    <Compile Include="Entities\ClausulaDieciocho.cs" />
+    <Compile Include="Entities\ClausulaDiecinueve.cs" />
+    <Compile Include="Entities\ClausulaVeinte.cs" />
+    <Compile Include="Entities\ClausulaVeintiuno.cs" />
+    <Compile Include="Entities\ClausulaVeintidos.cs" />
+    <Compile Include="Entities\ClausulaVeintitres.cs" />
+    <Compile Include="Entities\ClausulaVeinticuatro.cs" />
+    <Compile Include="Entities\ClausulaVeinticinco.cs" />
+    <Compile Include="Entities\ClausulaVeintiseis.cs" />
+    <Compile Include="Entities\ClausulaVeintisiete.cs" />
+    <Compile Include="Entities\ClausulaVeintiocho.cs" />
+    <Compile Include="Entities\ClausulaVeintinueve.cs" />
+    <Compile Include="Entities\ClausulaTreinta.cs" />
+    <Compile Include="Entities\ClausulaTreintaYUno.cs" />
+    <Compile Include="Entities\ClausulaTreintaYDos.cs" />
+    <Compile Include="Entities\ClausulaTreintaYTres.cs" />
+    <Compile Include="Entities\ClausulaTreintaYCuatro.cs" />
+    <Compile Include="Entities\ClausulaTreintaYCinco.cs" />
+    <Compile Include="Entities\ClausulaTreintaYSeis.cs" />
+    <Compile Include="Entities\ClausulaTreintaYSiete.cs" />
+    <Compile Include="Entities\ClausulaTreintaYOcho.cs" />
+    <Compile Include="Entities\ClausulaTreintaYNueve.cs" />
+    <Compile Include="Entities\ClausulaCuarenta.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYUno.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYDos.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYTres.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYCuatro.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYCinco.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYSeis.cs" />
+    <Compile Include="Entities\ClausulaCuarentaYSiete.cs" />
+    <Compile Include="Entities\ClausulaCuatro.cs" />
+    <Compile Include="Entities\ClausulaTres.cs" />
+    <Compile Include="Entities\ClausulaDos.cs" />
     <Compile Include="Entities\CondicionDePagoVenta.cs" />
     <Compile Include="Entities\ComisionAFavor.cs" />
+    <Compile Include="Entities\Clausula.cs" />
+    <Compile Include="Entities\ClausulaUno.cs" />
+    <Compile Include="Entities\TipoNegocioDetalle.cs" />
     <Compile Include="Entities\NegocioAsociado.cs" />
     <Compile Include="Entities\CriterioCumplimientoCupo.cs" />
     <Compile Include="Entities\FijacionVirtualSAP.cs" />
@@ -447,11 +510,13 @@
     <Compile Include="Entities\TipoFason.cs" />
     <Compile Include="Entities\ZonaCupo.cs" />
     <Compile Include="Helpers\AES.cs" />
+    <Compile Include="Dto\BoletoHeaderFooter.cs" />
     <Compile Include="Helpers\CopiarEntidad.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\Expresiones.cs" />
     <Compile Include="Helpers\ExtensionesSerializacion.cs" />
     <Compile Include="Helpers\HashCodeByPropertyExtensions.cs" />
+    <Compile Include="Helpers\iTextSharpCustomImageTagProcessor.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\KendoGridFilter.cs" />
     <Compile Include="Extensions\MimeKitExtensions.cs" />

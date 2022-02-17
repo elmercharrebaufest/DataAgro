@@ -24,20 +24,35 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:simpleType name="char12">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="12" />
-        </xsd:restriction>
-      </xsd:simpleType>
       <xsd:simpleType name="date10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
           <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char12">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="12" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char13">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="13" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char11">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="11" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="string">
@@ -52,11 +67,6 @@
       <xsd:simpleType name="char18">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="18" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="char4">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="4" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:complexType name="ZMPTT9070">
@@ -75,6 +85,9 @@
           <xsd:element name="CANTIDAD" type="rfc:decimal8.0" />
           <xsd:element name="FECHA_NETO" type="rfc:date10" />
           <xsd:element name="FECHA_INGRESO" type="rfc:date10" />
+          <xsd:element name="CTG" type="rfc:char13" />
+          <xsd:element name="CUIT_SOLICITANTE" type="rfc:char11" />
+          <xsd:element name="ALMACEN" type="rfc:char4" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

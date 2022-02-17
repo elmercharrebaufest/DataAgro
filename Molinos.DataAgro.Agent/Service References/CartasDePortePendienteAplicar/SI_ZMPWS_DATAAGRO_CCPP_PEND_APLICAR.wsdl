@@ -87,6 +87,7 @@
           <xsd:element name="FECHA_INGRESO" type="rfc:date10" />
           <xsd:element name="CTG" type="rfc:char13" />
           <xsd:element name="CUIT_SOLICITANTE" type="rfc:char11" />
+          <xsd:element name="ALMACEN" type="rfc:char4" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

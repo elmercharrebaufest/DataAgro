@@ -59,6 +59,10 @@ namespace WebDataAgro
             builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
                    .Where(t => t.Name.StartsWith("Procesador"))
                    .InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(Assembly.Load("Molinos.DataAgro.Business"))
+                 .Where(t => t.Name.EndsWith("Clausulas"))
+                 .AsImplementedInterfaces()
+                 .InstancePerLifetimeScope();
 
             var container = builder.Build();
 

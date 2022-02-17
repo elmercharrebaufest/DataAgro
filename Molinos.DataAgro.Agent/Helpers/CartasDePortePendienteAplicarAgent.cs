@@ -108,6 +108,7 @@ namespace Molinos.DataAgro.Agent
                             Proveedor = item.PROVEEDOR,
                             FechaIngresoFecha = DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
                             FechaNetoFecha = DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                            Almacen = item.ALMACEN
                         }).OrderBy(a => a.FechaIngresoFecha).ToList();
 
                     return listaccpp;

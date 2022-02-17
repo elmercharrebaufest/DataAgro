@@ -90,6 +90,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string PrincipalCupo { get; set; }
         public string CompraNet { get; set; }
         public string Cupo { get; set; }
+        public string Boleto { get; set; }
     }
 
     public class ProduccionAll

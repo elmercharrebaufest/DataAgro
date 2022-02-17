@@ -51,7 +51,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         Codigo = item.CODIGO
                     });
                 }
-                logger.Debug(devolucion.ToXml());
+                //logger.Debug(devolucion.ToXml());
 
                 logger.Debug("Sin Error");
                 return resultado;

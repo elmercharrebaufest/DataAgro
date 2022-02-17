@@ -25,6 +25,18 @@ function TraerFiltrosConValores() {
     return filtroCompleto;
 }
 
+function TraerFiltrosBoletos() {
+    let listaFiltros = [];
+    filtroAgregarValorContratoCorredorSap(listaFiltros);
+    //filtroAgregarValortipoNegocio(listaFiltros);
+    filtrosBusqIdUnico(listaFiltros);
+
+    let filtroPrincipal = (listaFiltros.length == 0) ? null : new FiltroPadre("and", listaFiltros);
+    let filtroCompleto = new FiltroCompleto(20, 0, filtroPrincipal);
+
+    return filtroCompleto;
+}
+
 function filtroAgregarValorPopUp(listaFiltros) {
     let filtrosParaContratoSAP;
     //solo se esta pudiendo agregar 1 filtro de estos por pantalla
@@ -54,6 +66,19 @@ function filtroAgregarValorContratoCorredorSap(listaFiltros) {
     }
 }
 
+function filtroAgregarValortipoNegocio(listaFiltros) {
+    let filtrosParaTipoNegocio;
+    //solo se esta pudiendo agregar 1 filtro de estos por pantalla
+    if ($(".filtroTipoNegocio")[0] != undefined) {
+        filtrosParaTipoNegocio = filtrosBusqIdUnico($(".filtroTipoNegocio").name);
+
+    }
+
+    if (filtrosParaTipoNegocio != null) {
+        filtrosParaTipoNegocio.filters[0].value = filtrosParaTipoNegocio.filters[0].value;
+        listaFiltros.push(filtrosParaTipoNegocio);
+    }
+}
 
 function filtroTextToArrayCsv(listaDeFiltros) {
 

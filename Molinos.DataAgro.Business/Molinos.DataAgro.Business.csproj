@@ -70,8 +70,8 @@
     <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
-      <HintPath>..\packages\Portable.BouncyCastle.1.8.5\lib\net40\BouncyCastle.Crypto.dll</HintPath>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -86,6 +86,15 @@
     </Reference>
     <Reference Include="GemBox.Email, Version=13.0.35.1030, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
       <HintPath>..\packages\GemBox.Email.13.0.0.1030\lib\net35\GemBox.Email.dll</HintPath>
+    </Reference>
+    <Reference Include="Humanizer, Version=2.13.0.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Humanizer.Core.2.13.14\lib\netstandard1.0\Humanizer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.13\lib\itextsharp.xmlworker.dll</HintPath>
     </Reference>
     <Reference Include="JsonDiffer, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\JsonDiffer.0.2.0\lib\net45\JsonDiffer.dll</HintPath>
@@ -102,6 +111,9 @@
     <Reference Include="MailKit, Version=2.9.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.2.9.0\lib\net45\MailKit.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.4.1\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -114,7 +126,9 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -131,9 +145,14 @@
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -165,7 +184,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clausulas\ServicioClausulas.cs" />
     <Compile Include="Criterios\ServicioCriterios.cs" />
+    <Compile Include="Managers\BoletoManager.cs" />
+    <Compile Include="Managers\HabilitacionBoletoManager.cs" />
     <Compile Include="Managers\ConfiguracionBolsaManager.cs" />
     <Compile Include="Managers\HttpContextManager.cs" />
     <Compile Include="Managers\AgendaManager.cs" />
@@ -231,6 +253,55 @@
     <Compile Include="Managers\RG2300Manager.cs" />
     <Compile Include="Managers\RiesgoComercialManager.cs" />
     <Compile Include="Managers\TipoNegocioManager.cs" />
+    <Compile Include="ProcesamientoClausulas\IProcesadorClausula.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausula.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCatorce.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCinco.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarenta.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYCinco.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYCuatro.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYDos.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYSeis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYSiete.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYTres.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuarentaYUno.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaCuatro.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDiecinueve.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDieciocho.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDieciseis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDiecisiete.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDiez.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDoce.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaNueve.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaOcho.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaOnce.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaQuince.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaSeis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaSiete.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTrece.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreinta.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYCinco.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYCuatro.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYDos.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYNueve.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYOcho.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYSeis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYSiete.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYTres.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTreintaYUno.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaTres.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaDos.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaUno.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeinte.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeinticinco.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeinticuatro.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintidos.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintinueve.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintiocho.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintiseis.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintisiete.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintitres.cs" />
+    <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintiuno.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsContratoAPrecio.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsEspacioDinamico.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioCDWarrant.cs" />
@@ -276,7 +347,14 @@
       <Name>Molinos.DataAgro.Repository</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
+    <Content Include="Templates\BoletoFisico.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\BoletoFisicoBuenosAires.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

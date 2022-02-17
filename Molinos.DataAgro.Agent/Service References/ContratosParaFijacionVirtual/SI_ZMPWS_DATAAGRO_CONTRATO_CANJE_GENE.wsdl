@@ -15,7 +15,7 @@
       <xsd:element name="Z_MPRFC_CONTRATO_CANJE_GENE">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="IM_CORREDOR" type="rfc:char10" />
+            <xsd:element name="IM_CORREDOR" type="rfc:char16" />
             <xsd:element name="IM_CUIT" type="rfc:char16" />
             <xsd:element name="IM_MATERIAL" type="rfc:char18" />
           </xsd:sequence>
@@ -25,6 +25,11 @@
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
           <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char2">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="2" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="unit3">
@@ -38,10 +43,21 @@
           <xsd:fractionDigits value="2" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="curr13.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="decimal25.0">
         <xsd:restriction base="xsd:decimal">
           <xsd:totalDigits value="25" />
           <xsd:fractionDigits value="0" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="cuky5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char5">
@@ -64,11 +80,30 @@
           <xsd:maxLength value="16" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="decimal5.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="5" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char18">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="18" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:complexType name="ZMPES6700">
+        <xsd:sequence>
+          <xsd:element name="CONCEPTO" type="rfc:char2" />
+          <xsd:element name="IMPORTE" type="rfc:curr13.2" />
+          <xsd:element name="MONEDA" type="rfc:cuky5" />
+          <xsd:element name="PORC" type="rfc:decimal5.2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT8200">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6700" />
+        </xsd:sequence>
+      </xsd:complexType>
       <xsd:complexType name="ZMPTT8120">
         <xsd:sequence>
           <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6450" />
@@ -89,6 +124,8 @@
           <xsd:element name="COSECHA" type="rfc:char5" />
           <xsd:element name="KILOS_FIJADOS" type="rfc:decimal25.2" />
           <xsd:element name="KILOS_A_FIJAR" type="rfc:decimal25.2" />
+          <xsd:element name="APERTURA" type="rfc:ZMPTT8200" />
+          <xsd:element name="PORC_S_PRECIO" type="rfc:decimal5.2" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

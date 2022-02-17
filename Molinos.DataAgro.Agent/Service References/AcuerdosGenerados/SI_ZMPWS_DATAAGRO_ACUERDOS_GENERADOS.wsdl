@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" name="SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation />
+  <wsp:UsingPolicy wsdl:required="true" />
+  <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS" />
+  <wsdl:types>
+    <xsd:schema xmlns="urn:sap-com:document:sap:rfc:functions" targetNamespace="urn:sap-com:document:sap:rfc:functions" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:element name="Z_MPRFC_ACUERDOS_GENERADOS">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="IM_CUIT" type="rfc:char16" />
+            <xsd:element name="IM_MATERIAL" type="rfc:char18" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="Z_MPRFC_ACUERDOS_GENERADOSResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="EX_ACUER_GENERADOS" type="rfc:ZMPTT8100" />
+            <xsd:element name="EX_MENSAJE" type="rfc:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="unit3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="curr11.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="11" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="quantum13.3">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char16">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="16" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="string">
+        <xsd:restriction base="xsd:string" />
+      </xsd:simpleType>
+      <xsd:simpleType name="char18">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="18" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ZMPTT8100">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6340" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES6340">
+        <xsd:sequence>
+          <xsd:element name="NROACUERDO" type="rfc:char10" />
+          <xsd:element name="CLASEDOC" type="rfc:char4" />
+          <xsd:element name="CLIENTE" type="rfc:char10" />
+          <xsd:element name="MATERIAL" type="rfc:char18" />
+          <xsd:element name="FECHAREG" type="rfc:date10" />
+          <xsd:element name="INPERVAL" type="rfc:date10" />
+          <xsd:element name="FINPERVAL" type="rfc:date10" />
+          <xsd:element name="COSECHA" type="rfc:char5" />
+          <xsd:element name="CANTIDAD" type="rfc:quantum13.3" />
+          <xsd:element name="ESTADO" type="rfc:char1" />
+          <xsd:element name="UNIDAD" type="rfc:unit3" />
+          <xsd:element name="PRECIOSERV" type="rfc:curr11.2" />
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="rfc.Z_MPRFC_ACUERDOS_GENERADOS">
+    <wsdl:documentation />
+    <wsdl:part name="parameters" element="rfc:Z_MPRFC_ACUERDOS_GENERADOS" />
+  </wsdl:message>
+  <wsdl:message name="rfc.Z_MPRFC_ACUERDOS_GENERADOSResponse">
+    <wsdl:documentation />
+    <wsdl:part name="parameter" element="rfc:Z_MPRFC_ACUERDOS_GENERADOSResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS">
+    <wsdl:documentation />
+    <wsdl:operation name="SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS">
+      <wsdl:documentation />
+      <wsp:Policy>
+        <wsp:PolicyReference URI="#OP_SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS" />
+      </wsp:Policy>
+      <wsdl:input message="p1:rfc.Z_MPRFC_ACUERDOS_GENERADOS" />
+      <wsdl:output message="p1:rfc.Z_MPRFC_ACUERDOS_GENERADOSResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOSBinding" type="p1:SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS">
+    <binding transport="http://schemas.xmlsoap.org/soap/http" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    <wsdl:operation name="SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS">
+      <operation soapAction="http://sap.com/xi/WebService/soap1.1" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <wsdl:input>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:input>
+      <wsdl:output>
+        <body use="literal" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOSService">
+    <wsdl:port name="HTTP_Port" binding="p1:SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOSBinding">
+      <address location="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+    <wsdl:port name="HTTPS_Port" binding="p1:SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOSBinding">
+      <address location="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_ACUERDOS_GENERADOS&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

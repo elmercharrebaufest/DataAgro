@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -221,6 +221,7 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\AgendaController.cs" />
     <Compile Include="Controllers\AreaInfluenciaController.cs" />
+    <Compile Include="Controllers\BoletoController.cs" />
     <Compile Include="Controllers\CanalOperacionController.cs" />
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Controllers\FechaFeriadoController.cs" />
     <Compile Include="Controllers\CartaDePresentacionController.cs" />
     <Compile Include="Controllers\CampanaController.cs" />
+    <Compile Include="Controllers\HabilitacionBoletoController.cs" />
     <Compile Include="Controllers\LogServerController.cs" />
     <Compile Include="Controllers\ReporteContratosAFijarPaseController.cs" />
     <Compile Include="Controllers\ReporteEvolucionFijacionController.cs" />
@@ -302,6 +304,7 @@
     <Compile Include="Helpers\Excel\IDataForExcel.cs" />
     <Compile Include="Helpers\ExtensionesUrl.cs" />
     <Compile Include="Models\CampanaModel.cs" />
+    <Compile Include="Models\HabilitacionBoletoModel.cs" />
     <Compile Include="Models\ConfiguracionBolsaModel.cs" />
     <Compile Include="Models\HabilitacionCupoModel.cs" />
     <Compile Include="Models\FechaFeriadoModel.cs" />
@@ -409,6 +412,7 @@
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
     <Content Include="Content\diffPlex.css" />
+    <Content Include="Content\generarboleto.css" />
     <Content Include="Content\Images\Circular.PNG" />
     <Content Include="Content\Images\logo-sharepoint.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1011,6 +1015,9 @@
     <Content Include="DEV.DeployParameters.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\App\DescargarBoleto.js" />
+    <Content Include="Scripts\App\GenerarBoleto.js" />
+    <Content Include="Scripts\App\HabilitacionBoleto.js" />
     <Content Include="Scripts\App\PanelAsociarNegocios.js" />
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
@@ -2778,6 +2785,12 @@
     <Content Include="Views\SugerenciaCupo\PartialSolicitud.cshtml" />
     <Content Include="Views\SugerenciaCupo\SolicitudExtraordinaria.cshtml" />
     <Content Include="Views\SugerenciaCupo\MensajesSugerencia.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\Index.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\_ListaHabilitados.cshtml" />
+    <Content Include="Views\HabilitacionBoleto\AgregarModal.cshtml" />
+    <Content Include="Views\Boleto\GenerarBoletos.cshtml" />
+    <Content Include="Views\Boleto\ModalBoletoGenerado.cshtml" />
+    <Content Include="Views\Boleto\DescargarBoletos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

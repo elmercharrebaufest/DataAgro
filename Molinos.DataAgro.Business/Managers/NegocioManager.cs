@@ -131,7 +131,6 @@ namespace Molinos.DataAgro.Business.Managers
                     th + "Corredor" + "</td>" +
                     th + "Proveedor" + "</td>" +
                     th + "Tipo" + "</td>" +
-                    //th + "Estado:" + "</td>" +
                     th + "Anula y reemplaza" + "</td>" +
                     th + "Motivo" + "</td>" +
                     "</tr>";
@@ -311,8 +310,6 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "</td></tr></table>";
             }
 
-            htmlBody += " </td></tr>";
-            htmlBody += "</td></tr></table>";
             htmlBody += "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -321,7 +318,6 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(res);
             return alternateView;
         }
-
 
 
         public void EnviarMailErrorFinalizarNegocio(int negocioId)

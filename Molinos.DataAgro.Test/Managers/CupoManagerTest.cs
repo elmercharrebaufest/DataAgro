@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IHttpContextManager> contextoManager;
         private Mock<IAltaTempranaAgent> altaTempranaAgent;
         private Mock<ICumplimientoCuposAgent> cumplimientoCuposAgent;
+        private Mock<IContratoKgPendienteAgent> contratoKgPendienteAgent;
 
 
         [SetUp]
@@ -73,12 +74,13 @@ namespace Molinos.DataAgro.Test.Managers
             contextoManager = new Mock<IHttpContextManager>();
             altaTempranaAgent = new Mock<IAltaTempranaAgent>();
             cumplimientoCuposAgent = new Mock<ICumplimientoCuposAgent>();
+            contratoKgPendienteAgent = new Mock<IContratoKgPendienteAgent>();
 
             target = new CupoManager(repositorioMock.Object, logger.Object, crearCupoAgentMock.Object,
                 eliminarCupoAgentMock.Object, clienteStopMock.Object, modificarCupoAgentMock.Object, proveedorManagerMock.Object,
                 mailManagerMock.Object, servicioCriterioMock.Object, disponibilidadCuposAgentMock.Object, criterioCDWarrantAgentMock.Object,
                 logDataAgroManagerMock.Object, comercialManagerMock.Object, servicioScato.Object, contextoManager.Object, altaTempranaAgent.Object,
-                cumplimientoCuposAgent.Object);
+                cumplimientoCuposAgent.Object, contratoKgPendienteAgent.Object);
             repositorioMock.Setup(x => x.Obtener<Configuracion>(1)).Returns(new Configuracion { ConexionABMStop = true });
         }
 
@@ -741,6 +743,7 @@ namespace Molinos.DataAgro.Test.Managers
                .Returns(new List<int>());
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AdministracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<AdministracionCupo>());
+            contratoKgPendienteAgent.Setup(x => x.Consultar(It.IsAny<List<ContratoKgPendiente>>())).Returns(new List<ContratoKgPendiente> { new ContratoKgPendiente { ContratoSAP = "aa", KgPendiente = 60000, ContratoId = 1 } });
 
             target.CrearSugerenciaCupo(It.IsAny<int>(), formulaDto, It.IsAny<ConfiguracionCupo>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);

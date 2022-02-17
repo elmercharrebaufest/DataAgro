@@ -18,7 +18,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Moneda { get; set; }
         public double KgNegocio { get; set; }
         public string Material { get; set; }
-      
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
         public string Comercial { get; set; }

@@ -40,6 +40,7 @@ BEGIN
 		cc.EsPrincipal,
 		CC.CompraNet,
 		CC.Cupo,
+		cc.Boleto,
 		cc.ContactoComercialId
 	FROM ContactoComercial CC
 	WHERE CC.ProveedorId = @ProveedorId

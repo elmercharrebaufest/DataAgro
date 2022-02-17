@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -889,6 +889,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to El campo Descripcion es requerido.
+        /// </summary>
+        public static string DescripcionRequerido {
+            get {
+                return ResourceManager.GetString("DescripcionRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Desde Fijacion.
         /// </summary>
         public static string DesdeFijacion {
@@ -1218,6 +1227,24 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Finalizar_Negocios {
             get {
                 return ResourceManager.GetString("Finalizar_Negocios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generar Boleto.
+        /// </summary>
+        public static string GenerarBoleto {
+            get {
+                return ResourceManager.GetString("GenerarBoleto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Habilitacion Boleto.
+        /// </summary>
+        public static string Habilitacion_Boleto {
+            get {
+                return ResourceManager.GetString("Habilitacion_Boleto", resourceCulture);
             }
         }
         
@@ -1933,6 +1960,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string TipoNegocio {
             get {
                 return ResourceManager.GetString("TipoNegocio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El campo Tipo de Negocio es requerido.
+        /// </summary>
+        public static string TipoNegocioRequerido {
+            get {
+                return ResourceManager.GetString("TipoNegocioRequerido", resourceCulture);
             }
         }
         

@@ -127,6 +127,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? EsPrincipal { get; set; }
         public bool? CompraNet { get; set; }
         public bool? Cupo { get; set; }
+        public bool? Boleto { get; set; }
         public Nullable<int> ProveedorId { get; set; }
     }
 

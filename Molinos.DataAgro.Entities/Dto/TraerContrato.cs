@@ -57,7 +57,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public double? Ampliaciones { get; set; }
         public string TipoNegocio { get; set; }
         public string Proveedor { get; set; }
-        public string Corredor { get; set; }
+        public string ProveedorDireccion { get; set; }
+        public string ProveedorLocalidad { get; set; }
+        public string ProveedorProvincia { get; set; }
+        public string ProveedorCP { get; set; }
+        public string RazonSocialCorredor { get; set; }
         public string CUITCorredor { get; set; }
         public string Comercial { get; set; }
         public string ComercialCreador { get; set; }
@@ -186,6 +190,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string PlantaDestinoDescripcion { get; set; }
         public bool? DolarizadoCorredor { get; set; }
         public bool? SustentableTercero { get; set; }
+        public bool? Venta { get; set; }
         public bool? Anticipo { get; set; }
         public bool? Cesion { get; set; }
         public string ClasificacionContrato { get; set; }
@@ -196,7 +201,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? ImporteSobrePrecioContrato { get; set; }
         public decimal? PorcentajeSobrePrecioContrato { get; set; }
         public string MonedaSobrePrecioContrato { get; set; }
-        public bool? Venta { get; set; }
         public double CantidadAmpliado { get; set; }
         public bool? ObligatoriedadCostoFinanciero { get; set; }
         public bool? ObligatoriedadBonificacion { get; set; }
@@ -255,6 +259,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public int KgMaximo { get; set; }
         public int? ProveedorComisionistaId { get; set; }
         public string RazonSocialProveedorComisionista { get; set; }
+        public int StandardDeCalidadId { get; set; }
+        public string DestinoLocalidad { get; set; }
+        public string DestinoProvincia { get; set; }
+        public string MonedaCanjeDescripcion { get; set; }
+        public string CondicionalMonedaDescripcion { get; set; }
+        
+
+        public int? BoletoContratoId { get; set; }
+        public string RazonSocialProveedor { get; set; }
+        public string Corredor { get; set; }
+        public int? BolsaContratoId { get; set; }
     }
 
     public class StoredPorContratoResult

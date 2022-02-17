@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "HabilitacionBoleto";
+}
+@section Styles {
+    <link href="~/Content/ConfiguracionInterna.css" rel="stylesheet" />
+    <link href="~/Content/cupo.css" rel="stylesheet" />
+}
+@section Scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+}
+<h3>Habilitacion Boleto</h3>
+<div class="row">
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+        <div style="width:fit-content">
+            <span id="habilitacionPrecio" class="btnAzul btn-block" type="button" onclick="AbrirModal()">
+                Agregar Negocio
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="">
+    @using (Ajax.BeginForm("ActualizarTipoNegocioDetalle", null, new AjaxOptions { UpdateTargetId = "listado", InsertionMode = InsertionMode.Replace }, new { @id = "actualizarListado" }))
+
+    {
+        <div id="listado" class="tableFixHead row">
+            @Html.Partial("_ListaHabilitados")
+        </div>
+    }
+</div>
+<div id="modal-agregar">
+    @Html.Partial("AgregarModal")
+</div>
+<style>
+    .content-input input + i {
+        left: 73px !important;
+    }
+
+    .btnAzul {
+        background: #017940 !important;
+        color: #fff;
+        padding: 8px;
+        border-radius: 5px !important;
+        margin-bottom: 10px;
+        width: 190px;
+        text-align: center;
+    }
+</style>
