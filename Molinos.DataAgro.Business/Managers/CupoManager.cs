@@ -1130,7 +1130,7 @@ namespace Molinos.DataAgro.Business.Managers
         private static void PriorizarSegunDisponibilidad(List<ConfiguracionCupoDto> disponibilidadEnPlantas, List<SugerenciaCupoDto> negocios)
         {
             var idsProveedores = negocios.Select(a => a.ProveedorId ?? 0).Distinct();
-            decimal puntajeMinimo = negocios.Min(a => a.PuntuacionTotal);
+            decimal puntajeMinimo = negocios == null || negocios.Count() == 0 ? 0 : negocios.Min(a => a.PuntuacionTotal);
             int porcentajeMaximo = 30;
             List<TopeSugerenciasPorDiaPorProveedor> limitePorProveedor = new List<TopeSugerenciasPorDiaPorProveedor>();
             foreach (var disponibilidad in disponibilidadEnPlantas)
@@ -1297,7 +1297,7 @@ namespace Molinos.DataAgro.Business.Managers
                     formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId && x.MercsDeposito != true && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
-            logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a=>a.ContratoSAP).ToList().ToJson());
+            logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
 
             var zonas = repositorio.Listar<ZonaCupo>();
@@ -1378,7 +1378,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratos = contratos.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(contratos);
             logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Count());
-            logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Select(a=>a.ContratoSAP).ToList().ToJson());
+            logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
             var warrant = cdWarrant.ConsultarContratoWarrant(formula.NegociosDesde, formula.NegociosHasta);
             foreach (var c in contratos)
