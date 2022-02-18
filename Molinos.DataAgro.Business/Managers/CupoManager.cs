@@ -1129,6 +1129,24 @@ namespace Molinos.DataAgro.Business.Managers
 
         private static void PriorizarSegunDisponibilidad(List<ConfiguracionCupoDto> disponibilidadEnPlantas, List<SugerenciaCupoDto> negocios)
         {
+            var idsProveedores = negocios.Select(a => a.ProveedorId ?? 0).Distinct();
+            decimal puntajeMinimo = negocios.Min(a => a.PuntuacionTotal);
+            int porcentajeMaximo = 30;
+            List<TopeSugerenciasPorDiaPorProveedor> limitePorProveedor = new List<TopeSugerenciasPorDiaPorProveedor>();
+            foreach (var disponibilidad in disponibilidadEnPlantas)
+            {
+                var topeCupos = disponibilidad.LimiteAlgoritmo * porcentajeMaximo / 100;
+                foreach (var idProveedor in idsProveedores)
+                {
+                    limitePorProveedor.Add(new TopeSugerenciasPorDiaPorProveedor
+                    {
+                        Asignado = 0,
+                        Fecha = disponibilidad.Fecha,
+                        Maximo = topeCupos,
+                        ProveedorId = idProveedor
+                    });
+                }
+            }
             List<SugerenciaCupoDto> newNegocios = new List<SugerenciaCupoDto>();
             foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal))
             {
@@ -1139,36 +1157,6 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (disponible.LimiteAlgoritmo > 0 && !negocio.Priorizado)
                     {
-                        //var disponiblezona = disponible.CantidadCupo.Where(a => a.ZonaCupo == negocio.ZonaDescrip).SingleOrDefault();
-                        //if (disponiblezona != null)
-                        //{
-                        //    if (disponiblezona.CantidadCupo >= negocio.CantidadDeCupos)
-                        //    {
-                        //        disponiblezona.CantidadCupo -= negocio.CantidadDeCupos;
-                        //        disponible.LimiteAlgoritmo -= negocio.CantidadDeCupos;
-                        //        negocio.Priorizado = true;
-                        //        negocio.FechaSugerida = disponible.Fecha.Date;
-                        //    }
-                        //    else
-                        //    {
-                        //        if (disponiblezona.CantidadCupo > 0)
-                        //        {
-                        //            var newNegocio = (SugerenciaCupoDto)negocio.Clone();
-                        //            newNegocio.CantidadDeCupos = disponiblezona.CantidadCupo;
-                        //            newNegocio.Priorizado = true;
-                        //            newNegocio.FechaSugerida = disponible.Fecha.Date;
-                        //            newNegocios.Add(newNegocio);
-
-                        //            negocio.CantidadDeCupos -= disponiblezona.CantidadCupo;
-                        //            disponible.LimiteAlgoritmo -= disponiblezona.CantidadCupo;
-                        //            disponiblezona.CantidadCupo = 0;
-                        //            negocio.Priorizado = false;
-                        //        }
-
-                        //    }
-                        //}
-                        //else
-                        //{
                         if (disponible.LimiteAlgoritmo >= negocio.CantidadDeCupos)
                         {
                             disponible.LimiteAlgoritmo -= negocio.CantidadDeCupos;
@@ -1191,9 +1179,6 @@ namespace Molinos.DataAgro.Business.Managers
                             }
 
                         }
-
-                        //}
-
 
                     }
                 }
@@ -1312,6 +1297,8 @@ namespace Molinos.DataAgro.Business.Managers
                     formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId && x.MercsDeposito != true && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
+            logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a=>a.ContratoSAP).ToList().ToJson());
+
 
             var zonas = repositorio.Listar<ZonaCupo>();
 
@@ -1349,7 +1336,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             List<ContratoKgPendiente> contratosKgPendiente = contratos.Select(a => new ContratoKgPendiente { ContratoId = a.Id, ContratoSAP = a.ContratoSAP }).ToList();
             contratosKgPendiente = contratoKgPendienteAgent.Consultar(contratosKgPendiente);
-                var minimo = Convert.ToSingle(kilosMinimosParaSugerencia * 100) / 30000;
+            logger.Debug("CrearSugerenciaCupo - Contratos KgPendiente: " + contratosKgPendiente.ToJson());
+            var minimo = Convert.ToSingle(kilosMinimosParaSugerencia * 100) / 30000;
             foreach (var item in contratos)
             {
                 item.ZonaCupoId = zonas.Where(a => a.Descripcion == item.ZonaDescrip).Select(a => a.Id).SingleOrDefault();
@@ -1390,6 +1378,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratos = contratos.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(contratos);
             logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Count());
+            logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Select(a=>a.ContratoSAP).ToList().ToJson());
 
             var warrant = cdWarrant.ConsultarContratoWarrant(formula.NegociosDesde, formula.NegociosHasta);
             foreach (var c in contratos)
