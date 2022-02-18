@@ -1347,11 +1347,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     item.KgPendienteAplicar = kgp;
                     var cantidadcupos = Convert.ToSingle(kgp) / 30000;
-                    item.CantidadDeCupos = cantidadcupos < 1 ? 1 : kgp / 30000;
+                    item.CantidadDeCupos = kgp / 30000;
                     var excedente = (cantidadcupos - Math.Truncate(cantidadcupos)) * 100;
-                    if (excedente < minimo && excedente != 0)
+                    if (Convert.ToInt32(excedente) >= Convert.ToInt32(minimo))
                     {
-                        item.CantidadDeCupos -= 1;
+                        item.CantidadDeCupos += 1;
                     }
                 }
                 else
