@@ -149,7 +149,7 @@
     <Compile Include="Dto\ResultadoClausula.cs" />
     <Compile Include="Dto\TipoNegocioDetalleDto.cs" />
     <Compile Include="Dto\BoletoVentaDto.cs" />
-    <Compile Include="Dto\CampoDetalleMoa.cs" />
+    <Compile Include="Dto\CampoDetalleMoaDto.cs" />
     <Compile Include="Dto\DiaDiferido.cs" />
     <Compile Include="Dto\NegocioAsociadoDto.cs" />
     <Compile Include="Dto\EstadoSAPDto.cs" />
@@ -355,6 +355,7 @@
     <Compile Include="Entities\Boleto.cs" />
     <Compile Include="Entities\BoletoVenta.cs" />
     <Compile Include="Entities\BoletoCompraNetProvincia.cs" />
+    <Compile Include="Entities\CampoDetalleTercero.cs" />
     <Compile Include="Entities\CierreDelDiaMailExternos.cs" />
     <Compile Include="Entities\ClausulaCinco.cs" />
     <Compile Include="Entities\ClausulaSeis.cs" />

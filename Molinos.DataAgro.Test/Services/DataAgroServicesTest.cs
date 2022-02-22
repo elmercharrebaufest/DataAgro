@@ -1015,7 +1015,7 @@ namespace Molinos.DataAgro.Test.Services
         [Test]
         public void AltaCampoSustentableTestOk()
         {
-            var campo = new CampoDetalleMoa
+            var campo = new CampoDetalleTerceroDto
             {
                 HectareasCultivables = 1,
                 Campania = "20-21",
@@ -1034,11 +1034,11 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>()))
                 .Returns(new Campaña { CampañaId = 1, Descripcion = "20-21" });
             repositorioMock.Setup(x => x.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
-            proveedorManager.Setup(x => x.AltaCampoSustentable(It.IsAny<CampoDetalle>())).Returns(new Resultado());
+            proveedorManager.Setup(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>())).Returns(new Resultado());
 
             var result = target.AltaCampoSustentable(campo) as Resultado;
 
-            proveedorManager.Verify(x => x.AltaCampoSustentable(It.IsAny<CampoDetalle>()), Times.Once);
+            proveedorManager.Verify(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>()), Times.Once);
 
             Assert.NotNull(result);
             Assert.AreEqual(false, result.HayError);

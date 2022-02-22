@@ -322,6 +322,7 @@
     <Build Include="dbo\Tables\TipoNegocioDetalle.sql" />
     <Build Include="dbo\Tables\Boleto.sql" />
     <Build Include="dbo\Tables\Clausula.sql" />
+    <Build Include="dbo\Tables\CampoDetalleTercero.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

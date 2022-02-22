@@ -78,6 +78,6 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarMailFijacionVirtual(FijacionDePrecioContrato contrato, string comercial, bool eliminar);
         void EnviarMailPrestamoDevolucion(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial);
         List<ProveedorDto> ListarProveedorTodos(string proveedor);
-        Resultado AltaCampoSustentable(CampoDetalle campo);
+        Resultado AltaCampoSustentable(CampoDetalleTercero campo);
     }
 }

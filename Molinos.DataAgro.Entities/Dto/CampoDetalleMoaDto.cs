@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public class CampoDetalleMoa
+    public class CampoDetalleTerceroDto
     {
 
         public string ProveedorCUIT { get; set; }
@@ -31,6 +31,8 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public decimal HectareasCultivables { get; set; }
 
+        public int Id{ get; set; }
+        public string Estado { get; set; }
 
     }
 

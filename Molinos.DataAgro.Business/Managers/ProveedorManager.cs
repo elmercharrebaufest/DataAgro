@@ -2834,7 +2834,7 @@ namespace Molinos.DataAgro.Business.Managers
                 RazonSocial = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).RazonSocial,
                 Alias = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Alias,
                 Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id,
-                ComisionistaId = resultado.FirstOrDefault(y=> y.Cuit == x.Key.Cuit).ComisionistaId
+                ComisionistaId = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).ComisionistaId
             }).ToList();
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
             CompletarEstadoAltaTemprana(listaOrdenada);
@@ -2875,7 +2875,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (validar == true)
             {
                 CompletarEstadoAltaTemprana(listaOrdenada);
-            }         
+            }
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
         public List<ProveedorDto> ListarProveedor(string proveedor)
@@ -4439,12 +4439,27 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
-        public Resultado AltaCampoSustentable(CampoDetalle campo)
+        public Resultado AltaCampoSustentable(CampoDetalleTercero campo)
         {
             var resultado = new Resultado();
             try
             {
-                repositorio.Agregar(campo);
+                var campoSave = repositorio.Obtener<CampoDetalleTercero>(x => x.IdMoa == campo.IdMoa);
+                if (campoSave == null)
+                {
+                    repositorio.Agregar(campo);
+                }
+                else
+                {
+                    campoSave.Estado = campo.Estado;
+                    campoSave.Nombre = campo.Nombre;
+                    campoSave.LocalidadId = campo.LocalidadId;
+                    campoSave.HectareasCultivables = campo.HectareasCultivables;
+                    campoSave.HectareasTotales = campo.HectareasTotales;
+                    campoSave.Rinde = campo.Rinde;
+                    campoSave.Latitud = campo.Latitud;
+                    campoSave.Longitud = campo.Longitud;
+                }
                 repositorio.GuardarCambios();
             }
             catch (Exception e)

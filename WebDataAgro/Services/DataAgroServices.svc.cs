@@ -1126,7 +1126,7 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
-        public Resultado AltaCampoSustentable(CampoDetalleMoa campo)
+        public Resultado AltaCampoSustentable(CampoDetalleTerceroDto campo)
         {
             Resultado resultado = new Resultado();
             try
@@ -1150,20 +1150,12 @@ namespace WebDataAgro.Services
                 {
                     return resultado;
                 }
-                int? comercialAsociadoId = null;
-                var comercialAsociado = proveedor.ProveedorComercialAsociados.FirstOrDefault();
-                if (comercialAsociado != null)
-                {
-                    comercialAsociadoId = comercialAsociado.ComercialId;
-                }
 
-                CampoDetalle campoSave = new CampoDetalle
+                CampoDetalleTercero campoSave = new CampoDetalleTercero
                 {
-                    ComercialId = comercialAsociadoId,
                     HectareasCultivables = campo.HectareasCultivables,
                     HectareasTotales = campo.HectareasTotales,
                     Rinde = campo.ToneladasAprobadas,
-                    ImportId = null,
                     KMZfile = campo.KMZfileBase64, // ej: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAA...
                     KMZnombre = @"C:\fakepath\" + campo.KMZnombre,
                     Latitud = campo.Latitud,
@@ -1171,9 +1163,11 @@ namespace WebDataAgro.Services
                     LocalidadId = campo.LocalidadId,
                     MaterialId = 3,
                     Nombre = campo.Nombre,
-                    NroItem = 1,
                     ProveedorId = proveedor.ProveedorId,
-                    CampañaId = campaña.CampañaId
+                    CampañaId = campaña.CampañaId,
+                    IdMoa = campo.Id,
+                    Estado = campo.Estado,
+                    
                 };
 
                 resultado = proveedorManager.AltaCampoSustentable(campoSave);
@@ -1184,7 +1178,7 @@ namespace WebDataAgro.Services
             {
                 logger.Error("Error en AltaCampoSustentable");
                 logger.Error(e);
-                resultado.Error("Error", "Error");
+                resultado.Error("Error", e.Message);
             }
             return resultado;
         }

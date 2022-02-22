@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Test.Managers
             httpContextManagerMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             altaTempranaMock = new Mock<IAltaTempranaAgent>();
 
-            target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, 
+            target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object,
                 riesgoComercialAgentMock.Object, datosProveedorMock.Object, mailManagerMock.Object,
                 logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object);
 
@@ -3818,7 +3818,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void ListarProveedorTodosFiltroOkTest()
         {
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), null, Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<ProveedorDto> { new ProveedorDto {Alias="aa",CUIT="1",RazonSocial="1" }  });
+                .Returns(new List<ProveedorDto> { new ProveedorDto { Alias = "aa", CUIT = "1", RazonSocial = "1" } });
 
             var result = target.ListarProveedorTodos("aa");
 
@@ -3830,9 +3830,24 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void AltaCampoSustentableTestOk()
         {
-            var result = target.AltaCampoSustentable(It.IsAny<CampoDetalle>());
+            var result = target.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>());
 
-            repositorioMock.Verify(x => x.Agregar(It.IsAny<CampoDetalle>()), Times.Once);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<CampoDetalleTercero>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayErrores);
+        }
+
+        [Test]
+        public void AltaCampoSustentableTestEditarOk()
+        {
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<CampoDetalleTercero, bool>>>()))
+              .Returns(new CampoDetalleTercero { });
+
+            var result = target.AltaCampoSustentable(new CampoDetalleTercero());
+
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<CampoDetalleTercero>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             Assert.NotNull(result);
