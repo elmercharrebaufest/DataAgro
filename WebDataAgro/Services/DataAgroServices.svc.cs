@@ -1126,9 +1126,9 @@ namespace WebDataAgro.Services
             return oEntityErrors;
         }
 
-        public Resultado AltaCampoSustentable(CampoDetalleTerceroDto campo)
+        public ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTerceroDto campo)
         {
-            Resultado resultado = new Resultado();
+            ResultadoAltaCampoSustentable resultado = new ResultadoAltaCampoSustentable();
             try
             {
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == campo.ProveedorCUIT);

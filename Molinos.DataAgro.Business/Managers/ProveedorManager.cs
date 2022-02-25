@@ -4443,9 +4443,9 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
-        public Resultado AltaCampoSustentable(CampoDetalleTercero campo)
+        public ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTercero campo)
         {
-            var resultado = new Resultado();
+            var resultado = new ResultadoAltaCampoSustentable();
             try
             {
                 var campoSave = repositorio.Obtener<CampoDetalleTercero>(x => x.IdMoa == campo.IdMoa);

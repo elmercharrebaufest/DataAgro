@@ -1034,9 +1034,9 @@ namespace Molinos.DataAgro.Test.Services
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>()))
                 .Returns(new Campaña { CampañaId = 1, Descripcion = "20-21" });
             repositorioMock.Setup(x => x.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
-            proveedorManager.Setup(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>())).Returns(new Resultado());
+            proveedorManager.Setup(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>())).Returns(new ResultadoAltaCampoSustentable());
 
-            var result = target.AltaCampoSustentable(campo) as Resultado;
+            var result = target.AltaCampoSustentable(campo) as ResultadoAltaCampoSustentable;
 
             proveedorManager.Verify(x => x.AltaCampoSustentable(It.IsAny<CampoDetalleTercero>()), Times.Once);
 

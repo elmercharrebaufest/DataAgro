@@ -3836,7 +3836,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             Assert.NotNull(result);
-            Assert.IsFalse(result.HayErrores);
+            Assert.IsFalse(result.HayError);
         }
 
         [Test]
@@ -3851,7 +3851,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             Assert.NotNull(result);
-            Assert.IsFalse(result.HayErrores);
+            Assert.IsFalse(result.HayError);
         }
 
     }

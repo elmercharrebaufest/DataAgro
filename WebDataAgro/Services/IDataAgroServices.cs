@@ -58,7 +58,7 @@ namespace WebDataAgro.Services
         ResultadoSap ActualizarCesionContratoSAP(string contratoSAP, bool cesion);
 
         [OperationContract]
-        Resultado AltaCampoSustentable(CampoDetalleTerceroDto campo);
+        ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTerceroDto campo);
         #endregion
     }
 }
