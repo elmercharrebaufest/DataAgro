@@ -744,13 +744,13 @@
                 <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-4 col-md-2">
-                <div class="sustentableDiv fason acuerdo" hidden>
+                <div class="sustentableDiv tarifaAConvenirDiv fason acuerdo" hidden>
                     <input id="sustentablePrecioId" placeholder="Importe" style="width:100%" />
                     <img id="errsustentableprecioId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
             <div class="col-sm-4 col-md-2">
-                <div class="sustentableDiv fason acuerdo" hidden>
+                <div class="sustentableDiv tarifaAConvenirDiv fason acuerdo" hidden>
                     <select id="sustentableMonedaId" data-bind="source: SustentableMonedaCombo, value: Parametros.sustentableMonedaId, disabled: isControlDisabled" style="width:100%"></select>
                     <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
@@ -772,6 +772,11 @@
                         <img id="errfechaHastaSustentableId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
+            </div>
+            <div class="col-sm-2 col-md-3 sustentableDiv" id="divSustentableSinTarifa" hidden>
+                <label class="sojaSustentable" style="width:120px">Tarifa a Convenir</label>
+                <input id="tarifaAConvenirId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.tarifaAConvenir, disabled: isControlDisabled" type="checkbox" onclick="HayTarifaAConvenir()" />
+                <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
         @*<div class="row">

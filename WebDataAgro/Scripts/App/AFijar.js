@@ -5040,6 +5040,21 @@ function HaySustentable() {
     //    $("#mercsDepositoDiv").show();
     //}
 }
+function HayTarifaAConvenir() {
+    if ($("#tarifaAConvenirId").is(":checked")) {
+        //$(".tarifaAConvenirDiv").hide();
+        $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
+        $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
+        $("#sustentablePrecioId").addClass("disabled").prop("disabled", true);
+        $("#sustentableMonedaId").addClass("disabled").prop("disabled", true);
+
+        $(".tarifaAConvenirDiv").addClass("disabled").prop("disabled", true);
+    } else {
+        $(".tarifaAConvenirDiv").removeClass("disabled").prop("disabled", false);
+        $("#sustentablePrecioId").removeClass("disabled").prop("disabled", false);
+        $("#sustentableMonedaId").removeClass("disabled").prop("disabled", false);
+    }
+}
 function EsconderCalidadSiHaySojaYCalidadEspecial() {
     if (($("#destinoId").data("kendoDropDownList").value() == "13" || $("#destinoId").data("kendoDropDownList").value() == "6" ||
         $("#destinoId").data("kendoDropDownList").value() == "7") && $('#material').data("kendoDropDownList").value() == "3") {

@@ -2791,6 +2791,7 @@
     <Content Include="Views\Boleto\GenerarBoletos.cshtml" />
     <Content Include="Views\Boleto\ModalBoletoGenerado.cshtml" />
     <Content Include="Views\Boleto\DescargarBoletos.cshtml" />
+    <Content Include="Views\ReporteCompraNet\ModalDetalleFijacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

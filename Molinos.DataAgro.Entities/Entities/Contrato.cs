@@ -55,6 +55,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? CondicionalFecha { get; set; }
         public string CondicionalPosicion { get; set; }
         public int? CondicionalContratoId { get; set; }
+        //public bool? TarifaAConvenir { get; set; }
                     
         [ForeignKey("CondicionalMonedaId")]
         public virtual Moneda CondicionalMoneda { get; set; }

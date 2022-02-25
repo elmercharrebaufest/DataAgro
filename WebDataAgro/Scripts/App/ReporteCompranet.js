@@ -16,6 +16,7 @@ $(document).ready(function () {
     $("#verFijaciones").on('change', function () {
         setearValoresComboDeInicio();
     });
+    InicializarModalFijacion();
 });
 
 function InicializarDate() {
@@ -96,7 +97,7 @@ function AbrirModal(material, mes, anio, fechaDesde, fechaHasta, materialNombre,
     $.get(href, function (data) { crearGrilladetallePosicion(data); });
     return false;
 }
-function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioids, moneda) {
+function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioids, moneda, esFijacion) {
     setearTituloModal(materialNombre, mesNombre, anio);
     var href = window.location.href;
     if (moneda == null) {
@@ -107,10 +108,39 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
     //$.get(href, function (data) { crearGrilladetallePosicion(data); });
     var list = negocioids.split(',');
     $.post(window.location.href + "/DetalleIdsModal", { negocioids: list, moneda: moneda }, function (data) {
-        crearGrilladetallePosicion(data);
+        if (esFijacion == true) {
+            crearGrilladetalleFijacion(data);
+            var jsonD = JSON.parse(data);
+
+            var dataFijLargas = jsonD.items.filter(function (el) {
+                var diferenciaDias = DiferenciaFechasEnDias(el.Fecha, el.FechaHasta);
+                return diferenciaDias > 30;
+            });
+            var dataFijCortas = jsonD.items.filter(function (el) {
+                var diferenciaDias = DiferenciaFechasEnDias(el.Fecha, el.FechaHasta);
+                return diferenciaDias <= 30;
+            });
+            dataFijLargas.sort((a, b) => (parseFloat(a.Precio) > parseFloat(b.Precio)) ? -1 : ((parseFloat(b.Precio) > parseFloat(a.Precio)) ? 1 : 0))
+            dataFijCortas.sort((a, b) => (parseFloat(a.Precio) > parseFloat(b.Precio)) ? -1 : ((parseFloat(b.Precio) > parseFloat(a.Precio)) ? 1 : 0))
+            crearGrillaFijacionLargaCorta(JSON.stringify({items: dataFijLargas, total : dataFijLargas.length }), 'grillaFijacionLarga');
+
+            crearGrillaFijacionLargaCorta(JSON.stringify({ items: dataFijCortas, total: dataFijCortas.length }), 'grillaFijacionCorta');
+        } else {
+            crearGrilladetallePosicion(data);
+        }
     }, "json");
     return false;
 }
+
+//Formato de Fechas DD/MM/YYYY
+function DiferenciaFechasEnDias(fechaA, fechaB) {
+    var partsA = fechaA.split('/');
+    var fechaADate = new Date(Date.parse(partsA[2] + '/' + partsA[1] + '/' + partsA[0]));
+    var partsB = fechaB.split('/');
+    var fechaBDate = new Date(Date.parse(partsB[2] + '/' + partsB[1] + '/' + partsB[0]));
+    return (fechaADate.getTime() - fechaBDate.getTime()) / (1000 * 3600 * 24);
+}
+
 function setearTituloModal(materialNombre, mesNombre, anio) {
     $('#titulo').empty();
     $('#titulo').text('DETALLE ' + materialNombre + ' ' + mesNombre + ' - ' + anio);
@@ -193,7 +223,7 @@ function CrearGraficoHedgeObjetivo(data) {
     });
 }
 
-function crearGrilladetallePosicion(href) {
+function crearGrilladetallePosicion(href, esFijacion) {
     $("#grilla").kendoGrid({
         culture: "es-AR",
         dataSource: {
@@ -209,7 +239,7 @@ function crearGrilladetallePosicion(href) {
                 { field: "CantidadD", aggregate: "sum" },
             ]
         },
-        dataBound: ShowModal,
+        dataBound: (esFijacion == true)? ShowModalFijacion : ShowModal,
         sortable: true,
         scrollable: false,
         reorderable: false,
@@ -438,6 +468,319 @@ function crearGrilladetallePosicion(href) {
 
 }
 
+function crearGrilladetalleFijacion(href) {
+    $("#grillaDetalle").kendoGrid({
+        culture: "es-AR",
+        dataSource: {
+            data: JSON.parse(href),
+            type: JSON,
+            schema: {
+                data: "items",
+                total: "total"
+            },
+            pageSize: 20,
+
+            aggregate: [
+                { field: "CantidadD", aggregate: "sum" },
+            ]
+        },
+        dataBound: ShowModalFijacion,
+        sortable: true,
+        scrollable: false,
+        reorderable: false,
+        groupable: false,
+        resizable: true,
+        filterable: {
+            checkAll: false,
+            height: 350,
+            extra: false,
+            messages: {
+                info: "Filtros:",
+                filter: "Filtrar",
+                clear: "Limpiar",
+                isTrue: "SI",
+                isFalse: "NO",
+                and: "Y",
+                or: "O"
+            },
+            operators: {
+                string: {
+                    eq: "Igual",
+                    neq: "Distinto",
+                    startswith: "Comienza con",
+                    contains: "Contiene",
+                    endswith: "Finaliza con"
+                },
+                date: {
+                    eq: "Igual",
+                    gte: "Despu&eacute;s o igual a",
+                    lte: "Antes o igual a",
+                },
+                number: {
+                    eq: "Igual a",
+                    gte: "Mayor que o igual a",
+                    lte: "Menor que o igual a",
+                }
+            }
+        },
+        columnMenu: true,
+        pageable: {
+            messages: {
+                display: "{2} elementos",
+                empty: "No hay elementos para mostrar",
+                page: "P&aacute;gina",
+                allPages: "Todas",
+                of: "de {0}",
+                itemsPerPage: "Elementos por p&aacute;gina",
+                first: "Ir a la primer p&aacute;gina",
+                previous: "Ir a la p&aacute;gina anterior",
+                next: "Ir a la p&aacute;gina siguiente",
+                last: "Ir a la &uacute;ltima p&aacute;gina",
+                refresh: "Recargar"
+            },
+            input: true,
+            numeric: true
+        },
+        columns: [
+            {
+                field: "Contrato",
+                title: "Nro",
+                width: 80
+            }, {
+                field: "RazonSocial",
+                title: "Razon Social",
+                width: 150
+            }, {
+                field: "Cuit",
+                title: "CUIT",
+                width: 120
+            }, {
+                field: "RazonCorredor",
+                title: "Corredor",
+                width: 150
+            }, {
+                field: "CuitCorredor",
+                title: "CUIT",
+                width: 120
+            }, {
+                field: "Material",
+                title: "Material",
+                width: 100
+            }, {
+                field: "TipoNegocio",
+                title: "Negocio",
+                width: 100
+            }, {
+                field: "Comercial",
+                title: "Comercial",
+                width: 150
+            }, {
+                field: "CantidadD",
+                title: "Cantidad",
+                width: 110,
+                format: "{0:n0}",
+                type: "number",
+                aggregates: ["sum"], footerTemplate: '#=kendo.toString(sum, "n0")#',
+            }, {
+                field: "CantidadCamiones",
+                title: "Camiones",
+                width: 110
+            }, {
+                field: "Campana",
+                title: "Campaña",
+                width: 110
+            }, {
+                field: "FechaDesde",
+                title: "Fecha<br> Desde",
+                width: 100
+            }, {
+                field: "FechaHasta",
+                title: "Fecha <br>Hasta",
+                width: 100
+            }, {
+                field: "Precio",
+                title: "Precio",
+                width: 100
+            }, {
+                field: "PrecioNeto",
+                title: "Precio <br>Neto",
+                width: 100
+            }, {
+                field: "Moneda",
+                title: "Moneda",
+                width: 90
+            }, {
+                field: "Fecha",
+                title: "Fecha <br> Operación",
+                width: 120
+            }, {
+                field: "Provincia",
+                title: "Provincia",
+                width: 150
+            }, {
+                field: "Localidad",
+                title: "Localidad",
+                width: 150
+            }, {
+                field: "Boleto",
+                title: "Boleto",
+                width: 150
+            }, {
+                field: "Bolsa",
+                title: "Bolsa",
+                width: 150
+            }, {
+                field: "Destino",
+                title: "Destino",
+                width: 150
+            }, {
+                field: "CondicionFijacion",
+                title: "Condición<br> Fijacion",
+                width: 150
+            }, {
+                field: "DesdeFijacion",
+                title: "Desde<br> Fijacion",
+                width: 100
+            }, {
+                field: "HastaFijacion",
+                title: "Hasta<br>Fijacion",
+                width: 100
+            }, {
+                field: "Base",
+                title: "Base",
+                width: 150
+            }, {
+                field: "ImporteSustentable",
+                title: "Importe<br> Sustentable",
+                width: 150
+            }, {
+                field: "FechaDolarizado",
+                title: "Fecha<br> Dolarizado",
+                width: 150
+            }, {
+                field: "DiasPesificado",
+                title: "Días<br> Pesificado",
+                width: 150
+            }, {
+                field: "NoInformaSio",
+                title: "No Informa Sio",
+                width: 150
+            }, {
+                field: "Ampliaciones",
+                title: "Ampliaciones",
+                width: 150
+            }, {
+                field: "Consignatario",
+                title: "Consignatario",
+                width: 150
+            }, {
+                field: "PlanCanje",
+                title: "Plan Canje",
+                width: 150
+            }, {
+                field: "Consignatario",
+                title: "Consignatario",
+                width: 150
+            }
+            , {
+                field: "Pago",
+                title: "Pago",
+                width: 150
+            }
+            //, {
+            //    field: "CalidadEspecial",
+            //    title: "Calidad <br>Especial",
+            //    width: 150
+            //}
+            , {
+                field: "CalidadEspecial",
+                title: "Calidad <br>Especial",
+                width: 110
+            }
+            , {
+                field: "MercsDeposito",
+                title: "Merc. en <br>Deposito",
+                width: 110
+            }
+            , {
+                field: "Observación",
+                title: "Observación",
+                width: 150
+            }]
+
+    });
+
+}
+
+
+function crearGrillaFijacionLargaCorta(href, grilla) {
+    $("#"+ grilla +"").kendoGrid({
+        culture: "es-AR",
+        dataSource: {
+            data: JSON.parse(href),
+            type: JSON,
+            schema: {
+                data: "items",
+                total: "total"
+            },
+            pageSize: 20,
+
+            aggregate: [
+                { field: "CantidadD", aggregate: "sum" },
+            ]
+        },
+        //dataBound: ShowModalFijacion,
+        sortable: false,
+        scrollable: false,
+        reorderable: false,
+        groupable: false,
+        resizable: true,
+        pageable: {
+            messages: {
+                display: "{2} elementos",
+                empty: "No hay elementos para mostrar",
+                page: "P&aacute;gina",
+                allPages: "Todas",
+                of: "de {0}",
+                itemsPerPage: "Elementos por p&aacute;gina",
+                first: "Ir a la primer p&aacute;gina",
+                previous: "Ir a la p&aacute;gina anterior",
+                next: "Ir a la p&aacute;gina siguiente",
+                last: "Ir a la &uacute;ltima p&aacute;gina",
+                refresh: "Recargar"
+            },
+            //input: true,
+            //numeric: true
+        },
+        columns: [
+            {
+                title: grilla == "grillaFijacionLarga" ? "Fijaciones Largas" : "Fijaciones Cortas",
+                columns: [
+                    {
+                        field: "FechaHasta",
+                        title: "Fijación Hasta",
+                        width: 50
+                    }, {
+                        field: "Moneda",
+                        title: "Moneda",
+                        width: 80
+                    }, {
+                        field: "Precio",
+                        title: "Precio",
+                        width: 100,
+                    }, {
+                        field: "Cantidad",
+                        title: "Toneladas",
+                        width: 150
+                    }
+                ]
+            }
+        ]
+
+    });
+
+}
+
 function OcultarColumnasVacias(grid) {
     //var grid = $("#grid").data("kendoGrid");
     var data = grid.dataSource.data();
@@ -576,6 +919,21 @@ function ShowModal(e) {
     OcultarColumnasVacias($("#grilla").data("kendoGrid"));
 }
 
+function ShowModalFijacion(e) {
+    //A saber: Esto sirve para que se pueda escribir en los input de los filtros cuando la grilla de Kendo esta dentro de un modal (error de Kendo).
+    $("#ModalDetalleFijacion").on('shown.bs.modal', function () {
+        $(document).off('focusin.modal');
+    });
+    $("#ModalDetalleFijacion").on('hidden.bs.modal', function () {
+        //$("#grilla").kendoGrid().destroy;
+        $('#grillaDetalle').kendoGrid('destroy').empty();
+    });
+    $("#ModalDetalleFijacion").modal('show');
+    OcultarColumnasVacias($("#grillaDetalle").data("kendoGrid"));
+
+
+}
+
 function ShowModalAgente() {
     //A saber: Esto sirve para que se pueda escribir en los input de los filtros cuando la grilla de Kendo esta dentro de un modal (error de Kendo).
     $("#ModalAgenteCompra").on('shown.bs.modal', function () {
@@ -664,4 +1022,5 @@ function setearValoresComboDeInicio() {
 function getVerFijaciones() {
     return $("#verFijaciones").is(':checked') ? "True" : "False";
 }
+
 

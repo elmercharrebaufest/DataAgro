@@ -1156,7 +1156,7 @@ namespace WebDataAgro.Services
                     HectareasCultivables = campo.HectareasCultivables,
                     HectareasTotales = campo.HectareasTotales,
                     Rinde = campo.ToneladasAprobadas,
-                    KMZfile = campo.KMZfileBase64, // ej: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAA...
+                    KMZfile = "data:application/octet-stream;base64," + campo.KMZfileBase64, // ej: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAA...
                     KMZnombre = @"C:\fakepath\" + campo.KMZnombre,
                     Latitud = campo.Latitud,
                     Longitud = campo.Longitud,

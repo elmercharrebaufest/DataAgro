@@ -102,6 +102,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaDesdeSustentable { get; set; } // FechaDesdeSustentable       
         [JsonConverter(typeof(SinHora))]
         public DateTime? FechaHastaSustentable { get; set; } // FechaHastaSustentable   
+        public bool? TarifaAConvenir { get; set; }
         public string PosicionCBOT { get; set; }
         public int? TipoPosicionCBOTId { get; set; }
 

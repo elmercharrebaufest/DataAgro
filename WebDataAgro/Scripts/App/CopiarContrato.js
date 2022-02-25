@@ -631,6 +631,8 @@ function ObtenerDatos(error) {
     obj.MonedaSustentableId = $("#sustentableMonedaId").val();
     obj.FechaDesdeSustentable = fechaValida($("#fechaDesdeSustentableId").val()) ? $("#fechaDesdeSustentableId").val() : null;
     obj.FechaHastaSustentable = fechaValida($("#fechaHastaSustentableId").val()) ? $("#fechaHastaSustentableId").val() : null;
+    obj.tarifaAConvenir = $("#tarifaAConvenirId").is(":checked");
+
     obj.FechaDolarizado = $("#tipoId").val() == "1" ? "" : $("#dolarizadoFechaId").val();
     obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
     obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false;

@@ -929,6 +929,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Pago con Cbu: " + oContrato.PagoCBU + " <br />";
             }
+            if( oContrato.TarifaAConvenir == true)
+            {
+                htmlBody += "Negocio sustentable con tarifa a convenir antes de la entrega.<br />";
+            }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +

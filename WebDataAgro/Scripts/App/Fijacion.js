@@ -5292,6 +5292,22 @@ function ValidarProveedorSisa() {
     }
 }
 
+function HayTarifaAConvenir() {
+    if ($("#tarifaAConvenirId").is(":checked")) {
+        //$(".tarifaAConvenirDiv").hide();
+        $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
+        $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
+        $("#sustentablePrecioId").addClass("disabled").prop("disabled", true);
+        $("#sustentableMonedaId").addClass("disabled").prop("disabled", true);
+
+        $(".tarifaAConvenirDiv").addClass("disabled").prop("disabled", true);
+    } else {
+        $(".tarifaAConvenirDiv").removeClass("disabled").prop("disabled", false);
+        $("#sustentablePrecioId").removeClass("disabled").prop("disabled", false);
+        $("#sustentableMonedaId").removeClass("disabled").prop("disabled", false);
+    }
+}
+
 
 
 

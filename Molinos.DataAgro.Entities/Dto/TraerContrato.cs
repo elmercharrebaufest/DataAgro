@@ -270,6 +270,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string RazonSocialProveedor { get; set; }
         public string Corredor { get; set; }
         public int? BolsaContratoId { get; set; }
+        public bool? TarifaAConvenir { get; set; }
     }
 
     public class StoredPorContratoResult

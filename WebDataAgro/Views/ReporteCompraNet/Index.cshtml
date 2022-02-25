@@ -60,18 +60,19 @@
                     <button type="submit" id="buscar-reporte" class="k-button k-button-icontext sideMargin-15">Buscar</button>
                     @Html.ActionLink("Descargar Reporte", "ReporteComprasDelDia", "ReporteCompraNet", new { }, new { @class = "k-button k-button-icontext sideMargin-15", @id = "descargaReporte" })
                 </div>
-               
+
             </div>
         </div>
     }
     <div id="CuerpoCompraNet" class="container-reporte">
-        @Html.Action("PartialReporteCompraNet", new { fechaString = DateTime.Now.Date.ToString("dd-MM-yyyy"), fechaHastaString = DateTime.Now.Date.ToString("dd-MM-yyyy"),verFijaciones = "on" })
+        @Html.Action("PartialReporteCompraNet", new { fechaString = DateTime.Now.Date.ToString("dd-MM-yyyy"), fechaHastaString = DateTime.Now.Date.ToString("dd-MM-yyyy"), verFijaciones = "on" })
     </div>
 </div>
 
 
 <!-- Modal Detalle Posicion-->
 @Html.Partial("ModalDetallePosicion")
+@Html.Partial("ModalDetalleFijacion")
 
 <!-- Modal Agente-->
 @Html.Partial("ModalAgente")

@@ -783,7 +783,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value == 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
                 {
-                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
+                    if (!(oParam.TarifaAConvenir.HasValue? oParam.TarifaAConvenir.Value : false))
+                    {
+                        oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
+                    }
                 }
                 if (oParam.MercsDeposito == true)
                 {
@@ -1685,6 +1688,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.MonedaSustentableId = oContrato.MonedaSustentableId;
             oContratoSave.FechaDesdeSustentable = oContrato.FechaDesdeSustentable;
             oContratoSave.FechaHastaSustentable = oContrato.FechaHastaSustentable;
+            oContratoSave.TarifaAConvenir = oContrato.TarifaAConvenir;
             oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
             oContratoSave.DiasPesificado = oContrato.DiasPesificado;
             oContratoSave.NoInformaSio = oContrato.NoInformaSio;
@@ -3104,8 +3108,8 @@ namespace Molinos.DataAgro.Business.Managers
                 CondicionalContratoSAP = x.CondicionalContrato.ContratoSAP,
                 KgMinimo = x.KgMinimo ?? 0,
                 KgMaximo = x.KgMaximo ?? 0,
-                ProveedorComisionistaId = x.ProveedorComisionistaId
-
+                ProveedorComisionistaId = x.ProveedorComisionistaId,
+                TarifaAConvenir = x.TarifaAConvenir
             });
             return contrato;
         }

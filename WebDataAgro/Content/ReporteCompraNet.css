@@ -248,6 +248,21 @@ table#GirasolAltoOleico th, table#GirasolAltoOleico td {
     font-weight: bold;
 }
 
+#grillaDetalle > .k-grid-header, #grillaDetalle .k-grid-header .k-header {
+    background-color: yellowgreen;
+    font-weight: bold;
+}
+#grillaFijacionCorta > .k-grid-header, #grillaFijacionCorta .k-grid-header .k-header {
+    background-color: yellowgreen;
+    font-weight: bold;
+    text-align: center;
+}
+#grillaFijacionLarga > .k-grid-header, #grillaFijacionLarga .k-grid-header .k-header {
+    background-color: yellowgreen;
+    font-weight: bold;
+    text-align: center;
+}
+
 .abrirModalDetallePosicion {
     font-size: 23px;
     color:black;
@@ -275,4 +290,8 @@ table#GirasolAltoOleico th, table#GirasolAltoOleico td {
 
 .k-header > .k-grid-filter, .k-header > .k-header-column-menu {
     margin: -.5em -0.0em -.4em 0;
+}
+
+.tab-selected {
+    border-bottom: 5px solid #017940;
 }

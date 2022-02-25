@@ -787,6 +787,11 @@
                     <img id="errcontVendedorId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
+            <div class="col-sm-2 col-md-3 sustentableDiv" id="divSustentableSinTarifa" hidden>
+                <label class="sojaSustentable" style="width:120px">Tarifa a Convenir</label>
+                <input id="tarifaAConvenirId" class="campo-input-input sojaSustentable" data-bind="checked:Parametros.tarifaAConvenir, disabled: isControlDisabled" type="checkbox" onclick="HayTarifaAConvenir()" />
+                <img id="errsustentableId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
         </div>
         <div class="row @(fijacionVirtual ? "hide" : "")">
             <div class="col-sm-2 ">
