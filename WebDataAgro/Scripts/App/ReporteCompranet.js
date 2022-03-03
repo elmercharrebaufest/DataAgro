@@ -120,17 +120,42 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
                 var diferenciaDias = DiferenciaFechasEnDias(el.Fecha, el.FechaHasta);
                 return diferenciaDias <= 30;
             });
+
             dataFijLargas.sort((a, b) => (parseFloat(a.Precio) > parseFloat(b.Precio)) ? -1 : ((parseFloat(b.Precio) > parseFloat(a.Precio)) ? 1 : 0))
             dataFijCortas.sort((a, b) => (parseFloat(a.Precio) > parseFloat(b.Precio)) ? -1 : ((parseFloat(b.Precio) > parseFloat(a.Precio)) ? 1 : 0))
-            crearGrillaFijacionLargaCorta(JSON.stringify({items: dataFijLargas, total : dataFijLargas.length }), 'grillaFijacionLarga');
 
-            crearGrillaFijacionLargaCorta(JSON.stringify({ items: dataFijCortas, total: dataFijCortas.length }), 'grillaFijacionCorta');
+            var dFijLargas = [];
+            dataFijLargas.reduce(function (res, value) {
+                if (!res[value.FechaHasta + value.Moneda]) {
+
+                    res[value.FechaHasta + value.Moneda] = { FechaHasta: value.FechaHasta, Moneda: value.Moneda,Precio: 0, Cantidad: 0 };
+                    dFijLargas.push(res[value.FechaHasta + value.Moneda])
+                }
+                res[value.FechaHasta + value.Moneda].Precio += parseFloat(value.Precio.replace(".", "").replace(",","."));
+                res[value.FechaHasta + value.Moneda].Cantidad += parseFloat(value.Cantidad.replace(".", "").replace(",", "."));
+                return res;
+            }, {});
+            var dFijCortas = [];
+            dataFijCortas.reduce(function (res, value) {
+                if (!res[value.FechaHasta + value.Moneda]) {
+
+                    res[value.FechaHasta + value.Moneda] = { FechaHasta: value.FechaHasta, Moneda: value.Moneda, Precio: 0, Cantidad: 0 };
+                    dFijCortas.push(res[value.FechaHasta + value.Moneda])
+                }
+                res[value.FechaHasta + value.Moneda].PrecioTotal += parseFloat(value.Precio.replace(".", "").replace(",", "."));
+                res[value.FechaHasta + value.Moneda].CantidadTotal += parseFloat(value.Cantidad.replace(".", "").replace(",", "."));
+                return res;
+            }, {});
+            
+            crearGrillaFijacionLargaCorta(JSON.stringify({ items: dFijLargas, total: dFijLargas.length }), 'grillaFijacionLarga');
+            crearGrillaFijacionLargaCorta(JSON.stringify({ items: dFijCortas, total: dFijCortas.length }), 'grillaFijacionCorta');
         } else {
             crearGrilladetallePosicion(data);
         }
     }, "json");
     return false;
 }
+
 
 //Formato de Fechas DD/MM/YYYY
 function DiferenciaFechasEnDias(fechaA, fechaB) {
@@ -140,6 +165,8 @@ function DiferenciaFechasEnDias(fechaA, fechaB) {
     var fechaBDate = new Date(Date.parse(partsB[2] + '/' + partsB[1] + '/' + partsB[0]));
     return (fechaADate.getTime() - fechaBDate.getTime()) / (1000 * 3600 * 24);
 }
+
+
 
 function setearTituloModal(materialNombre, mesNombre, anio) {
     $('#titulo').empty();
@@ -760,7 +787,8 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
                         field: "FechaHasta",
                         title: "Fijación Hasta",
                         width: 50
-                    }, {
+                    }
+                    , {
                         field: "Moneda",
                         title: "Moneda",
                         width: 80
@@ -768,6 +796,9 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
                         field: "Precio",
                         title: "Precio",
                         width: 100,
+                        template: function (dataItem) {
+                            return dataItem.Precio.toFixed(2).toLocaleString('de-DE');
+                        }
                     }, {
                         field: "Cantidad",
                         title: "Toneladas",

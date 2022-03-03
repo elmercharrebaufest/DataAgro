@@ -4020,7 +4020,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#plantaDestinoId").data("kendoDropDownList").trigger("change");
     }
 
-    if (contrato.Importe_Sustentable !== null && contrato.Importe_Sustentable !== undefined && contrato.Importe_Sustentable !== 0) {
+    if (contrato.Sustentable == true) {
         $("#sustentablePrecioId").data("kendoNumericTextBox").value(contrato.Importe_Sustentable);
         $("#sustentableMonedaId").data("kendoDropDownList").value(contrato.Moneda_Sustentable);
         $("#sustentableId").prop("checked", true);
@@ -4029,6 +4029,12 @@ function CargarDatosEditar(contrato, hijo) {
             $(".fechaHastaSustentableDiv").show();
             $("#fechaDesdeSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaDesde_SustentableFormateado)));
             $("#fechaHastaSustentableId").data("kendoDatePicker").value(FormatearFecha((contrato.FechaHasta_SustentableFormateado)));
+        }
+        if (contrato.TarifaAConvenir == true) {
+            $("#tarifaAConvenirId").prop("checked", true);
+            $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
+            $("#sustentablePrecioId").addClass("disabled").prop("disabled", true);
+            $("#sustentableMonedaId").addClass("disabled").prop("disabled", true);
         }
     }
 
@@ -5049,6 +5055,8 @@ function HayTarifaAConvenir() {
         $("#sustentableMonedaId").addClass("disabled").prop("disabled", true);
 
         $(".tarifaAConvenirDiv").addClass("disabled").prop("disabled", true);
+
+        MensAlerta("Se esta creando un contrato sustentable con tarifa a convenir");
     } else {
         $(".tarifaAConvenirDiv").removeClass("disabled").prop("disabled", false);
         $("#sustentablePrecioId").removeClass("disabled").prop("disabled", false);

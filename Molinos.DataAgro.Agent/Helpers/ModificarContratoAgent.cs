@@ -102,7 +102,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     };
                 }
-                if (contrato.ImporteSustentable != null && contrato.ImporteSustentable != 0)
+                if (contrato.Sustentable == true)
                 {
                     listaDescuentos.Add(new ZMPES5290
                     {
@@ -110,7 +110,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         TIPO_DB = "B",
                         FEDESDE = contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
                         FEHASTA = contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
-                        IMPORTE_DB = contrato.ImporteSustentable.Value,
+                        IMPORTE_DB = contrato.TarifaAConvenir == true ? -1 : contrato.ImporteSustentable.Value,
                         MONEDA_DB = contrato.MonedaSustentableId,
                         PORC_DB = 0
                     });
@@ -321,6 +321,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     contratoGuardado.SelCargoVendedor != contrato.SelCargoVendedor ||
                     contratoGuardado.StandardDeCalidadId != contrato.StandardDeCalidadId ||
                     contratoGuardado.Sustentable != contrato.Sustentable ||
+                    contratoGuardado.TarifaAConvenir != contrato.TarifaAConvenir ||
                     contratoGuardado.TarifaFlete != contrato.TarifaFlete ||
                     contratoGuardado.TrigoEspecial != contrato.TrigoEspecial ||
                     contratoGuardado.UsuarioId != contrato.UsuarioId ||

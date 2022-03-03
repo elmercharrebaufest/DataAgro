@@ -781,7 +781,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.Sustentable.HasValue && oParam.Sustentable.Value)
             {
-                if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value == 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
+                if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value < 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
                 {
                     if (!(oParam.TarifaAConvenir.HasValue? oParam.TarifaAConvenir.Value : false))
                     {
@@ -2905,6 +2905,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = x.Observacion,
                 Estado = x.EstadoId,
                 Estado_Contrato = x.Estado.Descripcion,
+                Sustentable = x.Sustentable,
                 Importe_Sustentable = x.ImporteSustentable,
                 Moneda_Sustentable = x.MonedaSustentableId,
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
@@ -3777,7 +3778,9 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.ProvinciaId = contrato.ProvinciaId;
             contratoSave.Base = contrato.Base;
             contratoSave.ImporteSustentable = contrato.ImporteSustentable;
+            contratoSave.TarifaAConvenir = contrato.TarifaAConvenir;
             contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
+            contratoSave.Sustentable = contrato.Sustentable;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
             contratoSave.Dolarizado = contrato.Dolarizado;
             contratoSave.DolarizadoCorredor = contrato.DolarizadoCorredor;
@@ -4802,6 +4805,8 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.ProvinciaId = contratoSap.ProvinciaId;
                 contrato.Base = contratoSap.Base;
                 contrato.ImporteSustentable = contratoSap.ImporteSustentable;
+                contrato.TarifaAConvenir = contratoSap.TarifaAConvenir;
+                contrato.Sustentable = contratoSap.Sustentable;
                 contrato.MonedaSustentableId = contratoSap.MonedaSustentableId;
                 contrato.FechaDolarizado = contratoSap.FechaDolarizado;
                 contrato.Dolarizado = contratoSap.Dolarizado;
@@ -5129,7 +5134,8 @@ namespace Molinos.DataAgro.Business.Managers
             bc.Observacion = negocio.Observacion != null ? negocio.Observacion : "";
 
             bc.FijacionDePrecioContratoId = (negocio is FijacionDePrecioContrato) ? (int?)(negocio as FijacionDePrecioContrato).Id : null;
-            bc.Sustentable = (negocio is Contrato) && (negocio as Contrato).ImporteSustentable != null && (negocio as Contrato).ImporteSustentable > 0;
+            bc.Sustentable = (negocio is Contrato)? (negocio as Contrato).Sustentable.HasValue ? (negocio as Contrato).Sustentable.Value : false : false ;
+            bc.TarifaAConvenir = negocio.TarifaAConvenir;
             bc.Dolarizado = negocio.Dolarizado.Value;
             bc.Pesificado = negocio.DiasPesificado != null;
             bc.Negocio = negocio is ContratoAcuerdo ? negocio.Id.ToString() : (negocio is FijacionDePrecioContrato && (negocio.EstadoId == (int)EnumEstadoContrato.Finalizado || negocio.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (negocio as FijacionDePrecioContrato).FijacionSAP : negocio.ContratoSAP != "0" ? negocio.ContratoSAP : "";

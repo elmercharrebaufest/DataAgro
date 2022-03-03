@@ -349,8 +349,10 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Localidad + "'" + ',' +
         "'" + dataItem.ContratoSAP + "'" + ',' +
         "'" + dataItem.Negocio + "'" + ',' +
+        "'" + dataItem.Sustentable + "'" + ',' +
         "'" + dataItem.Importe_Sustentable + "'" + ',' +
         "'" + dataItem.MonedaId_Sustentable + "'" + ',' +
+        "'" + dataItem.TarifaAConvenir + "'" + ',' +
         "'" + formatearFecha(dataItem.Fecha_Dolarizado) + "'" + ',' +
         "'" + dataItem.Dias_Pesificado + "'" + ',' +
         "'" + dataItem.NoInformaSIO + "'" + ',' +
@@ -2148,7 +2150,7 @@ function GuardarAmpliacion(ampliacion) {
 }
 
 function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda,
-    campana, provincia, localidad, nro_SAP, negocio, sustentablePrecio, sustentableMonedaId, dolarizadoFecha, pesificadoDias, informaSIO,
+    campana, provincia, localidad, nro_SAP, negocio, sustentable, sustentablePrecio, sustentableMonedaId, tarifaAConvenir ,dolarizadoFecha, pesificadoDias, informaSIO,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
@@ -2332,8 +2334,16 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
 
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
-    sustentablePrecio !== "null" && sustentableMonedaId !== "null" ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
-
+    //sustentablePrecio !== "null" && sustentableMonedaId !== "null" ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
+    if (sustentable == "true") {
+        if (tarifaAConvenir == "true") {
+            $("#visualizar_sustentablePrecio").text("Tarifa a Convenir");
+        } else {
+            $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId);
+        }
+    } else {
+        $("#visualizar_sustentablePrecio").text("null")
+    }
     if (fechaDesdeSustentable != null && fechaHastaSustentable != null && fechaDesdeSustentable != "//" && fechaHastaSustentable != "//") {
         $("#visualizar_sustentableDesde").text(fechaDesdeSustentable);
         $("#visualizar_sustentableHasta").text(fechaHastaSustentable);
@@ -2356,9 +2366,11 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
+        $("#fechaHastaFijacionDivVisualizar").hide();
     } else {
         $("#visualizar_desdeHastaFijacion").text(desdeHastaFijacion);
         $("#visualizar_condicionFijacion").text(condicionFijacionDescripcion);
+        $("#visualizar_fechaHastaFijacion").text(hastaFijacion);
     }
 
     planCanje === "true" ? $("#visualizar_planCanje").text("Si") : $("#visualizar_planCanje").text("null");

@@ -139,6 +139,7 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
+    <Compile Include="Dto\SustentableDto.cs" />
     <Compile Include="Dto\ResultadoAltaCampoSustentable.cs" />
     <Compile Include="Dto\TopeSugerenciasPorDiaPorProveedor.cs" />
     <Compile Include="Dto\BoletoArchivoDto.cs" />

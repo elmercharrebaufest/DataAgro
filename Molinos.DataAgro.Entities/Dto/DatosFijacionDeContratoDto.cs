@@ -48,6 +48,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Pase { get; set; }
 
         public int? ProveedorComisionistaId { get; set; }
+        public List<SustentableDto> Sustentables { get; set; }
+        public bool MercsDeposito { get; set; }
+        public bool TarifaAConvenir { get; set; }
     }
 }
 

@@ -70,7 +70,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             );
                         };
                     }
-                    if (contrato.ImporteSustentable != null && contrato.ImporteSustentable != 0)
+                    if (contrato.Sustentable == true)
                     {
                         listaDescuentos.Add(new ZMPES5290
                         {
@@ -78,29 +78,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                             TIPO_DB = "B",
                             FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
                             FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
-                            IMPORTE_DB = contrato.ImporteSustentable.Value,
+                            IMPORTE_DB = contrato.TarifaAConvenir == true ? -1 : contrato.ImporteSustentable.Value,
                             MONEDA_DB = contrato.MonedaSustentableId,
                             //MONEDA = contrato.MonedaSustentableId,
                             PORC_DB = 0
                         });
                     }
-                    else
-                    {
-                        if ((contrato is Negocio)? contrato.TarifaAConvenir.HasValue? contrato.TarifaAConvenir.Value : false : false)
-                        {
-                            listaDescuentos.Add(new ZMPES5290
-                            {
-                                TIPO_PERIODO = "I",
-                                TIPO_DB = "B",
-                                FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
-                                FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
-                                IMPORTE_DB = contrato.ImporteSustentable.HasValue ? contrato.ImporteSustentable.Value : -1,
-                                MONEDA_DB = contrato.ImporteSustentable == null ? "USDM" : contrato.MonedaSustentableId,
-                                //MONEDA = contrato.MonedaSustentableId,
-                                PORC_DB = 0
-                            });
-                        }
-                    }
+                    
                     if (contrato.PrecioPactado != null && contrato.PrecioPactado.Count > 0)
                     {
                         foreach (var p in contrato.PrecioPactado)
@@ -357,7 +341,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             //TOL_SUP=0,
 
                         },
-                       
+
                         IM_TOPES_FIJ = topesFijacion.ToArray(),
                         IM_DESC_BONIF = listaDescuentos.ToArray(),
                         IM_CALIDAD = listaCalidades.ToArray(),
