@@ -2369,7 +2369,10 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
         $("#fechaHastaFijacionDivVisualizar").hide();
     } else {
         $("#visualizar_desdeHastaFijacion").text(desdeHastaFijacion);
-        $("#visualizar_condicionFijacion").text(condicionFijacionDescripcion);
+        $("#visualizar_condicionFijacion").text(condicionFijacionDescripcion);       
+    }
+    if (tipo === "FIJACION") {
+        $("#fechaHastaFijacionDivVisualizar").hide();
         $("#visualizar_fechaHastaFijacion").text(hastaFijacion);
     }
 
