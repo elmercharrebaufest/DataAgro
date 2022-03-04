@@ -283,11 +283,11 @@ namespace Molinos.DataAgro.Agent
                     logger.Debug("contrato.CONTRATO " + contrato.CONTRATO);
 
                     contratoParaFijacion.MercAplicada = contrato.KILOS_APLICADOS > 0;
+                    contratoParaFijacion.TarifaAConvenir = sustentables.Any(a=>a.Importe == -1);
                     if (contDA != null)
                     {
-                        contratoParaFijacion.Pase = contDA.TipoPosicionCBOTId == 3;
                         contratoParaFijacion.MercsDeposito = contDA.MercsDeposito ?? false;
-                        contratoParaFijacion.TarifaAConvenir = contDA.TarifaAConvenir ?? false;
+                        contratoParaFijacion.Pase = contDA.TipoPosicionCBOTId == 3;
 
                         var idContratoConAnulaYReemplaza = contDA.Id;
                         existeConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == contDA.Id);
