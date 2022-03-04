@@ -5121,7 +5121,7 @@ function inicializarGrillaContratosPendientes() {
                 }
                 grid.tbody.find("tr").dblclick(function (e) {
                     var data = grid.dataItem(this);
-                    if (data.MercsDeposito && data.TarifaAConvenir) {
+                    if (data.MercsAplicada && data.TarifaAConvenir) {
                         MensErr("Debe completar la tarifa sustentable del contrato en SAP");
                         return;
                     }

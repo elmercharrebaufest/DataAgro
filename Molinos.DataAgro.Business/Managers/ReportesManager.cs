@@ -1480,7 +1480,8 @@ namespace Molinos.DataAgro.Business.Managers
                         /*calculo sin % */x.Precio + x.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId != 4).Sum(a => a.Importe)
                         ).ToString() : (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
                 MercsDeposito = x.MercsDeposito == true ? "X" : "",
-                Pizarra = x.Pizarra
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
             },
             x => negocios.Contains(x.Id)
                 && (moneda == "" || x.MonedaId == moneda || (moneda == "USDM " && x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) || (x.Pizarra == true && moneda == "ARP  "))
@@ -1524,7 +1525,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Destino = "",
                 CondicionFijacion = "",
                 DesdeFijacion = "",
-                HastaFijacion = "",
+                HastaFijacion = x.Contrato == null ?
+                    SqlFunctions.DateName("day", x.FechaHasta) + "/" + SqlFunctions.DatePart("month", x.FechaHasta) + "/" + SqlFunctions.DateName("year", x.FechaHasta) :
+                    SqlFunctions.DateName("day", x.Contrato.HastaFijacion) + "/" + SqlFunctions.DatePart("month", x.Contrato.HastaFijacion) + "/" + SqlFunctions.DateName("year", x.Contrato.HastaFijacion),
                 Base = "",
                 ImporteSustentable = "",
                 FechaDolarizado = "",
@@ -1539,7 +1542,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = x.Observacion ?? "",
                 PrecioNeto = (x.PrecioNeto != null) ? x.PrecioNeto.ToString() : x.Precio.ToString(),
                 MercsDeposito = "",
-                Pizarra = x.Pizarra
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
+
             },
              x => negocios.Contains(x.Id)
                 && (moneda == "" || x.MonedaId == moneda || (x.Pizarra == true && moneda == "ARP  "))

@@ -282,6 +282,7 @@ namespace Molinos.DataAgro.Agent
                     var contDA = contratos.Where(x => x.ContratoSAP == contrato.CONTRATO).FirstOrDefault();
                     logger.Debug("contrato.CONTRATO " + contrato.CONTRATO);
 
+                    contratoParaFijacion.MercAplicada = contrato.KILOS_APLICADOS > 0;
                     if (contDA != null)
                     {
                         contratoParaFijacion.Pase = contDA.TipoPosicionCBOTId == 3;

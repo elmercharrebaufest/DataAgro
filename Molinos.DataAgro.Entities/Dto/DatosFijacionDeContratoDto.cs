@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<SustentableDto> Sustentables { get; set; }
         public bool MercsDeposito { get; set; }
         public bool TarifaAConvenir { get; set; }
+        public bool MercAplicada { get; set; }
     }
 }
 

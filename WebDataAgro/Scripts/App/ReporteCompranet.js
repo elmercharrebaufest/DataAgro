@@ -113,11 +113,11 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
             var jsonD = JSON.parse(data);
 
             var dataFijLargas = jsonD.items.filter(function (el) {
-                var diferenciaDias = DiferenciaFechasEnDias(el.Fecha, el.FechaHasta);
+                var diferenciaDias = DiferenciaFechasEnDias(el.HastaFijacion, el.FechaOperacion);
                 return diferenciaDias > 30;
             });
             var dataFijCortas = jsonD.items.filter(function (el) {
-                var diferenciaDias = DiferenciaFechasEnDias(el.Fecha, el.FechaHasta);
+                var diferenciaDias = DiferenciaFechasEnDias(el.HastaFijacion, el.FechaOperacion);
                 return diferenciaDias <= 30;
             });
 
@@ -128,25 +128,23 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
             dataFijLargas.reduce(function (res, value) {
                 if (!res[value.FechaHasta + value.Moneda]) {
 
-                    res[value.FechaHasta + value.Moneda] = { FechaHasta: value.FechaHasta, Moneda: value.Moneda,Precio: 0, Cantidad: 0 };
+                    res[value.FechaHasta + value.Moneda] = { CantidadTotal: 0, FechaHasta: value.FechaHasta, Moneda: value.Moneda, Precio: value.Precio, Cantidad: value.CantidadD };
                     dFijLargas.push(res[value.FechaHasta + value.Moneda])
                 }
-                res[value.FechaHasta + value.Moneda].Precio += parseFloat(value.Precio.replace(".", "").replace(",","."));
-                res[value.FechaHasta + value.Moneda].Cantidad += parseFloat(value.Cantidad.replace(".", "").replace(",", "."));
+                res[value.FechaHasta + value.Moneda].CantidadTotal += value.CantidadD;
                 return res;
             }, {});
             var dFijCortas = [];
             dataFijCortas.reduce(function (res, value) {
                 if (!res[value.FechaHasta + value.Moneda]) {
 
-                    res[value.FechaHasta + value.Moneda] = { FechaHasta: value.FechaHasta, Moneda: value.Moneda, Precio: 0, Cantidad: 0 };
+                    res[value.FechaHasta + value.Moneda] = { CantidadTotal: 0, FechaHasta: value.FechaHasta, Moneda: value.Moneda, Precio: value.Precio, Cantidad: value.CantidadD };
                     dFijCortas.push(res[value.FechaHasta + value.Moneda])
                 }
-                res[value.FechaHasta + value.Moneda].PrecioTotal += parseFloat(value.Precio.replace(".", "").replace(",", "."));
-                res[value.FechaHasta + value.Moneda].CantidadTotal += parseFloat(value.Cantidad.replace(".", "").replace(",", "."));
+                res[value.FechaHasta + value.Moneda].CantidadTotal += value.CantidadD;
                 return res;
             }, {});
-            
+
             crearGrillaFijacionLargaCorta(JSON.stringify({ items: dFijLargas, total: dFijLargas.length }), 'grillaFijacionLarga');
             crearGrillaFijacionLargaCorta(JSON.stringify({ items: dFijCortas, total: dFijCortas.length }), 'grillaFijacionCorta');
         } else {
@@ -266,7 +264,7 @@ function crearGrilladetallePosicion(href, esFijacion) {
                 { field: "CantidadD", aggregate: "sum" },
             ]
         },
-        dataBound: (esFijacion == true)? ShowModalFijacion : ShowModal,
+        dataBound: (esFijacion == true) ? ShowModalFijacion : ShowModal,
         sortable: true,
         scrollable: false,
         reorderable: false,
@@ -741,7 +739,7 @@ function crearGrilladetalleFijacion(href) {
 
 
 function crearGrillaFijacionLargaCorta(href, grilla) {
-    $("#"+ grilla +"").kendoGrid({
+    $("#" + grilla + "").kendoGrid({
         culture: "es-AR",
         dataSource: {
             data: JSON.parse(href),
@@ -797,12 +795,15 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
                         title: "Precio",
                         width: 100,
                         template: function (dataItem) {
-                            return dataItem.Precio.toFixed(2).toLocaleString('de-DE');
+                            return kendo.toString(dataItem.Precio, "n0");
                         }
                     }, {
-                        field: "Cantidad",
+                        field: "CantidadTotal",
                         title: "Toneladas",
-                        width: 150
+                        width: 150,
+                        template: function (dataItem) {
+                            return kendo.toString(dataItem.CantidadTotal, "n0");
+                        }
                     }
                 ]
             }
@@ -1045,7 +1046,7 @@ function CargarComboMaterial() {
 
 
 function setearValoresComboDeInicio() {
-    var url ="/ReporteCompraNet/ReporteComprasDelDia";
+    var url = "/ReporteCompraNet/ReporteComprasDelDia";
     $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString + '&centroId=' + ObtenerValorCentroId() + '&materialId=' + ObtenerValorMaterialId().toString() + "&verFijaciones=" + getVerFijaciones());
 }
 

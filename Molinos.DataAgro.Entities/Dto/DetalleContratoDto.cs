@@ -54,6 +54,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaDate { get; set; }
         public bool? Pizarra { get; set; }
         public bool? Virtual { get; set; }
+        public string FechaOperacion { get; set; }
     }
 }
 
