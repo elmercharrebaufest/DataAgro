@@ -126,22 +126,22 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
 
             var dFijLargas = [];
             dataFijLargas.reduce(function (res, value) {
-                if (!res[value.FechaHasta + value.Moneda]) {
+                if (!res[value.HastaFijacion + value.Moneda]) {
 
-                    res[value.FechaHasta + value.Moneda] = { CantidadTotal: 0, FechaHasta: value.FechaHasta, Moneda: value.Moneda, Precio: value.Precio, Cantidad: value.CantidadD };
-                    dFijLargas.push(res[value.FechaHasta + value.Moneda])
+                    res[value.HastaFijacion + value.Moneda] = { CantidadTotal: 0, HastaFijacion: value.HastaFijacion, Moneda: value.Moneda, Precio: value.Precio, Cantidad: value.CantidadD };
+                    dFijLargas.push(res[value.HastaFijacion + value.Moneda])
                 }
-                res[value.FechaHasta + value.Moneda].CantidadTotal += value.CantidadD;
+                res[value.HastaFijacion + value.Moneda].CantidadTotal += value.CantidadD;
                 return res;
             }, {});
             var dFijCortas = [];
             dataFijCortas.reduce(function (res, value) {
-                if (!res[value.FechaHasta + value.Moneda]) {
+                if (!res[value.HastaFijacion + value.Moneda]) {
 
-                    res[value.FechaHasta + value.Moneda] = { CantidadTotal: 0, FechaHasta: value.FechaHasta, Moneda: value.Moneda, Precio: value.Precio, Cantidad: value.CantidadD };
-                    dFijCortas.push(res[value.FechaHasta + value.Moneda])
+                    res[value.HastaFijacion + value.Moneda] = { CantidadTotal: 0, HastaFijacion: value.HastaFijacion, Moneda: value.Moneda, Precio: value.Precio, Cantidad: value.CantidadD };
+                    dFijCortas.push(res[value.HastaFijacion + value.Moneda])
                 }
-                res[value.FechaHasta + value.Moneda].CantidadTotal += value.CantidadD;
+                res[value.HastaFijacion + value.Moneda].CantidadTotal += value.CantidadD;
                 return res;
             }, {});
 
@@ -782,7 +782,7 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
                 title: grilla == "grillaFijacionLarga" ? "Fijaciones Largas" : "Fijaciones Cortas",
                 columns: [
                     {
-                        field: "FechaHasta",
+                        field: "HastaFijacion",
                         title: "Fijación Hasta",
                         width: 50
                     }
