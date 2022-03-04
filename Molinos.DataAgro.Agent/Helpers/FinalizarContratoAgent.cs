@@ -205,7 +205,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     var descuentoGeneralFueraPrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                     string fechaDolarizadoString = contrato.FechaDolarizado?.ToString("yyyy-MM-dd");
-                    string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
+                    //string sustentableString = contrato.ImporteSustentable != null && contrato.ImporteSustentable.Value != 0 ? "X" : "";
                     string noInformaSioString = contrato.NoInformaSio != null && contrato.NoInformaSio.Value ? "X" : "";
                     string especialString = calidad.Count > 0 ? "4" : "1";
 
@@ -253,7 +253,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PRECIO = (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio,
                             PROVEEDOR = contrato.Proveedor.CUIT,
                             PROVINCIA = contrato.ProvinciaId.ToString(),
-                            SUSTENTABLE = sustentableString,
+                            SUSTENTABLE = contrato.Sustentable == true ? "X" : "",
                             ESPECIAL = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.CodigoSap : especialString,
                             FECHA = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.FechaOperacion.ToString("yyyy-MM-dd") :
                             repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),

@@ -414,7 +414,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             PRECIO = contrato.PrecioNeto ?? contrato.Precio,
                             PROVEEDOR = repositorio.Obtener<Proveedor, string>(x => contrato.ProveedorId == x.ProveedorId, x => x.CUIT),
                             PROVINCIA = contrato.ProvinciaId.ToString(),
-                            SUSTENTABLE = sustentableString,
+                            SUSTENTABLE = contrato.Sustentable == true ? "X" : "",
                             ESPECIAL = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap),
                             FECHA = contrato.FechaOperacion.ToString("yyyy-MM-dd"),
                             USUARIO = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory),
