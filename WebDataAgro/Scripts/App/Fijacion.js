@@ -5122,7 +5122,7 @@ function inicializarGrillaContratosPendientes() {
                 grid.tbody.find("tr").dblclick(function (e) {
                     var data = grid.dataItem(this);
                     if (data.MercAplicada && data.TarifaAConvenir) {
-                        MensErr("Debe completar la tarifa sustentable del contrato en SAP");
+                        MensErr("Debe completar la tarifa sustentable del contrato en SAP " + data.ContratoId);
                         return;
                     }
                     $("#contratoId").val(data.ContratoId);

@@ -2366,16 +2366,17 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     if (condicionFijacionDescripcion === "undefined" || condicionFijacionDescripcion === "null" || condicionFijacionDescripcion === "false" || condicionFijacionDescripcion === "") {
         $("#desdeHastaFijacionDivVisualizar").hide();
         $("#condicionFijacionDivVisualisar").hide();
-        $("#fechaHastaFijacionDivVisualizar").hide();
     } else {
         $("#visualizar_desdeHastaFijacion").text(desdeHastaFijacion);
         $("#visualizar_condicionFijacion").text(condicionFijacionDescripcion);       
     }
     if (tipo === "FIJACION") {
-        $("#fechaHastaFijacionDivVisualizar").hide();
+        $("#fechaHastaFijacionDivVisualizar").show();
         $("#visualizar_fechaHastaFijacion").text(hastaFijacion);
-    }
+    } else {
+        $("#fechaHastaFijacionDivVisualizar").hide();
 
+    }
     planCanje === "true" ? $("#visualizar_planCanje").text("Si") : $("#visualizar_planCanje").text("null");
     consignatario === "true" ? $("#visualizar_consignatario").text("Consignatario") : $("#visualizar_consignatario").text("");
     cantidadCamiones !== 0 && cantidadCamiones !== "null" ? $("#visualizar_cantidadDeCamiones").text(cantidadCamiones) : $("#visualizar_cantidadDeCamiones").text("null");
