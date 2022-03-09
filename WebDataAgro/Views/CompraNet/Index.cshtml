@@ -39,8 +39,8 @@
     var confirmarNegociosGirasolAO = PermisosHelper.Is(PermisosDataAgro.ConfirmarNegociosGirasolAO);
     var fijacionVirtual = PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual);
     var asociarNegocios = PermisosHelper.Is(PermisosDataAgro.AsociarNegocio);
+    var noDefault = PermisosHelper.Is(PermisosDataAgro.ActualizarCompraNet);
 
-    
 }
 <script>
     comercialId = '@ViewBag.comercialId';
@@ -160,7 +160,7 @@
                     <label style="width: 110px">Notificaciones: </label><input type="checkbox" id="suscribirNotificacion" name="suscribirNotificacion" value="suscribirNotificacion">
                 </div>
                 <div class="autoRecarga col-md-6 noPadding">
-                    <label style="width: 110px">Autorecargar:</label> <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" checked>
+                    <label style="width: 110px">Autorecargar:</label> <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" @(noDefault ? "": "checked")>
                 </div>
             </div>
         }
