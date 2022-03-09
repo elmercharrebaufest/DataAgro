@@ -168,6 +168,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         AsociarNegocio = 347,
         [Display(ResourceType = typeof(Text), Name = "ImporteSustentableEspecial")]
         ImporteSustentableEspecial = 348,
+        [Display(ResourceType = typeof(Text), Name = "ActualizarCompraNet")]
+        ActualizarCompraNet = 349,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

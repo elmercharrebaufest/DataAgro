@@ -99,5 +99,6 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult GrabarContratoAPrecioTercero(Contrato oContrato);
         GrabarContratoResult GrabarContratoAFijarTercero(Contrato oContrato);
         bool Tiene2doCondicionalAsociado(int contratoId);
+        int DevolverMilisegundos();
     }
 }

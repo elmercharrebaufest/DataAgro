@@ -34,5 +34,6 @@ namespace Molinos.DataAgro.Entities.Entities
 
 
         public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
+        public int Actualizacion { get; set; }
     }
 }

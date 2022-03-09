@@ -39,7 +39,7 @@ namespace WebDataAgro.Models
         public int ToleranciaPaseMin { get; set; }
 
         public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
-
+        public int Actualizacion { get; set; }
         public decimal ImporteSustentableEspecial { get;  set; }
     }
 }

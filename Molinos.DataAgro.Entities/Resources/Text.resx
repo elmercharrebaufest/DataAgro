@@ -875,4 +875,7 @@
   <data name="GenerarBoleto" xml:space="preserve">
     <value>Generar Boleto</value>
   </data>
+  <data name="ActualizarCompraNet" xml:space="preserve">
+    <value>Actualizar ALV CompraNet</value>
+  </data>
 </root>

@@ -21,6 +21,7 @@
     [ImporteSustentableEspecial] DECIMAL(11, 2) NULL DEFAULT 20, 
 
     [AlgoritmoKilosMinimosParaSugerencia] INT NOT NULL DEFAULT 20000, 
+    [Actualizacion] INT NULL DEFAULT 30000, 
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

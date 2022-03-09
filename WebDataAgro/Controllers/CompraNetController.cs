@@ -103,7 +103,7 @@ namespace WebDataAgro.Controllers
         {
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             ViewBag.comercialId = GlobalVariables.ComercialId;
-
+            ViewBag.Actualizacion = mobjContratoManager.DevolverMilisegundos();
             return View();
         }
 

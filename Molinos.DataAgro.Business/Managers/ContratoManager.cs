@@ -6699,5 +6699,16 @@ namespace Molinos.DataAgro.Business.Managers
                 a.EstadoId != (int)EnumEstadoContrato.Rechazado)
             );
         }
+
+        public int DevolverMilisegundos()
+        {
+            var ms = 30000;
+            if (PermisosHelper.Is(PermisosDataAgro.ActualizarCompraNet)){
+                var configuracion = configuracionManager.TraerConfiguraciones();
+                ms = configuracion != null ? configuracion.Actualizacion : 30000;
+            }
+
+            return ms;
+        }
     }
 }

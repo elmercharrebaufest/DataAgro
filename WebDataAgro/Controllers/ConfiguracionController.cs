@@ -43,10 +43,9 @@ namespace WebDataAgro.Controllers
                 RedespachoMaximoARP = conf != null ? conf.RedespachoMaximoARP : 0,
                 ToleranciaPaseMin = conf != null ? conf.ToleranciaPaseMin : 0,
                 ToleranciaPaseMax = conf != null ? conf.ToleranciaPaseMax : 0,
-
-                AlgoritmoKilosMinimosParaSugerencia = conf != null ? conf.AlgoritmoKilosMinimosParaSugerencia : 0,
                 ImporteSustentableEspecial = conf.ImporteSustentableEspecial,
-
+                AlgoritmoKilosMinimosParaSugerencia = conf != null ? conf.AlgoritmoKilosMinimosParaSugerencia : 0,
+                Actualizacion = conf != null ? conf.Actualizacion : 1,
             });
         }
         [HttpPost]
@@ -90,7 +89,7 @@ namespace WebDataAgro.Controllers
 
                 AlgoritmoKilosMinimosParaSugerencia = configuracion.AlgoritmoKilosMinimosParaSugerencia,
                 ImporteSustentableEspecial = configuracion.ImporteSustentableEspecial,
-
+                Actualizacion = configuracion.Actualizacion
             };
             return entidad;
         }

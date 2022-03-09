@@ -61,6 +61,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actualizar ALV CompraNet.
+        /// </summary>
+        public static string ActualizarCompraNet {
+            get {
+                return ResourceManager.GetString("ActualizarCompraNet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Algoritimo de Cupos.
         /// </summary>
         public static string Administracion_AlgoritimoDeCupos {

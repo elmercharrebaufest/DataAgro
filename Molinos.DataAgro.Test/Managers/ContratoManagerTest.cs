@@ -5173,5 +5173,12 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
+
+        public void DevolverMilisegundosTestOk()
+        {
+            configuracionManagermock.Setup(x => x.TraerConfiguraciones());
+            var resultado = target.DevolverMilisegundos();
+            configuracionManagermock.Verify(x => x.TraerConfiguraciones(), Times.Once);
+        }
     }
 }

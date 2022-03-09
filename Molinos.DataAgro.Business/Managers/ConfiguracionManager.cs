@@ -54,10 +54,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.ToleranciaPaseMax = oConfiguracion.ToleranciaPaseMax;
                 oConfiguracionSave.ToleranciaPaseMin = oConfiguracion.ToleranciaPaseMin;
                 oConfiguracionSave.ImporteSustentableEspecial = oConfiguracion.ImporteSustentableEspecial;
-
-
-
                 oConfiguracionSave.AlgoritmoKilosMinimosParaSugerencia = oConfiguracion.AlgoritmoKilosMinimosParaSugerencia;
+                oConfiguracionSave.Actualizacion = oConfiguracion.Actualizacion;
             }
 
             else

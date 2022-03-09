@@ -34,7 +34,7 @@ var confirmarNegociosGirasolAO;
 var esVirtual;
 var asociarNegocios;
 var asociados = [];
-
+var actualizacionMs;
 
 $(document).ready(function () {
     creaNegocios = ConvertirStringABool(creaNegocios);
@@ -66,7 +66,6 @@ $(document).ready(function () {
     confirmarNegociosGirasolAO = ConvertirStringABool(confirmarNegociosGirasolAO);
     esVirtual = ConvertirStringABool(esVirtual);
     asociarNegocios = ConvertirStringABool(asociarNegocios);
-
     kendo.culture("es-AR");
 
     $('#menuproveedor').hide();
@@ -541,8 +540,9 @@ function AutoRecargar() {
         if (document.getElementById('checkRecarga').checked == true) {
             filasSeleccionadas = SeleccionarElementos();
             recargarGrilla();
+            console.log("hola");
         }
-    }, 30000);
+    }, Number(actualizacionMs));
 
 }
 
