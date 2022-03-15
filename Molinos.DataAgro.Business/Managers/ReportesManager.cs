@@ -2707,8 +2707,8 @@ namespace Molinos.DataAgro.Business.Managers
             List<Contrato> contratosAFijarPasePendientes = new List<Contrato>();
             foreach (var item in contratosAFijarPase)
             {
-                var cont = fijacionesKilos.Where(x => x.ContratoSAP == item.ContratoSAP).SingleOrDefault();
-                if (cont == null || item.Cantidad > cont.Cantidad)
+                var fijacionKg = fijacionesKilos.Where(x => x.ContratoSAP == item.ContratoSAP).SingleOrDefault();
+                if (fijacionKg == null || item.Cantidad > fijacionKg.Cantidad)
                 {
                     pesificado.Add(new PesificarAgentDto
                     {
@@ -2723,16 +2723,16 @@ namespace Molinos.DataAgro.Business.Managers
                         DolarizadoNoProductor = item.Corredor == null ? false : true,
                         FechaUltimaAplicacion = null,
                         Fijacion = "",
-                        KgNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) : 0,
-                        USDNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) * Convert.ToInt32(item.PrecioPonderado) : 0,
-                        KgVencimientoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) : 0,
-                        USDPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)) * Convert.ToInt32(item.PrecioPonderado) : 0,
-                        KgTotales = Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)),
-                        CantidadPendiente = Convert.ToInt32(item.Cantidad - (cont == null ? 0 : cont.Cantidad)),
+                        KgNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (fijacionKg == null ? 0 : fijacionKg.Cantidad)) : 0,
+                        USDNoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) > DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (fijacionKg == null ? 0 : fijacionKg.Cantidad)) * Convert.ToInt32(item.PrecioPonderado) : 0,
+                        KgVencimientoPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (fijacionKg == null ? 0 : fijacionKg.Cantidad)) : 0,
+                        USDPesificable = new DateTime(int.Parse(item.PosicionCBOT.Split('.').Last()), int.Parse(item.PosicionCBOT.Split('.').First()), 01) <= DateTime.Now.Date ? Convert.ToInt32(item.Cantidad - (fijacionKg == null ? 0 : fijacionKg.Cantidad)) * Convert.ToInt32(item.PrecioPonderado) : 0,
+                        KgTotales = Convert.ToInt32(item.Cantidad - (fijacionKg == null ? 0 : fijacionKg.Cantidad)),
+                        CantidadPendiente = Convert.ToInt32(item.Cantidad - (fijacionKg == null ? 0 : fijacionKg.Cantidad)),
                         Material = item.Material.Codigo,
                         Unidad = "Kg",
                         Moneda = "USDM ",
-                        Precio = item.PrecioPonderado.Value,
+                        Precio = item.PrecioPonderado ?? 0,
                         NombreCorredor = item.Corredor == null ? "" : item.Corredor.RazonSocial,
                         NombreVendedor = item.Proveedor.RazonSocial,
                         Pase = true,
