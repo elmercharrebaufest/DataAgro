@@ -114,11 +114,11 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
 
             var dataFijLargas = jsonD.items.filter(function (el) {
                 var diferenciaDias = DiferenciaFechasEnDias(el.HastaFijacion, el.FechaOperacion);
-                return diferenciaDias > 30;
+                return diferenciaDias > 31;
             });
             var dataFijCortas = jsonD.items.filter(function (el) {
                 var diferenciaDias = DiferenciaFechasEnDias(el.HastaFijacion, el.FechaOperacion);
-                return diferenciaDias <= 30;
+                return diferenciaDias <= 31;
             });
 
             dataFijLargas.sort((a, b) => (parseFloat(a.Precio) > parseFloat(b.Precio)) ? -1 : ((parseFloat(b.Precio) > parseFloat(a.Precio)) ? 1 : 0))

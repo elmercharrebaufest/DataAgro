@@ -118,7 +118,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         BoletoDescripcion = (contrato is Contrato) ? (contrato as Contrato).Boleto.Descripcion : "",
                         BolsaDescripcion = (contrato is Contrato) ? (contrato as Contrato).Bolsa.Descripcion : "",
                         DesdeFijacion = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).DesdeFijacion) : null,
-                        HastaFijacion = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).HastaFijacion) : null,
+                        HastaFijacion = (contrato is Contrato) ? DbFunctions.TruncateTime((contrato as Contrato).HastaFijacion) : (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).HastaFijacion != null ? DbFunctions.TruncateTime((contrato as FijacionDePrecioContrato).HastaFijacion) : null,
                         CondicionFijacion = (contrato is Contrato) ? (contrato as Contrato).CondicionFijacionId : null,
                         CondicionFijacionDescripcion = (contrato is Contrato) ? (contrato as Contrato).CondicionFijacion.Descripcion : "",
                         ClasificacionId = (contrato is Contrato) ? (contrato as Contrato).ClasificacionId : (int?)null,
