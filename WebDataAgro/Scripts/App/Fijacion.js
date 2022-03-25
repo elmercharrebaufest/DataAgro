@@ -131,6 +131,8 @@ function cargarDatosAFijarEnFijacion(afijar) {
 
     $("#desdecontrato").text(afijar.FechaDesde);
     $("#hastacontrato").text(afijar.FechaHasta);
+    $("#desdeentrega").text(afijar.DesdeEntrega);
+    $("#hastaentrega").text(afijar.HastaEntrega);
 
     $("#clasficacionContrato").text(afijar.Clasificacion);
 
@@ -5227,6 +5229,23 @@ function inicializarGrillaContratosPendientes() {
                             return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + dataItem.FechaHasta + "</strong></label>"
                         } else {
                             return "<label  style='font-weight: bold;'> <strong>" + dataItem.FechaHasta + "</strong></label>"
+                        }
+                    }
+                },
+                {
+                    field: "DesdeEntrega", title: "Desde<br/>Entrega", template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + dataItem.DesdeEntrega + "</strong></label>"
+                        } else {
+                            return "<label  style='font-weight: bold;'> <strong>" + dataItem.DesdeEntrega + "</strong></label>"
+                        }
+                    }
+                }, {
+                    field: "HastaEntrega", title: "Hasta<br/>Entrega", template: function (dataItem) {
+                        if (dataItem.Color != "") {
+                            return "<label  style='font-weight: bold; color: " + dataItem.Color + "'> <strong>" + dataItem.HastaEntrega + "</strong></label>"
+                        } else {
+                            return "<label  style='font-weight: bold;'> <strong>" + dataItem.HastaEntrega + "</strong></label>"
                         }
                     }
                 },

@@ -50,6 +50,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string CodLocalidadOrigen { get; set; }
         public string NroEstablecimientoOrigen { get; set; }
         public int? TipoNegocioId { get; set; }
+        public bool? ConDescarga { get; set; }
         public int? ConfiguracionEspacioDinamicoId { get; set; }
         [ForeignKey("ConfiguracionEspacioDinamicoId")]
         public virtual ConfiguracionEspacioDinamico ConfiguracionEspacioDinamico { get; set; }
@@ -83,6 +84,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? NegocioId { get; set; }
         public bool? Cumplimiento { get; set; }
 
+        [ForeignKey("AdministracionCupoId")]
+        public virtual AdministracionCupo AdministracionCupo { get; set; }
+        public int? AdministracionCupoId { get; set; }
         public object Clone()
         {
             return this.MemberwiseClone();

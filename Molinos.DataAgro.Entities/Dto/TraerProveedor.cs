@@ -93,7 +93,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? PlanCanje { get; set; }
         public bool? Deshabilitado { get; set; }
         public string Alias { get; set; }
-        public string Comisionista { get; set; }
+        public string RazonSocialComisionista { get; set; }
+        public bool? Comisionista { get; set; }
         public int? ComisionistaId { get; set; }
         public bool? CuposConRiesgo { get; set; }
 

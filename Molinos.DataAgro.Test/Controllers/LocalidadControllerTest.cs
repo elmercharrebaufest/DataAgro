@@ -103,9 +103,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             localidadManagerMock.Setup(x => x.EliminarLocalidad(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             var result = target.Eliminar(new AbmLocalidadParam { LocalidadId = 1});
-
             Assert.NotNull(result);
-
             var a = serializer.Serialize(result);
             Assert.AreEqual(
                 "{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":1,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}",

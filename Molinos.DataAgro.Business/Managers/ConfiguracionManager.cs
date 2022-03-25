@@ -56,6 +56,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.ImporteSustentableEspecial = oConfiguracion.ImporteSustentableEspecial;
                 oConfiguracionSave.AlgoritmoKilosMinimosParaSugerencia = oConfiguracion.AlgoritmoKilosMinimosParaSugerencia;
                 oConfiguracionSave.Actualizacion = oConfiguracion.Actualizacion;
+                oConfiguracionSave.AlgoritmoProcMaxSugerenciasProveedorDia = oConfiguracion.AlgoritmoProcMaxSugerenciasProveedorDia;
             }
 
             else

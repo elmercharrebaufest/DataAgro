@@ -194,7 +194,7 @@ function FormatearString(string, moneda) {
     var numero = (parseFloat(string)).toLocaleString('es-AR', { minimumFractionDigits: 2 }) + ' ' + moneda;
     return numero;
 }
-function botonPendiente(dataItem, icono) {
+function botonPendiente(dataItem, icono, esModalVisualizar) {
     if ((modificaNegocios || (dataItem.Canje == true && esCanje)) && !externo &&
         (dataItem.PrestamoDevolucion != true && dataItem.Venta != true && dataItem.Virtual != true &&
             (dataItem.Canje == null || dataItem.Canje == false) || (dataItem.Canje == true && esCanje) ||
@@ -204,7 +204,13 @@ function botonPendiente(dataItem, icono) {
                 (dataItem.Venta == null || dataItem.Venta == false) || (dataItem.Venta == true && esVenta)) ||
             (dataItem.Canje != true && dataItem.Venta != true && dataItem.PrestamoDevolucion != true &&
                 (dataItem.Virtual == null || dataItem.Virtual == false) || (dataItem.Virtual == true && esVirtual)))) {
-        return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
+        var cerrarModalVisualizar = '';
+        if (esModalVisualizar == true) {
+            cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
+        }
+        return '<button data-toggle="tooltip" title="Editar" ' +
+            cerrarModalVisualizar +
+            'onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
     } else {
@@ -230,7 +236,11 @@ function cambiarMarca(id, ocultar) {
     result = MSExecuteOnServer('/CompraNet/NoMostrarEnTablero', marcar);
     recargarGrilla();
 }
-function botonModificarFinalizados(dataItem, icono) {
+function botonModificarFinalizados(dataItem, icono, esModalVisualizar) {
+    var cerrarModalVisualizar = ' ';
+    if (esModalVisualizar == true) {
+        cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
+    }
     if (((modificaFinalizados && (dataItem.Virtual == false || dataItem.Virtual == null)) || (dataItem.Canje == true && esCanje) || dataItem.Virtual == false)
         && (dataItem.ContratoId || dataItem.FijacionDePrecioContratoId)
         && (dataItem.TipoNegocio != "FIJACION PASE")
@@ -238,18 +248,25 @@ function botonModificarFinalizados(dataItem, icono) {
             || (dataItem.Canje == true && esCanje)
             || (dataItem.PrestamoDevolucion == true && esPrestamo))
         || (!modificaFinalizados && dataItem.TipoNegocioId == 3 && (modificacionFijacionDolarizado || modificacionFijacionDolarizadoExpress))) {
-        return '<button data-toggle="tooltip" title="Editar" onclick="editarContrato(' +
+        return '<button data-toggle="tooltip" title="Editar"' +
+            cerrarModalVisualizar +
+            'onclick="editarContrato(' +
             "'" + dataItem.Id + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ')"><i class="fa ' + icono + '"></i></button>';
     } else {
         return "<div</div>";
     }
 }
-function botonConfirmadoTilde(dataItem, icono) {
+function botonConfirmadoTilde(dataItem, icono, esModalVisualizar) {
     if (confirmaNegocios && !externo && puedeConfirmarNegocio(dataItem)) {
         var mensaje = ModificoPrecio(dataItem);
-
-        return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalConfirmadoTilde(' +
+        var cerrarModalVisualizar = '';
+        if (esModalVisualizar == true) {
+            cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
+        }
+        return '<button data-toggle="tooltip" title="Confirmar" ' +
+            cerrarModalVisualizar + 
+            'onclick = "ModalConfirmadoTilde(' +
             "'" + dataItem.Estado + "'" + ',' +
             "'" + dataItem.ContratoId + "'" + ',' +
             "'" + dataItem.ContratoSAP + "'" + ',' +
@@ -298,12 +315,18 @@ function puedeConfirmarNegocio(dataItem) {
             || (dataItem.MaterialId == 5 && confirmarNegociosGirasolAO))
     );
 }
-function botonFinalizado(dataItem, icono) {
+function botonFinalizado(dataItem, icono, esModalVisualizar) {
     if (dataItem.TipoNegocioId == 6) {
         return '<div></div>';
     }
     if (finalizaNegocios && !externo) {
-        return '<button data-toggle="tooltip" title="Finalizar" onclick="ModalFinalizado(' +
+        var cerrarModalVisualizar = ' ';
+        if (esModalVisualizar == true) {
+            cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
+        }
+        return '<button data-toggle="tooltip" title="Finalizar"' +
+            cerrarModalVisualizar +
+            'onclick="ModalFinalizado(' +
             "'" + dataItem.ContratoId + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ',' +
             "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
@@ -331,6 +354,7 @@ function botonAprobar(dataItem, icono) {
 }
 function botonVisualizar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Visualizar" onclick="ModalVisualizar(' +
+        "'" + dataItem.Id + "'" + ',' +
         "'" + dataItem.ContratoId + "'" + ',' +
         "'" + dataItem.Proveedor + "'" + ',' +
         "'" + dataItem.Corredor + "'" + ',' +
@@ -442,13 +466,28 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.MailVentaBoleto + "'" + ',' +
         "'" + htmlEncode(dataItem.RazonSocialProveedorComisionista == null ? "" : dataItem.RazonSocialProveedorComisionista) + "'" + ',' +
         "'" + dataItem.KgMinimo + "'" + ',' +
-        "'" + dataItem.KgMaximo + "'" +
+        "'" + dataItem.KgMaximo + "'" + ',' +
+        "'" + dataItem.ComercialZonaId + "'" + ',' +
+        "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
+        "'" + dataItem.TipoNegocioId + "'" + ',' +
+        "'" + dataItem.AcuerdoId + "'" + ',' +
+        "'" + dataItem.AgenteId + "'" + ',' +
+        "'" + dataItem.FasonId + "'" + ',' +
+        "'" + dataItem.Estado + "'" + ',' +
+        "'" + dataItem.MaterialId + "'" + ',' +
+        "'" + htmlEncode(dataItem.Virtual == null ? "" : dataItem.Virtual) + "'" +
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
-function botonBorrar(dataItem, icono) {
+function botonBorrar(dataItem, icono, esModalVisualizar) {
     if (eliminaNegocios && !externo) {
-        return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrar(' +
+        var cerrarModalVisualizar = ' ';
+        if (esModalVisualizar == true) {
+            cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
+        }
+        return '<button data-toggle="tooltip" title="Rechazar"' +
+            cerrarModalVisualizar +
+            'onclick="ModalBorrar(' +
             "'" + dataItem.Proveedor + "'" + ',' +
             "'" + dataItem.ContratoId + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ',' +
@@ -463,14 +502,20 @@ function botonBorrar(dataItem, icono) {
     }
 }
 
-function botonBorrarPreanulado(dataItem, icono) {
+function botonBorrarPreanulado(dataItem, icono, esModalVisualizar) {
     if (anular) {
         var KilosPendientes = 0;
         if (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true) {
             var kilospendientesFijacion = MSExecuteOnServer('/CompraNet/DevolverKilosPendientesAnularFijacionCanje', { id: dataItem.FijacionDePrecioContratoId });
             KilosPendientes = kilospendientesFijacion.KilosPendientes;
         }
-        return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalBorrarPreAnulado(' +
+        var cerrarModalVisualizar = ' ';
+        if (esModalVisualizar == true) {
+            cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
+        }
+        return '<button data-toggle="tooltip" title="Rechazar"' +
+            cerrarModalVisualizar +
+            'onclick="ModalBorrarPreAnulado(' +
             "'" + dataItem.Proveedor + "'" + ',' +
             "'" + dataItem.ContratoId + "'" + ',' +
             "'" + dataItem.TipoNegocioId + "'" + ',' +
@@ -487,12 +532,18 @@ function botonBorrarPreanulado(dataItem, icono) {
     }
 }
 
-function botonPreAnular(dataItem, icono) {
+function botonPreAnular(dataItem, icono, esModalVisualizar) {
     if (preanular && dataItem.ContratoId || (preanular && (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true))) {
+        var cerrarModalVisualizar = ' ';
+        if (esModalVisualizar == true) {
+            cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
+        }
         if (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true) {
             var kilospendientesFijacion = MSExecuteOnServer('/CompraNet/DevolverKilosPendientesAnularFijacionCanje', { id: dataItem.FijacionDePrecioContratoId });
             if (kilospendientesFijacion.KilosPendientes > 0) {
-                return '<button data-toggle="tooltip" title="PreAnular" onclick="ModalPreAnular(' +
+                return '<button data-toggle="tooltip" title="PreAnular"' +
+                    cerrarModalVisualizar +
+                    'onclick="ModalPreAnular(' +
                     "'" + dataItem.ContratoId + "'" + ',' +
                     "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
                     "'" + dataItem.Proveedor + "'" + ',' +
@@ -504,7 +555,9 @@ function botonPreAnular(dataItem, icono) {
                 return '<div></div>';
             }
         } else {
-            return '<button data-toggle="tooltip" title="PreAnular" onclick="ModalPreAnular(' +
+            return '<button data-toggle="tooltip" title="PreAnular"' +
+                cerrarModalVisualizar +
+                'onclick="ModalPreAnular(' +
                 "'" + dataItem.ContratoId + "'" + ',' +
                 "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
                 "'" + dataItem.Proveedor + "'" + ',' +
@@ -2149,7 +2202,7 @@ function GuardarAmpliacion(ampliacion) {
     $("#contratoIdAmpliaciones").val('');
 }
 
-function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda,
+function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda,
     campana, provincia, localidad, nro_SAP, negocio, sustentable, sustentablePrecio, sustentableMonedaId, tarifaAConvenir ,dolarizadoFecha, pesificadoDias, informaSIO,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
@@ -2158,9 +2211,97 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, descripcionOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
     Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
     Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional,
-    CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta, RazonsocialProveedorComisionista, minimo, maximo
+    CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta, RazonsocialProveedorComisionista, minimo, maximo,
+    ComercialZonaId, FijacionDePrecioContratoId, TipoNegocioId, AcuerdoId, AgenteId, FasonId, Estado, MaterialId, virtual
 ) {
+    var dataItem = {
+        Id : id,
+        Estado: Estado,
+        ContratoId: contrato,
+        ContratoSAP: nro_SAP,
+        FijacionDePrecioContratoId: FijacionDePrecioContratoId,
+        TipoNegocioId: TipoNegocioId,
+        AcuerdoId: AcuerdoId,
+        AgenteID: AgenteId,
+        FasonId: FasonId,
+        TipoPosicionCBOT: TipoPosicionCBOT,
+
+        ComercialZonaId: ComercialZonaId,
+        MaterialId: MaterialId,
+
+        ComercialCreadorId: comercialId,
+        DestinoId: destino,
+        Moneda: moneda,
+        PrecioPlazo: precio,
+        Precio: precio,
+        Virtual: virtual,
+        Proveedor : proveedor
+    };
     $("#modalVisualizar").modal('show');
+
+    if (Estado == '1') {//pendiente
+        $("#botoneriaPendDiv").html(botonPendiente(dataItem, 'fa-pencil pend', true) +
+            botonConfirmadoTilde(dataItem, 'fa-check pend', true) +
+            botonBorrar(dataItem, 'fa-trash pend', true))
+    }
+    if (Estado == '2') {//confirmado
+        if (dataItem.TipoNegocioId == 6 || dataItem.TipoNegocioId == 5) {
+            $("#botoneriaConfDiv").html(botonPendiente(dataItem, 'fa-pencil conf', true) +
+                botonBorrar(dataItem, 'fa-trash conf'));
+        } else {
+            $("#botoneriaConfDiv").html(botonPendiente(dataItem, 'fa-pencil conf', true) +
+                botonFinalizado(dataItem, 'fa-flag-checkered conf', true) +
+                botonBorrar(dataItem, 'fa-trash conf', true));
+        }
+    }
+    if (Estado == '3') {//oferta
+        $("#botoneriaOferDiv").html(botonPendiente(dataItem, 'fa-pencil ofe', true) +
+            botonConfirmadoTilde(dataItem, 'fa-check ofe', true) +
+            botonBorrar(dataItem, 'fa-trash ofe', true))
+    }
+    if (Estado == '4') {//error
+        if (dataItem.TipoNegocioId == 6) {
+            $("#botoneriaErroDiv").html(botonPendiente(dataItem, 'fa-pencil err', true) +
+                botonBorrar(dataItem, 'fa-trash err', true));
+        } else {
+            $("#botoneriaErroDiv").html(botonPendiente(dataItem, 'fa-pencil err', true) +
+                botonFinalizado(dataItem, 'fa-flag-checkered err', true) +
+                botonBorrar(dataItem, 'fa-trash err', true));
+        }
+    }
+    if (Estado == '5') { //Finalizado
+        //if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId)) {
+            $("#botoneriaFinaDiv").html(((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin', true)) +
+                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin', true))
+                );
+        //} else {
+        //    $("#botoneriaFinaDiv").html('');
+        //}
+    }
+    if (Estado == 6) { //Rechazado
+        //$("#botoneriaDiv").html('');
+    }
+    if (dataItem.Estado == 7) { //reconfirmar
+        $("#botoneriaRecoDiv").html(botonPendiente(dataItem, 'fa-pencil reconf', true) +
+            botonConfirmadoTilde(dataItem, 'fa-check reconf', true) +
+            botonBorrar(dataItem, 'fa-trash reconf', true))
+    }
+    if (dataItem.Estado == 8) { //Anulado
+        //$("#botoneriaDiv").html('');
+    }
+    if (dataItem.Estado == 9) { //preaprobacion
+        $("#botoneriaDiv").html(botonPendiente(dataItem, 'fa-pencil pre', true) +
+            botonBorrar(dataItem, 'fa-trash pre', true));
+    }
+    if (dataItem.Estado == 10) { //PreAnulado                  
+        $("#botoneriaDiv").html(botonBorrarPreanulado(dataItem, 'fa-trash bor', true));
+    }
+    if (dataItem.Estado == 11) { //ReconfirmarFinalizado 
+        $("#botoneriaRecoDiv").html(botonPendiente(dataItem, 'fa-pencil reconf', true) +
+            botonConfirmadoTildeFinalizado(dataItem, 'fa-check reconf', true) +
+            botonBorrar(dataItem, 'fa-trash reconf', true))
+    }
+
 
     $("#contrato").text(contrato);
     if (status == "11" || status == "7") {
@@ -2772,6 +2913,8 @@ function ModalVisualizar(contrato, proveedor, corredor, fecha, desdeHasta, tipo,
     } else {
         $("#comisionistaProveedorDivVisualizar").hide();
     }
+
+
 }
 
 function visualizacionRowDoblePrecioCero(div1, div2, aFijar) {

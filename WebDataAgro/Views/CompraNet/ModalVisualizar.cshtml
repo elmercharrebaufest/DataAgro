@@ -14,13 +14,14 @@
                 <h1 class="modal-title-visualizar" id="lineModalLabel"></h1>
                 <button id="mostrar" hidden onclick="compararReconfirmacion()">Visualizar Modificación</button>
                 <button id="ocultar" onclick="mostrarDetalles()" hidden>Ocultar Modificación</button>
-                <div class="status pendiente-modal"><div>PENDIENTE</div></div>
-                <div class="status confirmado-modal"><div>CONFIRMADO</div></div>
-                <div class="status oferta-modal"><div>OFERTA</div></div>
-                <div class="status conerror-modal"><div>CON ERROR</div></div>
-                <div class="status finalizado-modal"><div>FINALIZADO</div></div>
-                <div class="status borrado-modal"><div>RECHAZADO</div></div>
-                <div class="status reconfirmar-modal"><div>RECONFIRMAR</div></div>
+                <div class="status pendiente-modal row"><div class="col-md-9 col-sm-9">PENDIENTE</div><div id="botoneriaPendDiv" style="text-align: right"></div></div>
+                <div class="status confirmado-modal row"><div class="col-md-9 col-sm-9">CONFIRMADO</div><div id="botoneriaConfDiv" style="text-align: right"></div></div>
+                <div class="status oferta-modal row"><div class="col-md-8 col-sm-9">OFERTA</div><div id="botoneriaOferDiv" style="text-align: right"></div></div>
+                <div class="status conerror-modal row"><div class="col-md-8 col-sm-9">CON ERROR</div><div id="botoneriaErroDiv" style="text-align: right"></div></div>
+                <div class="status finalizado-modal row"><div class="col-md-8 col-sm-9">FINALIZADO</div><div id="botoneriaFinaDiv" style="text-align: right"></div></div>
+                <div class="status borrado-modal"><div>RECHAZADO</div><div id="botoneriaRechDiv" style="text-align: right" hidden></div></div>
+                <div class="status reconfirmar-modal row"><div class="col-md-8 col-sm-9">RECONFIRMAR</div><div id="botoneriaRecoDiv" style="text-align: right"  ></div></div>
+                <div id="botoneriaDiv"></div>
             </div>
             <div class="modal-body clearfix" id="datosContrato">
                 <div id="DivVisualizar" class="row">
@@ -494,6 +495,7 @@
                         <strong style="float:left">Condicional: </strong>
                         <span id="visualizar_Condicional"></span>
                     </div>
+                    
                 </div>
             </div>
 

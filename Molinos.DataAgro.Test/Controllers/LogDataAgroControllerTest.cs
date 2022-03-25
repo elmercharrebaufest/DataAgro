@@ -121,7 +121,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BuscarProveedorOk()
         {
-            mockProveedorManager.Setup(x => x.DevolverProveedoresCorredores(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<bool?>())).
+            mockProveedorManager.Setup(x => x.DevolverProveedoresCorredores(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(),It.IsAny<bool?>())).
                 Returns(new List<BusquedaHome>() { new BusquedaHome { Alias = "ACA", RazonSocial = "ACA", Cuit = "1233", Id = 1, Filtro = "",} });
             var result = target.BuscarProveedor("ACA") as JsonResult;
 

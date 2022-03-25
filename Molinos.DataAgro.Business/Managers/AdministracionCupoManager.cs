@@ -50,12 +50,22 @@ namespace Molinos.DataAgro.Business.Managers
                 Fecha = x.Fecha
             });
         }
-        public CupoResult AceptarCupoExcedente(int administracionId, int cantidad, int cantidadFp, string active)
+        public CupoResult AceptarCupoExcedente(int administracionId, int cantidad, int cantidadFp, int cantidadOriginal, int cantidadFleteOriginal, string active, string motivo)
         {
             try
             {
                 CupoResult resultado = new CupoResult();
                 var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
+                if (solicitud.EstadoId != (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo)
+                {
+                    resultado.Error("Solicitud", "La solicitud no puede ser editada. No se encuentra en estado pendiente");
+                    return resultado;
+                }
+                if(solicitud.CantidadCupo != cantidadOriginal || solicitud.CantidadFleteProcedencia != cantidadFleteOriginal)
+                {
+                    resultado.Error("Solicitud", $"- La solicitud con fecha { solicitud.Fecha.ToString("dd-MM-yyyy") }, proveedor { solicitud.Proveedor.RazonSocial } y destino {solicitud.Centro.Descripcion} no puede ser confirmada/aceptada porque ha sido editada por el usuario.<br /><br />");
+                    return resultado;
+                }
                 if (solicitud.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo)
                 {
                     //var sugerenciasParaAceptar = cupoManager.SugerenciasParaAceptar(solicitud.ProveedorId.Value, solicitud.ComercialId.Value, solicitud.Centro.CodigoSap, solicitud.MaterialId, null);
@@ -98,6 +108,8 @@ namespace Molinos.DataAgro.Business.Managers
                         NegocioId = solicitud.SugerenciaCupo.NegocioId,
                         ConfiguracionEspacioDinamicoId = solicitud.SugerenciaCupo.ConfiguracionEspacioDinamicoId,
                         TipoNegocioId = solicitud.SugerenciaCupo.TipoNegocioId,
+                        ConDescarga = solicitud.ConDescarga,
+                        AdministracionCupoId = administracionId
                     };
                     if (cantidad > 0)
                     {
@@ -121,6 +133,8 @@ namespace Molinos.DataAgro.Business.Managers
                     if (!result.HayError)
                     {
                         solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo;
+                        solicitud.FechaDecision = DateTime.Now;
+                        solicitud.Motivo = motivo;
                         EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, result.ListaCupos, active);
                         solicitud.CantidadCupo = cantidad;
                         solicitud.CantidadFleteProcedencia = cantidadFp;
@@ -160,6 +174,7 @@ namespace Molinos.DataAgro.Business.Managers
                         NegocioId = null,
                         ConfiguracionEspacioDinamicoId = null,
                         TipoNegocioId = 7,//para que lo envie a SAP como cupo con marca de propuesta y no valide limites en SAP
+                        AdministracionCupoId = administracionId
                     };
 
                     if (cantidad > 0)
@@ -188,17 +203,16 @@ namespace Molinos.DataAgro.Business.Managers
                     }
 
                     if (resultado.ListaCupos.Count > 0)
+                        solicitud.Motivo = motivo;
                         EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, resultado.ListaCupos, active);
 
                     if (!resultado.HayError)
                     {
                         solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo;
+                        solicitud.FechaDecision = DateTime.Now;
                         repositorio.GuardarCambios();
                     }
                 }
-
-
-
 
                 return resultado;
             }
@@ -235,7 +249,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var lista = new List<string>();
                 var comercial = new List<string>();
-                var c =  repositorio.Obtener<Comercial, string>(x => x.ComercialId == solicitud.ComercialCreadorId, x => x.IdActiveDirectory);
+                var c = repositorio.Obtener<Comercial, string>(x => x.ComercialId == solicitud.ComercialCreadorId, x => x.IdActiveDirectory);
 
                 comercial.Add(c);
                 if (solicitud.Comercial != null)
@@ -298,6 +312,10 @@ namespace Molinos.DataAgro.Business.Managers
             var linea = 0;
             string htmlBody = "";
             htmlBody += "En el presente mail, se detalla las solicitud aceptada por Molinos Agro S.A: <br /><br />  ";
+            if (!string.IsNullOrEmpty(solicitud.Motivo))
+            {
+                htmlBody += $"Motivo de confirmación: {solicitud.Motivo} <br /><br />  ";
+            }
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA SOLICITUD: </th>" + cupoManager.Td(ref linea) + cupoManager.Split(solicitud.Fecha.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "CUPOS SIN FLETE: </th>" + cupoManager.Td(ref linea) + cantidad + " de " + solicitud.CantidadCupo + "</td></tr>";
@@ -323,13 +341,15 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
-        public Resultado CambiarEstadoRechazado(int idAdministracion, string active)
+        public Resultado CambiarEstadoRechazado(int idAdministracion, string motivo, string active)
         {
             var resultado = new Resultado();
             try
             {
                 var solicitud = repositorio.Obtener<AdministracionCupo>(idAdministracion);
                 solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo;
+                solicitud.FechaDecision = DateTime.Now;
+                solicitud.Motivo = motivo;
                 //var sugerenciasParaAceptar = cupoManager.SugerenciasParaAceptar(solicitud.ProveedorId.Value, solicitud.ComercialId.Value, solicitud.Centro.CodigoSap, solicitud.MaterialId, null);
 
                 //foreach (var s in sugerenciasParaAceptar.Where(x => x.FechaSugerida == solicitud.Fecha))
@@ -356,17 +376,40 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var lista = new List<string>();
                 var comercial = new List<string>();
-                var c = repositorio.Obtener<Comercial>(comercialManager.ComercialAsociado(solicitud.ProveedorId.Value));
-                comercial.Add(c.IdActiveDirectory);
+                var c = repositorio.Obtener<Comercial, string>(x => x.ComercialId == solicitud.ComercialCreadorId, x => x.IdActiveDirectory);
+
+                comercial.Add(c);
+                if (solicitud.Comercial != null)
+                {
+                    comercial.Add(solicitud.Comercial.IdActiveDirectory);
+                }
+                else
+                {
+                    if (solicitud.ComercialId != null)
+                    {
+                        var comercial1 = repositorio.Obtener<Comercial>(x => x.ComercialId == solicitud.ComercialId);
+                        comercial.Add(comercial1.IdActiveDirectory);
+                    }
+                }
+
+                if (solicitud.ComercialCreador != null)
+                {
+                    comercial.Add(solicitud.ComercialCreador.IdActiveDirectory);
+                }
+                else
+                {
+                    if (solicitud.ComercialCreadorId != null)
+                    {
+                        var comercial1 = repositorio.Obtener<Comercial>(x => x.ComercialId == solicitud.ComercialCreadorId);
+                        comercial.Add(comercial1.IdActiveDirectory);
+                    }
+                }
+
                 if (comercial.Count <= 0)
                 {
                     return;
                 }
                 var administrador = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == active);
-                if (administrador == null)
-                {
-                    administrador = new Comercial();
-                }
                 var alterView = CuerpoMailSolicitudRechazo(httpContextManager.ObtenerPathLogoMail(), solicitud, administrador);
                 mailManager.EnviarMail(comercial, "Solicitud de cupos Rechazada", "", lista, alterView);
             }
@@ -397,7 +440,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla las solicitud rechazada por Molinos Agro S.A: <br /><br />  ";
+            htmlBody += "En el presente mail, se detalla las solicitud rechazada por Molinos Agro S.A: <br /> ";
+            if (!string.IsNullOrEmpty(solicitud.Motivo))
+            {
+                htmlBody += $"Motivo de rechazo: {solicitud.Motivo} <br /><br />  ";
+            }
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA SOLICITUD: </th>" + cupoManager.Td(ref linea) + cupoManager.Split(solicitud.Fecha.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "CUPOS SIN FLETE: </th>" + cupoManager.Td(ref linea) + solicitud.CantidadCupo + "</td></tr>";
@@ -420,8 +467,35 @@ namespace Molinos.DataAgro.Business.Managers
             var administacion = repositorio.Listar<AdministracionCupo>(x => x.Fecha < DateTime.Now && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo);
             foreach (var item in administacion)
             {
-                CambiarEstadoRechazado(item.Id, "");
+                CambiarEstadoRechazado(item.Id, "", "");
             }
+        }
+
+        public string ActualizarSolicitud(int id, int cantidadCupo, int cantidadFlete,  bool estado)
+        {
+            var resultado = "Error";
+            try
+            {
+                var solicitud = repositorio.Obtener<AdministracionCupo>(id);
+                if (solicitud != null && solicitud.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo)
+                {
+                    if (!estado)
+                    {                       
+                        solicitud.CantidadCupo = cantidadCupo;
+                        solicitud.CantidadFleteProcedencia = cantidadFlete;
+                    }
+
+                    solicitud.EstadoId = estado ? (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo : solicitud.EstadoId;
+                    repositorio.GuardarCambios();
+                    resultado = "Ok";
+                }
+
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error al actualizar la solicitud", e.Message);
+            }
+            return resultado;
         }
     }
 }

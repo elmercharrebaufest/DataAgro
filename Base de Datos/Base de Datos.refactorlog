@@ -981,4 +981,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Fason" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="d30c6910-88f6-4e55-adbb-ac9484061bda" ChangeDateTime="02/22/2022 19:13:14">
+    <Property Name="ElementName" Value="[dbo].[Acopio].[PesificadoNro]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Acopio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Pesificado" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2b3c25e8-9858-42db-8a21-3f403d859948" ChangeDateTime="02/24/2022 18:25:53">
+    <Property Name="ElementName" Value="[dbo].[Proveedor].[EsComisionista]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Proveedor]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Comisionista" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ce61f023-00d7-4edf-b649-574c359af2aa" ChangeDateTime="03/08/2022 15:10:25">
+    <Property Name="ElementName" Value="[dbo].[AdministracionCupo].[Motivo]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AdministracionCupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MotivoRechazo" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="51fc2dd7-6039-4028-82b2-55b251dd34fb" ChangeDateTime="03/15/2022 14:55:22">
+    <Property Name="ElementName" Value="[dbo].[AdministracionCupo].[MotivoConfirmacin]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AdministracionCupo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MotivoConfirmacion" />
+  </Operation>
 </Operations>

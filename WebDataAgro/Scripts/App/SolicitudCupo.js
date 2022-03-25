@@ -1,4 +1,6 @@
 ﻿var externo;
+var dataTabla = [];
+
 $(document).ready(function () {
     $('#menuproveedor').hide();
     $(function () {
@@ -8,9 +10,36 @@ $(document).ready(function () {
     CargarGrilla();
     $('#CargaCupos').on('hidden.bs.modal', function () {
         $("#cuerpo-carga-cupos").empty();
+        $(".cantidad-masiva-cupos").val($("#cantidad").data('kendoNumericTextBox').value());
+        $("#boton-carga-masiva").hide();
+        dataTabla = [];
+        var table = document.getElementById("cargaMasiva-cupos-table");
+        for (var i = 1; i < table.rows.length; i++) {
+            table.deleteRow(i);
+        }
+    });
+
+    $('#modalSolicitudExtraordinaria').on('hidden.bs.modal', function () {
+        $("#cuerpo-carga-cupos").empty();
+        var datepicker = $("#FechaHastaSE").data("kendoDatePicker");
+        datepicker.value("");
+        $("#boton-carga-masiva").hide();
+        dataTabla = [];
+        var table = document.getElementById("cargaMasiva-cupos-table");
+        for (var i = 1; i < table.rows.length; i++) {
+            table.deleteRow(i);
+        }
     });
     AutoRecargarSolicitudes();
     InicializarElementos();
+
+    $("#CantidadCupoSE").change(function () {
+        //console.log($(this).val());
+        var table = document.getElementById("cargaMasiva-cupos-table");
+        for (var i = 0; i < table.rows.length - 1; i++) {
+            $('[name="Dias[' + i + '].Cantidad"]').data('kendoNumericTextBox').value($(this).val());
+        }
+    });
 });
 function CargarGrilla() {
     var ds = {
@@ -71,6 +100,16 @@ function CargarGrilla() {
             $("td:has(div.statuseliminado)").attr('id', 'border-grey');
         },
         columns: [
+            {
+                field: "TipoAdministracionCupo", type: "string", title: "Tipo", width: 70,
+                editable: function (dataItem) { return false; }, filterable: {
+                    multi: true, dataSource: [{
+                        TipoAdministracionCupo: "Extraordinaria"
+                    }, {
+                        TipoAdministracionCupo: "Algoritmo"
+                    }]
+                }, width: 130, template: "#=TipoAdministracionCupo#",
+            },
             {
                 field: "Proveedor", type: "string", width: 150,
                 editable: function (dataItem) {
@@ -144,7 +183,42 @@ function CargarGrilla() {
             {
                 field: "Centro", type: "string", title: "Destino", editable: function (dataItem) {
                     return false;
-                }, attributes: { "class": "mobile-xs mobile-md" }
+                }, attributes: { "class": "mobile-xs mobile-md" }, filterable: {
+                    multi: true, dataSource: [{
+                        Centro: "S. Lorenzo"
+                    }, {
+                        Centro: "SAN LORENZO SUSTENTABLE / CALIDAD"
+                    }, {
+                        Centro: "Rio del Valle"
+                    }, {
+                        Centro: "General Pinedo"
+                    }, {
+                        Centro: "Vicentin Virtual"
+                    }, {
+                        Centro: "Bahia Blanca"
+                    }, {
+                        Centro: "Pergamino"
+                    }, {
+                        Centro: "Bandera"
+                    },
+                    {
+                        Centro: "La Cautiva"
+                    },
+                    {
+                        Centro: "Lincoln"
+                    },
+                    {
+                        Centro: "Prest Dev. Buenos Aires"
+                    },
+                    {
+                        Centro: "Prest Dev. Santa Fe"
+                    },
+                    {
+                        Centro: "Chivilcoy"
+                    }, {
+                        Centro: "LE"
+                    }]
+                }, width: 130, template: "#=Centro#",
             },
             {
                 field: "Fecha", title: "Fecha Solicitud", type: "date", editable: function (dataItem) {
@@ -153,10 +227,48 @@ function CargarGrilla() {
             },
             {
                 field: "CantidadDeCupo", title: "Cantidad de Cupos", width: "110px",
-
+                filterable: { extra: false },
+                editable: function (dataItem) {
+                    return (dataItem.EstadoId == 3 && dataItem.TipoAdministracionCupo == "Extraordinaria") ? true : false;
+                },
+                editor: function (container, options) {
+                    // create an input element
+                    var input = $("<input name='" + options.field + "'/>");
+                    // append it to the container
+                    input.appendTo(container);
+                    $("#CantidadDeCupo").val(options.model.CantidadDeCupo);
+                    // initialize a Kendo UI numeric text box and set max value
+                    input.kendoNumericTextBox({
+                        //max: options.model.CantidadDeCupoMax,
+                        min: 0,
+                        change: function () {
+                            ActualizarSolicitud(options.model.Id)
+                        },                                   
+                    });
+                }
             },
             {
                 field: "CantidadFleteProcedencia", title: "Cantidad Flete Procedencia",
+                filterable: { extra: false },
+                editable: function (dataItem) {
+                    return (dataItem.EstadoId == 3 && dataItem.TipoAdministracionCupo == "Extraordinaria")? true : false;
+                },
+                editor: function (container, options) {
+                    // create an input element
+                    var input = $("<input name='" + options.field + "'/>");
+                    // append it to the container
+                    input.appendTo(container);
+
+                    $("#CantidadCupoFlete").val(options.model.CantidadFleteProcedencia);
+                    // initialize a Kendo UI numeric text box and set max value
+                    input.kendoNumericTextBox({
+                        //max: options.model.CantidadFleteProcedenciaMax,
+                        min: 0,
+                        change: function () {
+                            ActualizarSolicitud(options.model.Id)
+                        },
+                    });
+                }
             },
             {
                 field: "Estado", title: "Estado", editable: function (dataItem) {
@@ -173,15 +285,27 @@ function CargarGrilla() {
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
+                    var estadoContent = ''
                     if (dataItem.EstadoId == 3) { //pendiente
-                        return '<div class="status pendiente">Pendiente</div>';
+                        if (dataItem.ConDescarga == true) {
+                            return '<div class="status pendiente" style="text-align: center;">Pendiente <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i></div>' + botonBorrar(dataItem, 'fa-trash pend');
+                        } else {
+                            return '<div class="status pendiente" style="text-align: center;">Pendiente</div>' + botonBorrar(dataItem, 'fa-trash pend');
+                        }
                     }
-                    if (dataItem.EstadoId == 1) { //confirmado                       
-                        return '<div class="status confirmado">Confirmado</div>';
+                    if (dataItem.EstadoId == 1) { //confirmado 
+                        estadoContent += '<div class="status confirmado">Confirmado';
+                        //return '<div class="status confirmado">Confirmado</div>';
                     }
                     if (dataItem.EstadoId == 2) { //Rechazado
-                        return '<div class="status borrado">Rechazado</div>';
+                        estadoContent += '<div class="status borrado">Rechazado';
+                        //return '<div class="status borrado">Rechazado</div>';
                     }
+                    if (dataItem.ConDescarga == true) {
+                        estadoContent += '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>'
+                    }
+                    estadoContent += '</div>'
+                    return estadoContent;
                 }
             }
         ],
@@ -202,6 +326,7 @@ function CargarGrilla() {
             input: true,
             numeric: true
         },
+        editable: true,
         scrollable: false,
         sortable: {
             mode: "multiple",
@@ -412,14 +537,78 @@ function InicializarElementos() {
     });
 
     $("#FechaSE").kendoDatePicker({
-        min: new Date()
-    });
+        min: new Date(),
+        change: function () {
+            $("#FechaHastaSE").data("kendoDatePicker").value("");
+            var datepicker = $("#FechaHastaSE").data("kendoDatePicker");
+            datepicker.min(kendo.parseDate($("#FechaSE").val()));
+            datepicker.value(kendo.parseDate($("#FechaSE").val()));
 
+        }
+    });
+    $("#FechaHastaSE").kendoDatePicker({
+        //min: kendo.parseDate($("#FechaSE").data("kendoDatePicker").value()),
+        min: kendo.parseDate($("#FechaSE").val()),
+        change: function () {
+            //$("#contratoId").val("");
+            CrearTablaFechaHasta();
+            $("#boton-carga-masiva").show();
+        }
+    });
 
     $("#MaterialIdSE").change(function () {
         checkSoja();
     });
+
+
 }
+
+function CrearTablaFechaHasta() {
+    $(".fila-carga").remove();
+
+    var date1 = $("#FechaSE").val();
+    var date2 = $("#FechaHastaSE").val();
+    var diffDays = parseInt((kendo.parseDate(date2) - kendo.parseDate(date1)) / (1000 * 60 * 60 * 24), 10);
+
+    for (var i = 0; i <= diffDays; i++) {
+
+        var fila = '<tr class="fila-carga"><input name="Dias[' + i + '].Fecha" value="' + date1 + '" type="hidden"/><td>' + date1 + '</td><td><input name="Dias[' + i + '].Cantidad" class="cantidad-masiva-cupos" value="' + $("#CantidadCupoSE").data('kendoNumericTextBox').value() + '"/></td></tr>';
+        $("#cargaMasiva-cupos-table").append(fila);
+        var newdate = kendo.parseDate(date1);
+
+        newdate.setDate(newdate.getDate() + 1); var dd = newdate.getDate();
+        var mm = newdate.getMonth() + 1;
+        var y = newdate.getFullYear();
+
+        date1 = dd + '/' + mm + '/' + y;
+    }
+    $(".cantidad-masiva-cupos").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 0
+    });
+
+    $("#cancelar-carga").click(function () {
+        //$(".cantidad-masiva-cupos").val($("#cantidad").data('kendoNumericTextBox').value());
+        //$("#boton-carga-masiva").hide();
+        $("#cancelar-carga").unbind('click');
+    });
+
+
+
+    $('[name="Dias[0].Cantidad"]').change(function () {
+        if ($("#cantidad").val() == 0) {
+            $("#cantidad").data('kendoNumericTextBox').value($('[name="Dias[0].Cantidad"]').val());
+            $("#cantidad").data("kendoNumericTextBox").trigger("change");
+        }
+    });
+}
+
+function MostrarCarga() {
+    $("#CargarCupos").modal('toggle');
+}
+
 function LimpiarModalSolicitudExtraordinaria() {
     //$("#CalidadIdSE").data("kendoDropDownList").value('');
     //$("#MaterialIdSE").data("kendoDropDownList").value('');
@@ -449,6 +638,14 @@ function checkSoja() {
     }
 }
 
+function ActualizarCantidad(cantidadDias) {
+    $(document).ready(function () {
+        for (var i = 0; i < cantidadDias.length; i++) {
+            $('[name="Dias[' + i + '].Cantidad"]').data('kendoNumericTextBox').value(cantidadDias[i].Cantidad);
+        }
+    });
+}
+
 function grabarSolicitudExtraordinaria() {
     if ($("#MaterialIdSE").data("kendoDropDownList").value() == "") {
         MensErr("Seleccione el Material"); return;
@@ -461,6 +658,12 @@ function grabarSolicitudExtraordinaria() {
     }
     if ($("#FechaSE").data("kendoDatePicker").value() == null) {
         MensErr("Seleccione la Fecha"); return;
+    }
+    if ($("#FechaSE").data("kendoDatePicker").value() < new Date().setHours(0, 0, 0, 0)) {
+        MensErr("La Fecha no puede ser menor a hoy."); return;
+    }
+    if ($("#FechaHastaSE").data("kendoDatePicker").value() < $("#FechaSE").data("kendoDatePicker").value().setHours(0, 0, 0, 0)) {
+        MensErr("La Fecha Hasta no puede ser menor a Fecha."); return;
     }
     if ($("#ProveedorIdSE").val() == "") {
         $("#buscadorProveedorSE").click();
@@ -478,7 +681,16 @@ function grabarSolicitudExtraordinaria() {
     if ($("#FasonES").is(':checked') && $("#CuitES").val() == "") {
         MensErr("Complete el CUIT del destinatario"); return;
     }
-    
+    dataTabla = [];
+    var table = document.getElementById("cargaMasiva-cupos-table");
+    for (let i = 0, n = table.rows.length; i < (n - 1); i++) {
+        let row = table.rows[i]
+        dataTabla.push({ Fecha: $('[name="Dias[' + i + '].Fecha"]').val(), Cantidad: $('[name="Dias[' + i + '].Cantidad"]').val() })
+        if ($('[name="Dias[' + i + '].Cantidad"]').val() < 1) {
+            MensErr("Ingrese la cantidad de cupos para el " + $('[name="Dias[' + i + '].Fecha"]').val() ); return;
+        }
+    }
+
     BlockUi('Grabando...');
     setTimeout(function () {
         var solicitud = {
@@ -493,11 +705,15 @@ function grabarSolicitudExtraordinaria() {
             Destinatario: $("#CuitES").val(),
             Observacion: $("#ObservacionSE").val(),
             CentroId: $("#CentroIdSE").data("kendoDropDownList").value(),
-            Calidad: $("#MaterialIdSE").data("kendoDropDownList").value() == 3 ? $("#CalidadIdSE").data("kendoDropDownList").text() : ""
+            Calidad: $("#MaterialIdSE").data("kendoDropDownList").value() == 3 ? $("#CalidadIdSE").data("kendoDropDownList").text() : "",
+            ConDescarga: $("#ConDescarga").is(':checked'),
+            Dias: dataTabla
         };
         result = MSExecuteOnServer('/SugerenciaCupo/GenerarSolicitudExtraordinaria', solicitud);
         ListarRespuesta(result);
-
+        if (!result.HayError) {
+            $("#boton-carga-masiva").hide();
+        }
         $.unblockUI();
     }, 250);
 }
@@ -614,4 +830,73 @@ function MostrarVisualizarStock() {
     } else {
         $("#stock").hide();
     }
+}
+
+function ObtenerIdSolicitudSeleccionada(id) {
+    var grid = $("#gridInformeCompraNet").data("kendoGrid").dataSource.data();
+    return grid.filter(function (x) { return (x.Id == id) });
+}
+function ActualizarSolicitud(id) {
+   
+    var solicitudSeleccionada = ObtenerIdSolicitudSeleccionada(id)
+    $("#CantidadDeCupoAceptado").val(solicitudSeleccionada[0].CantidadDeCupo);
+    $("#CantidadCupoFleteAceptado").val(solicitudSeleccionada[0].CantidadFleteProcedencia);
+
+    var cantidad = $("#CantidadDeCupoAceptado").val();
+    if (cantidad === undefined) {
+        cantidad = 0;
+    }
+    var cantidadFp = $("#CantidadCupoFleteAceptado").val();
+    if (cantidadFp === undefined) {
+        cantidadFp = 0;
+    }
+    if (cantidad == 0 && cantidadFp == 0) {
+        MensErr("Ingrese una cantidad de cupos válida");
+        recargarGrilla();
+        return;
+    }
+
+    BlockUi('Procesando...');
+    setTimeout(
+        function () {
+            result = MSExecuteOnServer('/AdministracionCupo/ActualizarSolicitud', { id: id, cantidadCupo: cantidad, cantidadFlete: cantidadFp, estado: false });
+            if (result != "Ok") {     
+                MensErr("La solicitud no puede editarse");
+            }
+            recargarGrilla();
+            $.unblockUI();
+        }, 200);
+}
+
+function AbrirModalRechazar(id) {
+    $("#modalRechazarSolicitud").modal("show");
+    $("#solicitudId").val(id);
+}
+
+
+function RechazarSolicitud() {
+    BlockUi('Procesando...');
+    var id = $("#solicitudId").val();
+    setTimeout(
+        function () {
+            result = MSExecuteOnServer('/AdministracionCupo/ActualizarSolicitud', { id: id, cantidadCupo: 0, cantidadFlete: 0, estado: true });
+            if (result == "Ok") {
+                MensInfo("Guardado Correctamente");
+            } else {
+                MensErr("La solicitud no puede ser rechazada");
+            }
+            recargarGrilla();
+            $.unblockUI();
+        }, 200);
+}
+
+function botonBorrar(dataItem, icono) {
+    return '<button data-toggle="tooltip" title="Rechazar" style="color: #ffc100;" onclick="AbrirModalRechazar(' + dataItem.Id + ') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+}
+
+function OcultarCargaMasiva() {
+
+    var datepicker = $("#FechaHastaSE").data("kendoDatePicker");
+    datepicker.value("");
+    $("#boton-carga-masiva").hide();
 }

@@ -58,6 +58,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ComisionistaId { get; set; }
 
         public bool? CuposConRiesgo { get; set; }
+
+        public bool Comisionista { get; set; }
     }
 }
 

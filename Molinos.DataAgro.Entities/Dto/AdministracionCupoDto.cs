@@ -9,9 +9,10 @@ namespace Molinos.DataAgro.Entities.Dto
     public partial class AdministracionCupoDto
     {
         public int Id { get; set; }
-        public int ProveedorId { get; set; }
+        public int? ProveedorId { get; set; }
         public int? ComercialId { get; set; }
         public DateTime Fecha { get; set; }
+        public int CantidadCupo { get; set; }
         public int CantidadDeCupo { get; set; }
         public int CantidadFleteProcedencia { get; set; }
         public int CantidadDeCupoMax { get; set; }
@@ -31,9 +32,21 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? NegocioId { get; set; }
         public int? ConfiguracionEspacioDinamicoId { get; set; }
         public bool Excedente { get; set; }
+        public bool? Fason { get; set; }
         public string Estado { get; set; }
         public string TipoAdministracionCupo { get; set; }
         public int TipoAdministracionCupoId { get; set; }
         public string Observacion { get; set; }
+        public int? ComercialCreadorId { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+        public DateTime? FechaDecision { get; set; }
+        public int? SugerenciaCupoId { get; set; }
+        public string Hora { get; set; }
+        public bool? ConDescarga { get; set; }
+        public DateTime? FechaCreacionConHora { get; set; }
+        public string Calidad { get; set; }
+        public List<DiaCupo> Dias { get; set; }
+        public int CantidadFleteProcedenciaOriginal { get; set; }
+        public int CantidadDeCupoOriginal { get; set; }
     }
 }

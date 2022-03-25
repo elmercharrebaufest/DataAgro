@@ -7,7 +7,7 @@
 
 <div class="row-fluid" style="padding-bottom:20px;">
     <div class="col-md-3 col-xs-6">
-        @Html.DropDownList("ComercialSeleccionado3", ViewBag.ComercialSeleccionado as SelectList, new { @class = "form-control ComercialSeleccionado", @id = "ComercialSeleccionado3"  })
+        @Html.DropDownList("ComercialSeleccionado3", ViewBag.ComercialSeleccionado as SelectList, new { @class = "form-control ComercialSeleccionado", @id = "ComercialSeleccionado3" })
     </div>
     <div class="col-md-2 col-md-offset-7">
         <label>Autorecargar</label>
@@ -15,13 +15,15 @@
     </div>
 </div>
 <br />
+
 <div class="row-fluid" id="Tabla">
     <div class="col-xs-12">
         <div id="gridInformeCompraNet" class="table-responsive"></div>
         <input id="CantidadDeCupoAceptado" type="hidden" />
-        <input id="CantidadCupoFleteAceptado" type="hidden" />
+        <input id="CantidadCupoFleteAceptado" type="hidden" /> 
     </div>
 </div>
+
 
 <style>
     #border-orange {
@@ -108,27 +110,26 @@
         font-size: 23px;
     }
 
-    #gridSugerenciaCupo td button:hover {
-        color: #fff;
-    }
+        #gridSugerenciaCupo td button:hover {
+            color: #fff;
+        }
 
     #gridSugerenciaCupo {
         font-size: 12px;
         overflow-x: scroll;
     }
 
-    #gridSugerenciaCupo td .status,
-    #gridSugerenciaCupo td .status:hover {
-        /*background:#787878;*/
-        font-size: 10px;
-        text-transform: uppercase;
-        padding: 1px 5px 1px 8px;
-        /*border-right: 6px solid;*/
-        font-weight: 700;
-        text-align: right;
-        /*color: #4c4b4b;*/
-        margin-bottom: 3px;
-        line-height: 1.2em;
-    }
-    
+        #gridSugerenciaCupo td .status,
+        #gridSugerenciaCupo td .status:hover {
+            /*background:#787878;*/
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: 1px 5px 1px 8px;
+            /*border-right: 6px solid;*/
+            font-weight: 700;
+            text-align: right;
+            /*color: #4c4b4b;*/
+            margin-bottom: 3px;
+            line-height: 1.2em;
+        }
 </style>

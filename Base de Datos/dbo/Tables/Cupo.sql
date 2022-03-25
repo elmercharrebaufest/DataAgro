@@ -44,6 +44,8 @@
     [CodLocalidadOrigen] NVARCHAR(MAX) NULL, 
     [NroEstablecimientoOrigen] NVARCHAR(MAX) NULL, 
 	[Cumplimiento] BIT NULL, 
+    [ConDescarga] BIT NULL, 
+    [AdministracionCupoId] INT NULL, 
     CONSTRAINT [PK_Cupo] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Cupo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
     CONSTRAINT [FK_Cupo_Centro] FOREIGN KEY (CentroId) REFERENCES [Centro]([Id]),
@@ -54,5 +56,6 @@
     CONSTRAINT [FK_Cupo_Negocio] FOREIGN KEY (NegocioId) REFERENCES [Negocio]([Id]),
     CONSTRAINT [FK_Cupo_TipoNegocio] FOREIGN KEY (TipoNegocioId) REFERENCES [TipoNegocio]([TipoNegocioId]),
     CONSTRAINT [FK_Cupo_ConfiguracionEspacioDinamico] FOREIGN KEY (ConfiguracionEspacioDinamicoId) REFERENCES [ConfiguracionEspacioDinamico]([Id]),
+    CONSTRAINT [FK_Cupo_AdministracionCupo] FOREIGN KEY (AdministracionCupoId) REFERENCES [AdministracionCupo]([Id]),
 	
 )

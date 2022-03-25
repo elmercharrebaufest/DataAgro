@@ -101,6 +101,13 @@
             </div>
             <input id="deshabilitado" class="campo-input-text input-nocliente" @(deshabilitarProveedor ? "" : "disabled") type="checkbox" />
         </div>
+
+        <div class="formulario-campo campo-comisionista" style="height:38px;">
+            <div class="campo-span">
+                Es Comisionista
+            </div>
+            <input id="comisionista" class="campo-input-text input-nocliente" type="checkbox" @(deshabilitarProveedor ? "" : "disabled") />
+        </div>
         <div @(ocultarCamposEditar ? "hidden" : "")>
             <div class="formulario-campo campo-segmentacion">
                 <span class="campo-span">Segmentación (*)</span>
@@ -117,14 +124,13 @@
                     <option class="multSelktrImg" image="../Content/Images/5estr.png" value="5"></option>
                 </select>
             </div>
-            @*<div class="formulario-campo campo-comisionista " id="comisionistaDiv">
-                <span class="campo-span">Comisionista</span>
-                
-                    @Html.TextBox("Comisionista","", new { @placeholder = "Buscar por CUIT, razón social", @id = "buscadorProveedor", @class = "k-textbox k-autocomplete w100 k-autocomplete-clearable k-state-default k-hidden", @style = "width:272px" })
-                    
-            </div>*@
+            <div class="formulario-campo campo-comisionista " @*id="comisionistaDiv"*@>
+                <span class="campo-span">Opera a través de</span>
+                @Html.TextBox("Comisionista", "", new { @placeholder = "Buscar por CUIT, razón social", @id = "buscadorProveedor", @class = "k-textbox k-autocomplete w100 k-autocomplete-clearable k-state-default k-hidden", @style = "width:272px" })
+            </div>
         </div>
-        <div >
+      
+        <div>
             <h2 id="datos">Datos proveedor</h2>
             <div @(ocultarCamposEditar ? "hidden" : "")>
                 <div class="datos-basicos-comentario">
@@ -175,20 +181,20 @@
 
             <div class="datos-produccion-cap-prod-editor-contenedor">
 
-                <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde" >
+                <div class="datos-produccion-cap-prod-editor-granos-contenedor sin-borde">
                     <div @(ocultarCamposEditar ? "hidden" : "")>
-                        <div class="formulario-campo campo-clasificacion-compranet noCorredor" >
+                        <div class="formulario-campo campo-clasificacion-compranet noCorredor">
                             <span class="campo-span">Clasificación</span>
                         </div>
-                        <div class="formulario-campo campo-tipo-boleto-compranet" >
+                        <div class="formulario-campo campo-tipo-boleto-compranet">
                             <span class="campo-span">Tipo de Boleto</span>
 
                         </div>
-                        <div class="formulario-campo campo-bolsa-compranet" >
+                        <div class="formulario-campo campo-bolsa-compranet">
                             <span class="campo-span">Bolsa</span>
 
                         </div>
-                        <div class="formulario-campo campo-provincia-compranet noCorredor" >
+                        <div class="formulario-campo campo-provincia-compranet noCorredor">
                             <span class="campo-span">Provincia</span>
                         </div>
                         <div class="formulario-campo campo-localidad-compranet noCorredor">

@@ -56,6 +56,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Alias { get; set; }
 
         public int? ComisionistaId { get; set; }
+        public bool? Comisionista { get; set; }
 
         public bool? Deshabilitado { get; set; }
         [ForeignKey("EstadoId")]
@@ -87,7 +88,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual ICollection<ProveedorComercial> ProveedorComercialAsociados { get; set; }
 
         [ForeignKey("ComisionistaId")]
-        public virtual Proveedor Comisionista { get; set; }
+        public virtual Proveedor ComisionistaE { get; set; }
 
     }
 }

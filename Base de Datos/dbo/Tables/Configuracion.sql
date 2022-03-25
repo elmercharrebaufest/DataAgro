@@ -22,6 +22,7 @@
 
     [AlgoritmoKilosMinimosParaSugerencia] INT NOT NULL DEFAULT 20000, 
     [Actualizacion] INT NULL DEFAULT 30000, 
+    [AlgoritmoProcMaxSugerenciasProveedorDia] INT NOT NULL DEFAULT 30, 
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

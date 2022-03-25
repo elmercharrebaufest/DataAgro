@@ -2792,6 +2792,9 @@
     <Content Include="Views\Boleto\ModalBoletoGenerado.cshtml" />
     <Content Include="Views\Boleto\DescargarBoletos.cshtml" />
     <Content Include="Views\ReporteCompraNet\ModalDetalleFijacion.cshtml" />
+    <Content Include="Views\AdministracionCupo\ModalRechazarSolicitudMasivo.cshtml" />
+    <Content Include="Views\SugerenciaCupo\ModalRechazarSolicitudUsuario.cshtml" />
+    <Content Include="Views\AdministracionCupo\ModalAceptarSolicitudMasivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

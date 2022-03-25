@@ -930,10 +930,12 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GenerarSolicitudExtraordinariaTest()
         {
-            var solicitud = new AdministracionCupo
+            var solicitud = new AdministracionCupoDto
             {
                 CantidadCupo = 1,
                 CantidadFleteProcedencia = 0,
+                CantidadDeCupoOriginal = 1,
+                CantidadFleteProcedenciaOriginal = 0,
                 CentroId = 1,
                 ComercialCreadorId = 1,
                 ComercialId = 1,
@@ -944,7 +946,8 @@ namespace Molinos.DataAgro.Test.Managers
                 TipoAdministracionCupoId = (int)EnumTipoAdministracionCupo.Extraordinaria,
                 ProveedorId = 1,
                 ZonaId = 1,
-                Fecha = DateTime.Now.Date
+                Fecha = DateTime.Now.Date,
+                Dias = new List<DiaCupo> { new DiaCupo { Cantidad = 1, Fecha = DateTime.Now.Date } }
             };
 
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -985,7 +988,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(resultado.HayError, true);
             Assert.AreEqual(resultado.Errores.Count(), 1);
             //repositorioMock.Verify(x => x.Agregar(It.IsAny<AdministracionCupo>()), Times.Once);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.AtLeastOnce);
         }
 
         [Test]

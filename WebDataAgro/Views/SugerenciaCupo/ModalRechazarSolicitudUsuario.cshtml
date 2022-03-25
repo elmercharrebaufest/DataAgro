@@ -2,6 +2,9 @@
     Layout = null;
 }
 
+@*<link href="~/Content/bootstrap-toggle.min.css" rel="stylesheet" />
+<link href="~/Content/compraNet.css" rel="stylesheet" />*@
+
 <div class="modal fade" id="modalRechazarSolicitud" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -11,7 +14,7 @@
             <div class="campo clearfix">
                 <div class="espaciolineas">¿Está seguro que desea rechazar esta solicitud?</div>
             </div>
-            <div id="div-motivo-rechazoSolictud"><label><b>Motivo de Rechazo:&nbsp;</b></label><input class="form-control" id="motivo-rechazoSolictud"></div>
+            @*  <div id="div-motivo-rechazoSolictud"><label><b>Motivo de Rechazo:&nbsp;</b></label><input class="form-control" id="motivo-rechazoSolictud"></div>*@
             <div id="solicitudId" hidden></div>
             <br />
             <div class="col-xs-6 noPaddingRight">
@@ -21,6 +24,15 @@
                 <button type="button" id="cancelarRechazar" class="myBtn" data-dismiss="modal">No</button>
             </div>
         </div>
-        </div>
-        </div>
+    </div>
 </div>
+</div>
+
+<style>
+    .modal-content {
+        padding: 12px 17px 55px 15px !important;
+    }
+    #aceptar, #cancelarRechazar {
+        width: 100%
+    }
+</style>

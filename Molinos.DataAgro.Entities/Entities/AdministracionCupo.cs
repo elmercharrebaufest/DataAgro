@@ -26,6 +26,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Observacion { get; set; }
 
         public int? SugerenciaCupoId { get; set; }
+        public DateTime? FechaDecision { get; set; }
+        public bool? ConDescarga { get; set; }
 
         [ForeignKey("SugerenciaCupoId")]
         public virtual SugerenciaCupo SugerenciaCupo { get; set; }
@@ -47,6 +49,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
         public string Calidad { get; set; }
+        public string Motivo { get; set; }
     }
 }
 

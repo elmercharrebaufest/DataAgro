@@ -36,7 +36,7 @@ function InicializarEdit() {
             $("#establecimiento").click();
         }
     }
-    comisionista = basico[0].ComisionistaId;
+    comisionistaId = basico[0].ComisionistaId;
 
 }
 
@@ -46,7 +46,8 @@ function armarBasico(basico) {
     $("#razonsocial").val(basico.RazonSocial);
     $("#Alias").val(basico.Alias);
     $("#segmentacion").val($('#segmentacion option').filter(function () { return $(this).html() == basico.Segmentacion; }).val());
-    $("#buscadorProveedor").val(basico.Comisionista);
+    $("#buscadorProveedor").val(basico.RazonSocialComisionista);
+    $("#comisionista").attr("checked", basico.Comisionista);
     if ($('#segmentacion :selected').parent().attr('label') === "Comisionistas") {
         $("#comisionistaDiv").hide();
     }
@@ -142,6 +143,9 @@ function armarBasico(basico) {
     }
     if (basico.CuposConRiesgo) {
         $("#cupoConRiesgo-compranet").prop("checked", true);
+    }
+    if (basico.Comisionista) {
+        $("#comisionistaDiv").hide();
     }
 }
 

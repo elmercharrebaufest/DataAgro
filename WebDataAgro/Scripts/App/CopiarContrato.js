@@ -606,6 +606,10 @@ function ObtenerDatos(error) {
     //if (TipoId != "3") {
     obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
     obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
+    if (obj.TipoNegocioId == "3") {
+        obj.FechaHasta = $("#hastacontrato").val() == null || $("#hastacontrato").val() == undefined || $("#hastacontrato").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#hastacontrato").val());
+    }
+
     //} else {
     //    obj.FechaDesde = formatearFecha(hoy);
     //    obj.FechaHasta = formatearFecha(maniana);

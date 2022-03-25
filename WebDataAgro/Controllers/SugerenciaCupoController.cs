@@ -173,7 +173,7 @@ namespace WebDataAgro.Controllers
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GenerarSolicitudExtraordinaria(AdministracionCupo solicitud)
+        public JsonResult GenerarSolicitudExtraordinaria(AdministracionCupoDto solicitud)
         {
             var resultado = cupoManager.GenerarSolicitudExtraordinaria(solicitud);
 

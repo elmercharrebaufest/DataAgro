@@ -3343,8 +3343,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Provincia = x.ProvinciaCompraNet.Nombre,
                 ComisionPorcentaje = x.ComisionPorcentaje,
                 PlanCanje = x.PlanCanje,
-                RazonSocialComisionista = x.Comisionista != null ? x.Comisionista.RazonSocial : "",
-                ComisionistaId = x.Comisionista != null ? x.ComisionistaId : null
+                RazonSocialComisionista = x.ComisionistaE != null ? x.ComisionistaE.RazonSocial : "",
+                ComisionistaId = x.ComisionistaE != null ? x.ComisionistaId : null
             });
             return compranet;
         }
@@ -6707,7 +6707,6 @@ namespace Molinos.DataAgro.Business.Managers
                 var configuracion = configuracionManager.TraerConfiguraciones();
                 ms = configuracion != null ? configuracion.Actualizacion : 30000;
             }
-
             return ms;
         }
     }

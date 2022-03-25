@@ -37,7 +37,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? Comision { get; set; }
         public bool? Deshabilitado { get; set; }
         public string Alias { get; set; }
-        public int? comisionista { get; set; }
+        public bool? comisionista { get; set; }
+        public int? comisionistaId { get; set; }
         public bool? CuposConRiesgo { get; set; }
     }
 

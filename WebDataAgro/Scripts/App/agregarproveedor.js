@@ -21,7 +21,7 @@ var aEliminarGranos = [];
 var aEliminarGranosEstablecimiento = [];
 var aEliminarGranosAlmacenamiento = [];
 var aEliminarGranosAlmacenamientoGrano = [];
-var comisionista = null;
+var comisionistaId = null;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -2296,6 +2296,16 @@ function armarFuncionalidades() {
         }
     });
 
+    $("#comisionista").change(function () {
+        if ($("#comisionista").is(":checked") == true) {
+            $("#comisionistaDiv").hide();
+            //$("#buscadorProveedor").val("")
+            //MensAlerta("Un proveedor comisionista no puede Operar con Comisionista.")
+        } else {
+            $("#comisionistaDiv").show();
+        }
+    });
+
     $("#GuardarContactoComercial").click(function () {
         if (!ValidarContactoComercial())
             return false;
@@ -2711,7 +2721,7 @@ function InicializarDatos() {
                 $("#buscadorProveedor").val($("#buscadorProveedor").val().split('|')[1]);
             } else {
                 //$("#buscadorProveedor").val("");
-             //   comisionista = null;
+                //comisionistaId = null;
             }
         },
         select: function (e) {
@@ -2720,7 +2730,7 @@ function InicializarDatos() {
                 e.preventDefault();
             } else {
                 //$("#Comisionista").val(e.dataItem.Id);
-                //comisionista = e.dataItem.Id;
+                comisionistaId = e.dataItem.Id;
             }
 
         },
@@ -2734,7 +2744,7 @@ function InicializarDatos() {
                     url: "/Proveedor/BuscarProveedor"
                 },
                 parameterMap: function (data, type) {
-                    return { filtroProveedor: $('#buscadorProveedor').val(), segmentacionId: 16 };
+                    return { filtroProveedor: $('#buscadorProveedor').val(), esComisionista: true, cuitProveedor: $("#cuit").val() }; //, segmentacionId: 16 };
                 }
             }
 
@@ -2963,10 +2973,11 @@ function ObtenerDatos() {
 
     obj.basicos.comentario = $("#comentario").val();
 
-    //if ($("#buscadorProveedor").val().length < 4) {        
-    //    comisionista = null;
-    //}
-    //obj.basicos.comisionista = comisionista; //comisionista
+    if ($("#buscadorProveedor").val().length < 4) {        
+        comisionistaId = null;
+    }
+    obj.basicos.comisionistaId = comisionistaId; //comisionista
+    obj.basicos.comisionista = $("#comisionista").is(":checked");
 
     obj.contacto.provincia = $("#provincia").val();
 

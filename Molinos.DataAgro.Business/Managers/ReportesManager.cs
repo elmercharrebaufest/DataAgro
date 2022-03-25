@@ -1424,6 +1424,15 @@ namespace Molinos.DataAgro.Business.Managers
             detalle.ForEach(x => x.PrecioNeto = decimal.Parse(x.PrecioNeto.Replace('.', ',')).ToString("n2"));
             return JsonConvert.SerializeObject(new { items = detalle, total = detalle.Count() }); ;
         }
+
+        public string SustentablePosicionModalIds(List<int> negocios, string moneda)
+        {
+            var detalle = TraerDetallePosicion(negocios, moneda);
+            var resultado = detalle.GroupBy(a => a.FechaHastaDate.ToString("MMMM - yyyy").ToUpper()).Select(a => new { posicion = a.Key, cantidad = a.Sum(x =>  x.CantidadD) }).ToList();
+            resultado.Add(new { posicion = "TOTAL", cantidad = resultado.Sum(x => x.cantidad) });
+            return JsonConvert.SerializeObject(new { items = resultado, total = resultado.Count() - 1 });
+            //return resultado;
+        }
         private List<DetalleContratoDto> TraerDetallePosicion(List<int> negocios, string moneda)
         {
             if (string.IsNullOrWhiteSpace(moneda))
@@ -1606,7 +1615,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString(),
                 MercsDeposito = "",
-                Pizarra = x.Pizarra
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
             },
              x => negocios.Contains(x.Id)
                 && (moneda == "" || x.MonedaId == moneda)
@@ -1666,7 +1676,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString(),
                 MercsDeposito = "",
-                Pizarra = x.Pizarra
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
             },
              x => negocios.Contains(x.Id)
                 && (moneda == "" || x.MonedaId == moneda)
@@ -1726,7 +1737,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = "",
                 PrecioNeto = x.Precio.ToString(),
                 MercsDeposito = "",
-                Pizarra = x.Pizarra
+                Pizarra = x.Pizarra,
+                FechaOperacion = SqlFunctions.DateName("day", x.FechaOperacion) + "/" + SqlFunctions.DatePart("month", x.FechaOperacion) + "/" + SqlFunctions.DateName("year", x.FechaOperacion),
+
             },
             x => negocios.Contains(x.Id)
                 && (moneda == "" || x.MonedaId == moneda)

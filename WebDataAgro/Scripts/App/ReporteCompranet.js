@@ -16,7 +16,7 @@ $(document).ready(function () {
     $("#verFijaciones").on('change', function () {
         setearValoresComboDeInicio();
     });
-    InicializarModalFijacion();
+    //InicializarModalFijacion();
 });
 
 function InicializarDate() {
@@ -97,6 +97,7 @@ function AbrirModal(material, mes, anio, fechaDesde, fechaHasta, materialNombre,
     $.get(href, function (data) { crearGrilladetallePosicion(data); });
     return false;
 }
+
 function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioids, moneda, esFijacion) {
     setearTituloModal(materialNombre, mesNombre, anio);
     var href = window.location.href;
@@ -111,7 +112,9 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
         if (esFijacion == true) {
             crearGrilladetalleFijacion(data);
             var jsonD = JSON.parse(data);
-
+            jsonD.items = jsonD.items.filter(function (el) {
+                return el.TipoNegocioId == 3;
+            });
             var dataFijLargas = jsonD.items.filter(function (el) {
                 var diferenciaDias = DiferenciaFechasEnDias(el.HastaFijacion, el.FechaOperacion);
                 return diferenciaDias > 31;
@@ -154,6 +157,21 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
     return false;
 }
 
+function AbrirModalSustentableIds(anio, materialNombre, mesNombre, negocioids, tiponegocioids, moneda) {
+    setearTituloModal(materialNombre, mesNombre, anio);
+    var href = window.location.href;
+    if (moneda == null) {
+        moneda = "";
+    }
+    href = href + "/DetalleIdsSojaModal?" /*+ "&tiponegocioids=" + tiponegocioids*/ + "&negocioids=" + negocioids + "&moneda=" + moneda;
+
+    //$.get(href, function (data) { crearGrilladetallePosicion(data); });
+    var list = negocioids.split(',');
+    $.post(window.location.href + "/DetalleIdsSojaSustentableModal", { negocioids: list, moneda: moneda }, function (data) {        
+            crearGrillaSustentablePosicion(data);
+    }, "json");
+    return false;
+}
 
 //Formato de Fechas DD/MM/YYYY
 function DiferenciaFechasEnDias(fechaA, fechaB) {
@@ -168,7 +186,11 @@ function DiferenciaFechasEnDias(fechaA, fechaB) {
 
 function setearTituloModal(materialNombre, mesNombre, anio) {
     $('#titulo').empty();
-    $('#titulo').text('DETALLE ' + materialNombre + ' ' + mesNombre + ' - ' + anio);
+    if (anio == "") {
+        $('#titulo').text('DETALLE ' + materialNombre + ' ' + mesNombre);
+    } else {
+        $('#titulo').text('DETALLE ' + materialNombre + ' ' + mesNombre + ' - ' + anio);
+    }
 }
 
 function ModalAgenteCompras(fecha) {
@@ -813,6 +835,61 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
 
 }
 
+function crearGrillaSustentablePosicion(href) {
+    var modal = document.getElementById("ModalDetallePosicion");
+    modal.style.textAlign = "-webkit-center";
+    var modalContent = document.getElementById("modalContentId");
+    modalContent.style.maxWidth = "50%";
+    modalContent.style.textAlign = "-webkit-center";
+    $("#grilla").kendoGrid({
+        culture: "es-AR",
+        dataSource: {
+            data: JSON.parse(href),
+            type: JSON,
+            schema: {
+                data: "items",
+                total: "total"
+            },
+            //pageSize: 20,
+
+            aggregate: [
+                
+            ]
+        },
+        dataBound: ShowModal,
+        //sortable: true,
+        scrollable: false,
+        reorderable: false,
+        groupable: false,
+        resizable: true,
+        
+        columnMenu: false,
+        columns: [
+            {
+                field: "posicion",
+                title: "Posición",
+                width: 180,
+                headerAttributes: {
+                    style: "background-color: #017940; text-align: center; color: white"
+                },
+                template: function (dataItem) {
+                    return dataItem.posicion;
+                }
+            }
+            , {
+                field: "cantidad",
+                title: "Total",
+                headerAttributes: {
+                    style: "background-color: #017940; text-align: center; color: white"
+                },
+                width: 100
+            }]
+
+    });
+
+
+}
+
 function OcultarColumnasVacias(grid) {
     //var grid = $("#grid").data("kendoGrid");
     var data = grid.dataSource.data();
@@ -964,6 +1041,19 @@ function ShowModalFijacion(e) {
     OcultarColumnasVacias($("#grillaDetalle").data("kendoGrid"));
 
 
+}
+
+function ShowModalSojaSustentable(e) {
+    //A saber: Esto sirve para que se pueda escribir en los input de los filtros cuando la grilla de Kendo esta dentro de un modal (error de Kendo).
+    $("#ModalDetalleSojaSustentable").on('shown.bs.modal', function () {
+        $(document).off('focusin.modal');
+    });
+    $("#ModalDetalleSojaSustentable").on('hidden.bs.modal', function () {
+        //$("#grilla").kendoGrid().destroy;
+        $('#grillaSojaSustentable').kendoGrid('destroy').empty();
+    });
+    $("#ModalDetalleSojaSustentable").modal('show');
+    //OcultarColumnasVacias($("#grilla").data("kendoGrid"));
 }
 
 function ShowModalAgente() {

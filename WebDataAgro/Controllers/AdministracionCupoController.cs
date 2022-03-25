@@ -50,12 +50,12 @@ namespace WebDataAgro.Controllers
             ViewBag.comercialId = GlobalVariables.ComercialId;
             return PartialView("PartialPanel");
         }
-        public JsonResult Aceptar(int administracionId, int cantidadCupo, int cantidadFleteProcedencia)
+        public JsonResult Aceptar(int administracionId, int cantidadCupo, int cantidadFleteProcedencia, int cantidadOriginal, int cantidadFleteOriginal, string motivo)
         {
             CupoResult resultado = new CupoResult();
             if (administracionId != 0)
             {
-                resultado = administracionCupoManager.AceptarCupoExcedente(administracionId, cantidadCupo, cantidadFleteProcedencia, GlobalVariables.IdActiveDirectory);
+                resultado = administracionCupoManager.AceptarCupoExcedente(administracionId, cantidadCupo, cantidadFleteProcedencia, cantidadOriginal, cantidadFleteOriginal, GlobalVariables.IdActiveDirectory, motivo);
             }
             else
             {
@@ -64,20 +64,20 @@ namespace WebDataAgro.Controllers
             return Json(resultado);
         }
 
-        public JsonResult Rechazar(int administracionId)
+        public JsonResult Rechazar(int administracionId, string motivo)
         {
-            var resultado = administracionCupoManager.CambiarEstadoRechazado(administracionId, GlobalVariables.IdActiveDirectory);
+            var resultado = administracionCupoManager.CambiarEstadoRechazado(administracionId, motivo, GlobalVariables.IdActiveDirectory);
             return Json(resultado);
         }
 
-        public JsonResult AceptarMasivo(List<AdministracionCupoDto> solicitudes)
+        public JsonResult AceptarMasivo(List<AdministracionCupoDto> solicitudes, string motivo)
         {
             CupoResult resultados = new CupoResult();
             if (solicitudes.Count > 0)
             {
                 foreach (var adm in solicitudes)
                 {
-                    var resultado = administracionCupoManager.AceptarCupoExcedente(adm.Id, adm.CantidadDeCupo, adm.CantidadFleteProcedencia, GlobalVariables.IdActiveDirectory);
+                    var resultado = administracionCupoManager.AceptarCupoExcedente(adm.Id, adm.CantidadDeCupo, adm.CantidadFleteProcedencia, adm.CantidadDeCupoOriginal, adm.CantidadFleteProcedenciaOriginal, GlobalVariables.IdActiveDirectory, motivo);
                     if (resultado.HayError)
                         resultados.Errores.AddRange(resultado.Errores);
                 }
@@ -89,14 +89,14 @@ namespace WebDataAgro.Controllers
             return Json(resultados);
         }
 
-        public JsonResult RechazarMasivo(List<AdministracionCupoDto> solicitudes)
+        public JsonResult RechazarMasivo(List<AdministracionCupoDto> solicitudes, string motivo)
         {
             var resultado = new Resultado();
             if (solicitudes.Count > 0)
             {
                 foreach (var adm in solicitudes)
                 {
-                    resultado = administracionCupoManager.CambiarEstadoRechazado(adm.Id, GlobalVariables.IdActiveDirectory);
+                    resultado = administracionCupoManager.CambiarEstadoRechazado(adm.Id, motivo, GlobalVariables.IdActiveDirectory);
                 }
             }
             else
@@ -110,6 +110,12 @@ namespace WebDataAgro.Controllers
         {
             ComercialId = ComercialId ?? GlobalVariables.ComercialId;
             var model = administracionCupoManager.TraerTodaAdministracionCupo(request, ComercialId);
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
+        public ActionResult ActualizarSolicitud(int id, int cantidadCupo, int cantidadFlete, bool estado)
+        {
+            var model = administracionCupoManager.ActualizarSolicitud(id, cantidadCupo, cantidadFlete, estado);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
     }

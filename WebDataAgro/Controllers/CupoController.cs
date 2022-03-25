@@ -96,7 +96,8 @@ namespace WebDataAgro.Controllers
                     PlantaId = cupo.CentroCodigo,
                     CuitId = cupo.Destinatario,
                     Siguientes = siguientes,
-                    NegocioId = cupo.NegocioId
+                    NegocioId = cupo.NegocioId,
+                    ConDescarga = cupo.ConDescarga.HasValue? cupo.ConDescarga.Value: false
                 };
                 ViewBag.Titulo = "Código Cupo " + cupo.CupoSap;
                 return View(cupoModel);
@@ -299,7 +300,8 @@ namespace WebDataAgro.Controllers
                 ComercialId = GlobalVariables.ComercialId,
                 FechaGeneracion = DateTime.Now,
                 NegocioId = cupo.Negocio,
-                ZonaCupoId = cupo.ZonaId
+                ZonaCupoId = cupo.ZonaId,
+                ConDescarga = cupo.ConDescarga
             };
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {

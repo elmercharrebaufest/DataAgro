@@ -46,7 +46,7 @@
         <div class="tab-pane" id="method">
             <div class="row alinear-derecha">
                 <div class="col-xs-12 col-md-1 col-sm-4" style="margin-left: 15px; margin-right: -32px;">
-                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick=" AceptarMasivo()">
+                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick="AbrilConfirmarModalMasivo()">
                         <span class="botonVarios">
                             <i class="fa fa-check" aria-hidden="true"></i>
                         </span>
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-2 col-sm-4 alinear-derecha">
-                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick=" RechazarMasivo()">
+                    <div id="finalizarVariosDiv" data-toggle="tooltip" onclick="AbrilModalMasivo()">
                         <span class="botonVarios">
                             <i class="fa  fa-trash" aria-hidden="true"></i>
                         </span>
@@ -67,7 +67,8 @@
                     <div id="gridInformeCompraNet" class="table-responsive"></div>
                     <input id="CantidadDeCupoAceptado" type="hidden" />
                     <input id="CantidadCupoFleteAceptado" type="hidden" />
-
+                    <input id="CantidadDeCupoFleteOriginal" type="hidden" />
+                    <input id="CantidadDeCupoOriginal" type="hidden" />
                 </div>
             </div>
         </div>
@@ -107,8 +108,13 @@
 @*Modal Aceptar*@
 @Html.Partial("ModalAceptarSolicitud")
 
+@*Modal Aceptar Masivo*@
+@Html.Partial("ModalAceptarSolicitudMasivo")
+
 @*Modal Rechazar*@
 @Html.Partial("ModalRechazarSolicitud")
+@*Modal Rechazar Masivo*@
+@Html.Partial("ModalRechazarSolicitudMasivo")
 <style>
     #gridInformeCompraNet td {
         text-align: center !important;

@@ -86,7 +86,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             cupoManagerMock.Verify(x => x.ObtenerSugerenciaCupo(It.IsAny<int>(), It.IsAny<int?>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"ComercialId\":1,\"Id\":1,\"MaterialId\":1,\"MaterialDesc\":null,\"Precio\":null,\"MonedaId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"PrecioPizarra\":0,\"formula\":null,\"Puntuaciones\":{},\"PuntuacionesString\":null,\"PuntuacionTotal\":0,\"DestinoId\":0,\"CantidadDeCupos\":0,\"CantidadCupoOriginal\":0,\"CantidadDeCuposMaximo\":0,\"CantidadFleteProcedencia\":null,\"ZonaDescrip\":null,\"Priorizado\":false,\"FechaSugerida\":\"\\/Date(-62135586000000)\\/\",\"ProveedorId\":1,\"CentroId\":1,\"MonedaDesc\":null,\"ProveedorCUIT\":null,\"ProveedorDesc\":null,\"TipoNegocioDesc\":null,\"Aceptado\":null,\"ZonaCupoId\":null,\"Destinatario\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"ContratoSAP\":null,\"NegocioId\":null,\"CDWarrant\":false,\"KgNegocio\":0,\"KgPendienteAplicar\":0,\"ComercialDesc\":null,\"Fason\":null,\"CentroDesc\":null}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"ComercialId\":1,\"Id\":1,\"MaterialId\":1,\"MaterialDesc\":null,\"Precio\":null,\"MonedaId\":null,\"ConfiguracionEspacioDinamicoId\":null,\"FechaDesde\":\"\\/Date(-62135586000000)\\/\",\"FechaHasta\":\"\\/Date(-62135586000000)\\/\",\"PrecioPizarra\":0,\"formula\":null,\"Puntuaciones\":{},\"PuntuacionesString\":null,\"PuntuacionTotal\":0,\"DestinoId\":0,\"CantidadDeCupos\":0,\"CantidadCupoOriginal\":0,\"CantidadDeCuposMaximo\":0,\"CantidadFleteProcedencia\":null,\"ZonaDescrip\":null,\"Priorizado\":false,\"FechaSugerida\":\"\\/Date(-62135586000000)\\/\",\"ProveedorId\":1,\"CentroId\":1,\"MonedaDesc\":null,\"ProveedorCUIT\":null,\"ProveedorDesc\":null,\"TipoNegocioDesc\":null,\"Aceptado\":null,\"ZonaCupoId\":null,\"Destinatario\":null,\"StandardDeCalidad\":null,\"TipoNegocioId\":0,\"ContratoSAP\":null,\"NegocioId\":null,\"CDWarrant\":false,\"KgNegocio\":0,\"KgPendienteAplicar\":0,\"ComercialDesc\":null,\"Fason\":null,\"CentroDesc\":null,\"Inhabilitado\":null}],\"Aggregates\":null,\"Total\":1},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
         [Test]
@@ -135,11 +135,11 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GenerarSolicitudExtraordinariaTest()
         {
-            cupoManagerMock.Setup(x => x.GenerarSolicitudExtraordinaria(It.IsAny<AdministracionCupo>())).Returns(new CupoResult());
-            var result = target.GenerarSolicitudExtraordinaria(It.IsAny<AdministracionCupo>());
+            cupoManagerMock.Setup(x => x.GenerarSolicitudExtraordinaria(It.IsAny<AdministracionCupoDto>())).Returns(new CupoResult());
+            var result = target.GenerarSolicitudExtraordinaria(It.IsAny<AdministracionCupoDto>());
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            cupoManagerMock.Verify(x => x.GenerarSolicitudExtraordinaria(It.IsAny<AdministracionCupo>()), Times.Once);
+            cupoManagerMock.Verify(x => x.GenerarSolicitudExtraordinaria(It.IsAny<AdministracionCupoDto>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);

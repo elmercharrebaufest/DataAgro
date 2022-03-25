@@ -1283,7 +1283,8 @@ namespace Molinos.DataAgro.Business.Managers
                 PlanCanje = oParam.basicos.PlanCanje,
                 Deshabilitado = oParam.basicos.Deshabilitado,
                 Alias = oParam.basicos.Alias,
-                ComisionistaId = oParam.basicos.comisionista,
+                ComisionistaId = oParam.basicos.comisionistaId,
+                Comisionista = oParam.basicos.comisionista,
                 CuposConRiesgo = oParam.basicos.CuposConRiesgo
             };
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
@@ -1673,6 +1674,11 @@ namespace Molinos.DataAgro.Business.Managers
                 oEntityErrors.Error("FACACOP", "El CUIT " + oParam.basicos.cuit + " es Apocrifo");
                 return oEntityErrors;
             }
+            if (oParam.basicos.comisionista == true && oParam.basicos.comisionistaId != null)
+            {
+                oEntityErrors.Error("Comisionista", "El campo comisionista y opera a través de son excluyentes");
+                return oEntityErrors;
+            }
             return oEntityErrors;
         }
         public ProveedorDto TraerProveedor(int? proveedorId)
@@ -1697,6 +1703,11 @@ namespace Molinos.DataAgro.Business.Managers
                     return resultado;
                 }
                 var oProveedorSave = repositorio.Obtener<Proveedor>(oParam.ProveedorId);
+                if (oParam.basicos.comisionista == true && oParam.basicos.comisionistaId != null)
+                {
+                    resultado.Error("Comisionista", "El campo comisionista y opera a través de son excluyentes");
+                    return resultado;
+                }
                 var proveedorCorredor = repositorio.Listar<Proveedor>(x => x.CUIT == oParam.basicos.cuit).ToList();
                 if (proveedorCorredor != null)
                 {
@@ -1737,7 +1748,8 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.RazonSocial = oParam.basicos.RazonSocial;
                 oProveedorSave.Deshabilitado = oParam.basicos.Deshabilitado;
                 oProveedorSave.Alias = oParam.basicos.Alias;
-                oProveedorSave.ComisionistaId = oParam.basicos.comisionista;
+                oProveedorSave.ComisionistaId = oParam.basicos.comisionistaId;
+                oProveedorSave.Comisionista = oParam.basicos.comisionista;
                 oProveedorSave.CuposConRiesgo = oParam.basicos.CuposConRiesgo;
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
@@ -2872,9 +2884,13 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
-        public List<BusquedaHome> DevolverProveedoresCorredores(string filtro, int? segmentacionId = null, bool? validar = true)
+        public List<BusquedaHome> DevolverProveedoresCorredores(string filtro, bool esComisionista = false, string cuitProveedor = "", bool? validar = true)
         {
-            var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro, segmentacionId, validar));
+            var resultado = repositorio.ListarConsulta(new DevolverProveedoresCorredores(filtro, esComisionista, validar));
+            if (esComisionista)
+            {
+                resultado = resultado.Where(x => x.Cuit != cuitProveedor).ToList();
+            }
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
             if (validar == true)
             {

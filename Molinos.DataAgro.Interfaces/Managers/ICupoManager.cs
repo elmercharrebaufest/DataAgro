@@ -59,7 +59,7 @@ namespace Molinos.DataAgro.Interfaces
         List<CierreCupera> DevolverTodoCierreCupera();
         void CrearSugerenciaCupo();
         void EnviarMailSugerenciasPendientesPorComercial();
-        CupoResult GenerarSolicitudExtraordinaria(AdministracionCupo solicitud);
+        CupoResult GenerarSolicitudExtraordinaria(AdministracionCupoDto solicitud);
         void EliminarSugerenciaDeCupos(ConfiguracionCupo configuracion);
 
         List<MensajeCupoDto> MostrarDetalle(int comercialSeleccionado, string centroId, int materialId);

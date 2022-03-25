@@ -69,6 +69,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ComercialDesc { get; set; }
         public bool? Fason { get; set; }
         public string CentroDesc { get; set; }
+        public string Inhabilitado { get; set; }
 
         public object Clone()
         {

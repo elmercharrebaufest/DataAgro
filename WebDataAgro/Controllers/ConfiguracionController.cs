@@ -46,6 +46,7 @@ namespace WebDataAgro.Controllers
                 ImporteSustentableEspecial = conf.ImporteSustentableEspecial,
                 AlgoritmoKilosMinimosParaSugerencia = conf != null ? conf.AlgoritmoKilosMinimosParaSugerencia : 0,
                 Actualizacion = conf != null ? conf.Actualizacion : 1,
+                AlgoritmoProcMaxSugerenciasProveedorDia = conf != null ? conf.AlgoritmoProcMaxSugerenciasProveedorDia : 0,
             });
         }
         [HttpPost]
@@ -89,7 +90,8 @@ namespace WebDataAgro.Controllers
 
                 AlgoritmoKilosMinimosParaSugerencia = configuracion.AlgoritmoKilosMinimosParaSugerencia,
                 ImporteSustentableEspecial = configuracion.ImporteSustentableEspecial,
-                Actualizacion = configuracion.Actualizacion
+                Actualizacion = configuracion.Actualizacion,
+                AlgoritmoProcMaxSugerenciasProveedorDia = configuracion.AlgoritmoProcMaxSugerenciasProveedorDia,
             };
             return entidad;
         }

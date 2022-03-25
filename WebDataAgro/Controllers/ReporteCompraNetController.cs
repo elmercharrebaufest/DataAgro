@@ -110,6 +110,12 @@ namespace WebDataAgro.Controllers
             var result = mobjReportesManager.DetallePosicionModalIds(negocioids, moneda);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult DetalleIdsSojaSustentableModal(List<int> negocioids, string moneda)
+        {
+            var result = mobjReportesManager.SustentablePosicionModalIds(negocioids, moneda);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         public ExcelResult ExcelAgente(string fechaString, string materialId)
         {
             var listmaterialId = String.IsNullOrEmpty(materialId) ? new List<int>() : materialId.Split(',').Select(a => int.Parse(a)).ToList();

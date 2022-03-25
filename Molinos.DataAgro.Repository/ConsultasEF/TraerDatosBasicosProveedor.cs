@@ -99,7 +99,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Consignatario = prove.Consignatario,
                     Comision = prove.ComisionPorcentaje,
                     PlanCanje = prove.PlanCanje,
-                    Comisionista = (prove.Comisionista == null) ? null : prove.Comisionista.RazonSocial,//(prove.ComisionistaId == null) ? "" : "Opera con comisionista.",
+                    RazonSocialComisionista = (prove.ComisionistaE == null) ? null : prove.ComisionistaE.RazonSocial,//(prove.ComisionistaId == null) ? "" : "Opera con comisionista.",
+                    Comisionista = prove.Comisionista,
                     ComisionistaId = prove.ComisionistaId,
                     Deshabilitado = prove.Deshabilitado,
                     CuposConRiesgo = prove.CuposConRiesgo

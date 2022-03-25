@@ -338,9 +338,9 @@ namespace WebDataAgro.Controllers
                 return Json(mobjProveedorManager.DevolverProveedoresConCorredor(filtroProveedor, filtro), JsonRequestBehavior.AllowGet);
             }
         }
-        public JsonResult BuscarProveedor(string filtroProveedor, int? segmentacionId)
+        public JsonResult BuscarProveedor(string filtroProveedor, bool esComisionista = false, string cuitProveedor = "")
         {
-            return Json(mobjProveedorManager.DevolverProveedoresCorredores(filtroProveedor, segmentacionId), JsonRequestBehavior.AllowGet);
+            return Json(mobjProveedorManager.DevolverProveedoresCorredores(filtroProveedor, esComisionista, cuitProveedor), JsonRequestBehavior.AllowGet);
         }
         public JsonResult BuscarLocalidades(string filtro)
         {

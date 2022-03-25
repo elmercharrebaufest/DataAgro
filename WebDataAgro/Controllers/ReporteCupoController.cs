@@ -67,7 +67,7 @@ namespace WebDataAgro.Controllers
         }
         public JsonResult BuscarProveedor(string text)
         {
-            var proveedores = proveedormanager.DevolverProveedoresCorredores(text, null, false);
+            var proveedores = proveedormanager.DevolverProveedoresCorredores(text, false, "",false);
             return Json(proveedores.Select(x => new { ProveedorId = x.Id, Proveedor = x.RazonSocial }), JsonRequestBehavior.AllowGet);
         }
 

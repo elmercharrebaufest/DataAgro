@@ -11,17 +11,17 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
     public class DevolverProveedoresCorredores : IConsulta<BusquedaHome>
     {
         private readonly string filtro;
-        private readonly int? segmentacionId;
+        private readonly bool esComisionista;
         private readonly bool? validarSisa;
 
-        public DevolverProveedoresCorredores(string filtro, int? segmentacionId = null, bool? validarSisa = true)
+        public DevolverProveedoresCorredores(string filtro, bool esComisionista = false, bool? validarSisa = true)
         {
             this.filtro = filtro;
-            this.segmentacionId = segmentacionId;
+            this.esComisionista = esComisionista;
             this.validarSisa = validarSisa;
         }
 
-        private static List<BusquedaHome> Query(DbContext contexto, string filtro, int? segmentacionId = null, bool? validarSisa = true)
+        private static List<BusquedaHome> Query(DbContext contexto, string filtro, bool esComisionista, bool? validarSisa = true)
         {
             var resultado = from Proveedor in contexto.Set<Proveedor>()
                             join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
@@ -29,7 +29,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             join c in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals c.ProveedorId into rg
                             from c in rg.DefaultIfEmpty()
                             where (Proveedor.CUIT.Contains(filtro) || Proveedor.RazonSocial.Contains(filtro) || Proveedor.Alias.Contains(filtro) ||
-                            c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) && (segmentacionId == null || Proveedor.SegmentacionId == segmentacionId)
+                            c.Nombres.Contains(filtro) || c.Apellido.Contains(filtro)) && (esComisionista == false || Proveedor.Comisionista == esComisionista)
                             group c by Proveedor into provs
                             select new BusquedaHome
                             {
@@ -60,7 +60,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, filtro, segmentacionId, validarSisa);
+                return Query(contexto, filtro, esComisionista, validarSisa);
             }
         }
 
@@ -93,24 +93,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         var sisa = new SISA();
                         if (item.ClasificacionId.HasValue)
                         {
-                            if (item.ClasificacionId == 1)
-                            {
-                                sisa = (from s in contexto.Set<SISA>()
-                                        where s.CUIT == item.Cuit && s.CodCategoria == 1 && s.SituacionCategoria == "AL"
-                                        select s).FirstOrDefault();
-                            }
-                            else if (item.ClasificacionId == 2)
-                            {
-                                sisa = (from s in contexto.Set<SISA>()
-                                        where s.CUIT == item.Cuit && s.CodCategoria == 6 && s.SituacionCategoria == "AL"
-                                        select s).FirstOrDefault();
-                            }
-                            else
-                            {
-                                sisa = (from s in contexto.Set<SISA>()
-                                        where s.CUIT == item.Cuit && s.CodCategoria != 1 && s.CodCategoria != 6 && s.SituacionCategoria == "AL"
-                                        select s).FirstOrDefault();
-                            }
+                           
+                            sisa = (from s in contexto.Set<SISA>()
+                                        where s.CUIT == item.Cuit select s).FirstOrDefault();
+                           
                             if (sisa != null)
                             {
                                 if (sisa.EstadoCuit == 3 && item.RiesgoComercialSap != "E")

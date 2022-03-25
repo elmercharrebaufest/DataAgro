@@ -38,8 +38,10 @@ namespace WebDataAgro.Models
         public int ToleranciaPaseMax { get; set; }
         public int ToleranciaPaseMin { get; set; }
 
-        public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
         public int Actualizacion { get; set; }
         public decimal ImporteSustentableEspecial { get;  set; }
+        public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
+        public int AlgoritmoProcMaxSugerenciasProveedorDia { get; set; }
+
     }
 }

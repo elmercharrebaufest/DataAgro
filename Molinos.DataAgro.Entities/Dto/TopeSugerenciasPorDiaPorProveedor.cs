@@ -8,8 +8,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int ProveedorId { get; set; }                  
         public DateTime Fecha { get; set; }
-        public int Maximo { get; set; }
-        public int Asignado { get; set; }
+        public int Disponible { get; set; }
     }
 
 }

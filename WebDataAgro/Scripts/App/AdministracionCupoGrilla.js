@@ -1,6 +1,7 @@
 ﻿var externo;
 $(document).ready(function () {
     $('#menuproveedor').hide();
+    kendo.culture("es-AR");
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
@@ -10,6 +11,18 @@ $(document).ready(function () {
         $("#cuerpo-carga-cupos").empty();
     });
     AutoRecargarSolicitudes();
+    $('#modalAceptarSolicitud').on('hidden.bs.modal', function () {
+        $("#motivo-confirmarSolictud").val("");
+    })
+    $('#modalRechazarSolicitud').on('hidden.bs.modal', function () {
+        $("#motivo-rechazoSolictud").val("");
+    })
+    $('#modalRechazarSolicitudMasivo').on('hidden.bs.modal', function () {
+        $("#motivo").val("");
+    })
+    $('#modalAceptarSolicitudMasivo').on('hidden.bs.modal', function () {
+        $("#motivo-confirmarSolictudMasivo").val("");
+    })
 
 });
 function CargarGrillaConfig() {
@@ -42,13 +55,14 @@ function CargarGrillaConfig() {
                     Centro: { type: "string" },
                     Fecha: { type: "date" },
                     Estado: { type: "string" },
-
+                    FechaCreacion: { type: "date" },
+                    FechaCreacionConHora: { type: "date" },
                 }
             }
         },
         serverPaging: true,
         serverSorting: true,
-        sort: [{ field: "EstadoId", dir: "desc" }, { field: "Fecha", dir: "asc" }],
+        sort: [{ field: "EstadoId", dir: "desc" }, { field: "Fecha", dir: "asc" }, { field: "FechaCreacion", dir: "desc" } ],
         serverFiltering: true,
         pageSize: 20,
     };
@@ -82,14 +96,17 @@ function CargarGrillaConfig() {
             { selectable: true, width: "50px" },
             {
                 field: "TipoAdministracionCupo", type: "string", title: "Tipo", width: 70,
-                editable: function (dataItem) { return false; },
-                attributes: { "class": "mobile-xs " + classExterno }
+                editable: function (dataItem) { return false; }, filterable: {
+                    multi: true, dataSource: [{
+                        TipoAdministracionCupo: "Extraordinaria"
+                    }, {
+                        TipoAdministracionCupo: "Algoritmo"
+                    }]
+                }, width: 130, template: "#=TipoAdministracionCupo#",
             },
             {
-                field: "Proveedor", type: "string", width: 150,
-                editable: function (dataItem) {
-                    return false;
-                },
+                field: "Proveedor", type: "string", minResizableWidth: 100, width: 150,
+                editable: function (dataItem) { return false; },
                 headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
                 template: function (dataItem) {
                     if (dataItem.EstadoId == 3) {
@@ -99,19 +116,19 @@ function CargarGrillaConfig() {
                     } else if (dataItem.EstadoId == 2) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
                     }
-                },
-                filterable: { ui: createMultiSelectProveedor }
+                }, 
+                filterable: { ui: createMultiSelectProveedor, extra: false }
             },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 70, editable: function (dataItem) {
+                field: "Comercial", type: "string", title: "Comercial", width: 150, editable: function (dataItem) {
                     return false;
-                }, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                }, filterable: { ui: createMultiSelectComercial, extra: false }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
             {
-                field: "Material", type: "string", editable: function (dataItem) {
+                field: "Material", type: "string", minResizableWidth: 100, width: 150, editable: function (dataItem) {
                     return false;
                 }, filterable: {
                     multi: true, dataSource: [{
@@ -156,17 +173,64 @@ function CargarGrillaConfig() {
                 },
             },
             {
-                field: "Centro", type: "string", title: "Destino", editable: function (dataItem) {
+                field: "Centro", type: "string", title: "Destino", minResizableWidth: 100, width: 150, editable: function (dataItem) {
                     return false;
-                }, attributes: { "class": "mobile-xs mobile-md" }
+                }, filterable: {
+                    multi: true, dataSource: [{
+                        Centro: "S. Lorenzo"
+                    }, {
+                        Centro: "SAN LORENZO SUSTENTABLE / CALIDAD"
+                    }, {
+                        Centro: "Rio del Valle"
+                    }, {
+                        Centro: "General Pinedo"
+                    }, {
+                        Centro: "Vicentin Virtual"
+                    }, {
+                        Centro: "Bahia Blanca"
+                    }, {
+                        Centro: "Pergamino"
+                    }, {
+                        Centro: "Bandera"
+                    },
+                    {
+                        Centro: "La Cautiva"
+                    },
+                    {
+                        Centro: "Lincoln"
+                    },
+                    {
+                        Centro: "Prest Dev. Buenos Aires"
+                    },
+                    {
+                        Centro: "Prest Dev. Santa Fe"
+                    },
+                    {
+                        Centro: "Chivilcoy"
+                    }, {
+                        Centro: "LE"
+                    }]
+                }, width: 130, template: "#=Centro#",
             },
             {
-                field: "Fecha", title: "Fecha Solicitud", type: "date", editable: function (dataItem) {
+                field: "Fecha", title: "Fecha Sugerida", width: 150, format: _DefaultDateTemplate, type: "date", editable: function (dataItem) {
                     return false;
-                }, format: _DefaultDateTemplate
+                }
             },
             {
-                field: "CantidadDeCupo", title: "Cantidad de Cupos", width: "110px",
+                field: "FechaCreacionConHora", title: "Fecha Creacion", width: 150, template: function (dataItem) {
+                    if (dataItem.FechaCreacion == null) {
+                        return "";
+                    }
+                    return kendo.toString(dataItem.FechaCreacion, "dd/MM/yyyy") + " " + dataItem.Hora;
+                },
+                type: "date", editable: function (dataItem) {
+                    return false;
+                }
+            },
+            {
+                field: "CantidadDeCupo", title: "Cantidad de Cupos", width: "150px",
+                filterable: { extra: false },
                 editor: function (container, options) {
                     // create an input element
                     var input = $("<input name='" + options.field + "'/>");
@@ -177,11 +241,12 @@ function CargarGrillaConfig() {
                     input.kendoNumericTextBox({
                         max: options.model.CantidadDeCupoMax,
                         min: 0
-                    });
+                    });                   
                 }
             },
             {
-                field: "CantidadFleteProcedencia", title: "Cantidad Flete Procedencia",
+                field: "CantidadFleteProcedencia", title: "Cantidad Flete Procedencia", width: "150px",
+                filterable: { extra: false },
                 editor: function (container, options) {
                     // create an input element
                     var input = $("<input name='" + options.field + "'/>");
@@ -195,9 +260,12 @@ function CargarGrillaConfig() {
                         min: 0
                     });
                 }
+            },               
+            {
+                field: "Observacion", type: "string", minResizableWidth: 100, width: 150, filterable: { extra: false }, editable: function (dataItem) { return false; },     
             },
             {
-                field: "Estado", title: "Estado", editable: function (dataItem) {
+                field: "Estado", title: "Estado", width: 150, editable: function (dataItem) {
                     return false;
                 },
                 filterable: {
@@ -212,16 +280,22 @@ function CargarGrillaConfig() {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
                     if (dataItem.EstadoId == 3) { //pendiente
-                        return '<div class="status pendiente">Pendiente</div>' +
+                        return '<div class="status pendiente" style="text-align: center;">Pendiente'
+                            + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
+                            '</div>' +
                             botonAprobar(dataItem, 'fa-check pend') +
                             botonBorrar(dataItem, 'fa-trash pend');
 
                     }
                     if (dataItem.EstadoId == 1) { //confirmado                       
-                        return '<div class="status confirmado">Confirmado</div>';
+                        return '<div class="status confirmado" style="text-align: center;">Confirmado' 
+                            + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
+                            '</div>';
                     }
                     if (dataItem.EstadoId == 2) { //Rechazado
-                        return '<div class="status borrado">Rechazado</div>';
+                        return '<div class="status borrado" style="text-align: center;">Rechazado' 
+                            + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
+                            + '</div>';
                     }
                 }
             }
@@ -244,15 +318,32 @@ function CargarGrillaConfig() {
             input: true,
             numeric: true
         },
-        scrollable: false,
+        scrollable: true,
         sortable: {
             mode: "multiple",
             allowUnsort: true,
             showIndexes: false
         },
+        filterMenuOpen: function (e) {
+            if (e.field == "Fecha" || e.field == "FechaCreacionConHora") {
+                var beginOperator = e.container.find("[data-role=dropdownlist]:eq(0)").data("kendoDropDownList");
+                beginOperator.value("gte");
+                beginOperator.trigger("change")
+                beginOperator.enable(false);
+                var logicDropDown = e.container.find("select:eq(1)").data("kendoDropDownList");
+                logicDropDown.value("and");
+                logicDropDown.trigger("change");
+                logicDropDown.wrapper.hide();
+                console.log(e.container.find("select:eq(1)"));
+                var endOperator = e.container.find("[data-role=dropdownlist]:eq(2)").data("kendoDropDownList");
+                endOperator.value("lte");
+                endOperator.trigger("change");
+                endOperator.enable(false);
+            }
+        },
         filterable: {
-            height: 350,
-            extra: false,
+            //height: 350,
+            //extra: false,
             checkAll: false,
 
             messages: {
@@ -266,17 +357,24 @@ function CargarGrillaConfig() {
             },
             operators: {
                 string: {
-                    eq: "Igual"
+                    eq: "Igual",
+                    neq: "Distinto",
+                    startswith: "Comienza con",
+                    contains: "Contiene",
+                    endswith: "Finaliza con"
                 },
                 date: {
-                    eq: "Igual",
-                    gte: "Despu&eacute;s o igual a",
-                    lte: "Antes o igual a"
+                    gte: "Desde",
+                    lte: "Hasta"
                 },
                 number: {
                     eq: "Igual a",
                     gte: "Mayor que o igual a",
                     lte: "Menor que o igual a"
+                },
+                bool: {
+                    yesText: 'Yes',     // default
+                    noText: 'No'        // default
                 }
             }
         }
@@ -391,6 +489,8 @@ function ModalAceptarSugerencia(id) {
     var solicitudSeleccionada = grid.filter(function (x) { return (x.Id == id) });
     $("#CantidadDeCupoAceptado").val(solicitudSeleccionada[0].CantidadDeCupo);
     $("#CantidadCupoFleteAceptado").val(solicitudSeleccionada[0].CantidadFleteProcedencia);
+    $("#CantidadDeCupoFleteOriginal").val(solicitudSeleccionada[0].CantidadFleteProcedenciaOriginal); 
+    $("#CantidadDeCupoOriginal").val(solicitudSeleccionada[0].CantidadDeCupoOriginal);
     $("#solicitudId").val(id);
 }
 function ModalRechazarSugerencia(id) {
@@ -400,6 +500,9 @@ function ModalRechazarSugerencia(id) {
 }
 function AceptarSolicitud() {
     var id = $("#solicitudId").val();
+    var motivo = $("#motivo-confirmarSolictud").val();
+    var cantidadOriginal = $("#CantidadDeCupoOriginal").val();
+    var cantidadFleteOriginal = $("#CantidadDeCupoFleteOriginal").val();
 
     var cantidad = $("#CantidadDeCupoAceptado").val();
     if (cantidad === undefined) {
@@ -416,7 +519,7 @@ function AceptarSolicitud() {
     BlockUi('Procesando...');
     setTimeout(
         function () {
-            result = MSExecuteOnServer('/AdministracionCupo/Aceptar', { administracionId: id, cantidadCupo: cantidad, cantidadFleteProcedencia: cantidadFp });
+            result = MSExecuteOnServer('/AdministracionCupo/Aceptar', { administracionId: id, cantidadCupo: cantidad, cantidadFleteProcedencia: cantidadFp, cantidadOriginal: cantidadOriginal, cantidadFleteOriginal: cantidadFleteOriginal, motivo: motivo });
 
             $.unblockUI();
             var errores = new Array();
@@ -433,16 +536,17 @@ function AceptarSolicitud() {
             $.unblockUI();
         }
         , 200);
-   
+
 }
 
 
 function RechazarSolicitud() {
     var id = $("#solicitudId").val();
+    var motivo = $("#motivo-rechazoSolictud").val();
     BlockUi('Procesando...');
     setTimeout(
         function () {
-            result = MSExecuteOnServer('/AdministracionCupo/Rechazar', { administracionId: id });
+            result = MSExecuteOnServer('/AdministracionCupo/Rechazar', { administracionId: id, motivo: motivo});
             var errores = new Array();
             for (var i = 0; i < result.length; i++) {
                 if (result[i].HayError) {
@@ -459,7 +563,7 @@ function RechazarSolicitud() {
             $.unblockUI();
         }
         , 200);
-  
+
 }
 function cuposCreados(lista) {
     $("#cupos-generados-modal").html(lista.join("</br>"));
@@ -573,9 +677,14 @@ function DeseleccionarElementos() {
     grid.clearSelection();
 }
 
+function AbrilModalMasivo() {
+    $("#modalRechazarSolicitudMasivo").modal("show");
+}
+
 function RechazarMasivo() {
     BlockUi('Procesando...');
     var solicitudes = SeleccionarElementos();
+    var motivo = $("#motivo").val();
     var ids = [];
     //for (var i = 0; i < configuraciones.length; i++) {
     //    ids.push(configuraciones[i].id);
@@ -583,16 +692,19 @@ function RechazarMasivo() {
     if (solicitudes.length <= 0) {
         MensErr("No se seleccionó ninguna solicitud pendiente.");
     } else {
-        var limites = MSExecuteOnServer("/AdministracionCupo/RechazarMasivo", { solicitudes: solicitudes });
+        var limites = MSExecuteOnServer("/AdministracionCupo/RechazarMasivo", { solicitudes: solicitudes, motivo: motivo });
         MensInfo("Se guardó correctamente");
         recargarGrilla();
     }
     $.unblockUI();
 }
+function AbrilConfirmarModalMasivo() {
+    $("#modalAceptarSolicitudMasivo").modal("show");
+}
 
 function AceptarMasivo() {
     BlockUi('Procesando...');
-
+    var motivo = $("#motivo-confirmarSolictudMasivo").val();
     setTimeout(
         function () {
             var solicitudes = SeleccionarElementos();
@@ -600,7 +712,7 @@ function AceptarMasivo() {
             if (solicitudes.length <= 0) {
                 MensErr("No se seleccionó ninguna solicitud pendiente.");
             } else {
-                var result = MSExecuteOnServer("/AdministracionCupo/AceptarMasivo", { solicitudes: solicitudes });
+                var result = MSExecuteOnServer("/AdministracionCupo/AceptarMasivo", { solicitudes: solicitudes, motivo: motivo });
                 var errores = new Array();
                 var cuposGenerados = new Array();
                 if (result.HayError) {
