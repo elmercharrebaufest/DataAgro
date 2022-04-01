@@ -1428,7 +1428,7 @@ namespace Molinos.DataAgro.Business.Managers
         public string SustentablePosicionModalIds(List<int> negocios, string moneda)
         {
             var detalle = TraerDetallePosicion(negocios, moneda);
-            var resultado = detalle.GroupBy(a => a.FechaHastaDate.ToString("MMMM - yyyy").ToUpper()).Select(a => new { posicion = a.Key, cantidad = a.Sum(x =>  x.CantidadD) }).ToList();
+            var resultado = detalle.GroupBy(a => a.FechaHastaDate.ToString("MMMM - yyyy").ToUpper()).Select(a => new { posicion = a.Key, cantidad = (a.Sum(x => x.CantidadD) / 1000) }).ToList();
             resultado.Add(new { posicion = "TOTAL", cantidad = resultado.Sum(x => x.cantidad) });
             return JsonConvert.SerializeObject(new { items = resultado, total = resultado.Count() - 1 });
             //return resultado;

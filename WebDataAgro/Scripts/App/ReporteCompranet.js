@@ -878,7 +878,7 @@ function crearGrillaSustentablePosicion(href) {
             }
             , {
                 field: "cantidad",
-                title: "Total",
+                title: "Total (Tn)",
                 headerAttributes: {
                     style: "background-color: #017940; text-align: center; color: white"
                 },
