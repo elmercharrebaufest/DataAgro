@@ -38,7 +38,9 @@ namespace Molinos.DataAgro.Agent
                     {
                        Cantidad = 30000,
                        Establecimiento = "CAPALDI",
-                       Cosecha = "19-20"
+                       Cosecha = "19-20",
+                       Localidad = "Buenos Aires",
+                       Provincia = "Buenos Aires"
 
                     };
                     establecimientos.Add(e);
@@ -57,8 +59,10 @@ namespace Molinos.DataAgro.Agent
                     var respuesta = valor.Select(x => new EstablecimientoStockDto()
                     {
                         Cantidad = x.StockDeclarado - x.StockUtilizado,
-                        Cosecha = x.Cosecha,
-                        Establecimiento = x.NombreEstablecimiento          
+                        Establecimiento = x.NombreEstablecimiento,
+                        Cosecha = x.Cosecha,                     
+                        Provincia = x.Provincia,
+                        Localidad = x.Localidad                     
                         
                     }).OrderBy(x => x.Cantidad).ToList();
 

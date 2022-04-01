@@ -1053,7 +1053,7 @@ function CreateGridInformeCompraNet() {
                     if (dataItem.FechaOperacion != null && kendo.toString(dataItem.FechaOperacion, "dd/MM/yyyy") != kendo.toString(dataItem.Fecha, "dd/MM/yyyy")) {
                         return "<b style='color:darkblue;'>" + kendo.toString(dataItem.FechaOperacion, "dd/MM/yyyy") + "</b>";
                     } else {
-                        return "" + kendo.toString(dataItem.Fecha, "dd/MM/yyyy");
+                        return "" + kendo.toString(dataItem.Fecha, "dd/MM/yyyy") +"<br>"+ dataItem.Hora;
                     }
                 }
             },

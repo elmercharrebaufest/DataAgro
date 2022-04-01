@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         MonedaId = contrato.MonedaId,
                         Moneda = contrato.Moneda == null ? "" : contrato.Moneda.Descripcion,
                         Fecha = DbFunctions.TruncateTime(contrato.Fecha),
-                        Hora = SqlFunctions.DateName("hh", contrato.Fecha) + ":" + SqlFunctions.DateName("mi", contrato.Fecha),
+                        Hora = (contrato.Fecha.Hour < 10 ? "0" : "") + SqlFunctions.DateName("hh", contrato.Fecha) + ":" + (contrato.Fecha.Minute < 10 ? "0" : "") + SqlFunctions.DateName("mi", contrato.Fecha),
                         Fecha_Order = contrato.Fecha,
                         GrupoCompra = (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).ComercialId.HasValue) ? (contrato as FijacionDePrecioContrato).Comercial.GrupoDeComprasId.Value :
                         (contrato is Contrato && (contrato as Contrato).ComercialId.HasValue) ? (contrato as Contrato).Comercial.GrupoDeComprasId.Value :
@@ -225,14 +225,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         BolsaContratoId = (contrato is Contrato) ? (contrato as Contrato).BolsaId : (contrato is FijacionDePrecioContrato) && (contrato as FijacionDePrecioContrato).Contrato != null ? (contrato as FijacionDePrecioContrato).Contrato.BolsaId : (int?)null,
                         ProveedorDireccion = contrato.Proveedor.Direccion,
                         ProveedorLocalidad = contrato.Proveedor.Localidad != null ? contrato.Proveedor.Localidad.Nombre : contrato.Proveedor.LocalidadCompraNet != null ? contrato.Proveedor.LocalidadCompraNet.Nombre : "",
-                        ProveedorProvincia = (contrato.Proveedor.Localidad != null && contrato.Proveedor.Localidad.Provincia != null) ? 
-                        contrato.Proveedor.Localidad.Provincia.Nombre : contrato.Proveedor.LocalidadCompraNet != null && contrato.Proveedor.LocalidadCompraNet.Provincia != null ? contrato.Proveedor.LocalidadCompraNet.Provincia.Nombre : "",                   
+                        ProveedorProvincia = (contrato.Proveedor.Localidad != null && contrato.Proveedor.Localidad.Provincia != null) ?
+                        contrato.Proveedor.Localidad.Provincia.Nombre : contrato.Proveedor.LocalidadCompraNet != null && contrato.Proveedor.LocalidadCompraNet.Provincia != null ? contrato.Proveedor.LocalidadCompraNet.Provincia.Nombre : "",
                         DestinoLocalidad = contrato.Destino.Localidad.Nombre,
                         DestinoProvincia = contrato.Destino.Localidad.Provincia.Nombre,
                         MonedaCanjeDescripcion = contrato.MonedaCanjeId != null ? contrato.MonedaCanje.Descripcion : "",
                         CondicionalMonedaDescripcion = (contrato is Contrato) ? (contrato as Contrato).CondicionalMonedaId != null ? (contrato is Contrato) ? (contrato as Contrato).CondicionalMoneda.Descripcion : "" : "" : "",
                         RazonSocialProveedor = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : contrato.Proveedor == null ? "" : contrato.Proveedor.RazonSocial,
-                        RazonSocialCorredor = contrato.Corredor == null ? "" :  contrato.Corredor.RazonSocial,
+                        RazonSocialCorredor = contrato.Corredor == null ? "" : contrato.Corredor.RazonSocial,
                         ProveedorCP = contrato.Proveedor.CodigoPostal
                     };
 
@@ -270,7 +270,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         MonedaId = contrato.MonedaId,
                         Moneda = contrato.Moneda == null ? "" : contrato.Moneda.Descripcion,
                         Fecha = DbFunctions.TruncateTime(contrato.Fecha),
-                        Hora = SqlFunctions.DateName("hh", contrato.Fecha) + ":" + SqlFunctions.DateName("mi", contrato.Fecha),
+                        Hora = (contrato.Fecha.Hour < 10 ? "0" : "") + SqlFunctions.DateName("hh", contrato.Fecha) + ":" + (contrato.Fecha.Minute < 10 ? "0" : "") + SqlFunctions.DateName("mi", contrato.Fecha),
                         Fecha_Order = contrato.Fecha,
                         GrupoCompra = (contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).ComercialId.HasValue) ? (contrato as FijacionDePrecioContrato).Comercial.GrupoDeComprasId.Value :
                                         contrato.GrupoCompra.HasValue ? contrato.GrupoCompra.Value : 0,
