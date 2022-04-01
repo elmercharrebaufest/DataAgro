@@ -21,6 +21,7 @@
       <xs:element name="cENTROField" nillable="true" type="xs:string" />
       <xs:element name="cODIGOField" nillable="true" type="xs:string" />
       <xs:element name="cORREDORField" nillable="true" type="xs:string" />
+      <xs:element name="cUIT_SOLICITANTEField" nillable="true" type="xs:string" />
       <xs:element name="dESCAGENTEField" nillable="true" type="xs:string" />
       <xs:element name="dESCCENTROField" nillable="true" type="xs:string" />
       <xs:element name="dESCCORREDORField" nillable="true" type="xs:string" />
@@ -44,6 +45,7 @@
       <xs:element name="pROVEEDORField" nillable="true" type="xs:string" />
       <xs:element name="rECHAZADOField" nillable="true" type="xs:string" />
       <xs:element name="rEMITENTE_COMField" nillable="true" type="xs:string" />
+      <xs:element name="sECUENCIAField" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ZMPES2200" nillable="true" type="tns:ZMPES2200" />

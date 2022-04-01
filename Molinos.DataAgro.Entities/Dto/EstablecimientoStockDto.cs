@@ -15,5 +15,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Proveedor { get; set; }
 
         public string Cosecha { get; set; }
+        public string Localidad { get; set; }
+        public string Provincia { get; set; }
     }
 }
