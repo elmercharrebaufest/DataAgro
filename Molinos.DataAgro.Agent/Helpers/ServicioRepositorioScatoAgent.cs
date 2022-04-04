@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Agent
                         Establecimiento = x.NombreEstablecimiento,
                         Cosecha = x.Cosecha,                     
                         Provincia = x.Provincia,
-                        Localidad = string.IsNullOrEmpty(x.Localidad) ? "" : x.Localidad.Split('-')[1].Split('(')[0]
+                        Localidad = string.IsNullOrEmpty(x.Localidad) ? "" : x.Localidad.Split('-').Last().Split('(').First()
                     }).OrderBy(x => x.Cantidad).ToList();
 
                     return respuesta;

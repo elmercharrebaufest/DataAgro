@@ -473,6 +473,9 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     } else if (contrato.BoletoId == 3) {
         $("#boletoNingunoId").prop("checked", true);
     }
+    //else if (contrato.BoletoId == 5) {
+    //    $("#sinBoletoId").prop("checked", true);
+    //}
 
     contrato.CD == true ? $("#CDId").prop("checked", true) : $("#CDId").prop("checked", false);
     contrato.Warrant == true ? $("#WarrantId").prop("checked", true) : $("#WarrantId").prop("checked", false);
@@ -606,9 +609,7 @@ function ObtenerDatos(error) {
     //if (TipoId != "3") {
     obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
     obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
-    if (obj.TipoNegocioId == "3") {
-        obj.FechaHasta = $("#hastacontrato").val() == null || $("#hastacontrato").val() == undefined || $("#hastacontrato").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#hastacontrato").val());
-    }
+   
 
     //} else {
     //    obj.FechaDesde = formatearFecha(hoy);
@@ -653,11 +654,13 @@ function ObtenerDatos(error) {
     if (obj.TipoNegocioId == 6) {
         obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? null : $("#fechaDesdeTopeId").val();
         obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? null : $("#fechaHastaTopeId").val();
+    } else if (obj.TipoNegocioId == 3) {
+        obj.DesdeFijacion = $("#fechaFijacionDesde").val() == null || $("#fechaFijacionDesde").val() == undefined || $("#fechaFijacionDesde").val() == "" ? formatearFecha(hoy) : $("#fechaFijacionDesde").val();
+        obj.HastaFijacion = $("#fechaFijacionHasta").val() == null || $("#fechaFijacionHasta").val() == undefined || $("#fechaFijacionHasta").val() == "" ? formatearFecha(maniana) : $("#fechaFijacionHasta").val();
     } else {
         obj.DesdeFijacion = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "" ? formatearFecha(hoy) : $("#fechaDesdeTopeId").val();
         obj.HastaFijacion = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "" ? formatearFecha(maniana) : $("#fechaHastaTopeId").val();
     }
-
     obj.CondicionFijacionId = $("#condicionFijacionId").val();
     obj.DestinoId = $("#destinoId").val();
     obj.planCanje = $("#planCanjeId").is(":checked") ? true : false;
@@ -687,7 +690,11 @@ function ObtenerDatos(error) {
     else if ($("#boletoNingunoId").is(':checked')) {
         obj.BoletoId = 3;
         obj.BolsaId = 0;
-    }
+    } 
+    //    else if ($("#sinBoletoId").is(':checked')) {
+    //    obj.BoletoId = 5;
+    //    obj.BolsaId = 0;
+    //} 
     var proveedorId;
     var corredorId;
     if ($("#buscadorProveedor").val() != "") {
@@ -1051,6 +1058,9 @@ function DatosProveedor() {
             } else if (compraNet.BoletoCompraNetId === 3) {
                 $("#boletoNingunoId").prop("checked", true);
             }
+            //else if (compraNet.BoletoCompraNetId === 5) {
+            //    $("#sinBoletoId").prop("checked", true);
+            //}
         }
     }
 }

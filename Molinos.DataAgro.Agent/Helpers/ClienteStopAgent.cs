@@ -460,7 +460,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
                 catch (Exception e)
                 {
-                    logger.Error(e.Message);
+                    logger.Error("Error consulta ConsultarCuposDiarios");
+                    logger.Error(e);
                     throw;
                 }
             }

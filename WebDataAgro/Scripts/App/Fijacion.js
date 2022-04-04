@@ -127,10 +127,14 @@ function cargarDatosAFijarEnFijacion(afijar) {
     $("#kgspendientescontrato").text(afijar.KilosPendiente);
     $("#kgsaplicadoscontrato").text(afijar.KilosAplicados);
 
+    $("#fechaFijacionDesde").val(afijar.FechaDesde);
+    $("#fechaFijacionHasta").val(afijar.FechaHasta);
+    
+
     $("#kgsaplicadossinfijarcontrato").text(afijar.RecibidoSinFijar);
 
     $("#desdecontrato").text(afijar.FechaDesde);
-    $("#hastacontrato").text(afijar.FechaHasta);
+    $("#hastacontrato").text(afijar.FechaHasta);    
     $("#desdeentrega").text(afijar.DesdeEntrega);
     $("#hastaentrega").text(afijar.HastaEntrega);
 
@@ -3759,6 +3763,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#kgscontrato").text(contrato.DatosFijacion.KilosPendiente + "/" + contrato.DatosFijacion.KilosAplicados);
         $("#desdecontrato").text(contrato.DatosFijacion.FechaDesde);
         $("#hastacontrato").text(contrato.DatosFijacion.FechaHasta);
+        $("#fechaFijacionDesde").val(contrato.DatosFijacion.FechaDesde);
+        $("#fechaFijacionHasta").val(contrato.DatosFijacion.FechaHasta);
     } else {
         //if ($("#buscadorCorredor").val() != "") {
         //    $("#pagoDirectoDiv").show();
