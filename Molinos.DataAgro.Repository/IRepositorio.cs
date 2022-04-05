@@ -1,4 +1,6 @@
-﻿using Molinos.DataAgro.Entities.Helpers;
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -145,5 +147,6 @@ namespace Molinos.DataAgro.Repository
         void EliminarTokens(long cuit);
         void MigrarReporteCompraNetPosicionCompras();
         void TruncarTabla<TEntidad>() where TEntidad : class;
+        List<Cupo> ListarCupoConsultaCuposDiarios(List<string> cuposSapStop);
     }
 }

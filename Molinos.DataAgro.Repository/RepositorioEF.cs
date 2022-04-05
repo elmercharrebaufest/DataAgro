@@ -1,4 +1,6 @@
-﻿using Molinos.DataAgro.Entities.Helpers;
+﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -364,6 +366,24 @@ namespace Molinos.DataAgro.Repository
         {
             var tabla = typeof(TEntidad).Name;
             context.Database.ExecuteSqlCommand("TRUNCATE TABLE [" + tabla + "]");
+        }
+
+        public List<Cupo> ListarCupoConsultaCuposDiarios(List<string> cuposSapStop)
+        {
+            var value = "'"+string.Join("','", cuposSapStop)+"'";
+            var sql = string.Format(
+    "SELECT * FROM Cupo WHERE CupoSap IN ({0})",
+    value);
+
+            var result = context.Set<Cupo>().SqlQuery(sql).ToList();
+            return result;
+            //context.Database.SqlQuery<Cupo>(@"
+            //        begin 
+            //            exec MigrarReporteCompraNetPosicionCompras
+            //      select 1 
+            //  end
+            //    "
+            //               ).First();
         }
     }
 }
