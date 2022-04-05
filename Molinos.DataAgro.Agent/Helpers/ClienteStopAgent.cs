@@ -412,6 +412,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     string where = " where T.EstadoCupoId <> 4 and T.EstadoCupoId <> 5 and T.EstadoCupoId <> 8 ";
 
                     var cuposSapStop = actualizarCupos.Select(a => a.CupoSap).ToList();
+                    logger.Debug("ConsultarCuposDiarios " + cuposSapStop.ToJson());
                     var cuposModificados = repositorio.Listar<Cupo, CupoDto>(x => new CupoDto { Id = x.Id, EstadoCupoId = x.EstadoCupoId, CupoSap = x.CupoSap }, x => cuposSapStop.Contains(x.CupoSap));
 
 
