@@ -69,107 +69,65 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             if (lista.Count > 0)
             {
                 foreach (var item in lista)
-                {
-                    if (item.Corredor == "")
+                {                    
+                    if (item.Deshabilitado.HasValue && item.Deshabilitado.Value != false)
                     {
-                        if (item.Deshabilitado.HasValue && item.Deshabilitado.Value != false)
+                        item.Estado = "Deshabilitado";
+                        item.Deshabilitar = true;
+                        item.Color = "red";
+                        continue;
+                    }
+
+                    if (!string.IsNullOrEmpty(item.RiesgoComercialSap))
+                    {
+                        if (item.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
                         {
-                            item.Estado = "Deshabilitado";
+                            item.Estado = "No Operable por Riesgo Comercial Alto";
                             item.Deshabilitar = true;
                             item.Color = "red";
                             continue;
                         }
+                    }
+                    var sisa = new SISA();
 
-                        if (!string.IsNullOrEmpty(item.RiesgoComercialSap))
+                    sisa = (from s in contexto.Set<SISA>()
+                                    where s.CUIT == item.Cuit
+                                    select s).FirstOrDefault();
+
+                    if (sisa != null)
+                    {
+                        if (sisa.EstadoCuit == 3 && item.RiesgoComercialSap != "E")
                         {
-                            if (item.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
-                            {
-                                item.Estado = "No Operable por Riesgo Comercial Alto";
-                                item.Deshabilitar = true;
-                                item.Color = "red";
-                                continue;
-                            }
+                            item.Estado = "No Operable por Estado de CUIT 3";
+                            item.Color = "red";
+                            item.Deshabilitar = true;
+                            continue;
                         }
-                        var sisa = new SISA();
-                        if (item.ClasificacionId.HasValue)
+                        else if (sisa.EstadoCuit == 0)
                         {
-                           
-                            sisa = (from s in contexto.Set<SISA>()
-                                        where s.CUIT == item.Cuit select s).FirstOrDefault();
-                           
-                            if (sisa != null)
-                            {
-                                if (sisa.EstadoCuit == 3 && item.RiesgoComercialSap != "E")
-                                {
-                                    item.Estado = "No Operable por Estado de CUIT 3";
-                                    item.Color = "red";
-                                    item.Deshabilitar = true;
-                                    continue;
-                                }
-                                else if (sisa.EstadoCuit == 0)
-                                {
-                                    item.Estado = "No Operable por Estado de CUIT Inactivo";
-                                    item.Color = "red";
-                                    item.Deshabilitar = true;
-                                    continue;
-                                }
-                                if (sisa.SituacionCategoria != "AL")
-                                {
-                                    item.Estado = "No Operable por Situación Categoría BA";
-                                    item.Color = "red";
-                                    item.Deshabilitar = true;
-                                    continue;
-                                }
-                            }
-                            else
-                            {
-                                item.Estado = "No Operable por CUIT o Categoria Inactivo";
-                                item.Color = "red";
-                                item.Deshabilitar = true;
-                                continue;
-                            }
+                            item.Estado = "No Operable por Estado de CUIT Inactivo";
+                            item.Color = "red";
+                            item.Deshabilitar = true;
+                            continue;
                         }
-                       
+                        //if (sisa.SituacionCategoria != "AL"))
+                        //{
+                        //    item.Estado = "No Operable por Situación Categoría BA";
+                        //    item.Color = "red";
+                        //    item.Deshabilitar = true;
+                        //    continue;
+                        //}
                     }
                     else
                     {
-                        var sisa = new SISA();
-                        sisa = (from s in contexto.Set<SISA>()
-                                where s.CUIT == item.Cuit && s.CodCategoria == 2 && s.SituacionCategoria == "AL"
-                                select s).FirstOrDefault();
-
-                        if (sisa != null)
-                        {
-                            if (sisa.EstadoCuit == 3 && item.RiesgoComercialSap != "E")
-                            {
-                                item.Estado = "No Operable por Estado de CUIT 3";
-                                item.Color = "red";
-                                item.Deshabilitar = true;
-                                continue;
-                            }
-                            else if (sisa.EstadoCuit == 0)
-                            {
-
-                                item.Estado = "Corredor No Operable por Estado de CUIT Inactivo";
-                                item.Color = "red";
-                                continue;
-                            }
-                            if (sisa.SituacionCategoria != "AL")
-                            {
-                                item.Estado = "Corredor No Operable por Situación Categoría BA";
-                                item.Color = "red";
-                                item.Deshabilitar = true;
-                                continue;
-                            }
-                        }
-                        else
-                        {
-                            item.Estado = "Corredor No Operable por CUIT o Categoria Inactivo";
-                            item.Color = "red";
-                            item.Deshabilitar = true;
-                            continue;
-                        }
+                        item.Estado = "No Operable por CUIT o Categoria Inactivo";
+                        item.Color = "red";
+                        item.Deshabilitar = true;
+                        continue;
                     }
+                    //}
+
+
                     var estadoProveedor = (from provEstado in contexto.Set<ProveedorEstado>()
                                            where provEstado.ProveedorId == item.Id && provEstado.EstadoId == 4
                                            select provEstado).FirstOrDefault();

@@ -883,7 +883,7 @@ function crearGrillaSustentablePosicion(href) {
                     style: "background-color: #017940; text-align: center; color: white"
                 },
                 template: function (dataItem) {
-                    return kendo.toString(dataItem.cantidad, "n2")
+                    return kendo.toString(dataItem.cantidad, "n1")
                 },
                 width: 100
             }]
