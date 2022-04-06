@@ -156,6 +156,8 @@ namespace Molinos.DataAgro.Agent.CartasDePortePendienteAplicar {
         
         private string cANJEField;
         
+        private string rEGIONField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string PROVEEDOR {
@@ -369,6 +371,18 @@ namespace Molinos.DataAgro.Agent.CartasDePortePendienteAplicar {
             set {
                 this.cANJEField = value;
                 this.RaisePropertyChanged("CANJE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=18)]
+        public string REGION {
+            get {
+                return this.rEGIONField;
+            }
+            set {
+                this.rEGIONField = value;
+                this.RaisePropertyChanged("REGION");
             }
         }
         

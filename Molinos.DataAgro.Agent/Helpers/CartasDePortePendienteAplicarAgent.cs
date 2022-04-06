@@ -116,7 +116,8 @@ namespace Molinos.DataAgro.Agent
                             Canje = item.CANJE == "X",
                             CD = item.CD_CG == "X",
                             Warrant = item.WARRANT == "X", 
-                            Sustentable = item.SUSTENTABLE == "X"
+                            Sustentable = item.SUSTENTABLE == "X",
+                            Region = item.REGION
                         }).OrderBy(a => a.FechaIngresoFecha).ToList();
 
                     return listaccpp;

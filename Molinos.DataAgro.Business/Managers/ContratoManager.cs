@@ -6798,7 +6798,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 };
                 var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto);
-                var cantidadCartaDePorte = pendientes.Where(x => x.Canje || x.CD || x.Warrant).Sum(x => x.Cantidad);
+                var cantidadCartaDePorte = pendientes.Where(x => x.Canje || x.CD || x.Warrant && x.Region != "3").Sum(x => x.Cantidad);
                 var cantidadNegocioPendiente = contratos.Sum(x => x.Cantidad);
                 //Soja Comun
                 if (tieneSustentable == false)

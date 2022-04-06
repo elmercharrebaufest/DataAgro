@@ -40,6 +40,11 @@
           <xsd:maxLength value="4" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char3">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="3" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char12">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="12" />
@@ -105,6 +110,7 @@
           <xsd:element name="CD_CG" type="rfc:char1" />
           <xsd:element name="WARRANT" type="rfc:char1" />
           <xsd:element name="CANJE" type="rfc:char1" />
+          <xsd:element name="REGION" type="rfc:char3" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
