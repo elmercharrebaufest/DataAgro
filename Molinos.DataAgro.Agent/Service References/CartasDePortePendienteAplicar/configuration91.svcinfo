@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="cKCkQ7CMJgb6VfAcd5kI4vtTRhg=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="UIeoxX1G6nA3/CRQEKKhffIsSP9O6RS91xiRqtoPCt0=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICARBinding2">
       <properties>

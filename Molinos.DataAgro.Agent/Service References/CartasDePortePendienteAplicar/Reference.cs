@@ -144,6 +144,18 @@ namespace Molinos.DataAgro.Agent.CartasDePortePendienteAplicar {
         
         private string aLMACENField;
         
+        private string cONTRATOField;
+        
+        private decimal kILOS_CONTField;
+        
+        private string sUSTENTABLEField;
+        
+        private string cD_CGField;
+        
+        private string wARRANTField;
+        
+        private string cANJEField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string PROVEEDOR {
@@ -285,6 +297,78 @@ namespace Molinos.DataAgro.Agent.CartasDePortePendienteAplicar {
             set {
                 this.aLMACENField = value;
                 this.RaisePropertyChanged("ALMACEN");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=12)]
+        public string CONTRATO {
+            get {
+                return this.cONTRATOField;
+            }
+            set {
+                this.cONTRATOField = value;
+                this.RaisePropertyChanged("CONTRATO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=13)]
+        public decimal KILOS_CONT {
+            get {
+                return this.kILOS_CONTField;
+            }
+            set {
+                this.kILOS_CONTField = value;
+                this.RaisePropertyChanged("KILOS_CONT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=14)]
+        public string SUSTENTABLE {
+            get {
+                return this.sUSTENTABLEField;
+            }
+            set {
+                this.sUSTENTABLEField = value;
+                this.RaisePropertyChanged("SUSTENTABLE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=15)]
+        public string CD_CG {
+            get {
+                return this.cD_CGField;
+            }
+            set {
+                this.cD_CGField = value;
+                this.RaisePropertyChanged("CD_CG");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=16)]
+        public string WARRANT {
+            get {
+                return this.wARRANTField;
+            }
+            set {
+                this.wARRANTField = value;
+                this.RaisePropertyChanged("WARRANT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=17)]
+        public string CANJE {
+            get {
+                return this.cANJEField;
+            }
+            set {
+                this.cANJEField = value;
+                this.RaisePropertyChanged("CANJE");
             }
         }
         

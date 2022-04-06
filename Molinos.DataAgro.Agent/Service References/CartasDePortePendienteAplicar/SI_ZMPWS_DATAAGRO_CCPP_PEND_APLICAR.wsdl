@@ -30,6 +30,11 @@
           <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char4">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="4" />
@@ -57,6 +62,12 @@
       </xsd:simpleType>
       <xsd:simpleType name="string">
         <xsd:restriction base="xsd:string" />
+      </xsd:simpleType>
+      <xsd:simpleType name="decimal13.3">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="13" />
+          <xsd:fractionDigits value="3" />
+        </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="decimal8.0">
         <xsd:restriction base="xsd:decimal">
@@ -88,6 +99,12 @@
           <xsd:element name="CTG" type="rfc:char13" />
           <xsd:element name="CUIT_SOLICITANTE" type="rfc:char11" />
           <xsd:element name="ALMACEN" type="rfc:char4" />
+          <xsd:element name="CONTRATO" type="rfc:char10" />
+          <xsd:element name="KILOS_CONT" type="rfc:decimal13.3" />
+          <xsd:element name="SUSTENTABLE" type="rfc:char1" />
+          <xsd:element name="CD_CG" type="rfc:char1" />
+          <xsd:element name="WARRANT" type="rfc:char1" />
+          <xsd:element name="CANJE" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>

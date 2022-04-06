@@ -37,6 +37,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Bolsa { get; set; }
         public string BolFisico { get; set; }
         public string CartaOferta { get; set; }
+        public string SinBoleto { get; set; }
         public string Ninguno { get; set; }
         public string AutCg { get; set; }
         public string AurCd { get; set; }

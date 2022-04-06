@@ -749,13 +749,19 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "<tr>" + th + "CONTRATO MADRE</th>" + Td(ref linea) + oContrato.ContratoMadre.TrimStart('0').ToUpper() + "</td></tr>";
             }
 
-            if (oContrato.BoletoId != null && oContrato.BoletoId != 3)
+            if (oContrato.BoletoId != null && oContrato.BoletoId != 3 && oContrato.BoletoId != 5)
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + " " + oContrato.Bolsa.Descripcion.ToUpper() + "</td></tr>";
             }
-            else if (oContrato.BoletoId == 3)
+            if (oContrato.BoletoId == 3)
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
+            }
+            if(oContrato.BoletoId == 5)
+            {
+                htmlBody += "<tr>" + th + "SIN BOLETO </th>" + Td(ref linea) + "Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser " +
+                    "rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a" + (!string.IsNullOrEmpty(emailComercial) ? "(" + emailComercial + "y )" : "") +
+                "documentacion@molinosagro.com.ar. </td></tr>";
             }
             htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
             if (oContrato.TipoNegocioId == 1)

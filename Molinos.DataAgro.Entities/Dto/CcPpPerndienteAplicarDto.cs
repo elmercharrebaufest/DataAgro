@@ -18,6 +18,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime FechaNetoFecha { get; set; }
         public DateTime FechaIngresoFecha { get; set; }
         public string Almacen { get; set; }
+        public bool Canje { get; set; }
+        public bool CD { get; set; }
+        public bool Warrant { get; set; }
+        public bool Sustentable { get; set; }
     }
 }
 

@@ -473,9 +473,9 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
     } else if (contrato.BoletoId == 3) {
         $("#boletoNingunoId").prop("checked", true);
     }
-    //else if (contrato.BoletoId == 5) {
-    //    $("#sinBoletoId").prop("checked", true);
-    //}
+    else if (contrato.BoletoId == 5) {
+        $("#sinBoletoId").prop("checked", true);
+    }
 
     contrato.CD == true ? $("#CDId").prop("checked", true) : $("#CDId").prop("checked", false);
     contrato.Warrant == true ? $("#WarrantId").prop("checked", true) : $("#WarrantId").prop("checked", false);
@@ -691,10 +691,10 @@ function ObtenerDatos(error) {
         obj.BoletoId = 3;
         obj.BolsaId = 0;
     } 
-    //    else if ($("#sinBoletoId").is(':checked')) {
-    //    obj.BoletoId = 5;
-    //    obj.BolsaId = 0;
-    //} 
+        else if ($("#sinBoletoId").is(':checked')) {
+        obj.BoletoId = 5;
+        obj.BolsaId = 0;
+    } 
     var proveedorId;
     var corredorId;
     if ($("#buscadorProveedor").val() != "") {
@@ -1058,9 +1058,9 @@ function DatosProveedor() {
             } else if (compraNet.BoletoCompraNetId === 3) {
                 $("#boletoNingunoId").prop("checked", true);
             }
-            //else if (compraNet.BoletoCompraNetId === 5) {
-            //    $("#sinBoletoId").prop("checked", true);
-            //}
+            else if (compraNet.BoletoCompraNetId === 5) {
+                $("#sinBoletoId").prop("checked", true);
+            }
         }
     }
 }

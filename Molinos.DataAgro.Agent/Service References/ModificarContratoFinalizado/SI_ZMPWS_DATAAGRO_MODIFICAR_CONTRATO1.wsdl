@@ -333,6 +333,7 @@
           <xsd:element name="PIZARRA" type="rfc:char4" />
           <xsd:element name="MES_COND_MAT" type="rfc:char7" />
           <xsd:element name="CANTIDAD_COND" type="rfc:decimal25.0" />
+          <xsd:element name="SIN_BOLETO" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES5280">

@@ -4467,7 +4467,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<RangoPrecio, bool>>>())).Returns(new RangoPrecio { PrecioMaximo = 50000, PrecioMinimo = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ProveedorEstado, bool>>>())).Returns(new ProveedorEstado { EstadoId = 1 });
-            repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000, CantidadAcuerdo = 10000, CantidadDiasDolarizadoLimiteMaximo = 11, DiasDiferimiento = 111,ImporteSustentableEspecial= 10 });
+            repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000, CantidadAcuerdo = 10000, CantidadDiasDolarizadoLimiteMaximo = 11, DiasDiferimiento = 111, ImporteSustentableEspecial = 10 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
@@ -5128,19 +5128,19 @@ namespace Molinos.DataAgro.Test.Managers
                 AperturaPrecio = new List<AperturaPrecio>(),
                 Venta = true,
                 CamaraId = 1,
-                ProcedenciaVentaId =1,
-                FleteACargo="a",
-                KgBalanza ="1",
-                ComisionAFavorId=1,
-                PorcentajeComisionVenta=1,
-                Pago ="1",
-                BoletoVentaId=1,
-                CondicionDePagoDiaPesificado=1,
-                CondicionDePagoTipoPesificado="1",
-                CondicionDePagoPesificadoVentaId=2,
-                CondicionDePagoDiaFijacion=1,
-                CondicionDePagoTipoFijacion="1",
-                CondicionDePagoFijacionVentaId=1,
+                ProcedenciaVentaId = 1,
+                FleteACargo = "a",
+                KgBalanza = "1",
+                ComisionAFavorId = 1,
+                PorcentajeComisionVenta = 1,
+                Pago = "1",
+                BoletoVentaId = 1,
+                CondicionDePagoDiaPesificado = 1,
+                CondicionDePagoTipoPesificado = "1",
+                CondicionDePagoPesificadoVentaId = 2,
+                CondicionDePagoDiaFijacion = 1,
+                CondicionDePagoTipoFijacion = "1",
+                CondicionDePagoFijacionVentaId = 1,
 
             };
             repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
@@ -5179,6 +5179,117 @@ namespace Molinos.DataAgro.Test.Managers
             configuracionManagermock.Setup(x => x.TraerConfiguraciones());
             var resultado = target.DevolverMilisegundos();
             configuracionManagermock.Verify(x => x.TraerConfiguraciones(), Times.Once);
+        }
+
+        [Test]
+        public void GrabarContratoSinBoletoOk()
+        {
+            var oContrato = new Contrato()
+            {
+                ProveedorId = 1,
+                ClasificacionId = 1,
+                CorredorId = null,
+                MaterialId = 1,
+                Cantidad = 1,
+                Precio = 1000,
+                PrecioNeto = 1000,
+                TipoNegocioId = 2,
+                DestinoId = 1,
+                LocalidadId = 1,
+                ProvinciaId = 1,
+                FechaEntrega = DateTime.Now,
+                FechaOperacion = DateTime.Now.Date,
+                FechaDesde = DateTime.Now,
+                FechaHasta = DateTime.Now,
+                MonedaId = "ARS ",
+                CampanaId = 1,
+                ComercialId = 70,
+                EstablecimientoPropio = true,
+                BoletoId = 3,
+                StandardDeCalidadId = 1,
+                Sustentable = false,
+                PorcentajeDePago = 95,
+                Calidad = new List<Calidad>(),
+                AperturaPrecio = new List<AperturaPrecio>(),
+                Boleto = new BoletoCompraNet()
+                {
+                    Descripcion = "Sin Boleto",
+                    Id = 5
+                },
+                CamaraId = 1,
+                ProcedenciaVentaId = 1,
+                FleteACargo = "a",
+                KgBalanza = "1",
+                ComisionAFavorId = 1,
+                PorcentajeComisionVenta = 1,
+                Pago = "1",
+                BoletoVentaId = 1,
+                CondicionDePagoDiaPesificado = 1,
+                CondicionDePagoTipoPesificado = "1",
+                CondicionDePagoPesificadoVentaId = 2,
+                CondicionDePagoDiaFijacion = 1,
+                CondicionDePagoTipoFijacion = "1",
+                CondicionDePagoFijacionVentaId = 1,
+
+            };
+           var pendiente = new CcPpPerndienteAplicarDto()
+            {
+                Centro = "034560",
+                Material = "034560",
+                Proveedor = "30209034560",
+                Corredor = null,
+                Cantidad = 10000,
+                Canje = true,
+                Sustentable = true,
+                CD = true,
+                Warrant = true
+            };
+            repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
+            validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668" });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>())).Returns(new SISA { SituacionCategoria = "AL", EstadoCuit = 1, CUIT = "20358654668" });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<RangoPrecio, bool>>>())).Returns(new RangoPrecio { PrecioMaximo = 50000, PrecioMinimo = 1 });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ProveedorEstado, bool>>>())).Returns(new ProveedorEstado { EstadoId = 1 });
+            repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            {
+                AltaTemprana = "SI",
+                Bolsa = "SI",
+                Carta = "SI",
+                FechaActualizacion = "SI",
+                Mensaje = "",
+                Nosis = "SI",
+                Ruca = new Ruca
+                {
+                    Acopiador = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Otros = new ValoresRuca { Consignatario = "SI", Directo = "SI", PlanCanje = "SI" },
+                    Corredor = "SI"
+                }
+            });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<MaterialHabilitadoSinBoleto, MaterialHabilitadoSinBoletoDto>>>(), It.IsAny<Expression<Func<MaterialHabilitadoSinBoleto, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+              .Returns(new List<MaterialHabilitadoSinBoletoDto>() { new MaterialHabilitadoSinBoletoDto { Id = 1, MaterialId = 3, Material = "Soja" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CentroHabilitadoSinBoleto, CentroHabilitadoSinBoletoDto>>>(), It.IsAny<Expression<Func<CentroHabilitadoSinBoleto, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+             .Returns(new List<CentroHabilitadoSinBoletoDto>() { new CentroHabilitadoSinBoletoDto { Id = 1, CentroId = 3, Centro = "San Lorenzo" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<TipoOperacionHabilitadoSinBoleto, TipoOperacionHabilitadoSinBoletoDto>>>(), It.IsAny<Expression<Func<TipoOperacionHabilitadoSinBoleto, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+             .Returns(new List<TipoOperacionHabilitadoSinBoletoDto>() { new TipoOperacionHabilitadoSinBoletoDto { Id = 1, Corredor = false, OperacionDirecta = true } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ClasificacionHabilitadoSinBoleto, ClasificacionHabilitadoSinBoletoDto>>>(), It.IsAny<Expression<Func<ClasificacionHabilitadoSinBoleto, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+            .Returns(new List<ClasificacionHabilitadoSinBoletoDto>() { new ClasificacionHabilitadoSinBoletoDto { Id = 1, ClasificacionId = 3, Clasificacion = "Productor" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<TipoNegocioHabilitadoSinBoleto, TipoNegocioHabilitadoSinBoletoDto>>>(), It.IsAny<Expression<Func<TipoNegocioHabilitadoSinBoleto, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+            .Returns(new List<TipoNegocioHabilitadoSinBoletoDto>() { new TipoNegocioHabilitadoSinBoletoDto { Id = 1, TipoNegocioId = 2, TipoNegocio = "A PRECIO" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ProvinciaNoHabilitadoSinBoleto, ProvinciaNoHabilitadoSinBoletoDto>>>(), It.IsAny<Expression<Func<ProvinciaNoHabilitadoSinBoleto, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+            .Returns(new List<ProvinciaNoHabilitadoSinBoletoDto>() { new ProvinciaNoHabilitadoSinBoletoDto { Id = 1, ProvinciaId = 2, Provincia = "CORDOBA" } });
+            repositorioMock.Setup(y => y.Obtener<Centro, string>(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, string>>>())).Returns("034560");
+            repositorioMock.Setup(y => y.Obtener<Material, string>(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, string>>>())).Returns("034560");
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                .Returns(new List<Contrato>() { new Contrato { Cantidad = 1000 } });
+            ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPerndienteAplicarDto>() { pendiente });
+            var resultado = target.GrabarContrato(oContrato);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
     }
 }

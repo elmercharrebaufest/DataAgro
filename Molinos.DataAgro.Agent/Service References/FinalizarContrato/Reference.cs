@@ -795,6 +795,8 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
         
         private decimal cANTIDAD_CONDField;
         
+        private string sIN_BOLETOField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string MATERIAL {
@@ -1944,6 +1946,18 @@ namespace Molinos.DataAgro.Agent.FinalizarContrato {
             set {
                 this.cANTIDAD_CONDField = value;
                 this.RaisePropertyChanged("CANTIDAD_COND");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=96)]
+        public string SIN_BOLETO {
+            get {
+                return this.sIN_BOLETOField;
+            }
+            set {
+                this.sIN_BOLETOField = value;
+                this.RaisePropertyChanged("SIN_BOLETO");
             }
         }
         

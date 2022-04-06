@@ -1283,6 +1283,6 @@ namespace WebDataAgro.Controllers
             bool estado = mobjContratoManager.Tiene2doCondicionalAsociado(contratoId);
             return Json(estado, JsonRequestBehavior.AllowGet);
         }
-        
+                
     }
 }

@@ -323,6 +323,16 @@
     <Build Include="dbo\Tables\Boleto.sql" />
     <Build Include="dbo\Tables\Clausula.sql" />
     <Build Include="dbo\Tables\CampoDetalleTercero.sql" />
+   
+  
+  
+    <Build Include="dbo\Tables\MaterialHabilitadoSinBoleto.sql" />
+    <Build Include="dbo\Tables\ClasificacionHabilitadoSinBoleto.sql" />
+    <Build Include="dbo\Tables\TipoNegocioHabilitadoSinBoleto.sql" />
+    <Build Include="dbo\Tables\TipoOperacionHabilitadoSinBoleto.sql" />
+    <Build Include="dbo\Tables\CentroHabilitadoSinBoleto.sql" />
+    <Build Include="dbo\Tables\ProvinciaNoHabilitadoSinBoleto.sql" />
+    <Build Include="dbo\Functions\SinBoleto.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

@@ -52,7 +52,7 @@ namespace Molinos.DataAgro.Agent
                 },
                 new CcPpPerndienteAplicarDto() {
                     AgenteCompra = "Agente compra",
-                    Cantidad = 10,
+                    Cantidad = 100000,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
@@ -60,10 +60,12 @@ namespace Molinos.DataAgro.Agent
                     FechaNeto = "2020-06-06",
                     FechaIngresoFecha = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     FechaNetoFecha = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    Warrant = true,
+                    Sustentable = false                    
                 },
                 new CcPpPerndienteAplicarDto() {
                     AgenteCompra = "Agente compra",
-                    Cantidad = 10,
+                    Cantidad = 100000,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
@@ -71,6 +73,8 @@ namespace Molinos.DataAgro.Agent
                     FechaNeto = "2020-07-07",
                     FechaIngresoFecha = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     FechaNetoFecha = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    Sustentable = true,
+                    Canje = true
                 } }.OrderBy(a => a.FechaIngresoFecha).ToList(); 
             }
             else
@@ -108,7 +112,11 @@ namespace Molinos.DataAgro.Agent
                             Proveedor = item.PROVEEDOR,
                             FechaIngresoFecha = DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
                             FechaNetoFecha = DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                            Almacen = item.ALMACEN
+                            Almacen = item.ALMACEN,
+                            Canje = item.CANJE == "X",
+                            CD = item.CD_CG == "X",
+                            Warrant = item.WARRANT == "X", 
+                            Sustentable = item.SUSTENTABLE == "X"
                         }).OrderBy(a => a.FechaIngresoFecha).ToList();
 
                     return listaccpp;
