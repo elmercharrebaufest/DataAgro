@@ -285,5 +285,13 @@ namespace WebDataAgro.Controllers
             logger.Info($"EnviarMailSugerenciasPendientesPorComercial - Finalizado");
             return Content("ok");
         }
+
+        public ActionResult ActualizarMailProveedor()
+        {
+            logger.Info($"EnviarMailSugerenciasPendientesPorComercial - inicio");
+            proveedorManager.GrabarMailProveedor();
+            logger.Info($"EnviarMailSugerenciasPendientesPorComercial - Finalizado");
+            return Content("ok");
+        }
     }
 }

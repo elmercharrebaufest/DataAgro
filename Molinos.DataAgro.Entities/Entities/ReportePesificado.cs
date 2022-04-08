@@ -30,6 +30,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual bool? Dolarizado { get; set; }
         public virtual string Clasificacion { get; set; }
         public virtual decimal KgTotales { get; set; }
+        public virtual string Status { get; set; }
+        public virtual decimal Cantidad { get; set; }
+        public virtual decimal CantidadLiquidada { get; set; }
+        public virtual decimal CantidadRecibida { get; set; }
+        public virtual string ConPrecio { get; set; }
+        public virtual bool Cesion { get; set; }
 
         [ForeignKey("MonedaId")]
         public virtual Moneda Moneda { get; set; } // MonedaId (length: 5)
@@ -41,6 +47,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal? Plus { get; set; }
         public string Posicion { get; set; }
         public double? KgTotalesPase { get; set; }
+        public int? NegocioId { get; set; }
     }
 
 }

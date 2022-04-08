@@ -124,6 +124,7 @@
     <Compile Include="Agent\IConsultarEstadoBoletoAgent.cs" />
     <Compile Include="Agent\IContratosConfirmadosAgent.cs" />
     <Compile Include="Agent\IContratosParaFijacionVirtualAgent.cs" />
+    <Compile Include="Agent\IMailProveedorAgent.cs" />
     <Compile Include="Agent\ICumplimientoCuposAgent.cs" />
     <Compile Include="Agent\IAnularFijacionVirtualAgent.cs" />
     <Compile Include="Agent\IEnviarBoletoAgent.cs" />

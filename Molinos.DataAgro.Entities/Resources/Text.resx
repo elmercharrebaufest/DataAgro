@@ -878,4 +878,10 @@
   <data name="ActualizarCompraNet" xml:space="preserve">
     <value>Actualizar ALV CompraNet</value>
   </data>
+  <data name="NegocioPesificado" xml:space="preserve">
+    <value>Visualizar Negocio Pesificado</value>
+  </data>
+  <data name="ConfigurarExcedente" xml:space="preserve">
+    <value>Configurar Excedente</value>
+  </data>
 </root>

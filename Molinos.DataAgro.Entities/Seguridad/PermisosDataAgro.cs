@@ -208,6 +208,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarReportePagoDiferido = 417,
         [Display(ResourceType = typeof(Text), Name = "VisualizarReporteContratosAFijarPase")]
         VisualizarReporteContratosAFijarPase = 418,
+        [Display(ResourceType = typeof(Text), Name = "NegocioPesificado")]
+        NegocioPesificado = 419,
 
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]
@@ -254,6 +256,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         LogServer = 521,
         [Display(ResourceType = typeof(Text), Name = "Habilitacion_Boleto")]
         Habilitacion_Boleto = 522,
+        [Display(ResourceType = typeof(Text), Name = "ConfigurarExcedente")]
+        ConfigurarExcedente = 523,
 
         //Research
         [Display(ResourceType = typeof(Text), Name = "Datos_Research")]

@@ -83,5 +83,8 @@ namespace Molinos.DataAgro.Interfaces
         DataSourceResult TraerTodoPrecioMoaPizarra(DataSourceRequest request);
         ResultReportePagosDiferidos ObtenerDatosReportePagosDiferidos(DateTime desde, DateTime hasta);
         void EnviarMailReportePagosDiferidos(byte[] datos, DateTime desde, DateTime hoy);
+        DataSourceResult BuscarDatosNegocioPesificacion(DataSourceRequest filtro, List<int> equipo);
+        Resultado ConfigurarExcedente(int id, bool excedente,int comercialId);
+       void EnviarMail(List<int> ids, DateTime fechaInstruccion, int comercialId);
     }
 }

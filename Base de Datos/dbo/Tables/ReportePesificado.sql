@@ -28,9 +28,17 @@
     [Plus] DECIMAL(11, 2) NULL, 
     [Posicion] VARCHAR(50) NULL, 
     [KgTotalesPase] FLOAT NULL, 
+    [Status] VARCHAR(50) NULL,
+    [Cantidad] DECIMAL(11, 2) NULL, 
+    [CantidadLiquidada] DECIMAL(11, 2) NULL, 
+    [CantidadRecibida] DECIMAL(11, 2) NULL, 
+    [ConPrecio] VARCHAR(50) NULL,
+    [Cesion] BIT NULL, 
+     [NegocioId]      INT           NULL,
     CONSTRAINT [PK_dbo.ReportePesificado] PRIMARY KEY CLUSTERED ([Id] ASC), 
     CONSTRAINT [FK_ReportePesificado_Moneda] FOREIGN KEY ([MonedaId]) REFERENCES [Moneda]([MonedaId]), 
     CONSTRAINT [FK_ReportePesificado_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]), 
-	CONSTRAINT [FK_ReportePesificado_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId])
+	CONSTRAINT [FK_ReportePesificado_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
+    CONSTRAINT [FK_eportePesificado_Negocio] FOREIGN KEY ([NegocioId]) REFERENCES [dbo].[Negocio] ([Id]),
 
 );

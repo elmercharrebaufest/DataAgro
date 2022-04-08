@@ -183,7 +183,8 @@ $(document).ready(function () {
 
 });
 function htmlEncode(value) {
-    return $('<div/>').text(value.replace(/(\r\n|\n|\r)/gm, " ")).html();
+    if (value == null) value = "";
+    return $('<div/>').text(value.toString().replace(/(\r\n|\n|\r)/gm, " ")).html();
 }
 
 function formatearFecha(fecha) {

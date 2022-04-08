@@ -102,19 +102,19 @@
                         PermisosDataAgro.VisualizarReporteCupo,
                         PermisosDataAgro.VisualizarReporteDeProveedores,
                         PermisosDataAgro.VisualizarReporteContratosAFijarPase,
-                        PermisosDataAgro.LogDataAgro))
+                        PermisosDataAgro.LogDataAgro, PermisosDataAgro.NegocioPesificado))
                     {
                         <li class="dropdown">
                             <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="reportes">
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDinamico))
-                    {
-                        <li>
-                            <a href="/Cubproveedores" class="nav-link misreporteslink">
-                                <i class="icon-bar-chart font-color"></i> Reporte Dinámico
-                            </a>
-                        </li>
-                    }*@
+        {
+            <li>
+                <a href="/Cubproveedores" class="nav-link misreporteslink">
+                    <i class="icon-bar-chart font-color"></i> Reporte Dinámico
+                </a>
+            </li>
+        }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteAgenda))
                                 {
                                     <li>
@@ -187,22 +187,7 @@
                                         </a>
                                     </li>
                                 }
-                                @if (PermisosHelper.Is(PermisosDataAgro.LogDataAgro))
-                                {
-                                    <li>
-                                        <a href="~/logdataagro" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Logs DataAgro
-                                        </a>
-                                    </li>
-                                }
-                                @if (PermisosHelper.Is(PermisosDataAgro.LogServer))
-                                {
-                                    <li>
-                                        <a href="~/LogServer" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Logs Server
-                                        </a>
-                                    </li>
-                                }
+
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDolarizado))
                                 {
                                     <li>
@@ -224,6 +209,30 @@
                                     <li>
                                         <a href="~/ReporteContratosAFijarPase" class="nav-link misreporteslink">
                                             <i class="icon-bar-chart"></i> Reporte Contratos A Fijar Pase
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.NegocioPesificado))
+                                {
+                                    <li>
+                                        <a href="~/NegocioPesificacion" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Visualizar Negocio Pesificado
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.LogDataAgro))
+                                {
+                                    <li>
+                                        <a href="~/logdataagro" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Logs DataAgro
+                                        </a>
+                                    </li>
+                                }
+                                @if (PermisosHelper.Is(PermisosDataAgro.LogServer))
+                                {
+                                    <li>
+                                        <a href="~/LogServer" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Logs Server
                                         </a>
                                     </li>
                                 }

@@ -35,6 +35,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogDataAgroManager> logDataAgroManagerMock;
         private Mock<IHttpContextManager> httpContextManagerMock;
         private Mock<IAltaTempranaAgent> altaTempranaMock;
+        private Mock<IMailProveedorAgent> mailProveedorAgentMock;
         private JavaScriptSerializer serializer;
 
 
@@ -59,10 +60,11 @@ namespace Molinos.DataAgro.Test.Managers
             httpContextManagerMock = new Mock<IHttpContextManager>();
             httpContextManagerMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             altaTempranaMock = new Mock<IAltaTempranaAgent>();
+            mailProveedorAgentMock = new Mock<IMailProveedorAgent>();
 
             target = new ProveedorManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object,
                 riesgoComercialAgentMock.Object, datosProveedorMock.Object, mailManagerMock.Object,
-                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object);
+                logDataAgroManagerMock.Object, httpContextManagerMock.Object, altaTempranaMock.Object, mailProveedorAgentMock.Object);
 
 
             //para pasar el logDataA

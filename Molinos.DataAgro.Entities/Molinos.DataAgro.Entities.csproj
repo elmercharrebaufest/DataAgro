@@ -146,7 +146,9 @@
     <Compile Include="Dto\MaterialHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\CentroHabilitadoSinBoletoDto.cs" />
 
+    <Compile Include="Dto\NegocioPesificacionDto.cs" />
     <Compile Include="Dto\SustentableDto.cs" />
+    <Compile Include="Dto\MailProveedorDto.cs" />
     <Compile Include="Dto\ResultadoAltaCampoSustentable.cs" />
     <Compile Include="Dto\TopeSugerenciasPorDiaPorProveedor.cs" />
     <Compile Include="Dto\BoletoArchivoDto.cs" />
@@ -361,12 +363,6 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
-    <Compile Include="Entities\CentroHabilitadoSinBoleto.cs" />
-    <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />
-    <Compile Include="Entities\MaterialHabilitadoSinBoleto.cs" />
-    <Compile Include="Entities\TipoOperacionHabilitadoSinBoleto.cs" />
-    <Compile Include="Entities\TipoNegocioHabilitadoSinBoleto.cs" />
-    <Compile Include="Entities\ClasificacionHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\Boleto.cs" />
     <Compile Include="Entities\BoletoVenta.cs" />
     <Compile Include="Entities\BoletoCompraNetProvincia.cs" />
@@ -422,6 +418,7 @@
     <Compile Include="Entities\ComisionAFavor.cs" />
     <Compile Include="Entities\Clausula.cs" />
     <Compile Include="Entities\ClausulaUno.cs" />
+    <Compile Include="Entities\MailProveedor.cs" />
     <Compile Include="Entities\TipoNegocioDetalle.cs" />
     <Compile Include="Entities\NegocioAsociado.cs" />
     <Compile Include="Entities\CriterioCumplimientoCupo.cs" />

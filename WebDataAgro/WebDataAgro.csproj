@@ -236,6 +236,7 @@
     <Compile Include="Controllers\LogServerController.cs" />
     <Compile Include="Controllers\ReporteContratosAFijarPaseController.cs" />
     <Compile Include="Controllers\ReporteEvolucionFijacionController.cs" />
+    <Compile Include="Controllers\NegocioPesificacionController.cs" />
     <Compile Include="Controllers\ReportePesificadosController.cs" />
     <Compile Include="Controllers\ReportePrecioMoaPizarraController.cs" />
     <Compile Include="Controllers\ReporteRangoConfirmacionAutomaticaController.cs" />
@@ -1022,6 +1023,7 @@
     <Content Include="Scripts\App\AbmAreaInfluencia.js" />
     <Content Include="Scripts\App\AbmCanalOperacion.js" />
     <Content Include="Scripts\App\AbmFechaFeriado.js" />
+    <Content Include="Scripts\App\NegocioPesificacion.js" />
     <Content Include="Scripts\App\SolicitudCupo.js" />
     <Content Include="Scripts\App\AdministracionCupoGrilla.js" />
     <Content Include="Scripts\App\AdministracionProveedor.js" />
@@ -2795,6 +2797,7 @@
     <Content Include="Views\AdministracionCupo\ModalRechazarSolicitudMasivo.cshtml" />
     <Content Include="Views\SugerenciaCupo\ModalRechazarSolicitudUsuario.cshtml" />
     <Content Include="Views\AdministracionCupo\ModalAceptarSolicitudMasivo.cshtml" />
+    <Content Include="Views\NegocioPesificacion\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

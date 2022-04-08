@@ -87,6 +87,7 @@
     <Compile Include="Helpers\ContratosConfirmadosAgent.cs" />
     <Compile Include="Helpers\ContratosParaFijacionVirtualAgent.cs" />
     <Compile Include="Helpers\AnularFijacionVirtualAgent.cs" />
+    <Compile Include="Helpers\MailProveedorAgent.cs" />
     <Compile Include="Helpers\EnviarBoletoAgent.cs" />
     <Compile Include="Helpers\FinalizarFijacionVirtualAgent.cs" />
     <Compile Include="Helpers\CumplimientoCuposAgent.cs" />
@@ -220,6 +221,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ModificarFijacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ObtenerMailProveedor\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -491,6 +497,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ModificarFijacion\SI_ZMPWS_DATAAGRO_MODIFICAR_FIJACION1.wsdl" />
+    <None Include="Service References\ObtenerMailProveedor\Molinos.DataAgro.Agent.ObtenerMailProveedor.SI_ZMPWS_DATAAGRO_OBTENER_MAILSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ObtenerMailProveedor\Molinos.DataAgro.Agent.ObtenerMailProveedor.Z_MPRFC_OBTENER_MAILSResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ObtenerMailProveedor\SI_ZMPWS_DATAAGRO_OBTENER_MAILS.wsdl" />
     <None Include="Service References\PrecioPizarra\Molinos.DataAgro.Agent.PrecioPizarra.SI_ZMPWS_DATAAGRO_PRECIO_PIZARRAResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1841,6 +1854,7 @@
     <WCFMetadataStorage Include="Service References\ListaCBUProveedor\" />
     <WCFMetadataStorage Include="Service References\ListadoCCPPendiente\" />
     <WCFMetadataStorage Include="Service References\ModificarFijacion\" />
+    <WCFMetadataStorage Include="Service References\ObtenerMailProveedor\" />
     <WCFMetadataStorage Include="Service References\PrecioPizarra\" />
     <WCFMetadataStorage Include="Service References\AltaTempranaNosisBolsaRuca\" />
     <WCFMetadataStorage Include="Service References\AnulacionContratos\" />
@@ -2378,6 +2392,18 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference1.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ObtenerMailProveedor\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ObtenerMailProveedor\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ObtenerMailProveedor\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

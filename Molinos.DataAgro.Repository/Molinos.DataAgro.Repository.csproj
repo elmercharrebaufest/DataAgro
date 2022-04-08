@@ -135,8 +135,10 @@
     <Compile Include="ConsultasEF\ObtenerSugerenciaAgrupadasPorProveedor.cs" />
     <Compile Include="ConsultasEF\TraerRolesPermisos.cs" />
     <Compile Include="ConsultasEF\TraerContratosPorFiltro.cs" />
-    <Compile Include="ConsultasEF\TraerTodoPesificado.cs" />
+    <Compile Include="ConsultasEF\TraerTodoPesificadoSinFiltro.cs" />
     <Compile Include="ConsultasEF\TraerTodoPrecioMoaPizarra.cs" />
+    <Compile Include="ConsultasEF\TraerTodosReportePesificado.cs" />
+    <Compile Include="ConsultasEF\TraerTodosNegocioPesificacion.cs" />
     <Compile Include="ConsultasEF\TraerTodosContratosBoleto.cs" />
     <Compile Include="ConsultasEF\TraerTodosContratosSinFiltro.cs" />
     <Compile Include="ConsultasEF\TraerTodoRango.cs" />

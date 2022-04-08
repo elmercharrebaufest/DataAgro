@@ -65,5 +65,6 @@
   <setParameter name="HTTP_Port29 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJE&amp;interfaceNamespace=namespace%3Adataagro"  />
   <setParameter name="HTTP_Port30 Service Endpoint Address" value="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_CONTRATO_CANJE_GENE&amp;interfaceNamespace=namespace%3Adataagro"  />
   <setParameter name="HTTP_Port41 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_INDICAR_KG_PENDIENTES&amp;interfaceNamespace=namespace%3Adataagro" />
+  <setParameter name="HTTP_Port43 Service Endpoint Address" value="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_OBTENER_MAILS&amp;interfaceNamespace=namespace%3Adataagro" />
 
 </parameters>

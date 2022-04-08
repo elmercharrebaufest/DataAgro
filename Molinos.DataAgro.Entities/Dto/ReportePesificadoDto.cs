@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public class ReportePesificadoDto
     {
-       public string MaterialDesc { get; set; }
+        public string MaterialDesc { get; set; }
         public string Contrato { get; set; }
         public int? CantidadPendiente { get; set; }
         public string ComercialDesc { get; set; }
@@ -41,7 +41,32 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? Plus { get; set; }
         public string Posicion { get; set; }
         public double? KgTotalesPase { get; set; }
+        public bool? Excepcion { get; set; }
+        public decimal Cantidad { get; set; }
+        public decimal CantidadRecibida { get; set; }
+        public string RazonSocialProveedor { get; set; }
+        public string RazonSocialCorredor { get; set; }
+        public string Corredor { get; set; }
+        public List<AgrupacionPesificado> AgrupracionPesificados {get; set; }
+        public DateTime? FechaInstruccion { get; set; }
+        public bool EsCorredor { get; set; }
+        public bool EsOperacionDirecta { get; set; }
+        public bool Cesion { get; set; }
+        public string CesionDescripcion { get; set; }
+        public string Status { get; set; }
+        public string StatusDescripcion { get; set; }
+        public int? NegocioId { get; set; }
+        public int? NegocioPesificacionId { get; set; }
     }
+
+    public class AgrupacionPesificado
+    {
+        public string Proveedor { get; set; }
+        public decimal CantidadAgrupada { get; set; }
+        public string Contrato { get; set; }
+        public string Fijacion { get; set; }
+    }
+
 
 }
 

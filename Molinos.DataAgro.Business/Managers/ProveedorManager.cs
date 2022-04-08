@@ -32,11 +32,12 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly ILogDataAgroManager logDataAgroManager;
         private readonly IHttpContextManager httpContextManager;
         private readonly IAltaTempranaAgent altaTempranaAgent;
+        private readonly IMailProveedorAgent mailProveedorAgent;
 
         public ProveedorManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
             IRiesgoComercialAgent oRiesgoComercialAgent, IDatosProveedorAgent oDatosProveedorAgent,
             IMailManager mailManager, ILogDataAgroManager logDataAgroManager, IHttpContextManager httpContextManager,
-            IAltaTempranaAgent altaTempranaAgent)
+            IAltaTempranaAgent altaTempranaAgent, IMailProveedorAgent mailProveedorAgent)
         {
             this.logger = logger;
             mobComercial = oComercial;
@@ -47,6 +48,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.logDataAgroManager = logDataAgroManager;
             this.httpContextManager = httpContextManager;
             this.altaTempranaAgent = altaTempranaAgent;
+            this.mailProveedorAgent = mailProveedorAgent;
         }
 
         public StoredHistorialResult TraerHistorialActividad(HistorialActiviad oParam, int ProveedorId, string actividadId)
@@ -4495,6 +4497,39 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Error("", e.Message);
             }
             return resultado;
+        }
+
+        public void GrabarMailProveedor()
+        {
+            var proveedores = repositorio.Listar<Proveedor>();
+            var lista = mailProveedorAgent.Ejecutar(proveedores.Select(x => x.CUIT).ToList());
+            var entidades = new List<MailProveedor>();
+            repositorio.RemoverTodos<MailProveedor>(x => x.Id == x.Id);
+            try
+            {
+
+                foreach (var item in lista)
+                {
+                    if (!string.IsNullOrEmpty(item.Pesificado))
+                    {
+                        entidades.Add(new MailProveedor()
+                        {
+                            Pesificado = (ConfigurationManager.AppSettings["AmbientePruebas"] == "1") ? "dataagro@molinosagro.com.ar" : item.Pesificado,
+                            ProveedorId = proveedores.Select(x => x.CUIT == item.Cuit).FirstOrDefault() != null ?
+                            proveedores.Where(x => x.CUIT == item.Cuit).FirstOrDefault().ProveedorId : (int?)null
+                        });
+                    }
+
+                }
+                repositorio.AgregarTodos(entidades);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error("error GrabarMailProveedor");
+                logger.Error(e);
+            }
+
         }
     }
 

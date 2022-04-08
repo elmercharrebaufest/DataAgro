@@ -126,6 +126,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\NegocioPesificacionControllerTest.cs" />
+    <Compile Include="Controllers\ReportePesificadosControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionInternaControllerTest.cs" />
     <Compile Include="Controllers\ReporteContratosAFijarPaseControllerTest.cs" />
     <Compile Include="Controllers\FormularioAltaNoGranosControllerTest.cs" />

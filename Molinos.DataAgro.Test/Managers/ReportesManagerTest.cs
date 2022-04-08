@@ -30,12 +30,19 @@ namespace Molinos.DataAgro.Test.Managers
         private JavaScriptSerializer serializer;
         private Mock<IContratosAPesificarAgent> pesificarAgent;
         private Mock<IMailManager> mailManager;
+        private Mock<IHttpContextManager> httpContextManager;
 
         [SetUp]
         public void SetUp()
         {
             ConfigurationManager.AppSettings["TNAReportePagosDiferidos"] = "30";
-
+            ConfigurationManager.AppSettings["CredentialUserName"] = "dataagro.baufest@gmail.com";
+            ConfigurationManager.AppSettings["UrlBaseMOAOperaciones"] = "www.sitio.com";
+            ConfigurationManager.AppSettings["SmtpServerPort"] = "587";
+            ConfigurationManager.AppSettings["SmtpServer"] = "smtp.gmail.com";
+            ConfigurationManager.AppSettings["UseDefaultCredentials"] = "S";
+            ConfigurationManager.AppSettings["EnableSSL"] = "S";
+            ConfigurationManager.AppSettings["CredentialPassword"] = "Hola1234";
             this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
@@ -43,7 +50,10 @@ namespace Molinos.DataAgro.Test.Managers
             tipoDeCambioMock = new Mock<ITipoDeCambioAgent>();
             pesificarAgent = new Mock<IContratosAPesificarAgent>();
             mailManager = new Mock<IMailManager>();
-            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object, pesificarAgent.Object, mailManager.Object);
+            httpContextManager = new Mock<IHttpContextManager>();
+            httpContextManager.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
+            target = new ReportesManager(logger.Object, repositorioMock.Object, comercialManagerMock.Object, tipoDeCambioMock.Object, 
+                pesificarAgent.Object, mailManager.Object, httpContextManager.Object);
             tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(null)).Returns(45);
             tipoDeCambioMock.Setup(x => x.TraerTipoDeCambio(It.IsAny<DateTime>())).Returns(94);
 
@@ -1116,12 +1126,99 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerTodoDatoPesificadoTestOk()
         {
-            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodoPesificado>())).Returns(new DataSourceResult());
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodosReportePesificado>())).Returns(new DataSourceResult());
 
             target.TraerTodoDatoPesificado(It.IsAny<DataSourceRequest>(), It.IsAny<List<int>>());
 
-            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodoPesificado>()), Times.Once);
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodosReportePesificado>()), Times.Once);
 
         }
+
+        [Test]
+        public void BuscarDatosNegocioPesificacionOk()
+        {
+            repositorioMock.Setup(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodosPesificacion>())).Returns(new DataSourceResult());
+
+            var resultado = target.BuscarDatosNegocioPesificacion(It.IsAny<DataSourceRequest>(), It.IsAny<List<int>>());
+
+            repositorioMock.Verify(x => x.ObtenerConsultaEscalar(It.IsAny<TraerTodosPesificacion>()), Times.Once);
+
+        }
+
+        [Test]
+        public void ConfigurarExcedenteOk()
+        {
+            var reporte = new ReportePesificado()
+            {
+                //Excep = false
+            };
+
+            repositorioMock.Setup(x => x.Obtener<ReportePesificado>(It.IsAny<int>())).Returns(reporte);
+            target.ConfigurarExcedente(It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<int>());
+            repositorioMock.Verify(x => x.Obtener<ReportePesificado>(It.IsAny<int>()), Times.Once);
+
+        }
+
+        [Test]
+        public void EnviarMailCorredorOk()
+        {
+            var reporte = new ReportePesificadoDto()
+            {
+                CuitCorredor = "20043159381",
+                CuitVendedor = "20061870610",
+                Contrato = "0002599447",
+                Cantidad = 1000,
+                Excepcion = false,
+                RazonSocialCorredor = "ACA",
+                RazonSocialProveedor = "ACA",
+                Fijacion = "0259944701"
+            };
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ReportePesificado, ReportePesificadoDto>>>(), It.IsAny<Expression<Func<ReportePesificado, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+              .Returns(new List<ReportePesificadoDto>() { reporte });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+             .Returns(new List<Comercial>() { new Comercial { ComercialId = 1, IdActiveDirectory = "bau@baufest.com" } });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<MailProveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+            .Returns(new List<MailProveedor>() { new MailProveedor { Pesificado = "aaa@baufest.com", Proveedor = new Proveedor { RazonSocial  = "ACA", }  } });
+            mailManager.Setup(x => x.GetEmailUserActiveDirectory("bmelgarej")).Returns("aaa@baufest.com");
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+             .Returns(new List<Negocio>() { new Negocio { ContratoSAP = "0002599447", Comercial = new Comercial { ComercialId = 1, IdActiveDirectory = "bau@baufest.com" } } });
+            
+            target.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>());
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ReportePesificado, ReportePesificadoDto>>>(), It.IsAny<Expression<Func<ReportePesificado, bool>>>(),
+                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+        }
+        [Test]
+        public void EnviarMailProveedorOk()
+        {
+            var reporte = new ReportePesificadoDto()
+            {
+                CuitCorredor = "",
+                CuitVendedor = "20061870610",
+                Contrato = "0002599447",
+                Cantidad = 1000,
+                Excepcion = false,
+                RazonSocialCorredor = "ACA",
+                RazonSocialProveedor = "ACA",
+                Fijacion = "0259944701"
+            };
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ReportePesificado, ReportePesificadoDto>>>(), It.IsAny<Expression<Func<ReportePesificado, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+              .Returns(new List<ReportePesificadoDto>() { reporte });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+             .Returns(new List<Comercial>() { new Comercial { ComercialId = 1, IdActiveDirectory = "bau@baufest.com" } });
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<MailProveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+            .Returns(new List<MailProveedor>() { new MailProveedor { Pesificado = "aaa@baufest.com", Proveedor = new Proveedor { RazonSocial = "ACA", } } });
+            mailManager.Setup(x => x.GetEmailUserActiveDirectory("bmelgarej")).Returns("aaa@baufest.com");
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+             .Returns(new List<Negocio>() { new Negocio { ContratoSAP = "0002599447", Comercial = new Comercial { ComercialId = 1, IdActiveDirectory = "bau@baufest.com" } } });
+
+            target.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>());
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ReportePesificado, ReportePesificadoDto>>>(), It.IsAny<Expression<Func<ReportePesificado, bool>>>(),
+                It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+        }
+
     }
 }

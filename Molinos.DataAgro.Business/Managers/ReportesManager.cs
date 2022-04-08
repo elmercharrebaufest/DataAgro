@@ -16,8 +16,10 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Reflection;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -30,9 +32,10 @@ namespace Molinos.DataAgro.Business.Managers
         private ILogger logger;
         private readonly IContratosAPesificarAgent pesificarAgent;
         private readonly IMailManager mailManager;
+        private readonly IHttpContextManager httpContextManager;
 
         public ReportesManager(ILogger logger, IRepositorio repositorio, IComercialManager oComercial,
-            ITipoDeCambioAgent tipoDeCambio, IContratosAPesificarAgent pesificarAgent, IMailManager mailManager)
+            ITipoDeCambioAgent tipoDeCambio, IContratosAPesificarAgent pesificarAgent, IMailManager mailManager, IHttpContextManager httpContextManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -40,6 +43,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.tipoDeCambio = tipoDeCambio;
             this.pesificarAgent = pesificarAgent;
             this.mailManager = mailManager;
+            this.httpContextManager = httpContextManager;
         }
 
         //--------------------------------------------------
@@ -2766,13 +2770,19 @@ namespace Molinos.DataAgro.Business.Managers
             var comerciales = repositorio.Listar<Comercial>();
             var materiales = repositorio.Listar<Material>();
             var monedas = repositorio.Listar<Moneda>();
-
+            var contratosSap = datos.Where(x => string.IsNullOrEmpty(x.Fijacion)).Select(x => x.Contrato);
+            var fijacionesSap = datos.Where(x => !string.IsNullOrEmpty(x.Fijacion)).Select(x => x.Fijacion);
+            var contratos = repositorio.Listar<Contrato>(x => contratosSap.Contains(x.ContratoSAP)).Select(x => new KeyValuePair<string, int>(x.ContratoSAP, x.Id)).ToList();
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => fijacionesSap.Contains(x.FijacionSAP)).Select(x => new KeyValuePair<string, int>(x.FijacionSAP, x.Id)).ToList();
             return datos.Select(item => new ReportePesificado()
             {
                 CantidadPendiente = item.CantidadPendiente,
                 Clasificacion = item.Clasificacion,
                 ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault() != null ? comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId : (int?)null,
                 Contrato = item.Contrato,
+                NegocioId = string.IsNullOrEmpty(item.Fijacion) ? contratos.Any(x => x.Key == item.Contrato) ?
+                contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : fijaciones.Any(x => x.Key == item.Fijacion) != null ?
+                fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value : (int?)null : (int?)null,
                 CuitCorredor = item.CuitCorredor,
                 CuitVendedor = item.CuitVendedor,
                 Dolarizado = item.Dolarizado,
@@ -2785,7 +2795,8 @@ namespace Molinos.DataAgro.Business.Managers
                 KgNoPesificable = item.KgNoPesificable,
                 KgVencimientoPesificable = item.KgVencimientoPesificable,
                 KgTotales = item.KgTotales,
-                MaterialId = materiales.Where(x => x.Codigo == item.Material).FirstOrDefault() != null ? materiales.Where(x => x.Codigo == item.Material).FirstOrDefault().MaterialId : (int?)null,
+                MaterialId = materiales.Where(x => x.Codigo == item.Material).FirstOrDefault() != null ?
+                materiales.Where(x => x.Codigo == item.Material).FirstOrDefault().MaterialId : (int?)null,
                 Unidad = item.Unidad,
                 MonedaId = item.Moneda,
                 Precio = item.Precio,
@@ -2794,7 +2805,13 @@ namespace Molinos.DataAgro.Business.Managers
                 Pase = item.Pase,
                 Plus = item.Plus,
                 Posicion = item.Posicion,
-                KgTotalesPase = item.KgTotalesPase
+                KgTotalesPase = item.KgTotalesPase,
+                Status = item.Status,
+                Cantidad = item.Cantidad,
+                CantidadLiquidada = item.CantidadLiquidada,
+                CantidadRecibida = item.CantidadRecibida,
+                ConPrecio = item.ConPrecio,
+                Cesion = item.Cesion
             }).ToList();
         }
 
@@ -2869,7 +2886,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
 
-            var result = repositorio.ObtenerConsultaEscalar(new TraerTodoPesificado(filtro, equipo));
+            var result = repositorio.ObtenerConsultaEscalar(new TraerTodosReportePesificado(filtro, equipo));
 
             return result;
         }
@@ -3099,5 +3116,357 @@ namespace Molinos.DataAgro.Business.Managers
             return result;
         }
 
+        public DataSourceResult BuscarDatosNegocioPesificacion(DataSourceRequest filtro, List<int> equipo)
+        {
+            return repositorio.ObtenerConsultaEscalar(new TraerTodosPesificacion(filtro, equipo));
+
+        }
+
+        public Resultado ConfigurarExcedente(int id, bool excedente, int comercialId)
+        {
+            try
+            {
+                var resultado = new Resultado();
+                var reportePesificado = repositorio.Obtener<ReportePesificado>(id);
+                var n = repositorio.Obtener<Negocio>(x => x.Id == reportePesificado.NegocioId);
+
+                var c = comercialId;
+
+                if (n == null)
+                {
+                    resultado.Error("ConfigurarExcedente", $"No se puede realizar la acción. El contrato {reportePesificado.Contrato} no se encuentra registrado en DA");
+                    return resultado;
+                }
+                var negocioPesificado = repositorio.ObtenerMayor<NegocioPesificacion, int>(x => x.NegocioId == n.Id, x => x.NegocioId);
+                if (negocioPesificado != null)
+                {
+                    negocioPesificado.FechaExcepcion = DateTime.Now;
+                    negocioPesificado.Excepcion = excedente;
+                    negocioPesificado.ComercialId = c;
+                }
+                else
+                {
+                    repositorio.Agregar(CrearNuevoNegocioPesificado(null, c, null, excedente, n.Id));
+                }
+
+                repositorio.GuardarCambios();
+                return resultado;
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error actualizar excedente");
+                logger.Error(e);
+                throw;
+            }
+        }
+
+        public void EnviarMail(List<int> ids, DateTime fechaInstruccion, int comercialId)
+        {
+            var pesificados = repositorio.Listar<ReportePesificado, ReportePesificadoDto>(x => new ReportePesificadoDto
+            {
+                Id = x.Id,
+                Cantidad = x.Cantidad,
+                CuitVendedor = x.CuitVendedor,
+                CuitCorredor = x.CuitCorredor,
+                RazonSocialProveedor = x.NombreVendedor,
+                RazonSocialCorredor = x.NombreCorredor,
+                Contrato = x.Contrato,
+                Fijacion = x.Fijacion,
+                NegocioId = x.NegocioId
+            }, x => ids.Contains(x.Id));
+            EnviarMailPesificacionVencida(pesificados, fechaInstruccion, true);
+            EnviarMailPesificacionVencida(pesificados, fechaInstruccion, false);
+            GrabarFechaDeInstruccion(pesificados, fechaInstruccion, comercialId);
+
+        }
+
+        private void EnviarMailPesificacionVencida(List<ReportePesificadoDto> pesificado, DateTime fechaInstruccion, bool tieneCorredor)
+        {
+            var subject = "";
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+            {
+                subject += "Mail Pruebas - PESIFICACION DE CONTRATOS - AVISO IMPORTANTE!";
+            }
+            else
+            {
+                subject += "PESIFICACION DE CONTRATOS - AVISO IMPORTANTE!";
+
+            }
+            var comerciales = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
+
+            var path = httpContextManager.ObtenerPathLogoMail();
+            var lista = new List<string>();
+            var emailComerciales = "";
+            var vendedor = repositorio.Listar<MailProveedor>();
+            var copia = new List<string>();
+            try
+            {
+                if (tieneCorredor)
+                {
+
+                    if (pesificado.Any(x => !string.IsNullOrEmpty(x.CuitCorredor)))
+                    {
+                        var corredor = pesificado.Where(x => !string.IsNullOrEmpty(x.CuitCorredor)).Distinct().GroupBy(x => x.RazonSocialCorredor);
+                        foreach (var item in corredor)
+                        {
+                            var pesi = new ReportePesificadoDto
+                            {
+                                Corredor = item.Key,
+                                AgrupracionPesificados =
+                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, CantidadAgrupada = x.Cantidad, Contrato = x.Contrato }).ToList()
+                            };
+                            var mails = DevolverMailComercialDeNegocio(pesi);
+                            if (mails != null)
+                            {
+                                var view = CuerpoMailPesificadoVencidoVendedor(path, pesi, fechaInstruccion, true);
+                                copia.AddRange(vendedor.Where(x => x.Proveedor.RazonSocial == item.Key).Select(x => x.Pesificado));
+                                mailManager.EnviarMail(lista, subject, "", copia, view);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (pesificado.Any(x => string.IsNullOrEmpty(x.CuitCorredor)))
+                    {
+                        var proveedor = pesificado.Where(x => string.IsNullOrEmpty(x.CuitCorredor)).Distinct().GroupBy(x => x.RazonSocialProveedor);
+                        var agrupacion = new List<ReportePesificadoDto>();
+                        foreach (var item in proveedor)
+                        {
+                            var pesi = new ReportePesificadoDto
+                            {
+                                RazonSocialProveedor = item.Key,
+                                AgrupracionPesificados =
+                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, CantidadAgrupada = x.Cantidad, Contrato = x.Contrato, Fijacion = x.Fijacion }).ToList()
+                            };
+                            var mails = DevolverMailComercialDeNegocio(pesi);
+                            if (mails != null)
+                            {
+                                copia.AddRange(vendedor.Where(x => x.Proveedor.RazonSocial == item.Key).Select(x => x.Pesificado));
+                                var view = CuerpoMailPesificadoVencidoVendedor(path, pesi, fechaInstruccion, false);
+                                mailManager.EnviarMail(mails, subject, "", (copia.Count > 0 ? copia : null), view);
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e) { logger.Error(e); }
+        }
+        private List<string> DevolverMailComercialDeNegocio(ReportePesificadoDto reporte)
+        {
+            try
+            {
+                var contratos = reporte.AgrupracionPesificados.Select(y => y.Contrato).ToList();
+                var negocio = repositorio.Listar<Negocio>(x => contratos.Contains(x.ContratoSAP));
+                var listaDirectory = new List<string>();
+                if (negocio != null && negocio.Count > 0)
+                {
+                    var todoComercial = repositorio.Listar<Comercial>();
+                    foreach (var n in negocio)
+                    {
+                        var comercial = todoComercial.Where(x => x.ComercialId == n.ComercialId).Select(x => x.IdActiveDirectory).FirstOrDefault();
+                        var comerecialCreador = todoComercial.Where(x => x.ComercialId == n.ComercialCreadorId).Select(x => x.IdActiveDirectory).FirstOrDefault();
+                        listaDirectory.Add(comercial);
+                        listaDirectory.Add(comerecialCreador);
+                    }
+
+                    return DevolverMailDeActiveDirectoryId(listaDirectory);
+                }
+                return null;
+            }
+            catch (Exception e) { logger.Error(e); return null; }
+        }
+
+        private void GrabarFechaDeInstruccion(List<ReportePesificadoDto> pesificados, DateTime fechaInstruccion, int comercialId)
+        {
+            try
+            {
+                var ids = pesificados.Select(y => y.NegocioId).ToList();
+                var negocio = repositorio.Listar<Negocio>(x => ids.Contains(x.Id));
+                var negociosPesificadosNuevo = new List<NegocioPesificacion>();
+                var negociosPesificados = repositorio.Listar<NegocioPesificacion>();
+            
+                if (negocio != null && negocio.Count() > 0)
+                {
+                    foreach (var n in negocio)
+                    {                       
+
+                        if (negociosPesificados != null && negociosPesificados.Count() > 0 && negociosPesificados.Any(x => x.Negocio.Id.Equals(n.Id)))
+                        {
+                            var pesificado = negociosPesificados.Where(x => x.Negocio.Id.Equals(n.Id)).LastOrDefault();
+
+                            if (pesificado.FechaInstruccion.HasValue)
+                            {
+                                repositorio.Agregar(CrearNuevoNegocioPesificado(fechaInstruccion, comercialId, pesificado.FechaExcepcion, pesificado.Excepcion, n.Id));
+                            }
+                            else
+                            {
+                                pesificado.FechaEnvio = DateTime.Now;
+                                pesificado.FechaInstruccion = fechaInstruccion;
+                                pesificado.ComercialId = comercialId;
+                            }
+
+                        }
+                        else
+                        {
+                            repositorio.Agregar(CrearNuevoNegocioPesificado(fechaInstruccion, comercialId, null, null, n.Id));
+                        }
+                    }
+                }
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e) { logger.Error(e); }
+        }
+        private NegocioPesificacion CrearNuevoNegocioPesificado(DateTime? fechaInstruccion, int? comercialId, DateTime? fechaExcepcion, bool? excepcion, int id)
+        {
+            return new NegocioPesificacion()
+            {
+                FechaEnvio = fechaInstruccion != null ? DateTime.Now : (DateTime?)null,
+                FechaInstruccion = fechaInstruccion,
+                ComercialId = comercialId,
+                Excepcion = excepcion,
+                FechaExcepcion = fechaExcepcion != null ? fechaExcepcion : DateTime.Now,
+                NegocioId = id
+            };
+        }
+
+        private List<string> DevolverMailDeActiveDirectoryId(List<string> active)
+        {
+            var lista = new List<string>();
+            foreach (var item in active)
+            {
+                try
+                {
+                    var emailComerciales = mailManager.GetEmailUserActiveDirectory(item);
+                    logger.Debug("Mail encontrado para " + emailComerciales + "  " + item);
+                    if (!String.IsNullOrEmpty(emailComerciales))
+                    {
+                        lista.Add(emailComerciales);
+                    }
+                }
+                catch (Exception e) { logger.Error(e); }
+            }
+
+            return lista;
+        }
+
+        private AlternateView CuerpoMailPesificadoVencidoVendedor(String filePath, ReportePesificadoDto corredor, DateTime instruccion, bool tieneCorredor)
+        {
+            //var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
+            LinkedResource res = new LinkedResource(filePath);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 0px solid #AAAAAA; padding: 3px 2px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
+            var p = "<p>";
+            var thHead = "style=\"font-size: 15px; font-weight: bold;color: #FFFFFF; text-align: center;border-left: 0px solid #D0E4F5; " +
+                "border: 0px solid #AAAAAA;padding: 3px 2px;\"";
+            var td = "style=\"border: 0px solid #AAAAAA;  padding: 3px 2px;\"";
+            var linea = 0;
+            string htmlBody = "";
+            htmlBody += $"{p}Estimados, buenas tardes! </p>";
+            htmlBody += $"{p}Por la presente les notificamos que, en atención a que en su carácter de corredor en el/los boleto/s de referencia no han emitido" +
+                $" a la fecha, la correspondiente liquidación de granos a pesar de haber entregado mercadería, Molinos Agro S.A.en calidad de comprador y en caso " +
+                $"de continuar esta situación hasta el {instruccion.ToString("dd-MM-yyyy")} se considerará a los efectos de la liquidación pendiente, que el tipo de cambio a utilizar será " +
+                $"el del cierre del día {FechaALetras(instruccion)} en las condiciones pactadas.</p>";
+            htmlBody += $"{p}A tales efectos, les solicitamos el inmediato informe de la/s liquidación/es correspondiente en nuestra web, en pesos argentinos al " +
+                $"tipo de cambio que corresponda, cumpliendo el comprador con su obligación de pago en los términos que indica el correspondiente boleto.</p>";
+            htmlBody += "<br/>";
+            if (tieneCorredor)
+            {
+                htmlBody += "<table style=\"border: 1px solid #1C6EA4;background-color: #EEEEEE; width:70%; text-align: left;border-collapse:collapse;\">";
+                htmlBody += "<thead style=\" font-size: 13px;background: #1C6EA4; border-bottom: 0px solid #444444;\">";
+                htmlBody += "<tr>";
+                htmlBody += $"<th {thHead}>Corredor: {corredor.Corredor} </th>";
+                htmlBody += $"<th {thHead}>Contrato </th>";
+                htmlBody += $"<th {thHead}>Fijación </th>";
+                htmlBody += $"<th {thHead}>Total</th>";
+                htmlBody += "</tr>";
+                htmlBody += "</thead>";
+                htmlBody += "<tbody>";
+                foreach (var item in corredor.AgrupracionPesificados)
+                {
+                    htmlBody += "<tr style=\"text-align: center\">";
+                    htmlBody += $"<td {td}> {item.Proveedor} </td>";
+                    htmlBody += $"<td {td}> { Split(item.Contrato.TrimStart('0')) } </td>";
+                    htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? item.Fijacion.Substring(item.Fijacion.Length - 3, 2) : "") } </td>";
+                    htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
+                    htmlBody += "</tr>";
+                }
+                htmlBody += "<tr style=\"text-align: center\">";
+                htmlBody += $"<td {td}></td>";
+                htmlBody += $"<td {td}></td>";
+                htmlBody += $"<td {td}></td>";
+                htmlBody += $"<td {td}> {Split(corredor.AgrupracionPesificados.Sum(x => x.CantidadAgrupada).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))}  </td>";
+                htmlBody += "</tr>";
+                htmlBody += "</tbody>";
+                htmlBody += "</table>";
+
+            }
+            else
+            {
+                htmlBody += "<table style=\"border: 1px solid #1C6EA4;background-color: #EEEEEE; width:70%; text-align: left;border-collapse:collapse;\">";
+                htmlBody += "<thead style=\" font-size: 13px;background: #1C6EA4; border-bottom: 0px solid #444444;\">";
+                htmlBody += "<tr>";
+                htmlBody += $"<th {thHead}>Vendedor: {corredor.RazonSocialProveedor} </th>";
+                htmlBody += $"<th {thHead}>Fijación </th>";
+                htmlBody += $"<th {thHead}>Total</th>";
+                htmlBody += "</tr>";
+                htmlBody += "</thead>";
+                htmlBody += "<tbody>";
+                foreach (var item in corredor.AgrupracionPesificados)
+                {
+                    htmlBody += "<tr style=\"text-align: center\">";
+                    htmlBody += $"<td {td}>  { Split(item.Contrato.TrimStart('0')) } </td>";
+                    htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? item.Fijacion.Substring(item.Fijacion.Length - 3, 2) : "") } </td>";
+                    htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
+                    htmlBody += "</tr>";
+                }
+                htmlBody += "<tr style=\"text-align: center\">";
+                htmlBody += $"<td {td}></td>";
+                htmlBody += $"<td {td}></td>";
+                htmlBody += $"<td {td}> {Split(corredor.AgrupracionPesificados.Sum(x => x.CantidadAgrupada).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
+                htmlBody += "</tr>";
+                htmlBody += "</tbody>";
+                htmlBody += "</table>";
+            }
+            htmlBody += "<br/>";
+            htmlBody += $"Asimismo, de no haber generado la pesificación antes del  {instruccion.ToString("dd-MM-yyyy")}, no será necesario que ingresen a la página WEB para tomar el TC, tomándose como " +
+                  $"pesificación efectiva esta comunicación con el TC del día {FechaALetras(instruccion)}.";
+            htmlBody += $"{p}Saludos Cordiales</p>" +
+                $"{p}Molinos Agro S.A.</p>  <br /> <br />" +
+                @"<img src='cid:" + res.ContentId + @"'/>" +
+                $"{p} www.molinosagro.com.ar</p>";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+        private string Split(string str)
+        {
+            var enumNumero = Enumerable.Range(0, str.Length / 2)
+                .Select(i => str.Substring(i * 2, 2)).ToList();
+            if (str.Length % 2 == 1)
+            {
+                enumNumero.Add(str[str.Length - 1].ToString());
+            }
+            var nuevoString = "";
+
+            for (int i = 0; i < enumNumero.Count(); i++)
+            {
+                nuevoString += "<span>" + enumNumero[i] + "</span>";
+            }
+            return nuevoString;
+        }
+        private string FechaALetras(DateTime fecha)
+        {
+            return $"{fecha.Day} de {fecha.ToString("MMMM")} de {fecha.Year}";
+        }
     }
 }

@@ -15,24 +15,26 @@ using Molinos.DataAgro.Entities.Seguridad;
 
 namespace Molinos.DataAgro.Repository.ConsultasEF
 {
-    public class TraerTodoPesificado : IConsultaEscalar<DataSourceResult>
+    public class TraerTodoPesificadoSinFiltro /*: IConsultaEscalar<DataSourceResult>*/
     {
-        private readonly DataSourceRequest request;
-        private readonly List<int> equipo;
+        //private readonly DataSourceRequest request;
+        //private readonly List<int> equipo;
 
-        public TraerTodoPesificado(DataSourceRequest request, List<int> equipo)
-        {
-            this.request = request;
-            this.equipo = equipo;
-        }
+        //public TraerTodoPesificado(DataSourceRequest request, List<int> equipo)
+        //{
+        //    this.request = request;
+        //    this.equipo = equipo;
+        //}
 
-        private static DataSourceResult Query(DbContext contexto, DataSourceRequest request, List<int> equipo)
+        public static IQueryable<ReportePesificadoDto> Query(DbContext contexto, DataSourceRequest request, List<int> equipo)
         {
 
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
             var queryRango =
                 from item in contexto.Set<ReportePesificado>()
-                where (equipo.Contains(item.ComercialId.Value) || item.ComercialId == null) && item.KgTotales > 0         
+                join np in contexto.Set<NegocioPesificacion>() on item.NegocioId equals np.Negocio.Id into nps
+                from np in nps.DefaultIfEmpty()
+                where (equipo.Contains(item.ComercialId.Value) || item.ComercialId == null) && item.KgTotales > 0
                 select new ReportePesificadoDto
                 {
                     Id = item.Id,
@@ -80,19 +82,35 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Pase = item.Pase,
                     Plus = item.Plus,
                     Posicion = item.Posicion,
-                    KgTotalesPase = item.KgTotalesPase
+                    KgTotalesPase = item.KgTotalesPase,
+                    Cantidad = item.Cantidad,
+                    CantidadRecibida = item.CantidadRecibida,
+                    Excepcion = np.Excepcion,
+                    FechaInstruccion = np.FechaInstruccion != null ? DbFunctions.TruncateTime(np.FechaInstruccion) : (DateTime?)null,
+                    EsCorredor = string.IsNullOrEmpty(item.CuitCorredor) ? false : true,
+                    EsOperacionDirecta = string.IsNullOrEmpty(item.CuitVendedor) ? false : true,
+                    Cesion = item.Cesion,
+                    CesionDescripcion = item.Cesion == true ? "SI" : "NO",
+                    Status = item.Status,
+                    StatusDescripcion = item.Status == "" ? "Slip" : item.Status == "A" ? "Con Anulación Automática" : 
+                    item.Status == "X" ? "Confirmado" : item.Status == "F" ? "Liquidación Finalizada" :
+                    item.Status == "C" ? "Cumplido" : item.Status == "M" ? "Con Anulación parcial" :
+                    item.Status == "B" ? "Contrato Anulado Totalmente" : item.Status == "K" ? "Cumplido en Camiones" :
+                    item.Status == "T" ? "Contrato de Canje Cerrado" : item.Status == "J" ? "Prefijación Cerrada" : "",
+                    NegocioId = np.NegocioId,
+                    NegocioPesificacionId = np.Id,
                 };
-            
+            queryRango = queryRango.GroupBy(x =>new { x.NegocioId, x.Contrato, x.Fijacion }).Select(x => x.OrderByDescending(y=> y.NegocioPesificacionId).FirstOrDefault());
             GridHelper.TruncateTime(request.Filter, ref queryRango);
-            return queryRango.ToDataSourceResult<ReportePesificadoDto>(request);
+            return queryRango;
         }
 
-        public virtual DataSourceResult Ejecutar(DbContext contexto)
-        {
-            using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
-            {
-                return Query(contexto, request, equipo);
-            }
-        }
+        //public virtual DataSourceResult Ejecutar(DbContext contexto)
+        //{
+        //    using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+        //    {
+        //        return Query(contexto, request, equipo);
+        //    }
+        //}
     }
 }

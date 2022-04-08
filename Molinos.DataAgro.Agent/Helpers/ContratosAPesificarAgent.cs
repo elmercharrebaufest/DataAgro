@@ -137,7 +137,14 @@ namespace Molinos.DataAgro.Agent
                 Unidad = dev.UNIDAD,
                 Dolarizado = dev.DOLARIZADO == "NO" ? false : true,
                 Clasificacion = dev.CLASIFICACION,
-                Anticipo = dev.ANTICIPO
+                Anticipo = dev.ANTICIPO,
+                Status = dev.STATUS,
+                Cesion = dev.CESION == "X",
+                Cantidad = dev.CANTIDAD,
+                CantidadLiquidada = dev.CANT_LIQUIDADA,
+                CantidadRecibida = dev.CANT_RECIBIDA,
+                ConPrecio = dev.CON_PRECIO,
+                
             };
             var fecha = new DateTime(1753, 1, 1);
             if (pesificado.FechaFijacion.HasValue && pesificado.FechaFijacion.Value < fecha)

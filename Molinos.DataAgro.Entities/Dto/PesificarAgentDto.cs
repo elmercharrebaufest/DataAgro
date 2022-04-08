@@ -37,6 +37,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? Plus { get; set; }
         public string Posicion { get; set; }
         public double? KgTotalesPase { get; set; }
+        public string Status { get; set; }
+        public bool Cesion { get; set; }
+        public decimal Cantidad { get; set; }
+        public decimal CantidadLiquidada { get; set; }
+        public decimal CantidadRecibida { get; set; }
+        public string ConPrecio { get; set; }
 
         public override bool Equals(object obj)
         {

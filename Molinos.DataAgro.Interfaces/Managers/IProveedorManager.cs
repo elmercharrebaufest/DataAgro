@@ -79,5 +79,6 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarMailPrestamoDevolucion(Contrato contrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string comercial);
         List<ProveedorDto> ListarProveedorTodos(string proveedor);
         ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTercero campo);
+        void GrabarMailProveedor();
     }
 }

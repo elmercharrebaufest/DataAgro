@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -633,6 +633,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Configuraciones_JefeEnvioMailNegociosConDiaAnterior {
             get {
                 return ResourceManager.GetString("Configuraciones_JefeEnvioMailNegociosConDiaAnterior", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configurar Excedente.
+        /// </summary>
+        public static string ConfigurarExcedente {
+            get {
+                return ResourceManager.GetString("ConfigurarExcedente", resourceCulture);
             }
         }
         
@@ -1650,6 +1659,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Moneda {
             get {
                 return ResourceManager.GetString("Moneda", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Negocio Pesificado.
+        /// </summary>
+        public static string NegocioPesificado {
+            get {
+                return ResourceManager.GetString("NegocioPesificado", resourceCulture);
             }
         }
         

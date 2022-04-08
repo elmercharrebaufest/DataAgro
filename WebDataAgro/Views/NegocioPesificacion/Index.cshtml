@@ -1,0 +1,430 @@
+﻿@{
+    ViewBag.Title = "Negocio Pesificado";
+    var excedente = PermisosHelper.Is(PermisosDataAgro.ConfigurarExcedente);
+}
+
+@section Styles {
+    <link href="~/Content/ReporteContrato.css" rel="stylesheet" />
+    <link href="~/Content/configuracionCupo.css" rel="stylesheet" />
+}
+<script>
+    configurarExcedente = '@excedente';
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/NegocioPesificacion")
+    <script src="~/Scripts/App/Filtros.js"></script>
+
+}
+
+<script type="x-kendo/template" id="template">
+
+    <div class="row">
+      <div class="col-md-6">
+        <a class="k-button k-button-icontext k-grid-excel" href="\#"><span class="k-icon k-i-excel"></span>Export to Excel</a>
+        </div>
+        <div class="col-sm-1">
+            <label>Fecha Intrucción</label>
+        </div>
+        <div class="col-sm-2">
+            <input id="fechaInstruccionId" type="date" data-bind="value: Parametros.fechaInstruccionId" style="width:100%" />
+        </div>
+        <div class="col-md-1"><label type="button" onclick="EnviarMail()" style="cursor: pointer" id="boton-search"><label style="cursor: pointer"><i class="fa fa-envelope" style="font-size: 16px;" aria-hidden="true"></i>&nbsp ENVIAR MAIL</label></label></div>
+
+    </div>
+</script>
+
+
+<div class="Titulo">
+    <div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+        <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+    </div>
+    <br />
+
+    <div id="filtrar" class="container collapse">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Corredor</label>
+            </div>
+            <div class="col-md-4">
+                <input id="buscadorCorredor" name="CuitCorredor" class="multiselectText" style="width:100%" type="text" placeholder="Buscar por CUIT..." required="required" />
+            </div>
+
+            <div class="col-md-2">
+                <label>Proveedor</label>
+            </div>
+            <div class="col-md-4">
+                <input id="buscadorProveedor" name="CuitVendedor" class="multiselectText" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Contrato SAP</label>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-xs-5 noRightPadding">
+                        @Html.TextBox("Contrato", "", new { @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "ContratoSAPId" })
+                    </div>
+                    <div class="col-xs-5">
+                        @Html.TextBox("ContratoSAPHasta-NoimportaElNombre", "", new { @type = "number", @class = "form-control", style = "width:100%", @id = "ContratoSAPHastaId" })
+                    </div>
+                    <div class="col-xs-2 noLeftPadding">
+                        <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
+                    </div>
+                    <div class="modal fade" id="popUpCargarValores" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label>Comercial</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione el Comercial", new { @class = "form-control filtroBusquedaPorId", @id = "ComercialId" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Fijación</label>
+            </div>
+            <div class="col-md-4">
+                @Html.TextBox("Fijacion", "", new { @class = "form-control filtroBusquedaTextBoxContieneTexto", style = "width:100%", @id = "Fijacion" })
+            </div>
+            <div class="col-md-2">
+                <label>Material</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Clasificacion</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownList("ClasificacionId", new SelectList(ViewBag.Clasificacion, "Value", "Text"), "Seleccione el Clasificacion", new { @class = "form-control filtroBusquedaPorId", @id = "clasificacionId" })
+            </div>
+            <div class="col-md-2">
+                <label>Operación Directa</label>
+                @Html.CheckBox("EsOperacionDirecta", false, new { @class = "filtroBoleano", @id = "EsOperacionDirecta" })
+            </div>
+            <div class="col-md-2">
+                <label>Con Corredor</label>
+                @Html.CheckBox("EsCorredor", false, new { @class = "filtroBoleano", @id = "EsCorredor" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Fecha Desde Dolarizado</label>
+            </div>
+            <div class="col-md-2">
+                <span id="">
+                    <input id="FechaDesdeDolarizado" class="filtroFecha" name="FechaHastaDolarizado-desde" type="date" style="width: 100%" />
+                </span>
+            </div>
+            <div class="col-md-2">
+                <label>Fecha Hasta Dolarizado</label>
+            </div>
+            <div class="col-md-2">
+                <span id="">
+                    <input id="FechaHastaDolarizado" class="filtroFecha" name="FechaHastaDolarizado-hasta" type="date" style="width: 100%" />
+                </span>
+            </div>
+            <div class="col-md-2">
+                <label>Dolarizado</label>
+                @Html.CheckBox("Dolarizado", false, new { @class = "filtroBoleano", @id = "Dolarizado" })
+            </div>
+            <div class="col-md-2">
+                <label>Express</label>
+                @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", @id = "DolarizadoExpress" })
+            </div>
+            <div class="col-md-2">
+                <label>No Productor</label>
+                @Html.CheckBox("DolarizadoNoProductor", false, new { @class = "filtroBoleano", @id = "DolarizadoNoProductor" })
+            </div>
+            <div class="col-md-2">
+                <label>Ninguno</label>
+                @Html.CheckBox("NingunDolarizado", false, new { @class = "filtroBoleano", @id = "NingunDolarizado" })
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label>Fecha Desde Instrucción</label>
+            </div>
+            <div class="col-md-2">
+                <span id="">
+                    <input id="FechaInstruccionId" class="filtroFecha" name="FechaInstruccion-desde" type="date" style="width: 100%" />
+                </span>
+            </div>
+            <div class="col-md-2">
+                <label>Fecha Hasta Instrucción</label>
+            </div>
+            <div class="col-md-2">
+                <span id="">
+                    <input id="FechaInstruccionHastaId" class="filtroFecha" name="FechaInstruccion-hasta" type="date" style="width: 100%" />
+                </span>
+            </div>
+
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label>Status</label>
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("Status", new SelectList(
+                           new List<SelectListItem>
+                    {
+                        new SelectListItem{ Value = "", Text = "Slip"},
+                        new SelectListItem{ Value = "A", Text = "Con Anulación Automática"},
+                        new SelectListItem{ Value = "X", Text = "Confirmado"},
+                        new SelectListItem{ Value = "F", Text = "Liquidación Finalizada"},
+                        new SelectListItem{ Value = "C", Text = "Cumplido"},
+                        new SelectListItem{ Value = "M", Text = "Con Anulación Parcial"},
+                        new SelectListItem{ Value = "B", Text = "Contrato Anulado Totalmente"},
+                        new SelectListItem{ Value = "K", Text = "Cumplido en Camiones"},
+                        new SelectListItem{ Value = "T", Text = "Contrato de Canje Cerrado"},
+                        new SelectListItem{ Value = "J", Text = "Prefijación Cerrada"},
+                    }
+               , "Value", "Text"), "Status", new { @class = "form-control filtroBusquedaTextBox", @id = "Status" })
+            </div>
+            <div class="col-md-2">
+                <label>Cesión</label>
+                @Html.CheckBox("Cesion", false, new { @class = "filtroBoleano", @id = "Cesion" })
+            </div>
+            <div class="col-md-1">
+                <label>Kg No Pesificable</label>
+            </div>
+            <div class="col-md-1">
+                @Html.CheckBox("KgNoPesificable", false, new { @class = "filtroPesificable", @id = "KgNoPesificable", @onclick = "DeshabilitarTildeExcluyenteKgNoPesificable()" })
+            </div>
+            <div class="col-md-1">
+                <label>Kg Vencimiento Pesificable</label>
+            </div>
+            <div class="col-md-1">
+                @Html.CheckBox("KgVencimientoPesificable", false, new { @class = "filtroPesificable", @id = "KgVencimientoPesificable", @onclick = "DeshabilitarTildeExcluyenteKgVencimientoPesificable()" })
+            </div>
+            <div class="col-md-1">
+                <label>Kg Totales</label>
+            </div>
+            <div class="col-md-1">
+                @Html.CheckBox("KgTotales", false, new { @class = "filtroPesificable", @id = "KgTotales", @onclick = "DeshabilitarTildeExcluyenteKgTotales()" })
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12" style="text-align:right">
+                <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<br />
+<div class="row">
+    <div id="totalizador-materiales" class="col-xs-12 text-xs-center grupo-totales">
+
+        <div class="col-xs-12 col-sm-6 col-md-4 noPadding">
+            <div>
+                <span style="margin-right:10px;font-weight:bolder;">Kilos Pesificable</span><span id="KilosPesificable"></span>
+                <div>
+                    <strong style="margin-right:15px;">USD Pesificable</strong><span id="USDPesificable"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 noPadding">
+            <div>
+                <span style="margin-right:10px;font-weight:bolder;">Kilos No Pesificables</span><span id="KilosNoPesificables"></span>
+                <div>
+                    <strong style="margin-right:25px;">USD No Pesificable</strong><span id="USDNoPesificable"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 noPadding">
+            <div>
+                <span style="margin-right:10px;font-weight:bolder;">Kilos Totales</span><span id="KilosTotales"></span>
+                <div>
+                    <strong style="margin-right:15px;">USD Totales</strong><span id="USDTotales"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="grid" class="table-responsive">
+</div>
+
+
+<style>
+    .fa {
+        font-size: inherit !important;
+    }
+
+    .botonVarios {
+        font-size: 22px !important;
+    }
+
+    .varios {
+        color: gray;
+    }
+
+    .content-input input,
+    .content-select select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    .content-input input {
+        visibility: hidden;
+        position: absolute;
+        right: 0;
+    }
+
+    .content-input {
+        position: relative;
+        margin-bottom: 30px;
+        padding: 5px 0 5px 60px; /* Damos un padding de 60px para posicionar
+            el elemento <i> en este espacio*/
+        display: block;
+        margin-left: 20px;
+    }
+
+        /* Estas reglas se aplicarán a todos las elementos i
+    después de cualquier input*/
+        .content-input input + i {
+            background: gray;
+            border: 2px solid rgba(0,0,0,0.2);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* Estas reglas se aplicarán a todos los i despues
+    de un input de tipo checkbox*/
+        .content-input input[type=checkbox ] + i {
+            width: 36px;
+            height: 19px;
+            border-radius: 15px;
+        }
+
+            .content-input input[type=checkbox] + i:before {
+                content: ''; /* No hay contenido */
+                width: 17px;
+                height: 18px;
+                background: #fff;
+                border-radius: 50%;
+                position: absolute;
+                z-index: 1;
+                left: 0px;
+                top: 0px;
+                -webkit-box-shadow: 3px 0 3px 0 rgba(0,0,0,0.2);
+                box-shadow: 3px 0 3px 0 rgba(0,0,0,0.2);
+            }
+
+        .content-input input[type=checkbox]:checked + i:before {
+            left: 17px;
+            -webkit-box-shadow: -3px 0 3px 0 rgba(0,0,0,0.2);
+            box-shadow: 3px 0 -3px 0 rgba(0,0,0,0.2);
+        }
+
+        .content-input input[type=checkbox]:checked + i {
+            background: #0080FF;
+        }
+
+        .content-input input[type=checkbox] + i:after {
+            content: '';
+            position: absolute;
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+            top: 8px;
+            left: 4px;
+            opacity: 0 /* Ocultamos este elemento */;
+            transition: all 0.25s ease 0.25s;
+        }
+
+        /* Cuando esté checkeado cambiamos la opacidad a 1 y lo mostramos */
+        .content-input input[type=checkbox]:checked + i:after {
+            opacity: 1;
+        }
+
+    .k-grid-header .k-header > .k-link {
+        color: white
+    }
+
+    .k-grid-header .k-header {
+        background: gray !important;
+    }
+    /*  .k-block, .k-button, .k-draghandle, .k-grid-header, .k-grouping-header, .k-header, .k-pager-wrap, .k-toolbar, .k-treemap-tile, html .km-pane-wrapper .k-header {
+                    background: gray !important;
+                }*/
+    .k-button.k-button-icon .k-icon, .k-grid-filter .k-icon, .k-header .k-icon {
+        color: white !important;
+    }
+
+    .k-grid table {
+        text-align: center;
+    }
+
+    .k-grid-filter.k-state-active {
+        background-color: gray;
+    }
+
+    .k-grid-footer td, .k-group-footer td, .k-grouping-row td {
+        background-color: #787878 !important;
+    }
+
+    div.k-grid-footer, div.k-grid-header {
+        background-color: #787878 !important;
+    }
+
+    .k-grid-excel {
+        background: #017940 !important;
+        color: white !important;
+    }
+
+    #boton-search {
+        padding: 1.5px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 17px;
+        background-color: white;
+        color: gray;
+        font-size: 12px;
+        border: lightgray 1px solid;
+    }
+
+        #boton-search:active {
+            background-color: gray;
+        }
+
+        #boton-search:active {
+            background-color: gray;
+            color: white
+        }
+
+    .k-state-default > .k-select {
+        background-color: gray;
+    }
+
+    .k-i-arrow-60-right {
+        background-color: gray;
+    }
+
+    .k-i-arrow-60-left {
+        background-color: gray;
+    }
+
+    .k-icon:before {
+        color: white;
+    }
+</style>
+
