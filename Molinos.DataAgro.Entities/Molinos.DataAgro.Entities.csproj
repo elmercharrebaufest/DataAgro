@@ -145,7 +145,6 @@
     <Compile Include="Dto\TipoNegocioHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\MaterialHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\CentroHabilitadoSinBoletoDto.cs" />
-
     <Compile Include="Dto\NegocioPesificacionDto.cs" />
     <Compile Include="Dto\SustentableDto.cs" />
     <Compile Include="Dto\MailProveedorDto.cs" />
@@ -367,7 +366,9 @@
     <Compile Include="Entities\BoletoVenta.cs" />
     <Compile Include="Entities\BoletoCompraNetProvincia.cs" />
     <Compile Include="Entities\CampoDetalleTercero.cs" />
+    <Compile Include="Entities\CentroHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\CierreDelDiaMailExternos.cs" />
+    <Compile Include="Entities\ClasificacionHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\ClausulaCinco.cs" />
     <Compile Include="Entities\ClausulaSeis.cs" />
     <Compile Include="Entities\ClausulaSiete.cs" />
@@ -419,6 +420,9 @@
     <Compile Include="Entities\Clausula.cs" />
     <Compile Include="Entities\ClausulaUno.cs" />
     <Compile Include="Entities\MailProveedor.cs" />
+    <Compile Include="Entities\MaterialHabilitadoSinBoleto.cs" />
+    <Compile Include="Entities\NegocioPesificacion.cs" />
+    <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\TipoNegocioDetalle.cs" />
     <Compile Include="Entities\NegocioAsociado.cs" />
     <Compile Include="Entities\CriterioCumplimientoCupo.cs" />
@@ -428,6 +432,8 @@
     <Compile Include="Entities\HabilitacionSustentable.cs" />
     <Compile Include="Entities\Camara.cs" />
     <Compile Include="Entities\ReportePagosDiferidos.cs" />
+    <Compile Include="Entities\TipoNegocioHabilitadoSinBoleto.cs" />
+    <Compile Include="Entities\TipoOperacionHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\TipoPosicionCBOT.cs" />
     <Compile Include="Entities\TipoNegocioRangoConfirmacionAutomatica.cs" />
     <Compile Include="Entities\TipoRangoConfirmacionAutomatica.cs" />

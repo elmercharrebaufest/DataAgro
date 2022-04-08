@@ -13,6 +13,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaInstruccion { get; set; }
         public DateTime? FechaEnvio { get; set; }
         public int? ComercialId { get; set; }
+
         public int NegocioId { get; set; }
 
         [ForeignKey("ComercialId")]
