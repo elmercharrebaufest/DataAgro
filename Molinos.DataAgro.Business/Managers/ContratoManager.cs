@@ -1706,7 +1706,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.MonedaSustentableId = oContrato.MonedaSustentableId;
             oContratoSave.FechaDesdeSustentable = oContrato.FechaDesdeSustentable;
             oContratoSave.FechaHastaSustentable = oContrato.FechaHastaSustentable;
-            oContratoSave.TarifaAConvenir = oContrato.TarifaAConvenir;
+            oContratoSave.TarifaAConvenir = oContrato.Sustentable == true ? oContrato.TarifaAConvenir : false;
             oContratoSave.FechaDolarizado = oContrato.FechaDolarizado;
             oContratoSave.DiasPesificado = oContrato.DiasPesificado;
             oContratoSave.NoInformaSio = oContrato.NoInformaSio;
