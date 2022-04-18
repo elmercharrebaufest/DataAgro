@@ -4507,19 +4507,21 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.RemoverTodos<MailProveedor>(x => x.Id == x.Id);
             try
             {
-
-                foreach (var item in lista)
+                if (lista != null && lista.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(item.Pesificado))
+                    foreach (var item in lista)
                     {
-                        entidades.Add(new MailProveedor()
+                        if (!string.IsNullOrEmpty(item.Pesificado))
                         {
-                            Pesificado = (ConfigurationManager.AppSettings["AmbientePruebas"] == "1") ? "dataagro@molinosagro.com.ar" : item.Pesificado,
-                            ProveedorId = proveedores.Select(x => x.CUIT == item.Cuit).FirstOrDefault() != null ?
-                            proveedores.Where(x => x.CUIT == item.Cuit).FirstOrDefault().ProveedorId : (int?)null
-                        });
-                    }
+                            entidades.Add(new MailProveedor()
+                            {
+                                Pesificado = (ConfigurationManager.AppSettings["AmbientePruebas"] == "1") ? "dataagro@molinosagro.com.ar" : item.Pesificado,
+                                ProveedorId = proveedores.Select(x => x.CUIT == item.Cuit).FirstOrDefault() != null ?
+                                proveedores.Where(x => x.CUIT == item.Cuit).FirstOrDefault().ProveedorId : (int?)null
+                            });
+                        }
 
+                    }
                 }
                 repositorio.AgregarTodos(entidades);
                 repositorio.GuardarCambios();

@@ -2806,7 +2806,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Plus = item.Plus,
                 Posicion = item.Posicion,
                 KgTotalesPase = item.KgTotalesPase,
-                Status = item.Status == ""? "S": item.Status,
+                Status = item.Status == "" ? "S" : item.Status,
                 Cantidad = item.Cantidad,
                 CantidadLiquidada = item.CantidadLiquidada,
                 CantidadRecibida = item.CantidadRecibida,
@@ -3184,6 +3184,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var subject = "";
             List<string> fromEmail = new List<string>();
+            var mailAdmin = "";
             fromEmail.Add(ConfigurationManager.AppSettings["CredentialUserNamePesificados"]);
             if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
             {
@@ -3192,7 +3193,7 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 subject += "PESIFICACION DE CONTRATOS - AVISO IMPORTANTE!";
-
+                mailAdmin = "Joaquin.Delfederico@molinosagro.com.ar";
             }
             var comerciales = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
 
@@ -3220,6 +3221,7 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 var view = CuerpoMailPesificadoVencidoVendedor(path, pesi, fechaInstruccion, true);
                                 copia.AddRange(vendedor.Where(x => x.Proveedor.RazonSocial == item.Key).Select(x => x.Pesificado));
+                                if (!string.IsNullOrEmpty(mailAdmin)) { mails.Add(mailAdmin); }
                                 mailManager.EnviarMail(mails, subject, "", copia, view, null, null, fromEmail);
                             }
                         }
@@ -3244,6 +3246,7 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 copia.AddRange(vendedor.Where(x => x.Proveedor.RazonSocial == item.Key).Select(x => x.Pesificado));
                                 var view = CuerpoMailPesificadoVencidoVendedor(path, pesi, fechaInstruccion, false);
+                                if (!string.IsNullOrEmpty(mailAdmin)) { mails.Add(mailAdmin); }
                                 mailManager.EnviarMail(mails, subject, "", (copia.Count > 0 ? copia : null), view, null, null, fromEmail);
                             }
 
@@ -3286,11 +3289,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var negocio = repositorio.Listar<Negocio>(x => ids.Contains(x.Id));
                 var negociosPesificadosNuevo = new List<NegocioPesificacion>();
                 var negociosPesificados = repositorio.Listar<NegocioPesificacion>();
-            
+
                 if (negocio != null && negocio.Count() > 0)
                 {
                     foreach (var n in negocio)
-                    {                       
+                    {
 
                         if (negociosPesificados != null && negociosPesificados.Count() > 0 && negociosPesificados.Any(x => x.Negocio.Id.Equals(n.Id)))
                         {
