@@ -4511,20 +4511,13 @@ namespace Molinos.DataAgro.Business.Managers
                 if (lista != null && lista.Count > 0)
                 {
                     foreach (var item in lista)
-                    {
-                        string jsonObjeto = JsonConvert.SerializeObject(item, new JsonSerializerSettings()
-                        {
-                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
-                            PreserveReferencesHandling = PreserveReferencesHandling.None,
-                            Formatting = Formatting.Indented,
-                        });
-                        logger.Debug(jsonObjeto);
+                    {                       
                         if (!string.IsNullOrEmpty(item.Pesificado))
                         {
                             entidades.Add(new MailProveedor()
                             {
                                 Pesificado = (ConfigurationManager.AppSettings["AmbientePruebas"] == "1") ? "dataagro@molinosagro.com.ar" : item.Pesificado,
-                                ProveedorId = proveedores.Select(x => x.CUIT == item.Cuit).FirstOrDefault() != null ?
+                                ProveedorId = proveedores.Any(x => x.CUIT == item.Cuit) ?
                                 proveedores.Where(x => x.CUIT == item.Cuit).FirstOrDefault().ProveedorId : (int?)null
                             });
                         }
