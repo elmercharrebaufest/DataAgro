@@ -138,7 +138,7 @@ namespace Molinos.DataAgro.Agent
                 Dolarizado = dev.DOLARIZADO == "NO" ? false : true,
                 Clasificacion = dev.CLASIFICACION,
                 Anticipo = dev.ANTICIPO,
-                Status = dev.STATUS,
+                Status = dev.STATUS == "" ? "S" : dev.STATUS,
                 Cesion = dev.CESION == "X",
                 Cantidad = dev.CANTIDAD,
                 CantidadLiquidada = dev.CANT_LIQUIDADA,

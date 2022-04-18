@@ -37,11 +37,11 @@ namespace Molinos.DataAgro.Business
             this.repositorio = repositorio;
         }
 
-        public void EnviarMail(Comercial desde, List<string> enviarA, string asunto, string cuerpo, List<string> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null)
+        public void EnviarMail(Comercial desde, List<string> enviarA, string asunto, string cuerpo, List<string> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null, List<string> emailRemitente = null)
         {
             try
             {
-                var oMensaje = CrearMailBase(cuerpo, asunto, enviarA);
+                var oMensaje = CrearMailBase(cuerpo, asunto, enviarA, emailRemitente);
                 if (copia != null)
                 {
                     foreach (string mail in copia)
@@ -101,14 +101,30 @@ namespace Molinos.DataAgro.Business
             return string.Empty;
         }
 
-        private MailMessage CrearMailBase(string cuerpo, string asunto, List<string> enviarA)
+        private MailMessage CrearMailBase(string cuerpo, string asunto, List<string> enviarA, List<string> remitente = null)
         {
             MailMessage oMensaje = new MailMessage
             {
                 From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"]),
                 Body = cuerpo,
-                Subject = asunto
+                Subject = asunto,
+                //Sender = string.IsNullOrEmpty(remitente) ? null : new MailAddress(remitente)
             };
+            if(remitente != null)
+            {
+                foreach(var item in remitente)
+                {
+                    oMensaje.ReplyToList.Add(item);
+                }
+                foreach (string mail in enviarA)
+                {
+                    if (!string.IsNullOrEmpty(mail))
+                    {
+                        oMensaje.ReplyToList.Add(mail);
+                    }
+                }
+            }
+            
             foreach (string mail in enviarA)
             {
                 if (!string.IsNullOrEmpty(mail))
@@ -139,9 +155,26 @@ namespace Molinos.DataAgro.Business
                 }
                 if (ConfigurationManager.AppSettings["SmtpAnonimo"] != "S")
                 {
+                    string passCredencial = "";
+                    if(oMensaje.Sender == null)
+                    {
+                        passCredencial = ConfigurationManager.AppSettings["CredentialPassword"];
+                    }
+                    else
+                    {
+                        switch (oMensaje.Sender.Address) {
+                            case "materiasprimas@molinosagro.com.ar":
+                                passCredencial = ConfigurationManager.AppSettings["CredentialPasswordPesificados"];
+                                break;
+                            default:
+                                passCredencial = ConfigurationManager.AppSettings["CredentialPassword"];
+                                break;
+                        };
+                    }
                     oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
-                    oCliente.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["CredentialUserName"],
-                        ConfigurationManager.AppSettings["CredentialPassword"]);
+                    oCliente.Credentials = new System.Net.NetworkCredential(oMensaje.Sender == null ? ConfigurationManager.AppSettings["CredentialUserName"] : oMensaje.Sender.Address,
+                        //ConfigurationManager.AppSettings["CredentialPassword"]);
+                        passCredencial);
                 }
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
                 oCliente.Send(oMensaje);
@@ -151,7 +184,7 @@ namespace Molinos.DataAgro.Business
                 logger.Error($"Fallo el SmtpClient con error:  {ex.Message}");
             }
         }
-        public void EnviarMail(Comercial desde, List<Comercial> enviarA, string asunto, string cuerpo, List<Comercial> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null)
+        public void EnviarMail(Comercial desde, List<Comercial> enviarA, string asunto, string cuerpo, List<Comercial> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null, List<string> emailRemitente = null)
         {
             List<string> enviarAstring = new List<string>();
             if (enviarA != null)
@@ -175,7 +208,7 @@ namespace Molinos.DataAgro.Business
                     try { copiaAstring.Add(GetEmailUserActiveDirectory(comercial.IdActiveDirectory)); } catch (Exception e) { logger.Error(e); }
                 }
             }
-            this.EnviarMail(enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
+            this.EnviarMail(enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo, emailRemitente);
         }
         public void ReenviarMailCierreDia(string asuntoABuscar, string asuntoNuevoMail, string cuerpo)
         {
@@ -294,7 +327,7 @@ namespace Molinos.DataAgro.Business
             }
         }
 
-        public void EnviarMail(List<string> enviarA, string asunto, string cuerpo, List<string> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null)
+        public void EnviarMail(List<string> enviarA, string asunto, string cuerpo, List<string> copia = null, AlternateView vistaAlternativa = null, byte[] archivo = null, string nombreArchivo = null, List<string> emailRemitente = null)
         {
             List<string> enviarAstring = new List<string>();
             List<string> copiaAstring = new List<string>();
@@ -343,7 +376,7 @@ namespace Molinos.DataAgro.Business
                     }
                 }
             }
-            this.EnviarMail(new Comercial(), enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo);
+            this.EnviarMail(new Comercial(), enviarAstring, asunto, cuerpo, copiaAstring, vistaAlternativa, archivo, nombreArchivo, emailRemitente);
         }
     }
 }

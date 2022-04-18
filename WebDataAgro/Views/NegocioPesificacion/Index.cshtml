@@ -105,7 +105,7 @@
                 <label>Clasificacion</label>
             </div>
             <div class="col-md-4">
-                @Html.DropDownList("ClasificacionId", new SelectList(ViewBag.Clasificacion, "Value", "Text"), "Seleccione el Clasificacion", new { @class = "form-control filtroBusquedaPorId", @id = "clasificacionId" })
+                @Html.DropDownList("Clasificacion", new SelectList(ViewBag.Clasificacion, "Value", "Text"), "Seleccione el Clasificacion", new { @class = "form-control filtroBusquedaPorId", @id = "clasificacion" })
             </div>
             <div class="col-md-2">
                 <label>Operación Directa</label>
@@ -152,6 +152,7 @@
             </div>
 
         </div>
+        <br/>
         <div class="row">
             <div class="col-md-2">
                 <label>Fecha Desde Instrucción</label>
@@ -181,7 +182,7 @@
                 @Html.DropDownList("Status", new SelectList(
                            new List<SelectListItem>
                     {
-                        new SelectListItem{ Value = "", Text = "Slip"},
+                        new SelectListItem{ Value = "S", Text = "Slip"},
                         new SelectListItem{ Value = "A", Text = "Con Anulación Automática"},
                         new SelectListItem{ Value = "X", Text = "Confirmado"},
                         new SelectListItem{ Value = "F", Text = "Liquidación Finalizada"},
@@ -195,9 +196,9 @@
                , "Value", "Text"), "Status", new { @class = "form-control filtroBusquedaTextBox", @id = "Status" })
             </div>
             <div class="col-md-2">
-                <label>Cesión</label>
-                @Html.CheckBox("Cesion", false, new { @class = "filtroBoleano", @id = "Cesion" })
-            </div>
+                @*<label>Cesión</label>
+                @Html.CheckBox("Cesion", false, new { @class = "filtroBoleano", @id = "Cesion" })*@
+            </div>           
             <div class="col-md-1">
                 <label>Kg No Pesificable</label>
             </div>
@@ -217,6 +218,21 @@
                 @Html.CheckBox("KgTotales", false, new { @class = "filtroPesificable", @id = "KgTotales", @onclick = "DeshabilitarTildeExcluyenteKgTotales()" })
             </div>
 
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label>Cesión</label>
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("Cesion", new SelectList(
+               new List<SelectListItem>
+               {
+                   new SelectListItem{ Text = "Todos", Selected = true},
+                   new SelectListItem{ Value = "1", Text = "Si"},
+                   new SelectListItem{ Value = "0", Text = "No"}
+               }
+               , "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "Cesion" })
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12" style="text-align:right">

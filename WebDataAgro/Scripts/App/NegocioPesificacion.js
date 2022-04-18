@@ -16,6 +16,7 @@ $(document).ready(function () {
 });
 
 function Inicializar() {
+
     $("#fechaInstruccionId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
@@ -74,6 +75,7 @@ function Inicializar() {
         //],
         //pageSize: 20,
         aggregate: [
+            { field: "Cantidad", aggregate: "sum" },
             { field: "KgVencimientoPesificable", aggregate: "sum" },
             { field: "KgNoPesificable", aggregate: "sum" },
             { field: "KgTotales", aggregate: "sum" },
@@ -91,6 +93,7 @@ function Inicializar() {
         },
         dataSource: ds,
         change: onChange,
+        footerTemplate: "<b>TOTAL</b>",
         dataBound: function () {
             var grid = $("#grid").data("kendoGrid");
             console.log(grid.dataSource._aggregateResult);
@@ -118,10 +121,11 @@ function Inicializar() {
                 }
             });
         },
+        //pageable: true,
         columns: [
 
             {
-                selectable: true, width: "50px"
+                selectable: true, width: "50px", footerTemplate: "<b>TOTAL</b>"
             },
             {
                 field: "Excepcion", type: "string", title: "Excepcion", width: 100, editable: function (dataItem) {
@@ -157,7 +161,7 @@ function Inicializar() {
                     return dataItem.FechaHastaDolarizado != null ? kendo.toString(kendo.parseDate(dataItem.FechaHastaDolarizado, 'yyyy-MM-dd'), 'dd/MM/yyyy') : "";
                 }
             },
-            { field: "Cantidad", title: "Kilos Negocio", format: "{0:n0}", aggregates: ["sum"], width: 150 },
+            { field: "Cantidad", title: "Kilos Negocio", format: "{0:n0}", aggregates: ["sum"], footerTemplate:"#: sum #", width: 150 },
             { field: "CantidadRecibida", title: "Kilos Aplicados", format: "{0:n0}", aggregates: ["sum"], width: 150 },
             { field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}", aggregates: ["sum"], width: 150 },
             { field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}", aggregates: ["sum"], width: 150 },
@@ -181,20 +185,20 @@ function Inicializar() {
         ],
         //pageable: {
         //    messages: {
-        //        display: "{2} elementos",
-        //        empty: "No hay elementos para mostrar",
-        //        page: "P&aacute;gina",
-        //        allPages: "Todas",
-        //        of: "de {0}",
-        //        itemsPerPage: "Elementos por p&aacute;gina",
-        //        first: "Ir a la primer p&aacute;gina",
-        //        previous: "Ir a la p&aacute;gina anterior",
-        //        next: "Ir a la p&aacute;gina siguiente",
-        //        last: "Ir a la &uacute;ltima p&aacute;gina",
-        //        refresh: "Recargar"
+        //        display: "{2} elementos"//,
+        //        //empty: "No hay elementos para mostrar",
+        //        //page: "P&aacute;gina",
+        //        //allPages: "Todas",
+        //        //of: "de {0}",
+        //        //itemsPerPage: "Elementos por p&aacute;gina",
+        //        //first: "Ir a la primer p&aacute;gina",
+        //        //previous: "Ir a la p&aacute;gina anterior",
+        //        //next: "Ir a la p&aacute;gina siguiente",
+        //        //last: "Ir a la &uacute;ltima p&aacute;gina",
+        //        //refresh: "Recargar"
         //    },
-        //    input: true,
-        //    numeric: true
+        //    input: false,
+        //    numeric: false
         //},
         scrollable: true,
         height: 550,
@@ -268,12 +272,12 @@ function Inicializar() {
         change: function () {
         }
     });
-    $("#FechaInstruccionHastaId").kendoDatePicker({
-        format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
-        change: function () {
-        }
-    });
+    //$("#FechaInstruccionHastaId").kendoDatePicker({
+    //    format: "dd-MM-yyyy",
+    //    parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
+    //    change: function () {
+    //    }
+    //});
 
 }
 
@@ -325,7 +329,7 @@ $("#descargar-reporte").click(function () {
     var CampanaId = $("#CampanaId").val();
     var MaterialId = $("#MaterialId").val();
     var GrupoCompraId = $("#GrupoCompraId").val();
-    var ClasificacionId = $("#ClasificacionId").val();
+    var ClasificacionId = $("#Clasificacion").val();
     var DestinoId = $("#DestinoId").val();
 
     $('#descargarReporte').attr('href', url + '?fecha=' + fecha + '&fechaHasta=' + fechaHasta + '&ProveedorId=' + ProveedorId + '&ComercialId=' + ComercialId

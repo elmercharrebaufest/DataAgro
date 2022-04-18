@@ -42,6 +42,16 @@
                         match="/configuration/appSettings/add[@key='CredentialPassword']
                            /@value" />
     </parameter>
+	<parameter name="CredentialUserNamePesificados Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='CredentialUserNamePesificados']
+                           /@value" />
+	</parameter>
+	<parameter name="CredentialPasswordPesificados Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+                        match="/configuration/appSettings/add[@key='CredentialPasswordPesificados']
+                           /@value" />
+	</parameter>
     <parameter name="maildeUsuarios Key">
         <parameterEntry kind="XmlFile" scope="Web.config"
                         match="/configuration/appSettings/add[@key='maildeUsuarios']

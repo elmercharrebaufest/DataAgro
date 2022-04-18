@@ -177,7 +177,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             target.EnviarMailErrorFinalizarNegocio(1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-            mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null,null), Times.Once);
+            mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null,null, null), Times.Once);
 
         }
     }

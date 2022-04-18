@@ -88,11 +88,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Excepcion = np.Excepcion,
                     FechaInstruccion = np.FechaInstruccion != null ? DbFunctions.TruncateTime(np.FechaInstruccion) : (DateTime?)null,
                     EsCorredor = string.IsNullOrEmpty(item.CuitCorredor) ? false : true,
-                    EsOperacionDirecta = string.IsNullOrEmpty(item.CuitVendedor) ? false : true,
+                    EsOperacionDirecta = string.IsNullOrEmpty(item.CuitCorredor) ? true : false,
                     Cesion = item.Cesion,
                     CesionDescripcion = item.Cesion == true ? "SI" : "NO",
                     Status = item.Status,
-                    StatusDescripcion = item.Status == "" ? "Slip" : item.Status == "A" ? "Con Anulación Automática" : 
+                    StatusDescripcion = item.Status == "S" ? "Slip" : item.Status == "A" ? "Con Anulación Automática" : 
                     item.Status == "X" ? "Confirmado" : item.Status == "F" ? "Liquidación Finalizada" :
                     item.Status == "C" ? "Cumplido" : item.Status == "M" ? "Con Anulación parcial" :
                     item.Status == "B" ? "Contrato Anulado Totalmente" : item.Status == "K" ? "Cumplido en Camiones" :

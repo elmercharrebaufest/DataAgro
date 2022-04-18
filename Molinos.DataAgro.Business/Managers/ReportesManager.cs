@@ -2806,7 +2806,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Plus = item.Plus,
                 Posicion = item.Posicion,
                 KgTotalesPase = item.KgTotalesPase,
-                Status = item.Status,
+                Status = item.Status == ""? "S": item.Status,
                 Cantidad = item.Cantidad,
                 CantidadLiquidada = item.CantidadLiquidada,
                 CantidadRecibida = item.CantidadRecibida,
@@ -3137,7 +3137,7 @@ namespace Molinos.DataAgro.Business.Managers
                     resultado.Error("ConfigurarExcedente", $"No se puede realizar la acción. El contrato {reportePesificado.Contrato} no se encuentra registrado en DA");
                     return resultado;
                 }
-                var negocioPesificado = repositorio.ObtenerMayor<NegocioPesificacion, int>(x => x.NegocioId == n.Id, x => x.NegocioId);
+                var negocioPesificado = repositorio.ObtenerMayor<NegocioPesificacion, int>(x => x.NegocioId == n.Id, x => x.Id);
                 if (negocioPesificado != null)
                 {
                     negocioPesificado.FechaExcepcion = DateTime.Now;
@@ -3183,6 +3183,8 @@ namespace Molinos.DataAgro.Business.Managers
         private void EnviarMailPesificacionVencida(List<ReportePesificadoDto> pesificado, DateTime fechaInstruccion, bool tieneCorredor)
         {
             var subject = "";
+            List<string> fromEmail = new List<string>();
+            fromEmail.Add(ConfigurationManager.AppSettings["CredentialUserNamePesificados"]);
             if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
             {
                 subject += "Mail Pruebas - PESIFICACION DE CONTRATOS - AVISO IMPORTANTE!";
@@ -3195,8 +3197,6 @@ namespace Molinos.DataAgro.Business.Managers
             var comerciales = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
 
             var path = httpContextManager.ObtenerPathLogoMail();
-            var lista = new List<string>();
-            var emailComerciales = "";
             var vendedor = repositorio.Listar<MailProveedor>();
             var copia = new List<string>();
             try
@@ -3220,7 +3220,7 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 var view = CuerpoMailPesificadoVencidoVendedor(path, pesi, fechaInstruccion, true);
                                 copia.AddRange(vendedor.Where(x => x.Proveedor.RazonSocial == item.Key).Select(x => x.Pesificado));
-                                mailManager.EnviarMail(lista, subject, "", copia, view);
+                                mailManager.EnviarMail(mails, subject, "", copia, view, null, null, fromEmail);
                             }
                         }
                     }
@@ -3244,7 +3244,7 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 copia.AddRange(vendedor.Where(x => x.Proveedor.RazonSocial == item.Key).Select(x => x.Pesificado));
                                 var view = CuerpoMailPesificadoVencidoVendedor(path, pesi, fechaInstruccion, false);
-                                mailManager.EnviarMail(mails, subject, "", (copia.Count > 0 ? copia : null), view);
+                                mailManager.EnviarMail(mails, subject, "", (copia.Count > 0 ? copia : null), view, null, null, fromEmail);
                             }
 
                         }
@@ -3400,8 +3400,8 @@ namespace Molinos.DataAgro.Business.Managers
                     htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                     htmlBody += "</tr>";
                 }
-                htmlBody += "<tr style=\"text-align: center\">";
-                htmlBody += $"<td {td}></td>";
+                htmlBody += $"<tr style=\"background: #1c6ea4; color:white; text-align: center\">";
+                htmlBody += $"<td><strong>Total General</strong></td>";
                 htmlBody += $"<td {td}></td>";
                 htmlBody += $"<td {td}></td>";
                 htmlBody += $"<td {td}> {Split(corredor.AgrupracionPesificados.Sum(x => x.CantidadAgrupada).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))}  </td>";
@@ -3414,7 +3414,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<table style=\"border: 1px solid #1C6EA4;background-color: #EEEEEE; width:70%; text-align: left;border-collapse:collapse;\">";
                 htmlBody += "<thead style=\" font-size: 13px;background: #1C6EA4; border-bottom: 0px solid #444444;\">";
-                htmlBody += "<tr>";
+                htmlBody += "<tr >";
                 htmlBody += $"<th {thHead}>Vendedor: {corredor.RazonSocialProveedor} </th>";
                 htmlBody += $"<th {thHead}>Fijación </th>";
                 htmlBody += $"<th {thHead}>Total</th>";
@@ -3429,8 +3429,8 @@ namespace Molinos.DataAgro.Business.Managers
                     htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                     htmlBody += "</tr>";
                 }
-                htmlBody += "<tr style=\"text-align: center\">";
-                htmlBody += $"<td {td}></td>";
+                htmlBody += $"<tr style=\"background: #1c6ea4; color:white; text-align: center\">";
+                htmlBody += $"<td><strong>Total General</strong></td>";
                 htmlBody += $"<td {td}></td>";
                 htmlBody += $"<td {td}> {Split(corredor.AgrupracionPesificados.Sum(x => x.CantidadAgrupada).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                 htmlBody += "</tr>";

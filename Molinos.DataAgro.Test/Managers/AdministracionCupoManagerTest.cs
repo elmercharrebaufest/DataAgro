@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
-                 It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>())).Verifiable();
+                 It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
             repositorioMock.Setup(x => x.AgregarTodos(It.IsAny<List<Cupo>>(), null)).Verifiable();
             cupoManagerMock.Setup(x => x.SugerenciasParaAceptar(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()))
                 .Returns(new List<SugerenciaCupo> { new SugerenciaCupo { CantidadCupoOriginal = 1, CantidadDeCupos = 1, CDWarrant = true, Aceptado = null, CentroId = 1, ComercialId = 1, ConfiguracionEspacioDinamicoId = 1, ContratoSAP = "", Destinatario = "", FechaSugerida = DateTime.Now.Date, Id = 1, MaterialId = 1, MonedaId = "ARP", MotivoRechazo = "", NegocioId = 1, Precio = 1, ProveedorId = 1, Puntuaciones = "", StandardDeCalidad = "", TipoNegocioId = 1, ZonaCupoId = 1, Puntuacion = 1 } });
@@ -162,7 +162,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
-                 It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>())).Verifiable();
+                 It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
             cupoManagerMock.Setup(x => x.SugerenciasParaAceptar(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime?>()))
                             .Returns(new List<SugerenciaCupo> { new SugerenciaCupo { CantidadCupoOriginal = 1, CantidadDeCupos = 1, CDWarrant = true, Aceptado = null, CentroId = 1, ComercialId = 1, ConfiguracionEspacioDinamicoId = 1, ContratoSAP = "", Destinatario = "", FechaSugerida = DateTime.Now.Date, Id = 1, MaterialId = 1, MonedaId = "ARP", MotivoRechazo = "", NegocioId = 1, Precio = 1, ProveedorId = 1, Puntuaciones = "", StandardDeCalidad = "", TipoNegocioId = 1, ZonaCupoId = 1, Puntuacion = 1 } });
             var resultado = target.CambiarEstadoRechazado(It.IsAny<int>(), "", "bmelgarejo");

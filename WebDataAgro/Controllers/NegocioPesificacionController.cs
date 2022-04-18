@@ -86,6 +86,43 @@ namespace WebDataAgro.Controllers
                     new Sort {Field= "MaterialDesc", Dir="desc" }
                 };
             }
+            if(filtro.Filter != null)
+            {
+                foreach(var item in filtro.Filter.Filters)
+                {
+                    if(item.Field == "Clasificacion")
+                    {
+                        if(item.Value.ToString() == "1")
+                        {
+                            item.Value = "PRODUCTOR";
+                        }
+                        if (item.Value.ToString() == "2")
+                        {
+                            item.Value = "ACOPIADOR";
+                        }
+                        if (item.Value.ToString() == "3")
+                        {
+                            item.Value = "OTROS";
+                        }
+                    }
+                    if(item.Field == "Cesion")
+                    {
+                        if (item.Value.ToString() == "1")
+                        {
+                            item.Value = true;
+                        }
+                        if (item.Value.ToString() == "0")
+                        {
+                            item.Value = false;
+                        }
+                        if (item.Value.ToString() == "")
+                        {
+                            item.Value = true;                            
+                        }
+                    }
+                }
+            }
+
 
             var equipo = GlobalVariables.EquipoReal;
             var model = reportesManager.BuscarDatosNegocioPesificacion(filtro, equipo);
