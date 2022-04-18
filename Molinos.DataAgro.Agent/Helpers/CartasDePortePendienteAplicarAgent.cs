@@ -61,7 +61,7 @@ namespace Molinos.DataAgro.Agent
                     FechaIngresoFecha = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     FechaNetoFecha = DateTime.ParseExact("2020-06-06", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     Warrant = true,
-                    Sustentable = false                    
+                    Sustentable = false
                 },
                 new CcPpPerndienteAplicarDto() {
                     AgenteCompra = "Agente compra",
@@ -75,7 +75,7 @@ namespace Molinos.DataAgro.Agent
                     FechaNetoFecha = DateTime.ParseExact("2020-07-07", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                     Sustentable = true,
                     Canje = true
-                } }.OrderBy(a => a.FechaIngresoFecha).ToList(); 
+                } }.OrderBy(a => a.FechaIngresoFecha).ToList();
             }
             else
             {
@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Agent
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var centro = repositorio.Obtener<Centro>(x => x.Id.ToString() == req.Centro || x.CodigoSap  == req.Centro);
+                    var centro = repositorio.Obtener<Centro>(x => x.Id.ToString() == req.Centro || x.CodigoSap == req.Centro);
                     var material = repositorio.Obtener<Material>(x => x.MaterialId.ToString() == req.Material || x.Codigo == req.Material);
 
                     var rq = new Z_MPRFC_CCPP_PENDIENTE_APLICAR
@@ -113,8 +113,8 @@ namespace Molinos.DataAgro.Agent
                                 FechaNeto = item.FECHA_NETO,
                                 Material = material.Descripcion,
                                 Proveedor = item.PROVEEDOR,
-                                FechaIngresoFecha = DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                                FechaNetoFecha = DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                FechaIngresoFecha = item.FECHA_INGRESO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                FechaNetoFecha = item.FECHA_NETO == "0000-00-00" ? (DateTime?)null : DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
                                 Almacen = item.ALMACEN,
                                 Canje = item.CANJE == "X",
                                 CD = item.CD_CG == "X",
