@@ -3572,7 +3572,7 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock.Setup(x => x.ListarComercialesSinRecibirMail()).Returns(new List<Comercial>() { new Comercial { ComercialId = 2, IdActiveDirectory = "hernanbio@bf.com" } });
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
-                 It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+                 It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<List<string>>())).Verifiable();
             repositorioMock.Setup(x => x.AgregarTodos(It.IsAny<List<Cupo>>(), null)).Verifiable();
 
             var resultado = target.ReconfirmarFinalizado(1, "");
@@ -4493,7 +4493,7 @@ namespace Molinos.DataAgro.Test.Managers
                             .Returns(new List<string> { "a" });
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
-         It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+         It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<List<string>>())).Verifiable();
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { ValidaRedespacho = false, Descripcion = "bandera", Acopio = false, CodigoSap = "1127", Id = 1 });
 
             var resultado = target.GrabarContratoMasivo(contratos);
