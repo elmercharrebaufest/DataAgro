@@ -8,6 +8,7 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -4511,6 +4512,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     foreach (var item in lista)
                     {
+                        string jsonObjeto = JsonConvert.SerializeObject(item, new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                            PreserveReferencesHandling = PreserveReferencesHandling.None,
+                            Formatting = Formatting.Indented,
+                        });
+                        logger.Debug(jsonObjeto);
                         if (!string.IsNullOrEmpty(item.Pesificado))
                         {
                             entidades.Add(new MailProveedor()
