@@ -332,9 +332,10 @@
     <Build Include="dbo\Tables\TipoOperacionHabilitadoSinBoleto.sql" />
     <Build Include="dbo\Tables\CentroHabilitadoSinBoleto.sql" />
     <Build Include="dbo\Tables\ProvinciaNoHabilitadoSinBoleto.sql" />
-    <Build Include="dbo\Functions\SinBoleto.sql" />
+    <Build Include="dbo\Functions\SinBoleto.sql" /> 
     <Build Include="dbo\Tables\MailProveedor.sql" />
     <Build Include="dbo\Tables\NegocioPesificacion.sql" />
+    <Build Include="dbo\Deploys\SinBoleto.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

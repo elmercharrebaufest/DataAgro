@@ -6031,6 +6031,7 @@ function EsComisionista(compranet) {
 
 
 function ValidarSinBoleto() {
+    DeshabilitarCampoSiEsBoleto();
     if ($("#sinBoletoId").is(':checked')) {
         //var result = MSExecuteOnServer("/Compranet/ValidarSinBoleto", {
         //    cantidad: $("#cantidadId").val(),
@@ -6058,19 +6059,21 @@ function ValidarSinBoleto() {
         $("#fechaDesdeId").data('kendoDatePicker').enable(true);
         $("#fechaHastaId").data('kendoDatePicker').enable(true); 
     }
-    DeshabilitarCampoSiEsBoleto();
+ 
 }
 
 function DeshabilitarCampoSiEsBoleto() {
-    if ($("#sinBoletoId").is(':checked') && ($("#estado").val() == '5' || $("#estado").val() == '7')) {
-        $("#fechaDesdeId").data('kendoDatePicker').enable(false);
-        $("#fechaHastaId").data('kendoDatePicker').enable(false);
-        $("#mercsDepositoId").attr("disabled", true);
-        $("#cantidadId").data("kendoNumericTextBox").enable(false);
-        $("#destinoId").data("kendoDropDownList").enable(false);
-        $("#clasificacion").data("kendoDropDownList").enable(false);
-        $("#LocalidadCrearContrato").data("kendoAutoComplete").enable(false);
-        $("#fechaHastaId").data('kendoDatePicker').enable(false);
+    if ($("#sinBoletoId").is(':checked')) {
+        if ($("#estado").val() == '5' || $("#estado").val() == '7') {
+            $("#fechaDesdeId").data('kendoDatePicker').enable(false);
+            $("#fechaHastaId").data('kendoDatePicker').enable(false);
+            $("#mercsDepositoId").attr("disabled", true);
+            $("#cantidadId").data("kendoNumericTextBox").enable(false);
+            $("#destinoId").data("kendoDropDownList").enable(false);
+            $("#clasificacion").data("kendoDropDownList").enable(false);
+            $("#LocalidadCrearContrato").data("kendoAutoComplete").enable(false);
+            $("#fechaHastaId").data('kendoDatePicker').enable(false);
+        }
     } else {
         $("#fechaDesdeId").data('kendoDatePicker').enable(true);
         $("#fechaHastaId").data('kendoDatePicker').enable(true);

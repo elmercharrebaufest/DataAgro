@@ -85,8 +85,8 @@ namespace Molinos.DataAgro.Agent
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
 
-                    var centro = repositorio.Obtener<Centro>(x => x.Id.ToString() == req.Centro);
-                    var material = repositorio.Obtener<Material>(x => x.MaterialId.ToString() == req.Material);
+                    var centro = repositorio.Obtener<Centro>(x => x.Id.ToString() == req.Centro || x.CodigoSap  == req.Centro);
+                    var material = repositorio.Obtener<Material>(x => x.MaterialId.ToString() == req.Material || x.Codigo == req.Material);
 
                     var rq = new Z_MPRFC_CCPP_PENDIENTE_APLICAR
                     {
@@ -98,33 +98,36 @@ namespace Molinos.DataAgro.Agent
                     };
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_CCPP_PEND_APLICAR(rq);
-                    var listaccpp = valor.EX_SALIDA.Select(item =>
-                        new CcPpPerndienteAplicarDto()
-                        {
-                            AgenteCompra = item.AGENTE_COMPRA,
-                            Cantidad = item.CANTIDAD,
-                            CartasPorte = item.CCPP,
-                            Centro = centro.Descripcion,
-                            Corredor = item.CORREDOR,
-                            FechaIngreso = item.FECHA_INGRESO,
-                            FechaNeto = item.FECHA_NETO,
-                            Material = material.Descripcion,
-                            Proveedor = item.PROVEEDOR,
-                            FechaIngresoFecha = DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                            FechaNetoFecha = DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                            Almacen = item.ALMACEN,
-                            Canje = item.CANJE == "X",
-                            CD = item.CD_CG == "X",
-                            Warrant = item.WARRANT == "X", 
-                            Sustentable = item.SUSTENTABLE == "X",
-                            Region = item.REGION
-                        }).OrderBy(a => a.FechaIngresoFecha).ToList();
-
+                    var listaccpp = new List<CcPpPerndienteAplicarDto>();
+                    if (valor.EX_SALIDA != null)
+                    {
+                        listaccpp = valor.EX_SALIDA.Select(item =>
+                            new CcPpPerndienteAplicarDto()
+                            {
+                                AgenteCompra = item.AGENTE_COMPRA,
+                                Cantidad = item.CANTIDAD,
+                                CartasPorte = item.CCPP,
+                                Centro = centro.Descripcion,
+                                Corredor = item.CORREDOR,
+                                FechaIngreso = item.FECHA_INGRESO,
+                                FechaNeto = item.FECHA_NETO,
+                                Material = material.Descripcion,
+                                Proveedor = item.PROVEEDOR,
+                                FechaIngresoFecha = DateTime.ParseExact(item.FECHA_INGRESO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                FechaNetoFecha = DateTime.ParseExact(item.FECHA_NETO, "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                                Almacen = item.ALMACEN,
+                                Canje = item.CANJE == "X",
+                                CD = item.CD_CG == "X",
+                                Warrant = item.WARRANT == "X",
+                                Sustentable = item.SUSTENTABLE == "X",
+                                Region = item.REGION
+                            }).OrderBy(a => a.FechaIngresoFecha).ToList();
+                    }
                     return listaccpp;
                 }
                 catch (Exception e)
                 {
-                    logger.Error(e.Message);
+                    logger.Error(e);
                     throw;
                 }
             }
