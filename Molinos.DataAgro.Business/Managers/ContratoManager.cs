@@ -6788,7 +6788,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.ProveedorId == proveedorId && x.DestinoId == centro &&
-                x.MaterialId == materialId && (x.EstadoId != 5 || x.EstadoId != 4 || x.EstadoId != 6 || x.EstadoId != 8));
+                x.MaterialId == materialId && (x.EstadoId != 5 || x.EstadoId != 6 || x.EstadoId != 8));
 
 
 
@@ -6817,11 +6817,12 @@ namespace Molinos.DataAgro.Business.Managers
                     cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable == false && contratosFinalizados.Contains(x.Contrato)).Sum(x => x.Cantidad);
                 }
                 logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
-                var cantidadDisponible = cantidadCartaDePorte + cantidadContratoDeSAP + (decimal)cantidadNegocioPendiente + cantidadContratosKilosPendientesAplicar;
+                var cantidadDisponible = cantidadCartaDePorte - cantidadContratoDeSAP - (decimal)cantidadNegocioPendiente - cantidadContratosKilosPendientesAplicar;
                 logger.Debug($"cantidadDisponible {cantidadDisponible}");
 
                 if ((decimal)(cantidad ?? 0) > cantidadDisponible)
                 {
+                    if (cantidadDisponible < 0) { cantidadDisponible = 0; }
                     resultado.Error("Cantidad", "La cantidad del contrato excede la cantidad disponible en depósito " + cantidadDisponible.ToString("N0"));
                     return resultado;
                 }
