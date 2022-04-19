@@ -6816,10 +6816,13 @@ namespace Molinos.DataAgro.Business.Managers
                     cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
                     cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable == false && contratosFinalizados.Contains(x.Contrato)).Sum(x => x.Cantidad);
                 }
+                logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
                 var cantidadDisponible = cantidadCartaDePorte + cantidadContratoDeSAP + (decimal)cantidadNegocioPendiente + cantidadContratosKilosPendientesAplicar;
+                logger.Debug($"cantidadDisponible {cantidadDisponible}");
+
                 if ((decimal)(cantidad ?? 0) > cantidadDisponible)
                 {
-                    resultado.Error("Cantidad", "La cantidad del contrato excede la cantidad disponible en depósito " + cantidadDisponible);
+                    resultado.Error("Cantidad", "La cantidad del contrato excede la cantidad disponible en depósito " + cantidadDisponible.ToString("N0"));
                     return resultado;
                 }
             }
