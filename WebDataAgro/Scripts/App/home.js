@@ -15,9 +15,9 @@ var checkear = function (el, nam) {
 };
 
 $(document).ready(function () {
-   
-    CrearObjetivo();
+
     InicializarDatos();
+    CrearObjetivo();
     armarFunciones();
     setChangeChecks();
     armarFuncionalidadesHome();
@@ -26,15 +26,15 @@ $(document).ready(function () {
     $("#GuardarCambios").hide();
     armarCarouselHome();
     $('[data-toggle="tooltip"]').tooltip();
-    
-    
+
+
 });
 function MostrarTooltip(e) {
     $(e + '[data-toggle="tooltip"]').click(function () {
-        $(e +"[data-toggle='tooltip']").on('shown.bs.tooltip', function () {
+        $(e + "[data-toggle='tooltip']").on('shown.bs.tooltip', function () {
             $(e + '[data-toggle="tooltip"]').tooltip("hide");
         });
-        $(e +"[data-toggle='tooltip']").on('hidden.bs.tooltip', function () {
+        $(e + "[data-toggle='tooltip']").on('hidden.bs.tooltip', function () {
             $(e + '[data-toggle="tooltip"]').tooltip("show");
         });
     });
@@ -43,11 +43,21 @@ function InicializarDatos() {
     var result = MSExecuteOnServer('/Home/Inicializar');
     kendo.culture("es-AR");
     datosCompra = result.Detalle;
+    var param = {
+        "materialId": null,
+        "campaniaId": null,
+        "toneladas": null
+    };
+
     viewModel = kendo.observable({
+        Parametros: param,
+        campaniaCombo: [],
+        materialCombo: [],
+
         Soja: [],
         Trigo: [],
         Maiz: [],
-        Girasol: []
+        Girasol: [],
     });
     for (var i = 0; i < datosCompra.length; i++) {
 
@@ -75,21 +85,21 @@ function InicializarDatos() {
     var girasol = datosCompra.filter(function (x) { return (x.Material == "Girasol") });
 
     if (soja.length > 0) {
-        $("#mostrarSoja").show();     
-        $("#sojaCampania").text(soja[0].Campana);      
-    }  
+        $("#mostrarSoja").show();
+        $("#sojaCampania").text(soja[0].Campana);
+    }
     if (maiz.length > 0) {
         $("#mostrarMaiz").show();
         $("#maizCampania").text(maiz[0].Campana);
-    }  
+    }
     if (trigo.length > 0) {
         $("#mostrarTrigo").show();
         $("#trigoCampania").text(trigo[0].Campana);
-    }  
+    }
     if (girasol.length > 0) {
         $("#mostrarGir").show();
         $("#girCampania").text(girasol[0].Campana);
-    }  
+    }
     viewModel.set("Soja", soja);
     viewModel.set("Trigo", trigo);
     viewModel.set("Maiz", maiz);
@@ -175,18 +185,18 @@ function armarCarouselHome() {
                                     '</a>';
                             } else {
                                 htmlCarouselHome +=
-                                '<a>' +
+                                    '<a>' +
                                     '<div class="linea-carouselHome">' +
                                     '<div>' +
                                     '<span>' + notificacionesAux[i][j].Tema + '</span>' +
                                     '</div>' +
                                     '<div class="carouselHome-descripcion">' +
                                     '<span class="span-display">' + notificacionesAux[i][j].Comentarios + '</span>' +
-                                    
+
                                     '<div class="carouselHome-hora ">' +
-                                    '<span class="notificacion-hora sinMargen"> Hasta el: ' + notificacionesAux[i][j].Dia + '</span>'+
-                                '</div>' +
-                                '</div>' +
+                                    '<span class="notificacion-hora sinMargen"> Hasta el: ' + notificacionesAux[i][j].Dia + '</span>' +
+                                    '</div>' +
+                                    '</div>' +
                                     '</div>' +
                                     '</a>';
                             }
@@ -222,7 +232,7 @@ function armarCarouselHome() {
                                     '</a>';
                             } else {
                                 htmlCarouselHome +=
-                                '<a>' +
+                                    '<a>' +
                                     '<div class="linea-carouselHome">' +
                                     '<div>' +
                                     '<span>' + notificacionesAux[i][j].Tema + '</span>' +
@@ -412,10 +422,10 @@ function actualizarContactos(contactos) {
 
 function ObtenerEstadoActual() {
     return $(".cont-agend-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? null :
-        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 1 : 
+        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 1 :
             $(".cont-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 2 :
-                $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 3 : 
-                    $(".cont-baj-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 4 : 
+                $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 3 :
+                    $(".cont-baj-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 4 :
                         $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 5 : null
 }
 
@@ -472,15 +482,15 @@ function ArmarContactos(contactos) {
     for (var ii in contactos) {
         $("#verMasContactos").show();
         (function (i) {
-            var clase ='';
+            var clase = '';
             var onClick = '';
             var htmlurl = MSGetUrl('/Proveedor/Detalle?ProveedorId=' + contactos[i].ProveedorId);
             if (visualiza === "False") {
                 htmlurl = '#';
                 onClick = ' onClick= "return false"';
-                clase= ' deshabilitado';
+                clase = ' deshabilitado';
             }
-            htmlaux += '<a href=' + htmlurl + onClick + ' class="'+clase + '"><div class="col-lg-12 lista-contactos-contenedor' + clase;
+            htmlaux += '<a href=' + htmlurl + onClick + ' class="' + clase + '"><div class="col-lg-12 lista-contactos-contenedor' + clase;
             contactos[i].Corredor ? htmlaux += ' detalleCorredor' : '';
             htmlaux += '">'
                 + '<div class="lista-contactos-estado">'
@@ -490,7 +500,7 @@ function ArmarContactos(contactos) {
             for (var j = 0; j < contactos[i].Calificacion; j++) {
                 var url = MSGetUrl("/Content/Images/estrellacalificacion.png");
                 htmlaux += '<img src="..' + url + '" />';
-            }            
+            }
             var url2 = MSGetUrl("/Content/Images/listcont.png");
 
             var telefonos = (contactos[i].Telefono ? contactos[i].Telefono : "Ninguno");
@@ -549,7 +559,7 @@ function ArmarContactos(contactos) {
                 + '<span><em><b>Último Contacto</b> ' + contactos[i].UltimoContacto + '</em></span>'
                 + '</div>'
                 + '</div>';
-            
+
             htmlaux += '</div></a>';
         })(ii);
     }
@@ -567,7 +577,7 @@ function TraerSiguiente() {
     filtro.pagina = pagina
     $("#verMasContactos").hide();
     $("#cargandoContactos").show();
-    function callback (result) {
+    function callback(result) {
         if (result != null) {
             if (ExistsErrorMessages(result.Errores)) {
                 ShowTooltipMessages("err", result.Errores);
@@ -582,7 +592,7 @@ function TraerSiguiente() {
     }
     var result = MSExecuteOnServerAsync('/Home/TraerBusquedaContacto', filtro, callback);
 
-    
+
 }
 
 function ArmarCamapaña(campañas) {
@@ -649,11 +659,11 @@ function CargarModelObjetivosComerciales(comercial) {
         for (var j in comercial[i].Objetivos) {
             var ToneladasAux = FormatearNumeros(comercial[i].Objetivos[j].Toneladas);
             html += '<tr><th class="col-xs-4">' + comercial[i].Objetivos[j].Material + '</th>' +
-                '<td class="col-xs-5">' + ToneladasAux+'</td>' +
+                '<td class="col-xs-5">' + ToneladasAux + '</td>' +
                 '<td class="col-xs-2">' + comercial[i].Objetivos[j].Campana + '</td>' +
-                '<td class="col-xs-1"><a class="fa fa-minus-circle danger" onclick="AlertaObjetivoBorrar(' + comercial[i].Objetivos[j].Id +')"></td>'+ '</tr>';
+                '<td class="col-xs-1"><a class="fa fa-minus-circle danger" onclick="AlertaObjetivoBorrar(' + comercial[i].Objetivos[j].Id + ')"></td>' + '</tr>';
         }
-        html += '</table></div></div></div>';                  
+        html += '</table></div></div></div>';
     }
     $(".contenedor-principal-detalle").append(html);
 }
@@ -991,19 +1001,19 @@ function CrearObjetivo() {
     $("#Toneladas").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
-        spinners:false
+        spinners: false
     });
     var param = {
         "materialId": null,
         "campaniaId": null,
         "toneladas": null
     };
-    viewModel = kendo.observable({
-        Parametros: param,
+    //viewModel = kendo.observable({
+    //    Parametros: param,
 
-        campaniaCombo: [],
-        materialCombo: []
-    });
+    //    campaniaCombo: [],
+    //    materialCombo: []
+    //});
 
     kendo.bind($("#objetivo-modal"), viewModel);
     $("#cancelar-borrar").click(function () {
@@ -1030,7 +1040,7 @@ function AgregarObjetivo() {
             MensErr(res.Errores[0].Message);
         }
         else {
-            $('#objetivo-modal').modal('toggle'); 
+            $('#objetivo-modal').modal('toggle');
             MensInfo("Grabación Exitosa");
             Actualizar();
         }
@@ -1045,16 +1055,16 @@ function Actualizar() {
     CargarModelObjetivosComerciales(obj.Objetivo.Comerciales);
 }
 function AlertaObjetivoBorrar(e) {
-    $("#borrar-objetivo").show();    
+    $("#borrar-objetivo").show();
     $("#aceptar-borrar").click(function () {
         EliminarObjetivo(e);
-        $("#borrar-objetivo").hide();   
+        $("#borrar-objetivo").hide();
         $("#aceptar-borrar").unbind('click');
     });
 }
 
 function EliminarObjetivo(id) {
-    var res = MSExecuteOnServer('/Home/EliminarObjetivo', { id:id });
+    var res = MSExecuteOnServer('/Home/EliminarObjetivo', { id: id });
 
     if (res != null) {
         if (ExistsErrorMessages(res.Errores)) {
@@ -1068,18 +1078,18 @@ function EliminarObjetivo(id) {
 
 
 function BorrarFilasVacias() {
-    var $filasEncabezado = $("#tablaTrigo tr:not('.encabezado')");   
+    var $filasEncabezado = $("#tablaTrigo tr:not('.encabezado')");
     Remover($filasEncabezado);
-    $filasEncabezado = $("#tablaSoja tr:not('.encabezado')"); 
+    $filasEncabezado = $("#tablaSoja tr:not('.encabezado')");
     Remover($filasEncabezado);
-    $filasEncabezado = $("#tablaGi tr:not('.encabezado')");    
+    $filasEncabezado = $("#tablaGi tr:not('.encabezado')");
     Remover($filasEncabezado);
-    $filasEncabezado = $("#tablaMaiz tr:not('.encabezado')");    
+    $filasEncabezado = $("#tablaMaiz tr:not('.encabezado')");
     Remover($filasEncabezado);
 }
 
 function Remover($filasEncabezado) {
-  
+
     $filasEncabezado.each(function () {
         var valorFila = 0
         $(this).find('td').each(function (i) {
@@ -1095,5 +1105,4 @@ function Remover($filasEncabezado) {
 
 
 
- 
-  
+
