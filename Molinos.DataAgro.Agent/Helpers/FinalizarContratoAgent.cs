@@ -271,7 +271,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             BOL_FISICO = contrato.BoletoId == 2 ? "X" : "",
                             CARTA_OFERTA = contrato.BoletoId == 4 ? "X" : "",
                             NINGUNO = contrato.BoletoId == 3 ? "X" : "",
-                            SIN_BOLETO = contrato.BoletoId == 5 ? "SB" : "", 
+                            SIN_BOLETO = contrato.BoletoId == 5 ? "X" : "", 
                             AUT_CG = contrato.Warrant == true ? "X" : "",
                             AUR_CD = contrato.CD == true ? "X" : "",
                             PAGO_DIR_VEND = contrato.PagoDirectoVendedor == true ? "X" : "",

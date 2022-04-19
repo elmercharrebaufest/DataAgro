@@ -340,7 +340,7 @@ namespace WebDataAgro.Services
 
 
             contrato.ContratoSAP = contratoSAP.ContratoSAP.PadLeft(10, '0');
-            contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : contratoSAP.SinBoleto == "SB" ? 5 : 3;
+            contrato.BoletoId = contratoSAP.Confirma == "X" ? 1 : contratoSAP.BolFisico == "X" ? 2 : contratoSAP.CartaOferta == "X" ? 4 : contratoSAP.SinBoleto == "X" ? 5 : 3;
             contrato.BolsaId = repositorio.Obtener<BolsaCompraNet, int>(x => contratoSAP.Bolsa.Contains(x.CodigoSap), x => x.Id);
             contrato.CampanaId = repositorio.Obtener<Campaña, int>(x => x.Descripcion == contratoSAP.Cosecha, x => x.CampañaId);
             contrato.Cantidad = (double)contratoSAP.Cantidad;
