@@ -23,6 +23,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Warrant { get; set; }
         public bool Sustentable { get; set; }
         public string Region { get; set; }
+        public string Contrato { get; set; }
     }
 }
 

@@ -6787,8 +6787,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var centroCodigo = repositorio.Obtener<Centro, string>(x => x.Id == centro, x => x.CodigoSap);
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
-                var contratos = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.ProveedorId == proveedorId && x.DestinoId == centro &&
+                var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.ProveedorId == proveedorId && x.DestinoId == centro &&
                 x.MaterialId == materialId && (x.EstadoId != 5 || x.EstadoId != 4 || x.EstadoId != 6 || x.EstadoId != 8));
+
+
+
                 var pendienteDto = new CcPpPerndienteAplicarDto()
                 {
                     Centro = centroCodigo,
@@ -6798,17 +6801,23 @@ namespace Molinos.DataAgro.Business.Managers
 
                 };
                 var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto);
-                var cantidadCartaDePorte = pendientes.Where(x => x.Canje || x.CD || x.Warrant && x.Region != "3").Sum(x => x.Cantidad);
-                var cantidadNegocioPendiente = contratos.Sum(x => x.Cantidad);
+                var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && x.Region != "3").Sum(x => x.Cantidad);
+                var cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.Cantidad);
+                var cantidadNegocioPendiente = contratosPendientes.Sum(x => x.Cantidad);
+
+                var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
+                var contratosFinalizados = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
+                var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Contains(x.Contrato)).Sum(x => x.Cantidad);
                 //Soja Comun
                 if (tieneSustentable == false)
                 {
-                    cantidadCartaDePorte = pendientes.Where(x => (x.Canje || x.CD || x.Warrant) && !x.Sustentable).Sum(x => x.Cantidad);
-                    cantidadNegocioPendiente = contratos.Where(x => x.Sustentable == false).Sum(x => x.Cantidad);
+                    cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && x.Region != "3").Sum(x => x.Cantidad);
+                    cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).Sum(x => x.Cantidad);
+                    cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
+                    cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable == false && contratosFinalizados.Contains(x.Contrato)).Sum(x => x.Cantidad);
                 }
-
-                var cantidadDisponible = (((double)cantidadCartaDePorte) - cantidadNegocioPendiente) < 0 ? 0 : (((double)cantidadCartaDePorte) - cantidadNegocioPendiente);
-                if (cantidad > cantidadDisponible)
+                var cantidadDisponible = cantidadCartaDePorte + cantidadContratoDeSAP + (decimal)cantidadNegocioPendiente + cantidadContratosKilosPendientesAplicar;
+                if ((decimal)(cantidad ?? 0) > cantidadDisponible)
                 {
                     resultado.Error("Cantidad", "La cantidad del contrato excede la cantidad disponible en depósito " + cantidadDisponible);
                     return resultado;
