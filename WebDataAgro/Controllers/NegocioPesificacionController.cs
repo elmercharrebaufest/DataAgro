@@ -120,6 +120,18 @@ namespace WebDataAgro.Controllers
                             item.Value = true;                            
                         }
                     }
+                    if (item.Field == "Excepcion")
+                    {
+                        if (item.Value.ToString() == "1")
+                        {
+                            item.Value = true;
+                        }
+                        if (item.Value.ToString() == "0")
+                        {
+                            item.Value = true;
+                            item.Operator = "neq";
+                        }
+                    }
                 }
             }
 

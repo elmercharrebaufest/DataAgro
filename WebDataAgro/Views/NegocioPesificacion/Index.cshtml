@@ -233,6 +233,19 @@
                }
                , "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "Cesion" })
             </div>
+            <div class="col-md-2">
+                <label>Excepción</label>
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("Excepcion", new SelectList(
+               new List<SelectListItem>
+               {
+                   new SelectListItem{ Text = "Todos", Selected = true},
+                   new SelectListItem{ Value = "1", Text = "Si"},
+                   new SelectListItem{ Value = "0", Text = "No"}
+               }
+               , "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "Excepcion" })
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12" style="text-align:right">
