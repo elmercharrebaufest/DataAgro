@@ -2781,7 +2781,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault() != null ? comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId : (int?)null,
                 Contrato = item.Contrato,
                 NegocioId = string.IsNullOrEmpty(item.Fijacion) ? contratos.Any(x => x.Key == item.Contrato) ?
-                contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : fijaciones.Any(x => x.Key == item.Fijacion) != null ?
+                contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : fijaciones.Any(x => x.Key == item.Fijacion) ?
                 fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value : (int?)null : (int?)null,
                 CuitCorredor = item.CuitCorredor,
                 CuitVendedor = item.CuitVendedor,
