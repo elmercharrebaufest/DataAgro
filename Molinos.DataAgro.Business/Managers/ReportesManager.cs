@@ -2767,6 +2767,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<ReportePesificado> ConvertPesificarAgent(List<PesificarAgentDto> datos)
         {
+            datos = datos.Where(x => x.Fijacion == "0266627501" || x.Fijacion == "0266627502").ToList();
             var comerciales = repositorio.Listar<Comercial>();
             var materiales = repositorio.Listar<Material>();
             var monedas = repositorio.Listar<Moneda>();
@@ -2780,9 +2781,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Clasificacion = item.Clasificacion,
                 ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault() != null ? comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId : (int?)null,
                 Contrato = item.Contrato,
-                NegocioId = string.IsNullOrEmpty(item.Fijacion) ? contratos.Any(x => x.Key == item.Contrato) ?
-                contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : fijaciones.Any(x => x.Key == item.Fijacion) ?
-                fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value : (int?)null : (int?)null,
+                NegocioId = string.IsNullOrEmpty(item.Fijacion) ?
+                (contratos.Any(x => x.Key == item.Contrato) ? contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : (int?)null) :
+                (fijaciones.Any(x => x.Key == item.Fijacion) ? fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value : (int?)null),
                 CuitCorredor = item.CuitCorredor,
                 CuitVendedor = item.CuitVendedor,
                 Dolarizado = item.Dolarizado,
