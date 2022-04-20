@@ -269,7 +269,7 @@ namespace Molinos.DataAgro.Business
         public List<ComercialDto> ListarComercial(string comercial, List<int> comerciales)
         {
             return repositorio.Listar<Comercial, ComercialDto>(x => new ComercialDto { ComercialId = x.ComercialId, Nombres = x.Nombres, Apellido = x.Apellido },
-                x => comercial == "" || comerciales.Contains(x.ComercialId) && (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial)), 15);
+                x => comercial == "" || comerciales.Contains(x.ComercialId) || (x.Nombres.Contains(comercial) || x.Apellido.Contains(comercial)), 15);
         }
 
         public EnumPerfil ObtenerPerfilDeUsuario(string activeDirectoryId)

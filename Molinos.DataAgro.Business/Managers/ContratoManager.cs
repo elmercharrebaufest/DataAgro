@@ -1510,7 +1510,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.BoletoId == 5)
             {
-                var res = ValidarSinBoleto(oParam.Cantidad, oParam.MaterialId, oParam.DestinoId, oParam.ClasificacionId, (oParam.CorredorId != null && oParam.CorredorId != 0), oParam.TipoNegocioId, oParam.ProvinciaId, oParam.ProveedorId, oParam.Sustentable);
+                var res = ValidarSinBoleto(oParam.Cantidad, oParam.Id, oParam.MaterialId, oParam.DestinoId, oParam.ClasificacionId, (oParam.CorredorId != null && oParam.CorredorId != 0), oParam.TipoNegocioId, oParam.ProvinciaId, oParam.ProveedorId, oParam.Sustentable);
                 if (res != null && res.HayError)
                 {
                     oErrorMessages.Errores.AddRange(res.Errores);
@@ -6725,7 +6725,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return ms;
         }
-        private Resultado ValidarSinBoleto(double? cantidad, int? materialId, int? centro, int? clasificacionId, bool? conCorredor, int? tipoNegocioId, int? provincia, int? proveedorId, bool? tieneSustentable)
+        private Resultado ValidarSinBoleto(double? cantidad, int id, int? materialId, int? centro, int? clasificacionId, bool? conCorredor, int? tipoNegocioId, int? provincia, int? proveedorId, bool? tieneSustentable)
         {
             var resultado = new Resultado();
             var materialesHabilitados = repositorio.Listar<MaterialHabilitadoSinBoleto, MaterialHabilitadoSinBoletoDto>(x =>
@@ -6787,7 +6787,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var centroCodigo = repositorio.Obtener<Centro, string>(x => x.Id == centro, x => x.CodigoSap);
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
-                var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.ProveedorId == proveedorId && x.DestinoId == centro &&
+                var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.ProveedorId == proveedorId && x.DestinoId == centro &&
                 x.MaterialId == materialId && (x.EstadoId != 5 || x.EstadoId != 6 || x.EstadoId != 8));
 
 
