@@ -2313,7 +2313,7 @@ function InicializarElementos() {
             $("#sinBoletoId").prop("checked", true);
             if ($("#sinBoletoId").is(':checked')) {
                 MensAlerta("Se completó la tilde de mercadería en depósito automáticamente");
-            }          
+            }
 
         }
         ValidarSinBoleto();
@@ -4169,6 +4169,8 @@ function CargarDatosEditar(contrato, hijo) {
         $("#sinBoletoId").prop("checked", true);
         $("#mercsDepositoId").prop("checked", true)
         $("#mercsDepositoId").attr("disabled", true);
+        $("#fechaDesdeId").data('kendoDatePicker').enable(false);
+        $("#fechaHastaId").data('kendoDatePicker').enable(false);
         if (contrato.Estado == 5 || contrato.Estado == 7) {
             DeshabilitarCampoSiEsBoleto();
         }
@@ -4748,7 +4750,7 @@ function AutocompleteProcedencia() {
         $("#LocalidadCrearContrato").trigger("change");
         $("#establecimientoPropioId").prop("checked", false);
         $("#establecimientoArrendadoId").prop("checked", false);
-        DatosProveedor();     
+        DatosProveedor();
     });
 
     $("#LocalidadCrearContrato").kendoAutoComplete({
@@ -6048,18 +6050,19 @@ function ValidarSinBoleto() {
         $("#mercsDepositoId").prop("checked", true)
         $("#mercsDepositoId").attr("disabled", true);
         $("#mercsDepositoDiv").show();
-        $("#fechaDesdeId").val(ObtenerFechaDesde());
-        $("#fechaHastaId").val(ObtenerFechaDesde());
-
+        if (Id == 0 || Id == null || Id == "") {
+            $("#fechaDesdeId").val(ObtenerFechaDesde());
+            $("#fechaHastaId").val(ObtenerFechaDesde());
+        }
         $("#fechaDesdeId").data('kendoDatePicker').enable(false);
-        $("#fechaHastaId").data('kendoDatePicker').enable(false);        
+        $("#fechaHastaId").data('kendoDatePicker').enable(false);
         //}
     } else {
         $("#mercsDepositoId").attr("disabled", false);
         $("#fechaDesdeId").data('kendoDatePicker').enable(true);
-        $("#fechaHastaId").data('kendoDatePicker').enable(true); 
+        $("#fechaHastaId").data('kendoDatePicker').enable(true);
     }
- 
+
 }
 
 function DeshabilitarCampoSiEsBoleto() {
