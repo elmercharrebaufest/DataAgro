@@ -737,7 +737,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { AlgoritmoKilosMinimosParaSugerencia = 20 });
-            
+            repositorioMock.Setup(y => y.Obtener<Centro>(It.IsAny<int>())).Returns(new Centro { NoPropio = false, Id = 1 });
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA { EstadoCuit = 1 });

@@ -428,7 +428,7 @@ namespace Molinos.DataAgro.Business.Managers
 
 
             var centro = repositorio.Obtener<Centro>(x => x.Id == cupo.CentroId);
-            if (centro.NoPropio)
+            if (centro != null && centro.NoPropio)
             {
                 if (cupo.FleteProcedencia == true)
                 {
@@ -1057,8 +1057,7 @@ namespace Molinos.DataAgro.Business.Managers
                 listaExcel.Add(excel);
             }
             return listaExcel.OrderByDescending(x => x.Puntaje).ToList();
-        }
-
+        }      
         public List<SugerenciaCupoDto> CrearSugerenciaCupo(int MaterialId, FormulaDto formula, ConfiguracionCupo configuracion = null)
         {
             try

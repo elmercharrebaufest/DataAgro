@@ -71,7 +71,7 @@ namespace Molinos.DataAgro.Interfaces
         List<CupoDto> ObtenerCupos(List<int> list, RepositorioEF repositorio);
         void ActualizarCumplimientoCupos(DateTime date);
         SugerenciaCupo ClonarSugerencia(SugerenciaCupo s);
-        void EjecutarAlgoritmoManual(int materialId, FormulaDto formula, ConfiguracionCupo configuracion = null, string path = "");
+        //void EjecutarAlgoritmoManual(int materialId, FormulaDto formula, ConfiguracionCupo configuracion = null, string path = "");
         List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos();
     }
 }
