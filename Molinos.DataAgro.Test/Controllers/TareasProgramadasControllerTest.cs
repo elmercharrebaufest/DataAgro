@@ -188,5 +188,14 @@ namespace Molinos.DataAgro.Test.Controllers
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
         }
+
+        [Test]
+        public void ConsultarMisturnosActivosTest()
+        {
+            var result = target.ConsultarMisturnosActivos() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
     }
 }

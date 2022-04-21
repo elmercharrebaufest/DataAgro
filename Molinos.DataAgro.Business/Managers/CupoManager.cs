@@ -147,7 +147,47 @@ namespace Molinos.DataAgro.Business.Managers
 
                                     try
                                     {
-                                        listaCupos = crearCupoAgent.Crear(cupo, d.Cantidad.Value);
+                                        // cupos para Vicentin en CupoExterno
+                                        if (cupo.Centro.NoPropio)
+                                        {
+                                            var consumidos = repositorio.Contar<Cupo>(x =>
+                                            x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso &&
+                                            cupo.ZonaCupoId == x.ZonaCupoId && x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+
+                                            ConfiguracionCupoDto limitePorZona = TraerLimitePorZona(cupo, d);
+
+                                            if (limitePorZona == null)
+                                            {
+                                                error.Error("Cupera", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
+                                                continue;
+                                            }
+                                            else if (limitePorZona.LimiteCupo <= 0)
+                                            {
+                                                error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                                continue;
+                                            }
+
+                                            var disponibles = limitePorZona.LimiteCupo - consumidos;
+                                            if (disponibles <= 0)
+                                            {
+                                                error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                                continue;
+                                            }
+
+                                            disponibles = disponibles > d.Cantidad.Value ? d.Cantidad.Value : disponibles;
+
+                                            var cuposNoPropios = repositorio.Listar<CupoNoPropio>(x => x.CupoId == null && x.Disponible == true && x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso,
+                                                disponibles);
+
+                                            foreach (var cupoNp in cuposNoPropios)
+                                            {
+                                                listaCupos.Add(cupoNp.Codigo);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            listaCupos = crearCupoAgent.Crear(cupo, d.Cantidad.Value);
+                                        }
                                     }
                                     catch (Exception e)
                                     {
@@ -169,14 +209,24 @@ namespace Molinos.DataAgro.Business.Managers
                                     repositorio.AgregarTodos(cuposConSap);
                                     repositorio.GuardarCambios();
 
+                                    List<CupoNoPropio> cuposnoPropio = new List<CupoNoPropio>();
                                     foreach (var cupoNuevo in cuposConSap)
                                     {
                                         if (cupo.Id == 0)
                                         {
-                                            var cupoConId = repositorio.Obtener<Cupo>(x => x.CupoSap == cupoNuevo.CupoSap);
+                                            var cupoConId = repositorio.ObtenerMayor<Cupo, int>(x => x.CupoSap == cupoNuevo.CupoSap, x => x.Id);
+                                            if (cupoNuevo.Centro.NoPropio)
+                                            {
+                                                var cupoVicentin = repositorio.Obtener<CupoNoPropio>(x => x.Codigo == cupoNuevo.CupoSap);
+                                                cupoVicentin.Cupo = cupoConId;
+                                                cupoVicentin.CupoId = cupoConId.Id;
+                                                cuposnoPropio.Add(cupoVicentin);
+                                            }
                                             logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoConId.Id, null), TipoAccionLogDataAgro.Crear);
                                         }
                                     }
+
+
                                     if (listaCupos.Count < d.Cantidad.Value)
                                     {
                                         error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + d.Cantidad.Value + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
@@ -218,23 +268,36 @@ namespace Molinos.DataAgro.Business.Managers
                         cupoSave.ComercialId = cupo.ComercialId;
                         cupoSave.Comercial = cupo.Comercial;
                         cupoSave.ConDescarga = cupo.ConDescarga;
-                        var res = modificarCupoAgent.Modificar(cupoSave);
-                        if (res != "Ok")
+                        if (cupoSave.Centro.NoPropio)
                         {
-                            error.Error("SAP", $"Error al grabar en SAP: {res}");
-                        }
-                        if (!cupoSave.Centro.Acopio)
-                        {
-                            if (datosConfiguracion.ConexionABMStop.HasValue && datosConfiguracion.ConexionABMStop.Value)
+                            if (!string.IsNullOrEmpty(cupoSave.CTG))
                             {
-                                if (cupoSave.CupoStop != null)
-                                {
-                                    clienteStopAgent.ModificarCupo(cupoSave);
-                                }
+                                error.Error("Centro", "Los cupos con CTG para centros no propios no pueden ser editados.");
+                                return error;
                             }
-                            else
+                            var cupoNoPropio = repositorio.Obtener<CupoNoPropio>(x => x.CupoId == cupoSave.Id);
+                            cupoNoPropio.Estado = cupoSave.EstadoCupoId;
+                        }
+                        if (!cupoSave.Centro.NoPropio)
+                        {
+                            var res = modificarCupoAgent.Modificar(cupoSave);
+                            if (res != "Ok")
                             {
-                                error.Error("Stop", "Sin Conexión a Stop. Modificado en SAP");
+                                error.Error("SAP", $"Error al grabar en SAP: {res}");
+                            }
+                            if (!cupoSave.Centro.Acopio && !cupoSave.Centro.NoPropio)
+                            {
+                                if (datosConfiguracion.ConexionABMStop.HasValue && datosConfiguracion.ConexionABMStop.Value)
+                                {
+                                    if (cupoSave.CupoStop != null)
+                                    {
+                                        clienteStopAgent.ModificarCupo(cupoSave);
+                                    }
+                                }
+                                else
+                                {
+                                    error.Error("Stop", "Sin Conexión a Stop. Modificado en SAP");
+                                }
                             }
                         }
                         repositorio.GuardarCambios();
@@ -253,6 +316,25 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
         }
+
+        private ConfiguracionCupoDto TraerLimitePorZona(Cupo cupo, DiaCupo d)
+        {
+            return repositorio.Obtener<LimiteCupo, ConfiguracionCupoDto>(
+                x => DbFunctions.TruncateTime(x.ConfiguracionCupo.Fecha) == d.Fecha
+                && x.ZonaCupoId == cupo.ZonaCupoId
+                && x.ConfiguracionCupo.CentroId == cupo.CentroId
+                && x.ConfiguracionCupo.MaterialId == cupo.MaterialId
+                && !x.ConfiguracionCupo.CierreCupera,
+                x => new ConfiguracionCupoDto
+                {
+                    Id = x.Id,
+                    Fecha = x.ConfiguracionCupo.Fecha,
+                    MaterialId = x.ConfiguracionCupo.MaterialId,
+                    CentroId = x.ConfiguracionCupo.CentroId,
+                    LimiteCupo = x.CantidadCupo,
+                });
+        }
+
         public Resultado Validar(Cupo cupo, int cantidadCupos, DateTime? fechaHasta)
         {
             var error = new Resultado();
@@ -343,6 +425,25 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 error.Errores.Add(new ErrorMessage(400, "La Fecha Hasta de entrega no puede ser menor a la Fecha Desde"));
             }
+
+
+            var centro = repositorio.Obtener<Centro>(x => x.Id == cupo.CentroId);
+            if (centro.NoPropio)
+            {
+                if (cupo.FleteProcedencia == true)
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Los cupos con flete para centros no propios  estan dehabilitados."));
+                }
+                var cuposVicentin = repositorio.Listar<CupoNoPropio>(x => x.CupoId == null && x.Disponible == true && x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso).Take(cantidadCupos);
+                if (cuposVicentin.Count() < cantidadCupos)
+                {
+                    error.Errores.Add(new ErrorMessage(400, "No existen cupos suficientes disponibles para el centro."));
+                }
+                if (!string.IsNullOrEmpty(cupo.CTG))
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Los cupos con CTG para centros no propios no pueden ser editados."));
+                }
+            }
             //if ((cupo.NegocioId == 0 || cupo.NegocioId == null) && !PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             //{
             //    error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
@@ -364,20 +465,36 @@ namespace Molinos.DataAgro.Business.Managers
                 var cupoSap = repositorio.Obtener<Cupo>(id);
                 var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
 
-
-                var resultStop = AnularCupoStop(cupoSap, datosConfiguracion, null);
+                var resultStop = new Resultado();
+                if (!cupoSap.Centro.NoPropio)
+                {
+                    resultStop = AnularCupoStop(cupoSap, datosConfiguracion, null);
+                }
                 if (!resultStop.HayError)
                 {
+                    if (cupoSap.Centro.NoPropio)
+                    {
+                        if (cupoSap.EstadoCupoId != 1)
+                        {
+                            var nuevoError = new Resultado();
+                            nuevoError.Error("Error", "El cupo no puede ser anulado. Cupo: " + cupoSap.CupoSap);
+                            return nuevoError;
+                        }
+                        var cuponoPropio = repositorio.Obtener<CupoNoPropio>(x => x.CupoId == cupoSap.Id);
+                        cuponoPropio.CupoId = null;
+                    }
+
                     cupoSap.EstadoCupoId = 4;
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSap.Id, null), TipoAccionLogDataAgro.Eliminar);
-
-                    var resultado = eliminarCupoAgent.Eliminar(cupoSap.CupoSap, comercial);
-                    if (resultado != "OK")
+                    if (!cupoSap.Centro.NoPropio)
                     {
-                        resultStop.Error("SAP", $"Anulado correctamente en STOP, Error al anular en SAP: {resultado}");
+                        var resultado = eliminarCupoAgent.Eliminar(cupoSap.CupoSap, comercial);
+                        if (resultado != "OK")
+                        {
+                            resultStop.Error("SAP", $"Anulado correctamente en STOP, Error al anular en SAP: {resultado}");
+                        }
                     }
-
                     var cupos = new List<CupoDto> {
                        new CupoDto {
                         ZonaCupo = cupoSap.ZonaCupo?.Descripcion,
@@ -3918,7 +4035,23 @@ namespace Molinos.DataAgro.Business.Managers
                                 result = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = solicitud.CantidadFleteProcedencia, Fecha = solicitud.Fecha } });
                             }
                         }
-                        listaSolicitudesGeneradas.AddRange(result.ListaCupos);
+                        //foreach(string itemCupo in result.ListaCupos)
+                        //{
+                        //    listaSolicitudesGeneradas.Add("Se generó el cupo " + itemCupo + " para el " + itemConfiguracion.Fecha.ToString("dd/MM/yyyy"));
+                        //}
+
+                        listaSolicitudesGeneradas.Add("Cupo(s) generado(s) para el " + itemConfiguracion.Fecha.ToString("dd/MM/yyyy"));
+                        if (result.HayError)
+                        {
+                            foreach (var err in result.Errores)
+                            {
+                                listaSolicitudesGeneradas.Add(err.Message);
+                            }
+                        }
+                        else
+                        {
+                            listaSolicitudesGeneradas.AddRange(result.ListaCupos);
+                        }
                     }
                     else
                     {
@@ -3995,7 +4128,7 @@ namespace Molinos.DataAgro.Business.Managers
                             repositorio.Agregar(solicitudCupo);
                         }
                         listaSolicitudesGeneradas.Add("La solicitud para el " + itemConfiguracion.Fecha.ToString("dd/MM/yyyy") + " se genero correctamente.");
-                    }                    
+                    }
                 }
                 result.ListaCupos.Clear();
                 result.ListaCupos.AddRange(listaSolicitudesGeneradas);
@@ -4998,17 +5131,10 @@ namespace Molinos.DataAgro.Business.Managers
                 var path = httpContextManager.ObtenerPathLogoMail();
                 var alterView = CuerpoMailNegociosAlgoritmo(path);
                 var comerciales = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.AlgoritimoDeCupos)));
-                var mail = new List<string>();
-                foreach (var item in comerciales)
+                var mail = new List<string> { };
+                if (comerciales != null && comerciales.Count > 0)
                 {
-                    try
-                    {
-                        var emailAdicional = mailManager.GetEmailUserActiveDirectory(item.IdActiveDirectory);
-                        mail.Add(emailAdicional);
-                    }
-                    catch (Exception e)
-                    {
-                    }
+                    mail.AddRange(comerciales.Select(x => x.IdActiveDirectory).ToList());
                 }
                 mail.Add("dataagro@baufest.com");
                 var asunto = "Prueba - Resultado Algoritmo de cupos";
@@ -5219,6 +5345,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
            x.CentroId == s.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == s.MaterialId)).Count;
+        }
+
+        public List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos()
+        {
+            return clienteStopAgent.ConsultarMisTurnosActivos();
         }
     }
 }

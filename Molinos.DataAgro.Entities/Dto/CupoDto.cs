@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -62,5 +63,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CentroCodigo { get; set; }
         public bool? Cumplimiento { get; set; }
         public bool? ConDescarga { get; set; }
-    }
+        public string Codigo { get; set; }
+    }  
 }

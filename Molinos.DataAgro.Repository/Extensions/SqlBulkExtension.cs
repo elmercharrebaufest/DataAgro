@@ -28,7 +28,10 @@ namespace Molinos.DataAgro.Repository
             var conn = (SqlConnection)session.Database.Connection;
             using (SqlCommand command = new SqlCommand(string.Empty, conn))
             {
-                command.Connection.Open();
+                if (command.Connection.State == ConnectionState.Closed)
+                {
+                    command.Connection.Open();
+                }
                 var setColumns = string.Empty;
                 var idType = string.Empty;
                 string columnasParaLaTemporal = "";

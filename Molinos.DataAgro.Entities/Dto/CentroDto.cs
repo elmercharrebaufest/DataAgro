@@ -14,6 +14,7 @@
         public bool Comision { get; set; }
         public bool CargaNegocios { get; set; }
         public bool CargaCupos { get; set; }
+        public bool NoPropio { get; set; }
     }
 
 }

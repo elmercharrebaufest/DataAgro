@@ -129,6 +129,8 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock.Setup(y => y.GetEmailUserActiveDirectory(It.IsAny<string>())).Returns("a@a.com");
             crearCupoAgentMock.Setup(x => x.Crear(It.IsAny<Cupo>(), It.IsAny<int>()))
                 .Returns(new List<string>() { "a" });
+            repositorioMock.Setup(y => y.ObtenerMayor<Cupo, int>(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<Expression<Func<Cupo, int>>>()))
+                    .Returns(new Cupo() { MaterialId = 1, Id = 1 });
             repositorioMock.Setup(x => x.Agregar(It.IsAny<Cupo>()));
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<Expression<Func<ConfiguracionCupo, int>>>()))
                .Returns(20);
@@ -232,7 +234,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new SISA());
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
             altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
-
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { Id = 1, NoPropio = false });
             var result = target.Validar(new Cupo() { Fason = true, MaterialId = 3, ProveedorId = 1, FechaIngreso = new DateTime(2019, 12, 30) }, 0, new DateTime(2019, 12, 1));
 
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>()), Times.Once);
@@ -981,7 +983,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA { EstadoCuit = 1 });
             altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
-
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Centro,bool>>>())).Returns(new Centro { Id = 1, NoPropio = false });
             var resultado = target.GenerarSolicitudExtraordinaria(solicitud);
 
             Assert.IsNotNull(resultado);
@@ -1003,6 +1005,14 @@ namespace Molinos.DataAgro.Test.Managers
             target.ActualizarCumplimientoCupos(It.IsAny<DateTime>());
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+
+        [Test]
+        public void ConsultarMisTurnosActivosTest()
+        {
+            target.ConsultarMisTurnosActivos();
+
+            clienteStopMock.Verify(x => x.ConsultarMisTurnosActivos(), Times.Once);
         }
     }
 }

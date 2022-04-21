@@ -76,17 +76,26 @@ namespace Molinos.DataAgro.Business.Managers
                             newConfiguracion.LimiteAlgoritmo = d.CantidadAlgoritmo.Value;
                             newConfiguracion.CantidadCupo = new List<LimiteCupo>();
                             GenerarLimiteZona(newConfiguracion, zonas);
-                            errorSap = EnviarConfiguracion(newConfiguracion, null, null, materiales, zonas, centros);
-                            if (errorSap.HayError)
+                            var centro = centros.Where(x => x.Id == newConfiguracion.CentroId).FirstOrDefault();
+                            if (!centro.NoPropio)
                             {
-                                errorSap.Error("GrabarConfiguracionCupo - Cabecera ", newConfiguracion.Fecha.ToShortDateString() + ": Error Sap:" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
-                                return errorSap;
+                                errorSap = EnviarConfiguracion(newConfiguracion, null, null, materiales, zonas, centros);
+                                if (errorSap.HayError)
+                                {
+                                    errorSap.Error("GrabarConfiguracionCupo - Cabecera ", newConfiguracion.Fecha.ToShortDateString() + ": Error Sap:" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
+                                    return errorSap;
+                                }
+                                else
+                                {
+                                    repositorio.Agregar(newConfiguracion);
+                                    repositorio.GuardarCambios();
+
+                                }
                             }
                             else
                             {
                                 repositorio.Agregar(newConfiguracion);
                                 repositorio.GuardarCambios();
-
                             }
                             //errorSap = EnviarLimiteZona(newConfiguracion.CantidadCupo.ToList(), newConfiguracion, false, materiales, zonas, centros, newConfiguracion.CierreCupera);
                             //if (!errorSap.HayError)
@@ -122,9 +131,12 @@ namespace Molinos.DataAgro.Business.Managers
                             ZonaCupo = x.ZonaCupo
                         });
                     }
-                    if (configuracionSave.LimiteCupo != configuracion.LimiteCupo || configuracionSave.CierreCupera != configuracion.CierreCupera)
+                    if (!configuracionSave.Centro.NoPropio)
                     {
-                        errorSap = EnviarConfiguracion(configuracion, null, configuracionSave.LimiteCupo, materiales, zonas, centros);
+                        if (configuracionSave.LimiteCupo != configuracion.LimiteCupo || configuracionSave.CierreCupera != configuracion.CierreCupera)
+                        {
+                            errorSap = EnviarConfiguracion(configuracion, null, configuracionSave.LimiteCupo, materiales, zonas, centros);
+                        }
                     }
                     if (errorSap.HayError)
                     {
@@ -183,11 +195,15 @@ namespace Molinos.DataAgro.Business.Managers
                 var materiales = repositorio.Listar<Material>();
                 var zonas = repositorio.Listar<ZonaCupo>();
                 var centros = repositorio.Listar<Centro>();
-                var errorSap = EnviarConfiguracion(configuracion, null, configuracion.LimiteCupo, materiales, zonas, centros);
-                if (errorSap.HayError)
+                //var centro = centros.Where(x=> x.Id == configuracion.CentroId).FirstOrDefault();
+                if (!configuracion.Centro.NoPropio)
                 {
-                    errorSap.Error("GrabarLimites", configuracion.Fecha.ToShortDateString() + ": " + "Error sap" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
-                    return errorSap;
+                    var errorSap = EnviarConfiguracion(configuracion, null, configuracion.LimiteCupo, materiales, zonas, centros);
+                    if (errorSap.HayError)
+                    {
+                        errorSap.Error("GrabarLimites", configuracion.Fecha.ToShortDateString() + ": " + "Error sap" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
+                        return errorSap;
+                    }
                 }
                 repositorio.GuardarCambios();
             }
@@ -313,10 +329,19 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var listaZonas = repositorio.Listar<ZonaCupo, string>(x => x.CodigoSap);
 
-                var disponibilidad = disponibilidades.Where(a => a.Fecha == configuracion.Fecha && a.CentroCodigo == configuracion.CentroCodigoSap && a.MaterialCodigo == configuracion.MaterialCodigoSap).ToList();
+                if (configuracion.NoPropio)
+                {
+                    configuracion.CuposConsumidos = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == configuracion.Fecha && x.CupoId != null && x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId);
+                    configuracion.LimiteCupo = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == configuracion.Fecha && x.Disponible == true && x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId);
+                    configuracion.CuposDisponibles = configuracion.LimiteCupo - configuracion.CuposConsumidos;
+                }
+                else
+                {
+                    var disponibilidad = disponibilidades.Where(a => a.Fecha == configuracion.Fecha && a.CentroCodigo == configuracion.CentroCodigoSap && a.MaterialCodigo == configuracion.MaterialCodigoSap).ToList();
 
-                configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
-                configuracion.CuposDisponibles += disponibilidad.Sum(X => X.Disponibles);
+                    configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
+                    configuracion.CuposDisponibles += disponibilidad.Sum(X => X.Disponibles);
+                }
             }
             return configuraciones;
         }
@@ -331,15 +356,36 @@ namespace Molinos.DataAgro.Business.Managers
             }, x => x.ConfiguracionCupoId == id);
 
             var configuracion = repositorio.Obtener<ConfiguracionCupo>(id);
-
+            var centro = repositorio.Obtener<Centro>(configuracion.CentroId);
+            //if (centro.NoPropio)
+            //{
+            //    configuracion.CuposConsumidos = repositorio.Contar<CupoNoPropio>(x => x.Fechaingreso == configuracion.Fecha && x.CupoId != null && x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId);
+            //    configuracion.LimiteCupo = repositorio.Contar<CupoNoPropio>(x => x.Fechaingreso == configuracion.Fecha && x.Disponible == true && x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId);
+            //    configuracion.CuposDisponibles = configuracion.LimiteCupo - configuracion.CuposConsumidos;
+            //}
             var listaZonas = repositorio.Listar<ZonaCupo, string>(x => x.CodigoSap);
-            var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.Centro.CodigoSap }, configuracion.Material.Codigo);
-            foreach (var d in disponibilidad)
+            if (!centro.NoPropio)
             {
-                if (zonas.Any(x => x.ZonaCupo == d.ZonaId))
+                var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.Centro.CodigoSap }, configuracion.Material.Codigo);
+                foreach (var d in disponibilidad)
                 {
-                    zonas.Where(x => x.ZonaCupo == d.ZonaId).FirstOrDefault().Consumidos = d.Consumidos;
-                    zonas.Where(x => x.ZonaCupo == d.ZonaId).FirstOrDefault().Disponible = d.Disponibles;
+                    if (zonas.Any(x => x.ZonaCupo == d.ZonaId))
+                    {
+                        zonas.Where(x => x.ZonaCupo == d.ZonaId).FirstOrDefault().Consumidos = d.Consumidos;
+                        zonas.Where(x => x.ZonaCupo == d.ZonaId).FirstOrDefault().Disponible = d.Disponibles;
+                    }
+                }
+            }
+            else
+            {
+                var consumidos = repositorio.Listar<Cupo>(x =>
+                                           x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId && x.FechaIngreso == configuracion.Fecha &&
+                                           x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+                foreach (var zona in zonas)
+                {
+                    var consumidosZona = consumidos.Where(a => a.ZonaCupoId == zona.ZonaCupoId).ToList().Count();
+                    zona.Disponible = zona.CantidadCupo - consumidosZona;
+                    zona.Consumidos = consumidosZona;
                 }
             }
             return zonas;
@@ -348,6 +394,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var resultado = new Resultado();
             var config = repositorio.Obtener<ConfiguracionCupo>(limite[0].ConfiguracionCupoId);
+            if (config.Centro.NoPropio)
+            {
+                config.LimiteCupo = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == config.Fecha && x.Disponible == true && x.CentroId == config.CentroId && x.MaterialId == config.MaterialId);
+            }
             if (limite.Sum(x => x.CantidadCupo) > config.LimiteCupo)
             {
                 resultado.Error("cantidad", "La cantidad de cupos excede el limite cargado");
@@ -373,13 +423,21 @@ namespace Molinos.DataAgro.Business.Managers
                 Centro = x.Centro.Descripcion,
                 Material = x.Material.Descripcion,
                 CentroCodigoSap = x.Centro.CodigoSap,
-                MaterialCodigoSap = x.Material.Codigo
+                MaterialCodigoSap = x.Material.Codigo,
+                NoPropio = x.Centro.NoPropio
             });
-
-            var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
-            configuracion.CuposConsumidos = disponibilidad.Sum(x => x.Consumidos);
-            configuracion.CuposDisponibles = disponibilidad.Sum(x => x.Disponibles);
-
+            if (configuracion.NoPropio)
+            {
+                configuracion.CuposConsumidos = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == configuracion.Fecha && x.CupoId != null && x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId);
+                configuracion.LimiteCupo = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == configuracion.Fecha && x.Disponible == true && x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId);
+                configuracion.CuposDisponibles = configuracion.LimiteCupo - configuracion.CuposConsumidos;
+            }
+            else
+            {
+                var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
+                configuracion.CuposConsumidos = disponibilidad.Sum(x => x.Consumidos);
+                configuracion.CuposDisponibles = disponibilidad.Sum(x => x.Disponibles);
+            }
             return configuracion;
         }
         public Resultado CambioMasivo(bool aceptar)
@@ -434,11 +492,15 @@ namespace Molinos.DataAgro.Business.Managers
                 configuracionCupo.LimiteAnterior = configuracionCupo.LimiteCupo;
                 configuracionCupo.LimiteCupo = limite.Sum(x => x.CantidadCupo);
                 configuracionCupo.LimiteAlgoritmo = limiteAlgoritmo;
-                var errorSap = EnviarConfiguracion(configuracionCupo, null, configuracionCupo.LimiteCupo, materiales, zonas, centros);
-                if (errorSap.HayError)
+                var centro = centros.Where(x => x.Id == configuracionCupo.CentroId).FirstOrDefault();
+                if (!centro.NoPropio)
                 {
-                    erroresSap.Error("GrabarLimitesMasivo", configuracionCupo.Fecha.ToShortDateString() + ": " + "Error sap" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
-                    break;
+                    var errorSap = EnviarConfiguracion(configuracionCupo, null, configuracionCupo.LimiteCupo, materiales, zonas, centros);
+                    if (errorSap.HayError)
+                    {
+                        erroresSap.Error("GrabarLimitesMasivo", configuracionCupo.Fecha.ToShortDateString() + ": " + "Error sap" + string.Join(", ", errorSap.Errores.Select(a => a.Source + " " + a.Message).ToList()));
+                        break;
+                    }
                 }
                 repositorio.GuardarCambios();
 

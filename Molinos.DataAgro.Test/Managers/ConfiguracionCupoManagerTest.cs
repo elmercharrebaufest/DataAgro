@@ -93,6 +93,10 @@ namespace Molinos.DataAgro.Test.Managers
                         LimiteAnterior = null,
                         ZonaCupoId = 1,
                     }
+                },
+                Centro = new Centro {
+                    Id = 1,
+                    NoPropio = false
                 }
             };
             var diaCupo = new List<DiaCupo> { new DiaCupo { Cantidad = 10, Fecha = DateTime.Now } };
@@ -135,12 +139,17 @@ namespace Molinos.DataAgro.Test.Managers
                 Centro = new Centro { CodigoSap = "ASF"},
                 Material = new Material { Codigo = "aa"}
             };
+            var centro = new Centro { 
+                Id = 1,                
+                NoPropio = false 
+            };
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<LimiteCupo, LimiteCupoDto>>>(), It.IsAny<Expression<Func<LimiteCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<LimiteCupoDto>() { new LimiteCupoDto { Id = 1, CantidadCupo = 1, ZonaCupoId = 1, ZonaCupo = "aaa" } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, string>>>(), It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
            Returns(new List<string>() { "CBA" });
             cupoManager.Setup(x => x.TraerCupoDisponibilidad(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>());
             repositorioMock.Setup(x => x.Obtener<ConfiguracionCupo>(It.IsAny<int>())).Returns(cupo);
+            repositorioMock.Setup(x => x.Obtener<Centro>(It.IsAny<int>())).Returns(centro);
             var resultado = target.TraerLimites(1);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<LimiteCupo, LimiteCupoDto>>>(), It.IsAny<Expression<Func<LimiteCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);

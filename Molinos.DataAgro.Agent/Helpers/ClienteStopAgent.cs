@@ -572,5 +572,237 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
             }
         }
+
+        #region MisturnosActivos(CupoNoPropio)
+        public List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos()
+        {
+            logger.Debug("Iniciando consulta ConsultarMisturnosActivos");
+            var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+            if (datosConfiguracion.ConexionConsultaStop.HasValue && datosConfiguracion.ConexionConsultaStop.Value)
+            {
+                try
+                {
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri(urlStop);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    
+                    DateTime fechaDesde = DateTime.Now.AddDays(-2).Date;
+                    DateTime fechaHasta = DateTime.Now.AddDays(3).Date;
+
+                    ConsultaTurnosActivosStop listaCuposStop;
+
+                    listaCuposStop = ObtenerMisTurnosActivosDeStop(datosConfiguracion, client, fechaDesde, fechaHasta);
+
+                    //listaCuposStop = new ConsultaTurnosActivosStop() {
+                    //    count = 1,
+                    //    data = new List<RespuestaCupoNoPropioStop>()
+                    //    {
+                    //        new RespuestaCupoNoPropioStop{
+                    //           cuitChoferAfip = "S",
+                    //            cuitCorredorCAfip = "N",
+                    //            cuitCorredorVAfip = "N",
+                    //            cuitDestinatarioAfip = "N",
+                    //            cuitDestinoAfip = "N",
+                    //            cuitIntermediarioAfip = "N",
+                    //            cuitIntermediarioFleteAfip = "N",
+                    //            cuitMercadoATerminoAfip = "N",
+                    //            cuitOrigenAfip = "S",
+                    //            cuitRemComercialAfip = "S",
+                    //            cuitRepresentanteEntregadorAfip = "N",
+                    //            cuitTransportistaAfip = "S",
+                    //            esAnulado = "N",
+                    //            esRechazado = "N",
+                    //            idCupo = 20045911,
+                    //            idCupoEstado = 3,
+                    //            idCupoTerminal = "MOL1420/01042022",
+                    //            idTerminal = 1,
+                    //            idCuitOrigen = 30709364436,
+                    //            idCuitIntermediario = null,
+                    //            idCuitMercadoATermino = null,
+                    //            idCuitRemComercial = 30710589883,
+                    //            idCuitCorredorV = null,
+                    //            idCuitCorredorC = null,
+                    //            idCuitRepresentanteEntregador = null,
+                    //            idCuitDestino = 30715118773,
+                    //            idCuitDestinatario = 30546689979,
+                    //            idCuitIntermediarioFlete = null,
+                    //            idCuitTransportista = 30709364436,
+                    //            idCuitChofer = 20204831409,
+                    //            fecha = "2022-04-01T00:00:00",
+                    //            ctg = "10102768814",
+                    //            fechaCTG_Desde = "2022-03-31T00:00:00",
+                    //            fechaCTG_Hasta = "2022-04-04T00:00:00",
+                    //            cartaPorte = "364",
+                    //            fechaCP_Carga = null,
+                    //            fechaCP_Vto = null,
+                    //            codLocalidadOrigen = "9449",
+                    //            codLocalidadDestino = 18794,
+                    //            desvio = "N",
+                    //            idTurnoDetalle = null,
+                    //            codGrano = 23,
+                    //            cosecha = "2122",
+                    //            renspa = null,
+                    //            nroEstablecimientoOrigen = null,
+                    //            pesoOriginal = null,
+                    //            pesoNetoEstimado = "36320.0",
+                    //            kmRecorrer = "320.0",
+                    //            validaKM = "S",
+                    //            cantHorasSalidaCamion = 0,
+                    //            dominio = "AA550UF",
+                    //            dominio_1 = "AE332MJ",
+                    //            dominio_2 = null,
+                    //            nroContrato = null,
+                    //            nroPlantaRuca = "408411",
+                    //            idEstadoEnPlanta = 1,
+                    //            estado = "A",
+                    //            creado = "2022-03-28T09:25:14",
+                    //            modificado = "2022-04-01T12:10:31",
+                    //            creadoPor = -1,
+                    //            modificadoPor = -23471,
+                    //            consultadoXAFIP = "S",
+                    //            fechaActivado = "2022-03-31T17:30:53",
+                    //            fechaArribado = "2022-04-01T06:50:24",
+                    //            fechaRechazado = null,
+                    //            fechaDesviadoD = null,
+                    //            fechaRegresado = null,
+                    //            fechaDesviadoO = null,
+                    //            fechaAnulado = null,
+                    //            fechaConfirmado = "2022-04-01T11:42:11",
+                    //            fechaDescargado = "2022-04-01T11:42:11",
+                    //            fechaReActivado = null,
+                    //            fechaTomado = null,
+                    //            ultima_latitud = null,
+                    //            ultima_longitud = null
+                    //        }
+                    //    }
+                    //};
+                    
+                    //string where = " where T.EstadoCupoId <> 4 and T.EstadoCupoId <> 5 and T.EstadoCupoId <> 8 ";
+
+                    IEnumerable<CupoNoPropio> actualizarCupoNoPropios = listaCuposStop.data.Select(cupoNoPropio => new CupoNoPropio
+                    {
+                        Codigo = cupoNoPropio.idCupoTerminal,
+                        Estado = cupoNoPropio.idCupoEstado,
+                        Disponible = (cupoNoPropio.esAnulado == "N" && cupoNoPropio.esRechazado == "N") ? true : false,
+                        FechaIngreso = Convert.ToDateTime(cupoNoPropio.fecha)
+                    });
+                    var columnasNoPropios = new List<KeyValuePair<string, string>> {
+                        new KeyValuePair<string, string> ("Codigo", "Codigo"),
+                        new KeyValuePair<string, string> ("Estado", "Estado"),
+                        new KeyValuePair<string, string> ("Disponible", "Disponible")
+                    };
+                    repositorio.ActualizarTodos(actualizarCupoNoPropios, columnasNoPropios, "Codigo");
+
+
+                    IEnumerable<Cupo> actualizarCupos = listaCuposStop.data.Select(cupo => new Cupo
+                    {
+                        EstadoPlanta = cupo.estadoEnPlanta,
+                        CTGFechaDesde = !String.IsNullOrEmpty(cupo.fechaCTG_Desde) ? DateTime.ParseExact(cupo.fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        CTGFechaHasta = !String.IsNullOrEmpty(cupo.fechaCTG_Hasta) ? DateTime.ParseExact(cupo.fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        RemitenteComercial = cupo.cuitRemComercial,
+                        CorredorComprador = cupo.cuitCorredorCAfip,
+                        CorredorVendedor = cupo.cuitCorredorVAfip,
+                        MercadoATermino = cupo.cuitMercadoATerminoAfip,
+                        Cosecha = cupo.cosecha,
+                        IntermediarioFlete = cupo.cuitIntermediarioFleteAfip,
+                        Transportista = cupo.cuitTransportistaAfip,
+                        Chofer = cupo.cuitChoferAfip,
+                        Km = cupo.kmRecorrer,
+                        Peso = cupo.pesoNetoEstimado,
+                        CartaPorte = cupo.cartaPorte,
+                        CTG = cupo.ctg,
+                        CuitOrigen = cupo.cuitOrigen,
+                        CuitOrigenAfip = cupo.cuitOrigenAfip,
+                        CodLocalidadOrigen = cupo.codLocalidadOrigen,
+                        NroEstablecimientoOrigen = cupo.nroEstablecimientoOrigen,
+                        EstadoCupoId = cupo.idCupoEstado,
+                        CupoSap = cupo.idCupoTerminal,
+                        CupoStop = cupo.idCupo,
+                        CreacionStop = cupo.creado
+                    });
+                    var columnas = new List<KeyValuePair<string, string>> {
+                        new KeyValuePair<string, string> ("EstadoPlanta", "EstadoPlanta"),
+                        new KeyValuePair<string, string> ("CTGFechaDesde", "CTGFechaDesde"),
+                        new KeyValuePair<string, string> ("CTGFechaHasta", "CTGFechaHasta"),
+                        new KeyValuePair<string, string> ("RemitenteComercial", "RemitenteComercial"),
+                        new KeyValuePair<string, string> ("CorredorComprador", "CorredorComprador"),
+                        new KeyValuePair<string, string> ("CorredorVendedor", "CorredorVendedor"),
+                        new KeyValuePair<string, string> ("MercadoATermino", "MercadoATermino"),
+                        new KeyValuePair<string, string> ("Cosecha", "Cosecha"),
+                        new KeyValuePair<string, string> ("IntermediarioFlete", "IntermediarioFlete"),
+                        new KeyValuePair<string, string> ("Transportista", "Transportista"),
+                        new KeyValuePair<string, string> ("Chofer", "Chofer"),
+                        new KeyValuePair<string, string> ("Km", "Km"),
+                        new KeyValuePair<string, string> ("Peso", "Peso"),
+                        new KeyValuePair<string, string> ("CartaPorte", "CartaPorte"),
+                        new KeyValuePair<string, string> ("CTG", "CTG"),
+                        new KeyValuePair<string, string> ("CuitOrigen", "CuitOrigen"),
+                        new KeyValuePair<string, string> ("CuitOrigenAfip", "CuitOrigenAfip"),
+                        new KeyValuePair<string, string> ("NroEstablecimientoOrigen", "NroEstablecimientoOrigen"),
+                        new KeyValuePair<string, string> ("EstadoCupoId", "EstadoCupoId"),
+                        new KeyValuePair<string, string> ("CupoSap", "CupoSap"),
+                        new KeyValuePair<string, string> ("CupoStop", "CupoStop"),
+                        new KeyValuePair<string, string> ("CreacionStop", "CreacionStop"),
+                    };
+                    var cuposSapStop = actualizarCupos.Select(a => a.CupoSap).ToList();
+
+                    var cuposModificados = repositorio.Listar<CupoNoPropio>(x => cuposSapStop.Contains(x.Codigo));
+
+                    var cuposSap = cuposModificados.Select(a => a.Codigo).ToList();
+
+                    actualizarCupos = actualizarCupos.Where(x => cuposSap.Contains(x.CupoSap));
+
+                    repositorio.ActualizarTodos(actualizarCupos, columnas, "CupoSap");
+                    
+                    repositorio.GuardarCambios();
+
+                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" +  fechaDesde.ToString() + " - " + DateTime.Now.ToString());
+
+                    return listaCuposStop.data;
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e.Message);
+                    throw;
+                }
+            }
+            else
+            {
+                return new List<RespuestaCupoNoPropioStop>();
+            }
+        }
+
+        private ConsultaTurnosActivosStop ObtenerMisTurnosActivosDeStop(Configuracion datosConfiguracion, HttpClient client, DateTime fechaDesde, DateTime fechaHasta)
+        {
+            CultureInfo provider;
+            var token = ObtenerToken(datosConfiguracion.ClaveStop);
+            var listaCupos = new ConsultaTurnosActivosStop() { data = new List<RespuestaCupoNoPropioStop>() };
+            //logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
+            provider = CultureInfo.InvariantCulture;
+                HttpResponseMessage response = client.PostAsJsonAsync(
+                       $"v1.1.0/misturnosactivos/{token.Data}/{fechaDesde.ToString("yyyy-MM-dd")}/{fechaHasta.ToString("yyyy-MM-dd")}", new { }).Result;
+                response.EnsureSuccessStatusCode();
+                var res = response.Content.ReadAsAsync<dynamic>().Result;
+                var jObject = JObject.Parse(res.ToString());
+                ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+                //logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
+                if (!respuesta.isError)
+                {
+                    ConsultaTurnosActivosStop model = JsonConvert.DeserializeObject<ConsultaTurnosActivosStop>(jObject.ToString());
+                    listaCupos.data.AddRange(model.data);
+                    //logger.Debug(model.results.Count);
+                    //if (model.results.Count > 0)
+                    //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
+                }
+                else
+                {
+                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                    logger.Debug(error.ToJson() + " fechaDesde: " + fechaDesde.ToString() + " - fechaHasta: " + fechaHasta.ToString());
+                }
+            
+            return listaCupos;
+        }
+        #endregion
     }
 }

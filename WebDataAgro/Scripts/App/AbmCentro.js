@@ -78,6 +78,7 @@ function CreateGridCentro() {
             { field: "Comision", title: "Comision", filterable: false, template: "# if(Comision){#Si#}else{##}#" },
             { field: "CargaNegocios", title: "Carga Negocios", filterable: false, template: "# if(CargaNegocios){#Si#}else{##}#" },
             { field: "CargaCupos", title: "Carga Cupos", filterable: false, template: "# if(CargaCupos){#Si#}else{##}#" },
+            { field: "NoPropio", title: "No Propio", filterable: false, template: "# if(NoPropio){#Si#}else{##}#" },
         ],
 
         sortable: true,
@@ -207,6 +208,7 @@ function UpdateViewModel(model) {
     var centro = {
         "Id": model.Centro.Id,
         "Descripcion": model.Centro.Descripcion,
+        "NoPropio": model.Centro.NoPropio,
         "CodigoSap": model.Centro.CodigoSap,
         "Acopio": model.Centro.Acopio,
         "ValidaRedespacho": model.Centro.ValidaRedespacho,
@@ -357,6 +359,7 @@ function Grabar() {
         "Id": viewModel.get("Centro.Id"),
         "Descripcion": viewModel.get("Centro.Descripcion"),
         "CodigoSap": viewModel.get("Centro.CodigoSap"),
+        "NoPropio": viewModel.get("Centro.NoPropio"),
         "Acopio": viewModel.get("Centro.Acopio"),
         "ValidaRedespacho": viewModel.get("Centro.ValidaRedespacho"),
         "LocalidadId": viewModel.get("Centro.LocalidadId"),

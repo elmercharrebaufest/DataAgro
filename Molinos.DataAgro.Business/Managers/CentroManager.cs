@@ -49,6 +49,7 @@ namespace Molinos.DataAgro.Business
                     Comision = x.Comision,
                     CargaNegocios = x.CargaNegocios,
                     CargaCupos = x.CargaCupos,
+                    NoPropio = x.NoPropio,
                 }, null, 0, "Descripcion")
             };
         }
@@ -69,6 +70,7 @@ namespace Molinos.DataAgro.Business
                 Comision = x.Comision,
                 CargaNegocios = x.CargaNegocios,
                 CargaCupos = x.CargaCupos,
+                NoPropio = x.NoPropio
             }) ?? new CentroDto();
         }
 
@@ -96,6 +98,7 @@ namespace Molinos.DataAgro.Business
                 oCentroSave.Comision = oCentro.Comision;
                 oCentroSave.CargaNegocios = oCentro.CargaNegocios;
                 oCentroSave.CargaCupos = oCentro.CargaCupos;
+                oCentroSave.NoPropio = oCentro.NoPropio;
             }
             else
             {

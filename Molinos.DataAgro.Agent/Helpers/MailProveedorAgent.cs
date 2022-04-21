@@ -49,7 +49,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     lista.Add(new MailProveedorDto()
                     {
                         Cuit = item.CUIT,
-                        Pesificado = item.REMARK == "" ? item.MAIL : ""
+                        Pesificado = (item.REMARK == "" || item.REMARK.ToUpper() == "PESIFICADOS"  || item.REMARK.ToUpper() == "PAGOS") ? item.MAIL : ""
                     });
                 }
                 logger.Debug(devolucion.ToXml());

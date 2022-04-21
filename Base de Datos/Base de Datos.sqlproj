@@ -332,6 +332,7 @@
     <Build Include="dbo\Tables\MailProveedor.sql" />
     <Build Include="dbo\Tables\NegocioPesificacion.sql" />
     <Build Include="dbo\Deploys\SinBoleto.sql" />
+    <Build Include="dbo\Tables\CupoNoPropio.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

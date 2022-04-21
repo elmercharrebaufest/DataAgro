@@ -332,6 +332,9 @@ namespace Molinos.DataAgro.Entities.Seguridad
         HabilitacionDeCupos = 730,
         [Display(ResourceType = typeof(Text), Name = "Ver_Todas_Las_Sugerencias")]
         VerTodasLasSugerencias = 731,
+        //Cupo NO Propio
+        [Display(ResourceType = typeof(Text), Name = "Visualizar_CupoNoPropio")]
+        Visualizar_CupoNoPropio = 732,
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]

@@ -42,11 +42,14 @@ function filtroAgregarValorPopUp(listaFiltros) {
     //solo se esta pudiendo agregar 1 filtro de estos por pantalla
     if ($(".filtroAgregarValorPopUp")[0] != undefined) {
         filtrosParaContratoSAP = filtroPopUpAddValor($(".filtroAgregarValorPopUp")[0].name);
+        if (filtrosParaContratoSAP == null) {
+            filtrosParaContratoSAP = filtroPopUpAddValorCodigo($(".filtroAgregarValorPopUp")[0].name);
+        }
     }
 
     if (filtrosParaContratoSAP != null) {
         for (var i = 0; i < filtrosParaContratoSAP.filters.length; i++) {
-            filtrosParaContratoSAP.filters[i].value = filtrosParaContratoSAP.filters[i].value.padStart(10, '0');  
+            filtrosParaContratoSAP.filters[i].value = filtrosParaContratoSAP.filters[i].value.padStart(10, '0');
         }
         listaFiltros.push(filtrosParaContratoSAP);
     }
@@ -210,11 +213,11 @@ function filtrosBusqSelectMultiple(listaDeFiltros) {
                     filtrosPorCadaValorSeleccionado.push(new FiltroHijo(filtroMultiselect[e].name, JSON.parse(x), "eq"));
                 }
             });
-            if (filtrosPorCadaValorSeleccionado.length>0) {
+            if (filtrosPorCadaValorSeleccionado.length > 0) {
                 let FiltroDeMultiselect = new FiltroPadre("or", filtrosPorCadaValorSeleccionado);
                 listaDeFiltros.push(FiltroDeMultiselect);
             }
-            
+
         }
     });
 }
@@ -393,6 +396,20 @@ function filtroPopUpAddValor(nombreDelFiltro) {
     return (filtrosContratosSap.length > 0) ? new FiltroPadre("or", filtrosContratosSap) : null;
 }
 
+// se creo para cupo no propio
+function filtroPopUpAddValorCodigo(nombreDelFiltro) {
+
+    let filtrosContratosSap = [];
+    $("#contratos-tableCodigo td").each(function (e) {
+
+        let valorBuscado = $("#contratos-tableCodigo td")[e].innerText;
+
+        (valorBuscado != "" &&
+            $(valorBuscado != null)) ? filtrosContratosSap.push(new FiltroHijo(nombreDelFiltro, valorBuscado, "eq")) : null;
+    });
+    return (filtrosContratosSap.length > 0) ? new FiltroPadre("or", filtrosContratosSap) : null;
+}
+
 
 //Agregarlo en document.ready de kendo si se usa
 function inicializarPopUpSap(nombrePopUp) {
@@ -522,11 +539,15 @@ function ModalContrato() {
 
 function ArmarTabla(contratos) {
     $("#contratos-table").empty();
-    var tabla = '<tr><th>Seleccionados:</th></tr>';
+    var tabla = '<tr class="seleccionado" ><th >Seleccionados:</th></tr>';
     if (contratos) {
+        tabla += "<div id='div1'>"
         for (var i = 0; i < contratos.length; i++) {
-            tabla += '<tr><td>' + contratos[i] + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" style="height: 34px;float: right" type="button"></button></td></tr>';
+            if (contratos[i] != "") {
+                tabla += '<tr><td class="hide contador" style="width: 40px; text-align: center">' + (i + 1) + '</td><td style="width: 100%">' + contratos[i] + '<button class="k-button k-button-icontext fa fa-trash borrarContrato" style="height: 34px;float: right" type="button"></button></td></tr>';
+            }
         }
+        tabla += "</div>";
     }
     $("#contratos-table").append(tabla);
 }

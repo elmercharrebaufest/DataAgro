@@ -97,7 +97,8 @@ namespace WebDataAgro.Controllers
                     Comision = oCentro.Comision,
                     Direccion = oCentro.Direccion,
                     LocalidadId = oCentro.LocalidadId,
-                    ValidaRedespacho = oCentro.ValidaRedespacho
+                    ValidaRedespacho = oCentro.ValidaRedespacho,
+                    NoPropio = oCentro.NoPropio
                 };
             }
 

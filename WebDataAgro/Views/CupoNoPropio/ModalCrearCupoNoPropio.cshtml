@@ -1,0 +1,143 @@
+﻿@model WebDataAgro.Models.CupoModel
+
+<link rel="stylesheet" href="styles/kendo.default.min.css" />
+<link rel="stylesheet" href="styles/kendo.default.mobile.min.css" />
+<link href="~/Content/rol.css" rel="stylesheet" />
+
+<div class="modal fade" id="ModalCrearCupoNoPropio" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" href="#">
+    <div class="modal-dialog">
+        <div class="modal-content" style="position: absolute;margin-left: -270px;  width: 182%;">
+            <div class="modal-header ">
+                <button type="button" class="cerrar close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-confirmado" id="lineModalLabel"></h1>
+                <div class="status finalizado-modal">
+                    <div style="background:#76ae7e !important; padding: 4px !important">Alta de Cupos</div>
+                </div>
+            </div>
+
+            <div class="modal-body clearfix " style="padding:0;">
+                @*@using (Html.BeginForm("CrearCupo", "CupoNoPropio"))
+            {*@
+                <div id="CrearCupo" class="container">
+                    <br />
+                    <div class="row errorDiv" hidden>
+                        <div class="col-md-12 alert alert-error">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Error! </strong><label id="error"></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div>
+                                    <div class="col-sm-4">
+                                        <label>Fecha Ingreso</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div id="fechaDiv">
+                                            <div>
+                                                @Html.TextBoxFor(x => x.FechaIngreso, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaEntrega" })
+                                            </div>
+                                            @Html.HiddenFor(x => x.FechaIngreso)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div>
+                                    <div class="col-sm-4">
+                                        <label>Planta</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        @Html.DropDownListFor(x => x.PlantaId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control", @id = "planta" })
+                                        @Html.HiddenFor(x => x.PlantaId)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div>
+                                    <div class="col-sm-4">
+                                        <label>Material</label>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div>
+                                            @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), new { @class = "form-control", @id = "material" })
+                                            @Html.HiddenFor(x => x.MaterialId)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div>
+                                    <div class="col-sm-4">
+                                        <label>Código de Cupo</label>
+                                    </div>
+                                    <div class="col-sm-8 noRightPadding">
+                                        @Html.TextBox("CuposNoPropios", "", new { @class = "form-control ocultarAnular", style = "width:96%", @id = "ContratoSAPId", @onChange = "CompletarTable()", @onPaste = "CompletarTable()" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 form">
+                            <table class="tabla-cupo table-striped" id="cupos-table">
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer clearfix ">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-3 col-sm-3 noPaddingLeft botonAgregar">
+                            <span id="idBolsa"></span>
+                            <button id="confirmar" class="myBtn" onclick="GrabarCupo()">Guardar Cambios</button>
+                        </div>
+                        <div class="col-md-3  col-sm-2  noPaddingRight">
+                            <button type="button" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+
+                </div>
+                @*}*@
+            </div>
+            <br />
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+
+    #div1 {
+        width: 880px;
+    }
+
+    .form {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 1em;
+        background: #f9f9f9;
+        height: 156px;
+        border: 1px solid #c1c1c1;
+        border-collapse: collapse;
+        /* width: 29%; */
+        max-height: 362px;
+        height: 175px;
+        margin-bottom: 10px;
+        overflow-y: auto;
+        width: 46%;
+        margin-left: 14px;
+    }
+    .alert-error {
+        color: #b94a48;
+        background-color: #f2dede;
+        border-color: #eed3d7;
+        border-radius: 4px !important
+    }
+</style>
+
+
+
+

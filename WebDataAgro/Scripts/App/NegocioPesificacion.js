@@ -219,11 +219,11 @@ function Inicializar() {
                 } else {
                     row.cells[0].value = "NO"
                 }
-                if (row.cells[5].value == true) {
-                    row.cells[5].value = "SI"
-                } else {
-                    row.cells[5].value = "NO"
-                }
+                //if (row.cells[5].value == true) {
+                //    row.cells[5].value = "SI"
+                //} else {
+                //    row.cells[5].value = "NO"
+                //}
 
                 if (row.cells[6].value == true) {
                     row.cells[6].value = "SI"
@@ -237,23 +237,40 @@ function Inicializar() {
                     row.cells[7].value = "NO"
                 }
 
+                if (row.cells[8].value == true) {
+                    row.cells[8].value = "SI"
+                } else {
+                    row.cells[8].value = "NO"
+                }
+                var fechaInstruccion = row.cells[1].value;
                 var fecha = row.cells[3].value;
-                var fechaHasta = row.cells[8].value;
-                var ultimaAplicacion = row.cells[4].value;
+                var fechaHasta = row.cells[9].value;
+                var fechaFijacion = row.cells[4].value;
+                var ultimaAplicacion = row.cells[5].value;
+                fechaInstruccion = kendo.parseDate(fechaInstruccion, 'yyyy-MM-dd')
                 fechaHasta = kendo.parseDate(fechaHasta, 'yyyy-MM-dd')
                 fecha = kendo.parseDate(fecha, 'yyyy-MM-dd')
+                fechaFijacion = kendo.parseDate(fechaFijacion, 'yyyy-MM-dd')
                 ultimaAplicacion = kendo.parseDate(ultimaAplicacion, 'yyyy-MM-dd')
+                if (fechaInstruccion != null) {
+                    row.cells[1].value = fechaInstruccion;
+                    row.cells[1].format = 'dd/MM/yyyy'
+                }
                 if (fecha != null) {
                     row.cells[3].value = fecha;
                     row.cells[3].format = 'dd/MM/yyyy'
                 }
                 if (fechaHasta != null) {
-                    row.cells[8].value = fechaHasta;
-                    row.cells[8].format = 'dd/MM/yyyy'
+                    row.cells[9].value = fechaHasta;
+                    row.cells[9].format = 'dd/MM/yyyy'
+                }
+                if (fechaFijacion != null) {
+                    row.cells[4].value = fechaFijacion;
+                    row.cells[4].format = 'dd/MM/yyyy'
                 }
                 if (ultimaAplicacion != null) {
-                    row.cells[4].value = ultimaAplicacion;
-                    row.cells[4].format = 'dd/MM/yyyy'
+                    row.cells[5].value = ultimaAplicacion;
+                    row.cells[5].format = 'dd/MM/yyyy'
                 }
 
             }

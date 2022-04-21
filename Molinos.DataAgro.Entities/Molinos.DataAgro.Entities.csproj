@@ -146,6 +146,7 @@
     <Compile Include="Dto\MaterialHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\CentroHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\NegocioPesificacionDto.cs" />
+    <Compile Include="Dto\CupoNoPropioDto.cs" />
     <Compile Include="Dto\SustentableDto.cs" />
     <Compile Include="Dto\MailProveedorDto.cs" />
     <Compile Include="Dto\ResultadoAltaCampoSustentable.cs" />
@@ -419,6 +420,7 @@
     <Compile Include="Entities\ComisionAFavor.cs" />
     <Compile Include="Entities\Clausula.cs" />
     <Compile Include="Entities\ClausulaUno.cs" />
+    <Compile Include="Entities\CupoNoPropio.cs" />
     <Compile Include="Entities\MailProveedor.cs" />
     <Compile Include="Entities\MaterialHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\NegocioPesificacion.cs" />

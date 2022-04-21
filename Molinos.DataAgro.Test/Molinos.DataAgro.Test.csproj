@@ -126,6 +126,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CupoNoPropioControllerTest.cs" />
     <Compile Include="Controllers\NegocioPesificacionControllerTest.cs" />
     <Compile Include="Controllers\ReportePesificadosControllerTest.cs" />
     <Compile Include="Controllers\ConfiguracionInternaControllerTest.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Controllers\SincronizarMaestrosControllerTest.cs" />
     <Compile Include="Controllers\TareasProgramadasControllerTest.cs" />
     <Compile Include="Controllers\ZonaCupoControllerTest.cs" />
+    <Compile Include="Managers\CupoNoPropioManagerTest.cs" />
     <Compile Include="Managers\HabilitacionBoletoManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionBolsaManagerTest.cs" />
     <Compile Include="Managers\FacacopManagerTest.cs" />
@@ -275,7 +277,7 @@
       <Name>Molinos.DataAgro.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\WebDataAgro\WebDataAgro.csproj">
-      <Project>{4A4B326D-1ED3-4AED-A2B9-06EC9464810D}</Project>
+      <Project>{4a4b326d-1ed3-4aed-a2b9-06ec9464810d}</Project>
       <Name>WebDataAgro</Name>
     </ProjectReference>
   </ItemGroup>

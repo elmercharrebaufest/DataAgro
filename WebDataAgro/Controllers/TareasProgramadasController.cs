@@ -293,5 +293,13 @@ namespace WebDataAgro.Controllers
             logger.Info($"EnviarMailSugerenciasPendientesPorComercial - Finalizado");
             return Content("ok");
         }
+
+        public ActionResult ConsultarMisturnosActivos()
+        {
+            logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos");
+            cupoManager.ConsultarMisTurnosActivos();
+            logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos - Finalizado");
+            return Content("ok");
+        }
     }
 }

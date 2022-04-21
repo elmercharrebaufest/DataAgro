@@ -118,7 +118,7 @@ namespace Molinos.DataAgro.Test.Controllers
             });
 
             centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
-
+            centroManagerMock.Setup(x => x.TraerCentro(It.IsAny<int>())).Returns(new CentroDto { NoPropio = false });
             var result = target.CrearCupo(1, "") as ViewResult;
 
             Assert.NotNull(result);
@@ -341,7 +341,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -355,7 +355,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
 

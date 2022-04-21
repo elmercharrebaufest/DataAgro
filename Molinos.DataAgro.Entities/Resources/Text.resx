@@ -884,4 +884,10 @@
   <data name="ConfigurarExcedente" xml:space="preserve">
     <value>Configurar Excedente</value>
   </data>
+  <data name="ActualizarCompraNet" xml:space="preserve">
+    <value>Actualizar ALV CompraNet</value>
+  </data>
+  <data name="Visualizar_CupoNoPropio" xml:space="preserve">
+    <value>Visualizar Cupo No Propio</value>
+  </data>
 </root>

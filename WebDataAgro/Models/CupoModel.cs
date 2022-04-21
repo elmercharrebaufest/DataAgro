@@ -42,6 +42,10 @@ namespace WebDataAgro.Models
         public int? Negocio { get; set; }       
         public int? NegocioId { get; set; }
 
+        public bool NoPropio { get; set; }
+        public DateTime FechaIngreso { get; set; }
+        public string CuposNoPropios { get; set; }
+        
     }
     
 }

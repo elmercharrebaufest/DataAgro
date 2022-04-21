@@ -11,6 +11,7 @@
     [Comision] BIT NOT NULL DEFAULT 0, 
     [CargaNegocios] BIT NOT NULL DEFAULT 1, 
     [CargaCupos] BIT NOT NULL DEFAULT 1, 
+    [NoPropio] BIT NOT NULL DEFAULT 0, 
     CONSTRAINT [FK_Centro_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [Localidad]([LocalidadId]),
 
 );

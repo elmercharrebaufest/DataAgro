@@ -137,6 +137,7 @@
     <Compile Include="ConsultasEF\TraerContratosPorFiltro.cs" />
     <Compile Include="ConsultasEF\TraerTodoPesificadoSinFiltro.cs" />
     <Compile Include="ConsultasEF\TraerTodoPrecioMoaPizarra.cs" />
+    <Compile Include="ConsultasEF\TraerTodosCupoNoPropio.cs" />
     <Compile Include="ConsultasEF\TraerTodosReportePesificado.cs" />
     <Compile Include="ConsultasEF\TraerTodosNegocioPesificacion.cs" />
     <Compile Include="ConsultasEF\TraerTodosContratosBoleto.cs" />

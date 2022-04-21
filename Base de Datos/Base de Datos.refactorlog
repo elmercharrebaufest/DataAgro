@@ -1017,4 +1017,39 @@
     <Property Name="NewName" Value="Excepcion" />
   </Operation>
   
+  <Operation Name="Rename Refactor" Key="1e7b5a0f-9b1e-4731-a71c-917b021df45b" ChangeDateTime="03/22/2022 17:40:53">
+    <Property Name="ElementName" Value="[dbo].[Centro].[Externo]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Centro]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NoPropio" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e99aa5fe-30fe-4422-b7b4-316e43406242" ChangeDateTime="03/22/2022 23:31:58">
+    <Property Name="ElementName" Value="[dbo].[CupoExterno].[IdCentro]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CupoExterno]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Centroid" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d8548034-ed03-4e70-be4f-feef678dc26f" ChangeDateTime="03/22/2022 23:32:07">
+    <Property Name="ElementName" Value="[dbo].[CupoExterno].[Centroid]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CupoExterno]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CentroId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b387b3bf-01f9-4e90-98c0-c319f3a27a84" ChangeDateTime="03/22/2022 23:32:19">
+    <Property Name="ElementName" Value="[dbo].[CupoExterno].[IdMaterial]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CupoExterno]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MaterialId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7e916b82-825a-4c4d-828a-bd95ac0713a0" ChangeDateTime="03/22/2022 23:32:28">
+    <Property Name="ElementName" Value="[dbo].[CupoExterno].[IdCupo]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CupoExterno]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CupoId" />
+  </Operation>
 </Operations>

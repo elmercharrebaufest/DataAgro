@@ -601,6 +601,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.Visualizar_CupoNoPropio))
+                                {
+                                    <li>
+                                        <a href="/CupoNoPropio/Index" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Cupos No Propios
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </li>
                     }

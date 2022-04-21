@@ -41,7 +41,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     MaterialCodigoSap = cupo.Material.Codigo,
                     LimiteCupoAnterior = cupo.LimiteAnterior,
                     Bloquear = cupo.CierreCupera,
-                    LiberarCupera = cupo.LiberarCupera
+                    LiberarCupera = cupo.LiberarCupera,
+                    NoPropio = cupo.Centro.NoPropio
                 };
 
             return new KendoGrid<ConfiguracionCupoDto>(request, query);

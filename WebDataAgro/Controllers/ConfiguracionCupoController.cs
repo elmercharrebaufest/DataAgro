@@ -117,6 +117,7 @@ namespace WebDataAgro.Controllers
                     }).OrderBy(x => x.Value);
             ViewBag.Material = materialesListItems;
             var centro = centroManager.TraerTodoCentro();
+            centro.Centro = centro.Centro.Where(x=> x.NoPropio != true).ToList();
             var centroListItems = centro.Centro.Select(
                     x => new SelectListItem
                     {

@@ -1,0 +1,168 @@
+﻿.k-button:hover .filtro {
+    color: #FFF;
+}
+.k-button.k-button-icontext .k-icon {
+    vertical-align: middle;
+}
+.k-icon.k-i-file-excel {
+    color: green !important;
+    font-size: 28px;
+    overflow: visible;
+}
+
+.filtro {
+    color: #017940;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Open Sans",sans-serif;
+    text-align: center;
+}
+
+.content-input input,
+.content-select select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.content-input input {
+    visibility: hidden;
+    position: absolute;
+    right: 0;
+}
+
+.content-input {
+    position: relative;
+    margin-bottom: 30px;
+    padding: 5px 0 5px 60px; /* Damos un padding de 60px para posicionar
+            el elemento <i> en este espacio*/
+    display: block;
+    margin-left: 33px;
+}
+
+    /* Estas reglas se aplicarán a todos las elementos i
+    después de cualquier input*/
+    .content-input input + i {
+        background: gray;
+        border: 2px solid rgba(0,0,0,0.2);
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    /* Estas reglas se aplicarán a todos los i despues
+    de un input de tipo checkbox*/
+    .content-input input[type=checkbox ] + i {
+        width: 36px;
+        height: 19px;
+        border-radius: 15px;
+    }
+
+        .content-input input[type=checkbox] + i:before {
+            content: ''; /* No hay contenido */
+            width: 17px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            z-index: 1;
+            left: 0px;
+            top: 0px;
+            -webkit-box-shadow: 3px 0 3px 0 rgba(0,0,0,0.2);
+            box-shadow: 3px 0 3px 0 rgba(0,0,0,0.2);
+        }
+
+    .content-input input[type=checkbox]:checked + i:before {
+        left: 17px;
+        -webkit-box-shadow: -3px 0 3px 0 rgba(0,0,0,0.2);
+        box-shadow: 3px 0 -3px 0 rgba(0,0,0,0.2);
+    }
+
+    .content-input input[type=checkbox]:checked + i {
+        background: #0080FF;
+    }
+
+    .content-input input[type=checkbox] + i:after {
+        content: '';
+        position: absolute;
+        font-size: 10px;
+        color: rgba(255,255,255,0.6);
+        top: 8px;
+        left: 4px;
+        opacity: 0 /* Ocultamos este elemento */;
+        transition: all 0.25s ease 0.25s;
+    }
+
+    /* Cuando esté checkeado cambiamos la opacidad a 1 y lo mostramos */
+    .content-input input[type=checkbox]:checked + i:after {
+        opacity: 1;
+    }
+
+.k-grid-header .k-header > .k-link {
+    color: white
+}
+
+.k-grid-header .k-header {
+    background: gray !important;
+}
+/*  .k-block, .k-button, .k-draghandle, .k-grid-header, .k-grouping-header, .k-header, .k-pager-wrap, .k-toolbar, .k-treemap-tile, html .km-pane-wrapper .k-header {
+                    background: gray !important;
+                }*/
+.k-button.k-button-icon .k-icon, .k-grid-filter .k-icon, .k-header .k-icon {
+    color: white;
+}
+
+.k-grid table {
+    text-align: center;
+}
+
+.k-grid-filter.k-state-active {
+    background-color: gray;
+}
+
+
+/*//PopUp Sap*/
+.modal-content {
+    border-radius: 0 !important;
+    padding: 10px 15px 15px 15px;
+}
+
+.modal .close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000000;
+    text-shadow: 0 1px 0 #ffffff;
+    opacity: 0.2;
+    background: none !important;
+    text-indent: 0;
+}
+.modal .modal-header .cerrar {
+    margin-top: 0.8rem !important;
+    margin-right: 0.5rem;
+}
+
+.modal .modal-header {
+    padding: 6px;
+    border-bottom: none;
+}
+
+.modal .modal-body {
+    padding: 0 15px 0px 15px;
+}
+
+.modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.status div {
+    font-size: 12px;
+    text-align: left;
+    margin: 10px 0;
+    border: 0;
+    color: #FFF;
+    padding: 3px;
+    font-weight: 700;
+}

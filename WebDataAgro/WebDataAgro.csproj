@@ -226,6 +226,7 @@
     <Compile Include="Controllers\AdministracionProveedorController.cs" />
     <Compile Include="Controllers\AdministracionCupoController.cs" />
     <Compile Include="Controllers\CamposSustentableReporteController.cs" />
+    <Compile Include="Controllers\CupoNoPropioController.cs" />
     <Compile Include="Controllers\FormularioAltaNoGranosController.cs" />
     <Compile Include="Controllers\CompraNetTerceroController.cs" />
     <Compile Include="Controllers\ConfiguracionBolsaController.cs" />
@@ -412,6 +413,7 @@
     <Content Include="Content\compraNet.css" />
     <Content Include="Content\configuracion.css" />
     <Content Include="Content\contactoDetalle.css" />
+    <Content Include="Content\cupoNoPropio.css" />
     <Content Include="Content\diffPlex.css" />
     <Content Include="Content\generarboleto.css" />
     <Content Include="Content\Images\Circular.PNG" />
@@ -1016,6 +1018,7 @@
     <Content Include="DEV.DeployParameters.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\App\CupoNoPropio.js" />
     <Content Include="Scripts\App\DescargarBoleto.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
     <Content Include="Scripts\App\HabilitacionBoleto.js" />
@@ -2798,6 +2801,8 @@
     <Content Include="Views\SugerenciaCupo\ModalRechazarSolicitudUsuario.cshtml" />
     <Content Include="Views\AdministracionCupo\ModalAceptarSolicitudMasivo.cshtml" />
     <Content Include="Views\NegocioPesificacion\Index.cshtml" />
+    <Content Include="Views\CupoNoPropio\Index.cshtml" />
+    <Content Include="Views\CupoNoPropio\ModalCrearCupoNoPropio.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

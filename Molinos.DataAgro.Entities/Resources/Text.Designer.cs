@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -844,6 +844,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debe ingresar el/los codigo/s del cupo.
+        /// </summary>
+        public static string CupoRequerido {
+            get {
+                return ResourceManager.GetString("CupoRequerido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datos Research.
         /// </summary>
         public static string Datos_Research {
@@ -1227,6 +1236,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string FechaHasta {
             get {
                 return ResourceManager.GetString("FechaHasta", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La fecha de ingreso es requerida.
+        /// </summary>
+        public static string FechaIngresoRequerida {
+            get {
+                return ResourceManager.GetString("FechaIngresoRequerida", resourceCulture);
             }
         }
         
@@ -2104,6 +2122,15 @@ namespace Molinos.DataAgro.Entities.Resources {
         public static string Visualizar_Compras_Proveedor {
             get {
                 return ResourceManager.GetString("Visualizar_Compras_Proveedor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualizar Cupo No Propio.
+        /// </summary>
+        public static string Visualizar_CupoNoPropio {
+            get {
+                return ResourceManager.GetString("Visualizar_CupoNoPropio", resourceCulture);
             }
         }
         

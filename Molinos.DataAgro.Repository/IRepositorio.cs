@@ -148,5 +148,6 @@ namespace Molinos.DataAgro.Repository
         void MigrarReporteCompraNetPosicionCompras();
         void TruncarTabla<TEntidad>() where TEntidad : class;
         List<Cupo> ListarCupoConsultaCuposDiarios(List<string> cuposSapStop);
+        List<TEntidad> ListarEntidadMasiva<TEntidad>(string campo, List<string> filtro) where TEntidad : class;
     }
 }

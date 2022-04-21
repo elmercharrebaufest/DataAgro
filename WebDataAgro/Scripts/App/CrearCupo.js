@@ -12,8 +12,8 @@ $(document).ready(function () {
     InicializarCargaCupos();
     $.unblockUI();
     checkFason();
-    checkSoja();  
-  
+    checkSoja();
+
 });
 $(document).submit(function () {
     BlockUi("Grabando...");
@@ -54,7 +54,7 @@ function InicializarCargaCupos() {
             } else {
                 $("#Proveedor").val(e.dataItem.Id);
             }
-          
+
         },
         dataSource: {
             severFiltering: true,
@@ -120,6 +120,13 @@ function InicializarCargaCupos() {
     $("#planta").change(function () {
         checkSoja();
         MostrarVisualizarStock();
+        //if ($(this).val() == "1074") {
+        //    $("#flete").attr('disabled', 'disabled');
+        //    $("#flete").prop('checked', false);
+        //} else {
+        //    $("#flete").removeAttr("disabled");
+        //}
+
     });
     if ($("#Id").val() != null && $("#Id").val() != "0") {
 
@@ -127,18 +134,21 @@ function InicializarCargaCupos() {
         $("#planta").attr('disabled', 'disabled');
         $("#fechaEntrega").data('kendoDatePicker').enable(false);
         $("#fechaHasta").data('kendoDatePicker').enable(false);
-        $("#cantidad").data('kendoNumericTextBox').enable(false);        
+        $("#cantidad").data('kendoNumericTextBox').enable(false);
         $("#zona").attr('disabled', 'disabled');
         $("#flete").attr('disabled', 'disabled');
+        if ($("#NoPropio").val() == "True") {
+            $("#flete").prop('checked', false);
+        }
         if (reasignarCupo == false) {
-            $("#buscadorProveedor").attr('disabled', 'disabled');     
+            $("#buscadorProveedor").attr('disabled', 'disabled');
         }
         if ($("#flete").is(':checked')) {
             MensInfo("Cupo con condición de Flete");
         }
         $("#guardarBtn").attr('type', 'button');
         $("#guardarBtn").click(function () {
-            if (fleteProcedencia) {
+            if (fleteProcedencia && $("#NoPropio").val() == "False") {
                 if ($("#flete").is(':checked')) {
                     $("#msjConfirmacion").html("El cupo tiene flete procedencia, desea mantener esta condición?");
                 } else {
@@ -176,15 +186,15 @@ function InicializarCargaCupos() {
     }
     $("#fleteProcedenciaModal").draggable({
         handle: ".modal-header"
-    }); 
+    });
 
-    if ($("#fechaHasta").val() != $("#fechaEntrega").val() ) {
+    if ($("#fechaHasta").val() != $("#fechaEntrega").val()) {
         $("#boton-carga-masiva").show();
     }
 
     $("#contratoId").kendoAutoComplete({
-        template: 
-        '<p class="buscar-nomb" >#: data.TipoNegocio# - #: data.Negocio# KGs: #: data.Cantidad#</p>',
+        template:
+            '<p class="buscar-nomb" >#: data.TipoNegocio# - #: data.Negocio# KGs: #: data.Cantidad#</p>',
         dataTextField: "Negocio",
         dataValueField: "Id",
         autoWidth: true,
@@ -216,8 +226,8 @@ function InicializarCargaCupos() {
                     }
                     else {
                         cuitP = cuitProv;
-                    }                   
-                    return { cuitProveedor: cuitP[0], materialId: $('#material').val(), centro: $('#planta').val(), filtro: $('#contratoId').val(), desde: $('#fechaEntrega').val(), hasta: $('#fechaHasta').val()};
+                    }
+                    return { cuitProveedor: cuitP[0], materialId: $('#material').val(), centro: $('#planta').val(), filtro: $('#contratoId').val(), desde: $('#fechaEntrega').val(), hasta: $('#fechaHasta').val() };
                 }
             }
 
@@ -256,7 +266,7 @@ function checkSoja() {
 function cuposCreados(error, lista) {
     $(document).ready(function () {
         var listaError = JSON.parse(error);
-        if (listaError.length>0) {
+        if (listaError.length > 0) {
             $("#error-modal").html(makeUL(listaError));
             $("#error-modal").show();
         }
@@ -274,7 +284,7 @@ function cuposCreados(error, lista) {
 
 function avisoCuposCreados() {
     $(document).ready(function () {
-       window.location.href = window.location.origin + "/Cupo/";         
+        window.location.href = window.location.origin + "/Cupo/";
     });
 }
 
@@ -308,7 +318,7 @@ function MostrarCarga() {
     $("#CargaCupos").modal('toggle');
 }
 
-function CrearTablaFechaHasta(){
+function CrearTablaFechaHasta() {
     $(".fila-carga").remove();
 
     var date1 = $("#fechaEntrega").val();
@@ -317,7 +327,7 @@ function CrearTablaFechaHasta(){
 
     for (var i = 0; i <= diffDays; i++) {
 
-        var fila = '<tr class="fila-carga"><input name="Dias[' + i + '].Fecha" value="' + date1 + '" type="hidden"/><td>' + date1 + '</td><td><input name="Dias['+i+'].Cantidad" class="cantidad-masiva" value="' + $("#cantidad").data('kendoNumericTextBox').value() + '"/></td></tr>';
+        var fila = '<tr class="fila-carga"><input name="Dias[' + i + '].Fecha" value="' + date1 + '" type="hidden"/><td>' + date1 + '</td><td><input name="Dias[' + i + '].Cantidad" class="cantidad-masiva" value="' + $("#cantidad").data('kendoNumericTextBox').value() + '"/></td></tr>';
         $("#carga-cupos-table").append(fila);
         var newdate = kendo.parseDate(date1);
 
@@ -347,7 +357,7 @@ function CrearTablaFechaHasta(){
 }
 function ActualizarCantidad(cantidadDias) {
     $(document).ready(function () {
-        for (var i=0; i < cantidadDias.length; i++) {
+        for (var i = 0; i < cantidadDias.length; i++) {
             $('[name="Dias[' + i + '].Cantidad"]').data('kendoNumericTextBox').value(cantidadDias[i].Cantidad);
         }
     });
@@ -371,7 +381,7 @@ function copiarTablaEstablecimiento() {
     window.removeEventListener('copy', copy);
 }
 
-function VisualizarStock() {   
+function VisualizarStock() {
 
     var cuitProv = $("#buscadorProveedor").val().split('(');
     if (cuitProv[1] != null) {
@@ -379,7 +389,7 @@ function VisualizarStock() {
     }
     else {
         cuitP = cuitProv;
-    }  
+    }
     var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0] });
     if (result != null && result.length > 0) {
         var table = "<tr>";
@@ -404,7 +414,7 @@ function VisualizarStock() {
     } else {
         MensErr("No se encontraron establecimientos con stock disponible")
     }
-   
+
 }
 
 function MostrarVisualizarStock() {
@@ -412,5 +422,5 @@ function MostrarVisualizarStock() {
         $("#stock").show();
     } else {
         $("#stock").hide();
-    }    
+    }
 }

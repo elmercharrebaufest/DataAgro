@@ -385,5 +385,19 @@ namespace Molinos.DataAgro.Repository
             //    "
             //               ).First();
         }
+
+        public List<TEntidad> ListarEntidadMasiva<TEntidad>(string campo, List<string> filtros) where TEntidad : class
+        {
+            var filtro = "'" + string.Join("','", filtros) + "'";
+            var tabla = typeof(TEntidad).Name;
+            var sql = string.Format(
+            "SELECT * FROM {0} WHERE {1} IN ({2})",
+            tabla, campo, filtro);
+
+            var result = context.Set<TEntidad>().SqlQuery(sql).ToList();
+            return result;
+        }
+
+
     }
 }

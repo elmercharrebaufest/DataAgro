@@ -13,5 +13,6 @@ namespace Molinos.DataAgro.Interfaces
         List<RespuestaCupoStop> ConsultarCuposDiarios();
         Resultado EliminarCupo(Cupo cupo);
         void ModificarCupo(Cupo cupo);
+        List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos();
     }
 }

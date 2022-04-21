@@ -236,6 +236,12 @@ function CargarGrillaConfig() {
                         },
                     });
                 }, filterable: { extra: false },
+                editable: function (dataItem) {
+                    if (dataItem.NoPropio == true)
+                        return false;
+                    else
+                        return true;
+                }
             },
             {
                 field: "LimiteAlgoritmo", type: "number", title: "Límite Algoritmo", editor: function (container, options) {
@@ -254,6 +260,12 @@ function CargarGrillaConfig() {
                         },
                     });
                 }, filterable: { extra: false },
+                editable: function (dataItem) {
+                    if (dataItem.NoPropio == true)
+                        return false;
+                    else
+                        return true;
+                }
             },
             {
                 field: "LimiteCupoAnterior", type: "number", title: "Límite Anterior", editable: function (dataItem) {
@@ -512,10 +524,16 @@ function CargarConfiguracion(id, mostrarFecha) {
         '<td>' + configuracion.Material + '</td>' +
         '<td>' + fecha + '</td>' +
         '<td>' + configuracion.LimiteCupo + '</td>' +
-        '<td>' + configuracion.LimiteAlgoritmo + '</td>' +
-        '<td style="text-align: left; width: 15%;"><input min="' + configuracion.Consumidos + '" value="' + configuracion.LimiteCupo + '" id="limiteCupo' + configuracion.Id + '" class="number"  /></td>' +
-        '<td style="text-align: left; width: 15%;"><input value="' + configuracion.LimiteAlgoritmo + '" id="limiteAlgoritmo' + configuracion.Id + '" class="number" /></td>' +
-        '</tr>';
+        '<td>' + configuracion.LimiteAlgoritmo + '</td>';
+    if (configuracion.NoPropio == true) {
+        fila += '<td style="text-align: left; width: 15%;"><input min="' + configuracion.Consumidos + '" value="' + configuracion.LimiteCupo + '" id="limiteCupo' + configuracion.Id + '" class="number" disabled /></td>' +
+            '<td style="text-align: left; width: 15%;"><input value="' + configuracion.LimiteAlgoritmo + '" id="limiteAlgoritmo' + configuracion.Id + '" class="number" disabled/></td>' +
+            '</tr>'
+    } else {
+        fila += '<td style="text-align: left; width: 15%;"><input min="' + configuracion.Consumidos + '" value="' + configuracion.LimiteCupo + '" id="limiteCupo' + configuracion.Id + '" class="number"  /></td>' +
+            '<td style="text-align: left; width: 15%;"><input value="' + configuracion.LimiteAlgoritmo + '" id="limiteAlgoritmo' + configuracion.Id + '" class="number" /></td>' +
+            '</tr>';
+    }
     $("#tablaConfiguracion").append(fila);
 
     $(".number").kendoNumericTextBox({

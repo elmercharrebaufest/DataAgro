@@ -36,7 +36,8 @@ namespace WebDataAgro.Controllers
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
-        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager, ICupoManager cupoManager, IComercialManager comercialManager, IHabilitacionCupoManager habilitacionManager)
+        public CupoController(ICentroManager centroManager, IMaterialManager materialManager, IZonaCupoManager zonaCupoManager, IProveedorManager proveedorManager, 
+            ICupoManager cupoManager, IComercialManager comercialManager, IHabilitacionCupoManager habilitacionManager)
         {
             this.centroManager = centroManager;
             this.materialManager = materialManager;
@@ -97,9 +98,11 @@ namespace WebDataAgro.Controllers
                     CuitId = cupo.Destinatario,
                     Siguientes = siguientes,
                     NegocioId = cupo.NegocioId,
-                    ConDescarga = cupo.ConDescarga.HasValue? cupo.ConDescarga.Value: false
+                    ConDescarga = cupo.ConDescarga.HasValue ? cupo.ConDescarga.Value : false
                 };
                 ViewBag.Titulo = "Código Cupo " + cupo.CupoSap;
+                var centro = centroManager.TraerCentro(cupo.CentroId);
+                cupoModel.NoPropio = centro.NoPropio;
                 return View(cupoModel);
             }
         }
@@ -183,6 +186,18 @@ namespace WebDataAgro.Controllers
                         }
                     }
                 }
+                //if (cupo.PlantaId == "1074")
+                //{
+                //    var cupoExterno = TransformarACupoExterno(cupoNuevo);
+                //    var cupoexternoResult = cupoExternoManager.GrabarCupoExterno(cupoExterno);
+                //    if (cupoexternoResult.HayError)
+                //    {
+                //        foreach (var e in cupoexternoResult.Errores)
+                //        {
+                //            ModelState.AddModelError(e.Source, e.Message);
+                //        }
+                //    }
+                //}
                 cupo.Resultado = cupoGrabado;
             }
             var siguientes = JsonConvert.DeserializeObject<List<int>>(cupo.Siguientes ?? "");
@@ -311,6 +326,22 @@ namespace WebDataAgro.Controllers
             {
                 entidad.ComercialId = GlobalVariables.ComercialId;
             }
+            return entidad;
+        }
+
+        private CupoNoPropio TransformarACupoExterno(Cupo externo)
+        {
+            var entidad = new CupoNoPropio
+            {
+                Id = externo.Id,
+                Codigo = externo.CupoSap,
+                MaterialId = externo.MaterialId,
+                CentroId = externo.CentroId,
+                FechaAlta = externo.FechaGeneracion,
+                FechaIngreso = externo.FechaIngreso,
+                //Estado = externo.EstadoCupo,
+                //Disponible = externo.Disponible,
+            };
             return entidad;
         }
 
