@@ -2767,7 +2767,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<ReportePesificado> ConvertPesificarAgent(List<PesificarAgentDto> datos)
         {
-            datos = datos.Where(x => x.Fijacion == "0266627501" || x.Fijacion == "0266627502").ToList();
+            
             var comerciales = repositorio.Listar<Comercial>();
             var materiales = repositorio.Listar<Material>();
             var monedas = repositorio.Listar<Moneda>();
