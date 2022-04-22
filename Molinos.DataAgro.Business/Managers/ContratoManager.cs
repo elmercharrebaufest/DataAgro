@@ -1511,12 +1511,15 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Localidad", "La localidad ingresada no corresponde a la provincia.");
             }
-            if (oParam.BoletoId == 5)
+            if (!validacionesMinimas)
             {
-                var res = ValidarSinBoleto(oParam.Cantidad, oParam.Id, oParam.MaterialId, oParam.DestinoId, oParam.ClasificacionId, (oParam.CorredorId != null && oParam.CorredorId != 0), oParam.TipoNegocioId, oParam.ProvinciaId, oParam.ProveedorId, oParam.Sustentable);
-                if (res != null && res.HayError)
+                if (oParam.BoletoId == 5)
                 {
-                    oErrorMessages.Errores.AddRange(res.Errores);
+                    var res = ValidarSinBoleto(oParam.Cantidad, oParam.Id, oParam.MaterialId, oParam.DestinoId, oParam.ClasificacionId, (oParam.CorredorId != null && oParam.CorredorId != 0), oParam.TipoNegocioId, oParam.ProvinciaId, oParam.ProveedorId, oParam.Sustentable);
+                    if (res != null && res.HayError)
+                    {
+                        oErrorMessages.Errores.AddRange(res.Errores);
+                    }
                 }
             }
 
