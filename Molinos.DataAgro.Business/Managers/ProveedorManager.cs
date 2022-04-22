@@ -763,7 +763,7 @@ namespace Molinos.DataAgro.Business.Managers
             if(oContrato.BoletoId == 5)
             {
                 htmlBody += "<tr>" + th + "SIN BOLETO </th>" + Td(ref linea) + "Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser " +
-                    "rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a" + (!string.IsNullOrEmpty(emailComercial) ? "(" + emailComercial + "y )" : "") +
+                    "rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (!string.IsNullOrEmpty(emailComercial) ? "" + emailComercial + " y " : "") +
                 "documentacion@molinosagro.com.ar. </td></tr>";
             }
             htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);

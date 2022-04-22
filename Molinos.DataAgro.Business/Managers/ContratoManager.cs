@@ -6794,7 +6794,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.ProveedorId == proveedorId && x.DestinoId == centro &&
-                x.MaterialId == materialId && (x.EstadoId != 5 || x.EstadoId != 6 || x.EstadoId != 8));
+                x.MaterialId == materialId && (x.EstadoId != 5 && x.EstadoId != 6 && x.EstadoId != 8));
 
 
 
