@@ -6825,7 +6825,7 @@ namespace Molinos.DataAgro.Business.Managers
                     cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && x.Region != "3").Sum(x => x.Cantidad);
                     cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).Sum(x => x.Cantidad);
                     cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
-                    cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable == false && contratosFinalizados.Contains(x.Contrato)).Sum(x => x.Cantidad);
+                    cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable != true && contratosFinalizados.Contains(x.Contrato)).Sum(x => x.Cantidad);
                 }
                 logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
                 var cantidadDisponible = cantidadCartaDePorte - cantidadContratoDeSAP - (decimal)cantidadNegocioPendiente - cantidadContratosKilosPendientesAplicar;
