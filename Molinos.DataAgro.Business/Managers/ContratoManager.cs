@@ -6815,7 +6815,9 @@ namespace Molinos.DataAgro.Business.Managers
                 var cantidadNegocioPendiente = contratosPendientes.Sum(x => x.Cantidad);
 
                 var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
-                var contratosFinalizados = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
+                logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
+
+               var contratosFinalizados = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
                 var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Contains(x.Contrato)).Sum(x => x.Cantidad);
                 //Soja Comun
                 if (tieneSustentable == false)
