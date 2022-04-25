@@ -40,17 +40,15 @@
                 <div class="col-md-2">
                     <label>Cupo</label>
                 </div>
-                <div class="col-md-4 ">
+                <div class="col-md-3 ">
                     @Html.TextBox("Codigo", "", new { placeholder = "", @class = "form-control filtroAgregarValorPopUp", style = "width:100%", @id = "Codigo" })
                 </div>
-                <div class="col-xs-2 noLeftPadding">
+                <div class="col-xs-1 col-md-1 noRightPadding">
                     <button type="button" id="abrirPopUpCargarValores" class="k-button k-button-icontext fa fa-list" style="height:34px"></button>
                 </div>
                 <div class="modal fade" id="popUpCargarValoresCodigo" tabindex="-1" role="dialog" aria-labelledby="CargaContratosLabel" aria-hidden="true">
                 </div>
-            </div>
-            <br/>
-            <div class="row">
+
                 <div class="col-md-2">
                     <label>Fecha de Ingreso</label>
                 </div>
@@ -64,8 +62,8 @@
                         <input id="fechaIngresoHastaId" class="filtroFecha" name="FechaIngreso-hasta" type="date" style="width: 100%" />
                     </span>
                 </div>
-
             </div>
+            <br />
             <br />
 
             <div class="row">
@@ -75,11 +73,6 @@
                 <div class="col-md-4">
                     @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
                 </div>
-
-
-            </div>
-            <br />
-            <div class="row">
                 <div class="col-md-2">
                     <label>Planta</label>
                 </div>
@@ -87,8 +80,38 @@
                     @Html.DropDownList("CentroId", new SelectList(ViewBag.CentroFiltro, "Value", "Text"), "Seleccione la Planta", new { @class = "form-control filtroBusquedaPorId", @id = "centroId" })
                 </div>
 
-
             </div>
+            <br />
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <label>Utilizado</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("Utilizado", new SelectList(
+                   new List<SelectListItem>
+                   {
+                       new SelectListItem{ Text = "Todos", Selected = true},
+                       new SelectListItem{ Value = "1", Text = "Si"},
+                       new SelectListItem{ Value = "0", Text = "No"}
+                   }
+                   , "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "Utilizado" })
+                </div>
+                <div class="col-md-2">
+                    <label>Disponible</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.DropDownList("Disponible", new SelectList(
+                   new List<SelectListItem>
+                   {
+                       new SelectListItem{ Text = "Todos", Selected = true},
+                       new SelectListItem{ Value = "1", Text = "Si"},
+                       new SelectListItem{ Value = "0", Text = "No"}
+                   }
+                   , "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "Disponible" })
+                </div>
+            </div>
+            <br />
             <br />
             <br />
             <div class="row">

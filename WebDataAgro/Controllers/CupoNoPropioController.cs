@@ -101,7 +101,34 @@ namespace WebDataAgro.Controllers
                     new Sort {Field= "FechaIngreso", Dir="desc" },
                     new Sort {Field="Material", Dir="desc" } };
             }
-
+            if (request.Filter != null)
+            {
+                foreach (var item in request.Filter.Filters)
+                {
+                    if (item.Field == "Utilizado")
+                    {
+                        if (item.Value.ToString() == "1")
+                        {
+                            item.Value = true;
+                        }
+                        if (item.Value.ToString() == "0")
+                        {
+                            item.Value = false;
+                        }
+                    }
+                    if (item.Field == "Disponible")
+                    {
+                        if (item.Value.ToString() == "1")
+                        {
+                            item.Value = true;
+                        }
+                        if (item.Value.ToString() == "0")
+                        {
+                            item.Value = false;
+                        }
+                    }
+                }
+            }
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
             var model = cupoNoPropioManager.TraerCuposNoPropioTabla(request, equipo);
             return Json(model);

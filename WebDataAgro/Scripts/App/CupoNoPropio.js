@@ -279,6 +279,9 @@ function CambioVariosCupos() {
     }
     var lista = [];
     lista = $("#ContratoSAPId").val().split(';');
+    lista = lista.filter(function (value, index, arr) {
+        return value.length > 0;
+    });
     if (lista.length > 1) {
         $("#ContratoSAPHastaId").attr('disabled', 'disabled');
         $("#ContratoSAPHastaId").val("")

@@ -46,9 +46,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Estado = e.Descripcion,
                     EstadoId = cupo.Estado,
                     FechaAlta = cupo.FechaAlta,
-                    FechaIngreso =  cupo.FechaIngreso,
+                    FechaIngreso = cupo.FechaIngreso,
                     Material = cupo.Material.Descripcion,
-                    MaterialId = cupo.MaterialId
+                    MaterialId = cupo.MaterialId,
+                    Utilizado = cupo.CupoId == null ? false : true
                 };
             queryCupos = queryCupos.OrderByDescending(c => c.FechaIngreso);
             return queryCupos.ToDataSourceResult<CupoNoPropioDto>(request);

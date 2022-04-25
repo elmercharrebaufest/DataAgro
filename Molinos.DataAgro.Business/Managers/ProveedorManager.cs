@@ -760,12 +760,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
-            if(oContrato.BoletoId == 5)
-            {
-                htmlBody += "<tr>" + th + "SIN BOLETO </th>" + Td(ref linea) + "Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser " +
-                    "rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (!string.IsNullOrEmpty(emailComercial) ? "" + emailComercial + " y " : "") +
-                "documentacion@molinosagro.com.ar. </td></tr>";
-            }
+           
             htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
             if (oContrato.TipoNegocioId == 1)
             {
@@ -944,8 +939,18 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                "<br /> <br />  Saludos Cordiales" +
+            if(oContrato.BoletoId == 5)
+            {
+                htmlBody += "<br /><br />  Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser " +
+                    "rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (!string.IsNullOrEmpty(emailComercial) ? "" + emailComercial + " y " : "") +
+                "documentacion@molinosagro.com.ar. </td></tr>";
+            }
+            else
+            {
+                htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
+
+            }
+            htmlBody += "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";

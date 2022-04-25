@@ -248,8 +248,10 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         if (error.ListaCupos.Count > 0)
                         {
-
-                            EnviarEmail(cupo, error.ListaCupos);
+                            if (!cupo.Centro.NoPropio)
+                            {
+                                EnviarEmail(cupo, error.ListaCupos);
+                            }
                         }
                         return error;
                     }

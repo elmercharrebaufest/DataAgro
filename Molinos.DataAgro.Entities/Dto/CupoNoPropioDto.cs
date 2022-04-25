@@ -22,5 +22,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Estado { get; set; }
         public bool Disponible { get; set; }
         public string CentroCodigo { get; set; }
+        public bool Utilizado { get; set; }
     }
 }

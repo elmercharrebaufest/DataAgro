@@ -66,6 +66,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var codigos = cupoDto.Codigo.Replace(" ", "").ToUpper().Split(';').Distinct().ToList();
+                codigos.RemoveAll(codigo => string.IsNullOrEmpty(codigo));
                 var estado = new List<string>();
                 var cantidadCupos = 0;
                 var cupos = repositorio.ListarEntidadMasiva<CupoNoPropio>("Codigo", codigos);
@@ -85,7 +86,8 @@ namespace Molinos.DataAgro.Business.Managers
                             Codigo = c,
                             FechaAlta = DateTime.Now,
                             FechaIngreso = cupoDto.FechaIngreso,
-                            Disponible = true
+                            Disponible = true,
+                            Estado = 6 
                         });
                         cuposEstado.Add(new CupoNoPropioDto { Codigo = c, EstadoId = 0 });
                         cantidadCupos = cantidadCupos + 1;
