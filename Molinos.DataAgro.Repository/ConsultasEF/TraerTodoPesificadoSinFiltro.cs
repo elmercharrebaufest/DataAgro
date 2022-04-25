@@ -92,13 +92,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Cesion = item.Cesion,
                     CesionDescripcion = item.Cesion == true ? "SI" : "NO",
                     Status = item.Status,
-                    StatusDescripcion = item.Status == "S" ? "Slip" : item.Status == "A" ? "Con Anulación Automática" : 
+                    StatusDescripcion = item.Status == "S" ? "Slip" : item.Status == "A" ? "Con Anulación Automática" :
                     item.Status == "X" ? "Confirmado" : item.Status == "F" ? "Liquidación Finalizada" :
                     item.Status == "C" ? "Cumplido" : item.Status == "M" ? "Con Anulación parcial" :
                     item.Status == "B" ? "Contrato Anulado Totalmente" : item.Status == "K" ? "Cumplido en Camiones" :
                     item.Status == "T" ? "Contrato de Canje Cerrado" : item.Status == "J" ? "Prefijación Cerrada" : "",
                     NegocioId = np.NegocioId,
                     NegocioPesificacionId = np.Id,
+                    ConFechaInstruccion = np.FechaInstruccion != null ? true : false
                 };
             queryRango = queryRango.GroupBy(x =>new { x.NegocioId, x.Contrato, x.Fijacion }).Select(x => x.OrderByDescending(y=> y.NegocioPesificacionId).FirstOrDefault());
             GridHelper.TruncateTime(request.Filter, ref queryRango);

@@ -170,7 +170,19 @@
                     <input id="FechaInstruccionHastaId" class="filtroFecha" name="FechaInstruccion-hasta" type="date" style="width: 100%" />
                 </span>
             </div>
-
+            <div class="col-md-2">
+                <label>Con Fecha de Instrucción</label>
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("ConFechaInstruccion", new SelectList(
+               new List<SelectListItem>
+               {
+                   new SelectListItem{ Text = "Todos", Selected = true},
+                   new SelectListItem{ Value = "1", Text = "Si"},
+                   new SelectListItem{ Value = "0", Text = "No"}
+               }
+               , "Value", "Text"), new { @class = "form-control filtroBusquedaTextBox", @id = "ConFechaInstruccion" })
+            </div>
         </div>
 
         <br />
@@ -195,10 +207,6 @@
                     }
                , "Value", "Text"), "Status", new { @class = "form-control filtroBusquedaTextBox", @id = "Status" })
             </div>
-            <div class="col-md-2">
-                @*<label>Cesión</label>
-                @Html.CheckBox("Cesion", false, new { @class = "filtroBoleano", @id = "Cesion" })*@
-            </div>           
             <div class="col-md-1">
                 <label>Kg No Pesificable</label>
             </div>
@@ -216,6 +224,12 @@
             </div>
             <div class="col-md-1">
                 @Html.CheckBox("KgTotales", false, new { @class = "filtroPesificable", @id = "KgTotales", @onclick = "DeshabilitarTildeExcluyenteKgTotales()" })
+            </div>
+            <div class="col-md-1">
+                <label>Kg Pendientes</label>
+            </div>
+            <div class="col-md-1">
+                @Html.CheckBox("CantidadPendiente", false, new { @class = "filtroPesificable", @id = "CantidadPendiente", @onclick = "DeshabilitarTildeExcluyenteKgPendientes()" })
             </div>
 
         </div>

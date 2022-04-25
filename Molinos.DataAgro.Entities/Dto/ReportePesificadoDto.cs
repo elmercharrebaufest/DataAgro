@@ -57,6 +57,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string StatusDescripcion { get; set; }
         public int? NegocioId { get; set; }
         public int? NegocioPesificacionId { get; set; }
+
+        public bool ConFechaInstruccion { get; set; }
     }
 
     public class AgrupacionPesificado

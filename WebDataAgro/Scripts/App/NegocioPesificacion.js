@@ -79,6 +79,7 @@ function Inicializar() {
             { field: "KgVencimientoPesificable", aggregate: "sum" },
             { field: "KgNoPesificable", aggregate: "sum" },
             { field: "KgTotales", aggregate: "sum" },
+            { field: "CantidadPendiente", aggregate: "sum" },
             { field: "USDPesificable", aggregate: "sum" },
             { field: "USDNoPesificable", aggregate: "sum" },
             { field: "USDTotal", aggregate: "sum" }
@@ -166,6 +167,7 @@ function Inicializar() {
             { field: "KgVencimientoPesificable", title: "Kilos Pesificable", format: "{0:n0}", aggregates: ["sum"], width: 150 },
             { field: "KgNoPesificable", title: "Kilos No Pesificables", format: "{0:n0}", aggregates: ["sum"], width: 150 },
             { field: "KgTotales", title: "Kilos Totales", format: "{0:n0}", aggregates: ["sum"], width: 150 },
+            { field: "CantidadPendiente", title: "Kilos Pendientes", format: "{0:n0}", aggregates: ["sum"], width: 150 },
             { field: "USDPesificable", title: "USD Pesificable", format: "{0:n0}", aggregates: ["sum"], width: 150 },
             { field: "USDNoPesificable", title: "USD No Pesificables", format: "{0:n0}", aggregates: ["sum"], width: 150 },
             { field: "USDTotal", title: "USD Totales", format: "{0:n0}", aggregates: ["sum"], },
@@ -296,6 +298,23 @@ function Inicializar() {
     //    }
     //});
 
+
+    $("#ConFechaInstruccion").on('change', function (e) {
+        var valor = $("#ConFechaInstruccion").val();
+        if (valor == "0") {
+            //document.getElementById("FechaInstruccionId").ariaDisabled  = true;
+            //document.getElementById("FechaInstruccionHastaId").ariaDisabled  = true;
+            $("#FechaInstruccionId").attr('disabled', 'disabled');
+            $("#FechaInstruccionHastaId").attr('disabled', 'disabled');
+            $("#FechaInstruccionId").val("");
+            $("#FechaInstruccionHastaId").val("");
+        }
+        else {
+            $("#FechaInstruccionId").removeAttr("disabled");
+            $("#FechaInstruccionHastaId").removeAttr("disabled");
+        }
+    });
+
 }
 
 function Filtrar() {
@@ -359,6 +378,7 @@ function DeshabilitarTildeExcluyenteKgVencimientoPesificable() {
     if ($("#KgVencimientoPesificable").is(":checked")) {
         $("#KgNoPesificable").prop("checked", false)
         $("#KgTotales").prop("checked", false)
+        $("#CantidadPendiente").prop("checked", false)
     }
 }
 
@@ -367,6 +387,7 @@ function DeshabilitarTildeExcluyenteKgNoPesificable() {
     if ($("#KgNoPesificable").is(":checked")) {
         $("#KgVencimientoPesificable").prop("checked", false)
         $("#KgTotales").prop("checked", false)
+        $("#CantidadPendiente").prop("checked", false)
     }
 
 }
@@ -375,6 +396,17 @@ function DeshabilitarTildeExcluyenteKgTotales() {
     if ($("#KgTotales").is(":checked")) {
         $("#KgNoPesificable").prop("checked", false)
         $("#KgVencimientoPesificable").prop("checked", false)
+        $("#CantidadPendiente").prop("checked", false)
+    }
+
+}
+
+function DeshabilitarTildeExcluyenteKgPendientes() {
+
+    if ($("#CantidadPendiente").is(":checked")) {
+        $("#KgNoPesificable").prop("checked", false)
+        $("#KgVencimientoPesificable").prop("checked", false)
+        $("#KgTotales").prop("checked", false)
     }
 
 }

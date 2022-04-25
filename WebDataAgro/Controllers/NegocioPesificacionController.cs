@@ -132,6 +132,17 @@ namespace WebDataAgro.Controllers
                             item.Operator = "neq";
                         }
                     }
+                    if (item.Field == "ConFechaInstruccion")
+                    {
+                        if (item.Value.ToString() == "1")
+                        {
+                            item.Value = true;
+                        }
+                        if (item.Value.ToString() == "0")
+                        {
+                            item.Value = false;
+                        }
+                    }
                 }
             }
 
