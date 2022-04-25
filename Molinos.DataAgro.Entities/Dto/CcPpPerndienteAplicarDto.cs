@@ -24,6 +24,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Sustentable { get; set; }
         public string Region { get; set; }
         public string Contrato { get; set; }
+        public decimal KgContrato { get; set; }
     }
 }
 

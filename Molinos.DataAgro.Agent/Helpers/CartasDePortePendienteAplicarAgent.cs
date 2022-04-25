@@ -121,7 +121,8 @@ namespace Molinos.DataAgro.Agent
                                 Warrant = item.WARRANT == "X",
                                 Sustentable = item.SUSTENTABLE == "X",
                                 Region = item.REGION,
-                                Contrato = item.CONTRATO
+                                Contrato = item.CONTRATO,
+                                KgContrato = item.KILOS_CONT
                             }).OrderBy(a => a.FechaIngresoFecha).ToList();
                     }
                     return listaccpp;
