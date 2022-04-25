@@ -6820,7 +6820,10 @@ namespace Molinos.DataAgro.Business.Managers
                var contratosFinalizados = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
                 logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
                 var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Contains(x.Contrato)).Sum(x => x.Cantidad);
+                var aaa = pendientes.Where(x => contratosFinalizados.Contains(x.Contrato)).ToList();
+                logger.Debug($"aa {aaa.ToJson()}");
                 logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
+
                 //Soja Comun
                 if (tieneSustentable == false)
                 {
