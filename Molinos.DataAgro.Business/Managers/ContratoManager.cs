@@ -3828,7 +3828,14 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.EstablecimientoPropio = contrato.EstablecimientoPropio != null ? contrato.EstablecimientoPropio : null;
             contratoSave.ClasificacionId = contrato.ClasificacionId;
             contratoSave.CantidadCamiones = contrato.CantidadCamiones;
-            contratoSave.BoletoId = contrato.BoletoId;
+            if (contrato.BoletoId == 5 && contratoSave.BoletoId != 5)
+            {
+                contratoSave.BoletoId = contratoSave.BoletoId;
+            }
+            else
+            {
+                contratoSave.BoletoId = contrato.BoletoId;
+            }
             contratoSave.BolsaId = contrato.BolsaId == 0 ? null : contrato.BolsaId;
             contratoSave.DesdeFijacion = contrato.DesdeFijacion;
             contratoSave.HastaFijacion = contrato.HastaFijacion;
@@ -6817,7 +6824,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
                 logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
 
-               var contratosFinalizados = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
+                var contratosFinalizados = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
                 logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
                 var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Contains(x.Contrato)).Sum(x => x.KgContrato);
                 logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");

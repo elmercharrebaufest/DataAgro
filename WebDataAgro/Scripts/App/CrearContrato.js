@@ -6076,6 +6076,11 @@ function DeshabilitarCampoSiEsBoleto() {
             $("#clasificacion").data("kendoDropDownList").enable(false);
             $("#LocalidadCrearContrato").data("kendoAutoComplete").enable(false);
             $("#fechaHastaId").data('kendoDatePicker').enable(false);
+            $("#sinBoletoId").attr("disabled", true);
+            $("#boletoConfirmaId").attr("disabled", true);
+            $("#boletoFisicoId").attr("disabled", true);
+            $("#boletoCartaId").attr("disabled", true);
+            $("#boletoNingunoId").attr("disabled", true);            
         }
     } else {
         $("#fechaDesdeId").data('kendoDatePicker').enable(true);
