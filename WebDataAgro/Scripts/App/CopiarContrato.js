@@ -1035,7 +1035,7 @@ function FormatearFecha(fecha) {
 }
 
 function DatosProveedor() {
-    if ($("#buscadorProveedor").val() != "") {
+    if ($("#buscadorProveedor").val() != "" && !$("#sinBoletoId").is(":checked")) {
         var id = $("#proveedorId").val() != "" ? $("#proveedorId").val() : 0;
         var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: id });
         if ($("#estado").val() !== "5" && compraNet.BoletoCompraNetId !== null) {

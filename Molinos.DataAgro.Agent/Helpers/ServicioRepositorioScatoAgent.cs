@@ -62,9 +62,10 @@ namespace Molinos.DataAgro.Agent
                         Establecimiento = x.NombreEstablecimiento,
                         Cosecha = x.Cosecha,                     
                         Provincia = x.Provincia,
-                        Localidad = string.IsNullOrEmpty(x.Localidad) ? "" : x.Localidad.Split('-').Last().Split('(').First()
+                        Localidad = string.IsNullOrEmpty(x.Localidad) ? "" : x.Localidad.Split('-').Last().Split('(').First(),
+                        CodigoEstablecimiento = x.CodigoEstablecimiento
                     }).OrderBy(x => x.Cantidad).ToList();
-
+                    respuesta = ValidarEstablecimiento(respuesta);
                     return respuesta;
                 }
                 catch (Exception e)
@@ -73,6 +74,22 @@ namespace Molinos.DataAgro.Agent
                     throw;
                 }
             }
+        }
+
+        private List<EstablecimientoStockDto> ValidarEstablecimiento(List<EstablecimientoStockDto> establecimientoStockDtos)
+        {
+            var establecimientos = new List<EstablecimientoStockDto>();
+            foreach (var establecimiento in establecimientoStockDtos)
+            {
+                int number;
+
+                bool success = int.TryParse(establecimiento.CodigoEstablecimiento, out number);
+                if (success)
+                {
+                    establecimientos.Add(establecimiento);
+                }
+            }
+            return establecimientos;
         }
 
     }

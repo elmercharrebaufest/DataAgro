@@ -384,7 +384,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Establecimiento\":\"Guard\",\"Cantidad\":300,\"Proveedor\":null,\"Cosecha\":\"20-21\",\"Localidad\":null,\"Provincia\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Establecimiento\":\"Guard\",\"Cantidad\":300,\"Proveedor\":null,\"Cosecha\":\"20-21\",\"Localidad\":null,\"Provincia\":null,\"CodigoEstablecimiento\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
