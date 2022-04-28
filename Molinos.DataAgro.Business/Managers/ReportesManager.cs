@@ -1758,7 +1758,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var maxFecha = data.Where(a => a.Pizarra == true).Max(a => a.FechaDate);
                 var preciosPizarra = repositorio.Listar<PrecioPizarra>(x => x.FechaHasta <= maxFecha);
-                foreach (var item in data.Where(a => a.Moneda == "").ToList())
+                foreach (var item in data.Where(a => a.Pizarra == true && a.TipoNegocioId != 1).ToList())
                 {
                     var precioPizarra = preciosPizarra.Where(x => x.Material.Descripcion == item.Material && x.FechaHasta <= item.FechaDate).ToList();
                     var precio = precioPizarra.Count != 0 ? precioPizarra.OrderByDescending(x => x.FechaHasta).FirstOrDefault() : new PrecioPizarra();
