@@ -84,7 +84,7 @@ namespace Molinos.DataAgro.Agent
                 int number;
 
                 bool success = int.TryParse(establecimiento.CodigoEstablecimiento, out number);
-                if (success && number > 9000)
+                if (success && number > 90000)
                 {
                     establecimientos.Add(establecimiento);
                 }
