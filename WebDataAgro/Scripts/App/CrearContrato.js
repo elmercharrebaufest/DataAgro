@@ -13,6 +13,7 @@ var PorcentajeSobrePrecio = 0;
 var cargaFijacionAyer;
 var esEdicion;
 var feriados = [];
+var boletoId;
 $(document).ready(function () {
     $('#menuproveedor').hide();
     $('#rootwizard').bootstrapWizard({
@@ -3657,7 +3658,7 @@ function editarContrato(id, tipoId, siguientes) {
 }
 
 function obtenerLocalidadProvincia() {
-    if ($("#buscadorProveedor").val() != "") {
+    if ($("#buscadorProveedor").val() != "" && !$("#sinBoletoId").is(":checked")) {
         let cuitProvAux = $("#buscadorProveedor").val().split('(');
         let cuitProv = cuitProvAux[1].split(')');
         if (cuitProv[0] != null && $("#material").val() != "" && $("#campanaId").val() != "") {
@@ -4150,6 +4151,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#trigoEspecialFasonId").prop("checked", true);
     }
     LimpiarBoleto();
+    boletoId = contrato.BoletoId;
     if (hijo || contrato.BoletoId == 3) {
         $("#boletoNingunoId").prop("checked", true);
     }
@@ -6076,7 +6078,9 @@ function DeshabilitarCampoSiEsBoleto() {
             $("#clasificacion").data("kendoDropDownList").enable(false);
             $("#LocalidadCrearContrato").data("kendoAutoComplete").enable(false);
             $("#fechaHastaId").data('kendoDatePicker').enable(false);
-            $("#sinBoletoId").attr("disabled", true);
+            if (boletoId == 5) {
+                $("#sinBoletoId").attr("disabled", true);
+            }
             $("#boletoConfirmaId").attr("disabled", true);
             $("#boletoFisicoId").attr("disabled", true);
             $("#boletoCartaId").attr("disabled", true);

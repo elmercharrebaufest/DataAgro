@@ -6769,7 +6769,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (provincia != null && (provinciaNoHabilitados.Any(x => x.ProvinciaId == provincia)))
             {
-                resultado.Error("Material", "La procedencia seleccionada no está habilitada para la carga de contratos sin boleto");
+                resultado.Error("Provincia", "La procedencia seleccionada no está habilitada para la carga de contratos sin boleto");
                 return resultado;
             }
             if (clasificacionId != null && (!clasificacionHabilitados.Any(x => x.ClasificacionId == clasificacionId)))
@@ -6777,14 +6777,10 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Error("Clasificacion", "La Clasificación seleccionada no está habilitada para la carga de contratos sin boleto");
                 return resultado;
             }
+           
             if (tipoNegocioId != null && (!tipoNegocioHabilitados.Any(x => x.TipoNegocioId == tipoNegocioId)))
             {
-                resultado.Error("Clasificacion", "La Clasificación seleccionada no está habilitada para la carga de contratos sin boleto");
-                return resultado;
-            }
-            if (tipoNegocioId != null && (!tipoNegocioHabilitados.Any(x => x.TipoNegocioId == tipoNegocioId)))
-            {
-                resultado.Error("Clasificacion", "La Clasificación seleccionada no está habilitada para la carga de contratos sin boleto");
+                resultado.Error("TipoNegocio", "El tipo de negocio seleccionada no está habilitado para la carga de contratos sin boleto");
                 return resultado;
             }
             if (conCorredor == true && (operacionHabilitada.Corredor == false || operacionHabilitada.Corredor == null))
@@ -6834,9 +6830,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && x.Region != "3").Sum(x => x.Cantidad);
                     cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
+                    logger.Debug($"soja comun {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).ToJson()}");
                     cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
                     cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable != true && contratosFinalizados.Contains(x.Contrato)).Sum(x => x.KgContrato);
                 }
+                logger.Debug($"soja sustentable {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).ToJson()}");
                 logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
                 var cantidadDisponible = cantidadCartaDePorte - cantidadContratoDeSAP - (decimal)cantidadNegocioPendiente - cantidadContratosKilosPendientesAplicar;
                 logger.Debug($"cantidadDisponible {cantidadDisponible}");
