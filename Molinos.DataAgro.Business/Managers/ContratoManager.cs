@@ -510,8 +510,17 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
             }
-
-
+            if (!validacionesMinimas)
+            {
+                if (oParam.BoletoId == 5)
+                {
+                    var res = ValidarSinBoleto(oParam.Cantidad, oParam.Id, oParam.MaterialId, oParam.DestinoId, oParam.ClasificacionId, (oParam.CorredorId != null && oParam.CorredorId != 0), oParam.TipoNegocioId, oParam.ProvinciaId, oParam.ProveedorId, oParam.Sustentable);
+                    if (res != null && res.HayError)
+                    {
+                        oErrorMessages.Errores.AddRange(res.Errores);
+                    }
+                }
+            }
             if (oParam.Venta != true)
             {
                 if (oParam.ClasificacionId == 1)
@@ -1514,17 +1523,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Localidad", "La localidad ingresada no corresponde a la provincia.");
             }
-            if (!validacionesMinimas)
-            {
-                if (oParam.BoletoId == 5)
-                {
-                    var res = ValidarSinBoleto(oParam.Cantidad, oParam.Id, oParam.MaterialId, oParam.DestinoId, oParam.ClasificacionId, (oParam.CorredorId != null && oParam.CorredorId != 0), oParam.TipoNegocioId, oParam.ProvinciaId, oParam.ProveedorId, oParam.Sustentable);
-                    if (res != null && res.HayError)
-                    {
-                        oErrorMessages.Errores.AddRange(res.Errores);
-                    }
-                }
-            }
+           
 
             return oErrorMessages;
         }
@@ -1738,6 +1737,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.DesdeFijacion = oContrato.DesdeFijacion;
             oContratoSave.HastaFijacion = oContrato.HastaFijacion;
             oContratoSave.MercsDeposito = oContrato.MercsDeposito;
+            //oContratoSave.CantidadDeposito = oContrato.CantidadDeposito;
             oContratoSave.CorredorId = oContrato.CorredorId;
             oContratoSave.PorcentajeComision = oContrato.PorcentajeComision;
             oContratoSave.ContratoVendedor = oContrato.ContratoVendedor;
@@ -2526,6 +2526,7 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.DesdeFijacion = contratoOriginal.DesdeFijacion;
                             oContratoSave.HastaFijacion = contratoOriginal.HastaFijacion;
                             oContratoSave.MercsDeposito = contratoOriginal.MercsDeposito;
+                            //oContratoSave.CantidadDeposito = oContrato.CantidadDeposito;
                             oContratoSave.ComercialCreadorId = contratoOriginal.ComercialCreadorId;
                             oContratoSave.CorredorId = contratoOriginal.CorredorId;
                             oContratoSave.PorcentajeComision = contratoOriginal.PorcentajeComision;
@@ -2964,6 +2965,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PagoDirectoVendedor = x.PagoDirectoVendedor,
                 EstablecimientoPropio = x.EstablecimientoPropio,
                 MercsDeposito = x.MercsDeposito,
+                //CantidadDeposito = x.CantidadDeposito,
                 PorcentajeComision = x.PorcentajeComision,
                 ContratoCorredor = x.ContratoCorredor,
                 ContratoVendedor = x.ContratoVendedor,
@@ -3840,6 +3842,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.DesdeFijacion = contrato.DesdeFijacion;
             contratoSave.HastaFijacion = contrato.HastaFijacion;
             contratoSave.MercsDeposito = contrato.MercsDeposito;
+            //contratoSave.CantidadDeposito = contrato.CantidadDeposito; 
             contratoSave.CorredorId = contrato.CorredorId;
             contratoSave.PorcentajeComision = contrato.PorcentajeComision;
             contratoSave.ContratoVendedor = contrato.ContratoVendedor;
@@ -6810,6 +6813,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Corredor = null,
 
                 };
+                logger.Debug($"DatosIngresados {pendienteDto.ToJson()}");
                 var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto).Where(x => x.Region != "3").ToList();
                 var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && x.Region != "3").Sum(x => x.Cantidad);
                 var cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
@@ -6851,6 +6855,56 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return resultado;
         }
+        //public List<int> ObtenerDatosMercaderiaEnDeposito(double? cantidad, int id, int? materialId, int? centro, string cuitCorredor, string cuitProveedor, bool? tieneSustentable)
+        //{
 
+        //    if (centro != null && materialId != null && cuitProveedor != null)
+        //    {
+        //        var centroCodigo = repositorio.Obtener<Centro, string>(x => x.Id == centro, x => x.CodigoSap);
+        //        var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
+
+        //        var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.Proveedor.CUIT == cuitProveedor && x.DestinoId == centro &&
+        //        x.MaterialId == materialId && (x.EstadoId != 5 && x.EstadoId != 6 && x.EstadoId != 8));
+
+        //        var pendienteDto = new CcPpPerndienteAplicarDto()
+        //        {
+        //            Centro = centroCodigo,
+        //            Material = materialCodigo,
+        //            Proveedor = cuitProveedor,
+        //            Corredor = cuitCorredor,
+        //        };
+
+        //        var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto);
+        //        var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && x.Region != "3").Sum(x => x.Cantidad);
+        //        var cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
+        //        var cantidadNegocioPendiente = contratosPendientes.Sum(x => x.Cantidad);
+
+        //        var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
+        //        logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
+
+        //        var contratosFinalizados = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
+        //        logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
+        //        var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Contains(x.Contrato)).Sum(x => x.KgContrato);
+        //        logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
+
+        //        //Soja Comun
+        //        if (tieneSustentable == false)
+        //        {
+        //            cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && x.Region != "3").Sum(x => x.Cantidad);
+        //            cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
+        //            cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
+        //            cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable != true && contratosFinalizados.Contains(x.Contrato)).Sum(x => x.KgContrato);
+        //        }
+        //        logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
+        //        var cantidadDisponible = cantidadCartaDePorte - cantidadContratoDeSAP - (decimal)cantidadNegocioPendiente - cantidadContratosKilosPendientesAplicar;
+        //        logger.Debug($"cantidadDisponible {cantidadDisponible}");
+
+        //        if ((decimal)(cantidad ?? 0) > cantidadDisponible)
+        //        {
+        //            if (cantidadDisponible < 0) { cantidadDisponible = 0; }
+        //        }
+        //    }
+        //    return null;
+        //}
     }
 }
