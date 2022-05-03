@@ -6802,8 +6802,6 @@ namespace Molinos.DataAgro.Business.Managers
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.ProveedorId == proveedorId && x.DestinoId == centro &&
                 x.MaterialId == materialId && (x.EstadoId != 5 && x.EstadoId != 6 && x.EstadoId != 8));
 
-
-
                 var pendienteDto = new CcPpPerndienteAplicarDto()
                 {
                     Centro = centroCodigo,
@@ -6812,7 +6810,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Corredor = null,
 
                 };
-                var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto);
+                var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto).Where(x => x.Region != "3").ToList();
                 var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && x.Region != "3").Sum(x => x.Cantidad);
                 var cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
                 var cantidadNegocioPendiente = contratosPendientes.Sum(x => x.Cantidad);
@@ -6824,7 +6822,7 @@ namespace Molinos.DataAgro.Business.Managers
                    ContratoSAP = x.ContratoSAP,
                    BoletoId = x.BoletoId,
                    Cantidad = x.Cantidad
-                }, x => contratosPendientesAplicar.Contains(x.ContratoSAP));
+                }, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
 
                 logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
                 var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
