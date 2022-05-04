@@ -10,7 +10,7 @@
   <setParameter name="UseDefaultCredentials Key" value="N" />
   <setParameter name="CredentialUserName Key" value="dataagro@molinosagro.com.ar" />
   <setParameter name="CredentialPassword Key" value="D4taAgr017" />
-  <setParameter name="CredentialUserNamePesificados Key" value="dataagro@molinosagro.com.ar" />
+  <setParameter name="CredentialUserNamePesificados Key" value="materiasprimas@molinosagro.com.ar" />
   <setParameter name="CredentialPasswordPesificados Key" value="D4taAgr017" />
   <setParameter name="EmailAgenda Key" value="0" />
   <setParameter name="SmtpAnonimo Key" value="S" />
