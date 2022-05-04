@@ -3271,8 +3271,14 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         var comercial = todoComercial.Where(x => x.ComercialId == n.ComercialId).Select(x => x.IdActiveDirectory).FirstOrDefault();
                         var comerecialCreador = todoComercial.Where(x => x.ComercialId == n.ComercialCreadorId).Select(x => x.IdActiveDirectory).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(comercial))
+                        {
                         listaDirectory.Add(comercial);
-                        listaDirectory.Add(comerecialCreador);
+                        }
+                        if (!string.IsNullOrEmpty(comerecialCreador))
+                        {
+                            listaDirectory.Add(comerecialCreador);
+                        }
                     }
 
                     return DevolverMailDeActiveDirectoryId(listaDirectory);

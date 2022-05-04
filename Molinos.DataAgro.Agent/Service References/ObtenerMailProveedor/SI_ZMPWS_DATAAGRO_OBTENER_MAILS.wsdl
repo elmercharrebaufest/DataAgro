@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" name="SI_ZMPWS_DATAAGRO_OBTENER_MAILS" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" name="SI_ZMPWS_DATAAGRO_OBTENER_MAILS" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:documentation />
   <wsp:UsingPolicy wsdl:required="true" />
   <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_OBTENER_MAILS" />
@@ -19,6 +19,11 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char16">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="16" />
@@ -39,6 +44,8 @@
           <xsd:element name="CUIT" type="rfc:char16" />
           <xsd:element name="MAIL" type="rfc:char241" />
           <xsd:element name="REMARK" type="rfc:char50" />
+          <xsd:element name="FLGDEFAULT" type="rfc:char1" />
+          <xsd:element name="HOME_FLAG" type="rfc:char1" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT8070">

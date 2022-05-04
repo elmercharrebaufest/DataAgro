@@ -103,6 +103,10 @@ namespace Molinos.DataAgro.Agent.ObtenerMailProveedor {
         
         private string rEMARKField;
         
+        private string fLGDEFAULTField;
+        
+        private string hOME_FLAGField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string CUIT {
@@ -136,6 +140,30 @@ namespace Molinos.DataAgro.Agent.ObtenerMailProveedor {
             set {
                 this.rEMARKField = value;
                 this.RaisePropertyChanged("REMARK");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string FLGDEFAULT {
+            get {
+                return this.fLGDEFAULTField;
+            }
+            set {
+                this.fLGDEFAULTField = value;
+                this.RaisePropertyChanged("FLGDEFAULT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string HOME_FLAG {
+            get {
+                return this.hOME_FLAGField;
+            }
+            set {
+                this.hOME_FLAGField = value;
+                this.RaisePropertyChanged("HOME_FLAG");
             }
         }
         
