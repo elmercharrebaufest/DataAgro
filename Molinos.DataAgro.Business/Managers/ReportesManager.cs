@@ -3403,7 +3403,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<table style=\"border: 1px solid #1C6EA4;background-color: #EEEEEE; width:70%; text-align: left;border-collapse:collapse;\">";
                 htmlBody += "<thead style=\" font-size: 13px;background: #1C6EA4; border-bottom: 0px solid #444444;\">";
-                htmlBody += "<tr>";
+                htmlBody += "<tr >";
                 htmlBody += $"<th {thHead}>Corredor: {corredor.Corredor} </th>";
                 htmlBody += $"<th {thHead}>Contrato </th>";
                 htmlBody += $"<th {thHead}>Fijación </th>";
