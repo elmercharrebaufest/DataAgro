@@ -87,7 +87,7 @@ namespace Molinos.DataAgro.Business.Managers
                             FechaAlta = DateTime.Now,
                             FechaIngreso = cupoDto.FechaIngreso,
                             Disponible = true,
-                            Estado = 6 
+                            Estado = 1 
                         });
                         cuposEstado.Add(new CupoNoPropioDto { Codigo = c, EstadoId = 0 });
                         cantidadCupos = cantidadCupos + 1;

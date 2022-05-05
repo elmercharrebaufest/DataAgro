@@ -832,17 +832,21 @@ namespace Molinos.DataAgro.Business.Managers
                 if (config != null)
                 {
                     var fechaLimite = oParam.FechaDesde.AddDays(30);
-                    if (oParam.DolarizadoExpress == true && oParam.FechaDolarizado.Value > fechaLimite.Date)
+                    if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado))
                     {
-                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado express debe ser menor o igual que los 30 días");
+                        if (oParam.DolarizadoExpress == true && oParam.FechaDolarizado.Value > fechaLimite.Date)
+                        {
+                            oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado express debe ser menor o igual que los 30 días");
+                        }
                     }
-
                     fechaLimite = oParam.FechaDesde.AddDays(cantidadDias);
-                    if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
+                    if (!validacionesMinimas)
                     {
-                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
+                        if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
+                        {
+                            oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
+                        }
                     }
-
                     //var fechaLimite = oParam.FechaDesde.AddDays(cantidadDias);
                     //if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
                     //{
@@ -867,18 +871,18 @@ namespace Molinos.DataAgro.Business.Managers
                 fechaFijacion = fechaFijacion.Value.AddDays(cantidadDias);
             }
 
-            if (oParam.TipoNegocioId == 1 && oParam.FechaDolarizado > fechaFijacion)
-            {
-                oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de Fijación");
-            }
-
-            if (oParam.TipoNegocioId == 2 && oParam.FechaDolarizado > fechaAPrecio)
-            {
-                oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de la Entrega");
-            }
-
             if (!validacionesMinimas)
             {
+                if (oParam.TipoNegocioId == 1 && oParam.FechaDolarizado > fechaFijacion)
+                {
+                    oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de Fijación");
+                }
+
+                if (oParam.TipoNegocioId == 2 && oParam.FechaDolarizado > fechaAPrecio)
+                {
+                    oErrorMessages.Error("dolarizado", "La fecha de pesificación no puede ser mayor a " + cantidadDias + " días de la Entrega");
+                }
+
                 if (oParam.TarifaFlete != null && (oParam.NivelTarifaId == null || oParam.NivelTarifaId == 0))
                 {
                     oErrorMessages.Error("", "Se debe cargar Nivel de Tarifa cuando hay Tarifa");

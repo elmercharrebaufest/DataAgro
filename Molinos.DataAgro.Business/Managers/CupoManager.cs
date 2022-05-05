@@ -198,7 +198,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         error.Errores.AddRange(errorSap.Errores);
                                         continue;
                                     }
-                                    cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : 8;
+                                    cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : (cupo.Centro.NoPropio)? 1 : 8;
                                     foreach (var cupoSap in listaCupos)
                                     {
                                         var nuevoCupo = (Cupo)cupo.Clone();
