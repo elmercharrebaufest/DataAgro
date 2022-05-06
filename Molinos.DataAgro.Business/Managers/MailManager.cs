@@ -162,14 +162,23 @@ namespace Molinos.DataAgro.Business
                     }
                     else
                     {
-                        switch (oMensaje.Sender.Address) {
-                            case "materiasprimas@molinosagro.com.ar":
-                                passCredencial = ConfigurationManager.AppSettings["CredentialPasswordPesificados"];
-                                break;
-                            default:
-                                passCredencial = ConfigurationManager.AppSettings["CredentialPassword"];
-                                break;
-                        };
+                        var correoMateriasPrimas = ConfigurationManager.AppSettings["CredentialUserNamePesificados"];
+                        //switch (oMensaje.Sender.Address) {
+                        //    case correoMateriasPrimas://"materiasprimas@molinosagro.com.ar":
+                        //        passCredencial = ConfigurationManager.AppSettings["CredentialPasswordPesificados"];
+                        //        break;
+                        //    default:
+                        //        passCredencial = ConfigurationManager.AppSettings["CredentialPassword"];
+                        //        break;
+                        //};
+                        if(oMensaje.Sender.Address == correoMateriasPrimas)
+                        {
+                            passCredencial = ConfigurationManager.AppSettings["CredentialPasswordPesificados"];
+                        }
+                        else
+                        {
+                            passCredencial = ConfigurationManager.AppSettings["CredentialPassword"];
+                        }
                     }
                     oCliente.UseDefaultCredentials = ConfigurationManager.AppSettings["UseDefaultCredentials"] == "S";
                     oCliente.Credentials = new System.Net.NetworkCredential(oMensaje.Sender == null ? ConfigurationManager.AppSettings["CredentialUserName"] : oMensaje.Sender.Address,
