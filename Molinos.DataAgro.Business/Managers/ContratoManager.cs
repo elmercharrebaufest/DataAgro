@@ -6807,7 +6807,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.ProveedorId == proveedorId && x.DestinoId == centro &&
-                x.MaterialId == materialId && (x.EstadoId != 5 && x.EstadoId != 6 && x.EstadoId != 8));
+                x.MaterialId == materialId && (x.EstadoId != 6 && x.EstadoId != 8));
 
                 var pendienteDto = new CcPpPerndienteAplicarDto()
                 {
@@ -6821,10 +6821,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto).Where(x => x.Region != "3").ToList();
                 var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && x.Region != "3").Sum(x => x.Cantidad);
                 var cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
-                var cantidadNegocioPendiente = contratosPendientes.Sum(x => x.Cantidad);
+     
 
                 var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
                 logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
+            
 
                 var contratosFinalizados = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato {
                    ContratoSAP = x.ContratoSAP,
@@ -6832,9 +6833,11 @@ namespace Molinos.DataAgro.Business.Managers
                    Cantidad = x.Cantidad
                 }, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
 
-                logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
-                var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
-                logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
+            //logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
+            var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
+            var cantidadNegocioPendiente = contratosPendientes.Where(x => !pendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).Sum(x => x.Cantidad);
+            logger.Debug($"contratosPendientesEnDA {contratosPendientes.Where(x => !pendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).ToJson()}");
+                //logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
 
                 //Soja Comun
                 if (tieneSustentable == false)
