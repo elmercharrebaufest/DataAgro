@@ -98,7 +98,7 @@ namespace WebDataAgro.Controllers
                     CuitId = cupo.Destinatario,
                     Siguientes = siguientes,
                     NegocioId = cupo.NegocioId,
-                    ConDescarga = cupo.ConDescarga.HasValue ? cupo.ConDescarga.Value : false
+                    ConDescarga = cupo.ConDescarga
                 };
                 ViewBag.Titulo = "Código Cupo " + cupo.CupoSap;
                 var centro = centroManager.TraerCentro(cupo.CentroId);

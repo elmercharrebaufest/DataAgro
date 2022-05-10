@@ -269,7 +269,7 @@ namespace Molinos.DataAgro.Business.Managers
                         cupoSave.NegocioId = cupo.NegocioId;
                         cupoSave.ComercialId = cupo.ComercialId;
                         cupoSave.Comercial = cupo.Comercial;
-                        cupoSave.ConDescarga = cupo.ConDescarga;
+                        //cupoSave.ConDescarga = cupo.ConDescarga;
                         if (cupoSave.Centro.NoPropio)
                         {
                             if (!string.IsNullOrEmpty(cupoSave.CTG))

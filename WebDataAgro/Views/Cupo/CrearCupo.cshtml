@@ -154,47 +154,47 @@ else if (!Html.ViewData.ModelState.IsValid)
             </div>
         </div>
 
-    </div>
-    <div class="row">
-        <div>
+        </div>
+        <div class="row">
+            <div>
+                <div class="col-sm-2">
+                    <label>Observación</label>
+                </div>
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(x => x.Observacion, new { @class = "form-control", @id = "observacion" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <div class="col-sm-2 noRightPadding">
+                    <label>Flete procedencia/Acarreo </label>
+                </div>
+                <div class="col-sm-4 ">
+                    @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
+                </div>
+            </div>
             <div class="col-sm-2">
-                <label>Observación</label>
+                <label>Fasón/Préstamo devolución</label>
             </div>
-            <div class="col-sm-10">
-                @Html.TextAreaFor(x => x.Observacion, new { @class = "form-control", @id = "observacion" })
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div>
-            <div class="col-sm-2 noRightPadding">
-                <label>Flete procedencia/Acarreo </label>
-            </div>
-            <div class="col-sm-4 ">
-                @Html.CheckBoxFor(x => x.FleteAcarreo, new { @id = "flete" })
+            <div class="col-sm-1">
+                <span style="height:34px"></span>
+                @Html.CheckBoxFor(x => x.FasonId, new { @id = "fason" })
+                @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
             </div>
         </div>
-        <div class="col-sm-2">
-            <label>Fasón/Préstamo devolución</label>
-        </div>
-        <div class="col-sm-1">
-            <span style="height:34px"></span>
-            @Html.CheckBoxFor(x => x.FasonId, new { @id = "fason" })
-            @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
+        @*<div class="row" id="descargaRowId" hidden>
+            <div class="col-sm-6">
 
-        </div>
-        <div class="col-sm-2">
-            <label>Con Descarga</label>
-        </div>
-        <div class="col-sm-2">
-            @Html.CheckBoxFor(x => x.ConDescarga, new { @id = "ConDescarga" })
-        </div>
+            </div>
+            <div class="col-sm-2">
+                <label>Con Descarga</label>
+            </div>
+            <div class="col-sm-2">
+                @Html.CheckBoxFor(x => x.ConDescarga, new { @id = "ConDescarga" })
+            </div>
+        </div>*@
     </div>
-</div>
     <br />
     <div class="row">
         <div class="col-md-offset-3 col-md-4" style="padding-left: 67px;">

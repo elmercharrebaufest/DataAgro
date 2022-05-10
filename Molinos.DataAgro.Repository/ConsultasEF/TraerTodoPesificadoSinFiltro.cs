@@ -45,7 +45,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Clasificacion = item.Clasificacion,
                     ComercialDesc = item.Comercial.Nombres + " " + item.Comercial.Apellido,
                     ComercialId = item.ComercialId,
-                    Contrato = item.Contrato,
+                    Contrato = item.Contrato,//(item.Contrato.First() == '0')? item.Contrato.TrimStart('0'): item.Contrato,
                     CuitCorredor = item.CuitCorredor,
                     CuitVendedor = item.CuitVendedor,
                     Dolarizado = item.Dolarizado,

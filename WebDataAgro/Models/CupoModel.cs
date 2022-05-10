@@ -35,7 +35,7 @@ namespace WebDataAgro.Models
         public string Observacion { get; set; }
         public bool FasonId { get; set; }
         public string CuitId { get; set; }
-        public bool ConDescarga { get; set; }
+        public bool? ConDescarga { get; set; }
         public List<DiaCupo> Dias { get; set; }
         public CupoResult Resultado { get; set; }
 
