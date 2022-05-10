@@ -3296,6 +3296,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             listaDirectory.Add(comerecialCreador);
                         }
+                        listaDirectory.Distinct();
                     }
 
                     return DevolverMailDeActiveDirectoryId(listaDirectory);
@@ -3423,7 +3424,7 @@ namespace Molinos.DataAgro.Business.Managers
                         htmlBody += "<tr style=\"text-align: center\">";
                         htmlBody += $"<td {td}> {item.Proveedor} </td>";
                         htmlBody += $"<td {td}> { Split(item.Contrato.TrimStart('0')) } </td>";
-                        htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? item.Fijacion.Substring(item.Fijacion.Length - 3, 2) : "") } </td>";
+                        htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? item.Fijacion : "") } </td>";
                         htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                         htmlBody += "</tr>";
                     }
@@ -3444,9 +3445,10 @@ namespace Molinos.DataAgro.Business.Managers
                     htmlBody += $"{p} Informamos que los siguientes contratos serán pesificados por MOA con TC de cierre del día {(instruccion.ToString("dd.MM.yyyy"))}:</p>";
                     htmlBody += "<table style=\"border: 1px solid #1C6EA4;background-color: #EEEEEE; width:70%; text-align: left;border-collapse:collapse;\">";
                     htmlBody += "<thead style=\" font-size: 13px;background: #1C6EA4; border-bottom: 0px solid #444444;\">";
-                    htmlBody += "<tr >";
-                    htmlBody += $"<th {thHead}>Contrato </th>";
+                    htmlBody += "<tr >";                  
                     htmlBody += $"<th {thHead}>Productor </th>";
+                    htmlBody += $"<th {thHead}>Contrato </th>";
+                    htmlBody += $"<th {thHead}>Fijación </th>";
                     htmlBody += $"<th {thHead}>Toneladas</th>";
                     htmlBody += "</tr>";
                     htmlBody += "</thead>";
@@ -3454,14 +3456,16 @@ namespace Molinos.DataAgro.Business.Managers
                     foreach (var item in corredor.AgrupracionPesificados)
                     {
                         htmlBody += "<tr style=\"text-align: center\">";
+                        htmlBody += $"<td {td}> { item.Proveedor} </td>";
                         htmlBody += $"<td {td}> { Split(item.Contrato.TrimStart('0')) } </td>";
-                        htmlBody += $"<td {td}> {item.Proveedor} </td>";
+                        htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? item.Fijacion : "") } </td>";
                         //htmlBody += $"<td {td}> {Math.Round((item.CantidadAgrupada / 1000), 3).ToString("00.000", CultureInfo.CreateSpecificCulture("da-DK"))} </td>"; // en toneladas
                         htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                         htmlBody += "</tr>";
                     }
                     htmlBody += $"<tr style=\"background: #1c6ea4; color:white; text-align: center\">";
                     htmlBody += $"<td><strong>Total General</strong></td>";
+                    htmlBody += $"<td {td}></td>";
                     htmlBody += $"<td {td}></td>";
                     //htmlBody += $"<td {td}> {Math.Round((corredor.AgrupracionPesificados.Sum(x => x.CantidadAgrupada))/1000, 3).ToString("00.000", CultureInfo.CreateSpecificCulture("da-DK"))}  </td>"; //toneladas
                     htmlBody += $"<td {td}> {Split(corredor.AgrupracionPesificados.Sum(x => x.CantidadAgrupada).ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))}  </td>";
