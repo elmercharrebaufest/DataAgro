@@ -3222,7 +3222,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 Clasificacion = pesificado.Where(x => item.Key == x.RazonSocialCorredor).FirstOrDefault().Clasificacion,
                                 EsOperacionDirecta = pesificado.Where(x => item.Key == x.RazonSocialCorredor).FirstOrDefault().EsOperacionDirecta,
                                 AgrupracionPesificados =
-                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, CantidadAgrupada = x.KgVencimientoPesificable.HasValue? x.KgVencimientoPesificable.Value : 0, Contrato = x.Contrato }).ToList()
+                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, CantidadAgrupada = x.KgVencimientoPesificable.HasValue? x.KgVencimientoPesificable.Value : 0, Contrato = x.Contrato, Fijacion = x.Fijacion }).ToList()
                             };
                             var mails = DevolverMailComercialDeNegocio(pesi);
                             if (mails != null)
