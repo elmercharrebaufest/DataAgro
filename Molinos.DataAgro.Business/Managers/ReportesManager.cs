@@ -3362,7 +3362,8 @@ namespace Molinos.DataAgro.Business.Managers
         private List<string> DevolverMailDeActiveDirectoryId(List<string> active)
         {
             var lista = new List<string>();
-            foreach (var item in active)
+            logger.Debug("Active: " + active.ToJson());
+            foreach (var item in active.Distinct())
             {
                 try
                 {
