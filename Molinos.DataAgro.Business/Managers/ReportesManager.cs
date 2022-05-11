@@ -3496,7 +3496,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         htmlBody += "<tr style=\"text-align: center\">";
                         htmlBody += $"<td {td}>  { Split(item.Contrato.TrimStart('0')) } </td>";
-                        htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? item.Fijacion.Substring(item.Fijacion.Length - 3, 2) : "") } </td>";
+                        htmlBody += $"<td {td}> {(!string.IsNullOrEmpty(item.Fijacion) ? item.Fijacion /*item.Fijacion.Substring(item.Fijacion.Length - 3, 2)*/ : "") } </td>";
                         htmlBody += $"<td {td}> {Split(item.CantidadAgrupada.ToString("N0", CultureInfo.CreateSpecificCulture("es-AR")))} </td>";
                         htmlBody += "</tr>";
                     }
