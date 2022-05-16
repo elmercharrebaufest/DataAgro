@@ -519,6 +519,14 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Errores.AddRange(res.Errores);
                     }
+                    if(oParam.Warrant == true || oParam.CD == true)
+                    {
+                        oErrorMessages.Error("SinBoleto", "Los contratos Sin Boleto no pueden tener la tilde CD/Warrant");
+                    }
+                    if (!string.IsNullOrEmpty(oParam.ContratoMadre))
+                    {
+                        oErrorMessages.Error("Convenir", "Los contratos Sin Boleto no pueden tener la tilde Fij. Convenio");
+                    }
                 }
             }
             if (oParam.Venta != true)
@@ -533,13 +541,6 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("Capacidad Productiva", result);
                     }
-                }
-            }
-            if (oParam.BoletoId == 5)
-            {
-                if (!string.IsNullOrEmpty(oParam.ContratoMadre))
-                {
-                    oErrorMessages.Error("Convenir", "Los contratos Sin Boleto no pueden tener la tilde Fij. Convenio");
                 }
             }
             if (!string.IsNullOrEmpty(oParam.ContratoMadre))
