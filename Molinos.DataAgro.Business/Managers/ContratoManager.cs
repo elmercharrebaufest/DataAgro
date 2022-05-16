@@ -6838,8 +6838,8 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
                 var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
                 var cantidadNegocioPendiente = contratosPendientes.Where(x => !pendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).Sum(x => x.Cantidad);
-                logger.Debug($"contratosPendientesEnDA {contratosPendientes.ToJson()}");
-                logger.Debug($"contratosPendientesEnDA {contratosPendientes.ToList()}");
+                logger.Debug($"contratosPendientesEnDA {contratosPendientes.Select(x => x.ContratoSAP).ToJson()}");
+                logger.Debug($"contratosPendientesEnDA {contratosPendientes.Select(x => x.ContratoSAP).ToList()}");
                 logger.Debug($"pendientes {pendientes.ToJson()}");
                 logger.Debug($"pendientes {pendientes.ToList()}");
 
