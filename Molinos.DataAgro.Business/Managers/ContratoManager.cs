@@ -519,7 +519,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Errores.AddRange(res.Errores);
                     }
-                    if(oParam.Warrant == true || oParam.CD == true)
+                    if (oParam.Warrant == true || oParam.CD == true)
                     {
                         oErrorMessages.Error("SinBoleto", "Los contratos Sin Boleto no pueden tener la tilde CD/Warrant");
                     }
@@ -1528,7 +1528,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Localidad", "La localidad ingresada no corresponde a la provincia.");
             }
-           
+
 
             return oErrorMessages;
         }
@@ -6785,7 +6785,7 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Error("Clasificacion", "La Clasificación seleccionada no está habilitada para la carga de contratos sin boleto");
                 return resultado;
             }
-           
+
             if (tipoNegocioId != null && (!tipoNegocioHabilitados.Any(x => x.TipoNegocioId == tipoNegocioId)))
             {
                 resultado.Error("TipoNegocio", "El tipo de negocio seleccionada no está habilitado para la carga de contratos sin boleto");
@@ -6826,19 +6826,24 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
                 logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
-            
 
-                var contratosFinalizados = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato {
-                   ContratoSAP = x.ContratoSAP,
-                   BoletoId = x.BoletoId,
-                   Cantidad = x.Cantidad
+
+                var contratosFinalizados = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato
+                {
+                    ContratoSAP = x.ContratoSAP,
+                    BoletoId = x.BoletoId,
+                    Cantidad = x.Cantidad
                 }, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
 
-            logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
-            var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
-            var cantidadNegocioPendiente = contratosPendientes.Where(x => !pendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).Sum(x => x.Cantidad);
-            logger.Debug($"contratosPendientesEnDA {contratosPendientes.Where(x => !pendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).ToList()}");
-            logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
+                logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
+                var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
+                var cantidadNegocioPendiente = contratosPendientes.Where(x => !pendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).Sum(x => x.Cantidad);
+                logger.Debug($"contratosPendientesEnDA {contratosPendientes.ToJson()}");
+                logger.Debug($"contratosPendientesEnDA {contratosPendientes.ToList()}");
+                logger.Debug($"pendientes {pendientes.ToJson()}");
+                logger.Debug($"pendientes {pendientes.ToList()}");
+
+                logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
 
                 //Soja Comun
                 if (tieneSustentable == false)
