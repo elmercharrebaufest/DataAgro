@@ -2781,9 +2781,11 @@ namespace Molinos.DataAgro.Business.Managers
                 Clasificacion = item.Clasificacion,
                 ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault() != null ? comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId : (int?)null,
                 Contrato = item.Contrato,
-                NegocioId = string.IsNullOrEmpty(item.Fijacion) ?
-                (contratos.Any(x => x.Key == item.Contrato) ? contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : (int?)null) :
-                (fijaciones.Any(x => x.Key == item.Fijacion) ? fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value : (int?)null),
+                //NegocioId = string.IsNullOrEmpty(item.Fijacion) ?
+                //(contratos.Any(x => x.Key == item.Contrato) ? contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : (int?)null) :
+                //(fijaciones.Any(x => x.Key == item.Fijacion) ? fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value : (int?)null),
+                NegocioId = !string.IsNullOrEmpty(item.Fijacion) && fijaciones.Any(x => x.Key == item.Fijacion) ? fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value :
+                !string.IsNullOrEmpty(item.Contrato) && (contratos.Any(x => x.Key == item.Contrato)) ? contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : (int?)null,
                 CuitCorredor = item.CuitCorredor,
                 CuitVendedor = item.CuitVendedor,
                 Dolarizado = item.Dolarizado,
