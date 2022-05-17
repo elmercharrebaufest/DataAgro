@@ -2657,7 +2657,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Cuit = x.CUIT,
                         ProveedorId = x.ProveedorId
                     });
-
+                //proveedores = proveedores.Where(x => x.ProveedorId == 385).ToList();
                 var cuits = proveedores.Select(y => y.ProveedorId);
 
                 var corredores = repositorio.Listar<CorredorProveedor, ProveedorCombo>(
@@ -2767,12 +2767,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<ReportePesificado> ConvertPesificarAgent(List<PesificarAgentDto> datos)
         {
-            
             var comerciales = repositorio.Listar<Comercial>();
             var materiales = repositorio.Listar<Material>();
             var monedas = repositorio.Listar<Moneda>();
-            var contratosSap = datos.Where(x => string.IsNullOrEmpty(x.Fijacion)).Select(x => x.Contrato);
-            var fijacionesSap = datos.Where(x => !string.IsNullOrEmpty(x.Fijacion)).Select(x => x.Fijacion);
+            var contratosSap = datos.Where(x => string.IsNullOrEmpty(x.Fijacion)).Select(x => x.Contrato).ToList();
+            var fijacionesSap = datos.Where(x => !string.IsNullOrEmpty(x.Fijacion)).Select(x => x.Fijacion).ToList();
             var contratos = repositorio.Listar<Contrato>(x => contratosSap.Contains(x.ContratoSAP)).Select(x => new KeyValuePair<string, int>(x.ContratoSAP, x.Id)).ToList();
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => fijacionesSap.Contains(x.FijacionSAP)).Select(x => new KeyValuePair<string, int>(x.FijacionSAP, x.Id)).ToList();
             logger.Debug(contratos.ToJson());
@@ -2783,11 +2782,9 @@ namespace Molinos.DataAgro.Business.Managers
                 Clasificacion = item.Clasificacion,
                 ComercialId = comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault() != null ? comerciales.Where(x => x.IdActiveDirectory == item.Comercial).FirstOrDefault().ComercialId : (int?)null,
                 Contrato = item.Contrato,
-                //NegocioId = string.IsNullOrEmpty(item.Fijacion) ?
-                //(contratos.Any(x => x.Key == item.Contrato) ? contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : (int?)null) :
-                //(fijaciones.Any(x => x.Key == item.Fijacion) ? fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value : (int?)null),
-                NegocioId = !string.IsNullOrEmpty(item.Fijacion) && fijaciones.Any(x => x.Key == item.Fijacion) ? fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value :
-                !string.IsNullOrEmpty(item.Contrato) && (contratos.Any(x => x.Key == item.Contrato)) ? contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : (int?)null,
+                NegocioId = string.IsNullOrEmpty(item.Fijacion) ?
+                (contratos.Any(x => x.Key == item.Contrato) ? contratos.Where(x => x.Key == item.Contrato).FirstOrDefault().Value : (int?)null) :
+                (fijaciones.Any(x => x.Key == item.Fijacion) ? fijaciones.Where(x => x.Key == item.Fijacion).FirstOrDefault().Value : (int?)null),
                 CuitCorredor = item.CuitCorredor,
                 CuitVendedor = item.CuitVendedor,
                 Dolarizado = item.Dolarizado,
