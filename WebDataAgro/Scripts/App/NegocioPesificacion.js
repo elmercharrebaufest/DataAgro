@@ -433,7 +433,7 @@ function EnviarMail() {
 
     BlockUi("Enviando Mail...");
     setTimeout(function () {
-        var fecha = $("#fechaInstruccionId").val();
+        var fecha = $("#fechaInstruccionId").data("kendoDatePicker").value();
         if (fecha == "") {
             MensErr("Debe ingresar una fecha de instrucción de pesificación");
         } else {
