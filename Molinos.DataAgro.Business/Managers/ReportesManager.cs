@@ -2775,6 +2775,8 @@ namespace Molinos.DataAgro.Business.Managers
             var fijacionesSap = datos.Where(x => !string.IsNullOrEmpty(x.Fijacion)).Select(x => x.Fijacion);
             var contratos = repositorio.Listar<Contrato>(x => contratosSap.Contains(x.ContratoSAP)).Select(x => new KeyValuePair<string, int>(x.ContratoSAP, x.Id)).ToList();
             var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x => fijacionesSap.Contains(x.FijacionSAP)).Select(x => new KeyValuePair<string, int>(x.FijacionSAP, x.Id)).ToList();
+            logger.Debug(contratos.ToJson());
+            logger.Debug(fijaciones.ToJson());
             return datos.Select(item => new ReportePesificado()
             {
                 CantidadPendiente = item.CantidadPendiente,
