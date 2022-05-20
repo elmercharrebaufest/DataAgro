@@ -40,7 +40,9 @@
 
 <input type="hidden" id="comercialCreador" value="@ViewBag.ComercialId" />
 <input id="proveedorId" hidden />
+<input id="corredorId" hidden />
 <input id="posicionCBOTId" hidden />
+<input id="cantidadDepositoOriginal" hidden />
 
 <input id="tipoPosicionCBOTId" hidden />
 @Html.Hidden("crearContrato", Url.Action("CrearContrato", "CompraNet"))
@@ -113,7 +115,7 @@
             <div class="col-md-4 col-sm-5">
                 <input type="text" class="k-textbox" style="width:100%" id="contratoCondicional" />
                 <input type="hidden" id="contratoCondicionalId" />
-            </div>            
+            </div>
         </div>
         <input type="hidden" id="estado" />
     </div>
@@ -651,11 +653,20 @@
                 </span>
             </div>
         </div>
-        <div id="mercsDepositoDiv" class="ampliar noFason noAgente noAcuerdo col-md-5">
+        <div id="mercsDepositoDiv" class="ampliar noFason noAgente noAcuerdo col-md-2" style="width:151px">
             <div class="mercsDepositoDiv">
                 <label id="mercEnDepLabel">Mercs. en dep.</label>
                 <input id="mercsDepositoId" class="campo-input-input" data-bind="checked:Parametros.MercsDeposito, disabled: isControlDisabled" type="checkbox" onclick="HayMercaderia()" />
                 <img id="errmercsDepositoId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+        </div>
+        <div hidden class="col-md-4 depositoDiv ampliar noFason noAgente noAcuerdo">
+            <div class="col-md-4">
+                <label>Cantidad en depósito</label>
+            </div>
+            <div class="col-md-6">
+                <input id="cantidadDeposito" style="width:100%" />               
+                <img id="errcondicionalCantidadId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
     </div>
@@ -684,8 +695,17 @@
         <div class="col-sm-10 col-md-4">
             <input type="text" class="k-textbox" style="width:100%" id="pagoCbuInput" />
         </div>
+    </div> 
+    <div hidden class="row depositoDiv ampliar noFason noAgente noAcuerdo">
+        <div class="col-md-8"></div>        
+        <div class="col-md-4" style="margin-left: -24px;margin-top: -14px;">
+            <strong style="color: green">
+                <label style="font-size: 13px">Cantidad Disponible:</label>
+                <label style="font-size: 13px" id="cantidadTotal"></label>
+            </strong>
+        </div>
+      
     </div>
-
     <div class="row ampliar noFason noAgente noAcuerdo">
         <div class="col-sm-2 ">
             <label>Observaci&oacute;n</label>

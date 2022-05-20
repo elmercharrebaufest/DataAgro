@@ -12,8 +12,10 @@
                 </button>
                 <div id="contrato" hidden></div>
                 <h1 class="modal-title-visualizar" id="lineModalLabel"></h1>
-                <button id="mostrar" hidden onclick="compararReconfirmacion()">Visualizar Modificación</button>
-                <button id="ocultar" onclick="mostrarDetalles()" hidden>Ocultar Modificación</button>
+                <button id="mostrar" class="boton" hidden onclick="compararReconfirmacion()">
+                  Ver Modificación
+                </button>
+                <button id="ocultar" class="boton" onclick="mostrarDetalles()" hidden >Ocultar Modificación</button>
                 <div class="status pendiente-modal row"><div class="col-md-9 col-sm-9">PENDIENTE</div><div id="botoneriaPendDiv" style="text-align: right"></div></div>
                 <div class="status confirmado-modal row"><div class="col-md-9 col-sm-9">CONFIRMADO</div><div id="botoneriaConfDiv" style="text-align: right"></div></div>
                 <div class="status oferta-modal row"><div class="col-md-8 col-sm-9">OFERTA</div><div id="botoneriaOferDiv" style="text-align: right"></div></div>
@@ -241,9 +243,15 @@
                             <strong style="float:left">Pago:</strong>
                             <span id="visualizar_pago"></span>
                         </div>
+                    </div>
+                    <div class="row marginCero">
                         <div id="mercsDepositoDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Mercaderías en Depósito:</strong>
-                            <span id="visualizar_mercsDeposito"></span>
+                            <span id="visualizar_mercsDeposito"></span>                            
+                        </div>
+                        <div id="mercsDepositoDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Cantidad en depósito (Kg):</strong>
+                            <span id="cantidadDeposito"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -495,7 +503,7 @@
                         <strong style="float:left">Condicional: </strong>
                         <span id="visualizar_Condicional"></span>
                     </div>
-                    
+
                 </div>
             </div>
 

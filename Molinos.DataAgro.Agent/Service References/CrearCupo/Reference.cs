@@ -40,6 +40,8 @@ namespace Molinos.DataAgro.Agent.CrearCupo {
         
         private string iM_DATAAGROField;
         
+        private string iM_EXCEPCIONField;
+        
         private string iM_PROPUESTAField;
         
         /// <remarks/>
@@ -92,6 +94,18 @@ namespace Molinos.DataAgro.Agent.CrearCupo {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string IM_EXCEPCION {
+            get {
+                return this.iM_EXCEPCIONField;
+            }
+            set {
+                this.iM_EXCEPCIONField = value;
+                this.RaisePropertyChanged("IM_EXCEPCION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string IM_PROPUESTA {
             get {
                 return this.iM_PROPUESTAField;

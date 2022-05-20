@@ -144,6 +144,9 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public int? ProveedorComisionistaId { get; set; }
 
+        public double? CantidadDeposito { get; set; }
+
+
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }

@@ -303,6 +303,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                         if (model == null)
                         {
                             logger.Debug("Eliminar Cupo Stop ok: ", jObject["data"].ToString());
+                            var cuposStop = ObtenerCuposPorFecha(cupo.FechaIngreso).Where(a => a.CupoSap == cupo.CupoSap).SingleOrDefault();
+                            if (cuposStop != null)//stop no devuelve los cupos anulados
+                            {
+                                resultado.Error("", $"El cupo {cupo.CupoSap} no se anulo en stop");
+                            }
                             return resultado;
                         }
                         else
@@ -409,7 +414,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         new KeyValuePair<string, string> ("CupoStop", "CupoStop"),
                         new KeyValuePair<string, string> ("CreacionStop", "CreacionStop"),
                     };
-                    string where = " where T.EstadoCupoId <> 4 and T.EstadoCupoId <> 5 and T.EstadoCupoId <> 8 ";
+                    string where = " where T.EstadoCupoId <> 5 and T.EstadoCupoId <> 8 ";
 
                     var cuposSapStop = actualizarCupos.Select(a => a.CupoSap).ToList();
 
@@ -470,6 +475,66 @@ namespace Molinos.DataAgro.Agent.Helpers
             else
             {
                 return new List<RespuestaCupoStop>();
+            }
+        }
+
+
+        private List<Cupo> ObtenerCuposPorFecha(DateTime fechaDelCupo)
+        {
+            logger.Debug("Iniciando consulta ConsultarCupo");
+            var datosConfiguracion = repositorio.Obtener<Configuracion>(1);
+            if (datosConfiguracion.ConexionConsultaStop.HasValue && datosConfiguracion.ConexionConsultaStop.Value)
+            {
+                try
+                {
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri(urlStop);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    ConsultaCuposStop listaCuposStop;
+
+                    listaCuposStop = ObtenerDatosDeStop(datosConfiguracion, client, new List<DateTime> { fechaDelCupo });
+
+                    List<Cupo> actualizarCupos = listaCuposStop.results.Select(cupo => new Cupo
+                    {
+                        EstadoPlanta = cupo.estadoEnPlanta,
+                        CTGFechaDesde = !String.IsNullOrEmpty(cupo.fechaCTG_Desde) ? DateTime.ParseExact(cupo.fechaCTG_Desde, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        CTGFechaHasta = !String.IsNullOrEmpty(cupo.fechaCTG_Hasta) ? DateTime.ParseExact(cupo.fechaCTG_Hasta, "yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture) : (DateTime?)null,
+                        RemitenteComercial = cupo.cuitRemComercial,
+                        CorredorComprador = cupo.cuitCorredorCAfip,
+                        CorredorVendedor = cupo.cuitCorredorVAfip,
+                        MercadoATermino = cupo.cuitMercadoATerminoAfip,
+                        Cosecha = cupo.cosecha,
+                        IntermediarioFlete = cupo.cuitIntermediarioFleteAfip,
+                        Transportista = cupo.cuitTransportistaAfip,
+                        Chofer = cupo.cuitChoferAfip,
+                        Km = cupo.kmRecorrer,
+                        Peso = cupo.pesoNetoEstimado,
+                        CartaPorte = cupo.cartaPorte,
+                        CTG = cupo.ctg,
+                        CuitOrigen = cupo.cuitOrigen,
+                        CuitOrigenAfip = cupo.cuitOrigenAfip,
+                        CodLocalidadOrigen = cupo.codLocalidadOrigen,
+                        NroEstablecimientoOrigen = cupo.nroEstablecimientoOrigen,
+                        EstadoCupoId = cupo.idCupoEstado,
+                        CupoSap = cupo.idCupoTerminal,
+                        CupoStop = cupo.idCupo,
+                        CreacionStop = cupo.creado
+                    }).ToList();
+
+                    return actualizarCupos;
+                }
+                catch (Exception e)
+                {
+                    logger.Error($"Error consulta ConsultarCupos {fechaDelCupo.ToString("dd-MM-yyyy")}");
+                    logger.Error(e);
+                    throw;
+                }
+            }
+            else
+            {
+                return new List<Cupo>();
             }
         }
 
@@ -557,7 +622,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 userMessage = "No se pudo anular en STOP."
                             };
                         }
-                        cupo.ErrorStop = error.userMessage;                        
+                        cupo.ErrorStop = error.userMessage;
                         logger.Debug("No se pudo anular en STOP." + cupo.CupoSap);
                         throw new Exception("Error Stop: " + error.userMessage);
                     }
@@ -586,7 +651,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     client.BaseAddress = new Uri(urlStop);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    
+
                     DateTime fechaDesde = DateTime.Now.AddDays(-2).Date;
                     DateTime fechaHasta = DateTime.Now.AddDays(3).Date;
 
@@ -677,7 +742,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //        }
                     //    }
                     //};
-                    
+
                     //string where = " where T.EstadoCupoId <> 4 and T.EstadoCupoId <> 5 and T.EstadoCupoId <> 8 ";
 
                     IEnumerable<CupoNoPropio> actualizarCupoNoPropios = listaCuposStop.data.Select(cupoNoPropio => new CupoNoPropio
@@ -754,10 +819,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                     actualizarCupos = actualizarCupos.Where(x => cuposSap.Contains(x.CupoSap));
 
                     repositorio.ActualizarTodos(actualizarCupos, columnas, "CupoSap");
-                    
+
                     repositorio.GuardarCambios();
 
-                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" +  fechaDesde.ToString() + " - " + DateTime.Now.ToString());
+                    logger.Debug("Fin consulta ConsultarCuposDiarios. Fechas" + fechaDesde.ToString() + " - " + DateTime.Now.ToString());
 
                     return listaCuposStop.data;
                 }
@@ -780,27 +845,27 @@ namespace Molinos.DataAgro.Agent.Helpers
             var listaCupos = new ConsultaTurnosActivosStop() { data = new List<RespuestaCupoNoPropioStop>() };
             //logger.Debug("Token obtenido. Consultando para fechas " + string.Join(", ", fechas));
             provider = CultureInfo.InvariantCulture;
-                HttpResponseMessage response = client.PostAsJsonAsync(
-                       $"v1.1.0/misturnosactivos/{token.Data}/{fechaDesde.ToString("yyyy-MM-dd")}/{fechaHasta.ToString("yyyy-MM-dd")}", new { }).Result;
-                response.EnsureSuccessStatusCode();
-                var res = response.Content.ReadAsAsync<dynamic>().Result;
-                var jObject = JObject.Parse(res.ToString());
-                ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
-                //logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
-                if (!respuesta.isError)
-                {
-                    ConsultaTurnosActivosStop model = JsonConvert.DeserializeObject<ConsultaTurnosActivosStop>(jObject.ToString());
-                    listaCupos.data.AddRange(model.data);
-                    //logger.Debug(model.results.Count);
-                    //if (model.results.Count > 0)
-                    //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
-                }
-                else
-                {
-                    ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
-                    logger.Debug(error.ToJson() + " fechaDesde: " + fechaDesde.ToString() + " - fechaHasta: " + fechaHasta.ToString());
-                }
-            
+            HttpResponseMessage response = client.PostAsJsonAsync(
+                   $"v1.1.0/misturnosactivos/{token.Data}/{fechaDesde.ToString("yyyy-MM-dd")}/{fechaHasta.ToString("yyyy-MM-dd")}", new { }).Result;
+            response.EnsureSuccessStatusCode();
+            var res = response.Content.ReadAsAsync<dynamic>().Result;
+            var jObject = JObject.Parse(res.ToString());
+            ResultadoStop respuesta = JsonConvert.DeserializeObject<ResultadoStop>(jObject.ToString());
+            //logger.Debug(fecha.ToShortDateString() + " " + respuesta.isError.ToString());
+            if (!respuesta.isError)
+            {
+                ConsultaTurnosActivosStop model = JsonConvert.DeserializeObject<ConsultaTurnosActivosStop>(jObject.ToString());
+                listaCupos.data.AddRange(model.data);
+                //logger.Debug(model.results.Count);
+                //if (model.results.Count > 0)
+                //logger.Debug(String.Join(",", model.results.Select(a => a.idCupoTerminal)));
+            }
+            else
+            {
+                ErrorStop error = JsonConvert.DeserializeObject<ErrorStop>(jObject["data"].ToString());
+                logger.Debug(error.ToJson() + " fechaDesde: " + fechaDesde.ToString() + " - fechaHasta: " + fechaHasta.ToString());
+            }
+
             return listaCupos;
         }
         #endregion

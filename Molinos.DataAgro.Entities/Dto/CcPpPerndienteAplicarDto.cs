@@ -25,6 +25,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Region { get; set; }
         public string Contrato { get; set; }
         public decimal KgContrato { get; set; }
+        public decimal CantidadDisponible {get; set;}
+        public decimal CantidadTotal { get; set; }
     }
 }
 

@@ -152,16 +152,18 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var fecha = new DateTime(2018, 10, 26);
             HttpContext.Current.Session["equipo"] = new List<int> { 1, 2 };
-            reportesManagerMock.Setup(x => x.DetallePosicionModalIds(It.IsAny<List<int>>(), It.IsAny<string>())).Returns("");
-            var result = target.DetalleIdsModal(new List<int> { 1 }, "");
+            reportesManagerMock.Setup(x => x.DetallePosicionModalIds(It.IsAny<List<int>>(), It.IsAny<string>(), It.IsAny<int?>())).Returns("");
+            var result = target.DetalleIdsModal(new List<int> { 1 }, "",null);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            reportesManagerMock.Verify(x => x.DetallePosicionModalIds(It.IsAny<List<int>>(), It.IsAny<string>()), Times.Once);
+            reportesManagerMock.Verify(x => x.DetallePosicionModalIds(It.IsAny<List<int>>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"\",\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
+
 
         [Test]
         public void ExcelModeloAltaMasivaTest()

@@ -144,7 +144,7 @@ namespace WebDataAgro.Controllers
         {
             try
             {
-                Byte[] fileBytes = mobjBoletoManager.BoletoEnByte(_logDir  + nombre);
+                Byte[] fileBytes = mobjBoletoManager.BoletoEnByte(_logDir + "\\" + nombre);
 
                 if (fileBytes == null)
                 {

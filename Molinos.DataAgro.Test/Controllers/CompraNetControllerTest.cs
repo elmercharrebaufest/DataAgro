@@ -1453,5 +1453,15 @@ namespace Molinos.DataAgro.Test.Controllers
             contratoManagerMock.Verify(x => x.EsUnContratoAsociado(It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
         }
+
+        [Test]
+        public void ObtenerDatosMercaderiaEnDepositoTest()
+        {
+            contratoManagerMock.Setup(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
+                .Returns(new CcPpPerndienteAplicarDto());
+            var result = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false) as JsonResult;
+            contratoManagerMock.Verify(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()), Times.Once);
+            Assert.NotNull(result);
+        }
     }
 }

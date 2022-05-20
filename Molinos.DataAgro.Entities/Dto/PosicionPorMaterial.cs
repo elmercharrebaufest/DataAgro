@@ -22,5 +22,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Posicion { get; set; }
         public EnumClasificacionNegocio ClasificacionNegocio { get; set; }
         public string Campana { get; set; }
+        public bool FijacionContratoConDescarga { get; set; }
     }
 }

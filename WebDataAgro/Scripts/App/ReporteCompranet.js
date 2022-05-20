@@ -98,7 +98,7 @@ function AbrirModal(material, mes, anio, fechaDesde, fechaHasta, materialNombre,
     return false;
 }
 
-function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioids, moneda, esFijacion) {
+function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioids, moneda, esFijacion, verDepositoTipoNegocio) {
     setearTituloModal(materialNombre, mesNombre, anio);
     var href = window.location.href;
     if (moneda == null) {
@@ -108,7 +108,7 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
 
     //$.get(href, function (data) { crearGrilladetallePosicion(data); });
     var list = negocioids.split(',');
-    $.post(window.location.href + "/DetalleIdsModal", { negocioids: list, moneda: moneda }, function (data) {
+    $.post(window.location.href + "/DetalleIdsModal", { negocioids: list, moneda: moneda, verDepositoTipoNegocio: verDepositoTipoNegocio }, function (data) {
         if (esFijacion == true) {
             crearGrilladetalleFijacion(data);
             var jsonD = JSON.parse(data);

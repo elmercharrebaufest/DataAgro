@@ -130,30 +130,28 @@ namespace WebDataAgro.Controllers
         }
         static readonly object _lockAnulacionMasiva = new object();
 
-        public async Task<string> AnulacionMasivaAsync(List<int> equipo, DataSourceResult cupos, string path)
+        public async Task<string> AnulacionMasivaAsync(List<int> equipo, List<int> ids, string path)
         {
           
             var comercialId = GlobalVariables.IdActiveDirectory;
             await Task.Run(() =>
             {
                 //Thread.Sleep(5000);
-                cupoManager.AnulacionMasiva(equipo, comercialId, cupos, path);
+                cupoManager.AnulacionMasiva(equipo, comercialId, ids, path);
 
             });
             return "";
         }
 
-        public ActionResult AnulacionMasiva(Filter filter)
-        {
-            var request = new DataSourceRequest { Filter = filter };
+        public ActionResult AnulacionMasiva(List<int> ids)
+        {           
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodosCupos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
-            var model = cupoManager.TraerCuposTabla(request, equipo);
             var path = httpContextManager.ObtenerPathLogoMail();
-            if (model.Total == 0)
+            if (ids.Count == 0)
             {
                 return Json("Ningún cupo para anular");
             }
-            var a = AnulacionMasivaAsync(equipo, model, path);           
+            var a = AnulacionMasivaAsync(equipo, ids, path);           
             return Json("Estamos procesando tu solicitud, en breve te enviaremos un mail.");
         }
     }

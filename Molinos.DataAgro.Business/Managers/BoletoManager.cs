@@ -97,15 +97,15 @@ namespace Molinos.DataAgro.Business.Managers
 
                                     var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
                                     EnviarMailBoleto(itemNegocio.BoletoDescripcion,
-                                        itemNegocio.TipoNegocioId == 1 ? "Contrato" : "Fijación",
-                                        String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.Proveedor : itemNegocio.RazonSocialCorredor,
+                                        (itemNegocio.TipoNegocioId == 1 || itemNegocio.TipoNegocioId == 2) ? "Contrato" : itemNegocio.TipoNegocioId == 3? "Fijación" : itemNegocio.TipoNegocio,
+                                        String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
                                         itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : itemNegocio.ContratoSAP,
                                         consultaBoleto.Version, comercial, emailproveedor, pdf);
                                 }
                                 try
                                 {
                                     File.WriteAllBytes(ConfigurationManager.AppSettings["PathBoletos"].ToString() + "\\"
-                                         + (itemNegocio.TipoNegocioId == 3 ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);
+                                         + (itemNegocio.TipoNegocioId == 3 ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);                                    
                                 }
                                 catch (Exception ex)
                                 {
@@ -245,6 +245,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (!PermisosHelper.Is(PermisosDataAgro.NoRecibirMail))
             {
                 lista.Add(comercialRegistrado);
+                lista.Add("dataagro@molinosagro.com.ar");
                 logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             }
             var subject = "";
@@ -380,7 +381,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var templateString = System.IO.File.ReadAllText(templateFilePath);
 
                         var xHtml = templateString;
-                        xHtml = CompletarHtml(basico, clausulas, boleto, xHtml);
+                        xHtml = CompletarHtml(basico, clausulas, boleto, xHtml, false);
 
                         var PdfWriter = iTextSharp.text.pdf.PdfWriter.GetInstance(document, stream);
                         document.Open();
@@ -434,13 +435,17 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 1)
             {
-                Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisicoBuenosAires.html");
+                return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisicoBuenosAires.html");
+            }
+            if(basico.BoletoContratoId == 4)
+            {
+                return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOferta.html");
             }
 
             return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
         }
 
-        private static string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoGeneradoDto boleto, string xHtml)
+        private static string CompletarHtml(BasicoContrato basico, List<ResultadoClausula> clausulas, BoletoGeneradoDto boleto, string xHtml, bool esCartaOferta)
         {
             string clausulashtml = String.Join("", clausulas.OrderBy(a => a.Orden).Select(a => "<br />" + a.Orden + " . " + a.Texto).ToList());
             var stylesHtml = @"<style type='text/css'>
@@ -533,8 +538,14 @@ namespace Molinos.DataAgro.Business.Managers
             width: 30%;
             display: inline-block;
         }
+        .cls_012 {
+            font-family: Arial,serif;
+            font-size: 6px;
+            text-align: justify;
+        }
         
     </style>";
+            
             if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 2)
             {
                 var precio = "";
@@ -576,6 +587,17 @@ namespace Molinos.DataAgro.Business.Managers
                 stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
                 basico.RazonSocialProveedor, basico.Cuit, corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
+            }else if (basico.BoletoContratoId == 4)
+            {
+                //var localidad = reposi
+                string clausulasNumeradas = "";
+                for (int i = 1; i <= clausulas.Count; i++)
+                {
+                    clausulasNumeradas += "<li>" + clausulas.Where(x => x.Orden == i).First().Texto + "</li>";
+                }
+                xHtml = String.Format(xHtml, stylesHtml, DateTime.Now.ToString("dd/MM/yyyy"), basico.ContratoSAP, basico.Proveedor, basico.Cuit, basico.ProveedorDireccion, basico.ProveedorProvincia, basico.ProveedorCP
+                    , basico.Corredor, basico.CUITCorredor, clausulasNumeradas);
+                return xHtml;
             }
 
             return xHtml;

@@ -212,7 +212,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EliminarCupoTest()
         {
-            repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo { EstadoCupoId = 4, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
+            repositorioMock.Setup(x => x.Obtener<Cupo>(It.IsAny<int>())).Returns(new Cupo { EstadoCupoId = 1, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
             eliminarCupoAgentMock.Setup(x => x.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             clienteStopMock.Setup(x => x.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado { Errores = new List<ErrorMessage>() });
             repositorioMock.Setup(x => x.GuardarCambios());
@@ -261,7 +261,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void EliminarCupoTestOk()
         {
             repositorioMock.Setup(y => y.Obtener<Cupo>(It.IsAny<int>()))
-                .Returns(new Cupo() { EstadoCupoId = 4, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
+                .Returns(new Cupo() { EstadoCupoId = 1, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { ConexionABMStop = true });
             eliminarCupoAgentMock.Setup(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             clienteStopMock.Setup(y => y.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado() { Errores = new List<ErrorMessage>() });
@@ -337,8 +337,10 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EliminarVariosCupoTestOk()
         {
-            repositorioMock.Setup(y => y.Obtener<Cupo>(It.IsAny<int>()))
-                .Returns(new Cupo() { EstadoCupoId = 4, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
+            repositorioMock.Setup(y => y.Obtener<Cupo>(1))
+                .Returns(new Cupo() { EstadoCupoId = 1, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
+            repositorioMock.Setup(y => y.Obtener<Cupo>(2))
+                .Returns(new Cupo() { EstadoCupoId = 1, CupoStop = 1, CupoSap = "a", Centro = new Centro { Acopio = false } });
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { ConexionABMStop = true });
             eliminarCupoAgentMock.Setup(y => y.Eliminar(It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             clienteStopMock.Setup(y => y.EliminarCupo(It.IsAny<Cupo>())).Returns(new Resultado() { Errores = new List<ErrorMessage>() });

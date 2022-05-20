@@ -2725,7 +2725,7 @@ function InicializarDatos() {
             }
         },
         select: function (e) {
-            if (e.dataItem.Deshabilitar) {
+            if (e.dataItem.Deshabilitado) {
                 $("#buscadorProveedor").val("")
                 e.preventDefault();
             } else {

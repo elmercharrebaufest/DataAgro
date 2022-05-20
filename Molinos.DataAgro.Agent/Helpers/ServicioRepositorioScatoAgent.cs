@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Agent
                 {
                    var e = new EstablecimientoStockDto
                     {
-                       Cantidad = 30000,
+                       Cantidad = 56000,
                        Establecimiento = "CAPALDI",
                        Cosecha = "19-20",
                        Localidad = "Buenos Aires",

@@ -246,6 +246,9 @@ function cargarDatosAFijarEnFijacion(afijar) {
     }
     $("#comisionistaId").val(afijar.ProveedorComisionistaId);
 
+    if (afijar.Pase == true) {
+        MensajeTipoNegocio();
+    }
 }
 
 function ArmarAperturaDesdeAFijar(afijar) {
@@ -5337,6 +5340,9 @@ function HayTarifaAConvenir() {
     }
 }
 
+function MensajeTipoNegocio() {
+    MensAlerta("El contrato seleccionado es un A FIJAR PASE. Consulte con MESA BA antes de fijar.");
+}
 
 
 

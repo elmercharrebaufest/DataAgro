@@ -125,6 +125,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ClasificacionDescripcion = (contrato is Contrato) ? (contrato as Contrato).Clasificacion.Descripcion : "",
                         CalidadDescripcion = contrato.TrigoEspecial == true ? "Especial" : "Cámara",
                         MercsDeposito = (contrato is Contrato) ? ((contrato as Contrato).MercsDeposito == true ? (contrato as Contrato).MercsDeposito : false) : null,
+                        MercaderiaDescripcion = (contrato is Contrato) ? ((contrato as Contrato).MercsDeposito == true ? "SI" : "NO") : "",
+                        CantidadDeposito = (contrato is Contrato) && (contrato as Contrato).MercsDeposito == true ? contrato.CantidadDeposito : null,
                         ComercialCreadorId = contrato.ComercialCreadorId ?? contrato.ProveedorCreadorId,
                         ComercialCreador = contrato.ProveedorCreadorId != null ? contrato.ProveedorCreador.RazonSocial : contrato.ComercialCreador == null ? contrato.Comercial.Nombres + " " + contrato.Comercial.Apellido : contrato.ComercialCreador.Nombres + " " + contrato.ComercialCreador.Apellido,
                         ContratoCorredor = (contrato is Contrato) ? (contrato as Contrato).ContratoCorredor : "",

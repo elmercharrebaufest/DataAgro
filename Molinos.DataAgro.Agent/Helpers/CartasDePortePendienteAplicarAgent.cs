@@ -48,11 +48,11 @@ namespace Molinos.DataAgro.Agent
                     FechaIngreso = "2020-08-08",
                     FechaNeto = "2020-08-08",
                     FechaIngresoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    FechaNetoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    FechaNetoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),                    
                 },
                 new CcPpPerndienteAplicarDto() {
                     AgenteCompra = "Agente compra",
-                    Cantidad = 100000,
+                    Cantidad = 100000000,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
@@ -65,7 +65,7 @@ namespace Molinos.DataAgro.Agent
                 },
                 new CcPpPerndienteAplicarDto() {
                     AgenteCompra = "Agente compra",
-                    Cantidad = 100000,
+                    Cantidad = 10000000,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",

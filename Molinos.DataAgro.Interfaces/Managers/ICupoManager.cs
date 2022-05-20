@@ -55,7 +55,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId, DateTime fecha);
 
         List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor);
-        void AnulacionMasiva(List<int> equipo, string comercialId, DataSourceResult cupos, string path);
+        void AnulacionMasiva(List<int> equipo, string comercialId, List<int> ids, string path);
         List<CierreCupera> DevolverTodoCierreCupera();
         void CrearSugerenciaCupo();
         void EnviarMailSugerenciasPendientesPorComercial();

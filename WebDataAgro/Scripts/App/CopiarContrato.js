@@ -529,7 +529,11 @@ function CargarDatosCopiar(contrato, hijo, tipo) {
         viewModel.Calidades.pop();
     }
     contrato.MercsDeposito == true ? $("#mercsDepositoId").prop("checked", true) : $("#mercsDepositoId").prop("checked", false);
-
+    if (contrato.MercsDeposito == true) {
+        HayMercaderia();
+        $(".depositoDiv").show();
+        $("#cantidadDeposito").data("kendoNumericTextBox").value(contrato.CantidadDeposito);
+    }
     var descuentosDto = contrato.Descuentos;
     $.each(descuentosDto, function (key, descuento) {
         var descuentoKendo = {
@@ -669,6 +673,7 @@ function ObtenerDatos(error) {
     obj.Warrant = $("#WarrantId").is(":checked") ? true : false;
     obj.PagoDirectoVendedor = $("#pagoDirectoId").is(":checked") ? true : false;
     obj.MercsDeposito = $("#mercsDepositoId").is(":checked") ? true : false;
+    obj.CantidadDeposito = $("#mercsDepositoId").is(":checked") ? $("#cantidadDeposito").data("kendoNumericTextBox").value() : null;
     obj.NivelTarifaId = $("#NivelTarifaId").val();
     obj.TarifaFlete = $("#TarifaFleteId").val();
     obj.ChequeElectronico = $("#tipoId").val() == "2" ? $("#chequeElectronicoInput").is(":checked") ? true : false : $("#chequeElectronico").is(":checked") ? true : false;

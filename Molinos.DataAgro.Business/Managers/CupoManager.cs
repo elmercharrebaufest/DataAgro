@@ -84,8 +84,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
-                cupo.Comercial = comercial;
-
+                cupo.Comercial = comercial;              
                 if (!error.HayError)
                 {
                     cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
@@ -358,7 +357,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (cupo.ProveedorId != 0 && ((cupo.NegocioId == null && proveedor.Comisionista != true) || (negocio != null && negocio.ProveedorComisionistaId == null)))
             {
                 var cuit = repositorio.Obtener<Proveedor, string>(y => y.ProveedorId == cupo.ProveedorId, y => y.CUIT);
-                var sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit);
+                var sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL");
                 if (sisa == null)
                 {
                     error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por CUIT Inactivo"));
@@ -446,11 +445,39 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Errores.Add(new ErrorMessage(400, "Los cupos con CTG para centros no propios no pueden ser editados."));
                 }
             }
+
             //if ((cupo.NegocioId == 0 || cupo.NegocioId == null) && !PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             //{
             //    error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
             //}
-
+            if (proveedor != null && centro != null && centro.CodigoSap == "1600")
+            {
+                var establecimientos = TraerEstablecimientos(proveedor.CUIT);
+                var cantidadCupo = 0;
+                if (establecimientos != null && establecimientos.Count > 0)
+                {
+                    foreach (var establecimiento in establecimientos)
+                    {
+                        if (establecimiento.Cantidad >= 28000)
+                        {
+                            cantidadCupo += (int)Math.Floor(establecimiento.Cantidad / 28000);
+                        }
+                    }
+                    if (cantidadCupo < cantidadCupos)
+                    {
+                        if (cantidadCupo < 0)
+                        {
+                            error.Errores.Add(new ErrorMessage(400, "No se encontraron establecimientos con stock disponible"));
+                            return error;
+                        }
+                        error.Errores.Add(new ErrorMessage(400, "No hay disponibilidad de stock para los cupos ingresados, la cantidad en cupos disponibles es: " + cantidadCupo));
+                    }
+                }
+                else
+                {
+                    error.Errores.Add(new ErrorMessage(400, "No se encontraron establecimientos con stock disponible"));
+                }
+            }
             return error;
         }
         public DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo)
@@ -528,7 +555,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             logger.Debug("AnularCupoStop " + cupoSap.CupoSap + " " + cupoSap.ToJson());
             var nuevoResultado = new Resultado();
-            if (!cupoSap.Centro.Acopio && cupoSap.EstadoCupoId == 4 && cupoSap.CupoStop != null)
+            if (!cupoSap.Centro.Acopio && cupoSap.EstadoCupoId == 1 && cupoSap.CupoStop != null)
             {
                 if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
                 {
@@ -3392,12 +3419,12 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        public void AnulacionMasiva(List<int> equipo, string comercialId, DataSourceResult cuposResult, string path)
+        public void AnulacionMasiva(List<int> equipo, string comercialId, List<int> ids, string path)
         {
             try
             {
                 var momento = DateTime.Now;
-                var ids = cuposResult.Data.Cast<CupoDto>().Select(x => x.Id);
+                //var ids = cuposResult.Data.Cast<CupoDto>().Select(x => x.Id);
                 if (ids != null)
                 {
                     ids = ids.ToList();
@@ -3417,13 +3444,11 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         try
                         {
-                            c.EstadoCupoId = 4;
                             var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
                             errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
 
                             if (errorStop.HayError)
                             {
-                                c.EstadoCupoId = 1;
                                 var cupoError = new CupoDto
                                 {
                                     CupoSap = c.CupoSap,
@@ -3436,6 +3461,7 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                             else
                             {
+                                c.EstadoCupoId = 4;
                                 var resultado = eliminarcupoSap.Eliminar(c.CupoSap, comercialId);
                                 if (resultado != "OK")
                                 {
@@ -3932,7 +3958,8 @@ namespace Molinos.DataAgro.Business.Managers
             var result = new CupoResult();
             try
             {
-                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha }, 1, solicitud.Fecha);
+                var centro = repositorio.Obtener<Centro, int>(x => x.CodigoSap == solicitud.CentroId.ToString(), x => x.Id);
+                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro }, 1, solicitud.Fecha);
                 if (resultado.HayError)
                 {
                     result.Errores = resultado.Errores;
@@ -3941,7 +3968,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == solicitud.ComercialId).First().GrupoDeCompras.Descripcion;
                 var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
                 //var configuracion = repositorio.Obtener<ConfiguracionCupo>(x => x.MaterialId == solicitud.MaterialId && x.Centro.CodigoSap == solicitud.CentroId.ToString() && x.Fecha == solicitud.Fecha.Date);
-                var centro = repositorio.Obtener<Centro, int>(x => x.CodigoSap == solicitud.CentroId.ToString(), x => x.Id);
+
                 string active = PermisosHelper.ObtenerUsuario();
                 var creadorId = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == active, x => x.ComercialId);
 

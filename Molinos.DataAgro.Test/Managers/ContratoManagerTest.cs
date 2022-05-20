@@ -5291,5 +5291,79 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
+        [Test]
+        public void ObtenerDatosMercaderiaEnDepositoOk()
+        {
+            var oContrato = new Contrato()
+            {
+                ProveedorId = 1,
+                ClasificacionId = 1,
+                CorredorId = null,
+                MaterialId = 1,
+                Cantidad = 1,
+                Precio = 1000,
+                PrecioNeto = 1000,
+                TipoNegocioId = 2,
+                DestinoId = 1,
+                LocalidadId = 1,
+                ProvinciaId = 1,
+                FechaEntrega = DateTime.Now,
+                FechaOperacion = DateTime.Now.Date,
+                FechaDesde = DateTime.Now,
+                FechaHasta = DateTime.Now,
+                MonedaId = "ARS ",
+                CampanaId = 1,
+                ComercialId = 70,
+                EstablecimientoPropio = true,
+                BoletoId = 3,
+                StandardDeCalidadId = 1,
+                Sustentable = false,
+                PorcentajeDePago = 95,
+                Calidad = new List<Calidad>(),
+                AperturaPrecio = new List<AperturaPrecio>(),
+                Boleto = new BoletoCompraNet()
+                {
+                    Descripcion = "Sin Boleto",
+                    Id = 5
+                },
+                CamaraId = 1,
+                ProcedenciaVentaId = 1,
+                FleteACargo = "a",
+                KgBalanza = "1",
+                ComisionAFavorId = 1,
+                PorcentajeComisionVenta = 1,
+                Pago = "1",
+                BoletoVentaId = 1,
+                CondicionDePagoDiaPesificado = 1,
+                CondicionDePagoTipoPesificado = "1",
+                CondicionDePagoPesificadoVentaId = 2,
+                CondicionDePagoDiaFijacion = 1,
+                CondicionDePagoTipoFijacion = "1",
+                CondicionDePagoFijacionVentaId = 1,
+
+            };
+            var pendiente = new CcPpPerndienteAplicarDto()
+            {
+                Centro = "034560",
+                Material = "034560",
+                Proveedor = "30209034560",
+                Corredor = null,
+                Cantidad = 10000,
+                Canje = true,
+                Sustentable = true,
+                CD = true,
+                Warrant = true,
+                CartasPorte = "0000",
+                Contrato = "ssss",
+                KgContrato = 2223
+            };
+            repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
+            repositorioMock.Setup(y => y.Obtener<Material, string>(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, string>>>())).Returns("30209034560");
+            repositorioMock.Setup(y => y.Obtener<Centro, string>(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, string>>>())).Returns("30209034560");
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { oContrato });           
+            ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPerndienteAplicarDto>() { pendiente });
+            var resultado = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false);
+
+        }
     }
 }

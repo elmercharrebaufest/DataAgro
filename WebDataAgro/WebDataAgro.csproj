@@ -1256,6 +1256,8 @@
     <Content Include="Scripts\esm\popper.js" />
     <Content Include="Scripts\esm\popper.min.js" />
     <Content Include="Scripts\gtag.js" />
+    <Content Include="Scripts\html2canvas.min.js" />
+    <Content Include="Scripts\html2canvas.js" />
     <Content Include="Scripts\jquery-ui-1.12.1\package.json" />
     <Content Include="Scripts\index.js.flow" />
     <Content Include="Scripts\esm\popper.min.js.map" />

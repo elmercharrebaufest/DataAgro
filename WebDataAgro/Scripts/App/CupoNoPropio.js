@@ -150,7 +150,7 @@ function CreateGridReporteCupoNoPropio() {
                 field: "Material", title: "Material", width: 130, template: "#=Material#"
             },
             {
-                field: "FechaIngreso", title: "Fecha de Ingreso", width: 120, format: _DefaultDateTemplate
+                field: "FechaIngreso", title: "Fecha de Cupo", width: 120, format: _DefaultDateTemplate
             },
 
             {

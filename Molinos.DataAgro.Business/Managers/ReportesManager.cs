@@ -425,7 +425,9 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoAcuerdoId = x is Contrato ? (x as Contrato).ContratoAcuerdoId : null,
                 TrigoEspecial = x.TrigoEspecial,
                 Posicion = x.Posicion,
-                ContratoSAP = x.ContratoSAP
+                ContratoSAP = x.ContratoSAP,
+                CantidadDeposito = x.CantidadDeposito,
+
             },
                x => x.OcultarEnTablero == false
                &&
@@ -449,6 +451,42 @@ namespace Molinos.DataAgro.Business.Managers
                && (((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).Canje != true) || !(x is FijacionDePrecioContrato))
                && (((x is FijacionDePrecioContrato) && (x as FijacionDePrecioContrato).TipoPosicionCBOTId != 3) || !(x is FijacionDePrecioContrato))
                );
+
+            var negociosConDescarga = negocios.Where(a => a.TipoNegocioId == 2 && a.CantidadDeposito > 0).ToList();
+
+            foreach (var x in negociosConDescarga)
+            {
+                var negocio = negocios.Where(y => y.Id == x.Id).Single();
+                negocios.Add(new BasicoContrato
+                {
+                    Id = x.Id,
+                    FechaDesde = x.FechaDesde,
+                    FechaHasta = x.FechaHasta,
+                    Fecha = x.Fecha,
+                    Cantidad = x.CantidadDeposito.Value,
+                    Precio = x.Precio,
+                    Pizarra = x.Pizarra,
+                    TipoNegocioId = 3,
+                    CampanaMaterialId = x.CampanaMaterialId,
+                    CampanaId = x.CampanaId,
+                    Campania = x.Campania,
+                    MonedaId = x.MonedaId,
+                    OcultarEnTablero = x.OcultarEnTablero,
+                    Estado = x.Estado,
+                    MaterialId = x.MaterialId,
+                    StandardCalidadId = x.StandardDeCalidadId,
+                    DestinoId = x.DestinoId,
+                    EsFason = x.EsFason,
+                    ContratoAcuerdoId = x.ContratoAcuerdoId,
+                    TrigoEspecial = x.TrigoEspecial,
+                    Posicion = x.Posicion,
+                    ContratoSAP = x.ContratoSAP,
+                    CantidadDeposito = x.CantidadDeposito,
+                });
+                negocio.Cantidad -= negocio.CantidadDeposito.GetValueOrDefault(0);
+            }
+
+
             if (verFijaciones == false)
             {
                 negocios = negocios.Where(x => x.TipoNegocioId != 3).ToList();
@@ -564,8 +602,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000),
-                SanLorenzo = x.Destino.Acopio == false ? Math.Round(x.Cantidad / 1000) : 0,
-                Acopio = x.Destino.Acopio == true ? Math.Round(x.Cantidad / 1000) : 0
+                SanLorenzo = (x.Destino.Acopio == false || x.Destino.CodigoSap == "1074") ? Math.Round(x.Cantidad / 1000) : 0,
+                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074") ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
             DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
             && (x.TipoNegocioId == 2 || (x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1)) && x.Venta != true && x.AnulaYReemplazaContratoId == null &&
@@ -579,8 +617,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000),
-                SanLorenzo = x.Destino.Acopio == false ? Math.Round(x.Cantidad / 1000) : 0,
-                Acopio = x.Destino.Acopio == true ? Math.Round(x.Cantidad / 1000) : 0
+                SanLorenzo = (x.Destino.Acopio == false || x.Destino.CodigoSap == "1074") ? Math.Round(x.Cantidad / 1000) : 0,
+                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074") ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.Canje != true && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde &&
                     DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) && (centroId == 0 || centroId == x.DestinoId) &&
                     !(x.Canje != true && x.Virtual != true && x.Contrato.Canje == true) && verFijaciones && x.TipoPosicionCBOTId != 3
@@ -621,8 +659,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round((double)x.Cantidad / 1000),
-                SanLorenzo = x.Destino.Acopio == false ? Math.Round((double)x.Cantidad / 1000) : 0,
-                Acopio = x.Destino.Acopio == true ? Math.Round((double)x.Cantidad / 1000) : 0
+                SanLorenzo = (x.Destino.Acopio == false || x.Destino.CodigoSap == "1074") ? Math.Round(x.Cantidad / 1000) : 0,
+                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074") ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0)
             /*&& fechaDesde == fechaHasta*/  && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta
                 && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5) && (centroId == 0 || centroId == 1) && x.TipoAgenteCompraId == null);
@@ -1018,7 +1056,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Campana = x.Campania,
                     CampanaMaterialId = x.CampanaMaterialId,
                     CantidadPonderada = x.Pizarra == true && precio.Precio != 0 ? x.Cantidad : x.Precio != 0 ? x.Cantidad : 0,
-                    MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId
+                    MonedaId = x.Pizarra == true ? precio.MonedaId : x.MonedaId,
+                    FijacionContratoConDescarga = x.CantidadDeposito > 0
                 })
                 .ToList();
             foreach (var cont in fijaciones)
@@ -1124,9 +1163,9 @@ namespace Molinos.DataAgro.Business.Managers
                 var posKil = new PosicionKilos();
                 posKil.NegocioId = cont.Id;
                 posKil.TipoNegocioId = cont.TipoNegocioId;
-                if (cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
+                if ((cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
                     cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardFijacion &&
-                    cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion)
+                    cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion) || cont.FijacionContratoConDescarga)
                 {
                     if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
                     {
@@ -1420,9 +1459,9 @@ namespace Molinos.DataAgro.Business.Managers
                 negocio.MesPosicion = pos.Mes.ToString() + " " + pos.Anio;
             }
         }
-        public string DetallePosicionModalIds(List<int> negocios, string moneda)
+        public string DetallePosicionModalIds(List<int> negocios, string moneda, int? verDepositoTipoNegocio)
         {
-            var detalle = TraerDetallePosicion(negocios, moneda);
+            var detalle = TraerDetallePosicion(negocios, moneda, verDepositoTipoNegocio);
             detalle.ForEach(x => x.Cantidad = (int.Parse(x.Cantidad)).ToString("n0"));
             detalle.ForEach(x => x.Precio = decimal.Parse(x.Precio.Replace('.', ',')).ToString("n2"));
             detalle.ForEach(x => x.PrecioNeto = decimal.Parse(x.PrecioNeto.Replace('.', ',')).ToString("n2"));
@@ -1431,13 +1470,13 @@ namespace Molinos.DataAgro.Business.Managers
 
         public string SustentablePosicionModalIds(List<int> negocios, string moneda)
         {
-            var detalle = TraerDetallePosicion(negocios, moneda);
+            var detalle = TraerDetallePosicion(negocios, moneda, null);
             var resultado = detalle.GroupBy(a => a.FechaHastaDate.ToString("MMMM - yyyy").ToUpper()).Select(a => new { posicion = a.Key, cantidad = (a.Sum(x => x.CantidadD) / 1000) }).ToList();
             resultado.Add(new { posicion = "TOTAL", cantidad = resultado.Sum(x => x.cantidad) });
             return JsonConvert.SerializeObject(new { items = resultado, total = resultado.Count() - 1 });
             //return resultado;
         }
-        private List<DetalleContratoDto> TraerDetallePosicion(List<int> negocios, string moneda)
+        private List<DetalleContratoDto> TraerDetallePosicion(List<int> negocios, string moneda, int? verDepositoTipoNegocio)
         {
             if (string.IsNullOrWhiteSpace(moneda))
                 moneda = "";
@@ -1459,6 +1498,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Comercial = x.Comercial != null ? x.Comercial.Nombres + " " + x.Comercial.Apellido : "",
                 Cantidad = SqlFunctions.StringConvert((double)x.Cantidad),
                 CantidadD = x.Cantidad,
+                CantidadDeposito = x.CantidadDeposito,
                 CantidadCamiones = x.CantidadCamiones.ToString(),
                 Campana = x.Campana != null ? x.Campana.Descripcion : "",
                 FechaDesde = SqlFunctions.DateName("day", x.FechaDesde) + "/" + SqlFunctions.DatePart("month", x.FechaDesde) + "/" + SqlFunctions.DateName("year", x.FechaDesde),
@@ -1500,6 +1540,31 @@ namespace Molinos.DataAgro.Business.Managers
                 && (moneda == "" || x.MonedaId == moneda || (moneda == "USDM " && x.TipoPosicionCBOTId == 3 && x.TipoNegocioId == 1) || (x.Pizarra == true && moneda == "ARP  "))
             );
 
+            if (verDepositoTipoNegocio != null)
+            {
+                var negociosConDescarga = contratos.Where(a => a.TipoNegocioId == 2 && a.CantidadDeposito > 0).ToList();
+
+                foreach (var x in negociosConDescarga)
+                {
+                    var negocio = contratos.Where(y => y.Contrato == x.Contrato).Single();
+                    var fijacion = (DetalleContratoDto)negocio.Clone();
+                    fijacion.CantidadD = fijacion.CantidadDeposito.GetValueOrDefault(0);
+                    fijacion.Cantidad = fijacion.CantidadD.ToString();
+                    contratos.Add(fijacion);
+                    negocio.CantidadD -= negocio.CantidadDeposito.GetValueOrDefault(0);
+                    negocio.CantidadDeposito = null;
+                    negocio.Cantidad = negocio.CantidadD.ToString();
+                }
+                if (verDepositoTipoNegocio == (int)EnumTipoNegocio.A_PRECIO)
+                {
+                    contratos = contratos.Where(x => x.CantidadDeposito == 0 || x.CantidadDeposito == null).ToList();
+                }
+                else if (verDepositoTipoNegocio == (int)EnumTipoNegocio.FIJACION)
+                {
+                    contratos = contratos.Where(x => x.CantidadDeposito > 0).ToList();
+                }
+            }
+
             if (contratos != null)
             {
                 data.AddRange(contratos);
@@ -1535,7 +1600,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Localidad = "",
                 Boleto = "",
                 Bolsa = "",
-                Destino = "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
                 CondicionFijacion = "",
                 DesdeFijacion = "",
                 HastaFijacion = x.Contrato == null ?
@@ -1573,6 +1638,81 @@ namespace Molinos.DataAgro.Business.Managers
                 data.AddRange(fijaciones);
             }
 
+            //if (verDepositoTipoNegocio == -1)
+            //{
+            //    foreach (var cont in data)
+            //    {
+            //        if (cont.TipoNegocioId == 3)
+            //        {
+            //            if ((DateTime.DaysInMonth(cont.FechaDesdeDate.Year, cont.FechaDesdeDate.Month) - cont.FechaDesdeDate.Day) >= 10)
+            //            {
+            //                cont.mesPosision = cont.FechaDesdeDate.Month;
+            //                cont.anioPosision = cont.FechaDesdeDate.Year;
+            //            }
+            //            else if (cont.FechaDesdeDate.AddMonths(1).Month <= cont.FechaHastaDate.Month)
+            //            {
+            //                cont.FechaDesdeDate = cont.FechaDesdeDate.AddMonths(1);
+            //                cont.mesPosision = cont.FechaDesdeDate.Month;
+            //                cont.anioPosision = cont.FechaDesdeDate.Year;
+
+            //            }
+            //            else if (cont.FechaDesdeDate.AddMonths(1).Month > cont.FechaHastaDate.Month)
+            //            {
+            //                cont.mesPosision = cont.FechaHastaDate.Month;
+            //                cont.anioPosision = cont.FechaHastaDate.Year;
+            //            }
+            //        }
+            //        else if (cont.TipoNegocioId == 2)
+            //        {
+            //            if (new DateTime(cont.FechaDesdeDate.Year, cont.FechaDesdeDate.Month, 1) <= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
+            //            {
+            //                cont.mesPosision = DateTime.Now.Month;
+            //                cont.anioPosision = DateTime.Now.Year;
+            //            }
+            //            else
+            //            {
+            //                cont.mesPosision = cont.FechaDesdeDate.Month;
+            //                cont.anioPosision = cont.FechaDesdeDate.Year;
+            //            }
+            //        }
+            //    }
+            //    //if (cont.ClasificacionNegocio != EnumClasificacionNegocio.DisponibleFijacion &&
+            //    //    cont.ClasificacionNegocio != EnumClasificacionNegocio.ForwardFijacion &&
+            //    //    cont.ClasificacionNegocio != EnumClasificacionNegocio.NewCropFijacion)
+            //    //{
+            //    //    if ((DateTime.DaysInMonth(cont.FechaDesde.Year, cont.FechaDesde.Month) - cont.FechaDesde.Day) >= 10)
+            //    //    {
+            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+            //    //        posKil.Anio = cont.FechaDesde.Year;
+            //    //    }
+            //    //    else if (cont.FechaDesde.AddMonths(1).Month <= cont.FechaHasta.Month)
+            //    //    {
+            //    //        cont.FechaDesde = cont.FechaDesde.AddMonths(1);
+            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+            //    //        posKil.Anio = cont.FechaDesde.Year;
+
+            //    //    }
+            //    //    else if (cont.FechaDesde.AddMonths(1).Month > cont.FechaHasta.Month)
+            //    //    {
+            //    //        posKil.Mes = (EnumMeses)cont.FechaHasta.Month;
+            //    //        posKil.Anio = cont.FechaHasta.Year;
+            //    //    }
+            //    //}
+            //    //else
+            //    //{
+            //    //    if (new DateTime(cont.FechaDesde.Year, cont.FechaDesde.Month, 1) <= new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1))
+            //    //    {
+            //    //        posKil.Mes = (EnumMeses)DateTime.Now.Month;
+            //    //        posKil.Anio = DateTime.Now.Year;
+            //    //    }
+            //    //    else
+            //    //    {
+            //    //        posKil.Mes = (EnumMeses)cont.FechaDesde.Month;
+            //    //        posKil.Anio = cont.FechaDesde.Year;
+            //    //    }
+            //    //}
+            //}
+
 
             var fasones = repositorio.Listar<Fason, DetalleContratoDto>(x => new DetalleContratoDto
             {
@@ -1601,7 +1741,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Localidad = "",
                 Boleto = "",
                 Bolsa = "",
-                Destino = "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
                 CondicionFijacion = "",
                 DesdeFijacion = "",
                 HastaFijacion = "",
@@ -1723,7 +1863,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Localidad = "",
                 Boleto = "",
                 Bolsa = "",
-                Destino = "",
+                Destino = x.Destino != null ? x.Destino.Descripcion : "",
                 CondicionFijacion = "",
                 DesdeFijacion = "",
                 HastaFijacion = "",
@@ -2767,6 +2907,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         private List<ReportePesificado> ConvertPesificarAgent(List<PesificarAgentDto> datos)
         {
+
             var comerciales = repositorio.Listar<Comercial>();
             var materiales = repositorio.Listar<Material>();
             var monedas = repositorio.Listar<Moneda>();

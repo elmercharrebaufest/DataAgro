@@ -243,7 +243,7 @@ function InicializarCargaCupos() {
             event.preventDefault();
         }
     });
-
+    MostrarVisualizarStock();
 }
 function checkFason() {
     if ($("#fason").is(':checked')) {
@@ -269,14 +269,22 @@ function cuposCreados(error, lista) {
         if (listaError.length > 0) {
             $("#error-modal").html(makeUL(listaError));
             $("#error-modal").show();
+            MostrarVisualizarStock();
         }
         if ($("#MaterialId").val() == 2 && lista.length > 0) {
             lista.unshift("Trigo libre de HB4");
         }
+        if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
+            MostrarVisualizarStock();
+            VisualizarStock(true);
+            $("#copy_btn2").show();
+        } else {
+            $("#copy_btn2").hide();
+        }
         $("#cupos-generados-modal").html(lista.join("</br>"));
         $('#resultadoCupo').modal('toggle');
 
-        $(".modal").on("hidden.bs.modal", function () {
+        $("#resultadoCupo").on("hidden.bs.modal", function () {
             window.location.href = window.location.origin + "/Cupo/";
         });
     });
@@ -364,24 +372,24 @@ function ActualizarCantidad(cantidadDias) {
 }
 
 function copiarTablaEstablecimiento() {
-    var copiarEstablecimientos = document.getElementById("cargarDatosEstablecimiento").innerText;
+    //var copiarEstablecimientos = document.getElementById("cargarDatosEstablecimiento").innerText;
+    //var copy = function (e) {
+    //    e.preventDefault();
+    //    console.log('copy');
 
-    var copy = function (e) {
-        e.preventDefault();
-        console.log('copy');
-
-        if (e.clipboardData) {
-            e.clipboardData.setData('text/plain', copiarEstablecimientos);
-        } else if (window.clipboardData) {
-            window.clipboardData.setData('Text', copiarEstablecimientos);
-        }
-    };
-    window.addEventListener('copy', copy);
-    document.execCommand('copy');
-    window.removeEventListener('copy', copy);
+    //    if (e.clipboardData) {
+    //        e.clipboardData.setData('text/plain', copiarEstablecimientos);
+    //    } else if (window.clipboardData) {
+    //        window.clipboardData.setData('Text', copiarEstablecimientos);
+    //    }
+    //};
+    //window.addEventListener('copy', copy);
+    //document.execCommand('copy');
+    //window.removeEventListener('copy', copy);
+    copiarImagen();
 }
 
-function VisualizarStock() {
+function VisualizarStock(noabrir) {
 
     var cuitProv = $("#buscadorProveedor").val().split('(');
     if (cuitProv[1] != null) {
@@ -410,9 +418,13 @@ function VisualizarStock() {
         }
 
         $("#cargarDatosEstablecimiento").html(table);
-        $("#modalEstablecimientos").modal("show");
+        if (noabrir != true) {
+            $("#modalEstablecimientos").modal("show");            
+        }
     } else {
-        MensErr("No se encontraron establecimientos con stock disponible")
+        if (noabrir != true) {
+            MensErr("No se encontraron establecimientos con stock disponible")
+        }
     }
 
 }
@@ -423,4 +435,39 @@ function MostrarVisualizarStock() {
     } else {
         $("#stock").hide();
     }
+}
+function imageToBlob(imageURL) {
+    const img = new Image;
+    const c = document.createElement("canvas");
+    const ctx = c.getContext("2d");
+    img.crossOrigin = "";
+    img.src = imageURL;
+    return new Promise(resolve => {
+        img.onload = function () {
+            c.width = this.naturalWidth;
+            c.height = this.naturalHeight;
+            ctx.drawImage(this, 0, 0);
+            c.toBlob((blob) => {
+                // here the image is a blob
+                resolve(blob)
+            }, "image/png", 0.75);
+        };
+    })
+}
+
+async function copyImage(imageURL) {
+    const blob = await imageToBlob(imageURL)
+    const item = new ClipboardItem({ "image/png": blob });
+    navigator.clipboard.write([item]);
+}
+
+function copiarImagen() {
+    html2canvas($("#cargarDatosEstablecimiento")[0]).then(function (canvas) {
+        let image = new Image();
+        image.src = canvas.toDataURL();
+        $("#out_image").append(image);
+        copyImage(image.src);
+        $("#out_image").empty();
+    }
+    );
 }

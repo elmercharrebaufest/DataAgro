@@ -46,7 +46,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_PROVEEDOR= corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
                         IM_DESCPROV = cupo.Proveedor.RazonSocial.Length > 35 ? cupo.Proveedor.RazonSocial.Substring(0, 35) : cupo.Proveedor.RazonSocial,
                         IM_CODIGO = cupo.CupoSap,
-                        IM_FLETE_PROC= cupo.FleteProcedencia == true? "S" : "N"
+                        IM_FLETE_PROC= cupo.FleteProcedencia == true? "S" : "N",
+                        IM_EXCEPCION = cupo.Proveedor.CuposConRiesgo == true ? "X" : ""
                     };
 
                     var logId = repositorio.Agregar(new Log

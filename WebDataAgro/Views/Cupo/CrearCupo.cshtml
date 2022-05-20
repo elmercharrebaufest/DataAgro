@@ -5,6 +5,7 @@
     var fleteProcedencia = PermisosHelper.Is(PermisosDataAgro.ReasignarFlete);
     var reasignarCupo = PermisosHelper.Is(PermisosDataAgro.ReasignarProveedorPantallaCupo);
 }
+<script src="~/Scripts/html2canvas.js"></script>
 
 <script>
     BlockUi("Cargando...");
@@ -48,111 +49,111 @@ else if (!Html.ViewData.ModelState.IsValid)
 
 @using (Html.BeginForm())
 {
-<div id="CrearCupo" class="container">
-    <div id="boton-carga-masiva" class="margen-15" hidden>
-        <span class="btnVarios" onclick="MostrarCarga()">
-            Carga Masiva
-        </span>
-    </div>
-    <br />
-    @Html.HiddenFor(x => x.Id)
-    @Html.HiddenFor(x=> x.NoPropio)
-    @Html.HiddenFor(x => x.Siguientes)
-    <div class="row">
-        <div>
-            <div class="col-sm-2" id="proveedorLabelId">
-                <label id="proveedorLabel">Proveedor</label>
-            </div>
-            <div class="col-sm-4">
-                @Html.TextBoxFor(x => x.ProveedorDescripcion, new { @placeholder = "Buscar por CUIT, razón social", @id = "buscadorProveedor", @class = "w100" })
-                @Html.HiddenFor(x => x.Proveedor)
-            </div>
+    <div id="CrearCupo" class="container">
+        <div id="boton-carga-masiva" class="margen-15" hidden>
+            <span class="btnVarios" onclick="MostrarCarga()">
+                Carga Masiva
+            </span>
         </div>
-        <div>
-            <div class="col-sm-2">
-                <label>Planta</label>
+        <br />
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.NoPropio)
+        @Html.HiddenFor(x => x.Siguientes)
+        <div class="row">
+            <div>
+                <div class="col-sm-2" id="proveedorLabelId">
+                    <label id="proveedorLabel">Proveedor</label>
+                </div>
+                <div class="col-sm-4">
+                    @Html.TextBoxFor(x => x.ProveedorDescripcion, new { @placeholder = "Buscar por CUIT, razón social", @id = "buscadorProveedor", @class = "w100" })
+                    @Html.HiddenFor(x => x.Proveedor)
+                </div>
             </div>
-            <div class="col-sm-4">
-                @Html.DropDownListFor(x => x.PlantaId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control", @id = "planta" })
-                @Html.HiddenFor(x => x.PlantaId)
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div>
-            <div class="col-sm-2 ">
-                <label>Material</label>
-            </div>
-            <div class="col-sm-4">
-                <div>
-                    @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control", @id = "material" })
-                    @Html.HiddenFor(x => x.MaterialId)
+            <div>
+                <div class="col-sm-2">
+                    <label>Planta</label>
+                </div>
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(x => x.PlantaId, new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control", @id = "planta" })
+                    @Html.HiddenFor(x => x.PlantaId)
                 </div>
             </div>
         </div>
-        <div>
-            <div class="col-sm-2 ">
-                <label>Fecha Entrega</label>
-            </div>
-            <div class="col-sm-4">
-                <div id="fechaDiv">
-                    <div class="col-xs-6 noLeftPadding">
-                        @Html.TextBoxFor(x => x.FechaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaEntrega" })
+        <div class="row">
+            <div>
+                <div class="col-sm-2 ">
+                    <label>Material</label>
+                </div>
+                <div class="col-sm-4">
+                    <div>
+                        @Html.DropDownListFor(x => x.MaterialId, new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione Material", new { @class = "form-control", @id = "material" })
+                        @Html.HiddenFor(x => x.MaterialId)
                     </div>
-                    @Html.HiddenFor(x => x.FechaEntrega)
-                    <div class="col-xs-6 noRightPadding">
-                        @Html.TextBoxFor(x => x.FechaHastaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaHasta" })
+                </div>
+            </div>
+            <div>
+                <div class="col-sm-2 ">
+                    <label>Fecha Entrega</label>
+                </div>
+                <div class="col-sm-4">
+                    <div id="fechaDiv">
+                        <div class="col-xs-6 noLeftPadding">
+                            @Html.TextBoxFor(x => x.FechaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaEntrega" })
+                        </div>
+                        @Html.HiddenFor(x => x.FechaEntrega)
+                        <div class="col-xs-6 noRightPadding">
+                            @Html.TextBoxFor(x => x.FechaHastaEntrega, "{0:yyyy-MM-dd}", new { @class = "w100", @id = "fechaHasta" })
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div>
-            <div class="col-sm-2">
-                <label>Cantidad</label>
+        <div class="row">
+            <div>
+                <div class="col-sm-2">
+                    <label>Cantidad</label>
+                </div>
+                <div class="col-sm-4 ">
+                    @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @placeholder = "SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
+                </div>
             </div>
-            <div class="col-sm-4 ">
-                @Html.TextBoxFor(x => x.CantidadCupos, new { type = "number", @class = "w100", @placeholder = "SELECCIONE CANTIDAD DE CUPOS...", @id = "cantidad" })
-            </div>
-        </div>
-        <div>
-            <div class="col-sm-2 ">
-                <label>Zona</label>
-            </div>
+            <div>
+                <div class="col-sm-2 ">
+                    <label>Zona</label>
+                </div>
 
-            <div class="col-sm-4">
-                <div>
-                    @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control", @id = "zona" })
-                    @Html.HiddenFor(x => x.ZonaId)
+                <div class="col-sm-4">
+                    <div>
+                        @Html.DropDownListFor(x => x.ZonaId, zonas, new { @class = "form-control", @id = "zona" })
+                        @Html.HiddenFor(x => x.ZonaId)
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        @*<div class="col-sm-2">
-                <label>Contrato</label>
+        <div class="row">
+            @*<div class="col-sm-2">
+                    <label>Contrato</label>
+                </div>
+                <div class="col-sm-4">
+                    @Html.TextBoxFor(x => x.NegocioId, new { @id = "contratoId", @class = "w100" })
+                    @Html.HiddenFor(x => x.Negocio)
+                </div>*@
+            <div id="calidadDiv" hidden>
+                <div class="col-sm-2">
+                    <label>Calidad</label>
+                </div>
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(x => x.CalidadId, new SelectList(ViewBag.Calidad, "Value", "Text"), "Seleccione Calidad", new { @class = "form-control", @id = "calidad" })
+                </div>
             </div>
-            <div class="col-sm-4">
-                @Html.TextBoxFor(x => x.NegocioId, new { @id = "contratoId", @class = "w100" })
-                @Html.HiddenFor(x => x.Negocio)
-            </div>*@
-        <div id="calidadDiv" hidden>
-            <div class="col-sm-2">
-                <label>Calidad</label>
+            <div id="stock" hidden>
+                <div class="col-sm-2">
+                    <label>Establecimiento</label>
+                </div>
+                <div class="col-sm-4">
+                    <button class="k-button k-button-icontext" type="button" onclick="VisualizarStock()" style="width: 100%">Visualizar Stock</button>
+                </div>
             </div>
-            <div class="col-sm-4">
-                @Html.DropDownListFor(x => x.CalidadId, new SelectList(ViewBag.Calidad, "Value", "Text"), "Seleccione Calidad", new { @class = "form-control", @id = "calidad" })
-            </div>
-        </div>
-        <div id="stock" hidden>
-            <div class="col-sm-2">
-                <label>Establecimiento</label>
-            </div>
-            <div class="col-sm-4">
-                <button class="k-button k-button-icontext" type="button" onclick="VisualizarStock()" style="width: 100%">Visualizar Stock</button>
-            </div>
-        </div>
 
         </div>
         <div class="row">
@@ -247,7 +248,7 @@ else if (!Html.ViewData.ModelState.IsValid)
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
-                    <button type="button" class="myBtn btn" id="cancelar-carga"  data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="myBtn btn" id="cancelar-carga" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -273,16 +274,17 @@ else if (!Html.ViewData.ModelState.IsValid)
             </div>
             <div class="modal-footer">
                 <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
-                <button type="button" class="myBtn btn" onclick="copiarGenerados()"><i class="fa fa-copy"></i> Copiar</button>
+                <button type="button" class="myBtn btn" onclick="copiarGenerados()"><i class="fa fa-copy"></i>Copiar Cupos</button>
+                <button type="button" class="myBtn btn" id="copy_btn2" onclick="VisualizarStock()">Visualizar Stock </button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="modalEstablecimientos" tabindex="-1" role="dialog" aria-labelledby="establecimiento" aria-hidden="true">
+<div class="modal fade " id="modalEstablecimientos" tabindex="-1" role="dialog" aria-labelledby="establecimiento" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="table table-striped table-responsive modal-body tabla">
+            <div class="table table-striped table-responsive modal-body tabla ">
                 <table id="cargarDatosEstablecimiento" style="width:100%"></table>
             </div>
             <div class="modal-footer">
@@ -294,8 +296,11 @@ else if (!Html.ViewData.ModelState.IsValid)
     </div>
 </div>
 
+
+<div class="hide" id="out_image"></div>
+
 <style>
-     .tabla {
+    .tabla {
         width: 100%;
         max-height: 335px;
         overflow-y: auto;

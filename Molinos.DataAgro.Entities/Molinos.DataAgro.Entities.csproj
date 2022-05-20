@@ -127,6 +127,7 @@
     <Compile Include="Common\Enums\EnumConceptoApertura.cs" />
     <Compile Include="Common\Enums\AreaDeCompras.cs" />
     <Compile Include="Common\Enums\EnumEstadoAdministracionCupo.cs" />
+    <Compile Include="Common\Enums\EnumTipoNegocio.cs" />
     <Compile Include="Common\Enums\EnumTipoAdministracionCupo.cs" />
     <Compile Include="Common\Enums\EnumEstadoCuit.cs" />
     <Compile Include="Common\Enums\EnumEstadoContrato.cs" />

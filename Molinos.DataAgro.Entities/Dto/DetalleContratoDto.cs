@@ -3,7 +3,7 @@ using Molinos.DataAgro.Entities.Common.Enums;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
-    public partial class DetalleContratoDto
+    public partial class DetalleContratoDto : ICloneable
     {
         public string Contrato { get; set; } // ContratoId (Primary key)
         public string RazonSocial { get; set; } // ProveedorId
@@ -55,6 +55,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Pizarra { get; set; }
         public bool? Virtual { get; set; }
         public string FechaOperacion { get; set; }
+        public double? CantidadDeposito { get; set; }
+
+        public object Clone()
+        {
+            var contrato = (DetalleContratoDto)MemberwiseClone();
+            return contrato;
+        }
+
+        public int anioPosision { get; set; }
+        public int mesPosision { get; set; }
+
     }
 }
 

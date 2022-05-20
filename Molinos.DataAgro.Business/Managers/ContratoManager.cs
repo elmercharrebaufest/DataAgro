@@ -1650,8 +1650,10 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
-                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId || ValidarCalidadModificada(oContrato, oContratoSave))
-                    && (oContratoSave.EstadoId != (int)EnumEstadoContrato.Pendiente && oContratoSave.EstadoId != (int)EnumEstadoContrato.Oferta && oContratoSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion))
+                if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.DesdeFijacion != oContrato.DesdeFijacion ||
+                    oContratoSave.MonedaId != oContrato.MonedaId || oContratoSave.HastaFijacion != oContrato.HastaFijacion
+                    || ValidarCalidadModificada(oContrato, oContratoSave)) && (oContratoSave.EstadoId != (int)EnumEstadoContrato.Pendiente 
+                    && oContratoSave.EstadoId != (int)EnumEstadoContrato.Oferta && oContratoSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion))
                 {
                     oContrato.EstadoId = 7;
                     if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
@@ -1742,7 +1744,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.DesdeFijacion = oContrato.DesdeFijacion;
             oContratoSave.HastaFijacion = oContrato.HastaFijacion;
             oContratoSave.MercsDeposito = oContrato.MercsDeposito;
-            //oContratoSave.CantidadDeposito = oContrato.CantidadDeposito;
+            oContratoSave.CantidadDeposito = oContrato.CantidadDeposito;
             oContratoSave.CorredorId = oContrato.CorredorId;
             oContratoSave.PorcentajeComision = oContrato.PorcentajeComision;
             oContratoSave.ContratoVendedor = oContrato.ContratoVendedor;
@@ -2531,7 +2533,7 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.DesdeFijacion = contratoOriginal.DesdeFijacion;
                             oContratoSave.HastaFijacion = contratoOriginal.HastaFijacion;
                             oContratoSave.MercsDeposito = contratoOriginal.MercsDeposito;
-                            //oContratoSave.CantidadDeposito = oContrato.CantidadDeposito;
+                            oContratoSave.CantidadDeposito = oContrato.CantidadDeposito;
                             oContratoSave.ComercialCreadorId = contratoOriginal.ComercialCreadorId;
                             oContratoSave.CorredorId = contratoOriginal.CorredorId;
                             oContratoSave.PorcentajeComision = contratoOriginal.PorcentajeComision;
@@ -2970,7 +2972,7 @@ namespace Molinos.DataAgro.Business.Managers
                 PagoDirectoVendedor = x.PagoDirectoVendedor,
                 EstablecimientoPropio = x.EstablecimientoPropio,
                 MercsDeposito = x.MercsDeposito,
-                //CantidadDeposito = x.CantidadDeposito,
+                CantidadDeposito = x.CantidadDeposito,
                 PorcentajeComision = x.PorcentajeComision,
                 ContratoCorredor = x.ContratoCorredor,
                 ContratoVendedor = x.ContratoVendedor,
@@ -3847,7 +3849,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.DesdeFijacion = contrato.DesdeFijacion;
             contratoSave.HastaFijacion = contrato.HastaFijacion;
             contratoSave.MercsDeposito = contrato.MercsDeposito;
-            //contratoSave.CantidadDeposito = contrato.CantidadDeposito; 
+            contratoSave.CantidadDeposito = contrato.CantidadDeposito; 
             contratoSave.CorredorId = contrato.CorredorId;
             contratoSave.PorcentajeComision = contrato.PorcentajeComision;
             contratoSave.ContratoVendedor = contrato.ContratoVendedor;
@@ -3969,7 +3971,12 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (oContrato.EstadoId != 11)
                 {
-                    if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3) || ValidarCalidadModificada(oContrato, oContratoSave))
+                    //if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.MonedaId != oContrato.MonedaId) 
+                    //    && (oContratoSave.EstadoId != 1 && oContratoSave.EstadoId != 3) || ValidarCalidadModificada(oContrato, oContratoSave))
+                    if ((oContratoSave.Precio != oContrato.Precio || oContratoSave.Cantidad != oContrato.Cantidad || oContratoSave.DesdeFijacion != oContrato.DesdeFijacion ||
+                    oContratoSave.MonedaId != oContrato.MonedaId || oContratoSave.HastaFijacion != oContrato.HastaFijacion
+                    || ValidarCalidadModificada(oContrato, oContratoSave)) && (oContratoSave.EstadoId != (int)EnumEstadoContrato.Pendiente 
+                    && oContratoSave.EstadoId != (int)EnumEstadoContrato.Oferta && oContratoSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion))
                     {
                         oContrato.EstadoId = 11;
                         if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
@@ -4699,7 +4706,8 @@ namespace Molinos.DataAgro.Business.Managers
                 var contratoSave = JsonConvert.DeserializeObject<Contrato>(json);
                 Expression<Func<Contrato, BasicoContrato>> proyeccion = x => new BasicoContrato
                 {
-                    MonedaId = x.MonedaId,
+                    TipoNegocioId = x.TipoNegocioId,
+                    MonedaId = !string.IsNullOrEmpty(x.MonedaId) ? x.MonedaId : "",
                     Cantidad = x.Cantidad,
                     Precio = x.Precio,
                     StandardCalidadId = x.StandardDeCalidadId,
@@ -4713,7 +4721,12 @@ namespace Molinos.DataAgro.Business.Managers
                         PorcentajeHasta = y.PorcentajeHasta,
                         Valor = y.Valor,
                     }).ToList(),
-
+                    DesdeFijacionFormateado = x.DesdeFijacion != null ? SqlFunctions.DateName("day", x.DesdeFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.DesdeFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.DesdeFijacion) : "",
+                    HastaFijacionFormateado = x.HastaFijacion != null ? SqlFunctions.DateName("day", x.HastaFijacion).Trim() + "-" +
+                                           SqlFunctions.StringConvert((double)x.HastaFijacion.Value.Month).TrimStart() + "-" +
+                                           SqlFunctions.DateName("year", x.HastaFijacion) : "",
                 };
                 var contrato = repositorio.Obtener<Contrato, BasicoContrato>(x => x.Id == contratoId, proyeccion);
                 var basicoSave = TransformarABasicoContrato(contratoSave);
@@ -4734,12 +4747,16 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new BasicoContrato
             {
+                TipoNegocioId = x.TipoNegocioId,
                 Cantidad = x.Cantidad,
                 Precio = x.Precio,
-                MonedaId = x.MonedaId,
+                MonedaId = !string.IsNullOrEmpty(x.MonedaId) ? x.MonedaId : "",
                 StandardCalidadId = x.StandardDeCalidadId,
                 StandardDeCalidadDescripcion = x.StandardDeCalidad.Descripcion,
-
+                DesdeFijacion = x.DesdeFijacion,
+                HastaFijacion   = x.HastaFijacion,
+                DesdeFijacionFormateado = x.DesdeFijacion != null ? x.DesdeFijacion.Value.ToString("d-M-yyyy") : "",
+                HastaFijacionFormateado = x.HastaFijacion != null ? x.HastaFijacion.Value.ToString("d-M-yyyy") : "",
                 Calidades = x.Calidad != null ? x.Calidad.Select(y => new CalidadDto
                 {
                     Id = y.Id,
@@ -6820,44 +6837,7 @@ namespace Molinos.DataAgro.Business.Managers
                 };
                 logger.Debug($"DatosIngresados {pendienteDto.ToJson()}");
                 var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto).Where(x => x.Region != "3").ToList();
-                var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && x.Region != "3").Sum(x => x.Cantidad);
-                var cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
-                logger.Debug($"cantidadContratoDeSAPCanje {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).ToJson()}");
-
-                var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
-                logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
-
-
-                var contratosFinalizados = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato
-                {
-                    ContratoSAP = x.ContratoSAP,
-                    BoletoId = x.BoletoId,
-                    Cantidad = x.Cantidad
-                }, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
-
-                logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
-                var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
-                var cantidadNegocioPendiente = contratosPendientes.Where(x => !pendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).Sum(x => x.Cantidad);
-                foreach (var item in contratosPendientes)
-                {
-                    logger.Debug($"contratosPendientesEnDA {item.ContratoSAP}");
-                }
-                logger.Debug($"pendientes {pendientes.ToJson()}");
-
-                logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
-
-                //Soja Comun
-                if (tieneSustentable == false)
-                {
-                    cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && x.Region != "3").Sum(x => x.Cantidad);
-                    cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
-                    logger.Debug($"soja comun {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).ToJson()}");
-                    cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
-                    cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable != true && contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
-                }
-                logger.Debug($"soja sustentable {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).ToJson()}");
-                logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
-                var cantidadDisponible = cantidadCartaDePorte - cantidadContratoDeSAP - (decimal)cantidadNegocioPendiente - cantidadContratosKilosPendientesAplicar;
+                decimal cantidadDisponible = DevolverCantidadDisponible(tieneSustentable, contratosPendientes, pendientes);
                 logger.Debug($"cantidadDisponible {cantidadDisponible}");
 
                 if ((decimal)(cantidad ?? 0) > cantidadDisponible)
@@ -6869,56 +6849,73 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return resultado;
         }
-        //public List<int> ObtenerDatosMercaderiaEnDeposito(double? cantidad, int id, int? materialId, int? centro, string cuitCorredor, string cuitProveedor, bool? tieneSustentable)
-        //{
 
-        //    if (centro != null && materialId != null && cuitProveedor != null)
-        //    {
-        //        var centroCodigo = repositorio.Obtener<Centro, string>(x => x.Id == centro, x => x.CodigoSap);
-        //        var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
+        private decimal DevolverCantidadDisponible(bool? tieneSustentable, List<Contrato> contratosPendientes, List<CcPpPerndienteAplicarDto> pendientes)
+        {
+            var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte)).Sum(x => x.Cantidad);           
+            var cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
+            var cantidadNegocioPendiente = contratosPendientes.Sum(x => x.Cantidad);
 
-        //        var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.Proveedor.CUIT == cuitProveedor && x.DestinoId == centro &&
-        //        x.MaterialId == materialId && (x.EstadoId != 5 && x.EstadoId != 6 && x.EstadoId != 8));
+            var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
+            //logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
 
-        //        var pendienteDto = new CcPpPerndienteAplicarDto()
-        //        {
-        //            Centro = centroCodigo,
-        //            Material = materialCodigo,
-        //            Proveedor = cuitProveedor,
-        //            Corredor = cuitCorredor,
-        //        };
+            var contratosFinalizados = repositorio.Listar<Contrato, BasicoContrato>(x => new BasicoContrato
+            {
+                ContratoSAP = x.ContratoSAP,
+                BoletoId = x.BoletoId,
+                Cantidad = x.Cantidad
+            }, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
 
-        //        var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto);
-        //        var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && x.Region != "3").Sum(x => x.Cantidad);
-        //        var cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
-        //        var cantidadNegocioPendiente = contratosPendientes.Sum(x => x.Cantidad);
+            //logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
+            var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
+            //logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
 
-        //        var contratosPendientesAplicar = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && x.Canje == false && x.CD == false && x.Warrant == false).Select(x => x.Contrato).ToList();
-        //        logger.Debug($"contratosPendientesAplicar {contratosPendientesAplicar.ToJson()}");
+            //Soja Comun
+            if (tieneSustentable == false)
+            {
+                cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable).Sum(x => x.Cantidad);
+                cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
+                logger.Debug($"soja comun {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).ToJson()}");
+                cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
+                cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable != true && contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
+            }
+            //logger.Debug($"soja sustentable {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).ToJson()}");
+            logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
+            var cantidadDisponible = cantidadCartaDePorte - cantidadContratoDeSAP - (decimal)cantidadNegocioPendiente - cantidadContratosKilosPendientesAplicar;
+            return cantidadDisponible;
+        }
 
-        //        var contratosFinalizados = repositorio.Listar<Contrato, string>(x => x.ContratoSAP, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
-        //        logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
-        //        var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Contains(x.Contrato)).Sum(x => x.KgContrato);
-        //        logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
+        public CcPpPerndienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable)
+        {
+            var disponible = new CcPpPerndienteAplicarDto();
+            id = id ?? 0;
+            if (centro != null && materialId != null && proveedorId != null)
+            {
+                var centroCodigo = repositorio.Obtener<Centro, string>(x => x.Id == centro, x => x.CodigoSap);
+                var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
+                var cuitCorredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
+                var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
+                var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.Proveedor.CUIT == cuitProveedor && x.DestinoId == centro &&
+                x.MaterialId == materialId && (x.EstadoId != 5 && x.EstadoId != 6 && x.EstadoId != 8));
 
-        //        //Soja Comun
-        //        if (tieneSustentable == false)
-        //        {
-        //            cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && x.Region != "3").Sum(x => x.Cantidad);
-        //            cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
-        //            cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
-        //            cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable != true && contratosFinalizados.Contains(x.Contrato)).Sum(x => x.KgContrato);
-        //        }
-        //        logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");
-        //        var cantidadDisponible = cantidadCartaDePorte - cantidadContratoDeSAP - (decimal)cantidadNegocioPendiente - cantidadContratosKilosPendientesAplicar;
-        //        logger.Debug($"cantidadDisponible {cantidadDisponible}");
+                var pendienteDto = new CcPpPerndienteAplicarDto()
+                {
+                    Centro = centroCodigo,
+                    Material = materialCodigo,
+                    Proveedor = cuitProveedor,
+                    Corredor = cuitCorredor,
+                };
 
-        //        if ((decimal)(cantidad ?? 0) > cantidadDisponible)
-        //        {
-        //            if (cantidadDisponible < 0) { cantidadDisponible = 0; }
-        //        }
-        //    }
-        //    return null;
-        //}
+                var pendientes = ListarCartasDePortePendienteAplicar(pendienteDto);
+                if (pendientes != null && pendientes.Count > 0)
+                {
+                    var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte)).Sum(x => x.Cantidad);
+                    var cantidadDisponible = DevolverCantidadDisponible(tieneSustentable, contratosPendientes, pendientes);
+                    disponible.CantidadDisponible = cantidadDisponible < 0 ? 0 : cantidadDisponible;
+                    disponible.CantidadTotal = cantidadCartaDePorte;
+                }
+            }
+            return disponible;
+        }
     }
 }

@@ -476,7 +476,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.FasonId + "'" + ',' +
         "'" + dataItem.Estado + "'" + ',' +
         "'" + dataItem.MaterialId + "'" + ',' +
-        "'" + htmlEncode(dataItem.Virtual == null ? "" : dataItem.Virtual) + "'" +
+        "'" + htmlEncode(dataItem.Virtual == null ? "" : dataItem.Virtual) + "'" + ',' +
+        "'" + dataItem.CantidadDeposito + "'" +        
         ')"><i class="fa ' + icono + ' aria-hidden="true"></i></button>';
 }
 
@@ -821,7 +822,7 @@ function CreateGridInformeCompraNet() {
                     DesdeFijacion: { type: "date" },
                     HastaFijacion: { type: "date" },
                     FechaCierta: { type: "date" },
-                    FechaOperacion: { type: "date" },
+                    FechaOperacion: { type: "date" }
                 }
             }
         },
@@ -1232,7 +1233,7 @@ function CreateGridInformeCompraNet() {
                 field: "ContratoCorredor", type: "string", title: "Contrato Corredor", filterable: {
                     multi: true, dataSource: new Array()
                 }
-            }
+            },           
         ],
         pageable: {
             messages: {
@@ -2213,8 +2214,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
     Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional,
     CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta, RazonsocialProveedorComisionista, minimo, maximo,
-    ComercialZonaId, FijacionDePrecioContratoId, TipoNegocioId, AcuerdoId, AgenteId, FasonId, Estado, MaterialId, virtual
-) {
+    ComercialZonaId, FijacionDePrecioContratoId, TipoNegocioId, AcuerdoId, AgenteId, FasonId, Estado, MaterialId, virtual, CantidadDeposito) {
     var dataItem = {
         Id : id,
         Estado: Estado,
@@ -2502,6 +2502,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     $("#visualizar_pesificadoDias").text(pesificadoDias);
     informaSIO === "true" ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
     mercsFijacion == "true" ? $("#visualizar_mercsDeposito").text("Si") : $("#visualizar_mercsDeposito").text("null");
+    mercsFijacion == "true" ? $("#cantidadDeposito").text(isNaN(parseInt(CantidadDeposito)) ? "" : kendo.toString(parseInt(CantidadDeposito), "n0")) : $("#cantidadDeposito").text("0");
     cd === "true" ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null");
     boletoDescripcion === "Ninguno" || boletoDescripcion === null || boletoDescripcion === "" || boletoDescripcion === "undefined" ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
 
@@ -2526,7 +2527,8 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     destinoDescripcion != "" ? $("#visualizar_destino").text(destinoDescripcion) : $("#visualizar_destino").text("null");
     visualizacionRowDoble("cantidadDivVisualizar", "visualizar_cantidad", "cantidadDeCamionesDivVisualizar", "visualizar_cantidadDeCamiones");
     visualizacionRowDoble("tipoDivVisualizar", "visualizar_tipo", "destinoDivVisualizar", "visualizar_destino");
-    visualizacionRowDoble("mercsDepositoDivVisualizar", "visualizar_mercsDeposito", "pagoDivVisualizar", "visualizar_pago");
+    visualizacionRowDoble("mercsDepositoDivVisualizar", "visualizar_mercsDeposito", "mercsDepositoDivVisualizar", "cantidadDeposito");
+    visualizacionRowDoble("pagoDivVisualizar", "visualizar_pago");
     visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
     visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
     visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio", "dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha");
@@ -3403,6 +3405,24 @@ function compararReconfirmacion() {
     table += '<span> CANTIDAD (Kg): ' + (contrato.Cantidad != contratoSave.Cantidad ? "<strong>" + kendo.toString(contratoSave.Cantidad, "n0") + "</strong>" : kendo.toString(contratoSave.Cantidad, "n0")) + '</span><br/>';
     table += '</td>';
     table += "</tr>";
+    if (contrato.TipoNegocioId == 1) {
+        table += "<tr>";
+        table += "<td>";
+        table += '<span> DESDE FIJACION: ' + kendo.toString(contrato.DesdeFijacionFormateado, "dd-MM-yyyy") + '</span><br/>';
+        table += '</td>';
+        table += '<td>';
+        table += '<span> DESDE FIJACION: ' + (contrato.DesdeFijacion != contratoSave.DesdeFijacion ? "<strong>" + kendo.toString(contratoSave.DesdeFijacionFormateado, "dd/MM/yyyy") + "</strong>" : kendo.toString(contratoSave.DesdeFijacionFormateado, "dd/MM/yyyy")) + '</span><br/>';
+        table += '</td>';
+        table += "</tr>";
+        table += "<tr>";
+        table += '<td>';
+        table += '<span> HASTA FIJACION: ' + kendo.toString(contrato.HastaFijacionFormateado, "dd-MM-yyyy") + '</span><br/>';
+        table += '</td>';
+        table += '<td>';
+        table += '<span> HASTA FIJACION: ' + (contrato.HastaFijacion != contratoSave.HastaFijacion ? "<strong>" + kendo.toString(contratoSave.HastaFijacionFormateado, "dd/MM/yyyy") + "</strong>" : kendo.toString(contratoSave.HastaFijacionFormateado, "dd/MM/yyyy")) + '</span><br/>';
+        table += '</td>';
+        table += "</tr>";
+    }
 
     var result = MSExecuteOnServer('/CompraNet/ValidarCalidades', { contratoId: id });
 

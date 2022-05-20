@@ -105,9 +105,9 @@ namespace WebDataAgro.Controllers
             return Json(mobjReportesManager.DetallePosicionModal(materialId, mes, anio, fecha, fechaHasta, (materialId != 2) ? null : clasificacion, int.Parse(centroId),verFijaciones), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult DetalleIdsModal(List<int> negocioids, string moneda)
+        public JsonResult DetalleIdsModal(List<int> negocioids, string moneda, int? verDepositoTipoNegocio)
         {
-            var result = mobjReportesManager.DetallePosicionModalIds(negocioids, moneda);
+            var result = mobjReportesManager.DetallePosicionModalIds(negocioids, moneda, verDepositoTipoNegocio);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

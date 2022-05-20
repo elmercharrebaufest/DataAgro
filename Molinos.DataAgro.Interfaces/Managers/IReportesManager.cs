@@ -70,7 +70,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ExcelPosicionMaterialDto> PosicionPorMaterial(DateTime fechaDesde, DateTime fechaHasta, bool verFijaciones = true);
         string DetallePosicionModal(int materialId, int? mes, int? anio, DateTime fechaDesde, DateTime fechaHasta, int? calidad,  int centroId = 0, bool verFijaciones = true);
         string DetalleAgenteModal(DateTime fecha,List<int> materialId);
-        string DetallePosicionModalIds(List<int> negocios,string moneda);
+        string DetallePosicionModalIds(List<int> negocios,string moned, int? verDepositoTipoNegocioa);
         string SustentablePosicionModalIds(List<int> negocios, string moneda);
         void TraerPosicionNegocios(List<BasicoContrato> datos);
         ReporteEvolucionFijacionModel ObtenerDatosReporteEvolucionFijacion(DateTime desde, DateTime hasta, int? ProveedorId, int? ComercialId, int? CampanaId, int? MaterialId,

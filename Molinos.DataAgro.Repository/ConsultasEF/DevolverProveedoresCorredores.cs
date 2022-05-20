@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
                     sisa = (from s in contexto.Set<SISA>()
                                     where s.CUIT == item.Cuit
-                                    select s).FirstOrDefault();
+                                    select s).OrderBy(x => x.SituacionCategoria).FirstOrDefault();
 
                     if (sisa != null)
                     {
@@ -110,13 +110,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             item.Deshabilitar = true;
                             continue;
                         }
-                        //if (sisa.SituacionCategoria != "AL"))
-                        //{
-                        //    item.Estado = "No Operable por Situación Categoría BA";
-                        //    item.Color = "red";
-                        //    item.Deshabilitar = true;
-                        //    continue;
-                        //}
+                        if (sisa.SituacionCategoria != "AL")
+                        {
+                            item.Estado = "No Operable por Situación Categoría";
+                            item.Color = "red";
+                            item.Deshabilitar = true;
+                            continue;
+                        }
                     }
                     else
                     {

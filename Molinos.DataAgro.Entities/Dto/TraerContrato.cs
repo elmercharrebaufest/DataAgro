@@ -271,6 +271,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Corredor { get; set; }
         public int? BolsaContratoId { get; set; }
         public bool? TarifaAConvenir { get; set; }
+        public double? CantidadDeposito { get; set; }
+        public string MercaderiaDescripcion { get; set; }
     }
 
     public class StoredPorContratoResult

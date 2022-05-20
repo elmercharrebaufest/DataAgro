@@ -160,7 +160,7 @@
                     <label style="width: 110px">Notificaciones: </label><input type="checkbox" id="suscribirNotificacion" name="suscribirNotificacion" value="suscribirNotificacion">
                 </div>
                 <div class="autoRecarga col-md-6 noPadding">
-                    <label style="width: 110px">Autorecargar:</label> <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" @(noDefault ? "": "checked")>
+                    <label style="width: 110px">Autorecargar:</label> <input type="checkbox" id="checkRecarga" name="autoRecarga" value="Autorecarga" @(noDefault ? "" : "checked")>
                 </div>
             </div>
         }
@@ -399,5 +399,18 @@
 
     .k-grid-header th.k-header > .k-link {
         text-overflow: unset !important;
+    }
+
+    .boton {
+        padding: 0px 7px;
+        /* border: 1px; */
+        border-color: #a3a3a3;
+        text-align: center;
+        height: 34px;
+        text-decoration: none;
+        font-size: 13px;
+        border-radius: 5px !important;
+        color: white;
+        background: #ac67ca !important;
     }
 </style>

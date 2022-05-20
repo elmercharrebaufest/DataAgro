@@ -323,6 +323,12 @@ function CreateGridInformeCompraNet() {
 
             { field: "RazonSocialProveedorComisionista", title: "Comisionista", type: "string", width: 300 },
             { field: "BoletoDescripcion", title: "Boleto", type: "string", width: 80 },
+            { field: "MercaderiaDescripcion", title: "Mercaderia en depósito", type: "string", width: 300 },
+            {
+                field: "CantidadDeposito", title: "Cantidad en depósito", type: "number", width: 80, minResizableWidth: 80, format: "{0:n0}", attributes: {
+                    "class": "mobile-xs"
+                }
+            },
             
         ],
         excelExport: function (e) {
