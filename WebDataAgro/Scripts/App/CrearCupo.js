@@ -307,20 +307,63 @@ function makeUL(array) {
 }
 
 function copiarGenerados() {
-    var listaCupos = $("#cupos-generados-modal").html().replace(/<br>/g, "\n");
-    var copy = function (e) {
-        e.preventDefault();
-        console.log('copy');
+    $("#copiar-cupos-generados-modal").empty();
+    $("#copiar-cupos-generados-modal").append($("#cupos-generados-modal").html());
 
-        if (e.clipboardData) {
-            e.clipboardData.setData('text/plain', listaCupos);
-        } else if (window.clipboardData) {
-            window.clipboardData.setData('Text', listaCupos);
+    if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
+        var cuitProv = $("#buscadorProveedor").val().split('(');
+        if (cuitProv[1] != null) {
+            var cuitP = cuitProv[1].split(')');
         }
-    };
-    window.addEventListener('copy', copy);
-    document.execCommand('copy');
-    window.removeEventListener('copy', copy);
+        else {
+            cuitP = cuitProv;
+        }
+        var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0] });
+        if (result != null && result.length > 0) {
+            var table = "<pre style='border: 0;    background-color: transparent;'>";
+            table += '<div colspan = "">Cosecha ' + result[0].Cosecha + '</div>';
+            table += "<div>" + "Establecimiento".padEnd(25, ' ') + "Cantidad (Kg)".padEnd(25, ' ') + "Localidad(Provincia)" + " </div>"
+            for (var i = 0; i < result.length; i++) {
+                table += "<div>";
+                table += '<div>' + result[i].Establecimiento.padEnd(25, ' ') + kendo.toString(result[i].Cantidad, "n0").padEnd(25, ' ') + result[i].Localidad + '(' + result[i].Provincia + ')' + '</div>';
+                table += "</div>";
+            }
+            table += "</pre>";
+
+            $("#copiar-cupos-generados-modal").append(table);
+        }
+    }
+
+    //var listaCupos = $("#copiar-cupos-generados-modal").html().replace(/<br>/g, "\n");
+    //var copy = function (e) {
+    //    e.preventDefault();
+    //    console.log('copy');
+
+    //    if (e.clipboardData) {
+    //        e.clipboardData.setData('text/plain', listaCupos);
+    //    } else if (window.clipboardData) {
+    //        window.clipboardData.setData('Text', listaCupos);
+    //    }
+    //};
+    //window.addEventListener('copy', copy);
+    //document.execCommand('copy');
+    //window.removeEventListener('copy', copy);c
+    selectElementContents(document.getElementById('copiar-cupos-generados-modal'));
+    setTimeout(function () {
+        $("#copiar-cupos-generados-modal").empty();
+    }, 50);
+}
+function selectElementContents(el) {
+    var body = document.body,
+        range, sel;
+    if (document.createRange && window.getSelection) {
+        range = document.createRange();
+        sel = window.getSelection();
+        sel.removeAllRanges();
+        range.selectNodeContents(el);
+        sel.addRange(range);
+    }
+    document.execCommand("Copy");
 }
 function MostrarCarga() {
     $("#CargaCupos").modal('toggle');
@@ -419,7 +462,7 @@ function VisualizarStock(noabrir) {
 
         $("#cargarDatosEstablecimiento").html(table);
         if (noabrir != true) {
-            $("#modalEstablecimientos").modal("show");            
+            $("#modalEstablecimientos").modal("show");
         }
     } else {
         if (noabrir != true) {

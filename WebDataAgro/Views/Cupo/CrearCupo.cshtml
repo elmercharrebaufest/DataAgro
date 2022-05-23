@@ -284,7 +284,7 @@ else if (!Html.ViewData.ModelState.IsValid)
 <div class="modal fade " id="modalEstablecimientos" tabindex="-1" role="dialog" aria-labelledby="establecimiento" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="table table-striped table-responsive modal-body tabla ">
+            <div class="table table-striped table-responsive modal-body tabla " id="divTablaEstablecimientos">
                 <table id="cargarDatosEstablecimiento" style="width:100%"></table>
             </div>
             <div class="modal-footer">
@@ -307,3 +307,4 @@ else if (!Html.ViewData.ModelState.IsValid)
     }
 </style>
 
+<div id="copiar-cupos-generados-modal" style="background-color:white;"></div>
