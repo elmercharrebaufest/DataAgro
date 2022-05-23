@@ -17,10 +17,12 @@ namespace Molinos.DataAgro.Agent.Helpers
     public class FinalizarContratoAgent : IFinalizarContratoAgent
     {
         private readonly IRepositorio repositorio;
-        public FinalizarContratoAgent(ILogger logger, IRepositorio repositorio)
+        private readonly ITipoDeCambioAgent tipoCambioAgent;
+        public FinalizarContratoAgent(ILogger logger, IRepositorio repositorio, ITipoDeCambioAgent tipoCambioAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.tipoCambioAgent = tipoCambioAgent;
         }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
@@ -87,8 +89,27 @@ namespace Molinos.DataAgro.Agent.Helpers
                     
                     if (contrato.PrecioPactado != null && contrato.PrecioPactado.Count > 0)
                     {
+                        var tipoCambio = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.Date),2, MidpointRounding.AwayFromZero);
                         foreach (var p in contrato.PrecioPactado)
                         {
+                            decimal importe = 0;
+                            if (p.ImportePactado.HasValue && p.ImportePactado.Value >  0) {
+                                if (p.MonedaImportePactadoId == p.MonedaPactadoId)
+                                {
+                                    importe = p.ImportePactado.Value;
+                                }
+                                else
+                                {
+                                    if(p.MonedaImportePactadoId.Replace(" ","") == "USDM")
+                                    {
+                                        importe = p.ImportePactado.Value * tipoCambio;
+                                    }
+                                    else
+                                    {
+                                        importe = p.ImportePactado.Value / tipoCambio;
+                                    }
+                                }
+                            }
                             listaDescuentos.Add(new ZMPES5290
                             {
                                 TIPO_PERIODO = "E",
@@ -96,9 +117,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 FEDESDE = p.FechaDesde?.ToString("yyyy-MM-dd"),
                                 FEHASTA = p.FechaHasta?.ToString("yyyy-MM-dd"),
                                 IMPORTE_DB = 0, //p.ImportePactado ?? 0,
-                                MONEDA_DB = p.MonedaImportePactado != null ? p.MonedaImportePactadoId : "",
+                                MONEDA_DB = "",//p.MonedaImportePactado != null ? p.MonedaImportePactadoId : "",
                                 PORC_DB = 0, //p.Porcentaje ?? 0,
-                                PRECIO = Math.Round(p.Precio + (p.ImportePactado.HasValue? p.ImportePactado.Value : 0) + (p.Porcentaje.HasValue? p.Precio * (p.Porcentaje.Value/ 100) : 0), 2),
+                                PRECIO = Math.Round(p.Precio + importe + (p.Porcentaje.HasValue? p.Precio * (p.Porcentaje.Value/ 100) : 0), 2),
                                 MONEDA = p.MonedaPactadoId
                             });
                         }
