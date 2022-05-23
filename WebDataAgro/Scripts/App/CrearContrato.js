@@ -4841,6 +4841,9 @@ function validarGuardarApertura(precioPactado) {
 
         return true;
     }
+    if (precioPactado.ImportePactado != 0 && precioPactado.Porcentaje != "") {
+        return true;
+    }
     return false;
 }
 
@@ -5307,6 +5310,10 @@ function AgregarPrecioPactado() {
         }
         if (Number($("#precioPactado").val().replace(',', '.')) > rangos.PrecioMaximo) {
             errores.push("Precio por fuera del rango de Precio Máximo");
+        }
+
+        if (precioPactado.ImportePactado != 0 && precioPactado.Porcentaje != "") {
+            errores.push("No es posible colocar un importe y un porcentaje en la misma apertura.");;
         }
         return errores;
     }

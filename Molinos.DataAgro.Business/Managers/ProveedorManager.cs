@@ -872,8 +872,9 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "PRECIO PACTADO <br />";
                 foreach (var precio in oContrato.PrecioPactado)
                 {
+                    decimal calculoPrecio = precio.Precio + (precio.Porcentaje.HasValue ? precio.Precio * (precio.Porcentaje.Value / 100) : 0) + (precio.ImportePactado.HasValue ?  precio.ImportePactado.Value : 0);
                     htmlBody += " Si la entrega se realiza entre el " + precio.FechaDesde.Value.ToString("dd/MM/yyyy") + " y el " + precio.FechaHasta.Value.ToString("dd/MM/yyyy") +
-                                            " el precio será " + precio.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() +
+                                            " el precio será " + calculoPrecio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() +
                                             "<br />"; if (precio.ImportePactado != null && precio.ImportePactado > 0 && precio.MonedaImportePactado != null)
                     {
                         htmlBody += "Importe Pactado " + precio.ImportePactado.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaImportePactado.Descripcion.ToUpper() + "<br />";

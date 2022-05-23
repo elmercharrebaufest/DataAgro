@@ -62,12 +62,12 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 TIPO_DB = descBon.TipoDB.CodigoSap,
                                 FEDESDE = descBon.FechaDesde != null ? descBon.FechaDesde.Value.ToString("yyyy-MM-dd") : null,
                                 FEHASTA = descBon.FechaHasta?.ToString("yyyy-MM-dd"),
-                                IMPORTE_DB = descBon.Importe,
+                                IMPORTE_DB = descBon.Importe * (1 + (descBon.Porcentaje / 100)),
                                 MONEDA_DB = descBon.MonedaId ?? "",
                                 MONEDA = descBon.MonedaId ?? "",
                                 PORC_DB = descBon.Porcentaje
                             }
-                            );
+                            ); ;
                         };
                     }
                     if (contrato.Sustentable == true)
@@ -98,7 +98,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 IMPORTE_DB = p.ImportePactado ?? 0,
                                 MONEDA_DB = p.MonedaImportePactado != null ? p.MonedaImportePactadoId : "",
                                 PORC_DB = p.Porcentaje ?? 0,
-                                PRECIO = p.Precio,
+                                PRECIO = p.Precio + (p.ImportePactado.HasValue? p.ImportePactado.Value : 0) + (p.Porcentaje.HasValue? p.Precio * (p.Porcentaje.Value/ 100) : 0),
                                 MONEDA = p.MonedaPactadoId
                             });
                         }
