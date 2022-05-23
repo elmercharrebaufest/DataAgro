@@ -95,10 +95,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 TIPO_DB = "",
                                 FEDESDE = p.FechaDesde?.ToString("yyyy-MM-dd"),
                                 FEHASTA = p.FechaHasta?.ToString("yyyy-MM-dd"),
-                                IMPORTE_DB = p.ImportePactado ?? 0,
+                                IMPORTE_DB = 0, //p.ImportePactado ?? 0,
                                 MONEDA_DB = p.MonedaImportePactado != null ? p.MonedaImportePactadoId : "",
-                                PORC_DB = p.Porcentaje ?? 0,
-                                PRECIO = p.Precio + (p.ImportePactado.HasValue? p.ImportePactado.Value : 0) + (p.Porcentaje.HasValue? p.Precio * (p.Porcentaje.Value/ 100) : 0),
+                                PORC_DB = 0, //p.Porcentaje ?? 0,
+                                PRECIO = Math.Round(p.Precio + (p.ImportePactado.HasValue? p.ImportePactado.Value : 0) + (p.Porcentaje.HasValue? p.Precio * (p.Porcentaje.Value/ 100) : 0), 2),
                                 MONEDA = p.MonedaPactadoId
                             });
                         }
