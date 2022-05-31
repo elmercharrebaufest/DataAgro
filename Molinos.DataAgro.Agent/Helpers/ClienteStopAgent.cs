@@ -664,7 +664,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         Codigo = cupoNoPropio.idCupoTerminal,
                         Estado = cupoNoPropio.idCupoEstado,
-                        Disponible = (cupoNoPropio.esAnulado == "N" && cupoNoPropio.esRechazado == "N") ? true : false,
+                        //Disponible = (cupoNoPropio.esAnulado == "N" && cupoNoPropio.esRechazado == "N") ? true : false,//no tenemos que hacer esto
                         FechaIngreso = Convert.ToDateTime(cupoNoPropio.fecha)
                     });
                     var columnasNoPropios = new List<KeyValuePair<string, string>> {

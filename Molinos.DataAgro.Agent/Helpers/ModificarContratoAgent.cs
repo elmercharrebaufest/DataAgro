@@ -389,115 +389,113 @@ namespace Molinos.DataAgro.Agent.Helpers
                 });
 
                 var fechaContrato = repositorio.Obtener<Contrato, DateTime>(x => x.Id == contrato.Id, x => x.Fecha);
+
+                var AnulaYReemplazaContratoSAP = contrato.AnulaYReemplazaContratoId == null ? "" :
+                    repositorio.Obtener<Contrato, string>(x => x.Id == contrato.AnulaYReemplazaContratoId, x => x.ContratoSAP);
+                var detalle = new ZMPES5270();
+
+                detalle.CANTIDAD = Convert.ToDecimal(contrato.Cantidad);
+                detalle.CONTR_DATAAGRO = contrato.Id.ToString();
+                detalle.COSECHA = repositorio.Obtener<Campaña, string>(x => contrato.CampanaId == x.CampañaId, x => x.Descripcion);
+                detalle.DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0";
+                detalle.FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd");
+                detalle.FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd");
+                detalle.FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd");
+                detalle.FECHA_LIMITE = fechaDolarizadoString;
+                detalle.GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "";
+                detalle.MONEDA = contrato.MonedaId;
+                detalle.NO_INFORMAR_SIO = noInformaSioString;
+                detalle.PAGO_DIFERIDO = (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) == true ? "X" : "";
+                detalle.MATERIAL = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo);
+                detalle.PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "";
+                detalle.PRECIO_PIZARRA = contrato.Precio;
+                detalle.PRECIO = contrato.PrecioNeto ?? contrato.Precio;
+                detalle.PROVEEDOR = repositorio.Obtener<Proveedor, string>(x => contrato.ProveedorId == x.ProveedorId, x => x.CUIT);
+                detalle.PROVINCIA = contrato.ProvinciaId.ToString();
+                detalle.SUSTENTABLE = contrato.Sustentable == true ? "X" : "";
+                detalle.ESPECIAL = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap);
+                detalle.FECHA = contrato.FechaOperacion.ToString("yyyy-MM-dd");
+                detalle.USUARIO = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory);
+                detalle.HORAACT = fechaContrato.ToString("HH:mm:ss");
+                detalle.PROCEDENCIA = localidadString;
+                detalle.CENTRO = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap);
+                detalle.CLASIFICACION = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion).ToUpper();
+                detalle.IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "";
+                detalle.CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "";
+                detalle.COND_FIJACION = contrato.CondicionFijacionId.HasValue ? repositorio.Obtener<CondicionFijacion, string>(x => contrato.CondicionFijacionId == x.Id, x => x.CodigoSap) : "";
+                detalle.CAMIONES = cantidadCamiones;
+                detalle.CONFIRMA = contrato.BoletoId == 1 ? "X" : "";
+                detalle.BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? repositorio.Obtener<BolsaCompraNet, string>(x => contrato.BolsaId == x.Id, x => x.CodigoSap) : null;
+                detalle.BOL_FISICO = contrato.BoletoId == 2 ? "X" : "";
+                detalle.CARTA_OFERTA = contrato.BoletoId == 4 ? "X" : "";
+                detalle.NINGUNO = contrato.BoletoId == 3 ? "X" : "";
+                detalle.SIN_BOLETO = contrato.BoletoId == 5 ? "X" : "";
+                detalle.AUT_CG = contrato.Warrant == true ? "X" : "";
+                detalle.AUR_CD = contrato.CD == true ? "X" : "";
+                detalle.PAGO_DIR_VEND = contrato.PagoDirectoVendedor == true ? "X" : "";
+                detalle.ESTAB_PROPIO = contrato.EstablecimientoPropio == true ? "X" : "";
+                detalle.ESTAB_ARRENDADO = contrato.EstablecimientoPropio == false ? "X" : "";
+                detalle.IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe : 0;
+                detalle.MONEDA_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId : null;
+                detalle.PORC_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0;
+                detalle.IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0;
+                detalle.MONEDA_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null;
+                detalle.PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0;
+                detalle.MERC_DESCARGADA = contrato.MercsDeposito == true ? "X" : "";
+                detalle.OBSERVACION_CAL1 = contrato.Observacion;
+                detalle.CUIT_CORREDOR = contrato.CorredorId.HasValue ? repositorio.Obtener<Proveedor, string>(x => contrato.CorredorId == x.ProveedorId, x => x.CUIT) : "";
+                detalle.PORC_COMISION = contrato.CorredorId.HasValue ? contrato.PorcentajeComision.Value : 0;
+                detalle.CONTRCORR = contrato.ContratoCorredor ?? "";
+                detalle.CONTRVEND = contrato.ContratoVendedor ?? "";
+                detalle.SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "";
+                detalle.SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "";
+                detalle.CONTRATO_MADRE = contrato.ContratoMadre ?? "";
+                detalle.CREADOR = contrato.ComercialCreadorId.HasValue ? repositorio.Obtener<Comercial, string>(x => contrato.ComercialCreadorId == x.ComercialId, x => x.IdActiveDirectory) : "";
+                detalle.ZONA = contrato.ZonaId.HasValue ? repositorio.Obtener<Zona, string>(x => contrato.ZonaId == x.Id, x => x.CodigoSap) : "";
+                detalle.COMPENSACION = contrato.Compensacion == true ? "X" : "";
+                detalle.FLETE_NIVEL = contrato.NivelTarifaId.HasValue ? repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "";
+                detalle.FLETE_TARIFA = contrato.TarifaFlete ?? 0;
+                detalle.FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null;
+                detalle.PORCPARCIAL = contrato.PorcentajeDePago ?? (decimal)97.5;
+                detalle.AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "";
+                detalle.CARATULA = contrato.CaratulaMAT;
+                detalle.CARATULA_EXT = contrato.CaratulaExtension;
+                detalle.PRECIO_COM_MAT = contrato.PrecioAjusteComision ?? 0;
+                detalle.MONEDA_COM_MAT = contrato.MonedaAjusteComisionId;
+                detalle.FECHA_CREACION = fechaContrato.ToString("yyyy-MM-dd");
+                detalle.ZLSCH = contrato.ChequeElectronico == true ? "=" : "";
+                detalle.DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "";
+                detalle.CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "";
+                detalle.PLANTA_DEST = contrato.PlantaDestinoId != null ? repositorio.Obtener<Centro, string>(x => contrato.PlantaDestinoId == x.Id, x => x.CodigoSap) : repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap);
+                detalle.CANJE = contrato.Canje == true ? "X" : "";
+                detalle.DESC_INSUMOS = contrato.Insumo;
+                detalle.MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId;
+                detalle.MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0;
+                detalle.POSICION_CBOT = contrato.PosicionCBOT;
+                detalle.FIJ_CBOT_MAT = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "";
+                detalle.TERCERO = contrato.ProveedorCreadorId != null ? "X" : "";
+                detalle.ANULA_Y_REEMP = AnulaYReemplazaContratoSAP;
+
+                detalle.CONDICIONAL = contrato.Condicional == true ? "X" : "";
+                detalle.FECHA_COND = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "";
+                detalle.MES_COND_MAT = contrato.CondicionalPosicion != null ? contrato.CondicionalPosicion : "";
+                detalle.MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "";
+                detalle.PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0;
+                detalle.CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "";
+                detalle.CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
+                detalle.COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "";
+                detalle.PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "";
+                detalle.TOL_INF = 3;
+                detalle.TOL_SUP = 3;
+                detalle.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
+                detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " ? "02" : "";
+
                 var rq = new Z_MPRFC_MODIFICAR_CONTRATO
                 {
                     IM_CONTRATO = new ZMPES5560
                     {
                         CONTRATO = contrato.ContratoSAP.TrimStart('0'),
-                        DETALLE = new ZMPES5270
-                        {
-                            CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
-                            CONTR_DATAAGRO = contrato.Id.ToString(),
-                            COSECHA = repositorio.Obtener<Campaña, string>(x => contrato.CampanaId == x.CampañaId, x => x.Descripcion),
-                            DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0",
-                            FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),
-                            FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd"),
-                            FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
-                            FECHA_LIMITE = fechaDolarizadoString,
-                            GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "",
-                            MONEDA = contrato.MonedaId,
-                            NO_INFORMAR_SIO = noInformaSioString,
-                            PAGO_DIFERIDO = (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) == true ? "X" : "",
-                            MATERIAL = repositorio.Obtener<Material, string>(x => contrato.MaterialId == x.MaterialId, x => x.Codigo),
-                            PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
-                            PRECIO_PIZARRA = contrato.Precio,
-                            PRECIO = contrato.PrecioNeto ?? contrato.Precio,
-                            PROVEEDOR = repositorio.Obtener<Proveedor, string>(x => contrato.ProveedorId == x.ProveedorId, x => x.CUIT),
-                            PROVINCIA = contrato.ProvinciaId.ToString(),
-                            SUSTENTABLE = contrato.Sustentable == true ? "X" : "",
-                            ESPECIAL = repositorio.Obtener<StandardDeCalidad, string>(x => contrato.StandardDeCalidadId == x.Id, x => x.CodigoSap),
-                            FECHA = contrato.FechaOperacion.ToString("yyyy-MM-dd"),
-                            USUARIO = repositorio.Obtener<Comercial, string>(x => contrato.ComercialId == x.ComercialId, x => x.IdActiveDirectory),
-                            HORAACT = fechaContrato.ToString("HH:mm:ss"),
-                            PROCEDENCIA = localidadString,
-                            CENTRO = repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
-                            CLASIFICACION = repositorio.Obtener<ClasificacionCompraNet, string>(x => contrato.ClasificacionId == x.Id, x => x.Descripcion).ToUpper(),
-                            IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "",
-                            CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "",
-                            COND_FIJACION = contrato.CondicionFijacionId.HasValue ?
-                            repositorio.Obtener<CondicionFijacion, string>(x => contrato.CondicionFijacionId == x.Id, x => x.CodigoSap) : "",
-                            CAMIONES = cantidadCamiones,
-                            CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
-                            BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ?
-                            repositorio.Obtener<BolsaCompraNet, string>(x => contrato.BolsaId == x.Id, x => x.CodigoSap) : null,
-                            BOL_FISICO = contrato.BoletoId == 2 ? "X" : "",
-                            CARTA_OFERTA = contrato.BoletoId == 4 ? "X" : "",
-                            NINGUNO = contrato.BoletoId == 3 ? "X" : "",
-                            SIN_BOLETO = contrato.BoletoId == 5 ? "X" : "",
-                            AUT_CG = contrato.Warrant == true ? "X" : "",
-                            AUR_CD = contrato.CD == true ? "X" : "",
-                            PAGO_DIR_VEND = contrato.PagoDirectoVendedor == true ? "X" : "",
-                            ESTAB_PROPIO = contrato.EstablecimientoPropio == true ? "X" : "",
-                            ESTAB_ARRENDADO = contrato.EstablecimientoPropio == false ? "X" : "",
-                            IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe : 0,
-                            MONEDA_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId : null,
-                            PORC_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0,
-                            IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
-                            MONEDA_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null,
-                            PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
-                            MERC_DESCARGADA = contrato.MercsDeposito == true ? "X" : "",
-                            OBSERVACION_CAL1 = contrato.Observacion,
-                            CUIT_CORREDOR = contrato.CorredorId.HasValue ?
-                            repositorio.Obtener<Proveedor, string>(x => contrato.CorredorId == x.ProveedorId, x => x.CUIT) : "",
-                            PORC_COMISION = contrato.CorredorId.HasValue ? contrato.PorcentajeComision.Value : 0,
-                            CONTRCORR = contrato.ContratoCorredor ?? "",
-                            CONTRVEND = contrato.ContratoVendedor ?? "",
-                            SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "",
-                            SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
-                            CONTRATO_MADRE = contrato.ContratoMadre ?? "",
-                            CREADOR = contrato.ComercialCreadorId.HasValue ?
-                            repositorio.Obtener<Comercial, string>(x => contrato.ComercialCreadorId == x.ComercialId, x => x.IdActiveDirectory) : "",
-                            ZONA = contrato.ZonaId.HasValue ?
-                            repositorio.Obtener<Zona, string>(x => contrato.ZonaId == x.Id, x => x.CodigoSap) : "",
-                            COMPENSACION = contrato.Compensacion == true ? "X" : "",
-                            FLETE_NIVEL = contrato.NivelTarifaId.HasValue ?
-                            repositorio.Obtener<NivelTarifa, string>(x => contrato.NivelTarifaId == x.Id, x => x.CodigoSap) : "",
-                            FLETE_TARIFA = contrato.TarifaFlete ?? 0,
-                            FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
-                            PORCPARCIAL = contrato.PorcentajeDePago ?? (decimal)97.5,
-                            AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "",
-                            CARATULA = contrato.CaratulaMAT,
-                            CARATULA_EXT = contrato.CaratulaExtension,
-                            PRECIO_COM_MAT = contrato.PrecioAjusteComision ?? 0,
-                            MONEDA_COM_MAT = contrato.MonedaAjusteComisionId,
-                            FECHA_CREACION = fechaContrato.ToString("yyyy-MM-dd"),
-                            ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
-                            DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
-                            CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
-                            PLANTA_DEST = contrato.PlantaDestinoId != null ? repositorio.Obtener<Centro, string>(x => contrato.PlantaDestinoId == x.Id, x => x.CodigoSap) : repositorio.Obtener<Centro, string>(x => contrato.DestinoId == x.Id, x => x.CodigoSap),
-                            CANJE = contrato.Canje == true ? "X" : "",
-                            DESC_INSUMOS = contrato.Insumo,
-                            MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
-                            MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0,
-                            POSICION_CBOT = contrato.PosicionCBOT,
-                            FIJ_CBOT_MAT = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "",
-                            TERCERO = contrato.ProveedorCreadorId != null ? "X" : "",
-                            ANULA_Y_REEMP = contrato.AnulaYReemplazaContratoId == null ? "" : contrato.AnulaYReemplazaContrato.ContratoSAP,
-
-                            CONDICIONAL = contrato.Condicional == true ? "X" : "",
-                            FECHA_COND = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "",
-                            MES_COND_MAT = contrato.CondicionalPosicion != null ? contrato.CondicionalPosicion : "",
-                            MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "",
-                            PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0,
-                            CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "",
-                            CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0,
-                            COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "",
-                            PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "",
-                            TOL_INF = 3,
-                            TOL_SUP = 3,
-                            PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "",
-                            CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " ? "02" : ""
-                        }
+                        DETALLE = detalle
                     }
                 };
                 var topFija =
@@ -545,7 +543,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             catch (Exception e)
             {
                 logger.Error("Error comunicacion SAP", e);
-                throw e;
+                throw;
             }
 
         }

@@ -84,7 +84,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
-                cupo.Comercial = comercial;              
+                cupo.Comercial = comercial;
                 if (!error.HayError)
                 {
                     cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
@@ -197,7 +197,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         error.Errores.AddRange(errorSap.Errores);
                                         continue;
                                     }
-                                    cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : (cupo.Centro.NoPropio)? 1 : 8;
+                                    cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : (cupo.Centro.NoPropio) ? 1 : 8;
                                     foreach (var cupoSap in listaCupos)
                                     {
                                         var nuevoCupo = (Cupo)cupo.Clone();
@@ -3444,58 +3444,80 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         try
                         {
-                            var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
-                            errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
-
-                            if (errorStop.HayError)
+                            if (c.Centro.NoPropio)
                             {
-                                var cupoError = new CupoDto
+                                if (c.EstadoCupoId == 1)
                                 {
-                                    CupoSap = c.CupoSap,
-                                    Proveedor = c.Proveedor.RazonSocial,
-                                    Material = c.Material.Descripcion,
-                                    MensajeError = "Error al anular en STOP: " + errorStop.ListaErrores.First().Message,
-                                    ZonaCupo = c.ZonaCupo.Descripcion
-                                };
-                                listaCuposError.Add(cupoError);
+                                    c.EstadoCupoId = 4;
+                                    repo.GuardarCambios();
+                                    logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
+                                    var cuposOk = new CupoDto
+                                    {
+                                        CupoSap = c.CupoSap,
+                                        Proveedor = c.Proveedor.RazonSocial,
+                                        Material = c.Material.Descripcion,
+                                        ZonaCupo = c.ZonaCupo.Descripcion,
+                                        ComercialId = c.ComercialId,
+                                        ProveedorId = c.ProveedorId
+                                    };
+                                    listaCuposOk.Add(cuposOk);
+                                }
                             }
                             else
                             {
-                                c.EstadoCupoId = 4;
-                                var resultado = eliminarcupoSap.Eliminar(c.CupoSap, comercialId);
-                                if (resultado != "OK")
+                                var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
+                                errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
+
+                                if (errorStop.HayError)
                                 {
-                                    if (c.Centro.Acopio)
-                                    {
-                                        c.EstadoCupoId = 1;
-                                    }
                                     var cupoError = new CupoDto
                                     {
                                         CupoSap = c.CupoSap,
                                         Proveedor = c.Proveedor.RazonSocial,
                                         Material = c.Material.Descripcion,
-                                        MensajeError = "Anulado Ok en STOP. Error al anular en SAP: " + resultado,
+                                        MensajeError = "Error al anular en STOP: " + errorStop.ListaErrores.First().Message,
                                         ZonaCupo = c.ZonaCupo.Descripcion
                                     };
                                     listaCuposError.Add(cupoError);
                                 }
-
-                            }
-
-                            if (!errorStop.HayError)
-                            {
-                                logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
-
-                                var cuposOk = new CupoDto
+                                else
                                 {
-                                    CupoSap = c.CupoSap,
-                                    Proveedor = c.Proveedor.RazonSocial,
-                                    Material = c.Material.Descripcion,
-                                    ZonaCupo = c.ZonaCupo.Descripcion,
-                                    ComercialId = c.ComercialId,
-                                    ProveedorId = c.ProveedorId
-                                };
-                                listaCuposOk.Add(cuposOk);
+                                    c.EstadoCupoId = 4;
+                                    var resultado = eliminarcupoSap.Eliminar(c.CupoSap, comercialId);
+                                    if (resultado != "OK")
+                                    {
+                                        if (c.Centro.Acopio)
+                                        {
+                                            c.EstadoCupoId = 1;
+                                        }
+                                        var cupoError = new CupoDto
+                                        {
+                                            CupoSap = c.CupoSap,
+                                            Proveedor = c.Proveedor.RazonSocial,
+                                            Material = c.Material.Descripcion,
+                                            MensajeError = "Anulado Ok en STOP. Error al anular en SAP: " + resultado,
+                                            ZonaCupo = c.ZonaCupo.Descripcion
+                                        };
+                                        listaCuposError.Add(cupoError);
+                                    }
+
+                                }
+
+                                if (!errorStop.HayError)
+                                {
+                                    logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);
+
+                                    var cuposOk = new CupoDto
+                                    {
+                                        CupoSap = c.CupoSap,
+                                        Proveedor = c.Proveedor.RazonSocial,
+                                        Material = c.Material.Descripcion,
+                                        ZonaCupo = c.ZonaCupo.Descripcion,
+                                        ComercialId = c.ComercialId,
+                                        ProveedorId = c.ProveedorId
+                                    };
+                                    listaCuposOk.Add(cuposOk);
+                                }
                             }
 
 
