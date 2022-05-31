@@ -6893,7 +6893,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var centroCodigo = repositorio.Obtener<Centro, string>(x => x.Id == centro, x => x.CodigoSap);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
-                var cuitCorredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
+                var cuitCorredor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == corredorId, x => x.CUIT);
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.Proveedor.CUIT == cuitProveedor && x.DestinoId == centro &&
                 x.MaterialId == materialId && (x.EstadoId != 5 && x.EstadoId != 6 && x.EstadoId != 8));
