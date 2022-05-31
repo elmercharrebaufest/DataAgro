@@ -296,9 +296,16 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ConsultarMisturnosActivos()
         {
-            logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos");
-            cupoManager.ConsultarMisTurnosActivos();
-            logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos - Finalizado");
+            if (DateTime.Now >= DateTime.Now.Date.AddHours(7) && DateTime.Now <= DateTime.Now.Date.AddHours(21))
+            {
+                logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos");
+                cupoManager.ConsultarMisTurnosActivos();
+                logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos - Finalizado");
+            }
+            else
+            {
+                logger.Info($"Actualizar CupoNoPropio - MisTurnosActivos - fuera de rango");
+            }
             return Content("ok");
         }
     }

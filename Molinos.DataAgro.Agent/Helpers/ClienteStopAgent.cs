@@ -670,7 +670,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var columnasNoPropios = new List<KeyValuePair<string, string>> {
                         new KeyValuePair<string, string> ("Codigo", "Codigo"),
                         new KeyValuePair<string, string> ("Estado", "Estado"),
-                        new KeyValuePair<string, string> ("Disponible", "Disponible")
+                        //new KeyValuePair<string, string> ("Disponible", "Disponible")
                     };
                     repositorio.ActualizarTodos(actualizarCupoNoPropios, columnasNoPropios, "Codigo");
 

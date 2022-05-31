@@ -81,7 +81,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 NegocioId = itemNegocio.Id,
                                 Version = Convert.ToInt32(String.IsNullOrEmpty(consultaBoleto.Version) ? "0" : consultaBoleto.Version) + 1,
                                 ComercialId = comercialId,
-                                FechaGeneracion = Convert.ToDateTime(consultaBoleto.FechaRecepcionBoleto),
+                                FechaGeneracion = DateTime.Now,
                                 TipoNegocioDetalleId = itemNegocio.TipoNegocioId,
                             };
                             var guardaBoleto = repositorio.Agregar(tempBoleto);
