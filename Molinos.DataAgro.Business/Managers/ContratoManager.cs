@@ -6930,7 +6930,7 @@ namespace Molinos.DataAgro.Business.Managers
                         ContratoSAP = x.ContratoSAP,
                         BoletoId = x.BoletoId,
                         Cantidad = x.Cantidad
-                    }, x => x.BoletoId == 5 && contratosPendientesAplicar.Contains(x.ContratoSAP));
+                    }, x => /*x.BoletoId == 5 &&*/ contratosPendientesAplicar.Contains(x.ContratoSAP));
 
                     logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
                     var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
