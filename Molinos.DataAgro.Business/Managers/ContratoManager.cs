@@ -6895,7 +6895,7 @@ namespace Molinos.DataAgro.Business.Managers
             return cantidadDisponible;
         }
 
-        public CcPpPerndienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable)
+        public CcPpPerndienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto)
         {
             var disponible = new CcPpPerndienteAplicarDto();
             id = id ?? 0;
@@ -6920,7 +6920,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (pendientes != null && pendientes.Count > 0)
                 {
                     var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte)).Sum(x => x.Cantidad);                 
-                    var cantidadDisponible = DevolverCantidadDisponible(tieneSustentable, contratosPendientes, pendientes, false);
+                    var cantidadDisponible = DevolverCantidadDisponible(tieneSustentable, contratosPendientes, pendientes, tieneBoleto.Value);
                     disponible.CantidadDisponible = cantidadDisponible < 0 ? 0 : cantidadDisponible;
                     disponible.CantidadTotal = cantidadCartaDePorte;
                 }

@@ -1284,9 +1284,9 @@ namespace WebDataAgro.Controllers
             return Json(estado, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable)
+        public JsonResult ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto)
         {
-            var model = mobjContratoManager.ObtenerDatosMercaderiaEnDeposito(materialId, id, centro, corredorId, proveedorId, tieneSustentable);
+            var model = mobjContratoManager.ObtenerDatosMercaderiaEnDeposito(materialId, id, centro, corredorId, proveedorId, tieneSustentable, tieneBoleto);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 

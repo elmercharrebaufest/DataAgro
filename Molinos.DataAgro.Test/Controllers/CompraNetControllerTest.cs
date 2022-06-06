@@ -1457,10 +1457,10 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void ObtenerDatosMercaderiaEnDepositoTest()
         {
-            contratoManagerMock.Setup(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()))
+            contratoManagerMock.Setup(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()))
                 .Returns(new CcPpPerndienteAplicarDto());
-            var result = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false) as JsonResult;
-            contratoManagerMock.Verify(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()), Times.Once);
+            var result = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false, false) as JsonResult;
+            contratoManagerMock.Verify(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
             Assert.NotNull(result);
         }
     }

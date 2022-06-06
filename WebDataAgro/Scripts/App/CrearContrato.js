@@ -6141,7 +6141,7 @@ function CompletarCantidadDisponibleDeposito() {
             cuitC = cuitCorr;
         }
         Id = Id != "" ? Id : 0;
-        var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked") };
+        var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked"), tieneBoleto: $("#sinBoletoId").is(':checked') };
         var disponible = MSExecuteOnServer('/CompraNet/ObtenerDatosMercaderiaEnDeposito', datos);
         if (disponible != null && disponible.CantidadTotal != null) {
             $("#cantidadDeposito").data("kendoNumericTextBox").value(disponible.CantidadTotal);

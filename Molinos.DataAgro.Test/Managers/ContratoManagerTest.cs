@@ -5362,7 +5362,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Centro, string>(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, string>>>())).Returns("30209034560");
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { oContrato });           
             ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPerndienteAplicarDto>() { pendiente });
-            var resultado = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false);
+            var resultado = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false, false);
 
         }
     }
