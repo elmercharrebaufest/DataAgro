@@ -6867,16 +6867,16 @@ namespace Molinos.DataAgro.Business.Managers
                 Cantidad = x.Cantidad
             }, x => contratosPendientesAplicar.Contains(x.ContratoSAP));
 
-            contratosFinalizados = validarBoleto ? contratosFinalizados.Where(x => x.BoletoId == 5) : contratosFinalizados;
+            contratosFinalizados = validarBoleto ? contratosFinalizados.Where(x => x.BoletoId == 5).ToList() : contratosFinalizados;
 
-            logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
+            //logger.Debug($"contratosFinalizados {contratosFinalizados.ToJson()}");
             var cantidadContratosKilosPendientesAplicar = pendientes.Where(x => contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
             var cantidadNegocioPendiente = contratosPendientes.Where(x => !pendientes.Any(y => y.Contrato.Contains(x.ContratoSAP))).Sum(x => x.Cantidad);
-            foreach (var item in contratosPendientes)
-            {
-                logger.Debug($"contratosPendientesEnDA {item.ContratoSAP}");
-            }
-            logger.Debug($"pendientes {pendientes.ToJson()}");
+            //foreach (var item in contratosPendientes)
+            //{
+            //    logger.Debug($"contratosPendientesEnDA {item.ContratoSAP}");
+            //}
+            //logger.Debug($"pendientes {pendientes.ToJson()}");
 
             logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
 
