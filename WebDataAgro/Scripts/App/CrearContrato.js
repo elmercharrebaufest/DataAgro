@@ -222,7 +222,7 @@ function InicializarElementos() {
             $("#dolarizadoExpressDiv").hide();
 
         }
-    });  
+    });
 
     $("#buscadorProveedor").kendoAutoComplete({
         template: '<img class="buscar-cont" src="..' + MSGetUrl("/Content/Images/usuario-busqueda.png") + '" /> ' +
@@ -2416,7 +2416,7 @@ function InicializarElementos() {
             } else {
                 $(".depositoDiv").hide();
             }
-         
+
             //else if ($('#tipoId').val() == 6) {
             //    $(".contratoAFijar").hide();
             //    $(".contratoAPrecio").hide();
@@ -4272,11 +4272,11 @@ function CargarDatosEditar(contrato, hijo) {
     }
     if (contrato.esFason === true) {
         $("#madreId").attr("disabled", true);
+        $("#fasonIdCheck").prop("checked", true);
         $("#pagosDiv").hide();
     } else {
         $("#madreId").attr("disabled", false);
     }
-
     contrato.SelCargoMOA === true ? $("#selCargoMOAId").prop("checked", true) : $("#selCargoMOAId").prop("checked", false);
     contrato.SelCargoVendedor === true ? $("#selCargoVendedorId").prop("checked", true) : $("#selCargoVendedorId").prop("checked", false);
 
@@ -5668,7 +5668,7 @@ function validarCredito(cuitProv) {
 }
 
 function HayMercaderia() {
-    CompletarCantidadDisponibleDeposito(); 
+    CompletarCantidadDisponibleDeposito();
     if ($("#mercsDepositoId").is(":checked")) {
         MostrarCcPpPendientesAplicar();
         $(".depositoDiv").show();
@@ -5686,7 +5686,7 @@ function HayMercaderia() {
 function HaySustentable() {
     if ($("#sustentableId").is(":checked")) {
         MostrarCcPpPendientesAplicar();
-        $(".sustentableDiv").show();     
+        $(".sustentableDiv").show();
     } else {
         $(".sustentableDiv").hide();
         $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
@@ -6080,6 +6080,10 @@ function ValidarSinBoleto() {
         $("#mercsDepositoId").attr("disabled", true);
         $("#mercsDepositoDiv").show();
         if (Id == 0 || Id == null || Id == "") {
+            $("#fechaDesdeId").val(ObtenerFechaDesde());
+            $("#fechaHastaId").val(ObtenerFechaDesde());
+        }
+        if (boletoId != 5 && $("#sinBoletoId").is(':checked')) {
             $("#fechaDesdeId").val(ObtenerFechaDesde());
             $("#fechaHastaId").val(ObtenerFechaDesde());
         }

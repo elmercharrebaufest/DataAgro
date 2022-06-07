@@ -3759,8 +3759,9 @@ function CargarDatosEditar(contrato, hijo) {
             $("#contMadreId").val(contrato.ContratoMadre);
         }
     }
-    if (contrato.esFason === true) {
+    if (contrato.EsFason === true) {
         $("#madreId").attr("disabled", true);
+        $("#fasonIdCheck").prop("checked", true); 
         $("#pagosDiv").hide();
     } else {
         $("#madreId").attr("disabled", false);
