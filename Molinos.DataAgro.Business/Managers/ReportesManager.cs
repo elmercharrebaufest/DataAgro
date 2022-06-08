@@ -3373,7 +3373,7 @@ namespace Molinos.DataAgro.Business.Managers
                             if (mails != null)
                             {
                                 var view = CuerpoMailPesificadoVencidoVendedor(path, pesi, fechaInstruccion, true);
-                                copia.AddRange(vendedor.Where(x => x.ProveedorId != null && x.Proveedor.RazonSocial == item.Key).Select(x => x.Pesificado));
+                                copia.AddRange(vendedor.Where(x => x.ProveedorId != null && x.Proveedor.CUIT == item.First().CuitCorredor).Select(x => x.Pesificado));
                                 //if (!string.IsNullOrEmpty(mailAdmin)) { mails.Add(mailAdmin); }
                                 if (mailAdmin.Count > 0)
                                 {
@@ -3405,7 +3405,7 @@ namespace Molinos.DataAgro.Business.Managers
                             //mails = new List<string>() { "bmelgarejo@baufest.com" };
                             if (mails != null)
                             {
-                                copia.AddRange(vendedor.Where(x => x.ProveedorId != null && x.Proveedor.RazonSocial == item.Key).Select(x => x.Pesificado));
+                                copia.AddRange(vendedor.Where(x => x.ProveedorId != null && x.Proveedor.CUIT == item.First().CuitVendedor).Select(x => x.Pesificado));
                                 var view = CuerpoMailPesificadoVencidoVendedor(path, pesi, fechaInstruccion, false);
                                 //if (!string.IsNullOrEmpty(mailAdmin)) { mails.Add(mailAdmin); }
                                 if (mailAdmin.Count > 0)
