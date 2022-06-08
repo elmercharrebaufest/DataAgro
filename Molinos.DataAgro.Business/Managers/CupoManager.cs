@@ -3466,8 +3466,9 @@ namespace Molinos.DataAgro.Business.Managers
                             else
                             {
                                 var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
+                                logger.Debug($"El cupo: {c.CupoSap} se esta anulando en STOP: "+ DateTime.Now);
                                 errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
-
+                                logger.Debug($"Fin STOP: {c.CupoSap} : " + DateTime.Now);
                                 if (errorStop.HayError)
                                 {
                                     var cupoError = new CupoDto
@@ -3483,7 +3484,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 else
                                 {
                                     c.EstadoCupoId = 4;
+                                    logger.Debug($"El cupo: {c.CupoSap} se esta anulando en SAP " + DateTime.Now);
                                     var resultado = eliminarcupoSap.Eliminar(c.CupoSap, comercialId);
+                                    logger.Debug($"Fin SAP: {c.CupoSap} : " + DateTime.Now);
                                     if (resultado != "OK")
                                     {
                                         if (c.Centro.Acopio)

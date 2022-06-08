@@ -3358,6 +3358,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var corredor = pesificado.Where(x => !string.IsNullOrEmpty(x.CuitCorredor)).Distinct().GroupBy(x => x.RazonSocialCorredor);
                         foreach (var item in corredor)
                         {
+                            copia = new List<string>();
                             var pesi = new ReportePesificadoDto
                             {
                                 Corredor = item.Key,
@@ -3391,6 +3392,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var agrupacion = new List<ReportePesificadoDto>();
                         foreach (var item in proveedor)
                         {
+                            copia = new List<string>();
                             var pesi = new ReportePesificadoDto
                             {
                                 RazonSocialProveedor = item.Key,
