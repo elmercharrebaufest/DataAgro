@@ -450,7 +450,8 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
             //}
-            if (proveedor != null && centro != null && centro.CodigoSap == "1600")
+            var tieneQueValidar = proveedor.SegmentacionId == 2 || proveedor.SegmentacionId == 3 && proveedor.SegmentacionId == 4;
+            if (proveedor != null && tieneQueValidar && centro != null && centro.CodigoSap == "1600")
             {
                 var establecimientos = TraerEstablecimientos(proveedor.CUIT);
                 var cantidadCupo = 0;

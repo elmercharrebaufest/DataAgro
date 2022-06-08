@@ -673,7 +673,7 @@ function ObtenerDatos(error) {
     obj.Warrant = $("#WarrantId").is(":checked") ? true : false;
     obj.PagoDirectoVendedor = $("#pagoDirectoId").is(":checked") ? true : false;
     obj.MercsDeposito = $("#mercsDepositoId").is(":checked") ? true : false;
-    obj.CantidadDeposito = $("#mercsDepositoId").is(":checked") ? $("#cantidadDeposito").data("kendoNumericTextBox").value() : null;
+    obj.CantidadDeposito = ($("#tipoId").val() == "2" && $("#mercsDepositoId").is(":checked")) ? $("#cantidadDeposito").data("kendoNumericTextBox").value() : null;
     obj.NivelTarifaId = $("#NivelTarifaId").val();
     obj.TarifaFlete = $("#TarifaFleteId").val();
     obj.ChequeElectronico = $("#tipoId").val() == "2" ? $("#chequeElectronicoInput").is(":checked") ? true : false : $("#chequeElectronico").is(":checked") ? true : false;
