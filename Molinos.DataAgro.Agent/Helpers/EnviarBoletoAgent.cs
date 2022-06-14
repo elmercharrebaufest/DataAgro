@@ -26,13 +26,13 @@ namespace Molinos.DataAgro.Agent.Helpers
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
 
-        public string Enviar(Boleto boleto)
+        public string Enviar(BoletoGeneradoDto boleto)
         {
-            logger.Debug("Eviando Contrato Nro: " + boleto.Id);
+            logger.Debug("Eviando Contrato Nro: " + boleto.ContratoSAP);
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
 
-                return "Ok";
+                return "Se actualizan correctamente los datos";
             }
             try
             {
@@ -46,12 +46,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Cargando contrato");
                 var rq = new Z_MPRFC_ENVIAR_BOLETOS_GENE()
                 {
-                    IM_CONTRATO = boleto.Negocio.ContratoSAP,
+                    IM_CONTRATO = !string.IsNullOrEmpty(boleto.ContratoSAP) ? boleto.ContratoSAP : "",
                     IM_FECHA_GENE = boleto.FechaGeneracion.ToString("yyyy-MM-dd"),
-                    IM_FIJACION = (boleto.Negocio is FijacionDePrecioContrato) ? (boleto.Negocio as FijacionDePrecioContrato).FijacionSAP : "",
+                    IM_FIJACION = !string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.FijacionSAP : "",
                     IM_GENERADO = "X",
                     IM_HORA_GENE = boleto.FechaGeneracion.ToString("HH:mm:ss"),
-                    IM_VERSION = boleto.Version.ToString()
+                    IM_VERSION = boleto.Version.ToString(),
+                    IM_ESTADO = "",
+                    IM_ESTADO_DOCUMENTO = "",
+                    IM_ESTADO_LOTE = "",
+                    IM_ID_DOC_CONFIRMA = "",
+                    IM_ID_LOTE_CONFIRMA = ""                      
                 };
                 logger.Debug(rq.ToXml());
 
@@ -71,7 +76,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 log.Xml += devolucion.ToXml();
                 repositorio.GuardarCambios();
 
-                if (devolucion.EX_MENSAJE != "Ok")
+                if (devolucion.EX_MENSAJE != "Se actualizan correctamente los datos")
                 {
                     throw new Exception(devolucion.EX_MENSAJE);
                 }

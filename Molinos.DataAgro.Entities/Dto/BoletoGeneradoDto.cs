@@ -14,5 +14,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Generado { get; set; }
         public bool Mail { get; set; }
         public string Mensaje { get; set; }
+        public int NegocioId { get; set; }
+        public int ComercialId { get; set; }
+        public DateTime FechaGeneracion { get; set; }
+        public int TipoNegocioDetalleId { get; set; }
+        public string FijacionSAP { get; set; }
     }
 }

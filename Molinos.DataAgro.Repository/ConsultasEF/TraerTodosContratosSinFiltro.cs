@@ -400,7 +400,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrecioPonderado = contrato.PrecioPonderado,
                         PrecioNetoPonderado = contrato.PrecioNetoPonderado,
                         ProveedorComisionistaId = contrato.ProveedorComisionistaId,
-                        RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial
+                        RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial,
+                        FijacionSAP = (contrato is Contrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP :  "",
+
                     };
 
                 return queryNegocios;

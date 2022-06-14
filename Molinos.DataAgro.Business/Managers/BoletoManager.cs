@@ -76,47 +76,57 @@ namespace Molinos.DataAgro.Business.Managers
                         var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : "");
                         if (consultaBoleto.Generado == "") // probar casos anulados
                         {
-                            Boleto tempBoleto = new Boleto
+                            var tempBoleto = new BoletoGeneradoDto
                             {
                                 NegocioId = itemNegocio.Id,
                                 Version = Convert.ToInt32(String.IsNullOrEmpty(consultaBoleto.Version) ? "0" : consultaBoleto.Version) + 1,
                                 ComercialId = comercialId,
                                 FechaGeneracion = DateTime.Now,
-                                TipoNegocioDetalleId = itemNegocio.TipoNegocioId,
+                                //TipoNegocioDetalleId = itemNegocio.TipoNegocioId,
+                                ContratoSAP = itemNegocio.ContratoSAP,
+                                FijacionSAP = itemNegocio.FijacionSAP
                             };
-                            var guardaBoleto = repositorio.Agregar(tempBoleto);
-                            var enviarBoleto = oEnviarBoletoAgent.Enviar(guardaBoleto);
-                            error.boletos.Add(guardaBoleto);
-                            var boletoGenerado = DevolverDto(itemNegocio, true, tempBoleto.Version, "");
-                            try
+                            logger.Debug("Enviando boleto" + tempBoleto.ToString());
+                            var resultado = oEnviarBoletoAgent.Enviar(tempBoleto);
+                            if (resultado == "Se actualizan correctamente los datos")
                             {
-                                var pdf = GenerarPDF(itemNegocio, ObtenerClausulas(itemNegocio), boletoGenerado);
-
-                                if (enviarEmail)
-                                {
-
-                                    var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
-                                    EnviarMailBoleto(itemNegocio.BoletoDescripcion,
-                                        (itemNegocio.TipoNegocioId == 1 || itemNegocio.TipoNegocioId == 2) ? "Contrato" : itemNegocio.TipoNegocioId == 3? "Fijación" : itemNegocio.TipoNegocio,
-                                        String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
-                                        itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : itemNegocio.ContratoSAP,
-                                        consultaBoleto.Version, comercial, emailproveedor, pdf);
-                                }
+                                var guardaBoleto = repositorio.Agregar(ConvertirDtoAEntidad(tempBoleto));
+                                error.boletos.Add(guardaBoleto);
+                                var boletoGenerado = DevolverDto(itemNegocio, true, tempBoleto.Version, "");
                                 try
                                 {
-                                    File.WriteAllBytes(ConfigurationManager.AppSettings["PathBoletos"].ToString() + "\\"
-                                         + (itemNegocio.TipoNegocioId == 3 ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);                                    
+                                    var pdf = GenerarPDF(itemNegocio, ObtenerClausulas(itemNegocio), boletoGenerado);
+
+                                    if (enviarEmail)
+                                    {
+
+                                        var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (itemNegocio.CorredorId != 0 ? itemNegocio.CorredorId : itemNegocio.ProveedorId) && x.Boleto == true);
+                                        EnviarMailBoleto(itemNegocio.BoletoDescripcion,
+                                            (itemNegocio.TipoNegocioId == 1 || itemNegocio.TipoNegocioId == 2) ? "Contrato" : itemNegocio.TipoNegocioId == 3 ? "Fijación" : itemNegocio.TipoNegocio,
+                                            String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
+                                            itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : itemNegocio.ContratoSAP,
+                                            consultaBoleto.Version, comercial, emailproveedor, pdf);
+                                    }
+                                    try
+                                    {
+                                        File.WriteAllBytes(ConfigurationManager.AppSettings["PathBoletos"].ToString() + "\\"
+                                             + (itemNegocio.TipoNegocioId == 3 ? (itemNegocio.ContratoSAP + "_F" + itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 3, 2)) : (itemNegocio.ContratoSAP + "_V" + tempBoleto.Version.ToString().PadLeft(2, '0'))) + ".pdf", pdf);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        boletoGenerado.Mensaje += " Error al grabar el PDF del Boleto: " + ex.Message;
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
-                                    boletoGenerado.Mensaje += " No se guardo el PDF del Boleto: " + ex.Message;
+                                    error.ListaErrores.Add(new ErrorMessage { Message = " Error al enviar el email: " + ex.Message });
                                 }
+                                error.boletosGenerados.Add(boletoGenerado);
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                error.ListaErrores.Add(new ErrorMessage { Message = " Error al enviar el email: " + ex.Message });
+                                error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "Error al conectarse con SAP"));
                             }
-                            error.boletosGenerados.Add(boletoGenerado);
                         }
                         else
                         {
@@ -136,8 +146,10 @@ namespace Molinos.DataAgro.Business.Managers
                         error.boletosGenerados.Add(DevolverDto(new BasicoContrato { TipoNegocioId = 2, ContratoSAP = itemContrato }, false, 0, "El negocio no esta habilitado para generar boleto"));
                     }
                 }
+
                 //repositorio.AgregarTodos(error.boletos);
                 repositorio.GuardarCambios();
+
             }
             catch (Exception e)
             {
@@ -145,6 +157,18 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Errores.Add(new ErrorMessage(400, e.Message));
             }
             return error;
+        }
+
+        private static Boleto ConvertirDtoAEntidad(BoletoGeneradoDto tempBoleto)
+        {
+            return new Boleto
+            {
+                NegocioId = tempBoleto.NegocioId,
+                Version = tempBoleto.Version,
+                ComercialId = tempBoleto.ComercialId,
+                FechaGeneracion = tempBoleto.FechaGeneracion,
+                //TipoNegocioDetalleId = tempBoleto.TipoNegocioDetalleId
+            };
         }
 
         public byte[] BoletoEnByte(string archivoUrl)
@@ -429,7 +453,7 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
             //}
-            if(basico.BoletoContratoId == 2 && basico.BolsaContratoId == 2)
+            if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 2)
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisico.html");
             }
@@ -437,7 +461,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/BoletoFisicoBuenosAires.html");
             }
-            if(basico.BoletoContratoId == 4)
+            if (basico.BoletoContratoId == 4)
             {
                 return Path.Combine(AppDomain.CurrentDomain.RelativeSearchPath, "Templates/CartaOferta.html");
             }
@@ -545,7 +569,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         
     </style>";
-            
+
             if (basico.BoletoContratoId == 2 && basico.BolsaContratoId == 2)
             {
                 var precio = "";
@@ -587,7 +611,8 @@ namespace Molinos.DataAgro.Business.Managers
                 stylesHtml, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3), boleto.Version, basico.ContratoSAP.Substring(3, basico.ContratoSAP.Length - 3),
                 basico.RazonSocialProveedor, basico.Cuit, corredor, clausulashtml, (basico.CorredorId > 0 ? "__________________" : ""), (basico.CorredorId > 0 ? "P. el Corredor" : ""), (basico.CorredorId > 0 ? "Aclaración: _____________" : ""),
                      (basico.CorredorId > 0 ? "DNI Nro:&nbsp; _______________" : ""), (basico.CorredorId > 0 ? "CUIT Nro.: _____________" : ""));
-            }else if (basico.BoletoContratoId == 4)
+            }
+            else if (basico.BoletoContratoId == 4)
             {
                 //var localidad = reposi
                 string clausulasNumeradas = "";

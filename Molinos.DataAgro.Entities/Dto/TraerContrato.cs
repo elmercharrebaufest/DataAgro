@@ -273,6 +273,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? TarifaAConvenir { get; set; }
         public double? CantidadDeposito { get; set; }
         public string MercaderiaDescripcion { get; set; }
+        public string FijacionSAP { get; set; }
     }
 
     public class StoredPorContratoResult
