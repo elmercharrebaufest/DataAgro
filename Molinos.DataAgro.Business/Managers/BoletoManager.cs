@@ -43,10 +43,11 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IMailManager mailManager;
         private readonly IHttpContextManager httpContextManager;
         private readonly IServicioClausulas servicioClausula;
+        private readonly IStatusContratoAgent status;
 
         public BoletoManager(IRepositorio repositorio, ILogger logger, IContratosConfirmadosAgent oContratosConfirmadosAgent
             , IConsultarEstadoBoletoAgent oConsultarEstadoBoletoAgent, IEnviarBoletoAgent oEnviarBoletoAgent
-            , IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula)
+            , IMailManager mailManager, IHttpContextManager httpContextManager, IServicioClausulas servicioClausula, IStatusContratoAgent status)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -56,6 +57,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.mailManager = mailManager;
             this.httpContextManager = httpContextManager;
             this.servicioClausula = servicioClausula;
+            this.status = status;
         }
 
         public BoletoResult GrabarBoleto(List<int> tipoNegocios, int comercialId, List<string> contratos, bool enviarEmail, List<int> equipo)
@@ -73,6 +75,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (tipoNegocios.Exists(x => x == itemNegocio.TipoNegocioId))
                     {
+                        if (!string.IsNullOrEmpty(ValidarNegocioEnGeneracionBoleto(itemNegocio, itemNegocio.TipoNegocioId)))
+                        {
+                            error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, ""));
+                            continue;
+                        }
                         var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : "");
                         if (consultaBoleto.Generado == "") // probar casos anulados
                         {
@@ -104,7 +111,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         EnviarMailBoleto(itemNegocio.BoletoDescripcion,
                                             (itemNegocio.TipoNegocioId == 1 || itemNegocio.TipoNegocioId == 2) ? "Contrato" : itemNegocio.TipoNegocioId == 3 ? "Fijación" : itemNegocio.TipoNegocio,
                                             String.IsNullOrEmpty(itemNegocio.RazonSocialCorredor) ? itemNegocio.RazonSocialProveedor : itemNegocio.RazonSocialCorredor,
-                                            itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : itemNegocio.ContratoSAP,
+                                            itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio.Substring(itemNegocio.Negocio.Length - 2) : Split(itemNegocio.ContratoSAP.TrimStart('0')),
                                             consultaBoleto.Version, comercial, emailproveedor, pdf);
                                     }
                                     try
@@ -626,6 +633,36 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return xHtml;
+        }
+
+        private string ValidarNegocioEnGeneracionBoleto(BasicoContrato negocio, int tipoNegocio)
+        {
+            var mensaje = "";
+            var kilosDisponibles = 10000;
+            if (tipoNegocio == 3)
+            {
+                if (negocio.Cantidad < (kilosDisponibles * 1000))
+                {
+                    mensaje = "No se pudo generar el boleto para la fijacion seleccionada";
+                    logger.Debug("No se pudo generar el boleto para la fijacion seleccionada por cantidad no disponible " + negocio.FijacionSAP);
+                }
+                if(negocio.Canje != true)
+                {
+                    mensaje = "No se pudo generar el boleto para la fijacion seleccionada";
+                    logger.Debug("No se pudo generar el boleto para la fijacion seleccionada por tener Canje " + negocio.FijacionSAP);
+                }
+            }
+            else
+            {
+                var res = status.ValidarEstado(negocio.ContratoSAP);
+                if (string.IsNullOrEmpty(res.Status) && res.NumeroSio == 0)
+                {
+                    mensaje = "El contrato ya no se encuentra en slip o fue informado a SIO granos";
+                    logger.Debug("No se pudo generar el boleto por el status: " + res.Status + " " + negocio.ContratoSAP);
+
+                }
+            }
+            return mensaje;
         }
     }
 
