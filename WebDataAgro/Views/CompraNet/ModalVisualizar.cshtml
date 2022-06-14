@@ -4,28 +4,34 @@
 
 <div class="modal fade" id="modalVisualizar" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header ">
+        <div class="modal-content datosContrato">
+            <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">×</span>
                     <span class="sr-only">Close</span>
                 </button>
                 <div id="contrato" hidden></div>
-                <h1 class="modal-title-visualizar" id="lineModalLabel"></h1>
-                <button id="mostrar" class="boton" hidden onclick="compararReconfirmacion()">
-                  Ver Modificación
-                </button>
-                <button id="ocultar" class="boton" onclick="mostrarDetalles()" hidden >Ocultar Modificación</button>
-                <div class="status pendiente-modal row"><div class="col-md-9 col-sm-9">PENDIENTE</div><div id="botoneriaPendDiv" style="text-align: right"></div></div>
-                <div class="status confirmado-modal row"><div class="col-md-9 col-sm-9">CONFIRMADO</div><div id="botoneriaConfDiv" style="text-align: right"></div></div>
-                <div class="status oferta-modal row"><div class="col-md-8 col-sm-9">OFERTA</div><div id="botoneriaOferDiv" style="text-align: right"></div></div>
-                <div class="status conerror-modal row"><div class="col-md-8 col-sm-9">CON ERROR</div><div id="botoneriaErroDiv" style="text-align: right"></div></div>
-                <div class="status finalizado-modal row"><div class="col-md-8 col-sm-9">FINALIZADO</div><div id="botoneriaFinaDiv" style="text-align: right"></div></div>
-                <div class="status borrado-modal"><div>RECHAZADO</div><div id="botoneriaRechDiv" style="text-align: right" hidden></div></div>
-                <div class="status reconfirmar-modal row"><div class="col-md-8 col-sm-9">RECONFIRMAR</div><div id="botoneriaRecoDiv" style="text-align: right"  ></div></div>
+                <div class="noCopiarDatos">
+                    <div class="row">
+                        <strong><label style="font-weight: bolder; font-size: 16px;" class="modal-title-visualizar" id="lineModalLabel"></label></strong>
+                        <button type="button" style="width: 30px;border: none;font-size: 18px;" class="myBtn btn" onclick="copiarImagen()"><i class="fa fa-copy"></i></button>
+                    </div>
+                    <button id="mostrar" class="boton" hidden onclick="compararReconfirmacion()">
+                        Ver Modificación
+                    </button>
+                </div>
+                <button id="ocultar" class="boton" onclick="mostrarDetalles()" hidden>Ocultar Modificación</button>
+                <div class="status pendiente-modal row"><div class="col-md-9 col-sm-9">PENDIENTE</div><div class="noCopiarDatos" id="botoneriaPendDiv" style="text-align: right"></div></div>
+                <div class="status confirmado-modal row"><div class="col-md-9 col-sm-9">CONFIRMADO</div><div class="noCopiarDatos" id="botoneriaConfDiv" style="text-align: right"></div></div>
+                <div class="status oferta-modal row"><div class="col-md-8 col-sm-9">OFERTA</div><div class="noCopiarDatos" id="botoneriaOferDiv" style="text-align: right"></div></div>
+                <div class="status conerror-modal row"><div class="col-md-8 col-sm-9">CON ERROR</div><div class="noCopiarDatos" id="botoneriaErroDiv" style="text-align: right"></div></div>
+                <div class="status finalizado-modal row"><div class="col-md-8 col-sm-9">FINALIZADO</div><div class="noCopiarDatos" id="botoneriaFinaDiv" style="text-align: right"></div></div>
+                <div class="status borrado-modal"><div>RECHAZADO</div><div class="noCopiarDatos" id="botoneriaRechDiv" style="text-align: right" hidden></div></div>
+                <div class="status reconfirmar-modal row"><div class="col-md-8 col-sm-9">RECONFIRMAR</div><div class="noCopiarDatos" id="botoneriaRecoDiv" style="text-align: right"></div></div>
                 <div id="botoneriaDiv"></div>
             </div>
-            <div class="modal-body clearfix" id="datosContrato">
+            <div class="modal-body clearfix datosContrato" id="datosContrato">
+                <label hidden style="font-weight: bolder; font-size: 16px;" class="modal-title-visualizar" id="lineModalLabelCopiar"></label>
                 <div id="DivVisualizar" class="row">
                     <div id="proveedorDivVisualizar" class="row campo marginCero noAgente clearfix">
                         <strong style="float:left">Proveedor:</strong>
@@ -110,9 +116,9 @@
                             <span id="visualizar_porcentajeDePago"></span>
                         </div>
                         @*<div id="comercialDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                <strong style="float:left">Comercial:</strong>
-                <span id="visualizar_comercial"></span>
-            </div>*@
+                    <strong style="float:left">Comercial:</strong>
+                    <span id="visualizar_comercial"></span>
+                </div>*@
                     </div>
 
                     <div id="aperturaDiv" class="bordeSeccionVisualizar">
@@ -247,9 +253,9 @@
                     <div class="row marginCero">
                         <div id="mercsDepositoDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Mercaderías en Depósito:</strong>
-                            <span id="visualizar_mercsDeposito"></span>                            
+                            <span id="visualizar_mercsDeposito"></span>
                         </div>
-                        <div id="mercsDepositoDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                        <div id="mercsDepositoDivVisualizar" class="deposito campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
                             <strong style="float:left">Cantidad en depósito (Kg):</strong>
                             <span id="cantidadDeposito"></span>
                         </div>
@@ -508,9 +514,23 @@
             </div>
 
             <div id="tablaModificacion" class="text-xs-center table-responsive">
-                <table hidden id="tablaComparar" class="table table-striped"  style="width:100%">
+                <table hidden id="tablaComparar" class="table table-striped" style="width:100%">
                 </table>
             </div>
         </div>
-        </div>
+    </div>
+
+    <div id="out_image"></div>
 </div>
+
+<style>
+    .anchoEstado{
+        width: 780px
+    }
+    .datosContrato, .modal-header, .modal-body {
+    background-color: white !important;
+    }
+    .noPadding {
+        padding: 0px;
+    }
+</style>

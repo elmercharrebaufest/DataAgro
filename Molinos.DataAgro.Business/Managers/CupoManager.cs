@@ -1207,7 +1207,7 @@ namespace Molinos.DataAgro.Business.Managers
             for (int i = negocios.Count - 1; i >= 0; i--)
             {
                 var negocio = negocios[i];
-                var result = Validar(new Cupo { NegocioId = negocio.NegocioId, ProveedorId = negocio.ProveedorId.Value, FechaIngreso = negocio.FechaHasta }, 1, DateTime.Now.Date.AddDays(1));
+                var result = Validar(new Cupo { CentroId = negocio.CentroId, NegocioId = negocio.NegocioId, ProveedorId = negocio.ProveedorId.Value, FechaIngreso = negocio.FechaHasta }, 1, DateTime.Now.Date.AddDays(1));
                 if (result.HayError)
                 {
                     // proxima etapa guardar detalle del error para mostrar al comecial por que se 
@@ -1847,12 +1847,12 @@ namespace Molinos.DataAgro.Business.Managers
                             solicitud.CantidadCupo = cupoNormalSolicitud - sugerenciaPorComercial.Total;
 
                             //Generear cupos
-                            result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, false);
+                            result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, false, null);
                         }
                         else
                         {
                             //Generar cupos
-                            result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false);
+                            result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null);
                         }
 
                         if (sugerenciaPorComercial.Total < fleteSolicitud)
@@ -1861,12 +1861,12 @@ namespace Molinos.DataAgro.Business.Managers
                             solicitud.CantidadFleteProcedencia = fleteSolicitud - sugerenciaPorComercial.Total;
 
                             //Generear cupos
-                            result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, true);
+                            result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, true, null);
                         }
                         else
                         {
                             //Generar cupos
-                            result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true);
+                            result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null);
                         }
 
                         for (int i = 0; i < result2.ListaCupos.Count; i++)
@@ -1891,8 +1891,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false);
-                        result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true);
+                        result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null);
+                        result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null);
                     }
                     if (!result.HayError)
                     {
@@ -1915,7 +1915,7 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        private CupoResult CrearCupoSugerenciaDetalle(SugerenciaCupo s, SugerenciaPorComercial sugerenciaPorComercial, int cantidadACrear, bool esFlete)
+        private CupoResult CrearCupoSugerenciaDetalle(SugerenciaCupo s, SugerenciaPorComercial sugerenciaPorComercial, int cantidadACrear, bool esFlete, DateTime? fechaCupo)
         {
             var result = new CupoResult();
             if (cantidadACrear == 0)
@@ -1927,7 +1927,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ProveedorId = s.Negocio != null && s.Negocio.ProveedorComisionistaId != null ? s.Negocio.ProveedorComisionistaId.Value : s.ProveedorId.Value,
                 CentroId = s.CentroId,
                 MaterialId = s.MaterialId,
-                FechaIngreso = s.FechaSugerida,
+                FechaIngreso = fechaCupo ?? s.FechaSugerida,
                 ZonaCupoId = s.ZonaCupoId.Value,
                 ComercialId = s.ComercialId,
                 Calidad = s.StandardDeCalidad,
@@ -1946,7 +1946,7 @@ namespace Molinos.DataAgro.Business.Managers
                 TipoNegocioId = s.TipoNegocioId,
             };
 
-            result = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadACrear, Fecha = s.FechaSugerida } });
+            result = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadACrear, Fecha = fechaCupo ?? s.FechaSugerida } });
 
             sugerenciaPorComercial.Total -= result.ListaCupos.Count();
             if (sugerenciaPorComercial.Total < 0)
@@ -2447,7 +2447,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 var cupoDesde = (formula.CuposDesde < DateTime.Now.Date ? DateTime.Now.Date : formula.CuposDesde);
                 var sugerenciaComercialDia = repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida >= cupoDesde && x.FechaSugerida <= formula.CuposHasta
-                && x.CentroId == formula.CentroId && x.Aceptado == null && x.MaterialId == material.MaterialId && x.Solicitudes.Count == 0).GroupBy(y => y.Comercial);
+                && x.CentroId == formula.CentroId && x.Aceptado == null && x.MaterialId == material.MaterialId && (x.Solicitudes.Count == 0 || x.Solicitudes.All(y => y.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo))).GroupBy(y => y.Comercial);
                 foreach (var sug in sugerenciaComercialDia)
                 {
                     var dia = new SugerenciaNoAceptada()
@@ -2572,7 +2572,107 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)
         {
-            return disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde, fechaHasta, zonaId, centroId, materialId);
+            List<DisponibilidadCuposDto> resultado = disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde, fechaHasta, zonaId, centroId, materialId);
+            List<DisponibilidadCuposDto> resultadoNoPropios = TraerCupoDisponibilidadNoPropios(fechaDesde, fechaHasta, zonaId, centroId, materialId);
+
+
+
+            resultado.AddRange(resultadoNoPropios);
+            return resultado;
+        }
+
+        public List<DisponibilidadCuposDto> TraerCupoDisponibilidadNoPropios(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)
+        {
+            var centros = repositorio.Listar<Centro>();
+            List<int> centrosIds = new List<int>();
+            if (centroId == null || centroId.Count == 0)
+            {
+                centros = centros.Where(a => a.NoPropio == true).ToList();
+            }
+            else
+            {
+                centros = centros.Where(a => centroId.Contains(a.CodigoSap) && a.NoPropio == true).ToList();
+            }
+            centrosIds = centros.Select(a => a.Id).ToList();
+            if (fechaHasta.HasValue)
+            {
+                fechaHasta = fechaHasta.Value.AddDays(1);
+            }
+            //List<ConfiguracionCupo> conf = new List<ConfiguracionCupo>();
+            //foreach(var item in centros)
+            //{
+            //    conf.AddRange(repositorio.Listar<ConfiguracionCupo>(a => a.Centro.NoPropio == true && fechaDesde <= a.Fecha && fechaHasta >= a.Fecha && a.CentroId == item.Id));
+            //}
+            var conf = repositorio.Listar<ConfiguracionCupo>(a => a.Centro.NoPropio == true && fechaDesde <= a.Fecha && fechaHasta >= a.Fecha && centrosIds.Contains(a.CentroId));
+
+            List<DisponibilidadCuposDto> result = new List<DisponibilidadCuposDto>();
+            foreach (var itemConf in conf)
+            {
+                if (!String.IsNullOrEmpty(zonaId))
+                {
+                    var zona = repositorio.Obtener<ZonaCupo>(x => x.CodigoSap == zonaId);
+                    var limiteCupoZona = itemConf.CantidadCupo.Where(x => x.ZonaCupo.CodigoSap == zonaId).FirstOrDefault();
+                    var CuposConsumidos = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == itemConf.Fecha && x.CupoId != null && x.CentroId == itemConf.CentroId && x.MaterialId == itemConf.MaterialId && x.Cupo.ZonaCupoId == zona.Id);
+                    //var CuposDisponibles = LimiteCupo - CuposConsumidos;
+                    result.Add(new DisponibilidadCuposDto
+                    {
+                        CentroCodigo = itemConf.Centro.CodigoSap,
+                        CentroNombre = itemConf.Centro.Descripcion,
+                        Consumidos = CuposConsumidos,
+                        Disponibles = limiteCupoZona.CantidadCupo - CuposConsumidos,
+                        Fecha = itemConf.Fecha,
+                        Limite = limiteCupoZona.CantidadCupo,
+                        MaterialCodigo = itemConf.Material.Codigo,
+                        MaterialId = itemConf.MaterialId,
+                        MaterialNombre = itemConf.Material.Descripcion,
+                        ZonaId = zonaId,
+                        ZonaNombre = zona.Descripcion
+                    });
+                }
+                else
+                {
+                    //var zonas = repositorio.Obtener<ZonaCupo>(x=> itemConf.Centro.);
+                    foreach(var itemCupo in itemConf.CantidadCupo)
+                    {
+                        if (itemCupo.CantidadCupo > 0)
+                        {
+                            var CuposConsumidosZona = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == itemConf.Fecha && x.CupoId != null && x.CentroId == itemConf.CentroId && x.MaterialId == itemConf.MaterialId && x.Cupo.ZonaCupoId == itemCupo.ZonaCupoId);
+                            result.Add(new DisponibilidadCuposDto
+                            {
+                                CentroCodigo = itemConf.Centro.CodigoSap,
+                                CentroNombre = itemConf.Centro.Descripcion,
+                                Consumidos = CuposConsumidosZona,
+                                Disponibles = itemCupo.CantidadCupo - CuposConsumidosZona,
+                                Fecha = itemConf.Fecha,
+                                Limite = itemCupo.CantidadCupo,
+                                MaterialCodigo = itemConf.Material.Codigo,
+                                MaterialId = itemConf.MaterialId,
+                                MaterialNombre = itemConf.Material.Descripcion,
+                                ZonaId = itemCupo.ZonaCupoId.ToString(),
+                                ZonaNombre = itemCupo.ZonaCupo.Descripcion
+                            });
+                        }
+                    }
+                    //var CuposConsumidos = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == itemConf.Fecha && x.CupoId != null && x.CentroId == itemConf.CentroId && x.MaterialId == itemConf.MaterialId);
+                    //var LimiteCupo = repositorio.Contar<CupoNoPropio>(x => x.FechaIngreso == itemConf.Fecha && x.Disponible == true && x.CentroId == itemConf.CentroId && x.MaterialId == itemConf.MaterialId);
+                    ////var CuposDisponibles = LimiteCupo - CuposConsumidos;
+                    //result.Add(new DisponibilidadCuposDto
+                    //{
+                    //    CentroCodigo = itemConf.Centro.CodigoSap,
+                    //    CentroNombre = itemConf.Centro.Descripcion,
+                    //    Consumidos = CuposConsumidos,
+                    //    Disponibles = itemConf.LimiteCupo - CuposConsumidos,
+                    //    Fecha = itemConf.Fecha,
+                    //    Limite = itemConf.LimiteCupo,
+                    //    MaterialCodigo = itemConf.Material.Codigo,
+                    //    MaterialId = itemConf.MaterialId,
+                    //    MaterialNombre = itemConf.Material.Descripcion,
+                    //    //ZonaId = itemConf.,
+
+                    //});
+                }
+            }
+            return result;
         }
 
         public CupoResult RechazarCupo(Cupo cupo, string idActiveDirectory)
@@ -3467,7 +3567,7 @@ namespace Molinos.DataAgro.Business.Managers
                             else
                             {
                                 var cliente = new ClienteStopAgent(logger, repo, () => { return this; }, logmanager);
-                                logger.Debug($"El cupo: {c.CupoSap} se esta anulando en STOP: "+ DateTime.Now);
+                                logger.Debug($"El cupo: {c.CupoSap} se esta anulando en STOP: " + DateTime.Now);
                                 errorStop = AnularCupoStop(c, datosConfiguracion, cliente);
                                 logger.Debug($"Fin STOP: {c.CupoSap} : " + DateTime.Now);
                                 if (errorStop.HayError)
@@ -4303,14 +4403,14 @@ namespace Molinos.DataAgro.Business.Managers
                     nuevaSugerenciaSolicitud.CantidadCupoOriginal = solicitud.CantidadFleteProcedencia;
 
                     //Generear cupos
-                    result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, true);
+                    result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, true, null);
                 }
                 else
                 {
                     resultado.Add(new CupoResult { CuposFlete = fleteSolicitud });
 
                     //Generar cupos
-                    result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true);
+                    result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null);
                 }
 
                 //despues los comunes
@@ -4324,13 +4424,13 @@ namespace Molinos.DataAgro.Business.Managers
                     nuevaSugerenciaSolicitud.CantidadDeCupos += solicitud.CantidadCupo;
                     nuevaSugerenciaSolicitud.CantidadCupoOriginal += solicitud.CantidadCupo;
                     //Generear cupos
-                    result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, false);
+                    result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, false, null);
                 }
                 else
                 {
                     resultado.Add(new CupoResult { CuposNormales = cupoNormalSolicitud });
                     //Generar cupos
-                    result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false);
+                    result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null);
                 }
 
                 if (solicitud.CantidadFleteProcedencia > 0 || solicitud.CantidadCupo > 0)
@@ -4346,11 +4446,11 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 int cantidadFlete = fleteSolicitud > s.CantidadDeCupos ? s.CantidadDeCupos : fleteSolicitud;
-                result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cantidadFlete, true);//primero se generan los de flete
+                result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cantidadFlete, true, null);//primero se generan los de flete
                 resultado.Add(new CupoResult { CuposFlete = result2.ListaCupos.Count() });
 
                 int cantidadNormal = cupoNormalSolicitud > (s.CantidadDeCupos - result2.ListaCupos.Count()) ? (s.CantidadDeCupos - result2.ListaCupos.Count()) : cupoNormalSolicitud;
-                result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cantidadNormal, false);//despues los comunes
+                result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cantidadNormal, false, null);//despues los comunes
                 resultado.Add(new CupoResult { CuposNormales = result.ListaCupos.Count() });
             }
             if (!result.HayError)
@@ -4847,13 +4947,13 @@ namespace Molinos.DataAgro.Business.Managers
                         nuevaSugerenciaSolicitud.CantidadDeCupos = solicitud.CantidadFleteProcedencia;
                         nuevaSugerenciaSolicitud.CantidadCupoOriginal = solicitud.CantidadFleteProcedencia;
                         //Generear cupos
-                        result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, total, true);
+                        result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, total, true, null);
                         total -= result2.ListaCupos.Count();
                     }
                     else
                     {
                         //Generar cupos
-                        result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidadFleteProcedencia, true);
+                        result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidadFleteProcedencia, true, null);
                         total -= result2.ListaCupos.Count();
                     }
                     //despues los comunes
@@ -4864,13 +4964,13 @@ namespace Molinos.DataAgro.Business.Managers
                         nuevaSugerenciaSolicitud.CantidadDeCupos += solicitud.CantidadCupo;
                         nuevaSugerenciaSolicitud.CantidadCupoOriginal += solicitud.CantidadCupo;
                         //Generear cupos
-                        result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, total, false);
+                        result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, total, false, null);
                         total -= result.ListaCupos.Count();
                     }
                     else
                     {
                         //Generar cupos
-                        result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidad, false);
+                        result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidad, false, null);
                         total -= result.ListaCupos.Count();
                     }
 
@@ -4886,8 +4986,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidadFleteProcedencia, true);//primero se generan los de flete
-                    result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidad, false);//despues los comunes
+                    result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidadFleteProcedencia, true, null);//primero se generan los de flete
+                    result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidad, false, null);//despues los comunes
                 }
                 if (!result.HayError)
                 {
@@ -4922,7 +5022,356 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        public List<CupoResult> ModificarSugerenciaCupoPorProveedor(List<AceptarSugerenciaCupoDto> items)
+
+        public List<CupoResult> ModificarSugerenciaCupoPorProveedor(List<AceptarSugerenciaCupoDto> sugerenciasAceptadasDesdeElFront)
+        {
+
+            var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
+            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+            var solicitudes = new List<string>();
+            var solicitudesDto = new List<AdministracionCupoDto>();
+            List<CupoResult> resultado = new List<CupoResult>();
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
+            var resultNormales = new CupoResult();
+            var resultFletes = new CupoResult();
+            var resultFinal = new CupoResult();
+            if (validarSiHayCierre)
+            {
+                var errorCupera = new CupoResult();
+                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+                resultado.Add(errorCupera);
+                return resultado;
+            }
+            var zonaCupo = repositorio.Listar<ZonaCupo>();
+            var comerciales = repositorio.Listar<Comercial>();
+            var proveedorId = sugerenciasAceptadasDesdeElFront.First().proveedorId;
+            var materialId = sugerenciasAceptadasDesdeElFront.First().materialId.Value;
+            var centroSAP = sugerenciasAceptadasDesdeElFront.First().centroId;
+            var fechaOriginal = sugerenciasAceptadasDesdeElFront.First().fechaOriginal;
+            var comercialId = sugerenciasAceptadasDesdeElFront.First().comercialId;
+            var grupoDeCompras = comerciales.Where(x => x.ComercialId == comercialId).First().GrupoDeCompras.Descripcion;
+            var proveedorDesc = repositorio.Obtener<Proveedor>(proveedorId);
+
+            List<SugerenciaCupo> sugerencias = repositorio.Listar<SugerenciaCupo>(a =>
+                a.Aceptado == null
+                && a.ProveedorId == proveedorId
+                && a.MaterialId == materialId
+                && a.Centro.CodigoSap == centroSAP
+                && a.FechaSugerida == fechaOriginal
+                && a.ComercialId == comercialId
+                && (a.Solicitudes.All(y => y.EstadoId == 2) || a.Solicitudes.Count() == 0)
+            , 0, "Puntuacion", DirOrden.Desc);
+
+            if (sugerencias.Count() == 0)
+            {
+                var errorCupera = new CupoResult();
+                errorCupera.Error("CantidadCuposSAP", "No hay sugerencias pendientes");
+                resultado.Add(errorCupera);
+                return resultado;
+            }
+
+            //sugerenciasAceptadasDesdeElFront
+            foreach (var sugerenciaAceptadaDesdeElFront in sugerenciasAceptadasDesdeElFront)
+            {
+                var centroId = repositorio.Obtener<Centro, int>(a => a.CodigoSap == sugerenciaAceptadaDesdeElFront.centroId, a => a.Id);
+                var totalPorDia = ObtenerSugerenciaPorComercial(sugerenciaAceptadaDesdeElFront.fecha.Value, comercialId, materialId, centroSAP);
+                var total = totalPorDia.Total;
+
+                var cuperaLiberada = DevolverCuperaLiberada(sugerenciaAceptadaDesdeElFront.materialId.Value, centroId, sugerenciaAceptadaDesdeElFront.fecha.Value);
+                if (cuperaLiberada != null)
+                {
+                    total = cuperaLiberada.LimiteCupo - ObtenerCuposConsumidosPorFecha(sugerenciaAceptadaDesdeElFront.materialId.Value, centroId, sugerenciaAceptadaDesdeElFront.fecha.Value);
+                }
+                var nuevaSugerencias = new List<SugerenciaCupo>();
+
+                //acepta sugerencias / crea cupos
+                foreach (var sugerencia in sugerencias.Where(a => a.Aceptado == null).OrderByDescending(a => a.Puntuacion).ThenBy(a => a.Id))
+                {
+                    if (total <= 0)
+                    {
+                        break;
+                    }
+                    resultNormales = new CupoResult();
+                    resultFletes = new CupoResult();
+                    //si quedan pendientes para creaer
+                    if ((sugerenciaAceptadaDesdeElFront.cantidad + sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia) > 0)
+                    {
+                        //si quedan pendientes de flete
+                        int puedoCrearFlete = new List<int> { total, sugerencia.CantidadDeCupos, sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia }.Min();
+                        if (sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia > 0 && puedoCrearFlete > 0)
+                        {
+                            resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, puedoCrearFlete, true, sugerenciaAceptadaDesdeElFront.fecha.Value);
+                            resultFinal.ListaCupos.AddRange(resultFletes.ListaCupos.Select(a => "*" + a + "*"));
+                            total -= resultFletes.ListaCupos.Count();
+                            //creo una nueva sug por lo que se confirmar
+                            if (sugerencia.CantidadDeCupos > puedoCrearFlete)
+                            {
+                                SugerenciaCupo nuevaSugerencia = ClonarSugerencia(sugerencia);
+                                nuevaSugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                if (!resultFletes.HayError)
+                                {
+                                    nuevaSugerencia.CantidadDeCupos = puedoCrearFlete;
+                                    nuevaSugerencia.CantidadCupoOriginal = puedoCrearFlete;
+                                    nuevaSugerencia.Aceptado = true;
+                                    sugerencia.CantidadCupoOriginal -= puedoCrearFlete;
+                                    sugerencia.CantidadDeCupos -= puedoCrearFlete;
+
+                                    sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia -= puedoCrearFlete;
+                                }
+                                else
+                                {
+                                    if (resultFletes.ListaCupos.Count() > 0)
+                                    {
+                                        puedoCrearFlete = resultFletes.ListaCupos.Count();
+                                        sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia -= puedoCrearFlete;
+                                        nuevaSugerencia.Aceptado = true;
+                                        nuevaSugerencia.CantidadDeCupos = puedoCrearFlete;
+                                        nuevaSugerencia.CantidadCupoOriginal = puedoCrearFlete;
+                                        sugerencia.CantidadCupoOriginal -= puedoCrearFlete;
+                                        sugerencia.CantidadDeCupos -= puedoCrearFlete;
+                                    }
+                                }
+                                if (resultFletes.ListaCupos.Count() > 0)
+                                {
+                                    repositorio.Agregar(nuevaSugerencia);
+                                    nuevaSugerencias.Add(nuevaSugerencia);
+                                }
+                            }
+                            else
+                            {
+                                if (!resultFletes.HayError)
+                                {
+                                    sugerencia.Aceptado = true;
+                                    sugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                    sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia -= puedoCrearFlete;
+                                }
+                                else
+                                {
+                                    if (resultFletes.ListaCupos.Count() > 0)
+                                    {
+                                        puedoCrearFlete = resultFletes.ListaCupos.Count();
+                                        SugerenciaCupo nuevaSugerencia = ClonarSugerencia(sugerencia);
+                                        nuevaSugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                        nuevaSugerencia.CantidadDeCupos = puedoCrearFlete;
+                                        nuevaSugerencia.CantidadCupoOriginal = puedoCrearFlete;
+                                        sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia -= puedoCrearFlete;
+                                        nuevaSugerencia.Aceptado = true;
+                                        sugerencia.CantidadCupoOriginal -= puedoCrearFlete;
+                                        sugerencia.CantidadDeCupos -= puedoCrearFlete;
+                                        repositorio.Agregar(nuevaSugerencia);
+                                    }
+                                }
+                            }
+
+                        }
+
+                        //si quedan pendientes normales
+                        int puedoCrear = new List<int> { total, sugerencia.CantidadDeCupos, sugerenciaAceptadaDesdeElFront.cantidad }.Min();
+                        if (sugerenciaAceptadaDesdeElFront.cantidad > 0 && puedoCrear > 0)
+                        {
+                            resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, puedoCrear, false, sugerenciaAceptadaDesdeElFront.fecha);
+                            resultFinal.ListaCupos.AddRange(resultNormales.ListaCupos.Select(a => a));
+                            total -= resultNormales.ListaCupos.Count();
+                            //creo una nueva sug por lo que se confirmar
+                            if (sugerencia.CantidadDeCupos > puedoCrear)
+                            {
+                                SugerenciaCupo nuevaSugerencia = ClonarSugerencia(sugerencia);
+                                nuevaSugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                if (!resultNormales.HayError)
+                                {
+                                    nuevaSugerencia.CantidadDeCupos = puedoCrear;
+                                    nuevaSugerencia.CantidadCupoOriginal = puedoCrear;
+                                    nuevaSugerencia.Aceptado = true;
+                                    sugerencia.CantidadCupoOriginal -= puedoCrear;
+                                    sugerencia.CantidadDeCupos -= puedoCrear;
+                                    sugerenciaAceptadaDesdeElFront.cantidad -= puedoCrear;
+                                }
+                                else
+                                {
+                                    if (resultNormales.ListaCupos.Count() > 0)
+                                    {
+                                        puedoCrear = resultNormales.ListaCupos.Count();
+                                        sugerenciaAceptadaDesdeElFront.cantidad -= puedoCrear;
+                                        nuevaSugerencia.Aceptado = true;
+                                        nuevaSugerencia.CantidadDeCupos = puedoCrear;
+                                        nuevaSugerencia.CantidadCupoOriginal = puedoCrear;
+                                        sugerencia.CantidadCupoOriginal -= puedoCrear;
+                                        sugerencia.CantidadDeCupos -= puedoCrear;
+                                    }
+                                }
+                                if (resultNormales.ListaCupos.Count() > 0)
+                                {
+                                    repositorio.Agregar(nuevaSugerencia);
+                                    nuevaSugerencias.Add(nuevaSugerencia);
+                                }
+                            }
+                            else
+                            {
+                                if (!resultNormales.HayError)
+                                {
+                                    sugerencia.Aceptado = true;
+                                    sugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                    sugerenciaAceptadaDesdeElFront.cantidad -= puedoCrear;
+                                }
+                                else
+                                {
+                                    if (resultNormales.ListaCupos.Count() > 0)
+                                    {
+                                        puedoCrear = resultNormales.ListaCupos.Count();
+                                        SugerenciaCupo nuevaSugerencia = ClonarSugerencia(sugerencia);
+                                        nuevaSugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                        nuevaSugerencia.CantidadDeCupos = puedoCrear;
+                                        nuevaSugerencia.CantidadCupoOriginal = puedoCrear;
+                                        sugerenciaAceptadaDesdeElFront.cantidad -= puedoCrear;
+                                        nuevaSugerencia.Aceptado = true;
+                                        sugerencia.CantidadCupoOriginal -= puedoCrear;
+                                        sugerencia.CantidadDeCupos -= puedoCrear;
+                                        repositorio.Agregar(nuevaSugerencia);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                // si no esta liberada la cupera creo solicitudes
+                if (cuperaLiberada == null)
+                {
+                    //crear solicitudes flete
+                    foreach (var sugerencia in sugerencias.Where(a => a.Aceptado == null && (a.Solicitudes == null || a.Solicitudes.Count() == 0)).OrderByDescending(a => a.Puntuacion).ThenBy(a => a.Id))
+                    {
+                        if (sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia > 0)
+                        {
+                            int puedoSolicitarFlete = new List<int> { sugerencia.CantidadDeCupos, sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia }.Min();
+                            var solicitud = new AdministracionCupo()
+                            {
+                                ComercialCreadorId = comercialCreador,
+                                CantidadCupo = 0,
+                                CantidadFleteProcedencia = 0,
+                                ComercialId = sugerencia.ComercialId,
+                                Fecha = sugerenciaAceptadaDesdeElFront.fecha.Value,
+                                EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                                MaterialId = sugerencia.MaterialId,
+                                ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
+                                CentroId = sugerencia.CentroId,
+                                Excedente = true,
+                                ProveedorId = sugerencia.ProveedorId,
+                                TipoAdministracionCupoId = (int)EnumTipoAdministracionCupo.Algoritmo,
+                                FechaCreacion = DateTime.Now,
+                            };
+                            if (puedoSolicitarFlete >= sugerencia.CantidadDeCupos)
+                            {
+                                solicitud.CantidadFleteProcedencia = sugerencia.CantidadDeCupos;
+                                solicitud.SugerenciaCupo = sugerencia;
+                                sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia -= sugerencia.CantidadDeCupos;
+                                sugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                            }
+                            else
+                            {
+                                SugerenciaCupo nuevaSugerenciaSolicitud = ClonarSugerencia(sugerencia);
+                                nuevaSugerenciaSolicitud.CantidadDeCupos = puedoSolicitarFlete;
+                                nuevaSugerenciaSolicitud.CantidadCupoOriginal = puedoSolicitarFlete;
+                                nuevaSugerenciaSolicitud.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                solicitud.CantidadFleteProcedencia = puedoSolicitarFlete;
+                                solicitud.SugerenciaCupo = nuevaSugerenciaSolicitud;
+                                sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia -= puedoSolicitarFlete;
+                                sugerencia.CantidadDeCupos -= puedoSolicitarFlete;
+                                sugerencia.CantidadCupoOriginal -= puedoSolicitarFlete;
+                                repositorio.Agregar(solicitud);
+                            }
+                            solicitudesDto.Add(new AdministracionCupoDto { Fecha = solicitud.Fecha, CantidadDeCupo = solicitud.CantidadCupo, CantidadFleteProcedencia = solicitud.CantidadFleteProcedencia });
+
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                    }
+
+                    //crear solicitudes normal
+                    foreach (var sugerencia in sugerencias.Where(a => a.Aceptado == null && (a.Solicitudes == null || a.Solicitudes.Count() == 0)).OrderByDescending(a => a.Puntuacion).ThenBy(a => a.Id))
+                    {
+                        if (sugerenciaAceptadaDesdeElFront.cantidad > 0)
+                        {
+                            int puedoSolicitar = new List<int> { sugerencia.CantidadDeCupos, sugerenciaAceptadaDesdeElFront.cantidad }.Min();
+                            var solicitud = new AdministracionCupo()
+                            {
+                                ComercialCreadorId = comercialCreador,
+                                CantidadCupo = 0,
+                                CantidadFleteProcedencia = 0,
+                                ComercialId = sugerencia.ComercialId,
+                                Fecha = sugerenciaAceptadaDesdeElFront.fecha.Value,
+                                EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                                MaterialId = sugerencia.MaterialId,
+                                ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
+                                CentroId = sugerencia.CentroId,
+                                Excedente = true,
+                                ProveedorId = sugerencia.ProveedorId,
+                                TipoAdministracionCupoId = (int)EnumTipoAdministracionCupo.Algoritmo,
+                                FechaCreacion = DateTime.Now,
+                            };
+                            if (puedoSolicitar >= sugerencia.CantidadDeCupos)
+                            {
+                                solicitud.CantidadCupo = sugerencia.CantidadDeCupos;
+                                solicitud.SugerenciaCupo = sugerencia;
+                                sugerenciaAceptadaDesdeElFront.cantidad -= sugerencia.CantidadDeCupos;
+                                sugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                            }
+                            else
+                            {
+                                SugerenciaCupo nuevaSugerenciaSolicitud = ClonarSugerencia(sugerencia);
+                                nuevaSugerenciaSolicitud.CantidadDeCupos = puedoSolicitar;
+                                nuevaSugerenciaSolicitud.CantidadCupoOriginal = puedoSolicitar;
+                                nuevaSugerenciaSolicitud.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                solicitud.CantidadCupo = puedoSolicitar;
+                                solicitud.SugerenciaCupo = nuevaSugerenciaSolicitud;
+                                sugerenciaAceptadaDesdeElFront.cantidad -= puedoSolicitar;
+                                sugerencia.CantidadDeCupos -= puedoSolicitar;
+                                sugerencia.CantidadCupoOriginal -= puedoSolicitar;
+                                repositorio.Agregar(solicitud);
+                            }
+                            solicitudesDto.Add(new AdministracionCupoDto { Fecha = solicitud.Fecha, CantidadDeCupo = solicitud.CantidadCupo, CantidadFleteProcedencia = solicitud.CantidadFleteProcedencia });
+
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                    }
+
+                }
+            }
+
+
+            foreach (var solicitudDto in solicitudesDto.GroupBy(x => x.Fecha))
+            {
+                solicitudes.Add("Para la fecha: " + solicitudDto.Key.ToString("dd/MM/yyyy") + " se generó una solicitud: " +
+                    (solicitudDto.Sum(a => a.CantidadDeCupo) > 0 ? "<br />Cupo normales:" + solicitudDto.Sum(a => a.CantidadDeCupo) : "") +
+                    (solicitudDto.Sum(a => a.CantidadFleteProcedencia) > 0 ? "<br />Cupo con flete:" + solicitudDto.Sum(a => a.CantidadFleteProcedencia) : "")
+                );
+            }
+            //solicitudes.Insert(0, (proveedorDesc != null ? proveedorDesc.RazonSocial + "<br/>" : ""));
+            //solicitudes.Add("<br/>");
+            //
+            if (resultFinal.ListaCupos.Count > 0)
+            {
+                resultFinal.ListaCupos.Insert(0, (proveedorDesc != null ? proveedorDesc.RazonSocial : ""));
+            }
+            resultFinal.ListaCupos.AddRange(solicitudes);
+            resultado.Add(resultFinal);
+
+            repositorio.GuardarCambios();
+            return resultado;
+        }
+
+        public List<CupoResult> ModificarSugerenciaCupoPorProveedor2(List<AceptarSugerenciaCupoDto> items)
         {
 
             var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
@@ -4969,7 +5418,7 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Add(errorCupera);
                 return resultado;
             }
-
+            //sugerenciasAceptadasDesdeElFront
             foreach (var item in items)
             {
                 var nuevaSugerencias = new List<SugerenciaCupo>();
@@ -5036,22 +5485,22 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 generados = item.cantidadFleteProcedencia < sugerencia.CantidadDeCupos ? item.cantidadFleteProcedencia : sugerencia.CantidadDeCupos;
                                 //1                       //3
-                                if (total < sugerencia.CantidadDeCupos)
+                                if (total < generados)
                                 {
                                     //Generar solicitudes por la resta y la sugerencia de esa solicitud
-                                    solicitud.CantidadFleteProcedencia = generados - total;
+                                    solicitud.CantidadFleteProcedencia = total - generados;
                                     item.cantidadFleteProcedencia -= generados;
                                     nuevaSugerenciaSolicitud.CantidadDeCupos += solicitud.CantidadFleteProcedencia;
                                     nuevaSugerenciaSolicitud.CantidadCupoOriginal += solicitud.CantidadFleteProcedencia;
                                     //Generear cupos
-                                    resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, total, true);
+                                    resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, generados, true, null);
                                     total -= resultFletes.ListaCupos.Count();
 
                                 }
                                 else
                                 {
                                     //Generar cupos
-                                    resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, sugerencia.CantidadDeCupos, true);
+                                    resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, generados, true, null);
                                     total -= resultFletes.ListaCupos.Count();
                                 }
                             }
@@ -5068,13 +5517,13 @@ namespace Molinos.DataAgro.Business.Managers
                                     nuevaSugerenciaSolicitud.CantidadDeCupos += solicitud.CantidadCupo;
                                     nuevaSugerenciaSolicitud.CantidadCupoOriginal += solicitud.CantidadCupo;
                                     //Generear cupos
-                                    resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, total, true);
+                                    resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, total, true, null);
                                     total -= resultNormales.ListaCupos.Count();
                                 }
                                 else
                                 {
                                     //Generar cupos
-                                    resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, (sugerencia.CantidadDeCupos - generados), true);
+                                    resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, (sugerencia.CantidadDeCupos - generados), true, null);
                                     total -= resultNormales.ListaCupos.Count();
                                 }
                             }
@@ -5096,13 +5545,13 @@ namespace Molinos.DataAgro.Business.Managers
                             if (item.cantidadFleteProcedencia > 0)
                             {
                                 item.cantidadFleteProcedencia -= cantidadFlete;
-                                resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, cantidadFlete, true);//primero se generan los de flete
+                                resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, cantidadFlete, true, null);//primero se generan los de flete
                             }
                             if (item.cantidad > 0)
                             {
                                 var cantidad = item.cantidad < (sugerencia.CantidadDeCupos - cantidadFlete) ? item.cantidad : (sugerencia.CantidadDeCupos - cantidadFlete);
                                 item.cantidad -= cantidad;
-                                resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, cantidad, false);//despues los comunes
+                                resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, cantidad, false, null);//despues los comunes
                             }
                         }
                         if (!resultNormales.HayError)
@@ -5394,11 +5843,24 @@ namespace Molinos.DataAgro.Business.Managers
              x.Fecha == sugerencia.FechaSugerida && x.CierreCupera != true && x.LiberarCupera == true);
 
         }
+        private ConfiguracionCupo DevolverCuperaLiberada(int MaterialId, int CentroId, DateTime Fecha)
+        {
+
+            return repositorio.Obtener<ConfiguracionCupo>(x => x.MaterialId == MaterialId && x.CentroId == CentroId &&
+             x.Fecha == Fecha && x.CierreCupera != true && x.LiberarCupera == true);
+
+        }
 
         private int ObtenerCuposConsumidosPorFecha(DateTime fecha, SugerenciaCupo s)
         {
             return (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
            x.CentroId == s.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == s.MaterialId)).Count;
+        }
+
+        private int ObtenerCuposConsumidosPorFecha(int MaterialId, int CentroId, DateTime fecha)
+        {
+            return (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha &&
+           x.CentroId == CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == MaterialId)).Count;
         }
 
         public List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos()

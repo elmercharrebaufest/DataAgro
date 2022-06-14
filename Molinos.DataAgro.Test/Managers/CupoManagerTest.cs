@@ -769,6 +769,10 @@ namespace Molinos.DataAgro.Test.Managers
                 {
                     MaterialNombre  ="Soja"
                 }});
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                        .Returns(new List<Centro>());
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                        .Returns(new List<ConfiguracionCupo>());
             var result = target.TraerCupoDisponibilidad(DateTime.Now.Date, DateTime.Now.Date, "", new List<string>(), "");
 
             Assert.AreEqual(1, result.Count());

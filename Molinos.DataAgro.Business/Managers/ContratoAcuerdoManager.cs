@@ -689,6 +689,7 @@ namespace Molinos.DataAgro.Business
                 TipoNegocioId = 6,
                 FechaHasta = x.FechaHasta,
                 FechaDesde = x.FechaDesde,
+                FechaOperacion = x.FechaOperacion,
                 Estado = x.EstadoId,
                 Estado_Contrato = x.Estado.Descripcion,
                 MonedaId = x.MonedaId,

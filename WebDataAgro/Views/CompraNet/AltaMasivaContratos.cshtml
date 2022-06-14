@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewBag.Title = "Alta masiva de contratos";
+}
+
+<script src="~/Scripts/App/AltaMasivaContratos.js"></script>
+@section Styles {
+    <link href="~/Content/altaMasivaContratos.css" rel="stylesheet" />
+    <link href="~/Content/configuracionCupo.css" rel="stylesheet" />
+}
+<h3>@ViewBag.Title</h3>
+@*@using (Html.BeginForm("AltaMasivaContratosExcel", "CompraNet", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {*@
+@Html.Hidden("contratoId")
+<div class="container">
+    <div id="divFormulario">
+        <br />
+        <div class="cupo">
+            <div class="row">
+                <span class="col-md-1 historial" style="padding-top: 15px; margin-left: -4px;">Alta</span>
+                <div class="col-md-5"></div>
+                <div class="col-md-3" style="text-align: end; margin-left: 75px;">
+                    <form action="~/Templates/AltaMasiva.xlsx" target="_blank">
+                        <button class="k-button k-button-icontext" type="submit"><i class="fa fa-download" style="font-size:18px; width: 25px" aria-hidden="true"></i> Archivo Modelo</button>
+                    </form>
+
+                </div>
+                <div class="col-md-3" style="padding-left: 0px; margin-left: -75px;text-align: end">
+                    <form action="https://www.afip.gob.ar/genericos/guiavirtual/archivos/localidades.pdf" target="_blank">
+                        <button class="k-button k-button-icontext" type="submit"><i class="fa fa-download" style="font-size:18px; width: 25px" aria-hidden="true"></i> Localidades ONCCA </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-2">
+                <label>Contrato Acuerdo</label>
+            </div>
+            <div class="col-sm-4" style="padding-top: 7px;">
+                <input type="text" class="k-textbox" style="width:100%" id="contratoAcuerdoId" />
+            </div>
+            <div class="col-md-4">
+                <button style="" class="k-button k-button-icontext" onclick="document.getElementById('file').click()"><i class="fa fa-paperclip" style="font-size:18px; width: 25px" aria-hidden="true"></i>  Adjuntar Archivo</button>
+                <label id="fileLb" style="padding-top:12px; padding-left:5px"></label>
+                <input type='file' id="file" style="display:none" oninput="setFileName()">
+                @*@Html.TextBox("file", "Cargar Archivo", new { type = "file", value = "Adjuntar" }) <br />*@
+            </div>
+            <div class=" col-md-2" style="padding-left: 0px; margin-left: -27px;">
+                <input id="guardarBtn" style="background:#017940 !important; color:#fff" onclick="cargarContratos()" class="k-button k-button-icontext" value="Grabar" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <strong id="divAcuerdoData"></strong>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class=" col-md-5"></div>
+           
+        </div>
+
+    </div>
+    <div id="divRespuesta" style="margin-top:20px; text-align:center" hidden>
+
+    </div>
+</div>
+@*}*@
+
+<div class="modal fade" id="resultadoCarga" tabindex="-1" role="dialog" aria-labelledby="resultadoCargaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title" id="resultadoCupo"></h1>
+                <div class="status confirmado-modal">
+                    <div>Contratos Cargados</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="error-modal" hidden></div>
+                <div id="contratos-generados-modal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5599,9 +5599,16 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.MonedaAjusteComisionId = acuerdo.MonedaAjusteComisionId;
                 contrato.PagoDirectoVendedor = acuerdo.PagoDirectoVendedor;
 
-                contrato.ProveedorCreadorId = acuerdo.CorredorId;
+                if (item.ComercialCreadorId.HasValue)
+                {
+                    contrato.ProveedorCreadorId = null;
+                }
+                else
+                {
+                    contrato.ProveedorCreadorId = acuerdo.CorredorId;
+                }
                 contrato.CorredorId = acuerdo.CorredorId;
-                contrato.ComercialCreadorId = null;
+                contrato.ComercialCreadorId = item.ComercialCreadorId;
                 contrato.UsuarioId = proveedor.RazonSocial;
                 contrato.ComercialId = acuerdo.ComercialId;
                 contrato.ProveedorId = proveedorid;
@@ -5619,7 +5626,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    var result = GrabarContrato(contrato);
+                    var result = GrabarContrato(contrato);                  
                     result.ContratoId = int.Parse(item.Observacion);
                     results.Add(result);
                 }
@@ -5630,10 +5637,6 @@ namespace Molinos.DataAgro.Business.Managers
                 EnviarMailAltaMasiva(results, contratos, enviarA);
             }
 
-            foreach (var item in results.Where(x => x.ContratoId != null && x.ContratoId > 0))
-            {
-                logDataAgroManager.LogCambiosDataAgro(TraerContrato(item.ContratoId.Value), TipoAccionLogDataAgro.Crear, new Contrato().GetType());
-            }
             return results;
         }
 

@@ -5285,6 +5285,7 @@ function AgregarPrecioPactado() {
         if (precioPactado.ImportePactado > 0 && (precioPactado.MonedaImportePactadoId === "" || precioPactado.MonedaImportePactadoId === undefined)) {
             errores.push("La Moneda no debe ser vacia cuando hay Importe");
         }
+        
         if ((precioPactado.ImportePactado == 0 || precioPactado.ImportePactado == "" || precioPactado.ImportePactado === undefined) && (precioPactado.MonedaImportePactadoId != "")) {
             errores.push("El Importe no debe ser vacia cuando seleciono Moneda");
         }
@@ -5314,6 +5315,34 @@ function AgregarPrecioPactado() {
 
         if (precioPactado.ImportePactado != 0 && precioPactado.Porcentaje != "") {
             errores.push("No es posible colocar un importe y un porcentaje en la misma apertura.");;
+        }
+        if (precioPactado.ImportePactado > 0) {
+            if (precioPactado.MonedaImportePactadoId == precioPactado.MonedaPactadoId) {
+                if (precioPactado.ImportePactado > precioPactado.Precio * 0.01) {
+                    errores.push(" El Importe no puede ser mayor al 1% del Precio");
+                }
+            }
+            else {
+                if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
+                    var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+                    var ImporteMonedaIgual = 0;
+                    console.log("valorDolar", valorDolar);
+                    if (precioPactado.MonedaPactadoId == "USDM ") {
+                        ImporteMonedaIgual = precioPactado.ImportePactado / valorDolar;
+                    } else {
+                        ImporteMonedaIgual = precioPactado.ImportePactado * valorDolar;
+                    }
+                    if (precioPactado.Precio * 0.01 < ImporteMonedaIgual) {
+                        errores.push(" El Importe no puede ser mayor al 1% del Precio");
+                    }
+                }
+            }
+        }
+        if (precioPactado.Porcentaje != "") {
+            var porcentajeValue = parseFloat(precioPactado.Porcentaje.replace(",", "."));
+            if (porcentajeValue > 1) {
+                errores.push(" El porcentaje no puede ser mayor al 1%");
+            }
         }
         return errores;
     }

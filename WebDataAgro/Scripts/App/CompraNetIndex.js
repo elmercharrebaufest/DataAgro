@@ -2501,8 +2501,8 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     }
     $("#visualizar_pesificadoDias").text(pesificadoDias);
     informaSIO === "true" ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
-    mercsFijacion == "true" ? $("#visualizar_mercsDeposito").text("Si") : $("#visualizar_mercsDeposito").text("null");
-    mercsFijacion == "true" ? $("#cantidadDeposito").text(isNaN(parseInt(CantidadDeposito)) ? "" : kendo.toString(parseInt(CantidadDeposito), "n0")) : $("#cantidadDeposito").text("0");
+    mercsFijacion == "true" ? $("#visualizar_mercsDeposito").text("Si") : "";
+    mercsFijacion == "true" ? $("#cantidadDeposito").text(isNaN(parseInt(CantidadDeposito)) ? "" : kendo.toString(parseInt(CantidadDeposito), "n0")) : "";
     cd === "true" ? $("#visualizar_pago").text("CD") : (warrant === "true") ? $("#visualizar_pago").text("Warrant") : (pagoDirectoVendedor === "true") ? $("#visualizar_pago").text("Pago Directo Vendedor") : $("#visualizar_pago").text("null");
     boletoDescripcion === "Ninguno" || boletoDescripcion === null || boletoDescripcion === "" || boletoDescripcion === "undefined" ? ($("#visualizar_boleto").text("null") && $("#visualizar_bolsa").text("null")) : ($("#visualizar_boleto").text(boletoDescripcion) && $("#visualizar_bolsa").text(bolsaDescripcion));
 
@@ -2528,6 +2528,13 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     visualizacionRowDoble("cantidadDivVisualizar", "visualizar_cantidad", "cantidadDeCamionesDivVisualizar", "visualizar_cantidadDeCamiones");
     visualizacionRowDoble("tipoDivVisualizar", "visualizar_tipo", "destinoDivVisualizar", "visualizar_destino");
     visualizacionRowDoble("mercsDepositoDivVisualizar", "visualizar_mercsDeposito", "mercsDepositoDivVisualizar", "cantidadDeposito");
+    if (mercsFijacion == "true") {
+        $(".deposito").show(); 
+        $("#mercsDepositoDivVisualizar").show();
+    } else {
+        $(".deposito").hide(); 
+        $("#mercsDepositoDivVisualizar").hide();
+    }
     visualizacionRowDoble("pagoDivVisualizar", "visualizar_pago");
     visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
     visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
@@ -3507,3 +3514,50 @@ function setPageSize() {
     grid.dataSource.pageSize($("#pageSize").val());
     grid.refresh();
 }
+
+function imageToBlob(imageURL) {
+    const img = new Image;
+    const c = document.createElement("canvas");
+    const ctx = c.getContext("2d");
+    img.crossOrigin = "";
+    img.src = imageURL;
+    return new Promise(resolve => {
+        img.onload = function () {
+            c.width = this.naturalWidth;
+            c.height = this.naturalHeight;
+            ctx.drawImage(this, 0, 0);
+            c.toBlob((blob) => {
+                // here the image is a blob
+                resolve(blob)
+            }, "image/png", 0.75);
+        };
+    })
+}
+
+async function copyImage(imageURL) {
+    const blob = await imageToBlob(imageURL)
+    const item = new ClipboardItem({ "image/png": blob });
+    navigator.clipboard.write([item]);
+}
+
+function copiarImagen() {
+    $("#lineModalLabelCopiar").show(); 
+    $(".noCopiarDatos").hide();
+    $(".status").addClass("anchoEstado");  
+    $(".datosContrato").addClass("noPadding");  
+    
+    html2canvas($(".datosContrato")[0]).then(function (canvas) {
+        let image = new Image();
+        image.src = canvas.toDataURL();
+        $("#out_image").append(image);
+        copyImage(image.src);
+        $("#out_image").empty();
+    }
+    );
+    $("#lineModalLabelCopiar").hide(); 
+    $(".noCopiarDatos").show();
+    $(".status").removeClass("anchoEstado");  
+    $(".datosContrato").removeClass("noPadding");  
+
+}
+

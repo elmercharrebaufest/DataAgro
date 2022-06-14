@@ -657,13 +657,13 @@ function grabarSolicitudExtraordinaria() {
         MensErr("Seleccione la Calidad"); return;
     }
     if ($("#FechaSE").data("kendoDatePicker").value() == null) {
-        MensErr("Seleccione la Fecha"); return;
+        MensErr("Seleccione una Fecha Desde mayor o igual al dia actual."); return;
     }
     if ($("#FechaSE").data("kendoDatePicker").value() < new Date().setHours(0, 0, 0, 0)) {
-        MensErr("La Fecha no puede ser menor a hoy."); return;
+        MensErr("Seleccione una Fecha Desde mayor o igual al dia actual."); return;
     }
     if ($("#FechaHastaSE").data("kendoDatePicker").value() < $("#FechaSE").data("kendoDatePicker").value().setHours(0, 0, 0, 0)) {
-        MensErr("La Fecha Hasta no puede ser menor a Fecha."); return;
+        MensErr("La Fecha Hasta no puede ser menor a Fecha Desde."); return;
     }
     if ($("#ProveedorIdSE").val() == "") {
         $("#buscadorProveedorSE").click();

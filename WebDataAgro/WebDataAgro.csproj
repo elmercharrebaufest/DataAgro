@@ -372,6 +372,7 @@
     <Content Include="Content\agregarcontacto.css" />
     <Content Include="Content\agregarproveedor.css" />
     <Content Include="Content\agregarproveedorResponsive.css" />
+    <Content Include="Content\altaMasivaContratos.css" />
     <Content Include="Content\assets\global\css\components.min.css" />
     <Content Include="Content\assets\global\css\plugins.min.css" />
     <Content Include="Content\assets\global\img\remove-icon-small.png" />
@@ -1018,6 +1019,7 @@
     <Content Include="DEV.DeployParameters.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\App\AltaMasivaContratos.js" />
     <Content Include="Scripts\App\CupoNoPropio.js" />
     <Content Include="Scripts\App\DescargarBoleto.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
@@ -2805,6 +2807,10 @@
     <Content Include="Views\NegocioPesificacion\Index.cshtml" />
     <Content Include="Views\CupoNoPropio\Index.cshtml" />
     <Content Include="Views\CupoNoPropio\ModalCrearCupoNoPropio.cshtml" />
+    <Content Include="Views\CompraNet\AltaMasivaContratos.cshtml" />
+    <Content Include="Templates\AltaMasiva.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
