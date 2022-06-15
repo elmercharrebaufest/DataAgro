@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Business.Helpers
                 DataSet result = excelReader.AsDataSet();
 
                 excelReader.Close();
-                if(result.Tables.Count == 0)
+                if (result.Tables.Count == 0)
                 {
                     throw new Exception("El documento no tiene formato correcto.");
                 }
@@ -78,6 +78,7 @@ namespace Molinos.DataAgro.Business.Helpers
                 if (dd.Any())
                 {
                     DataTable dt = dd.CopyToDataTable();
+                    dt.TableName = result.Tables[0].TableName;
                     return dt;
                 }
                 else

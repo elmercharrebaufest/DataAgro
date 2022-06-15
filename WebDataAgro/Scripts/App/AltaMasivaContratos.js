@@ -1,7 +1,7 @@
 ﻿var dataFile;
 
 $(document).ready(function () {
-
+    $("#menuproveedor").hide();
     $("#contratoAcuerdoId").click(function () {
         $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
         $("#contratoAcuerdoId").data("kendoAutoComplete").trigger("change");
