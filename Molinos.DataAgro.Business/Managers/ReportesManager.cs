@@ -3619,6 +3619,9 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "</tr>";
                 htmlBody += "</tbody>";
                 htmlBody += "</table>";
+                htmlBody += "<br/>";
+                htmlBody += $"Asimismo, de no haber generado la pesificación antes del  {instruccion.ToString("dd-MM-yyyy")}, no será necesario que ingresen a la página WEB para tomar el TC, tomándose como " +
+                      $"pesificación efectiva esta comunicación con el TC del día {FechaALetras(instruccion)}.";
                 htmlBody += $"{p}Saludos Cordiales</p>" +
                     $"{p}Molinos Agro S.A.</p>  <br /> <br />" +
                     @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -3660,6 +3663,9 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "</tr>";
                 htmlBody += "</tbody>";
                 htmlBody += "</table>";
+                htmlBody += "<br/>";
+                htmlBody += $"Asimismo, de no haber generado la pesificación antes del  {instruccion.ToString("dd-MM-yyyy")}, no será necesario que ingresen a la página WEB para tomar el TC, tomándose como " +
+                      $"pesificación efectiva esta comunicación con el TC del día {FechaALetras(instruccion)}.";
                 htmlBody += $"{p}Saludos Cordiales</p>" +
                     $"{p}Molinos Agro S.A.</p>  <br /> <br />" +
                     @"<img src='cid:" + res.ContentId + @"'/>" +
