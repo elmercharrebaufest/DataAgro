@@ -75,9 +75,10 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (tipoNegocios.Exists(x => x == itemNegocio.TipoNegocioId))
                     {
-                        if (!string.IsNullOrEmpty(ValidarNegocioEnGeneracionBoleto(itemNegocio, itemNegocio.TipoNegocioId)))
+                        var mensaje = ValidarNegocioEnGeneracionBoleto(itemNegocio, itemNegocio.TipoNegocioId);
+                        if (!string.IsNullOrEmpty(mensaje))
                         {
-                            error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, ""));
+                            error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, mensaje));
                             continue;
                         }
                         var consultaBoleto = oConsultarEstadoBoletoAgent.EstadoBoleto(itemNegocio.ContratoSAP, itemNegocio.TipoNegocioId == 3 ? itemNegocio.Negocio : "");
@@ -655,9 +656,9 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 var res = status.ValidarEstado(negocio.ContratoSAP);
-                if (string.IsNullOrEmpty(res.Status) && res.NumeroSio == 0)
+                if (string.IsNullOrEmpty(res.Status) && res.Status != "X")
                 {
-                    mensaje = "El contrato ya no se encuentra en slip o fue informado a SIO granos";
+                    mensaje = "No se pudo generar el boleto para el contrato seleccionado";
                     logger.Debug("No se pudo generar el boleto por el status: " + res.Status + " " + negocio.ContratoSAP);
 
                 }

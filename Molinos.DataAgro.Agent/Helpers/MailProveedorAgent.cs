@@ -49,7 +49,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     lista.Add(new MailProveedorDto()
                     {
                         Cuit = item.CUIT,
-                        Pesificado = (item.REMARK == "" || item.REMARK.ToUpper().Contains("PESI")  || item.REMARK.ToUpper().Contains("PAGO") || item.FLGDEFAULT == "X") ? item.MAIL : "",
+                        Pesificado = (item.REMARK == "" || item.REMARK.ToUpper().Contains("PESI")  || 
+                        item.REMARK.ToUpper().Contains("PAGO") || item.FLGDEFAULT == "X" || item.REMARK.ToUpper().Contains("PARCIALES")) ? item.MAIL : "",
                     });
                 }
                 logger.Debug(devolucion.ToXml());
