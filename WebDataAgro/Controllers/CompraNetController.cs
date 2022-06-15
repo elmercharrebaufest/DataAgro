@@ -1363,6 +1363,18 @@ namespace WebDataAgro.Controllers
                         errores.Add(string.Concat("Archivo no contiene información."));
                         return Json(new { Resume = errores, Resultado = false });
                     }
+                    if (dsExcel.Tables[0].TableName != "AltaMasiva")
+                    {
+                        if (dsExcel.Tables[0].TableName == "Data")
+                        {
+                            throw new Exception("El documento no contiene información de contratos.");
+                        }
+                        else
+                        {
+                            throw new Exception("El documento no tiene el formato correcto. Utilice el Archivo Modelo");
+                        }
+                    }
+
                     var materiales = mobjMaterialManager.TraerTodoMaterial();
                     var centros = centroManager.TraerTodoCentro();
                     var campanias = mobjCampañaManager.TraerTodoCampania();
