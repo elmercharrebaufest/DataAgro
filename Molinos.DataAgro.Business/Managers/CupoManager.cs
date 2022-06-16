@@ -3549,6 +3549,8 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 if (c.EstadoCupoId == 1)
                                 {
+                                    var noPropio = repo.Obtener<CupoNoPropio>(a => a.Codigo == c.CupoSap);
+                                    noPropio.CupoId = null;
                                     c.EstadoCupoId = 4;
                                     repo.GuardarCambios();
                                     logmanager.LogCambiosDataAgro(ObtenerCupo(c.Id, repo), TipoAccionLogDataAgro.Eliminar);

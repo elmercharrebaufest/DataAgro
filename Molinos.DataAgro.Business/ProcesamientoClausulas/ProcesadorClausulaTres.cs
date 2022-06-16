@@ -22,10 +22,16 @@ namespace Molinos.DataAgro.Business.Procesamiento
         public override ResultadoClausula DevolverClausulas(ClausulaTres clausula)
         {
             var res = new ResultadoClausula();
-            if ((clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje != true) || (clausula.Basico.TipoNegocioId == 3 && clausula.Basico.Canje == true) || clausula.Basico.TipoNegocioId == 2)
+            var contrato = Repositorio.Obtener<Contrato>(x => x.ContratoSAP == clausula.Basico.ContratoSAP);
+            var esFijacionConContratoCanje = clausula.Basico.TipoNegocioId == 3 && contrato.Canje == true;
+            if ((clausula.Basico.TipoNegocioId == 1 && clausula.Basico.Canje != true) || (esFijacionConContratoCanje) || clausula.Basico.TipoNegocioId == 2)
             {
-                res.Texto += $"El pago se hará { clausula.Basico.PorcentajeDePago } ({ DevolverNumeroEnLetras(clausula.Basico.PorcentajeDePago.Value) } por ciento), ";
-                if ((clausula.Basico.TipoNegocioId == 3 && clausula.Basico.Canje == true) || clausula.Basico.TipoNegocioId == 1)
+                if (contrato.PorcentajeDePago != null)
+                {
+                    res.Texto += $"El pago se hará {  contrato.PorcentajeDePago  } " +
+                      $"({ DevolverNumeroEnLetras(contrato.PorcentajeDePago.Value) } por ciento), ";
+                }
+                if ((clausula.Basico.TipoNegocioId == 3 && contrato.Canje == true) || clausula.Basico.TipoNegocioId == 1)
                 {
                     res.Texto += clausula.Basico.CondicionFijacionDescripcion;
                 }
@@ -60,8 +66,8 @@ namespace Molinos.DataAgro.Business.Procesamiento
 
         public string DevolverNumeroEnLetras(decimal numero)
         {
-            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();             
-            var fraccion = numero - Math.Floor(numero); 
+            var letras = ((int)Math.Abs(numero)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper();
+            var fraccion = numero - Math.Floor(numero);
             if (fraccion > 0)
             {
                 letras += $" con {((int)(fraccion * 100)).ToWords(CultureInfo.GetCultureInfo("es-AR")).ToUpper() }";

@@ -639,18 +639,26 @@ namespace Molinos.DataAgro.Business.Managers
         private string ValidarNegocioEnGeneracionBoleto(BasicoContrato negocio, int tipoNegocio)
         {
             var mensaje = "";
-            var kilosDisponibles = 10000;
+            var kilosDisponibles = 10000;          
             if (tipoNegocio == 3)
             {
-                if (negocio.Cantidad < (kilosDisponibles * 1000))
+                var contrato = repositorio.Obtener<Contrato>(x => x.ContratoSAP == negocio.ContratoSAP);
+                if (contrato != null)
                 {
-                    mensaje = "No se pudo generar el boleto para la fijacion seleccionada";
-                    logger.Debug("No se pudo generar el boleto para la fijacion seleccionada por cantidad no disponible " + negocio.FijacionSAP);
+                    if (contrato.Cantidad < (kilosDisponibles * 1000))
+                    {
+                        mensaje = "No se pudo generar el boleto para la fijación seleccionada";
+                        logger.Debug("No se pudo generar el boleto para la fijacion seleccionada por cantidad no disponible " + negocio.FijacionSAP);
+                    }
+                    if (contrato.Canje != true)
+                    {
+                        mensaje = "No se pudo generar el boleto para la fijación seleccionada";
+                        logger.Debug("No se pudo generar el boleto para la fijacion seleccionada por tener Canje " + negocio.FijacionSAP);
+                    }
                 }
-                if(negocio.Canje != true)
+                else
                 {
-                    mensaje = "No se pudo generar el boleto para la fijacion seleccionada";
-                    logger.Debug("No se pudo generar el boleto para la fijacion seleccionada por tener Canje " + negocio.FijacionSAP);
+                    mensaje = "No se encontró el contrato para la fijación seleccionada";
                 }
             }
             else
