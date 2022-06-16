@@ -33,7 +33,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
                 }
                 if ((clausula.Basico.TipoNegocioId == 3 && contrato.Canje == true) || clausula.Basico.TipoNegocioId == 1)
                 {
-                    res.Texto += clausula.Basico.CondicionFijacionDescripcion;
+                    res.Texto += contrato.CondicionFijacion.Descripcion;
                 }
                 if (clausula.Basico.TipoNegocioId == 2)
                 {
