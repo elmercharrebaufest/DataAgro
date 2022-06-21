@@ -54,9 +54,12 @@ namespace Molinos.DataAgro.Business.Procesamiento
                         res.Texto += "las 72 hs";
                     }
                 }
-                res.Texto += $", con mercadería descargada en planta, liquidándose el { (100 - clausula.Basico.PorcentajeDePago) } ({ DevolverNumeroEnLetras(100 - clausula.Basico.PorcentajeDePago.Value) } por ciento) " +
+                if (contrato.PorcentajeDePago != null)
+                {
+                    res.Texto += $", con mercadería descargada en planta, liquidándose el { (100 - contrato.PorcentajeDePago.Value) } ({ DevolverNumeroEnLetras(100 - contrato.PorcentajeDePago.Value) } por ciento) " +
                     $"restante a los 30 (treinta) días del cumplimiento del contrato.";
-                if (clausula.Basico.PagoDirectoVendedor == true)
+                }               
+                if (contrato.PagoDirectoVendedor == true)
                 {
                     res.Texto += "El pago se hará en su totalidad al vendedor. ";
                 }
