@@ -236,7 +236,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CondicionalMonedaDescripcion = (contrato is Contrato) ? (contrato as Contrato).CondicionalMonedaId != null ? (contrato is Contrato) ? (contrato as Contrato).CondicionalMoneda.Descripcion : "" : "" : "",
                         RazonSocialProveedor = (contrato is AgenteCompra) ? (contrato as AgenteCompra).Operador.Descripcion : contrato.Proveedor == null ? "" : contrato.Proveedor.RazonSocial,
                         RazonSocialCorredor = contrato.Corredor == null ? "" : contrato.Corredor.RazonSocial,
-                        ProveedorCP = contrato.Proveedor.CodigoPostal
+                        ProveedorCP = contrato.Proveedor.CodigoPostal,
+                        FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : "",
+
                     };
 
                 return queryNegocios;
@@ -401,7 +403,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrecioNetoPonderado = contrato.PrecioNetoPonderado,
                         ProveedorComisionistaId = contrato.ProveedorComisionistaId,
                         RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial,
-                        FijacionSAP = (contrato is Contrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP :  "",
+                        FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP :  "",
 
                     };
 
