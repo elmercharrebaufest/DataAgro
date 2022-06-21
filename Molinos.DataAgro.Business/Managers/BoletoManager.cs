@@ -664,7 +664,7 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 var res = status.ValidarEstado(negocio.ContratoSAP);
-                if (string.IsNullOrEmpty(res.Status) && res.Status != "X")
+                if (!string.IsNullOrEmpty(res.Status) && res.Status != "X")
                 {
                     mensaje = "No se pudo generar el boleto para el contrato seleccionado";
                     logger.Debug("No se pudo generar el boleto por el status: " + res.Status + " " + negocio.ContratoSAP);
