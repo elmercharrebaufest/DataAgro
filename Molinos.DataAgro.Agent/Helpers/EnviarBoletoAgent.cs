@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public string Enviar(BoletoGeneradoDto boleto)
         {
-            logger.Debug("Eviando Contrato Nro: " + boleto.ContratoSAP);
+            logger.Debug("Eviando negocio Nro: " + (string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.ContratoSAP : boleto.FijacionSAP));
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
 
@@ -46,7 +46,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Cargando contrato");
                 var rq = new Z_MPRFC_ENVIAR_BOLETOS_GENE()
                 {
-                    IM_CONTRATO = !string.IsNullOrEmpty(boleto.ContratoSAP) ? boleto.ContratoSAP : "",
+                    IM_CONTRATO = string.IsNullOrEmpty(boleto.FijacionSAP) && !string.IsNullOrEmpty(boleto.ContratoSAP) ? boleto.ContratoSAP : "",
                     IM_FECHA_GENE = boleto.FechaGeneracion.ToString("yyyy-MM-dd"),
                     IM_FIJACION = !string.IsNullOrEmpty(boleto.FijacionSAP) ? boleto.FijacionSAP : "",
                     IM_GENERADO = "X",
