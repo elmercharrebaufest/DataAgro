@@ -133,7 +133,7 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                             else
                             {
-                                error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, "Error al conectarse con SAP"));
+                                error.boletosGenerados.Add(DevolverDto(itemNegocio, false, 0, resultado));
                             }
                         }
                         else
