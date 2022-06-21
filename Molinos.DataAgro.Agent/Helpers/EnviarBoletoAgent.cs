@@ -74,12 +74,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 log = repositorio.Obtener<Log>(logId.Id);
                 log.Xml += devolucion.ToXml();
-                repositorio.GuardarCambios();
-
-                if (devolucion.EX_MENSAJE != "Se actualizan correctamente los datos")
-                {
-                    throw new Exception(devolucion.EX_MENSAJE);
-                }
+                repositorio.GuardarCambios();              
 
                 return devolucion.EX_MENSAJE;
 
