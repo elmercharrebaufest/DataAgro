@@ -231,6 +231,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (tipo.Descripcion == negocio.TipoNegocio)
                     {
+                        logger.Debug("Tipo Negocio: " + tipo.Descripcion + " " + negocio.TipoNegocio);
                         if ((negocio.TipoNegocioId == 3 ? negocio.BoletoContratoId : negocio.BoletoId) == 1 && tipo.Confirma)
                         {
                             negociosFiltrados.Add(negocio);
