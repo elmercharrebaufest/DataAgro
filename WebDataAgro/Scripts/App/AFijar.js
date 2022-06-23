@@ -1598,6 +1598,7 @@ function InicializarElementos() {
         }
     });
     $("#minimoId").data("kendoNumericTextBox").enable(false);
+    $("#maximaId").data("kendoNumericTextBox").enable(false);
 
     $("#cargarCantidadCamiones").change(function () {
         if ($("#cargarCantidadCamiones").is(':checked')) {
@@ -4146,11 +4147,13 @@ function CargarDatosEditar(contrato, hijo) {
     }
 
     if (contrato.Id > 0) {
-        $("#maximaId").data("kendoNumericTextBox").value(contrato.KgMaximo);
-        $("#minimoId").data("kendoNumericTextBox").value(contrato.KgMinimo);
-    } else {
+        //$("#maximaId").data("kendoNumericTextBox").value(contrato.KgMaximo);
         CalcularMaximo();
+        $("#minimoId").data("kendoNumericTextBox").value(contrato.KgMinimo);
     }
+    //else {
+    //    CalcularMaximo();
+    //}
 
 
     if (contrato.CondicionalContratoId != null && contrato.CondicionalContratoId > 0) {        
@@ -5378,12 +5381,13 @@ function CargarAutomaticamenteLaComision(compraNet) {
 }
 
 function CalcularMaximo() {
-    if ($("#cantidadId").val() > 0) {
-        var cantidadMaxima = 30 * $("#cantidadId").val() / 100;
+    var cantidad = $("#cantidadId").data("kendoNumericTextBox").value();
+    if (cantidad > 0) {
+        var cantidadMaxima = 30 * cantidad / 100;
         var cantidadMinima = 30000;
-        if ($("#cantidadId").val() < 30000) {
-            cantidadMaxima = $("#cantidadId").val();
-            cantidadMinima = $("#cantidadId").val();
+        if (cantidad < 30000) {
+            cantidadMaxima = cantidad;
+            cantidadMinima = cantidad;
         } else if (cantidadMaxima < 30000) {
             cantidadMaxima = 30000;
         }
