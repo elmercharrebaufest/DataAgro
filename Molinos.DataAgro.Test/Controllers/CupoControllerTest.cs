@@ -156,6 +156,42 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
+
+        [Test]
+        public void GuardarCupoTest()
+        {
+            var cupoModel = new CupoModel
+            {
+                Id = 0,
+                CalidadId = 1,
+                CantidadCupos = null,
+                FasonId = false,
+                FechaEntrega = new DateTime(2020, 1, 20),
+                FechaHastaEntrega = new DateTime(2020, 1, 20),
+                FleteAcarreo = false,
+                MaterialId = 1,
+                ProveedorDescripcion = "a",
+                Proveedor = 1,
+                Observacion = "",
+                ZonaId = 1,
+                PlantaId = "1600",
+                CuitId = "A",
+                Siguientes = null
+
+            };
+            cupoManagerMock.Setup(x => x.Validar(It.IsAny<Cupo>(), It.IsAny<int>(), It.IsAny<DateTime>()))
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+            cupoManagerMock.Setup(x => x.GrabarCupo(It.IsAny<Cupo>(), It.IsAny<List<DiaCupo>>()))
+                .Returns(new CupoResult { Errores = new List<ErrorMessage>() });
+            centroManagerMock.Setup(x => x.ObtenerCentroPorCodigoSap(It.IsAny<string>())).Returns(new CentroDto { CodigoSap = "1600" });
+            var result = target.GuardarCupo(cupoModel) as JsonResult;
+
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Result\":{\"Id\":0,\"Siguientes\":null,\"ProveedorDescripcion\":\"a\",\"Proveedor\":1,\"PlantaId\":\"1600\",\"MaterialId\":1,\"FechaEntrega\":\"\\/Date(1579489200000)\\/\",\"FechaHastaEntrega\":\"\\/Date(1579489200000)\\/\",\"CantidadCupos\":0,\"ZonaId\":1,\"FleteAcarreo\":false,\"CalidadId\":1,\"Observacion\":\"\",\"FasonId\":false,\"CuitId\":\"A\",\"ConDescarga\":null,\"Dias\":null,\"Resultado\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"Negocio\":null,\"NegocioId\":null,\"NoPropio\":false,\"FechaIngreso\":\"\\/Date(-62135586000000)\\/\",\"CuposNoPropios\":null},\"Error\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"irA\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
         [Test]
         public void ModificarCupoOkTest()
         {

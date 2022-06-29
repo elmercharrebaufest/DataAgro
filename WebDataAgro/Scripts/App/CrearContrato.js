@@ -3752,6 +3752,11 @@ function validarDescuento(descuento) {
     if (descuento.Importe !== 0 && (descuento.MonedaId == "Moneda" || descuento.MonedaId == null || descuento.MonedaId == undefined || descuento.MonedaId == "")) {
         errores.push("El campo Moneda no puede estar vacío");
     }
+    if (descuento.TipoDBId == "2") {
+        if (($("#material").val() == "4" || $("#material").val() == "5") && (descuento.Porcentaje > 1 || descuento.Porcentaje < 0 )) {
+            errores.push("El porcentaje debe estar entre 0% y 1%");
+        }
+    }
 
     if (descuentos != undefined && descuentos != null && descuentos.length > 0) {
         for (var i = 0; i < descuentos.length; i++) {

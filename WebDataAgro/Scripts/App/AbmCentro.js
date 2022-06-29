@@ -73,12 +73,15 @@ function CreateGridCentro() {
             { field: "Descripcion", title: "Centro", filterable: false },
             { field: "CodigoSap", title: "Codigo SAP", filterable: false },
             { field: "Localidad", title: "Localidad", filterable: false },
+            { field: "Orden", title: "Orden", filterable: false, template: "# if(Orden == null){##}else{ # #: Orden# # }#" },
             { field: "Acopio", title: "Acopio", filterable: false, template: "# if(Acopio){#Si#}else{##}#" },
             { field: "ValidaRedespacho", title: "ValidaRedespacho", filterable: false, template: "# if(ValidaRedespacho){#Si#}else{##}#" },
             { field: "Comision", title: "Comision", filterable: false, template: "# if(Comision){#Si#}else{##}#" },
             { field: "CargaNegocios", title: "Carga Negocios", filterable: false, template: "# if(CargaNegocios){#Si#}else{##}#" },
             { field: "CargaCupos", title: "Carga Cupos", filterable: false, template: "# if(CargaCupos){#Si#}else{##}#" },
             { field: "NoPropio", title: "No Propio", filterable: false, template: "# if(NoPropio){#Si#}else{##}#" },
+            { field: "CUIT", title: "CUIT", filterable: false, template: "# if(CUIT == null){##}else{ # #: CUIT# # }#" },
+            { field: "RazonSocial", title: "Razón Social", filterable: false, template: "# if(RazonSocial == null){##}else{ # #: RazonSocial# # }#" },
         ],
 
         sortable: true,
@@ -219,6 +222,9 @@ function UpdateViewModel(model) {
         "Comision": model.Centro.Comision,
         "CargaNegocios": model.Centro.CargaNegocios,
         "CargaCupos": model.Centro.CargaCupos,
+        "Orden": model.Centro.Orden,
+        "CUIT": model.Centro.CUIT,
+        "RazonSocial": model.Centro.RazonSocial,
     };
 
     viewModel.set("Centro", centro);
@@ -368,6 +374,9 @@ function Grabar() {
         "Comision": viewModel.get("Centro.Comision"),
         "CargaNegocios": viewModel.get("Centro.CargaNegocios"),
         "CargaCupos": viewModel.get("Centro.CargaCupos"),
+        "Orden": viewModel.get("Centro.Orden"),
+        "CUIT": viewModel.get("Centro.CUIT"),
+        "RazonSocial": viewModel.get("Centro.RazonSocial"),
     };
 
     var result = MSExecuteOnServer('/Centro/Grabar', datos);
@@ -436,4 +445,13 @@ function AutocompleteProcedencia() {
             }
         }
     });
+}
+
+function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
 }

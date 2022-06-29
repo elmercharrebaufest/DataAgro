@@ -6,7 +6,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 
-namespace Molinos.DataAgro.Business.Helpers
+namespace Molinos.DataAgro.Entities.Helpers
 {
     public class ExcelImport
     {
@@ -14,12 +14,13 @@ namespace Molinos.DataAgro.Business.Helpers
         {
             var dsRet = new DataSet();
 
-            foreach (string upload in request.Files)
+            //foreach (string upload in request.Files)
+            for(int i = 0; i< request.Files.Count; i++)
             {
-                if (request.Files == null || request.Files[upload] == null) continue;
+                if (request.Files == null || request.Files[i] == null) continue;
 
-                Stream fileStream = request.Files[upload].InputStream;
-                string fileName = Path.GetFileName(request.Files[upload].FileName);
+                Stream fileStream = request.Files[i].InputStream;
+                string fileName = Path.GetFileName(request.Files[i].FileName);
 
                 if (fileName == null || !(fileName.EndsWith("xlsx") || fileName.EndsWith("xls"))) continue;
 

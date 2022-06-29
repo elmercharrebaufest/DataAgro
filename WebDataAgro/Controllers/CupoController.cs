@@ -238,6 +238,76 @@ namespace WebDataAgro.Controllers
             return RedirectToAction("Index");
         }
 
+        public JsonResult GuardarCupo(CupoModel cupo)
+        {
+            if (cupo.NegocioId == 0)
+            {
+                cupo.NegocioId = null;
+            }
+            if (cupo.Negocio == 0)
+            {
+                cupo.Negocio = null;
+            }
+            var modificado = cupo.Id != 0;
+            cupo.CantidadCupos = cupo.CantidadCupos
+                                 != null ? cupo.CantidadCupos : 0;
+            var cupoNuevo = TransformarAEntidad(cupo);
+            var error = cupoManager.Validar(cupoNuevo, cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
+            if (cupoNuevo.MaterialId == 3 && cupoNuevo.CentroId != 10 && ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
+            {
+                if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                error.Errores.Add(new ErrorMessage("Los cupos de soja no sustentable los deben gestionar por la pantalla de “Sugerencias de cupos”"));
+
+            }
+            if (!error.HayError)
+            {
+                var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, cupo.Dias);
+                //if (cupoGrabado.HayError)
+                //{
+                //    foreach (var e in cupoGrabado.Errores)
+                //    {
+                //        if (ViewData.ModelState["Proveedor"].Errors.Count == 0 || ViewData.ModelState["Proveedor"].Errors.Any(x => x.ErrorMessage != e.Message))
+                //        {
+                //            ModelState.AddModelError(e.Source, e.Message);
+                //        }
+                //    }
+                //}
+                cupo.Resultado = cupoGrabado;
+                error.ListaErrores.AddRange(cupoGrabado.ListaErrores);
+            }
+            var siguientes = JsonConvert.DeserializeObject<List<int>>(cupo.Siguientes ?? "");
+            if (!ViewData.ModelState.IsValid || !modificado)
+            {
+                if (modificado)
+                {
+                    cupo.FechaHastaEntrega = cupo.FechaEntrega;
+                }
+                //CargarViewBag();
+
+                if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+                {
+                    if (ViewData.ModelState.IsValid)
+                    {
+                        return Json(new { Result = cupo, Error = error, irA = "/Cupo/" });
+                    }
+                    return Json(new { Result = cupo, Error = error, irA = "/Cupo/CrearCupoTercero" });
+
+                }
+                return Json(new { Result = cupo, Error = error, irA= "" });
+            }
+            if (siguientes != null && siguientes.Count != 0)
+            {
+                var id = siguientes[0];
+                siguientes.RemoveAt(0);
+                if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+                {
+                    return Json(new { Result = cupo, Error = error, irA = "/Cupo/CrearCupoTercero?id=" + id.ToString() + "&siguientes=" + JsonConvert.SerializeObject(siguientes) });
+                }
+                return Json(new { Result = cupo, Error = error, irA = "/Cupo/CrearCupo?id=" + id.ToString() + "&siguientes=" + JsonConvert.SerializeObject(siguientes) });
+            }
+            return Json(new { Result = cupo, Error = error, irA = "/Cupo/" });
+        }
+
         public JsonResult BuscarProveedor(string filtroProveedor)
         {
             return Json(proveedorManager.DevolverProveedoresCorredores(filtroProveedor), JsonRequestBehavior.AllowGet);
@@ -249,8 +319,9 @@ namespace WebDataAgro.Controllers
             {
                 centros.Centro = centros.Centro.Where(x => x.CodigoSap == "1029" || x.CodigoSap == "1600").ToList();
             }
+            centros.Centro = centros.Centro.OrderBy(x=>x.Orden).ToList();
             var listaCentro = new List<SelectListItem>();
-            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true))
+            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden != null).OrderBy(y => y.Orden))
             {
                 listaCentro.Add(new SelectListItem
                 {
@@ -259,7 +330,16 @@ namespace WebDataAgro.Controllers
                     Selected = i.CodigoSap == "1029" ? true : false
                 });
             }
-            ViewBag.Centro = listaCentro.OrderBy(x => x.Value);
+            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden == null).OrderBy(y => y.Descripcion))
+            {
+                listaCentro.Add(new SelectListItem
+                {
+                    Text = i.Descripcion,
+                    Value = i.CodigoSap.ToString(),
+                    Selected = i.CodigoSap == "1029" ? true : false
+                });
+            }
+            ViewBag.Centro = listaCentro;//.OrderBy(x => x.Value);
 
             var material = materialManager.TraerTodoMaterial();
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))

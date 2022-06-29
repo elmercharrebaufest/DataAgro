@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace Molinos.DataAgro.Business.Helpers
+namespace Molinos.DataAgro.Entities.Helpers
 {
     public class ExcelValidator
     {

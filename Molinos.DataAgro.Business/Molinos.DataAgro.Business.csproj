@@ -192,8 +192,6 @@
   <ItemGroup>
     <Compile Include="Clausulas\ServicioClausulas.cs" />
     <Compile Include="Criterios\ServicioCriterios.cs" />
-    <Compile Include="Helpers\ExcelImport.cs" />
-    <Compile Include="Helpers\ExcelValidator.cs" />
     <Compile Include="Managers\BoletoManager.cs" />
     <Compile Include="Managers\CupoNoPropioManager.cs" />
     <Compile Include="Managers\HabilitacionBoletoManager.cs" />

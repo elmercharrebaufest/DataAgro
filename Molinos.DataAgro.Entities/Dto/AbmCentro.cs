@@ -38,6 +38,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool CargaNegocios { get; set; }
         public bool CargaCupos { get; set; }
         public bool NoPropio { get; set; }
+        public int? Orden { get; set; }
+        public string CUIT { get; set; }
+        public string RazonSocial { get; set; }
     }
 }
 

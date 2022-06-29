@@ -66,6 +66,17 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
+                        <label>Orden</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="Orden" type="text" class="k-textbox" data-bind="value: Centro.Orden, disabled: isControlDisabled" maxlength="50" style="max-width:310px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                        <img id="errNombres" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
                         <label>STOP</label>
                     </div>
                     <div class="col-md-2">
@@ -146,11 +157,34 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-2">
+                        <label>CUIT</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="CUIT" type="text" class="k-textbox" data-bind="value: Centro.CUIT, disabled: isControlDisabled" maxlength="50" style="max-width:310px" />
+                        <img id="errNombres" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Razón Social</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input id="RazonSocial" type="text" class="k-textbox" data-bind="value: Centro.RazonSocial, disabled: isControlDisabled" maxlength="50" style="max-width:310px" />
+                        <img id="errNombres" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
                         <button id="butAceptar" class="k-button" type="button" data-role="button">Aceptar</button>
                         <button id="butCancelar" class="k-button" type="button" data-role="button" style="margin-left:15px;">Cancelar</button>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

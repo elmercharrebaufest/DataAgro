@@ -773,7 +773,7 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
             pageSize: 20,
 
             aggregate: [
-                { field: "CantidadD", aggregate: "sum" },
+                { field: "CantidadTotal", aggregate: "sum" },
             ]
         },
         //dataBound: ShowModalFijacion,
@@ -825,7 +825,8 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
                         width: 150,
                         template: function (dataItem) {
                             return kendo.toString(dataItem.CantidadTotal, "n0");
-                        }
+                        },
+                        aggregates: ["sum"], footerTemplate: '#=kendo.toString(sum, "n0")#',
                     }
                 ]
             }

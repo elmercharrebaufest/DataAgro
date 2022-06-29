@@ -138,119 +138,129 @@ namespace Molinos.DataAgro.Business.Managers
                                 //    }
                                 //}
 
-                                var listaCupos = new List<string>();
-                                var errorSap = new Resultado();
-                                var cuposConSap = new List<Cupo>();
-                                if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
+                                try
                                 {
 
-                                    try
+                                    using (var transaction = new System.Transactions.TransactionScope())
                                     {
-                                        // cupos para Vicentin en CupoExterno
-                                        if (cupo.Centro.NoPropio)
+                                        var listaCupos = new List<string>();
+                                        var errorSap = new Resultado();
+                                        var cuposConSap = new List<Cupo>();
+                                        if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
                                         {
-                                            var consumidos = repositorio.Contar<Cupo>(x =>
-                                            x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso &&
-                                            cupo.ZonaCupoId == x.ZonaCupoId && x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
 
-                                            ConfiguracionCupoDto limitePorZona = TraerLimitePorZona(cupo, d);
-
-                                            if (limitePorZona == null)
+                                            try
                                             {
-                                                error.Error("Cupera", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
+                                                // cupos para Vicentin en CupoExterno
+                                                if (cupo.Centro.NoPropio)
+                                                {
+                                                    var consumidos = repositorio.Contar<Cupo>(x =>
+                                                    x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso &&
+                                                    cupo.ZonaCupoId == x.ZonaCupoId && x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+
+                                                    ConfiguracionCupoDto limitePorZona = TraerLimitePorZona(cupo, d);
+
+                                                    if (limitePorZona == null)
+                                                    {
+                                                        error.Error("Cupera", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
+                                                        continue;
+                                                    }
+                                                    else if (limitePorZona.LimiteCupo <= 0)
+                                                    {
+                                                        error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                                        continue;
+                                                    }
+
+                                                    var disponibles = limitePorZona.LimiteCupo - consumidos;
+                                                    if (disponibles <= 0)
+                                                    {
+                                                        error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                                        continue;
+                                                    }
+
+                                                    disponibles = disponibles > d.Cantidad.Value ? d.Cantidad.Value : disponibles;
+
+                                                    var cuposNoPropios = repositorio.Listar<CupoNoPropio>(x => x.CupoId == null && x.Disponible == true && x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso,
+                                                        disponibles);
+
+                                                    foreach (var cupoNp in cuposNoPropios)
+                                                    {
+                                                        listaCupos.Add(cupoNp.Codigo);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    listaCupos = crearCupoAgent.Crear(cupo, d.Cantidad.Value);
+                                                }
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                errorSap.Error("CantidadCuposSAP", cupo.FechaIngreso.ToShortDateString() + ": " + e.Message);
+                                            }
+                                            if (errorSap.HayError)
+                                            {
+                                                error.Errores.AddRange(errorSap.Errores);
                                                 continue;
                                             }
-                                            else if (limitePorZona.LimiteCupo <= 0)
+                                            cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : (cupo.Centro.NoPropio) ? 1 : 8;
+                                            foreach (var cupoSap in listaCupos)
                                             {
-                                                error.Error("Cupera", "No hay límite de cupo disponible para la zona");
-                                                continue;
+                                                var nuevoCupo = (Cupo)cupo.Clone();
+                                                nuevoCupo.CupoSap = cupoSap;
+                                                cuposConSap.Add(nuevoCupo);
                                             }
 
-                                            var disponibles = limitePorZona.LimiteCupo - consumidos;
-                                            if (disponibles <= 0)
+                                            repositorio.AgregarTodos(cuposConSap);
+                                            repositorio.GuardarCambios();
+
+                                            List<CupoNoPropio> cuposnoPropio = new List<CupoNoPropio>();
+                                            foreach (var cupoNuevo in cuposConSap)
                                             {
-                                                error.Error("Cupera", "No hay límite de cupo disponible para la zona");
-                                                continue;
+                                                if (cupo.Id == 0)
+                                                {
+                                                    var cupoConId = repositorio.ObtenerMayor<Cupo, int>(x => x.CupoSap == cupoNuevo.CupoSap, x => x.Id);
+                                                    if (cupoNuevo.Centro.NoPropio)
+                                                    {
+                                                        var cupoVicentin = repositorio.Obtener<CupoNoPropio>(x => x.Codigo == cupoNuevo.CupoSap);
+                                                        cupoVicentin.Cupo = cupoConId;
+                                                        cupoVicentin.CupoId = cupoConId.Id;
+                                                        cuposnoPropio.Add(cupoVicentin);
+                                                    }
+                                                    logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoConId.Id, null), TipoAccionLogDataAgro.Crear);
+                                                }
                                             }
 
-                                            disponibles = disponibles > d.Cantidad.Value ? d.Cantidad.Value : disponibles;
 
-                                            var cuposNoPropios = repositorio.Listar<CupoNoPropio>(x => x.CupoId == null && x.Disponible == true && x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso,
-                                                disponibles);
-
-                                            foreach (var cupoNp in cuposNoPropios)
+                                            if (listaCupos.Count < d.Cantidad.Value)
                                             {
-                                                listaCupos.Add(cupoNp.Codigo);
+                                                error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + d.Cantidad.Value + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
                                             }
+                                            error.ListaCupos.AddRange(listaCupos);
                                         }
                                         else
                                         {
-                                            listaCupos = crearCupoAgent.Crear(cupo, d.Cantidad.Value);
-                                        }
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        errorSap.Error("CantidadCuposSAP", cupo.FechaIngreso.ToShortDateString() + ": " + e.Message);
-                                    }
-                                    if (errorSap.HayError)
-                                    {
-                                        error.Errores.AddRange(errorSap.Errores);
-                                        continue;
-                                    }
-                                    cupo.EstadoCupoId = cupo.Centro.CodigoSap == "1600" || cupo.Centro.CodigoSap == "1029" ? 6 : (cupo.Centro.NoPropio) ? 1 : 8;
-                                    foreach (var cupoSap in listaCupos)
-                                    {
-                                        var nuevoCupo = (Cupo)cupo.Clone();
-                                        nuevoCupo.CupoSap = cupoSap;
-                                        cuposConSap.Add(nuevoCupo);
-                                    }
-
-                                    repositorio.AgregarTodos(cuposConSap);
-                                    repositorio.GuardarCambios();
-
-                                    List<CupoNoPropio> cuposnoPropio = new List<CupoNoPropio>();
-                                    foreach (var cupoNuevo in cuposConSap)
-                                    {
-                                        if (cupo.Id == 0)
-                                        {
-                                            var cupoConId = repositorio.ObtenerMayor<Cupo, int>(x => x.CupoSap == cupoNuevo.CupoSap, x => x.Id);
-                                            if (cupoNuevo.Centro.NoPropio)
+                                            for (int i = 0; i < d.Cantidad.Value; i++)
                                             {
-                                                var cupoVicentin = repositorio.Obtener<CupoNoPropio>(x => x.Codigo == cupoNuevo.CupoSap);
-                                                cupoVicentin.Cupo = cupoConId;
-                                                cupoVicentin.CupoId = cupoConId.Id;
-                                                cuposnoPropio.Add(cupoVicentin);
+                                                var nuevoCupo = (Cupo)cupo.Clone();
+                                                cuposConSap.Add(nuevoCupo);
                                             }
-                                            logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoConId.Id, null), TipoAccionLogDataAgro.Crear);
+                                            repositorio.AgregarTodos(cuposConSap);
+                                            repositorio.GuardarCambios();
                                         }
+                                        transaction.Complete();
                                     }
-
-
-                                    if (listaCupos.Count < d.Cantidad.Value)
-                                    {
-                                        error.Error("CantidadCuposSAP", "Se generaron " + listaCupos.Count + " de " + d.Cantidad.Value + " cupos solicitados para el dia " + cupo.FechaIngreso.ToShortDateString());
-                                    }
-                                    error.ListaCupos.AddRange(listaCupos);
                                 }
-                                else
+                                catch(Exception e)
                                 {
-                                    for (int i = 0; i < d.Cantidad.Value; i++)
-                                    {
-                                        var nuevoCupo = (Cupo)cupo.Clone();
-                                        cuposConSap.Add(nuevoCupo);
-                                    }
-                                    repositorio.AgregarTodos(cuposConSap);
-                                    repositorio.GuardarCambios();
+                                    logger.Error(e);
+                                    error.Errores.Add(new ErrorMessage(400, e.Message));
+                                    return error;
                                 }
-
                             }
                         }
                         if (error.ListaCupos.Count > 0)
                         {
-                            if (!cupo.Centro.NoPropio)
-                            {
-                                EnviarEmail(cupo, error.ListaCupos);
-                            }
+                            EnviarEmail(cupo, error.ListaCupos);
                         }
                         return error;
                     }
@@ -822,16 +832,31 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
 
-                oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/storeCircular.PNG"), listaCupos, cupo, emailComercial,
+                if (cupo.Centro.NoPropio)
+                {
+                    oMensaje.AlternateViews.Add(CuerpoMailNoPropio(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/storeCircular.PNG"), listaCupos, cupo, emailComercial,
                     System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/Circular.PNG"), System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/molinosCircular.PNG")));
-                var subject = "";
+                }
+                else
+                {
+                    oMensaje.AlternateViews.Add(CuerpoMail(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/storeCircular.PNG"), listaCupos, cupo, emailComercial,
+                        System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/Circular.PNG"), System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/molinosCircular.PNG")));
+                }
 
+                var subject = "";
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
                 {
                     subject += "Mail Pruebas - ";
                 }
                 subject += "Cupos Molinos Agro S.A. - ";
-                subject += cupo.Proveedor.RazonSocial;
+                if (cupo.Centro.NoPropio)
+                {
+                    subject += cupo.Centro.Descripcion;
+                }
+                else
+                {
+                    subject += cupo.Proveedor.RazonSocial;
+                }
                 oMensaje.Subject = subject;
                 oMensaje.BodyEncoding = Encoding.UTF8;
 
@@ -906,6 +931,97 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
+
+            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
+            {
+                htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
+            }
+            if (cupo.Observaciones != null)
+            {
+                htmlBody += cupo.Observaciones + "<br />";
+            }
+            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
+            {
+
+                if (cupo.MaterialId == 1)
+                {
+                    htmlBody += "ESPECIAL<br />";
+                }
+                if (cupo.MaterialId == 2)
+                {
+                    htmlBody += "ESPECIAL<br />";
+                }
+                if (cupo.MaterialId == 3)
+                {
+                    htmlBody += "SUSTENTABLE<br />";
+                }
+
+            }
+            htmlBody += "</td></tr>";
+            htmlBody += "</table>";
+            htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+                "<br /> <br />  Saludos Cordiales" +
+                " <br /> <br />   Molinos Agro S.A.  <br />" +
+                "<br /> www.molinosagro.com.ar <br />" +
+                "<table>" +
+                "<tr >" +
+                "<td rowspan='2'>" + @"<img src='cid:" + img.ContentId + @"'/> " + "</td> " +
+                "<td>" + @"<a href='https://play.google.com/store/apps/details?id=com.appcircular'><img src='cid:" + store.ContentId + @"'/></a>" + "</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td>" + @"<a href='www.molinosagro.com.ar'><img src='cid:" + res.ContentId + @"'/></a>" + " </td>" +
+                "</tr>" +
+                "</table>" +
+                " ";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            alternateView.LinkedResources.Add(img);
+            alternateView.LinkedResources.Add(store);
+            return alternateView;
+        }
+
+        private AlternateView CuerpoMailNoPropio(String filePath, List<string> listaCupos, Cupo cupo, string emailComercial, String circular, String molinos)
+        {
+            LinkedResource store = new LinkedResource(filePath);
+            store.ContentId = Guid.NewGuid().ToString();
+            LinkedResource img = new LinkedResource(circular);
+            img.ContentId = Guid.NewGuid().ToString();
+            LinkedResource res = new LinkedResource(molinos);
+            res.ContentId = Guid.NewGuid().ToString();
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
+            var linea = 0;
+
+            string htmlBody = "";
+
+            htmlBody += "En el presente mail, se detalla los cupos generados con Molinos Agro S.A. - con Destino : " + cupo.Centro.RazonSocial + "<br /><br />  ";
+
+            if (cupo.MaterialId == 2)
+            {
+                htmlBody += "<b style=\"font-size: 18px;text-decoration: underline;background-color: yellow;\">Trigo libre de HB4</b>" + "<br />";
+
+            }
+            foreach (var c in listaCupos)
+            {
+                htmlBody += c + "<br />";
+            }
+            htmlBody += "<br />";
+            htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
+            var destino = cupo.Centro.Descripcion + " - " + cupo.Centro.Localidad.Provincia.Nombre +" - " + cupo.Centro.Direccion;
+            htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino a " + destino.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
+            htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
+            htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + cupo.Centro.RazonSocial + " - " + cupo.Centro.CUIT + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
 
             if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)

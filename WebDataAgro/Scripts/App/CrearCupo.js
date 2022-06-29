@@ -157,7 +157,8 @@ function InicializarCargaCupos() {
                 $('#fleteProcedenciaModal').modal('toggle');
             } else {
                 $("#flete").removeAttr('disabled');
-                $("form").submit();
+                //$("form").submit();
+                GuardarCupo();
             }
         });
         $("#boton-si").click(function () {
@@ -168,7 +169,8 @@ function InicializarCargaCupos() {
                 $("#flete").prop('checked', false);
             }
             $('#fleteProcedenciaModal').modal('toggle');
-            $("form").submit();
+            //$("form").submit();
+            GuardarCupo();
         });
         $("#boton-no").click(function () {
             $("#flete").removeAttr('disabled');
@@ -178,10 +180,15 @@ function InicializarCargaCupos() {
                 $("#flete").prop('checked', true);
             }
             $('#fleteProcedenciaModal').modal('toggle');
-            $("form").submit();
+            //$("form").submit();
+            GuardarCupo();
         });
         $("#boton-cancelar").click(function () {
             window.location.href = window.location.origin + "/Cupo/";
+        });
+    } else {
+        $("#guardarBtn").click(function () {
+            GuardarCupo();
         });
     }
     $("#fleteProcedenciaModal").draggable({
@@ -245,6 +252,7 @@ function InicializarCargaCupos() {
     });
     MostrarVisualizarStock();
 }
+
 function checkFason() {
     if ($("#fason").is(':checked')) {
         $("#cuit").show();
@@ -513,4 +521,92 @@ function copiarImagen() {
         $("#out_image").empty();
     }
     );
+}
+
+
+function GuardarCupo() {
+    BlockUi("Grabando...");
+    setTimeout(function () {
+        var date1 = $("#fechaEntrega").val();
+        var date2 = $("#fechaHasta").val();
+        var diffDays = parseInt((kendo.parseDate(date2) - kendo.parseDate(date1)) / (1000 * 60 * 60 * 24), 10);
+
+        var dias = [];
+        for (var i = 0; i <= diffDays; i++) {
+            dias.push({ Fecha: $('[name="Dias[' + i + '].Fecha"]').val(), Cantidad: $('[name="Dias[' + i + '].Cantidad"]').val() })
+        }
+
+
+
+        var cupo = {
+            Id: $("#Id").val(),
+            Siguientes: $("#Siguientes").val(),
+            ProveedorDescripcion: $("#buscadorProveedor").val(),
+            Proveedor: $("#Proveedor").val(),
+            PlantaId: $("#planta").val(),
+
+            FechaEntrega: $("#fechaEntrega").val(),
+            FechaHastaEntrega: $("#fechaHasta").val(),
+            CantidadCupos: $("#cantidad").val(),
+
+            Zona: $("#Zona").val(),
+            ZonaId: $("#zona").val(),
+            FleteAcarreo: $("#flete").is(':checked'),
+            CalidadId: $("#calidad").val(),
+            Observacion: $("#observacion").val(),
+            FasonId: $("#fason").is(':checked'),
+            CuitId: $("#cuit").val(),
+            ConDescarga: $("#ConDescarga").is(':checked'),
+            Dias: dias,
+            //CupoResult Resultado :
+            MaterialId: $("#material").val(),
+            Negocio: $("#Negocio").val(),
+            NegocioId: $("#NegocioId").val(),
+
+            NoPropio: $("#NoPropio").val(),
+            FechaIngreso: $("#FechaIngreso").val(),
+            CuposNoPropios: $("#CuposNoPropios").val()
+
+        };
+
+        var resultado = MSExecuteOnServer('/Cupo/GuardarCupo', { cupo });
+        if (resultado.Error.ListaErrores.length == 0) {
+            if (!resultado.Result.Resultado.HayError) {
+                if (resultado.irA == "") {
+                    var model = JSON.stringify(resultado.Result.Resultado.ListaCupos);
+                    var data = JSON.parse(model);
+                    //var error = '@(Html.ViewData.ModelState.ContainsKey("CantidadCuposSAP")? Html.Raw(Json.Encode(Html.ViewData.ModelState["CantidadCuposSAP"].Errors.Select(x => x.ErrorMessage))) : Html.Raw(Json.Encode(new List<string>())))';
+                    var error = JSON.stringify(resultado.Result.Resultado.ListaErrores);//resultado.Result.Resultado.ListaErrores
+                    cuposCreados(error, resultado.Result.Resultado.ListaCupos);
+                }
+                else {
+                    window.location.href = window.location.origin + resultado.irA;
+                }
+                if (resultado.irA == "Index") {
+                    window.location.href = window.location.origin + "/Cupo/";
+                }
+                if (resultado.irA == "CrearCupo") {
+                    if (resultado.Parametros != "") {
+                        window.location.href = window.location.origin + "/Cupo/CrearCupo?id=" + resultado.Parametros.id + "&siguientes=" + resultado.Parametros.siguientes;
+                    }
+                    window.location.href = window.location.origin + "/Cupo/";
+                }
+                if (resultado.irA == "CrearCupoTercero") {
+                    window.location.href = window.location.origin + "/CrearCupoTercero/";
+                }
+                $.unblockUI();
+            }
+        } else {
+            //var error = JSON.stringify(resultado.Error.ListaErrores);
+            var listaErr = [];
+            for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
+                listaErr.push(resultado.Error.ListaErrores[i].Message);
+            }
+            //cuposCreados(error, []);
+            $("#errorDiv1").html(makeUL(listaErr));
+            $("#errorDiv").show();
+            $.unblockUI();
+            //MostrarVisualizarStock();
+        }
+    },1000);
 }

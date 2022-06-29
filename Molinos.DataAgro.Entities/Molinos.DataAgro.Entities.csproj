@@ -536,6 +536,8 @@
     <Compile Include="Dto\BoletoHeaderFooter.cs" />
     <Compile Include="Helpers\CopiarEntidad.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
+    <Compile Include="Helpers\ExcelImport.cs" />
+    <Compile Include="Helpers\ExcelValidator.cs" />
     <Compile Include="Helpers\Expresiones.cs" />
     <Compile Include="Helpers\ExtensionesSerializacion.cs" />
     <Compile Include="Helpers\HashCodeByPropertyExtensions.cs" />

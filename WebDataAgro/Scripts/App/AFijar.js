@@ -266,13 +266,12 @@ function InicializarElementos() {
             } else {
                 ObtenerAlta(e.dataItem.Id);
                 ValidarFason();
+                var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
                 if ($("#estado").val() !== "5") {
                     if ($("#tipoId").val() != 3 && (Id == 0 || Id == null || Id == "")) {
                         $("#clasificacion").data("kendoDropDownList").value("");
                         $("#consignatarioId").prop("checked", false);
-                    }
-
-                    var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: e.dataItem.Id });
+                    }                 
 
                     $("#proveedorId").val(compraNet.ProveedorId);
                     $("#clasificacion").data("kendoDropDownList").value(compraNet.ClasificacionCompraNetId);
@@ -3296,6 +3295,11 @@ function validarDescuento(descuento) {
 
     if (descuento.TipoPeriodoDBId != 1 && (fechaD < topeD || fechaH > topeH)) {
         errores.push("El descuento o bonificación que intenta agregar esta fuera del rango de la fijacion.");
+    }
+    if (descuento.TipoDBId == "2") {
+        if (($("#material").val() == "4" || $("#material").val() == "5") && (descuento.Porcentaje > 1 || descuento.Porcentaje < 0)) {
+            errores.push("El porcentaje debe estar entre 0% y 1%");
+        }
     }
     if (descuentos != undefined && descuentos != null && descuentos.length > 0) {
         for (var i = 0; i < descuentos.length; i++) {

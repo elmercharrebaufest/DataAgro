@@ -76,7 +76,6 @@ function cargarContratos() {
                     success: function (result) {
                         var tablaRespuesta = '<table style="border-radius:15px" id="tableRespuesta"><tr><th>Fila</th><th>Resultado</th></tr>';
                         if (result.Resultado) {
-                            //var tablaRespuesta = '<table style="border-radius:15px" id="tableRespuesta"><tr><th>Fila</th><th>Resultado</th></tr>';
                             for (var i = 0; i < result.Resume.length; i++) {
                                 var erroresHtml = '';
                                 if (result.Resume[i].HasError) {
@@ -84,34 +83,22 @@ function cargarContratos() {
                                         erroresHtml += '<tr style="color:red"><td>' + String(result.Resume[i].Row + 2) + '</td><td>' + result.Resume[i].Errors[j] + '</td></tr>'
                                     }
                                 } else {
-                                    //tablaRespuesta += '<tr style=""><td>' + String(result.Resume[i].Row) +'</td><td>Contrato Corredor ' + result.Resume[i].ContratoCorredor + "Cargado correctamente.'</td></tr>'"
                                     erroresHtml += '<tr><td>' + String(result.Resume[i].Row + 2) + '</td><td>Contrato Corredor ' + result.Resume[i].ContratoCorredor + ' creado correctamente.</td></tr>'
                                 }
                                 tablaRespuesta += erroresHtml;
                             }
-                            //tablaRespuesta += '</table>';
-                            //tablaRespuesta += '<div class="col-md-4" style="padding-left: 67px;"><input id="volverBtn" onclick="volverFormulario()" class="k-button k-button-icontext" value="Volver" /></div>'
-                            //$.unblockUI();
-                            //$('#divFormulario').hide();
-                            //$("#divRespuesta").html('');
-                            //$("#divRespuesta").html(tablaRespuesta);
-                            //$('#divRespuesta').show();
-                            //$('#resultadoCarga').modal('toggle');
-                            //$("#contratos-generados-modal").html(tablaRespuesta);
                         }
                         else {
                             var erroresHtml = "";
                             for (var i = 0; i < result.Resume.length; i++) {
 
-                                 erroresHtml= '<tr style="color:red">';
+                                erroresHtml = '<tr style="color:red">';
                                 //for (var j = 0; j < result.Resume[i].Errors.length; j++) {
                                 erroresHtml += '<td>0</td><td>' + result.Resume[i] + '</td>'
                                 //}
                                 erroresHtml += '</tr>';
                             }
                             tablaRespuesta += erroresHtml;
-                            //MensErr(erroresHtml)
-                            //$.unblockUI();
                         }
                         tablaRespuesta += '</table>';
                         tablaRespuesta += '<div class="col-md-4" style="padding-left: 67px;"><input id="volverBtn" onclick="volverFormulario()" class="k-button k-button-icontext" value="Volver" /></div>'
@@ -127,6 +114,9 @@ function cargarContratos() {
                     }
                 });
             }
+        }
+        else {
+            $.unblockUI();
         }
     }, 1000);
 

@@ -5,11 +5,15 @@ using KendoGridBinder.Containers;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -1462,6 +1466,75 @@ namespace Molinos.DataAgro.Test.Controllers
             var result = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false, false) as JsonResult;
             contratoManagerMock.Verify(x => x.ObtenerDatosMercaderiaEnDeposito(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>(), It.IsAny<bool>()), Times.Once);
             Assert.NotNull(result);
+        }
+
+        [Test]
+        public void AltaMasivaContratoExcel()
+        {
+            DataSet dsExcel = new DataSet();
+            DataTable tableData = new DataTable("AltaMasiva");
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Contrato corredor", DataType = System.Type.GetType("System.String") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Contrato vendedor", DataType = System.Type.GetType("System.String") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Grano", DataType = System.Type.GetType("System.String") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Cosecha", DataType = System.Type.GetType("System.String") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Fecha Operación", DataType = System.Type.GetType("System.DateTime") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Fecha Desde Entrega", DataType = System.Type.GetType("System.DateTime") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Fecha Vto.Entrega", DataType = System.Type.GetType("System.DateTime") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "TN", DataType = System.Type.GetType("System.Int32") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "CUIT Vendedor", DataType = System.Type.GetType("System.String") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Clasificacion", DataType = System.Type.GetType("System.String") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Plan Canje" });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Consignatario" });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Destino", DataType = System.Type.GetType("System.String") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Procedencia", DataType = System.Type.GetType("System.Int32") });
+            tableData.Columns.Add(new DataColumn() { ColumnName = "Provincia", DataType = System.Type.GetType("System.Int32") });
+            DataRow row = tableData.NewRow();
+            row["Contrato corredor"] = "10001";
+            row["Contrato vendedor"] = "10002";
+            row["Grano"] = "Soja";
+            row["Cosecha"] = "2021";
+            row["Fecha Operación"] = "10/10/2022";
+            row["Fecha Desde Entrega"] = "10/11/2022";
+            row["Fecha Vto.Entrega"] = "10/11/2022";
+            row["TN"] = "30";
+            row["CUIT Vendedor"] = "30500120882";
+            row["Clasificacion"] = "Otros";
+            row["Plan Canje"] = "";
+            row["Consignatario"] = "";
+            row["Destino"] = "S. Lorenzo";
+            row["Procedencia"] = "3";
+            row["Provincia"] = "1";
+            tableData.Rows.Add(row);
+            dsExcel.Tables.Add(tableData);
+
+
+            HttpContext.Current.Session["comercialId"] = 1;
+
+            Mock<ControllerContext> cc = new Mock<ControllerContext>();
+            System.Text.UTF8Encoding enc = new System.Text.UTF8Encoding();
+
+            string filePath = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "/Templates/AltaMasiva.xlsx");
+            FileStream fileStream = new FileStream(filePath, FileMode.Open);
+            Mock<HttpPostedFileBase> file1 = new Mock<HttpPostedFileBase>();
+            file1.Setup(d => d.FileName).Returns("AltaMasiva.xlsx");
+            file1.Setup(d => d.InputStream).Returns(fileStream);
+            file1.Setup(d => d.ContentLength).Returns(Convert.ToInt32(fileStream.Length));
+
+            cc.Setup(d => d.HttpContext.Request.Files.Count).Returns(1);
+            cc.Setup(d => d.HttpContext.Request.Files[0]).Returns(file1.Object);
+            target.ControllerContext = cc.Object;
+            acuerdoManagerMock.Setup(x => x.TraerAcuerdo(It.IsAny<int>()))
+                .Returns(new BasicoContrato{ Id = 1});
+            contratoManagerMock.Setup(m => m.AltaMasivaContratos(dsExcel, new BasicoContrato { Id = 1 }, GlobalVariables.ComercialId))
+                .Returns(new List<ExcelValidatorResumeItem>() { new ExcelValidatorResumeItem { Row = 0, ContratoCorredor = "110001"} });
+            var result = target.AltaMasivaContratosExcel("110001") as JsonResult;
+            Assert.NotNull(result);
+            acuerdoManagerMock.Verify(x => x.TraerAcuerdo(It.IsAny<int>()), Times.Once);
+            var a = serializer.Serialize(result);
+            acuerdoManagerMock.Verify(x => x.TraerAcuerdo(It.IsAny<int>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Resume\":null,\"Resultado\":true},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
         }
     }
 }

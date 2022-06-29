@@ -12,6 +12,9 @@
     [CargaNegocios] BIT NOT NULL DEFAULT 1, 
     [CargaCupos] BIT NOT NULL DEFAULT 1, 
     [NoPropio] BIT NOT NULL DEFAULT 0, 
+    [Orden] INT NULL,
+    [CUIT] VARCHAR(20) NULL,
+    [RazonSocial] VARCHAR(100) NULL,
     CONSTRAINT [FK_Centro_Localidad] FOREIGN KEY ([LocalidadId]) REFERENCES [Localidad]([LocalidadId]),
 
 );
