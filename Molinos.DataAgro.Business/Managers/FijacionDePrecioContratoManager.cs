@@ -2039,6 +2039,37 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     fijacion.PrecioNeto += fijacion.PrecioNeto * afijar[0].PorcentajeSobrePrecio / 100;
                 }
+                if(afijar[0].Aperturas != null && afijar[0].Aperturas.Count > 0)
+                {
+                    var aperturaAFijar = afijar[0].Aperturas;
+                    //redespacho
+                    if(afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 2))
+                    {
+                        var redespacho = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 2).Importe;
+                        logger.Debug("redespacho: " + redespacho);
+                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 2).Importe = redespacho;
+                        fijacion.PrecioNeto = fijacion.Precio + redespacho;
+                        logger.Debug("redespachoPrecioNeto: " + redespacho);
+
+                    }
+                    if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 4))
+                    {
+                        var bonif = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 4).Importe;
+                        logger.Debug("bonif: " + bonif);
+                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 4).Importe = bonif;
+                        fijacion.PrecioNeto = fijacion.Precio + bonif;
+                        logger.Debug("bonifPrecioNeto: " + fijacion.PrecioNeto);
+                    }
+                    if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 5))
+                    {
+                        var basis = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 5).Importe;
+                        logger.Debug("basis: " + basis);
+                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 5).Importe = basis;
+                        fijacion.PrecioNeto = fijacion.Precio + basis;
+                        logger.Debug("basisPrecioNeto: " + basis);
+                    }
+                }
+            
             }
             fijacion.PagoDiferidoTerceroId = fijacion.PagoDiferidoTerceroId == -1 ? (int?)null : fijacion.PagoDiferidoTerceroId;
             fijacion.ContratoId = null;
