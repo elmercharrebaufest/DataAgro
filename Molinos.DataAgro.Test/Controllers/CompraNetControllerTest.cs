@@ -1523,15 +1523,14 @@ namespace Molinos.DataAgro.Test.Controllers
             cc.Setup(d => d.HttpContext.Request.Files.Count).Returns(1);
             cc.Setup(d => d.HttpContext.Request.Files[0]).Returns(file1.Object);
             target.ControllerContext = cc.Object;
-            acuerdoManagerMock.Setup(x => x.TraerAcuerdo(It.IsAny<int>()))
-                .Returns(new BasicoContrato{ Id = 1});
-            contratoManagerMock.Setup(m => m.AltaMasivaContratos(dsExcel, new BasicoContrato { Id = 1 }, GlobalVariables.ComercialId))
+            //acuerdoManagerMock.Setup(x => x.TraerAcuerdo(It.IsAny<int>()))
+            //    .Returns(new BasicoContrato{ Id = 1});
+            contratoManagerMock.Setup(m => m.AltaMasivaContratos(dsExcel, It.IsAny<string>(), GlobalVariables.ComercialId))
                 .Returns(new List<ExcelValidatorResumeItem>() { new ExcelValidatorResumeItem { Row = 0, ContratoCorredor = "110001"} });
             var result = target.AltaMasivaContratosExcel("110001") as JsonResult;
             Assert.NotNull(result);
-            acuerdoManagerMock.Verify(x => x.TraerAcuerdo(It.IsAny<int>()), Times.Once);
+            //acuerdoManagerMock.Verify(x => x.TraerAcuerdo(It.IsAny<int>()), Times.Once);
             var a = serializer.Serialize(result);
-            acuerdoManagerMock.Verify(x => x.TraerAcuerdo(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Resume\":null,\"Resultado\":true},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);

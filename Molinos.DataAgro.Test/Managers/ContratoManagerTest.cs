@@ -5411,6 +5411,19 @@ namespace Molinos.DataAgro.Test.Managers
 
             HttpContext.Current.Session["comercialId"] = 1;
 
+            //contratoAcuerdoManagerMock.Setup(x => x.TraerAcuerdo(It.IsAny<int>()))
+            //    .Returns(new BasicoContrato
+            //    {
+            //        Id = 1,
+            //        CampanaId = 9,
+            //        MaterialId = 3,
+            //        FechaOperacion = DateTime.Now.Date,
+            //        FechaDesde = DateTime.Now.Date,
+            //        FechaHasta = DateTime.Now.Date.AddMonths(1),
+            //        DestinoId = 1,
+            //        ComercialId = WebDataAgro.MvcApplication.GlobalVariables.ComercialId
+            //    });
+
             materialManagerMock.Setup(x => x.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>() { new MaterialIni { MaterialId = 3, Descripcion = "Soja" } } });
             centroManagerMock.Setup(x => x.TraerTodoCentro()).Returns(new ResultIniCentro { Centro = new List<CentroIni>() { new CentroIni { Id = 1, Descripcion = "S. Lorenzo" } } });
             oMSCampaniaManagerMock.Setup(x => x.TraerTodoCampania())
@@ -5517,7 +5530,16 @@ namespace Molinos.DataAgro.Test.Managers
                     Corredor = "SI"
                 }
             });
-            contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato { Cantidad = 1000000 });
+            contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato {
+                Id = 1,
+                CampanaId = 9,
+                MaterialId = 3,
+                FechaOperacion = DateTime.Now.Date,
+                FechaDesde = DateTime.Now.Date,
+                FechaHasta = DateTime.Now.Date.AddMonths(1),
+                DestinoId = 1,
+                ComercialId = WebDataAgro.MvcApplication.GlobalVariables.ComercialId,
+                Cantidad = 1000000 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Contrato>() { new Contrato { Cantidad = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, string>>>(), It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                             .Returns(new List<string> { "a" });
@@ -5553,17 +5575,7 @@ namespace Molinos.DataAgro.Test.Managers
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             mailManagerMock.Setup(y => y.EnviarMail(It.IsAny<Comercial>(), It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(),
          It.IsAny<List<string>>(), It.IsAny<AlternateView>(), It.IsAny<byte[]>(), It.IsAny<string>(), It.IsAny<List<string>>())).Verifiable();
-            var resultado = target.AltaMasivaContratos(dsExcel
-                    , new BasicoContrato { 
-                        Id = 1, 
-                        CampanaId = 9, 
-                        MaterialId = 3, 
-                        FechaOperacion = DateTime.Now.Date,
-                        FechaDesde = DateTime.Now.Date,
-                        FechaHasta = DateTime.Now.Date.AddMonths(1),
-                        DestinoId = 1,
-                        ComercialId = WebDataAgro.MvcApplication.GlobalVariables.ComercialId
-                    }, WebDataAgro.MvcApplication.GlobalVariables.ComercialId);
+            var resultado = target.AltaMasivaContratos(dsExcel, "010101", WebDataAgro.MvcApplication.GlobalVariables.ComercialId);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.AreEqual(1, resultado.Count);
