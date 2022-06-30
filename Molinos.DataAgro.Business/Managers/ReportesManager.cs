@@ -3318,7 +3318,9 @@ namespace Molinos.DataAgro.Business.Managers
                 NegocioId = x.NegocioId,
                 EsOperacionDirecta = string.IsNullOrEmpty(x.CuitCorredor) ? true : false,
                 Clasificacion = x.Clasificacion,
-                KgVencimientoPesificable = x.KgVencimientoPesificable
+                KgVencimientoPesificable = x.KgVencimientoPesificable, 
+                FechaHastaDolarizado = x.FechaHastaDolarizado,
+                KgTotales = x.KgTotales
             }, x => ids.Contains(x.Id));
             EnviarMailPesificacionVencida(pesificados, fechaInstruccion, true);
             EnviarMailPesificacionVencida(pesificados, fechaInstruccion, false);
