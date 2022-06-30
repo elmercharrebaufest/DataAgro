@@ -3331,6 +3331,7 @@ namespace Molinos.DataAgro.Business.Managers
             var subject = "";
             List<string> fromEmail = new List<string>();
             List<string> mailAdmin = new List<string>();
+            var hoy = DateTime.Today;
             fromEmail.Add(ConfigurationManager.AppSettings["CredentialUserNamePesificados"]);
             if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
             {
@@ -3365,10 +3366,13 @@ namespace Molinos.DataAgro.Business.Managers
                                 Clasificacion = pesificado.Where(x => item.Key == x.RazonSocialCorredor).FirstOrDefault().Clasificacion,
                                 EsOperacionDirecta = pesificado.Where(x => item.Key == x.RazonSocialCorredor).FirstOrDefault().EsOperacionDirecta,
                                 AgrupracionPesificados =
-                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, CantidadAgrupada = x.KgVencimientoPesificable.HasValue ? x.KgVencimientoPesificable.Value : 0, Contrato = x.Contrato, Fijacion = x.Fijacion }).ToList()
+                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, 
+                                    CantidadAgrupada = (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? x.KgTotales ?? 0 : x.KgVencimientoPesificable ?? 0, 
+                                    Contrato = x.Contrato, 
+                                    Fijacion = x.Fijacion }).ToList()
                             };
                             var mails = DevolverMailComercialDeNegocio(pesi);
-                            //mails = new List<string>() { "bmelgarejo@baufest.com" };
+                            mails = new List<string>() { "bmelgarejo@baufest.com" };
 
                             if (mails != null)
                             {
@@ -3399,10 +3403,10 @@ namespace Molinos.DataAgro.Business.Managers
                                 Clasificacion = pesificado.Where(x => item.Key == x.RazonSocialProveedor).FirstOrDefault().Clasificacion,
                                 EsOperacionDirecta = pesificado.Where(x => item.Key == x.RazonSocialProveedor).FirstOrDefault().EsOperacionDirecta,
                                 AgrupracionPesificados =
-                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, CantidadAgrupada = x.KgVencimientoPesificable.HasValue ? x.KgVencimientoPesificable.Value : 0, Contrato = x.Contrato, Fijacion = x.Fijacion }).ToList()
+                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, CantidadAgrupada = (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? x.KgTotales ?? 0 : x.KgVencimientoPesificable ?? 0, Contrato = x.Contrato, Fijacion = x.Fijacion }).ToList()
                             };
                             var mails = DevolverMailComercialDeNegocio(pesi);
-                            //mails = new List<string>() { "bmelgarejo@baufest.com" };
+                            mails = new List<string>() { "bmelgarejo@baufest.com" };
                             if (mails != null)
                             {
                                 copia.AddRange(vendedor.Where(x => x.ProveedorId != null && x.Proveedor.CUIT == item.First().CuitVendedor).Select(x => x.Pesificado));
