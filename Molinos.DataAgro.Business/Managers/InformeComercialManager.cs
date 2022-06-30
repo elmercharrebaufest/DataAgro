@@ -172,7 +172,7 @@ namespace Molinos.DataAgro.Business
                     //repositorio.RemoverTodos(contactos);
                     if (contactos.Count > 0)
                     {
-                        foreach (var item in contactos.Where(a=>a.Email1 != contactoComercial.Email1))
+                        foreach (var item in contactos.Where(a => a.Email1 != contactoComercial.Email1))
                         {
                             item.EsPrincipal = false;
                         }
@@ -197,11 +197,27 @@ namespace Molinos.DataAgro.Business
 
             if (informe.InformeComercialId > 0)
             {
-                var produccion = repositorio.Listar<InformeComercialProduccion>(x => x.InformeComercial.InformeComercialId == informe.InformeComercialId);
-                repositorio.Remover(produccion);
+                var producciones = repositorio.Listar<InformeComercialProduccion>(x => x.InformeComercial.InformeComercialId == informe.InformeComercialId);
 
-                var almacen = repositorio.Listar<InformeComercialAlmacenamiento>(x => x.InformeComercial.InformeComercialId == informe.InformeComercialId);
-                repositorio.Remover(almacen);
+                if (producciones != null)
+                {
+                    foreach (var produccion in producciones)
+                    {
+                        repositorio.Remover(produccion);
+
+                    }
+
+                }
+
+                var almacenes = repositorio.Listar<InformeComercialAlmacenamiento>(x => x.InformeComercial.InformeComercialId == informe.InformeComercialId);
+                if (almacenes != null)
+                {
+                    foreach (var almacen in almacenes)
+                    {
+                        repositorio.Remover(almacen);
+
+                    }
+                }
 
                 inf = repositorio.Obtener<InformeComercial>(x => x.InformeComercialId == informe.InformeComercialId);
             }
