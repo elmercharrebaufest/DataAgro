@@ -1003,7 +1003,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             string htmlBody = "";
 
-            htmlBody += "En el presente mail, se detalla los cupos generados con Molinos Agro S.A. - con Destino : " + cupo.Centro.RazonSocial + "<br /><br />  ";
+            htmlBody += "En el presente mail, se detalla los cupos generados con Molinos Agro S.A. - Destino: " + cupo.Centro.RazonSocial + "<br /><br />  ";
 
             if (cupo.MaterialId == 2)
             {

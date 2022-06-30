@@ -570,39 +570,24 @@ function GuardarCupo() {
         };
 
         var resultado = MSExecuteOnServer('/Cupo/GuardarCupo', { cupo });
-        if (resultado.Error.ListaErrores.length == 0) {
-            if (!resultado.Result.Resultado.HayError) {
-                if (resultado.irA == "") {
-                    var model = JSON.stringify(resultado.Result.Resultado.ListaCupos);
-                    var data = JSON.parse(model);
-                    //var error = '@(Html.ViewData.ModelState.ContainsKey("CantidadCuposSAP")? Html.Raw(Json.Encode(Html.ViewData.ModelState["CantidadCuposSAP"].Errors.Select(x => x.ErrorMessage))) : Html.Raw(Json.Encode(new List<string>())))';
-                    var error = JSON.stringify(resultado.Result.Resultado.ListaErrores);//resultado.Result.Resultado.ListaErrores
-                    cuposCreados(error, resultado.Result.Resultado.ListaCupos);
+        if (resultado.Result.Resultado != null) {
+            if (resultado.irA == "") {
+                var errorCantidadCuposSAP = resultado.Result.Resultado.ListaErrores.find(x => x.Source == "CantidadCuposSAP");
+                var errores = [];
+                if (errorCantidadCuposSAP != undefined) {
+                    errores.push(errorCantidadCuposSAP.Message);
                 }
-                else {
-                    window.location.href = window.location.origin + resultado.irA;
-                }
-                if (resultado.irA == "Index") {
-                    window.location.href = window.location.origin + "/Cupo/";
-                }
-                if (resultado.irA == "CrearCupo") {
-                    if (resultado.Parametros != "") {
-                        window.location.href = window.location.origin + "/Cupo/CrearCupo?id=" + resultado.Parametros.id + "&siguientes=" + resultado.Parametros.siguientes;
-                    }
-                    window.location.href = window.location.origin + "/Cupo/";
-                }
-                if (resultado.irA == "CrearCupoTercero") {
-                    window.location.href = window.location.origin + "/CrearCupoTercero/";
-                }
-                $.unblockUI();
+                cuposCreados(JSON.stringify(errores), resultado.Result.Resultado.ListaCupos);
             }
+            else {
+                window.location.href = window.location.origin + resultado.irA;
+            }
+            $.unblockUI();
         } else {
-            //var error = JSON.stringify(resultado.Error.ListaErrores);
             var listaErr = [];
             for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
                 listaErr.push(resultado.Error.ListaErrores[i].Message);
             }
-            //cuposCreados(error, []);
             $("#errorDiv1").html(makeUL(listaErr));
             $("#errorDiv").show();
             $.unblockUI();

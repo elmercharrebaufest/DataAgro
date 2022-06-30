@@ -342,6 +342,11 @@ IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSe
 IF NOT EXISTS (select 1 from Clausula where Discriminator = 'ClausulaCuarentaYSiete') BEGIN insert into Clausula(Discriminator, Orden, Estado) values ('ClausulaCuarentaYSiete',47 , 1); END
 
 
+UPDATE Centro SET Orden = 1, CUIT = '30709151432', RazonSocial = 'SAN LORENZO S A'  WHERE Id = 1  AND CUIT IS NULL
+UPDATE Centro SET Orden = 2, CUIT = '30500959629', RazonSocial = 'VICENTIN S A I C'  WHERE Id = 13 AND CUIT IS NULL
+UPDATE Centro SET Orden = 3, CUIT = '30709151432', RazonSocial = 'SAN LORENZO S A'  WHERE Id = 10 AND CUIT IS NULL
+
+
 
 
 
