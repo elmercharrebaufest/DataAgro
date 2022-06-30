@@ -3367,10 +3367,11 @@ namespace Molinos.DataAgro.Business.Managers
                                 EsOperacionDirecta = pesificado.Where(x => item.Key == x.RazonSocialCorredor).FirstOrDefault().EsOperacionDirecta,
                                 AgrupracionPesificados =
                                 item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, 
-                                    CantidadAgrupada = (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? x.KgTotales ?? 0 : x.KgVencimientoPesificable ?? 0, 
+                                    CantidadAgrupada = (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? (x.KgTotales ?? 0) : (x.KgVencimientoPesificable ?? 0), 
                                     Contrato = x.Contrato, 
                                     Fijacion = x.Fijacion }).ToList()
                             };
+                            logger.Debug("fecha hasta dolarizado: " + item.First().FechaHastaDolarizado.Value.ToString("dd-MM-yyyy hh:mm") + "hoy: " + hoy.ToString("dd-MM-yyyy hh:mm"));
                             var mails = DevolverMailComercialDeNegocio(pesi);
                             mails = new List<string>() { "bmelgarejo@baufest.com" };
 
@@ -3403,8 +3404,13 @@ namespace Molinos.DataAgro.Business.Managers
                                 Clasificacion = pesificado.Where(x => item.Key == x.RazonSocialProveedor).FirstOrDefault().Clasificacion,
                                 EsOperacionDirecta = pesificado.Where(x => item.Key == x.RazonSocialProveedor).FirstOrDefault().EsOperacionDirecta,
                                 AgrupracionPesificados =
-                                item.Select(x => new AgrupacionPesificado { Proveedor = x.RazonSocialProveedor, CantidadAgrupada = (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? x.KgTotales ?? 0 : x.KgVencimientoPesificable ?? 0, Contrato = x.Contrato, Fijacion = x.Fijacion }).ToList()
+                                item.Select(x => new AgrupacionPesificado { 
+                                    Proveedor = x.RazonSocialProveedor, 
+                                    CantidadAgrupada = (x.FechaHastaDolarizado != null && x.FechaHastaDolarizado > hoy) ? (x.KgTotales ?? 0) : (x.KgVencimientoPesificable ?? 0), 
+                                    Contrato = x.Contrato, Fijacion = x.Fijacion }).ToList()
                             };
+                            logger.Debug("fecha hasta dolarizado: " + item.First().FechaHastaDolarizado.Value.ToString("dd-MM-yyyy hh:mm") + "hoy: " + hoy.ToString("dd-MM-yyyy hh:mm"));
+
                             var mails = DevolverMailComercialDeNegocio(pesi);
                             mails = new List<string>() { "bmelgarejo@baufest.com" };
                             if (mails != null)
