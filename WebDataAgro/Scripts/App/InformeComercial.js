@@ -571,11 +571,13 @@ function EmitirInformeModificado() {
     var ArrayMaterial = $("#materiales").val();
     var proveedorId = datosModificacion.ProveedorId;
     var arrMat = [];
-    for (var i = 0; i < ArrayMaterial.length; i++) {
-        arrMat.push({
-            MaterialId: ArrayMaterial[i],
-            Toneladas: null
-        });
+    if (ArrayMaterial != null && ArrayMaterial.length > 0) {
+        for (var i = 0; i < ArrayMaterial.length; i++) {
+            arrMat.push({
+                MaterialId: ArrayMaterial[i],
+                Toneladas: null
+            });
+        }
     }
 
     var datos = $("#gridInformeComercial").data("kendoGrid").dataSource.data();
