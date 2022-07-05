@@ -3611,6 +3611,9 @@ function CargarDatosEditar(contrato, hijo) {
 
     $("#observacionId").val(contrato.Observacion);
     $("#cantidadId").data("kendoNumericTextBox").value(contrato.Cantidad);
+    if (contrato.Cantidad > 0) {
+        CalcularMaximo();
+    }
     $("#cantidadId").trigger("change");
 
     //$("#precioId").data("kendoNumericTextBox").value(contrato.Precio);
