@@ -3297,7 +3297,8 @@ function validarDescuento(descuento) {
         errores.push("El descuento o bonificación que intenta agregar esta fuera del rango de la fijacion.");
     }
     if (descuento.TipoDBId == "2") {
-        if (($("#material").val() == "4" || $("#material").val() == "5") && (descuento.Porcentaje > 1 || descuento.Porcentaje < 0)) {
+        var porcentajeNum = parseFloat(descuento.Porcentaje.replace(',', '.'));
+        if (($("#material").val() == "4" || $("#material").val() == "5") && (porcentajeNum > 1 || porcentajeNum < 0)) {
             errores.push("El porcentaje debe estar entre 0% y 1%");
         }
     }
