@@ -2058,13 +2058,13 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug("redespachoPrecioNeto: " + redespacho);
 
                     }
-                    if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 3))
+                    if (afijar[0].ImporteSobrePrecio > 0)
                     {
                         
                         fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Importe = comisionImporte;                      
                         logger.Debug("comisionImporte: " + comisionImporte);
                     }
-                    if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 3))
+                    if (afijar[0].PorcentajeSobrePrecio > 0)
                     {
 
                         fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = comisionPorcentaje;
