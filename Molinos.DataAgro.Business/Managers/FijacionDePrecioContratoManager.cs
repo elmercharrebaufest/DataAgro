@@ -2004,6 +2004,40 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var afijar = TraerDatosFijacion(proveedor.CUIT, cuitCorredor, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id);
+            var cambio = tipoDeCambioAgent.TraerTipoDeCambio(fijacion.FechaOperacion);
+            if (afijar[0].Aperturas != null && afijar[0].Aperturas.Count > 0)
+            {
+                var aperturaAFijar = afijar[0].Aperturas;
+                //redespacho
+                if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 2))
+                {
+                    var redespacho = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 2).Importe;
+                    redespacho = CalcularImporteSiEsEnDolares(redespacho, afijar, fijacion, cambio);
+                    logger.Debug("redespacho: " + redespacho);
+                    fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 2).Importe = redespacho;
+                    fijacion.PrecioNeto = fijacion.Precio + redespacho;
+                    logger.Debug("redespachoPrecioNeto: " + fijacion.PrecioNeto);
+
+                }              
+                if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 4))
+                {
+                    var bonif = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 4).Importe;
+                    bonif = CalcularImporteSiEsEnDolares(bonif, afijar, fijacion, cambio);
+                    logger.Debug("bonif: " + bonif);
+                    fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 4).Importe = bonif;
+                    fijacion.PrecioNeto = fijacion.Precio + bonif;
+                    logger.Debug("bonifPrecioNeto: " + fijacion.PrecioNeto);
+                }
+                if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 5))
+                {
+                    var basis = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 5).Importe;
+                    basis = CalcularImporteSiEsEnDolares(basis, afijar, fijacion, cambio);
+                    logger.Debug("basis: " + basis);
+                    fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 5).Importe = basis;
+                    fijacion.PrecioNeto = fijacion.Precio + basis;
+                    logger.Debug("basisPrecioNeto: " + fijacion.PrecioNeto);
+                }
+            }
             if (afijar != null && afijar.Count > 0)
             {
                 decimal comisionImporte = 0;
@@ -2014,8 +2048,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacion.PorcentajeSobrePrecioContrato = afijar[0].PorcentajeSobrePrecio;
                 fijacion.ImporteAPrecioContrato = afijar[0].ImporteAPrecio;
                 fijacion.MonedaAPrecioContrato = afijar[0].MonedaAPrecio;
-                fijacion.PorcentajeAPrecioContrato = afijar[0].PorcentajeAPrecio;
-                var cambio = tipoDeCambioAgent.TraerTipoDeCambio(fijacion.FechaOperacion);
+                fijacion.PorcentajeAPrecioContrato = afijar[0].PorcentajeAPrecio;             
                 if (afijar[0].ImporteSobrePrecio > 0)
                 {
                     if (afijar[0].MonedaSobrePrecio?.Trim() == fijacion.MonedaId.Trim())
@@ -2044,52 +2077,18 @@ namespace Molinos.DataAgro.Business.Managers
                     fijacion.PrecioNeto += fijacion.PrecioNeto * afijar[0].PorcentajeSobrePrecio / 100;
                     comisionPorcentaje = afijar[0].PorcentajeSobrePrecio;
                 }
-                if(afijar[0].Aperturas != null && afijar[0].Aperturas.Count > 0)
+                if (afijar[0].ImporteSobrePrecio > 0)
                 {
-                    var aperturaAFijar = afijar[0].Aperturas;
-                    //redespacho
-                    if(afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 2))
-                    {
-                        var redespacho = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 2).Importe;
-                        redespacho = CalcularImporteSiEsEnDolares(redespacho, afijar, fijacion, cambio);
-                        logger.Debug("bonif: " + redespacho);
-                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 2).Importe = redespacho;
-                        fijacion.PrecioNeto += redespacho;
-                        logger.Debug("redespachoPrecioNeto: " + redespacho);
 
-                    }
-                    if (afijar[0].ImporteSobrePrecio > 0)
-                    {
-                        
-                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Importe = comisionImporte;                      
-                        logger.Debug("comisionImporte: " + comisionImporte);
-                    }
-                    if (afijar[0].PorcentajeSobrePrecio > 0)
-                    {
-
-                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = comisionPorcentaje;
-                        logger.Debug("comisionPorcentaje: " + comisionPorcentaje);
-                    }
-                    if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 4))
-                    {
-                        var bonif = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 4).Importe;
-                        bonif = CalcularImporteSiEsEnDolares(bonif, afijar, fijacion, cambio);
-                        logger.Debug("bonif: " + bonif);
-                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 4).Importe = bonif;
-                        fijacion.PrecioNeto += bonif;
-                        logger.Debug("bonifPrecioNeto: " + fijacion.PrecioNeto);
-                    }
-                    if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 5))
-                    {
-                        var basis = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 5).Importe;
-                        basis = CalcularImporteSiEsEnDolares(basis, afijar, fijacion, cambio);
-                        logger.Debug("basis: " + basis);
-                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 5).Importe = basis;
-                        fijacion.PrecioNeto +=  basis;
-                        logger.Debug("basisPrecioNeto: " + basis);
-                    }
+                    fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Importe = comisionImporte;
+                    logger.Debug("comisionImporte: " + comisionImporte);
                 }
-            
+                if (afijar[0].PorcentajeSobrePrecio > 0)
+                {
+
+                    fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = comisionPorcentaje;
+                    logger.Debug("comisionPorcentaje: " + comisionPorcentaje);
+                }
             }
             fijacion.PagoDiferidoTerceroId = fijacion.PagoDiferidoTerceroId == -1 ? (int?)null : fijacion.PagoDiferidoTerceroId;
             fijacion.ContratoId = null;
