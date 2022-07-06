@@ -2006,6 +2006,8 @@ namespace Molinos.DataAgro.Business.Managers
             var afijar = TraerDatosFijacion(proveedor.CUIT, cuitCorredor, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id);
             if (afijar != null && afijar.Count > 0)
             {
+                decimal comisionImporte = 0;
+                decimal comisionPorcentaje = 0;
                 fijacion.ClasificacionContrato = afijar[0].Clasificacion;
                 fijacion.ImporteSobrePrecioContrato = afijar[0].ImporteSobrePrecio;
                 fijacion.MonedaSobrePrecioContrato = afijar[0].MonedaSobrePrecio;
@@ -2019,16 +2021,19 @@ namespace Molinos.DataAgro.Business.Managers
                     if (afijar[0].MonedaSobrePrecio?.Trim() == fijacion.MonedaId.Trim())
                     {
                         fijacion.PrecioNeto += afijar[0].ImporteSobrePrecio;
+                        comisionImporte = afijar[0].ImporteSobrePrecio;
                     }
                     else
                     {                       
                         if (fijacion.MonedaId.Trim() == "ARP")
                         {
                             fijacion.PrecioNeto += afijar[0].ImporteSobrePrecio * cambio;
+                            comisionImporte = afijar[0].ImporteSobrePrecio * cambio;
                         }
                         else
                         {
                             fijacion.PrecioNeto += afijar[0].ImporteSobrePrecio / cambio;
+                            comisionImporte = afijar[0].ImporteSobrePrecio / cambio;
                         }
                     }
 
@@ -2037,6 +2042,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (afijar[0].PorcentajeSobrePrecio > 0)
                 {
                     fijacion.PrecioNeto += fijacion.PrecioNeto * afijar[0].PorcentajeSobrePrecio / 100;
+                    comisionPorcentaje = afijar[0].PorcentajeSobrePrecio;
                 }
                 if(afijar[0].Aperturas != null && afijar[0].Aperturas.Count > 0)
                 {
@@ -2048,9 +2054,21 @@ namespace Molinos.DataAgro.Business.Managers
                         redespacho = CalcularImporteSiEsEnDolares(redespacho, afijar, fijacion, cambio);
                         logger.Debug("bonif: " + redespacho);
                         fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 2).Importe = redespacho;
-                        fijacion.PrecioNeto = fijacion.Precio + redespacho;
+                        fijacion.PrecioNeto += redespacho;
                         logger.Debug("redespachoPrecioNeto: " + redespacho);
 
+                    }
+                    if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 3))
+                    {
+                        
+                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Importe = comisionImporte;                      
+                        logger.Debug("comisionImporte: " + comisionImporte);
+                    }
+                    if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 3))
+                    {
+
+                        fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 3).Porcentaje = comisionPorcentaje;
+                        logger.Debug("comisionPorcentaje: " + comisionPorcentaje);
                     }
                     if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 4))
                     {
@@ -2058,7 +2076,7 @@ namespace Molinos.DataAgro.Business.Managers
                         bonif = CalcularImporteSiEsEnDolares(bonif, afijar, fijacion, cambio);
                         logger.Debug("bonif: " + bonif);
                         fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 4).Importe = bonif;
-                        fijacion.PrecioNeto = fijacion.Precio + bonif;
+                        fijacion.PrecioNeto += bonif;
                         logger.Debug("bonifPrecioNeto: " + fijacion.PrecioNeto);
                     }
                     if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 5))
@@ -2067,7 +2085,7 @@ namespace Molinos.DataAgro.Business.Managers
                         basis = CalcularImporteSiEsEnDolares(basis, afijar, fijacion, cambio);
                         logger.Debug("basis: " + basis);
                         fijacion.AperturaPrecio.First(x => x.ConceptoAperturaPrecioId == 5).Importe = basis;
-                        fijacion.PrecioNeto = fijacion.Precio + basis;
+                        fijacion.PrecioNeto +=  basis;
                         logger.Debug("basisPrecioNeto: " + basis);
                     }
                 }
