@@ -68,6 +68,8 @@ namespace Molinos.DataAgro.Agent.StatusContrato {
         
         private string eX_FECHA_SIOField;
         
+        private string eX_FE_VUELTAField;
+        
         private string eX_MENSAJEField;
         
         private string eX_NO_INFORMAR_SIOField;
@@ -102,6 +104,18 @@ namespace Molinos.DataAgro.Agent.StatusContrato {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string EX_FE_VUELTA {
+            get {
+                return this.eX_FE_VUELTAField;
+            }
+            set {
+                this.eX_FE_VUELTAField = value;
+                this.RaisePropertyChanged("EX_FE_VUELTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public string EX_MENSAJE {
             get {
                 return this.eX_MENSAJEField;
@@ -113,7 +127,7 @@ namespace Molinos.DataAgro.Agent.StatusContrato {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string EX_NO_INFORMAR_SIO {
             get {
                 return this.eX_NO_INFORMAR_SIOField;
@@ -125,7 +139,7 @@ namespace Molinos.DataAgro.Agent.StatusContrato {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string EX_NUM_SIO {
             get {
                 return this.eX_NUM_SIOField;
@@ -137,7 +151,7 @@ namespace Molinos.DataAgro.Agent.StatusContrato {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string EX_STATUS {
             get {
                 return this.eX_STATUSField;

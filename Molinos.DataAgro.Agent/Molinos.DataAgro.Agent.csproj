@@ -1804,7 +1804,7 @@
     <None Include="Service References\StatusContrato\Molinos.DataAgro.Agent.StatusContrato.Z_MPRFC_STATUS_DE_CONTRATOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Service References\StatusContrato\SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO.wsdl" />
+    <None Include="Service References\StatusContrato\SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO11.wsdl" />
     <None Include="Service References\TipoDeCambio\Molinos.DataAgro.Agent.TipoDeCambio.SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIOResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
