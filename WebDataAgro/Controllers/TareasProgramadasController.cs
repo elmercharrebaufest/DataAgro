@@ -308,5 +308,12 @@ namespace WebDataAgro.Controllers
             }
             return Content("ok");
         }
+        public ActionResult ActualizarEstadoDeContratos()
+        {
+            logger.Info($"Inicio Actualizar EstadoContrato");
+            contratoManager.ActualizarEstadoDeContratos();
+            logger.Info($"Fin Actualizar EstadoContrato");
+            return Content("ok");
+        }
     }
 }

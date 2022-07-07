@@ -197,5 +197,14 @@ namespace Molinos.DataAgro.Test.Controllers
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
         }
+
+        [Test]
+        public void ActualizarEstadoDeContratosTest()
+        {
+            var result = target.ActualizarEstadoDeContratos() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
     }
 }

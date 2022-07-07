@@ -7292,12 +7292,15 @@ namespace Molinos.DataAgro.Business.Managers
         public void ActualizarEstadoDeContratos()
         {
            var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP)).ToList();
-            foreach (var contrato in contratos)
-            {
-                var res = status.ValidarEstado(contrato.ContratoSAP);
-                contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
+            if (contratos != null && contratos.Count > 0) {
+                logger.Debug("Cambiar estado de contratos: Count" + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
+                foreach (var contrato in contratos)
+                {
+                    var res = status.ValidarEstado(contrato.ContratoSAP);
+                    contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
+                }
+                repositorio.GuardarCambios();
             }
-            repositorio.GuardarCambios();
         }
     }
 }
