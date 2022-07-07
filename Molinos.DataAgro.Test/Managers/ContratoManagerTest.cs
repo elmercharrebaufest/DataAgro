@@ -5581,5 +5581,60 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, resultado.Count);
             Assert.AreEqual(false, resultado[0].HasError);
         }
+        [Test]
+        public void ActualizarEstadoDeContratosOk()
+        {
+            var oContrato = new Contrato()
+            {
+                ProveedorId = 1,
+                ClasificacionId = 1,
+                CorredorId = null,
+                MaterialId = 1,
+                Cantidad = 1,
+                Precio = 1000,
+                PrecioNeto = 1000,
+                TipoNegocioId = 2,
+                DestinoId = 1,
+                LocalidadId = 1,
+                ProvinciaId = 1,
+                FechaEntrega = DateTime.Now,
+                FechaOperacion = DateTime.Now.Date,
+                FechaDesde = DateTime.Now,
+                FechaHasta = DateTime.Now,
+                MonedaId = "ARS ",
+                CampanaId = 1,
+                ComercialId = 70,
+                EstablecimientoPropio = true,
+                BoletoId = 3,
+                StandardDeCalidadId = 1,
+                Sustentable = false,
+                PorcentajeDePago = 95,
+                Calidad = new List<Calidad>(),
+                AperturaPrecio = new List<AperturaPrecio>(),
+                Boleto = new BoletoCompraNet()
+                {
+                    Descripcion = "Sin Boleto",
+                    Id = 5
+                },
+                CamaraId = 1,
+                ProcedenciaVentaId = 1,
+                FleteACargo = "a",
+                KgBalanza = "1",
+                ComisionAFavorId = 1,
+                PorcentajeComisionVenta = 1,
+                Pago = "1",
+                BoletoVentaId = 1,
+                CondicionDePagoDiaPesificado = 1,
+                CondicionDePagoTipoPesificado = "1",
+                CondicionDePagoPesificadoVentaId = 2,
+                CondicionDePagoDiaFijacion = 1,
+                CondicionDePagoTipoFijacion = "1",
+                CondicionDePagoFijacionVentaId = 1,
+
+            };
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { oContrato });
+            status.Setup(x => x.ValidarEstado(oContrato.ContratoSAP)).Returns(new EstadoSAPDto { NumeroSio = 0, Status = "" });
+            target.ActualizarEstadoDeContratos();
+        }
     }
 }

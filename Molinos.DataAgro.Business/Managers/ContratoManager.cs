@@ -6885,7 +6885,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoSAP = x.ContratoSAP,
                 BoletoId = x.BoletoId,
                 Cantidad = x.Cantidad
-            }, x => contratosPendientesAplicar.Contains(x.ContratoSAP));
+            }, x => contratosPendientesAplicar.Contains(x.ContratoSAP) && x.ConfirmadoSAP != true);
 
             contratosFinalizados = validarBoleto ? contratosFinalizados.Where(x => x.BoletoId == 5).ToList() : contratosFinalizados;
 
@@ -7287,6 +7287,17 @@ namespace Molinos.DataAgro.Business.Managers
             //configurar el resto de campos
 
             return ret;
+        }
+
+        public void ActualizarEstadoDeContratos()
+        {
+           var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP)).ToList();
+            foreach (var contrato in contratos)
+            {
+                var res = status.ValidarEstado(contrato.ContratoSAP);
+                contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
+            }
+            repositorio.GuardarCambios();
         }
     }
 }

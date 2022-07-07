@@ -145,7 +145,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ProveedorComisionistaId { get; set; }
 
         public double? CantidadDeposito { get; set; }
-
+        public bool? ConfirmadoSAP { get; set; }
 
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
