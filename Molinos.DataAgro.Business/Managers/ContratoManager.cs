@@ -6845,7 +6845,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.ProveedorId == proveedorId && x.DestinoId == centro &&
-                x.MaterialId == materialId && (x.EstadoId != 6 && x.EstadoId != 8));
+                x.MaterialId == materialId && (x.EstadoId != 6 && x.EstadoId != 8) && x.ConfirmadoSAP != true);
 
                 var pendienteDto = new CcPpPerndienteAplicarDto()
                 {
@@ -6885,7 +6885,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ContratoSAP = x.ContratoSAP,
                 BoletoId = x.BoletoId,
                 Cantidad = x.Cantidad
-            }, x => contratosPendientesAplicar.Contains(x.ContratoSAP) && x.ConfirmadoSAP != true);
+            }, x => contratosPendientesAplicar.Contains(x.ContratoSAP));
 
             contratosFinalizados = validarBoleto ? contratosFinalizados.Where(x => x.BoletoId == 5).ToList() : contratosFinalizados;
 
