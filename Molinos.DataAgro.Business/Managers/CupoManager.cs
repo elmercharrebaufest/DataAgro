@@ -162,19 +162,19 @@ namespace Molinos.DataAgro.Business.Managers
 
                                                     if (limitePorZona == null)
                                                     {
-                                                        error.Error("Cupera", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
+                                                        error.Error("CantidadCuposSAP", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
                                                         continue;
                                                     }
                                                     else if (limitePorZona.LimiteCupo <= 0)
                                                     {
-                                                        error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                                        error.Error("CantidadCuposSAP", "No hay límite de cupo disponible para la zona");
                                                         continue;
                                                     }
 
                                                     var disponibles = limitePorZona.LimiteCupo - consumidos;
                                                     if (disponibles <= 0)
                                                     {
-                                                        error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                                        error.Error("CantidadCuposSAP", "No hay límite de cupo disponible para la zona");
                                                         continue;
                                                     }
 
@@ -283,7 +283,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             if (!string.IsNullOrEmpty(cupoSave.CTG))
                             {
-                                error.Error("Centro", "Los cupos con CTG para centros no propios no pueden ser editados.");
+                                error.Error("CantidadCuposSAP", "Los cupos con CTG para centros no propios no pueden ser editados.");
                                 return error;
                             }
                             var cupoNoPropio = repositorio.Obtener<CupoNoPropio>(x => x.CupoId == cupoSave.Id);
@@ -294,7 +294,7 @@ namespace Molinos.DataAgro.Business.Managers
                             var res = modificarCupoAgent.Modificar(cupoSave);
                             if (res != "Ok")
                             {
-                                error.Error("SAP", $"Error al grabar en SAP: {res}");
+                                error.Error("CantidadCuposSAP", $"Error al grabar en SAP: {res}");
                             }
                             if (!cupoSave.Centro.Acopio && !cupoSave.Centro.NoPropio)
                             {
@@ -307,7 +307,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 }
                                 else
                                 {
-                                    error.Error("Stop", "Sin Conexión a Stop. Modificado en SAP");
+                                    error.Error("CantidadCuposSAP", "Sin Conexión a Stop. Modificado en SAP");
                                 }
                             }
                         }
