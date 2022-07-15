@@ -572,12 +572,16 @@ function GuardarCupo() {
         var resultado = MSExecuteOnServer('/Cupo/GuardarCupo', { cupo });
         if (resultado.Result.Resultado != null) {
             if (resultado.irA == "") {
-                var errorCantidadCuposSAP = resultado.Result.Resultado.ListaErrores.find(x => x.Source == "CantidadCuposSAP");
+                //var errorCantidadCuposSAP = resultado.Result.Resultado.ListaErrores.find(x => x.Source == "CantidadCuposSAP");
                 var errores = [];
-                if (errorCantidadCuposSAP != undefined) {
-                    errores.push(errorCantidadCuposSAP.Message);
+                if (resultado.Error.HayError) {
+                    errores.push(resultado.Error.ListaErrores[0].Message);
+                    $("#errorDiv1").html(makeUL(errores));
+                    $("#errorDiv").show();
+                    $.unblockUI();
+                } else {
+                    cuposCreados(JSON.stringify(errores), resultado.Result.Resultado.ListaCupos);
                 }
-                cuposCreados(JSON.stringify(errores), resultado.Result.Resultado.ListaCupos);
             }
             else {
                 window.location.href = window.location.origin + resultado.irA;
@@ -593,5 +597,5 @@ function GuardarCupo() {
             $.unblockUI();
             //MostrarVisualizarStock();
         }
-    },1000);
+    }, 1000);
 }
