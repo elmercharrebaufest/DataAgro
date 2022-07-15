@@ -577,7 +577,17 @@ function GuardarCupo() {
                 if (errorCantidadCuposSAP != undefined) {
                     errores.push(errorCantidadCuposSAP.Message);
                 }
-                cuposCreados(JSON.stringify(errores), resultado.Result.Resultado.ListaCupos);
+                if (resultado.Result.Resultado.ListaCupos.length > 0) {
+                    cuposCreados(JSON.stringify(errores), resultado.Result.Resultado.ListaCupos);
+                } else {
+                    var listaErr = [];
+                    for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
+                        listaErr.push(resultado.Error.ListaErrores[i].Message);
+                    }
+                    $("#errorDiv1").html(makeUL(listaErr));
+                    $("#errorDiv").show();
+                    $.unblockUI();
+                }
             }
             else {
                 window.location.href = window.location.origin + resultado.irA;
