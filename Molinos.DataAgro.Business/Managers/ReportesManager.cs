@@ -3561,7 +3561,7 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "";
             var cabecera = "";
             cabecera += $"{p}Estimado/s,</p>";
-            cabecera += $"{p}Por la presente les notificamos que, en atención a que en su carácter de " + (corredor.EsOperacionDirecta && corredor.Clasificacion != "PRODUCTOR" ? "vendedor" : "corredor") + " en el/los boleto/s de referencia no han emitido" +
+            cabecera += $"{p}Por la presente les notificamos que, en atención a que en su carácter de " + (corredor.EsOperacionDirecta && corredor.Clasificacion.ToUpper() != "PRODUCTOR" ? "vendedor" : "corredor") + " en el/los boleto/s de referencia no han emitido" +
                 $" a la fecha, la correspondiente liquidación de granos a pesar de haber entregado mercadería, Molinos Agro S.A.en calidad de comprador y en caso " +
                 $"de continuar esta situación hasta el {instruccion.ToString("dd-MM-yyyy")} se considerará a los efectos de la liquidación pendiente, que el tipo de cambio a utilizar será " +
                 $"el del cierre del día {FechaALetras(instruccion)} en las condiciones pactadas.</p>";
@@ -3600,7 +3600,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "</tbody>";
                 htmlBody += "</table>";
             }         
-            if((corredor.Clasificacion == "ACOPIADOR" || corredor.Clasificacion == "OTROS") && corredor.EsOperacionDirecta){
+            if((corredor.Clasificacion.ToUpper().Contains("ACOPI") || corredor.Clasificacion.ToUpper().Contains("OTROS")) && corredor.EsOperacionDirecta){
                 htmlBody += cabecera;
                 htmlBody += "<table style=\"border: 1px solid #1C6EA4;background-color: #EEEEEE; width:70%; text-align: left;border-collapse:collapse;\">";
                 htmlBody += "<thead style=\" font-size: 13px;background: #1C6EA4; border-bottom: 0px solid #444444;\">";
@@ -3642,7 +3642,7 @@ namespace Molinos.DataAgro.Business.Managers
                 alternateViewT.LinkedResources.Add(res);
                 return alternateViewT;
             }
-            if (corredor.Clasificacion == "PRODUCTOR" && corredor.EsOperacionDirecta)
+            if (corredor.Clasificacion.ToUpper().Contains("PRODUC") && corredor.EsOperacionDirecta)
             {
                 htmlBody = $"{p}Estimado/s,</p>";
                 htmlBody += $"{p} Informamos que los siguientes contratos serán pesificados por MOA con TC de cierre del día {(instruccion.ToString("dd.MM.yyyy"))}:</p>";
