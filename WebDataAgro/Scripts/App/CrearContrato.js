@@ -1793,6 +1793,11 @@ function InicializarElementos() {
     });
 
     $("#porcentajeComision").kendoNumericTextBox({
+        change: function () {
+            if (this.value() == 0) {
+                MensAlerta("Se esta colocando el Porcentaje de Comisión en 0");
+            }
+        },
         culture: "es-AR",
         format: "n2",
         spinners: false,

@@ -14,9 +14,12 @@ namespace Molinos.DataAgro.Entities.Entities
         public int Id { get; set; }
        
         public int CentroId { get; set; }
-        
+        public int TipoNegocioId { get; set; }
+
         [ForeignKey("CentroId")]
         public virtual Centro Centro { get; set; }
+        [ForeignKey("TipoNegocioId")]
+        public virtual TipoNegocio TipoNegocio { get; set; }
     }
 
 }

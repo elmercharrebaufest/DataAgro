@@ -9,6 +9,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -76,6 +77,18 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
+        }
+
+        [Test]
+        public void ModificacionMasivaDisponibleOk()
+        {
+            var ids = new List<int>() { 1 };
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CupoNoPropio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(),
+                It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<CupoNoPropio>() { new CupoNoPropio { Disponible = true } });
+            var result = target.ModificacionMasivaDisponible(ids, true);
+            repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<CupoNoPropio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(),
+                It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
     }
 }

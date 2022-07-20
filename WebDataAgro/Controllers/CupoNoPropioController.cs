@@ -47,16 +47,16 @@ namespace WebDataAgro.Controllers
             CargarViewBag();
             return View(new CupoModel());
         }
-       
+
         public ActionResult CrearCupo(CupoDto cupoDto)
         {
             var result = cupoNoPropioManager.GrabarCupoNoPropio(cupoDto);
             return Json(result);
-        }     
-       
+        }
+
         private void CargarViewBag()
         {
-            var centros = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos == true && x.NoPropio == true);            
+            var centros = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos == true && x.NoPropio == true);
             var listaCentro = centros.Select(
                     x => new SelectListItem
                     {
@@ -137,6 +137,12 @@ namespace WebDataAgro.Controllers
         public ActionResult ModificarDisponible(int id, bool disponible)
         {
             var resultado = cupoNoPropioManager.GrabarDisponibilidadCupoNoPropio(id, disponible);
+            return new JsonResult() { Data = resultado, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
+        public ActionResult ModificacionMasivaDisponible(List<int> ids, bool disponible)
+        {           
+            var resultado = cupoNoPropioManager.ModificacionMasivaDisponible(ids, disponible);           
             return new JsonResult() { Data = resultado, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
     }

@@ -85,6 +85,6 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarMailReportePagosDiferidos(byte[] datos, DateTime desde, DateTime hoy);
         DataSourceResult BuscarDatosNegocioPesificacion(DataSourceRequest filtro, List<int> equipo);
         Resultado ConfigurarExcedente(int id, bool excedente,int comercialId);
-       void EnviarMail(List<int> ids, DateTime fechaInstruccion, int comercialId);
+       void EnviarMail(List<int> ids, DateTime fechaInstruccion, int comercialId, bool kgTotales, bool kgPesif);
     }
 }

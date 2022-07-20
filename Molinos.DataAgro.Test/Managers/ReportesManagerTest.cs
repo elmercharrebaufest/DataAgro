@@ -1246,7 +1246,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
              .Returns(new List<Negocio>() { new Negocio { ContratoSAP = "0002599447", Comercial = new Comercial { ComercialId = 1, IdActiveDirectory = "bau@baufest.com" } } });
             
-            target.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>());
+            target.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>(), true, false);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ReportePesificado, ReportePesificadoDto>>>(), It.IsAny<Expression<Func<ReportePesificado, bool>>>(),
                 It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 
@@ -1276,7 +1276,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Negocio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
              .Returns(new List<Negocio>() { new Negocio { ContratoSAP = "0002599447", Comercial = new Comercial { ComercialId = 1, IdActiveDirectory = "bau@baufest.com" } } });
 
-            target.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>());
+            target.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>(), true, false);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ReportePesificado, ReportePesificadoDto>>>(), It.IsAny<Expression<Func<ReportePesificado, bool>>>(),
                 It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 

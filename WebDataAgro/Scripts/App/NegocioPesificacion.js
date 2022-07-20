@@ -434,10 +434,12 @@ function EnviarMail() {
     BlockUi("Enviando Mail...");
     setTimeout(function () {
         var fecha = $("#fechaInstruccionId").data("kendoDatePicker").value();
+        var kgTotales = $("#kgTotal").is(":checked");
+        var kgPesif = $("#kgPesif").is(":checked");
         if (fecha == "") {
             MensErr("Debe ingresar una fecha de instrucción de pesificación");
         } else {
-            result = MSExecuteOnServer('/NegocioPesificacion/EnviarMail', { ids: SeleccionarElementos(), fecha: fecha });
+            result = MSExecuteOnServer('/NegocioPesificacion/EnviarMail', { ids: SeleccionarElementos(), fecha: fecha, kgTotales: kgTotales, kgPesif: kgPesif});
             if (result == "Error") {
                 MensErr("Debe seleccionar un negocio");
             } else {
@@ -468,6 +470,15 @@ function onChange(arg) {
     $(".k-state-disabled").removeClass("k-state-selected");
     $(".k-state-disabled").find(".k-checkbox").prop("checked", false);
 }
+
+function DeshabilitarKgTotal() {
+    $("#kgTotal").prop("checked", false);
+}
+
+function DeshabilitarKgPesificacion() {
+    $("#kgPesif").prop("checked", false);
+}
+
 //function DeseleccionarExcedente() {
 //    $("[aria-label='Select all rows']").click(function (e) {
 //        var grid = $('#grid').data("kendoGrid");

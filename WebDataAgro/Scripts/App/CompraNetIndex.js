@@ -3541,23 +3541,24 @@ async function copyImage(imageURL) {
 }
 
 function copiarImagen() {
+    BlockUi('Copiando...');
+    setTimeout(function () {   
     $("#lineModalLabelCopiar").show(); 
     $(".noCopiarDatos").hide();
     $(".status").addClass("anchoEstado");  
-    $(".datosContrato").addClass("noPadding");  
-    
+    $(".datosContrato").addClass("noPadding");   
+
     html2canvas($(".datosContrato")[0]).then(function (canvas) {
         let image = new Image();
         image.src = canvas.toDataURL();
         $("#out_image").append(image);
         copyImage(image.src);
         $("#out_image").empty();
-    }
-    );
+    });
     $("#lineModalLabelCopiar").hide(); 
     $(".noCopiarDatos").show();
     $(".status").removeClass("anchoEstado");  
-    $(".datosContrato").removeClass("noPadding");  
-
+    $(".datosContrato").removeClass("noPadding");
+        $.unblockUI();
+    }, 200); 
 }
-

@@ -105,5 +105,18 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}"
                 , a);
         }
+
+
+        [Test]
+        public void ModificacionMasivaDisponibleTest()
+        {
+            Resultado res = new Resultado();
+            cupoNoPropioManagerMock.Setup(x => x.ModificacionMasivaDisponible(It.IsAny<List<int>>(), It.IsAny<bool>()))
+                .Returns(res);
+            var result = target.ModificacionMasivaDisponible(It.IsAny<List<int>>(), It.IsAny<bool>());
+            var a = serializer.Serialize(result);
+            Assert.AreEqual("{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}"
+                , a);
+        }
     }
 }

@@ -87,7 +87,7 @@ namespace Molinos.DataAgro.Business.Managers
                             FechaAlta = DateTime.Now,
                             FechaIngreso = cupoDto.FechaIngreso,
                             Disponible = true,
-                            Estado = 1 
+                            Estado = 1
                         });
                         cuposEstado.Add(new CupoNoPropioDto { Codigo = c, EstadoId = 0 });
                         cantidadCupos = cantidadCupos + 1;
@@ -172,6 +172,27 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var cupo = repositorio.Obtener<CupoNoPropio>(id);
                 cupo.Disponible = disponibilidad;
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+                resultado.Error(e.Source, e.Message);
+                throw;
+            }
+            return resultado;
+        }
+
+        public Resultado ModificacionMasivaDisponible(List<int> ids, bool disponible)
+        {
+            var resultado = new Resultado();
+            try
+            {
+                var cupos = repositorio.Listar<CupoNoPropio>(x => ids.Contains(x.Id));
+                foreach (var cupo in cupos)
+                {
+                    cupo.Disponible = disponible;
+                }
                 repositorio.GuardarCambios();
             }
             catch (Exception e)

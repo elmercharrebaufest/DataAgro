@@ -1036,8 +1036,15 @@
         <div class="row">
             <div class="col-sm-3 ">
                 <label style="width:120px">Ninguno</label>
-                <input id="boletoNingunoId" class="campo-input-input" data-bind="checked:Parametros.boletoNingunoId  , disabled: isControlDisabled" type="checkbox" />
+                <input id="boletoNingunoId" class="campo-input-input" data-bind="checked:Parametros.boletoNingunoId, disabled: isControlDisabled" type="checkbox" />
                 <img id="errBoletoNingunoId" src="~/Content/Images/error.png" style="display:none" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 ">
+                <label style="width:120px">Sin Boleto</label>
+                <input id="sinBoletoId" class="campo-input-input" data-bind="checked:Parametros.sinBoletoId, disabled: isControlDisabled" type="checkbox" />
+                <img id="errorSinBoletoId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
     </div>

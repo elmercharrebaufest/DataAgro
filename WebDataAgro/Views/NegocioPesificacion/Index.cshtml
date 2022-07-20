@@ -20,10 +20,18 @@
 <script type="x-kendo/template" id="template">
 
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <a class="k-button k-button-icontext k-grid-excel" href="\#"><span class="k-icon k-i-excel"></span>Export to Excel</a>
         </div>
-        <div class="col-sm-1">
+       <div class="col-sm-1">
+           <label style="width:80px">Kg Pesif.</label>
+          <input id="kgPesif" class="campo-input-input" type="checkbox" onclick="DeshabilitarKgTotal()" />
+        </div>
+         <div class="col-sm-1">
+           <label style="width:80px">Kg Total </label>
+          <input id="kgTotal" class="campo-input-input" type="checkbox" onclick="DeshabilitarKgPesificacion()" />
+        </div>
+         <div class="col-sm-1">
             <label>Fecha Intrucción</label>
         </div>
         <div class="col-sm-2">

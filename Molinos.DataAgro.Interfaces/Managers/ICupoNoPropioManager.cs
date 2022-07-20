@@ -15,5 +15,6 @@ namespace Molinos.DataAgro.Interfaces
         CupoResult GrabarCupoNoPropio(CupoDto cupo);
         DataSourceResult TraerCuposNoPropioTabla(DataSourceRequest request, List<int> equipo);
         Resultado GrabarDisponibilidadCupoNoPropio(int id, bool disponibilidad);
+         Resultado ModificacionMasivaDisponible(List<int> ids, bool disponible);
     }
 }

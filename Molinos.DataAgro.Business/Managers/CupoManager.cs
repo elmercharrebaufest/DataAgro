@@ -1420,51 +1420,46 @@ namespace Molinos.DataAgro.Business.Managers
             }
             List<SugerenciaCupoDto> newNegocios = new List<SugerenciaCupoDto>();
 
+            
             //primera ronda de sugerencias TENIENDO en cuenta el limite de % por dia por prov
             foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal))
             {
                 var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0 /*&& a.Fecha >= negocio.FechaDesde && a.Fecha <= negocio.FechaHasta*/).OrderBy(a => a.Fecha).ToList();
 
-                foreach (var disponible in disponibles)
+                while (negocio.CantidadDeCupos > 0 && negocio.Priorizado != true)
                 {
-                    var limiteProveedor = limitePorProveedor.Where(a => a.ProveedorId == negocio.ProveedorId && a.Fecha == disponible.Fecha).Single();
-                    //pasa al proximo dia si ya le asigno todo lo que podia a ese dia por proveedor
-                    if (limiteProveedor.Disponible <= 0) continue;
-
-                    //si hay disponible para ese dia y el negocio no esta priorizado
-                    if (disponible.LimiteAlgoritmo > 0 && !negocio.Priorizado)
+                    foreach (var disponible in disponibles)
                     {
-                        //asignacion total del negocio ( limite del algoritmo mayor a cantCupos y cantCupos menor al limite por dia
-                        if (disponible.LimiteAlgoritmo >= negocio.CantidadDeCupos && negocio.CantidadDeCupos <= limiteProveedor.Disponible)
+                        var limiteProveedor = limitePorProveedor.Where(a => a.ProveedorId == negocio.ProveedorId && a.Fecha == disponible.Fecha).Single();
+
+                        //pasa al proximo dia si ya le asigno todo lo que podia a ese dia por proveedor o por limite algoritmo  o por negocio priorizado
+                        if (limiteProveedor.Disponible <= 0 || disponible.LimiteAlgoritmo <= 0 || negocio.Priorizado) continue;
+
+                        if (negocio.CantidadDeCupos == 1)
                         {
                             disponible.LimiteAlgoritmo -= negocio.CantidadDeCupos;
                             limiteProveedor.Disponible -= negocio.CantidadDeCupos;
                             negocio.Priorizado = true;
                             negocio.FechaSugerida = disponible.Fecha.Date;
                         }
-                        else //asignacion parcial del negocio
+                        else 
                         {
-                            if (disponible.LimiteAlgoritmo > 0)
-                            {
-                                //creo por el menor de los dos
-                                int cantidadAcrear = disponible.LimiteAlgoritmo <= limiteProveedor.Disponible ? disponible.LimiteAlgoritmo : limiteProveedor.Disponible;
+                            int cantidadAcrear = 1;
 
-                                var newNegocio = (SugerenciaCupoDto)negocio.Clone();
-                                newNegocio.CantidadDeCupos = cantidadAcrear;
-                                limiteProveedor.Disponible -= cantidadAcrear;
-                                newNegocio.Priorizado = true;
-                                newNegocio.FechaSugerida = disponible.Fecha.Date;
-                                newNegocios.Add(newNegocio);
+                            var newNegocio = (SugerenciaCupoDto)negocio.Clone();
+                            newNegocio.CantidadDeCupos = cantidadAcrear;
+                            limiteProveedor.Disponible -= cantidadAcrear;
+                            newNegocio.Priorizado = true;
+                            newNegocio.FechaSugerida = disponible.Fecha.Date;
+                            newNegocios.Add(newNegocio);
 
-                                negocio.CantidadDeCupos -= cantidadAcrear;
-                                disponible.LimiteAlgoritmo -= cantidadAcrear;
-                                negocio.Priorizado = false;
-                            }
-
+                            negocio.CantidadDeCupos -= cantidadAcrear;
+                            disponible.LimiteAlgoritmo -= cantidadAcrear;
+                            negocio.Priorizado = false;
                         }
-
                     }
                 }
+
             }
 
             //segunda ronda de sugerencias de lo pendiente SIN tener en cuenta el limite de % por dia por prov
@@ -1472,34 +1467,39 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0 /*&& a.Fecha >= negocio.FechaDesde && a.Fecha <= negocio.FechaHasta*/).OrderBy(a => a.Fecha).ToList();
 
-                foreach (var disponible in disponibles)
+                while (negocio.CantidadDeCupos > 0 && negocio.Priorizado != true)
                 {
-                    if (disponible.LimiteAlgoritmo > 0 && !negocio.Priorizado)
+                    foreach (var disponible in disponibles)
                     {
-                        if (disponible.LimiteAlgoritmo >= negocio.CantidadDeCupos)
+
+                        //pasa al proximo dia si ya le asigno todo por limite algoritmo  o por negocio priorizado
+                        if (disponible.LimiteAlgoritmo <= 0 || negocio.Priorizado) continue;
+
+                        if (negocio.CantidadDeCupos == 1)
                         {
                             disponible.LimiteAlgoritmo -= negocio.CantidadDeCupos;
                             negocio.Priorizado = true;
                             negocio.FechaSugerida = disponible.Fecha.Date;
                         }
-                        else
+                        else 
                         {
-                            if (disponible.LimiteAlgoritmo > 0)
-                            {
-                                var newNegocio = (SugerenciaCupoDto)negocio.Clone();
-                                newNegocio.CantidadDeCupos = disponible.LimiteAlgoritmo;
-                                newNegocio.Priorizado = true;
-                                newNegocio.FechaSugerida = disponible.Fecha.Date;
-                                newNegocios.Add(newNegocio);
+                            int cantidadAcrear = 1;
 
-                                negocio.CantidadDeCupos -= disponible.LimiteAlgoritmo;
-                                disponible.LimiteAlgoritmo = 0;
-                                negocio.Priorizado = false;
-                            }
+                            var newNegocio = (SugerenciaCupoDto)negocio.Clone();
+                            newNegocio.CantidadDeCupos = cantidadAcrear;
+                            newNegocio.Priorizado = true;
+                            newNegocio.FechaSugerida = disponible.Fecha.Date;
+                            newNegocios.Add(newNegocio);
+
+                            negocio.CantidadDeCupos -= cantidadAcrear;
+                            disponible.LimiteAlgoritmo -= cantidadAcrear;
+                            negocio.Priorizado = false;
                         }
                     }
                 }
+
             }
+
             if (newNegocios.Count > 0)
             {
                 negocios.AddRange(newNegocios);
@@ -2748,7 +2748,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     //var zonas = repositorio.Obtener<ZonaCupo>(x=> itemConf.Centro.);
-                    foreach(var itemCupo in itemConf.CantidadCupo)
+                    foreach (var itemCupo in itemConf.CantidadCupo)
                     {
                         if (itemCupo.CantidadCupo > 0)
                         {

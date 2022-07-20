@@ -112,9 +112,9 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void EnviarMailOk()
         {
-            reporteManagerMock.Setup(x => x.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>()));
-            var result = target.EnviarMail(new List<int> { 1, 2}, It.IsAny<DateTime>());
-            reporteManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>()), Times.Once);
+            reporteManagerMock.Setup(x => x.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>(), true, false));
+            var result = target.EnviarMail(new List<int> { 1, 2}, It.IsAny<DateTime>(), true, false);
+            reporteManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<int>>(), It.IsAny<DateTime>(), It.IsAny<int>(), true, false), Times.Once);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"OK\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",

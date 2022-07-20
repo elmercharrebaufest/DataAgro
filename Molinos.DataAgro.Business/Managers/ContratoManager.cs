@@ -6792,7 +6792,7 @@ namespace Molinos.DataAgro.Business.Managers
             var materialesHabilitados = repositorio.Listar<MaterialHabilitadoSinBoleto, MaterialHabilitadoSinBoletoDto>(x =>
             new MaterialHabilitadoSinBoletoDto() { Id = x.Id, Material = x.Material.Descripcion, MaterialId = x.MaterialId });
             var centrosHabilitados = repositorio.Listar<CentroHabilitadoSinBoleto, CentroHabilitadoSinBoletoDto>(x =>
-            new CentroHabilitadoSinBoletoDto() { Id = x.Id, Centro = x.Centro.Descripcion, CentroId = x.CentroId });
+            new CentroHabilitadoSinBoletoDto() { Id = x.Id, Centro = x.Centro.Descripcion, CentroId = x.CentroId, TipoNegocioId = x.TipoNegocioId });
             var clasificacionHabilitados = repositorio.Listar<ClasificacionHabilitadoSinBoleto, ClasificacionHabilitadoSinBoletoDto>(x =>
             new ClasificacionHabilitadoSinBoletoDto() { Id = x.Id, Clasificacion = x.Clasificacion.Descripcion, ClasificacionId = x.ClasificacionId });
             var operacionHabilitada = repositorio.Listar<TipoOperacionHabilitadoSinBoleto, TipoOperacionHabilitadoSinBoletoDto>(x =>
@@ -6807,11 +6807,23 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Error("Material", "El Material seleccionado no está habilitado para la carga de contratos sin boleto");
                 return resultado;
             }
-            if (centro != null && (!centrosHabilitados.Any(x => x.CentroId == centro)))
+            if(tipoNegocioId == 1)
             {
-                resultado.Error("Centro", "El Centro seleccionado no está habilitado para la carga de contratos sin boleto");
-                return resultado;
+                if (centro != null && (!centrosHabilitados.Any(x => x.CentroId == centro && x.TipoNegocioId == tipoNegocioId)))
+                {
+                    resultado.Error("Centro", "El Centro seleccionado no está habilitado para la carga de contratos sin boleto.");
+                    return resultado;
+                }
             }
+            else if (tipoNegocioId == 2)
+            {
+                if (centro != null && (!centrosHabilitados.Any(x => x.CentroId == centro && x.TipoNegocioId == tipoNegocioId)))
+                {
+                    resultado.Error("Centro", "El Centro seleccionado no está habilitado para la carga de contratos sin boleto");
+                    return resultado;
+                }
+            }
+           
             if (provincia != null && (provinciaNoHabilitados.Any(x => x.ProvinciaId == provincia)))
             {
                 resultado.Error("Provincia", "La procedencia seleccionada no está habilitada para la carga de contratos sin boleto");
@@ -6845,7 +6857,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var materialCodigo = repositorio.Obtener<Material, string>(x => x.MaterialId == materialId, x => x.Codigo);
                 var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
                 var contratosPendientes = repositorio.Listar<Contrato>(x => x.BoletoId == 5 && x.Id != id && x.ProveedorId == proveedorId && x.DestinoId == centro &&
-                x.MaterialId == materialId && (x.EstadoId != 6 && x.EstadoId != 8) && x.ConfirmadoSAP != true);
+                x.MaterialId == materialId && (x.EstadoId != 6 && x.EstadoId != 8) && x.ConfirmadoSAP != true && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2));
 
                 var pendienteDto = new CcPpPerndienteAplicarDto()
                 {

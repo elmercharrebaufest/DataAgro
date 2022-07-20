@@ -163,12 +163,12 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult EnviarMail(List<int> ids, DateTime? fecha)
+        public ActionResult EnviarMail(List<int> ids, DateTime? fecha, bool kgTotales, bool kgPesif)
         {
             var mensaje = "OK";
             if (ids != null && ids.Count > 0 && fecha != null)
             {
-                reportesManager.EnviarMail(ids, fecha.Value, GlobalVariables.ComercialId);
+                reportesManager.EnviarMail(ids, fecha.Value, GlobalVariables.ComercialId, kgTotales, kgPesif);
             }
             else
             {

@@ -2,19 +2,19 @@
 
 
 $(document).ready(function () {
-
     kendo.culture("es-AR");
     $('#menuproveedor').hide();
     inicializarTodosKendoDate($(".filtroFecha"));
-
     CreateGridReporteCupoNoPropio();
     //InicializarElementos();
+    $("#pageSize").kendoDropDownList();
     InicializarElementos();
     //CompletarTable();  
 
 });
 
 function InicializarElementos() {
+
     $("#fechaIngresoId").data("kendoDatePicker").value(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
     $('#ContratoSAPId').click(function (e) {
         $('#ContratoSAPId').val("");
@@ -57,10 +57,12 @@ function mostrarocultar(element) {
 
 
 function Filtrar() {
-    $('#gridCupoNoPropio').data('kendoGrid').dataSource.read();
+    $('#gridCupoNoPropio').data('kendoGrid').dataSource.filter({});
+    //$('#gridCupoNoPropio').data('kendoGrid').dataSource.read();
 }
 
 function CreateGridReporteCupoNoPropio() {
+    var defaultFilter = { field: "FechaIngreso", operator: "eq", value: new Date };
     kendo.ui.FilterMultiCheck.prototype.options.messages =
         $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages, {
             "selectedItemsFormat": ""
@@ -110,15 +112,21 @@ function CreateGridReporteCupoNoPropio() {
                 }
             }
         },
-
+        pageSize: 20,
         serverPaging: true,
         serverSorting: true,
-        serverFiltering: false,
-        //sort: [
-        //    { field: "Material", dir: "desc" }
-        //],
-
-        pageSize: 10,
+        sort: [
+        ],
+        serverFiltering: true,
+        pageable: {
+            numeric: true,
+            refresh: true,
+            pageSize: 20,
+            previousNext: true,
+            input: true,
+            info: true
+        },
+        filter: defaultFilter
     };
 
     $("#gridCupoNoPropio").kendoGrid({
@@ -142,6 +150,9 @@ function CreateGridReporteCupoNoPropio() {
         },
         columns: [
             {
+                selectable: true, width: 20
+            },
+            {
                 field: "Centro", title: "Planta", width: 150, template: function (dataItem) {
                     return dataItem.Centro;
                 }
@@ -150,7 +161,8 @@ function CreateGridReporteCupoNoPropio() {
                 field: "Material", title: "Material", width: 130, template: "#=Material#"
             },
             {
-                field: "FechaIngreso", title: "Fecha de Cupo", width: 120, format: _DefaultDateTemplate
+                field: "FechaIngreso", type: "date", title: "Fecha de Cupo", width: 120, format: _DefaultDateTemplate,
+
             },
 
             {
@@ -215,20 +227,23 @@ function CreateGridReporteCupoNoPropio() {
             input: true,
             numeric: true
         },
-        scrollable: true,
+        scrollable: false,
         sortable: {
             mode: "multiple",
             allowUnsort: true,
             showIndexes: false
         },
-        selectable: "row",
-        height: 550,
+        //height: 550,
         filterable: false,
 
     });
 
 }
-
+function setPageSize() {
+    var grid = $("#gridCupoNoPropio").data("kendoGrid");
+    grid.dataSource.pageSize($("#pageSize").val());
+    grid.refresh();
+}
 function ModificarDisponible(id) {
 
     //var grid = $("#gridCupoNoPropio").data("kendoGrid").dataSource.data();
@@ -508,4 +523,43 @@ function crearPopUpCodigo(nombrePopUp) {
         $("#06").prepend('<div>Seleccione ' + nombrePopUp + '</div>');
         $("#03").prepend('<button id="05" type="button" class="cerrar close" data-dismiss="modal" aria-label="Close"></button>');
     }
+}
+
+function CambioMasivoDisponible(disponible) {
+    BlockUi('Copiando...');
+    var cupos = SeleccionarElementos();
+    var ids = [];
+    for (var i = 0; i < cupos.length; i++) {
+        if (cupos[i].CupoId == null) {
+            ids.push(cupos[i].id);
+        }
+    }
+    if (ids != null && ids.length > 0) {
+        MSExecuteOnServer('/CupoNoPropio/ModificacionMasivaDisponible', { ids: ids, disponible: disponible });
+        MensInfo("Los cambios se guardaron correctamente");
+        recargarGrilla();
+        $.unblockUI();
+    } else {
+        $.unblockUI();
+        MensErr("Ningun cupo seleccionado");
+
+    }
+
+}
+
+function SeleccionarElementos() {
+    var grid = $("#gridCupoNoPropio").data("kendoGrid");
+    var selectedRows = grid.select();
+    obj = [];
+
+    selectedRows.each(function (index, row) {
+        var selectedItem = grid.dataItem(row);
+        obj.push(selectedItem);
+    });
+    return obj;
+}
+
+function DeseleccionarElementos() {
+    var grid = $("#gridCupoNoPropio").data("kendoGrid");
+    grid.clearSelection();
 }

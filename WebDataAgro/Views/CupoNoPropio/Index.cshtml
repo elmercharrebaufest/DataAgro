@@ -17,9 +17,7 @@
     <link href="~/Content/compraNet.css" rel="stylesheet" />
 }
 <div class="">
-    <div class="row">
 
-    </div>
     <div class="row">
         <div class="col-md-10" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
             <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
@@ -113,6 +111,22 @@
             </div>
             <br />
             <br />
+            <div class="row">
+                <div class="col-md-4">
+                    <span>Elementos por página</span>
+                </div>
+                <div class="col-md-2">
+                    <select id="pageSize" onchange="setPageSize()">
+                        <option value="20" selected>20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="300">300</option>
+                        <option value="all">Todos</option>
+                    </select>
+                </div>
+            </div>
+            <br />
+            <br />
             <br />
             <div class="row">
 
@@ -126,9 +140,25 @@
         <br />
     </div>
     <script type="text/x-kendo-template" id="templateToolbar">
-        <div class="">
+        <div class="col-md-7">
             <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Export to Excel</a>
         </div>
+           <div class="col-xs-2">
+                <div id="finalizarVariosDiv" data-toggle="tooltip" onclick=" CambioMasivoDisponible(true)">
+                    <span class="botonVarios">
+                        <i class="fa fa-unlock varios" style="color: gray" aria-hidden="true"></i>
+                    </span>
+                    <span style="color:gray">Disponibilizar Cupos</span>
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div id="finalizarVariosDiv" data-toggle="tooltip" onclick="CambioMasivoDisponible(false)">
+                    <span class="botonVarios">
+                        <i class="fa fa-lock varios" style="color: gray" aria-hidden="true"></i>
+                    </span>
+                    <span style="color:gray">No Disponibilizar Cupos</span>
+                </div>
+            </div>
     </script>
     <div class="resultado">
         <div id="gridCupoNoPropio" class="tabla-result">
