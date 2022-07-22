@@ -33,24 +33,24 @@
     <CallTarget Targets="Build"/>
 
     <Message Text="*** Performing Testing ***" />
-    <ItemGroup>
+    <!--<ItemGroup>
       <UnitTestProjects Include="$(NUnitProject)"/>
-    </ItemGroup>
+    </ItemGroup>-->
 
     <!--Build all the projects in UnitTestProjects-->
-    <MSBuild Projects="$(UnitTestProjects)"/>
+    <!--<MSBuild Projects="$(UnitTestProjects)"/>-->
 
-    <Message Text="*** Executing Unit Tests and Performing Test Coverage ***" />
-    <Exec Command="&quot;$(OpenCoverTool)&quot; -register:administrator -filter:&quot;$(OpenCoverFilter)&quot; -target:&quot;$(NUnitToolPath)\nunit3-console.exe&quot; -targetargs:&quot; /config:Jenkins $(NUnitProject)&quot; -output:coverage.xml" />
+    <!--<Message Text="*** Executing Unit Tests and Performing Test Coverage ***" />-->
+    <!--<Exec Command="&quot;$(OpenCoverTool)&quot; -register:administrator -filter:&quot;$(OpenCoverFilter)&quot; -target:&quot;$(NUnitToolPath)\nunit3-console.exe&quot; -targetargs:&quot; /config:Jenkins $(NUnitProject)&quot; -output:coverage.xml" />-->
 
     <!--Generate solution coverage report-->
-    <RemoveDir Directories="report" />
-    <ReportGenerator ReportFiles="coverage.xml" TargetDirectory="report/opencover" />
+    <!--<RemoveDir Directories="report" />
+    <ReportGenerator ReportFiles="coverage.xml" TargetDirectory="report/opencover" />-->
 
     <!-- Create Deploy directory -->
-    <Message Text="*** Creating Output Directory ***"/>
+    <!--<Message Text="*** Creating Output Directory ***"/>
     <RemoveDir Directories="$(OutputDir)"/>
-    <MakeDir Directories="$(OutputDir)" />
+    <MakeDir Directories="$(OutputDir)" />-->
 
     <!-- Copy the Package's files to Output Directory -->
     <Message Text="*** Copying files to Output Directory ***"/>
