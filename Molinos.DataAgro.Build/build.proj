@@ -44,8 +44,8 @@
     <Exec Command="&quot;$(OpenCoverTool)&quot; -register:administrator -filter:&quot;$(OpenCoverFilter)&quot; -target:&quot;$(NUnitToolPath)\nunit3-console.exe&quot; -targetargs:&quot; /config:Jenkins $(NUnitProject)&quot; -output:coverage.xml" />
 
     <!--Generate solution coverage report-->
-    <!--<RemoveDir Directories="report" />
-    <ReportGenerator ReportFiles="coverage.xml" TargetDirectory="report/opencover" />-->
+    <RemoveDir Directories="report" />
+    <ReportGenerator ReportFiles="coverage.xml" TargetDirectory="report/opencover" />
 
     <!-- Create Deploy directory -->
     <Message Text="*** Creating Output Directory ***"/>
