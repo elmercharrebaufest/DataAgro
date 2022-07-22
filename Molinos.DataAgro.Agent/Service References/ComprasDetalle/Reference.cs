@@ -109,6 +109,10 @@ namespace Molinos.DataAgro.Agent.ComprasDetalle {
         
         private decimal pEND_FIJARField;
         
+        private string fECHA_DESDEField;
+        
+        private string fECHA_HASTAField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string VENDEDOR {
@@ -286,6 +290,30 @@ namespace Molinos.DataAgro.Agent.ComprasDetalle {
             set {
                 this.pEND_FIJARField = value;
                 this.RaisePropertyChanged("PEND_FIJAR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=15)]
+        public string FECHA_DESDE {
+            get {
+                return this.fECHA_DESDEField;
+            }
+            set {
+                this.fECHA_DESDEField = value;
+                this.RaisePropertyChanged("FECHA_DESDE");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=16)]
+        public string FECHA_HASTA {
+            get {
+                return this.fECHA_HASTAField;
+            }
+            set {
+                this.fECHA_HASTAField = value;
+                this.RaisePropertyChanged("FECHA_HASTA");
             }
         }
         

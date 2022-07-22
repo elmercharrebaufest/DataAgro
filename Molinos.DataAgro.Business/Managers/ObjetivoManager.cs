@@ -27,21 +27,49 @@ namespace Molinos.DataAgro.Business
         public ObjetivoHome TraerObjetivoHome(int idComercial, List<int> equipo)
         {
             var list = new ObjetivoHome();
-
-            var lista = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
+            var oComercial = repositorio.Obtener<Comercial>(x => x.ComercialId == idComercial);
+            List<MaterialObjetivo> lista = new List<MaterialObjetivo>();
+            if (oComercial.GrupoDeCompras.Corredor)
             {
-                Id = x.Id,
-                Material = x.Material.Descripcion,
-                MaterialId = x.MaterialId,
-                Campana = x.Campana.Descripcion,
-                Toneladas = x.ToneladasObjetivos,
-                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
-                ComercialId = x.ComercialId
-            }, x => equipo.Contains(x.ComercialId) && x.Material.CampañaId <= x.CampanaId, 0, "ComercialId");
+                lista = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
+                {
+                    Id = x.Id,
+                    Material = x.Material.Descripcion,
+                    MaterialId = x.MaterialId,
+                    Campana = x.Campana.Descripcion,
+                    Toneladas = x.ToneladasObjetivos,
+                    Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                    ComercialId = x.ComercialId,
+                    GrupoDeComprasId = x.GrupoDeComprasId
+                }, x => x.GrupoDeComprasId == oComercial.GrupoDeComprasId && x.Material.CampañaId <= x.CampanaId, 0, "ComercialId");
+            }
+            else
+            {
+                lista = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
+                {
+                    Id = x.Id,
+                    Material = x.Material.Descripcion,
+                    MaterialId = x.MaterialId,
+                    Campana = x.Campana.Descripcion,
+                    Toneladas = x.ToneladasObjetivos,
+                    Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                    ComercialId = x.ComercialId,
+                    GrupoDeComprasId = x.GrupoDeComprasId
+                }, x => equipo.Contains(x.ComercialId) && x.Material.CampañaId <= x.CampanaId, 0, "ComercialId");
+            }
             var listaPorMaterial = lista.GroupBy(x => x.Material);
             foreach (var obj in listaPorMaterial)
             {
-                var agregarObjetivo = obj.OrderByDescending(x => x.Campana).Where(x => x.ComercialId == idComercial).FirstOrDefault();
+                MaterialObjetivo agregarObjetivo = new MaterialObjetivo();
+                if (oComercial.GrupoDeCompras.Corredor)
+                {
+                    agregarObjetivo = obj.OrderByDescending(x => x.Campana).Where(x => x.GrupoDeComprasId == oComercial.GrupoDeComprasId)
+                        .FirstOrDefault();
+                }
+                else
+                {
+                    agregarObjetivo = obj.OrderByDescending(x => x.Campana).Where(x => x.ComercialId == idComercial).FirstOrDefault();
+                }
                 if(agregarObjetivo != null)
                 list.Objetivos.Add(agregarObjetivo);
             }
@@ -61,6 +89,8 @@ namespace Molinos.DataAgro.Business
         }
         public Resultado GuardarObjetivo(ObjetivoComercial objetivo)
         {
+            var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == objetivo.ComercialId);
+            objetivo.GrupoDeComprasId = comercial.GrupoDeComprasId;
             var resultado = new Resultado();
             if (objetivo.MaterialId == 0)
                 resultado.Error("Material", "Debe elegir Material");

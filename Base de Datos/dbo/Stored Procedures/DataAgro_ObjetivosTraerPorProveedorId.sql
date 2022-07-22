@@ -15,7 +15,9 @@ BEGIN
 		M.Descripcion Material,
 		CM.NroItem,
 		CM.ProveedorId,
-		CM.ToneladasObjetivos
+		CM.ToneladasObjetivos,
+		CM.ComercialId,
+		CM.GrupoDeComprasId
 	FROM Objetivo CM
 	INNER JOIN Material M ON M.MaterialId = CM.MaterialId AND M.CampañaId <= CM.CampañaId
 	INNER JOIN Campaña C ON C.CampañaId = CM.CampañaId

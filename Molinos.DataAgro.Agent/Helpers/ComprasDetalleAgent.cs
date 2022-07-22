@@ -63,7 +63,7 @@ namespace Molinos.DataAgro.Agent
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-
+                
                 var rq = new Z_MPRFC_DATOS_COMPRAS_DETALLE() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = UsuarioComercial };
                 //var log = new Log
                 //{
@@ -74,6 +74,7 @@ namespace Molinos.DataAgro.Agent
                 //repositorio.GuardarCambios();
                 //logger.Debug(rq.ToXml());
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE(rq);
+                
                 if (devolucion.EX_SALIDA != null)
                 {
                     foreach (var dev in devolucion.EX_SALIDA)
@@ -111,7 +112,9 @@ namespace Molinos.DataAgro.Agent
                 TN_ANULADAS = dev.TN_ANULADAS,
                 TN_APLICADAS = dev.TN_APLICADAS,
                 TN_CONTRATO = dev.TN_CONTRATO,
-                TN_FIJADAS = dev.TN_FIJADAS
+                TN_FIJADAS = dev.TN_FIJADAS,
+               FECHA_HASTA = dev.FECHA_HASTA,
+               FECHA_DESDE = dev.FECHA_DESDE,
                 
             };
             return compraAgent;

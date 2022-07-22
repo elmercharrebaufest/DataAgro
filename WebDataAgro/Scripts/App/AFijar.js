@@ -1717,7 +1717,7 @@ function InicializarElementos() {
     $("#porcentajeComision").kendoNumericTextBox({
         change: function () {
             if (this.value() == 0) {
-                MensAlerta("Se esta colocando el Porcentaje de Comisión en 0");
+                MensAlerta("El porcentaje de comision se completó con valor en 0");
             }
         },
         culture: "es-AR",
@@ -2629,7 +2629,13 @@ function InicializarElementos() {
     $("#CapacidadProductivaPendienteBtn").click(function () {
         AbrirModalCapacidadProductivaPendiente();
     });
-
+    $("#cantidadDeposito").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        change: function () {
+        }
+    });
     //FIN INICIALIZARELEMENTOS
 }
 
@@ -3709,6 +3715,7 @@ function CargarDatosEditar(contrato, hijo) {
 
     if (contrato.PorcentajeComision !== null && contrato.PorcentajeComision !== undefined && contrato.PorcentajeComision !== "") {
         $("#porcentajeComision").data("kendoNumericTextBox").value(contrato.PorcentajeComision);
+        $("#porcentajeComision").data("kendoNumericTextBox").trigger("change");
     }
     if (contrato.NoInformaSIO == true) {
         $("#noInformaSioId").prop("checked", true);

@@ -10,6 +10,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int CampanaId { get; set; }
         public int MaterialId { get; set; }        
         public int ComercialId { get; set; }
+        public int? GrupoDeComprasId { get; set; }
         public double ToneladasObjetivos { get; set; }
 
         [ForeignKey("CampanaId")]

@@ -45,6 +45,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Campana { get; set; }
         public string Comercial { get; set; }
         public int ComercialId { get; set; }
+        public int? GrupoDeComprasId { get; set; }
     }
     public class Contactos
     {

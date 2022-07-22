@@ -21,7 +21,8 @@ function InicializarEdit() {
     armarComercial(comerciales);
     if (basico[0].GrupoSegmentacion === "Corredores") {
         CrearCorredor();
-        armarEditCorredor(resultEdit);        
+        armarEditCorredor(resultEdit);
+        armarObjetivos(objetivo);
     } else {
         armarProduccion(campoacopio);
         armarAlmacenamiento(acopio, acopiomaterial);

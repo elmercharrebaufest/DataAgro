@@ -177,6 +177,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int campañaId { get; set; }
         public string campaña { get; set; }
         public string toneladasObjetivo { get; set; }
+        public int? comercialId { get; set; }
+        public int? grupoDeComprasId { get; set; }
     }
 
 

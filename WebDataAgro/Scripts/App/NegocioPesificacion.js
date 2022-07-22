@@ -436,7 +436,7 @@ function EnviarMail() {
         var fecha = $("#fechaInstruccionId").data("kendoDatePicker").value();
         var kgTotales = $("#kgTotal").is(":checked");
         var kgPesif = $("#kgPesif").is(":checked");
-        if (fecha == "") {
+        if (fecha == "" || fecha == null) {
             MensErr("Debe ingresar una fecha de instrucción de pesificación");
         } else {
             result = MSExecuteOnServer('/NegocioPesificacion/EnviarMail', { ids: SeleccionarElementos(), fecha: fecha, kgTotales: kgTotales, kgPesif: kgPesif});

@@ -247,7 +247,8 @@ namespace WebDataAgro.Controllers
         public ActionResult ProcessCompras()
         {
             logger.Info($"ProcessCompras - Iniciando");
-            comprasManager.ActualizarCompras();
+            //comprasManager.ActualizarCompras();
+            comprasManager.ActualizarComprasDetalle("", "");
             logger.Info($"ProcessCompras - Finalizado");
             return Content("ok");
         }

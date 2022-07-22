@@ -11,7 +11,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public int NroItem { get; set; }
         public int ProveedorId { get; set; }
         public int MaterialId { get; set; }
-        
+        public int? ComercialId { get; set; }
+        public int? GrupoDeComprasId { get; set; }
+
         public double ToneladasObjetivos { get; set; }
 
         [ForeignKey("CampañaId")]
@@ -20,6 +22,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Proveedor Proveedor { get; set; }
         [ForeignKey("MaterialId")]
         public virtual Material Material { get; set; }
+        [ForeignKey("ComercialId")]
+        public virtual Comercial Comercial { get; set; }
     }
 }
 

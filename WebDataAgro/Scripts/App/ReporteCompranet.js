@@ -1,5 +1,5 @@
 ﻿var fechaString;
-var url;
+var url = "/ReporteCompraNet/ReporteComprasDelDia";
 var viewModel;
 var datosIniCrearContrato;
 var getUrl = window.location;
@@ -1140,7 +1140,6 @@ function CargarComboMaterial() {
 
 
 function setearValoresComboDeInicio() {
-    var url = "/ReporteCompraNet/ReporteComprasDelDia";
     $('#descargaReporte').attr('href', url + '?fechaString=' + fechaString + '&fechaHastaString=' + fechaString + '&centroId=' + ObtenerValorCentroId() + '&materialId=' + ObtenerValorMaterialId().toString() + "&verFijaciones=" + getVerFijaciones());
 }
 

@@ -35,6 +35,10 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerObjetivoHomeTest()
         {
+            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
+
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
+                .Returns(comercial);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ObjetivoComercial, MaterialObjetivo>>>(), It.IsAny<Expression<Func<ObjetivoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<MaterialObjetivo>() { new MaterialObjetivo { Id = 1, Campana = "1", Comercial = "a", ComercialId = 1, Material = "a", MaterialId = 1, Toneladas = 1 } });
 
@@ -49,6 +53,10 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GuardarObjetivoTestOk()
         {
+            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a" };
+
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
+                .Returns(comercial);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<ObjetivoComercial, bool>>>())).Returns(false);
 
             var resultado = target.GuardarObjetivo(new ObjetivoComercial() { MaterialId=1,ComercialId=1,CampanaId=1,ToneladasObjetivos=1});
@@ -63,6 +71,10 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GuardarObjetivoTestError()
         {
+            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a" };
+            
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
+                .Returns(comercial);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<ObjetivoComercial, bool>>>())).Returns(true);
 
             var resultado = target.GuardarObjetivo(new ObjetivoComercial());

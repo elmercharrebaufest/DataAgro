@@ -111,7 +111,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Comercial>() { new Comercial { IdActiveDirectory = "A" } });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes { ComercialId = 1,Contrato="",ProveedorId=1 } });
+                .Returns(new List<CampanaMaterialDetallePorMes>() { new CampanaMaterialDetallePorMes { ComercialId = 1,Contrato="",ProveedorId=1, FechaDesde = DateTime.Now } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampañaMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<CampañaMaterial>() { new CampañaMaterial { NroItem = 1, CampañaMaterialId = 1, CampañaId = 1, MaterialId = 1, ProveedorId = 1, ToneladasCompradas = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, ProveedorBasicoDto>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -122,11 +122,12 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<MaterialBasicoDto>() { new MaterialBasicoDto { Codigo = "A", MaterialId = 1 } });
             comprasDetalleAgentMock.Setup(y => y.ComprarIniciales(It.IsAny<List<string>>(), It.IsAny<string>()))
                 .Returns(new List<CompraDetalleAgentDto> {
-                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "A",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01" },
-                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01" }
+                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "A",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01", FECHA_HASTA= "2020-01-01", FECHA_DESDE = "2020-10-01" },
+                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01", FECHA_HASTA= "2020-01-01", FECHA_DESDE = "2020-10-01" }
                 });
 
-
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>()))
+                            .Returns(new Campaña { CampañaId = 1 });
             target.ActualizarComprasDetalle("A", "a");
 
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<Proveedor, string>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
@@ -158,10 +159,11 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<MaterialBasicoDto>() { new MaterialBasicoDto { Codigo = "A", MaterialId = 1 } });
             comprasDetalleAgentMock.Setup(y => y.ComprarIniciales(It.IsAny<List<string>>(), It.IsAny<string>()))
                 .Returns(new List<CompraDetalleAgentDto> {
-                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "A",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01" },
-                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01" }
+                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "A",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01", FECHA_HASTA= "2020-01-01", FECHA_DESDE = "2020-10-01" },
+                    new CompraDetalleAgentDto {  COSECHA = "19-20", MATERIAL = "A", VENDEDOR = "",CLASE_DOC="",CLASIFICACION="",CONTRATO="", CORREDOR="A",FECHA= "2020-01-01", FECHA_HASTA= "2020-01-01", FECHA_DESDE = "2020-10-01" }
                 });
-
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>()))
+                            .Returns(new Campaña { CampañaId = 1 });
 
             target.ActualizarComprasDetalle("A", "a");
 

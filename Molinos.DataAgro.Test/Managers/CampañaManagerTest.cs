@@ -93,6 +93,13 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerCampañaHomeTestOkMayorA5()
         {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<Material>() { 
+                                new Material { MaterialId = 1, Descripcion = "a", Campaña = new Campaña { Descripcion = "1-2" } },
+                                new Material { MaterialId = 1, Descripcion = "b", Campaña = new Campaña { Descripcion = "1-2" } },
+                                new Material { MaterialId = 1, Descripcion = "c", Campaña = new Campaña { Descripcion = "1-2" } },
+                                new Material { MaterialId = 1, Descripcion = "d", Campaña = new Campaña { Descripcion = "1-2" } }
+                            });
             repositorioMock.Setup(y => y.ListarConsulta(It.IsAny<TraerComprasHome>()))
                             .Returns(new List<MaterialCampaña>() {
                             new MaterialCampaña { Campaña = "1-2", Nombre = "a", Toneladas = 10 },

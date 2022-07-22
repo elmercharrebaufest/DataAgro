@@ -400,6 +400,7 @@
     <None Include="Service References\ComprasDetalle\Molinos.DataAgro.Agent.ComprasDetalle.Z_MPRFC_DATOS_COMPRAS_DETALLEResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\ComprasDetalle\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE1.wsdl" />
     <None Include="Service References\ConsultarEstadoBoleto\Molinos.DataAgro.Agent.ConsultarEstadoBoleto.SI_ZMPWS_DATAAGRO_CONSULTAR_ESTADO_BOLETResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -444,7 +445,6 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\CriterioCDWarrant\SI_ZMPWS_DATAAGRO_CD_WARRANTS.wsdl" />
-    <None Include="Service References\ComprasDetalle\SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE.wsdl" />
     <None Include="Service References\CumplimientoCupos\Molinos.DataAgro.Agent.CumplimientoCupos.SI_ZMPWS_DATAAGRO_CUMPLIMIENTO_CUPOSResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

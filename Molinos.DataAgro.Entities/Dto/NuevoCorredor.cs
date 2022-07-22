@@ -8,6 +8,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public Basico basicos { get; set; }
         public Contacto contacto { get; set; }
+        public Produccion produccion { get; set; }
         public List<ContactosComercial> contactocomercial { get; set; }
         public List<NuevoProveedor> proveedorCorredor { get; set; }
         public int? CorredorId { get; set; }        

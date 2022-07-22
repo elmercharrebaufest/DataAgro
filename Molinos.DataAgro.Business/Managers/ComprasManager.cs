@@ -178,7 +178,7 @@ namespace Molinos.DataAgro.Business.Managers
             ComprasIniciales comp = null;
             if (!string.IsNullOrEmpty(comercialUsurarioAD))
             {
-                oComercial = oComercial.Where(x => x.IdActiveDirectory == comercialUsurarioAD).ToList();
+                oComercial = oComercial.Where(x => x.IdActiveDirectory == comercialUsurarioAD).Take(5).ToList();
             }
             foreach (var comercial in oComercial)
             {
@@ -273,9 +273,13 @@ namespace Molinos.DataAgro.Business.Managers
                                         campaniaMaterialMes.Contrato = ii.CONTRATO;
                                         campaniaMaterialMes.CorredorCuit = ii.CORREDOR;
                                         campaniaMaterialMes.CorredorId = CorredorId;
-                                        campaniaMaterialMes.CampanaId = campaniaId;
+                                        campaniaMaterialMes.CampanaSAPId = campaniaId;
+                                        campaniaMaterialMes.CampanaId = CalcularCampanaId(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider))?? campaniaId;
                                         campaniaMaterialMes.ProveedorId = proveedorId.ProveedorId;
                                         campaniaMaterialMes.MaterialId = materialId;
+                                        campaniaMaterialMes.FechaDesde = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider);
+                                        campaniaMaterialMes.FechaHasta = DateTime.ParseExact(ii.FECHA_HASTA, "yyyy-MM-dd", provider);
+                                        campaniaMaterialMes.CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider));
                                     }
                                     else
                                     {
@@ -296,11 +300,14 @@ namespace Molinos.DataAgro.Business.Managers
                                             CorredorCuit = ii.CORREDOR,
                                             ComercialId = ComercialId,
                                             CorredorId = CorredorId,
-                                            CampanaId = campaniaId,
+                                            CampanaSAPId = campaniaId,
+                                            CampanaId = CalcularCampanaId(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider))?? campaniaId,
                                             ProveedorId = proveedorId.ProveedorId,
                                             MaterialId = materialId,
-
-                                        });
+                                            FechaDesde = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider),
+                                            FechaHasta = DateTime.ParseExact(ii.FECHA_HASTA, "yyyy-MM-dd", provider),
+                                            CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider))
+                                    });
                                     }
                                 }
                             }
@@ -329,9 +336,13 @@ namespace Molinos.DataAgro.Business.Managers
                                         campaniaMaterialMes.Contrato = ii.CONTRATO;
                                         campaniaMaterialMes.CorredorCuit = ii.CORREDOR;
                                         campaniaMaterialMes.CorredorId = CorredorId;
-                                        campaniaMaterialMes.CampanaId = campaniaId;
+                                        campaniaMaterialMes.CampanaSAPId = campaniaId;
+                                        campaniaMaterialMes.CampanaId = CalcularCampanaId(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider))?? campaniaId;
                                         campaniaMaterialMes.ProveedorId = null;
                                         campaniaMaterialMes.MaterialId = materialId;
+                                        campaniaMaterialMes.FechaDesde = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider);
+                                        campaniaMaterialMes.FechaHasta = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider);
+                                        campaniaMaterialMes.CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider));
                                     }
                                     else
                                     {
@@ -352,9 +363,13 @@ namespace Molinos.DataAgro.Business.Managers
                                             CorredorCuit = ii.CORREDOR,
                                             ComercialId = ComercialId,
                                             CorredorId = CorredorId,
-                                            CampanaId = campaniaId,
+                                            CampanaSAPId = campaniaId,
+                                            CampanaId = CalcularCampanaId(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider))?? campaniaId,
                                             ProveedorId = null,
                                             MaterialId = materialId,
+                                            FechaDesde = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider),
+                                            FechaHasta = DateTime.ParseExact(ii.FECHA_HASTA, "yyyy-MM-dd", provider),
+                                            CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider))
 
                                         });
                                     }
@@ -377,6 +392,23 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(ex);
                 throw;
             }
+        }
+
+        private int? CalcularCampanaId(DateTime fecha)
+        {
+            var campaña = CalcularCampana(fecha);
+            var campana = repositorio.Obtener<Campaña>(a => a.Descripcion == campaña);
+            if(campana == null)
+            {
+                return null;
+            }
+            return campana.CampañaId;
+        }
+
+        private string CalcularCampana(DateTime fecha)
+        {
+            int anio = fecha.Year;
+            return fecha.Month > 3 ? anio.ToString().Substring(2,2) + "-" + (anio + 1).ToString().Substring(2, 2) : (anio - 1).ToString().Substring(2, 2) + "-" + anio.ToString().Substring(2, 2);
         }
 
     }

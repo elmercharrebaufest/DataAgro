@@ -60,7 +60,7 @@
 
     <Copy SourceFiles="@(SourceFilesWeb)"
       DestinationFiles="@(SourceFilesWeb->'$(OutputDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
-    
+
     <Message Text="*** Creating Output DirectoryPack ***"/>
     <MakeDir Directories="$(OutputPackDir)" />
     <MakeDir Directories="$(OutputPackWebDir)" />
@@ -73,7 +73,7 @@
     <Copy SourceFiles="@(ZipDir)" DestinationFiles="@(ZipDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(CmdDir)" DestinationFiles="@(CmdDir->'$(OutputPackDir)\%(RecursiveDir)\%(Filename)%(Extension)')" />
 
-    
+
     <ItemGroup>
       <DeployParametersWeb Include="$(DeployParametersWeb)"/>
     </ItemGroup>

@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Agent
                     return new List<CcPpPerndienteAplicarDto>();
                 }
                 return new List<CcPpPerndienteAplicarDto>() { new CcPpPerndienteAplicarDto() {
+                    Contrato = "",
                     AgenteCompra = "Agente compra",
                     Cantidad = 10,
                     CartasPorte = "000585221852",
@@ -48,9 +49,10 @@ namespace Molinos.DataAgro.Agent
                     FechaIngreso = "2020-08-08",
                     FechaNeto = "2020-08-08",
                     FechaIngresoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    FechaNetoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),                    
+                    FechaNetoFecha = DateTime.ParseExact("2020-08-08", "yyyy-MM-dd", CultureInfo.InvariantCulture),
                 },
                 new CcPpPerndienteAplicarDto() {
+                    Contrato = "",
                     AgenteCompra = "Agente compra",
                     Cantidad = 100000000,
                     CartasPorte = "000585221852",
@@ -64,6 +66,7 @@ namespace Molinos.DataAgro.Agent
                     Sustentable = false
                 },
                 new CcPpPerndienteAplicarDto() {
+                    Contrato = "",
                     AgenteCompra = "Agente compra",
                     Cantidad = 10000000,
                     CartasPorte = "000585221852",
@@ -121,7 +124,7 @@ namespace Molinos.DataAgro.Agent
                                 Warrant = item.WARRANT == "X",
                                 Sustentable = item.SUSTENTABLE == "X",
                                 Region = item.REGION,
-                                Contrato = item.CONTRATO,
+                                Contrato = item.CONTRATO ?? "",
                                 KgContrato = item.KILOS_CONT
                             }).OrderBy(a => a.FechaIngresoFecha).ToList();
                     }

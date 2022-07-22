@@ -20,6 +20,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal TN_APLICADAS { get; set; }
         public decimal TN_CONTRATO { get; set; }
         public decimal TN_FIJADAS { get; set; }
+        public string FECHA_DESDE { get; set; }
+        public string FECHA_HASTA { get; set; }
     }
 
 }

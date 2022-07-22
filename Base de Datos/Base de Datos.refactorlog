@@ -1052,4 +1052,39 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CupoId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="e6a7eb25-98b2-450e-8eb8-66ffc264ed67" ChangeDateTime="07/06/2022 21:17:02">
+    <Property Name="ElementName" Value="[dbo].[CampanaMaterialDetallePorMes].[FechaDesde]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CampanaMaterialDetallePorMes]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaHasta" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6928816c-96f6-4566-ab0d-497d3d147958" ChangeDateTime="07/07/2022 17:13:34">
+    <Property Name="ElementName" Value="[dbo].[CampanaMaterialDetallePorMes].[Campana]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CampanaMaterialDetallePorMes]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CampanaDesc" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e68acb6a-b455-453b-aa6d-468f83a78187" ChangeDateTime="07/11/2022 14:59:00">
+    <Property Name="ElementName" Value="[dbo].[CampanaMaterialDetallePorMes].[FechaHasta]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[CampanaMaterialDetallePorMes]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FechaDesde" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9e80eba8-3ed3-4867-8478-93a2542a32e8" ChangeDateTime="07/15/2022 17:32:12">
+    <Property Name="ElementName" Value="[dbo].[Objetivo].[ZonaId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Objetivo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ZonaCupoId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="79b45024-6b69-4101-a929-7356543a2e38" ChangeDateTime="07/18/2022 07:25:57">
+    <Property Name="ElementName" Value="[dbo].[Objetivo].[ZonaCupoId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Objetivo]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GrupoDeComprasId" />
+  </Operation>
 </Operations>

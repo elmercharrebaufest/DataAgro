@@ -4,9 +4,11 @@
     [MaterialId]			INT			NULL,
 	[ComercialId]			INT			NULL,
     [ToneladasObjetivos]	FLOAT (53)	NULL,
+    [GrupoDeComprasId] INT NULL, 
     CONSTRAINT [PK_ObjetivoComercial] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_ObjetivoComercial_Campana] FOREIGN KEY ([CampanaId]) REFERENCES [dbo].[Campaña] ([CampañaId]),
     CONSTRAINT [FK_ObjetivoComercial_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
-    CONSTRAINT [FK_ObjetivoComercial_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId])
+    CONSTRAINT [FK_ObjetivoComercial_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
+    CONSTRAINT [FK_ObjetivoComercial_GrupoDeCompras] FOREIGN KEY ([GrupoDeComprasId]) REFERENCES [dbo].[GrupoDeCompras] ([Id])
 );
 

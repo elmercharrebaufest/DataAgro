@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" name="SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" name="SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:documentation />
   <wsp:UsingPolicy wsdl:required="true" />
   <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE" />
@@ -24,12 +24,6 @@
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
           <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="decimal25.0">
-        <xsd:restriction base="xsd:decimal">
-          <xsd:totalDigits value="25" />
-          <xsd:fractionDigits value="0" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char20">
@@ -62,6 +56,12 @@
           <xsd:maxLength value="16" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="quantum25.2">
+        <xsd:restriction base="xsd:decimal">
+          <xsd:totalDigits value="25" />
+          <xsd:fractionDigits value="2" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char18">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="18" />
@@ -77,13 +77,15 @@
           <xsd:element name="MATERIAL" type="rfc:char18" />
           <xsd:element name="COSECHA" type="rfc:char5" />
           <xsd:element name="FECHA" type="rfc:date10" />
-          <xsd:element name="TN_CONTRATO" type="rfc:decimal25.0" />
-          <xsd:element name="TN_AMPLIADAS" type="rfc:decimal25.0" />
-          <xsd:element name="TN_ANULADAS" type="rfc:decimal25.0" />
-          <xsd:element name="TN_FIJADAS" type="rfc:decimal25.0" />
-          <xsd:element name="TN_APLICADAS" type="rfc:decimal25.0" />
-          <xsd:element name="PEND_APLICAR" type="rfc:decimal25.0" />
-          <xsd:element name="PEND_FIJAR" type="rfc:decimal25.0" />
+          <xsd:element name="TN_CONTRATO" type="rfc:quantum25.2" />
+          <xsd:element name="TN_AMPLIADAS" type="rfc:quantum25.2" />
+          <xsd:element name="TN_ANULADAS" type="rfc:quantum25.2" />
+          <xsd:element name="TN_FIJADAS" type="rfc:quantum25.2" />
+          <xsd:element name="TN_APLICADAS" type="rfc:quantum25.2" />
+          <xsd:element name="PEND_APLICAR" type="rfc:quantum25.2" />
+          <xsd:element name="PEND_FIJAR" type="rfc:quantum25.2" />
+          <xsd:element name="FECHA_DESDE" type="rfc:date10" />
+          <xsd:element name="FECHA_HASTA" type="rfc:date10" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT7420">
@@ -131,10 +133,10 @@
   </wsdl:binding>
   <wsdl:service name="SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEService">
     <wsdl:port name="HTTP_Port" binding="p1:SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEBinding">
-      <address location="http://GSLOPIDEVQA00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <address location="http://gslopidevqa00.molinosagro.ad:50000/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
     </wsdl:port>
     <wsdl:port name="HTTPS_Port" binding="p1:SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLEBinding">
-      <address location="https://GSLOPIDEVQA00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
+      <address location="https://gslopidevqa00.molinosagro.ad:50001/XISOAPAdapter/MessageServlet?senderParty=&amp;senderService=BC_DATAAGRO&amp;receiverParty=&amp;receiverService=&amp;interface=SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE&amp;interfaceNamespace=namespace%3Adataagro" xmlns="http://schemas.xmlsoap.org/wsdl/soap/" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

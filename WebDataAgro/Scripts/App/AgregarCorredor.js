@@ -414,6 +414,7 @@ function DatosCorredor() {
     obj.basicos = {};
     obj.contacto = {};
     obj.contactocomercial = {};
+    obj.produccion = {};
 
     obj.basicos.cuit = $("#cuit").val();
     obj.basicos.razonsocial = $("#razonsocial").val();
@@ -451,6 +452,19 @@ function DatosCorredor() {
     }
     obj.contactocomercial = aGuardarContactoComercial;
     obj.proveedorCorredor = proveedorCorredorGuardado;
+
+    obj.produccion.objetivos = [];
+    for (var i = 0; i < (cantGranoObjetivo + 1); i++) {
+        if ($("#granoObjetivo" + i).length > 0 && $("#granoObjetivo" + i).val() != "null" && $("#campañaObjetivo" + i).val() != "null") {
+            obj.produccion.objetivos.push({
+                granoId: $("#granoObjetivo" + i).val(),
+                grano: $("#granoObjetivo" + i).find('option:selected').text(),
+                campañaId: $("#campañaObjetivo" + i).val(),
+                campaña: $("#campañaObjetivo" + i).find('option:selected').text(),
+                toneladasObjetivo: $("#toneladasObjetivo" + i).val()
+            });
+        }
+    }
     GrabarCorredor(obj);
 }
 function GrabarCorredor(nuevoCorredor) {

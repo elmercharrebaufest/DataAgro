@@ -189,7 +189,16 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var cupos = repositorio.Listar<CupoNoPropio>(x => ids.Contains(x.Id));
-                foreach (var cupo in cupos)
+                var cuposUtilizados = cupos.Where(x => x.CupoId != null).ToList();
+                if(cuposUtilizados != null && cuposUtilizados.Count() > 0)
+                {
+                    resultado.Error("Cupos", "No se pudieron actualizar todos los cupos porque algunos ya fueron utilizados. Cupos no actualizados: "+ String.Join(", ", cuposUtilizados.Select(x => x.Codigo).ToList()));
+                }
+                else
+                {
+                    resultado.Error("Cupos", "Los cupos se actualizaron correctamente");
+                }
+                foreach (var cupo in cupos.Where(x => x.CupoId == null).ToList())
                 {
                     cupo.Disponible = disponible;
                 }
@@ -198,7 +207,6 @@ namespace Molinos.DataAgro.Business.Managers
             catch (Exception e)
             {
                 logger.Error(e);
-                resultado.Error(e.Source, e.Message);
                 throw;
             }
             return resultado;

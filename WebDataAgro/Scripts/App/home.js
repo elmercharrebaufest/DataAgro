@@ -603,7 +603,7 @@ function ArmarCamapaña(campañas) {
             var ToneladasAux = campañas.Materiales[i].Toneladas.toString().split(".");
             if (ToneladasAux.length > 1) {
                 ToneladasAux[0] = ToneladasAux[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                ToneladasAux[1] = ToneladasAux[1].lenght > 0 ? ToneladasAux[1].substr(0, 2) : "";
+                ToneladasAux[1] = ToneladasAux[1].length > 0 ? ToneladasAux[1].substr(0, 2) : "";
                 ToneladasAux = ToneladasAux.join(",");
             }
             else {

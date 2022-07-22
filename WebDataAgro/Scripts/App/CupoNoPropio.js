@@ -9,6 +9,7 @@ $(document).ready(function () {
     //InicializarElementos();
     $("#pageSize").kendoDropDownList();
     InicializarElementos();
+    Filtrar();
     //CompletarTable();  
 
 });
@@ -526,22 +527,22 @@ function crearPopUpCodigo(nombrePopUp) {
 }
 
 function CambioMasivoDisponible(disponible) {
-    BlockUi('Copiando...');
+    BlockUi('Grabando...');
     var cupos = SeleccionarElementos();
     var ids = [];
     for (var i = 0; i < cupos.length; i++) {
-        if (cupos[i].CupoId == null) {
+      /*  if (cupos[i].CupoId == null) {*/
             ids.push(cupos[i].id);
-        }
+        //}
     }
     if (ids != null && ids.length > 0) {
-        MSExecuteOnServer('/CupoNoPropio/ModificacionMasivaDisponible', { ids: ids, disponible: disponible });
-        MensInfo("Los cambios se guardaron correctamente");
+        var resultado = MSExecuteOnServer('/CupoNoPropio/ModificacionMasivaDisponible', { ids: ids, disponible: disponible });
+        MensInfo(resultado.Errores[0].Message);
         recargarGrilla();
         $.unblockUI();
     } else {
         $.unblockUI();
-        MensErr("Ningun cupo seleccionado");
+        MensErr("Seleccione un cupo válido");
 
     }
 

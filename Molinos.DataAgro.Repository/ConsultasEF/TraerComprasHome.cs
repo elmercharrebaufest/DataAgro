@@ -22,15 +22,26 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private static List<MaterialCampaña> Query(DbContext contexto, int comercialId, List<int> equipo)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
-            
+
+            //var resultado =
+            //    from x in contexto.Set<CampañaMaterialPorMes>()
+            //    where equipo.Contains(x.Comercial.ComercialId) && x.CampañaMaterial.Material.CampañaId == x.CampañaMaterial.CampañaId
+            //    group x by new { Material = x.CampañaMaterial.Material.Descripcion, Campania = x.CampañaMaterial.Campaña.Descripcion } into g
+            //    select new MaterialCampaña
+            //    {
+            //        Nombre = g.Key.Material,
+            //        Toneladas = g.Sum(t => t.Toneladas.HasValue ? t.Toneladas.Value : 0),
+            //        Campaña = g.Key.Campania
+            //    };
             var resultado =
-                from x in contexto.Set<CampañaMaterialPorMes>()
-                where equipo.Contains(x.Comercial.ComercialId) && x.CampañaMaterial.Material.CampañaId == x.CampañaMaterial.CampañaId
-                group x by new { Material = x.CampañaMaterial.Material.Descripcion, Campania = x.CampañaMaterial.Campaña.Descripcion } into g
+                from x in contexto.Set<CampanaMaterialDetallePorMes>()
+                where equipo.Contains(x.Comercial.ComercialId) //&& x.Campana.Descripcion == x.CampanaDesc
+                && x.ComercialId == comercialId
+                group x by new { Material = x.Material.Descripcion, Campania = x.Campana.Descripcion } into g
                 select new MaterialCampaña
                 {
                     Nombre = g.Key.Material,
-                    Toneladas = g.Sum(t => t.Toneladas.HasValue ? t.Toneladas.Value : 0),
+                    Toneladas = g.Sum(t => t.ToneladaAplicada),
                     Campaña = g.Key.Campania
                 };
 

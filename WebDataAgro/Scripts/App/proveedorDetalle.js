@@ -1008,7 +1008,7 @@ function armarContacto() {
     $(".historial-actividad-grupo-contenedor").append(htmlHist);
 
     if (objetivos && objetivos.length) {
-        var htmlCamp = '<div class="noCorredor"><div class="datos-contacto-titular noCorredor"> ' +
+        var htmlCamp = '<div class=""><div class="datos-contacto-titular "> ' +
             '<span>Objetivos</span>' +
             '</div>' +
             '<div class="datos-produccion-cap-prod-editor-contenedor">' +
@@ -1023,7 +1023,7 @@ function armarContacto() {
 
         for (var ii in objetivos) {
             (function (i) {
-                htmlCamp += '<div class="noCorredor"><div class="lineaObjetivos campo-granos-objetivo">' +
+                htmlCamp += '<div class=""><div class="lineaObjetivos campo-granos-objetivo">' +
                     '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + objetivos[i].Campaña + '</span></div>' +
                     '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + objetivos[i].Material + '</span></div>' +
                     '<div class="campo-input-text toneladasObjetivo"><span style="text-align:center;">' + (objetivos[i].ToneladasObjetivos ? objetivos[i].ToneladasObjetivos : "0") + ' TNs</span></div>' +
@@ -1031,7 +1031,7 @@ function armarContacto() {
             })(ii);
         }
     } else {
-        var htmlCamp = '<div class="noCorredor"><div class="datos-contacto-titular">' +
+        var htmlCamp = '<div class=""><div class="datos-contacto-titular">' +
             '<span>Objetivos</span>' +
             '</div>' +
             '<div class="datos-produccion-cap-prod-editor-contenedor">' +

@@ -209,6 +209,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Material { get; set; }
         public int? NroItem { get; set; }
         public int? ProveedorId { get; set; }
+        public int? ComercialId { get; set; }
+        public int? GrupoDeComprasId { get; set; }
         public Nullable<double> ToneladasObjetivos { get; set; }
     }
 

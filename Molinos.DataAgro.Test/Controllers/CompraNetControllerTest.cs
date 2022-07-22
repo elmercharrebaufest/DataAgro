@@ -971,7 +971,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             comercialManagerMock.Verify(x => x.ListarGrupoDeCompras(It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Descripcion\":\"a\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"Descripcion\":\"a\",\"Corredor\":false}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
