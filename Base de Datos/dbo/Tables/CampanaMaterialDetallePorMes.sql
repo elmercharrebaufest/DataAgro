@@ -16,7 +16,7 @@
     [ComercialId]             INT        NULL,
     [CorredorId] INT NULL, 
 	[CampanaId]          INT        NOT NULL,
-	[CampanaSAPId]          INT        NOT NULL,
+	[CampanaSAPId]          INT        NOT NULL DEFAULT 7,
     [ProveedorId]        INT        NULL,
     [MaterialId]         INT        NOT NULL,
     [FechaDesde] DATETIME NULL, 
