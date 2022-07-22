@@ -31,7 +31,7 @@ namespace Molinos.DataAgro.Agent
             {
                 for (int i = 0; i < contratos.Count(); i++)
                 {
-                    contratos[i].KgPendiente = i * 10000;
+                    contratos[i].KgPendiente = (i+1) * 100000;
                 }
                 return contratos;
             }

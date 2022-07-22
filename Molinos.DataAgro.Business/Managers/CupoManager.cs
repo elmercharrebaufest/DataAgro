@@ -250,7 +250,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         transaction.Complete();
                                     }
                                 }
-                                catch(Exception e)
+                                catch (Exception e)
                                 {
                                     logger.Error(e);
                                     error.Errores.Add(new ErrorMessage(400, e.Message));
@@ -1016,7 +1016,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "<br />";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
-            var destino = cupo.Centro.Descripcion + " - " + cupo.Centro.Localidad.Provincia.Nombre +" - " + cupo.Centro.Direccion;
+            var destino = cupo.Centro.Descripcion + " - " + cupo.Centro.Localidad.Provincia.Nombre + " - " + cupo.Centro.Direccion;
             htmlBody += "<tr>" + Td(ref linea, 2) + "Con destino a " + destino.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
@@ -1420,13 +1420,13 @@ namespace Molinos.DataAgro.Business.Managers
             }
             List<SugerenciaCupoDto> newNegocios = new List<SugerenciaCupoDto>();
 
-            
+
             //primera ronda de sugerencias TENIENDO en cuenta el limite de % por dia por prov
             foreach (var negocio in negocios.OrderByDescending(a => a.PuntuacionTotal))
             {
                 var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0 /*&& a.Fecha >= negocio.FechaDesde && a.Fecha <= negocio.FechaHasta*/).OrderBy(a => a.Fecha).ToList();
 
-                while (negocio.CantidadDeCupos > 0 && negocio.Priorizado != true)
+                while (ValidarDisponibilidad(limitePorProveedor, negocio, disponibles))
                 {
                     foreach (var disponible in disponibles)
                     {
@@ -1442,7 +1442,7 @@ namespace Molinos.DataAgro.Business.Managers
                             negocio.Priorizado = true;
                             negocio.FechaSugerida = disponible.Fecha.Date;
                         }
-                        else 
+                        else
                         {
                             int cantidadAcrear = 1;
 
@@ -1467,7 +1467,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var disponibles = disponibilidadEnPlantas.Where(a => a.MaterialId == negocio.MaterialId && a.LimiteAlgoritmo > 0 /*&& a.Fecha >= negocio.FechaDesde && a.Fecha <= negocio.FechaHasta*/).OrderBy(a => a.Fecha).ToList();
 
-                while (negocio.CantidadDeCupos > 0 && negocio.Priorizado != true)
+                while (negocio.CantidadDeCupos > 0 && negocio.Priorizado != true && disponibles.Any(a => a.LimiteAlgoritmo > 0))
                 {
                     foreach (var disponible in disponibles)
                     {
@@ -1481,7 +1481,7 @@ namespace Molinos.DataAgro.Business.Managers
                             negocio.Priorizado = true;
                             negocio.FechaSugerida = disponible.Fecha.Date;
                         }
-                        else 
+                        else
                         {
                             int cantidadAcrear = 1;
 
@@ -1515,6 +1515,18 @@ namespace Molinos.DataAgro.Business.Managers
             }
             negocios.RemoveAll(a => true);
             negocios.AddRange(sugerenciasAgrupadas);
+        }
+
+        private static bool ValidarDisponibilidad(List<TopeSugerenciasPorDiaPorProveedor> limitePorProveedor, SugerenciaCupoDto negocio, List<ConfiguracionCupoDto> disponibles)
+        {
+            var fechasDispo = disponibles.Where(a => a.LimiteAlgoritmo > 0).Select(a => a.Fecha).ToList();
+            var disponibleProvYPlantaPorFecha = limitePorProveedor.Any(a => a.ProveedorId == negocio.ProveedorId && a.Disponible > 0 && fechasDispo.Contains(a.Fecha));
+
+            return negocio.CantidadDeCupos > 0 &&
+                                negocio.Priorizado != true &&
+                                disponibles.Any(a => a.LimiteAlgoritmo > 0) &&
+                                limitePorProveedor.Any(a => a.ProveedorId == negocio.ProveedorId && a.Disponible > 0) &&
+                                disponibleProvYPlantaPorFecha;
         }
 
         private void ObtenerNegocios(DateTime hoy, FormulaDto formula, List<SugerenciaCupoDto> negocios)
