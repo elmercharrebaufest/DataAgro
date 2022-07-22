@@ -38,7 +38,7 @@
     </ItemGroup>
 
     <!--Build all the projects in UnitTestProjects-->
-    <!--<MSBuild Projects="$(UnitTestProjects)"/>-->
+    <MSBuild Projects="$(UnitTestProjects)"/>
 
     <!--<Message Text="*** Executing Unit Tests and Performing Test Coverage ***" />-->
     <!--<Exec Command="&quot;$(OpenCoverTool)&quot; -register:administrator -filter:&quot;$(OpenCoverFilter)&quot; -target:&quot;$(NUnitToolPath)\nunit3-console.exe&quot; -targetargs:&quot; /config:Jenkins $(NUnitProject)&quot; -output:coverage.xml" />-->
