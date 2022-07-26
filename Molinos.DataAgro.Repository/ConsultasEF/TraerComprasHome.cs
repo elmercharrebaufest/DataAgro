@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             var resultado =
                 from x in contexto.Set<CampanaMaterialDetallePorMes>()
                 where equipo.Contains(x.Comercial.ComercialId) //&& x.Campana.Descripcion == x.CampanaDesc
-                && x.ComercialId == comercialId
+                //&& x.ComercialId == comercialId
                 group x by new { Material = x.Material.Descripcion, Campania = x.Campana.Descripcion } into g
                 select new MaterialCampaña
                 {

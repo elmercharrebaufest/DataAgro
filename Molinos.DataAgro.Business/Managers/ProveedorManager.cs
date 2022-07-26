@@ -90,7 +90,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => x.ComercialId == oComerciales.ComercialId && x.GrupoDeComprasId == oComerciales.GrupoDeComprasId).ToList();
+                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId.Value) && x.GrupoDeComprasId == oComerciales.GrupoDeComprasId).ToList();
                 }
                 res.AcopioMaterialPorProveedores = repositorio.Listar<AcopioMaterial, AcopioMaterialPorProveedor>(x => new AcopioMaterialPorProveedor
                 {
@@ -144,7 +144,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }, x => x.ProveedorId == ProveedorId);
 
                 res.ProveedorCorredor = ListarProveedorCorredor(ProveedorId);
-                res.CompraDetalle = TraerTodoCompraProveedor(ProveedorId, oComerciales);
+                res.CompraDetalle = TraerTodoCompraProveedor(ProveedorId, oComerciales, equipo);
                 //res.CompraDetalle = TraerTodoCompra(ProveedorId, equipo);
                 res.Material = res.CompraDetalle.Select(x => x.Material).Distinct().ToList();
                 res.Campanias = res.CompraDetalle.OrderByDescending(x => x.Campana).Select(x => x.Campana).Distinct().ToList();
@@ -3643,7 +3643,7 @@ namespace Molinos.DataAgro.Business.Managers
             return compraDto.OrderBy(x => x.Material).ThenByDescending(x => x.Campana).ToList();
         }
 
-        public List<CompraDto> TraerTodoCompraProveedor(int proveedorId, Comercial oComercial)
+        public List<CompraDto> TraerTodoCompraProveedor(int proveedorId, Comercial oComercial, List<int> equipo)
         {
 
             var compraDto = new List<CompraDto>();
@@ -3657,7 +3657,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else {
                 compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
-                    x.ProveedorId == proveedorId && x.ComercialId == oComercial.ComercialId);
+                    x.ProveedorId == proveedorId && equipo.Contains(x.ComercialId.Value));
             }
 
             var grupoCompras = compras.GroupBy(x => new { x.CampanaId, x.MaterialId });

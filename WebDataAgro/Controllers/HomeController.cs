@@ -67,14 +67,25 @@ namespace WebDataAgro.Controllers
             };
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
             var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, equipo);
-           
-            model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, equipo);
+
             model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, equipo);
             model.Datos = mobjHomeManager.TraerInfoIniciales(equipo);
             model.Detalle = mobjHomeManager.TraerTodoCompraDetalle(equipo);
+            model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, equipo);
+
             if (result != null)
             {
                 model.Contactos = result;
+            }
+            foreach (var item in model.Campaña.Materiales)
+            {
+                if (item.Nombre != "Otros")
+                {
+                    var det = model.Detalle.Find(x => x.Campana == item.Campaña && x.Material == item.Nombre);
+                    item.Toneladas = det.ConCorredor.ARecibirAFijar + det.ConCorredor.ComprasConPrecio + det.ConCorredor.FasonFas + det.ConCorredor.RecibidoSinPrecio
+                        + det.DirectoAcopiador.ARecibirAFijar + det.DirectoAcopiador.ComprasConPrecio + det.DirectoAcopiador.FasonFas + det.DirectoAcopiador.RecibidoSinPrecio
+                        + det.DirectoProductor.ARecibirAFijar + det.DirectoProductor.ComprasConPrecio + det.DirectoProductor.FasonFas + det.DirectoProductor.RecibidoSinPrecio;
+                }
             }
 
             return new JsonResult()
