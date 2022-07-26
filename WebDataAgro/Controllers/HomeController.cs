@@ -77,14 +77,17 @@ namespace WebDataAgro.Controllers
             {
                 model.Contactos = result;
             }
-            foreach (var item in model.Campaña.Materiales)
+            if (model.Campaña != null)
             {
-                if (item.Nombre != "Otros")
+                foreach (var item in model.Campaña.Materiales)
                 {
-                    var det = model.Detalle.Find(x => x.Campana == item.Campaña && x.Material == item.Nombre);
-                    item.Toneladas = det.ConCorredor.ARecibirAFijar + det.ConCorredor.ComprasConPrecio + det.ConCorredor.FasonFas + det.ConCorredor.RecibidoSinPrecio
-                        + det.DirectoAcopiador.ARecibirAFijar + det.DirectoAcopiador.ComprasConPrecio + det.DirectoAcopiador.FasonFas + det.DirectoAcopiador.RecibidoSinPrecio
-                        + det.DirectoProductor.ARecibirAFijar + det.DirectoProductor.ComprasConPrecio + det.DirectoProductor.FasonFas + det.DirectoProductor.RecibidoSinPrecio;
+                    if (item.Nombre != "Otros")
+                    {
+                        var det = model.Detalle.Find(x => x.Campana == item.Campaña && x.Material == item.Nombre);
+                        item.Toneladas = det.ConCorredor.ARecibirAFijar + det.ConCorredor.ComprasConPrecio + det.ConCorredor.FasonFas + det.ConCorredor.RecibidoSinPrecio
+                            + det.DirectoAcopiador.ARecibirAFijar + det.DirectoAcopiador.ComprasConPrecio + det.DirectoAcopiador.FasonFas + det.DirectoAcopiador.RecibidoSinPrecio
+                            + det.DirectoProductor.ARecibirAFijar + det.DirectoProductor.ComprasConPrecio + det.DirectoProductor.FasonFas + det.DirectoProductor.RecibidoSinPrecio;
+                    }
                 }
             }
 

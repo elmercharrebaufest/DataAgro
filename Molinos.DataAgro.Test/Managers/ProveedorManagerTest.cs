@@ -271,7 +271,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -364,7 +364,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerProveedorConEstadoInactivoTest()
         {
-            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
+            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false }, GrupoDeComprasId = 44 };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
             ConfigurationManager.AppSettings["RiesgoComercialAltoSap"] = "a";
 
@@ -377,7 +377,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId= 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -470,7 +470,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerProveedorConEstado3Test()
         {
-            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false  } };
+            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false  }, GrupoDeComprasId = 44 };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
             ConfigurationManager.AppSettings["RiesgoComercialAltoSap"] = "a";
 
@@ -483,7 +483,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -596,7 +596,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -1928,7 +1928,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -2180,7 +2180,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -2468,7 +2468,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -2622,7 +2622,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() {  ComercialId = 1} });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -3087,7 +3087,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
