@@ -5847,10 +5847,10 @@ function EstablecerCostoFinanciero() {
                     } else {
                         var precio = Number($("#precioId").val().toString().replace(',', '.'));
                         tasa = Number(tasa);
-                        var costo = precio * (tasa / 100) * (c - 3) / 365 * 2 / 2;
+                        var costo = Math.round(precio * (tasa / 100) * (c - 3) / 365 * 2) / 2;
                         var d10 = costo / 10.00;
-                        costo = d10 * 2 / 2;
-                        costo = Math.round(costo * 10);
+                        costo = Math.round(d10 * 2) / 2;
+                        costo = costo * 10;
                         if (costoFinancieroActual != costo) {
                             Confirma('¿Desea actualizar el costo financiero a ' + costo + "?", function () {
                                 $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").value(costo);

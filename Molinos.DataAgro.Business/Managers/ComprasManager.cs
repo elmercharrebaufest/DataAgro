@@ -408,7 +408,9 @@ namespace Molinos.DataAgro.Business.Managers
         private string CalcularCampana(DateTime fecha)
         {
             int anio = fecha.Year;
-            return fecha.Month > 3 ? anio.ToString().Substring(2,2) + "-" + (anio + 1).ToString().Substring(2, 2) : (anio - 1).ToString().Substring(2, 2) + "-" + anio.ToString().Substring(2, 2);
+            return fecha.Month > 3 ? 
+                (anio -1).ToString().Substring(2,2) + "-" + anio.ToString().Substring(2, 2) : 
+                (anio - 2).ToString().Substring(2, 2) + "-" + (anio -1).ToString().Substring(2, 2);
         }
 
     }
