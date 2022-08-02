@@ -40,26 +40,13 @@ namespace Molinos.DataAgro.Business
 
         public CampañaHome TraerCampañaHome(int idComercial, List<int> equipo)
         {
-            //var c = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
-            //    equipo.Contains(x.ComercialId.Value)
-            //    && x.ComercialId == idComercial
-            //    );
-
             var list = new CampañaHome();
 
             var lista = repositorio.ListarConsulta(new TraerComprasHome(idComercial, equipo));
 
             if (lista.Count() > 5)
             {
-                list.Materiales = new List<MaterialCampaña>();
-                var material = repositorio.Listar<Material>();
-                foreach (var mat in material)
-                {
-                    var item = lista.Where(x => x.Campaña == mat.Campaña.Descripcion && mat.Descripcion == x.Nombre).FirstOrDefault();
-                    if (item != null)
-                    list.Materiales.Add(item);
-                }
-                //list.Materiales = lista.Take(4).ToList();
+                list.Materiales = lista.Take(4).ToList();
                 list.Materiales.Add(new MaterialCampaña()
                 {
                     Nombre = "Otros",
