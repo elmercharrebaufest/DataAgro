@@ -63,14 +63,14 @@ left join Acopio a on p.ProveedorId = a.ProveedorId
 left join AcopioMaterial am on am.AcopioId = a.AcopioId
 left join Campo ca on p.ProveedorId = ca.ProveedorId
 left join CampoMaterial cam on cam.CampoId= ca.CampoId
-left join CampañaMaterial cm on cm.ProveedorId = p.ProveedorId
+left join CampanaMaterialDetallePorMes cm on cm.ProveedorId = p.ProveedorId
 left join Actividad ac on p.ProveedorId = ac.ProveedorId
 left join ProveedorCondicion pcc on pcc.ProveedorId = p.ProveedorId
 
 where 1 = 1
 
 and (( @PeriodoDeTiempo is null) or (@PeriodoDeTiempo= '0' and cam.CampañaId is not null) 
-		or (exists ( select 1 from @PeriodoDeTiempoSecuencia where Item = cm.CampañaId)))	
+		or (exists ( select 1 from @PeriodoDeTiempoSecuencia where Item = cm.CampanaId)))	
 		
 and (( @Segmentacion is null) or (@Segmentacion= '0' and p.SegmentacionId is not null) 
 	or (exists ( select 1 from @SegmentacionSecuencia where Item = p.SegmentacionId)))
