@@ -29,6 +29,7 @@
   <setParameter name="ServicePass Key" value="MOA.Test" />
   
   <setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
+	<setParameter name="VersionClienteSTOP Key" value="2.0.0" />
   <setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9001/" />
   <setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
 

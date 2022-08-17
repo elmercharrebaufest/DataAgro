@@ -1,13 +1,14 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
-    public interface IClienteStopAgent
+    public interface IClienteStopV1Agent
     {
-        //TokenStop ObtenerToken(string clave);
         void CrearCupo(List<string> listaCupos);
         void TransmitirJobCupos();
         List<RespuestaCupoStop> ConsultarCuposDiarios();

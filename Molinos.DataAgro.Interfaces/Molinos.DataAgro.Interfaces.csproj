@@ -119,6 +119,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agent\IClienteStopV2Agent.cs" />
+    <Compile Include="Agent\IClienteStopV1Agent.cs" />
     <Compile Include="Agent\IContratoKgPendienteAgent.cs" />
     <Compile Include="Agent\ICapacidadProductivaDisponibleAgent.cs" />
     <Compile Include="Agent\IConsultarEstadoBoletoAgent.cs" />

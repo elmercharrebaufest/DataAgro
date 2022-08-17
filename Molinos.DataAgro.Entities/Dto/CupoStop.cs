@@ -7,6 +7,8 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public partial class CupoStop
     {
+        public int? nroPlantaRuca { get; set; }
+
         public string token { get; set; }
         public string cuitDestino { get; set; }
         public string cuitDestinatario { get; set; }
@@ -17,6 +19,15 @@ namespace Molinos.DataAgro.Entities.Dto
         public int codLocalidadDestino { get; set; }
         public string desvio { get; set; }
         public int codGrano { get; set; }
+
+        // V2
+
+        public string cuitOrigen { get; set; }
+        public string cuitIntermediario { get; set; }
+        public string CuitRemComercialProductor { get; set; }
+        public string CuitCorredorVentaSecundaria { get; set; }
+        public string CuitCorredorVentaPrimaria { get; set; }
+        //public int? nroPlantaRucaOrigen { get; set; }
 
     }
     public partial class ModificarCupo :CupoStop
@@ -36,7 +47,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string fechaCTG_Hasta { get; set; }
         public string cuitCorredorVAfip { get; set; }
         public string cuitCorredorCAfip { get; set; }
-        public string cuitOrigen { get; set; }
+        //public string cuitOrigen { get; set; }
         public string cuitRemComercial { get; set; }
         public string cuitMercadoATerminoAfip { get; set; }
         public string cosecha { get; set; }

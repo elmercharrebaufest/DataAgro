@@ -251,6 +251,11 @@
                     match="/configuration/appSettings/add[@key='UrlBaseSTOP']
                            /@value" />
   </parameter>
+	<parameter name="VersionClienteSTOP Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='VersionClienteSTOP']
+                           /@value" />
+	</parameter>
 
   <parameter name="UrlBaseDataAgro Key">
     <parameterEntry kind="XmlFile" scope="Web.config"

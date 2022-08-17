@@ -1,18 +1,25 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
-    public interface IClienteStopAgent
+    public interface IClienteStopV2Agent
     {
         //TokenStop ObtenerToken(string clave);
         void CrearCupo(List<string> listaCupos);
         void TransmitirJobCupos();
+        //int ConsultarCupo(string cupo, int terminalId, string token);
+
         List<RespuestaCupoStop> ConsultarCuposDiarios();
         Resultado EliminarCupo(Cupo cupo);
+        //List<Cupo> ObtenerCuposPorFecha(DateTime fechaDelCupo);
+        //ConsultaCuposStop ObtenerDatosDeStop(Configuracion datosConfiguracion, HttpClient client, List<DateTime> fechas);
         void ModificarCupo(Cupo cupo);
         List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos();
+        //ConsultaTurnosActivosStop ObtenerMisTurnosActivosDeStop(Configuracion datosConfiguracion, HttpClient client, DateTime fechaDesde, DateTime fechaHasta);
     }
 }

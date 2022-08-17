@@ -81,6 +81,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ClienteStopV2Agent.cs" />
+    <Compile Include="Helpers\ClienteStopV1Agent.cs" />
     <Compile Include="Helpers\ContratoKgPendienteAgent.cs" />
     <Compile Include="Helpers\CapacidadProductivaDisponibleAgent .cs" />
     <Compile Include="Helpers\ConsultarEstadoBoletoAgent.cs" />
