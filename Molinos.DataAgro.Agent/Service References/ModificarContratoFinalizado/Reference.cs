@@ -355,7 +355,7 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         
         private string fECHAACTField;
         
-        private System.DateTime hORAACTField;
+        private string hORAACTField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -430,8 +430,8 @@ namespace Molinos.DataAgro.Agent.ModificarContratoFinalizado {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="time", Order=6)]
-        public System.DateTime HORAACT {
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public string HORAACT {
             get {
                 return this.hORAACTField;
             }

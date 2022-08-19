@@ -95,6 +95,80 @@ namespace Molinos.DataAgro.Agent.ObtenerMailProveedor {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES6920 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string dIRECCIONField;
+        
+        private string lOCALIDADField;
+        
+        private string pROVINCIAField;
+        
+        private string cODIGO_POSTALField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string DIRECCION {
+            get {
+                return this.dIRECCIONField;
+            }
+            set {
+                this.dIRECCIONField = value;
+                this.RaisePropertyChanged("DIRECCION");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string LOCALIDAD {
+            get {
+                return this.lOCALIDADField;
+            }
+            set {
+                this.lOCALIDADField = value;
+                this.RaisePropertyChanged("LOCALIDAD");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string PROVINCIA {
+            get {
+                return this.pROVINCIAField;
+            }
+            set {
+                this.pROVINCIAField = value;
+                this.RaisePropertyChanged("PROVINCIA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string CODIGO_POSTAL {
+            get {
+                return this.cODIGO_POSTALField;
+            }
+            set {
+                this.cODIGO_POSTALField = value;
+                this.RaisePropertyChanged("CODIGO_POSTAL");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class ZMPES6710 : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string cUITField;
@@ -106,6 +180,8 @@ namespace Molinos.DataAgro.Agent.ObtenerMailProveedor {
         private string fLGDEFAULTField;
         
         private string hOME_FLAGField;
+        
+        private ZMPES6920 dIRECCIONField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -164,6 +240,18 @@ namespace Molinos.DataAgro.Agent.ObtenerMailProveedor {
             set {
                 this.hOME_FLAGField = value;
                 this.RaisePropertyChanged("HOME_FLAG");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public ZMPES6920 DIRECCION {
+            get {
+                return this.dIRECCIONField;
+            }
+            set {
+                this.dIRECCIONField = value;
+                this.RaisePropertyChanged("DIRECCION");
             }
         }
         

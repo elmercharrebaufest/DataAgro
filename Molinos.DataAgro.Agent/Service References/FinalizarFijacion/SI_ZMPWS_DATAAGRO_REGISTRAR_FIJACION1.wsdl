@@ -8,6 +8,7 @@
       <xsd:element name="Z_MPRFC_REGISTRAR_FIJACION">
         <xsd:complexType>
           <xsd:sequence>
+            <xsd:element minOccurs="0" name="IM_ANULACION" type="rfc:char1" />
             <xsd:element name="IM_APERTURA" type="rfc:ZMPTT7960" />
             <xsd:element name="IM_CONTRATO" type="rfc:char10" />
             <xsd:element minOccurs="0" name="IM_CORREDOR" type="rfc:char16" />
@@ -17,7 +18,7 @@
             <xsd:element minOccurs="0" name="IM_DOL_CORREDOR" type="rfc:char1" />
             <xsd:element minOccurs="0" name="IM_DOL_EXPRESS" type="rfc:char1" />
             <xsd:element name="IM_FECHA" type="rfc:date10" />
-            <xsd:element name="IM_FECHA_CIERTA" type="rfc:char10" />
+            <xsd:element name="IM_FECHA_CIERTA" type="rfc:date10" />
             <xsd:element minOccurs="0" name="IM_FECHA_LIMITE" type="rfc:date10" />
             <xsd:element name="IM_KILOS" type="rfc:quantum13.3" />
             <xsd:element name="IM_MATERIAL" type="rfc:char18" />

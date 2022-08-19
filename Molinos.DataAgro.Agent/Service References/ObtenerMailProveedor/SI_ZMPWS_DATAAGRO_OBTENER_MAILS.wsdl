@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" name="SI_ZMPWS_DATAAGRO_OBTENER_MAILS" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:p1="namespace:dataagro" xmlns:rfc="urn:sap-com:document:sap:rfc:functions" name="SI_ZMPWS_DATAAGRO_OBTENER_MAILS" targetNamespace="namespace:dataagro" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:documentation />
   <wsp:UsingPolicy wsdl:required="true" />
   <wsp:Policy wsu:Id="OP_SI_ZMPWS_DATAAGRO_OBTENER_MAILS" />
@@ -24,19 +24,39 @@
           <xsd:maxLength value="1" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="char16">
+      <xsd:simpleType name="char30">
         <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="16" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="char241">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="241" />
+          <xsd:maxLength value="30" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char50">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="50" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char35">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="35" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char16">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="16" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char25">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="25" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char241">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="241" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:complexType name="ZMPES6710">
@@ -46,6 +66,20 @@
           <xsd:element name="REMARK" type="rfc:char50" />
           <xsd:element name="FLGDEFAULT" type="rfc:char1" />
           <xsd:element name="HOME_FLAG" type="rfc:char1" />
+          <xsd:element name="DIRECCION" type="rfc:ZMPES6920" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES6920">
+        <xsd:sequence>
+          <xsd:element name="DIRECCION" type="rfc:char35" />
+          <xsd:element name="LOCALIDAD" type="rfc:char25" />
+          <xsd:element name="PROVINCIA" type="rfc:char30" />
+          <xsd:element name="CODIGO_POSTAL" type="rfc:char10" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT8210">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6710" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT8070">
@@ -56,11 +90,6 @@
       <xsd:complexType name="ZMPES6280">
         <xsd:sequence>
           <xsd:element name="CUIT" type="rfc:char16" />
-        </xsd:sequence>
-      </xsd:complexType>
-      <xsd:complexType name="ZMPTT8210">
-        <xsd:sequence>
-          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6710" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
