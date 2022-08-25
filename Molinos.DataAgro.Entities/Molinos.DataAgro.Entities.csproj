@@ -370,7 +370,6 @@
     <Compile Include="Entities\Servicio.cs" />
     <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\MaterialHabilitadoSinBoleto.cs" />
-    <Compile Include="Entities\TipoOperacionHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\TipoNegocioHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\ClasificacionHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\NegocioPesificacion.cs" />
@@ -432,8 +431,6 @@
     <Compile Include="Entities\ClausulaUno.cs" />
     <Compile Include="Entities\CupoNoPropio.cs" />
     <Compile Include="Entities\MailProveedor.cs" />
-    <Compile Include="Entities\NegocioPesificacion.cs" />
-    <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\TipoNegocioDetalle.cs" />
     <Compile Include="Entities\NegocioAsociado.cs" />
     <Compile Include="Entities\CriterioCumplimientoCupo.cs" />
@@ -443,7 +440,6 @@
     <Compile Include="Entities\HabilitacionSustentable.cs" />
     <Compile Include="Entities\Camara.cs" />
     <Compile Include="Entities\ReportePagosDiferidos.cs" />
-    <Compile Include="Entities\TipoNegocioHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\TipoOperacionHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\TipoPosicionCBOT.cs" />
     <Compile Include="Entities\TipoNegocioRangoConfirmacionAutomatica.cs" />
