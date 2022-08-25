@@ -432,7 +432,6 @@
     <Compile Include="Entities\ClausulaUno.cs" />
     <Compile Include="Entities\CupoNoPropio.cs" />
     <Compile Include="Entities\MailProveedor.cs" />
-    <Compile Include="Entities\MaterialHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\NegocioPesificacion.cs" />
     <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\TipoNegocioDetalle.cs" />
