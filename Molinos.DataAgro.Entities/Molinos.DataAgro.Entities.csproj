@@ -380,7 +380,6 @@
     <Compile Include="Entities\CampoDetalleTercero.cs" />
     <Compile Include="Entities\CentroHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\CierreDelDiaMailExternos.cs" />
-    <Compile Include="Entities\ClasificacionHabilitadoSinBoleto.cs" />
     <Compile Include="Entities\ClausulaCinco.cs" />
     <Compile Include="Entities\ClausulaSeis.cs" />
     <Compile Include="Entities\ClausulaSiete.cs" />
