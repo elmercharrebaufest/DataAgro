@@ -1,0 +1,180 @@
+﻿@{
+    Layout = null;
+}
+
+    <div class="modal fade modal-inferior" id="modalAperturaPrecio" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                    <h1 class="modal-title-ampliaciones" id="lineModalLabel"></h1>
+                    <div class="status confirmado-modal">
+                        <div id="titulo-modal">APERTURA DE PRECIO</div>
+                    </div>
+                </div>
+                <div class="modal-body clearfix ">
+                    <div id="apertura-precio">
+                        <div class="row" style="margin-bottom:15px;">
+                            <div class="col-xs-6 noPaddingLeft">
+                                <button type="button" id="preciosPactadosBoton" class="k-button k-button-icontext">Precios Pactados</button>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 noPadding">
+                            <div class="precioMonedaAFijarIdDiv" style="display:none;">
+                                <div style="display:inline-flex">
+                                    <label style="width:130px;">Moneda</label>
+                                    <select id="precioMonedaAFijarId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
+                                    <img id="errprecioMonedaAFijarId" src="~/Content/Images/error.png" style="display:none" />
+                                    <input type="text" id="PorcentajeDescuentoAFijarId" class="campo-input-text k-textbox" placeholder="(comision)" style="width: 80%" max="1" onchange="LimpiarDatos()" />
+                                    <label style="width:20px;">%</label>
+                                    <img id="errPorcentajeDescuentoAFijarId" src="~/Content/Images/error.png" style="display:none" />
+                                </div>
+                            </div> 
+                            
+                            <table id="tablaApertura" class="table table-bordered">
+                                <thead>
+                                    <tr class="aperturaPrecioPrecio">
+                                        <td style="border-top: 1px solid Transparent !important; border-left: 1px solid Transparent !important;" colspan="2"></td>
+
+                                        <td class="fuente600">Precio:</td>
+                                        <td class="aperturaPrecioTd fuente600"> <span id="precioAperturaOriginal" class="aperturaPrecioInput"> </span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fuente600">Concepto</td>
+                                        <td class="fuente600">Importe</td>
+                                        <td class="fuente600">Moneda</td>
+                                        <td class="fuente600" id="porcentajeLabel">Porcentaje</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="display:none;" id="aperturaPrecioConceptoBasis">
+                                        <td>Basis</td>
+                                        <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteBasisId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
+                                        <td class="noAFijar"></td>
+                                    </tr>
+                                    <tr id="aperturaPrecioConceptoFinanciero">
+                                        <td>Financiero</td>
+                                        <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteFinancieroId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
+                                        <td class="noAFijar"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Redespacho</td>
+                                        <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteRedespachoId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
+                                        <td class="noAFijar"></td>
+                                    </tr>
+                                    <tr id="aperturaPrecioConceptoComisiones">
+                                        <td>Comisiones</td>
+                                        <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteComisionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
+                                        <td class="aperturaPrecioTd noAFijar"><input id="aperturaPrecioPorcentajeComisionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                    </tr>
+                                    <tr style="display:none;" id="aperturaPrecioConceptoBonificaciones">
+                                        <td id="nombreBonificacion">Bonificaciones</td>
+                                        <td class="aperturaPrecioTd"><input id="aperturaPrecioImporteBonificacionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                        <td class="aperturaPrecioTd"><span class="aperturaPrecioInput aperturaprecioMoneda" readonly></span></td>
+                                        <td class="aperturaPrecioTd noAFijar" style="display:none;"><input id="aperturaPrecioPorcentajeBonificacionesId" class="aperturaPrecioInput" value="0" type="number" /></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td style="border-bottom: 1px solid Transparent !important; border-left: 1px solid Transparent !important;" colspan="2"></td>
+                                        <td id="aperturaPrecioTdPrecioNeto">Precio Neto:</td>
+                                        <td class="aperturaPrecioTd"> <span id="totalApertura" class="aperturaPrecioInput" type="number"></span></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="precio-pactado" hidden>
+                        <div class="row" style="margin-bottom:15px;">
+                            <div class="col-xs-6 noPaddingLeft">
+                                <button type="button" id="aperturaPrecioBoton" class="k-button k-button-icontext">Apertura de Precio</button>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom:5px;">
+                            <div class="col-sm-2">
+                                <span>Fecha</span>
+                            </div>
+                            <div class="col-sm-5">
+                                <input id="fechaDesdePactado" placeholder="DESDE" type="date" style="width: 100%" />
+                            </div>
+                            <div class="col-sm-5">
+                                <input id="fechaHastaPactado" placeholder="HASTA" type="date" style="width: 100%" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <span>Precio</span>
+                            </div>
+                            <div class="col-sm-5">
+                                <input id="precioPactado" type="number" style="width: 100%" />
+                            </div>
+                            <div class="col-sm-5">
+                                <select id="monedaPactadoId" data-bind="source: PrecioMonedaCombo" style="width:100%;"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <span>Importe</span>
+                            </div>
+                            <div class="col-sm-5">
+                                <input id="importePactado" type="number" style="width: 100%" />
+                            </div>
+                            <div class="col-sm-5">
+                                <select id="monedaImportePactadoId" data-bind="source: PrecioMonedaCombo" style="width:100%;"></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <span>Porcentaje</span>
+                            </div>
+                            <div class="col-sm-5">
+                                <input id="porcentajePactado" type="number" style="width: 100%" />
+                            </div>
+                            <div class="col-sm-5">
+                                <button type="button" id="agregarPrecioPactado" class="k-button">Agregar</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive tabla-pactados" hidden>
+                                <table id="lista-precios-pactados" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th ></th>
+                                            <th >Fecha Desde</th>
+                                            <th >Fecha Hasta</th>
+                                            <th >Precio</th>
+                                            <th >Importe</th>
+                                            <th >Porcentaje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-template="precio-pactado-template" data-bind="source:PrecioPactado"></tbody>
+                                </table>
+                            </div>
+                            <script id="precio-pactado-template" type="text/x-kendo-template">
+                                <tr>
+                                    <td data-bind="click: Borrar"><i class="fa fa-trash" aria-hidden="true"></i></td>
+                                    <td>#: FechaDesde #</td>
+                                    <td>#: FechaHasta #</td>
+                                    <td>#: PrecioVisualizar # #: MonedaPactadoDesc #</td>
+                                    <td>#: ImportePactadoVisualizar # #: MonedaImportePactadoDesc #</td>
+                                    <td>#: Porcentaje #</td>                                   
+                                </tr>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer clearfix" style="margin-top:15px;">
+                    <div class="col-xs-6 noPaddingLeft">
+                        <button type="button" id="guardarAperturaPrecio" class="myBtn btnSubmit">Guardar</button>
+                    </div>
+                    <div class="col-xs-6 noPaddingRight">
+                        <button type="button" id="cancelarAperturaPrecio" class="myBtn btnCancelar" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

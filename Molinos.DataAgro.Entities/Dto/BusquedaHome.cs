@@ -19,5 +19,6 @@
 
         public int? ComisionistaId { get; set; }
         public bool? CuposConRiesgo { get; set; }
+        public bool? OperaConMATBA { get; set; }
     }
 }

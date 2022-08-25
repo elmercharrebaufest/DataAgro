@@ -32,7 +32,7 @@
             </div>
             <div class="modal-body clearfix datosContrato" id="datosContrato">
                 <label hidden style="font-weight: bolder; font-size: 16px;" class="modal-title-visualizar" id="lineModalLabelCopiar"></label>
-                <div id="DivVisualizar" class="row">
+                <div id="DivVisualizar" class="row tamanioModal">
                     <div id="proveedorDivVisualizar" class="row campo marginCero noAgente clearfix">
                         <strong style="float:left">Proveedor:</strong>
                         <span id="visualizar_proveedor"></span>
@@ -60,6 +60,10 @@
                     <div id="fechaDesdeHastaDivVisualizar" class="row campo marginCero noFason noAgente clearfix noFijacion">
                         <strong style="float:left">Fecha Desde - Fecha Hasta (Entrega):</strong>
                         <span id="visualizar_desdeHasta"></span>
+                    </div>
+                    <div id="fechaDesdeHastaOriginalDivVisualizar" class="row campo marginCero noFason noAgente clearfix noFijacion">
+                        <strong style="float:left">Fecha Hasta Original (Entrega):</strong>
+                        <span id="visualizar_desdeHastaOriginal"></span>
                     </div>
                     <div class="row campo marginCero clearfix noFason noAgente noFijacion" id="clasificacionDivVisualizar">
                         <div id="clasificacionDivVisualizar ">
@@ -116,9 +120,9 @@
                             <span id="visualizar_porcentajeDePago"></span>
                         </div>
                         @*<div id="comercialDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix">
-                    <strong style="float:left">Comercial:</strong>
-                    <span id="visualizar_comercial"></span>
-                </div>*@
+                                <strong style="float:left">Comercial:</strong>
+                                <span id="visualizar_comercial"></span>
+                            </div>*@
                     </div>
 
                     <div id="aperturaDiv" class="bordeSeccionVisualizar">
@@ -186,6 +190,45 @@
                             <span id="visualizar_destino"></span>
                         </div>
                     </div>
+                    <div class="container-fluid" id="VisualizarServicioDiv" hidden>
+                        <div data-toggle="collapse" href="#footwear" aria-expanded="false" aria-controls="footwear">
+                            <div onmouseover="this.style.background='#dbdbdb';" onmouseout="this.style.background='white';" style="cursor:pointer" class="row marginCero clearfix campo col-xs-12 noPadding noFason noAgente">
+                                <strong style="float:left">
+                                    <span class="icono servicioBtn margen">
+                                        <i class="fa fa-chevron-circle-down black-color"></i>
+                                    </span>Servicios y Calidades:
+                                </strong>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 noPadding">
+                            <div class="collapse" id="footwear">
+                                <div id="servicioCollapse">
+                                    <table id="tablaApertura" class="table table-bordered" style="margin: 0px;">
+                                        <thead>
+                                            <tr>
+                                                <td class="fuente600">
+                                                    Descripcion
+                                                </td>
+                                                <td class="fuente600">Importe</td>
+                                                <td class="fuente600">Moneda</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tabla-servicios" data-template="div-tabla-servicios" style="width: 100%" data-bind="source:Servicios" type="text/x-kendo-template">
+                                        </tbody>
+                                        <script id="div-tabla-servicios" type="text/x-kendo-template">
+                                            <tr>
+                                                <td>#=DescripcionServicio#</td>
+                                                <td>#=Importe#</td>
+                                                <td>#=MonedaDescripcion#</td>
+                                                <td hidden>#=ServicioValorId#</td>
+                                            </tr>
+                                        </script>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row marginCero fason agente" hidden>
                         <div id="tipoFasonDivVisualizar" class="campo col-sm-6 col-xs-12 noPadding clearfix noAgente">
                             <strong style="float:left">Tipo de Fasón:</strong>
@@ -215,13 +258,19 @@
                         <span id="visualizar_procedencia"></span>
                     </div>
                     <div class="row marginCero">
-                        <div id="sustentableDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
-                            <strong style="float:left">Sustentable (Bonificaci&oacute;n):</strong>
-                            <span id="visualizar_sustentablePrecio"></span>
-                        </div>
                         <div id="dolarizadoFechaDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding noFason noAgente clearfix">
                             <strong style="float:left">Dolarizado (Fecha l&iacute;mite):</strong>
                             <span id="visualizar_dolarizadoFecha"></span>
+                        </div>
+                        <div id="dolarizadoFechaOriginalDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding noFason noAgente clearfix">
+                            <strong style="float:left">Dolarizado Original (Fecha l&iacute;mite):</strong>
+                            <span id="visualizar_dolarizadoOriginalFecha"></span>
+                        </div>
+                    </div>
+                    <div class="row marginCero">
+                        <div id="sustentableDivVisualizar" class="campo campoAdicionales col-sm-6 col-xs-12 noPadding clearfix">
+                            <strong style="float:left">Sustentable (Bonificaci&oacute;n):</strong>
+                            <span id="visualizar_sustentablePrecio"></span>
                         </div>
                     </div>
                     <div class="row marginCero">
@@ -509,11 +558,10 @@
                         <strong style="float:left">Condicional: </strong>
                         <span id="visualizar_Condicional"></span>
                     </div>
-
                 </div>
             </div>
 
-            <div id="tablaModificacion" class="text-xs-center table-responsive">
+            <div id="tablaModificacion" class="text-xs-center table-responsive tamanioModal">
                 <table hidden id="tablaComparar" class="table table-striped" style="width:100%">
                 </table>
             </div>
@@ -524,13 +572,28 @@
 </div>
 
 <style>
-    .anchoEstado{
+    .anchoEstado {
         width: 780px
     }
+
     .datosContrato, .modal-header, .modal-body {
-    background-color: white !important;
+        background-color: white !important;
     }
+
     .noPadding {
         padding: 0px;
+    }
+
+    .tamanioModal {
+        overflow-y: scroll;
+        max-height: 500px;
+    }
+
+    .black-color {
+        color: black;
+    }
+    .margen {
+        margin-right: 3px !important; 
+        margin-left: 3px !important;
     }
 </style>

@@ -343,42 +343,42 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BuscarCorredoresTest()
         {
-            proveedorManagerMock.Setup(x => x.DevolverProveedores("agr", 1, GlobalVariables.Equipo)).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
-            var result = target.BuscarCorredores("agr", 1);
+            proveedorManagerMock.Setup(x => x.DevolverProveedores("agr", 1, GlobalVariables.Equipo, It.IsAny<int>())).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
+            var result = target.BuscarCorredores("agr", 1, 1);
 
-            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<List<int>>()), Times.Once);
+            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"OperaConMATBA\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
         public void BuscarProveedoresConCorredorOkSinCorredorTest()
         {
-            proveedorManagerMock.Setup(x => x.DevolverProveedores("agr", 0, GlobalVariables.Equipo)).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
-            var result = target.BuscarProveedoresConCorredor("agr", "");
+            proveedorManagerMock.Setup(x => x.DevolverProveedores("agr", 0, GlobalVariables.Equipo, It.IsAny<int>())).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
+            var result = target.BuscarProveedoresConCorredor("agr", "", 1);
 
-            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<List<int>>()), Times.Once);
+            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Once);
             proveedorManagerMock.Verify(x => x.DevolverProveedoresConCorredor(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"OperaConMATBA\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
         public void BuscarProveedoresConCorredorOkConCorredorTest()
         {
             proveedorManagerMock.Setup(x => x.DevolverProveedoresConCorredor("agr", "2011")).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
-            var result = target.BuscarProveedoresConCorredor("agr", "2011");
+            var result = target.BuscarProveedoresConCorredor("agr", "2011", 1);
 
-            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), 1, It.IsAny<List<int>>()), Times.Never);
+            proveedorManagerMock.Verify(x => x.DevolverProveedores(It.IsAny<string>(), 1, It.IsAny<List<int>>(), It.IsAny<int>()), Times.Never);
             proveedorManagerMock.Verify(x => x.DevolverProveedoresConCorredor(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"OperaConMATBA\":null}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

@@ -319,6 +319,7 @@ function InicializarElementos() {
                             $("#sinBoletoId").data("kendoDropDownList").trigger("change");
                             ValidarSinBoleto();
                         }
+                        ActivarBoletoXAgentedeCompras($("#AgenteCompraId").val());
                     }
                     if ($("#tipoId").val() == 3) {
                         compraNet.ComisionPorcentaje = 0;
@@ -357,7 +358,7 @@ function InicializarElementos() {
                     else {
                         cuit = cuitAux;
                     }
-                    return { filtro: cuit[0], filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
+                    return { filtro: cuit[0], filtroProveedor: $('#buscadorProveedor').val(), corredor: 0, agenteCompraId: $("#AgenteCompraId").val() };
                 }
             }
 
@@ -486,7 +487,7 @@ function InicializarElementos() {
                     url: "/Proveedor/BuscarCorredores"
                 },
                 parameterMap: function (data, type) {
-                    return { filtro: $('#buscadorCorredor').val(), corredor: 1 };
+                    return { filtro: $('#buscadorCorredor').val(), corredor: 1, agenteCompraId: $("#AgenteCompraId").val() };
                 }
             }
 
@@ -1091,6 +1092,8 @@ function InicializarElementos() {
             }
             InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             CompletarCantidadDisponibleDeposito();
+            MostrarServiciosYCalidades();
+
         }
     });
 
@@ -1174,6 +1177,11 @@ function InicializarElementos() {
             var precioNeto = $("#precioTotalApertura").data("kendoNumericTextBox").value();
 
             CalcularImporteDeOperacion(precioNeto, $("#cantidadId").val());
+            if ($("#precioMonedaId").val() === "ARP  ") {
+                $(".dolarizadoOriginalDiv").hide();
+            } else if ($("#fechaDolarizadoOriginalId").val() != "") {
+                $(".dolarizadoOriginalDiv").show();
+            }
         },
         select: function (e) {
             $("#monedaPactadoId").data("kendoDropDownList").value(e.dataItem.MonedaId);
@@ -1434,6 +1442,7 @@ function InicializarElementos() {
             }
             ValidarSinBoleto();
             CompletarCantidadDisponibleDeposito();
+            MostrarServiciosYCalidades();
         }
     });
 
@@ -1477,6 +1486,9 @@ function InicializarElementos() {
                     $("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
                 }
+
+                $("#buscadorProveedor").val("");
+                $("#buscadorCorredor").val("");
             }
 
             if (this.value() == "" && ($("#tipoId").val() == "2")) {
@@ -1493,20 +1505,7 @@ function InicializarElementos() {
                 $("#pagoCbu").val("");
                 $("#pagoCbuInput").val("");
             }
-            if (this.value() == 1) {
-                $("#boletoNingunoId").prop("checked", false);
-                $("#boletoNingunoId").click();
-                $("#boletoNingunoId").attr("readonly", "readonly");
-                $("#boletoConfirmaId").attr("disabled", true);
-                $("#boletoFisicoId").attr("disabled", true);
-                $("#boletoCartaId").attr("disabled", true);
-            } else {
-                $("#boletoNingunoId").prop("checked", false);
-                $("#boletoNingunoId").removeAttr("readonly");
-                $("#boletoConfirmaId").removeAttr("disabled");
-                $("#boletoFisicoId").removeAttr("disabled");
-                $("#boletoCartaId").removeAttr("disabled");
-            }
+            ActivarBoletoXAgentedeCompras(this.value());
             OcultarCamposAgente();
         },
         select: function () {
@@ -1917,6 +1916,14 @@ function InicializarElementos() {
             HayMercaderia();
         }
     });
+    $("#fechaHastaOriginalId").kendoDatePicker({
+        value: datehasta,
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+
+    $("#fechaHastaOriginalId").data('kendoDatePicker').enable(false);
+
     $("#fechaHastaId").kendoDatePicker({
         value: datehasta,
         format: "dd-MM-yyyy",
@@ -1974,6 +1981,15 @@ function InicializarElementos() {
             LimpiarCondicionDePago();
         }
     });
+
+    $("#fechaDolarizadoOriginalId").kendoDatePicker({
+        value: datehasta,
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+
+    $("#fechaDolarizadoOriginalId").data('kendoDatePicker').enable(false);
+
     $("#fechaCiertaAcuerdo").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
@@ -3110,6 +3126,7 @@ function CambioCalidades(calidades) {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
     }
+    MostrarServiciosYCalidades();
 }
 
 function ClickEnPizarra() {
@@ -3263,6 +3280,14 @@ function LimpiarDescuentos() {
         viewModel.Descuentos.pop();
     }
 }
+
+function LimpiarServicios() {
+    var iteracionesServicios = viewModel.Servicios.length;
+    for (var i = 0; i < iteracionesServicios; i++) {
+        viewModel.Servicios.pop();
+    }
+}
+
 function CrearViewModel() {
     var param = {
         "proveedorId": null,
@@ -3413,7 +3438,8 @@ function CrearViewModel() {
         KgBalanzaCombo: [],
         PagoCombo: [],
         CondicionPagoCombo: [],
-        BoletoCombo: []
+        BoletoCombo: [],
+        Servicios: [],
     });
 
     kendo.bind($("#CrearContrato"), viewModel);
@@ -3553,6 +3579,8 @@ function AsignarDatos() {
     var materialId = $('select[id="material"]').val();
 
     CargarCalidadPorMaterial(materialId);
+    MostrarServiciosYCalidades();
+    //Carga de datos
 
 }
 
@@ -3758,8 +3786,8 @@ function validarDescuento(descuento) {
         errores.push("El campo Moneda no puede estar vacío");
     }
     if (descuento.TipoDBId == "2") {
-        var porcentajeNum = parseFloat(descuento.Porcentaje.replace(',','.'));
-        if (($("#material").val() == "4" || $("#material").val() == "5") && (porcentajeNum > 1 || porcentajeNum < 0 )) {
+        var porcentajeNum = parseFloat(descuento.Porcentaje.replace(',', '.'));
+        if (($("#material").val() == "4" || $("#material").val() == "5") && (porcentajeNum > 1 || porcentajeNum < 0)) {
             errores.push("El porcentaje debe estar entre 0% y 1%");
         }
     }
@@ -4253,6 +4281,18 @@ function CargarDatosEditar(contrato, hijo) {
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
 
+    LimpiarServicios();
+    if (contrato.Servicios != null && contrato.Servicios.length > 0) {
+        ArmarDescripcionServicio(contrato.Servicios);
+        viewModel.set("Servicios", contrato.Servicios);
+        kendo.bind($("#ModalServicio"), viewModel);
+        InicializarServicios();
+        $("#servicioBtn").show();
+    } else {
+        MostrarServiciosYCalidades();
+    }
+
+
     if (contrato.TipoNegocioId == 3) {
         $("#contratoId").val(contrato.DatosFijacion.ContratoId);
         $("#datosContrato").show();
@@ -4717,6 +4757,18 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $("#comisionistaCheckId").prop("checked", false);
     }
+
+    if (contrato.FechaDolarizadoOriginalFormateado != null && contrato.FechaDolarizadoOriginalFormateado != "") {
+        $(".dolarizadoOriginalDiv").show();
+        $("#fechaDolarizadoOriginalId").data("kendoDatePicker").value(contrato.FechaDolarizadoOriginalFormateado);
+    }
+    if (contrato.FechaHastaOriginalFormateado != null && contrato.FechaHastaOriginalFormateado != "") {
+        $(".fechahastaOriginalDiv").show();
+        $("#fechaHastaOriginalId").data("kendoDatePicker").value(contrato.FechaHastaOriginalFormateado);
+    }
+
+
+    //Fin cargar datos editar
 }
 
 function compareDates(date, dates) {
@@ -5297,7 +5349,7 @@ function AgregarPrecioPactado() {
         if (precioPactado.ImportePactado > 0 && (precioPactado.MonedaImportePactadoId === "" || precioPactado.MonedaImportePactadoId === undefined)) {
             errores.push("La Moneda no debe ser vacia cuando hay Importe");
         }
-        
+
         if ((precioPactado.ImportePactado == 0 || precioPactado.ImportePactado == "" || precioPactado.ImportePactado === undefined) && (precioPactado.MonedaImportePactadoId != "")) {
             errores.push("El Importe no debe ser vacia cuando seleciono Moneda");
         }
@@ -6211,4 +6263,95 @@ function ValidarCantidad() {
             $("#cantidadDeposito").data("kendoNumericTextBox").value($("#cantidadDepositoOriginal").val());
         }
     }
+}
+
+function TraerServicio() {
+
+    var servicio = {
+        MaterialId: $("#material").val(),
+        CentroId: $("#destinoId").val(),
+    };
+    var url = '/Compranet/TraerServicios';
+    var data = servicio;
+    var result = MSExecuteOnServer(url, data);
+    $.unblockUI();
+    ArmarDescripcionServicio(result);
+    viewModel.set("Servicios", result);
+    kendo.bind($("#ModalServicio"), viewModel);
+    InicializarServicios();
+}
+
+function InicializarServicios() {
+    for (var i = 0; i < viewModel.Servicios.length; i++) {
+        $("#" + viewModel.Servicios[i].ServicioValorId).kendoNumericTextBox({
+            culture: "es-AR",
+            format: "n2",
+            spinners: false,
+            min: 0
+        });
+    }
+}
+function ArmarDescripcionServicio(servicio) {
+    for (var i = 0; i < servicio.length; i++) {
+        //servicio[i].Importe = kendo.toString(servicio[i].Importe, "n2");
+        servicio[i].DescripcionServicio = servicio[i].Descripcion +
+            ((servicio[i].Desde >= 0 && servicio[i].Hasta > 0) ? (" DE " + kendo.toString(servicio[i].Desde, "n2") + " A " + kendo.toString(servicio[i].Hasta, "n2") + "%") :
+                (servicio[i].Desde > 0 && servicio[i].Hasta == 0) ? (" MAS DE " + kendo.toString(servicio[i].Desde, "n2") + "%") :
+                    (servicio[i].Desde == 0 && servicio[i].Hasta == 0) ? "" : "");
+    }
+}
+function MostrarServicios() {
+    $("#ModalServicio").modal("show");
+}
+
+function GuardarServicio() {
+    BlockUi('Guardando...');
+    for (var i = 0; i < viewModel.Servicios.length; i++) {
+        viewModel.Servicios[i].Importe = $("#" + viewModel.Servicios[i].ServicioValorId).data("kendoNumericTextBox").value();
+    }
+    $("#ModalServicio").modal("hide");
+    $.unblockUI();
+}
+
+function CancelarServicio() {
+    kendo.bind($("#ModalServicio"), viewModel);
+}
+
+
+function ActivarBoletoXAgentedeCompras(agenteCompraId) {
+    if (agenteCompraId == 1) {
+        $("#boletoNingunoId").prop("checked", false);
+        $("#boletoNingunoId").click();
+        $("#boletoNingunoId").attr("readonly", "readonly");
+        $("#boletoConfirmaId").attr("disabled", true);
+        $("#boletoFisicoId").attr("disabled", true);
+        $("#boletoCartaId").attr("disabled", true);
+    } else {
+        $("#boletoNingunoId").prop("checked", false);
+        $("#boletoNingunoId").removeAttr("readonly");
+        $("#boletoConfirmaId").removeAttr("disabled");
+        $("#boletoFisicoId").removeAttr("disabled");
+        $("#boletoCartaId").removeAttr("disabled");
+    }
+}
+
+
+function MostrarServiciosYCalidades() {
+    var validar = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados";
+    if (validar == false) {
+        $("#servicioBtn").hide();
+        LimpiarServicios()
+    } else {
+        if (Id == null || (viewModel.Servicios == null || viewModel.Servicios.length <= 0)) {
+            $("#servicioBtn").show();
+            TraerServicio();
+        }
+    }
+
+    return validar;
 }

@@ -665,9 +665,29 @@
                 <label>Cantidad utilizada</label>
             </div>
             <div class="col-md-6">
-                <input id="cantidadDeposito" style="width:100%" />               
+                <input id="cantidadDeposito" style="width:100%" />
                 <img id="errcondicionalCantidadId" src="~/Content/Images/error.png" style="display:none" />
             </div>
+        </div>
+        <div hidden class="row depositoDiv ampliar noFason noAgente noAcuerdo">
+            <div class="col-md-8"></div>
+            <div class="col-md-4" style="margin-left: -24px;margin-top: -14px;">
+                <strong style="color: green">
+                    <label style="font-size: 13px">Total en depósito:</label>
+                    <label style="font-size: 13px" id="cantidadTotal"></label>
+                </strong>
+            </div>
+
+        </div>
+    </div>
+    <div class="row fechahastaOriginalDiv" hidden>
+        <div class="col-sm-2 " data-toggle="tooltip" data-placement="top" id="fechaTooltip">
+            <label>Fecha Hasta Original</label>
+        </div>
+        <div class="col-sm-5 col-md-2">
+            <span id="fechaHastaOriginalDiv">
+                <input id="fechaHastaOriginalId" type="date" data-bind="value: Parametros.fechaHastaOriginalId" style="width:100%" />
+            </span>
         </div>
     </div>
     <div class="row" hidden id="fechaCiertaAcuerdoDiv">
@@ -695,17 +715,8 @@
         <div class="col-sm-10 col-md-4">
             <input type="text" class="k-textbox" style="width:100%" id="pagoCbuInput" />
         </div>
-    </div> 
-    <div hidden class="row depositoDiv ampliar noFason noAgente noAcuerdo">
-        <div class="col-md-8"></div>        
-        <div class="col-md-4" style="margin-left: -24px;margin-top: -14px;">
-            <strong style="color: green">
-                <label style="font-size: 13px">Total en depósito:</label>
-                <label style="font-size: 13px" id="cantidadTotal"></label>
-            </strong>
-        </div>
-      
     </div>
+
     <div class="row ampliar noFason noAgente noAcuerdo">
         <div class="col-sm-2 ">
             <label>Observaci&oacute;n</label>
@@ -872,6 +883,16 @@
             </div>
         </div>
         <div class="row">
+            <div class="dolarizadoOriginalDiv" hidden>
+                <div class="col-sm-2 " data-toggle="tooltip" data-placement="top">
+                    <label>Fecha Dolarizado Original</label>
+                </div>
+                <div class="col-sm-9 col-md-2">
+                    <span id="fechaDolarizadoOriginal">
+                        <input id="fechaDolarizadoOriginalId" type="date" data-bind="value: Parametros.fechaDolarizadoOriginalId" style="width:100%" />
+                    </span>
+                </div>
+            </div>
             <div class="col-sm-2 ">
                 <div id="pagoDiferidoDiv">
                     <label style="width:120px">Pago diferido</label>
@@ -1178,6 +1199,13 @@
                     </div>
                 </div>
             </div>
+            <div id="servicioBtn" hidden>
+                <span style="display:inline-block" id="botonServicio">
+                    <span class="k-button k-button-icontext" id="servicioBtnId" data-toggle="tooltip" data-placement="top" title="Servicios" onclick="MostrarServicios()">
+                        <i class="fa fa-list-alt"></i>
+                    </span>
+                </span>
+            </div>
         </div>
         <div id="rangosEspecialesId" class="calidadesEspecialesDatos calidad-no-grado calidad row" hidden>
             <div class="col-md-3 col-md-offset-2">
@@ -1192,10 +1220,11 @@
                     <img id="errporcentajeDesdeId" src="~/Content/Images/error.png" style="display:none" />
                 </span>
             </div>
-            <div id="agregarCalidad" class="col-sm-3 col-md-1">
+            <div id="agregarCalidad" class="col-sm-3 col-md-1" style=" margin-left: -16px;">
                 <span id="IngresarCalidad" class="k-button btnVerde k-button-icontext" type="button">Agregar</span>
             </div>
         </div>
+
         @*<div class="row">
 
             </div>*@
@@ -1411,6 +1440,8 @@
 @Html.Partial("ModalConfirmarCostoFinanciero")
 
 @Html.Partial("_ModalObtenerCapacidadProductivaPendiente")
+
+@Html.Partial("ModalServicios")
 
 
 

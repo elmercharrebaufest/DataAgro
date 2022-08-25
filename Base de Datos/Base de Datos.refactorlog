@@ -1087,4 +1087,39 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="GrupoDeComprasId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="5b1af0c1-86e3-4358-bddb-c3b8fa056cc1" ChangeDateTime="08/01/2022 15:24:48">
+    <Property Name="ElementName" Value="[dbo].[TipoServicio].[ConceptoAperturaPrecioId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[TipoServicio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Descripcion" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6cc854a3-f9c8-44c5-ab13-3d1a9c6fa5e2" ChangeDateTime="08/01/2022 15:24:58">
+    <Property Name="ElementName" Value="[dbo].[TipoServicio].[Importe]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[TipoServicio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CodigoSAP" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6cbaa196-5842-41c5-aa29-0a14b1ec5002" ChangeDateTime="08/02/2022 17:19:57">
+    <Property Name="ElementName" Value="[dbo].[Proveedor].[operaConMatba]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Proveedor]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="operaConMATBA" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fdd19421-79e3-4602-9a3e-a44a38b5929e" ChangeDateTime="08/02/2022 17:20:24">
+    <Property Name="ElementName" Value="[dbo].[Proveedor].[operaConMATBA]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Proveedor]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="OperaConMATBA" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="28c0f003-4490-4665-8435-a9afe94f3103" ChangeDateTime="08/05/2022 20:27:49">
+    <Property Name="ElementName" Value="[dbo].[Servicio].[TipoServicioId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Servicio]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ServicioValorId" />
+  </Operation>
 </Operations>

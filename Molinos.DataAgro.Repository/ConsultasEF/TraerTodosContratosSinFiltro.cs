@@ -195,7 +195,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         CantidadAmpliado = contrato.CantidadAmpliado ?? 0,
                         ObligatoriedadCostoFinancieroDesc = !contrato.ObligatoriedadCostoFinanciero.HasValue ? "" : contrato.ObligatoriedadCostoFinanciero.HasValue && contrato.ObligatoriedadCostoFinanciero.Value == true ? "Si" : "No",
                         ObligatoriedadCostoFinanciero = contrato.ObligatoriedadCostoFinanciero.HasValue ? contrato.ObligatoriedadCostoFinanciero.Value : (bool?)null,
-                        PosicionCBOT = contrato.PosicionCBOT,                        
+                        PosicionCBOT = contrato.PosicionCBOT,
                         VirtualDescripcion = contrato.Virtual == true ? "Si" : "No",
                         TipoPosicionCBOT = contrato.TipoPosicionCBOT.Descripcion,
                         Virtual = contrato.Virtual,
@@ -238,7 +238,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         RazonSocialCorredor = contrato.Corredor == null ? "" : contrato.Corredor.RazonSocial,
                         ProveedorCP = contrato.Proveedor.CodigoPostal,
                         FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : "",
-
+                        DolarizadoOriginal = (contrato is Contrato) ? (contrato as Contrato).FechaDolarizadoOriginal : null,
+                        FechaDolarizadoOriginalFormateado = (contrato is Contrato) ? (contrato as Contrato).FechaDolarizadoOriginal != null ? SqlFunctions.DateName("day", (contrato as Contrato).FechaDolarizadoOriginal) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaDolarizadoOriginal) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaDolarizadoOriginal) : "" : "",
+                        HastaOriginal = (contrato is Contrato) ? (contrato as Contrato).FechaHastaOriginal : null,
+                        FechaHastaOriginalFormateado = (contrato is Contrato) ? (contrato as Contrato).FechaHastaOriginal != null ? SqlFunctions.DateName("day", (contrato as Contrato).FechaHastaOriginal) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaHastaOriginal) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaHastaOriginal) : "" : "",
+                        ServicioModificado = (contrato is Contrato) ? (contrato as Contrato).Servicios.Any(x => x.Modificado == true) : false,
                     };
 
                 return queryNegocios;

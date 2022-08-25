@@ -38,6 +38,21 @@ namespace Molinos.DataAgro.Agent
             return fecha;
         }
 
+        public List<DateTime> ObtenerDiasHabilesDelMes(DateTime? fechaActual = null)
+        {
+            var fechas = new List<DateTime>();
+            var fecha = fechaActual == null ? DateTime.Now : fechaActual.Value;
+            for (int i = 1; i <= DateTime.DaysInMonth(fecha.Year, fecha.Month); i++)
+            {
+                DateTime.TryParse(i.ToString() + "/" + fecha.Month.ToString() + "/" + fecha.Year.ToString(), out DateTime dia);
+                if (dia.DayOfWeek != DayOfWeek.Saturday && dia.DayOfWeek != DayOfWeek.Sunday && !repositorio.Listar<FechaFeriado>().Select(x => x.Feriado).Contains(dia))
+                {
+                    fechas.Add(dia);
+                }
+            }
+            return fechas;
+        }
+
         public DateTime UltimoDiaHabil(DateTime? fecha)
         {
 

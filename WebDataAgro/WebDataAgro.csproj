@@ -1249,6 +1249,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="libman.json" />
+    <Content Include="ModalAperturaPrecio.cshtml" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <Content Include="firebase-messaging-sw.js" />
     <Content Include="Scripts\Chart.js" />
@@ -2811,6 +2812,7 @@
     <Content Include="Templates\AltaMasiva.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\CompraNet\ModalServicios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -32,6 +32,8 @@
   <setParameter name="UrlBaseDataAgro Key" value="https://DataAgro.com.ar/" />
   <setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperaciones.com.ar/" />
 
+	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="No" />
+	<setParameter name="CupoMaizPorSugerencias Key" value="No" />
 
 	<setParameter name="PathBoletos Key" value="\\MOAFSP01\MATERIAS_PRIMAS\CONTRATOSGAP\" />
 

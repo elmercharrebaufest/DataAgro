@@ -15,10 +15,13 @@ namespace Molinos.DataAgro.Agent.Helpers
     public class ModificarContratoAgent : IModificarContratoAgent
     {
         private readonly IRepositorio repositorio;
-        public ModificarContratoAgent(ILogger logger, IRepositorio repositorio)
+        private readonly IDiasHabilesAgent diasHabilesAgent;
+
+        public ModificarContratoAgent(ILogger logger, IRepositorio repositorio, IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.diasHabilesAgent = diasHabilesAgent;
         }
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
         String PassSap = ConfigurationManager.AppSettings["SapPass"];
@@ -35,12 +38,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                 logger.Debug("Modificando Contrato Nro: " + contrato.Id);
                 var listaDescuentos = new List<ZMPES5290>();
                 var topesFijacion = new List<ZMPES5280>();
+                var servicioSap = new List<ZMPES6620>();
                 logger.Debug("Contrato Obtenido: " + contratoGuardado.Id);
 
                 var descModificado = false;
                 var listaMonedas = repositorio.Listar<Moneda>();
                 var descuentosGenerales = new List<DescuentoBonificacion>();
                 var descuentos = new List<DescuentoBonificacion>();
+                var servicios = contrato.Servicios ?? new List<Servicio>();
+                var servicioValor = repositorio.Listar<ServicioValor>();
                 if (contrato.Descuentos != null)
                 {
                     descuentosGenerales = contrato.Descuentos.Where(x => x.TipoPeriodoDBId == 1).ToList();
@@ -211,6 +217,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
+
                 logger.Debug("Calidades: " + contrato.Calidad);
                 var apModificado = false;
                 if ((contrato.AperturaPrecio == null && contratoGuardado.AperturaPrecio.Count > 0) || contrato.AperturaPrecio != null && contratoGuardado.AperturaPrecio.Count != contrato.AperturaPrecio.Count)
@@ -255,6 +262,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     contrato.Descuentos = new List<DescuentoBonificacion>();
                 }
+                logger.Debug("Servicios: " + contrato.AperturaPrecio);
+                foreach (var servicio in servicios)
+                {
+                    servicioSap.Add(new ZMPES6620
+                    {
+                        CODIGO = servicioValor.Where(x => x.Id == servicio.ServicioValorId).FirstOrDefault().TipoServicio.CodigoSAP,
+                        PORC_DESDE = servicio.Desde,
+                        PORC_HASTA = servicio.Hasta,
+                        VALOR = servicio.Importe,
+                        MONEDA = servicio.MonedaId,
+                        FECHAACT = contrato.Fecha.ToString("yyyy-MM-dd"),
+                        HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
+                    }
+                    );
+
+                }
                 var descuentoGeneralSobrePrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
                 var descuentoGeneralFueraPrecio = contrato.Descuentos.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 2).FirstOrDefault();
                 string fechaDolarizadoString = contrato.FechaDolarizado != null ? contrato.FechaDolarizado.Value.ToString("yyyy-MM-dd") : "";
@@ -267,7 +290,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 string localidadString = RellenarEspaciosSAP(localidad.CodLocalidad, 5);
                 decimal cantidadCamiones = Convert.ToDecimal(contrato.CantidadCamiones ?? 0);
 
-                var servicios = new List<ZMPES6620>();
+
 
                 logger.Debug("Cargando contrato");
                 var conModificado =
@@ -485,11 +508,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
                 detalle.COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "";
                 detalle.PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "";
-                detalle.TOL_INF = 3;
-                detalle.TOL_SUP = 3;
                 detalle.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
                 detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " ? "02" : "";
-
+                detalle.TOL_INF = contrato.CantidadCamiones == null ? 3 : 0;
+                detalle.TOL_SUP = contrato.CantidadCamiones == null ? 3 : 0;
+                detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " ? "02" : contrato.TipoAgenteCompraId != null ? "03" : "";
+                detalle.BLOQUEO = "";
+                detalle.TIPO_CAMBIO_FIJO = 0;
+                detalle.POSICION = CalcularPosicion(contrato.FechaDesde);
                 var rq = new Z_MPRFC_MODIFICAR_CONTRATO
                 {
                     IM_CONTRATO = new ZMPES5560
@@ -513,7 +539,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                 rq.IM_DESC_BONIF = listaDescuentos.ToArray();
                 rq.IM_CALIDAD = listaCalidades.ToArray();
                 rq.IM_APERTURA = listaApertura.ToArray();
-                rq.IM_SERVICIOS = servicios.ToArray();
+                rq.IM_SERVICIOS = servicioSap.ToArray();
 
                 logger.Debug(rq.ToXml());
 
@@ -559,6 +585,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                 }
             }
             return value;
+        }
+        private string CalcularPosicion(DateTime fechaDesde)
+        {
+            var ultimoDiaHabil = diasHabilesAgent.UltimoDiaHabil(fechaDesde);
+            var diferenteEntreDias = fechaDesde - ultimoDiaHabil;
+            return diferenteEntreDias.Days >= 10 ? (fechaDesde.Month) + "-" + (fechaDesde.Year) :
+                   (fechaDesde.Month + 1) + "-" + (fechaDesde.Year + 1);
         }
     }
 }

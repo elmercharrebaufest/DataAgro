@@ -1,0 +1,17 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Molinos.DataAgro.Entities.Entities
+{
+    public partial class TipoServicio
+    {
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
+        public string CodigoSAP { get; set; }       
+
+    }
+
+}
+
+
+

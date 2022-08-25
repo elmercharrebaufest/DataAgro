@@ -274,6 +274,12 @@ namespace Molinos.DataAgro.Entities.Dto
         public double? CantidadDeposito { get; set; }
         public string MercaderiaDescripcion { get; set; }
         public string FijacionSAP { get; set; }
+        public DateTime? DolarizadoOriginal { get; set; }
+        public string FechaDolarizadoOriginalFormateado { get; set; }
+        public DateTime? HastaOriginal { get; set; }
+        public string FechaHastaOriginalFormateado { get; set; }
+        public List<ServicioValorDto> Servicios { get; set; }
+        public bool ServicioModificado { get; set; }
     }
 
     public class StoredPorContratoResult

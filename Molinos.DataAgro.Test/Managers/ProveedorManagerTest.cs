@@ -1899,6 +1899,8 @@ namespace Molinos.DataAgro.Test.Managers
                     new ContactoComercial {ContactoComercialId=2,ProveedorId = 1 }});
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercialInteres, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ContactoComercialInteres>() { new ContactoComercialInteres { InteresId = 1, ContactoComercial = new ContactoComercial { ContactoComercialId = 1 } } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Actividad, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<Actividad>() { new Actividad { ContactoComercial = new ContactoComercial { ContactoComercialId = 1 }, ContactoComercialId = 1 } });
             //UpdateProduccion
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campo, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<Campo>() { new Campo { CampoId = 1 }, new Campo { CampoId = 3 } });
@@ -2025,6 +2027,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Remover(It.IsAny<ContactoComercial>()), Times.Once);
             repositorioMock.Verify(x => x.Remover(It.IsAny<ContactoComercialInteres>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Remover(It.IsAny<Actividad>()), Times.Exactly(1));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Campo, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampoMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Exactly(2));
             repositorioMock.Verify(x => x.Remover(It.IsAny<Campo>()), Times.Once);
@@ -2151,6 +2154,8 @@ namespace Molinos.DataAgro.Test.Managers
                     new ContactoComercial {ContactoComercialId=2,ProveedorId = 1 }});
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercialInteres, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<ContactoComercialInteres>() { new ContactoComercialInteres { InteresId = 1, ContactoComercial = new ContactoComercial { ContactoComercialId = 1 } } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Actividad, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<Actividad>() { new Actividad { ContactoComercial = new ContactoComercial { ContactoComercialId = 1 }, ContactoComercialId = 1 } });
             //UpdateProduccion
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campo, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<Campo>() { new Campo { CampoId = 1 }, new Campo { CampoId = 3 } });
@@ -2276,6 +2281,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Objetivo>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ContactoComercial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Remover(It.IsAny<ContactoComercial>()), Times.Once);
+            repositorioMock.Verify(x => x.Remover(It.IsAny<Actividad>()), Times.Once);
             repositorioMock.Verify(x => x.Remover(It.IsAny<ContactoComercialInteres>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Campo, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampoMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Exactly(2));
@@ -2769,7 +2775,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.ListarConsulta(It.IsAny<DevolverProveedores>()))
                 .Returns(new List<BusquedaHome>());
 
-            var result = target.DevolverProveedores("aa", It.IsAny<int>(), new List<int>() { 1, 2, 3 });
+            var result = target.DevolverProveedores("aa", It.IsAny<int>(), new List<int>() { 1, 2, 3 }, null);
 
             repositorioMock.Verify(x => x.ListarConsulta(It.IsAny<DevolverProveedores>()), Times.Once);
             Assert.NotNull(result);

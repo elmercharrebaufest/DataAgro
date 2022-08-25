@@ -108,6 +108,12 @@
             </div>
             <input id="comisionista" class="campo-input-text input-nocliente" type="checkbox" @(deshabilitarProveedor ? "" : "disabled") />
         </div>
+        <div class="formulario-campo " style="height:38px;">
+            <div class="campo-span">
+                Opera con MATBA
+            </div>
+            <input id="operaconMATBA" class="campo-input-text input-nocliente" type="checkbox" @(deshabilitarProveedor ? "" : "disabled") />
+        </div>
         <div @(ocultarCamposEditar ? "hidden" : "")>
             <div class="formulario-campo campo-segmentacion">
                 <span class="campo-span">Segmentación (*)</span>
@@ -129,7 +135,7 @@
                 @Html.TextBox("Comisionista", "", new { @placeholder = "Buscar por CUIT, razón social", @id = "buscadorProveedor", @class = "k-textbox k-autocomplete w100 k-autocomplete-clearable k-state-default k-hidden", @style = "width:272px" })
             </div>
         </div>
-      
+
         <div>
             <h2 id="datos">Datos proveedor</h2>
             <div @(ocultarCamposEditar ? "hidden" : "")>

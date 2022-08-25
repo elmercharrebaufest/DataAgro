@@ -329,6 +329,8 @@ function CreateGridInformeCompraNet() {
                     "class": "mobile-xs"
                 }
             },
+            { field: "FechaDolarizadoOriginalFormateado", type: "string", title: "Dolarizado <br>Original", width: 80,  },
+            { field: "FechaHastaOriginalFormateado", type: "string", title: "Hasta <br>Original", width: 80 },
             
         ],
         excelExport: function (e) {

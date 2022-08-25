@@ -97,6 +97,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Comisionista { get; set; }
         public int? ComisionistaId { get; set; }
         public bool? CuposConRiesgo { get; set; }
+        public bool? OperaConMATBA { get; set; }
 
     }
 

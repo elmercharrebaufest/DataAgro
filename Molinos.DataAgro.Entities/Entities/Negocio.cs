@@ -147,6 +147,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public double? CantidadDeposito { get; set; }
         public bool? ConfirmadoSAP { get; set; }
 
+        [JsonConverter(typeof(SinHora))]
+        public DateTime? FechaHastaOriginal { get; set; }
+        [JsonConverter(typeof(SinHora))]
+        public DateTime? FechaDolarizadoOriginal { get; set; }
         //public DateTime FechaCarga { get; set; } // Fecha
         [ForeignKey("TipoAgenteCompraId")]
         public virtual TipoAgenteCompra TipoAgenteCompra { get; set; }
@@ -217,8 +221,11 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("BoletoVentaId")]
         public virtual BoletoVenta BoletoVenta { get; set; }
 
-        [ForeignKey("ProveedorComisionistaId")]
+        [ForeignKey("ProveedorComisionistaId")]      
         public virtual Proveedor ProveedorComisionista { get; set; } // ProveedorId
+
+        [InverseProperty("Negocio")]
+        public virtual ICollection<Servicio> Servicios { get; set; }
         public Negocio()
         {
             Cantidad = 0;

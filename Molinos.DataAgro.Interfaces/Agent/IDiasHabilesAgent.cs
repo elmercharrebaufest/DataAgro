@@ -8,5 +8,6 @@ namespace Molinos.DataAgro.Interfaces
     {
         List<DateTime> ObtenerDiasHabiles();
         DateTime UltimoDiaHabil(DateTime? fecha);
+        List<DateTime> ObtenerDiasHabilesDelMes(DateTime? fechaActual = null);
     }
 }

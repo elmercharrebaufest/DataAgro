@@ -494,6 +494,7 @@ function armarContacto() {
 
     $(".contacto-detalle-basico-contenedor-datos-telefono").html(basicoTelefonos);
     $(".contacto-detalle-basico-contenedor-datos-comisionista").html(basico[0].ComisionistaId != null ? "Opera con comisionista " + basico[0].RazonSocialComisionista : "");
+    $(".contacto-detalle-basico-contenedor-datos-operaconMATBA").html(basico[0].OperaConMATBA == true ? "Opera con MATBA " : "");
     $(".contacto-detalle-basico-contenedor-datos-comentarios").html(basico[0].Observaciones ? "Obs: " + basico[0].Observaciones : "Sin Observaciones");
 
     var contactocomercialprincipal = comerciales.filter(function (x) { return x.EsPrincipal });

@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Entities.Entities
 
         public int? ComisionistaId { get; set; }
         public bool? Comisionista { get; set; }
+        public bool? OperaConMATBA { get; set; }
 
         public bool? Deshabilitado { get; set; }
         [ForeignKey("EstadoId")]

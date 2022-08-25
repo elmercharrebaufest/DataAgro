@@ -118,6 +118,7 @@
                         <th>Campaña</th>
                         <th class="@(Model.PricingCampania.Any(x => x.SanLorenzo != 0) ? "" : "hide")">SL</th>
                         <th class="@(Model.PricingCampania.Any(x => x.Acopio != 0) ? "" : "hide")">Acopios</th>
+                        <th class="@(Model.PricingCampania.Any(x => x.BahiaBlanca != 0) ? "" : "hide")">BB</th>
                         <th><b>TOTALES</b></th>
                     </tr>
                     @foreach (var datos in Model.PricingCampania)
@@ -234,26 +235,31 @@
                                 sumaPricing = "0";
                                 break;
                         }
-                        <tr>
-                            <td>@datos.Material</td>
-                            <td>@datos.Campania</td>
+                <tr>
+                    <td>@datos.Material</td>
+                    <td>@datos.Campania</td>
 
-                            <td class="@(Model.PricingCampania.Any(x => x.SanLorenzo != 0) ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.SanLorenzoIds)')">
-                                    @(Model.PricingCampania.Any(x => x.SanLorenzo != 0 && x.Id == datos.Id) ? datos.SanLorenzo.ToString("N0") : "")
-                                </a>
-                            </td>
-                            <td class="@(Model.PricingCampania.Any(x => x.Acopio != 0) ? "" : "hide")">
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.AcopioIds)')">
-                                    @(Model.PricingCampania.Any(x => x.Acopio != 0 && x.Id == datos.Id) ? datos.Acopio.ToString("N0") : "")
-                                </a>
-                            </td>
-                            <td>
-                                <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", sumaPricingIds)')">
-                                    <b> @sumaPricing</b>
-                                </a>
-                            </td>
-                        </tr>
+                    <td class="@(Model.PricingCampania.Any(x => x.SanLorenzo != 0) ? "" : "hide")">
+                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.SanLorenzoIds)')">
+                            @(Model.PricingCampania.Any(x => x.SanLorenzo != 0 && x.Id == datos.Id) ? datos.SanLorenzo.ToString("N0") : "")
+                        </a>
+                    </td>
+                    <td class="@(Model.PricingCampania.Any(x => x.Acopio != 0) ? "" : "hide")">
+                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.AcopioIds)')">
+                            @(Model.PricingCampania.Any(x => x.Acopio != 0 && x.Id == datos.Id) ? datos.Acopio.ToString("N0") : "")
+                        </a>
+                    </td>
+                    <td class="@(Model.PricingCampania.Any(x => x.BahiaBlanca != 0) ? "" : "hide")">
+                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", datos.BahiaBlancaIds)')">
+                            @(Model.PricingCampania.Any(x => x.BahiaBlanca != 0 && x.Id == datos.Id) ? datos.BahiaBlanca.ToString("N0") : "")
+                        </a>
+                    </td>
+                    <td>
+                        <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', '@datos.Material.ToUpper()', '','@String.Join(",", sumaPricingIds)')">
+                            <b> @sumaPricing</b>
+                        </a>
+                    </td>
+                </tr>
                     }
                 </table>
             </div>

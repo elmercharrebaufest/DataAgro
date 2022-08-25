@@ -40,6 +40,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? comisionista { get; set; }
         public int? comisionistaId { get; set; }
         public bool? CuposConRiesgo { get; set; }
+        public bool? OperaConMATBA { get; set; }
     }
 
     public class Telefono

@@ -960,6 +960,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
+            if(cupo.Centro.CodigoSap == "1600" && cupo.MaterialId == 3)
+            {
+                htmlBody += TablaSustentable(cupo);
+            }
             htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales" +
@@ -1051,6 +1055,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
+            if (cupo.Centro.CodigoSap == "1600" && cupo.MaterialId == 3)
+            {
+                htmlBody += TablaSustentable(cupo);
+            }
             htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
             htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
                 "<br /> <br />  Saludos Cordiales" +
@@ -1147,6 +1155,51 @@ namespace Molinos.DataAgro.Business.Managers
                         "<td " + style2 + "Sin CTG" + "</td></ tr>";
             }
 
+        }
+
+        private string TablaSustentable(Cupo cupo)
+        {
+            var linea = 0;
+            string th;
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
+            }
+            else
+            {
+                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
+            }
+            string htmlBody = "";
+
+            if (cupo.Centro.CodigoSap == "1600")
+            {
+                var establecimientos = TraerEstablecimientos(cupo.Proveedor.CUIT);
+
+                var table = "<table style =\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"><tr>";
+
+                table += "<tr>" + Td(ref linea, 3) + "Cosecha " + establecimientos[0].Cosecha + "</td></tr>";
+                table += "</tr>";
+                table += "<tr>";
+                table += th + "Establecimiento</th>";
+                table += th + "Cantidad (Kg)</th>";
+                table += th + "Localidad(Provincia) </th>";
+                table += "</tr>";
+                for (var i = 0; i < establecimientos.Count(); i++)
+                {
+                    table += "<tr>";
+
+                    table += Td(ref linea) + establecimientos[i].Establecimiento + "</td>";
+                    linea--;
+                    table += Td(ref linea) + establecimientos[i].Cantidad.ToString() + "</td>";
+                    linea--;
+                    table += Td(ref linea) + establecimientos[i].Localidad + "(" + establecimientos[i].Provincia + ")" + "</td>";
+                    table += "</tr>";
+                }
+                table += "</table>";
+                htmlBody += "<br/><br/>";
+                htmlBody += table;
+            }
+            return htmlBody;
         }
         public void CrearSugerenciaCupo()
         {
@@ -1345,7 +1398,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x.EstadoCupoId != 4 && x.EstadoCupoId != 9 &&
                 (x.NegocioId != null || x.ConfiguracionEspacioDinamicoId != null)
             );
-            logger.Debug("CrearSugerenciaCupo - se obtuvieron " + cupos.Count + " cupos.");
+            logger.Debug("CrearSugerenciaCupo - se obtuvieron " + cupos.Count + " cupos creados de sugerencias.");
 
             //solicitudes pendientes
             List<AdministracionCupo> solicitudesPendientes = repositorio.Listar<AdministracionCupo>(x =>
@@ -1376,6 +1429,24 @@ namespace Molinos.DataAgro.Business.Managers
                     configuracion.LimiteAlgoritmo -= sugerencia.CantidadFleteProcedencia + sugerencia.CantidadCupo;
                 }
             }
+
+
+            //cupos no rechazados en rango de fecha 
+            List<Cupo> cuposTotales = repositorio.Listar<Cupo>(x =>
+                x.FechaIngreso >= formula.CuposDesde && x.FechaIngreso <= formula.CuposHasta &&
+                x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
+                x.EstadoCupoId != 4 && x.EstadoCupoId != 9 );
+
+            foreach (var config in disponibilidadEnPlantas)
+            {
+                var cuposTomados = cuposTotales.Count(a => a.FechaIngreso == config.Fecha && a.CentroId == config.CentroId && a.MaterialId == config.MaterialId);
+                if (config.LimiteAlgoritmo > config.LimiteCupo - cuposTomados)
+                {
+                    logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta menor a algoritmo:" + config.Fecha.ToString("dd/MM/yyyy") + ", cantidad:" + config.LimiteAlgoritmo + ", materialid:" + config.MaterialId + ", disponibles: "+(config.LimiteCupo - cuposTomados));
+                    config.LimiteAlgoritmo = config.LimiteCupo - cuposTomados;
+                }
+            }
+
             foreach (var item in disponibilidadEnPlantas)
             {
                 logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta:" + item.Fecha.ToString("dd/MM/yyyy") + ",cantidad:" + item.LimiteAlgoritmo + "materialid:" + item.MaterialId);

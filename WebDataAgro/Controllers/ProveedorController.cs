@@ -323,15 +323,15 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-        public JsonResult BuscarCorredores(string filtro, int corredor)
+        public JsonResult BuscarCorredores(string filtro, int corredor, int? agenteCompraId)
         {
-            return Json(mobjProveedorManager.DevolverProveedores(filtro, 1, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
+            return Json(mobjProveedorManager.DevolverProveedores(filtro, 1, GlobalVariables.Equipo, agenteCompraId), JsonRequestBehavior.AllowGet);
         }
-        public JsonResult BuscarProveedoresConCorredor(string filtroProveedor, string filtro)
+        public JsonResult BuscarProveedoresConCorredor(string filtroProveedor, string filtro, int? agenteCompraId)
         {
             if (filtro == "")
             {
-                return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, 0, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
+                return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, 0, GlobalVariables.Equipo, agenteCompraId), JsonRequestBehavior.AllowGet);
             }
             else
             {
@@ -357,7 +357,7 @@ namespace WebDataAgro.Controllers
         public JsonResult BuscarProveedores(string filtroProveedor)
         {
 
-            return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, 2, GlobalVariables.Equipo), JsonRequestBehavior.AllowGet);
+            return Json(mobjProveedorManager.DevolverProveedores(filtroProveedor, 2, GlobalVariables.Equipo, null), JsonRequestBehavior.AllowGet);
 
         }
         public ActionResult GrabarCorredor(NuevoCorredor oParam)

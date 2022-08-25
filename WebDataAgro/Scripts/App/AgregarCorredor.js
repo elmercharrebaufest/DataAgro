@@ -243,6 +243,7 @@ function guardarProveedorCorredor() {
             obj.ProveedorCorredorId = $("#corredorId").val();
             obj.basicos.Consignatario = $("#consignatario-proveedor-compranet").is(":checked");
 
+            obj.basicos.operaconMATBA = $("#operaconMATBA").is(":checked");
             crearContenedoresProveedores(obj);
 
             limpiarCargaProveedor();
@@ -434,6 +435,7 @@ function DatosCorredor() {
     obj.basicos.Consignatario = $("#consignatario-compranet").is(":checked");
     obj.basicos.Comision = Number($("#comision-compranet").val().replace(',', '.'));
     obj.basicos.comentario = $("#comentario").val();
+    obj.basicos.operaconMATBA = $("#operaconMATBA").is(":checked");
 
     obj.contacto.provincia = $("#provincia").val();
     obj.contacto.localidad = $("#localidad").val();

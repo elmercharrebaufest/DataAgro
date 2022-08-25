@@ -88,7 +88,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [InverseProperty("Contrato")]
         public virtual ICollection<Calidad> Calidad { get; set; } 
         [InverseProperty("Contrato")]
-        public virtual ICollection<PrecioPactado> PrecioPactado { get; set; }
+        public virtual ICollection<PrecioPactado> PrecioPactado { get; set; }     
 
         [ForeignKey("ZonaId")]
         public virtual Zona Zona { get; set; }

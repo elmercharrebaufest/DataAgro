@@ -49,6 +49,7 @@ function armarBasico(basico) {
     $("#segmentacion").val($('#segmentacion option').filter(function () { return $(this).html() == basico.Segmentacion; }).val());
     $("#buscadorProveedor").val(basico.RazonSocialComisionista);
     $("#comisionista").attr("checked", basico.Comisionista);
+    $("#operaconMATBA").attr("checked", basico.OperaConMATBA);
     if ($('#segmentacion :selected').parent().attr('label') === "Comisionistas") {
         $("#comisionistaDiv").hide();
     }

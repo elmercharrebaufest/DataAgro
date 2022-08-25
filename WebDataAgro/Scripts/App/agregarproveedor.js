@@ -2241,6 +2241,7 @@ function armarFuncionalidades() {
     });
 
     $("#cuit").blur(function (ev) {
+        $("#cuit").val($("#cuit").val().replace(" ", "").trim());
         var valor = $("#cuit").val();
         if (valor.length > 10)
             buscarRazonSocial(valor);
@@ -2978,6 +2979,7 @@ function ObtenerDatos() {
     }
     obj.basicos.comisionistaId = comisionistaId; //comisionista
     obj.basicos.comisionista = $("#comisionista").is(":checked");
+    obj.basicos.operaconMATBA = $("#operaconMATBA").is(":checked");
 
     obj.contacto.provincia = $("#provincia").val();
 
@@ -3304,7 +3306,7 @@ function validateNumber(number) {
 }
 
 function comprobarInputs() {
-    var hayErrores = 0;
+    var hayErrores = 0;  
     if ($("#cuit").val() && $("#cuit").val().length > 20) {
         mostrarError("#cuit", "error-elem-cuit", "No debe superar los 20 caracteres");
         hayErrores = 1;

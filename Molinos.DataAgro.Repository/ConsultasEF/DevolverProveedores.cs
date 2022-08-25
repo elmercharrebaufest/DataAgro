@@ -13,15 +13,25 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly string filtro;
         private readonly int corredor;
         private readonly List<int> equipo;
+        private readonly int? agenteCompraId;
 
         public DevolverProveedores(string filtro, int corredor, List<int> equipo)
         {
             this.filtro = filtro;
             this.corredor = corredor;
             this.equipo = equipo;
+            this.agenteCompraId = null;
         }
 
-        private static List<BusquedaHome> Query(DbContext contexto, string filtro, int corredor, List<int> equipo)
+        public DevolverProveedores(string filtro, int corredor, List<int> equipo, int? agenteCompraId)
+        {
+            this.filtro = filtro;
+            this.corredor = corredor;
+            this.equipo = equipo;
+            this.agenteCompraId = agenteCompraId;
+        }
+
+        private static List<BusquedaHome> Query(DbContext contexto, string filtro, int corredor, List<int> equipo, int? agenteCompraId)
         {
             var resultado = from Proveedor in contexto.Set<Proveedor>()
                             join p in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals p.ProveedorId into rgs
@@ -47,9 +57,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 Deshabilitar = false,
                                 Color = "",
                                 Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")",
-                                ComisionistaId = provs.Key.ComisionistaId
+                                ComisionistaId = provs.Key.ComisionistaId,
+                                OperaConMATBA = provs.Key.OperaConMATBA,
                             };
-            var lista = DevolverEstadoSisa(contexto, resultado.ToList(), corredor);
+            if(agenteCompraId == null)
+            {
+                resultado = resultado.Where(x => x.OperaConMATBA != true);
+            }
+            var lista = DevolverEstadoSisa(contexto, resultado.ToList(), corredor, agenteCompraId);
             return lista.Distinct().Take(15).ToList();
         }
 
@@ -57,16 +72,30 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, filtro, corredor, equipo);
+                return Query(contexto, filtro, corredor, equipo, agenteCompraId);
             }
         }
 
-        private static List<BusquedaHome> DevolverEstadoSisa(DbContext contexto, List<BusquedaHome> lista, int corredor)
+        private static List<BusquedaHome> DevolverEstadoSisa(DbContext contexto, List<BusquedaHome> lista, int corredor, int? agenteCompraId)
         {
             if (lista.Count > 0)
             {
                 foreach (var item in lista)
                 {
+                    if (agenteCompraId == 1)
+                    {
+                        //if (item.OperaConMATBA != true)
+                        //{
+                        //    //item.Estado = "No Opera con MATBA";
+                        //    item.Deshabilitar = true;
+                        //    item.Color = "red";
+                        //    continue;
+                        //}
+                        //else
+                        //{
+                        //    item.Estado = "Opera con MATBA";
+                        //}
+                    }
                     if (corredor == 0)
                     {
                         if (item.Deshabilitado.HasValue && item.Deshabilitado.Value != false)
@@ -200,6 +229,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         continue;
                     }
 
+                    if (item.OperaConMATBA == true)
+                    {
+                        item.Estado += ". Opera con MATBA";
+                    }
                 }
                 return lista;
             }

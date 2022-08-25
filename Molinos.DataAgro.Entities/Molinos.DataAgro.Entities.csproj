@@ -140,6 +140,7 @@
     <Compile Include="Common\Enums\TipoAccionLogDataAgro.cs" />
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
+    <Compile Include="Dto\ServicioValorDto.cs" />
     <Compile Include="Dto\ClasificacionHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\ProvinciaHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\TipoOperacionNoHabilitadoSinBoletoDto.cs" />
@@ -364,6 +365,15 @@
     <Compile Include="Dto\Resultado.cs" />
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
+    <Compile Include="Entities\ServicioValor.cs" />
+    <Compile Include="Entities\TipoServicio.cs" />
+    <Compile Include="Entities\Servicio.cs" />
+    <Compile Include="Entities\ProvinciaNoHabilitadoSinBoleto.cs" />
+    <Compile Include="Entities\MaterialHabilitadoSinBoleto.cs" />
+    <Compile Include="Entities\TipoOperacionHabilitadoSinBoleto.cs" />
+    <Compile Include="Entities\TipoNegocioHabilitadoSinBoleto.cs" />
+    <Compile Include="Entities\ClasificacionHabilitadoSinBoleto.cs" />
+    <Compile Include="Entities\NegocioPesificacion.cs" />
     <Compile Include="Entities\Boleto.cs" />
     <Compile Include="Entities\BoletoVenta.cs" />
     <Compile Include="Entities\BoletoCompraNetProvincia.cs" />

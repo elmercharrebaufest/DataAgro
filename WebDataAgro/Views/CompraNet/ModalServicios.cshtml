@@ -1,0 +1,51 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade modal-inferior" id="ModalServicio" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h1 class="modal-title-ampliaciones" id="lineModalLabel"></h1>
+                <div class="status confirmado-modal">
+                    <div id="titulo-modal">Servicio</div>
+                </div>
+            </div>
+            <div class="modal-body clearfix ">
+                <div id="apertura-precio">
+                    <div class="col-xs-12 noPadding">
+
+                        <table id="tablaApertura" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td class="fuente600">Descripcion de Servicios y Calidades</td>
+                                    <td class="fuente600">Importe</td>
+                                    <td class="fuente600">Moneda</td>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-servicios" data-template="div-tabla-servicios" data-bind="source:Servicios" type="text/x-kendo-template">
+                            </tbody>
+                            <script id="div-tabla-servicios" type="text/x-kendo-template">
+                                <tr>
+                                    <td>#=DescripcionServicio#</td>
+                                    <td><input id=#=ServicioValorId# class="ImporteServicio" value=#=Importe# type="number" /></td>
+                                    <td>#=MonedaDescripcion#</td>
+                                    <td hidden>#=ServicioValorId#</td>
+                                </tr>
+                            </script>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer clearfix" style="margin-top:15px;">
+                <div class="col-xs-6 noPaddingLeft">
+                    <button type="button" id="guardarAperturaPrecio" class="myBtn btnSubmit" onclick="GuardarServicio()">Guardar</button>
+                </div>
+                <div class="col-xs-6 noPaddingRight">
+                    <button type="button" id="cancelarAperturaPrecio" class="myBtn btnCancelar" data-dismiss="modal" onclick="CancelarServicio()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

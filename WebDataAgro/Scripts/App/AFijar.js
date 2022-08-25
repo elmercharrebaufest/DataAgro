@@ -272,7 +272,7 @@ function InicializarElementos() {
                     if ($("#tipoId").val() != 3 && (Id == 0 || Id == null || Id == "")) {
                         $("#clasificacion").data("kendoDropDownList").value("");
                         $("#consignatarioId").prop("checked", false);
-                    }                 
+                    }
 
                     $("#proveedorId").val(compraNet.ProveedorId);
                     $("#clasificacion").data("kendoDropDownList").value(compraNet.ClasificacionCompraNetId);
@@ -319,6 +319,7 @@ function InicializarElementos() {
                             $("#sinBoletoId").data("kendoDropDownList").trigger("change");
                             ValidarSinBoleto();
                         }
+                        ActivarBoletoXAgentedeCompras($("#AgenteCompraId").val());
                     }
                     if ($("#tipoId").val() == 3) {
                         compraNet.ComisionPorcentaje = 0;
@@ -359,7 +360,7 @@ function InicializarElementos() {
                     else {
                         cuit = cuitAux;
                     }
-                    return { filtro: cuit[0], filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
+                    return { filtro: cuit[0], filtroProveedor: $('#buscadorProveedor').val(), corredor: 0, agenteCompraId: $("#AgenteCompraId").val() };
                 }
             }
 
@@ -490,7 +491,7 @@ function InicializarElementos() {
                     url: "/Proveedor/BuscarCorredores"
                 },
                 parameterMap: function (data, type) {
-                    return { filtro: $('#buscadorCorredor').val(), corredor: 1 };
+                    return { filtro: $('#buscadorCorredor').val(), corredor: 1, agenteCompraId: $("#AgenteCompraId").val() };
                 }
             }
 
@@ -1068,7 +1069,7 @@ function InicializarElementos() {
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
                 CargarAutomaticamenteLaComision(compraNet);
             }
-
+            MostrarServiciosYCalidades();
         }
     });
 
@@ -1351,6 +1352,7 @@ function InicializarElementos() {
                 BorrarComisionSiEsAcopio();
             }
             ValidarSinBoleto();
+            MostrarServiciosYCalidades();
         }
     });
 
@@ -1411,21 +1413,10 @@ function InicializarElementos() {
                     $("#chequeElectronicoId").show();
                     $("#pagoCbuId").show();
                 }
+                $("#buscadorProveedor").val("");
+                $("#buscadorCorredor").val("");
             }
-            if (this.value() == 1) {
-                $("#boletoNingunoId").prop("checked", false);
-                $("#boletoNingunoId").click();
-                $("#boletoNingunoId").attr("readonly", "readonly");
-                $("#boletoConfirmaId").attr("disabled", true);
-                $("#boletoFisicoId").attr("disabled", true);
-                $("#boletoCartaId").attr("disabled", true);
-            } else {
-                $("#boletoNingunoId").prop("checked", false);
-                $("#boletoNingunoId").removeAttr("readonly");
-                $("#boletoConfirmaId").removeAttr("disabled");
-                $("#boletoFisicoId").removeAttr("disabled");
-                $("#boletoCartaId").removeAttr("disabled");
-            }
+            ActivarBoletoXAgentedeCompras(this.value());
             DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
             OcultarCamposAgente();
         }
@@ -1820,6 +1811,14 @@ function InicializarElementos() {
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
 
+    $("#fechaHastaOriginalId").kendoDatePicker({
+        value: datehasta,
+        format: "dd-MM-yyyy",
+        parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
+    });
+
+    $("#fechaHastaOriginalId").data('kendoDatePicker').enable(false);
+
     $("#fechaDesdeTopeId").kendoDatePicker({
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
@@ -2200,11 +2199,31 @@ function InicializarElementos() {
     $("#sinBoletoId").click(function () {
         if ($(this).is(':checked')) {
             LimpiarBoleto();
+
+            $("#prestamoDevolucionId").prop("checked", false);
+            $("#prestamoDevolucionId").prop("disabled", true);
+            HayPrestamo();
+            $("#canjeId").prop("checked", false);
+            $("#canjeId").prop("disabled", true);
+            HayCanje();
+
+            $("#posicionCBOTId").val("");
+            $("#posicionCBOTId").prop("disabled", true);
+            $("#tipoPosicionCBOTId").data("kendoDropDownList").value("");
+            $("#tipoPosicionCBOTId").prop("disabled", true);
+
             $("#sinBoletoId").prop("checked", true);
             if ($("#sinBoletoId").is(':checked')) {
                 MensAlerta("Se completó la tilde de mercadería en depósito automáticamente");
             }
 
+        }
+        else {
+
+            $("#prestamoDevolucionId").prop("disabled", false);
+            $("#canjeId").prop("disabled", false);
+            $("#posicionCBOTId").prop("disabled", false);
+            $("#tipoPosicionCBOTId").prop("disabled", false);
         }
         ValidarSinBoleto();
     });
@@ -2430,7 +2449,9 @@ function InicializarElementos() {
     });
     $("#posicionFasonId").mask("00.0000", { placeholder: "MM.AAAA" });
     $("#posicionCBOTId").mask("00.0000", { placeholder: "MM.AAAA" });
-
+    $("#posicionCBOTId").change(function () {
+        ActivarSinBoleto();
+    });
     $("#pizarraId").click(ClickEnPizarra);
 
     InicializarAperturaDePrecios();
@@ -2615,7 +2636,7 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "Id",
         change: function () {
-
+            ActivarSinBoleto()
             DeshabilitarConPase();
         }
     });
@@ -2701,7 +2722,7 @@ function CambioCalidades(calidades) {
         $(".girasol-alto").hide();
         $("#zonasGirasolAltoId").data("kendoDropDownList").value("");
     }
-
+    MostrarServiciosYCalidades();
 }
 
 function ClickEnPizarra() {
@@ -2980,6 +3001,7 @@ function CrearViewModel() {
         MonedaPactadoCombo: [],
         TipoPosicionCBOT: [],
         ObtenerCapacidadProductivaPendiente: [],
+        Servicios: [],
     });
 
     kendo.bind($("#CrearContrato"), viewModel);
@@ -3108,7 +3130,7 @@ function AsignarDatos() {
     var materialId = $('select[id="material"]').val();
 
     CargarCalidadPorMaterial(materialId);
-
+    MostrarServiciosYCalidades();
 }
 
 function LimpiarValidaciones() {
@@ -3768,6 +3790,16 @@ function CargarDatosEditar(contrato, hijo) {
     //    $("#chequeElectronicoId").hide();
     //    $("#chequeElectronicoDiv").hide();
     //}
+    LimpiarServicios();
+    if (contrato.Servicios != null && contrato.Servicios.length > 0) {
+        ArmarDescripcionServicio(contrato.Servicios);
+        viewModel.set("Servicios", contrato.Servicios);
+        kendo.bind($("#ModalServicio"), viewModel);
+        InicializarServicios();
+        $("#servicioBtn").show();
+    } else {
+        MostrarServiciosYCalidades();
+    }
 
     contrato.PagoDirectoVendedor == true ? $("#pagoDirectoId").prop("checked", true) : $("#pagoDirectoId").prop("checked", false);
     contrato.EstablecimientoPropio == true ? $("#establecimientoPropioId").prop("checked", true) : contrato.EstablecimientoPropio == false ? $("#establecimientoArrendadoId").prop("checked", true) : false;
@@ -3802,7 +3834,7 @@ function CargarDatosEditar(contrato, hijo) {
     }
     if (contrato.EsFason === true) {
         $("#madreId").attr("disabled", true);
-        $("#fasonIdCheck").prop("checked", true); 
+        $("#fasonIdCheck").prop("checked", true);
         $("#pagosDiv").hide();
     } else {
         $("#madreId").attr("disabled", false);
@@ -4240,6 +4272,13 @@ function CargarDatosEditar(contrato, hijo) {
     } else {
         $("#comisionistaCheckId").prop("checked", false);
     }
+
+    if (contrato.FechaHastaOriginalFormateado != null && contrato.FechaHastaOriginalFormateado != "") {
+        $(".fechahastaOriginalDiv").show();
+        $("#fechaHastaOriginalId").data("kendoDatePicker").value(contrato.FechaHastaOriginalFormateado);
+    }
+
+    //Fin cargar datos editar
 }
 
 function LimpiarApertura() {
@@ -4444,7 +4483,7 @@ function InsertarAperturasViewModel(total) {
     //$("#ImporteDescuentoId").data("kendoNumericTextBox").value(total);
 }
 function eliminarDescuento(descuento) {
-    if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {        
+    if (descuento.TipoDBId == 1 && descuento.TipoPeriodoDBId == 1) {
         //LimpiarApertura();
         //$("#ImporteDescuentoId").data("kendoNumericTextBox").value("");
         //$("#posicionCBOTDiv").hide();
@@ -4914,7 +4953,6 @@ function HayCanje() {
         //$("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
         //LimpiarCalidades();
 
-
     } else {
         CargarCalidadPorMaterial($('#material').data("kendoDropDownList").value());
         $("#mostrarCanje").hide();
@@ -4938,6 +4976,7 @@ function HayCanje() {
         //$("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
         //LimpiarCalidades();
     }
+    ActivarSinBoleto();
 }
 
 function ocultarSiHayCanje() {
@@ -5036,7 +5075,7 @@ function HayPrestamo() {
         $("#condicionFijacionId").data("kendoDropDownList").value(7);
         $("#calidadesEspecialesId").data("kendoDropDownList").trigger("change");
     }
-
+    ActivarSinBoleto();
 }
 
 function SeleccionAutomaticaBolsa() {
@@ -5532,7 +5571,122 @@ function DeshabilitarCampoSiEsBoleto() {
     }
 }
 
+function LimpiarServicios() {
+    var iteracionesServicios = viewModel.Servicios.length;
+    for (var i = 0; i < iteracionesServicios; i++) {
+        viewModel.Servicios.pop();
+    }
+}
 
+function TraerServicio() {
+
+    var servicio = {
+        MaterialId: $("#material").val(),
+        CentroId: $("#destinoId").val(),
+    };
+    var url = '/Compranet/TraerServicios';
+    var data = servicio;
+    var result = MSExecuteOnServer(url, data);
+    $.unblockUI();
+    ArmarDescripcionServicio(result);
+    viewModel.set("Servicios", result);
+    kendo.bind($("#ModalServicio"), viewModel);
+    InicializarServicios();
+}
+
+function InicializarServicios() {
+    for (var i = 0; i < viewModel.Servicios.length; i++) {
+        $("#" + viewModel.Servicios[i].ServicioValorId).kendoNumericTextBox({
+            culture: "es-AR",
+            format: "n2",
+            spinners: false,
+            min: 0
+        });
+    }
+}
+function ArmarDescripcionServicio(servicio) {
+    for (var i = 0; i < servicio.length; i++) {
+        //servicio[i].Importe = kendo.toString(servicio[i].Importe, "n2");
+        servicio[i].DescripcionServicio = servicio[i].Descripcion +
+            ((servicio[i].Desde >= 0 && servicio[i].Hasta > 0) ? (" DE " + kendo.toString(servicio[i].Desde, "n2") + " A " + kendo.toString(servicio[i].Hasta, "n2") + "%") :
+                (servicio[i].Desde > 0 && servicio[i].Hasta == 0) ? (" MAS DE " + kendo.toString(servicio[i].Desde, "n2") + "%") :
+                    (servicio[i].Desde == 0 && servicio[i].Hasta == 0) ? "" : "");
+    }
+}
+function MostrarServicios() {
+    $("#ModalServicio").modal("show");
+}
+
+function GuardarServicio() {
+    BlockUi('Guardando...');
+    for (var i = 0; i < viewModel.Servicios.length; i++) {
+        viewModel.Servicios[i].Importe = $("#" + viewModel.Servicios[i].ServicioValorId).data("kendoNumericTextBox").value();
+    }
+    $("#ModalServicio").modal("hide");
+    $.unblockUI();
+}
+
+function CancelarServicio() {
+    kendo.bind($("#ModalServicio"), viewModel);
+}
+
+function ActivarBoletoXAgentedeCompras(agenteCompraId) {
+    if (agenteCompraId == 1) {
+        $("#boletoNingunoId").prop("checked", false);
+        $("#boletoNingunoId").click();
+        $("#boletoNingunoId").attr("readonly", "readonly");
+        $("#boletoConfirmaId").attr("disabled", true);
+        $("#boletoFisicoId").attr("disabled", true);
+        $("#boletoCartaId").attr("disabled", true);
+    } else {
+        $("#boletoNingunoId").prop("checked", false);
+        $("#boletoNingunoId").removeAttr("readonly");
+        $("#boletoConfirmaId").removeAttr("disabled");
+        $("#boletoFisicoId").removeAttr("disabled");
+        $("#boletoCartaId").removeAttr("disabled");
+    }
+}
+
+
+function ActivarSinBoleto() {
+    var activar = true;
+    if ($("#tipoPosicionCBOTId").data("kendoDropDownList").value() != '' && $("#posicionCBOTId").val() != '') {
+        activar = false;
+    }
+    if ($("#canjeId").is(":checked")) {
+        activar = false;
+    }
+    if ($("#prestamoDevolucionId").is(":checked")) {
+        activar = false;
+    }
+    if (activar) {
+        $("#sinBoletoId").prop("disabled", false);
+    } else {
+        $("#sinBoletoId").prop("checked", false);
+        $("#sinBoletoId").prop("disabled", true);
+    }
+}
+
+
+function MostrarServiciosYCalidades() {
+    var validar = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ||
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados";
+    if (validar == false) {
+        $("#servicioBtn").hide();
+        LimpiarServicios()
+    } else {
+        if (Id == null || (viewModel.Servicios == null || viewModel.Servicios.length <= 0)) {
+            $("#servicioBtn").show();
+            TraerServicio();
+        }
+    }
+
+    return validar;
+}
 
 
 

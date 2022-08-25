@@ -73,8 +73,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 var hasta = DateTime.Now.ToString("yyyyMMdd");
                 var desde = DateTime.Now.AddMonths(-1).ToString("yyyyMMdd");
                 //pruebas
-                hasta = "20210127";
-                desde = "20210127";
+                hasta = "20220720";
+                desde = "20220720";
                 var token = ObtenerToken();
                 //List<MaterialDto> materiales = repositorio.Listar<Material, MaterialDto>(a => new MaterialDto { MaterialId = a.MaterialId, Descripcion = a.Descripcion, CampañaId = a.CampañaId }, null, 0, null, Entities.Helpers.DirOrden.Asc);
                 if (token.Code != "200")
@@ -104,11 +104,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     //}
                     List<AgenteCompra> lista = new List<AgenteCompra>();
 
-                    lista = result.Value.Select(a => new AgenteCompra
+                    lista = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500") && a.TrdType == 61).Select(a => new AgenteCompra
                     {
 
                         TipoNegocioId = 5,
-                        Cantidad = decimal.ToDouble((a.LastQty ?? 0) * 1000),
+                        Cantidad = ObtenerCantidad(a),
                         Precio = a.LastPx ?? 0,
                         FechaDesde = DateTime.ParseExact(a.TransactTime, "s", null).Date,
                         FechaHasta = DateTime.ParseExact(a.TransactTime, "s", null).Date.AddMonths(1),
@@ -131,7 +131,31 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     }).ToList();
 
-                    var  ppp = lista.ToJson();
+                    var ppp2 = lista.Select(a => new pppp
+                    {
+                        TipoNegocioId = a.TipoNegocioId,
+                        Cantidad = a.Cantidad,
+                        Precio = a.Precio,
+                        FechaDesde = a.FechaDesde,
+                        FechaHasta = a.FechaHasta,
+                        FechaOperacion = a.FechaOperacion,
+                        MonedaId = a.MonedaId,
+                        Fecha = a.Fecha,
+                        EstadoId = a.EstadoId,
+                        DestinoId = a.DestinoId,
+                        ContratoMat = a.Observacion,//codigo contrato MAT
+                        //faltan
+                        MaterialId = a.MaterialId,
+                        Posicion = a.Posicion,
+                        CampanaId = a.CampanaId,
+                        OperadorId = a.OperadorId,
+                        TipoAgenteCompraId = a.TipoAgenteCompraId,
+                        ComercialId = a.ComercialId,
+                        ComercialCreadorId = a.ComercialCreadorId,
+
+                    }).ToList();
+                    var ppp22 = ppp2.ToJson();
+                    var ppp = lista.ToJson();
                     return result;
                 }
 
@@ -145,13 +169,25 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
+        private static double ObtenerCantidad(TradeCaptureReportValue a)
+        {
+            int value = 1;
+
+            if (a.TrdCapRptSideGrp != null && a.TrdCapRptSideGrp.Count > 0)
+            {
+                value = a.TrdCapRptSideGrp.First().Side != "1" ? 1 : -1;
+            }
+
+            return value * decimal.ToDouble((a.LastQty ?? 0) * 1000);
+        }
+
         private int ObtenerCampania(List<Instrument> instruments, TradeCaptureReportInstrument tradeCaptureReportInstrument)
         {
             var campanias = repositorio.Listar<Campaña, CampañaQry>(a => new CampañaQry { CampañaId = a.CampañaId, Descripcion = a.Descripcion });
             var item = instruments.Where(a => a.SecurityID == tradeCaptureReportInstrument.SecurityID).FirstOrDefault();
             if (item != null)
             {
-                var anio = (int.Parse(item.MaturityMonthYear.Substring(2, 2)) -1).ToString();
+                var anio = (int.Parse(item.MaturityMonthYear.Substring(2, 2)) - 1).ToString();
                 int? campaña = campanias.Where(a => a.Descripcion.StartsWith(anio)).Select(a => a.CampañaId).SingleOrDefault();
                 return campaña ?? 0;
             }
@@ -281,6 +317,28 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             MarketDataResult result = JsonConvert.DeserializeObject<MarketDataResult>(jObject.ToString());
             return result;
+        }
+
+        private class pppp
+        {
+            public int TipoNegocioId { get; internal set; }
+            public double Cantidad { get; internal set; }
+            public decimal Precio { get; internal set; }
+            public DateTime FechaDesde { get; internal set; }
+            public DateTime FechaHasta { get; internal set; }
+            public DateTime FechaOperacion { get; internal set; }
+            public string MonedaId { get; internal set; }
+            public DateTime Fecha { get; internal set; }
+            public int EstadoId { get; internal set; }
+            public int? DestinoId { get; internal set; }
+            public string ContratoMat { get; internal set; }
+            public int MaterialId { get; internal set; }
+            public string Posicion { get; internal set; }
+            public int? CampanaId { get; internal set; }
+            public int OperadorId { get; internal set; }
+            public int? TipoAgenteCompraId { get; internal set; }
+            public int? ComercialId { get; internal set; }
+            public int? ComercialCreadorId { get; internal set; }
         }
     }
 }

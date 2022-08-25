@@ -112,6 +112,17 @@
                     match="/configuration/appSettings/add[@key='SmtpAnonimo']
                            /@value" />
   </parameter>
+
+	<parameter name="CupoSojaNoSustPorSugerencias Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='CupoSojaNoSustPorSugerencias']
+                           /@value" />
+	</parameter>
+	<parameter name="CupoMaizPorSugerencias Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='CupoMaizPorSugerencias']
+                           /@value" />
+	</parameter>
   
   
   <parameter name="HTTP_Port Service Endpoint Address">

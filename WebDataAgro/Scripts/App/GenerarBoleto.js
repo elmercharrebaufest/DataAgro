@@ -44,6 +44,12 @@ function InicializarDatos() {
 
 function AsignarDatos() {
     viewModel.set("TipoCombo", datosIniCrearContrato.Datos.tiponegocio);
+    var contrato = {
+        
+    };
+    var url = '/Compranet/TraerContratoCompleto';
+    var data = servicio;
+    var result = MSExecuteOnServer(url, data);
 }
 
 

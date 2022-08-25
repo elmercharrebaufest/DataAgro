@@ -3,7 +3,7 @@
 }
 
 <div class="modal fade" id="modalConfirmadoTilde" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header ">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
@@ -12,13 +12,17 @@
                     <div> A CONFIRMAR</div>
                 </div>
             </div>
+            <div class="calidadModificadaManual" hidden>
+                <div class="alert alert-warning" role="alert">
+                    <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></strong> El contrato seleccionado tiene Calidad/Servicio modificado
+                </div>
+            </div>
             <div class="modal-body clearfix ">
                 <div class="col-xs-12 noPadding">
                     <div id="mensajeModalConTilde"></div>
                     <div class="col-xs-12 noPadding"> ¿Desea Confirmar? </div>
                 </div>
             </div>
-            <input type="hidden" id="contratoModalConTilde" />
             <input type="hidden" id="tipoNegocioModalConTilde" />
             <input type="hidden" id="posicion" />
             <input type="hidden" id="contratoId" />

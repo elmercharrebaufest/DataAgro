@@ -19,9 +19,17 @@ namespace Molinos.DataAgro.Entities.Helpers
                     return Encoding.UTF8.GetString(ms.ToArray());
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                return "error al serializar el objeto.";
+                try
+                {
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(data);
+                }
+                catch (System.Exception ex)
+                {
+                    return "error al serializar el objeto.";
+
+                }
             }
 
         }

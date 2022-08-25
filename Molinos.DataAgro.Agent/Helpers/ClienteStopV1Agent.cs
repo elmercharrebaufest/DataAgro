@@ -699,7 +699,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     var cuposSapStop = actualizarCupos.Select(a => a.CupoSap).ToList();
 
-                    var cuposModificados = repositorio.Listar<Cupo>(x => cuposSapStop.Contains(x.CupoSap));
+                    var cuposModificados = repositorio.Listar<Cupo>(x => cuposSapStop.Contains(x.CupoSap) && x.EstadoCupoId != 4);
 
                     var cuposAgrupados = cuposModificados.GroupBy(a => a.CupoSap);
 

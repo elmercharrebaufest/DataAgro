@@ -961,6 +961,14 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
+
+            if(oContrato.TipoNegocioId == 1)
+            {
+                htmlBody += "<br/>Si el Vendedor no enviara la Notificación  hasta el " + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + ", el plazo de pago será fijado por el Comprador y abonado al Vendedor dentro de las 48 horas hábiles siguientes a la notificación del plazo de pago que deberá efectuar el Comprador vía correo electrónico con las condiciones descriptas anteriormente.";
+
+
+            }
+
             if(oContrato.BoletoId == 5)
             {
                 htmlBody += "<br /><br />  Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser " +
@@ -969,8 +977,14 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
-
+                if (oContrato.TipoNegocioId == 1)
+                {
+                    htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
+                }
+                else
+                {
+                    htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
+                }
             }
             htmlBody += "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
@@ -1321,7 +1335,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Alias = oParam.basicos.Alias,
                 ComisionistaId = oParam.basicos.comisionistaId,
                 Comisionista = oParam.basicos.comisionista,
-                CuposConRiesgo = oParam.basicos.CuposConRiesgo
+                CuposConRiesgo = oParam.basicos.CuposConRiesgo,
+                OperaConMATBA = oParam.basicos.OperaConMATBA
             };
             var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
             var oEstados = repositorio.Listar<Estado>();
@@ -1772,6 +1787,14 @@ namespace Molinos.DataAgro.Business.Managers
                         item.Alias = oParam.basicos.Alias;
                     }
                 }
+                if((oProveedorSave.SegmentacionId == 5 || oProveedorSave.SegmentacionId == 7) && (oParam.basicos.segmentacion <= 5))
+                {
+                    var corredorProveedor = repositorio.Listar<CorredorProveedor>(x => x.CorredorId == oParam.ProveedorId);
+                    foreach(var item in corredorProveedor)
+                    {
+                        repositorio.Remover(item);
+                    }
+                }
                 var clasificacion = oParam.basicos.ClasificacionCompraNet != null ?
                     oParam.basicos.ClasificacionCompraNet :
                     (oParam.produccion != null && oParam.produccion.CamposProduccion != null && oParam.produccion.CamposProduccion.Any()) ? 1 :
@@ -1806,6 +1829,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oProveedorSave.ComisionistaId = oParam.basicos.comisionistaId;
                 oProveedorSave.Comisionista = oParam.basicos.comisionista;
                 oProveedorSave.CuposConRiesgo = oParam.basicos.CuposConRiesgo;
+                oProveedorSave.OperaConMATBA = oParam.basicos.OperaConMATBA;
                 var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == oParam.basicos.cuit);
                 var comercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == idActiveDirectory);
                 var oEstados = repositorio.Listar<Estado>();
@@ -2150,6 +2174,13 @@ namespace Molinos.DataAgro.Business.Managers
                         foreach (var interes in oContactoComercialInteresEliminar)
                         {
                             repositorio.Remover(interes);
+                        }
+
+                        var oActividad = repositorio.Listar<Actividad>(x => x.ContactoComercialId == can.ContactoComercialId);
+
+                        foreach (var actividad in oActividad)
+                        {
+                            repositorio.Remover(actividad);
                         }
                         repositorio.Remover(can);
                     }
@@ -2918,9 +2949,9 @@ namespace Molinos.DataAgro.Business.Managers
             CompletarEstadoAltaTemprana(listaOrdenada);
             return resultado.Where(x => !string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.Alias).ThenBy(x => x.RazonSocial).Concat(listaOrdenada).ToList();
         }
-        public List<BusquedaHome> DevolverProveedores(string filtro, int corredor, List<int> equipo)
+        public List<BusquedaHome> DevolverProveedores(string filtro, int corredor, List<int> equipo, int? agenteCompraId)
         {
-            var resultado = repositorio.ListarConsulta(new DevolverProveedores(filtro, corredor, equipo));
+            var resultado = repositorio.ListarConsulta(new DevolverProveedores(filtro, corredor, equipo, agenteCompraId));
             var lista = resultado.GroupBy(x => new { x.Cuit, x.Filtro }).ToList();
             resultado = lista.Select(x => new BusquedaHome
             {
@@ -2933,7 +2964,8 @@ namespace Molinos.DataAgro.Business.Managers
                 RazonSocial = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).RazonSocial,
                 Alias = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Alias,
                 Id = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).Id,
-                ComisionistaId = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).ComisionistaId
+                ComisionistaId = resultado.FirstOrDefault(y => y.Cuit == x.Key.Cuit).ComisionistaId,
+
             }).ToList();
             var listaOrdenada = resultado.Where(x => string.IsNullOrEmpty(x.Alias)).OrderBy(x => x.RazonSocial).ToList();
             CompletarEstadoAltaTemprana(listaOrdenada);

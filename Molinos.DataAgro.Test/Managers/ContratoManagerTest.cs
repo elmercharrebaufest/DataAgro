@@ -3900,6 +3900,25 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void CompararNegocioReconfirmadoTest()
         {
+            var servicioValor = new ServicioValorDto()
+            {
+                Importe = 400,
+                Desde = 0,
+                Hasta = 15,
+                TipoServicioId = 1,
+                MonedaDescripcion = "USD",
+                Descripcion = "FUM",
+                MonedaId = "USDM ",
+                CodigoSAP = "FUM",
+                Modificado = false,
+                Id = 1,
+                ServicioValorId = 1,
+                Centro = "SL",
+                CentroId = 1,
+                MaterialId = 1,
+                MaterialDescripcion = "Soja",
+                DescripcionServicio = "FUM"
+            };
             var contratoParaSerializar = new Contrato()
             {
                 ProveedorId = 1,
@@ -3990,8 +4009,8 @@ namespace Molinos.DataAgro.Test.Managers
                         NegocioId = 1,
                         PorcentajeDesde = 1,
                         PorcentajeHasta = 2,
-                        StandardDeCalidad = new StandardDeCalidad { Descripcion = "aaa"},
-                        CalidadEspecial = new CalidadEspecial {Descripcion = "aaa"}
+                        StandardDeCalidad = new StandardDeCalidad { Descripcion = "aaa" },
+                        CalidadEspecial = new CalidadEspecial { Descripcion = "aaa" }
                     }
                 },
                 AperturaPrecio = new List<AperturaPrecio>()
@@ -4002,6 +4021,53 @@ namespace Molinos.DataAgro.Test.Managers
                         NegocioId = 1,
                     }
                 },
+                Servicios = new List<Servicio>()
+                 {
+                     new Servicio()
+                     {
+                        Id = 1,
+                        Moneda = new Moneda
+                        {
+                            MonedaId = "USDM ",
+                        },
+                        ServicioValorId = 1,
+                        Importe = 400,
+                        Desde = 0,
+                        Hasta = 15,
+                        MonedaId = "USDM ",
+                        Modificado = false,                        
+                        ServicioValor = new ServicioValor()
+                        {
+                        Importe = 400,
+                        Desde = 0,
+                        Hasta = 15,
+                        TipoServicioId = 1,
+                        MaterialId = 1,
+                        CentroId = 1,
+                        Id = 1,
+                        TipoServicio = new TipoServicio()
+                        {
+                            CodigoSAP = "FUM",
+                            Descripcion = "FUM",
+                            Id = 1,
+                        },
+                        Material = new Material
+                        {
+                            MaterialId = 1,
+                        },
+                        MonedaId = "USDM",
+                        Moneda = new Moneda()
+                        {
+                            MonedaId = "USDM "
+                        },
+                        Centro = new Centro()
+                        {
+                            Id = 1
+                        }                       
+
+                        }
+                     }
+                 }
             };
             var datos = JsonConvert.SerializeObject(contratoParaSerializar, new JsonSerializerSettings()
             {
@@ -4075,7 +4141,13 @@ namespace Molinos.DataAgro.Test.Managers
 
                     }
                 },
+                 Servicios = new List<ServicioValorDto>()
+                 {
+                   servicioValor
+                 }
              });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ServicioValor, ServicioValorDto>>>(), It.IsAny<Expression<Func<ServicioValor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+              .Returns(new List<ServicioValorDto>() { servicioValor });
             var res = target.CompararNegocioReconfirmado(It.IsAny<int>());
             Assert.NotNull(res);
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<NegocioHistorico, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()), Times.Once);
@@ -5236,7 +5308,7 @@ namespace Molinos.DataAgro.Test.Managers
                 CondicionDePagoFijacionVentaId = 1,
 
             };
-           var pendiente = new CcPpPerndienteAplicarDto()
+            var pendiente = new CcPpPerndienteAplicarDto()
             {
                 Centro = "034560",
                 Material = "034560",
@@ -5364,7 +5436,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             repositorioMock.Setup(y => y.Obtener<Material, string>(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, string>>>())).Returns("30209034560");
             repositorioMock.Setup(y => y.Obtener<Centro, string>(It.IsAny<Expression<Func<Centro, bool>>>(), It.IsAny<Expression<Func<Centro, string>>>())).Returns("30209034560");
-            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { oContrato });           
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { oContrato });
             ccppPendienteAplicarAgentMock.Setup(x => x.ListarCartasDePortePendienteAplicar(pendiente)).Returns(new List<CcPpPerndienteAplicarDto>() { pendiente });
             var resultado = target.ObtenerDatosMercaderiaEnDeposito(1, 1, 1, 1, 1, false, false);
 
@@ -5530,7 +5602,8 @@ namespace Molinos.DataAgro.Test.Managers
                     Corredor = "SI"
                 }
             });
-            contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato {
+            contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato
+            {
                 Id = 1,
                 CampanaId = 9,
                 MaterialId = 3,
@@ -5539,7 +5612,8 @@ namespace Molinos.DataAgro.Test.Managers
                 FechaHasta = DateTime.Now.Date.AddMonths(1),
                 DestinoId = 1,
                 ComercialId = WebDataAgro.MvcApplication.GlobalVariables.ComercialId,
-                Cantidad = 1000000 });
+                Cantidad = 1000000
+            });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Contrato>() { new Contrato { Cantidad = 10 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ContactoComercial, string>>>(), It.IsAny<Expression<Func<ContactoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                             .Returns(new List<string> { "a" });
@@ -5567,7 +5641,7 @@ namespace Molinos.DataAgro.Test.Managers
                                Observacion = "HHAAA",
                                CD = false,
                                Warrant = false,
-                           });            
+                           });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Contrato>() { new Contrato { Cantidad = 10 } });
             repositorioMock.Setup(y => y.Obtener<Proveedor, string>(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<Expression<Func<Proveedor, string>>>())).Returns("30209034560");
             validacionCreditoAgent.Setup(x => x.ValidarCredito(It.IsAny<string>())).Returns(new ValidarCreditoDto() { Moneda = "ARP" });

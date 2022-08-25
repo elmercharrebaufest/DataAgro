@@ -33,6 +33,8 @@
   <setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9000/" />
   <setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
 
+	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="No" />
+	<setParameter name="CupoMaizPorSugerencias Key" value="No" />
 
 	<setParameter name="PathBoletos Key" value="\\GVICECCQA.MOLINOSAGRO.AD\FTPROOT\TRANSF\MATPRIM\" />
 

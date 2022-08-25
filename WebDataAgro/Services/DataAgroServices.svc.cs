@@ -390,7 +390,7 @@ namespace WebDataAgro.Services
             }
             contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
             contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
-            
+
             //sap tiene problemas con la moneda USD y llega corrido los decimales  por eso el *10
             if (contrato.ImporteSustentable.HasValue && !string.IsNullOrEmpty(contrato.MonedaSustentableId) && contrato.MonedaSustentableId.Contains("USDM"))
             {
@@ -1134,6 +1134,7 @@ namespace WebDataAgro.Services
 
         public ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTerceroDto campo)
         {
+            logger.Debug("AltaCampoSustentable: " + campo.ToJson());
             ResultadoAltaCampoSustentable resultado = new ResultadoAltaCampoSustentable();
             try
             {
@@ -1162,8 +1163,8 @@ namespace WebDataAgro.Services
                     HectareasCultivables = campo.HectareasCultivables,
                     HectareasTotales = campo.HectareasTotales,
                     Rinde = campo.ToneladasAprobadas,
-                    KMZfile = "data:application/octet-stream;base64," + campo.KMZfileBase64, // ej: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAA...
-                    KMZnombre = @"C:\fakepath\" + campo.KMZnombre,
+                    KMZfile = "data:application/octet-stream;base64," + (campo.KMZfileBase64 ?? ""), // ej: data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAA...
+                    KMZnombre = @"C:\fakepath\" + (campo.KMZnombre ?? ""),
                     Latitud = campo.Latitud,
                     Longitud = campo.Longitud,
                     LocalidadId = campo.LocalidadId,
@@ -1173,7 +1174,7 @@ namespace WebDataAgro.Services
                     CampañaId = campaña.CampañaId,
                     IdMoa = campo.Id,
                     Estado = campo.Estado,
-                    
+
                 };
 
                 resultado = proveedorManager.AltaCampoSustentable(campoSave);

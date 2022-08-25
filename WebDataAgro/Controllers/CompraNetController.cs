@@ -1360,6 +1360,10 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        
+        public JsonResult TraerServicios(int? materialId, int? centroId)
+        {
+            var model = mobjContratoManager.TraerTodoServicio(materialId, centroId);
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
     }
 }

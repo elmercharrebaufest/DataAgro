@@ -19,7 +19,9 @@
   <setParameter name="SISA Key" value="C:\Img\RG_4310.txt" />
   <setParameter name="Rg2300 Key" value="C:\Img\RG2300.LST" />
   <setParameter name="Facacop Key" value="C:\Img\facacop.txt" />
-  
+
+	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="No" />
+	<setParameter name="CupoMaizPorSugerencias Key" value="No" />
   <setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
     <setParameter name="VersionClienteSTOP Key" value="2.0.0" />
 

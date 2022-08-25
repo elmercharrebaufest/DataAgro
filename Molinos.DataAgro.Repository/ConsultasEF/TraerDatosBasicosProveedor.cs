@@ -103,8 +103,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Comisionista = prove.Comisionista,
                     ComisionistaId = prove.ComisionistaId,
                     Deshabilitado = prove.Deshabilitado,
-                    CuposConRiesgo = prove.CuposConRiesgo
-
+                    CuposConRiesgo = prove.CuposConRiesgo,
+                    OperaConMATBA = prove.OperaConMATBA
                 };
 
             return resultado.ToList();

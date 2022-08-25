@@ -772,6 +772,7 @@ function ObtenerDatos(error) {
     }
     obj.ContratoMadre = $("#contMadreId").val();
     obj.Descuentos = viewModel.Descuentos;
+    obj.Servicios = viewModel.Servicios;
 
     obj.Especial = $("#trigoEspecialFasonId").is(":checked") ? true : false;
     obj.TrigoEspecial = viewModel.Calidades.length > 0 && obj.MaterialId == 2;

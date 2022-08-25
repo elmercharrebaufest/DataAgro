@@ -26,7 +26,7 @@ namespace Molinos.DataAgro.Agent
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
-                return new EstadoSAPDto { Status = "OK", NumeroSio = 0 };
+                return new EstadoSAPDto { Status = "", NumeroSio = 0 };
             }
             else
             {
