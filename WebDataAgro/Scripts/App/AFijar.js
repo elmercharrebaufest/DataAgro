@@ -5681,6 +5681,7 @@ function DesbloquearCamposExpluyentesSinBoleto() {
 }
 
 
+
 function MostrarServiciosYCalidades() {
     var validar = $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado 2" ||
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Grado" ||
@@ -5690,16 +5691,16 @@ function MostrarServiciosYCalidades() {
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados";
     if (validar == false) {
         $("#servicioBtn").hide();
-        LimpiarServicios()
+        LimpiarServicios();
     } else {
-        if (Id == null || (viewModel.Servicios == null || viewModel.Servicios.length <= 0)) {
-            $("#servicioBtn").show();
-            TraerServicio();
-        }
+        $("#servicioBtn").show();
+        LimpiarServicios();
+        TraerServicio();
     }
 
     return validar;
 }
+
 
 
 

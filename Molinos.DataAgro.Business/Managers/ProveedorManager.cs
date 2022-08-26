@@ -962,7 +962,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
 
-            if(oContrato.TipoNegocioId == 1)
+            if (oContrato.TipoNegocioId == 1 && oContrato.BoletoId == 6)
             {
                 htmlBody += "<br/>Si el Vendedor no enviara la Notificación  hasta el " + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + ", el plazo de pago será fijado por el Comprador y abonado al Vendedor dentro de las 48 horas hábiles siguientes a la notificación del plazo de pago que deberá efectuar el Comprador vía correo electrónico con las condiciones descriptas anteriormente.";
 
@@ -977,7 +977,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                if (oContrato.TipoNegocioId == 1)
+                if (oContrato.TipoNegocioId == 1 && oContrato.BoletoId == 6)
                 {
                     htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
                 }
