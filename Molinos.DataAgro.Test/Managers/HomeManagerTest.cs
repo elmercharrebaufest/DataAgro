@@ -205,7 +205,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerTodoCompraDetalleTest()
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<int>(), It.IsAny<string>(),
-                  It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Material>() { new Material { MaterialId = 1, CampañaId = 1 } });
+                  It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Material>() { new Material { MaterialId = 1, CampañaId = 1,Campaña = new Campaña {Descripcion="20-21" } } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(),
                It.IsAny<Entities.Helpers.DirOrden>())).Returns(new List<Proveedor>() { new Proveedor { ProveedorId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), It.IsAny<int>(), It.IsAny<string>(),
