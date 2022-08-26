@@ -371,7 +371,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3,
                             TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3,
                             PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "",
-                            CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " ? "02" : contrato.TipoAgenteCompraId != null ? "03" : "",
+                            CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
+                            contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "",
                             BLOQUEO = "",
                             TIPO_CAMBIO_FIJO = 0,
                             POSICION = CalcularPosicion(contrato.FechaDesde)

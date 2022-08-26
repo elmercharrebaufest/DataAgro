@@ -29,6 +29,11 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public string Modificar(Contrato contrato, Contrato contratoGuardado)
         {
+            if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
+            {
+                
+                return "OK";
+            }
             try
             {
                 SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOClient agent = new SI_ZMPWS_DATAAGRO_MODIFICAR_CONTRATOClient();
@@ -509,10 +514,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "";
                 detalle.PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "";
                 detalle.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
-                detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " ? "02" : "";
                 detalle.TOL_INF = contrato.CantidadCamiones == null ? 3 : 0;
                 detalle.TOL_SUP = contrato.CantidadCamiones == null ? 3 : 0;
-                detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " ? "02" : contrato.TipoAgenteCompraId != null ? "03" : "";
+                detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
+                    contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
                 detalle.BLOQUEO = "";
                 detalle.TIPO_CAMBIO_FIJO = 0;
                 detalle.POSICION = CalcularPosicion(contrato.FechaDesde);

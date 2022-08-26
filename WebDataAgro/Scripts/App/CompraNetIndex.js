@@ -2396,7 +2396,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         $(".fason").hide();
         $("#VisualizarServicioDiv").hide();
         //var mostrarServicio = ArmarServicio(id);
-        if (tipo === "A FIJAR") {
+        if (tipo === "A FIJAR" || tipo === "AGENTE DE COMPRAS MP") {
             ArmarServicio(id);
             if (viewModel.Servicios != null && viewModel.Servicios.length > 0) {
                 $("#VisualizarServicioDiv").show();

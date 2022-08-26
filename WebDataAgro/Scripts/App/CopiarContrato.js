@@ -257,7 +257,12 @@ function CargarCopiaContrato(contratoId, tipo) {
             for (var i = 0; i < contratoCopia.Descuentos.length; i++) {
                 contratoCopia.Descuentos[i].Id = 0;
             }
-        }       
+        } 
+        if (contratoCopia.Calidades) {
+            for (var i = 0; i < contratoCopia.Calidades.length; i++) {
+                contratoCopia.Calidades[i].Id = 0;
+            }
+        }  
 
         if (tipo == "sap") {
             contratoCopia.MotivoOperacionAnterior = null;
