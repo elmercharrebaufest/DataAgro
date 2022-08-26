@@ -319,7 +319,6 @@ function InicializarElementos() {
                             $("#sinBoletoId").data("kendoDropDownList").trigger("change");
                             ValidarSinBoleto();
                         }
-                        ActivarBoletoXAgentedeCompras($("#AgenteCompraId").val());
                     }
                     if ($("#tipoId").val() == 3) {
                         compraNet.ComisionPorcentaje = 0;
@@ -339,6 +338,7 @@ function InicializarElementos() {
                     ValidarSinBoleto();
                     CompletarCantidadDisponibleDeposito();
                 }
+                ActivarBoletoXAgentedeCompras($("#AgenteCompraId").val());
             }
         },
         dataSource: {
@@ -6322,6 +6322,7 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
     if (agenteCompraId == 1) {
         $("#boletoNingunoId").prop("checked", false);
         $("#boletoNingunoId").click();
+        $("#boletoNingunoId").prop("checked", true);
         $("#boletoNingunoId").attr("readonly", "readonly");
         $("#boletoConfirmaId").attr("disabled", true);
         $("#boletoFisicoId").attr("disabled", true);

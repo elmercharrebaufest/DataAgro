@@ -319,7 +319,6 @@ function InicializarElementos() {
                             $("#sinBoletoId").data("kendoDropDownList").trigger("change");
                             ValidarSinBoleto();
                         }
-                        ActivarBoletoXAgentedeCompras($("#AgenteCompraId").val());
                     }
                     if ($("#tipoId").val() == 3) {
                         compraNet.ComisionPorcentaje = 0;
@@ -338,6 +337,7 @@ function InicializarElementos() {
                     BorrarComisionSiEsAcopio();
                 }
                 EsComisionista(compraNet);
+                ActivarBoletoXAgentedeCompras($("#AgenteCompraId").val());
                 //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 //InsertarAperturasViewModel(CalcularPrecioTotalApertura());
 
@@ -2210,8 +2210,10 @@ function InicializarElementos() {
             $("#posicionCBOTId").val("");
             $("#posicionCBOTId").prop("disabled", true);
             $("#tipoPosicionCBOTId").data("kendoDropDownList").value("");
-            $("#tipoPosicionCBOTId").prop("disabled", true);
-
+            var tipoPosicionCBOT = $("#tipoPosicionCBOTId").data("kendoDropDownList");
+            tipoPosicionCBOT.enable(false);
+            tipoPosicionCBOT.value("");
+            
             $("#sinBoletoId").prop("checked", true);
             if ($("#sinBoletoId").is(':checked')) {
                 MensAlerta("Se completó la tilde de mercadería en depósito automáticamente");
@@ -5536,6 +5538,7 @@ function ValidarSinBoleto() {
         $("#mercsDepositoId").attr("disabled", false);
         $("#fechaDesdeId").data('kendoDatePicker').enable(true);
         $("#fechaHastaId").data('kendoDatePicker').enable(true);
+        DesbloquearCamposExpluyentesSinBoleto();
     }
     HayMercaderia();
 }
@@ -5634,6 +5637,7 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
     if (agenteCompraId == 1) {
         $("#boletoNingunoId").prop("checked", false);
         $("#boletoNingunoId").click();
+        $("#boletoNingunoId").prop("checked", true);
         $("#boletoNingunoId").attr("readonly", "readonly");
         $("#boletoConfirmaId").attr("disabled", true);
         $("#boletoFisicoId").attr("disabled", true);
@@ -5650,7 +5654,7 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
 
 function ActivarSinBoleto() {
     var activar = true;
-    if ($("#tipoPosicionCBOTId").data("kendoDropDownList").value() != '' && $("#posicionCBOTId").val() != '') {
+    if ($("#tipoPosicionCBOTId").data("kendoDropDownList").value() == '3') { //&& $("#posicionCBOTId").val() != '') {
         activar = false;
     }
     if ($("#canjeId").is(":checked")) {
@@ -5665,6 +5669,15 @@ function ActivarSinBoleto() {
         $("#sinBoletoId").prop("checked", false);
         $("#sinBoletoId").prop("disabled", true);
     }
+
+}
+
+function DesbloquearCamposExpluyentesSinBoleto() {
+    $("#canjeId").prop("disabled", false);
+    $("#prestamoDevolucionId").prop("disabled", false);
+    $("#posicionCBOTId").prop("disabled", false);
+    var tipoPosicionCBOT = $("#tipoPosicionCBOTId").data("kendoDropDownList");
+    tipoPosicionCBOT.enable(true);
 }
 
 
