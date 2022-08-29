@@ -2207,12 +2207,12 @@ function InicializarElementos() {
             $("#canjeId").prop("disabled", true);
             HayCanje();
 
-            $("#posicionCBOTId").val("");
-            $("#posicionCBOTId").prop("disabled", true);
-            $("#tipoPosicionCBOTId").data("kendoDropDownList").value("");
-            var tipoPosicionCBOT = $("#tipoPosicionCBOTId").data("kendoDropDownList");
-            tipoPosicionCBOT.enable(false);
-            tipoPosicionCBOT.value("");
+            //$("#posicionCBOTId").val("");
+            //$("#posicionCBOTId").prop("disabled", true);
+            //$("#tipoPosicionCBOTId").data("kendoDropDownList").value("");
+            //var tipoPosicionCBOT = $("#tipoPosicionCBOTId").data("kendoDropDownList");
+            //tipoPosicionCBOT.enable(false);
+            //tipoPosicionCBOT.value("");
             
             $("#sinBoletoId").prop("checked", true);
             if ($("#sinBoletoId").is(':checked')) {
@@ -2452,7 +2452,7 @@ function InicializarElementos() {
     $("#posicionFasonId").mask("00.0000", { placeholder: "MM.AAAA" });
     $("#posicionCBOTId").mask("00.0000", { placeholder: "MM.AAAA" });
     $("#posicionCBOTId").change(function () {
-        ActivarSinBoleto();
+        //ActivarSinBoleto();
     });
     $("#pizarraId").click(ClickEnPizarra);
 
@@ -2638,7 +2638,7 @@ function InicializarElementos() {
         dataTextField: "Descripcion",
         dataValueField: "Id",
         change: function () {
-            ActivarSinBoleto()
+            //ActivarSinBoleto()
             DeshabilitarConPase();
         }
     });
@@ -5638,7 +5638,7 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
         $("#boletoNingunoId").prop("checked", false);
         $("#boletoNingunoId").click();
         $("#boletoNingunoId").prop("checked", true);
-        $("#boletoNingunoId").attr("readonly", "readonly");
+        //$("#boletoNingunoId").attr("readonly", "readonly");
         $("#boletoConfirmaId").attr("disabled", true);
         $("#boletoFisicoId").attr("disabled", true);
         $("#boletoCartaId").attr("disabled", true);
@@ -5654,9 +5654,9 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
 
 function ActivarSinBoleto() {
     var activar = true;
-    if ($("#tipoPosicionCBOTId").data("kendoDropDownList").value() == '3') { //&& $("#posicionCBOTId").val() != '') {
-        activar = false;
-    }
+    //if ($("#tipoPosicionCBOTId").data("kendoDropDownList").value() == '3') { //&& $("#posicionCBOTId").val() != '') {
+    //    activar = false;
+    //}
     if ($("#canjeId").is(":checked")) {
         activar = false;
     }
@@ -5675,9 +5675,9 @@ function ActivarSinBoleto() {
 function DesbloquearCamposExpluyentesSinBoleto() {
     $("#canjeId").prop("disabled", false);
     $("#prestamoDevolucionId").prop("disabled", false);
-    $("#posicionCBOTId").prop("disabled", false);
-    var tipoPosicionCBOT = $("#tipoPosicionCBOTId").data("kendoDropDownList");
-    tipoPosicionCBOT.enable(true);
+    //$("#posicionCBOTId").prop("disabled", false);
+    //var tipoPosicionCBOT = $("#tipoPosicionCBOTId").data("kendoDropDownList");
+    //tipoPosicionCBOT.enable(true);
 }
 
 

@@ -1558,7 +1558,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Localidad", "La localidad ingresada no corresponde a la provincia.");
             }
-
+            if(oParam.TipoPosicionCBOTId == 3 && oParam.BoletoId == 5)
+            {
+                oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE .");
+            }
 
             return oErrorMessages;
         }
