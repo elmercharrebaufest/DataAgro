@@ -267,6 +267,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                 {
                     contrato.Descuentos = new List<DescuentoBonificacion>();
                 }
+                var apServicio = false;
+                if ((contrato.Servicios == null && contratoGuardado.Servicios.Count > 0) || contrato.Servicios != null && contratoGuardado.Servicios.Count != contrato.Servicios.Count)
+                {
+                    apServicio = true;
+                }
+                else
+                {
+                    foreach (var ser in contratoGuardado.Servicios)
+                    {
+                        if (!contrato.Servicios.Any(x => x.Importe == ser.Importe))
+                        {
+                            apServicio = true;
+                            break;
+                        }
+                    }
+                }
                 logger.Debug("Servicios: " + contrato.AperturaPrecio);
                 foreach (var servicio in servicios)
                 {
@@ -539,7 +555,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     APERTURA = apModificado ? "X" : "",
                     CALIDAD = calModificado ? "X" : "",
                     DESC_BONIF = descModificado ? "X" : "",
-                    TOPES_FIJ = topFija ? "X" : ""
+                    TOPES_FIJ = topFija ? "X" : "",
+                    SERVICIOS = apServicio ? "X" : "" 
                 };
                 rq.IM_DESC_BONIF = listaDescuentos.ToArray();
                 rq.IM_CALIDAD = listaCalidades.ToArray();
