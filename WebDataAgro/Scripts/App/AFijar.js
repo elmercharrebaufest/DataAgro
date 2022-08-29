@@ -4970,7 +4970,9 @@ function HayCanje() {
         $("#compensacionDiv").show();
         $("#ordenarRow").hide();
         $("#prestamoDevolucionDiv").show();
-        $("#boletoCartaId").prop("disabled", false);
+        if ($("#AgenteCompraId").val() != 1) {
+            $("#boletoCartaId").prop("disabled", false);
+        } 
         $("#boletoNingunoId").prop("disabled", false);
         $("#TipoDBId").data("kendoDropDownList").enable(true);
         //$("#DatosCalidades").show();

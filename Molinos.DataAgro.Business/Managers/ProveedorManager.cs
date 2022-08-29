@@ -962,15 +962,21 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
 
-            if (oContrato.TipoNegocioId == 1 && oContrato.BoletoId == 5)
+            if (oContrato.BoletoId == 5)
             {
-                htmlBody += "<br/>Si el Vendedor no enviara la Notificación  hasta el " + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + ", el plazo de pago será fijado por el Comprador y abonado al Vendedor dentro de las 48 horas hábiles siguientes a la notificación del plazo de pago que deberá efectuar el Comprador vía correo electrónico con las condiciones descriptas anteriormente.";
-                htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
+                if (oContrato.TipoNegocioId == 1)
+                {
+                    htmlBody += "<br/>Si el Vendedor no enviara la Notificación  hasta el " + Split(oContrato.HastaFijacion.Value.ToShortDateString()) + ", el plazo de pago será fijado por el Comprador y abonado al Vendedor dentro de las 48 horas hábiles siguientes a la notificación del plazo de pago que deberá efectuar el Comprador vía correo electrónico con las condiciones descriptas anteriormente.";
+                    htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
+                }
+                else
+                {
+                    htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
+                }
             }
             else
             {
-                //htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
-                htmlBody += "<br/><br/> Por favor, revisar que los datos sean correctos, los que se considerarán válidos de no ser rectificados o modificados por ustedes dentro de las 24 hrs por correo electrónico a " + (emailComercial != "" && emailComercial != null ? emailComercial + " y documentacion@molinosagro.com.ar." : "documentacion@molinosagro.com.ar.");
+                htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
             }
             htmlBody += "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
