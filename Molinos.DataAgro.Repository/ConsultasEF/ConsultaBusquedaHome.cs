@@ -58,6 +58,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                      Deshabilitado = provs.Key.Deshabilitado,
                      Consignatario = provs.Key.Consignatario,
                      PlanCanje = provs.Key.PlanCanje,
+                     OperaConMATBA = provs.Key.OperaConMATBA,
                  }).Distinct().Take(15).ToList();
 
             var lista = DevolverEstadoSisa(contexto, resultado.ToList());
@@ -210,7 +211,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         item.Color = "red";
                         continue;
                     }
-
+                    if (item.OperaConMATBA == true)
+                    {
+                        item.Estado += ". Opera con MATBA";
+                    }
                 }
                 return lista;
             }
