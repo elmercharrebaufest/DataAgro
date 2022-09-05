@@ -2241,7 +2241,7 @@ function armarFuncionalidades() {
     });
 
     $("#cuit").blur(function (ev) {
-        $("#cuit").val($("#cuit").val().replace(" ", "").trim());
+        $("#cuit").val($("#cuit").val().split(" ").join(''));
         var valor = $("#cuit").val();
         if (valor.length > 10)
             buscarRazonSocial(valor);

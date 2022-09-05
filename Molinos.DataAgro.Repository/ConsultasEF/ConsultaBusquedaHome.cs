@@ -213,7 +213,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     }
                     if (item.OperaConMATBA == true)
                     {
-                        item.Estado += ". Opera con MATBA";
+                        item.Estado += ". Opera solo MATBA";
                     }
                 }
                 return lista;
