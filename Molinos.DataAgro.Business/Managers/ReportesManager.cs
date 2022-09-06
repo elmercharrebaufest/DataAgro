@@ -603,7 +603,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000),
                 SanLorenzo = ((x.Destino.Acopio == false || x.Destino.CodigoSap == "1074") && !(x.Destino.CodigoSap == "1168" && x.MaterialId == 1)) ? Math.Round(x.Cantidad / 1000) : 0,
-                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074") ? Math.Round(x.Cantidad / 1000) : 0,
+                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074") && !(x.Destino.CodigoSap == "1168" && x.MaterialId == 1) ? Math.Round(x.Cantidad / 1000) : 0,
                 BahiaBlanca = (x.Destino.CodigoSap == "1168" && x.MaterialId == 1)? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
             DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
