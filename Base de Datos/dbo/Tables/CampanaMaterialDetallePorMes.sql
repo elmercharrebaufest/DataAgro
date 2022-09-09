@@ -22,6 +22,7 @@
     [FechaDesde] DATETIME NULL, 
     [FechaHasta] DATETIME NULL, 
     [CampanaDesc] VARCHAR(9) NULL, 
+    [Centro] VARCHAR(MAX) NULL, 
     CONSTRAINT [PK_CampanaMaterialDetallePorMes] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_CampanaMaterialDetallePorMes_Contacto] FOREIGN KEY ([CorredorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),
 	CONSTRAINT [FK_CampanaMaterialDetallePorMes_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [Comercial]([ComercialId]),

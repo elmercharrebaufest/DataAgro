@@ -113,6 +113,8 @@ namespace Molinos.DataAgro.Agent.ComprasDetalle {
         
         private string fECHA_HASTAField;
         
+        private string cENTROField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string VENDEDOR {
@@ -314,6 +316,18 @@ namespace Molinos.DataAgro.Agent.ComprasDetalle {
             set {
                 this.fECHA_HASTAField = value;
                 this.RaisePropertyChanged("FECHA_HASTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=17)]
+        public string CENTRO {
+            get {
+                return this.cENTROField;
+            }
+            set {
+                this.cENTROField = value;
+                this.RaisePropertyChanged("CENTRO");
             }
         }
         

@@ -280,6 +280,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         campaniaMaterialMes.FechaDesde = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider);
                                         campaniaMaterialMes.FechaHasta = DateTime.ParseExact(ii.FECHA_HASTA, "yyyy-MM-dd", provider);
                                         campaniaMaterialMes.CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider));
+                                        campaniaMaterialMes.Centro = ii.CENTRO;
                                     }
                                     else
                                     {
@@ -306,7 +307,8 @@ namespace Molinos.DataAgro.Business.Managers
                                             MaterialId = materialId,
                                             FechaDesde = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider),
                                             FechaHasta = DateTime.ParseExact(ii.FECHA_HASTA, "yyyy-MM-dd", provider),
-                                            CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider))
+                                            CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider)),
+                                            Centro = ii.CENTRO
                                     });
                                     }
                                 }
@@ -343,6 +345,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         campaniaMaterialMes.FechaDesde = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider);
                                         campaniaMaterialMes.FechaHasta = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider);
                                         campaniaMaterialMes.CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider));
+                                        campaniaMaterialMes.Centro = ii.CENTRO;
                                     }
                                     else
                                     {
@@ -369,8 +372,8 @@ namespace Molinos.DataAgro.Business.Managers
                                             MaterialId = materialId,
                                             FechaDesde = DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider),
                                             FechaHasta = DateTime.ParseExact(ii.FECHA_HASTA, "yyyy-MM-dd", provider),
-                                            CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider))
-
+                                            CampanaDesc = CalcularCampana(DateTime.ParseExact(ii.FECHA_DESDE, "yyyy-MM-dd", provider)),
+                                            Centro = ii.CENTRO
                                         });
                                     }
                                 }

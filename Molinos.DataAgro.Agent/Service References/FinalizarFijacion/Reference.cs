@@ -64,6 +64,8 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         
         private string iM_PAGO_DIF_ARPField;
         
+        private string iM_PEDIDOField;
+        
         private decimal iM_PRECIOField;
         
         private string iM_PROVEEDORField;
@@ -265,6 +267,18 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=16)]
+        public string IM_PEDIDO {
+            get {
+                return this.iM_PEDIDOField;
+            }
+            set {
+                this.iM_PEDIDOField = value;
+                this.RaisePropertyChanged("IM_PEDIDO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=17)]
         public decimal IM_PRECIO {
             get {
                 return this.iM_PRECIOField;
@@ -276,7 +290,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=17)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=18)]
         public string IM_PROVEEDOR {
             get {
                 return this.iM_PROVEEDORField;
@@ -288,7 +302,7 @@ namespace Molinos.DataAgro.Agent.FinalizarFijacion {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=18)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=19)]
         public string IM_ZLSCH {
             get {
                 return this.iM_ZLSCHField;

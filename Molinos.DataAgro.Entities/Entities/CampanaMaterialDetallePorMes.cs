@@ -45,6 +45,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Material Material { get; set; }
         [ForeignKey("CampanaSAPId")]
         public virtual Campaña CampanaSAP { get; set; }
+        public string Centro { get; set; }
     }    
 }
    

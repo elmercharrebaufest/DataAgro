@@ -143,7 +143,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         IM_FECHA_LIMITE = !String.IsNullOrEmpty(fechaDolarizadoString) ? fechaDolarizadoString : "",
                         IM_DOL_CORREDOR = fijacion.DolarizadoCorredor == true ? "X" : "",
                         IM_FECHA_CIERTA = fijacion.FechaCierta.HasValue ? fijacion.FechaCierta.Value.ToString("yyyy-MM-dd") : "",
-                        IM_ANULACION = ""
+                        IM_ANULACION = "",
+                        IM_PEDIDO = ""
                     };
                     logger.Debug(rq.ToXml());
 

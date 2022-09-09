@@ -63,7 +63,7 @@ namespace Molinos.DataAgro.Agent
 
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
-                
+
                 var rq = new Z_MPRFC_DATOS_COMPRAS_DETALLE() { IM_CUIT = CUIT.ToArray(), IM_USUARIO = UsuarioComercial };
                 //var log = new Log
                 //{
@@ -74,7 +74,7 @@ namespace Molinos.DataAgro.Agent
                 //repositorio.GuardarCambios();
                 //logger.Debug(rq.ToXml());
                 var devolucion = agent.SI_ZMPWS_DATAAGRO_DATOS_COMPRAS_DETALLE(rq);
-                
+
                 if (devolucion.EX_SALIDA != null)
                 {
                     foreach (var dev in devolucion.EX_SALIDA)
@@ -96,16 +96,15 @@ namespace Molinos.DataAgro.Agent
         private CompraDetalleAgentDto ConvertirADto(ZMPES5620 dev)
         {
             var compraAgent = new CompraDetalleAgentDto
-            {               
+            {
                 COSECHA = dev.COSECHA,
                 MATERIAL = dev.MATERIAL,
                 VENDEDOR = dev.VENDEDOR,
-
                 CLASE_DOC = dev.CLASE_DOC,
                 CLASIFICACION = dev.CLASIFICACION,
                 CONTRATO = dev.CONTRATO,
                 CORREDOR = dev.CORREDOR,
-                FECHA = dev.FECHA,               
+                FECHA = dev.FECHA,
                 PEND_APLICAR = dev.PEND_APLICAR,
                 PEND_FIJAR = dev.PEND_FIJAR,
                 TN_AMPLIADAS = dev.TN_AMPLIADAS,
@@ -113,9 +112,9 @@ namespace Molinos.DataAgro.Agent
                 TN_APLICADAS = dev.TN_APLICADAS,
                 TN_CONTRATO = dev.TN_CONTRATO,
                 TN_FIJADAS = dev.TN_FIJADAS,
-               FECHA_HASTA = dev.FECHA_HASTA,
-               FECHA_DESDE = dev.FECHA_DESDE,
-                
+                FECHA_HASTA = dev.FECHA_HASTA,
+                FECHA_DESDE = dev.FECHA_DESDE,
+                CENTRO = dev.CENTRO
             };
             return compraAgent;
         }

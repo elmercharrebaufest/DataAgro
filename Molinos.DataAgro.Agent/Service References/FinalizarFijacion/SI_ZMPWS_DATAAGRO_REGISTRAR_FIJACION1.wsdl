@@ -24,6 +24,7 @@
             <xsd:element name="IM_MATERIAL" type="rfc:char18" />
             <xsd:element name="IM_MONEDA" type="rfc:char4" />
             <xsd:element name="IM_PAGO_DIF_ARP" type="rfc:char1" />
+            <xsd:element minOccurs="0" name="IM_PEDIDO" type="rfc:char10" />
             <xsd:element name="IM_PRECIO" type="rfc:curr11.2" />
             <xsd:element name="IM_PROVEEDOR" type="rfc:char16" />
             <xsd:element minOccurs="0" name="IM_ZLSCH" type="rfc:char1" />
