@@ -6345,8 +6345,8 @@ function MostrarServiciosYCalidades() {
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Especial" ||
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ||
-        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados" ||
-        ($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && ($('#material').val() == 4 || $('#material').val() == 5));
+        $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados";
+        //($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && ($('#material').val() == 4 || $('#material').val() == 5));
     if (validar == false) {
         $("#servicioBtn").hide();
         LimpiarServicios();
