@@ -90,7 +90,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId.Value) /*&& x.GrupoDeComprasId == oComerciales.GrupoDeComprasId*/).ToList();
+                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId.HasValue ? x.ComercialId.Value:0) /*&& x.GrupoDeComprasId == oComerciales.GrupoDeComprasId*/).ToList();
                 }
                 res.AcopioMaterialPorProveedores = repositorio.Listar<AcopioMaterial, AcopioMaterialPorProveedor>(x => new AcopioMaterialPorProveedor
                 {
