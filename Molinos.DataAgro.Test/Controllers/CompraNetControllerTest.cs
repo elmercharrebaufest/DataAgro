@@ -1301,13 +1301,13 @@ namespace Molinos.DataAgro.Test.Controllers
         public void AnularFijacionVirtualTest()
         {
 
-            fijacionManagerMock.Setup(x => x.AnularFijacionVirtual(It.IsAny<int>(), It.IsAny<string>()))
+            fijacionManagerMock.Setup(x => x.AnularFijacion(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(new GrabarFijacionResult());
             var result = target.AnularFijacionVirtual(It.IsAny<int>());
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
 
-            fijacionManagerMock.Verify(x => x.AnularFijacionVirtual(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            fijacionManagerMock.Verify(x => x.AnularFijacion(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"FijacionDePrecioContratoId\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
@@ -1532,7 +1532,7 @@ namespace Molinos.DataAgro.Test.Controllers
             //acuerdoManagerMock.Verify(x => x.TraerAcuerdo(It.IsAny<int>()), Times.Once);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Resume\":null,\"Resultado\":true},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"data\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
     }

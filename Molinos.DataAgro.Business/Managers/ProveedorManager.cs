@@ -72,18 +72,20 @@ namespace Molinos.DataAgro.Business.Managers
                 res.ContactosComercialesTraerPorProveedores = repositorio.SelStore<ContactosComerciales>("DataAgro_ContactosComercialesTraerPorProveedorId", 0, ProveedorId);
                 res.ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, false));
                 res.ObjetivosTraerPorProveedorId = repositorio.SelStore<ObjetivosTraer>("DataAgro_ObjetivosTraerPorProveedorId", 0, ProveedorId);
-                if(oComerciales.GrupoDeCompras.Corredor)
+                if (oComerciales.GrupoDeCompras.Corredor)
                 {
                     List<ObjetivosTraer> listaObjetivos = new List<ObjetivosTraer>();
                     var xGrupoCompras = res.ObjetivosTraerPorProveedorId.GroupBy(z => new { z.GrupoDeComprasId, z.Material, z.MaterialId, z.CampañaId, z.Campaña, z.ProveedorId })
-                        .Select(x  => new ObjetivosTraer { 
-                            Campaña = x.Key.Campaña, 
+                        .Select(x => new ObjetivosTraer
+                        {
+                            Campaña = x.Key.Campaña,
                             CampañaId = x.Key.CampañaId,
-                            Material = x.Key.Material, 
+                            Material = x.Key.Material,
                             MaterialId = x.Key.MaterialId,
-                            GrupoDeComprasId = x.Key.GrupoDeComprasId, 
+                            GrupoDeComprasId = x.Key.GrupoDeComprasId,
                             ProveedorId = x.Key.ProveedorId,
-                            ToneladasObjetivos = x.Sum(s=> s.ToneladasObjetivos) })
+                            ToneladasObjetivos = x.Sum(s => s.ToneladasObjetivos)
+                        })
                         .Where(x => x.GrupoDeComprasId == oComerciales.GrupoDeComprasId).ToList();
                     //xGrupoCompras = xGrupoCompras.Where(x => x.GrupoDeComprasId == oComerciales.GrupoDeComprasId).ToList();
                     res.ObjetivosTraerPorProveedorId = xGrupoCompras;
@@ -781,7 +783,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "<tr>" + th + "BOLETO</th>" + Td(ref linea) + oContrato.Boleto.Descripcion.ToUpper() + "</td></tr>";
             }
-           
+
             htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
             if (oContrato.TipoNegocioId == 1)
             {
@@ -893,7 +895,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "PRECIO PACTADO <br />";
                 foreach (var precio in oContrato.PrecioPactado)
                 {
-                    decimal calculoPrecio = precio.Precio + (precio.Porcentaje.HasValue ? precio.Precio * (precio.Porcentaje.Value / 100) : 0) + (precio.ImportePactado.HasValue ?  precio.ImportePactado.Value : 0);
+                    decimal calculoPrecio = precio.Precio + (precio.Porcentaje.HasValue ? precio.Precio * (precio.Porcentaje.Value / 100) : 0) + (precio.ImportePactado.HasValue ? precio.ImportePactado.Value : 0);
                     htmlBody += " Si la entrega se realiza entre el " + precio.FechaDesde.Value.ToString("dd/MM/yyyy") + " y el " + precio.FechaHasta.Value.ToString("dd/MM/yyyy") +
                                             " el precio será " + calculoPrecio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + " " + precio.MonedaPactado.Descripcion.ToUpper() +
                                             "<br />"; if (precio.ImportePactado != null && precio.ImportePactado > 0 && precio.MonedaImportePactado != null)
@@ -1032,6 +1034,10 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
             }
             htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
+            if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
+            {
+                htmlBody += "PRECIO NETO: " + oFijacionDePrecioContrato.PrecioNeto.ToString() + "<br /> ";
+            }
             if (oFijacionDePrecioContrato.PagoDiferido.HasValue && oFijacionDePrecioContrato.PagoDiferido.Value)
             {
                 htmlBody += "PAGO DIFERIDO <br /> ";
@@ -1094,6 +1100,32 @@ namespace Molinos.DataAgro.Business.Managers
                 if (contrato.ImporteSustentable != null && contrato.ImporteSustentable > 0 && contrato.MonedaSustentable != null)
                 {
                     htmlBody += "SUSTENTABLE " + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                }
+                if (contrato.Descuentos != null)
+                {
+                    foreach (var desc in contrato.Descuentos)
+                    {
+                        if (desc.Importe > 0 || desc.Porcentaje > 0)
+                        {
+                            htmlBody += "BONIFICACIONES " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                        }
+                        else if (desc.Importe < 0 || desc.Porcentaje < 0)
+                        {
+                            htmlBody += "DESCUENTOS " + "<br />" + desc.TipoDB.Descripcion.ToUpper() + "<br />";
+                        }
+                        if (contrato.AperturaPrecio != null && !contrato.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis &&
+                        (x.Importe != 0 || x.Porcentaje != 0)))
+                        {
+                            if (desc.Importe != 0)
+                            {
+                                htmlBody += desc.Importe + " " + desc.Moneda.Descripcion + "<br />";
+                            }
+                            if (desc.Porcentaje != 0)
+                            {
+                                htmlBody += desc.Porcentaje + "%<br />";
+                            }
+                        }
+                    }
                 }
             }
 
@@ -1290,7 +1322,7 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public GrabarProveedorResult GrabarNuevoProveedor(NuevoProveedor oParam, string idActiveDirectory)
         {
-            var oEntityErrors = new GrabarProveedorResult();            
+            var oEntityErrors = new GrabarProveedorResult();
             oEntityErrors = ValidarProveedor(oParam, oEntityErrors, false);
             if (oEntityErrors.HayError)
             {
@@ -1779,10 +1811,10 @@ namespace Molinos.DataAgro.Business.Managers
                         item.Alias = oParam.basicos.Alias;
                     }
                 }
-                if((oProveedorSave.SegmentacionId == 5 || oProveedorSave.SegmentacionId == 7) && (oParam.basicos.segmentacion <= 5))
+                if ((oProveedorSave.SegmentacionId == 5 || oProveedorSave.SegmentacionId == 7) && (oParam.basicos.segmentacion <= 5))
                 {
                     var corredorProveedor = repositorio.Listar<CorredorProveedor>(x => x.CorredorId == oParam.ProveedorId);
-                    foreach(var item in corredorProveedor)
+                    foreach (var item in corredorProveedor)
                     {
                         repositorio.Remover(item);
                     }
@@ -2824,7 +2856,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var campaniaActual = material.Campaña.Descripcion;
                     var campaniaAnterior = (Convert.ToInt32(campaniaActual.Substring(0, 2)) - 1).ToString() + "-" + campaniaActual.Substring(0, 2);
-                    var campaniaSiguiente = campaniaActual.Substring(3, 2) + "-" +(Convert.ToInt32(campaniaActual.Substring(3, 2)) + 1).ToString();
+                    var campaniaSiguiente = campaniaActual.Substring(3, 2) + "-" + (Convert.ToInt32(campaniaActual.Substring(3, 2)) + 1).ToString();
                     List<CampanaMaterialDetallePorMes> oCampañaMaterialAnteriorActualNueva = new List<CampanaMaterialDetallePorMes>();
                     if (oComerciales.GrupoDeCompras.Corredor)
                     {
@@ -2835,11 +2867,11 @@ namespace Molinos.DataAgro.Business.Managers
                                 ANIO = y.Key.Year.ToString(),
                                 COSECHA = y.Key.Descripcion,
                                 MATERIAL = material.MaterialId.ToString(),
-                                MES  = y.Key.Month.ToString(),
-                                TN_COMPRADAS = Convert.ToDecimal(campanaMaterial.Where(x=> x.ProveedorId == y.Key.ProveedorId 
-                                   && x.Campana.Descripcion == y.Key.Descripcion 
+                                MES = y.Key.Month.ToString(),
+                                TN_COMPRADAS = Convert.ToDecimal(campanaMaterial.Where(x => x.ProveedorId == y.Key.ProveedorId
+                                   && x.Campana.Descripcion == y.Key.Descripcion
                                    && x.FechaDesde.Year == y.Key.Year
-                                   && x.FechaDesde.Month == y.Key.Month).Sum(s=> s.ToneladaAplicada)),
+                                   && x.FechaDesde.Month == y.Key.Month).Sum(s => s.ToneladaAplicada)),
                                 VENDEDOR = proveedor.CUIT
                             }).ToList());
                     }
@@ -2865,7 +2897,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         }
                     }
-                    
+
                 }
 
                 var listMaterial = hist.GroupBy(z => z.MATERIAL).ToList();
@@ -2900,7 +2932,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 historial.HistorialGrano = list;
 
-                var listCampaña = hist.GroupBy(z => z.COSECHA).OrderBy( x => x.Key ).ToList();
+                var listCampaña = hist.GroupBy(z => z.COSECHA).OrderBy(x => x.Key).ToList();
 
                 foreach (var ca in listCampaña)
                 {
@@ -3191,7 +3223,7 @@ namespace Molinos.DataAgro.Business.Managers
                 basicos = oParam.basicos,
                 contacto = oParam.contacto,
                 contactocomercial = oParam.contactocomercial,
-                produccion = oParam.produccion != null? oParam.produccion : new Produccion(),
+                produccion = oParam.produccion != null ? oParam.produccion : new Produccion(),
                 almacenamiento = new Almacenamiento()
 
             };
@@ -3679,7 +3711,8 @@ namespace Molinos.DataAgro.Business.Managers
                 compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
                 x.ProveedorId == proveedorId && x.Comercial.GrupoDeComprasId == oComercial.GrupoDeComprasId);
             }
-            else {
+            else
+            {
                 compras = repositorio.Listar<CampanaMaterialDetallePorMes>(x =>
                     x.ProveedorId == proveedorId && equipo.Contains(x.ComercialId.Value));
             }
@@ -4703,7 +4736,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (lista != null && lista.Count > 0)
                 {
                     foreach (var item in lista)
-                    {                       
+                    {
                         if (!string.IsNullOrEmpty(item.Pesificado))
                         {
                             entidades.Add(new MailProveedor()

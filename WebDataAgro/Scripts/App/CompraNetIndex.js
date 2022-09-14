@@ -548,12 +548,13 @@ function botonBorrarPreanulado(dataItem, icono, esModalVisualizar) {
 }
 
 function botonPreAnular(dataItem, icono, esModalVisualizar) {
-    if (preanular && dataItem.ContratoId || (preanular && (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true))) {
+    if (preanular && dataItem.ContratoId || (preanular && (dataItem.FijacionDePrecioContratoId != null/* && dataItem.Virtual == true*/))) {
         var cerrarModalVisualizar = ' ';
         if (esModalVisualizar == true) {
             cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
         }
-        if (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true) {
+        if (dataItem.FijacionDePrecioContratoId && dataItem.Virtual == true ) {
+
             var kilospendientesFijacion = MSExecuteOnServer('/CompraNet/DevolverKilosPendientesAnularFijacionCanje', { id: dataItem.FijacionDePrecioContratoId });
             if (kilospendientesFijacion.KilosPendientes > 0) {
                 return '<button data-toggle="tooltip" title="PreAnular"' +
@@ -565,11 +566,10 @@ function botonPreAnular(dataItem, icono, esModalVisualizar) {
                     "'" + dataItem.TipoNegocioId + "'" + ',' +
                     "'" + kilospendientesFijacion.KilosPendientes + "'" +
                     ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
-            }
-            else {
+            }else {
                 return '<div></div>';
             }
-        } else {
+        } else if (dataItem.FijacionDePrecioContratoId && dataItem.Canje != true) {
             return '<button data-toggle="tooltip" title="PreAnular"' +
                 cerrarModalVisualizar +
                 'onclick="ModalPreAnular(' +
@@ -578,8 +578,9 @@ function botonPreAnular(dataItem, icono, esModalVisualizar) {
                 "'" + dataItem.Proveedor + "'" + ',' +
                 "'" + dataItem.TipoNegocioId + "'" +
                 ')"><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+        } else {
+            return '<div></div>';
         }
-
 
     } else {
         return '<div></div>';
@@ -1181,7 +1182,7 @@ function CreateGridInformeCompraNet() {
                             return '<div class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
-                                ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin')) +
+                                ((dataItem.TipoNegocioId == 3) ? botonPreAnular(dataItem, 'fa-trash fin') : botonPreAnular(dataItem, 'fa-trash fin')) +
                                 ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin')) +
                                 botonAsociarContratos(dataItem, 'fa fa-inbox fin');
 
@@ -1191,7 +1192,7 @@ function CreateGridInformeCompraNet() {
                             return '<div ' + descripcion + 'class="status finalizado">Finalizado</div>' +
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
-                                ((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin')) +
+                                ((dataItem.TipoNegocioId == 3) ? botonPreAnular(dataItem, 'fa-trash fin') : botonPreAnular(dataItem, 'fa-trash fin')) +
                                 ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
                         }
                     }
@@ -1661,10 +1662,10 @@ function ModalConfirmadoVarios() {
         var n = negocios.filter(function (x) { return x.ServicioModificado == true });
         if (n != null && n.length > 0) {
             $(".calidadModificada").show();
-            $("#confirmarVariosSinCalidad").show();            
+            $("#confirmarVariosSinCalidad").show();
         } else {
             $(".calidadModificada").hide();
-            $("#confirmarVariosSinCalidad").hide();   
+            $("#confirmarVariosSinCalidad").hide();
         }
     }
     if (negocios.length > 0) {
@@ -2277,7 +2278,8 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         Precio: precio,
         Virtual: virtual,
         Proveedor: proveedor,
-        ServicioModificado: servicioModificado
+        ServicioModificado: servicioModificado,
+        Canje: Canje
     };
     $("#modalVisualizar").modal('show');
     if (Estado == '1') {//pendiente
@@ -2312,7 +2314,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     }
     if (Estado == '5') { //Finalizado
         //if (verMesa && (dataItem.ContratoId || dataItem.FasonId || dataItem.AgenteId)) {
-        $("#botoneriaFinaDiv").html(((dataItem.Virtual != true && dataItem.TipoNegocioId == 3) ? "" : botonPreAnular(dataItem, 'fa-trash fin', true)) +
+        $("#botoneriaFinaDiv").html((dataItem.TipoNegocioId == 3 && dataItem.Canje != true ? botonPreAnular(dataItem, 'fa-trash fin', true) : botonPreAnular(dataItem, 'fa-trash fin', true)) +
             ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin', true))
         );
         //} else {
@@ -2380,7 +2382,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         //var mostrarServicio = ArmarServicio(id);
         ArmarServicio(id);
         if (viewModel.Servicios != null && viewModel.Servicios.length > 0) {
-        $("#VisualizarServicioDiv").show();
+            $("#VisualizarServicioDiv").show();
         } else {
             $("#VisualizarServicioDiv").hide();
         }

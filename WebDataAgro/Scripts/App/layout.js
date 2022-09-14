@@ -3,6 +3,7 @@ var htmlnotifaux = "";
 var options = {};
 var strFiltro = "";
 var notificaciones = [];
+var filtro;
 
 function ArmarNotificaciones() {
     var result = MSExecuteOnServer('/Home/TraerActividadesPorComercialId');
@@ -395,6 +396,7 @@ function armarBusquedaResult(value) {
         var result = MSExecuteOnServer('/Home/BusquedaHome', { filtro: txt });
 
         var html = "";
+        var url = "";
         for (var i = 0; i < result.length; i++) {
             var valor = "";
             var colorEstado = result[i].Color;
@@ -403,8 +405,12 @@ function armarBusquedaResult(value) {
             valor = valor.toUpperCase().split(txt).join("<strong>" + txt + "</strong>");
 
             var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
-
-            html += '<a href=' + MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[i].Id) + '>'
+            if (result[i].EstaAsignado) {
+              url =  MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[i].Id)
+            } else {
+                url = MSGetUrl("/proveedor/ReporteProveedor?valor=" + result[i].Cuit)
+            }
+            html += '<a href=' + url + '>'
                 + '<div class="buscar-result-linea" >'
                 + '<img class="buscar-cont" src="..' + url + '" /> '
                 + '<p class="buscar-nomb" style="color:' + colorEstado + '">' + valor + '</p>'
@@ -414,7 +420,9 @@ function armarBusquedaResult(value) {
 
         if (result.length == 1) {
             if (value && (value.keyCode || value.which) == 13) {
+                
                 var htmlurl = MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[0].Id);
+                var htmlurl = MSGetUrl("/proveedor/ObtenerReporteProveedor?Valor=" + result[0].Cuit);
                 window.location.href = window.location.origin + htmlurl;
             }
         }

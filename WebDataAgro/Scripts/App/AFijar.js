@@ -1619,6 +1619,7 @@ function InicializarElementos() {
         change: function () {
             if ($("#cargarCantidadCamiones").is(':checked')) {
                 $("#cantidadId").data("kendoNumericTextBox").value(Math.ceil(this.value() * 30000));
+                CalcularMaximo();
             }
             if ($("#cantidadId").val() <= 30) {
                 $("#cantidadTooltip").tooltip({ title: 'Cantidad inferior a 30kg' });
@@ -2213,7 +2214,7 @@ function InicializarElementos() {
             //var tipoPosicionCBOT = $("#tipoPosicionCBOTId").data("kendoDropDownList");
             //tipoPosicionCBOT.enable(false);
             //tipoPosicionCBOT.value("");
-            
+
             $("#sinBoletoId").prop("checked", true);
             if ($("#sinBoletoId").is(':checked')) {
                 MensAlerta("Se completó la tilde de mercadería en depósito automáticamente");
@@ -4972,7 +4973,7 @@ function HayCanje() {
         $("#prestamoDevolucionDiv").show();
         if ($("#AgenteCompraId").val() != 1) {
             $("#boletoCartaId").prop("disabled", false);
-        } 
+        }
         $("#boletoNingunoId").prop("disabled", false);
         $("#TipoDBId").data("kendoDropDownList").enable(true);
         //$("#DatosCalidades").show();

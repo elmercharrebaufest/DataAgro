@@ -34,6 +34,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class ContactoAll
     {
+        public int ProveedorId { get; set; }
         public string Cuit { get; set; }
         public string RazonSocial { get; set; }
         public string Estado { get; set; }
@@ -49,7 +50,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Intermediario { get; set; }
         public string AreaDeInfluencia { get; set; }
         public string Comentario { get; set; }
-        public string Comercial { get; set; }
+        public string ComercialACargo { get; set; }
         public string ClienteMoa { get; set; }
         public string Zona { get; set; }
         public DateTime FechaAlta { get; set; }
@@ -62,6 +63,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string LocalidadCompraNet { get; set; }
         public string ProvinciaCompraNet { get; set; }
         public string Deshabilitado { get; set; }
+        public string Comisionista { get; set; }
+        public string CuposConRiesgo { get; set; }
+        public string OperaConMATBA { get; set; }
+        public string OperaAtravesDe { get; set; }
     }
 
     public class ObjetivoAll
@@ -91,6 +96,10 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CompraNet { get; set; }
         public string Cupo { get; set; }
         public string Boleto { get; set; }
+        //public string OperaATravesDe { get; set; }
+        //public string Comisionista { get; set; }
+        //public string HabilitadoCuposConRiesgo { get; set; }
+        //public string OperaConMatba { get; set; }
     }
 
     public class ProduccionAll

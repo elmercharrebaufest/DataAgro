@@ -1,5 +1,9 @@
 ﻿$(document).ready(function () {
     InicializarElementos();
+
+    if (filtro != "" && filtro != null) {
+        buscar();
+    }
 });
 
 function InicializarElementos() {
@@ -19,7 +23,13 @@ function InicializarElementos() {
 }
 
 function buscar() {
-    var valor = $("#valor").val();
+    var valor = "";
+    if (filtro != "" && filtro != null) {
+        valor = filtro;
+    } else {
+        valor = $("#valor").val();
+    }
+   
     if (!valor || !valor.trim()) {
         MensErr("El campo no puede estar vacío");
         return false;

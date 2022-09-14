@@ -34,12 +34,14 @@ namespace Molinos.DataAgro.Interfaces
         Resultado AnularFijacionCarga(int fijacionId, string motivoRechazo);
         void BuscarComision(BasicoContrato negocio);
         List<DatosFijacionDeContratoDto> TraerDatosFijacionVirtual(string CuitProveedor, string CuitCorredor, int materialId, string filtro, int fijacionId);
-        GrabarFijacionResult AnularFijacionVirtual(int fijacionId, string idActiveDirectory);
+        GrabarFijacionResult AnularFijacion(int fijacionId, string idActiveDirectory);
         GrabarFijacionResult RechazarPreAnularFijacionVirtual(int contratoId/*, string motivo*/);
         GrabarFijacionResult PreAnularFijacion(int contratoId, string motivo);
         ResultadoDevolverKilosPendientesAnularFijacionCanjeDto DevolverKilosPendientesAnularFijacionCanje(int id);
 
         GrabarFijacionResult GrabarFijacionDePrecioTercero(FijacionDePrecioContrato oFijacionDePrecio);
+
+        void ConfirmacionAutomaticaPizarra13Hrs();
 
     }
 }

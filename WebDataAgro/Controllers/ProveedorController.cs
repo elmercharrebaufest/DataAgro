@@ -51,13 +51,14 @@ namespace WebDataAgro.Controllers
 
         // GET: Contactos
         public ActionResult Index()
-        {
+        {            
             return View();
         }
 
         [Autorizacion(PermisosDataAgro.VisualizarReporteProveedor)]
-        public ActionResult ReporteProveedor()
+        public ActionResult ReporteProveedor(string valor)
         {
+            ViewBag.filtro = valor;
             ViewBag.edita = false;
             return View();
         }
@@ -320,7 +321,8 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = mobjProveedorManager.ObtenerReporteProveedor(Valor, GlobalVariables.IdActiveDirectory),
-                MaxJsonLength = Int32.MaxValue
+                MaxJsonLength = Int32.MaxValue,
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
             };
         }
         public JsonResult BuscarCorredores(string filtro, int corredor, int? agenteCompraId)

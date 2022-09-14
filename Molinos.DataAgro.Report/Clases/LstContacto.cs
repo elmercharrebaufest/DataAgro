@@ -140,7 +140,6 @@ namespace Molinos.DataAgro.Report
             var oColumnas = oDatos.contacto;
 
             var workSheet = excel.Workbook.Worksheets.Add("Datos del Proveedor");
-
             workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
 
             var workSheet2 = excel.Workbook.Worksheets.Add("Objetivo");
@@ -200,12 +199,14 @@ namespace Molinos.DataAgro.Report
                 j++;
             }
 
+            workSheet.Cells[1, 1].Value = "Proveedor";
+            workSheet.Column(1).Hidden = true;
 
-            workSheet.Cells[1, 1].Value = "CUIT";
-            workSheet.Column(1).AutoFit();
-
-            workSheet.Cells[1, 2].Value = "Razón Social";
+            workSheet.Cells[1, 2].Value = "CUIT";
             workSheet.Column(2).AutoFit();
+
+            workSheet.Cells[1, 3].Value = "Razón Social";
+            workSheet.Column(3).AutoFit();
 
             workSheet.Cells[1, 4].Value = "Calificación";
             workSheet.Column(4).AutoFit();

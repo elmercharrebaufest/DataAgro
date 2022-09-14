@@ -1,6 +1,4 @@
-﻿
-
-create procedure [dbo].[DataAgro_ExportAll_Contacto] --'1,2,3',44
+﻿create procedure [dbo].[DataAgro_ExportAll_Contacto] --'1,2,3',44
 	@Proveedores VARCHAR(max),
 	 @ComercialId VARCHAR(max)
 as
@@ -20,9 +18,10 @@ create table #ProveedorAux (ProveedorId int,CUIT varchar(20),RazonSocial varchar
 RiesgoComercialSap   varchar(255), Estado  varchar(255), Situacion  varchar(255),Faccop int, Calificacion int,  
 Segmentacion  varchar(255),Domicilio  varchar(255),Localidad varchar(255),Provincia varchar(255),CodPostal varchar(255),  
 CanalDeOperacion varchar(255),Destinatario varchar(255),Condicion varchar(255),Intermediario varchar(255),  
-AreaDeInfluencia varchar(10),Comentario varchar(MAX),Comercial varchar(255),ClienteMoa varchar(255),   
+AreaDeInfluencia varchar(10),Comentario varchar(MAX),ComercialACargo varchar(255),ClienteMoa varchar(255),   
 Zona varchar(255), FechaAlta DATETIME null, Clasificacion varchar(255), TipoBoleto varchar(255), Bolsa varchar(255),  
-Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompraNet varchar(255),ProvinciaCompraNet varchar(255), Deshabilitado varchar(255) )  
+Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompraNet varchar(255),ProvinciaCompraNet varchar(255), Deshabilitado varchar(255), 
+Comisionista varchar(255), CuposConRiesgo varchar(255), OperaConMATBA varchar(255), OperaAtravesDe varchar(255))  
   
   
  insert into @table   
@@ -30,8 +29,9 @@ Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompr
   
   
  insert into #ProveedorAux(ProveedorId,CUIT,RazonSocial,Estado, Calificacion,  
- Segmentacion,Domicilio,Localidad,Provincia,CodPostal,CanalDeOperacion,Destinatario,Condicion,Intermediario, AreaDeInfluencia,Comentario,Comercial  
- ,ClienteMoa,Zona,FechaAlta, Clasificacion, TipoBoleto, Bolsa, Consignatario, Deshabilitado,ComisionPorcentaje,LocalidadCompraNet,ProvinciaCompraNet)  
+ Segmentacion,Domicilio,Localidad,Provincia,CodPostal,CanalDeOperacion,Destinatario,Condicion,Intermediario, AreaDeInfluencia,Comentario,ComercialACargo
+ ,ClienteMoa,Zona,FechaAlta, Clasificacion, TipoBoleto, Bolsa, Consignatario, Deshabilitado,ComisionPorcentaje,LocalidadCompraNet, ProvinciaCompraNet,
+ Comisionista, CuposConRiesgo, OperaConMATBA, OperaAtravesDe)
   
  select    
  p.ProveedorId,  
@@ -76,10 +76,14 @@ Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompr
  boletocn.Descripcion,  
  bolsacn.Descripcion,  
  case when p.Consignatario = 1 then 'SI' else 'NO' end,  
- case when p.Deshabilitado = 1 then 'SI' else 'NO' end,  
+ case when p.Deshabilitado = 1 then 'SI' else 'NO' end,   
  isnull(p.ComisionPorcentaje,0) as ComisionPorcentaje,  
  l1.Nombre ,  
- p1.Nombre  
+ p1.Nombre,
+ case when p.Comisionista = 1 then 'SI' else 'NO' end,  
+ case when p.CuposConRiesgo = 1 then 'SI' else 'NO' end,  
+ case when p.OperaConMATBA = 1 then 'SI' else 'NO' end,  
+ comisionista.RazonSocial + '(' + comisionista.CUIT + ')'  as OperaAtravesDe
   from Proveedor p  
  inner join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId  
  inner join Comercial c on pc.ComercialId = c.ComercialId  
@@ -102,6 +106,7 @@ Consignatario varchar(255),ComisionPorcentaje decimal(11, 2) NULL,LocalidadCompr
   
   left join Localidad l2 on p.LocalidadCompraNetId = l2.LocalidadId  
  left join Provincia p2 on l2.ProvinciaId = p2.ProvinciaId  
+  left join Proveedor comisionista on p.ComisionistaId = comisionista.ProveedorId
   
  where p.ProveedorId in (select * from @table)  
  order by p.RazonSocial desc  
@@ -131,6 +136,7 @@ from #ProveedorAux t ) est
 where  est.ProveedorId = #ProveedorAux.ProveedorId  
   
 select    
+ProveedorId,
  CUIT,  
  RazonSocial,  
  Estado,  
@@ -146,7 +152,7 @@ select
  Intermediario,  
  AreaDeInfluencia,  
  Comentario,  
- Comercial,  
+ ComercialACargo,  
  ClienteMoa,  
  Zona,  
  FechaAlta,  
@@ -157,7 +163,11 @@ select
  ComisionPorcentaje,  
  LocalidadCompraNet,  
  ProvinciaCompraNet,  
- Deshabilitado  
+ Deshabilitado, 
+ Comisionista, 
+ CuposConRiesgo, 
+ OperaConMATBA,
+ OperaAtravesDe
 from #ProveedorAux PA  
   
 drop table #ProveedorAux  

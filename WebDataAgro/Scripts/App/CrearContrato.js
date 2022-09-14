@@ -4271,7 +4271,7 @@ function CargarDatosEditar(contrato, hijo) {
         $("#dolarizadoExpressId").prop("checked", false);
         //$("#dolarizadoDiv").hide();
     }
-
+    
 
     if (contrato.PagoCBU != "" && contrato.PagoCBU != null) {
         $("#pagoCbu").data("kendoAutoComplete").value(contrato.PagoCBU);
@@ -4701,7 +4701,7 @@ function CargarDatosEditar(contrato, hijo) {
             $('#material').data("kendoDropDownList").enable(false);
         }
     }
-
+   
     $("#monedaPactadoId").data("kendoDropDownList").value($("#precioMonedaId").data("kendoDropDownList").value());
     if (contrato.Condicional == true) {
         $("#condicionalMonedaId").data("kendoDropDownList").enable(false);

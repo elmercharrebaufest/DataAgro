@@ -104,6 +104,7 @@ namespace Molinos.DataAgro.Interfaces
         int DevolverMilisegundos();
         CcPpPerndienteAplicarDto ObtenerDatosMercaderiaEnDeposito(int? materialId, int? id, int? centro, int? corredorId, int? proveedorId, bool? tieneSustentable, bool? tieneBoleto);
         List<ExcelValidatorResumeItem> AltaMasivaContratos(DataSet dsExcel, string contratoAcuerdo, int ComercialId);
+        List<ExcelValidatorResumeItem> AltaMasivaConvenios(DataSet dsExcel, int ComercialId);
         void ActualizarEstadoDeContratos();
         List<ServicioValorDto> TraerTodoServicio(int? materialId, int? centroId);
     }

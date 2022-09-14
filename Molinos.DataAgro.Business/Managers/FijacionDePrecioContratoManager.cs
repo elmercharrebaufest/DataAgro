@@ -41,6 +41,12 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IAnularFijacionVirtualAgent anularFijacionVirtual;
         private readonly INegocioManager negocioManager;
         private readonly IConfiguracionInternaManager configuracionInternaManager;
+        private readonly IAnularFijacionAgent anularFijacion;
+        private readonly IValidarLiquidacionComisionesAgent validarLiquidacionComisionesAgent;
+        private readonly IValidarLiquidacionFinalAgent validarLiquidacionFinalAgent;
+        private readonly IValidarLiquidacionParcialAgent validarLiquidacionParcialAgent;
+        private readonly IValidarPesificacionAgent validarPesificacionAgent;
+
 
         public FijacionDePrecioContratoManager(
             ILogger logger,
@@ -57,7 +63,9 @@ namespace Molinos.DataAgro.Business.Managers
             IValidarLiquidacionParaFijacionAgent validarLiquidacionParaFijacionAgent,
             ITipoDeCambioAgent tipoDeCambioAgent, IContratosParaFijacionVirtualAgent contratosParaFijacionVirtualAgent,
             IFinalizarFijacionVirtualAgent finalizarFijacionVirtual, IAnularFijacionVirtualAgent anularFijacionVirtual,
-            INegocioManager negocioManager, IConfiguracionInternaManager configuracionInternaManager)
+            INegocioManager negocioManager, IConfiguracionInternaManager configuracionInternaManager,
+            IAnularFijacionAgent anularFijacion, IValidarLiquidacionComisionesAgent validarLiquidacionComisionesAgent, IValidarLiquidacionFinalAgent validarLiquidacionFinalAgent,
+            IValidarLiquidacionParcialAgent validarLiquidacionParcialAgent, IValidarPesificacionAgent validarPesificacionAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -80,6 +88,11 @@ namespace Molinos.DataAgro.Business.Managers
             this.anularFijacionVirtual = anularFijacionVirtual;
             this.negocioManager = negocioManager;
             this.configuracionInternaManager = configuracionInternaManager;
+            this.anularFijacion = anularFijacion;
+            this.validarLiquidacionComisionesAgent = validarLiquidacionComisionesAgent;
+            this.validarLiquidacionFinalAgent = validarLiquidacionFinalAgent;
+            this.validarLiquidacionParcialAgent = validarLiquidacionParcialAgent;
+            this.validarPesificacionAgent = validarPesificacionAgent;
         }
 
         //--------------------------------------------------
@@ -1858,40 +1871,65 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
-        public GrabarFijacionResult AnularFijacionVirtual(int fijacionId, string idActiveDirectory)
+        public GrabarFijacionResult AnularFijacion(int fijacionId, string idActiveDirectory)
         {
             var oEntityErrors = new GrabarFijacionResult();
 
-            var oFijacionVirtualSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionId);
+            var oFijacionSave = repositorio.Obtener<FijacionDePrecioContrato>(fijacionId);
 
-            if (oFijacionVirtualSave != null && (oFijacionVirtualSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
+            if (oFijacionSave != null && (oFijacionSave.EstadoId == (int)EnumEstadoContrato.PreAnulado))
             {
-                var respuesta = anularFijacionVirtual.AnularFijacionVirtual(oFijacionVirtualSave, idActiveDirectory);
-                if (respuesta.Contains("OK"))
+                if (oFijacionSave.Virtual == true)
                 {
-                    try
+                    var respuesta = anularFijacionVirtual.AnularFijacionVirtual(oFijacionSave, idActiveDirectory);
+                    if (respuesta.Contains("OK"))
                     {
-                        var kilos = DevolverKilosPendientesAnularFijacionCanje(fijacionId);
-                        if (kilos.KilosPendientes >= oFijacionVirtualSave.Cantidad)
+                        try
                         {
-                            oFijacionVirtualSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                            var kilos = DevolverKilosPendientesAnularFijacionCanje(fijacionId);
+                            if (kilos.KilosPendientes >= oFijacionSave.Cantidad)
+                            {
+                                oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                            }
+                            else
+                            {
+                                oFijacionSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
+                                oFijacionSave.Cantidad -= kilos.KilosPendientes;
+                            }
+
+                            repositorio.GuardarCambios();
+                            logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacionId), TipoAccionLogDataAgro.Eliminar, oFijacionSave.GetType());
                         }
-                        else
+                        catch (Exception e)
                         {
-                            oFijacionVirtualSave.EstadoId = (int)EnumEstadoContrato.Finalizado;
-                            oFijacionVirtualSave.Cantidad -= kilos.KilosPendientes;
+                            logger.Error(e);
+                            oEntityErrors.Error("", e.Message);
+
+                        }
+                        //mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionVirtualSave, idActiveDirectory, true);
+                    }
+                }
+                else
+                {
+                    if (ValidarFijacionDisponibleParaAnular(oFijacionSave, oEntityErrors))
+                    {
+                        var respuesta = anularFijacion.AnularFijacion(oFijacionSave);
+                        //if (respuesta.Contains("OK"))
+                        //{
+                        try
+                        {
+                            oFijacionSave.EstadoId = (int)EnumEstadoContrato.Eliminado;
+                            repositorio.GuardarCambios();
+                            logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacionId), TipoAccionLogDataAgro.Eliminar, oFijacionSave.GetType());
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error(e);
+                            oEntityErrors.Error("", e.Message);
+
                         }
 
-                        repositorio.GuardarCambios();
-                        logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacionId), TipoAccionLogDataAgro.Eliminar, oFijacionVirtualSave.GetType());
                     }
-                    catch (Exception e)
-                    {
-                        logger.Error(e);
-                        oEntityErrors.Error("", e.Message);
-
-                    }
-                    //mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionVirtualSave, idActiveDirectory, true);
                 }
             }
             return oEntityErrors;
@@ -1993,7 +2031,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var pago = configuracionInternaManager.TraerPagosDiferido().Where(x => x.CantidadDia >= fijacion.DiasPesificado).OrderBy(x => x.CantidadDia).FirstOrDefault();
                 if (pago == null)
                 {
-                    return new GrabarFijacionResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } }  };
+                    return new GrabarFijacionResult { Errores = new List<ErrorMessage> { new ErrorMessage { Source = "PagoDiferido", Message = "No hay una tasa de pago diferido para esa cantidad de dias." } } };
                 }
                 fijacion.PagoDiferido = fijacion.PagoDiferidoTercero;
                 decimal ImporteFinanciero = Redondear(Math.Round(fijacion.Precio * (pago.Tasa / 100) * (fijacion.DiasPesificado.Value - 3) / 365));
@@ -2018,7 +2056,7 @@ namespace Molinos.DataAgro.Business.Managers
                     fijacion.PrecioNeto = fijacion.Precio + redespacho;
                     logger.Debug("redespachoPrecioNeto: " + fijacion.PrecioNeto);
 
-                }              
+                }
                 if (afijar[0].Aperturas.Any(x => x.ConceptoAperturaPrecioId == 4))
                 {
                     var bonif = afijar[0].Aperturas.First(x => x.ConceptoAperturaPrecioId == 4).Importe;
@@ -2048,7 +2086,7 @@ namespace Molinos.DataAgro.Business.Managers
                 fijacion.PorcentajeSobrePrecioContrato = afijar[0].PorcentajeSobrePrecio;
                 fijacion.ImporteAPrecioContrato = afijar[0].ImporteAPrecio;
                 fijacion.MonedaAPrecioContrato = afijar[0].MonedaAPrecio;
-                fijacion.PorcentajeAPrecioContrato = afijar[0].PorcentajeAPrecio;             
+                fijacion.PorcentajeAPrecioContrato = afijar[0].PorcentajeAPrecio;
                 if (afijar[0].ImporteSobrePrecio > 0)
                 {
                     if (afijar[0].MonedaSobrePrecio?.Trim() == fijacion.MonedaId.Trim())
@@ -2057,7 +2095,7 @@ namespace Molinos.DataAgro.Business.Managers
                         comisionImporte = afijar[0].ImporteSobrePrecio;
                     }
                     else
-                    {                       
+                    {
                         if (fijacion.MonedaId.Trim() == "ARP")
                         {
                             fijacion.PrecioNeto += afijar[0].ImporteSobrePrecio * cambio;
@@ -2116,9 +2154,74 @@ namespace Molinos.DataAgro.Business.Managers
 
             return nuevoImporte;
         }
-    }
 
- 
+        private bool ValidarFijacionDisponibleParaAnular(FijacionDePrecioContrato fijacion, GrabarFijacionResult resultado)
+        {
+
+            var puedoAnular = true;
+            var resultadoLiquidacionParcial = validarLiquidacionParcialAgent.ValidarLiquidacionParcial(fijacion);
+            if (string.IsNullOrEmpty(resultadoLiquidacionParcial) || resultadoLiquidacionParcial != "OK")
+            {
+                resultado.Error("", resultadoLiquidacionParcial);
+                puedoAnular = false;
+                return puedoAnular;
+            }
+            var resultadoLiquidacionFinal = validarLiquidacionFinalAgent.ValidarLiquidacionFinal(fijacion);
+            if (string.IsNullOrEmpty(resultadoLiquidacionFinal) || resultadoLiquidacionFinal != "OK")
+            {
+                resultado.Error("", resultadoLiquidacionFinal);
+                puedoAnular = false;
+                return puedoAnular;
+            }
+            var resultadoPesificacion = validarPesificacionAgent.ValidarPesificacion(fijacion);
+            if (string.IsNullOrEmpty(resultadoPesificacion) || resultadoPesificacion != "OK")
+            {
+                resultado.Error("", resultadoPesificacion);
+                puedoAnular = false;
+                return puedoAnular;
+            }
+
+            var resultadoLiquidacion = validarLiquidacionComisionesAgent.ValidarLiquidacionComisiones(fijacion);
+            if (string.IsNullOrEmpty(resultadoLiquidacion) || resultadoLiquidacion != "OK")
+            {
+                resultado.Error("", resultadoLiquidacion);
+                puedoAnular = false;
+                return puedoAnular;
+            }
+
+               
+            return puedoAnular;
+        }
+
+
+        public void ConfirmacionAutomaticaPizarra13Hrs()
+        {
+            var oEntityErrors = new GrabarContratoResult();
+            var fijaciones = repositorio.Listar<FijacionDePrecioContrato>(x =>
+            x.TipoNegocioId == (int)EnumTipoNegocio.FIJACION &&
+            x.EstadoId == (int)EnumEstadoContrato.Pendiente &&
+            (x.Contrato.CondicionFijacion.CodigoSap == "02" || x.Contrato.CondicionFijacion.CodigoSap == "05") &&
+            x.Cantidad <= x.Contrato.KgMaximo);
+
+            foreach (var fijacion in fijaciones)
+            {
+                try
+                {
+                    logger.Debug("Fijacion confirmada automaticamente:" + fijacion.Id);
+                    fijacion.FechaConfirmacion = DateTime.Now;
+                    fijacion.EstadoId = (int)EnumEstadoContrato.Confirmado;
+                    repositorio.GuardarCambios();
+                    logDataAgroManager.LogCambiosDataAgro(TraerFijacion(fijacion.Id), TipoAccionLogDataAgro.Eliminar, fijacion.GetType());
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    oEntityErrors.Error("", ex.Message);
+                }
+            }
+        }
+
+    }
 }
 
 

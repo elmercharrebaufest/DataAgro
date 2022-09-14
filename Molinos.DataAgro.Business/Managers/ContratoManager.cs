@@ -1558,7 +1558,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("Localidad", "La localidad ingresada no corresponde a la provincia.");
             }
-            if(oParam.TipoPosicionCBOTId == 3 && oParam.BoletoId == 5)
+            if (oParam.TipoPosicionCBOTId == 3 && oParam.BoletoId == 5)
             {
                 oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE .");
             }
@@ -1686,7 +1686,7 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.Error("", "El contrato no se puede modificar");
                     return oEntityErrors;
                 }
-              
+
                 if (oContrato.Servicios != null && oContrato.Servicios.Count > 0)
                 {
                     GrabarServicioModificado(oContrato.Servicios.ToList(), oContrato.MaterialId, oContrato.DestinoId ?? 0);
@@ -1967,7 +1967,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     //if (oContrato.Servicios == null || oContrato.Servicios.Any(x => x.Id == servExistente.Id))
                     //{
-                        repositorio.Remover(servExistente);
+                    repositorio.Remover(servExistente);
                     //}
                 }
             }
@@ -3917,7 +3917,7 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Error("Contrato", "No existe contrato en DataAgro");
                 return error;
             }
-            
+
             contrato.TipoNegocioId = contratoSave.TipoNegocioId;
             contrato.ComercialId = contratoSave.ComercialId;
             Validar(contrato, error, validacionesMinimas);
@@ -4041,7 +4041,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contratoSave.KgMinimo = contrato.KgMinimo ?? contratoSave.KgMinimo;
                 contratoSave.KgMaximo = contrato.KgMaximo ?? contratoSave.KgMaximo;
             }
-           
+
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(contratoSave.Id), TipoAccionLogDataAgro.Modificar, contratoSave.GetType());
 
@@ -4231,7 +4231,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oContrato.ContratoSAP = oContratoSave.ContratoSAP;
                 var cuit = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.ProveedorId, x => x.CUIT);
                 oContratoSave.MonedaCreditoDisponible = validarCreditoAgente.ValidarCredito(cuit).Moneda;
-                var validacionServicioModificado = ValidarServicioModificado(oContrato, oContratoSave);              
+                var validacionServicioModificado = ValidarServicioModificado(oContrato, oContratoSave);
 
                 if (oContratoSave.EstadoId == 6)
                 {
@@ -4271,7 +4271,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
 
                         oContrato.ContratoSAP = repositorio.Obtener<Contrato, string>(x => x.Id == oContrato.Id, x => x.ContratoSAP);
-                        
+
                         var res = modificarContratoAgent.Modificar(oContrato, oContratoSave);
                         if (res.Contains("Error"))
                         {
@@ -7388,6 +7388,247 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
+        public List<ExcelValidatorResumeItem> AltaMasivaConvenios(DataSet dsExcel, int ComercialId)
+        {
+            List<string> errores = new List<string>();
+            try
+            {
+                //int ncontratoAcuerdo;
+                //BasicoContrato acuerdo = contratoAcuerdoManager.TraerAcuerdo(1);
+                //if (acuerdo.Id == 0)
+                //{
+                //    throw new Exception("El Acuerdo seleccionado no es valido.");
+                //}
+                if (dsExcel.Tables.Count == 0)
+                {
+                    throw new Exception("El Archivo no contiene información.");
+                }
+                if (dsExcel.Tables[0].Rows.Count == 0)
+                {
+                    throw new Exception("El Archivo no contiene información.");
+                }
+                if (dsExcel.Tables[0].TableName != "AltaMasiva")
+                {
+                    if (dsExcel.Tables[0].TableName == "Data")
+                    {
+                        throw new Exception("El documento no contiene información de contratos.");
+                    }
+                    else
+                    {
+                        throw new Exception("El documento no tiene el formato correcto. Utilice el Archivo Modelo");
+                    }
+                }
+                var conceptoList = repositorio.Listar<ConceptoAperturaPrecio>();
+                var materiales = mobjMaterialManager.TraerTodoMaterial();
+                var centros = centroManager.TraerTodoCentro();
+                var campanias = mobjCampaniaManager.TraerTodoCampania();
+                var tipoBoletos = repositorio.Listar<BoletoCompraNet>();
+                var bolsas = repositorio.Listar<BolsaCompraNet>();
+                var tipoDB = repositorio.Listar<TipoDB>();
+                var condicionFijacion = repositorio.Listar<CondicionFijacion>();
+                var validations = GetValidatorConvenios(materiales.Material, centros.Centro);
+                var validator = new ExcelValidator(validations);
+
+                var resultValidation = validator.Validate(dsExcel.Tables[0], false);
+
+                if (!resultValidation.IsValid)
+                {
+                    return resultValidation.Resume;
+                    //return Json(new { Resume = resultValidation.Resume, Resultado = !resultValidation.IsValid }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    List<Contrato> contratos = new List<Contrato>();
+                    List<int> rowsOk = resultValidation.RowsResult.Where(a => a.HasError).Select(a => a.Row).ToList();
+                    if (rowsOk.Count == 0)
+                    {
+                        return resultValidation.Resume;
+                        //return Json(new { Resume = resultValidation.Resume, Resultado = resultValidation.IsValid }, JsonRequestBehavior.AllowGet);
+                    }
+                    var rows = dsExcel.Tables[0].AsEnumerable().Select(x => x.ItemArray).Skip(0);
+                    for (int ii = 0; ii < rows.Count(); ii++)
+                    {
+                        if (!rowsOk.Contains(ii))
+                            continue;
+                        var contrato = new Contrato();
+                        contrato.TipoNegocioId = 1;
+                        contrato.ContratoCorredor = rows.ElementAt(ii)[1].ToString().Trim();
+                        contrato.ContratoVendedor = rows.ElementAt(ii)[1].ToString().Trim();
+                        contrato.MaterialId = materiales.Material.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[2].ToString().Trim().ToLower()).Single().MaterialId;
+                        contrato.CampanaId = campanias.Where(a => a.Descripcion.Replace("-", "").ToLower() == rows.ElementAt(ii)[3].ToString().Trim().ToLower()).Single().CampañaId;
+                        //contrato.Fecha = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim());
+                        contrato.FechaOperacion = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim());
+                        contrato.FechaDesde = DateTime.Parse(rows.ElementAt(ii)[5].ToString().Trim());
+                        contrato.FechaHasta = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim());
+                        contrato.FechaEntrega = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim());
+                        contrato.Cantidad = int.Parse(rows.ElementAt(ii)[7].ToString().Trim()) * 1000;
+                        var cuitProveedor = rows.ElementAt(ii)[8].ToString().Trim();
+                        var cuitCorredor = rows.ElementAt(ii)[9].ToString().Trim();
+                        var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitProveedor && x.SegmentacionId < 5);
+                        contrato.ProveedorId = proveedor.ProveedorId;
+                        if (!string.IsNullOrEmpty(cuitCorredor))
+                        {
+                            contrato.CorredorId = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7)).ProveedorId;
+                        }
+                        contrato.ClasificacionId = rows.ElementAt(ii)[10].ToString().Trim().ToLower() == "productor" ? 1 : rows.ElementAt(ii)[10].ToString().Trim().ToLower() == "acopiador" ? 2 : 3;
+                        contrato.PlanCanje = rows.ElementAt(ii)[11].ToString().Trim().ToUpper() == "X";
+                        contrato.Consignatario = rows.ElementAt(ii)[12].ToString().Trim().ToUpper() == "X";
+                        contrato.DestinoId = centros.Centro.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[13].ToString().Trim().ToLower()).Single().Id;
+                        contrato.LocalidadId = int.Parse(rows.ElementAt(ii)[14].ToString().Trim());
+                        contrato.ProvinciaId = int.Parse(rows.ElementAt(ii)[15].ToString().Trim());
+                        contrato.TarifaAConvenir = rows.ElementAt(ii)[16].ToString().Trim().ToUpper() == "X";
+                        contrato.Sustentable = rows.ElementAt(ii)[16].ToString().Trim().ToUpper() == "X";
+                        contrato.BoletoId = tipoBoletos.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[17].ToString().Trim().ToLower()).Single().Id;
+                        if (string.IsNullOrEmpty(rows.ElementAt(ii)[18].ToString()))
+                        {
+                            //var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == contrato.Cuit && x.SegmentacionId < 5);
+                            contrato.BolsaId = proveedor.BolsaCompraNetId;
+                        }
+                        else
+                        {
+                            contrato.BolsaId = bolsas.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[18].ToString().Trim().ToLower()).Single().Id;
+                        }
+
+                        contrato.Observacion = rows.ElementAt(ii)[19].ToString();
+                        contrato.DesdeFijacion = DateTime.Parse(rows.ElementAt(ii)[20].ToString().Trim());
+                        contrato.HastaFijacion = DateTime.Parse(rows.ElementAt(ii)[21].ToString().Trim());
+                        contrato.CondicionFijacionId = condicionFijacion.Where(a => a.CodigoSap.ToLower() == rows.ElementAt(ii)[22].ToString().Trim().ToLower()).Single().Id;
+                        int porcentajeDB = int.Parse(string.IsNullOrEmpty(rows.ElementAt(ii)[23].ToString().Trim()) ? "0" : rows.ElementAt(ii)[23].ToString().Trim());
+                        if (porcentajeDB > 0)
+                        {
+                            contrato.Descuentos = new List<DescuentoBonificacion> { new DescuentoBonificacion {
+                            TipoDBId = tipoDB.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[24].ToString().Trim().ToLower()).Single().Id,
+                            Porcentaje = int.Parse(rows.ElementAt(ii)[23].ToString().Trim()),
+                            TipoPeriodoDBId = 1,
+                            MonedaId = "USDM "
+                        }};
+                        }
+
+                        contrato.ComercialId = ComercialId;
+                        contrato.Comercial = repositorio.Obtener<Comercial>(ComercialId);
+                        contrato.GrupoCompra = contrato.Comercial.GrupoDeComprasId;
+                        contrato.UsuarioId = contrato.Comercial.IdActiveDirectory;
+                        contrato.ComercialCreadorId = ComercialId;
+                        contrato.PorcentajeDePago = 97.5m;
+
+                        CalcularKgMaximoYMinimo(contrato);
+                        contrato.Calidad = new List<Calidad>();
+                        switch (contrato.MaterialId)
+                        {
+                            case 1:
+                                contrato.StandardDeCalidadId = 2;
+                                contrato.Calidad.Add(new Calidad { StandardDeCalidadId = 2, CalidadEspecialId = 4, Valor = 2 });
+                                break;
+                            case 2:
+                                contrato.StandardDeCalidadId = 7;
+                                contrato.Calidad.Add(new Calidad { StandardDeCalidadId = 7, CalidadEspecialId = 5, Valor = 2 });
+                                break;
+                            case 3:
+                                contrato.StandardDeCalidadId = 3;
+                                break;
+                            case 4:
+                                contrato.StandardDeCalidadId = 5;
+                                break;
+                            case 5:
+                                contrato.StandardDeCalidadId = 5;
+                                break;
+                            default:
+                                break;
+                        }
+                        contrato.ObservacionTercero = ii.ToString().Trim();
+                        contrato.AperturaPrecio = new List<AperturaPrecio>();
+                        foreach (var item in conceptoList)
+                        {
+                            contrato.AperturaPrecio.Add(new AperturaPrecio { NegocioId = 0, ConceptoAperturaPrecioId = item.Id, Importe = 0, Porcentaje = 0, MonedaId = "USDM " });
+                        }
+
+                        contratos.Add(contrato);
+                    }
+
+                    if (!resultValidation.IsValid)
+                    {
+                        List<ExcelValidatorResumeItem> erroresList = new List<ExcelValidatorResumeItem>();
+                        foreach (var item in resultValidation.RowsResult)
+                        {
+                            List<string> errorsList = new List<string>();
+                            ExcelValidatorResumeItem erroresItem = new ExcelValidatorResumeItem();
+                            erroresItem.ContratoCorredor = item.ContratoCorredor;
+                            erroresItem.Row = item.Row;
+
+                            foreach (var item2 in item.ItemsResult)
+                            {
+                                errorsList.AddRange(item2.Errors);
+                            }
+                            erroresItem.Errors = errorsList;
+
+                            erroresList.Add(erroresItem);
+                        }
+                        return erroresList;
+                        //return Json(new { Resume = erroresList, Resultado = true }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+
+                        foreach (var item in contratos)
+                        {                            
+                            var resultado = GrabarContrato(item);
+
+                            logger.Debug($"Se creo el contrato: {item.Id} desde el alta masiva de convenios.");
+
+                            if (resultado.HayError)
+                            {
+                                //item.ContratoId estoy usando ese campo para devolver el numero de row
+                                resultValidation.RowsResult[Convert.ToInt32(item.ObservacionTercero)].ItemsResult.Add(new ExcelValidatorItemResult { Errors = resultado.Errores.Select(a => a.Message).ToList(), Item = new ExcelValidatorItem { ErrorType = ExcelValidationErrorType.Error, Name = "", Options = null, Position = 1, Required = true, Type = ExcelValidationColumnType.String } });
+                                //errores.AddRange(item.Errores.Select(a => a.Message).ToList());
+                            }
+                            else
+                            {
+                                logger.Debug($"Se esta creando el contrato {item.Id} con el alta masiva de convenios");
+                            }
+                          
+
+                        }
+                        return resultValidation.Resume.OrderBy(x => x.HasError).ToList();
+                        //return Json(new { Resume = resultValidation.Resume.OrderBy(x => x.HasError).ToList(), Resultado = resultValidation.IsValid }, JsonRequestBehavior.AllowGet);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        private void CalcularKgMaximoYMinimo(Contrato contrato)
+        {
+            var cantidad = contrato.Cantidad;
+            double cantidadMinima = 0;
+            double cantidadMaxima = 0;
+            if (cantidad > 0)
+            {
+                cantidadMaxima = 30 * cantidad / 100;
+                cantidadMinima = 30000;
+                if (cantidad < 30000)
+                {
+                    cantidadMaxima = cantidad;
+                    cantidadMinima = cantidad;
+                }
+                else if (cantidadMaxima < 30000)
+                {
+                    cantidadMaxima = 30000;
+                }
+                //setear
+                contrato.KgMinimo = (int)cantidadMinima;
+                contrato.KgMaximo = (int)cantidadMaxima;
+            }
+            else
+            {
+                contrato.KgMinimo = (int)cantidadMinima;
+                contrato.KgMaximo = (int)cantidadMaxima;
+            }
+        }
+
         private void validacionContratoFatal(List<BasicoContrato> contratos, BasicoContrato acuerdo, ExcelValidatorResult resultValidation)
         {
             int i = 0;
@@ -7590,6 +7831,247 @@ namespace Molinos.DataAgro.Business.Managers
             return ret;
         }
 
+        private List<ExcelValidatorItem> GetValidatorConvenios(List<MaterialIni> materiales, List<CentroIni> centros)
+        {
+            var ret = new List<ExcelValidatorItem>();
+            var pos = 0;
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Contrato Corredor",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = false,
+                Type = ExcelValidationColumnType.Long
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Contrato Vendedor",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = false,
+                Type = ExcelValidationColumnType.Long
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Grano",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Options = materiales.Where(a => a.MaterialId < 5).Select(a => a.Descripcion.ToLower()).ToList(),
+                Type = ExcelValidationColumnType.List
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Cosecha",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Int
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Fecha Operación",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Date
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Fecha DesdeEntrega",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Date
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Fecha Vto.Entrega",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Date
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "TN",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Decimal
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "CUIT Vendedor",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Long
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "CUIT Corredor",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = false,
+                Type = ExcelValidationColumnType.Long
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Clasificacion",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = true,
+                Options = new List<string>() { "acopiador", "productor", "otros" },
+                Type = ExcelValidationColumnType.List
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Plan Canje",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = false,
+                Type = ExcelValidationColumnType.Bool
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Consignatario",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = false,
+                Type = ExcelValidationColumnType.Bool
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Destino",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Options = centros.Where(a => a.Id != 10).Select(a => a.Descripcion.ToLower()).ToList(),
+                Type = ExcelValidationColumnType.List
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "PROCEDENCIA",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Int
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "PROVINCIA",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Int
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Sust a conv.",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = false,
+                Type = ExcelValidationColumnType.Bool
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Tipo Boleto",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Options = repositorio.Listar<BoletoCompraNet>().Select(a => a.Descripcion.ToLower()).ToList(),
+                Type = ExcelValidationColumnType.List
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Bolsa",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Options = repositorio.Listar<BolsaCompraNet>().Select(a => a.Descripcion.ToLower()).ToList(),
+                Type = ExcelValidationColumnType.List
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Observaciones",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = false,
+                Type = ExcelValidationColumnType.String
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Fix desde",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Date
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Fix hasta",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Date
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Condic. Fix",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Options = repositorio.Listar<CondicionFijacion>().Select(a => a.CodigoSap.ToLower()).ToList(),
+                Type = ExcelValidationColumnType.List
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Desc. Y Bonif %",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Int
+            });
+
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Desc. Y Bonif",
+                ErrorType = ExcelValidationErrorType.Fatal,
+                Position = pos++,
+                Required = true,
+                Options = repositorio.Listar<TipoDB>().Select(a => a.Descripcion.ToLower()).ToList(),
+                Type = ExcelValidationColumnType.List
+            });
+            //configurar el resto de campos
+
+            return ret;
+        }
+
         public void ActualizarEstadoDeContratos()
         {
             var contratos = repositorio.Listar<Contrato>(x => x.ConfirmadoSAP != true && !string.IsNullOrEmpty(x.ContratoSAP)).ToList();
@@ -7646,5 +8128,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return modificado;
         }
+
+
     }
 }

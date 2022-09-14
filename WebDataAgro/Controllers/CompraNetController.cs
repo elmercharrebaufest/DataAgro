@@ -1173,7 +1173,7 @@ namespace WebDataAgro.Controllers
         {
             return new JsonResult()
             {
-                Data = mobjFijacionDePrecioContratoManager.AnularFijacionVirtual(fijacionId, GlobalVariables.IdActiveDirectory),
+                Data = mobjFijacionDePrecioContratoManager.AnularFijacion(fijacionId, GlobalVariables.IdActiveDirectory),
                 MaxJsonLength = Int32.MaxValue
             };
         }
@@ -1302,12 +1302,31 @@ namespace WebDataAgro.Controllers
 
         [Autorizacion(PermisosDataAgro.NuevoNegocios, PermisosDataAgro.ModificarNegocios, PermisosDataAgro.ModificarNegFinalizados, PermisosDataAgro.ModificarCanje, PermisosDataAgro.ModificarDolarizadoExpress, PermisosDataAgro.ModificarDolarizadoFinalizado)]
         public ActionResult AltaMasivaContratos()
-        {            
+        {
+            var tipoAlta = new List<SelectListItem>(); tipoAlta.Add(new SelectListItem
+            {
+                Text = "Seleccione",
+                Value = "0",
+                Selected = true
+            });
+            tipoAlta.Add(new SelectListItem
+            {
+                Text = "Acuerdo",
+                Value = "1",
+                Selected = false
+            });
+            tipoAlta.Add(new SelectListItem
+            {
+                Text = "Convenio - A Fijar",
+                Value = "2",
+                Selected = false
+            });
+            ViewBag.TipoAlta = tipoAlta;
             return View();
         }
 
         [HttpPost]
-        public ActionResult AltaMasivaContratosExcel(string contratoAcuerdo)//(System.Web.HttpPostedFileBase file)
+        public ActionResult AltaMasivaContratosExcel(string tipoAlta, string contratoAcuerdo = null)
         {
             List<string> errores = new List<string>();
             try
@@ -1335,9 +1354,16 @@ namespace WebDataAgro.Controllers
                 if (fileSubido.ContentLength > 0)
                 {
                     var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);
-
-                    var resultado = mobjContratoManager.AltaMasivaContratos(dsExcel, contratoAcuerdo, GlobalVariables.ComercialId);
-                    return Json(new { Resume = resultado, Resultado = true });                    
+                    if (tipoAlta == "1")
+                    {
+                        var resultado = mobjContratoManager.AltaMasivaContratos(dsExcel, contratoAcuerdo, GlobalVariables.ComercialId);
+                        return Json(new { Resume = resultado, Resultado = true });
+                    }
+                    if (tipoAlta == "2")
+                    {
+                        var resultado = mobjContratoManager.AltaMasivaConvenios(dsExcel, GlobalVariables.ComercialId);
+                        return Json(new { Resume = resultado, Resultado = true });
+                    }
                 }
                 else
                 {

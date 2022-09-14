@@ -41,6 +41,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 group prove by prove into provs
                 select new ContactoAll
                 {
+                    ProveedorId = provs.Key.ProveedorId,
+                    ComercialACargo = contexto.Set<ProveedorComercial>().Where(x => x.ProveedorId == provs.Key.ProveedorId).FirstOrDefault().Comercial.Nombres + " " + contexto.Set<ProveedorComercial>().Where(x => x.ProveedorId == provs.Key.ProveedorId).FirstOrDefault().Comercial.Apellido,
                     AreaDeInfluencia = provs.Key.AreaInfluencia.Descripcion,
                     Bolsa = provs.Key.BoletoCompraNet.Descripcion,
                     Calificacion = provs.Key.Calificacion,
@@ -49,7 +51,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ClienteMoa = (provs.Key.ClienteMOA.HasValue && provs.Key.ClienteMOA.Value) ? "SI" : "NO",
                     CodPostal = provs.Key.CodigoPostal,
                     Comentario = "",
-                    Comercial = contexto.Set<ProveedorComercial>().Where(x => x.ProveedorId == provs.Key.ProveedorId).FirstOrDefault().Comercial.Apellido,
                     Condicion = "",
                     Consignatario = provs.Key.Consignatario.HasValue && provs.Key.Consignatario.Value ? "SI" : "NO",
                     Cuit = provs.Key.CUIT,
@@ -68,7 +69,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     LocalidadCompraNet = provs.Key.LocalidadCompraNet.Nombre,
                     ProvinciaCompraNet = provs.Key.ProvinciaCompraNet.Nombre,
                     Deshabilitado = provs.Key.Deshabilitado.HasValue && provs.Key.Deshabilitado.Value ? "SI" : "NO",
-
+                    Comisionista = provs.Key.Comisionista.HasValue && provs.Key.Comisionista.Value ? "SI" : "NO",
+                    CuposConRiesgo = provs.Key.CuposConRiesgo.HasValue && provs.Key.CuposConRiesgo.Value ? "SI" : "NO",
+                    OperaConMATBA = provs.Key.OperaConMATBA.HasValue && provs.Key.OperaConMATBA.Value ? "SI" : "NO",
+                    OperaAtravesDe = provs.Key.ComisionistaE != null ? provs.Key.ComisionistaE.RazonSocial +
+                    "(" + provs.Key.ComisionistaE.CUIT + ")" : "",
                 };
 
             return resultado.Distinct().ToList();

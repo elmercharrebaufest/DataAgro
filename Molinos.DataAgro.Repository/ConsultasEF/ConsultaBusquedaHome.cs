@@ -32,10 +32,11 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var resultado =
                 (from Proveedor in contexto.Set<Proveedor>()
-                 join proveedorComercial in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals proveedorComercial.ProveedorId
-                 join contactoComercial in contexto.Set<ContactoComercial>() on proveedorComercial.Proveedor.ProveedorId equals contactoComercial.Proveedor.ProveedorId into cons
+                     //join proveedorComercial in contexto.Set<ProveedorComercial>() on Proveedor.ProveedorId equals proveedorComercial.ProveedorId
+                 join contactoComercial in contexto.Set<ContactoComercial>() on Proveedor.ProveedorId equals contactoComercial.Proveedor.ProveedorId into cons
                  from contactoComercial in cons.DefaultIfEmpty()
-                 where (equipo.Contains(proveedorComercial.ComercialId) || corredor) &&
+                     //where (equipo.Contains(proveedorComercial.ComercialId) || corredor) &&
+                 where
                      (Proveedor.CUIT.Contains(filtro) ||
                      contactoComercial.Nombres.Contains(filtro) ||
                      contactoComercial.Apellido.Contains(filtro) ||
@@ -43,25 +44,25 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                      Proveedor.RazonSocial.Contains(filtro) ||
                      Proveedor.Alias.Contains(filtro))
 
-                 group proveedorComercial by Proveedor into provs
+                 //group proveedorComercial by Proveedor into provs
                  select new BusquedaHome
 
                  {
-                     Id = provs.Key.ProveedorId,
-                     Cuit = provs.Key.CUIT,
-                     Alias = provs.Key.Alias,
-                     RazonSocial = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR - " + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) : !string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial,
-                     Corredor = provs.Key.SegmentacionId == 5 || provs.Key.SegmentacionId == 7 ? "COR" : "",
-                     Filtro = filtro + "|" + (!string.IsNullOrEmpty(provs.Key.Alias) ? (provs.Key.Alias + " - " + provs.Key.RazonSocial) : provs.Key.RazonSocial) + " (" + provs.Key.CUIT + ")",
-                     ClasificacionId = provs.Key.ClasificacionCompraNetId,
-                     RiesgoComercialSap = provs.Key.RiesgoComercialSap,
-                     Deshabilitado = provs.Key.Deshabilitado,
-                     Consignatario = provs.Key.Consignatario,
-                     PlanCanje = provs.Key.PlanCanje,
-                     OperaConMATBA = provs.Key.OperaConMATBA,
+                     Id = Proveedor.ProveedorId,
+                     Cuit = Proveedor.CUIT,
+                     Alias = Proveedor.Alias,
+                     RazonSocial = Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7 ? "COR - " + (!string.IsNullOrEmpty(Proveedor.Alias) ? (Proveedor.Alias + " - " + Proveedor.RazonSocial) : Proveedor.RazonSocial) : !string.IsNullOrEmpty(Proveedor.Alias) ? (Proveedor.Alias + " - " + Proveedor.RazonSocial) : Proveedor.RazonSocial,
+                     Corredor = Proveedor.SegmentacionId == 5 || Proveedor.SegmentacionId == 7 ? "COR" : "",
+                     Filtro = filtro + "|" + (!string.IsNullOrEmpty(Proveedor.Alias) ? (Proveedor.Alias + " - " + Proveedor.RazonSocial) : Proveedor.RazonSocial) + " (" + Proveedor.CUIT + ")",
+                     ClasificacionId = Proveedor.ClasificacionCompraNetId,
+                     RiesgoComercialSap = Proveedor.RiesgoComercialSap,
+                     Deshabilitado = Proveedor.Deshabilitado,
+                     Consignatario = Proveedor.Consignatario,
+                     PlanCanje = Proveedor.PlanCanje,
+                     OperaConMATBA = Proveedor.OperaConMATBA,
                  }).Distinct().Take(15).ToList();
 
-            var lista = DevolverEstadoSisa(contexto, resultado.ToList());
+            var lista = DevolverEstadoSisa(contexto, resultado.ToList(), equipo);
             return lista.ToList();
         }
 
@@ -72,13 +73,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 return Query(contexto, equipo, comercialId, filtro, corredoresComercial, corredor);
             }
         }
-
-        private static List<BusquedaHome> DevolverEstadoSisa(DbContext contexto, List<BusquedaHome> lista)
+        private static List<BusquedaHome> DevolverEstadoSisa(DbContext contexto, List<BusquedaHome> lista, List<int> equipo)
         {
             if (lista.Count > 0)
             {
                 foreach (var item in lista)
                 {
+                    VerificarSiEstaAsignado(contexto, item, equipo);
                     if (item.Corredor == "")
                     {
                         if (item.Deshabilitado.HasValue && item.Deshabilitado.Value != false)
@@ -148,7 +149,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 continue;
                             }
                         }
-                       
+
                     }
                     else
                     {
@@ -219,6 +220,14 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 return lista;
             }
             return lista;
+        }
+        private static void VerificarSiEstaAsignado(DbContext contexto, BusquedaHome item, List<int> equipo)
+        {
+            var proveedorComercialAsignado = (from s in contexto.Set<ProveedorComercial>()
+                                              where s.ProveedorId == item.Id
+                                              select s).Select(a => a.ComercialId).ToList();
+
+            item.EstaAsignado = equipo.Intersect(proveedorComercialAsignado).Any();
         }
     }
 }

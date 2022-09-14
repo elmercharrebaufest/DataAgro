@@ -315,5 +315,13 @@ namespace WebDataAgro.Controllers
             logger.Info($"Fin Actualizar EstadoContrato");
             return Content("ok");
         }
+
+        public ActionResult ConfirmacionAutomaticaPizarra13Hrs()
+        {
+            logger.Info($"Inicio Confirmación Automatica Pizarra 13hrs");
+            fijacionManager.ConfirmacionAutomaticaPizarra13Hrs();
+            logger.Info($"Fin Confirmación Automatica Pizarra 13hrs");
+            return Content("ok");
+        }
     }
 }

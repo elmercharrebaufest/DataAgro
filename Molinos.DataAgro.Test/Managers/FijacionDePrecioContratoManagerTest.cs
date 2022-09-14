@@ -47,6 +47,11 @@ namespace Molinos.DataAgro.Test.Managers
         private JavaScriptSerializer serializer;
         private Mock<INegocioManager> negocioManagerMock;
         private Mock<IConfiguracionInternaManager> configuracionInternaManagerMock;
+        private Mock<IAnularFijacionAgent>  anularFijacionMock;
+        private Mock<IValidarLiquidacionComisionesAgent> validarLiquidacionComisionMock;
+        private Mock<IValidarLiquidacionFinalAgent> validarLiquidacionFinalMock;
+        private Mock<IValidarLiquidacionParcialAgent> validarLiquidacionParcialMock;
+        private Mock<IValidarPesificacionAgent> validarPesificacionMock;
 
         [SetUp]
         public void SetUp()
@@ -75,6 +80,11 @@ namespace Molinos.DataAgro.Test.Managers
             anularFijacionVirtualMock = new Mock<IAnularFijacionVirtualAgent>();
             negocioManagerMock = new Mock<INegocioManager>();
             configuracionInternaManagerMock = new Mock<IConfiguracionInternaManager>();
+            anularFijacionMock = new Mock<IAnularFijacionAgent>();
+            validarLiquidacionComisionMock = new Mock<IValidarLiquidacionComisionesAgent>();
+            validarLiquidacionFinalMock = new Mock<IValidarLiquidacionFinalAgent>();
+            validarLiquidacionParcialMock = new Mock<IValidarLiquidacionParcialAgent>();
+            validarPesificacionMock = new Mock<IValidarPesificacionAgent>();
 
             target = new FijacionDePrecioContratoManager(logger.Object, repositorioMock.Object,
                 proveedorManagerMock.Object, comercialManagerMock.Object,
@@ -83,7 +93,8 @@ namespace Molinos.DataAgro.Test.Managers
                 mailManagerMock.Object, logDataAgroManagerMock.Object, validarPagoAgente.Object,
                 modificarFijacionAgentMock.Object, diasHabilesAgente.Object, configuracionManagerMock.Object, validarLiquidacionParaFijacionAgentMock.Object,
                 tipoDeCamcioAgentMock.Object, contratosFijacionVirtualMock.Object, finalizarFijacionMock.Object, anularFijacionVirtualMock.Object,
-                negocioManagerMock.Object, configuracionInternaManagerMock.Object);
+                negocioManagerMock.Object, configuracionInternaManagerMock.Object, anularFijacionMock.Object, validarLiquidacionComisionMock.Object, validarLiquidacionFinalMock.Object,
+                validarLiquidacionParcialMock.Object, validarPesificacionMock.Object);
         }
 
         [Test]

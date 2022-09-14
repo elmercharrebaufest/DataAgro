@@ -119,6 +119,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agent\IValidarLiquidacionParcialAgent.cs" />
+    <Compile Include="Agent\IValidarPesificacionAgent.cs" />
+    <Compile Include="Agent\IValidarLiquidacionComisionesAgent.cs" />
+    <Compile Include="Agent\IValidarLiquidacionFinalAgent.cs" />
     <Compile Include="Agent\IClienteStopV2Agent.cs" />
     <Compile Include="Agent\IClienteStopV1Agent.cs" />
     <Compile Include="Agent\IContratoKgPendienteAgent.cs" />
@@ -126,6 +130,7 @@
     <Compile Include="Agent\IConsultarEstadoBoletoAgent.cs" />
     <Compile Include="Agent\IContratosConfirmadosAgent.cs" />
     <Compile Include="Agent\IContratosParaFijacionVirtualAgent.cs" />
+    <Compile Include="Agent\IAnularFijacionAgent.cs" />
     <Compile Include="Agent\IMailProveedorAgent.cs" />
     <Compile Include="Agent\ICumplimientoCuposAgent.cs" />
     <Compile Include="Agent\IAnularFijacionVirtualAgent.cs" />

@@ -82,30 +82,30 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var lista = new List<ContactoIni>();
             ContactoIni cont = null;
-
-            foreach (var con in list)
+            var a = list.GroupBy(x => x.ProveedorId);
+            foreach (var con in a)
             {
                 cont = new ContactoIni();
-                cont.Calificacion = con.Calificacion;
-                cont.ComercialCargo = con.ComercialAcargo;
+                cont.Calificacion = con.FirstOrDefault().Calificacion;
+                cont.ComercialCargo = string.Join("; ", con.Select(x => x.ComercialAcargo).Distinct());
                 cont.Operando = true;
-                cont.Cuit = con.CUIT;
-                cont.Mail = (String.IsNullOrEmpty(con.Email1) ? String.Empty : (con.Email1)) +
-                            (String.IsNullOrEmpty(con.Email2) ? String.Empty : (";" + con.Email2)) +
-                            (String.IsNullOrEmpty(con.Email3) ? String.Empty : (";" + con.Email3)) +
-                            (String.IsNullOrEmpty(con.Email4) ? String.Empty : (";" + con.Email4));
-                cont.ProveedorId = con.ProveedorId;
-                cont.RazonSocial = con.RazonSocial;
-                cont.Telefono = (String.IsNullOrEmpty(con.Telefono1) ? String.Empty : (con.Telefono1)) +
-                            (String.IsNullOrEmpty(con.Telefono2) ? String.Empty : (";" + con.Telefono2)) +
-                            (String.IsNullOrEmpty(con.Telefono3) ? String.Empty : (";" + con.Telefono3)) +
-                            (String.IsNullOrEmpty(con.Telefono4) ? String.Empty : (";" + con.Telefono4));
-                cont.UltimoContacto = DevolverUltimoContacto(con.FechaUltimoContacto);
-                cont.Estado = con.Estado;
-                cont.FechaAlta = con.FechaAlta;
-                cont.GrupoDeCompras = con.GrupoDeCompras;
-                cont.Corredor = con.Segmentacion == 5 || con.Segmentacion == 7 ? true : false;
-                CargarOperabilidad(cont, con);
+                cont.Cuit = con.FirstOrDefault().CUIT;
+                cont.Mail = (String.IsNullOrEmpty(con.FirstOrDefault().Email1) ? String.Empty : (con.FirstOrDefault().Email1)) +
+                            (String.IsNullOrEmpty(con.FirstOrDefault().Email2) ? String.Empty : (";" + con.FirstOrDefault().Email2)) +
+                            (String.IsNullOrEmpty(con.FirstOrDefault().Email3) ? String.Empty : (";" + con.FirstOrDefault().Email3)) +
+                            (String.IsNullOrEmpty(con.FirstOrDefault().Email4) ? String.Empty : (";" + con.FirstOrDefault().Email4));
+                cont.ProveedorId = con.FirstOrDefault().ProveedorId;
+                cont.RazonSocial = con.FirstOrDefault().RazonSocial;
+                cont.Telefono = (String.IsNullOrEmpty(con.FirstOrDefault().Telefono1) ? String.Empty : (con.FirstOrDefault().Telefono1)) +
+                            (String.IsNullOrEmpty(con.FirstOrDefault().Telefono2) ? String.Empty : (";" + con.FirstOrDefault().Telefono2)) +
+                            (String.IsNullOrEmpty(con.FirstOrDefault().Telefono3) ? String.Empty : (";" + con.FirstOrDefault().Telefono3)) +
+                            (String.IsNullOrEmpty(con.FirstOrDefault().Telefono4) ? String.Empty : (";" + con.FirstOrDefault().Telefono4));
+                cont.UltimoContacto = DevolverUltimoContacto(con.FirstOrDefault().FechaUltimoContacto);
+                cont.Estado = con.FirstOrDefault().Estado;
+                cont.FechaAlta = con.FirstOrDefault().FechaAlta;
+                cont.GrupoDeCompras = string.Join("; ", con.Select(x => x.GrupoDeCompras).Distinct());
+                cont.Corredor = con.FirstOrDefault().Segmentacion == 5 || con.FirstOrDefault().Segmentacion == 7 ? true : false;
+                CargarOperabilidad(cont, con.FirstOrDefault());
                 if (cont.NoOperable == true)
                 {
                     cont.RptOpera = "No operable";
@@ -113,7 +113,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     cont.RptOpera = "Operable";
-                }
+                }               
                 lista.Add(cont);
             }
 
@@ -339,7 +339,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var re = repositorio.ListarConsulta(new TraerCorredoresComercialExportarAll(comerciales, oParam.ComercialId));
                     exp.contacto.AddRange(re);
                 }
-
+                exp.contacto = DarFormato(exp.contacto);
                 exp.objetivo = repositorio.SelStore<ObjetivoAll>("DataAgro_ExportAll_Objetivos", 0, idsStr);
 
                 //exp.ContactosPrincipales = repositorio.SelStore<ContactosPrincipalesAll>("DataAgro_ExportAll_ContactosPrincipales", 0, idsStr);
@@ -424,7 +424,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var detalle = new CompraDto
                 {
                     Campana = mat.Campaña.Descripcion,// c.Select(x => x.Campana.Descripcion).FirstOrDefault(),
-                    Material =mat.Descripcion,// c.Select(x => x.Material.Descripcion).FirstOrDefault(),
+                    Material = mat.Descripcion,// c.Select(x => x.Material.Descripcion).FirstOrDefault(),
 
                     ConCorredor = new CompraDetalleDto
                     {
@@ -617,14 +617,23 @@ namespace Molinos.DataAgro.Business.Managers
 
             }, x => equipo.Contains(x.ComercialId.Value) && (proveedorIds.Contains(x.ProveedorId) || proveedorIds.Contains(x.CorredorId)));
         }
+
+        private List<ContactoAll> DarFormato(List<ContactoAll> resultado)
+        {
+            var res = resultado.GroupBy(x => x.ProveedorId).ToList();
+            var lista = new List<ContactoAll>();
+            foreach (var item in res)
+            {
+                item.FirstOrDefault().ComercialACargo = string.Join("; ", item.Select(x => x.ComercialACargo).Distinct());
+                lista.Add(item.FirstOrDefault());
+            }
+            return lista;
+        }
     }
     public class FakeHome
     {
         public int Id { set; get; }
         public string Nombre { set; get; }
     }
-
-
-
 
 }

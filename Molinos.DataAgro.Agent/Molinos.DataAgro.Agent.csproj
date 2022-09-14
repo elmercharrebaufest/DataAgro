@@ -81,6 +81,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ValidarPesificacionesAgent.cs" />
+    <Compile Include="Helpers\ValidarLiquidacionParcialAgent.cs" />
+    <Compile Include="Helpers\ValidarLiquidacionFinalAgent.cs" />
+    <Compile Include="Helpers\ValidarLiquidacionComisionesAgent.cs" />
     <Compile Include="Helpers\ClienteStopV2Agent.cs" />
     <Compile Include="Helpers\ClienteStopV1Agent.cs" />
     <Compile Include="Helpers\ContratoKgPendienteAgent.cs" />
@@ -89,6 +93,7 @@
     <Compile Include="Helpers\ContratosConfirmadosAgent.cs" />
     <Compile Include="Helpers\ContratosParaFijacionVirtualAgent.cs" />
     <Compile Include="Helpers\AnularFijacionVirtualAgent.cs" />
+    <Compile Include="Helpers\AnularFijacionAgent.cs" />
     <Compile Include="Helpers\MailProveedorAgent.cs" />
     <Compile Include="Helpers\EnviarBoletoAgent.cs" />
     <Compile Include="Helpers\FinalizarFijacionVirtualAgent.cs" />
@@ -342,7 +347,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ValidarLiquidacionComisiones\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ValidarLiquidacionFinal\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\ValidarLiquidacionParaFijacion\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ValidarLiquidacionParcial\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ValidarPesificaciones\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -1828,6 +1853,20 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ValidarDocProcPago\SI_ZMPWS_DATAAGRO_VALIDAR_DOC_PROC_PAGO.wsdl" />
+    <None Include="Service References\ValidarLiquidacionComisiones\Molinos.DataAgro.Agent.ValidarLiquidacionComisiones.SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_COMISIONESResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarLiquidacionComisiones\Molinos.DataAgro.Agent.ValidarLiquidacionComisiones.Z_MPRFC_VALIDAR_LIQ_COMISIONESResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarLiquidacionComisiones\SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_COMISIONES.wsdl" />
+    <None Include="Service References\ValidarLiquidacionFinal\Molinos.DataAgro.Agent.ValidarLiquidacionFinal.SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_FINALResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarLiquidacionFinal\Molinos.DataAgro.Agent.ValidarLiquidacionFinal.Z_MPRFC_VALIDAR_LIQ_FINALResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarLiquidacionFinal\SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_FINAL.wsdl" />
     <None Include="Service References\ValidarLiquidacionParaFijacion\Molinos.DataAgro.Agent.ValidarLiquidacionParaFijacion.SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACIONResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -1835,6 +1874,20 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ValidarLiquidacionParaFijacion\SI_ZMPWS_DATAAGRO_VAL_LIQ_PAR_FIJACION.wsdl" />
+    <None Include="Service References\ValidarLiquidacionParcial\Molinos.DataAgro.Agent.ValidarLiquidacionParcial.SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_PARCIALResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarLiquidacionParcial\Molinos.DataAgro.Agent.ValidarLiquidacionParcial.Z_MPRFC_VALIDAR_LIQ_PARCIALResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarLiquidacionParcial\SI_ZMPWS_DATAAGRO_VALIDAR_LIQ_PARCIAL.wsdl" />
+    <None Include="Service References\ValidarPesificaciones\Molinos.DataAgro.Agent.ValidarPesificaciones.SI_ZMPWS_DATAAGRO_VALIDAR_PESIFICACIONESResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarPesificaciones\Molinos.DataAgro.Agent.ValidarPesificaciones.Z_MPRFC_VALIDAR_PESIFICACIONESResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ValidarPesificaciones\SI_ZMPWS_DATAAGRO_VALIDAR_PESIFICACIONES.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\AcuerdosGenerados\" />
@@ -1879,7 +1932,11 @@
     <WCFMetadataStorage Include="Service References\ValidacionCredito\" />
     <WCFMetadataStorage Include="Service References\ValidarDocProcPago\" />
     <WCFMetadataStorage Include="Service References\AdministracionCupera\" />
+    <WCFMetadataStorage Include="Service References\ValidarLiquidacionComisiones\" />
+    <WCFMetadataStorage Include="Service References\ValidarLiquidacionFinal\" />
     <WCFMetadataStorage Include="Service References\ValidarLiquidacionParaFijacion\" />
+    <WCFMetadataStorage Include="Service References\ValidarLiquidacionParcial\" />
+    <WCFMetadataStorage Include="Service References\ValidarPesificaciones\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\Compras\configuration91.svcinfo" />
@@ -2403,6 +2460,54 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ObtenerMailProveedor\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionComisiones\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionComisiones\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionComisiones\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionFinal\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionFinal\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionFinal\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionParcial\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionParcial\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarLiquidacionParcial\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarPesificaciones\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarPesificaciones\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ValidarPesificaciones\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

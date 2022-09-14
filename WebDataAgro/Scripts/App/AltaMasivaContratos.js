@@ -53,6 +53,35 @@ $(document).ready(function () {
         }
     });
 
+    $("#tipoAlta").change(function () {
+        var divContrato = document.getElementById("divContratoAcuerdo");
+        var divDescargarPlantillaVacio = document.getElementById("divDescargarPlantillaVacio");
+        var divDescargarPlantillaAcuerdo = document.getElementById("divDescargarPlantillaAcuerdo");
+        var divDescargarPlantillaConvenio = document.getElementById("divDescargarPlantillaConvenio");
+        if (this.value == "2") {
+            divContrato.style.display = 'none';
+            divDescargarPlantillaVacio.style.display = 'none';
+            divDescargarPlantillaAcuerdo.style.display = 'none';
+            divDescargarPlantillaConvenio.style.display = 'block';
+            divAcuerdoData.style.display = 'none'
+            $('#divAcuerdoData').text("");
+            $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
+        } else if (this.value == "1") {
+            divContrato.style.display = 'block';
+            divDescargarPlantillaVacio.style.display = 'none';
+            divDescargarPlantillaAcuerdo.style.display = 'block';
+            divDescargarPlantillaConvenio.style.display = 'none';
+            $('#divAcuerdoData').show();
+        } else if (this.value == "0") {
+            divContrato.style.display = 'none';
+            divDescargarPlantillaVacio.style.display = 'block';
+            divDescargarPlantillaAcuerdo.style.display = 'none';
+            divDescargarPlantillaConvenio.style.display = 'none';
+            divAcuerdoData.style.display = 'none'
+            $('#divAcuerdoData').text("");
+            $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
+        }
+    });
 });
 
 
@@ -68,7 +97,7 @@ function cargarContratos() {
                     data.append("file" + x, files[x]);
                 }
                 $.ajax({
-                    url: '/Compranet/AltaMasivaContratosExcel?contratoacuerdo=' + $("#contratoId").val(),
+                    url: '/Compranet/AltaMasivaContratosExcel?tipoAlta=' + $("#tipoAlta").val() +'&contratoacuerdo=' + $("#contratoId").val(),
                     type: "POST",
                     contentType: false, // Not to set any content header  
                     processData: false, // Not to process data  
@@ -83,7 +112,7 @@ function cargarContratos() {
                                         erroresHtml += '<tr style="color:red"><td>' + String(result.Resume[i].Row + 2) + '</td><td>' + result.Resume[i].Errors[j] + '</td></tr>'
                                     }
                                 } else {
-                                    erroresHtml += '<tr><td>' + String(result.Resume[i].Row + 2) + '</td><td>Contrato Corredor ' + result.Resume[i].ContratoCorredor + ' creado correctamente.</td></tr>'
+                                    erroresHtml += '<tr><td>' + String(result.Resume[i].Row + 2) + '</td><td>Contrato ' + result.Resume[i].ContratoCorredor + ' creado correctamente.</td></tr>'
                                 }
                                 tablaRespuesta += erroresHtml;
                             }
@@ -123,7 +152,11 @@ function cargarContratos() {
 }
 
 function ValidarCarga() {
-    if ($("#contratoId").val() == "") {
+    if ($("#tipoAlta").val() == "0") {
+        MensErr("Debe seleccionar un tipo de alta");
+        return false;
+    }
+    if ($("#contratoId").val() == "" && $("#tipoAlta").val() == "1") {
         MensErr("Debe seleccionar el contrato acuerdo");
         return false;
     }
