@@ -1025,10 +1025,10 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += "Pizarra";
             }
-            else if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
-            {
-                htmlBody += Split(oFijacionDePrecioContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
-            }
+            //else if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
+            //{
+            //    htmlBody += Split(oFijacionDePrecioContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
+            //}
             else
             {
                 htmlBody += Split(oFijacionDePrecioContrato.Precio.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper();
@@ -1036,7 +1036,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "OBSERVACIONES</th>" + Td(ref linea);
             if (oFijacionDePrecioContrato.PrecioNeto.HasValue)
             {
-                htmlBody += "PRECIO NETO: " + oFijacionDePrecioContrato.PrecioNeto.ToString() + "<br /> ";
+                htmlBody += "PRECIO NETO: " + Split(oFijacionDePrecioContrato.PrecioNeto.Value.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR"))) + " " + oFijacionDePrecioContrato.Moneda.Descripcion.ToUpper() + "<br /> ";
             }
             if (oFijacionDePrecioContrato.PagoDiferido.HasValue && oFijacionDePrecioContrato.PagoDiferido.Value)
             {
