@@ -4732,7 +4732,7 @@ namespace Molinos.DataAgro.Business.Managers
             var entidades = new List<MailProveedor>();
             repositorio.RemoverTodos<MailProveedor>(x => x.Id == x.Id);
             try
-            {
+            {              
                 if (lista != null && lista.Count > 0)
                 {
                     foreach (var item in lista)

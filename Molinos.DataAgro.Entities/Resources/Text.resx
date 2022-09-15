@@ -890,4 +890,7 @@
   <data name="Visualizar_CupoNoPropio" xml:space="preserve">
     <value>Visualizar Cupo No Propio</value>
   </data>
+  <data name="Pre_AnularFijacion" xml:space="preserve">
+    <value>PreAnular Fijacion</value>
+  </data>
 </root>

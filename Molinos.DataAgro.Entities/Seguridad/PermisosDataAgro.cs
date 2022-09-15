@@ -170,6 +170,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ImporteSustentableEspecial = 348,
         [Display(ResourceType = typeof(Text), Name = "ActualizarCompraNet")]
         ActualizarCompraNet = 349,
+        [Display(ResourceType = typeof(Text), Name = "Pre_AnularFijacion")]
+        PreAnularFijacion = 350,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

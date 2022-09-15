@@ -1796,6 +1796,18 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 try
                 {
+                    if (oContratoSave.Virtual == null)
+                    {
+                        if (ValidarFijacionDisponibleParaAnular(oContratoSave, oEntityErrors))
+                        {
+                            oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
+                            oContratoSave.MotivoRechazo = motivo;
+                        }
+                        else
+                        {
+                            return oEntityErrors;
+                        }
+                    }
                     oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
                     oContratoSave.MotivoRechazo = motivo;
                     repositorio.GuardarCambios();
@@ -2189,7 +2201,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return puedoAnular;
             }
 
-               
+
             return puedoAnular;
         }
 

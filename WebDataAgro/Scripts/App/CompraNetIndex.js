@@ -35,6 +35,7 @@ var esVirtual;
 var asociarNegocios;
 var asociados = [];
 var actualizacionMs;
+var preanularFijacion;
 
 $(document).ready(function () {
     creaNegocios = ConvertirStringABool(creaNegocios);
@@ -66,6 +67,7 @@ $(document).ready(function () {
     confirmarNegociosGirasolAO = ConvertirStringABool(confirmarNegociosGirasolAO);
     esVirtual = ConvertirStringABool(esVirtual);
     asociarNegocios = ConvertirStringABool(asociarNegocios);
+    preanularFijacion = ConvertirStringABool(preanularFijacion);
     kendo.culture("es-AR");
 
     $('#menuproveedor').hide();
@@ -548,7 +550,7 @@ function botonBorrarPreanulado(dataItem, icono, esModalVisualizar) {
 }
 
 function botonPreAnular(dataItem, icono, esModalVisualizar) {
-    if (preanular && dataItem.ContratoId || (preanular && (dataItem.FijacionDePrecioContratoId != null/* && dataItem.Virtual == true*/))) {
+    if ((preanular && dataItem.ContratoId != null) || (preanularFijacion && dataItem.FijacionDePrecioContratoId != null/* && dataItem.Virtual == true*/)) {
         var cerrarModalVisualizar = ' ';
         if (esModalVisualizar == true) {
             cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
@@ -569,7 +571,7 @@ function botonPreAnular(dataItem, icono, esModalVisualizar) {
             }else {
                 return '<div></div>';
             }
-        } else if (dataItem.FijacionDePrecioContratoId && dataItem.Canje != true) {
+        } else if ((dataItem.FijacionDePrecioContratoId && dataItem.Canje != true) || dataItem.ContratoId != null) {
             return '<button data-toggle="tooltip" title="PreAnular"' +
                 cerrarModalVisualizar +
                 'onclick="ModalPreAnular(' +

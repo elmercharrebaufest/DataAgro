@@ -41,7 +41,8 @@
     var fijacionVirtual = PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual);
     var asociarNegocios = PermisosHelper.Is(PermisosDataAgro.AsociarNegocio);
     var noDefault = PermisosHelper.Is(PermisosDataAgro.ActualizarCompraNet);
-
+    var preanularFijacion = PermisosHelper.Is(PermisosDataAgro.PreAnularFijacion);
+    
 }
 <script>
     comercialId = '@ViewBag.comercialId';
@@ -75,6 +76,7 @@
     esVirtual = '@fijacionVirtual';
     asociarNegocios = '@asociarNegocios';
     actualizacionMs = '@ViewBag.Actualizacion';
+    preanularFijacion = '@preanularFijacion';
 </script>
 @section Styles {
     <link href="~/Content/compraNet.css" rel="stylesheet" />
