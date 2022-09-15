@@ -550,7 +550,7 @@ function botonBorrarPreanulado(dataItem, icono, esModalVisualizar) {
 }
 
 function botonPreAnular(dataItem, icono, esModalVisualizar) {
-    if ((preanular && dataItem.ContratoId != null) || (preanularFijacion && dataItem.FijacionDePrecioContratoId != null/* && dataItem.Virtual == true*/)) {
+    if ((preanular && (dataItem.ContratoId != null && dataItem.ContratoId != 0)) || (preanularFijacion && (dataItem.FijacionDePrecioContratoId != null && dataItem.FijacionDePrecioContratoId != 0)/* && dataItem.Virtual == true*/)) {
         var cerrarModalVisualizar = ' ';
         if (esModalVisualizar == true) {
             cerrarModalVisualizar = ' data-dismiss="modal" style="border: 1px solid #848484; border-radius: 5px !important; margin-right: 4px" '
@@ -571,7 +571,7 @@ function botonPreAnular(dataItem, icono, esModalVisualizar) {
             }else {
                 return '<div></div>';
             }
-        } else if ((dataItem.FijacionDePrecioContratoId && dataItem.Canje != true) || dataItem.ContratoId != null) {
+        } else if ((dataItem.FijacionDePrecioContratoId && dataItem.Canje != true) || (dataItem.ContratoId != null && dataItem.ContratoId != 0)) {
             return '<button data-toggle="tooltip" title="PreAnular"' +
                 cerrarModalVisualizar +
                 'onclick="ModalPreAnular(' +
