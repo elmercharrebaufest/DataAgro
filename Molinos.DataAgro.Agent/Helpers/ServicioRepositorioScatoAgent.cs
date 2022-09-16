@@ -79,7 +79,7 @@ namespace Molinos.DataAgro.Agent
         private List<EstablecimientoStockDto> ValidarEstablecimiento(List<EstablecimientoStockDto> establecimientoStockDtos)
         {
             var establecimientos = new List<EstablecimientoStockDto>();
-            if (establecimientoStockDtos != null)
+            if (establecimientoStockDtos != null && establecimientoStockDtos.Count > 0)
             {
                 foreach (var establecimiento in establecimientoStockDtos)
                 {

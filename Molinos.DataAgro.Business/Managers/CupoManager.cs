@@ -1174,7 +1174,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (cupo.Centro.CodigoSap == "1600")
             {
                 var establecimientos = TraerEstablecimientos(cupo.Proveedor.CUIT);
-                if (establecimientos != null)
+                if (establecimientos != null && establecimientos.Count > 0)
                 {
                     var table = "<table style =\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"><tr>";
 
