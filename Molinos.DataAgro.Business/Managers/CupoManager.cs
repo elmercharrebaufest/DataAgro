@@ -1174,30 +1174,32 @@ namespace Molinos.DataAgro.Business.Managers
             if (cupo.Centro.CodigoSap == "1600")
             {
                 var establecimientos = TraerEstablecimientos(cupo.Proveedor.CUIT);
-
-                var table = "<table style =\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"><tr>";
-
-                table += "<tr>" + Td(ref linea, 3) + "Cosecha " + establecimientos[0].Cosecha + "</td></tr>";
-                table += "</tr>";
-                table += "<tr>";
-                table += th + "Establecimiento</th>";
-                table += th + "Cantidad (Kg)</th>";
-                table += th + "Localidad(Provincia) </th>";
-                table += "</tr>";
-                for (var i = 0; i < establecimientos.Count(); i++)
+                if (establecimientos != null)
                 {
-                    table += "<tr>";
+                    var table = "<table style =\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"><tr>";
 
-                    table += Td(ref linea) + establecimientos[i].Establecimiento + "</td>";
-                    linea--;
-                    table += Td(ref linea) + establecimientos[i].Cantidad.ToString() + "</td>";
-                    linea--;
-                    table += Td(ref linea) + establecimientos[i].Localidad + "(" + establecimientos[i].Provincia + ")" + "</td>";
+                    table += "<tr>" + Td(ref linea, 3) + "Cosecha " + establecimientos[0].Cosecha + "</td></tr>";
                     table += "</tr>";
+                    table += "<tr>";
+                    table += th + "Establecimiento</th>";
+                    table += th + "Cantidad (Kg)</th>";
+                    table += th + "Localidad(Provincia) </th>";
+                    table += "</tr>";
+                    for (var i = 0; i < establecimientos.Count(); i++)
+                    {
+                        table += "<tr>";
+
+                        table += Td(ref linea) + establecimientos[i].Establecimiento + "</td>";
+                        linea--;
+                        table += Td(ref linea) + establecimientos[i].Cantidad.ToString() + "</td>";
+                        linea--;
+                        table += Td(ref linea) + establecimientos[i].Localidad + "(" + establecimientos[i].Provincia + ")" + "</td>";
+                        table += "</tr>";
+                    }
+                    table += "</table>";
+                    htmlBody += "<br/><br/>";
+                    htmlBody += table;
                 }
-                table += "</table>";
-                htmlBody += "<br/><br/>";
-                htmlBody += table;
             }
             return htmlBody;
         }

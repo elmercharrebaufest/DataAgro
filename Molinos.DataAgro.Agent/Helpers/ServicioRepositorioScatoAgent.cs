@@ -79,14 +79,17 @@ namespace Molinos.DataAgro.Agent
         private List<EstablecimientoStockDto> ValidarEstablecimiento(List<EstablecimientoStockDto> establecimientoStockDtos)
         {
             var establecimientos = new List<EstablecimientoStockDto>();
-            foreach (var establecimiento in establecimientoStockDtos)
+            if (establecimientoStockDtos != null)
             {
-                int number;
-
-                bool success = int.TryParse(establecimiento.CodigoEstablecimiento, out number);
-                if (success && number < 90000)
+                foreach (var establecimiento in establecimientoStockDtos)
                 {
-                    establecimientos.Add(establecimiento);
+                    int number;
+
+                    bool success = int.TryParse(establecimiento.CodigoEstablecimiento, out number);
+                    if (success && number < 90000)
+                    {
+                        establecimientos.Add(establecimiento);
+                    }
                 }
             }
             return establecimientos;

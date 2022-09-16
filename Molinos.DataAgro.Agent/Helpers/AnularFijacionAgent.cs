@@ -50,42 +50,42 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     var listaApertura = new List<ZMPES5440>();
                     var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
-                    var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
-                    logger.Debug("Anular fijacion log 1" + oContrato);
-                    if (oContrato.ImporteSobrePrecio != 0 && !string.IsNullOrEmpty(fijacion.MonedaId) && oContrato.MonedaSobrePrecio?.Trim() != fijacion.MonedaId.Trim())
-                    {
-                        var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date), 2, MidpointRounding.AwayFromZero);
+                    //var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
+                    //logger.Debug("Anular fijacion log 1" + oContrato);
+                    //if (oContrato.ImporteSobrePrecio != 0 && !string.IsNullOrEmpty(fijacion.MonedaId) && oContrato.MonedaSobrePrecio?.Trim() != fijacion.MonedaId.Trim())
+                    //{
+                    //    var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date), 2, MidpointRounding.AwayFromZero);
                         
-                        if (fijacion.MonedaId.Trim() == "ARP")
-                        {
-                            oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio * cotizacion;
-                        }
-                        if (fijacion.MonedaId.Trim() == "USMD")
-                        {
-                            oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio / cotizacion;
-                        }
-                    }
-                    logger.Debug("Anular fijacion log 2" + oContrato);
-                    var importeComisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault().Importe;
-                    var modificoImporteComisionesAFijarViejo = (oContrato != null && oContrato.Aperturas == null || oContrato.Aperturas.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).ToList().Count == 0)
-                                                            && importeComisiones != 0
-                                                            && oContrato.ImporteSobrePrecio != 0
-                                                            && importeComisiones != oContrato.ImporteSobrePrecio;
-                    logger.Debug("Anular fijacion log 3" + oContrato);
-                    if ((oContrato != null && oContrato.ImporteSobrePrecio == 0)
-                        || fijacion.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && a.Porcentaje > 0)
-                        || modificoImporteComisionesAFijarViejo
-                        )
-                    {
-                        conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
-                    }
-                    logger.Debug("Anular fijacion log 4" + oContrato);
-                    if (oContrato != null && oContrato.Aperturas != null
-                        && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0)))
-                    {
-                        conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
-                    }
-                    logger.Debug("Anular fijacion log 5" + oContrato);
+                    //    if (fijacion.MonedaId.Trim() == "ARP")
+                    //    {
+                    //        oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio * cotizacion;
+                    //    }
+                    //    if (fijacion.MonedaId.Trim() == "USMD")
+                    //    {
+                    //        oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio / cotizacion;
+                    //    }
+                    //}
+                    //logger.Debug("Anular fijacion log 2" + oContrato);
+                    //var importeComisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault().Importe;
+                    //var modificoImporteComisionesAFijarViejo = (oContrato != null && oContrato.Aperturas == null || oContrato.Aperturas.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).ToList().Count == 0)
+                    //                                        && importeComisiones != 0
+                    //                                        && oContrato.ImporteSobrePrecio != 0
+                    //                                        && importeComisiones != oContrato.ImporteSobrePrecio;
+                    //logger.Debug("Anular fijacion log 3" + oContrato);
+                    //if ((oContrato != null && oContrato.ImporteSobrePrecio == 0)
+                    //    || fijacion.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && a.Porcentaje > 0)
+                    //    || modificoImporteComisionesAFijarViejo
+                    //    )
+                    //{
+                    //    conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
+                    //}
+                    //logger.Debug("Anular fijacion log 4" + oContrato);
+                    //if (oContrato != null && oContrato.Aperturas != null
+                    //    && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0)))
+                    //{
+                    //    conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
+                    //}
+                    //logger.Debug("Anular fijacion log 5" + oContrato);
                     //if (fijacion.Pizarra != true)
                     //{
                     //foreach (AperturaPrecio apertura in fijacion.AperturaPrecio.Where(x => conceptosCargados.Contains(x.ConceptoAperturaPrecioId)))
@@ -112,21 +112,21 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         precioApertura += ImportFinanciero.Importe;
                     }
-                    logger.Debug("Anular fijacion log 6" + oContrato);
+                   
                     var ImportBonificaciones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
                     if (ImportBonificaciones != null)
                     {
                         precioApertura += ImportBonificaciones.Importe;
                     }
-                    logger.Debug("Anular fijacion log 7" + oContrato);
+              
                     var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
                     if (Comisiones != null)
                     {
                         precioApertura += Comisiones.Importe;
                     }
-                    logger.Debug("Anular fijacion log 8" + oContrato);
+                  
                     decimal im_precio = fijacion.Precio + precioApertura;
-                    logger.Debug("Anular fijacion log 9" + im_precio);
+             
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
