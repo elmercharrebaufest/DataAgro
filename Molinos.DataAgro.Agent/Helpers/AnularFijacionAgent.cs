@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var listaApertura = new List<ZMPES5440>();
                     var conceptosCargados = new List<int>() { (int)EnumConceptoApertura.Financiero };
                     var oContrato = contratosParaFijacionAgent.ObtenerContratos(fijacion.Proveedor.CUIT, fijacion.Corredor == null ? "" : fijacion.Corredor.CUIT, fijacion.MaterialId, fijacion.ContratoSAP.TrimStart('0'), fijacion.Id).SingleOrDefault();
+                    logger.Debug("Anular fijacion log 1" + oContrato);
                     if (oContrato.ImporteSobrePrecio != 0 && !string.IsNullOrEmpty(fijacion.MonedaId) && oContrato.MonedaSobrePrecio?.Trim() != fijacion.MonedaId.Trim())
                     {
                         var cotizacion = decimal.Round(tipoCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date), 2, MidpointRounding.AwayFromZero);
@@ -64,12 +65,13 @@ namespace Molinos.DataAgro.Agent.Helpers
                             oContrato.ImporteSobrePrecio = oContrato.ImporteSobrePrecio / cotizacion;
                         }
                     }
+                    logger.Debug("Anular fijacion log 2" + oContrato);
                     var importeComisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).FirstOrDefault().Importe;
                     var modificoImporteComisionesAFijarViejo = (oContrato != null && oContrato.Aperturas == null || oContrato.Aperturas.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones).ToList().Count == 0)
                                                             && importeComisiones != 0
                                                             && oContrato.ImporteSobrePrecio != 0
                                                             && importeComisiones != oContrato.ImporteSobrePrecio;
-
+                    logger.Debug("Anular fijacion log 3" + oContrato);
                     if ((oContrato != null && oContrato.ImporteSobrePrecio == 0)
                         || fijacion.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && a.Porcentaje > 0)
                         || modificoImporteComisionesAFijarViejo
@@ -77,29 +79,29 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Comisiones);
                     }
-
+                    logger.Debug("Anular fijacion log 4" + oContrato);
                     if (oContrato != null && oContrato.Aperturas != null
                         && !oContrato.Aperturas.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && (x.Importe > 0 || x.Porcentaje > 0)))
                     {
                         conceptosCargados.Add((int)EnumConceptoApertura.Bonificaciones);
                     }
-
+                    logger.Debug("Anular fijacion log 5" + oContrato);
                     //if (fijacion.Pizarra != true)
                     //{
-                        //foreach (AperturaPrecio apertura in fijacion.AperturaPrecio.Where(x => conceptosCargados.Contains(x.ConceptoAperturaPrecioId)))
-                        //{
-                        //    if (apertura.Importe != 0 || apertura.Porcentaje != 0)
-                        //    {
-                        //        var a = new ZMPES5440
-                        //        {
-                        //            CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
-                        //            IMPORTE = apertura.Importe,
-                        //            MONEDA = apertura.MonedaId,
-                        //            PORC = apertura.Porcentaje
-                        //        };
-                        //        listaApertura.Add(a);
-                        //    }
-                        //}
+                    //foreach (AperturaPrecio apertura in fijacion.AperturaPrecio.Where(x => conceptosCargados.Contains(x.ConceptoAperturaPrecioId)))
+                    //{
+                    //    if (apertura.Importe != 0 || apertura.Porcentaje != 0)
+                    //    {
+                    //        var a = new ZMPES5440
+                    //        {
+                    //            CONCEPTO = apertura.ConceptoAperturaPrecio.CodigoSap,
+                    //            IMPORTE = apertura.Importe,
+                    //            MONEDA = apertura.MonedaId,
+                    //            PORC = apertura.Porcentaje
+                    //        };
+                    //        listaApertura.Add(a);
+                    //    }
+                    //}
                     //}
 
 
@@ -110,19 +112,21 @@ namespace Molinos.DataAgro.Agent.Helpers
                     {
                         precioApertura += ImportFinanciero.Importe;
                     }
+                    logger.Debug("Anular fijacion log 6" + oContrato);
                     var ImportBonificaciones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Bonificaciones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
                     if (ImportBonificaciones != null)
                     {
                         precioApertura += ImportBonificaciones.Importe;
                     }
+                    logger.Debug("Anular fijacion log 7" + oContrato);
                     var Comisiones = fijacion.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && conceptosCargados.Contains(a.ConceptoAperturaPrecioId)).SingleOrDefault();
                     if (Comisiones != null)
                     {
                         precioApertura += Comisiones.Importe;
                     }
-
+                    logger.Debug("Anular fijacion log 8" + oContrato);
                     decimal im_precio = fijacion.Precio + precioApertura;
-
+                    logger.Debug("Anular fijacion log 9" + im_precio);
                     var rq = new Z_MPRFC_REGISTRAR_FIJACION()
                     {
                         IM_PROVEEDOR = fijacion.Proveedor.CUIT,
@@ -148,7 +152,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         
                     };
                     logger.Debug(rq.ToXml());
-
+                    logger.Debug("Anular fijacion log 10" + im_precio);
                     var log = new Log
                     {
                         Fecha = DateTime.Now,
@@ -157,7 +161,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     var logId = repositorio.Agregar(log);
                     repositorio.GuardarCambios();
-
+                    logger.Debug("Anular fijacion log 11" + im_precio);
                     var devolucion = agent.SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION(rq);
                     logger.Debug(devolucion.ToXml());
 
