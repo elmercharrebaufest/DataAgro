@@ -2,7 +2,7 @@
 (
 	[Id] INT NOT NULL IDENTITY (1, 1), 
     [CentroId] INT NOT NULL, 
-    [Codigo] VARCHAR(20) NOT NULL, 
+    [Codigo] VARCHAR(50) NOT NULL, 
     [FechaIngreso] DATETIME NOT NULL, 
     [MaterialId] INT NOT NULL, 
     [CupoId] INT NULL, 

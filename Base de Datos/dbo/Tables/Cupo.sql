@@ -5,7 +5,7 @@
     [CentroId]				INT NOT NULL,
     [MaterialId]			INT NOT NULL,
 	[FechaIngreso]			DATETIME NOT NULL, 
-    [CupoSap]				VARCHAR(20) NULL, 
+    [CupoSap]				VARCHAR(50) NULL, 
 	[ZonaCupoId]			INT NOT NULL,
     [ComercialId]			INT NULL, 
     [FleteProcedencia]		BIT NULL,

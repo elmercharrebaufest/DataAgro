@@ -6325,12 +6325,11 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
         $("#boletoNingunoId").prop("checked", false);
         $("#boletoNingunoId").click();
         $("#boletoNingunoId").prop("checked", true);
-        //$("#boletoNingunoId").attr("readonly", "readonly");
         $("#boletoConfirmaId").attr("disabled", true);
         $("#boletoFisicoId").attr("disabled", true);
         $("#boletoCartaId").attr("disabled", true);
     } else {
-        $("#boletoNingunoId").prop("checked", false);
+        DatosProveedor();
         $("#boletoNingunoId").removeAttr("readonly");
         $("#boletoConfirmaId").removeAttr("disabled");
         $("#boletoFisicoId").removeAttr("disabled");

@@ -725,11 +725,25 @@ function filtrarMesa() {
     //FILTRO MANUAL
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
     if (!$("#negociosPropiosDiv").hasClass("selected")) {
-        addOrRemoveFilter(grilla, "ComercialCreadorId", "eq", parseInt(comercialId));
+        var comerciales = { logic: 'or', filters: [] };
+
+
+        comerciales.filters.push({ field: 'ComercialCreadorId', operator: 'eq', value: parseInt(comercialId) });
+        comerciales.filters.push({ field: 'ComercialId', operator: 'eq', value: parseInt(comercialId) });
+
+        //addOrRemoveFilter(grilla, "ComercialCreadorId", "eq", parseInt(comercialId));     
+        //addOrRemoveFilter(grilla, "ComercialId", "eq", parseInt(comercialId)); 
         $("#negociosPropiosDiv").addClass("selected");
         $("#negociosPropios").addClass("selected").removeClass("varios");
+        var currentFilters = grilla.dataSource.filter();
+        if (!currentFilters) {
+            currentFilters = { filters: [], logic: 'and' }
+        }
+        currentFilters.filters.push(comerciales);
+        grilla.dataSource.filter(currentFilters);
     } else {
-        addOrRemoveFilter(grilla, "ComercialId", "eq", "");
+
+        removerFiltroComercial(grilla, "ComercialId", "eq", null);
         $("#negociosPropiosDiv").removeClass("selected");
         $("#negociosPropios").addClass("varios").removeClass("selected");
     }
@@ -772,7 +786,7 @@ function addOrRemoveFilter(grid, field, operator, value) {
         var removeIndex = -1;
         if (filters != null) {
             for (var x = 0; x < filters.length; x++) {
-                var temp = filters[x];
+                var temp = filters[x].filters;
                 if (temp.field == field) {
                     removeIndex = x;
                     break;
@@ -781,6 +795,35 @@ function addOrRemoveFilter(grid, field, operator, value) {
             if (removeIndex != -1)
                 filters.splice(removeIndex, 1);
         }
+    }
+    dataSource.filter(filters);
+}
+
+function removerFiltroComercial(grid, field, operator, value) {
+    //Remove filter 
+    var newFilter = { field: field, operator: operator, value: value };
+    var dataSource = grid.dataSource;
+    var filters = null;
+    if (dataSource.filter() != null) {
+        filters = dataSource.filter().filters;
+    }
+    var removeIndex = -1;
+    if (filters != null) {
+        for (var x = 0; x < filters.length; x++) {
+            var filtro = filters[x].filters;
+            if (filters[x].filters != null) {
+                var filtro = filters[x].filters;
+                for (var i = 0; i < filters[x].filters.length; i++) {
+                    if (filtro[i].field == field) {
+                        removeIndex = x;
+                        break;
+                    }
+                }
+
+            }
+        }
+        if (removeIndex != -1)
+            filters.splice(removeIndex, 1);
     }
     dataSource.filter(filters);
 }
@@ -1311,7 +1354,7 @@ function CreateGridInformeCompraNet() {
             }
         },
         filterMenuInit: function (e) {
-            if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Corredor" || e.field == "ComercialCreador") {
+            if (e.field == "Proveedor" || e.field == "Comercial" || e.field == "Corredor" || e.field == "ComercialCreador" || e.field == "Comercial") {
                 $(e.container).css("width", "300px");
             }
         },

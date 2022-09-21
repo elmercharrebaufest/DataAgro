@@ -5636,6 +5636,7 @@ function CancelarServicio() {
     kendo.bind($("#ModalServicio"), viewModel);
 }
 
+
 function ActivarBoletoXAgentedeCompras(agenteCompraId) {
     if (agenteCompraId == 1) {
         $("#boletoNingunoId").prop("checked", false);
@@ -5646,7 +5647,8 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
         $("#boletoFisicoId").attr("disabled", true);
         $("#boletoCartaId").attr("disabled", true);
     } else {
-        $("#boletoNingunoId").prop("checked", false);
+        DatosProveedor();
+        //$("#boletoNingunoId").prop("checked", false);
         $("#boletoNingunoId").removeAttr("readonly");
         $("#boletoConfirmaId").removeAttr("disabled");
         $("#boletoFisicoId").removeAttr("disabled");
@@ -5692,7 +5694,7 @@ function MostrarServiciosYCalidades() {
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Materia Extraña" ||
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Granos verdes" ||
         $("#calidadesEspecialesId").data("kendoDropDownList").text() === "Dañados";
-        //($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && ($('#material').val() == 4 || $('#material').val() == 5));
+    //($("#calidadesEspecialesId").data("kendoDropDownList").text() === "Camara" && ($('#material').val() == 4 || $('#material').val() == 5));
 
     if (validar == false) {
         $("#servicioBtn").hide();

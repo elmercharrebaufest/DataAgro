@@ -1798,12 +1798,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (oContratoSave.Virtual == null)
                     {
-                        if (ValidarFijacionDisponibleParaAnular(oContratoSave, oEntityErrors))
-                        {
-                            oContratoSave.EstadoId = (int)EnumEstadoContrato.PreAnulado;
-                            oContratoSave.MotivoRechazo = motivo;
-                        }
-                        else
+                        if (!ValidarFijacionDisponibleParaAnular(oContratoSave, oEntityErrors))                       
                         {
                             return oEntityErrors;
                         }
