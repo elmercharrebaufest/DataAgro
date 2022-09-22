@@ -375,7 +375,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "",
                             BLOQUEO = "",
                             TIPO_CAMBIO_FIJO = 0,
-                            POSICION = CalcularPosicion(contrato.FechaDesde)
+                            POSICION = CalcularPosicion(contrato.FechaDesde, contrato.FechaHasta)
 
                         },
 
@@ -438,14 +438,31 @@ namespace Molinos.DataAgro.Agent.Helpers
             return value;
         }
 
-        private string CalcularPosicion(DateTime fechaDesde)
+        private string CalcularPosicion(DateTime fechaDesde, DateTime fechaHasta)
         {
             var ultimoDiaHabilDelMes = diasHabilesAgent.ObtenerDiasHabilesDelMes(fechaDesde).LastOrDefault();
             var diferenciaEntreDias = fechaDesde - ultimoDiaHabilDelMes;
             var fechaDesdeMesSiguiente = fechaDesde.AddMonths(1);
             var dias = Math.Abs(diferenciaEntreDias.Days);
-            return dias >= 10 ? (fechaDesde.Month.ToString().PadLeft(2, '0')) + "." + (fechaDesde.Year) :
-                   ((fechaDesdeMesSiguiente.Month).ToString().PadLeft(2, '0')) + "." + (fechaDesdeMesSiguiente.Year);
+
+
+
+            var resultado = dias >= 10 ? fechaDesde : fechaDesdeMesSiguiente;
+            resultado = new DateTime(resultado.Year, resultado.Month, 1);
+            fechaHasta = new DateTime(fechaHasta.Year, fechaHasta.Month, 1);
+            if (resultado > fechaHasta)
+            {
+                return fechaHasta.Month.ToString().PadLeft(2, '0') + "." + fechaHasta.Year;
+            }
+            else
+            {
+                return resultado.Month.ToString().PadLeft(2, '0') + "." + resultado.Year;
+            }
+
+
+
+            //return dias >= 10 ? (fechaDesde.Month.ToString().PadLeft(2, '0')) + "." + (fechaDesde.Year) :
+            //       ((fechaDesdeMesSiguiente.Month).ToString().PadLeft(2, '0')) + "." + (fechaDesdeMesSiguiente.Year);
         }
     }
 }

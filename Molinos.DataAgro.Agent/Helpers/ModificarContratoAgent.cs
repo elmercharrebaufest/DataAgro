@@ -530,8 +530,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                 detalle.COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "";
                 detalle.PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "";
                 detalle.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
-                detalle.TOL_INF = contrato.CantidadCamiones == null ? 3 : 0;
-                detalle.TOL_SUP = contrato.CantidadCamiones == null ? 3 : 0;
+                detalle.TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3;
+                detalle.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
                 detalle.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
                     contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
                 detalle.BLOQUEO = "";
