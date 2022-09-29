@@ -391,10 +391,10 @@ namespace WebDataAgro.Services
             contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Importe : (decimal?)null;
             contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B") != null ? contratoSAP.DescuentoBonificaciones.FirstOrDefault(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").MonedaDB : "";
 
-            //sap tiene problemas con la moneda USD y llega corrido los decimales  por eso el *10
+            //sap tiene problemas con la moneda USD y llega corrido los decimales  por eso el *10 -- Lo arreglaron en SAP y sacamos el parche 29/09
             if (contrato.ImporteSustentable.HasValue && !string.IsNullOrEmpty(contrato.MonedaSustentableId) && contrato.MonedaSustentableId.Contains("USDM"))
             {
-                contrato.ImporteSustentable = contrato.ImporteSustentable * 10;
+                contrato.ImporteSustentable = contrato.ImporteSustentable; /** 10;*/
             }
 
             if (contrato.ImporteSustentable == -1)
