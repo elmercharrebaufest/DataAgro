@@ -62,7 +62,7 @@ function CargarGrillaConfig() {
         },
         serverPaging: true,
         serverSorting: true,
-        sort: [{ field: "EstadoId", dir: "desc" }, { field: "Fecha", dir: "asc" }, { field: "FechaCreacion", dir: "desc" } ],
+        sort: [{ field: "EstadoId", dir: "desc" }, { field: "Fecha", dir: "asc" }, { field: "FechaCreacion", dir: "desc" }],
         serverFiltering: true,
         pageSize: 20,
     };
@@ -116,7 +116,7 @@ function CargarGrillaConfig() {
                     } else if (dataItem.EstadoId == 2) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
                     }
-                }, 
+                },
                 filterable: { ui: createMultiSelectProveedor, extra: false }
             },
             {
@@ -241,7 +241,7 @@ function CargarGrillaConfig() {
                     input.kendoNumericTextBox({
                         max: options.model.CantidadDeCupoMax,
                         min: 0
-                    });                   
+                    });
                 }
             },
             {
@@ -260,9 +260,9 @@ function CargarGrillaConfig() {
                         min: 0
                     });
                 }
-            },               
+            },
             {
-                field: "Observacion", type: "string", minResizableWidth: 100, width: 150, filterable: { extra: false }, editable: function (dataItem) { return false; },     
+                field: "Observacion", type: "string", minResizableWidth: 100, width: 150, filterable: { extra: false }, editable: function (dataItem) { return false; },
             },
             {
                 field: "Estado", title: "Estado", width: 150, editable: function (dataItem) {
@@ -288,12 +288,12 @@ function CargarGrillaConfig() {
 
                     }
                     if (dataItem.EstadoId == 1) { //confirmado                       
-                        return '<div class="status confirmado" style="text-align: center;">Confirmado' 
+                        return '<div class="status confirmado" style="text-align: center;">Confirmado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
                             '</div>';
                     }
                     if (dataItem.EstadoId == 2) { //Rechazado
-                        return '<div class="status borrado" style="text-align: center;">Rechazado' 
+                        return '<div class="status borrado" style="text-align: center;">Rechazado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
                             + '</div>';
                     }
@@ -489,7 +489,7 @@ function ModalAceptarSugerencia(id) {
     var solicitudSeleccionada = grid.filter(function (x) { return (x.Id == id) });
     $("#CantidadDeCupoAceptado").val(solicitudSeleccionada[0].CantidadDeCupo);
     $("#CantidadCupoFleteAceptado").val(solicitudSeleccionada[0].CantidadFleteProcedencia);
-    $("#CantidadDeCupoFleteOriginal").val(solicitudSeleccionada[0].CantidadFleteProcedenciaOriginal); 
+    $("#CantidadDeCupoFleteOriginal").val(solicitudSeleccionada[0].CantidadFleteProcedenciaOriginal);
     $("#CantidadDeCupoOriginal").val(solicitudSeleccionada[0].CantidadDeCupoOriginal);
     $("#solicitudId").val(id);
 }
@@ -546,7 +546,7 @@ function RechazarSolicitud() {
     BlockUi('Procesando...');
     setTimeout(
         function () {
-            result = MSExecuteOnServer('/AdministracionCupo/Rechazar', { administracionId: id, motivo: motivo});
+            result = MSExecuteOnServer('/AdministracionCupo/Rechazar', { administracionId: id, motivo: motivo });
             var errores = new Array();
             for (var i = 0; i < result.length; i++) {
                 if (result[i].HayError) {
@@ -655,8 +655,13 @@ function AutoRecargarSolicitudes() {
 }
 
 function Recargar() {
-    recargarGrilla();
-    $("#panel").html(MSExecuteURLOnServer('/AdministracionCupo/PartialPanel'));
+    BlockUi('Cargando...');
+    setTimeout(function () {
+        recargarGrilla();
+        $("#panel").html(MSExecuteURLOnServer('/AdministracionCupo/PartialPanel'));
+        $.unblockUI();
+    }, 250);
+
 }
 
 function SeleccionarElementos() {
