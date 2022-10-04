@@ -23,7 +23,15 @@
             </div>
         </div>
     </div>*@
-
+<script>
+    $(document).ready(function () {
+        $('#menuproveedor').hide();
+        kendo.culture("es-AR");
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+    });
+</script>
 <div class="tab-content">
 
     @foreach (var m in panel.GroupBy(x => x.Material.Replace(" ", "")))
@@ -31,81 +39,139 @@
         <div class="tab-pane panel @(m.Key.Replace(" ","") == activo?" active":"")" id="@m.Key.Replace(" ","")">
 
             <div class="table-editable table-responsive">
-                <table class="table table-bordered table-responsive-md table-striped text-center tabla" id="@(m.Key.Replace(" ","") + "tabla")">
-                    <thead>
+                <table class="table table-bordered table-responsive-md text-center tabla" id="@(m.Key.Replace(" ","") + "tabla")">
+                    <thead class="ColorBackgroundThead">
                         <tr>
-                            <th></th>
+                            <th style="width: 25%"></th>
                             @foreach (var r in m.GroupBy(x => x.Fecha))
                             {
                                 var fecha = r.Key.ToString("dd/MM/yyyy");
                                 <th class="text-center">
-                                    <span>@fecha</span>
+                                    <span>@fecha (@m.Where(x => x.Fecha == r.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadPlanta = 0 }).Sum(x => x.CantidadDisponibilidadPlanta))</span>
                                 </th>
                             }
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad en planta por cada día pactado en Administración de cupos">Disponibilidad en planta</span></td>
+                        @*Disponibilidad en Administrador*@
+                        <tr class="ColorBackgroundTr">
+                            <td style="text-align: initial">
+                                <strong><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es el Limite de cupos menos el Limite del Algoritmo">Disponibilidad en Administrador</span></strong>
+                                <i class="fa fa-chevron-right" style="font-size: 11px" aria-hidden="true"></i>
+                            </td>
                             @foreach (var d in m.GroupBy(x => x.Fecha))
                             {
-                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadPlanta = 0 }).Sum(x => x.CantidadDisponibilidadPlanta)/@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadDia = 0 }).Sum(x => x.CantidadDisponibilidadDia)</td>
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadDia = 0 }).Sum(x => x.CantidadDisponibilidadDia)</td>
                             }
 
                         </tr>
+                        @*Consumidos*@
                         <tr>
-                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Capacidad del algoritmo por cada día pactado en Administración de cupos">Disponibilidad algoritmo </span></td>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Son los cupos generados manualmente o generados desde alguna solicitud">Consumidos</span></td>
                             @foreach (var d in m.GroupBy(x => x.Fecha))
                             {
-                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDisponibilidadPlanta = 0 }).Sum(x => x.CantidadDisponibilidadPlanta)/@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadAlgoritmo = 0 }).Sum(x => x.CantidadAlgoritmo)</td>
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { ConsumidosFueraDelAlgoritmo = 0 }).Sum(x => x.ConsumidosFueraDelAlgoritmo)</td>
                             }
 
                         </tr>
+                        @*Disponibles + Devoluciones*@
                         <tr>
-                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es la diferencia entre la capacidad total de la planta y las sugerencias pendientes mas los cupos creados. (Libres = Planta - (Sugerencias Pendientes + Cupos Creados))">Cupos Libres</span></td>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-html="true" data-placement="bottom" title="Es la <strong>Disponibilidad en Administrador</strong> mas las <strong>Solicitudes Devueltas</strong> hechas por el comercial, menos los <strong>Cupos Consumidos</strong>">Disponibles</span></td>
                             @foreach (var d in m.GroupBy(x => x.Fecha))
                             {
-                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadCuposLibres = 0 }).Sum(x => x.CantidadCuposLibres)</td>
-                            }
-                        </tr>
-
-                        <tr>
-                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cupos confirmados por los comerciales.">Sugerencias Aceptadas</span></td>
-                            @foreach (var d in m.GroupBy(x => x.Fecha))
-                            {
-                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSugerenciaAceptadaDia = 0 }).Sum(x => x.CantidadSugerenciaAceptadaDia)</td>
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { DisponiblesYDevoluciones = 0 }).Sum(x => x.DisponiblesYDevoluciones)</td>
                             }
 
                         </tr>
-                        @*<tr>
-                                <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cupos que no fueron confirmados en su totalidad.">Sugerencias Devueltas</span></td>
-                                @foreach (var d in m.GroupBy(x => x.Fecha))
-                                {
-                                    <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadCuposDevueltos = 0 }).Sum(x => x.CantidadCuposDevueltos)</td>
-                                }
+                        @*Disponibilidad Algoritmo*@
+                        <tr class="ColorBackgroundTr">
+                            <td style="text-align: initial">
+                                <strong><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Limite del algoritmo">Disponibilidad Algoritmo </span></strong>
+                                <i class="fa fa-chevron-right" style="font-size: 11px" aria-hidden="true"></i>
+                            </td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadAlgoritmo = 0 }).Sum(x => x.CantidadAlgoritmo)</td>
+                            }
 
-                            </tr>
-                            <tr>
-                                <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="">Solicitudes Aceptadas</span></td>
-                                @foreach (var d in m.GroupBy(x => x.Fecha))
-                                {
-                                    <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSolicitudesAceptadas = 0 }).Sum(x => x.CantidadSolicitudesAceptadas)</td>
-                                }
-
-                            </tr>*@
+                        </tr>
+                        @*Consumidos*@
                         <tr>
-                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="">Solicitudes Sugerencias Pendientes</span></td>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Todos los cupos que se consumieron dentro del algoritmo">Consumidos</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { ConsumidosDentroDelAlgoritmo = 0 }).Sum(x => x.ConsumidosDentroDelAlgoritmo)</td>
+                            }
+
+                        </tr>
+                        @*Pendientes*@
+                        <tr>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cantidad de cupos que aún no han sido confirmadas">Pendientes</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSugerenciaPendiente = 0 }).Sum(x => x.CantidadSugerenciaPendiente)</td>
+                            }
+
+                        </tr>
+                        @*Devueltas*@
+                        <tr>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Sugerencia de cantidad de cupos que el comercial devolvió">Devueltas</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadCuposDevueltos = 0 }).Sum(x => x.CantidadCuposDevueltos)</td>
+                            }
+
+                        </tr>
+                        @*Solicitudes*@
+                        <tr class="ColorBackgroundTr">
+                            <td style="text-align: initial">
+                                <strong>
+                                    <span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="">Solicitudes</span>
+                                    <i class="fa fa-chevron-right" style="font-size: 11px" aria-hidden="true"></i>
+                                </strong>
+                            </td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td></td>
+                            }
+                        </tr>
+
+                        @*Del Algoritmo pendientes*@
+                        <tr>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Solicitudes realizadas por el comercial dentro del algoritmo que se encuentran pendientes">Pendientes (Algoritmo)</span></td>
                             @foreach (var d in m.GroupBy(x => x.Fecha))
                             {
                                 <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSolicitudesPendientes = 0 }).Sum(x => x.CantidadSolicitudesPendientes)</td>
                             }
 
                         </tr>
+                        @*Extraordinarias pendientes*@
                         <tr>
-                            <td><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="">Solicitudes Extraordinarias Pendientes</span></td>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Solicitudes realizadas de forma extraordinaria que se encuentran pendientes">Pendientes (Extraordinarias)</span></td>
                             @foreach (var d in m.GroupBy(x => x.Fecha))
                             {
                                 <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSolicitudesPendientesExtra = 0 }).Sum(x => x.CantidadSolicitudesPendientesExtra)</td>
+                            }
+
+                        </tr>
+                        @*Aceptadas*@
+                        <tr>
+                            <td style="text-align: end"> <span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Cantidad de solicitudes aceptadas realizadas desde el algoritmo o de forma extraordinaria">Aceptadas (Algoritmo y Extraordinarias)</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadSolicitudesAceptadas = 0 }).Sum(x => x.CantidadSolicitudesAceptadas)</td>
+                            }
+
+                        </tr>
+                        @*Cupos No Tomados*@
+                        <tr class="ColorBackgroundTr">
+                            <td style="text-align: initial">
+                                <strong><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es la cantidad de cupos libres y se calcula en base al total de la planta menos todos los cupos consumidos">Cupos No Tomados</span></strong>
+                                <i class="fa fa-chevron-right" style="font-size: 11px" aria-hidden="true"></i>
+                            </td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadCuposLibres = 0 }).Sum(x => x.CantidadCuposLibres)</td>
                             }
 
                         </tr>
@@ -159,3 +225,15 @@
         </div>
     }
 </div>
+
+<style>
+    .ColorBackgroundTr {
+        color: white;
+        background-color: seagreen;
+    }
+
+    .ColorBackgroundThead {
+        color: white;
+        background-color: gray;
+    }
+</style>

@@ -242,7 +242,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsTrue(result.HayError);
-            Assert.AreEqual(6, result.Errores.Count);
+            Assert.AreEqual(7, result.Errores.Count);
         }
         //[Test]
         //public void TraerCuposTablaTestOk()
@@ -996,7 +996,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(resultado.HayError, true);
             Assert.AreEqual(resultado.Errores.Count(), 1);
             //repositorioMock.Verify(x => x.Agregar(It.IsAny<AdministracionCupo>()), Times.Once);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.AtLeastOnce);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
 
         [Test]

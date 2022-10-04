@@ -109,17 +109,20 @@ namespace Molinos.DataAgro.Business.Managers
                                     error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
                                     continue;
                                 }
-                                ////CierreCupera
-                                //var limitePorZona = this.TraerTodaConfiguracionCupoPorDia(cupo.ZonaCupoId, cupo.MaterialId, cupo.CentroId, d.Fecha);
-                                //if (limitePorZona.Count() <= 0)
-                                //{
-                                //    error.Error("Cupera", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
-                                //    continue;
+                                //CierreCupera
+                                //if (!cupo.Centro.NoPropio)
+                                //{   
+                                //    var limitePorZona = this.TraerTodaConfiguracionCupoPorDia(cupo.ZonaCupoId, cupo.MaterialId, cupo.CentroId, d.Fecha);
+                                //    if (limitePorZona.Count() <= 0)
+                                //    {
+                                //        error.Error("Cupera", "No hay cupera habilitada para el día " + d.Fecha.ToString("dd/MM/yyyy"));
+                                //        continue;
+                                //    }
+                                //    else if (limitePorZona.All(x => (x.LimiteCupo) <= 0))
+                                //    {
+                                //        error.Error("Cupera", "No hay límite de cupo disponible para la zona");
+                                //    }
                                 //}
-                                ////else if (limitePorZona.All(x => (x.LimiteCupo) <= 0))
-                                ////{
-                                ////    error.Error("Cupera", "No hay límite de cupo disponible para la zona");
-                                ////}
                                 cupo.FechaIngreso = d.Fecha;
 
                                 //if (cupo.NegocioId == null && cupo.ConfiguracionEspacioDinamicoId == null)
@@ -350,72 +353,12 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var error = new Resultado();
             var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == cupo.ProveedorId);
-            var negocio = repositorio.Obtener<Negocio>(x => x.Id == cupo.NegocioId);
             if (proveedor == null)
             {
                 error.Error("ProveedorId", "El campo 'Proveedor' es obligatorio");
                 return error;
             }
-            if (proveedor.Deshabilitado.HasValue && proveedor.Deshabilitado.Value != false)
-            {
-                error.Error("ProveedorId", "Proveedor deshabilitado");
-            }
-            if (cupo.ProveedorId == 0)
-            {
-                error.Errores.Add(new ErrorMessage(400, "El Proveedor no debe estar vacío"));
-            }
-            if (cupo.ProveedorId != 0 && ((cupo.NegocioId == null && proveedor.Comisionista != true) || (negocio != null && negocio.ProveedorComisionistaId == null)))
-            {
-                var cuit = repositorio.Obtener<Proveedor, string>(y => y.ProveedorId == cupo.ProveedorId, y => y.CUIT);
-                var sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL");
-                if (sisa == null)
-                {
-                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por CUIT Inactivo"));
-                }
-                else
-                {
-                    if (sisa.EstadoCuit == 3 && proveedor.RiesgoComercialSap != "E")
-                    {
-                        error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Estado de CUIT 3"));
-                    }
-                    else if (sisa.EstadoCuit == 0)
-                    {
-                        error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Estado de CUIT Inactivo"));
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(proveedor.RiesgoComercialSap) && proveedor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"] && proveedor.CuposConRiesgo != true)
-                {
-                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Riesgo Comercial Alto"));
-                }
-
-                if (repositorio.Existe<ProveedorEstado>(x => x.ProveedorId == proveedor.ProveedorId && x.EstadoId == 4))
-                {
-                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor no Operable por Estado BAJA"));
-                }
-
-                if (repositorio.Existe<FACACOP>(x => x.CUIT == proveedor.CUIT))
-                {
-                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por ser Apócrifo"));
-                }
-
-                if (proveedor.SegmentacionId != 5 && proveedor.SegmentacionId != 7)
-                {
-                    var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
-                    if (string.IsNullOrEmpty(alta.Mensaje))
-                    {
-                        if (alta.ProveedorGrano == "SI")
-                        {
-                            error.Errores.Add(new ErrorMessage(400, "El Corredor/Proveedor es un vendedor eventual"));
-                        }
-                    }
-                    else
-                    {
-                        error.Errores.Add(new ErrorMessage(400, alta.Mensaje));
-                    }
-                }
-
-            }
+            error = ValidarProveedor(cupo);
             if (cupo.Id == 0 && cantidadCupos == 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "La Cantidad no debe estar vacía"));
@@ -489,8 +432,88 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Errores.Add(new ErrorMessage(400, "No se encontraron establecimientos con stock disponible"));
                 }
             }
+            if (cupo.ZonaCupoId == 0 || cupo.ZonaCupoId == null)
+            {
+                error.Errores.Add(new ErrorMessage(400, "Se debe ingresar una zona"));
+            }
             return error;
         }
+
+        private Resultado ValidarProveedor(Cupo cupo)
+        {
+            var error = new Resultado();
+            var negocio = repositorio.Obtener<Negocio>(x => x.Id == cupo.NegocioId);
+            var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == cupo.ProveedorId);
+
+            if (proveedor == null)
+            {
+                error.Error("ProveedorId", "El campo 'Proveedor' es obligatorio");
+                return error;
+            }
+            if (proveedor.Deshabilitado.HasValue && proveedor.Deshabilitado.Value != false)
+            {
+                error.Error("ProveedorId", "Proveedor deshabilitado");
+            }
+            if (cupo.ProveedorId == 0)
+            {
+                error.Errores.Add(new ErrorMessage(400, "El Proveedor no debe estar vacío"));
+            }
+            if (cupo.ProveedorId != 0 && ((cupo.NegocioId == null && proveedor.Comisionista != true) || (negocio != null && negocio.ProveedorComisionistaId == null)))
+            {
+                var cuit = repositorio.Obtener<Proveedor, string>(y => y.ProveedorId == cupo.ProveedorId, y => y.CUIT);
+                var sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL");
+                if (sisa == null)
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por CUIT Inactivo"));
+                }
+                else
+                {
+                    if (sisa.EstadoCuit == 3 && proveedor.RiesgoComercialSap != "E")
+                    {
+                        error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Estado de CUIT 3"));
+                    }
+                    else if (sisa.EstadoCuit == 0)
+                    {
+                        error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Estado de CUIT Inactivo"));
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(proveedor.RiesgoComercialSap) && proveedor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"] && proveedor.CuposConRiesgo != true)
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por Riesgo Comercial Alto"));
+                }
+
+                if (repositorio.Existe<ProveedorEstado>(x => x.ProveedorId == proveedor.ProveedorId && x.EstadoId == 4))
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor no Operable por Estado BAJA"));
+                }
+
+                if (repositorio.Existe<FACACOP>(x => x.CUIT == proveedor.CUIT))
+                {
+                    error.Errores.Add(new ErrorMessage(400, "Corredor/Proveedor No Operable por ser Apócrifo"));
+                }
+
+                if (proveedor.SegmentacionId != 5 && proveedor.SegmentacionId != 7)
+                {
+                    var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+                    if (string.IsNullOrEmpty(alta.Mensaje))
+                    {
+                        if (alta.ProveedorGrano == "SI")
+                        {
+                            error.Errores.Add(new ErrorMessage(400, "El Corredor/Proveedor es un vendedor eventual"));
+                        }
+                    }
+                    else
+                    {
+                        error.Errores.Add(new ErrorMessage(400, alta.Mensaje));
+                    }
+                }
+
+            }
+
+            return error;
+        }
+
         public DataSourceResult TraerCuposTabla(DataSourceRequest request, List<int> equipo)
         {
             return repositorio.ObtenerConsultaEscalar(new TraerTodosCupos(request, equipo));
@@ -960,7 +983,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            if(cupo.Centro.CodigoSap == "1600" && cupo.MaterialId == 3)
+            if (cupo.Centro.CodigoSap == "1600" && cupo.MaterialId == 3)
             {
                 htmlBody += TablaSustentable(cupo);
             }
@@ -1378,7 +1401,7 @@ namespace Molinos.DataAgro.Business.Managers
             for (int i = negocios.Count - 1; i >= 0; i--)
             {
                 var negocio = negocios[i];
-                var result = Validar(new Cupo { CentroId = negocio.CentroId, NegocioId = negocio.NegocioId, ProveedorId = negocio.ProveedorId.Value, FechaIngreso = negocio.FechaHasta }, 1, DateTime.Now.Date.AddDays(1));
+                var result = ValidarProveedor(new Cupo { Id = 1, CentroId = negocio.CentroId, NegocioId = negocio.NegocioId, ProveedorId = negocio.ProveedorId.Value, FechaIngreso = negocio.FechaHasta, ZonaCupoId = 1 });
                 if (result.HayError)
                 {
                     // proxima etapa guardar detalle del error para mostrar al comecial por que se 
@@ -1437,14 +1460,14 @@ namespace Molinos.DataAgro.Business.Managers
             List<Cupo> cuposTotales = repositorio.Listar<Cupo>(x =>
                 x.FechaIngreso >= formula.CuposDesde && x.FechaIngreso <= formula.CuposHasta &&
                 x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
-                x.EstadoCupoId != 4 && x.EstadoCupoId != 9 );
+                x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
 
             foreach (var config in disponibilidadEnPlantas)
             {
                 var cuposTomados = cuposTotales.Count(a => a.FechaIngreso == config.Fecha && a.CentroId == config.CentroId && a.MaterialId == config.MaterialId);
                 if (config.LimiteAlgoritmo > config.LimiteCupo - cuposTomados)
                 {
-                    logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta menor a algoritmo:" + config.Fecha.ToString("dd/MM/yyyy") + ", cantidad:" + config.LimiteAlgoritmo + ", materialid:" + config.MaterialId + ", disponibles: "+(config.LimiteCupo - cuposTomados));
+                    logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta menor a algoritmo:" + config.Fecha.ToString("dd/MM/yyyy") + ", cantidad:" + config.LimiteAlgoritmo + ", materialid:" + config.MaterialId + ", disponibles: " + (config.LimiteCupo - cuposTomados));
                     config.LimiteAlgoritmo = config.LimiteCupo - cuposTomados;
                 }
             }
@@ -2577,19 +2600,40 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (fecha >= formula.CuposDesde && fecha <= formula.CuposHasta)
                         {
+                            //Todos los cupos
                             var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                            //Cupos creados por solicitud y creados manualmente (fuera del algoritmo)
+                            var CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            fecha && x.CentroId == formula.CentroId && (x.AdministracionCupoId != null || x.NegocioId == null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+
+                            //Cupos creados fuera del algoritmo y solicitudes
+                            var CantidadCuposGeneradosFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                            fecha && x.CentroId == formula.CentroId && ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                            //Cupos creados dentro del algoritmo
+                            var CantidadCuposGeneradosDentroDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                           fecha && x.CentroId == formula.CentroId && (x.NegocioId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+
                             var hoy = DateTime.Now.Date;
                             var cupo = new DiaCupo()
                             {
                                 Fecha = fecha,
                                 MaterialId = material.MaterialId,
                                 Material = material.Descripcion,
-                                //total de dispo para el dia
+                                //total de dispo para el dia 
                                 CantidadDisponibilidadPlanta = disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteCupo),
-                                //Disponibilidad en planta
+                                //Disponibilidad en planta (admin)
                                 CantidadDisponibilidadDia = disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteCupo) - disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteAlgoritmo),
                                 //Disponibilidad algoritmo
                                 CantidadAlgoritmo = disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteAlgoritmo),
+
+                                ConsumidosFueraDelAlgoritmo = CantidadCuposGeneradosFueraDelAlgoritmo,
+                                ConsumidosDentroDelAlgoritmo = CantidadCuposGeneradosDentroDelAlgoritmo,
+
+                                //Admin + devueltas - cupos aceptados por solicitud y cupos realizados fuera del algoritmo
+                                DisponiblesYDevoluciones = (disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteCupo) -
+                                disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteAlgoritmo)) +
+                                (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && !x.Excedente && x.MaterialId == material.MaterialId) -
+                                CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo,
 
                                 //Sugerencias Aceptadas
                                 CantidadSugerenciaAceptadaDia = (int)repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida == fecha && x.CentroId == formula.CentroId && x.Aceptado == true && x.MaterialId == material.MaterialId),
@@ -2597,8 +2641,8 @@ namespace Molinos.DataAgro.Business.Managers
                                 CantidadCuposDevueltos = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && !x.Excedente && x.MaterialId == material.MaterialId),
                                 //Solicitudes Aceptadas
                                 CantidadSolicitudesAceptadas = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 1 && x.MaterialId == material.MaterialId),
-                                //Solicitudes Pendientes Sugerencias
-                                CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo),
+                                //Solicitudes Pendientes del algoritmo y extraordinarias.
+                                CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && (x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo || x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Extraordinaria)),
                                 //Solicitudes Pendientes Extra
                                 CantidadSolicitudesPendientesExtra = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Extraordinaria),
 
@@ -2618,6 +2662,7 @@ namespace Molinos.DataAgro.Business.Managers
                             var sugerenciasPendientes = sugerenciasPorComercial.Where(a => a.Fecha == fecha && a.MaterialId == material.MaterialId).Sum(a => a.Total);
                             //Cupos Libres
                             logger.Debug($"Cantidad Planta : {cupo.CantidadDisponibilidadPlanta}, sug Pendientes: {cupo.CantidadSugerenciaPendiente}, Cupos creados: {CantidadCuposGenerados}");
+                            //Cupos no tomados
                             cupo.CantidadCuposLibres = cupo.CantidadDisponibilidadPlanta - CantidadCuposGenerados;
                             lista.Add(cupo);
                         }
@@ -5473,6 +5518,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 solicitud.SugerenciaCupo = sugerencia;
                                 sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia -= sugerencia.CantidadDeCupos;
                                 sugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                repositorio.Agregar(solicitud);
                             }
                             else
                             {
@@ -5525,6 +5571,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 solicitud.SugerenciaCupo = sugerencia;
                                 sugerenciaAceptadaDesdeElFront.cantidad -= sugerencia.CantidadDeCupos;
                                 sugerencia.FechaSugerida = sugerenciaAceptadaDesdeElFront.fecha.Value;
+                                repositorio.Agregar(solicitud);
                             }
                             else
                             {
