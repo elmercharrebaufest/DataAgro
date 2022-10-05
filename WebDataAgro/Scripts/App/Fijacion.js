@@ -14,7 +14,8 @@ var cargaFijacionAyer;
 var tieneDolarizado;
 var modificarDolarizadoFinalizado;
 var primeraCargaEdit = false;
-var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val()});
+var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+var FechaFeriados = MSExecuteOnServer('/CompraNet/FechaFeriados');
 var aFijar = null;
 var noTieneAperturasEnAFijar = false;
 var modificarPesificadoFinalizado;
@@ -129,12 +130,12 @@ function cargarDatosAFijarEnFijacion(afijar) {
 
     $("#fechaFijacionDesde").val(afijar.FechaDesde);
     $("#fechaFijacionHasta").val(afijar.FechaHasta);
-    
+
 
     $("#kgsaplicadossinfijarcontrato").text(afijar.RecibidoSinFijar);
 
     $("#desdecontrato").text(afijar.FechaDesde);
-    $("#hastacontrato").text(afijar.FechaHasta);    
+    $("#hastacontrato").text(afijar.FechaHasta);
     $("#desdeentrega").text(afijar.DesdeEntrega);
     $("#hastaentrega").text(afijar.HastaEntrega);
 
@@ -161,7 +162,16 @@ function cargarDatosAFijarEnFijacion(afijar) {
     } else {
         $("#impo-sobre-precio").show();
     }
-    $("#importe-sobre-precio").text(afijar.ImporteSobrePrecio + " " + afijar.MonedaSobrePrecio + " ");
+
+    if (afijar.ImporteSobrePrecio != 0 || afijar.PorcentajeSobrePrecio != 0) {
+        if (afijar.Aperturas != null && afijar.Aperturas.length > 0) {
+            MonedaSobrePrecio = afijar.Aperturas[0].MonedaId;
+        } else {
+            MonedaSobrePrecio = afijar.MonedaSobrePrecio;
+        }
+    }
+
+    $("#importe-sobre-precio").text(afijar.ImporteSobrePrecio + " " + MonedaSobrePrecio + " ");
     if (afijar.PorcentajeAPrecio == 0) {
         $("#porcenteaje-a-precio").hide();
     } else {
@@ -180,7 +190,11 @@ function cargarDatosAFijarEnFijacion(afijar) {
 
     if (afijar.ImporteSobrePrecio != 0 || afijar.PorcentajeSobrePrecio != 0) {
         ImporteSobrePrecio = afijar.ImporteSobrePrecio;
-        MonedaSobrePrecio = afijar.MonedaSobrePrecio;
+        if (afijar.Aperturas != null && afijar.Aperturas.length > 0) {
+            MonedaSobrePrecio = afijar.Aperturas[0].MonedaId;
+        } else {
+            MonedaSobrePrecio = afijar.MonedaSobrePrecio;
+        }
         PorcentajeSobrePrecio = afijar.PorcentajeSobrePrecio;
     } else {
         ImporteSobrePrecio = 0;
@@ -2004,6 +2018,7 @@ function InicializarElementos() {
             }
         },
         change: function () {
+            valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion:$("#fechaFijacionId").val()});
             $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
             var hoy = new Date();
             var anio = hoy.getFullYear();
@@ -2028,12 +2043,13 @@ function InicializarElementos() {
                 $("#descripcionMotivoAnterior").val("");
                 //$("#noInformaSioId").attr("disabled", false);
             }
+
+            var afijar = datosAfijar();
             if (afijar != null && afijar.length > 0) {
-                aFijar = afijar[0];
-                var afijar = datosAfijar();
+                aFijar = afijar[0];             
                 ArmarAperturaDesdeAFijar(aFijar);
             }
-     
+
         },
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
         month: {
@@ -4797,11 +4813,10 @@ function EsDolarizado() {
 }
 
 function FechaFeriado() {
-    var fechaFeriado = MSExecuteOnServer('/CompraNet/FechaFeriados');
     var fechas = [];
 
-    for (var i = 0; i < fechaFeriado.length; i++) {
-        var src = fechaFeriado[i];
+    for (var i = 0; i < FechaFeriados.length; i++) {
+        var src = FechaFeriados[i];
         src = src.replace(/[^0-9 +]/g, '');
         fechas.push(kendo.toString(new Date(parseInt(src)), "dd-MM-yyyy"));
     }
