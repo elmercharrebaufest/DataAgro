@@ -1004,11 +1004,17 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public JsonResult TraerTipoDeCambio()
+
+        public JsonResult TraerTipoDeCambio(DateTime? fechaOperacion)
         {
-            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambio(DateTime.Now.AddDays(-1).Date);
+            if (fechaOperacion == null || fechaOperacion == DateTime.Now.Date)
+            {
+                fechaOperacion = DateTime.Now.AddDays(-1).Date;
+            }
+            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambio(fechaOperacion.Value);
             return Json(precioDolar, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult ReconfirmarFinalizado(int contratoId)
         {
             return new JsonResult()
@@ -1321,6 +1327,12 @@ namespace WebDataAgro.Controllers
                 Value = "2",
                 Selected = false
             });
+            //tipoAlta.Add(new SelectListItem
+            //{
+            //    Text = "MATBA",
+            //    Value = "2",
+            //    Selected = false
+            //});
             ViewBag.TipoAlta = tipoAlta;
             return View();
         }

@@ -14,7 +14,7 @@ var cargaFijacionAyer;
 var tieneDolarizado;
 var modificarDolarizadoFinalizado;
 var primeraCargaEdit = false;
-var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', {});
+var valorDolar = MSExecuteOnServer('/CompraNet/TraerTipoDeCambio', { fechaOperacion: $("#fechaFijacionId").val()});
 var aFijar = null;
 var noTieneAperturasEnAFijar = false;
 var modificarPesificadoFinalizado;
@@ -2028,6 +2028,12 @@ function InicializarElementos() {
                 $("#descripcionMotivoAnterior").val("");
                 //$("#noInformaSioId").attr("disabled", false);
             }
+            if (afijar != null && afijar.length > 0) {
+                aFijar = afijar[0];
+                var afijar = datosAfijar();
+                ArmarAperturaDesdeAFijar(aFijar);
+            }
+     
         },
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"],
         month: {
