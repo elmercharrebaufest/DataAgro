@@ -1012,7 +1012,7 @@ namespace WebDataAgro.Controllers
                 fechaOperacion = DateTime.Now.Date;
             }
             var precioDolar = tipoDeCambioAgent.TraerTipoDeCambioUltimoDiaHabil(fechaOperacion.Value);
-            return Json(1, JsonRequestBehavior.AllowGet);
+            return Json(precioDolar, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ReconfirmarFinalizado(int contratoId)
