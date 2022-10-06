@@ -1009,10 +1009,10 @@ namespace WebDataAgro.Controllers
         {
             if (fechaOperacion == null || fechaOperacion == DateTime.Now.Date)
             {
-                fechaOperacion = DateTime.Now.AddDays(-1).Date;
+                fechaOperacion = DateTime.Now.Date;
             }
-            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambio(fechaOperacion.Value);
-            return Json(precioDolar, JsonRequestBehavior.AllowGet);
+            var precioDolar = tipoDeCambioAgent.TraerTipoDeCambioUltimoDiaHabil(fechaOperacion.Value);
+            return Json(1, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ReconfirmarFinalizado(int contratoId)

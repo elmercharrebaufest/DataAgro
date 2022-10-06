@@ -13,9 +13,11 @@ namespace Molinos.DataAgro.Agent
     public class TipoDeCambioAgent : ITipoDeCambioAgent
     {
         private readonly ILogger logger;
-        public TipoDeCambioAgent(ILogger logger)
+        private readonly IDiasHabilesAgent diasHabilesAgent;
+        public TipoDeCambioAgent(ILogger logger, IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
+            this.diasHabilesAgent = diasHabilesAgent;
         }
 
         String UserSap = ConfigurationManager.AppSettings["SapUser"];
@@ -53,6 +55,17 @@ namespace Molinos.DataAgro.Agent
                     return 1;
                 }
             }
+        }
+
+        public decimal TraerTipoDeCambioUltimoDiaHabil(DateTime? fecha)
+        {
+            if (fecha == null)
+            {
+                fecha = DateTime.Now.Date;
+            }
+            fecha = diasHabilesAgent.UltimoDiaHabil(fecha);
+            var tipoDeCambio = TraerTipoDeCambio(fecha);
+            return tipoDeCambio;
         }
     }
 }

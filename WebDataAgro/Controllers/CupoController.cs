@@ -163,7 +163,7 @@ namespace WebDataAgro.Controllers
                 error.Errores.Add(new ErrorMessage("Los cupos de soja no sustentable los deben gestionar por la pantalla de “Sugerencias de cupos”"));
 
             }
-            if (cupoNuevo.MaterialId == 1 && cupoNuevo.CentroId != 10 && ConfigurationManager.AppSettings["CupoMaizPorSugerencias"] == "Si")
+            if (cupoNuevo.MaterialId == 1 && ConfigurationManager.AppSettings["CupoMaizPorSugerencias"] == "Si")
             {
                 if (error.Errores == null) error.Errores = new List<ErrorMessage>();
                 error.Errores.Add(new ErrorMessage("Los cupos de maiz los deben gestionar por la pantalla de “Sugerencias de cupos”"));
