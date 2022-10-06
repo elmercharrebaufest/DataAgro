@@ -18,14 +18,23 @@ namespace Molinos.DataAgro.Agent
         public List<DateTime> ObtenerDiasHabiles()
         {
             var fecha = new List<DateTime>();
-            var anterior = DateTime.Today.AddMonths(-1);
-            for (int i = 1; i <= DateTime.DaysInMonth(anterior.Year, anterior.Month); i++)
+            var anterior = DateTime.Today.AddMonths(-12);
+            //for (int i = 1; i <= DateTime.DaysInMonth(anterior.Year, anterior.Month); i++)
+            //{
+            //    DateTime.TryParse(i.ToString() + "/" + anterior.Month.ToString() + "/" + anterior.Year.ToString(), out DateTime dia);
+            //    if (dia.DayOfWeek != DayOfWeek.Saturday && dia.DayOfWeek != DayOfWeek.Sunday && !repositorio.Listar<FechaFeriado>().Select(x=>x.Feriado).Contains(dia))
+            //    {
+            //        fecha.Add(dia);
+            //    }
+            //}
+            DateTime diaAnterior = anterior;
+            while (diaAnterior <= DateTime.Now.Date)
             {
-                DateTime.TryParse(i.ToString() + "/" + anterior.Month.ToString() + "/" + anterior.Year.ToString(), out DateTime dia);
-                if (dia.DayOfWeek != DayOfWeek.Saturday && dia.DayOfWeek != DayOfWeek.Sunday && !repositorio.Listar<FechaFeriado>().Select(x=>x.Feriado).Contains(dia))
+                if (diaAnterior.DayOfWeek != DayOfWeek.Saturday && diaAnterior.DayOfWeek != DayOfWeek.Sunday && !repositorio.Listar<FechaFeriado>().Select(x => x.Feriado).Contains(diaAnterior))
                 {
-                    fecha.Add(dia);
+                    fecha.Add(diaAnterior);
                 }
+                diaAnterior.AddDays(1);
             }
             for (int i = 1; i <= DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month); i++)
             {
