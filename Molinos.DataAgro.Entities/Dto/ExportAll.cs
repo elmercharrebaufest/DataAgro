@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
     public class ContactoAll
     {
-        public int ProveedorId { get; set; }
+       
         public string Cuit { get; set; }
         public string RazonSocial { get; set; }
         public string Estado { get; set; }
@@ -67,6 +67,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CuposConRiesgo { get; set; }
         public string OperaConMATBA { get; set; }
         public string OperaAtravesDe { get; set; }
+
+        public int ProveedorId { get; set; }
     }
 
     public class ObjetivoAll

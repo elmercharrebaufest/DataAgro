@@ -199,14 +199,14 @@ namespace Molinos.DataAgro.Report
                 j++;
             }
 
-            workSheet.Cells[1, 1].Value = "Proveedor";
-            workSheet.Column(1).Hidden = true;
+            //workSheet.Cells[1, 1].Value = "Proveedor";
+           
 
-            workSheet.Cells[1, 2].Value = "CUIT";
+            workSheet.Cells[1, 1].Value = "CUIT";
+            workSheet.Column(1).AutoFit();
+
+            workSheet.Cells[1, 2].Value = "Razón Social";
             workSheet.Column(2).AutoFit();
-
-            workSheet.Cells[1, 3].Value = "Razón Social";
-            workSheet.Column(3).AutoFit();
 
             workSheet.Cells[1, 4].Value = "Calificación";
             workSheet.Column(4).AutoFit();
@@ -263,6 +263,8 @@ namespace Molinos.DataAgro.Report
             workSheet.Column(26).AutoFit();
             workSheet.Cells[1, 27].Value = "Deshabilitado";
             workSheet.Column(27).AutoFit();
+            workSheet.Cells[1, 32].Value = "Proveedor";         
+            workSheet.Column(32).Hidden = true;
 
             if (oDatos.objetivo.Count > 0)
             {

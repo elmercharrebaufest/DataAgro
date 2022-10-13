@@ -1811,7 +1811,7 @@ namespace Molinos.DataAgro.Business.Managers
                         item.Alias = oParam.basicos.Alias;
                     }
                 }
-                if ((oProveedorSave.SegmentacionId == 5 || oProveedorSave.SegmentacionId == 7) && (oParam.basicos.segmentacion <= 5))
+                if ((oProveedorSave.SegmentacionId == 5 || oProveedorSave.SegmentacionId == 7) && (oParam.basicos.segmentacion < 5))
                 {
                     var corredorProveedor = repositorio.Listar<CorredorProveedor>(x => x.CorredorId == oParam.ProveedorId);
                     foreach (var item in corredorProveedor)
