@@ -296,7 +296,7 @@
                                             Sugerencias por dia:<b> @(@sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault() != null ? sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault().Total : 0)</b>
                                         </td>
                                         @*<td>Originales</td>*@
-                                        <td>Quedan</td>
+                                        <td>Quedan @dia.Where(a => a.MaterialId == materialId).Sum(a=>a.CantidadDeCupos)</td>
                                         <td colspan="3"></td>
                                         <td colspan="2">Devoluciones del dia</td>
                                     </tr>

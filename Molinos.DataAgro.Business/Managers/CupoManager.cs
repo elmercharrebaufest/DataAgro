@@ -4333,14 +4333,19 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var centro = repositorio.Obtener<Centro, int>(x => x.CodigoSap == solicitud.CentroId.ToString(), x => x.Id);
-                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro }, 1, solicitud.Fecha);
+                var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == solicitud.ComercialId).First().GrupoDeCompras.Descripcion;
+                var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
+                if (zona == null)
+                {
+                    result.Error("Zona", "El comercial seleccionado no tiene zona cupo asignada.");
+                    return result;
+                }
+                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id }, 1, solicitud.Fecha);
                 if (resultado.HayError)
                 {
                     result.Errores = resultado.Errores;
                     return result;
                 }
-                var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == solicitud.ComercialId).First().GrupoDeCompras.Descripcion;
-                var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
                 //var configuracion = repositorio.Obtener<ConfiguracionCupo>(x => x.MaterialId == solicitud.MaterialId && x.Centro.CodigoSap == solicitud.CentroId.ToString() && x.Fecha == solicitud.Fecha.Date);
 
                 string active = PermisosHelper.ObtenerUsuario();
@@ -4375,11 +4380,6 @@ namespace Molinos.DataAgro.Business.Managers
                     solicitud.Destinatario = "30715118773";
 
 
-                if (zona == null)
-                {
-                    result.Error("Zona", "El comercial seleccionado no tiene zona cupo asignada.");
-                    return result;
-                }
                 //if (configuracion == null)
                 //{
                 //    result.Error("Configuracion", "No hay cupera creada para el dia seleccionado.");

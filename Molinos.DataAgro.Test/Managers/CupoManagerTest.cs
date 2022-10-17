@@ -973,14 +973,14 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>()))
                .Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
             repositorioMock.Setup(y => y.Obtener<ConfiguracionCupo>(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>()))
-                .Returns(new ConfiguracionCupo { LiberarCupera = true, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 });
+                .Returns(new ConfiguracionCupo { LiberarCupera = false, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<Expression<Func<ConfiguracionCupo, int>>>())).Returns(90);
 
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-               .Returns(new List<ConfiguracionCupo>() { new ConfiguracionCupo { LiberarCupera = true, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 } });
+               .Returns(new List<ConfiguracionCupo>() { new ConfiguracionCupo { LiberarCupera = false, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 } });
 
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<ConfiguracionCupo, ConfiguracionCupoDto>>>(), It.IsAny<Expression<Func<ConfiguracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<ConfiguracionCupoDto>() { new ConfiguracionCupoDto { LiberarCupera = true, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 } });
+                .Returns(new List<ConfiguracionCupoDto>() { new ConfiguracionCupoDto { LiberarCupera = false, Id = 1, Fecha = DateTime.Now.Date, MaterialId = 1, CentroId = 1, LimiteCupo = 90 } });
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<LimiteCupo, ConfiguracionCupoDto>>>(), It.IsAny<Expression<Func<LimiteCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                .Returns(new List<ConfiguracionCupoDto>());
 
@@ -993,10 +993,10 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.GenerarSolicitudExtraordinaria(solicitud);
 
             Assert.IsNotNull(resultado);
-            Assert.AreEqual(resultado.HayError, true);
-            Assert.AreEqual(resultado.Errores.Count(), 1);
-            //repositorioMock.Verify(x => x.Agregar(It.IsAny<AdministracionCupo>()), Times.Once);
-            repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
+            Assert.AreEqual(resultado.HayError, false);
+            Assert.AreEqual(resultado.Errores.Count(), 0);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<AdministracionCupo>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(1));
         }
 
         [Test]
