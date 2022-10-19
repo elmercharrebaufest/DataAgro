@@ -1403,5 +1403,35 @@ namespace WebDataAgro.Controllers
             var model = mobjContratoManager.TraerTodoServicio(materialId, centroId);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
+
+        static readonly object _lockReenviarMailContrato = new object();
+        public ActionResult ReenviarMailContrato(int contratoId)
+        {
+            lock (_lockReenviarMailContrato)
+            {
+                mobjContratoManager.ReenviarMailContrato(contratoId, GlobalVariables.IdActiveDirectory);
+                return new JsonResult()
+                {
+                    Data = "Reenvio de email exitoso.",
+                    MaxJsonLength = Int32.MaxValue
+                };
+            }
+        }
+
+        static readonly object _lockEnviarMailFijacion = new object();
+
+        public ActionResult EnviarMailFijacion(int fijacionDePrecioContratoId)
+        {
+            lock (_lockEnviarMailFijacion)
+            {
+                mobjFijacionDePrecioContratoManager.EnviarMailFijacion(fijacionDePrecioContratoId, GlobalVariables.IdActiveDirectory);
+                //return Json("Ok", JsonRequestBehavior.AllowGet);
+                return new JsonResult()
+                {
+                    Data = "Reenvio de email de fijacion exitoso.",
+                    MaxJsonLength = Int32.MaxValue
+                };
+            }
+        }
     }
 }

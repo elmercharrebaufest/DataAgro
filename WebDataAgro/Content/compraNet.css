@@ -801,7 +801,7 @@ body {
     float: right;
 }
 
-#confirmarVariosDiv, #finalizarVariosDiv, #buscarDiv, #modificarVariosDiv, #negociosPropiosDiv {
+#confirmarVariosDiv, #finalizarVariosDiv, #reenviarMailVariosDiv, #buscarDiv, #modificarVariosDiv, #negociosPropiosDiv {
     border: 1px solid #848484;
     border-radius: 5px !important;
     background: white;
@@ -810,11 +810,11 @@ body {
     cursor: pointer;
 }
 
-    #confirmarVariosDiv > span, #finalizarVariosDiv > span, #buscarDiv > span, #modificarVariosDiv > span, #negociosPropiosDiv > span {
+    #confirmarVariosDiv > span, #finalizarVariosDiv > span, #reenviarMailVariosDiv > span, #buscarDiv > span, #modificarVariosDiv > span, #negociosPropiosDiv > span {
         vertical-align: middle;
     }
 
-    #confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #buscarDiv:hover, #modificarVariosDiv:hover, #negociosPropiosDiv:hover {
+    #confirmarVariosDiv:hover, #finalizarVariosDiv:hover, #reenviarMailVariosDiv:hover, #buscarDiv:hover, #modificarVariosDiv:hover, #negociosPropiosDiv:hover {
         background: #ccc;
         border: 1px solid #017940;
     }

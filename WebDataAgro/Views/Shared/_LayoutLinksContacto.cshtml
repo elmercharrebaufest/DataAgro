@@ -12,10 +12,10 @@
 }
 @*<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">*@
 @section LinksContacto {
-    <div class="navbar navbar-inverse nav-bar-segundo w3-animate-opacity" id="menuproveedor" style="margin-bottom:0">
+    <div hidden class="navbar navbar-inverse nav-bar-segundo w3-animate-opacity" id="menuproveedor" style="margin-bottom:0">
         <div class="container" id="search-bar">
             <div class="navbar-collapse">
-                <ul class="nav navbar-nav links">
+                <ul hidden class="nav navbar-nav links">
                     <li class="img-links" style="height:60px;">
                         <a href="http://www.bolsadecereales.com" target="_blank" title="Bolsa de Cereales" class="marcador">
                             <img src="~/Content/Images/bolsacereales.png" />
@@ -62,7 +62,7 @@
                     {
                         <li>
                             <div class="buscador-nav">
-                                <input class="buscador-nav-input" type="text" placeholder="Buscar por CUIT, razón social" />
+                                <input id="buscador1" class="buscador-nav-input" type="text" placeholder="Buscar por CUIT o razón social" />
                                 <img class="buscar-nav" src="~/Content/Images/menusegundo-buscar.png" />
                                 <div class="buscar-result"></div>
                             </div>

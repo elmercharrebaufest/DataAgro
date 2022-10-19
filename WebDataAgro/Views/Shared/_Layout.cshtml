@@ -239,12 +239,6 @@
                             </ul>
                         </li>
                     }
-                    <li class="agregar-contacto-mobile">
-                        <img src="~/Content/Images/Users-Add-user.png" style="width:16px;" />
-                    </li>
-                    <li class="buscar-mobile">
-                        <i class="fa fa-search" aria-hidden="true"></i>
-                    </li>
                     @if (PermisosHelper.Is(PermisosDataAgro.VisualizarInformeComercial,
                         PermisosDataAgro.VisualizarInformeAdministrativo,
                         PermisosDataAgro.VisualizarReporteComercial))
@@ -690,19 +684,37 @@
                     }
                 </ul>
                 <ul id="segundo" class="nav navbar-nav navbar-right" style="float: right;">
-                    <li class="float-left dropdown icons mis-postit" id="notas">
+                    @if (PermisosHelper.Is(PermisosDataAgro.VisualizarDatosProveedor))
+                    {
+                        <li id="findproveedor">
+                            <div class="buscador-nav">
+                                <input id="buscador2" class="buscador-nav-input" type="text" placeholder="Buscar por CUIT o razón social" />
+                                <img class="buscar-nav" src="~/Content/Images/menusegundo-buscar.png" />
+                                <div class="buscar-result"></div>
+                            </div>
+                        </li>
+                    }
+                    @if (PermisosHelper.Is(PermisosDataAgro.AltaDatosProveedor))
+                    {
+                        <li title="Agregar Contacto" class="float-left dropdown icons" id="AgregarContacto2">
+                            <a href="/Proveedor/Agregar">
+                                <img class="notificaciones-nav" src="~/Content/Images/Users-Add-user.png" />
+                            </a>
+                        </li>
+                    }
+                    <li title="Notas" class="float-left dropdown icons mis-postit" id="notas">
                         <a @*class="mis-postit imgs"*@>
                             <img class="usuario-nav" src="~/Content/Images/postit.png" />
                         </a>
                     </li>
-                    <li class="float-left dropdown icons">
+                    <li title="Notificaciones" class="float-left dropdown icons">
                         <a id="notificaciones-a" @*class="imgs"*@>
                             <img class="notificaciones-nav" src="~/Content/Images/menu-notificaciones.png" />
                             <div class="cant-notif"><span class="cant-notif-span"> </span></div>
                         </a>
                     </li>
-                    <li class="float-left dropdown icons">
-                        <a id="buscar-proveedor" @*class="imgs"*@>
+                    <li title="Buscar Proveedor" style="display:none;" class="float-left dropdown icons" id="buscar-proveedor">
+                        <a @*class="imgs"*@>
                             <div style="display:inline-block;">
                                 <img class="usuario-nav" src="~/Content/Images/buscar-proveedor.png" />
                             </div>

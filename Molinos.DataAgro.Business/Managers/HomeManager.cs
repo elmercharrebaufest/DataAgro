@@ -233,7 +233,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 cond = repositorio.Listar<Condicion, CondicionPreferenteQry>(x => new CondicionPreferenteQry() { CondicionId = x.CondicionId, Descripcion = x.Descripcion }),
 
-                come = repositorio.Listar<Comercial, ComercialQry>(s => new ComercialQry() { ComercialId = s.ComercialId, IdActiveDirectory = s.IdActiveDirectory }, x => equipo.Contains(x.ComercialId)),
+                come = repositorio.Listar<Comercial, ComercialQry>(s => new ComercialQry() { ComercialId = s.ComercialId, Comercial = s.Nombres + " " + s.Apellido }, x => equipo.Contains(x.ComercialId) && x.AsignarNegocios, 0, "Comercial", Entities.Helpers.DirOrden.Asc),
 
                 zona = repositorio.Listar<Comercial, ZonaQry>(x => new ZonaQry { Id = x.GrupoDeCompras.Id, Descripcion = x.GrupoDeCompras.Descripcion }, x => equipo.Contains(x.ComercialId) && x.GrupoDeCompras != null, 0, "Descripcion")
             };

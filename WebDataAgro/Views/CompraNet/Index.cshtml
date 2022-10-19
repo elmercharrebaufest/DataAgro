@@ -42,7 +42,7 @@
     var asociarNegocios = PermisosHelper.Is(PermisosDataAgro.AsociarNegocio);
     var noDefault = PermisosHelper.Is(PermisosDataAgro.ActualizarCompraNet);
     var preanularFijacion = PermisosHelper.Is(PermisosDataAgro.PreAnularFijacion);
-    
+
 }
 <script>
     comercialId = '@ViewBag.comercialId';
@@ -217,7 +217,7 @@
                     </script>
                 </div>
                 <div class="row no-margin">
-                    <div class="col-xs-12 col-md-5" id="buscadorZonaDiv">
+                    <div class="col-xs-12 col-md-4" id="buscadorZonaDiv">
                         @if (verMesa)
                         {
 
@@ -259,8 +259,8 @@
                         </div>
                     }
 
-                    <div id="variosDiv" class="col-xs-12 col-md-5 alinear-derecha">
-                        <div class="col-xs-12 col-md-4">
+                    <div id="variosDiv" class="col-xs-12 col-md-6 alinear-derecha">
+                        <div class="col-xs-12 col-md-3">
                             <div id="modificarVariosDiv" class="@(modificaNegocios?"":"hide")" data-toggle="tooltip" onclick="ModalModificarVarios()">
                                 <span class="botonVarios">
                                     <i class="fa fa-pencil varios" aria-hidden="true"></i>
@@ -268,7 +268,7 @@
                                 <span>Modificar </span>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-4">
+                        <div class="col-xs-12 col-md-3">
                             <div id="confirmarVariosDiv" class="@(confirmarNegocios?"":"hide")" data-toggle="tooltip" onclick="ModalConfirmadoVarios()">
                                 <span class="botonVarios">
                                     <i class="fa fa-check varios" aria-hidden="true"></i>
@@ -276,12 +276,20 @@
                                 <span>Confirmar</span>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-4">
+                        <div class="col-xs-12 col-md-3">
                             <div id="finalizarVariosDiv" class="@(finalizaNegocios?"":"hide")" data-toggle="tooltip" onclick="ModalFinalizarVarios()">
                                 <span class="botonVarios">
                                     <i class="fa fa-flag-checkered varios" aria-hidden="true"></i>
                                 </span>
                                 <span>Finalizar </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3">
+                            <div title="Reenviar Mail de Contratos Finalizados" id="reenviarMailVariosDiv" class="@(finalizaNegocios?"":"hide")" data-toggle="tooltip" onclick="ModalReenviarVarios()">
+                                <span class="botonVarios">
+                                    <i class="fa fa-envelope-o varios" aria-hidden="true"></i>
+                                </span>
+                                <span>Reenviar</span>
                             </div>
                         </div>
                     </div>
@@ -357,6 +365,10 @@
 
 <!-- Modal Modificar Varios-->
 @Html.Partial("_ModalModificarVarios")
+
+<!-- Modal Reenviar Varios-->
+@Html.Partial("_ModalReenviarVarios")
+
 <!-- Modal Aprobar-->
 @Html.Partial("_ModalAprobar")
 
@@ -368,6 +380,9 @@
 
 <!-- Modal ReconfirmarFinalizado-->
 @Html.Partial("ModalConfirmadoTildeFinalizado")
+
+<!-- Modal Reenviar Mail-->
+@Html.Partial("ModalReenviarMail")
 
 @Html.Partial("ModalConfirmarBolsa")
 @Html.Partial("PanelAsociarNegocios")

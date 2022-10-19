@@ -1535,5 +1535,31 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"data\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+        [Test]
+        public void EnviarMailFijacionTest()
+        {
+            fijacionManagerMock.Setup(x => x.EnviarMailFijacion(1, GlobalVariables.IdActiveDirectory));
+            var result = target.EnviarMailFijacion(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            fijacionManagerMock.Verify(x => x.EnviarMailFijacion(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"Reenvio de email de fijacion exitoso.\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ReenviarMailContratoTest()
+        {
+            contratoManagerMock.Setup(x => x.ReenviarMailContrato(1, GlobalVariables.IdActiveDirectory));
+            var result = target.ReenviarMailContrato(1);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            contratoManagerMock.Verify(x => x.ReenviarMailContrato(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"Reenvio de email exitoso.\",\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
     }
 }

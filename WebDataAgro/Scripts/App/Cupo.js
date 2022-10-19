@@ -221,8 +221,57 @@ function InicializarCuposIndex() {
             },
             { field: "Proveedor", type: "string", minResizableWidth: 100, filterable: { ui: createMultiSelectProveedor } },
             { field: "Destinatario", type: "string", width: 100 },
-            { field: "Centro", type: "string", width: 100 },
-            { field: "Calidad", type: "string", width: 80 },
+            {
+                field: "Centro", type: "string", title: "Destino", minResizableWidth: 100, width: 150, editable: function (dataItem) {
+                    return false;
+                }, filterable: {
+                    multi: true, dataSource: [{
+                        Centro: "S. Lorenzo"
+                    }, {
+                        Centro: "SAN LORENZO SUSTENTABLE / CALIDAD"
+                    }, {
+                        Centro: "Rio del Valle"
+                    }, {
+                        Centro: "General Pinedo"
+                    }, {
+                        Centro: "Vicentin Virtual"
+                    }, {
+                        Centro: "Bahia Blanca"
+                    }, {
+                        Centro: "Pergamino"
+                    }, {
+                        Centro: "Bandera"
+                    },
+                    {
+                        Centro: "La Cautiva"
+                    },
+                    {
+                        Centro: "Lincoln"
+                    },
+                    {
+                        Centro: "Prest Dev. Buenos Aires"
+                    },
+                    {
+                        Centro: "Prest Dev. Santa Fe"
+                    },
+                    {
+                        Centro: "Chivilcoy"
+                    }, {
+                        Centro: "LE"
+                    }]
+                }, width: 130, template: "#=Centro#",
+            },
+            {
+                field: "Calidad", type: "string", title: "Calidad", minResizableWidth: 100, width: 150, editable: function (dataItem) {
+                    return false;
+                }, filterable: {
+                    multi: true, dataSource: [{
+                        Calidad: "Camara"
+                    }, {
+                        Calidad: "Fabrica"
+                    }]
+                }, width: 130, template: "#=Calidad#",
+            },
             //{ field: "FechaGeneracion", title: "Fecha de registro", type: "date", width: 50, format: _DefaultDateTemplate },
             //{ field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 50, format: _DefaultDateTemplate },
             { field: "FechaRegistro", title: "Fecha de Registro", type: "date", width: 130, template: function (dataItem) { return kendo.toString(dataItem.FechaRegistro, "dd/MM/yyyy") + " " + dataItem.Hora; } },
@@ -437,10 +486,11 @@ function InicializarCuposIndex() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
-
-    function createMultiSelect(element, textField, valueField, url) {
+    function createMultiSelect(element, textField, valueField, url, columna, serverFiltering, filterType) {
         element.removeAttr("data-bind");
-
+        columna = columna == null ? valueField : columna;
+        serverFiltering = serverFiltering == null ? true : serverFiltering;
+        filterType = filterType == null ? "starswith" : filterType;
         element.kendoMultiSelect({
             itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
             dataBound: function () {
@@ -452,11 +502,11 @@ function InicializarCuposIndex() {
 
             dataTextField: textField,
             dataValueField: valueField,
-            autoClose: false,
+            autoClose: true,
             autoBind: false,
             delay: 300,
             dataSource: {
-                serverFiltering: true,
+                serverFiltering: serverFiltering,
                 filter: [],
                 transport: {
                     read: {
@@ -468,21 +518,19 @@ function InicializarCuposIndex() {
                         },
                         prefix: ""
                     }
-                }
+                },
             },
+            filter: filterType,
             change: function (e) {
                 var items = this.ul.find("li");
                 checkInputs(items);
                 var grilla = $('#gridCupo').data("kendoGrid");
-                var values = this.value();
-                $.each(values, function (i, v) {
-                    if (v !== '') {
-                        addOrRemoveFilter(grilla, valueField, "eq", v);
-                    }
-                });
-
+                //this.value = this.value().filter(x => { return x !== '' });
+                var values = this.value().filter(x => { return x !== '' });
                 if (values.length === 0) {
-                    addOrRemoveFilter(grilla, valueField, "eq", "");
+                    removerFiltros(grilla, columna, "eq", "");
+                } else {
+                    AddFilters(grilla, columna, "eq", values);
                 }
             }
         });
@@ -491,6 +539,59 @@ function InicializarCuposIndex() {
             $(".k-multiselect").parent().children("div").find('button').remove();
         }, 200);
     }
+    //function createMultiSelect(element, textField, valueField, url) {
+    //    element.removeAttr("data-bind");
+
+    //    element.kendoMultiSelect({
+    //        itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
+    //        dataBound: function () {
+    //            var items = this.ul.find("li");
+    //            setTimeout(function () {
+    //                checkInputs(items);
+    //            });
+    //        },
+
+    //        dataTextField: textField,
+    //        dataValueField: valueField,
+    //        autoClose: false,
+    //        autoBind: false,
+    //        delay: 300,
+    //        dataSource: {
+    //            serverFiltering: true,
+    //            filter: [],
+    //            transport: {
+    //                read: {
+    //                    url: url,
+    //                    data: function () {
+    //                        return {
+    //                            text: element.data("kendoMultiSelect").input.val()
+    //                        };
+    //                    },
+    //                    prefix: ""
+    //                }
+    //            }
+    //        },
+    //        change: function (e) {
+    //            var items = this.ul.find("li");
+    //            checkInputs(items);
+    //            var grilla = $('#gridCupo').data("kendoGrid");
+    //            var values = this.value();
+    //            $.each(values, function (i, v) {
+    //                if (v !== '') {
+    //                    addOrRemoveFilter(grilla, valueField, "eq", v);
+    //                }
+    //            });
+
+    //            if (values.length === 0) {
+    //                addOrRemoveFilter(grilla, valueField, "eq", "");
+    //            }
+    //        }
+    //    });
+    //    setTimeout(function () {
+    //        $(".k-multiselect").parent().children(".k-dropdown").remove();
+    //        $(".k-multiselect").parent().children("div").find('button').remove();
+    //    }, 200);
+    //}
     function createMultiSelectProveedor(element) {
         return createMultiSelect(element, "Proveedor", "Proveedor", "/Cupo/ListarProveedorTodos");
     }
@@ -1047,5 +1148,51 @@ function setPageSize() {
     grid.dataSource.pageSize($("#pageSize").val());
     grid.refresh();
 }  
+
+function AddFilters(grid, field, operator, values) {
+    var filtros = { logic: 'or', filters: [] };
+
+    $.each(values, function (i, v) {
+        if (v !== '') {
+            filtros.filters.push({ field: field, operator: operator, value: v });
+        }
+    });
+
+    var currentFilters = grid.dataSource.filter();
+    if (!currentFilters) {
+        currentFilters = { filters: [], logic: 'and' }
+    }
+    removerFiltros(grid, field, operator, "");
+    currentFilters.filters.push(filtros);
+    grid.dataSource.filter(currentFilters);
+}
+function removerFiltros(grid, field, operator, value) {
+    //Remove filter 
+    var newFilter = { field: field, operator: operator, value: value };
+    var dataSource = grid.dataSource;
+    var filters = null;
+    if (dataSource.filter() != null) {
+        filters = dataSource.filter().filters;
+    }
+    var removeIndex = -1;
+    if (filters != null) {
+        for (var x = 0; x < filters.length; x++) {
+            var filtro = filters[x].filters;
+            if (filters[x].filters != null) {
+                var filtro = filters[x].filters;
+                for (var i = 0; i < filters[x].filters.length; i++) {
+                    if (filtro[i].field == field) {
+                        removeIndex = x;
+                        break;
+                    }
+                }
+
+            }
+        }
+        if (removeIndex != -1)
+            filters.splice(removeIndex, 1);
+    }
+    dataSource.filter(filters);
+}
    
 

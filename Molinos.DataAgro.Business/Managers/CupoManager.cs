@@ -589,7 +589,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             logger.Debug("AnularCupoStop " + cupoSap.CupoSap + " " + cupoSap.ToJson());
             var nuevoResultado = new Resultado();
-            if (!cupoSap.Centro.Acopio && cupoSap.EstadoCupoId == 1 && cupoSap.CupoStop != null)
+            if (!cupoSap.Centro.Acopio && (cupoSap.EstadoCupoId == 1 || cupoSap.EstadoCupoId == 6) && cupoSap.CupoStop != null)
             {
                 if (datosConfiguracion.ConexionABMStop.HasValue && !datosConfiguracion.ConexionABMStop.Value)
                 {
@@ -905,6 +905,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+                logger.Debug("Intentando enviar a " + cupo.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Cupo SAP:" + cupo.CupoSap);
 
                 oCliente.Send(oMensaje);
             }
@@ -2179,73 +2180,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return result;
         }
-
-        public CupoResult AceptarCupoExcedente(int administracionId)
-        {
-            try
-            {
-                var sugerencia = repositorio.Obtener<AdministracionCupo>(administracionId);
-                CupoResult resultado = new CupoResult();
-                Cupo cupo = new Cupo
-                {
-                    ProveedorId = sugerencia.ProveedorId.Value,//---Agentecompra no tiene proveedor
-                    CentroId = sugerencia.CentroId,
-                    MaterialId = sugerencia.MaterialId,
-                    FechaIngreso = sugerencia.Fecha,
-                    ZonaCupoId = sugerencia.ZonaId,
-                    ComercialId = sugerencia.ComercialId,
-                    Calidad = "",
-                    Fason = false,
-                    Destinatario = "",
-                    FechaGeneracion = DateTime.Now,
-                    Observaciones = null,//---
-                    CupoSap = "",//---
-                    FleteProcedencia = false,//---
-                    EstadoCupoId = 1,//---
-                    CupoStop = null,//---
-                    CreacionStop = "",//---
-                    ErrorStop = "",//---
-                    NegocioId = 7,
-                    ConfiguracionEspacioDinamicoId = null,
-                    TipoNegocioId = null,
-                    AdministracionCupoId = administracionId
-                };
-
-                CupoResult result = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = sugerencia.CantidadCupo, Fecha = sugerencia.Fecha } });
-
-                if (sugerencia.CantidadFleteProcedencia > 0)
-                {
-                    cupo.FleteProcedencia = true;
-                    CupoResult result2 = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = sugerencia.CantidadFleteProcedencia, Fecha = sugerencia.Fecha } });
-
-                    result.Errores.AddRange(result2.Errores);
-                    result.ListaCupos.AddRange(result2.ListaCupos);
-                }
-                if (!result.HayError)
-                {
-
-                    sugerencia.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo;
-                }
-                else
-                {
-                    if (result.ListaCupos.Count > 0)
-                    {
-                        sugerencia.CantidadCupo -= result.ListaCupos.Count;
-                    }
-                }
-                resultado.Errores.AddRange(result.Errores);
-                resultado.ListaCupos.AddRange(result.ListaCupos);
-                repositorio.GuardarCambios();
-
-                return resultado;
-            }
-            catch (Exception e)
-            {
-                logger.Error(e.Message);
-                return null;
-            }
-        }
-
 
         public List<DateTime> FechasComprendidas(int? materialId = null)
         {

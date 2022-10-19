@@ -9,7 +9,7 @@ namespace Molinos.DataAgro.Interfaces
     public interface IClientePrimariAPIAgent
     {
         TokenPrimary ObtenerToken();
-        TradeCaptureReportResult ObtenerNegocios();
+        List<AgenteCompra> ObtenerNegocios();
         MarketDataResult ObtenerCotizacion(DateTime fecha);
 
 

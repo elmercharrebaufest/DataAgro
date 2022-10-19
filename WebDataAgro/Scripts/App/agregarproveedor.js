@@ -1718,6 +1718,7 @@ function armarFuncionalidades() {
     });
     $(".navbarsegundo-bread").html("Agregar contacto");
     $("#AgregarContacto").hide();
+    $("#AgregarContacto2").hide();
 
     $(".atras-nav").click(function () {
         $("#modalSalir").modal();

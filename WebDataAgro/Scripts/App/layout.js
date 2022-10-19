@@ -78,6 +78,12 @@ function mobile() {
     if (ww < 750) {        
         $(".padding").css({ paddingTop: "0px" });
 
+        $("#segundo").addClass("left");
+        $("#segundo").appendTo(".navbar-header");
+        $("#segundo").addClass("floatito");
+        $(".icons").addClass("float-left");
+        $(".imgs").removeClass("padding");
+
         $(".nav-text1").removeClass("dropdown-toggle");
         $(".nav-text1").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#reportes");
         $("#informes").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
@@ -103,6 +109,13 @@ function mobile() {
         $(".nav-text5").removeAttr("data-toggle").attr("data-toggle", "collapse").attr("data-target", "#research");
         $("#research").removeClass("dropdown-menu").addClass("collapse navbar-collapse");
     } else {
+
+        $("#segundo").removeClass("left");
+        $("#segundo").removeClass("floatito");
+        $("#segundo").appendTo("#myNavbar");
+        $(".icons").removeClass("float-left");
+        $(".imgs").addClass("padding");
+
         $(".nav-text1").addClass("dropdown-toggle");
         $(".nav-text1").removeAttr("data-toggle").attr("data-toggle", "dropdown").removeAttr("data-target");
         $("#informes").addClass("dropdown-menu").removeClass("collapse navbar-collapse");
@@ -129,12 +142,23 @@ function mobile() {
 
     }
     if (window.innerWidth < 768) {
+        $("#AgregarContacto2").attr("style", "display:none;");
+        $("#menuproveedor").removeAttr("hidden");
+        $("#menuproveedor").removeAttr("style");
+        $("#buscar-proveedor").removeAttr("style");
+        /*$("#findproveedor").attr("hidden", "hidden");*/
+        $("#findproveedor").attr("style", "display:none;");
         $("#segundo").addClass("left");
         $("#segundo").appendTo(".navbar-header");
         $("#segundo").addClass("floatito");
         $(".icons").addClass("float-left");
         $(".imgs").removeClass("padding");
     } else {
+        $("#AgregarContacto2").removeAttr("style");
+        /*$("#menuproveedor").attr("hidden", "hidden");*/
+        $("#menuproveedor").attr("style", "display: none;");
+        $("#buscar-proveedor").attr("style", "display:none;");
+        $("#findproveedor").removeAttr("style");
         $("#segundo").removeClass("left");        
         $("#segundo").removeClass("floatito");
         $("#segundo").appendTo("#myNavbar");
@@ -144,9 +168,9 @@ function mobile() {
 }
 
 $(document).ready(function () {
+    var ww = document.body.clientWidth; 
     mobile();
-
-    var ww = document.body.clientWidth;    
+    OcultarActividadesMobile();
 
     $(".miscontactos-nav").parent().attr("href", window.location.origin);
 
@@ -333,7 +357,7 @@ $(document).ready(function () {
     });
 
     $(".buscador-nav-input").keyup(function (e) {
-        armarBusquedaResult(e);
+        armarBusquedaResult(e, $(this).attr('id'));
     });
 
     $(".buscador-nav-input").focus(function (e) {
@@ -341,14 +365,6 @@ $(document).ready(function () {
         e.preventDefault();
         armarBusquedaResult();
     })
-
-    $(".agregar-contacto-mobile").click(function () {
-        window.location.href = window.location.origin + "/Proveedor/Agregar";
-    });
-
-    $(".buscar-mobile").click(function () {
-        $(".nav-bar-segundo").attr("style", "display:block!important;");
-    });
     
     $(".mis-postit").click(function (e) {
         e.stopPropagation();
@@ -386,12 +402,12 @@ function guardarPost() {
     }
 }
 
-function armarBusquedaResult(value) {
-    if ($(".buscador-nav-input").val().length >= 3) {
+function armarBusquedaResult(value, inputId) {
+    if ($("#"+inputId).val().length >= 3) {
         $(".buscar-result").empty();
 
         //aca tiene que ir a buscar
-        var txt = $(".buscador-nav-input").val().toUpperCase();
+        var txt = $("#" + inputId).val().toUpperCase();
 
         var result = MSExecuteOnServer('/Home/BusquedaHome', { filtro: txt });
 
@@ -523,5 +539,15 @@ function notifyMe(dataFromServer) {
             window.open(dataFromServer.url);
         };
         setTimeout(notification.close.bind(notification), 7000);
+    }
+}
+
+function OcultarActividadesMobile() {
+    var ww = document.body.clientWidth;
+
+    if (ww < 1200) {
+        $(".contenedor-principal-widget").hide();
+    } else {
+        $(".contenedor-principal-widget").show();
     }
 }

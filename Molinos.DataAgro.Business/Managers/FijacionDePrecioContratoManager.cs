@@ -833,14 +833,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                         //Envio de mail
 
-                        if (oFijacionDePrecioSave.Virtual == true)
-                        {
-                            mobjProveedorManager.EnviarMailFijacionVirtual(oFijacionDePrecioSave, idActiveDirectory, false);
-                        }
-                        else
-                        {
-                            mobjProveedorManager.EnviarEmailFijacion(oFijacionDePrecioSave, idActiveDirectory);
-                        }
+                        EnviarMailFijacion(oFijacionDePrecioSave.Id, idActiveDirectory);
+
                         var comerciales = mobjComercialManager.CadenaComerciales(oFijacionDePrecioSave.Comercial.ComercialId);
                         foreach (var comercialId in comerciales)
                         {
@@ -884,6 +878,20 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
+        public void EnviarMailFijacion(int fijacion, string idActiveDirectory)
+        {
+            FijacionDePrecioContrato fijacionDePrecio = repositorio.Obtener<FijacionDePrecioContrato>(fijacion);
+            if (fijacionDePrecio.Virtual == true)
+            {
+                mobjProveedorManager.EnviarMailFijacionVirtual(fijacionDePrecio, idActiveDirectory, false);
+            }
+            else
+            {
+                mobjProveedorManager.EnviarEmailFijacion(fijacionDePrecio, idActiveDirectory);
+            }
+        }
+
         private string SapFinalizarFijacion(FijacionDePrecioContrato fijacion)
         {
             return oFinalizarFijacionAgent.Finalizar(fijacion);

@@ -66,7 +66,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
         }
 
-        public TradeCaptureReportResult ObtenerNegocios()
+        public List<AgenteCompra> ObtenerNegocios()
         {
             try
             {
@@ -119,10 +119,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         DestinoId = 1,
                         //tendriamos que tener un nuevo campo para guardar el nro de contrato del MAT
                         Observacion = a.TradeID == null ? "" : a.TradeID.Value.ToString(),//codigo contrato MAT
-                                                                                          //faltan
                         MaterialId = ObtenerMaterial(instruments, a.Instrument[0]),
                         Posicion = ObtenerPosicion(instruments, a.Instrument[0]),
                         CampanaId = ObtenerCampania(instruments, a.Instrument[0]),
+                        //faltan
                         OperadorId = 1,
                         TipoAgenteCompraId = 1,
                         ComercialId = 1,
@@ -131,32 +131,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     }).ToList();
 
-                    var ppp2 = lista.Select(a => new pppp
-                    {
-                        TipoNegocioId = a.TipoNegocioId,
-                        Cantidad = a.Cantidad,
-                        Precio = a.Precio,
-                        FechaDesde = a.FechaDesde,
-                        FechaHasta = a.FechaHasta,
-                        FechaOperacion = a.FechaOperacion,
-                        MonedaId = a.MonedaId,
-                        Fecha = a.Fecha,
-                        EstadoId = a.EstadoId,
-                        DestinoId = a.DestinoId,
-                        ContratoMat = a.Observacion,//codigo contrato MAT
-                        //faltan
-                        MaterialId = a.MaterialId,
-                        Posicion = a.Posicion,
-                        CampanaId = a.CampanaId,
-                        OperadorId = a.OperadorId,
-                        TipoAgenteCompraId = a.TipoAgenteCompraId,
-                        ComercialId = a.ComercialId,
-                        ComercialCreadorId = a.ComercialCreadorId,
-
-                    }).ToList();
-                    var ppp22 = ppp2.ToJson();
-                    var ppp = lista.ToJson();
-                    return result;
+                    return lista;
                 }
 
                 return null;
@@ -319,26 +294,5 @@ namespace Molinos.DataAgro.Agent.Helpers
             return result;
         }
 
-        private class pppp
-        {
-            public int TipoNegocioId { get; internal set; }
-            public double Cantidad { get; internal set; }
-            public decimal Precio { get; internal set; }
-            public DateTime FechaDesde { get; internal set; }
-            public DateTime FechaHasta { get; internal set; }
-            public DateTime FechaOperacion { get; internal set; }
-            public string MonedaId { get; internal set; }
-            public DateTime Fecha { get; internal set; }
-            public int EstadoId { get; internal set; }
-            public int? DestinoId { get; internal set; }
-            public string ContratoMat { get; internal set; }
-            public int MaterialId { get; internal set; }
-            public string Posicion { get; internal set; }
-            public int? CampanaId { get; internal set; }
-            public int OperadorId { get; internal set; }
-            public int? TipoAgenteCompraId { get; internal set; }
-            public int? ComercialId { get; internal set; }
-            public int? ComercialCreadorId { get; internal set; }
-        }
     }
 }

@@ -313,6 +313,11 @@ function Modificar() {
 }
 
 function Eliminar() {
+    var grid = $("#gridIni").data("kendoGrid");
+    var row = grid.select();
+    var data = grid.dataItem(row);
+    if (data == null) return;
+
     Confirma('¿ Confirma la eliminación de este registro ?',
         function (dialogItself) {
             EjecutarEliminar();

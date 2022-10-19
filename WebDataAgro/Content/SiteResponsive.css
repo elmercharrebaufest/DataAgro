@@ -13,11 +13,6 @@
         text-align: center;
     }
 }
-@media (min-width: 768px) and (max-width:800px) {
-    #notas {
-        display: none;
-    }
-}
 
 @media (max-width:340px) {
     #notas {

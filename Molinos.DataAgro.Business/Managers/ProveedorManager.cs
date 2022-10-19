@@ -92,7 +92,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId.HasValue ? x.ComercialId.Value:0) /*&& x.GrupoDeComprasId == oComerciales.GrupoDeComprasId*/).ToList();
+                    res.ObjetivosTraerPorProveedorId = res.ObjetivosTraerPorProveedorId.Where(x => equipo.Contains(x.ComercialId.HasValue ? x.ComercialId.Value : 0) /*&& x.GrupoDeComprasId == oComerciales.GrupoDeComprasId*/).ToList();
                 }
                 res.AcopioMaterialPorProveedores = repositorio.Listar<AcopioMaterial, AcopioMaterialPorProveedor>(x => new AcopioMaterialPorProveedor
                 {
@@ -529,7 +529,9 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
 
+                logger.Debug("Se envió email del contrato ID " + oContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Contrato SAP:" + oContrato.ContratoSAP);
                 oCliente.Send(oMensaje);
+
                 return new Resultado();
             }
             catch (Exception ex)
@@ -642,7 +644,9 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
+                logger.Debug("Se envió email de la fijación con ID " + oFijacionDePrecioContrato.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Fijación SAP:" + oFijacionDePrecioContrato.FijacionSAP);
                 oCliente.Send(oMensaje);
+
 
                 return new Resultado();
             }
@@ -3808,6 +3812,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
+            logger.Debug("Enviando mail canje en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id );
+
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoCanje(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, email, false));
         }
 
@@ -4153,7 +4159,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (contrato.Comercial.IdActiveDirectory != comercial.ToUpper())
             {
                 lista.Add(email);
-                logger.Debug("Enviando mail a Comercial fijacion virtual" + email);
+                logger.Debug("Enviando mail a Comercial fijacion virtual" + email + "con ID " + contrato.Id + " y fijacion SAP " + contrato.FijacionSAP);
             }
 
             var comercialRegistrado = mailManager.GetEmailUserActiveDirectory(comercial);
@@ -4161,7 +4167,6 @@ namespace Molinos.DataAgro.Business.Managers
             if (!PermisosHelper.Is(PermisosDataAgro.NoRecibirMail))
             {
                 lista.Add(comercialRegistrado);
-                logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             }
             var subject = "";
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
@@ -4176,6 +4181,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
 
+            logger.Debug("Enviando mail fijacion virtual en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id + " y fijacion SAP " + contrato.FijacionSAP);
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailFijacionVirtual(httpContextManager.ObtenerPathLogoMail(), contrato, email, eliminar));
         }
@@ -4404,6 +4410,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+
+            logger.Debug("Enviando mail PD en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id );
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoPrestamoDevolucion(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, email, false));
         }
@@ -4732,7 +4740,7 @@ namespace Molinos.DataAgro.Business.Managers
             var entidades = new List<MailProveedor>();
             repositorio.RemoverTodos<MailProveedor>(x => x.Id == x.Id);
             try
-            {              
+            {
                 if (lista != null && lista.Count > 0)
                 {
                     foreach (var item in lista)
@@ -4762,5 +4770,3 @@ namespace Molinos.DataAgro.Business.Managers
     }
 
 }
-
-

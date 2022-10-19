@@ -26,7 +26,11 @@ $(document).ready(function () {
     $("#GuardarCambios").hide();
     armarCarouselHome();
     $('[data-toggle="tooltip"]').tooltip();
-
+    $("#filtro-comercialselect").css("width", "200px").kendoDropDownList({
+        dataTextField: "Text",
+        dataValueField: "Value",
+        filter: "contains"
+    });
 
 });
 function MostrarTooltip(e) {
@@ -126,9 +130,9 @@ function InicializarDatos() {
     }
 }
 
-$(window).resize(mobile);
+$(window).resize(OcultarActividadesMobile);
 
-function mobile() {
+function OcultarActividadesMobile() {
     var ww = document.body.clientWidth;
 
     if (ww < 1200) {
@@ -750,11 +754,12 @@ function armarSelects(result) {
         htmlComercial += '<option value="null">Todos los comerciales</option>';
         for (var ii in result.come) {
             (function (i) {
-                htmlComercial += '<option value="' + result.come[i].ComercialId + '">' + result.come[i].IdActiveDirectory + '</option>';
+                htmlComercial += '<option value="' + result.come[i].ComercialId + '">' + result.come[i].Comercial + '</option>';
             })(ii);
         }
         htmlComercial += '</select>';
         $(".filtro-comercial").append(htmlComercial);
+        
     } else {
         $(".filtro-comercial").parent().hide();
     }

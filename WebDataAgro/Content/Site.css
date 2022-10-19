@@ -213,7 +213,7 @@ li {
 
 .buscador-nav {
     border: 1px solid #DEDEDE;
-    width: 350px;
+    width: 242px;
     height: 40px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -568,8 +568,6 @@ ul.ui-multiselect-checkboxes.ui-helper-reset span{
     background-color:#eee;
 }
 
-li.agregar-contacto-mobile,
-li.buscar-mobile,
 li.mis-postit.postit-mobile {
     display: none;
 }

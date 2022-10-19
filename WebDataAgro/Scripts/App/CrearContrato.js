@@ -6330,6 +6330,7 @@ function ActivarBoletoXAgentedeCompras(agenteCompraId) {
         $("#boletoCartaId").attr("disabled", true);
     } else {
         DatosProveedor();
+        //$("#boletoNingunoId").prop("checked", false);
         $("#boletoNingunoId").removeAttr("readonly");
         $("#boletoConfirmaId").removeAttr("disabled");
         $("#boletoFisicoId").removeAttr("disabled");

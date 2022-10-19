@@ -1563,6 +1563,14 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE .");
             }
 
+            if (oParam.TipoNegocioId==2 && oParam.TipoAgenteCompraId!=null)
+            {
+                if (ValidarFechaAgenteMP(oParam))
+                {
+                    oErrorMessages.Error("FechaOperacion", "La fecha de operación para Agente de Compras MP no puede ser uno de los últimos 5 días hábiles del mes.");
+                }
+            }
+
             return oErrorMessages;
         }
 
@@ -2456,37 +2464,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     repositorio.GuardarCambios();
                     logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), TipoAccionLogDataAgro.Crear, oContratoSave.GetType());
-                    try
-                    {
-                        if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null
-                            && oContratoSave.Canje != true && oContratoSave.PrestamoDevolucion != true
-                            && oContratoSave.Venta != true)
-                        {
-                            mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
-                            var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
-                            foreach (var comercialId in comerciales)
-                            {
-                                EnviarNotificacion(comercialId, oContratoSave);
-                            }
-                        }
-
-                        if (oContratoSave.Venta.HasValue && oContratoSave.Venta != false)
-                        {
-                            EnviarMailVenta(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
-                        }
-                        if (oContratoSave.Canje.HasValue && oContratoSave.Canje != false)
-                        {
-                            mobjProveedorManager.EnviarMailCanje(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
-                        }
-                        if (oContratoSave.PrestamoDevolucion.HasValue && oContratoSave.PrestamoDevolucion != false)
-                        {
-                            mobjProveedorManager.EnviarMailPrestamoDevolucion(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        logger.Error(e);
-                    }
+                    EnviarMailFinalizado(idActiveDirectory, oContratoSave, objDescuento, objCalidad);
 
                 }
                 catch (Exception e)
@@ -2521,6 +2499,41 @@ namespace Molinos.DataAgro.Business.Managers
             }
             repositorio.GuardarCambios();
             return oEntityErrors;
+        }
+
+        private void EnviarMailFinalizado(string idActiveDirectory, Contrato oContratoSave, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad)
+        {
+            try
+            {
+                if (oContratoSave.EsFason != true && oContratoSave.TipoAgenteCompraId == null
+                    && oContratoSave.Canje != true && oContratoSave.PrestamoDevolucion != true
+                    && oContratoSave.Venta != true)
+                {
+                    mobjProveedorManager.EnviarEmail(oContratoSave, objDescuento, objCalidad, idActiveDirectory, null);
+                    var comerciales = mobjComercialManager.CadenaComerciales(oContratoSave.Comercial.ComercialId);
+                    foreach (var comercialId in comerciales)
+                    {
+                        EnviarNotificacion(comercialId, oContratoSave);
+                    }
+                }
+
+                if (oContratoSave.Venta.HasValue && oContratoSave.Venta != false)
+                {
+                    EnviarMailVenta(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
+                }
+                if (oContratoSave.Canje.HasValue && oContratoSave.Canje != false)
+                {
+                    mobjProveedorManager.EnviarMailCanje(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
+                }
+                if (oContratoSave.PrestamoDevolucion.HasValue && oContratoSave.PrestamoDevolucion != false)
+                {
+                    mobjProveedorManager.EnviarMailPrestamoDevolucion(oContratoSave, objDescuento, objCalidad, idActiveDirectory);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error(e);
+            }
         }
 
         public GrabarContratoResult BorrarContrato(Contrato oContrato)
@@ -4438,6 +4451,8 @@ namespace Molinos.DataAgro.Business.Managers
             var subject = "Modificación negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), contrato, contratoSave));
+
+            logger.Debug("Se envió email del contrato ID " + contrato.Id + " a " + emailproveedor + ". Contrato SAP:" + contrato.ContratoSAP);
         }
 
         private AlternateView CuerpoMailContrato(String filePath, Contrato oContrato, Contrato contratoSave)
@@ -7461,14 +7476,19 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.FechaDesde = DateTime.Parse(rows.ElementAt(ii)[5].ToString().Trim());
                         contrato.FechaHasta = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim());
                         contrato.FechaEntrega = DateTime.Parse(rows.ElementAt(ii)[6].ToString().Trim());
-                        contrato.Cantidad = int.Parse(rows.ElementAt(ii)[7].ToString().Trim()) * 1000;
+                        contrato.Cantidad = int.Parse(rows.ElementAt(ii)[7].ToString().Trim());
                         var cuitProveedor = rows.ElementAt(ii)[8].ToString().Trim();
                         var cuitCorredor = rows.ElementAt(ii)[9].ToString().Trim();
                         var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitProveedor && x.SegmentacionId < 5);
-                        contrato.ProveedorId = proveedor.ProveedorId;
-                        if (!string.IsNullOrEmpty(cuitCorredor))
+                        if (proveedor != null) 
+                        { 
+                            contrato.ProveedorId = proveedor.ProveedorId;
+                        }
+                        var corredor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7));
+                        if (!string.IsNullOrEmpty(cuitCorredor) && corredor != null)
                         {
-                            contrato.CorredorId = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7)).ProveedorId;
+                            //contrato.CorredorId = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7)).ProveedorId;
+                            contrato.CorredorId = corredor.ProveedorId;
                         }
                         contrato.ClasificacionId = rows.ElementAt(ii)[10].ToString().Trim().ToLower() == "productor" ? 1 : rows.ElementAt(ii)[10].ToString().Trim().ToLower() == "acopiador" ? 2 : 3;
                         contrato.PlanCanje = rows.ElementAt(ii)[11].ToString().Trim().ToUpper() == "X";
@@ -8129,6 +8149,28 @@ namespace Molinos.DataAgro.Business.Managers
             return modificado;
         }
 
+        private bool ValidarFechaAgenteMP (Contrato contrato)
+        {
+            var fechaElegida = contrato.FechaOperacion;
+            var diasHabiles = oDiasHabilesAgent.ObtenerDiasHabilesDelMes(fechaElegida);
+            bool fechaInvalida = false;
+            int cont = 0;
+            for (int i = diasHabiles.Count-1; cont < 5 && !fechaInvalida; i--)
+            {
+                if (fechaElegida == diasHabiles[i]) 
+                    fechaInvalida = true;
+                cont++;
+            }
 
+            return fechaInvalida;
+        }
+
+        public void ReenviarMailContrato(int contratoId, string idActiveDirectory)
+        {
+            Contrato contrato = repositorio.Obtener<Contrato>(contratoId);
+            var descuento = repositorio.Listar<DescuentoBonificacion>(x => x.ContratoId == contratoId);
+            var calidad = repositorio.Listar<Calidad>(x => x.NegocioId == contratoId);
+            EnviarMailFinalizado(idActiveDirectory, contrato, descuento, calidad);
+        }
     }
 }

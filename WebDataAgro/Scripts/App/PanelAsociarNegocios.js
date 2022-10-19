@@ -42,7 +42,7 @@ $(document).ready(function () {
     });
 
 
-    $(".cerrar").click(function (e) {
+    $("#cerrarAsociarNegocios").click(function (e) {
         Cerrar();
     });
     $("#asociadoId").click(function (e) {

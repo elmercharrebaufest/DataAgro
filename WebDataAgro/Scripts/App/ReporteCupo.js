@@ -241,7 +241,7 @@ function Filtrar() {
     var grid = $('#grid').data('kendoGrid').dataSource;
     grid.read();
     setTimeout(function () {
-        if (anulacion == true && $("#EstadoId").val() == "1" && grid.data().length > 0) {
+        if (anulacion == true && ($("#EstadoId").val() == "1" || $("#EstadoId").val() == "6") && grid.data().length > 0) {
             $('#anulacionMasivaDiv').show();
         } else {
             $('#anulacionMasivaDiv').hide();

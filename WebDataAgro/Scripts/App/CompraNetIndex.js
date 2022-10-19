@@ -183,6 +183,9 @@ $(document).ready(function () {
         $(".modal").modal('hide');
         recargarGrilla();
     });
+    $("#cerrarVariosReenvio").click(function () {
+        $(".modal").modal('hide');
+    });
 
     $("#modalVisualizar").on("hidden.bs.modal", function () {
         $("#mostrar").hide();
@@ -611,7 +614,7 @@ function AutoRecargar() {
         if (document.getElementById('checkRecarga').checked == true) {
             filasSeleccionadas = SeleccionarElementos();
             recargarGrilla();
-            console.log("hola");
+            console.log("Pagina auto-recargada");
         }
     }, Number(actualizacionMs));
 
@@ -743,7 +746,7 @@ function filtrarMesa() {
         grilla.dataSource.filter(currentFilters);
     } else {
 
-        removerFiltroComercial(grilla, "ComercialId", "eq", null);
+        removerFiltros(grilla, "ComercialId", "eq", null);
         $("#negociosPropiosDiv").removeClass("selected");
         $("#negociosPropios").addClass("varios").removeClass("selected");
     }
@@ -787,6 +790,7 @@ function addOrRemoveFilter(grid, field, operator, value) {
         if (filters != null) {
             for (var x = 0; x < filters.length; x++) {
                 var temp = filters[x].filters;
+               if (temp == undefined) { temp = filters[x]; }
                 if (temp.field == field) {
                     removeIndex = x;
                     break;
@@ -799,7 +803,7 @@ function addOrRemoveFilter(grid, field, operator, value) {
     dataSource.filter(filters);
 }
 
-function removerFiltroComercial(grid, field, operator, value) {
+function removerFiltros(grid, field, operator, value) {
     //Remove filter 
     var newFilter = { field: field, operator: operator, value: value };
     var dataSource = grid.dataSource;
@@ -1129,7 +1133,10 @@ function CreateGridInformeCompraNet() {
                 attributes: { "class": "mobile-xs mobile-md " + classExterno }
             },
             {
-                field: "Comercial", type: "string", title: "Comercial", width: 85, minResizableWidth: 85, filterable: { ui: createMultiSelectComercial }, headerAttributes: {
+                field: "Comercial", type: "string", title: "Comercial", width: 85, minResizableWidth: 85, filterable: {
+                    ui: createMultiSelectComercial,
+                    extra: false
+                }, headerAttributes: {
                     "class": classExterno
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
@@ -1140,6 +1147,7 @@ function CreateGridInformeCompraNet() {
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
+           
             {
                 field: "DestinoDescripcion", type: "string", title: "Destino", width: 80, minResizableWidth: 80, attributes: { "class": "mobile-xs mobile-md" }
             },
@@ -1229,7 +1237,8 @@ function CreateGridInformeCompraNet() {
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 ((dataItem.TipoNegocioId == 3) ? botonPreAnular(dataItem, 'fa-trash fin') : botonPreAnular(dataItem, 'fa-trash fin')) +
                                 ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin')) +
-                                botonAsociarContratos(dataItem, 'fa fa-inbox fin');
+                                botonAsociarContratos(dataItem, 'fa fa-inbox fin') + 
+                                ((dataItem.ContratoId) ? botonReenviarMail(dataItem, 'fa fa-envelope-o fin') : "") ;
 
                         } else {
                             descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n cerrada" ' : '';
@@ -1238,7 +1247,7 @@ function CreateGridInformeCompraNet() {
                                 botonNoMostrarEnTablero(dataItem, 'fin') +
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 ((dataItem.TipoNegocioId == 3) ? botonPreAnular(dataItem, 'fa-trash fin') : botonPreAnular(dataItem, 'fa-trash fin')) +
-                                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin'));
+                                ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin')) + botonReenviarMail(dataItem, 'fa fa-envelope-o fin');
                         }
                     }
                     if (dataItem.Estado == 6) { //Rechazado
@@ -1414,10 +1423,12 @@ function CreateGridInformeCompraNet() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
-    function createMultiSelect(element, textField, valueField, url, columna) {
+    function createMultiSelect(element, textField, valueField, url, columna, serverFiltering, filterType) {   
         element.removeAttr("data-bind");
         columna = columna == null ? valueField : columna;
-        element.kendoMultiSelect({
+        serverFiltering = serverFiltering == null ? true : serverFiltering;
+        filterType = filterType == null ? "starswith" : filterType;
+        element.kendoMultiSelect({            
             itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
             dataBound: function () {
                 var items = this.ul.find("li");
@@ -1428,11 +1439,11 @@ function CreateGridInformeCompraNet() {
 
             dataTextField: textField,
             dataValueField: valueField,
-            autoClose: false,
+            autoClose: true,
             autoBind: false,
             delay: 300,
             dataSource: {
-                serverFiltering: true,
+                serverFiltering: serverFiltering,
                 filter: [],
                 transport: {
                     read: {
@@ -1446,19 +1457,17 @@ function CreateGridInformeCompraNet() {
                     }
                 },
             },
+            filter: filterType,
             change: function (e) {
                 var items = this.ul.find("li");
                 checkInputs(items);
                 var grilla = $('#gridInformeCompraNet').data("kendoGrid");
-                var values = this.value();
-                $.each(values, function (i, v) {
-                    if (v !== '') {
-                        addOrRemoveFilter(grilla, columna, "eq", v);
-                    }
-                });
-
+                //this.value = this.value().filter(x => { return x !== '' });
+                var values = this.value().filter(x => { return x !== '' });            
                 if (values.length === 0) {
-                    addOrRemoveFilter(grilla, columna, "eq", "");
+                    removerFiltros(grilla, columna, "eq", "");
+                } else {
+                    AddFilters(grilla, columna, "eq", values);
                 }
             }
         });
@@ -1484,10 +1493,10 @@ function CreateGridInformeCompraNet() {
         return createMultiSelect(element, "Proveedor", "ProveedorId", "/CompraNet/ListarCorredor", "CorredorId");
     }
     function createMultiSelectComercial(element) {
-        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial");
+        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial", "ComercialId", false, "contains");
     }
     function createMultiSelectComercialCreador(element) {
-        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial", "ComercialCreadorId");
+        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial", "ComercialCreadorId", false, "contains");
     }
 
     AvisoContratosPendientes();
@@ -1708,11 +1717,18 @@ function ModalConfirmadoVarios() {
         if (n != null && n.length > 0) {
             $(".calidadModificada").show();
             $("#confirmarVariosSinCalidad").show();
+            $("#interiorModalConfirmarVarios").addClass('modal-lg');
+            $("#divConfirmButton").removeClass('col-xs-6').addClass('col-xs-4');
+            $("#divCancelButton").removeClass('col-xs-6').addClass('col-xs-4');
         } else {
             $(".calidadModificada").hide();
             $("#confirmarVariosSinCalidad").hide();
+            $("#interiorModalConfirmarVarios").removeClass('modal-lg');
+            $("#divConfirmButton").removeClass('col-xs-4').addClass('col-xs-6');
+            $("#divCancelButton").removeClass('col-xs-4').addClass('col-xs-6');
         }
     }
+    negocios = negocios.filter(function (neg) { return (neg.Estado == 1 || neg.Estado == 7 || neg.Estado == 12); });
     if (negocios.length > 0) {
         for (var i in negocios) {
             var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
@@ -1726,11 +1742,12 @@ function ModalConfirmadoVarios() {
         }
         //ConfirmarVariosContratos();
     } else {
-        $("#negocioConfirmado-modal").append('<div style="text-align:center"> Se debe seleccionar negocios</div>');
+        $("#negocioConfirmado-modal").append('<div style="text-align:center"> Se deben seleccionar negocios pendientes de confirmaci&oacute;n.</div>');
         $("#confirmarVarios").hide();
         $("#confirmarVariosSinCalidad").hide();
         $(".calidadModificada").hide();
         $("#cancelarVarios").hide();
+        $("#interiorModalConfirmarVarios").removeClass('modal-lg');
         $("#cerrarVarios").show();
     }
     $("#ModalConfirmarVarios").modal('show');
@@ -1788,7 +1805,7 @@ function ModalFinalizarVarios() {
     $("#finalizarVarios").addClass('myBtn').removeClass('myBtn-disabled');
 
     var negocios = SeleccionarElementos();
-    negocios = negocios.filter(function (neg) { return neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3; });
+    negocios = negocios.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && (neg.Estado == 2 || neg.Estado == 4); });
     if (negocios.length > 0) {
         for (var i in negocios) {
             var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
@@ -1805,7 +1822,7 @@ function ModalFinalizarVarios() {
             }
         }
     } else {
-        $("#negocioFinalizado-modal").append('<div style="text-align:center"> Se debe seleccionar negocios</div>');
+        $("#negocioFinalizado-modal").append('<div style="text-align:center"> Se deben seleccionar negocios confirmados.</div>');
         $("#finalizarVarios").hide();
         $("#cancelarVariosFinalizado").hide();
         $("#cerrarVariosFinalizado").show();
@@ -1858,7 +1875,7 @@ function ModalModificarVarios() {
 
     $("#modificarVarios").prop("disabled", false);
     $("#modificarVarios").addClass('myBtn').removeClass('myBtn-disabled');
-    $("#spanModificar").html('<span>Se modificaran los siguientes negocios:</span>');
+    $("#spanModificar").html('<span>Se modificar&aacute;n los siguientes negocios:</span>');
 
     var negocios = SeleccionarElementos();
     var hayNegociosParaModificar = false;
@@ -1881,7 +1898,7 @@ function ModalModificarVarios() {
         }
     }
     if (hayNegociosParaModificar == false) {
-        $("#spanModificar").html('<div style="text-align:center"> Se debe seleccionar negocios</div>');
+        $("#spanModificar").html('<div style="text-align:center">Se deben seleccionar negocios que no est&eacute;n finalizados ni rechazados.</div>');
         $("#modificarVarios").hide();
         $("#cancelarVariosModificar").hide();
         $("#cerrarVariosModificar").show();
@@ -1921,6 +1938,118 @@ function finalizacionCallBack(i, result) {
         $("#estado" + i).append('<img src="/Content/Images/Cancelar.png" alt="error" title="' + result.Errores[0].Message + '" />');
         $("#error" + i).append(result.Errores[0].Message);
     } else {
+        $("#estado" + i).removeClass("loader");
+        $("#estado" + i).append('<img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
+    }
+}
+
+function ModalReenviarVarios() {
+    $("#emailReenviado-modal").empty();
+    $("#reenviarVarios").show();
+    $("#cancelarVariosReenvio").show();
+    $("#cerrarVariosReenvio").hide();
+
+    $("#emailReenviado-modal").html('');
+
+    $("#reenviarVarios").prop("disabled", false);
+    $("#reenviarVarios").addClass('myBtn').removeClass('myBtn-disabled');
+
+    var negociosFinalizados = SeleccionarElementos();
+    negociosFinalizados = negociosFinalizados.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
+    if (negociosFinalizados.length > 0) {
+        for (var i in negociosFinalizados) {
+                var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
+            
+                if (negociosFinalizados[i].TipoNegocioId === 3) {
+                    $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Fijaci&oacute;n SAP: ' + negociosFinalizados[i].FijacionSAP + '</div>' + loader + '</div>');
+                } else {
+                    $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Contrato SAP: ' + negociosFinalizados[i].ContratoSAP.substring(3) + '</div>' + loader + '</div>');
+                }
+        }
+    } else {
+        $("#emailReenviado-modal").append('<div style="text-align:center">Se deben seleccionar contratos a precio, a fijar y/o fijaciones en estado finalizado.</div>');
+        $("#reenviarVarios").hide();
+        $("#cancelarVariosReenvio").hide();
+        $("#cerrarVariosReenvio").show();
+    }
+    $("#ModalReenviarVarios").modal('show');
+}
+
+function ReenviarVariosMails() {
+    $("#reenviarVarios").hide();
+    $("#cancelarVariosReenvio").hide();
+    $("#cerrarVariosReenvio").show();
+
+    var negocios = SeleccionarElementos();
+    negocios = negocios.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
+    $(".loader").show();
+    for (var i in negocios) {
+            var objFinalizado = {};
+            $("#estado" + i).empty();
+            var result = null;
+            if (negocios[i].TipoNegocioId === 3) {
+                objFinalizado.fijacionDePrecioContratoId = negocios[i].FijacionDePrecioContratoId;
+                result = MSExecuteOnServer('/CompraNet/EnviarMailFijacion', objFinalizado);
+            } else {
+                objFinalizado.contratoId = negocios[i].ContratoId;
+                result = MSExecuteOnServer('/CompraNet/ReenviarMailContrato', objFinalizado);
+            }
+        $("#estado" + i).removeClass("loader");
+        $("#estado" + i).append('<img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
+    }
+}
+
+function ModalReenviarVarios() {
+    $("#emailReenviado-modal").empty();
+    $("#reenviarVarios").show();
+    $("#cancelarVariosReenvio").show();
+    $("#cerrarVariosReenvio").hide();
+
+    $("#emailReenviado-modal").html('');
+
+    $("#reenviarVarios").prop("disabled", false);
+    $("#reenviarVarios").addClass('myBtn').removeClass('myBtn-disabled');
+
+    var negociosFinalizados = SeleccionarElementos();
+    negociosFinalizados = negociosFinalizados.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
+    if (negociosFinalizados.length > 0) {
+        for (var i in negociosFinalizados) {
+                var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
+            
+                if (negociosFinalizados[i].TipoNegocioId === 3) {
+                    $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Fijaci&oacute;n SAP: ' + negociosFinalizados[i].FijacionSAP + '</div>' + loader + '</div>');
+                } else {
+                    $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Contrato SAP: ' + negociosFinalizados[i].ContratoSAP.substring(3) + '</div>' + loader + '</div>');
+                }
+        }
+    } else {
+        $("#emailReenviado-modal").append('<div style="text-align:center">Se deben seleccionar contratos a precio, a fijar y/o fijaciones, en estado finalizado.</div>');
+        $("#reenviarVarios").hide();
+        $("#cancelarVariosReenvio").hide();
+        $("#cerrarVariosReenvio").show();
+    }
+    $("#ModalReenviarVarios").modal('show');
+}
+
+function ReenviarVariosMails() {
+    $("#reenviarVarios").hide();
+    $("#cancelarVariosReenvio").hide();
+    $("#cerrarVariosReenvio").show();
+
+    var negocios = SeleccionarElementos();
+    negocios = negocios.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
+    $(".loader").show();
+    for (var i in negocios) {
+            var objFinalizado = {};
+            $("#estado" + i).empty();
+            var result = null;
+            if (negocios[i].TipoNegocioId === 3) {
+                objFinalizado.fijacionDePrecioContratoId = negocios[i].FijacionDePrecioContratoId;
+                result = MSExecuteOnServer('/CompraNet/EnviarMailFijacion', objFinalizado);
+            } else {
+                objFinalizado.contratoId = negocios[i].ContratoId;
+                result = MSExecuteOnServer('/CompraNet/ReenviarMailContrato', objFinalizado);
+            }
         $("#estado" + i).removeClass("loader");
         $("#estado" + i).append('<img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
     }
@@ -2780,7 +2909,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     $("#aperturaBasisDivVisualizar").hide();
     $("#divPosicionCBOT").hide();
 
-    if (tipo === "A FIJAR") {
+    if (tipo === "A FIJAR" || tipo === "FIJACION") {
         $(".rangos").show();
         $("#maximoId").text(maximo);
         $("#minimoId").text(minimo);
@@ -3766,4 +3895,138 @@ function ArmarDescripcionServicio(servicio) {
                 (servicio[i].Desde > 0 && servicio[i].Hasta == 0) ? (" MAS DE " + kendo.toString(servicio[i].Desde, "n2") + "%") :
                     (servicio[i].Desde == 0 && servicio[i].Hasta == 0) ? "" : "");
     }
+}
+
+$("#reenviarEmail").click(function () {
+    $("#reenviarEmail").hide();
+    setTimeout(function () {
+        ObtenerDatosReenvio();
+        $("#modalReenviarMail").modal("hide");
+        $("#reenviarEmail").show();
+    }, 0);
+});
+
+function botonReenviarMail(dataItem, icono) {
+        return '<button data-toggle="tooltip" title="Reenviar Email"' +
+            'onclick="ModalReenviarMail(' +
+            "'" + dataItem.ContratoSAP + "'" + ',' +
+            "'" + dataItem.TipoNegocioId + "'" + ',' +
+            "'" + dataItem.FijacionSAP + "'" + ',' +
+            "'" + dataItem.ContratoId + "'" + ',' +
+            "'" + dataItem.FijacionDePrecioContratoId + "'" +
+            ')"><i class="fa ' + icono + ' fin"></i></button>';
+}
+
+function ModalReenviarMail(contratoSAP, tipoId, fijacionSAP, contratoId, fijacionDePrecioContratoId) {
+    $(".modal-title-reenviar").empty();
+
+    if (tipoId === "3") {
+        $("#reenviarContrato").val(fijacionDePrecioContratoId);
+        $(".modal-title-reenviar").append("Fijaci&oacute;n SAP: " + fijacionSAP);
+    } else {
+        $("#reenviarContrato").val(contratoId);
+        $(".modal-title-reenviar").append("Contrato SAP: " + contratoSAP.substring(3));
+    }
+    $("#tipoNegocioModalReenviar").val(tipoId);
+    $("#buttonReenviar").show();
+    $("#modalReenviarMail").modal('show');
+}
+
+function ObtenerDatosReenvio() {
+    $("#buttonReenviar").hide();
+
+    objFinalizado = {};
+
+    if ($("#tipoNegocioModalReenviar").val() === "3") {
+        objFinalizado.fijacionDePrecioContratoId = $("#reenviarContrato").val();
+    } else {
+        objFinalizado.contratoId = $("#reenviarContrato").val();
+    }
+
+    ReenviarMail(objFinalizado);
+}
+
+function ReenviarMail(contratoFinalizado) {
+    if ($("#tipoNegocioModalReenviar").val() === "3") {
+        result = MSExecuteOnServer('/CompraNet/EnviarMailFijacion', contratoFinalizado);
+    } else {
+        result = MSExecuteOnServer('/CompraNet/ReenviarMailContrato', contratoFinalizado);
+    }
+    MensInfo("Se reenvi&oacute; el email del negocio elegido " + ' <img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
+}
+
+$("#reenviarEmail").click(function () {
+    $("#reenviarEmail").hide();
+    setTimeout(function () {
+        ObtenerDatosReenvio();
+        $("#modalReenviarMail").modal("hide");
+        $("#reenviarEmail").show();
+    }, 0);
+});
+
+function botonReenviarMail(dataItem, icono) {
+        return '<button data-toggle="tooltip" title="Reenviar Email"' +
+            'onclick="ModalReenviarMail(' +
+            "'" + dataItem.ContratoSAP + "'" + ',' +
+            "'" + dataItem.TipoNegocioId + "'" + ',' +
+            "'" + dataItem.FijacionSAP + "'" + ',' +
+            "'" + dataItem.ContratoId + "'" + ',' +
+            "'" + dataItem.FijacionDePrecioContratoId + "'" +
+            ')"><i class="fa ' + icono + ' fin"></i></button>';
+}
+
+function ModalReenviarMail(contratoSAP, tipoId, fijacionSAP, contratoId, fijacionDePrecioContratoId) {
+    $(".modal-title-reenviar").empty();
+
+    if (tipoId === "3") {
+        $("#reenviarContrato").val(fijacionDePrecioContratoId);
+        $(".modal-title-reenviar").append("Fijaci&oacute;n SAP: " + fijacionSAP);
+    } else {
+        $("#reenviarContrato").val(contratoId);
+        $(".modal-title-reenviar").append("Contrato SAP: " + contratoSAP.substring(3));
+    }
+    $("#tipoNegocioModalReenviar").val(tipoId);
+    $("#buttonReenviar").show();
+    $("#modalReenviarMail").modal('show');
+}
+
+function ObtenerDatosReenvio() {
+    $("#buttonReenviar").hide();
+
+    objFinalizado = {};
+
+    if ($("#tipoNegocioModalReenviar").val() === "3") {
+        objFinalizado.fijacionDePrecioContratoId = $("#reenviarContrato").val();
+    } else {
+        objFinalizado.contratoId = $("#reenviarContrato").val();
+    }
+
+    ReenviarMail(objFinalizado);
+}
+
+function ReenviarMail(contratoFinalizado) {
+    if ($("#tipoNegocioModalReenviar").val() === "3") {
+        result = MSExecuteOnServer('/CompraNet/EnviarMailFijacion', contratoFinalizado);
+    } else {
+        result = MSExecuteOnServer('/CompraNet/ReenviarMailContrato', contratoFinalizado);
+    }
+    MensInfo("Se reenvi&oacute; el email del negocio elegido " + ' <img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
+}
+
+function AddFilters(grid, field, operator, values) {
+    var filtros = { logic: 'or', filters: [] };
+
+    $.each(values, function (i, v) {
+        if (v !== '') {
+            filtros.filters.push({ field: field, operator: operator, value: v });
+        }
+    });
+  
+    var currentFilters = grid.dataSource.filter();
+    if (!currentFilters) {
+        currentFilters = { filters: [], logic: 'and' }
+    }
+    removerFiltros(grid, field, operator, "");
+    currentFilters.filters.push(filtros);
+    grid.dataSource.filter(currentFilters);
 }

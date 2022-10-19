@@ -125,7 +125,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             //cuitIntermediario = "",//preguntar
                             //CuitRemComercialProductor = "",//preguntar
                             //CuitCorredorVentaSecundaria = "",//preguntar
-                            CuitCorredorVentaPrimaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
+                            CuitCorredorVentaSecundaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
+                            //CuitCorredorVentaPrimaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
                             cuitDestinatario = cupo.Destinatario,
                             cuitDestino = datosConfiguracion.CuitDestinoStop,
                             idCupoTerminal = cupo.CupoSap,
@@ -203,7 +204,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                             //cuitIntermediario = "",//preguntar
                             //CuitRemComercialProductor = "",//preguntar
                             //CuitCorredorVentaSecundaria = "",//preguntar
-                            CuitCorredorVentaPrimaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
+                            CuitCorredorVentaSecundaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
+                            //CuitCorredorVentaPrimaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
                             cuitDestinatario = cupo.Destinatario,
                             cuitDestino = datosConfiguracion.CuitDestinoStop,
                             idCupoTerminal = cupo.CupoSap,
@@ -605,8 +607,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                         //cuitOrigen = null,//cupo.CuitOrigen,//preguntar
                         //cuitIntermediario = "",//preguntar
                         //CuitRemComercialProductor = "",//preguntar
-                        //CuitCorredorVentaSecundaria = "",//preguntar
-                        CuitCorredorVentaPrimaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
+                        CuitCorredorVentaSecundaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
+                        //CuitCorredorVentaPrimaria = cupo.Proveedor.Segmentacion.Grupo == "Corredores" ? cupo.Proveedor.CUIT : null,
                         cuitDestinatario = cupo.Destinatario,
                         cuitDestino = datosConfiguracion.CuitDestinoStop,
                         idCupoTerminal = cupo.CupoSap,

@@ -2814,8 +2814,10 @@
     </Content>
     <Content Include="Views\CompraNet\ModalServicios.cshtml" />
     <Content Include="Templates\AltaMasivaConvenio.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\CompraNet\_ModalReenviarVarios.cshtml" />
+    <Content Include="Views\CompraNet\ModalReenviarMail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

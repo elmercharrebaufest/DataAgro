@@ -75,7 +75,16 @@ function CreateGridRol() {
         ]
     });
 }
-function Eliminar (id) {
+
+function Eliminar(id) {
+    Confirma('¿ Confirma la eliminación del Rol ?',
+        function (dialogItself) {
+            EjecutarEliminar();
+            dialogItself.close();
+        });
+}
+
+function EjecutarEliminar() {
     MSExecuteOnServerAsync('/Rol/Eliminar', { id: id }, function (result) {
         if (result != null) {
             if (ExistsErrorMessages(result.Errores)) {
@@ -89,6 +98,7 @@ function Eliminar (id) {
         }
     });
 }
+
 function Editar(id) {
     LimpiarPermisos();
 

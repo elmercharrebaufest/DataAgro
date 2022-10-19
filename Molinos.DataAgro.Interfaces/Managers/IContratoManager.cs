@@ -107,5 +107,6 @@ namespace Molinos.DataAgro.Interfaces
         List<ExcelValidatorResumeItem> AltaMasivaConvenios(DataSet dsExcel, int ComercialId);
         void ActualizarEstadoDeContratos();
         List<ServicioValorDto> TraerTodoServicio(int? materialId, int? centroId);
+        void ReenviarMailContrato(int contratoId, string idActiveDirectory);
     }
 }

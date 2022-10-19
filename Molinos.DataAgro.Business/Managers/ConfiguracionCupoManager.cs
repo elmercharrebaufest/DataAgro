@@ -320,6 +320,10 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var configuraciones = repositorio.ObtenerConsultaEscalar(new TraerConfiguracionesCupo(request));
             //var listaConfiguraciones = configuraciones.Data.ToList();
+            
+            if (configuraciones.Data.Count() == 0)
+                return configuraciones;
+
             var desde = configuraciones.Data.Min(a => a.Fecha);
             var hasta = configuraciones.Data.Max(a => a.Fecha);
             var centros = configuraciones.Data.Select(a => a.CentroCodigoSap).Distinct().ToList();
