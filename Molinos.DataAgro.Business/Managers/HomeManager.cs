@@ -353,9 +353,14 @@ namespace Molinos.DataAgro.Business.Managers
 
                 exp.compras = repositorio.SelStore<ComprasAll>("DataAgro_ExportAll_Compras", 0, idsStr);
 
+                exp.CapacidadProductiva = repositorio.ListarConsulta(new TraerExportarAllCapacidadProductiva(exp.contacto.Select(x => x.Cuit).ToList()));
+
                 exp.establecimiento = repositorio.ListarConsulta(new TraerExportarAllEstablecimientos(exp.contacto.Select(x => x.Cuit).ToList()));
+
                 exp.CompraCampanaActual = this.TraerTodoCompraCampanaActual(equipo);
+
                 exp.Situacion = this.TraerTodoCompraDetalleExcel(equipo);
+
                 return exp;
             }
             else

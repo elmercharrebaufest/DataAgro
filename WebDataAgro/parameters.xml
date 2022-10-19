@@ -402,5 +402,11 @@
                            /endpoint[@name='HTTP_Port43']
                            /@address" />
   </parameter>
-  
+  <parameter name="HTTP_Port49 Service Endpoint Address">
+    <parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port49']
+                           /@address" />
+  </parameter>
+
 </parameters>

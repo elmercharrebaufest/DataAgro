@@ -170,9 +170,11 @@
     <Compile Include="Agent\IRelacionCorredorProveedorAgent.cs" />
     <Compile Include="Agent\IRiesgoComercialAgent.cs" />
     <Compile Include="Agent\IValidarLiquidacionParaFijacionAgent.cs" />
+    <Compile Include="Agent\IVisualizarCapacidadProductivaAgent.cs" />
     <Compile Include="Clausulas\IServicioClausulas.cs" />
     <Compile Include="Criterios\IServicioCriterios.cs" />
     <Compile Include="Managers\IBoletoManager.cs" />
+    <Compile Include="Managers\ICapacidadProductivaManager.cs" />
     <Compile Include="Managers\ICupoNoPropioManager.cs" />
     <Compile Include="Managers\IHabilitacionBoletoManager.cs" />
     <Compile Include="Managers\IConfiguracionBolsaManager.cs" />

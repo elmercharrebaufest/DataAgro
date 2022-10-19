@@ -241,6 +241,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public List<String> Material { get; set; }
         public List<String> Campanias { get; set; }
+        public List<CapacidadProductivaDto> CapacidadProductiva { get; set; }
     }
 
     public class RptProveedorInfo

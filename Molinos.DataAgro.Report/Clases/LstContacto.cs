@@ -166,6 +166,9 @@ namespace Molinos.DataAgro.Report
 
             workSheet8.Cells[1, 1].LoadFromCollection(oDatos.establecimiento, true);
 
+            var workSheet14 = excel.Workbook.Worksheets.Add("Capacidad Productiva");
+            workSheet14.Cells[1, 1].LoadFromCollection(oDatos.CapacidadProductiva, true);
+
             var oPropRow = oColumnas.GetType().GetProperties();
 
             var cantColumns = oPropRow.Count();
@@ -233,18 +236,22 @@ namespace Molinos.DataAgro.Report
             workSheet.Column(11).AutoFit();
 
             workSheet.Cells[1, 12].Value = "Condiciones Preferentes";
-            workSheet.Column(11).AutoFit();
+            workSheet.Column(12).AutoFit();
 
             workSheet.Cells[1, 14].Value = "Área de Influencia";
-            workSheet.Column(13).AutoFit();
+            workSheet.Column(14).AutoFit();
+            workSheet.Column(15).AutoFit();
+
+            workSheet.Cells[1, 16].Value = "Comercial a Cargo";
+            workSheet.Column(16).AutoFit();
 
             workSheet.Cells[1, 17].Value = "Cliente MOA";
-            workSheet.Column(16).AutoFit();
+            workSheet.Column(17).AutoFit();
 
             workSheet.Cells[1, 19].Value = "Fecha de Alta";
             workSheet.Column(19).AutoFit();
 
-            workSheet.Cells[1, 20].Value = "Clasificacion";
+            workSheet.Cells[1, 20].Value = "Clasificación";
             workSheet.Column(20).AutoFit();
 
             workSheet.Cells[1, 21].Value = "Boleto";
@@ -256,13 +263,15 @@ namespace Molinos.DataAgro.Report
             workSheet.Cells[1, 24].Value = "Comisión";
             workSheet.Column(24).AutoFit();
 
-            workSheet.Cells[1, 25].Value = "LocalidadCompraNet";
+            workSheet.Cells[1, 25].Value = "Localidad CompraNet";
             workSheet.Column(25).AutoFit();
 
-            workSheet.Cells[1, 26].Value = "ProvinciaCompraNet";
+            workSheet.Cells[1, 26].Value = "Provincia CompraNet";
             workSheet.Column(26).AutoFit();
+
             workSheet.Cells[1, 27].Value = "Deshabilitado";
             workSheet.Column(27).AutoFit();
+
             workSheet.Cells[1, 32].Value = "Proveedor";         
             workSheet.Column(32).Hidden = true;
 
@@ -731,6 +740,33 @@ namespace Molinos.DataAgro.Report
                     };
                 }
             }
+
+            j = 1;
+            while (workSheet14.Cells[1, j].Value != null)
+            {
+                workSheet14.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet14.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet14.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+
+            workSheet14.Cells[1, 1].Value = "CUIT";
+            workSheet14.Column(1).AutoFit();
+
+            workSheet14.Cells[1, 2].Value = "Razón Social";
+            workSheet14.Column(2).AutoFit();
+            workSheet14.Column(3).AutoFit();
+
+            workSheet14.Cells[1, 4].Value = "Campaña";
+            workSheet14.Column(4).AutoFit();
+            workSheet14.Column(5).AutoFit();
+
+            workSheet14.Cells[1, 6].Value = "Unidad de Medida";
+            workSheet14.Column(6).AutoFit();
+            workSheet14.Column(7).AutoFit();
 
             var identif = Varios.GetIdentif();
 

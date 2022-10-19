@@ -1,0 +1,74 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Repository;
+using Autofac.Extras.NLog;
+using System.Configuration;
+using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Agent.VisualizarCapacidadProductiva;
+using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Helpers;
+
+namespace Molinos.DataAgro.Agent
+{
+    public class VisualizarCapacidadProductivaAgent : IVisualizarCapacidadProductivaAgent
+    {
+        public VisualizarCapacidadProductivaAgent(ILogger logger, IRepositorio repositorio)
+        {
+            this.logger = logger;
+            this.repositorio = repositorio;
+        }
+        string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        private readonly ILogger logger;
+        private readonly IRepositorio repositorio;
+
+        public List<CapacidadProductivaDto> VisualizarCapacidadProductiva (int proveedorID)
+        {
+            try
+            {
+                var proveedor = repositorio.Obtener<Proveedor, ProveedorDto>(x => proveedorID == x.ProveedorId, x => new ProveedorDto { ProveedorId = x.ProveedorId, CUIT = x.CUIT, RazonSocial = x.RazonSocial });
+                var agent = new SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVAClient();
+
+                agent.ClientCredentials.UserName.UserName = UserSap;
+                agent.ClientCredentials.UserName.Password = PassSap;
+                var response = agent.SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA(new Z_MPRFC_VISU_CAP_PRODUCTIVA { IM_CUIT = proveedor.CUIT });
+                List<CapacidadProductivaDto> lista = new List<CapacidadProductivaDto>();
+                var materiales = repositorio.Listar<Material>();
+                var cosecha = repositorio.Listar<Campaña>();
+
+                foreach (var item in response.EX_SALIDA)
+                {
+                    if (materiales.Where(x => x.Codigo == item.MATNR).FirstOrDefault() == null ||
+                        cosecha.Where(x => x.Descripcion == item.COSECHA).FirstOrDefault() == null)
+                    {
+                        logger.Error("Visualizar Capacidad Productiva: no se pudo agregar " + item.ToJson());
+                    }
+                    else
+                    {
+                        lista.Add(new CapacidadProductivaDto
+                        {
+                            ProveedorId = proveedorID,
+                            MaterialId = materiales.Where(x => x.Codigo == item.MATNR).FirstOrDefault().MaterialId,
+                            CampaniaId = cosecha.Where(x => x.Descripcion == item.COSECHA).FirstOrDefault().CampañaId,
+                            Cantidad = item.CANTIDAD,
+                            UnidadMedida = item.UNIME,
+                            Porcentaje = item.PORC,
+                            Material = materiales.Where(x => x.Codigo == item.MATNR).FirstOrDefault().Descripcion,
+                            Campania = cosecha.Where(x => x.Descripcion == item.COSECHA).FirstOrDefault().Descripcion,
+                        });
+                    }
+                }
+                return lista;
+            }
+            catch (Exception e)
+            {
+                logger.Error("No se pudo obtener la capacidad productiva para el ID " + proveedorID);
+                logger.Error(e);
+                return new List<CapacidadProductivaDto> { };
+            } 
+            
+        }
+    }
+}

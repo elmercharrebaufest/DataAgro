@@ -438,7 +438,8 @@ function armarContacto() {
     var objetivos = result.ObjetivosTraerPorProveedorId;
     var acopiomaterial = result.AcopioMaterialPorProveedores;
     var establecimiento = result.ProveedorCampoDetalle;
-
+    var cproductiva = result.CapacidadProductiva;
+    
     armarSelectHeader(historial);
 
     $(".detalle-contacto-header-estado-span").html(basico[0].Estado);
@@ -1060,6 +1061,19 @@ function armarContacto() {
     }
 
     ArmarTablaCompra(result.CompraDetalle, result.Material, result.Campanias);
+
+
+    if (cproductiva.length > 0) {
+        armarCapacidadProductiva(cproductiva);
+    }
+    else {
+        var html = "";
+        var html = "";
+        html += '<div class="contenedor-produccion-sin-resultados">' +
+            'No se encontraron resultados de Capacidad Productiva' +
+            '</div>';
+        $("#datos-caproductiva").append(html);
+    }
 }
 
 function armarCampañaProduccion(elem, i, grupocampoacopio, elem2) {
@@ -1433,7 +1447,7 @@ function armarEstilosyFuncionesDetalle() {
         editarProveedor(ProveedorId);
     });
     $("#agenda").click(function () {
-        $("#agenda").removeClass("whc-selected");
+        $("#visualizarCP").removeClass("whc-selected");
         $("#contacto").removeClass("whc-selected");
         $("#produccion").removeClass("whc-selected");
         $("#almacenamiento").removeClass("whc-selected");
@@ -1455,11 +1469,15 @@ function armarEstilosyFuncionesDetalle() {
             $("#datos-establecimiento").fadeOut("slow", function () {
                 $("#datos-agenda").fadeIn("slow", function () { });
             });
+        } else if ($("#datos-caproductiva").is(":visible")) {
+            $("#datos-caproductiva").fadeOut("slow", function () {
+                $("#datos-agenda").fadeIn("slow", function () { });
+            });
         }
     });
     $("#contacto").click(function () {
         $("#agenda").removeClass("whc-selected");
-        $("#contacto").removeClass("whc-selected");
+        $("#visualizarCP").removeClass("whc-selected");
         $("#produccion").removeClass("whc-selected");
         $("#almacenamiento").removeClass("whc-selected");
         $("#establecimiento").removeClass("whc-selected");
@@ -1485,12 +1503,52 @@ function armarEstilosyFuncionesDetalle() {
             $("#datos-establecimiento").fadeOut("slow", function () {
                 $("#datos-contacto").fadeIn("slow", function () { });
             });
+        } else if ($("#datos-caproductiva").is(":visible")) {
+            $("#datos-caproductiva").fadeOut("slow", function () {
+                $("#datos-contacto").fadeIn("slow", function () { });
+            });
         }
     });
-    $("#produccion").click(function () {
+
+    $("#visualizarCP").click(function () {
+        $("#visualizarCP").addClass("whc-selected");
         $("#agenda").removeClass("whc-selected");
         $("#contacto").removeClass("whc-selected");
         $("#produccion").removeClass("whc-selected");
+        $("#almacenamiento").removeClass("whc-selected");
+        $("#establecimiento").removeClass("whc-selected");
+        $("#proveedoresCorredor").removeClass("whc-selected");
+        if ($("#datos-contacto").is(":visible")) {
+            $("#datos-contacto").fadeOut("slow", function () {
+                $("#datos-caproductiva").fadeIn("slow", function () { });
+            });
+        } else if ($("#datos-agenda").is(":visible")) {
+            $("#datos-agenda").fadeOut("slow", function () {
+                $("#datos-caproductiva").fadeIn("slow", function () { });
+            });
+        } else if ($("#datos-almacenamiento").is(":visible")) {
+            $("#datos-almacenamiento").fadeOut("slow", function () {
+                $("#datos-caproductiva").fadeIn("slow", function () { });
+            });
+        } else if ($("#datos-produccion").is(":visible")) {
+            $("#datos-produccion").fadeOut("slow", function () {
+                $("#datos-caproductiva").fadeIn("slow", function () { });
+            });
+        } else if ($("#datos-proveedorescorredor").is(":visible")) {
+            $("#datos-proveedorescorredor").fadeOut("slow", function () {
+                $("#datos-caproductiva").fadeIn("slow", function () { });
+            });
+        } else if ($("#datos-establecimiento").is(":visible")) {
+            $("#datos-establecimiento").fadeOut("slow", function () {
+                $("#datos-caproductiva").fadeIn("slow", function () { });
+            });
+        }
+    });
+
+    $("#produccion").click(function () {
+        $("#agenda").removeClass("whc-selected");
+        $("#contacto").removeClass("whc-selected");
+        $("#visualizarCP").removeClass("whc-selected");
         $("#almacenamiento").removeClass("whc-selected");
         $("#establecimiento").removeClass("whc-selected");
         $("#produccion").addClass("whc-selected");
@@ -1510,11 +1568,16 @@ function armarEstilosyFuncionesDetalle() {
             $("#datos-establecimiento").fadeOut("slow", function () {
                 $("#datos-produccion").fadeIn("slow", function () { });
             });
+        } else if ($("#datos-caproductiva").is(":visible")) {
+            $("#datos-caproductiva").fadeOut("slow", function () {
+                $("#datos-produccion").fadeIn("slow", function () { });
+            });
         }
     });
     $("#almacenamiento").click(function () {
         $("#agenda").removeClass("whc-selected");
         $("#contacto").removeClass("whc-selected");
+        $("#visualizarCP").removeClass("whc-selected");
         $("#produccion").removeClass("whc-selected");
         $("#establecimiento").removeClass("whc-selected");
         $("#almacenamiento").addClass("whc-selected");
@@ -1534,11 +1597,16 @@ function armarEstilosyFuncionesDetalle() {
             $("#datos-establecimiento").fadeOut("slow", function () {
                 $("#datos-almacenamiento").fadeIn("slow", function () { });
             });
+        } else if ($("#datos-caproductiva").is(":visible")) {
+            $("#datos-caproductiva").fadeOut("slow", function () {
+                $("#datos-almacenamiento").fadeIn("slow", function () { });
+            });
         }
     });
     $("#establecimiento").click(function () {
         $("#agenda").removeClass("whc-selected");
         $("#contacto").removeClass("whc-selected");
+        $("#visualizarCP").removeClass("whc-selected");
         $("#produccion").removeClass("whc-selected");
         $("#almacenamiento").removeClass("whc-selected");
         $("#establecimiento").addClass("whc-selected");
@@ -1556,6 +1624,10 @@ function armarEstilosyFuncionesDetalle() {
             });
         } else if ($("#datos-almacenamiento").is(":visible")) {
             $("#datos-almacenamiento").fadeOut("slow", function () {
+                $("#datos-establecimiento").fadeIn("slow", function () { });
+            });
+        } else if ($("#datos-caproductiva").is(":visible")) {
+            $("#datos-caproductiva").fadeOut("slow", function () {
                 $("#datos-establecimiento").fadeIn("slow", function () { });
             });
         }
@@ -3123,4 +3195,31 @@ function armarEstablecimiento(establecimiento) {
             capProdCantEstablecimiento++;
         })(ii);
     }
+}
+
+function armarCapacidadProductiva(cproductiva) {
+    $(document).ready(function () {
+        $("#gridCapacidadProd").kendoGrid({
+            dataSource: cproductiva,
+            height: 200,
+            pageable: false,
+            columns: [
+                {
+                    field: "Campania", type: "string", title: "Campaña", width: 150, attributes: { style: 'text-align: center' } 
+                },
+                {
+                    field: "Material", type: "string", title: "Material", width: 150, attributes: { style: 'text-align: center' }
+                },
+                {
+                    field: "Cantidad", type: "number", title: "Cantidad", width: 150, attributes: { style: 'text-align: center' }
+                },
+                {
+                    field: "UnidadMedida", type: "string", title: "Unidad de Medida", width: 150, attributes: { style: 'text-align: center' }
+                },
+                {
+                    field: "Porcentaje", type: "number", title: "Porcentaje", width: 150, attributes: { style: 'text-align: center' }
+                }
+            ],
+        }).data("kendoGrid");
+    });
 }

@@ -159,6 +159,12 @@
         <div class="col-lg-9 color-claro">
             <div class="col-lg-6 detalle-contacto-header-campana-filtro"></div>
             <div class="col-lg-6 detalle-contacto-header-exportar">
+                @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosProveedor))
+                {
+                   
+                    <a onclick="editarProveedor(ProveedorId)"><img style="width:16px;height:16px;" src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc" id="editar-Proveedor"> Editar</span></a>
+                    
+                }
                 <a class="exportar-contactos" id="ExportarPdf"><img src="~/Content/Images/descargar-pdf-excel.png" /> <span>Exportar como PDF</span></a>
                 <a class="exportar-contactos" id="Imprimir"><img src="~/Content/Images/imprimir.png" /> <span>Imprimir</span></a>
             </div>
@@ -196,11 +202,14 @@
           
 
 
-            <div class="col-lg-12">
-                <div class="row bordertopbottom">
+            @*<div class="col-lg-12">*@
+                <div class="row">
                     <div class="wizard-header-contenedor-grupo">
                         <div class="wizard-header-contenedor whc-selected" id="contacto">
-                            Datos contacto
+                            Datos de Contacto
+                        </div>
+                        <div class="wizard-header-contenedor noCorredor" id="visualizarCP">
+                            Capacidad Productiva
                         </div>
                         <div class="wizard-header-contenedor noCorredor" id="produccion">
                             Producción
@@ -217,12 +226,7 @@
                                 Agenda
                             </div>
                         }
-                        @if (PermisosHelper.Is(PermisosDataAgro.ModificarDatosProveedor))
-                        {
-                            <div class="align-right wizardeditar">
-                                <a onclick="editarProveedor(ProveedorId)"><img style="width:16px;height:16px;" src="~/Content/Images/contacto-edit.png" /> <span class="editar-contacto editar-contacto-dc" id="editar-Proveedor"> Editar</span></a>
-                            </div>
-                        }
+
                         <div class="wizard-header-contenedor" id="proveedoresCorredor" style="display:none;">
                             Proveedores
                         </div>
@@ -230,7 +234,7 @@
 
                     </div>
                 </div>
-            </div>
+            @*</div>*@
 
             <div id="datos-contacto">
                 <div class="wd65p">
@@ -431,6 +435,14 @@
 
                 </div>
             </div>
+            <div id="datos-caproductiva">
+                <div class="col-lg-12">
+                    <div class="wizard-header-contenedor-grupo">
+                        <div id="gridCapacidadProd">
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="datos-produccion">
                 <div class="col-lg-12">
                     <div class="row bordertopbottom">
@@ -627,3 +639,8 @@
 
     @Html.Partial("~/Views/Shared/_PleaseWait.cshtml")
 
+    <style>
+        .k-grid-header th.k-header {
+            background: #D5F5E3
+        }
+    </style>

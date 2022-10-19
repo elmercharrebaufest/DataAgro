@@ -124,6 +124,7 @@
     <Compile Include="ConsultasEF\TraerAdministracionCupoExcedente.cs" />
     <Compile Include="ConsultasEF\TraerConfiguracionesBolsa.cs" />
     <Compile Include="ConsultasEF\TraerContratosReporteAFijarPase.cs" />
+    <Compile Include="ConsultasEF\TraerExportarAllCapacidadProductiva.cs" />
     <Compile Include="ConsultasEF\TraerSugerenciasPendientes.cs" />
     <Compile Include="ConsultasEF\TraerExportarAllEstablecimientos.cs" />
     <Compile Include="ConsultasEF\TraerHabilitacionesCupo.cs" />

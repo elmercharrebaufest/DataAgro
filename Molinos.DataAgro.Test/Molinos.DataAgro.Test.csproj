@@ -180,6 +180,7 @@
     <Compile Include="Controllers\SincronizarMaestrosControllerTest.cs" />
     <Compile Include="Controllers\TareasProgramadasControllerTest.cs" />
     <Compile Include="Controllers\ZonaCupoControllerTest.cs" />
+    <Compile Include="Managers\CapacidadProductivaManagerTest.cs" />
     <Compile Include="Managers\CupoNoPropioManagerTest.cs" />
     <Compile Include="Managers\HabilitacionBoletoManagerTest.cs" />
     <Compile Include="Managers\ConfiguracionBolsaManagerTest.cs" />

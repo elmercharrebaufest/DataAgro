@@ -25,6 +25,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<ISISAManager> sisaManagerMock;
         private Mock<ILogger> loggerMock;
         private Mock<IComprasManager> comprasManagerMock;
+        private Mock<ICapacidadProductivaManager> capProductivaMock;
         private JavaScriptSerializer serializer;
 
 
@@ -38,7 +39,8 @@ namespace Molinos.DataAgro.Test.Controllers
             sisaManagerMock = new Mock<ISISAManager>();
             loggerMock = new Mock<ILogger>();
             comprasManagerMock = new Mock<IComprasManager>();
-            target = new SincronizarMaestrosController(loggerMock.Object, comprasManagerMock.Object, rg2300Mock.Object, facacopManagerMock.Object, estadoProveedorMock.Object, sisaManagerMock.Object);
+            capProductivaMock = new Mock<ICapacidadProductivaManager>();
+            target = new SincronizarMaestrosController(loggerMock.Object, comprasManagerMock.Object, rg2300Mock.Object, facacopManagerMock.Object, estadoProveedorMock.Object, sisaManagerMock.Object, capProductivaMock.Object);
         }
 
         [Test]
@@ -68,6 +70,17 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             comprasManagerMock.Setup(x => x.ActualizarCompras());
             var result = target.ProcessCompras() as ContentResult;
+
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ProcessCapacidadProductivaTest()
+        {
+            capProductivaMock.Setup(x => x.ActualizarCapacidadProductiva());
+            var result = target.ProcessCapacidadProductiva() as ContentResult;
 
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };

@@ -221,6 +221,8 @@ namespace Molinos.DataAgro.Test.Managers
              } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Proveedor, int?>>>(), It.IsAny<Expression<Func<Proveedor, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                .Returns(new List<int?>() { 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CapacidadProductiva, CapacidadProductivaDto>>>(), It.IsAny<Expression<Func<CapacidadProductiva, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+                .Returns(new List<CapacidadProductivaDto>() { new CapacidadProductivaDto { ProveedorId = 1, MaterialId = 1, CampaniaId = 1 } });
 
             var result = target.TraerProveedor(1, "a", new List<int>() { 1, 2, 3 });
 
@@ -236,6 +238,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ProveedorCanalOperacion, CanalOperacion>>>(), It.IsAny<Expression<Func<ProveedorCanalOperacion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ProveedorCondicion, Condicion>>>(), It.IsAny<Expression<Func<ProveedorCondicion, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<ProveedorDestinatario, Destinatario>>>(), It.IsAny<Expression<Func<ProveedorDestinatario, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CapacidadProductiva, CapacidadProductivaDto>>>(), It.IsAny<Expression<Func<CapacidadProductiva, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
 
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Acopio.Count);
@@ -254,6 +257,7 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, result.ObjetivosTraerPorProveedorId.Count);
             Assert.AreEqual(1, result.ProveedorCondicion.Count);
             Assert.AreEqual(1, result.ProveedorDestinatario.Count);
+            Assert.AreEqual(1, result.CapacidadProductiva.Count);
         }
         [Test]
         public void TraerProveedorConRiesgoSapTest()

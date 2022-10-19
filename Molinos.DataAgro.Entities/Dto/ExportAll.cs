@@ -15,8 +15,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<AgendaAll> agenda { get; set; }
         public List<ComprasAll> compras { get; set; }
         public List<CompraCampanaActualDto> CompraCampanaActual { get; set; }
-
         public List<CampanaMaterialDetallePorMeseExcelDto> Situacion { get; set; }
+        public List<CapacidadProductivaAll> CapacidadProductiva { get; set; }
 
         public ExportAll()
         {
@@ -27,6 +27,7 @@ namespace Molinos.DataAgro.Entities.Dto
             almacenamiento = new List<AlmacenamientoAll>();
             establecimiento = new List<CampoDetalleAll>();
             compras = new List<ComprasAll>();
+            CapacidadProductiva = new List<CapacidadProductivaAll>();
 
         }
 
@@ -177,5 +178,16 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public int? ImportId { get; set; }
         public string Campaña { get; set; }
+    }
+
+    public class CapacidadProductivaAll
+    {
+        public string Cuit { get; set; }
+        public string RazonSocial { get; set; }
+        public string Material { get; set; }
+        public string Campania { get; set; }
+        public decimal Cantidad { get; set; }
+        public string UnidadMedida { get; set; }
+        public decimal Porcentaje { get; set; }
     }
 }

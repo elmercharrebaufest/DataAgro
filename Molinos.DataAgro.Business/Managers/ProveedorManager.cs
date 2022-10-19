@@ -150,6 +150,17 @@ namespace Molinos.DataAgro.Business.Managers
                 //res.CompraDetalle = TraerTodoCompra(ProveedorId, equipo);
                 res.Material = res.CompraDetalle.Select(x => x.Material).Distinct().ToList();
                 res.Campanias = res.CompraDetalle.OrderByDescending(x => x.Campana).Select(x => x.Campana).Distinct().ToList();
+                res.CapacidadProductiva = repositorio.Listar<CapacidadProductiva, CapacidadProductivaDto>(x => new CapacidadProductivaDto
+                {
+                    ProveedorId = x.ProveedorId,
+                    MaterialId = x.MaterialId,
+                    CampaniaId = x.CampaniaId,
+                    Material = x.Material.Descripcion,
+                    Campania = x.Campania.Descripcion,
+                    Cantidad = x.Cantidad,
+                    UnidadMedida = x.UnidadMedida,
+                    Porcentaje = x.Porcentaje
+                }, x=> x.ProveedorId == ProveedorId).OrderByDescending(x=> x.CampaniaId).ThenByDescending(x=> x.MaterialId).ToList();
             }
             catch (Exception ex)
             {

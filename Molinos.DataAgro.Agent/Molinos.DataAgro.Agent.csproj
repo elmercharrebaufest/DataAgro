@@ -131,6 +131,7 @@
     <Compile Include="Helpers\RelacionCorredorProveedorAgent.cs" />
     <Compile Include="Helpers\RiesgoComercialAgent.cs" />
     <Compile Include="Helpers\ValidarLiquidacionParaFijacionAgent.cs" />
+    <Compile Include="Helpers\VisualizarCapacidadProductivaAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\AcuerdosGenerados\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -368,6 +369,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\ValidarPesificaciones\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\VisualizarCapacidadProductiva\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -1888,6 +1894,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\ValidarPesificaciones\SI_ZMPWS_DATAAGRO_VALIDAR_PESIFICACIONES.wsdl" />
+    <None Include="Service References\VisualizarCapacidadProductiva\Molinos.DataAgro.Agent.VisualizarCapacidadProductiva.SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVAResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\VisualizarCapacidadProductiva\Molinos.DataAgro.Agent.VisualizarCapacidadProductiva.Z_MPRFC_VISU_CAP_PRODUCTIVAResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\VisualizarCapacidadProductiva\SI_ZMPWS_DATAAGRO_VISU_CAP_PRODUCTIVA.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\AcuerdosGenerados\" />
@@ -1937,6 +1950,7 @@
     <WCFMetadataStorage Include="Service References\ValidarLiquidacionParaFijacion\" />
     <WCFMetadataStorage Include="Service References\ValidarLiquidacionParcial\" />
     <WCFMetadataStorage Include="Service References\ValidarPesificaciones\" />
+    <WCFMetadataStorage Include="Service References\VisualizarCapacidadProductiva\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\Compras\configuration91.svcinfo" />
@@ -2508,6 +2522,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\ValidarPesificaciones\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\VisualizarCapacidadProductiva\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\VisualizarCapacidadProductiva\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\VisualizarCapacidadProductiva\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

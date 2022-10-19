@@ -18,8 +18,10 @@ namespace WebDataAgro.Controllers
         private readonly ISISAManager sisaManager;
         private readonly ILogger logger;
         private readonly IComprasManager comprasManager;
+        private readonly ICapacidadProductivaManager capProdManager;
 
-        public SincronizarMaestrosController(ILogger log, IComprasManager comprasManager, IRG2300Manager rG2300Manager, IFacacopManager facacopManager, IEstadoProveedorManager estadoProveedorManager, ISISAManager sisaManager)
+        public SincronizarMaestrosController(ILogger log, IComprasManager comprasManager, IRG2300Manager rG2300Manager, IFacacopManager facacopManager, 
+                                    IEstadoProveedorManager estadoProveedorManager, ISISAManager sisaManager, ICapacidadProductivaManager capProdManager)
         {
             this.logger = log;
             this.comprasManager = comprasManager;
@@ -27,6 +29,7 @@ namespace WebDataAgro.Controllers
             this.facacopManager = facacopManager;
             this.estadoProveedorManager = estadoProveedorManager;
             this.sisaManager = sisaManager;
+            this.capProdManager = capProdManager;
         }
 
         // GET: SincronizarMaestros
@@ -264,6 +267,14 @@ namespace WebDataAgro.Controllers
                 return Content("ok");
             }
 
+        }
+
+        public ActionResult ProcessCapacidadProductiva()
+        {
+            logger.Info($"ProcessCapacidadProductiva - Iniciando");
+            capProdManager.ActualizarCapacidadProductiva();
+            logger.Info($"ProcessCapacidadProductiva - Finalizado");
+            return Content("ok");
         }
     }
 }
