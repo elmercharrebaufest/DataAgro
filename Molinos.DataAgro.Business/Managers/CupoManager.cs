@@ -2574,9 +2574,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 //Sugerencias Devueltas
                                 CantidadCuposDevueltos = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && !x.Excedente && x.MaterialId == material.MaterialId),
                                 //Solicitudes Aceptadas
-                                CantidadSolicitudesAceptadas = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 1 && x.MaterialId == material.MaterialId),
+                                CantidadSolicitudesAceptadas = (int)repositorio.Contar<Cupo>(x => x.FechaIngreso == fecha && x.CentroId == formula.CentroId && x.MaterialId == material.MaterialId && x.AdministracionCupoId != null && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9)),
                                 //Solicitudes Pendientes del algoritmo y extraordinarias.
-                                CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && (x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo || x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Extraordinaria)),
+                                CantidadSolicitudesPendientes = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo),
                                 //Solicitudes Pendientes Extra
                                 CantidadSolicitudesPendientesExtra = (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && x.Excedente && x.EstadoId == 3 && x.MaterialId == material.MaterialId && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Extraordinaria),
 
