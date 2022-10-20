@@ -1563,7 +1563,7 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE .");
             }
 
-            if (oParam.TipoNegocioId==2 && oParam.TipoAgenteCompraId!=null)
+            if (oParam.TipoNegocioId == 2 && oParam.TipoAgenteCompraId != null)
             {
                 if (ValidarFechaAgenteMP(oParam))
                 {
@@ -7449,7 +7449,6 @@ namespace Molinos.DataAgro.Business.Managers
                 if (!resultValidation.IsValid)
                 {
                     return resultValidation.Resume;
-                    //return Json(new { Resume = resultValidation.Resume, Resultado = !resultValidation.IsValid }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
@@ -7458,7 +7457,6 @@ namespace Molinos.DataAgro.Business.Managers
                     if (rowsOk.Count == 0)
                     {
                         return resultValidation.Resume;
-                        //return Json(new { Resume = resultValidation.Resume, Resultado = resultValidation.IsValid }, JsonRequestBehavior.AllowGet);
                     }
                     var rows = dsExcel.Tables[0].AsEnumerable().Select(x => x.ItemArray).Skip(0);
                     for (int ii = 0; ii < rows.Count(); ii++)
@@ -7480,8 +7478,8 @@ namespace Molinos.DataAgro.Business.Managers
                         var cuitProveedor = rows.ElementAt(ii)[8].ToString().Trim();
                         var cuitCorredor = rows.ElementAt(ii)[9].ToString().Trim();
                         var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitProveedor && x.SegmentacionId < 5);
-                        if (proveedor != null) 
-                        { 
+                        if (proveedor != null)
+                        {
                             contrato.ProveedorId = proveedor.ProveedorId;
                         }
                         var corredor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7));
@@ -7514,8 +7512,17 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.HastaFijacion = DateTime.Parse(rows.ElementAt(ii)[21].ToString().Trim());
                         contrato.CondicionFijacionId = condicionFijacion.Where(a => a.CodigoSap.ToLower() == rows.ElementAt(ii)[22].ToString().Trim().ToLower()).Single().Id;
                         int porcentajeDB = int.Parse(string.IsNullOrEmpty(rows.ElementAt(ii)[23].ToString().Trim()) ? "0" : rows.ElementAt(ii)[23].ToString().Trim());
-                        if (porcentajeDB > 0)
+                        if (porcentajeDB != 0)
                         {
+                            if (rows.ElementAt(ii)[24] == null || string.IsNullOrEmpty(rows.ElementAt(ii)[24].ToString()))
+                            {
+                                ExcelValidatorRowResult excelValidatorRowResult = resultValidation.RowsResult.Where(a => a.Row == ii).Single();
+                                var ret = new ExcelValidatorItemResult();
+                                ret.Errors.Add("El campo Desc. Y Bonif es obligatorio si Desc. Y Bonif % es distinto de 0.");
+                                ret.Item = new ExcelValidatorItem { ErrorType = ExcelValidationErrorType.Error, Name = "Desc. Y Bonif" };
+                                excelValidatorRowResult.ItemsResult.Add(ret);
+                                continue;
+                            }
                             contrato.Descuentos = new List<DescuentoBonificacion> { new DescuentoBonificacion {
                             TipoDBId = tipoDB.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[24].ToString().Trim().ToLower()).Single().Id,
                             Porcentaje = int.Parse(rows.ElementAt(ii)[23].ToString().Trim()),
@@ -7590,7 +7597,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
 
                         foreach (var item in contratos)
-                        {                            
+                        {
                             var resultado = GrabarContrato(item);
 
                             logger.Debug($"Se creo el contrato: {item.Id} desde el alta masiva de convenios.");
@@ -7605,7 +7612,7 @@ namespace Molinos.DataAgro.Business.Managers
                             {
                                 logger.Debug($"Se esta creando el contrato {item.Id} con el alta masiva de convenios");
                             }
-                          
+
 
                         }
                         return resultValidation.Resume.OrderBy(x => x.HasError).ToList();
@@ -8074,7 +8081,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Name = "Desc. Y Bonif %",
                 ErrorType = ExcelValidationErrorType.Error,
                 Position = pos++,
-                Required = true,
+                Required = false,
                 Type = ExcelValidationColumnType.Int
             });
 
@@ -8083,7 +8090,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Name = "Desc. Y Bonif",
                 ErrorType = ExcelValidationErrorType.Fatal,
                 Position = pos++,
-                Required = true,
+                Required = false,
                 Options = repositorio.Listar<TipoDB>().Select(a => a.Descripcion.ToLower()).ToList(),
                 Type = ExcelValidationColumnType.List
             });
@@ -8149,15 +8156,15 @@ namespace Molinos.DataAgro.Business.Managers
             return modificado;
         }
 
-        private bool ValidarFechaAgenteMP (Contrato contrato)
+        private bool ValidarFechaAgenteMP(Contrato contrato)
         {
             var fechaElegida = contrato.FechaOperacion;
             var diasHabiles = oDiasHabilesAgent.ObtenerDiasHabilesDelMes(fechaElegida);
             bool fechaInvalida = false;
             int cont = 0;
-            for (int i = diasHabiles.Count-1; cont < 5 && !fechaInvalida; i--)
+            for (int i = diasHabiles.Count - 1; cont < 5 && !fechaInvalida; i--)
             {
-                if (fechaElegida == diasHabiles[i]) 
+                if (fechaElegida == diasHabiles[i])
                     fechaInvalida = true;
                 cont++;
             }

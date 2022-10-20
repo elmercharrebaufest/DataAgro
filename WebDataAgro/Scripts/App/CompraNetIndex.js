@@ -1967,62 +1967,6 @@ function ModalReenviarVarios() {
                 }
         }
     } else {
-        $("#emailReenviado-modal").append('<div style="text-align:center">Se deben seleccionar contratos a precio, a fijar y/o fijaciones en estado finalizado.</div>');
-        $("#reenviarVarios").hide();
-        $("#cancelarVariosReenvio").hide();
-        $("#cerrarVariosReenvio").show();
-    }
-    $("#ModalReenviarVarios").modal('show');
-}
-
-function ReenviarVariosMails() {
-    $("#reenviarVarios").hide();
-    $("#cancelarVariosReenvio").hide();
-    $("#cerrarVariosReenvio").show();
-
-    var negocios = SeleccionarElementos();
-    negocios = negocios.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
-    $(".loader").show();
-    for (var i in negocios) {
-            var objFinalizado = {};
-            $("#estado" + i).empty();
-            var result = null;
-            if (negocios[i].TipoNegocioId === 3) {
-                objFinalizado.fijacionDePrecioContratoId = negocios[i].FijacionDePrecioContratoId;
-                result = MSExecuteOnServer('/CompraNet/EnviarMailFijacion', objFinalizado);
-            } else {
-                objFinalizado.contratoId = negocios[i].ContratoId;
-                result = MSExecuteOnServer('/CompraNet/ReenviarMailContrato', objFinalizado);
-            }
-        $("#estado" + i).removeClass("loader");
-        $("#estado" + i).append('<img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
-    }
-}
-
-function ModalReenviarVarios() {
-    $("#emailReenviado-modal").empty();
-    $("#reenviarVarios").show();
-    $("#cancelarVariosReenvio").show();
-    $("#cerrarVariosReenvio").hide();
-
-    $("#emailReenviado-modal").html('');
-
-    $("#reenviarVarios").prop("disabled", false);
-    $("#reenviarVarios").addClass('myBtn').removeClass('myBtn-disabled');
-
-    var negociosFinalizados = SeleccionarElementos();
-    negociosFinalizados = negociosFinalizados.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
-    if (negociosFinalizados.length > 0) {
-        for (var i in negociosFinalizados) {
-                var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
-            
-                if (negociosFinalizados[i].TipoNegocioId === 3) {
-                    $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Fijaci&oacute;n SAP: ' + negociosFinalizados[i].FijacionSAP + '</div>' + loader + '</div>');
-                } else {
-                    $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Contrato SAP: ' + negociosFinalizados[i].ContratoSAP.substring(3) + '</div>' + loader + '</div>');
-                }
-        }
-    } else {
         $("#emailReenviado-modal").append('<div style="text-align:center">Se deben seleccionar contratos a precio, a fijar y/o fijaciones, en estado finalizado.</div>');
         $("#reenviarVarios").hide();
         $("#cancelarVariosReenvio").hide();
@@ -2032,14 +1976,16 @@ function ModalReenviarVarios() {
 }
 
 function ReenviarVariosMails() {
-    $("#reenviarVarios").hide();
-    $("#cancelarVariosReenvio").hide();
-    $("#cerrarVariosReenvio").show();
+    BlockUi('Enviando...');
+    setTimeout(function () {
+        $("#reenviarVarios").hide();
+        $("#cancelarVariosReenvio").hide();
+        $("#cerrarVariosReenvio").show();
 
-    var negocios = SeleccionarElementos();
-    negocios = negocios.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
-    $(".loader").show();
-    for (var i in negocios) {
+        var negocios = SeleccionarElementos();
+        negocios = negocios.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
+        $(".loader").show();
+        for (var i in negocios) {
             var objFinalizado = {};
             $("#estado" + i).empty();
             var result = null;
@@ -2050,9 +1996,11 @@ function ReenviarVariosMails() {
                 objFinalizado.contratoId = negocios[i].ContratoId;
                 result = MSExecuteOnServer('/CompraNet/ReenviarMailContrato', objFinalizado);
             }
-        $("#estado" + i).removeClass("loader");
-        $("#estado" + i).append('<img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
-    }
+            $("#estado" + i).removeClass("loader");
+            $("#estado" + i).append('<img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
+        }
+        $.unblockUI();
+    }, 200);    
 }
 
 function ObtenerDatosModalConfirmado() {
@@ -3897,15 +3845,6 @@ function ArmarDescripcionServicio(servicio) {
     }
 }
 
-$("#reenviarEmail").click(function () {
-    $("#reenviarEmail").hide();
-    setTimeout(function () {
-        ObtenerDatosReenvio();
-        $("#modalReenviarMail").modal("hide");
-        $("#reenviarEmail").show();
-    }, 0);
-});
-
 function botonReenviarMail(dataItem, icono) {
         return '<button data-toggle="tooltip" title="Reenviar Email"' +
             'onclick="ModalReenviarMail(' +
@@ -3956,62 +3895,15 @@ function ReenviarMail(contratoFinalizado) {
 }
 
 $("#reenviarEmail").click(function () {
+    BlockUi('Enviando...');
     $("#reenviarEmail").hide();
     setTimeout(function () {
         ObtenerDatosReenvio();
         $("#modalReenviarMail").modal("hide");
         $("#reenviarEmail").show();
-    }, 0);
+        $.unblockUI();
+    }, 200);
 });
-
-function botonReenviarMail(dataItem, icono) {
-        return '<button data-toggle="tooltip" title="Reenviar Email"' +
-            'onclick="ModalReenviarMail(' +
-            "'" + dataItem.ContratoSAP + "'" + ',' +
-            "'" + dataItem.TipoNegocioId + "'" + ',' +
-            "'" + dataItem.FijacionSAP + "'" + ',' +
-            "'" + dataItem.ContratoId + "'" + ',' +
-            "'" + dataItem.FijacionDePrecioContratoId + "'" +
-            ')"><i class="fa ' + icono + ' fin"></i></button>';
-}
-
-function ModalReenviarMail(contratoSAP, tipoId, fijacionSAP, contratoId, fijacionDePrecioContratoId) {
-    $(".modal-title-reenviar").empty();
-
-    if (tipoId === "3") {
-        $("#reenviarContrato").val(fijacionDePrecioContratoId);
-        $(".modal-title-reenviar").append("Fijaci&oacute;n SAP: " + fijacionSAP);
-    } else {
-        $("#reenviarContrato").val(contratoId);
-        $(".modal-title-reenviar").append("Contrato SAP: " + contratoSAP.substring(3));
-    }
-    $("#tipoNegocioModalReenviar").val(tipoId);
-    $("#buttonReenviar").show();
-    $("#modalReenviarMail").modal('show');
-}
-
-function ObtenerDatosReenvio() {
-    $("#buttonReenviar").hide();
-
-    objFinalizado = {};
-
-    if ($("#tipoNegocioModalReenviar").val() === "3") {
-        objFinalizado.fijacionDePrecioContratoId = $("#reenviarContrato").val();
-    } else {
-        objFinalizado.contratoId = $("#reenviarContrato").val();
-    }
-
-    ReenviarMail(objFinalizado);
-}
-
-function ReenviarMail(contratoFinalizado) {
-    if ($("#tipoNegocioModalReenviar").val() === "3") {
-        result = MSExecuteOnServer('/CompraNet/EnviarMailFijacion', contratoFinalizado);
-    } else {
-        result = MSExecuteOnServer('/CompraNet/ReenviarMailContrato', contratoFinalizado);
-    }
-    MensInfo("Se reenvi&oacute; el email del negocio elegido " + ' <img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
-}
 
 function AddFilters(grid, field, operator, values) {
     var filtros = { logic: 'or', filters: [] };

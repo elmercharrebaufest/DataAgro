@@ -905,7 +905,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
-                logger.Debug("Intentando enviar a " + cupo.Id + " a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Cupo SAP:" + cupo.CupoSap);
+                logger.Debug("Intentando enviar mail a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Cupos SAP:" + string.Join(", ", listaCupos) );
 
                 oCliente.Send(oMensaje);
             }

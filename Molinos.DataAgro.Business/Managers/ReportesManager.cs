@@ -603,7 +603,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000),
                 SanLorenzo = ((x.Destino.Acopio == false || x.Destino.CodigoSap == "1074") && !(x.Destino.CodigoSap == "1168" && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3))) ? Math.Round(x.Cantidad / 1000) : 0,
-                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074") ? Math.Round(x.Cantidad / 1000) : 0,
+                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074" && x.Destino.CodigoSap != "1168") ? Math.Round(x.Cantidad / 1000) : 0,
                 BahiaBlanca = (x.Destino.CodigoSap == "1168" && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3)) ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false &&
             DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde && DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta
@@ -619,7 +619,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round(x.Cantidad / 1000),
                 SanLorenzo = ((x.Destino.Acopio == false || x.Destino.CodigoSap == "1074") && !(x.Destino.CodigoSap == "1168" && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3))) ? Math.Round(x.Cantidad / 1000) : 0,
-                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074") ? Math.Round(x.Cantidad / 1000) : 0,
+                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074" && x.Destino.CodigoSap != "1168") ? Math.Round(x.Cantidad / 1000) : 0,
                 BahiaBlanca = (x.Destino.CodigoSap == "1168" && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3)) ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.Canje != true && x.OcultarEnTablero == false && DbFunctions.TruncateTime(x.FechaOperacion) >= fechaDesde &&
                     DbFunctions.TruncateTime(x.FechaOperacion) <= fechaHasta && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5 || x.EstadoId == 10) && (centroId == 0 || centroId == x.DestinoId) &&
@@ -664,7 +664,7 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 Pricing = Math.Round((double)x.Cantidad / 1000),
                 SanLorenzo = ((x.Destino.Acopio == false || x.Destino.CodigoSap == "1074") && !(x.Destino.CodigoSap == "1168" && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3))) ? Math.Round(x.Cantidad / 1000) : 0,
-                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074") ? Math.Round(x.Cantidad / 1000) : 0,
+                Acopio = (x.Destino.Acopio == true && x.Destino.CodigoSap != "1074" && x.Destino.CodigoSap != "1168") ? Math.Round(x.Cantidad / 1000) : 0,
                 BahiaBlanca = (x.Destino.CodigoSap == "1168" && (x.MaterialId == 1 || x.MaterialId == 2 || x.MaterialId == 3)) ? Math.Round(x.Cantidad / 1000) : 0
             }, x => materialId.Contains(x.MaterialId) && x.OcultarEnTablero == false && (x.PrecioNeto != null && x.PrecioNeto != 0)
             /*&& fechaDesde == fechaHasta*/  && DbFunctions.TruncateTime(x.Fecha) >= fechaDesde && DbFunctions.TruncateTime(x.Fecha) <= fechaHasta

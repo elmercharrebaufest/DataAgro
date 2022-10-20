@@ -439,7 +439,7 @@ function armarContacto() {
     var acopiomaterial = result.AcopioMaterialPorProveedores;
     var establecimiento = result.ProveedorCampoDetalle;
     var cproductiva = result.CapacidadProductiva;
-    
+
     armarSelectHeader(historial);
 
     $(".detalle-contacto-header-estado-span").html(basico[0].Estado);
@@ -1243,8 +1243,8 @@ function descargarKMZ(elem) {
     var campaña = $(elem).prop("id").split("_")[2];
     var val = grupocampoacopio[0][campaña]["Campo" + id];
     if (!val)
-        val = grupoacopio[0][campaña]["Acopio" + id];    
-    
+        val = grupoacopio[0][campaña]["Acopio" + id];
+
     var file = val.KMZfile;
     var aux = val.KMZnombre.split("\\").length - 1;
     var nomb = val.KMZnombre.split("\\")[aux];
@@ -1543,6 +1543,11 @@ function armarEstilosyFuncionesDetalle() {
                 $("#datos-caproductiva").fadeIn("slow", function () { });
             });
         }
+
+        setTimeout(function () {
+            $("#gridCapacidadProd").data("kendoGrid").dataSource.page(1);
+        }, 1000);
+
     });
 
     $("#produccion").click(function () {
@@ -3093,7 +3098,7 @@ function ExportarPdf() {
 }
 
 function armarEstablecimiento(establecimiento) {
-   
+
 
     for (var ii in establecimiento) {
         (function (i) {
@@ -3176,14 +3181,14 @@ function armarEstablecimiento(establecimiento) {
                 + '</div>'
                 + '<div>'
                 + '<div class="datos-produccion-cap-prod-guardados-hectareas">'
-                
+
                 + (obj.comercialId > 0 ? ' <b>Comercial</b>:' + obj.comercialNom : "")
                 //+ "<br>"
                 + (obj.campaña != "" && obj.campaña != null ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Campaña</b>:' + obj.campaña : "")
                 + (obj.materialId > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Material</b>:' + obj.materialNom : "")
-                + (obj.rinde > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Rinde</b>:' +obj.rinde : "")
+                + (obj.rinde > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Rinde</b>:' + obj.rinde : "")
                 + (obj.htotales > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Has Totales</b>:' + obj.htotales : "")
-                + (obj.hcultivables > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Has Cultivables</b>:' +obj.hcultivables : "")
+                + (obj.hcultivables > 0 ? '&nbsp;&nbsp;&nbsp;&nbsp; <b>Has Cultivables</b>:' + obj.hcultivables : "")
                 + '</div>'
                 + '<div class="granos-contenedor">';
 
@@ -3198,28 +3203,36 @@ function armarEstablecimiento(establecimiento) {
 }
 
 function armarCapacidadProductiva(cproductiva) {
-    $(document).ready(function () {
-        $("#gridCapacidadProd").kendoGrid({
-            dataSource: cproductiva,
-            height: 200,
-            pageable: false,
-            columns: [
-                {
-                    field: "Campania", type: "string", title: "Campaña", width: 150, attributes: { style: 'text-align: center' } 
-                },
-                {
-                    field: "Material", type: "string", title: "Material", width: 150, attributes: { style: 'text-align: center' }
-                },
-                {
-                    field: "Cantidad", type: "number", title: "Cantidad", width: 150, attributes: { style: 'text-align: center' }
-                },
-                {
-                    field: "UnidadMedida", type: "string", title: "Unidad de Medida", width: 150, attributes: { style: 'text-align: center' }
-                },
-                {
-                    field: "Porcentaje", type: "number", title: "Porcentaje", width: 150, attributes: { style: 'text-align: center' }
-                }
-            ],
-        }).data("kendoGrid");
+    $("#gridCapacidadProd").kendoGrid({
+        //dataSource: cproductiva,
+        dataSource: {
+            data: cproductiva,
+            pageSize: 9000
+        },
+        sortable: {
+            mode: "multiple",
+            allowUnsort: true
+        },
+        height: 200,
+        scrollable: {
+            virtual: true
+        },
+        columns: [
+            {
+                field: "Campania", type: "string", title: "Campaña", width: 150, attributes: { style: 'text-align: center' }
+            },
+            {
+                field: "Material", type: "string", title: "Material", width: 150, attributes: { style: 'text-align: center' }
+            },
+            {
+                field: "Cantidad", type: "number", title: "Cantidad", width: 150, attributes: { style: 'text-align: center' }
+            },
+            {
+                field: "UnidadMedida", type: "string", title: "Unidad de Medida", width: 150, attributes: { style: 'text-align: center' }
+            },
+            {
+                field: "Porcentaje", type: "number", title: "Porcentaje", width: 150, attributes: { style: 'text-align: center' }
+            }
+        ],
     });
 }

@@ -78,13 +78,12 @@ function CreateGridRol() {
 
 function Eliminar(id) {
     Confirma('¿ Confirma la eliminación del Rol ?',
-        function (dialogItself) {
-            EjecutarEliminar();
-            dialogItself.close();
+        function () {
+            EjecutarEliminar(id);
         });
 }
 
-function EjecutarEliminar() {
+function EjecutarEliminar(id) {
     MSExecuteOnServerAsync('/Rol/Eliminar', { id: id }, function (result) {
         if (result != null) {
             if (ExistsErrorMessages(result.Errores)) {
