@@ -3225,7 +3225,7 @@ function armarCapacidadProductiva(cproductiva) {
                 field: "Material", type: "string", title: "Material", width: 150, attributes: { style: 'text-align: center' }
             },
             {
-                field: "Cantidad", type: "number", title: "Cantidad", width: 150, attributes: { style: 'text-align: center' }
+                field: "Cantidad", type: "number", title: "Cantidad", width: 150, format: "{0:n0}", attributes: { style: 'text-align: center' }
             },
             {
                 field: "UnidadMedida", type: "string", title: "Unidad de Medida", width: 150, attributes: { style: 'text-align: center' }
