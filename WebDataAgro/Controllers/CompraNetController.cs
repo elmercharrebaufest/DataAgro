@@ -1327,12 +1327,12 @@ namespace WebDataAgro.Controllers
                 Value = "2",
                 Selected = false
             });
-            //tipoAlta.Add(new SelectListItem
-            //{
-            //    Text = "MATBA",
-            //    Value = "2",
-            //    Selected = false
-            //});
+            tipoAlta.Add(new SelectListItem
+            {
+                Text = "MATBA",
+                Value = "3",
+                Selected = false
+            });
             ViewBag.TipoAlta = tipoAlta;
             return View();
         }
@@ -1374,6 +1374,11 @@ namespace WebDataAgro.Controllers
                     if (tipoAlta == "2")
                     {
                         var resultado = mobjContratoManager.AltaMasivaConvenios(dsExcel, GlobalVariables.ComercialId);
+                        return Json(new { Resume = resultado, Resultado = true });
+                    }
+                    if (tipoAlta == "3")
+                    {
+                        var resultado = mobjContratoManager.AltaMasivaMATBA(dsExcel, GlobalVariables.ComercialId);
                         return Json(new { Resume = resultado, Resultado = true });
                     }
                 }

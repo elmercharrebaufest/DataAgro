@@ -58,6 +58,17 @@ $(document).ready(function () {
         var divDescargarPlantillaVacio = document.getElementById("divDescargarPlantillaVacio");
         var divDescargarPlantillaAcuerdo = document.getElementById("divDescargarPlantillaAcuerdo");
         var divDescargarPlantillaConvenio = document.getElementById("divDescargarPlantillaConvenio");
+        var divDescargarPlantillaConvenio = document.getElementById("divDescargarPlantillaMATBA");
+        if (this.value == "3") {
+            divContrato.style.display = 'none';
+            divDescargarPlantillaVacio.style.display = 'none';
+            divDescargarPlantillaAcuerdo.style.display = 'none';
+            divDescargarPlantillaConvenio.style.display = 'none';
+            divDescargarPlantillaMATBA.style.display = 'block';
+            divAcuerdoData.style.display = 'none'
+            $('#divAcuerdoData').text("");
+            $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
+        }
         if (this.value == "2") {
             divContrato.style.display = 'none';
             divDescargarPlantillaVacio.style.display = 'none';
