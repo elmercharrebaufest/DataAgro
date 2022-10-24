@@ -8683,8 +8683,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     switch (rows.ElementAt(ii)[32].ToString())
                                     {
                                         case "Camara":
-                                            //contrato.StandardDeCalidadId = (material == 1 || material == 2) ? 1 : material = 3 ? 4 : 5;
-                                            contrato.Calidad.Add(new Calidad { StandardDeCalidadId = 2, CalidadEspecialId = 4, Valor = 2 });
+                                            contrato.StandardDeCalidadId = (material == 1 || material == 2) ? 1 : material == 3 ? 4 : 5;                                           
                                             break;
                                         case "Fabrica":
                                             contrato.StandardDeCalidadId = 3;

@@ -87,7 +87,7 @@ namespace Molinos.DataAgro.Entities.Helpers
                     }
                     break;
                 case ExcelValidationColumnType.List:
-                    if (item.Options != null && !item.Options.Contains(cell.ToString().Trim().ToLower()))
+                    if (item.Options != null && !item.Options.Select(x=> x.ToLower()).Contains(cell.ToString().Trim().ToLower()))
                     {
                         ret.Errors.Add(string.Format("El campo {0} debe ser uno de los siguientes valores: {1}", item.Name, string.Join(", ", item.Options.ToArray())));
                     }
