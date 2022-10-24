@@ -58,7 +58,7 @@ $(document).ready(function () {
         var divDescargarPlantillaVacio = document.getElementById("divDescargarPlantillaVacio");
         var divDescargarPlantillaAcuerdo = document.getElementById("divDescargarPlantillaAcuerdo");
         var divDescargarPlantillaConvenio = document.getElementById("divDescargarPlantillaConvenio");
-        var divDescargarPlantillaConvenio = document.getElementById("divDescargarPlantillaMATBA");
+        var divDescargarPlantillaMATBA = document.getElementById("divDescargarPlantillaMATBA");
         if (this.value == "3") {
             divContrato.style.display = 'none';
             divDescargarPlantillaVacio.style.display = 'none';
@@ -73,7 +73,8 @@ $(document).ready(function () {
             divContrato.style.display = 'none';
             divDescargarPlantillaVacio.style.display = 'none';
             divDescargarPlantillaAcuerdo.style.display = 'none';
-            divDescargarPlantillaConvenio.style.display = 'block';
+            divDescargarPlantillaMATBA.style.display = 'none';
+            divDescargarPlantillaConvenio.style.display = 'block';         
             divAcuerdoData.style.display = 'none'
             $('#divAcuerdoData').text("");
             $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
@@ -81,6 +82,7 @@ $(document).ready(function () {
             divContrato.style.display = 'block';
             divDescargarPlantillaVacio.style.display = 'none';
             divDescargarPlantillaAcuerdo.style.display = 'block';
+            divDescargarPlantillaMATBA.style.display = 'none';
             divDescargarPlantillaConvenio.style.display = 'none';
             $('#divAcuerdoData').show();
         } else if (this.value == "0") {
@@ -88,6 +90,7 @@ $(document).ready(function () {
             divDescargarPlantillaVacio.style.display = 'block';
             divDescargarPlantillaAcuerdo.style.display = 'none';
             divDescargarPlantillaConvenio.style.display = 'none';
+            divDescargarPlantillaMATBA.style.display = 'none';
             divAcuerdoData.style.display = 'none'
             $('#divAcuerdoData').text("");
             $("#contratoAcuerdoId").data("kendoAutoComplete").value("");
