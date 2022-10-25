@@ -16,13 +16,13 @@ namespace Molinos.DataAgro.Test.Controllers
     public class LocalidadControllerTest
     {
         private LocalidadController target;
-        private Mock<ILocalidadManager>localidadManagerMock;
+        private Mock<ILocalidadManager> localidadManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();            
+            this.serializer = new JavaScriptSerializer();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
             localidadManagerMock = new Mock<ILocalidadManager>();
@@ -102,12 +102,14 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EliminarCondicionTest()
         {
             localidadManagerMock.Setup(x => x.EliminarLocalidad(1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
-            var result = target.Eliminar(new AbmLocalidadParam { LocalidadId = 1});
+            var result = target.Eliminar(new AbmLocalidadParam { LocalidadId = 1 });
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":1,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}",
-                a);
+            List<string> resultadosOk = new List<string> {
+            "{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":1,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}",
+            "{\"Result\":{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null},\"Id\":3,\"Exception\":null,\"Status\":5,\"IsCanceled\":false,\"IsCompleted\":true,\"CreationOptions\":0,\"AsyncState\":null,\"IsFaulted\":false}"
+            };
+            Assert.AreEqual(true, resultadosOk.Contains(a));
         }
 
         [Test]

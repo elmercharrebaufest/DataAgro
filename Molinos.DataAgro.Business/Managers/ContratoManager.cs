@@ -649,7 +649,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.FechaDesde > oParam.FechaHasta)
             {
-                oErrorMessages.Error("FechaDesdeHasta", "Fecha Inválida");
+                oErrorMessages.Error("FechaDesdeHasta", "Fecha Desde no puede ser mayor a Fecha hasta.");
             }
             if (oParam.DesdeFijacion > oParam.HastaFijacion)
             {
@@ -818,8 +818,16 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 oErrorMessages.Error("DolarizadoExpress", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
             }
+            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && oParam.MaterialId != 3)
+            {
+                oErrorMessages.Error("Sustentable", "Sustentable solo esta habilitado para el material Soja.");
+            }
             if (oParam.Sustentable.HasValue && oParam.Sustentable.Value)
             {
+                if (oParam.ImporteSustentable.HasValue && oParam.ImporteSustentable.Value != 0 && oParam.TarifaAConvenir == true)
+                {
+                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o Tarifa a Convenir");
+                }
                 if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value < 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
                 {
                     if (!(oParam.TarifaAConvenir.HasValue ? oParam.TarifaAConvenir.Value : false))
@@ -924,7 +932,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oParam.TipoAgenteCompraId != null)
                 {
-                    if (oParam.CaratulaMAT == null)
+                    if (string.IsNullOrEmpty(oParam.CaratulaMAT))
                     {
                         oErrorMessages.Error("CaratulaMAT", "Debe completar Caratula MAT.");
                     }
@@ -932,7 +940,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("PrecioAjusteComision", "Debe completar Precio Ajuste Comisión.");
                     }
-                    if (oParam.MonedaAjusteComisionId == null)
+                    if (string.IsNullOrEmpty(oParam.MonedaAjusteComisionId))
                     {
                         oErrorMessages.Error("MonedaAjusteComisionId", "Debe completar Moneda Ajuste Comisión.");
                     }
@@ -7316,7 +7324,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     List<BasicoContrato> contratos = new List<BasicoContrato>();
                     int tiponegocioid = acuerdo.Precio > 0 ? 2 : 1;
-                    List<int> rowsOk = resultValidation.RowsResult.Where(a => a.HasError).Select(a => a.Row).ToList();
+                    List<int> rowsOk = resultValidation.RowsResult.Where(a => !a.HasError).Select(a => a.Row).ToList();
                     if (rowsOk.Count == 0)
                     {
                         return resultValidation.Resume;
@@ -7453,7 +7461,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     List<Contrato> contratos = new List<Contrato>();
-                    List<int> rowsOk = resultValidation.RowsResult.Where(a => a.HasError).Select(a => a.Row).ToList();
+                    List<int> rowsOk = resultValidation.RowsResult.Where(a => !a.HasError).Select(a => a.Row).ToList();
                     if (rowsOk.Count == 0)
                     {
                         return resultValidation.Resume;
@@ -7468,7 +7476,7 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.ContratoCorredor = rows.ElementAt(ii)[1].ToString().Trim();
                         contrato.ContratoVendedor = rows.ElementAt(ii)[1].ToString().Trim();
                         contrato.MaterialId = materiales.Material.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[2].ToString().Trim().ToLower()).Single().MaterialId;
-                        contrato.CampanaId = campanias.Where(a => a.Descripcion.Replace("-", "").ToLower() == rows.ElementAt(ii)[3].ToString().Trim().ToLower()).Single().CampañaId;
+                        contrato.CampanaId = campanias.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[3].ToString().Trim().ToLower()).Single().CampañaId;
                         //contrato.Fecha = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim());
                         contrato.FechaOperacion = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim());
                         contrato.FechaDesde = DateTime.Parse(rows.ElementAt(ii)[5].ToString().Trim());
@@ -8126,7 +8134,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Name = "Agente de Compras",
                 ErrorType = ExcelValidationErrorType.Error,
                 Position = pos++,
-                Required = false,
+                Required = true,
                 Options = new List<string>() { "MATBA ROFEX SA".ToLower() },
                 Type = ExcelValidationColumnType.List
             });
@@ -8163,7 +8171,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ErrorType = ExcelValidationErrorType.Fatal,
                 Position = pos++,
                 Required = true,
-                Type = ExcelValidationColumnType.Int
+                Type = ExcelValidationColumnType.String
             });
             ret.Add(new ExcelValidatorItem()
             {
@@ -8282,7 +8290,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Name = "Caratula MAT",
                 ErrorType = ExcelValidationErrorType.Fatal,
                 Position = pos++,
-                Required = false,
+                Required = true,
                 Type = ExcelValidationColumnType.String
             });
             ret.Add(new ExcelValidatorItem()
@@ -8290,7 +8298,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Name = "Precio Ajuste Comision",
                 ErrorType = ExcelValidationErrorType.Fatal,
                 Position = pos++,
-                Required = false,
+                Required = true,
                 Type = ExcelValidationColumnType.Decimal
             });
 
@@ -8299,7 +8307,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Name = "Moneda MAT",
                 ErrorType = ExcelValidationErrorType.Fatal,
                 Position = pos++,
-                Required = false,
+                Required = true,
                 Options = new List<string>() { "USD".ToLower(), "ARP".ToLower() },
                 Type = ExcelValidationColumnType.List
             });
@@ -8347,25 +8355,25 @@ namespace Molinos.DataAgro.Business.Managers
                 Type = ExcelValidationColumnType.Bool
             });
 
-            ret.Add(new ExcelValidatorItem()
-            {
-                Name = "Tipo Boleto",
-                ErrorType = ExcelValidationErrorType.Fatal,
-                Position = pos++,
-                Required = true,
-                Options = repositorio.Listar<BoletoCompraNet>().Select(a => a.Descripcion.ToLower()).ToList(),
-                Type = ExcelValidationColumnType.List
-            });
+            //ret.Add(new ExcelValidatorItem()
+            //{
+            //    Name = "Tipo Boleto",
+            //    ErrorType = ExcelValidationErrorType.Fatal,
+            //    Position = pos++,
+            //    Required = true,
+            //    Options = repositorio.Listar<BoletoCompraNet>().Select(a => a.Descripcion.ToLower()).ToList(),
+            //    Type = ExcelValidationColumnType.List
+            //});
 
-            ret.Add(new ExcelValidatorItem()
-            {
-                Name = "Bolsa",
-                ErrorType = ExcelValidationErrorType.Fatal,
-                Position = pos++,
-                Required = false,
-                Options = repositorio.Listar<BolsaCompraNet>().Select(a => a.Descripcion.ToLower()).ToList(),
-                Type = ExcelValidationColumnType.List
-            });
+            //ret.Add(new ExcelValidatorItem()
+            //{
+            //    Name = "Bolsa",
+            //    ErrorType = ExcelValidationErrorType.Fatal,
+            //    Position = pos++,
+            //    Required = false,
+            //    Options = repositorio.Listar<BolsaCompraNet>().Select(a => a.Descripcion.ToLower()).ToList(),
+            //    Type = ExcelValidationColumnType.List
+            //});
             ret.Add(new ExcelValidatorItem()
             {
                 Name = "FIX desde",
@@ -8568,11 +8576,10 @@ namespace Molinos.DataAgro.Business.Managers
                     var moneda = repositorio.Listar<Moneda>();
 
                     List<Contrato> contratos = new List<Contrato>();
-                    List<int> rowsOk = resultValidation.RowsResult.Where(a => a.HasError).Select(a => a.Row).ToList();
+                    List<int> rowsOk = resultValidation.RowsResult.Where(a => !a.HasError).Select(a => a.Row).ToList();
                     if (rowsOk.Count == 0)
                     {
                         return resultValidation.Resume;
-                        //return Json(new { Resume = resultValidation.Resume, Resultado = resultValidation.IsValid }, JsonRequestBehavior.AllowGet);
                     }
                     var rows = dsExcel.Tables[0].AsEnumerable().Select(x => x.ItemArray).Skip(0);
                     for (int ii = 0; ii < rows.Count(); ii++)
@@ -8629,36 +8636,22 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.Sustentable = rows.ElementAt(ii)[23].ToString().Trim().ToUpper() == "X";
                         if (contrato.Sustentable != null && contrato.Sustentable.Value)
                         {
-                            contrato.ImporteSustentable = int.Parse(rows.ElementAt(ii)[24].ToString().Trim());
-                            contrato.MonedaSustentableId = moneda.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[25].ToString().Trim().ToLower()).Single().MonedaId;
-                        }
-                        else
-                        {
+                            decimal importeSustentable = 0;
+                            decimal.TryParse(rows.ElementAt(ii)[24].ToString().Trim(), out importeSustentable);
+                            contrato.ImporteSustentable = importeSustentable == 0 ? (decimal?)null : importeSustentable;
+                            contrato.MonedaSustentableId = moneda.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[25].ToString().Trim().ToLower()).SingleOrDefault()?.MonedaId;
                             contrato.TarifaAConvenir = rows.ElementAt(ii)[26].ToString().Trim().ToUpper() == "X";
                         }
 
-
-                        contrato.BoletoId = tipoBoletos.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[27].ToString().Trim().ToLower()).Single().Id;
-                        if (!(rows.ElementAt(ii)[28].ToString() == "Ninguno"))
-                        {
-
-                            if (string.IsNullOrEmpty(rows.ElementAt(ii)[28].ToString()))
-                            {
-                                contrato.BolsaId = proveedor.BolsaCompraNetId;
-                            }
-                            else
-                            {
-                                contrato.BolsaId = bolsas.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[28].ToString().Trim().ToLower()).Single().Id;
-                            }
-                        }
+                        contrato.BoletoId = 3;
 
                         if (contrato.TipoNegocioId == 1)
                         {
-                            contrato.DesdeFijacion = DateTime.Parse(rows.ElementAt(ii)[29].ToString().Trim());
-                            contrato.HastaFijacion = DateTime.Parse(rows.ElementAt(ii)[30].ToString().Trim());
-                            if (!string.IsNullOrEmpty(rows.ElementAt(ii)[32].ToString()))
+                            contrato.DesdeFijacion = DateTime.Parse(rows.ElementAt(ii)[27].ToString().Trim());
+                            contrato.HastaFijacion = DateTime.Parse(rows.ElementAt(ii)[28].ToString().Trim());
+                            if (!string.IsNullOrEmpty(rows.ElementAt(ii)[30].ToString()))
                             {
-                                contrato.CondicionFijacionId = condicionFijacion.Where(a => a.CodigoSap.ToLower() == rows.ElementAt(ii)[31].ToString().Trim().ToLower()).Single().Id;
+                                contrato.CondicionFijacionId = condicionFijacion.Where(a => a.CodigoSap.ToLower() == rows.ElementAt(ii)[29].ToString().Trim().ToLower()).Single().Id;
                             }
                         }
                         contrato.GrupoCompra = comerciales.Where(a => (a.Nombres.ToLower() + " " + a.Apellido.ToLower()) == rows.ElementAt(ii)[22].ToString().Trim().ToLower()).Single().GrupoDeComprasId;
@@ -8674,13 +8667,13 @@ namespace Molinos.DataAgro.Business.Managers
 
                         if (contrato.MaterialId != 0)
                         {
-                            if (!string.IsNullOrEmpty(rows.ElementAt(ii)[32].ToString()))
+                            if (!string.IsNullOrEmpty(rows.ElementAt(ii)[30].ToString()))
                             {
-                                var calidadListado = calidades.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[32].ToString().Trim().ToLower()).ToList();
+                                var calidadListado = calidades.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[30].ToString().Trim().ToLower()).ToList();
                                 if (calidadListado != null && calidadListado.Count > 0)
                                 {
                                     var material = contrato.MaterialId;
-                                    switch (rows.ElementAt(ii)[32].ToString())
+                                    switch (rows.ElementAt(ii)[30].ToString())
                                     {
                                         case "Camara":
                                             contrato.StandardDeCalidadId = (material == 1 || material == 2) ? 1 : material == 3 ? 4 : 5;                                           
@@ -8695,7 +8688,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                 {
                                                     StandardDeCalidadId = material == 1 ? 2 : 7,
                                                     CalidadEspecialId = material == 1 ? 4 : 5,
-                                                    Valor = material == 1 ? (string.IsNullOrEmpty(rows.ElementAt(ii)[33].ToString()) ? 2 : decimal.Parse(rows.ElementAt(ii)[33].ToString())) : 2
+                                                    Valor = material == 1 ? (string.IsNullOrEmpty(rows.ElementAt(ii)[31].ToString()) ? 2 : decimal.Parse(rows.ElementAt(ii)[31].ToString())) : 2
                                                 });
                                             break;
                                         case "Grado 2":
@@ -8705,7 +8698,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                 {
                                                     StandardDeCalidadId = material == 1 ? 2 : 7,
                                                     CalidadEspecialId = material == 1 ? 4 : 5,
-                                                    Valor = material == 1 ? (string.IsNullOrEmpty(rows.ElementAt(ii)[33].ToString()) ? 2 : decimal.Parse(rows.ElementAt(ii)[33].ToString())) : 2
+                                                    Valor = material == 1 ? (string.IsNullOrEmpty(rows.ElementAt(ii)[31].ToString()) ? 2 : decimal.Parse(rows.ElementAt(ii)[31].ToString())) : 2
                                                 });
                                             break;
                                         default:
@@ -8742,7 +8735,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         contrato.ObservacionTercero = ii.ToString().Trim();
                         contrato.AperturaPrecio = new List<AperturaPrecio>();
-                        var redespacho = string.IsNullOrEmpty(rows.ElementAt(ii)[33].ToString()) ? 0 : decimal.Parse(rows.ElementAt(ii)[34].ToString().Trim());
+                        var redespacho = string.IsNullOrEmpty(rows.ElementAt(ii)[32].ToString()) ? 0 : decimal.Parse(rows.ElementAt(ii)[32].ToString().Trim());
                         if (redespacho != 0)
                         {
 
@@ -8759,7 +8752,7 @@ namespace Molinos.DataAgro.Business.Managers
 
 
                       
-                        contrato.Observacion = rows.ElementAt(ii)[34].ToString();
+                        contrato.Observacion = rows.ElementAt(ii)[33].ToString();
 
                         contratos.Add(contrato);
                     }
