@@ -37,7 +37,7 @@ namespace Molinos.DataAgro.Entities.Helpers
         private ExcelValidatorRowResult ValidateRow(object[] row)
         {
             var ret = new ExcelValidatorRowResult();
-            //ret.ContratoCorredor = row[0].ToString();
+            ret.ContratoCorredor = row[0].ToString();
             foreach (var item in this._items)
             {
                 var retCell = ValidateCell(row[item.Position], item);

@@ -7905,7 +7905,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ErrorType = ExcelValidationErrorType.Fatal,
                 Position = pos++,
                 Required = true,
-                Type = ExcelValidationColumnType.Int
+                Type = ExcelValidationColumnType.String
             });
 
             ret.Add(new ExcelValidatorItem()
