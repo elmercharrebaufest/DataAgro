@@ -126,7 +126,7 @@ function cargarContratos() {
                                         erroresHtml += '<tr style="color:red"><td>' + String(result.Resume[i].Row + 2) + '</td><td>' + result.Resume[i].Errors[j] + '</td></tr>'
                                     }
                                 } else {
-                                    erroresHtml += '<tr><td>' + String(result.Resume[i].Row + 2) + '</td><td>Contrato ' + result.Resume[i].ContratoCorredor + ' creado correctamente.</td></tr>'
+                                    erroresHtml += '<tr><td>' + String(result.Resume[i].Row + 2) + '</td><td>Contrato creado correctamente.</td></tr>'
                                 }
                                 tablaRespuesta += erroresHtml;
                             }
