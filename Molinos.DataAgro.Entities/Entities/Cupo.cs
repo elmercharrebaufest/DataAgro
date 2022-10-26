@@ -87,6 +87,10 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("AdministracionCupoId")]
         public virtual AdministracionCupo AdministracionCupo { get; set; }
         public int? AdministracionCupoId { get; set; }
+        [ForeignKey("ComercialCreadorId")]
+        public virtual Comercial ComercialCreador { get; set; }
+        public int? ComercialCreadorId { get; set; }
+
         public object Clone()
         {
             return this.MemberwiseClone();

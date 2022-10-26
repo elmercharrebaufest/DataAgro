@@ -85,6 +85,12 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 var comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
                 cupo.Comercial = comercial;
+                if (cupo.ComercialCreadorId.HasValue)
+                {
+                    var comercialCreador = repositorio.Obtener<Comercial>(cupo.ComercialCreadorId);
+                    cupo.ComercialCreador = comercialCreador;
+                }
+
                 if (!error.HayError)
                 {
                     cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
@@ -793,9 +799,11 @@ namespace Molinos.DataAgro.Business.Managers
                 var proveedorContacto = repositorio.Listar<ContactoComercial>(x => x.ProveedorId == id && x.Cupo == true);
                 if (proveedorContacto.Count == 0)
                 {
+                    logger.Debug($"El proveedor {id} no tiene ContactoComercial. cupos {string.Join(", ", listaCupos)}");
                     return;
                 }
                 string emailComercial = "";
+                string emailComercialCreador = "";
 
                 if (cupo.Comercial != null)
                 {
@@ -813,6 +821,21 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     From = new MailAddress(ConfigurationManager.AppSettings["CredentialUserName"])
                 };
+
+
+
+                if (cupo.ComercialCreador != null)
+                {
+                    try
+                    {
+                        emailComercialCreador = mailManager.GetEmailUserActiveDirectory(cupo.ComercialCreador.IdActiveDirectory);
+                        oMensaje.To.Add(emailComercialCreador);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error(e);
+                    }
+                }
 
                 if (proveedorContacto.Count > 0)
                 {
@@ -832,7 +855,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    logger.Debug($"El contrato {cupo.Id} no tiene ContactoComercial para el proveedor {cupo.ProveedorId} ni email comercial");
+                    logger.Debug($"El cupo {string.Join(", ", listaCupos)} no tiene ContactoComercial para el proveedor {cupo.ProveedorId} ni email comercial");
                     return;
                 }
                 oMensaje.CC.Add(ConfigurationManager.AppSettings["CredentialUserName"]);
@@ -905,7 +928,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 oCliente.EnableSsl = ConfigurationManager.AppSettings["EnableSSL"] == "S";
-                logger.Debug("Intentando enviar mail a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Cupos SAP:" + string.Join(", ", listaCupos) );
+                logger.Debug("Intentando enviar mail a " + oMensaje.To.ToString() + " con copia a " + oMensaje.CC.ToString() + ". Cupos SAP:" + string.Join(", ", listaCupos));
 
                 oCliente.Send(oMensaje);
             }
@@ -2072,12 +2095,12 @@ namespace Molinos.DataAgro.Business.Managers
                             solicitud.CantidadCupo = cupoNormalSolicitud - sugerenciaPorComercial.Total;
 
                             //Generear cupos
-                            result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, false, null);
+                            result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, false, null, comercialCreador);
                         }
                         else
                         {
                             //Generar cupos
-                            result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null);
+                            result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null, comercialCreador);
                         }
 
                         if (sugerenciaPorComercial.Total < fleteSolicitud)
@@ -2086,12 +2109,12 @@ namespace Molinos.DataAgro.Business.Managers
                             solicitud.CantidadFleteProcedencia = fleteSolicitud - sugerenciaPorComercial.Total;
 
                             //Generear cupos
-                            result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, true, null);
+                            result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, true, null, comercialCreador);
                         }
                         else
                         {
                             //Generar cupos
-                            result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null);
+                            result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null, comercialCreador);
                         }
 
                         for (int i = 0; i < result2.ListaCupos.Count; i++)
@@ -2116,8 +2139,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null);
-                        result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null);
+                        result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null, comercialCreador);
+                        result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null, comercialCreador);
                     }
                     if (!result.HayError)
                     {
@@ -2140,7 +2163,7 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-        private CupoResult CrearCupoSugerenciaDetalle(SugerenciaCupo s, SugerenciaPorComercial sugerenciaPorComercial, int cantidadACrear, bool esFlete, DateTime? fechaCupo)
+        private CupoResult CrearCupoSugerenciaDetalle(SugerenciaCupo s, SugerenciaPorComercial sugerenciaPorComercial, int cantidadACrear, bool esFlete, DateTime? fechaCupo, int? comercialCreador)
         {
             var result = new CupoResult();
             if (cantidadACrear == 0)
@@ -2169,6 +2192,7 @@ namespace Molinos.DataAgro.Business.Managers
                 NegocioId = s.NegocioId,
                 ConfiguracionEspacioDinamicoId = s.ConfiguracionEspacioDinamicoId,
                 TipoNegocioId = s.TipoNegocioId,
+                ComercialCreadorId = comercialCreador
             };
 
             result = GrabarCupo(cupo, new List<DiaCupo> { new DiaCupo { Cantidad = cantidadACrear, Fecha = fechaCupo ?? s.FechaSugerida } });
@@ -3227,7 +3251,7 @@ namespace Molinos.DataAgro.Business.Managers
         //    repositorio.GuardarCambios();
         //    return resultado;
         //}
-        private CupoResult CrearCupos(DiaCupo detalle, SugerenciaCupo sugerencia, SugerenciaPorComercial sugerenciaPorComercial)
+        private CupoResult CrearCupos(DiaCupo detalle, SugerenciaCupo sugerencia, SugerenciaPorComercial sugerenciaPorComercial, int comercialCreador)
         {
             var resultado = new CupoResult();
 
@@ -3252,7 +3276,8 @@ namespace Molinos.DataAgro.Business.Managers
                 NegocioId = sugerencia.NegocioId,
                 ConfiguracionEspacioDinamicoId = sugerencia.ConfiguracionEspacioDinamicoId,
                 TipoNegocioId = sugerencia.TipoNegocioId,
-                CentroId = sugerencia.CentroId
+                CentroId = sugerencia.CentroId,
+                ComercialCreadorId = comercialCreador
             };
 
             var cuposGenerados = detalle.Cantidad > sugerencia.CantidadDeCupos ? sugerencia.CantidadDeCupos : detalle.Cantidad;
@@ -3391,7 +3416,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                                                 var original = sugerenciaPorComercial.Total > s.CantidadDeCupos ? s.CantidadDeCupos : sugerenciaPorComercial.Total;
                                                 //resultado.ListaCupos.AddRange(datos);
-                                                var res = CrearCupos(f, s, sugerenciaPorComercial);
+                                                var res = CrearCupos(f, s, sugerenciaPorComercial, comercialCreador);
                                                 if (original == res.ListaCupos.Count())
                                                 {
                                                     s.Aceptado = true;
@@ -3428,7 +3453,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                 cantidadIngresada = 0;
                                                 //datos.Add(!String.IsNullOrEmpty(razonSocial) ? "<hr />" + razonSocial : "");
                                                 //resultado.ListaCupos.AddRange(datos);
-                                                var res = CrearCupos(f, s, sugerenciaPorComercial);
+                                                var res = CrearCupos(f, s, sugerenciaPorComercial, comercialCreador);
                                                 if (res.HayErrores)
                                                 {
                                                     ArmarMensajeCupo(p.ProveedorId, f.Fecha, razonSocial, "Error", res.Errores, null, null, mensajes);
@@ -4346,7 +4371,8 @@ namespace Molinos.DataAgro.Business.Managers
                             NegocioId = null,
                             ConfiguracionEspacioDinamicoId = null,
                             TipoNegocioId = 7,
-                            ConDescarga = solicitud.ConDescarga
+                            ConDescarga = solicitud.ConDescarga,
+                            ComercialCreadorId = solicitud.ComercialCreadorId,
                         };
                         if (solicitud.CantidadCupo > 0)
                         {
@@ -4585,14 +4611,14 @@ namespace Molinos.DataAgro.Business.Managers
                     nuevaSugerenciaSolicitud.CantidadCupoOriginal = solicitud.CantidadFleteProcedencia;
 
                     //Generear cupos
-                    result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, true, null);
+                    result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, true, null, comercialCreador);
                 }
                 else
                 {
                     resultado.Add(new CupoResult { CuposFlete = fleteSolicitud });
 
                     //Generar cupos
-                    result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null);
+                    result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, fleteSolicitud, true, null, comercialCreador);
                 }
 
                 //despues los comunes
@@ -4606,13 +4632,13 @@ namespace Molinos.DataAgro.Business.Managers
                     nuevaSugerenciaSolicitud.CantidadDeCupos += solicitud.CantidadCupo;
                     nuevaSugerenciaSolicitud.CantidadCupoOriginal += solicitud.CantidadCupo;
                     //Generear cupos
-                    result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, false, null);
+                    result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, sugerenciaPorComercial.Total, false, null, comercialCreador);
                 }
                 else
                 {
                     resultado.Add(new CupoResult { CuposNormales = cupoNormalSolicitud });
                     //Generar cupos
-                    result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null);
+                    result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cupoNormalSolicitud, false, null, comercialCreador);
                 }
 
                 if (solicitud.CantidadFleteProcedencia > 0 || solicitud.CantidadCupo > 0)
@@ -4628,11 +4654,11 @@ namespace Molinos.DataAgro.Business.Managers
             else
             {
                 int cantidadFlete = fleteSolicitud > s.CantidadDeCupos ? s.CantidadDeCupos : fleteSolicitud;
-                result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cantidadFlete, true, null);//primero se generan los de flete
+                result2 = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cantidadFlete, true, null, comercialCreador);//primero se generan los de flete
                 resultado.Add(new CupoResult { CuposFlete = result2.ListaCupos.Count() });
 
                 int cantidadNormal = cupoNormalSolicitud > (s.CantidadDeCupos - result2.ListaCupos.Count()) ? (s.CantidadDeCupos - result2.ListaCupos.Count()) : cupoNormalSolicitud;
-                result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cantidadNormal, false, null);//despues los comunes
+                result = CrearCupoSugerenciaDetalle(s, sugerenciaPorComercial, cantidadNormal, false, null, comercialCreador);//despues los comunes
                 resultado.Add(new CupoResult { CuposNormales = result.ListaCupos.Count() });
             }
             if (!result.HayError)
@@ -5129,13 +5155,13 @@ namespace Molinos.DataAgro.Business.Managers
                         nuevaSugerenciaSolicitud.CantidadDeCupos = solicitud.CantidadFleteProcedencia;
                         nuevaSugerenciaSolicitud.CantidadCupoOriginal = solicitud.CantidadFleteProcedencia;
                         //Generear cupos
-                        result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, total, true, null);
+                        result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, total, true, null, comercialCreador);
                         total -= result2.ListaCupos.Count();
                     }
                     else
                     {
                         //Generar cupos
-                        result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidadFleteProcedencia, true, null);
+                        result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidadFleteProcedencia, true, null, comercialCreador);
                         total -= result2.ListaCupos.Count();
                     }
                     //despues los comunes
@@ -5146,13 +5172,13 @@ namespace Molinos.DataAgro.Business.Managers
                         nuevaSugerenciaSolicitud.CantidadDeCupos += solicitud.CantidadCupo;
                         nuevaSugerenciaSolicitud.CantidadCupoOriginal += solicitud.CantidadCupo;
                         //Generear cupos
-                        result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, total, false, null);
+                        result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, total, false, null, comercialCreador);
                         total -= result.ListaCupos.Count();
                     }
                     else
                     {
                         //Generar cupos
-                        result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidad, false, null);
+                        result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidad, false, null, comercialCreador);
                         total -= result.ListaCupos.Count();
                     }
 
@@ -5168,8 +5194,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidadFleteProcedencia, true, null);//primero se generan los de flete
-                    result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidad, false, null);//despues los comunes
+                    result2 = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidadFleteProcedencia, true, null, comercialCreador);//primero se generan los de flete
+                    result = CrearCupoSugerenciaDetalle(sugerenciaFecha, totalPorDia, item.cantidad, false, null, comercialCreador);//despues los comunes
                 }
                 if (!result.HayError)
                 {
@@ -5283,7 +5309,7 @@ namespace Molinos.DataAgro.Business.Managers
                         int puedoCrearFlete = new List<int> { total, sugerencia.CantidadDeCupos, sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia }.Min();
                         if (sugerenciaAceptadaDesdeElFront.cantidadFleteProcedencia > 0 && puedoCrearFlete > 0)
                         {
-                            resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, puedoCrearFlete, true, sugerenciaAceptadaDesdeElFront.fecha.Value);
+                            resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, puedoCrearFlete, true, sugerenciaAceptadaDesdeElFront.fecha.Value, comercialCreador);
                             resultFinal.ListaCupos.AddRange(resultFletes.ListaCupos.Select(a => "*" + a + "*"));
                             total -= resultFletes.ListaCupos.Count();
                             //creo una nueva sug por lo que se confirmar
@@ -5352,7 +5378,7 @@ namespace Molinos.DataAgro.Business.Managers
                         int puedoCrear = new List<int> { total, sugerencia.CantidadDeCupos, sugerenciaAceptadaDesdeElFront.cantidad }.Min();
                         if (sugerenciaAceptadaDesdeElFront.cantidad > 0 && puedoCrear > 0)
                         {
-                            resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, puedoCrear, false, sugerenciaAceptadaDesdeElFront.fecha);
+                            resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, puedoCrear, false, sugerenciaAceptadaDesdeElFront.fecha, comercialCreador);
                             resultFinal.ListaCupos.AddRange(resultNormales.ListaCupos.Select(a => a));
                             total -= resultNormales.ListaCupos.Count();
                             //creo una nueva sug por lo que se confirmar
@@ -5677,14 +5703,14 @@ namespace Molinos.DataAgro.Business.Managers
                                     nuevaSugerenciaSolicitud.CantidadDeCupos += solicitud.CantidadFleteProcedencia;
                                     nuevaSugerenciaSolicitud.CantidadCupoOriginal += solicitud.CantidadFleteProcedencia;
                                     //Generear cupos
-                                    resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, generados, true, null);
+                                    resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, generados, true, null, comercialCreador);
                                     total -= resultFletes.ListaCupos.Count();
 
                                 }
                                 else
                                 {
                                     //Generar cupos
-                                    resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, generados, true, null);
+                                    resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, generados, true, null, comercialCreador);
                                     total -= resultFletes.ListaCupos.Count();
                                 }
                             }
@@ -5701,13 +5727,13 @@ namespace Molinos.DataAgro.Business.Managers
                                     nuevaSugerenciaSolicitud.CantidadDeCupos += solicitud.CantidadCupo;
                                     nuevaSugerenciaSolicitud.CantidadCupoOriginal += solicitud.CantidadCupo;
                                     //Generear cupos
-                                    resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, total, true, null);
+                                    resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, total, true, null, comercialCreador);
                                     total -= resultNormales.ListaCupos.Count();
                                 }
                                 else
                                 {
                                     //Generar cupos
-                                    resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, (sugerencia.CantidadDeCupos - generados), true, null);
+                                    resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, (sugerencia.CantidadDeCupos - generados), true, null, comercialCreador);
                                     total -= resultNormales.ListaCupos.Count();
                                 }
                             }
@@ -5729,13 +5755,13 @@ namespace Molinos.DataAgro.Business.Managers
                             if (item.cantidadFleteProcedencia > 0)
                             {
                                 item.cantidadFleteProcedencia -= cantidadFlete;
-                                resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, cantidadFlete, true, null);//primero se generan los de flete
+                                resultFletes = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, cantidadFlete, true, null, comercialCreador);//primero se generan los de flete
                             }
                             if (item.cantidad > 0)
                             {
                                 var cantidad = item.cantidad < (sugerencia.CantidadDeCupos - cantidadFlete) ? item.cantidad : (sugerencia.CantidadDeCupos - cantidadFlete);
                                 item.cantidad -= cantidad;
-                                resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, cantidad, false, null);//despues los comunes
+                                resultNormales = CrearCupoSugerenciaDetalle(sugerencia, totalPorDia, cantidad, false, null, comercialCreador);//despues los comunes
                             }
                         }
                         if (!resultNormales.HayError)

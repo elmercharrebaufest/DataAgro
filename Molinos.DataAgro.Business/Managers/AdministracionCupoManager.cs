@@ -109,7 +109,8 @@ namespace Molinos.DataAgro.Business.Managers
                         ConfiguracionEspacioDinamicoId = solicitud.SugerenciaCupo.ConfiguracionEspacioDinamicoId,
                         TipoNegocioId = solicitud.SugerenciaCupo.TipoNegocioId,
                         ConDescarga = solicitud.ConDescarga,
-                        AdministracionCupoId = administracionId
+                        AdministracionCupoId = administracionId,
+                        ComercialCreadorId = solicitud.ComercialCreadorId
                     };
                     if (cantidad > 0)
                     {
@@ -174,7 +175,8 @@ namespace Molinos.DataAgro.Business.Managers
                         NegocioId = null,
                         ConfiguracionEspacioDinamicoId = null,
                         TipoNegocioId = 7,//para que lo envie a SAP como cupo con marca de propuesta y no valide limites en SAP
-                        AdministracionCupoId = administracionId
+                        AdministracionCupoId = administracionId,
+                        ComercialCreadorId = solicitud.ComercialCreadorId
                     };
 
                     if (cantidad > 0)

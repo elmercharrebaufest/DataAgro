@@ -8590,10 +8590,35 @@ namespace Molinos.DataAgro.Business.Managers
                         var cuitProveedor = rows.ElementAt(ii)[0].ToString().Trim();
                         var cuitCorredor = rows.ElementAt(ii)[1].ToString().Trim();
                         var proveedor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitProveedor && x.SegmentacionId < 5);
-                        contrato.ProveedorId = proveedor.ProveedorId;
+                        if (proveedor != null)
+                        {
+                            contrato.ProveedorId = proveedor.ProveedorId;
+                        }
+                        else
+                        {
+                            ExcelValidatorRowResult excelValidatorRowResult = resultValidation.RowsResult.Where(a => a.Row == ii).Single();
+                            var ret = new ExcelValidatorItemResult();
+                            ret.Errors.Add("No se encontro un proveedor para ese cuit.");
+                            ret.Item = new ExcelValidatorItem { ErrorType = ExcelValidationErrorType.Error, Name = "CUIT Proveedor" };
+                            excelValidatorRowResult.ItemsResult.Add(ret);
+                            continue;
+                        }
                         if (!string.IsNullOrEmpty(cuitCorredor))
                         {
-                            contrato.CorredorId = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7)).ProveedorId;
+                            var corredor = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7));
+                            if (corredor != null)
+                            {
+                                contrato.CorredorId = corredor.ProveedorId;
+                            }
+                            else
+                            {
+                                ExcelValidatorRowResult excelValidatorRowResult = resultValidation.RowsResult.Where(a => a.Row == ii).Single();
+                                var ret = new ExcelValidatorItemResult();
+                                ret.Errors.Add("No se encontro un corredor para ese cuit.");
+                                ret.Item = new ExcelValidatorItem { ErrorType = ExcelValidationErrorType.Error, Name = "CUIT Proveedor" };
+                                excelValidatorRowResult.ItemsResult.Add(ret);
+                                continue;
+                            }
                         }
                         contrato.TipoAgenteCompraId = 1;
                         contrato.TipoNegocioId = tiponegocio.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[3].ToString().Trim().ToLower()).Single().TipoNegocioId;
@@ -8609,7 +8634,7 @@ namespace Molinos.DataAgro.Business.Managers
                             }
                             contrato.MonedaId = moneda.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[8].ToString().Trim().ToLower()).Single().MonedaId;
                         }
-                        contrato.CampanaId = campanias.Where(a => a.Descripcion.Replace("-", "").ToLower() == rows.ElementAt(ii)[6].ToString().Trim().ToLower()).Single().CampañaId;
+                        contrato.CampanaId = campanias.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[6].ToString().Trim().ToLower()).Single().CampañaId;
                         contrato.ClasificacionId = rows.ElementAt(ii)[9].ToString().Trim().ToLower() == "productor" ? 1 : rows.ElementAt(ii)[8].ToString().Trim().ToLower() == "acopiador" ? 2 : 3;
                         contrato.ContratoVendedor = rows.ElementAt(ii)[10].ToString().Trim();
                         if (!string.IsNullOrEmpty(cuitCorredor))
@@ -8676,7 +8701,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     switch (rows.ElementAt(ii)[30].ToString())
                                     {
                                         case "Camara":
-                                            contrato.StandardDeCalidadId = (material == 1 || material == 2) ? 1 : material == 3 ? 4 : 5;                                           
+                                            contrato.StandardDeCalidadId = (material == 1 || material == 2) ? 1 : material == 3 ? 4 : 5;
                                             break;
                                         case "Fabrica":
                                             contrato.StandardDeCalidadId = 3;
@@ -8751,7 +8776,7 @@ namespace Molinos.DataAgro.Business.Managers
                         }
 
 
-                      
+
                         contrato.Observacion = rows.ElementAt(ii)[33].ToString();
 
                         contratos.Add(contrato);
