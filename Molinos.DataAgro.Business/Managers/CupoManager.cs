@@ -1288,6 +1288,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Destinatario = item.Destinatario,
                     Precio = item.Precio,
                     KgNegocio = item.KgNegocio,
+                    KgPendienteAplicar = item.KgPendienteAplicar,
                     Material = item.MaterialDesc,
                     Moneda = String.IsNullOrEmpty(item.MonedaId) ? "" : item.MonedaId,
                     FechaDesde = item.FechaDesde,
@@ -1300,6 +1301,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Priorizado = string.IsNullOrEmpty(item.Inhabilitado) ? item.Priorizado == true ? "SI" : "NO" : item.Inhabilitado,
                     Puntaje = item.PuntuacionTotal <= 0 ? 0 : item.PuntuacionTotal,
                     CantidadSugerida = item.CantidadDeCupos,
+                    CuposPendientes = item.CuposPendientes,
+                    SolicitudesPendientes = item.SolicitudesPendientes,
                     FechaSugerida = item.FechaSugerida
                 };
                 listaExcel.Add(excel);
@@ -1347,7 +1350,7 @@ namespace Molinos.DataAgro.Business.Managers
                 List<SugerenciaCupoDto> negocios = new List<SugerenciaCupoDto>();
 
                 logger.Debug("CrearSugerenciaCupo - inicio de obtener negocios.");
-                ObtenerNegocios(hoy, formulaDto, negocios);
+                var sinSugerencia = ObtenerNegocios(hoy, formulaDto, negocios);
                 logger.Debug("CrearSugerenciaCupo - fin de obtener negocios.");
 
                 logger.Debug("CrearSugerenciaCupo - inicio de ValidarHabilitaciones.");
@@ -1411,6 +1414,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 logger.Debug("CrearSugerenciaCupo - GuardarCambios.");
                 negocios.AddRange(inhabilitados);
+                negocios.AddRange(sinSugerencia);
                 return negocios;
             }
             catch (Exception e)
@@ -1649,9 +1653,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 disponibleProvYPlantaPorFecha;
         }
 
-        private void ObtenerNegocios(DateTime hoy, FormulaDto formula, List<SugerenciaCupoDto> negocios)
+        private List<SugerenciaCupoDto> ObtenerNegocios(DateTime hoy, FormulaDto formula, List<SugerenciaCupoDto> negocios)
         {
-
+            List<SugerenciaCupoDto> negociosSinSugerencia = new List<SugerenciaCupoDto>();
             //negocios disponibles
 
             var pizarraLista = repositorio.Listar<PrecioPizarra>(x => formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta);
@@ -1822,8 +1826,8 @@ namespace Molinos.DataAgro.Business.Managers
                 if (cuposPendientes.Any(a => a.Key == item.NegocioId))
                 {
                     item.CantidadDeCupos -= cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
+                    item.CuposPendientes = cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
                 }
-
                 //analizar si tiene sentido por que ahora la cantiad depende de los kg pendientes y no de la cantidad de cupos por negocios
                 //if (cuposNoCumplidos.Any(x => x.NegocioId == item.NegocioId))
                 //{
@@ -1834,8 +1838,14 @@ namespace Molinos.DataAgro.Business.Managers
                     item.CantidadDeCupos -= solicitudesPendientes
                         .Where(a => a.SugerenciaCupo != null && a.SugerenciaCupo.NegocioId == item.NegocioId)
                         .Sum(a => a.CantidadCupo + a.CantidadFleteProcedencia);
+                    item.SolicitudesPendientes = solicitudesPendientes
+                        .Where(a => a.SugerenciaCupo != null && a.SugerenciaCupo.NegocioId == item.NegocioId)
+                        .Sum(a => a.CantidadCupo + a.CantidadFleteProcedencia);
+
                 }
             }
+
+            negociosSinSugerencia.AddRange(contratos.Where(a => a.CantidadDeCupos <= 0).ToList());
             contratos = contratos.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(contratos);
             logger.Debug("CrearSugerenciaCupo - Contratos obtenidos: " + contratos.Count());
@@ -1850,6 +1860,9 @@ namespace Molinos.DataAgro.Business.Managers
                     c.CDWarrant = true;
                 }
             }
+
+
+
 
 
             TipoNegocio tipoNegocioEspacioDinamico = repositorio.ObtenerPrimero<TipoNegocio>(a => a.Descripcion == "ESPACIO DINAMICO");
@@ -1898,6 +1911,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (espacioDinamicoUsados.Any(a => a.Key == item.ConfiguracionEspacioDinamicoId))
                 {
                     item.CantidadDeCupos -= espacioDinamicoUsados.Where(a => a.Key == item.ConfiguracionEspacioDinamicoId).Single().Value;
+                    item.CuposPendientes = espacioDinamicoUsados.Where(a => a.Key == item.ConfiguracionEspacioDinamicoId).Single().Value;
                 }
 
                 //if (cuposNoCumplidos.Any(x => x.NegocioId == item.ConfiguracionEspacioDinamicoId))
@@ -1910,12 +1924,18 @@ namespace Molinos.DataAgro.Business.Managers
                     item.CantidadDeCupos -= solicitudesPendientes
                         .Where(a => a.SugerenciaCupo != null && a.SugerenciaCupo.ConfiguracionEspacioDinamicoId == item.ConfiguracionEspacioDinamicoId)
                         .Sum(a => a.CantidadCupo + a.CantidadFleteProcedencia);
+                    item.SolicitudesPendientes = solicitudesPendientes
+                        .Where(a => a.SugerenciaCupo != null && a.SugerenciaCupo.ConfiguracionEspacioDinamicoId == item.ConfiguracionEspacioDinamicoId)
+                        .Sum(a => a.CantidadCupo + a.CantidadFleteProcedencia);
                 }
             }
+
+            negociosSinSugerencia.AddRange(espacioDinamicoLista.Where(a => a.CantidadDeCupos <= 0).ToList());
             espacioDinamicoLista = espacioDinamicoLista.Where(a => a.CantidadDeCupos > 0).ToList();
             negocios.AddRange(espacioDinamicoLista);
 
             logger.Debug("CrearSugerenciaCupo - Espacio Dinamico obtenidos: " + espacioDinamicoLista.Count());
+            return negociosSinSugerencia;
         }
 
 

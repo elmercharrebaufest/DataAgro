@@ -17,6 +17,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal? Precio { get; set; }
         public string Moneda { get; set; }
         public double KgNegocio { get; set; }
+        public double KgPendienteAplicar { get; set; }
         public string Material { get; set; }
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
@@ -28,7 +29,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Priorizado { get; set; }
         public string Destinatario { get; set; }
         public int CantidadSugerida { get; set; }
-      
+        public int CuposPendientes { get; set; }
+        public int SolicitudesPendientes { get; set; }
     }
 
     public partial class SugerenciaCupoAgrupadasExcel

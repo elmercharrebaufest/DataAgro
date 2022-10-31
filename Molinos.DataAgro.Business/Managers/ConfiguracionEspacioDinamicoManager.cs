@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Business.Managers
                     espacioDinamicoSave.ComercialId = espacioDinamico.ComercialId;
                     espacioDinamicoSave.Calidad = espacioDinamico.Calidad;
                     CrearSugerenciaDeEspacioDinamico(espacioDinamicoSave);
-            
+
 
                 }
                 repositorio.GuardarCambios();
@@ -236,7 +236,8 @@ namespace Molinos.DataAgro.Business.Managers
                         FechaSugerida = x.Fecha,
                         ZonaCupoId = zona,
                         TipoNegocioId = tipoNegocioEspacioDinamico.TipoNegocioId,
-                        Puntuaciones = puntuacion
+                        Puntuaciones = puntuacion,
+                        Destinatario = "30715118773"
                     };
                     logger.Debug("Se creo una sugerencia para el dia: " + sugerencia.FechaSugerida);
                     repositorio.Agregar(sugerencia);
@@ -245,7 +246,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
         private Resultado ConfigurarLimiteAlgoritmo(ConfiguracionEspacioDinamico espacioDinamico, Resultado oEntityErrors)
-        {           
+        {
             var configuracionCupo = repositorio.Obtener<ConfiguracionCupo>(x => x.Fecha == espacioDinamico.Fecha && !x.CierreCupera &&
            x.MaterialId == espacioDinamico.MaterialId && x.CentroId == espacioDinamico.CentroId);
             if (configuracionCupo != null)
@@ -263,7 +264,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                 oEntityErrors.Error("espacioDinamico", "No hay cupera configurada para el día " + espacioDinamico.Fecha);
+                oEntityErrors.Error("espacioDinamico", "No hay cupera configurada para el día " + espacioDinamico.Fecha);
                 return oEntityErrors;
             }
             return oEntityErrors;
