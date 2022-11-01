@@ -9,16 +9,27 @@
         <xsd:complexType>
           <xsd:sequence>
             <xsd:element name="EX_ALTA_TEMPRANA" type="rfc:char2" />
+            <xsd:element name="EX_BEGRU_GENERAL" type="rfc:char4" />
+            <xsd:element name="EX_BEGRU_SOCIEDAD" type="rfc:char4" />
+            <xsd:element name="EX_BLOQUEO" type="rfc:char1" />
+            <xsd:element name="EX_BLOQUEO_GENERAL" type="rfc:char1" />
+            <xsd:element name="EX_BLOQUEO_SOCIEDAD" type="rfc:char1" />
             <xsd:element name="EX_BOLETO_FISICO" type="rfc:char2" />
             <xsd:element name="EX_BOLSA" type="rfc:char2" />
             <xsd:element name="EX_CARTA" type="rfc:char2" />
             <xsd:element name="EX_CONSIGNATARIO" type="rfc:char2" />
             <xsd:element name="EX_FECHA_ACTUALIZACION" type="rfc:char2" />
+            <xsd:element name="EX_FECHA_ACTUALIZACION_LEGAJO" type="rfc:ZMPTT6970" />
+            <xsd:element name="EX_INTAD" type="rfc:char130" />
             <xsd:element name="EX_MENSAJE" type="rfc:char50" />
             <xsd:element name="EX_NOSIS" type="rfc:char2" />
+            <xsd:element name="EX_PET_BORRADO_GENERAL" type="rfc:char1" />
+            <xsd:element name="EX_PET_BORRADO_SOCIEDAD" type="rfc:char1" />
             <xsd:element name="EX_PLAN_CANJE" type="rfc:char2" />
             <xsd:element name="EX_PROVEEDOR_GRANOS" type="rfc:char2" />
+            <xsd:element name="EX_RIESGO_COMERCIAL" type="rfc:char1" />
             <xsd:element name="EX_RUCA" type="rfc:ZMPES5510" />
+            <xsd:element name="EX_SIN_OBLEA" type="rfc:char2" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -34,9 +45,25 @@
           <xsd:maxLength value="2" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="char16">
+      <xsd:simpleType name="date10">
         <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="16" />
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char1">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char5">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="5" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char4">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="4" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:simpleType name="char50">
@@ -44,12 +71,31 @@
           <xsd:maxLength value="50" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:complexType name="ZMPES5510">
+      <xsd:simpleType name="char16">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="16" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char18">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="18" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="char130">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="130" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ZMPES6960">
         <xsd:sequence>
-          <xsd:element name="ACOPIADOR" type="rfc:ZMPES540" />
-          <xsd:element name="OTROS" type="rfc:ZMPES540" />
-          <xsd:element name="CORREDOR" type="rfc:char2" />
-          <xsd:element name="FASON" type="rfc:char2" />
+          <xsd:element name="MATNR" type="rfc:char18" />
+          <xsd:element name="COSECHA" type="rfc:char5" />
+          <xsd:element name="FECHA_ACT" type="rfc:date10" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT6970">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6960" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPES540">
@@ -57,6 +103,14 @@
           <xsd:element name="DIRECTO" type="rfc:char2" />
           <xsd:element name="PROV_PLAN_CANJE" type="rfc:char2" />
           <xsd:element name="CONSIGNATARIO" type="rfc:char2" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES5510">
+        <xsd:sequence>
+          <xsd:element name="ACOPIADOR" type="rfc:ZMPES540" />
+          <xsd:element name="OTROS" type="rfc:ZMPES540" />
+          <xsd:element name="CORREDOR" type="rfc:char2" />
+          <xsd:element name="FASON" type="rfc:char2" />
         </xsd:sequence>
       </xsd:complexType>
     </xsd:schema>
