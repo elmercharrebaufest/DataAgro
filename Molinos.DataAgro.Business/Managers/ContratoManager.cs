@@ -8435,6 +8435,14 @@ namespace Molinos.DataAgro.Business.Managers
                 Required = false,
                 Type = ExcelValidationColumnType.String
             });
+            ret.Add(new ExcelValidatorItem()
+            {
+                Name = "Porcentaje de Pago",
+                ErrorType = ExcelValidationErrorType.Error,
+                Position = pos++,
+                Required = true,
+                Type = ExcelValidationColumnType.Long
+            });
 
             //configurar el resto de campos
             return ret;
@@ -8609,6 +8617,7 @@ namespace Molinos.DataAgro.Business.Managers
                             if (corredor != null)
                             {
                                 contrato.CorredorId = corredor.ProveedorId;
+                                contrato.PorcentajeComision = 1;
                             }
                             else
                             {
@@ -8682,7 +8691,6 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.GrupoCompra = comerciales.Where(a => (a.Nombres.ToLower() + " " + a.Apellido.ToLower()) == rows.ElementAt(ii)[22].ToString().Trim().ToLower()).Single().GrupoDeComprasId;
                         contrato.UsuarioId = comerciales.Where(x => x.ComercialId == contrato.ComercialId).FirstOrDefault().IdActiveDirectory;
                         contrato.ComercialCreadorId = ComercialId;
-                        contrato.PorcentajeDePago = 97.5m;
 
                         if (contrato.TipoNegocioId == 1)
                         {
@@ -8778,6 +8786,7 @@ namespace Molinos.DataAgro.Business.Managers
 
 
                         contrato.Observacion = rows.ElementAt(ii)[33].ToString();
+                        contrato.PorcentajeDePago = decimal.Parse(rows.ElementAt(ii)[34].ToString());
 
                         contratos.Add(contrato);
                     }
