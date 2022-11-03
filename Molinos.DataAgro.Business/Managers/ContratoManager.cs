@@ -8651,8 +8651,9 @@ namespace Molinos.DataAgro.Business.Managers
                             contrato.ContratoCorredor = string.IsNullOrWhiteSpace(rows.ElementAt(ii)[11].ToString().Trim()) ? rows.ElementAt(ii)[10].ToString().Trim() : rows.ElementAt(ii)[11].ToString().Trim();
                         }
                         //contrato.Fecha = DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim());
-                        contrato.FechaOperacion = DateTime.Now.Date;
-                        //contrato.MotivoOperacionAnterior = rows.ElementAt(ii)[13].ToString();
+                        contrato.FechaOperacion = diasHabilesAgent.UltimoDiaHabil(null);
+                        contrato.MotivoOperacionAnterior = "Otro";
+                        contrato.DescripcionOperacionAnterior = "ES MATBA";
                         contrato.FechaDesde = DateTime.Parse(rows.ElementAt(ii)[12].ToString().Trim());
                         contrato.FechaHasta = DateTime.Parse(rows.ElementAt(ii)[13].ToString().Trim());
                         contrato.FechaEntrega = DateTime.Parse(rows.ElementAt(ii)[13].ToString().Trim());
