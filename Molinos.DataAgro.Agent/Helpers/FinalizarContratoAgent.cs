@@ -370,14 +370,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                     rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" : contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
                     rq2.IM_CONTRATO.BLOQUEO = "";
                     rq2.IM_CONTRATO.TIPO_CAMBIO_FIJO = 0;
-                    rq2.IM_CONTRATO.POSICION = CalcularPosicion(contrato.FechaDesde);
+                    rq2.IM_CONTRATO.POSICION = CalcularPosicion(contrato.FechaDesde, contrato.FechaHasta);
                     rq2.IM_TOPES_FIJ = topesFijacion.ToArray();
                     rq2.IM_DESC_BONIF = listaDescuentos.ToArray();
                     rq2.IM_CALIDAD = listaCalidades.ToArray();
                     rq2.IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.EsFason == true ? "FASON" : contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" : contrato.Venta == true ? "VENTA" : contrato.TipoNegocio.Descripcion;
                     rq2.IM_APERTURA = listaApertura.ToArray();
                     rq2.IM_SERVICIOS = servicioSap.ToArray();
-                    
+
                     logger.Debug(rq2.ToXml());
 
                     var log = new Log
@@ -431,6 +431,12 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         private string CalcularPosicion(DateTime fechaDesde, DateTime fechaHasta)
         {
+        //    var ultimoDiaHabilDelMes = diasHabilesAgent.ObtenerDiasHabilesDelMes(fechaDesde).LastOrDefault();
+        //    var diferenciaEntreDias = fechaDesde - ultimoDiaHabilDelMes;
+        //    var fechaDesdeMesSiguiente = fechaDesde.AddMonths(1);
+        //    var dias = Math.Abs(diferenciaEntreDias.Days);
+        //    return dias >= 10 ? (fechaDesde.Month.ToString().PadLeft(2, '0')) + "." + (fechaDesde.Year) :
+        //           ((fechaDesdeMesSiguiente.Month).ToString().PadLeft(2, '0')) + "." + (fechaDesdeMesSiguiente.Year);
             var ultimoDiaHabilDelMes = diasHabilesAgent.ObtenerDiasHabilesDelMes(fechaDesde).LastOrDefault();
             var diferenciaEntreDias = fechaDesde - ultimoDiaHabilDelMes;
             var fechaDesdeMesSiguiente = fechaDesde.AddMonths(1);
