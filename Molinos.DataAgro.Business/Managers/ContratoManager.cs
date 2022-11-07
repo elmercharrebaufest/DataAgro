@@ -7495,6 +7495,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             //contrato.CorredorId = repositorio.Obtener<Proveedor>(x => x.CUIT == cuitCorredor && (x.SegmentacionId == 5 || x.SegmentacionId == 7)).ProveedorId;
                             contrato.CorredorId = corredor.ProveedorId;
+                            contrato.PorcentajeComision = 1;
                         }
                         contrato.ClasificacionId = rows.ElementAt(ii)[10].ToString().Trim().ToLower() == "productor" ? 1 : rows.ElementAt(ii)[10].ToString().Trim().ToLower() == "acopiador" ? 2 : 3;
                         contrato.PlanCanje = rows.ElementAt(ii)[11].ToString().Trim().ToUpper() == "X";

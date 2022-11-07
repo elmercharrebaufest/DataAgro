@@ -271,135 +271,125 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     });
                     logger.Debug("Cargando contrato");
-                    var rq = new Z_MPRFC_PRE_SLIP()
-                    {
-                        IM_CONTRATO = new ZMPES5270
-                        {
-                            CANTIDAD = Convert.ToDecimal(contrato.Cantidad),
-                            CONTR_DATAAGRO = contrato.Id.ToString(),
-                            COSECHA = contrato.Campana.Descripcion,
-                            DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0",
-                            FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd"),
-                            FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd"),
-                            FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd"),
-                            FECHA_LIMITE = fechaDolarizadoString,
-                            GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "",
-                            MONEDA = contrato.Pizarra == true ? "ARP  " : contrato.MonedaId,
-                            NO_INFORMAR_SIO = noInformaSioString,
-                            PAGO_DIFERIDO = (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) ? "X" : "",
-                            MATERIAL = contrato.Material.Codigo,
-                            PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "",
-                            PRECIO_PIZARRA = contrato.Precio,
-                            //PRECIO = contrato.PrecioNeto ?? contrato.Precio,
-                            PRECIO = (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio,
-                            PROVEEDOR = contrato.Proveedor.CUIT,
-                            PROVINCIA = contrato.ProvinciaId.ToString(),
-                            SUSTENTABLE = contrato.Sustentable == true ? "X" : "",
-                            ESPECIAL = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.CodigoSap : especialString,
-                            FECHA = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.FechaOperacion.ToString("yyyy-MM-dd") :
-                            repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
-                            USUARIO = contrato.Comercial.IdActiveDirectory,
-                            HORAACT = contrato.Fecha.ToString("HH:mm:ss"),
-                            PROCEDENCIA = localidadString,
-                            CENTRO = contrato.Destino.CodigoSap,
-                            CLASIFICACION = contrato.Clasificacion.Descripcion,
-                            IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "",
-                            CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "",
-                            COND_FIJACION = contrato.CondicionFijacion?.CodigoSap,
-                            CAMIONES = cantidadCamiones,
-                            CONFIRMA = contrato.BoletoId == 1 ? "X" : "",
-                            BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? contrato.Bolsa.CodigoSap : null,
-                            BOL_FISICO = contrato.BoletoId == 2 ? "X" : "",
-                            CARTA_OFERTA = contrato.BoletoId == 4 ? "X" : "",
-                            NINGUNO = contrato.BoletoId == 3 ? "X" : "",
-                            SIN_BOLETO = contrato.BoletoId == 5 ? "X" : "",
-                            AUT_CG = contrato.Warrant == true ? "X" : "",
-                            AUR_CD = contrato.CD == true ? "X" : "",
-                            PAGO_DIR_VEND = contrato.PagoDirectoVendedor == true ? "X" : "",
-                            ESTAB_PROPIO = contrato.EstablecimientoPropio == true ? "X" : "",
-                            ESTAB_ARRENDADO = contrato.EstablecimientoPropio == false ? "X" : "",
-                            IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe : 0,
-                            MONEDA_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId : null,
-                            PORC_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0,
-                            IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0,
-                            MONEDA_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null,
-                            PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0,
-                            MERC_DESCARGADA = contrato.MercsDeposito == true ? "X" : "",
-                            OBSERVACION_CAL1 = contrato.Observacion,
-                            CUIT_CORREDOR = contrato.Corredor != null ? contrato.Corredor.CUIT : "",
-                            PORC_COMISION = contrato.Corredor != null ? contrato.PorcentajeComision.Value : 0,
-                            CONTRCORR = contrato.ContratoCorredor ?? "",
-                            CONTRVEND = contrato.ContratoVendedor ?? "",
-                            SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "",
-                            SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "",
-                            CONTRATO_MADRE = contrato.ContratoMadre ?? "",
-                            CREADOR = contrato.ComercialCreador != null ? contrato.ComercialCreador.IdActiveDirectory : "",
-                            ZONA = contrato.Zona != null ? contrato.Zona.CodigoSap : "",
-                            COMPENSACION = contrato.Compensacion == true ? "X" : "",
-                            FLETE_NIVEL = contrato.NivelTarifa != null ? contrato.NivelTarifa.CodigoSap : "",
-                            FLETE_TARIFA = contrato.TarifaFlete ?? 0,
-                            FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null,
-                            PORCPARCIAL = contrato.PorcentajeDePago ?? (decimal)97.5,
-                            AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "",
-                            CARATULA = contrato.CaratulaMAT,
-                            CARATULA_EXT = contrato.CaratulaExtension,
-                            PRECIO_COM_MAT = contrato.PrecioAjusteComision ?? 0,
-                            MONEDA_COM_MAT = contrato.MonedaAjusteComisionId,
-                            FECHA_CREACION = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") :
-                            repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd"),
-                            ZLSCH = contrato.ChequeElectronico == true ? "=" : "",
-                            DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "",
-                            CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "",
-                            PLANTA_DEST = contrato.PlantaDestino != null ? contrato.PlantaDestino.CodigoSap : contrato.Destino.CodigoSap,
-                            CANJE = contrato.Canje == true ? "X" : "",
-                            DESC_INSUMOS = contrato.Insumo,
-                            MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId,
-                            MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0,
-                            POSICION_CBOT = contrato.PosicionCBOT ?? "",
-                            FIJ_CBOT_MAT = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "",
-                            TERCERO = contrato.ProveedorCreadorId != null ? "X" : "",
-                            ANULA_Y_REEMP = contrato.AnulaYReemplazaContratoId == null ? "" : contrato.AnulaYReemplazaContrato.ContratoSAP,
-                            CONDICIONAL = contrato.Condicional == true ? "X" : "",
-                            FECHA_COND = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "",
-                            MES_COND_MAT = contrato.CondicionalPosicion != null ? contrato.CondicionalPosicion : "",
-                            MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "",
-                            PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0,
-                            CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "",
-                            CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0,
-                            COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "",
-                            PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "",
-                            TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3,
-                            TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3,
-                            PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "",
-                            CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" :
-                            contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "",
-                            BLOQUEO = "",
-                            TIPO_CAMBIO_FIJO = 0,
-                            POSICION = CalcularPosicion(contrato.FechaDesde, contrato.FechaHasta)
-
-                        },
-
-                        IM_TOPES_FIJ = topesFijacion.ToArray(),
-                        IM_DESC_BONIF = listaDescuentos.ToArray(),
-                        IM_CALIDAD = listaCalidades.ToArray(),
-                        IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" :
-                        contrato.EsFason == true ? "FASON" : contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" :
-                        contrato.Venta == true ? "VENTA" : contrato.TipoNegocio.Descripcion,
-                        IM_APERTURA = listaApertura.ToArray(),
-                        IM_SERVICIOS = servicioSap.ToArray()
-                    };
-                    logger.Debug(rq.ToXml());
+                    var rq2 = new Z_MPRFC_PRE_SLIP();
+                    rq2.IM_CONTRATO = new ZMPES5270();
+                    rq2.IM_CONTRATO.CANTIDAD = Convert.ToDecimal(contrato.Cantidad);
+                    rq2.IM_CONTRATO.CONTR_DATAAGRO = contrato.Id.ToString();
+                    rq2.IM_CONTRATO.COSECHA = contrato.Campana.Descripcion;
+                    rq2.IM_CONTRATO.DIAS_DIFERIM = contrato.DiasPesificado != null ? contrato.DiasPesificado.ToString() : "0";
+                    rq2.IM_CONTRATO.FECHA_DESDE = contrato.FechaDesde.ToString("yyyy-MM-dd");
+                    rq2.IM_CONTRATO.FECHA_ENTREGA = contrato.FechaEntrega.ToString("yyyy-MM-dd");
+                    rq2.IM_CONTRATO.FECHA_HASTA = contrato.FechaHasta.ToString("yyyy-MM-dd");
+                    rq2.IM_CONTRATO.FECHA_LIMITE = fechaDolarizadoString;
+                    rq2.IM_CONTRATO.GRUPO_COMPRAS = contrato.TipoAgenteCompraId == 1 ? "902" : "";
+                    rq2.IM_CONTRATO.MONEDA = contrato.Pizarra == true ? "ARP  " : contrato.MonedaId;
+                    rq2.IM_CONTRATO.NO_INFORMAR_SIO = noInformaSioString;
+                    rq2.IM_CONTRATO.PAGO_DIFERIDO = (contrato.Dolarizado == true || contrato.DolarizadoCorredor == true) ? "X" : "";
+                    rq2.IM_CONTRATO.MATERIAL = contrato.Material.Codigo;
+                    rq2.IM_CONTRATO.PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "";
+                    rq2.IM_CONTRATO.PRECIO_PIZARRA = contrato.Precio;
+                    //rq2.IM_CONTRATO.PRECIO = contrato.PrecioNeto ?? contrato.Precio;
+                    rq2.IM_CONTRATO.PRECIO = (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio;
+                    rq2.IM_CONTRATO.PROVEEDOR = contrato.Proveedor.CUIT;
+                    rq2.IM_CONTRATO.PROVINCIA = contrato.ProvinciaId.ToString();
+                    rq2.IM_CONTRATO.SUSTENTABLE = contrato.Sustentable == true ? "X" : "";
+                    rq2.IM_CONTRATO.ESPECIAL = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.CodigoSap : especialString;
+                    rq2.IM_CONTRATO.FECHA = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.FechaOperacion.ToString("yyyy-MM-dd") : repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd");
+                    rq2.IM_CONTRATO.USUARIO = contrato.Comercial.IdActiveDirectory;
+                    rq2.IM_CONTRATO.HORAACT = contrato.Fecha.ToString("HH:mm:ss");
+                    rq2.IM_CONTRATO.PROCEDENCIA = localidadString;
+                    rq2.IM_CONTRATO.CENTRO = contrato.Destino.CodigoSap;
+                    rq2.IM_CONTRATO.CLASIFICACION = contrato.Clasificacion.Descripcion;
+                    rq2.IM_CONTRATO.IND_OP_CANJE = contrato.PlanCanje != null && contrato.PlanCanje.Value ? "X" : "";
+                    rq2.IM_CONTRATO.CONSIGNATARIO = contrato.Consignatario != null && contrato.Consignatario.Value ? "X" : "";
+                    rq2.IM_CONTRATO.COND_FIJACION = contrato.CondicionFijacion?.CodigoSap;
+                    rq2.IM_CONTRATO.CAMIONES = cantidadCamiones;
+                    rq2.IM_CONTRATO.CONFIRMA = contrato.BoletoId == 1 ? "X" : "";
+                    rq2.IM_CONTRATO.BOLSA = contrato.BoletoId == 1 || contrato.BoletoId == 2 || contrato.BoletoId == 4 ? contrato.Bolsa.CodigoSap : null;
+                    rq2.IM_CONTRATO.BOL_FISICO = contrato.BoletoId == 2 ? "X" : "";
+                    rq2.IM_CONTRATO.CARTA_OFERTA = contrato.BoletoId == 4 ? "X" : "";
+                    rq2.IM_CONTRATO.NINGUNO = contrato.BoletoId == 3 ? "X" : "";
+                    rq2.IM_CONTRATO.SIN_BOLETO = contrato.BoletoId == 5 ? "X" : "";
+                    rq2.IM_CONTRATO.AUT_CG = contrato.Warrant == true ? "X" : "";
+                    rq2.IM_CONTRATO.AUR_CD = contrato.CD == true ? "X" : "";
+                    rq2.IM_CONTRATO.PAGO_DIR_VEND = contrato.PagoDirectoVendedor == true ? "X" : "";
+                    rq2.IM_CONTRATO.ESTAB_PROPIO = contrato.EstablecimientoPropio == true ? "X" : "";
+                    rq2.IM_CONTRATO.ESTAB_ARRENDADO = contrato.EstablecimientoPropio == false ? "X" : "";
+                    rq2.IM_CONTRATO.IMPORTE_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.Importe : 0;
+                    rq2.IM_CONTRATO.MONEDA_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Importe != 0 ? descuentoGeneralSobrePrecio.MonedaId : null;
+                    rq2.IM_CONTRATO.PORC_S_PRECIO = descuentoGeneralSobrePrecio != null && descuentoGeneralSobrePrecio.Porcentaje != 0 ? descuentoGeneralSobrePrecio.Porcentaje : 0;
+                    rq2.IM_CONTRATO.IMPORTE_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.Importe : 0;
+                    rq2.IM_CONTRATO.MONEDA_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Importe != 0 ? descuentoGeneralFueraPrecio.MonedaId : null;
+                    rq2.IM_CONTRATO.PORC_A_PRECIO = descuentoGeneralFueraPrecio != null && descuentoGeneralFueraPrecio.Porcentaje != 0 ? descuentoGeneralFueraPrecio.Porcentaje : 0;
+                    rq2.IM_CONTRATO.MERC_DESCARGADA = contrato.MercsDeposito == true ? "X" : "";
+                    rq2.IM_CONTRATO.OBSERVACION_CAL1 = contrato.Observacion;
+                    rq2.IM_CONTRATO.CUIT_CORREDOR = contrato.Corredor != null ? contrato.Corredor.CUIT : "";
+                    rq2.IM_CONTRATO.PORC_COMISION = contrato.Corredor != null ? contrato.PorcentajeComision.Value : 0;
+                    rq2.IM_CONTRATO.CONTRCORR = contrato.ContratoCorredor ?? "";
+                    rq2.IM_CONTRATO.CONTRVEND = contrato.ContratoVendedor ?? "";
+                    rq2.IM_CONTRATO.SEL_CARGO_MOA = contrato.SelCargoMOA == true ? "X" : "";
+                    rq2.IM_CONTRATO.SEL_CARGO_VEND = contrato.SelCargoVendedor == true ? "X" : "";
+                    rq2.IM_CONTRATO.CONTRATO_MADRE = contrato.ContratoMadre ?? "";
+                    rq2.IM_CONTRATO.CREADOR = contrato.ComercialCreador != null ? contrato.ComercialCreador.IdActiveDirectory : "";
+                    rq2.IM_CONTRATO.ZONA = contrato.Zona != null ? contrato.Zona.CodigoSap : "";
+                    rq2.IM_CONTRATO.COMPENSACION = contrato.Compensacion == true ? "X" : "";
+                    rq2.IM_CONTRATO.FLETE_NIVEL = contrato.NivelTarifa != null ? contrato.NivelTarifa.CodigoSap : "";
+                    rq2.IM_CONTRATO.FLETE_TARIFA = contrato.TarifaFlete ?? 0;
+                    rq2.IM_CONTRATO.FECHA_CIERTA = contrato.FechaCierta.HasValue ? contrato.FechaCierta.Value.ToString("yyyy-MM-dd") : null;
+                    rq2.IM_CONTRATO.PORCPARCIAL = contrato.PorcentajeDePago ?? (decimal)97.5;
+                    rq2.IM_CONTRATO.AGENTE_COMPRA = contrato.TipoAgenteCompraId == 1 ? "9952569841" : "";
+                    rq2.IM_CONTRATO.CARATULA = contrato.CaratulaMAT;
+                    rq2.IM_CONTRATO.CARATULA_EXT = contrato.CaratulaExtension;
+                    rq2.IM_CONTRATO.PRECIO_COM_MAT = contrato.PrecioAjusteComision ?? 0;
+                    rq2.IM_CONTRATO.MONEDA_COM_MAT = contrato.MonedaAjusteComisionId;
+                    rq2.IM_CONTRATO.FECHA_CREACION = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.Fecha.ToString("yyyy-MM-dd") : repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd");
+                    rq2.IM_CONTRATO.ZLSCH = contrato.ChequeElectronico == true ? "=" : "";
+                    rq2.IM_CONTRATO.DOL_EXPRESS = contrato.DolarizadoExpress == true ? "X" : "";
+                    rq2.IM_CONTRATO.CUENTA_MRP = contrato.PagoCBU != null ? contrato.PagoCBU.Split('-')[0] : "";
+                    rq2.IM_CONTRATO.PLANTA_DEST = contrato.PlantaDestino != null ? contrato.PlantaDestino.CodigoSap : contrato.Destino.CodigoSap;
+                    rq2.IM_CONTRATO.CANJE = contrato.Canje == true ? "X" : "";
+                    rq2.IM_CONTRATO.DESC_INSUMOS = contrato.Insumo;
+                    rq2.IM_CONTRATO.MONEDA_DEUDA = contrato.MonedaCanjeId == "USDM " ? "USD" : contrato.MonedaCanjeId;
+                    rq2.IM_CONTRATO.MONTO_DEUDA = contrato.Monto.HasValue ? contrato.Monto.Value : 0;
+                    rq2.IM_CONTRATO.POSICION_CBOT = contrato.PosicionCBOT ?? "";
+                    rq2.IM_CONTRATO.FIJ_CBOT_MAT = contrato.TipoPosicionCBOTId.HasValue ? contrato.TipoPosicionCBOTId.ToString() : "";
+                    rq2.IM_CONTRATO.TERCERO = contrato.ProveedorCreadorId != null ? "X" : "";
+                    rq2.IM_CONTRATO.ANULA_Y_REEMP = contrato.AnulaYReemplazaContratoId == null ? "" : contrato.AnulaYReemplazaContrato.ContratoSAP;
+                    rq2.IM_CONTRATO.CONDICIONAL = contrato.Condicional == true ? "X" : "";
+                    rq2.IM_CONTRATO.FECHA_COND = contrato.CondicionalFecha != null ? contrato.CondicionalFecha.Value.ToString("yyyy-MM-dd") : "";
+                    rq2.IM_CONTRATO.MES_COND_MAT = contrato.CondicionalPosicion != null ? contrato.CondicionalPosicion : "";
+                    rq2.IM_CONTRATO.MONEDA_COND = contrato.CondicionalMonedaId != null ? contrato.CondicionalMonedaId : "";
+                    rq2.IM_CONTRATO.PRECIO_COND = contrato.CondicionalPrecio != null ? contrato.CondicionalPrecio.Value : 0;
+                    rq2.IM_CONTRATO.CONTRATO_COND = contrato.CondicionalContrato != null ? contrato.CondicionalContrato.ContratoSAP : "";
+                    rq2.IM_CONTRATO.CANTIDAD_COND = contrato.CondicionalCantidad != null ? Convert.ToDecimal(contrato.CondicionalCantidad.Value) : 0;
+                    rq2.IM_CONTRATO.COND_PAGO = contrato.TipoNegocioId == 1 ? "04" : "";
+                    rq2.IM_CONTRATO.PORC_MULTA = contrato.TipoNegocioId == 1 ? "10" : "";
+                    rq2.IM_CONTRATO.TOL_INF = contrato.CantidadCamiones > 0 ? 0 : 3;
+                    rq2.IM_CONTRATO.TOL_SUP = contrato.CantidadCamiones > 0 ? 0 : 3;
+                    rq2.IM_CONTRATO.PIZARRA = contrato.TipoNegocioId == 1 ? "ROS" : "";
+                    rq2.IM_CONTRATO.CODIGO_TC = contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId == null ? "02" : contrato.TipoNegocioId == 2 && contrato.MonedaId == "USDM " && contrato.TipoAgenteCompraId != null ? "03" : "";
+                    rq2.IM_CONTRATO.BLOQUEO = "";
+                    rq2.IM_CONTRATO.TIPO_CAMBIO_FIJO = 0;
+                    rq2.IM_CONTRATO.POSICION = CalcularPosicion(contrato.FechaDesde);
+                    rq2.IM_TOPES_FIJ = topesFijacion.ToArray();
+                    rq2.IM_DESC_BONIF = listaDescuentos.ToArray();
+                    rq2.IM_CALIDAD = listaCalidades.ToArray();
+                    rq2.IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.EsFason == true ? "FASON" : contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" : contrato.Venta == true ? "VENTA" : contrato.TipoNegocio.Descripcion;
+                    rq2.IM_APERTURA = listaApertura.ToArray();
+                    rq2.IM_SERVICIOS = servicioSap.ToArray();
+                    
+                    logger.Debug(rq2.ToXml());
 
                     var log = new Log
                     {
                         Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
+                        Xml = rq2.ToXml()
                     };
 
                     var logId = repositorio.Agregar(log);
                     repositorio.GuardarCambios();
 
-                    var devolucion = agent.SI_ZMPWS_DATAAGRO_PRE_SLIP(rq);
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_PRE_SLIP(rq2);
                     logger.Debug(devolucion.ToXml());
 
                     log = repositorio.Obtener<Log>(logId.Id);
@@ -419,8 +409,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP", e);
-                throw e;
+                logger.Error("Error comunicacion SAP");
+                logger.Error(e);
+                throw;
             }
 
         }
