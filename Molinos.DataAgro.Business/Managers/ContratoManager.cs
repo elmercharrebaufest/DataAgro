@@ -7533,11 +7533,24 @@ namespace Molinos.DataAgro.Business.Managers
                                 continue;
                             }
                             contrato.Descuentos = new List<DescuentoBonificacion> { new DescuentoBonificacion {
-                            TipoDBId = tipoDB.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[24].ToString().Trim().ToLower()).Single().Id,
-                            Porcentaje = int.Parse(rows.ElementAt(ii)[23].ToString().Trim()),
-                            TipoPeriodoDBId = 1,
-                            MonedaId = "USDM "
-                        }};
+                                TipoDBId = tipoDB.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[24].ToString().Trim().ToLower()).Single().Id,
+                                Porcentaje = int.Parse(rows.ElementAt(ii)[23].ToString().Trim()),
+                                TipoPeriodoDBId = 1,
+                                MonedaId = "USDM "
+                            }};
+                        };
+                        int descuentos = DBNull.Value.Equals(rows.ElementAt(ii)[24]) ? 0 : tipoDB.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[24].ToString().Trim().ToLower()).Single().Id;
+                        if (descuentos != 0) 
+                        {
+                            if (rows.ElementAt(ii)[23] == null || string.IsNullOrEmpty(rows.ElementAt(ii)[23].ToString())) 
+                            {
+                                ExcelValidatorRowResult excelValidatorRowResult = resultValidation.RowsResult.Where(a => a.Row == ii).Single();
+                                var ret = new ExcelValidatorItemResult();
+                                ret.Errors.Add("El campo Desc. Y Bonif % es obligatorio si Desc. Y Bonif fue completado.");
+                                ret.Item = new ExcelValidatorItem { ErrorType = ExcelValidationErrorType.Error, Name = "Desc. Y Bonif %" };
+                                excelValidatorRowResult.ItemsResult.Add(ret);
+                                continue;
+                            }
                         }
 
                         contrato.ComercialId = ComercialId;
@@ -8088,7 +8101,7 @@ namespace Molinos.DataAgro.Business.Managers
             ret.Add(new ExcelValidatorItem()
             {
                 Name = "Desc. Y Bonif %",
-                ErrorType = ExcelValidationErrorType.Error,
+                ErrorType = ExcelValidationErrorType.Fatal,
                 Position = pos++,
                 Required = false,
                 Type = ExcelValidationColumnType.Int
