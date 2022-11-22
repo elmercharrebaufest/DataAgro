@@ -17,10 +17,13 @@
     [CampañaId]          INT           NULL,
     [EstadoId]           INT           NULL,
     [DomicilioReal] 	 VARCHAR(50)   NULL,
+    [FechaDescarga]      DATETIME      NULL,
+    [OrigenDA]           BIT           NULL,
     CONSTRAINT [PK_InformeComercial] PRIMARY KEY CLUSTERED ([InformeComercialId] ASC),
     CONSTRAINT [FK_InformeComercial_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId]),
     CONSTRAINT [FK_InformeComercial_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
     CONSTRAINT [FK_InformeComercial_InformeComercial] FOREIGN KEY ([InformeComercialId]) REFERENCES [dbo].[InformeComercial] ([InformeComercialId]),
+
     CONSTRAINT [FK_InformeComercial_InformeComercialEstado] FOREIGN KEY ([EstadoId]) REFERENCES [dbo].[InformeComercialEstado] ([EstadoInformeId]),
     CONSTRAINT [FK_InformeComercial_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId])
 );

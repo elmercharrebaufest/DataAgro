@@ -1401,7 +1401,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var solicitudesSugerenciasId = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null);
 
-                var solicitudesRechazadas = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo);
+                var solicitudesRechazadas = repositorio.Listar<AdministracionCupo, int>(a => a.SugerenciaCupoId.Value, x => x.SugerenciaCupoId != null && x.EstadoId == (int)EnumEstadoAdministracionCupo.Rechazado);
 
                 var sugerenciasPendientes = repositorio.Listar<SugerenciaCupo>(a => a.Aceptado != false && a.MaterialId == formulaDto.MaterialId && solicitudesRechazadas.Contains(a.Id));
                 sugerenciasPendientes.ForEach(a => a.Aceptado = false);
@@ -1458,7 +1458,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x.Fecha >= formula.CuposDesde && x.Fecha <= formula.CuposHasta &&
                 x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
                 x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo &&
-                x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo
+                x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente
                 && x.SugerenciaCupoId != null
             );
             logger.Debug("CrearSugerenciaCupo - se obtuvieron " + solicitudesPendientes.Count + " solicitudes pendientes.");
@@ -1794,7 +1794,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x.Fecha >= formula.CuposDesde && x.Fecha <= formula.CuposHasta &&
                 x.CentroId == formula.CentroId && x.MaterialId == formula.MaterialId &&
                 x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo &&
-                x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo
+                x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente
                 && x.SugerenciaCupoId != null
             );
 
@@ -2044,7 +2044,7 @@ namespace Molinos.DataAgro.Business.Managers
                             CantidadCupo = s.CantidadDeCupos - cantidadIngresada,
                             ComercialId = s.ComercialId,
                             Fecha = s.FechaSugerida,
-                            EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo,
+                            EstadoId = (int)EnumEstadoAdministracionCupo.Aceptado,
                             MaterialId = s.MaterialId,
                             ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                             CentroId = s.CentroId,
@@ -2098,7 +2098,7 @@ namespace Molinos.DataAgro.Business.Managers
                             ComercialCreadorId = comercialCreador,
                             ComercialId = s.ComercialId,
                             Fecha = s.FechaSugerida,
-                            EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                            EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente,
                             MaterialId = s.MaterialId,
                             ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                             CentroId = s.CentroId,
@@ -2671,7 +2671,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 var cupoDesde = (formula.CuposDesde < DateTime.Now.Date ? DateTime.Now.Date : formula.CuposDesde);
                 var sugerenciaComercialDia = repositorio.Listar<SugerenciaCupo>(x => x.FechaSugerida >= cupoDesde && x.FechaSugerida <= formula.CuposHasta
-                && x.CentroId == formula.CentroId && x.Aceptado == null && x.MaterialId == material.MaterialId && (x.Solicitudes.Count == 0 || x.Solicitudes.All(y => y.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo))).GroupBy(y => y.Comercial);
+                && x.CentroId == formula.CentroId && x.Aceptado == null && x.MaterialId == material.MaterialId && (x.Solicitudes.Count == 0 || x.Solicitudes.All(y => y.EstadoId == (int)EnumEstadoAdministracionCupo.Rechazado))).GroupBy(y => y.Comercial);
                 foreach (var sug in sugerenciaComercialDia)
                 {
                     var dia = new SugerenciaNoAceptada()
@@ -3530,7 +3530,7 @@ namespace Molinos.DataAgro.Business.Managers
                                         Fecha = f.Fecha,
                                         ProveedorId = p.ProveedorId,
                                         CantidadFleteProcedencia = f.CantidadFleteProcedencia.Value,
-                                        EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                                        EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente,
                                         MaterialId = materialId,
                                         ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                                         CentroId = centro,
@@ -3582,7 +3582,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 CantidadCupo = d.CantidadCuposDevueltos,
                                 ComercialId = comercialId,
                                 Fecha = d.Fecha,
-                                EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo,
+                                EstadoId = (int)EnumEstadoAdministracionCupo.Aceptado,
                                 MaterialId = materialId,
                                 ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                                 CentroId = centro,
@@ -3671,7 +3671,7 @@ namespace Molinos.DataAgro.Business.Managers
                                     CantidadCupo = s.Total,
                                     ComercialId = comercialId,
                                     Fecha = item.FechaSugerida,
-                                    EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo,
+                                    EstadoId = (int)EnumEstadoAdministracionCupo.Aceptado,
                                     MaterialId = materialId,
                                     ZonaId = zonaCupo.Where(x => x.Descripcion == zona).First().Id,
                                     CentroId = centro,
@@ -4319,7 +4319,7 @@ namespace Molinos.DataAgro.Business.Managers
                     result.Error("Zona", "El comercial seleccionado no tiene zona cupo asignada.");
                     return result;
                 }
-                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id }, 1, solicitud.Fecha);
+                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id }, solicitud.CantidadCupo + solicitud.CantidadFleteProcedencia, solicitud.Fecha);
                 if (resultado.HayError)
                 {
                     result.Errores = resultado.Errores;
@@ -4438,7 +4438,7 @@ namespace Molinos.DataAgro.Business.Managers
                     else
                     {
                         solicitud.Excedente = true;
-                        solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo;
+                        solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente;
                         solicitud.CentroId = centro;
                         solicitud.ZonaId = zona.Id;
                         solicitud.FechaCreacion = DateTime.Now;
@@ -4606,7 +4606,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ComercialId = s.ComercialId,
                     Fecha = s.FechaSugerida,
                     FechaCreacion = DateTime.Now,
-                    EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                    EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente,
                     MaterialId = s.MaterialId,
                     ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                     CentroId = s.CentroId,
@@ -5146,7 +5146,7 @@ namespace Molinos.DataAgro.Business.Managers
                         CantidadFleteProcedencia = 0,
                         ComercialId = sugerenciaFecha.ComercialId,
                         Fecha = sugerenciaFecha.FechaSugerida,
-                        EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                        EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente,
                         MaterialId = sugerenciaFecha.MaterialId,
                         ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                         CentroId = sugerenciaFecha.CentroId,
@@ -5483,7 +5483,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 CantidadFleteProcedencia = 0,
                                 ComercialId = sugerencia.ComercialId,
                                 Fecha = sugerenciaAceptadaDesdeElFront.fecha.Value,
-                                EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                                EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente,
                                 MaterialId = sugerencia.MaterialId,
                                 ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                                 CentroId = sugerencia.CentroId,
@@ -5536,7 +5536,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 CantidadFleteProcedencia = 0,
                                 ComercialId = sugerencia.ComercialId,
                                 Fecha = sugerenciaAceptadaDesdeElFront.fecha.Value,
-                                EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                                EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente,
                                 MaterialId = sugerencia.MaterialId,
                                 ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                                 CentroId = sugerencia.CentroId,
@@ -5688,7 +5688,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 CantidadFleteProcedencia = 0,
                                 ComercialId = sugerencia.ComercialId,
                                 Fecha = sugerencia.FechaSugerida,
-                                EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                                EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente,
                                 MaterialId = sugerencia.MaterialId,
                                 ZonaId = zonaCupo.Where(x => x.Descripcion == grupoDeCompras).First().Id,
                                 CentroId = sugerencia.CentroId,

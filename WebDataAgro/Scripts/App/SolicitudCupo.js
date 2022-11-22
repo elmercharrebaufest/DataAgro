@@ -123,7 +123,10 @@ function CargarGrilla() {
                         return '<div class="statusconfirmado "></div>' + dataItem.Proveedor;
                     } else if (dataItem.EstadoId == 2) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.EstadoId == 0) {
+                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
                     }
+
                 },
                 filterable: { ui: createMultiSelectProveedor }
             },
@@ -280,7 +283,9 @@ function CargarGrilla() {
                     dataSource: [
                         { Estado: "Aceptado" },
                         { Estado: "Rechazado" },
-                        { Estado: "Pendiente" }]
+                        { Estado: "Pendiente" },
+                        { Estado: "Anulado" }
+                    ]
                 },
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
@@ -293,13 +298,16 @@ function CargarGrilla() {
                             return '<div class="status pendiente" style="text-align: center;">Pendiente</div>' + botonBorrar(dataItem, 'fa-trash pend');
                         }
                     }
-                    if (dataItem.EstadoId == 1) { //confirmado 
-                        estadoContent += '<div class="status confirmado">Confirmado';
+                    if (dataItem.EstadoId == 1) { //aceptado
+                        estadoContent += '<div class="status confirmado">Aceptado';
                         //return '<div class="status confirmado">Confirmado</div>';
                     }
                     if (dataItem.EstadoId == 2) { //Rechazado
                         estadoContent += '<div class="status borrado">Rechazado';
                         //return '<div class="status borrado">Rechazado</div>';
+                    }
+                    if (dataItem.EstadoId == 0) { //anulado
+                        estadoContent += '<div class="status anulado">Anulado';
                     }
                     if (dataItem.ConDescarga == true) {
                         estadoContent += '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>'
@@ -776,6 +784,17 @@ function checkFason() {
 }
 
 function copiarTablaEstablecimiento() {
+    //Para copiar la tabla como una imagen:
+    html2canvas($("#cargarDatosEstablecimiento")[0]).then(function (canvas) {
+        let image = new Image();
+        image.src = canvas.toDataURL();
+        $("#out_image").append(image);
+        copyImage(image.src);
+        $("#out_image").empty();
+    }
+    );
+
+    /* Para copiarla en formato texto: 
     var copiarEstablecimientos = document.getElementById("cargarDatosEstablecimiento").innerText;
 
     var copy = function (e) {
@@ -791,6 +810,32 @@ function copiarTablaEstablecimiento() {
     window.addEventListener('copy', copy);
     document.execCommand('copy');
     window.removeEventListener('copy', copy);
+    */
+}
+
+async function copyImage(imageURL) {
+    const blob = await imageToBlob(imageURL)
+    const item = new ClipboardItem({ "image/png": blob });
+    navigator.clipboard.write([item]);
+}
+
+function imageToBlob(imageURL) {
+    const img = new Image;
+    const c = document.createElement("canvas");
+    const ctx = c.getContext("2d");
+    img.crossOrigin = "";
+    img.src = imageURL;
+    return new Promise(resolve => {
+        img.onload = function () {
+            c.width = this.naturalWidth;
+            c.height = this.naturalHeight;
+            ctx.drawImage(this, 0, 0);
+            c.toBlob((blob) => {
+                // here the image is a blob
+                resolve(blob)
+            }, "image/png", 0.75);
+        };
+    })
 }
 
 function VisualizarStock() {
@@ -869,12 +914,12 @@ function ActualizarSolicitud(id) {
 }
 
 function AbrirModalRechazar(id) {
-    $("#modalRechazarSolicitud").modal("show");
+    $("#modalAnularSolicitud").modal("show");
     $("#solicitudId").val(id);
 }
 
 
-function RechazarSolicitud() {
+function AnularSolicitud() {
     BlockUi('Procesando...');
     var id = $("#solicitudId").val();
     setTimeout(
@@ -883,7 +928,7 @@ function RechazarSolicitud() {
             if (result == "Ok") {
                 MensInfo("Guardado Correctamente");
             } else {
-                MensErr("La solicitud no puede ser rechazada");
+                MensErr("La solicitud no puede ser anulada");
             }
             recargarGrilla();
             $.unblockUI();
@@ -891,7 +936,7 @@ function RechazarSolicitud() {
 }
 
 function botonBorrar(dataItem, icono) {
-    return '<button data-toggle="tooltip" title="Rechazar" style="color: #ffc100;" onclick="AbrirModalRechazar(' + dataItem.Id + ') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+    return '<button data-toggle="tooltip" title="Anular" style="color: #ffc100;" onclick="AbrirModalRechazar(' + dataItem.Id + ') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
 }
 
 function OcultarCargaMasiva() {

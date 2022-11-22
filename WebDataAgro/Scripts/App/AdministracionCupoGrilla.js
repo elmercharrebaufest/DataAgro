@@ -115,6 +115,8 @@ function CargarGrillaConfig() {
                         return '<div class="statusconfirmado "></div>' + dataItem.Proveedor;
                     } else if (dataItem.EstadoId == 2) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
+                    } else if (dataItem.EstadoId == 0) {
+                        return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
                     }
                 },
                 filterable: { ui: createMultiSelectProveedor, extra: false }
@@ -274,7 +276,9 @@ function CargarGrillaConfig() {
                     dataSource: [
                         { Estado: "Aceptado" },
                         { Estado: "Rechazado" },
-                        { Estado: "Pendiente" }]
+                        { Estado: "Pendiente" },
+                        { Estado: "Anulado" }
+                    ]
                 },
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
@@ -294,6 +298,11 @@ function CargarGrillaConfig() {
                     }
                     if (dataItem.EstadoId == 2) { //Rechazado
                         return '<div class="status borrado" style="text-align: center;">Rechazado'
+                            + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
+                            + '</div>';
+                    }
+                    if (dataItem.EstadoId == 0) { //anulado
+                        return '<div class="status anulado" style="text-align: center;">Anulado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
                             + '</div>';
                     }

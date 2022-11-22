@@ -25,6 +25,9 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IInformeComercialManager> informeComercialManagerMock;
         private Mock<IHomeManager> homeManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
+        private Mock<IComercialManager> mobjComercialManagerMock;
+        private Mock<IMaterialManager> mobjMaterialManagerMock;
+        private Mock<ICampañaManager> mobjCampaniaManagerMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -34,10 +37,16 @@ namespace Molinos.DataAgro.Test.Controllers
             reportesManagerMock = new Mock<IReportesManager>();
             condicionManagerMock = new Mock<ICondicionManager>();
             informeComercialManagerMock = new Mock<IInformeComercialManager>();
+            mobjComercialManagerMock = new Mock<IComercialManager>();
+            mobjMaterialManagerMock = new Mock<IMaterialManager>();
+            mobjCampaniaManagerMock = new Mock<ICampañaManager>();
             homeManagerMock = new Mock<IHomeManager>();
+
+
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
-            target = new InformeComercialController(condicionManagerMock.Object, informeComercialManagerMock.Object, homeManagerMock.Object, reportesManagerMock.Object);
+            target = new InformeComercialController(condicionManagerMock.Object, informeComercialManagerMock.Object, homeManagerMock.Object, reportesManagerMock.Object,
+                  mobjComercialManagerMock.Object, mobjMaterialManagerMock.Object, mobjCampaniaManagerMock.Object);
         }
 
         [Test]
@@ -52,6 +61,22 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void InformeAdministrativoOkTest()
         {
+            mobjMaterialManagerMock.Setup(x => x.TraerTodoMaterial()).Returns(new ResultIniMaterial { Material = new List<MaterialIni>() });
+            mobjCampaniaManagerMock.Setup(x => x.TraerTodoCampania()).Returns(new List<CampañaDto> { new CampañaDto { CampañaId = 2, Descripcion = "" } });
+            mobjComercialManagerMock.Setup(x => x.TraerTodoComercial()).Returns(new ResultIniComercial
+            {
+                Comercial = new List<ComercialIni>()
+                {
+                    new ComercialIni()
+                    {
+                        ComercialId = 1,
+                        Apellido = "A",
+                        Nombres = "A",
+                        PerDescripcion = "Mesa",
+                        Rol = ""
+                    }
+                }
+            });
 
             var result = target.InformeAdministrativo() as ViewResult;
 
@@ -71,7 +96,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void BuscarTest()
         {
-            
+
             condicionManagerMock.Setup(x => x.TraerTodoCondicion()).Returns(new ResultIniCondicion()
             {
                 Condicion = new List<CondicionIni>()
@@ -82,7 +107,7 @@ namespace Molinos.DataAgro.Test.Controllers
                         Descripcion="A",
                     }
                 }
-            });            
+            });
             var result = target.Buscar();
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -114,8 +139,8 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             var informeComercial = new ParamInformeComercial()
             {
-                
-                ProveedorId= 1,
+
+                ProveedorId = 1,
                 Materiales = new List<ParamInformeComercialMaterial>()
                 {
                     new ParamInformeComercialMaterial()
@@ -124,7 +149,7 @@ namespace Molinos.DataAgro.Test.Controllers
                         Toneladas=1
                     }
                 },
-                Campaña ="18-19"
+                Campaña = "18-19"
             };
             var rtaInforme = new RptInformeComercialInfo()
             {
@@ -133,13 +158,13 @@ namespace Molinos.DataAgro.Test.Controllers
                 Campaña = "18-19"
             };
             homeManagerMock.Setup(x => x.TraerIdComercial(GlobalVariables.IdActiveDirectory)).Returns(10);
-            informeComercialManagerMock.Setup(x => x.GrabarInformeComercial(informeComercial, 10,null,null,null,null,null,null)).Returns(new InformeResult()
+            informeComercialManagerMock.Setup(x => x.GrabarInformeComercial(informeComercial, 10, null, null, null, null, null, null)).Returns(new InformeResult()
             {
                 InformeId = 1,
                 Errores = new List<ErrorMessage>() { }
             });
             informeComercialManagerMock.Setup(x => x.GenerarInformeComercial(informeComercial, 1)).Returns(rtaInforme);
-            var result = target.Listar(informeComercial,null,null,null,null,null,null,null);
+            var result = target.Listar(informeComercial, null, null, null, null, null, null, null);
 
             homeManagerMock.Verify(x => x.TraerIdComercial(It.IsAny<string>()), Times.Once);
             informeComercialManagerMock.Verify(x => x.GrabarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>(), It.IsAny<List<NuevoProduccion>>(), It.IsAny<List<NuevoAcopio>>(), It.IsAny<ContactoComercial>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Once);
@@ -171,8 +196,8 @@ namespace Molinos.DataAgro.Test.Controllers
                     InformeComercialId=1
                 }
             });
-            var result = target.ListarMateriales(new oParamInforme { filtro = 1});
-            
+            var result = target.ListarMateriales(new oParamInforme { filtro = 1 });
+
             informeComercialManagerMock.Verify(x => x.TraerInformeComercial(It.IsAny<int>()), Times.Once);
             informeComercialManagerMock.Verify(x => x.TraerInformeComercialGenerado(It.IsAny<int>()), Times.Once);
 
@@ -194,12 +219,13 @@ namespace Molinos.DataAgro.Test.Controllers
                     Campaña="18-19",
                     Cuit="12",
                     Comercial="a",
-                    Materiales="B",
                     RazonSocial="C",
-                    Seleccionado = true
+                    Seleccionado = true,
+                    MaterialesList = new List<string>{ ""},
+                    MaterialesIdList = new List<int?>{ 1}
                 }
             });
-            
+
             var result = target.ListarInformes();
 
             informeComercialManagerMock.Verify(x => x.TraerInformesGenerados(), Times.Once);
@@ -207,13 +233,13 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"InformeComercialId\":1,\"Cuit\":\"12\",\"RazonSocial\":\"C\",\"Campaña\":\"18-19\",\"Materiales\":\"B\",\"Comercial\":\"a\",\"Seleccionado\":true}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"InformeComercialId\":1,\"Cuit\":\"12\",\"RazonSocial\":\"C\",\"Campaña\":\"18-19\",\"MaterialesList\":[\"\"],\"Comercial\":\"a\",\"Seleccionado\":true,\"ProveedorId\":0,\"CampanaId\":null,\"ComercialId\":null,\"MaterialesIdList\":[1],\"Materiales\":\"\",\"MaterialId\":\"1\",\"FechaAlta\":null,\"FechaDescarga\":null,\"OrigenDA\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
         [Test]
         public void GenerarExcelTest()
-        { 
+        {
             informeComercialManagerMock.Setup(x => x.TraerCapacidadProductiva("A")).Returns(new List<ResultCapacidadProductiva>()
             {
                 new ResultCapacidadProductiva()
@@ -225,7 +251,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 }
             });
             informeComercialManagerMock.Setup(x => x.GrabarCapacidadProductiva("A")).Returns(1);
-            var result = target.GenerarExcel(new oParamExcel { Informes="A"});
+            var result = target.GenerarExcel(new oParamExcel { Informes = "A" });
 
             informeComercialManagerMock.Verify(x => x.TraerCapacidadProductiva(It.IsAny<string>()), Times.Once);
             informeComercialManagerMock.Verify(x => x.GrabarCapacidadProductiva(It.IsAny<string>()), Times.Once);
@@ -243,7 +269,7 @@ namespace Molinos.DataAgro.Test.Controllers
             {
                 new ReportesList{Cuit="1",Comercial="B",Estado="C",InformeComercialId=2,Material="D",RazonSocial="E"}
             });
-            
+
             var result = target.GenerarExcelIA(repo);
             homeManagerMock.Verify(x => x.TraerIdComercial(It.IsAny<string>()), Times.Once);
             informeComercialManagerMock.Verify(x => x.ListarReportes(It.IsAny<ParamReportesIC>(), It.IsAny<List<int>>()), Times.Once);
@@ -290,7 +316,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void EliminarInformeComercialTest()
         {
             informeComercialManagerMock.Setup(x => x.EliminarInformes(1)).Returns(new Resultado());
-            
+
             var result = target.EliminarInformeComercial(1);
 
             informeComercialManagerMock.Verify(x => x.EliminarInformes(It.IsAny<int>()), Times.Once);
@@ -317,7 +343,7 @@ namespace Molinos.DataAgro.Test.Controllers
                 Campaña = "18-19"
             };
             informeComercialManagerMock.Setup(x => x.ReimprimirInformeComercial(1)).Returns(informeComercial);
-            informeComercialManagerMock.Setup(x => x.TraerInformeMateriales(1)).Returns(new List<MaterialesModificacionInforme>() { new MaterialesModificacionInforme {Material= "A",MaterialId=1,Seleccionado=true } });
+            informeComercialManagerMock.Setup(x => x.TraerInformeMateriales(1)).Returns(new List<MaterialesModificacionInforme>() { new MaterialesModificacionInforme { Material = "A", MaterialId = 1, Seleccionado = true } });
 
             var result = target.ModificarInformeComercial(1);
 
@@ -326,7 +352,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"parametros\":{\"ProveedorId\":1,\"Materiales\":[{\"MaterialId\":1,\"Toneladas\":1}],\"CampañaId\":0,\"Campaña\":\"18-19\",\"EmplRelDep\":false,\"EmplRelDepCant\":null,\"Rodados\":null,\"RodadosOtros\":null,\"Chacra\":null,\"ChacraOtros\":null,\"AntigActividad\":null,\"ActuacionProd\":null,\"ClienteAnt\":null,\"Comentarios\":null,\"Domicilio\":null,\"InformeComercialId\":null},\"materiales\":[{\"MaterialId\":1,\"Material\":\"A\",\"Seleccionado\":true}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"parametros\":{\"ProveedorId\":1,\"Materiales\":[{\"MaterialId\":1,\"Toneladas\":1}],\"CampañaId\":0,\"Campaña\":\"18-19\",\"EmplRelDep\":false,\"EmplRelDepCant\":null,\"Rodados\":null,\"RodadosOtros\":null,\"Chacra\":null,\"ChacraOtros\":null,\"AntigActividad\":null,\"ActuacionProd\":null,\"ClienteAnt\":null,\"Comentarios\":null,\"Domicilio\":null,\"InformeComercialId\":null,\"FechaDescarga\":null,\"OrigenDA\":null},\"materiales\":[{\"MaterialId\":1,\"Material\":\"A\",\"Seleccionado\":true}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

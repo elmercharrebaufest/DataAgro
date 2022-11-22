@@ -999,7 +999,7 @@ namespace Molinos.DataAgro.Business.Managers
                 && x.MaterialId == materialId
                 && (calidad == null || (calidad != null && x.StandardCalidadId == standard))
                 && (centroId == 0 || x.DestinoId == centroId)
-                && x.ContratoAcuerdoId == null && x.EsFason != true
+                && x.ContratoAcuerdoId == null //&& x.EsFason != true
                 && (x.TipoNegocioId == 1 || x.TipoNegocioId == 2)
                 //&& (x.Canje != true)
                 && (x.PrestamoDevolucion != true)

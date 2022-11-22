@@ -314,9 +314,6 @@ function InicializarElementos() {
                             $("#boletoNingunoId").prop("checked", true);
                         } else if (compraNet.BoletoCompraNetId === 5) {
                             $("#sinBoletoId").prop("checked", true);
-                            //$("#sinBolsaCartaDiv").show();
-                            $("#sinBoletoId").data("kendoDropDownList").value(compraNet.BolsaCompraNetId);
-                            $("#sinBoletoId").data("kendoDropDownList").trigger("change");
                             ValidarSinBoleto();
                         }
                     }

@@ -947,7 +947,7 @@ namespace Molinos.DataAgro.Test.Managers
                 CentroId = 1,
                 ComercialCreadorId = 1,
                 ComercialId = 1,
-                EstadoId = (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo,
+                EstadoId = (int)EnumEstadoAdministracionCupo.Pendiente,
                 Excedente = true,
                 MaterialId = 3,
                 Observacion = "",

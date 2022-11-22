@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -45,7 +46,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ActuacionProduccion { get; set; }
         public string ClientesAnteriores { get; set; }
         public string Comentarios { get; set; }
-        public string ContactoNombre1 { get; set; }   
+        public string ContactoNombre1 { get; set; }
         public string ContactoCargo1 { get; set; }
         public string ContactoTelefono1 { get; set; }
         public string ContactoMail1 { get; set; }
@@ -81,6 +82,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comentarios { get; set; }
         public string Domicilio { get; set; }
         public int? InformeComercialId { get; set; }
+        public DateTime? FechaDescarga { get; set; }
+        public bool? OrigenDA { get; set; }
 
         public ParamInformeComercial()
         {
@@ -107,7 +110,7 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public InformesModel()
         {
-            materiales= new List<InformeComercialMaterialDisponible>();
+            materiales = new List<InformeComercialMaterialDisponible>();
             InformeGenerado = new List<InformeGeneradoList>();
         }
     }
@@ -131,7 +134,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public int EstadoId { get; set; }
         public string EstadoInforme { get; set; }
-        
+
 
 
         public InformeGeneradoList()
@@ -168,16 +171,24 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Cuit { get; set; }
         public string RazonSocial { get; set; }
         public string Campaña { get; set; }
-        public string Materiales { get; set; }
+        public IEnumerable<string> MaterialesList { get; set; }
         public string Comercial { get; set; }
         public bool Seleccionado { get; set; }
-
+        public int ProveedorId { get; set; }
+        public int? CampanaId { get; set; }
+        public int? ComercialId { get; set; }
+        public IEnumerable<int?> MaterialesIdList { get; set; }
+        public string Materiales { get { return string.Join(", ", this.MaterialesList.Distinct()) ?? ""; } }
+        public string MaterialId { get { return string.Join(", ", this.MaterialesIdList.Distinct()) ?? ""; } }
+        public DateTime? FechaAlta { get; set; }
+        public DateTime? FechaDescarga { get; set; }
+        public string OrigenDA { get; set; }
 
         public InformeList()
         {
-            Seleccionado=false;
+            Seleccionado = false;
         }
-    
+
     }
 
     public class ParamReportesIC
@@ -185,14 +196,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ComercialID { get; set; }
         public int? ComercialIDGenerador { get; set; }
         public string Cuit { get; set; }
-		public int? MaterialID { get; set; }
+        public int? MaterialID { get; set; }
         public int? EstadoId { get; set; }
     }
 
     public class ReportesList
     {
         public string Cuit { get; set; }
-	    public string RazonSocial { get; set; }
+        public string RazonSocial { get; set; }
         public DateTime? FechaDeGeneracion { get; set; }
         public string Comercial { get; set; }
         public string Estado { get; set; }
@@ -226,7 +237,8 @@ namespace Molinos.DataAgro.Entities.Dto
         }
     }
 
-    public class NuevoProduccion {
+    public class NuevoProduccion
+    {
         public int MaterialId { get; set; }
         public int Hectareas { get; set; }
         public int Toneladas { get; set; }

@@ -56,7 +56,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 CupoResult resultado = new CupoResult();
                 var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
-                if (solicitud.EstadoId != (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo)
+                if (solicitud.EstadoId != (int)EnumEstadoAdministracionCupo.Pendiente)
                 {
                     resultado.Error("Solicitud", "La solicitud no puede ser editada. No se encuentra en estado pendiente");
                     return resultado;
@@ -133,7 +133,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     if (!result.HayError)
                     {
-                        solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo;
+                        solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.Aceptado;
                         solicitud.FechaDecision = DateTime.Now;
                         solicitud.Motivo = motivo;
                         EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, result.ListaCupos, active);
@@ -210,7 +210,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (!resultado.HayError)
                     {
-                        solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoAceptadoAdministracionCupo;
+                        solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.Aceptado;
                         solicitud.FechaDecision = DateTime.Now;
                         repositorio.GuardarCambios();
                     }
@@ -349,7 +349,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var solicitud = repositorio.Obtener<AdministracionCupo>(idAdministracion);
-                solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo;
+                solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.Rechazado;
                 solicitud.FechaDecision = DateTime.Now;
                 solicitud.Motivo = motivo;
                 //var sugerenciasParaAceptar = cupoManager.SugerenciasParaAceptar(solicitud.ProveedorId.Value, solicitud.ComercialId.Value, solicitud.Centro.CodigoSap, solicitud.MaterialId, null);
@@ -466,7 +466,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public void RechazarSolicitudesVencidas()
         {
-            var administacion = repositorio.Listar<AdministracionCupo>(x => x.Fecha < DateTime.Now && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo);
+            var administacion = repositorio.Listar<AdministracionCupo>(x => x.Fecha < DateTime.Now && x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente);
             foreach (var item in administacion)
             {
                 CambiarEstadoRechazado(item.Id, "", "");
@@ -479,7 +479,7 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var solicitud = repositorio.Obtener<AdministracionCupo>(id);
-                if (solicitud != null && solicitud.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo)
+                if (solicitud != null && solicitud.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente)
                 {
                     if (!estado)
                     {                       
@@ -487,7 +487,7 @@ namespace Molinos.DataAgro.Business.Managers
                         solicitud.CantidadFleteProcedencia = cantidadFlete;
                     }
 
-                    solicitud.EstadoId = estado ? (int)EnumEstadoAdministracionCupo.EstadoRechazadoAdministracionCupo : solicitud.EstadoId;
+                    solicitud.EstadoId = estado ? (int)EnumEstadoAdministracionCupo.Anulado : solicitud.EstadoId;
                     repositorio.GuardarCambios();
                     resultado = "Ok";
                 }

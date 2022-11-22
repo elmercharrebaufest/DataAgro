@@ -1,5 +1,7 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Kendo.DynamicLinq;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Interfaces
@@ -7,6 +9,8 @@ namespace Molinos.DataAgro.Interfaces
     public interface IInformeComercialManager
     {
         List<InformeComercialMaterialDisponible> TraerInformeComercial(int ProveedorId);
+
+        DataSourceResult TraerInformesFiltrados(DataSourceRequest filtro);
 
         InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos, List<NuevoAcopio> nuevosAcopios, 
             ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId);
@@ -16,6 +20,8 @@ namespace Molinos.DataAgro.Interfaces
         List<ReportesList> ListarReportes(ParamReportesIC oParam, List<int> equipo);
 
         List<InformeList> TraerInformesGenerados();
+
+        void GuardarFechaDescargaInformeComercial(List<int> ids);
 
         List<ResultCapacidadProductiva> TraerCapacidadProductiva(string proveedores);
 

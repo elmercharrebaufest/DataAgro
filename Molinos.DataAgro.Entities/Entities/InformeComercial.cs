@@ -1,5 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,9 +10,9 @@ namespace Molinos.DataAgro.Entities.Entities
     {
         [Key]
         public int InformeComercialId { get; set; }
-        public int ProveedorId { get; set; }        
+        public int ProveedorId { get; set; }
         public DateTime? FechaAlta { get; set; }
-        public int? ComercialId { get; set; }        
+        public int? ComercialId { get; set; }
         public bool? EmplRelDep { get; set; }
         public string EmplRelDepCant { get; set; }
         public int? Rodados { get; set; }
@@ -26,6 +27,13 @@ namespace Molinos.DataAgro.Entities.Entities
         public string DomicilioReal { get; set; }
         public int? CampañaId { get; set; }
         public int? EstadoId { get; set; }
+        public DateTime? FechaDescarga { get; set; }
+        public bool? OrigenDA { get; set; }
+
+        [InverseProperty("InformeComercial")]
+        public virtual List<InformeComercialAlmacenamiento> InformeComercialAlmacenamiento { get; set; }
+        [InverseProperty("InformeComercial")]
+        public virtual List<InformeComercialProduccion> InformeComercialProduccion { get; set; }
 
         [ForeignKey("EstadoId")]
         public virtual InformeComercialEstado Estado { get; set; }

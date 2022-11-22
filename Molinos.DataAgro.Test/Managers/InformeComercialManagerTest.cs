@@ -100,9 +100,9 @@ namespace Molinos.DataAgro.Test.Managers
                             .Returns(new List<int>() { 1 });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                     .Returns(new List<CampoMaterial>() );
+                     .Returns(new List<CampoMaterial>());
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoMaterial, Campo>>>(), It.IsAny<Expression<Func<CampoMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                            .Returns(new List<Campo>() );
+                            .Returns(new List<Campo>());
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioCampaña, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                     .Returns(new List<AcopioCampaña>());
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
@@ -116,9 +116,9 @@ namespace Molinos.DataAgro.Test.Managers
             var result = target.GrabarInformeComercial(param, 1, nuevoCampo, nuevoAcopio, nuevoContactoComercial, "1", "1", 1599);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-           // repositorioMock.Verify(x => x.Remover(It.IsAny<List<InformeComercialProduccion>>()), Times.Once);
+            // repositorioMock.Verify(x => x.Remover(It.IsAny<List<InformeComercialProduccion>>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<InformeComercialAlmacenamiento, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-           // repositorioMock.Verify(x => x.Remover(It.IsAny<List<InformeComercialAlmacenamiento>>()), Times.Once);
+            // repositorioMock.Verify(x => x.Remover(It.IsAny<List<InformeComercialAlmacenamiento>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<InformeComercial, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Comercial>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<InformeComercial>()), Times.Once);
@@ -220,12 +220,17 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerInformesGeneradosTestOk()
         {
-            repositorioMock.Setup(y => y.SelStore<InformeList>(It.IsAny<string>(), It.IsAny<int>()))
-                            .Returns(new List<InformeList>() { new InformeList { Cuit = "1", Campaña = "a", Comercial = "a", InformeComercialId = 1, Materiales = "a", RazonSocial = "a", Seleccionado = true } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercial, InformeList>>>(), It.IsAny<Expression<Func<InformeComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+           .Returns(new List<InformeList>() { new InformeList { Cuit = "1", Campaña = "a", Comercial = "a", InformeComercialId = 1, RazonSocial = "a", Seleccionado = true, MaterialesIdList = new List<int?> { 1 }, MaterialesList = new List<string> { "" } } });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, String>>>(), It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+           .Returns(new List<String>() { "" });
+
 
             var result = target.TraerInformesGenerados();
 
-            repositorioMock.Verify(x => x.SelStore<InformeList>(It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<InformeComercial, InformeList>>>(), It.IsAny<Expression<Func<InformeComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
 
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count);

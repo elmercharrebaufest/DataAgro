@@ -1,4 +1,6 @@
-﻿<div class="modal fade" id="modalSolicitudExtraordinaria" tabindex="-1" role="dialog" aria-labelledby="CargaCuposLabel" aria-hidden="true">
+﻿<script src="~/Scripts/html2canvas.js"></script>
+
+<div class="modal fade" id="modalSolicitudExtraordinaria" tabindex="-1" role="dialog" aria-labelledby="CargaCuposLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -97,15 +99,17 @@
 
                     </div>
                     @*<div id="stock" >
-                <div class="col-sm-2">
-                    <label>Establecimiento</label>
+                        <div class="col-sm-2">
+                        <label>Establecimiento</label>
+                        </div>
+                        <div class="col-sm-4">
+                        <button class="k-button k-button-icontext" type="button" onclick="VisualizarStock()" style="width: 100%">Visualizar Stock</button>
+                        </div>
+                    </div>*@
                 </div>
-                <div class="col-sm-4">
-                    <button class="k-button k-button-icontext" type="button" onclick="VisualizarStock()" style="width: 100%">Visualizar Stock</button>
-                </div>
-            </div>*@
-                </div>
+                <br>
                 <div class="row" style="padding-top:8px;">
+                    <div class="col-sm-6"> </div>
                     <div id="stock">
                         <div class="col-sm-2">
                             <span>Establecimiento</span>
@@ -169,7 +173,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="myBtn btn" data-dismiss="modal">Aceptar</button>
-                <button type="button" class="myBtn btn" id="copy_btn" onclick="copiarTablaEstablecimiento()"><i class="fa fa-copy"></i> Copiar</button>
+                <button type="button" title="Copiar como imagen" class="myBtn btn" id="copy_btn" onclick="copiarTablaEstablecimiento()"><i class="fa fa-copy"></i> Copiar</button>
 
             </div>
         </div>

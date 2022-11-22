@@ -1,4 +1,5 @@
 ﻿using Autofac.Extras.NLog;
+using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -43,11 +44,13 @@ namespace Molinos.DataAgro.Business
         public InformeResult GrabarInformeComercial(ParamInformeComercial informe, int IdActiveDirectory, List<NuevoProduccion> nuevosCampos,
             List<NuevoAcopio> nuevosAcopios, ContactoComercial contactoComercial, string direccion, string codigoPostal, int? localidadId)
         {
+            informe.OrigenDA = true;
             var oEntityErrors = new InformeResult();
             InformeComercial inf = new InformeComercial();
             // si de MOA Operaciones generan un nuevo informe para un proveedor nuevo
             if (nuevosCampos != null || nuevosAcopios != null)
             {
+                informe.OrigenDA = false;
                 var materiales = repositorio.Listar<Material, int>(x => x.MaterialId);
                 var campañas = repositorio.Listar<Campaña, int>(x => x.CampañaId);
                 var localidades = repositorio.Listar<Localidad, int>(x => x.LocalidadId);
@@ -244,6 +247,7 @@ namespace Molinos.DataAgro.Business
             inf.ClienteAnt = informe.ClienteAnt;
             inf.Comentarios = informe.Comentarios;
             inf.DomicilioReal = informe.Domicilio;
+            inf.OrigenDA = informe.OrigenDA;
 
             if (inf.InformeComercialId == 0)
             {
@@ -557,11 +561,73 @@ namespace Molinos.DataAgro.Business
             return repositorio.SelStore<ReportesList>("DataAgro_InformeComercial_Reporte", 0, oParam.Cuit, oParam.ComercialID, string.Join(",", equipo.Select(n => n.ToString()).ToArray()), oParam.MaterialID, oParam.EstadoId);
         }
 
+        public DataSourceResult TraerInformesFiltrados(DataSourceRequest filtro)
+        {
+            var result = repositorio.ObtenerConsultaEscalar(new TraerInformesSinFiltro());
+            var resultado = result.AsQueryable<InformeList>().ToDataSourceResult<InformeList>(filtro);
+            return resultado;
+        }
+
         public List<InformeList> TraerInformesGenerados()
         {
-            var list = repositorio.SelStore<InformeList>("DataAgro_InformeComercial_TraerExcelGeneracion", 0);
-            list.ForEach(x => x.Materiales = x.Materiales.Replace("|", @"<br>"));
-            return list;
+            //var list = repositorio.SelStore<InformeList>("DataAgro_InformeComercial_TraerExcelGeneracion", 0);
+            //list.ForEach(x =>
+            //{
+            //    if (x.Materiales != null) x.Materiales = x.Materiales.Replace("|", @"<br>");
+            //});
+            //return list;
+
+            var informeComercial = repositorio.Listar<InformeComercial, InformeList>(x => new InformeList()
+            {
+                InformeComercialId = x.InformeComercialId,
+                Cuit = x.Proveedor.CUIT,
+                RazonSocial = x.Proveedor.RazonSocial,
+                Campaña = x.Campaña.Descripcion,
+                //Materiales = "",
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                Seleccionado = false
+            });
+
+            foreach (var infCom in informeComercial)
+            {
+                int infC = infCom.InformeComercialId;
+
+                var materiales = repositorio.Listar<InformeComercialProduccion, String>(x =>
+                    x.Material.Descripcion
+                , x => x.InformeComercial.InformeComercialId == infC);
+
+                String material = "";
+                int cantMat = materiales.Count();
+                int contMat = 0;
+
+                foreach (var mat in materiales)
+                {
+                    contMat += 1;
+                    material = contMat == cantMat ? material + mat : material + mat + @"<br>";
+                }
+                //infCom.Materiales = material;
+            }
+            return informeComercial;
+        }
+
+        public void GuardarFechaDescargaInformeComercial(List<int> ids)
+        {
+            try
+            {
+                List<InformeComercial> oInformesComercial = repositorio.Listar<InformeComercial>(x => ids.Contains(x.InformeComercialId));
+
+                foreach (var oInformeComercial in oInformesComercial)
+                {
+                    oInformeComercial.FechaDescarga = DateTime.Now;
+                }
+
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                throw;
+            }
         }
 
         public List<ResultCapacidadProductiva> TraerCapacidadProductiva(string informes)

@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 
             var solicitudes = contexto.Set<AdministracionCupo>()
                 .Where(x => x.Centro.CodigoSap == centroId && x.MaterialId == materialId
-                && x.ComercialId == comercialId && x.EstadoId == (int)EnumEstadoAdministracionCupo.EstadoPendienteAdministracionCupo
+                && x.ComercialId == comercialId && x.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente
                 && x.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo)
                 .GroupBy(x => new { x.ProveedorId, x.Fecha })
                 .Select(sugerido => new SugerenciaCupoDto

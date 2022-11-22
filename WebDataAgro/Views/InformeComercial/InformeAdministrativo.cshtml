@@ -2,16 +2,66 @@
     ViewBag.Title = "Informe Comercial";
 }
 
-<link href="~/Content/InformeAdministrativo.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="~/Scripts/App/InformeAdministrativo.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/InformeAdministrativoIndex")
+}
 
+@section Styles {
+    <link href="~/Content/InformeAdministrativo.css" rel="stylesheet" />
+}
 
-<div class="ia-contenedor">
-    <h3>Informe Administrativo</h3>
-    <div id="grilla-informes">
-        
+<div class="Titulo">
+    <h5> Informe Administrativo </h5>
+    <br />
+</div>
+<div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+    <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+</div>
+<br />
+
+<div id="filtrar" class="container collapse">
+    <div class="row">
+        <div class="col-md-2">
+            <label>Proveedor</label>
+        </div>
+        <div class="col-md-4">
+            <input id="buscadorProveedor" name="ProveedorId" class="multiselect" style="width:100%" type="text" placeholder="Buscar por CUIT, razón social" required="required" />
+        </div>
+
+        <div class="col-md-2">
+            <label>Campaña</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("CampanaId", new SelectList(ViewBag.Campania, "Value", "Text"), "Seleccione la Campaña", new { @class = "form-control filtroBusquedaPorId", @id = "campaniaId" })
+        </div>
     </div>
-    <div class="ia-contenedor-botones">
-        <button id="butDescargar" class="k-button"><img src="~/Content/Images/Aceptar.png" /> Generar</button>        
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Material</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaTextBox", @id = "materialId" })
+        </div>
+
+        <div class="col-md-2">
+            <label>Comercial</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("ComercialId", new SelectList(ViewBag.Comercial, "Value", "Text"), "Seleccione el Comercial", new { @class = "form-control filtroBusquedaPorId", @id = "ComercialId" })
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-md-12" style="text-align:right">
+            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>
+        </div>
+    </div>
+</div>
+
+<br />
+<div class="resultado">
+    <div id="grilla-informes" class="tabla-result">
     </div>
 </div>

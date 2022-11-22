@@ -2803,7 +2803,7 @@
     <Content Include="Views\Boleto\DescargarBoletos.cshtml" />
     <Content Include="Views\ReporteCompraNet\ModalDetalleFijacion.cshtml" />
     <Content Include="Views\AdministracionCupo\ModalRechazarSolicitudMasivo.cshtml" />
-    <Content Include="Views\SugerenciaCupo\ModalRechazarSolicitudUsuario.cshtml" />
+    <Content Include="Views\SugerenciaCupo\ModalAnularSolicitud.cshtml" />
     <Content Include="Views\AdministracionCupo\ModalAceptarSolicitudMasivo.cshtml" />
     <Content Include="Views\NegocioPesificacion\Index.cshtml" />
     <Content Include="Views\CupoNoPropio\Index.cshtml" />

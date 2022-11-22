@@ -1,4 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
+﻿using Kendo.DynamicLinq;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -6,6 +6,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
@@ -21,13 +22,20 @@ namespace WebDataAgro.Controllers
         private ICondicionManager mobjCondicionManager;
         private IInformeComercialManager mobjInformeComercialManager;
         private IHomeManager mobjHomeManager;
+        private readonly IComercialManager mobjComercialManager;
+        private readonly IMaterialManager mobjMaterialManager;
+        private readonly ICampañaManager mobjCampaniaManager;
         private readonly IReportesManager reportesManager;
 
-        public InformeComercialController(ICondicionManager oCondicionManager, IInformeComercialManager oInformeComercialManager, IHomeManager oHomeManager, IReportesManager reportesManager)
+        public InformeComercialController(ICondicionManager oCondicionManager, IInformeComercialManager oInformeComercialManager, IHomeManager oHomeManager, IReportesManager reportesManager,
+            IComercialManager mobjComercialManager, IMaterialManager mobjMaterialManager, ICampañaManager mobjCampaniaManager)
         {
             mobjCondicionManager = oCondicionManager;
             mobjInformeComercialManager = oInformeComercialManager;
             mobjHomeManager = oHomeManager;
+            this.mobjMaterialManager = mobjMaterialManager;
+            this.mobjCampaniaManager = mobjCampaniaManager;
+            this.mobjComercialManager = mobjComercialManager;
             this.reportesManager = reportesManager;
         }
 
@@ -41,9 +49,46 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
+        private void FillViewBag()
+        {
+            var material = mobjMaterialManager.TraerTodoMaterial();
+            var materialesListItems = material.Material.Select(
+                    x => new SelectListItem
+                    {
+                        Text = x.Descripcion,
+                        Value = x.MaterialId.ToString(),
+                        Selected = false
+                    }).OrderBy(x => x.Value);
+            ViewBag.Material = materialesListItems;
+
+            var campania = mobjCampaniaManager.TraerTodoCampania().Where(x => x.CampañaId >= 6).ToList();
+            var campaniaListItems = campania.Select(x => new SelectListItem
+            {
+                Text = x.Descripcion,
+                Value = x.CampañaId.ToString(),
+                Selected = false
+            }).OrderBy(x => x.Value);
+            ViewBag.Campania = campaniaListItems;
+
+            var comercial = mobjComercialManager.TraerTodoComercial();
+            comercial.Comercial = comercial.Comercial.Where(a => (a.Rol.ToUpper().Contains("Comercial".ToUpper()) || 
+                                                                  a.Rol.ToUpper().Contains("Comercial corredor".ToUpper()) || 
+                                                                  a.Rol.ToUpper().Contains("Mesa".ToUpper())) && a.Deshabilitado != true).ToList();
+            var comercialListItems = comercial.Comercial.Select(
+               x => new SelectListItem
+               {
+                   Text = x.Nombres + " " + x.Apellido,
+                   Value = x.ComercialId.ToString(),
+                   Selected = false
+               }).OrderBy(x => x.Value);
+            ViewBag.Comercial = comercialListItems;
+
+        }
+
         [Autorizacion(PermisosDataAgro.VisualizarInformeAdministrativo)]
         public ActionResult InformeAdministrativo()
         {
+            FillViewBag();
             return View();
         }
 
@@ -245,6 +290,39 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
+
+        [HttpPost]
+        public ActionResult BuscaDatosTabla(DataSourceRequest filtro)
+        {
+            if (filtro.Sort == null)
+            {
+                if(filtro.Filter != null && filtro.Filter.Filters!=null && filtro.Filter.Filters.Any(x => x.Field == "MaterialId")) 
+                {
+                    filtro.Filter.Filters.Where(x => x.Field == "MaterialId").FirstOrDefault().Operator="contains";
+                    filtro.Filter.Filters.Where(x => x.Field == "MaterialId").FirstOrDefault().Value = filtro.Filter.Filters.Where(x => x.Field == "MaterialId").FirstOrDefault().Value.ToString();
+                }
+
+                filtro.Sort = new List<Sort> {
+                    new Sort {Field = "RazonSocial", Dir = "desc" }
+                };
+            }
+
+            var equipo = GlobalVariables.EquipoReal;
+            var model = mobjInformeComercialManager.TraerInformesFiltrados(filtro);
+
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
+        public ActionResult ActualizarFechaDescargaInformeComercial(List<int> ids)
+        {
+            mobjInformeComercialManager.GuardarFechaDescargaInformeComercial(ids);
+            return new JsonResult()
+            {
+                Data = "Ok",
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
     }
 }
 
