@@ -848,24 +848,29 @@ function VisualizarStock() {
         cuitP = cuitProv;
     }
     var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0] });
-
-    var table = "<tr>";
-    table += '<th colspan = "2">Cosecha ' + result[0].Cosecha + '</th>';
-    table += "</tr>";
-    table += "<tr>";
-    table += "<th> Establecimiento</th>"
-    table += "<th> Cantidad (Kg)</th>"
-    table += "</tr>";
-    for (var i = 0; i < result.length; i++) {
-        table += "<tr>";
-
-        table += '<td>' + result[i].Establecimiento + '</td>';
-        table += '<td>' + kendo.toString(result[i].Cantidad, "n0") + '</td>';
+    if (result != null && result.length > 0) {
+        var table = "<tr>";
+        table += '<th colspan = "3">Cosecha ' + result[0].Cosecha + '</th>';
         table += "</tr>";
-    }
+        table += "<tr>";
+        table += "<th> Establecimiento</th>"
+        table += "<th> Cantidad (Kg)</th>"
+        table += "<th> Localidad(Provincia) </th>"
+        table += "</tr>";
+        for (var i = 0; i < result.length; i++) {
+            table += "<tr>";
 
-    $("#cargarDatosEstablecimiento").html(table);
-    $("#modalEstablecimientos").modal("show");
+            table += '<td>' + result[i].Establecimiento + '</td>';
+            table += '<td>' + kendo.toString(result[i].Cantidad, "n0") + '</td>';
+            table += '<td>' + result[i].Localidad + '(' + result[i].Provincia + ')' + '</td>';
+            table += "</tr>";
+        }
+
+        $("#cargarDatosEstablecimiento").html(table);
+        $("#modalEstablecimientos").modal("show");
+    } else {
+            MensErr("No se encontraron establecimientos con stock disponible.")
+    }
 
 }
 
