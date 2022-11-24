@@ -2,6 +2,8 @@
 
 $(document).ready(function () {
     kendo.culture("es-AR");
+    inicializarTodosKendoDate($(".filtroFecha"));
+    //$("#fechaCargaId").data("kendoDatePicker").value(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
     CreateGridInformeAdministrativo();
     InicializarElementos2();
 
@@ -117,11 +119,11 @@ function CreateGridInformeAdministrativo() {
         ],
         persistSelection: true,
         excelExport: function (e) {
-
+            var mes = new Date().getMonth() + 1;
             var sheet = e.workbook.sheets[0];
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
-                row.cells[7].value = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear();
+                row.cells[7].value = new Date().getDate() + "/" + mes + "/" + new Date().getFullYear();
             }
 
             var grid = $("#grilla-informes").data("kendoGrid");
