@@ -148,6 +148,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             //    }
             //}
+
+            //if (ValidarFechaAgenteMP(oParam))
+            //{
+            //    oErrorMessages.Error("FechaOperacion", "La fecha de operación para Agente de Compras MP no puede ser uno de los últimos 5 días hábiles del mes.");
+            //}
             return oErrorMessages;
         }
 
@@ -494,6 +499,23 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
+        private bool ValidarFechaAgenteMP(AgenteCompra contrato)
+        {
+            var fechaElegida = contrato.FechaOperacion;
+            var diasHabiles = oDiasHabilesAgent.ObtenerDiasHabilesDelMes(fechaElegida);
+            bool fechaInvalida = false;
+            int cont = 0;
+            for (int i = diasHabiles.Count - 1; cont < 5 && !fechaInvalida; i--)
+            {
+                if (fechaElegida == diasHabiles[i])
+                    fechaInvalida = true;
+                cont++;
+            }
+
+            return fechaInvalida;
+        }
+
     }
 }
 

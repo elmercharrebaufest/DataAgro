@@ -1571,13 +1571,13 @@ namespace Molinos.DataAgro.Business.Managers
                 oErrorMessages.Error("Posición", "No se puede crear un contrato SIN BOLETO con POSICION PASE .");
             }
 
-            if (oParam.TipoNegocioId == 2 && oParam.TipoAgenteCompraId != null)
-            {
-                if (ValidarFechaAgenteMP(oParam))
-                {
-                    oErrorMessages.Error("FechaOperacion", "La fecha de operación para Agente de Compras MP no puede ser uno de los últimos 5 días hábiles del mes.");
-                }
-            }
+            //if (oParam.TipoNegocioId == 2 && oParam.TipoAgenteCompraId != null)
+            //{
+            //    if (ValidarFechaAgenteMP(oParam))
+            //    {
+            //        oErrorMessages.Error("FechaOperacion", "La fecha de operación para Agente de Compras MP no puede ser uno de los últimos 5 días hábiles del mes.");
+            //    }
+            //}
 
             return oErrorMessages;
         }
