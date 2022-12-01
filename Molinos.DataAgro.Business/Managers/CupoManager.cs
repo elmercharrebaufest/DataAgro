@@ -1759,7 +1759,7 @@ namespace Molinos.DataAgro.Business.Managers
                     //formula.NegociosHasta > x.FechaDesde) || (formula.NegociosDesde <= x.FechaDesde && formula.NegociosHasta >= x.FechaHasta))
                     x.Sustentable != true &&
                     formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
-                    && x.EstadoId == 5 && x.DestinoId == formula.CentroId && x.MercsDeposito != true && x.MaterialId == formula.MaterialId);
+                    && x.EstadoId == 5 && x.DestinoId == formula.CentroId /*&& x.MercsDeposito != true*/ && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 

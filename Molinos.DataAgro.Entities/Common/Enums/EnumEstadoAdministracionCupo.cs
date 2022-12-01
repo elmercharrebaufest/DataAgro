@@ -12,12 +12,12 @@ namespace Molinos.DataAgro.Entities.Common.Enums
     public enum EnumEstadoAdministracionCupo
     {
         [Display(ResourceType = typeof(Text), Name = "EstadoAnuladoAdministracionCupo")]
-        Anulado = 0,
-        [Display(ResourceType = typeof(Text), Name = "EstadoAceptadoAdministracionCupo")]
-        Aceptado = 1,
+        Anulado = 1,
         [Display(ResourceType = typeof(Text), Name = "EstadoRechazadoAdministracionCupo")]
         Rechazado = 2,
+        [Display(ResourceType = typeof(Text), Name = "EstadoAceptadoAdministracionCupo")]
+        Aceptado = 3,
         [Display(ResourceType = typeof(Text), Name = "EstadoPendienteAdministracionCupo")]
-        Pendiente = 3,
+        Pendiente = 4
     }
 }

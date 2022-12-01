@@ -500,21 +500,21 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        private bool ValidarFechaAgenteMP(AgenteCompra contrato)
-        {
-            var fechaElegida = contrato.FechaOperacion;
-            var diasHabiles = oDiasHabilesAgent.ObtenerDiasHabilesDelMes(fechaElegida);
-            bool fechaInvalida = false;
-            int cont = 0;
-            for (int i = diasHabiles.Count - 1; cont < 5 && !fechaInvalida; i--)
-            {
-                if (fechaElegida == diasHabiles[i])
-                    fechaInvalida = true;
-                cont++;
-            }
+        //private bool ValidarFechaAgenteMP(AgenteCompra contrato)
+        //{
+        //    var fechaElegida = contrato.FechaOperacion;
+        //    var diasHabiles = oDiasHabilesAgent.ObtenerDiasHabilesDelMes(fechaElegida);
+        //    bool fechaInvalida = false;
+        //    int cont = 0;
+        //    for (int i = diasHabiles.Count - 1; cont < 5 && !fechaInvalida; i--)
+        //    {
+        //        if (fechaElegida == diasHabiles[i])
+        //            fechaInvalida = true;
+        //        cont++;
+        //    }
 
-            return fechaInvalida;
-        }
+        //    return fechaInvalida;
+        //}
 
     }
 }

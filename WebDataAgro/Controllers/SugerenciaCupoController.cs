@@ -82,16 +82,25 @@ namespace WebDataAgro.Controllers
             ViewBag.MuestraModal = muestraModal;
             var centros = centroManager.TraerTodoCentro();
             var listaCentro = new List<SelectListItem>();
-            foreach (var i in centros.Centro)
+            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden != null).OrderBy(y => y.Orden))
             {
                 listaCentro.Add(new SelectListItem
                 {
                     Text = i.Descripcion,
                     Value = i.CodigoSap.ToString(),
-                    Selected = i.CodigoSap == centroId ? true : false
+                    Selected = i.CodigoSap == centroId
                 });
             }
-            ViewBag.CenLista = new SelectList(listaCentro.OrderBy(x => x.Value), "Value", "Text", centroId);
+            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden == null).OrderBy(y => y.Descripcion))
+            {
+                listaCentro.Add(new SelectListItem
+                {
+                    Text = i.Descripcion,
+                    Value = i.CodigoSap.ToString(),
+                    Selected = i.CodigoSap == centroId
+                });
+            }
+            ViewBag.CenLista = new SelectList(listaCentro, "Value", "Text", centroId);
             var primerCierre = cupoManager.DevolverTodoCierreCupera().FirstOrDefault();
             ViewBag.Cierre = primerCierre != null ? primerCierre.Cierre : false;
 

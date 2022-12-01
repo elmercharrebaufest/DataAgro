@@ -109,13 +109,13 @@ function CargarGrillaConfig() {
                 editable: function (dataItem) { return false; },
                 headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
                 template: function (dataItem) {
-                    if (dataItem.EstadoId == 3) {
+                    if (dataItem.EstadoId == 4) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
-                    } else if (dataItem.EstadoId == 1) {
+                    } else if (dataItem.EstadoId == 3) {
                         return '<div class="statusconfirmado "></div>' + dataItem.Proveedor;
                     } else if (dataItem.EstadoId == 2) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
-                    } else if (dataItem.EstadoId == 0) {
+                    } else if (dataItem.EstadoId == 1) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
                     }
                 },
@@ -283,7 +283,7 @@ function CargarGrillaConfig() {
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
-                    if (dataItem.EstadoId == 3) { //pendiente
+                    if (dataItem.EstadoId == 4) { //pendiente
                         return '<div class="status pendiente" style="text-align: center;">Pendiente'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
                             '</div>' +
@@ -291,7 +291,7 @@ function CargarGrillaConfig() {
                             botonBorrar(dataItem, 'fa-trash pend');
 
                     }
-                    if (dataItem.EstadoId == 1) { //confirmado                       
+                    if (dataItem.EstadoId == 3) { //confirmado                       
                         return '<div class="status confirmado" style="text-align: center;">Confirmado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
                             '</div>';
@@ -301,7 +301,7 @@ function CargarGrillaConfig() {
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
                             + '</div>';
                     }
-                    if (dataItem.EstadoId == 0) { //anulado
+                    if (dataItem.EstadoId == 1) { //anulado
                         return '<div class="status anulado" style="text-align: center;">Anulado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
                             + '</div>';

@@ -62,7 +62,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                      OperaConMATBA = Proveedor.OperaConMATBA,
                  }).Distinct().Take(15).ToList();
 
-            var lista = DevolverEstadoSisa(contexto, resultado.ToList(), equipo);
+            var lista = DevolverEstadoSisa(contexto, resultado.ToList(), equipo, corredor);
             return lista.ToList();
         }
 
@@ -73,13 +73,13 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 return Query(contexto, equipo, comercialId, filtro, corredoresComercial, corredor);
             }
         }
-        private static List<BusquedaHome> DevolverEstadoSisa(DbContext contexto, List<BusquedaHome> lista, List<int> equipo)
+        private static List<BusquedaHome> DevolverEstadoSisa(DbContext contexto, List<BusquedaHome> lista, List<int> equipo, bool corredor)
         {
             if (lista.Count > 0)
             {
                 foreach (var item in lista)
                 {
-                    VerificarSiEstaAsignado(contexto, item, equipo);
+                    VerificarSiEstaAsignado(contexto, item, equipo, corredor);
                     if (item.Corredor == "")
                     {
                         if (item.Deshabilitado.HasValue && item.Deshabilitado.Value != false)
@@ -221,13 +221,18 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
             }
             return lista;
         }
-        private static void VerificarSiEstaAsignado(DbContext contexto, BusquedaHome item, List<int> equipo)
+        private static void VerificarSiEstaAsignado(DbContext contexto, BusquedaHome proveedor, List<int> equipo, bool corredor)
         {
+            if (proveedor.Corredor == "COR" && corredor)
+            {
+                proveedor.EstaAsignado = true;
+                return;
+            }
             var proveedorComercialAsignado = (from s in contexto.Set<ProveedorComercial>()
-                                              where s.ProveedorId == item.Id
+                                              where s.ProveedorId == proveedor.Id
                                               select s).Select(a => a.ComercialId).ToList();
 
-            item.EstaAsignado = equipo.Intersect(proveedorComercialAsignado).Any();
+            proveedor.EstaAsignado = equipo.Intersect(proveedorComercialAsignado).Any();
         }
     }
 }

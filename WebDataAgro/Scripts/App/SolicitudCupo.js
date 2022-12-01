@@ -117,13 +117,13 @@ function CargarGrilla() {
                 },
                 headerAttributes: { "class": classExterno }, attributes: { "id": "line", "class": classExterno },
                 template: function (dataItem) {
-                    if (dataItem.EstadoId == 3) {
+                    if (dataItem.EstadoId == 4) {
                         return '<div class="statuspendiente "></div>' + dataItem.Proveedor;
-                    } else if (dataItem.EstadoId == 1) {
+                    } else if (dataItem.EstadoId == 3) {
                         return '<div class="statusconfirmado "></div>' + dataItem.Proveedor;
                     } else if (dataItem.EstadoId == 2) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
-                    } else if (dataItem.EstadoId == 0) {
+                    } else if (dataItem.EstadoId == 1) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
                     }
 
@@ -291,14 +291,14 @@ function CargarGrilla() {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
                     var estadoContent = ''
-                    if (dataItem.EstadoId == 3) { //pendiente
+                    if (dataItem.EstadoId == 4) { //pendiente
                         if (dataItem.ConDescarga == true) {
                             return '<div class="status pendiente" style="text-align: center;">Pendiente <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i></div>' + botonBorrar(dataItem, 'fa-trash pend');
                         } else {
                             return '<div class="status pendiente" style="text-align: center;">Pendiente</div>' + botonBorrar(dataItem, 'fa-trash pend');
                         }
                     }
-                    if (dataItem.EstadoId == 1) { //aceptado
+                    if (dataItem.EstadoId == 3) { //aceptado
                         estadoContent += '<div class="status confirmado">Aceptado';
                         //return '<div class="status confirmado">Confirmado</div>';
                     }
@@ -306,7 +306,7 @@ function CargarGrilla() {
                         estadoContent += '<div class="status borrado">Rechazado';
                         //return '<div class="status borrado">Rechazado</div>';
                     }
-                    if (dataItem.EstadoId == 0) { //anulado
+                    if (dataItem.EstadoId == 1) { //anulado
                         estadoContent += '<div class="status anulado">Anulado';
                     }
                     if (dataItem.ConDescarga == true) {
