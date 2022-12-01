@@ -86,7 +86,7 @@ namespace Molinos.DataAgro.Test.Managers
                     CentroId = 1,
                     ComercialId = 1,
                     Comercial = new Comercial { IdActiveDirectory = "bmelgarejo", ComercialId = 1 },
-                    EstadoId = 3,
+                    EstadoId = 4,
                     Excedente = true,
                     ProveedorId = 1,
                     ZonaId = 1,
