@@ -60,6 +60,14 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? CuposConRiesgo { get; set; }
 
         public bool Comisionista { get; set; }
+        public int? EstadoHomeId { get; set; }
+        public string EstadoHomeMensaje { get; set; }
+    }
+
+    public class MensajeProveedorDto
+    {
+        public string DescripcionEstado { get; set; }
+        public string Mensaje { get; set; }
     }
 }
 

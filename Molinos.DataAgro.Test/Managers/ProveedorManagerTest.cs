@@ -385,7 +385,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId= 1 } });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -478,7 +478,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerProveedorConEstado3Test()
         {
-            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false  }, GrupoDeComprasId = 44 };
+            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false }, GrupoDeComprasId = 44 };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
             ConfigurationManager.AppSettings["RiesgoComercialAltoSap"] = "a";
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CapacidadProductiva, CapacidadProductivaDto>>>(), It.IsAny<Expression<Func<CapacidadProductiva, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
@@ -593,7 +593,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void TraerProveedorConFacacopTest()
         {
-            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras {  Corredor = false } };
+            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "a" };
             ConfigurationManager.AppSettings["RiesgoComercialAltoSap"] = "a";
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CapacidadProductiva, CapacidadProductivaDto>>>(), It.IsAny<Expression<Func<CapacidadProductiva, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
@@ -2058,14 +2058,14 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Campo, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampoMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Exactly(2));
             repositorioMock.Verify(x => x.Remover(It.IsAny<Campo>()), Times.Once);
-            repositorioMock.Verify(x => x.Remover(It.IsAny<CampoMaterial>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Remover(It.IsAny<CampoMaterial>()), Times.Exactly(1));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Campo>()), Times.Once);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<CampoMaterial>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.RemoverTodos(It.IsAny<List<AcopioMaterial>>()), Times.Once);
             repositorioMock.Verify(x => x.RemoverTodos(It.IsAny<List<AcopioCampaña>>()), Times.Once);
             repositorioMock.Verify(x => x.Remover(It.IsAny<Acopio>()), Times.Once);
-            repositorioMock.Verify(x => x.Remover(It.IsAny<AcopioMaterial>()), Times.Exactly(2));
-            repositorioMock.Verify(x => x.Remover(It.IsAny<AcopioCampaña>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Remover(It.IsAny<AcopioMaterial>()), Times.Exactly(1));
+            repositorioMock.Verify(x => x.Remover(It.IsAny<AcopioCampaña>()), Times.Exactly(1));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Acopio>()), Times.Once);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<AcopioCampaña>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<AcopioMaterial>()), Times.Exactly(2));
@@ -2315,14 +2315,14 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Campo, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CampoMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc), Times.Exactly(2));
             repositorioMock.Verify(x => x.Remover(It.IsAny<Campo>()), Times.Once);
-            repositorioMock.Verify(x => x.Remover(It.IsAny<CampoMaterial>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Remover(It.IsAny<CampoMaterial>()), Times.Exactly(1));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Campo>()), Times.Once);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<CampoMaterial>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.RemoverTodos(It.IsAny<List<AcopioMaterial>>()), Times.Once);
             repositorioMock.Verify(x => x.RemoverTodos(It.IsAny<List<AcopioCampaña>>()), Times.Once);
             repositorioMock.Verify(x => x.Remover(It.IsAny<Acopio>()), Times.Once);
-            repositorioMock.Verify(x => x.Remover(It.IsAny<AcopioMaterial>()), Times.Exactly(2));
-            repositorioMock.Verify(x => x.Remover(It.IsAny<AcopioCampaña>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Remover(It.IsAny<AcopioMaterial>()), Times.Exactly(1));
+            repositorioMock.Verify(x => x.Remover(It.IsAny<AcopioCampaña>()), Times.Exactly(1));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Acopio>()), Times.Once);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<AcopioCampaña>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<AcopioMaterial>()), Times.Exactly(2));
@@ -2661,7 +2661,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<ContactosComerciales>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<ContactosComerciales>() { new ContactosComerciales() });
             repositorioMock.Setup(y => y.SelStore<ObjetivosTraer>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() {  ComercialId = 1} });
+                .Returns(new List<ObjetivosTraer>() { new ObjetivosTraer() { ComercialId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, AcopioMaterialPorProveedor>>>(), It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
                 .Returns(new List<AcopioMaterialPorProveedor>() { new AcopioMaterialPorProveedor { AcopioId = 1,
                     AcopioMaterialId = 1,
@@ -2945,7 +2945,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.SelStore<CampoProduccionAcopio>(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new List<CampoProduccionAcopio>() { new CampoProduccionAcopio() { EsCampoProduccion = true, ProveedorId = 1 }, new CampoProduccionAcopio() { EsCampoProduccion = false, ProveedorId = 1, } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, Material>>>(), It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
-                .Returns(new List<Material>() { 
+                .Returns(new List<Material>() {
                     new Material { MaterialId = 1, Descripcion = "a", Campaña = new Campaña { Descripcion = "21-22" } },
                     new Material { MaterialId = 1, Descripcion = "b", Campaña = new Campaña { Descripcion = "21-22" } },
                     new Material { MaterialId = 1, Descripcion = "c", Campaña = new Campaña { Descripcion = "21-22" } },
@@ -3120,7 +3120,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CapacidadProductiva, CapacidadProductivaDto>>>(), It.IsAny<Expression<Func<CapacidadProductiva, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
               .Returns(new List<CapacidadProductivaDto>());
 
-            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false  } };
+            var comercial = new Comercial { ComercialId = 1, Apellido = "a", Nombres = "a", PerfilId = 7, IdActiveDirectory = "a", GrupoDeCompras = new GrupoDeCompras { Corredor = false } };
             var campana = new Campaña { CampañaId = 1, Descripcion = "20-21" };
 
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>()))
@@ -3508,7 +3508,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Actividad, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Proveedor>(It.IsAny<int>()), Times.Exactly(3));
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
-            
+
 
             Assert.NotNull(result);
             Assert.IsFalse(result.HayErrores);
@@ -4005,6 +4005,97 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
+        }
+
+        [Test]
+        public void ActualizarProveedoresHomeHabilitadoTestOk()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<Proveedor> {
+                    new Proveedor { CUIT = "1", EstadoHomeId = null, EstadoHomeMensaje = null, RiesgoComercialSap = "A"} });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<EstadoHome, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<EstadoHome> {
+                    new EstadoHome { Id = 1, Descripcion = "Habilitado", Color = "green" } });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<SISA> {
+                    new SISA { Id = 1, EstadoCuit = 1, SituacionCategoria = "A" } });
+
+            repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Equals(null);
+
+            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>()))
+                .Returns(new AltaTempranaNRCODto { 
+                    Mensaje = "", 
+                    AuthGralMP = "MP01", 
+                    AuthSociedadMP= "MP01", 
+                    PeticionBorradoSociedad="", 
+                    FechaActualizacionLegajo= "20.01.2022" });
+        }
+
+        [Test]
+        public void ActualizarProveedoresHomeLegajoIrregularTestOk()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<Proveedor> {
+                    new Proveedor { CUIT = "1", EstadoHomeId = null, EstadoHomeMensaje = null, RiesgoComercialSap = "A"} });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<EstadoHome, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<EstadoHome> { 
+                    new EstadoHome { Id = 2, Descripcion = "Legajo irregular", Color = "yellow" } });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<SISA> {
+                    new SISA { Id = 1, EstadoCuit = 3, SituacionCategoria = "AL" } });
+
+            repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Returns(new FACACOP { CUIT="1" });
+
+            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>()))
+                .Returns(new AltaTempranaNRCODto
+                {
+                    Mensaje = "",
+                    AuthGralMP = "MP01",
+                    AuthSociedadMP = "MP01",
+                    PeticionBorradoSociedad = "",
+                    FechaActualizacionLegajo = "31.12.9999"
+                });
+        }
+
+        [Test]
+        public void ActualizarProveedoresHomeNoHabilitadoTestOk()
+        {
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Proveedor, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<Proveedor> {
+                    new Proveedor { CUIT = "1", EstadoHomeId = null, EstadoHomeMensaje = null, RiesgoComercialSap = "A"} });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<EstadoHome, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<EstadoHome> {
+                    new EstadoHome { Id = 3, Descripcion = "No habilitado", Color = "red" } });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(
+                new List<SISA> {
+                    new SISA { Id = 1, EstadoCuit = 0, SituacionCategoria = "AL" } });
+
+            repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Returns(new FACACOP { CUIT = "1" });
+
+            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>()))
+                .Returns(new AltaTempranaNRCODto
+                {
+                    Mensaje = "",
+                    AuthGralMP = "MP02",
+                    AuthSociedadMP = "MP02",
+                    PeticionBorradoSociedad = "texto",
+                    FechaActualizacionLegajo = ""
+                });
         }
 
     }

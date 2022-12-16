@@ -32,7 +32,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 {
                     Id = cupo.Id,
                     Fecha = cupo.Fecha,
-                    Estado = cupo.EstadoId == 1 ? "Aceptado" : cupo.EstadoId == 2 ? "Rechazado" : cupo.EstadoId == 3 ? "Pendiente" : "Anulado",
+                    Estado = cupo.EstadoId == (int)EnumEstadoAdministracionCupo.Aceptado ? "Aceptado" : cupo.EstadoId == (int)EnumEstadoAdministracionCupo.Rechazado ? "Rechazado" : cupo.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente ? "Pendiente" : "Anulado",
                     EstadoId = cupo.EstadoId,
                     CantidadFleteProcedencia = cupo.CantidadFleteProcedencia,
                     CantidadDeCupo = cupo.CantidadCupo,

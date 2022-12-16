@@ -156,6 +156,8 @@ namespace WebDataAgro.Controllers
                 var identif = await oLstInformeComercial.GenerarListadoAsync(datos);
 
                 model.DownloadKey = Util.GetDownloadKey(identif);
+
+                mobjInformeComercialManager.EnviarMailInformeComercial(identif);
             }
             else
             {

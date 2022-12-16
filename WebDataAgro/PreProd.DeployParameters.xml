@@ -13,6 +13,7 @@
   <setParameter name="CredentialUserNamePesificados Key" value="materias.primas@molinosagro.com.ar" />
   <setParameter name="CredentialPasswordPesificados Key" value="D4taAgr017" />
   <setParameter name="EmailAgenda Key" value="0" />
+  <setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com.ar; administracion@molinosagro.com.ar" />
   <setParameter name="SmtpAnonimo Key" value="S" />
   <setParameter name="maildeUsuarios Key" value="scato-soporte@baufest.com" />
   <setParameter name="SapPass Key" value="Data2015" />
@@ -29,7 +30,7 @@
   <setParameter name="ServicePass Key" value="MOA.Test" />
   
   <setParameter name="UrlBaseSTOP Key" value="https://demo.ssta.gob.ar/turnos/" />
-	<setParameter name="VersionClienteSTOP Key" value="2.0.0" />
+  <setParameter name="VersionClienteSTOP Key" value="2.0.0" />
   <setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9001/" />
   <setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
 

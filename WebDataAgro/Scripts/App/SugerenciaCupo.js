@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿var listaCantidad = new Array();
+
+$(document).ready(function () {
     $('#menuproveedor').hide();
     kendo.culture("es-AR");
     //CargarGrillaConfig();
@@ -159,6 +161,7 @@ function CargarEventos() {
         var fila = '';
         for (var i = 0; i < itemsConfirmados.length; i++) {
             fila = '<tr><td>' + itemsConfirmados[i].razonSocial + '</td> <td>'
+                + kendo.toString(itemsConfirmados[i].fechaOriginal, "dd/MM/yyyy") + '</td> <td>'
                 + kendo.toString(itemsConfirmados[i].fecha, "dd/MM/yyyy")
                 + '</td> <td><input id="flete' + itemsConfirmados[i].nro + '" name="flete' + itemsConfirmados[i].nro + '" min="0" max="' + itemsConfirmados[i].cantidad
                 + '" class="cantidad-masiva" value="' + itemsConfirmados[i].cantidadFleteProcedencia + '"/> </td> <td>'
@@ -204,6 +207,8 @@ function CargarEventos() {
                 url = '/SugerenciaCupo/ModificarSugerenciaCupo';
                 data = itemsConfirmados;
             }
+            $("#CargaCupos").hide();
+            $("#cuerpo-carga-cupos").empty();
             var resultados = MSExecuteOnServer(url, data);
             mostrarResultados(resultados);
             $.unblockUI();
@@ -211,16 +216,15 @@ function CargarEventos() {
 
     });
 
-    $("#aceptarModificar").click(function () {
+    $("#aceptarModificarPorNegocio").click(function () {
         aceptar = false;
         var maximo = $("#modCantidad").html();
         var total = 0;
         var fecha = $("#modFecha").html();
         itemsConfirmados = new Array();
         var i = 0;
-        $("input:text.dia").each(function (index) {
+        $("input:text.diaNeg").each(function (index) {
             if (this.id != "") {
-                console.log(this);
                 total = total + $(this).data("kendoNumericTextBox").value();
                 var fechaSolicitud = this.id.substr(1, 2) + "/" + this.id.substr(3, 2) + "/" + this.id.substr(5, 4);
                 if ($(this).data("kendoNumericTextBox").value() > 0) {
@@ -250,7 +254,68 @@ function CargarEventos() {
         if (total > maximo) {
             MensErr("El maximo de sugerencias a modificar es " + maximo);
         } else {
-            $("#modificarSugerenciaModal").modal("hide");
+            $("#modificarSugerenciaNegocioModal").modal("hide");
+            $("#fleteProcedenciaModal").modal("show");
+        }
+    });
+
+    $("#aceptarModificarPorProveedor").click(function () {
+        aceptar = false;
+        var hayCambios = false;
+        itemsConfirmados = new Array();
+        var n = 0;
+        for (var i = 0; i < listaCantidad.length; i++) {
+            listaCantidad[i].cantidadAceptadaFila = 0;
+        }
+        $("input:text.diaProv").each(function (index) {
+            if (this.id != "") {
+                if ($(this).data("kendoNumericTextBox").value() > 0) {
+                    hayCambios = true;
+                    for (var i = 0; i < listaCantidad.length; i++) {
+                        if (listaCantidad[i].fecha == this.id.substr(3, 2) + this.id.substr(5, 2) + this.id.substr(7, 4)) {
+                            listaCantidad[i].cantidadAceptadaFila += $(this).data("kendoNumericTextBox").value();
+                        }                        
+                    }
+                }
+                
+                var fechaOriginal = this.id.substr(3, 2) + "/" + this.id.substr(5, 2) + "/" + this.id.substr(7, 4);
+                var fechaSolicitud = this.id.substr(12, 2) + "/" + this.id.substr(14, 2) + "/" + this.id.substr(16, 4);
+                
+                if ($(this).data("kendoNumericTextBox").value() > 0) {
+                    itemsConfirmados.push({
+                        nro: n++,
+                        cantidad: $(this).data("kendoNumericTextBox").value(),
+                        idSugerencia: $("#modSugerenciaId").val(),
+                        fecha: fechaSolicitud,
+                        fechaOriginal: fechaOriginal,
+                        proveedorId: $("#modProveedorId").val(),
+                        razonSocial: $(".modProveedor").html(),
+                        cantidadFleteProcedencia: 0,
+                        materialId: $("#modMaterialId").val(),
+                        comercialId: $("#ComercialSeleccionado1").val(),
+                        centroId: $("#CentroId").val(),
+
+                    });
+                }
+
+            }
+
+        });
+        
+        var errores = "";
+        for (var i = 0; i < listaCantidad.length; i++) {
+            if (listaCantidad[i].cantidad < listaCantidad[i].cantidadAceptadaFila) {
+                errores += "Para la fecha " + listaCantidad[i].fecha.substr(0, 2) + "/" + listaCantidad[i].fecha.substr(2, 2) + "/" + listaCantidad[i].fecha.substr(4, 4) + " el limite de cupos es  " + listaCantidad[i].cantidad + ".\n";
+            }
+        }
+        if (!hayCambios) {
+            MensErr("Ingrese la cantidad de sugerencias que desea cambiar de dia.");
+            return;
+        }
+        if (errores != "") {
+            MensErr(errores);
+        } else {
+            $("#modificarSugerenciaProveedorModal").modal("hide");
             $("#fleteProcedenciaModal").modal("show");
         }
     });
@@ -290,12 +355,12 @@ function redirect(comercial, material, mostrarResultado) {
     window.location.href = newURL;
 }
 
-function AceptarSugerenciaProvDia(id, fecha, material, proveedorId, razonSocial) {
+function AceptarSugerenciaProvDia(id, fecha, material, proveedorId, razonSocial, cantCupos) {
     aceptar = true;
     itemsConfirmados = new Array();
     itemsConfirmados.push({
         nro: 0,
-        cantidad: $("#" + id).data("kendoNumericTextBox").value(),
+        cantidad: $("#" + id).data("kendoNumericTextBox").value() != null ? $("#" + id).data("kendoNumericTextBox").value() : cantCupos,
         idSugerencia: 0,
         fecha: fecha,
         proveedorId: proveedorId,
@@ -309,12 +374,12 @@ function AceptarSugerenciaProvDia(id, fecha, material, proveedorId, razonSocial)
     $("#fleteProcedenciaModal").modal("show");
 }
 
-function AceptarSugerencia(id, fecha, proveedorId, razonSocial) {
+function AceptarSugerencia(id, fecha, proveedorId, razonSocial, cantCupos) {
     aceptar = true;
     itemsConfirmados = new Array();
     itemsConfirmados.push({
         nro: 0,
-        cantidad: $("#" + id).data("kendoNumericTextBox").value(),
+        cantidad: $("#" + id).data("kendoNumericTextBox").value() != null ? $("#" + id).data("kendoNumericTextBox").value() : cantCupos,
         idSugerencia: id.replace('s', ''),
         fecha: fecha,
         proveedorId: proveedorId,
@@ -350,29 +415,43 @@ function ModificarSugerencia(id, fecha, proveedorId, razonSocial, cantidad, mate
     $("#modProveedor").html(razonSocial);
     $("#modFecha").html(fecha);
     $("#modCantidad").html(cantidad);
-    $("input:text.dia").each(function (index) {
+    $("input:text.diaNeg").each(function (index) {
         if (this.id != "") {
             $(this).data("kendoNumericTextBox").value("");
         }
     });
-    $("#modificarSugerenciaModal").modal("show");
+    $("#modificarSugerenciaNegocioModal").modal("show");
 }
 
-function ModificarSugerenciaProv(id, fecha, proveedorId, razonSocial, cantidad, materialId, materialDesc) {
+function ModificarSugerenciaProv(id, fecha, proveedorId, razonSocial, materialId, materialDesc, cantidad) {
     aceptar = false;
+    listaCantidad = new Array();
+    var arrayDeCadenas = cantidad.split(",");
+    for (var i = 0; i < arrayDeCadenas.length; i++) {
+        var valores = arrayDeCadenas[i].split("-");
+        listaCantidad.push({
+            fecha: valores[0],
+            cantidad: valores[1],
+            cantidadAceptadaFila: 0,
+        });
+    }
+
+    $(".filaProv").hide();
+    for (var cupos of listaCantidad) {
+        document.getElementById("modCantidad" + cupos.fecha).innerHTML = cupos.cantidad;
+        $("#fila" + cupos.fecha).show();
+    }
     $("#modSugerenciaId").val(0);
     $("#modMaterialId").val(materialId);
     $("#modProveedorId").val(proveedorId);
-    $("#modMaterial").html(materialDesc);
-    $("#modProveedor").html(razonSocial);
-    $("#modFecha").html(fecha);
-    $("#modCantidad").html(cantidad);
-    $("input:text.dia").each(function (index) {
+    $(".modMaterial").html(materialDesc);
+    $(".modProveedor").html(razonSocial);
+    $("input:text.diaProv").each(function (index) {
         if (this.id != "") {
             $(this).data("kendoNumericTextBox").value("");
         }
     });
-    $("#modificarSugerenciaModal").modal("show");
+    $("#modificarSugerenciaProveedorModal").modal("show");
 }
 
 function mostrarResultado(result) {

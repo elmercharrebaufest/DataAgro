@@ -46,7 +46,8 @@ namespace WebDataAgro.Controllers
                 ImporteSustentableEspecial = conf.ImporteSustentableEspecial,
                 AlgoritmoKilosMinimosParaSugerencia = conf != null ? conf.AlgoritmoKilosMinimosParaSugerencia : 0,
                 Actualizacion = conf != null ? conf.Actualizacion : 1,
-                AlgoritmoProcMaxSugerenciasProveedorDia = conf != null ? conf.AlgoritmoProcMaxSugerenciasProveedorDia : 0,
+                ApiKeyBolsaRosario = conf.ApiKeyBolsaRosario,
+                SecretBolsaRosario = conf.SecretBolsaRosario,
             });
         }
         [HttpPost]
@@ -87,11 +88,12 @@ namespace WebDataAgro.Controllers
                 RedespachoMaximoARP = configuracion.RedespachoMaximoARP,
                 ToleranciaPaseMin = configuracion.ToleranciaPaseMin,
                 ToleranciaPaseMax = configuracion.ToleranciaPaseMax,
-
-                AlgoritmoKilosMinimosParaSugerencia = configuracion.AlgoritmoKilosMinimosParaSugerencia,
                 ImporteSustentableEspecial = configuracion.ImporteSustentableEspecial,
-                Actualizacion = configuracion.Actualizacion,
+                AlgoritmoKilosMinimosParaSugerencia = configuracion.AlgoritmoKilosMinimosParaSugerencia,
                 AlgoritmoProcMaxSugerenciasProveedorDia = configuracion.AlgoritmoProcMaxSugerenciasProveedorDia,
+                Actualizacion = configuracion.Actualizacion,
+                ApiKeyBolsaRosario = configuracion.ApiKeyBolsaRosario,
+                SecretBolsaRosario = configuracion.SecretBolsaRosario,
             };
             return entidad;
         }

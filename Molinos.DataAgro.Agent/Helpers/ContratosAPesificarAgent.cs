@@ -85,7 +85,7 @@ namespace Molinos.DataAgro.Agent
                 agent.ClientCredentials.UserName.UserName = UserSap;
                 agent.ClientCredentials.UserName.Password = PassSap;
                 //cuits = new List<string> { "0068514169" };
-                //logger.Debug("Cuits pesificados " + cuits.ToXml());
+                logger.Debug("Cuits pesificados " + cuits.ToXml());
                 var rq = new Z_MPRFC_LISTA_PROVEEDORES { IM_PROVEEDORES = cuits.ToArray() };
 
 

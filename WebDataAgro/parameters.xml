@@ -123,6 +123,12 @@
 						match="/configuration/appSettings/add[@key='CupoMaizPorSugerencias']
                            /@value" />
 	</parameter>
+
+	<parameter name="EmailInformeComercial Key">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/appSettings/add[@key='EmailInformeComercial']
+                           /@value" />
+	</parameter>
   
   
   <parameter name="HTTP_Port Service Endpoint Address">

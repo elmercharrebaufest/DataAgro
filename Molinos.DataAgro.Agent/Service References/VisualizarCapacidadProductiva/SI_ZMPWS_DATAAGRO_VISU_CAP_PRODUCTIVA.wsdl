@@ -19,6 +19,12 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
+      <xsd:simpleType name="date10">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="10" />
+          <xsd:pattern value="\d\d\d\d-\d\d-\d\d" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char10">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="10" />
@@ -64,6 +70,7 @@
           <xsd:element name="CANTIDAD" type="rfc:quantum25.0" />
           <xsd:element name="UNIME" type="rfc:unit3" />
           <xsd:element name="PORC" type="rfc:decimal5.2" />
+          <xsd:element name="FECHA_ACT" type="rfc:date10" />
         </xsd:sequence>
       </xsd:complexType>
       <xsd:complexType name="ZMPTT9740">

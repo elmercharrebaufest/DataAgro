@@ -37,11 +37,11 @@ namespace WebDataAgro.Models
         public int RedespachoMaximoARP { get; set; }
         public int ToleranciaPaseMax { get; set; }
         public int ToleranciaPaseMin { get; set; }
-
-        public int Actualizacion { get; set; }
         public decimal ImporteSustentableEspecial { get;  set; }
         public int AlgoritmoKilosMinimosParaSugerencia { get; set; }
         public int AlgoritmoProcMaxSugerenciasProveedorDia { get; set; }
-
+        public int Actualizacion { get; set; }
+        public string ApiKeyBolsaRosario { get; set; }
+        public string SecretBolsaRosario { get; set; }
     }
 }

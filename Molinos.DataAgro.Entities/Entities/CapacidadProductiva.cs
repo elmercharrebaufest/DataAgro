@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
@@ -13,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal Cantidad { get; set; }
         public string UnidadMedida { get; set; }
         public decimal Porcentaje { get; set; }
+        public DateTime? FechaActualizacion { get; set; }
 
         [ForeignKey("CampaniaId")]
         public virtual Campaña Campania { get; set; }

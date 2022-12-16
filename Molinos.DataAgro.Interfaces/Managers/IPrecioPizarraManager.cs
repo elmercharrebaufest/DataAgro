@@ -16,5 +16,6 @@ namespace Molinos.DataAgro.Interfaces.Managers
         List<MonedaDto> TraerTodoMoneda();
         PrecioPizarraDto TraerPrecioPizarraPorId(int id);
         Resultado EliminarPizarra(int id);
+        void ActualizarPrecioPizarra(DateTime fecha);
     }
 }

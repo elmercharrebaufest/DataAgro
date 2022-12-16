@@ -282,6 +282,11 @@ contenedor-principal-miscontactos-grupo{
     font-weight: bold;
     color: #757575;
 }
+.lista-contactos-estadoHome-titulo {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
 
 .lista-contactos-estado-guion,
 .lista-contactos-estado-ab {

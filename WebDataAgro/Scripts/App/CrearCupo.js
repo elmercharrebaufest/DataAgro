@@ -572,10 +572,13 @@ function GuardarCupo() {
         var resultado = MSExecuteOnServer('/Cupo/GuardarCupo', { cupo });
         if (resultado.Result.Resultado != null) {
             if (resultado.irA == "") {
-                var errorCantidadCuposSAP = resultado.Result.Resultado.ListaErrores.find(x => x.Source == "CantidadCuposSAP");
+                //var errorCantidadCuposSAP = resultado.Result.Resultado.ListaErrores.filter(x => x.Source == "CantidadCuposSAP");
                 var errores = [];
-                if (errorCantidadCuposSAP != undefined) {
-                    errores.push(errorCantidadCuposSAP.Message);
+                //if (errorCantidadCuposSAP != undefined) {
+                //    errores.push(errorCantidadCuposSAP.Message);
+                //}
+                for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
+                    errores.push(resultado.Error.ListaErrores[i].Message);
                 }
                 if (resultado.Result.Resultado.ListaCupos.length > 0) {
                     cuposCreados(JSON.stringify(errores), resultado.Result.Resultado.ListaCupos);

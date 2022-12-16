@@ -1064,11 +1064,17 @@ function InicializarElementos() {
                         $("#TipoDBId").data("kendoDropDownList").value("2");
                         $("#PorcentajeDescuentoId").val(compraNet.ComisionPorcentaje);
                         AgregarDescuentos();
-                    } else {
-                        for (var i = 0; i < viewModel.Descuentos.length; i++) {
-                            if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
-                                viewModel.Descuentos.remove(viewModel.Descuentos[i]);
-                            }
+                    }
+                    //else {
+                    //    for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                    //        if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
+                    //            viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+                    //        }
+                    //    }
+                    //}
+                    for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                        if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 1) {
+                            viewModel.Descuentos.remove(viewModel.Descuentos[i]);
                         }
                     }
                     $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
@@ -3785,7 +3791,7 @@ function validarDescuento(descuento) {
         errores.push("El campo Moneda no puede estar vacío");
     }
     if (descuento.TipoDBId == "2") {
-        var porcentajeNum = parseFloat(descuento.Porcentaje.replace(',', '.'));
+        var porcentajeNum = parseFloat(descuento.Porcentaje == 0 ? 0 : descuento.Porcentaje.replace(',', '.'));
         if (($("#material").val() == "4" || $("#material").val() == "5") && (porcentajeNum > 1 || porcentajeNum < 0)) {
             errores.push("El porcentaje debe estar entre 0% y 1%");
         }

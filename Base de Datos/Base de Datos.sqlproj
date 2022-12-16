@@ -337,6 +337,7 @@
     <Build Include="dbo\Tables\ServicioValor.sql" />
     <Build Include="dbo\Tables\Servicio.sql" />
     <Build Include="dbo\Tables\CapacidadProductiva.sql" />
+    <Build Include="dbo\Tables\EstadoHome.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

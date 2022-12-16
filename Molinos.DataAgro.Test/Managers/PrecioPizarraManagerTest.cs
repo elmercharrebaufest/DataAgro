@@ -25,6 +25,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<IPrecioPizarraAgent> precioPizarraAgentMock;
+        private Mock<IClienteBolsaRosarioAPIAgent> clienteBolsaRosarioAPIAgentMock;
 
         [SetUp]
         public void SetUp()
@@ -32,7 +33,8 @@ namespace Molinos.DataAgro.Test.Managers
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             precioPizarraAgentMock = new Mock<IPrecioPizarraAgent>();
-            target = new PrecioPizarraManager(repositorioMock.Object, logger.Object, precioPizarraAgentMock.Object);
+            clienteBolsaRosarioAPIAgentMock = new Mock<IClienteBolsaRosarioAPIAgent>();
+            target = new PrecioPizarraManager(repositorioMock.Object, logger.Object, precioPizarraAgentMock.Object, clienteBolsaRosarioAPIAgentMock.Object);
         }
 
         [Test]
@@ -66,7 +68,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerMonedaOk()
         {
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Moneda, MonedaDto>>>(), It.IsAny<Expression<Func<Moneda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-            .Returns(new List<MonedaDto>() { new MonedaDto {  MonedaId = "ARP" } });
+            .Returns(new List<MonedaDto>() { new MonedaDto { MonedaId = "ARP" } });
 
             var resultado = target.TraerTodoMoneda();
 
@@ -79,7 +81,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void GrabarPrecioPizarraOk()
         {
-            var precioPizarra = new PrecioPizarra {ComercialId=1, Id = 0, MaterialId = 1, FechaDesde =new DateTime(2019,8, 6), FechaHasta = new DateTime(2019, 8, 6), Material = new Material(), Moneda = new Moneda(), MonedaId = "a", Pizarra = new Pizarra(), PizarraId = 1, Precio = 100, UnidadMedida = "" };
+            var precioPizarra = new PrecioPizarra { ComercialId = 1, Id = 0, MaterialId = 1, FechaDesde = new DateTime(2019, 8, 6), FechaHasta = new DateTime(2019, 8, 6), Material = new Material(), Moneda = new Moneda(), MonedaId = "a", Pizarra = new Pizarra(), PizarraId = 1, Precio = 100, UnidadMedida = "" };
             repositorioMock.Setup(x => x.ObtenerMayor<PrecioPizarra, DateTime>(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, DateTime>>>()))
                 .Returns(new PrecioPizarra { FechaHasta = new DateTime(2019, 8, 5) });
 
@@ -91,7 +93,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.ObtenerMayor<PrecioPizarra, DateTime>(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, DateTime>>>()));
             repositorioMock.Verify(x => x.Agregar(It.IsAny<PrecioPizarra>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
-            
+
             Assert.NotNull(resultado);
             Assert.IsTrue(resultado.HayErrores);
             Assert.AreEqual(200, resultado.ListaErrores[0].ErrorCode);
@@ -113,7 +115,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void EliminarPizarraOk()
         {
-            repositorioMock.Setup(y => y.Obtener<PrecioPizarra>(It.IsAny<int>())).Returns( new PrecioPizarra { Id = 1 });
+            repositorioMock.Setup(y => y.Obtener<PrecioPizarra>(It.IsAny<int>())).Returns(new PrecioPizarra { Id = 1 });
             precioPizarraAgentMock.Setup(y => y.Anular(It.IsAny<PrecioPizarra>())).Returns("OK");
             var resultado = target.EliminarPizarra(1);
 
@@ -128,7 +130,7 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerPrecioPizarraPorIdOk()
         {
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(), It.IsAny<Expression<Func<PrecioPizarra, PrecioPizarraDto>>>()))
-                .Returns(new PrecioPizarraDto() { Id=1 });
+                .Returns(new PrecioPizarraDto() { Id = 1 });
 
             var resultado = target.TraerPrecioPizarraPorId(1);
 
@@ -137,5 +139,41 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.NotNull(resultado);
             Assert.AreEqual(1, resultado.Id);
         }
-    }    
+
+        [Test]
+        public void ActualizarPrecioPizarraOk()
+        {
+            repositorioMock.Setup(y => y.Obtener<Comercial>(It.IsAny<Expression<Func<Comercial, bool>>>())).Returns(new Comercial { IdActiveDirectory = "IdUser" });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Material, int>>>(),
+                                                It.IsAny<Expression<Func<Material, bool>>>(),
+                                                It.IsAny<int>(),
+                                                It.IsAny<string>(),
+                                                It.IsAny<DirOrden>())).Returns(new List<int>() { 1 });
+
+            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<PrecioPizarra, bool>>>(),
+                                                It.IsAny<int>(),
+                                                It.IsAny<string>(),
+                                                It.IsAny<DirOrden>())).Returns(new List<PrecioPizarra>() { new PrecioPizarra { MaterialId = 1 } });
+
+            clienteBolsaRosarioAPIAgentMock.Setup(y => y.ConsultarPrecios(It.IsAny<DateTime>(), It.IsAny<int[]>()))
+                .Returns(new List<DataBCR>() {new DataBCR {
+                    precio_Cotizacion = 1,
+                    id_MaterialDA = 1,
+                    fecha_Operacion_Pizarra = new DateTime(2019, 8, 6) } });
+
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Moneda, bool>>>()))
+                .Returns(new Moneda() { MonedaId = "ARP  " });
+
+            repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Pizarra, bool>>>()))
+                .Returns(new Pizarra() { Id = 1 });
+
+            precioPizarraAgentMock.Setup(y => y.Crear(It.IsAny<PrecioPizarra>())).Returns("OK");
+
+            target.ActualizarPrecioPizarra(new DateTime(2019, 8, 6));
+
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<PrecioPizarra>()), Times.Once);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+        }
+    }
 }

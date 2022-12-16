@@ -48,6 +48,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 from pc in pcs.DefaultIfEmpty()
                     //join pcom in contexto.Set<Proveedor>() on prove.ComisionistaId equals pcom.ProveedorId into pcoms
                     //from pcom in pcoms.DefaultIfEmpty()
+                join estHome in contexto.Set<EstadoHome>() on prove.EstadoHomeId equals estHome.Id into estHomes
+                from estHome in estHomes.DefaultIfEmpty()
                 where prove.ProveedorId == proveedorId
                 orderby pco.NroItem ascending
                 select new BasicoProveedor()
@@ -104,7 +106,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     ComisionistaId = prove.ComisionistaId,
                     Deshabilitado = prove.Deshabilitado,
                     CuposConRiesgo = prove.CuposConRiesgo,
-                    OperaConMATBA = prove.OperaConMATBA
+                    OperaConMATBA = prove.OperaConMATBA,
+                    EstadoHomeId = (int)prove.EstadoHomeId,
+                    EstadoHomeMensaje = prove.EstadoHomeMensaje,
+                    EstadoHomeDescripcion = estHome.Descripcion
                 };
 
             return resultado.ToList();

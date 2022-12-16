@@ -22,6 +22,12 @@ var aEliminarGranosEstablecimiento = [];
 var aEliminarGranosAlmacenamiento = [];
 var aEliminarGranosAlmacenamientoGrano = [];
 var comisionistaId = null;
+var generarInforme = false;
+var cambios = {
+    CampaniaId: [],
+    CampaniaDesc: [],
+    ComercialId: null
+};
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -268,7 +274,7 @@ function armarSelects(result) {
     $(".campo-segmentacion").append(htmlSegmentacion);
     $('#segmentacion').change(function () {
         CrearCorredor();
-    /*    checkComisionista();*/
+        /*    checkComisionista();*/
     });
     CrearCorredor();
 
@@ -498,7 +504,6 @@ function armarSelects(result) {
     });
 
     $("#eliminarGrano-almacenamientograno0").click(function () {
-        console.log("clickeo");
         var val = 0;
         var obj = {
             campañaId: $("#campañaAlmacenamientoGranos" + val).val(),
@@ -949,6 +954,9 @@ function armarSelects(result) {
                     toneladas: $("#toneladas" + i).val(),
                     CampoId: $("#campoid").val()
                 });
+
+                cambios.CampaniaId.push($("#campaña" + i).val()/*, materialId: $("#grano" + i).val(), material: $("#grano" + i).find('option:selected').text() }*/);
+                cambios.CampaniaDesc.push($("#campaña" + i).find('option:selected').text());
             }
         }
 
@@ -982,7 +990,7 @@ function armarSelects(result) {
             + '<div class="datos-produccion-cap-prod-guardados-zona">'
             + obj.localidadNom + " - " + obj.partido
             + '</div>'
-            + (obj.archivo?'<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar Archivo</div>':'')
+            + (obj.archivo ? '<div class="eliminar-produccion" onclick="eliminarKMZCampoProduccion(this)" id="eliminarKMZProd' + capProdCant + '">x Eliminar Archivo</div>' : '')
             + '<div class="editar-produccion" onclick="editarCampoProduccion(' + capProdCant + ')" id="editarProd' + capProdCant + '">'
             + '<img src="../Content/Images/contacto-edit.png" /> Editar'
             + '</div>'
@@ -1086,6 +1094,9 @@ function armarSelects(result) {
                     hasArrendadasNombre: $("#hectareas-propias" + i).is(":checked") ? "Propias" : ($("#hectareas-arrendadas" + i).is(":checked") ? "Alquiladas" : "no especifica"),
                     CampoId: $("#campoid").val()
                 });
+
+                cambios.CampaniaId.push($("#campañaAlmacenamiento" + i).val());
+                cambios.CampaniaDesc.push($("#campañaAlmacenamiento" + i).find('option:selected').text());
             }
         }
 
@@ -1282,7 +1293,7 @@ function armarSelects(result) {
             MensErr("Debe seleccionar un Maerial");
             return false;
         }
-        if (obj.nombre== "") {
+        if (obj.nombre == "") {
             MensErr("Debe ingresar un Nombre");
             return false;
         }
@@ -1373,6 +1384,13 @@ function armarSelects(result) {
 
 function eliminarCampoProduccion(val) {
     var item = $(val).attr("id").split("eliminarProd")[1];
+
+    for (var i = 0; i < (aGuardar[item].granos.length); i++) {
+        if ((aGuardar[item].granos[i].campañaId != "null") || (aGuardar[item].granos[i].granoId != "null")) {
+            cambios.CampaniaId.push(aGuardar[item].granos[i].campañaId);
+            cambios.CampaniaDesc.push(aGuardar[item].granos[i].campaña);
+        }
+    }
     $("#granocontenedor" + item).remove();
     aGuardar = aGuardar.filter(function (el) {
         return el.item !== parseInt(item);
@@ -1415,6 +1433,13 @@ function eliminarKMZEstablecimiento(val) {
 }
 function eliminarAlmacenamiento(val) {
     var item = $(val).attr("id").split("eliminarAlm")[1];
+    
+    for (var i = 0; i < (aGuardarAlmacenamiento[item].granosAlmacenamiento.length); i++) {
+        if ((aGuardarAlmacenamiento[item].granosAlmacenamiento[i].campañaId != "null")) {
+            cambios.CampaniaId.push(aGuardarAlmacenamiento[item].granosAlmacenamiento[i].campañaId);
+            cambios.CampaniaDesc.push(aGuardarAlmacenamiento[item].granosAlmacenamiento[i].campaña);
+        }
+    }
     $("#granocontenedoralmacenamiento" + item).remove();
     aGuardarAlmacenamiento = aGuardarAlmacenamiento.filter(function (el) {
         return el.item !== parseInt(item);
@@ -1436,6 +1461,7 @@ function eliminarKMZAlmacenamiento(val) {
     }
     recalcularSegmentacion();
 }
+
 function editarCampoProduccion(id) {
     var obj = aGuardar.filter(function (el) {
         return el.item === parseInt(id);
@@ -1565,6 +1591,7 @@ function editarCampoEstablecimiento(id) {
         return el.item !== parseInt(id);
     });
 }
+
 function editarAlmacenamiento(id) {
     var obj = aGuardarAlmacenamiento.filter(function (el) {
         return el.item === parseInt(id);
@@ -1690,7 +1717,6 @@ function editarAlmacenamiento(id) {
         });
 
         $("#eliminarGrano-almacenamientograno" + i).click(function () {
-            console.log("clickeo");
             eliminarGranoAlmacenamientoGrano(this);
         });
 
@@ -1812,11 +1838,11 @@ function armarFuncionalidades() {
             color: '#017940'
         });
     }, function () {
-            $("label[for='kmz-establecimiento']").css({
+        $("label[for='kmz-establecimiento']").css({
             'background-color': '#017940'
         });
-            $("label[for='kmz-establecimiento'] img").attr('src', "../content/images/uploadb.png");
-            $("label[for='kmz-establecimiento'] .campo-span").css({
+        $("label[for='kmz-establecimiento'] img").attr('src', "../content/images/uploadb.png");
+        $("label[for='kmz-establecimiento'] .campo-span").css({
             color: '#fff',
             border: 'none'
         });
@@ -2249,16 +2275,20 @@ function armarFuncionalidades() {
     });
 
     $(".formulario-footer-guardar-contacto").click(function () {
-        if ($(this).hasClass("guardar-proveedor")) {
-            if (comprobarInputs()) {
-                if (validar()) {
-                    ObtenerDatos();
+        if (cambios.CampaniaId.length > 0) {
+            $(this).removeClass("guardar-proveedor");
+            $("#modalGenerarInforme").modal('show');
+        } else {
+            if ($(this).hasClass("guardar-proveedor")) {
+                if (comprobarInputs()) {
+                    if (validar()) {
+                        ObtenerDatos();
+                    }
                 }
+            } else if ($(this).hasClass("guardar-corredor")) {
+                DatosCorredor();
             }
-        } else if ($(this).hasClass("guardar-corredor")) {
-            DatosCorredor();
         }
-
     });
 
     $("#concom-agregarMail").click(function () {
@@ -2758,6 +2788,7 @@ function InicializarDatos() {
         }
     });
 }
+
 function AutocompleteProcedenciaEstablecimiento() {
     $("#localidad-establecimiento").click(function () {
         $("#localidad-establecimiento").data("kendoAutoComplete").value("");
@@ -2824,6 +2855,7 @@ function AutocompleteProcedenciaEstablecimiento() {
     htmlestablecimientoMaterial += '</select>';
     $("#divMaterialEstablecimiento").append(htmlestablecimientoMaterial);
 }
+
 function AutocompleteProcedenciaAlmacenamiento() {
     $("#localidad-almacenamiento").click(function () {
         $("#localidad-almacenamiento").data("kendoAutoComplete").value("");
@@ -2931,7 +2963,6 @@ function AutocompleteProcedenciaProduccion() {
 
 }
 
-
 function ObtenerDatos() {
     if ($("#concom-nombre").val() !== ""
         || $("#concom-apellido").val() !== ""
@@ -2975,7 +3006,7 @@ function ObtenerDatos() {
 
     obj.basicos.comentario = $("#comentario").val();
 
-    if ($("#buscadorProveedor").val().length < 4) {        
+    if ($("#buscadorProveedor").val().length < 4) {
         comisionistaId = null;
     }
     obj.basicos.comisionistaId = comisionistaId; //comisionista
@@ -3169,8 +3200,23 @@ function recalcularSegmentacion() {
 function GrabarProveedor(nuevoProveedor) {
     if (ProveedorId)
         nuevoProveedor.ProveedorId = ProveedorId;
+    if (generarInforme) {
+        $('#myPleaseWait').modal('show');
+        cambios.ComercialId = $("#comercial-establecimiento").val();
+    }
+    var result = null;
+    var param = {
+        oParam: nuevoProveedor,
+        modificados: cambios
+    };
 
-    var result = MSExecuteOnServer('/Proveedor/GrabarProveedor', nuevoProveedor);
+    result = MSExecuteOnServer('/Proveedor/GrabarProveedor', param);
+    if (generarInforme && result.DownloadKey != null) {
+        for (var i = 0; i < result.DownloadKey.length; i++) {
+        descargarPdf(result.DownloadKey[i]);
+        }
+        $('#myPleaseWait').modal('hide');
+    }
     if (result != null) {
         if (ExistsErrorMessages(result.Errores)) {
             MensErr(result.Errores[0].Message);
@@ -3307,7 +3353,7 @@ function validateNumber(number) {
 }
 
 function comprobarInputs() {
-    var hayErrores = 0;  
+    var hayErrores = 0;
     if ($("#cuit").val() && $("#cuit").val().length > 20) {
         mostrarError("#cuit", "error-elem-cuit", "No debe superar los 20 caracteres");
         hayErrores = 1;
@@ -3469,6 +3515,7 @@ function eliminarError(elem, clase) {
     $(".tooltip-error.error-" + clase).remove();
     $(".triangulo-error.triangulo-" + clase).remove();
 }
+
 function mostrarConsignatario() {
     if ($("#clasificacion-compranet").val() == 1) {
         $("#consignatarioCompraNet").hide();
@@ -3505,3 +3552,28 @@ function mostrarConsignatarioProveedor() {
 //        //$("#comisionistaDiv").show();
 //    }
 //}
+
+function GuardarModalInforme(boolean) {
+    generarInforme = boolean;
+    $("#modalGenerarInforme").modal('hide');
+    if (generarInforme) {
+        if (comprobarInputs()) {
+            if (validar()) {
+                ObtenerDatos();
+            }
+        }
+    } else {
+        if (comprobarInputs()) {
+            if (validar()) {
+                ObtenerDatos();
+            }
+        }
+    }
+}
+
+function descargarPdf(datos) {
+        if (datos != null) {
+            var url = MSGetUrl('/DownLoad/Reporte?key=' + datos);
+            window.open(window.location.origin + "/" + url, '_blank');
+        }
+}

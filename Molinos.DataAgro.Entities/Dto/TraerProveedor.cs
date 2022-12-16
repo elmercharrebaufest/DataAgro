@@ -99,6 +99,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? CuposConRiesgo { get; set; }
         public bool? OperaConMATBA { get; set; }
 
+        public int? EstadoHomeId { get; set; }
+        public string EstadoHomeMensaje { get; set; }
+        public string EstadoHomeDescripcion { get; set; }
     }
 
     public class BasicoProveedorTraerPorProveedor

@@ -6,6 +6,7 @@ var grupoacopio = {};
 var grupocampoacopio = {};
 var campaniaSeleccionada;
 var grupoestablecimiento = {};
+var _DefaultDateTemplate = "{0:dd/MM/yyyy}";
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -441,6 +442,14 @@ function armarContacto() {
     var cproductiva = result.CapacidadProductiva;
 
     armarSelectHeader(historial);
+
+    var colorHome = basico[0].EstadoHomeId == null ? 'red' : basico[0].EstadoHomeId == 1 ? 'green' : basico[0].EstadoHomeId == 2 ? 'yellow' : 'red';
+    var colorTextoEstadoHome = basico[0].EstadoHomeId == 2 ? 'grey' : 'white';
+    var estadoHomeDescripcion = basico[0].EstadoHomeDescripcion == null ? "" : basico[0].EstadoHomeDescripcion;
+    //estadoHome = '<span style="background:' + colorHome + '; color:' + colorTextoEstadoHome + ';" > Estado Home: <b>' + basico[0].EstadoHomeDescripcion + '</b></span>';
+    estadoHome = '<span style="background:' + colorHome + '; color:' + colorTextoEstadoHome + ';" > <b>' + estadoHomeDescripcion + '</b></span>';
+    $(".detalle-contacto-header-estadoHome").html(estadoHome);
+
 
     $(".detalle-contacto-header-estado-span").html(basico[0].Estado);
     var estrellas = "";
@@ -3219,19 +3228,22 @@ function armarCapacidadProductiva(cproductiva) {
         },
         columns: [
             {
-                field: "Campania", type: "string", title: "Campaña", width: 150, attributes: { style: 'text-align: center' }
+                field: "Campania", type: "string", title: "Campaña", width: 105, attributes: { style: 'text-align: center' }
             },
             {
-                field: "Material", type: "string", title: "Material", width: 150, attributes: { style: 'text-align: center' }
+                field: "Material", type: "string", title: "Material", width: 105, attributes: { style: 'text-align: center' }
             },
             {
                 field: "Cantidad", type: "number", title: "Cantidad", width: 150, format: "{0:n0}", attributes: { style: 'text-align: center' }
             },
             {
-                field: "UnidadMedida", type: "string", title: "Unidad de Medida", width: 150, attributes: { style: 'text-align: center' }
+                field: "UnidadMedida", type: "string", title: "Unidad de Medida", width: 145, attributes: { style: 'text-align: center' }
             },
             {
-                field: "Porcentaje", type: "number", title: "Porcentaje", width: 150, attributes: { style: 'text-align: center' }
+                field: "Porcentaje", type: "number", title: "Porcentaje", width: 110, attributes: { style: 'text-align: center' }
+            },
+            {
+                field: "FechaActualizacion", type: "date", title: "Fecha de Actualización", width: 180, format: _DefaultDateTemplate, attributes: { style: 'text-align: center' }
             }
         ],
     });

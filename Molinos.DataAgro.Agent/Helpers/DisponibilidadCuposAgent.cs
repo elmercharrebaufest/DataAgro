@@ -48,7 +48,7 @@ namespace Molinos.DataAgro.Agent
                     List<ZonaCupo> zonas = repositorio.Listar<ZonaCupo>();
                     List<Centro> centros = repositorio.Listar<Centro>();
                     centros = centros.Where(a => a.NoPropio == false).ToList();
-                    if (centroId == null && centroId.Count == 0)
+                    if (centroId != null && centroId.Count == 0)
                     {
                         centroId.AddRange(centros.Select(x => x.CodigoSap).ToList());
                     }

@@ -57,14 +57,13 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GrabarTareaProgramadaTest()
         {            
-            var result = target.Grabar(new TaskModel());
+            var result = target.Grabar(new TaskModel()) as JsonResult;
 
             Assert.NotNull(result);
 
             var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Name\":null,\"NextRunTime\":\"\\/Date(-62135586000000)\\/\",\"LastRunTime\":\"\\/Date(-62135586000000)\\/\",\"ActionURL\":null,\"RepeticionEnMinutos\":0,\"Inicio\":\"\\/Date(-62135586000000)\\/\",\"Errores\":[{\"Item\":0,\"ErrorCode\":0,\"LogId\":0,\"Message\":\"Ocurrió un error al intentar guardar la tarea: Value does not fall within the expected range.\",\"Source\":\"\",\"LargeDescription\":\"\",\"Translate\":false,\"Format\":\"\",\"Args\":[]}],\"ListaErrores\":[{\"Item\":0,\"ErrorCode\":0,\"LogId\":0,\"Message\":\"Ocurrió un error al intentar guardar la tarea: Value does not fall within the expected range.\",\"Source\":\"\",\"LargeDescription\":\"\",\"Translate\":false,\"Format\":\"\",\"Args\":[]}],\"HayError\":true,\"HayErrores\":true},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            var model = serializer.Deserialize<Resultado>(serializer.Serialize(result.Data));
+            Assert.AreEqual(true, model.HayErrores);
         }
 
         [Test]

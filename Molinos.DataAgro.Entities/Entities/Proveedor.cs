@@ -58,8 +58,10 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ComisionistaId { get; set; }
         public bool? Comisionista { get; set; }
         public bool? OperaConMATBA { get; set; }
-
+        public int? EstadoHomeId { get; set; }
+        public string EstadoHomeMensaje { get; set; }
         public bool? Deshabilitado { get; set; }
+
         [ForeignKey("EstadoId")]
         public virtual Estado Estado { get; set; }
         [ForeignKey("SegmentacionId")]
@@ -90,6 +92,8 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("ComisionistaId")]
         public virtual Proveedor ComisionistaE { get; set; }
+        [ForeignKey("EstadoHomeId")]
+        public virtual EstadoHome EstadoHome { get; set; }
 
     }
 }

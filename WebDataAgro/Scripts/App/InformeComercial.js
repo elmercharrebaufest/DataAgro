@@ -295,7 +295,6 @@ function ModificarInformeComercial(InformeComercialId) {
 
 function EliminarInformeComercial(InformeComercialId) {
     Confirma("¿Desea eliminar el registro?", function (dialogItself) {
-        this.close();
         function funcReturn(datos) {
             var grilla = $("#gridInformeComercialNuevo").data("kendoGrid");
             var elemento = grilla.dataItem(grilla.select());

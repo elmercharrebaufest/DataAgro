@@ -55,8 +55,10 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.ToleranciaPaseMin = oConfiguracion.ToleranciaPaseMin;
                 oConfiguracionSave.ImporteSustentableEspecial = oConfiguracion.ImporteSustentableEspecial;
                 oConfiguracionSave.AlgoritmoKilosMinimosParaSugerencia = oConfiguracion.AlgoritmoKilosMinimosParaSugerencia;
-                oConfiguracionSave.Actualizacion = oConfiguracion.Actualizacion;
                 oConfiguracionSave.AlgoritmoProcMaxSugerenciasProveedorDia = oConfiguracion.AlgoritmoProcMaxSugerenciasProveedorDia;
+                oConfiguracionSave.Actualizacion = oConfiguracion.Actualizacion;
+                oConfiguracionSave.ApiKeyBolsaRosario = oConfiguracion.ApiKeyBolsaRosario;
+                oConfiguracionSave.SecretBolsaRosario = oConfiguracion.SecretBolsaRosario;
             }
 
             else

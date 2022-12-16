@@ -6,7 +6,9 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 
 namespace Molinos.DataAgro.Agent
 {
@@ -34,7 +36,7 @@ namespace Molinos.DataAgro.Agent
                     FechaActualizacion = "SI",
                     Nosis = "SI",
                     Ruca = new Ruca
-                        {
+                    {
                         Acopiador = new ValoresRuca
                         {
                             Consignatario = "SI",
@@ -52,9 +54,22 @@ namespace Molinos.DataAgro.Agent
                     },
                     Consignatario = "SI",
                     PlanCanje = "SI",
-                    BoletoFisico = "NO"
-                    
-                    
+                    BoletoFisico = "NO",
+
+                    PeticionBorradoGral = "",
+                    PeticionBorradoSociedad = "",
+                    BloqueoProveedorGral = "",
+                    BloqueoProveedorSociedad = "",
+                    RiesgoComercial = "",
+                    AuthGralMP = "",
+                    AuthSociedadMP = "",
+                    BloqueoProveedor = "",
+                    FechaActualizacionLegajo = "",
+                    HistoricoFechaActualizacionLegajo = new List<HistoricoFechaActualizacionLegajo>() {
+                        new HistoricoFechaActualizacionLegajo() {
+                            Cosecha = "",
+                            Material = "",
+                            FechaAtualizacion = "" } }
                 };
             }
             else
@@ -100,7 +115,7 @@ namespace Molinos.DataAgro.Agent
                                 Directo = valor.EX_RUCA.OTROS.DIRECTO,
                                 PlanCanje = valor.EX_RUCA.OTROS.PROV_PLAN_CANJE
                             },
-                            Corredor = valor.EX_RUCA.CORREDOR, 
+                            Corredor = valor.EX_RUCA.CORREDOR,
                             Fason = valor.EX_RUCA.FASON
                         },
                         PlanCanje = valor.EX_PLAN_CANJE,
@@ -111,12 +126,29 @@ namespace Molinos.DataAgro.Agent
                         Carta = valor.EX_CARTA,
                         FechaActualizacion = valor.EX_FECHA_ACTUALIZACION,
                         Mensaje = valor.EX_MENSAJE,
-                        ProveedorGrano = valor.EX_PROVEEDOR_GRANOS,      
-                        BoletoFisico = valor.EX_BOLETO_FISICO
-                          
+                        ProveedorGrano = valor.EX_PROVEEDOR_GRANOS,
+                        BoletoFisico = valor.EX_BOLETO_FISICO,
+
+                        PeticionBorradoGral = valor.EX_PET_BORRADO_GENERAL,
+                        PeticionBorradoSociedad = valor.EX_PET_BORRADO_SOCIEDAD,
+                        BloqueoProveedorGral = valor.EX_BLOQUEO_GENERAL,
+                        BloqueoProveedorSociedad = valor.EX_BLOQUEO_SOCIEDAD,
+                        RiesgoComercial = valor.EX_RIESGO_COMERCIAL,
+                        AuthGralMP = valor.EX_BEGRU_GENERAL,
+                        AuthSociedadMP = valor.EX_BEGRU_SOCIEDAD,
+                        BloqueoProveedor = valor.EX_BLOQUEO,
+                        FechaActualizacionLegajo = valor.EX_INTAD,
+                        HistoricoFechaActualizacionLegajo = valor.EX_FECHA_ACTUALIZACION_LEGAJO == null ? new List<HistoricoFechaActualizacionLegajo>() :
+                            valor.EX_FECHA_ACTUALIZACION_LEGAJO.ToList().Select(x => new HistoricoFechaActualizacionLegajo()
+                            {
+                                Material = x.MATNR,
+                                Cosecha = x.COSECHA,
+                                FechaAtualizacion = x.FECHA_ACT,
+                            }).ToList(),
                     };
                     return retorno;
-                }catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     logger.Error(e.Message);
                     throw;

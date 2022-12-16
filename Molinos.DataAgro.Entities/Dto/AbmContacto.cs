@@ -30,20 +30,24 @@ namespace Molinos.DataAgro.Entities.Dto
 
     }
 
-        public class ResultIniContacto
-        {
-            public List<ContactoIni> Contactos { get; set; }
+    public class ResultIniContacto
+    {
+        public List<ContactoIni> Contactos { get; set; }
         public int TotalContactos { get; set; }
         public int TotalPotencialContactos { get; set; }
         public int TotalOperandoContactos { get; set; }
         public int TotalNoOperandoContactos { get; set; }
         public int TotalBajaContactos { get; set; }
         public int TotalSinInteresContactos { get; set; }
+
+        public int TotalHabilitadoContactos { get; set; }
+        public int TotalLegajoIrregularContactos { get; set; }
+        public int TotalNoHabilitadoContactos { get; set; }
     }
 
 
-        public class ContactoIni
-        {       
+    public class ContactoIni
+    {
         public int ProveedorId { get; set; }
         public int? Calificacion { get; set; }
         [DisplayName("Razon Social")]
@@ -65,7 +69,9 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaAlta { get; set; }
         public string GrupoDeCompras { get; set; }
         public bool Corredor { get; set; }
-
+        public int? EstadoHomeId { get; set; }
+        public string EstadoHomeMensaje { get; set; }
+        public string EstadoHomeDescripcion { get; set; }
     }
 
     public class ContactoExcel
@@ -73,10 +79,10 @@ namespace Molinos.DataAgro.Entities.Dto
         [DisplayName("Razon Social")]
         public string RazonSocial { get; set; }
         public int? Calificacion { get; set; }
-        public string Cuit { get; set; }      
+        public string Cuit { get; set; }
         public string Mail { get; set; }
-        public string Estado { get; set; }       
-        public string Telefono { get; set; }        
+        public string Estado { get; set; }
+        public string Telefono { get; set; }
         [DisplayName("Ultimo Contacto")]
         public string UltimoContacto { get; set; }
         public string Operable { get; set; }
@@ -87,10 +93,5 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ComercialCargo { get; set; }
 
     }
-
-
-
-
-
 }
 

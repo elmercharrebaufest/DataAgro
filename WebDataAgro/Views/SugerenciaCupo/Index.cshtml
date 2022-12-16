@@ -173,7 +173,7 @@
 
 <link href="~/Content/cupo.css" rel="stylesheet" />
 
-@*<div class="alert alert-warning @(cierre ? "": "hide")">La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.</div>*@
+@*<div class="alert alert-warning @(cierre ? "": "hide")">La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente comunicarse con el administrador de la Cupera.</div>*@
 <div class="container-fluid ">
     <ul class="nav nav-tabs" id="myTab">
         @*<li><a data-target="#payment" data-toggle="tab">Sugerencia de cupos pendientes</a></li>*@
@@ -195,7 +195,7 @@
                 </div>
             </div>*@
         <div class="tab-pane active" id="method">
-            <div class="alert alert-warning @(cierre ? "": "hide")">La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.</div>
+            <div class="alert alert-warning @(cierre ? "": "hide")">La cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente comunicarse con el administrador de la cupera.</div>
 
             @*filtros*@
             <div class="panelflotante @(cierre ? "hide": "")">
@@ -231,12 +231,12 @@
                     <div class="float-left margen-15 borde-cheks">
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 1 ? "checked" : "") value="1"> Maiz
+                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 1 ? "checked" : "") value="1" disabled> Maiz
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 2 ? "checked" : "") value="2"> Trigo
+                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 2 ? "checked" : "") value="2" disabled> Trigo
                             </label>
                         </div>
                         <div class="form-check-inline">
@@ -246,12 +246,12 @@
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 4 ? "checked" : "") value="4"> Girasol
+                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 4 ? "checked" : "") value="4" disabled> Girasol
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 5 ? "checked" : "") value="5"> Girasol AO
+                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 5 ? "checked" : "") value="5" disabled> Girasol AO
                             </label>
                         </div>
 
@@ -265,8 +265,7 @@
             </div>
             <div class="row @(cierre ? "hide": "")">
                 <div class="col-xs-12" style="padding:0;">
-                    @*<div id="gridSugerenciaCupo" class="table-responsive">
-                        </div>*@
+                    @*<div id="gridSugerenciaCupo" class="table-responsive"> </div>*@
 
                     @if (lista == null || lista.Where(a => a.MaterialId == materialId).Count() == 0)
                     {
@@ -274,96 +273,96 @@
                     }
                     else
                     {
-                        <table class="table table-striped table-responsive">
-                            <thead>
-                                <tr class="cabecera">
-                                    <th colspan="3">Dia / Material</th>
-                                    <th colspan="4">Proveedor</th>
-                                    <th colspan="1">Sugerencias<br />Pendientes<br />por proveedor</th>
-                                    <th colspan="3">Sugerencias de cupos<br />que quiero aceptar</th>
-                                    <th colspan="2">Devolucion de<br />sugerencias</th>
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr class="cabecera">
+                            <th colspan="3">Dia / Material</th>
+                            <th colspan="4">Proveedor</th>
+                            <th colspan="1">Sugerencias<br />Pendientes<br />por proveedor</th>
+                            <th colspan="3">Sugerencias de cupos<br />que quiero aceptar</th>
+                            <th colspan="2">Devolucion de<br />sugerencias</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var dia in lista.GroupBy(x => x.FechaSugerida).OrderBy(x => x.Key).ToList())
+                        {
+                        <thead>
+                            <tr class="cabecera-dia">
+                                <td colspan="6">
+                                    <label class="fa fa-caret-square-o-down" aria-hidden="true" onclick="verOcultar(this,'@dia.Key.ToString("ddMMyyyy")',false)"></label>
+                                    <b>@dia.Key.ToString("dd/MM/yyyy")</b> &nbsp;
+                                    Sugerencias por dia:<b> @(@sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault() != null ? sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault().Total : 0)</b>
+                                </td>
+                                @*<td>Originales</td>*@
+                                <td>Quedan @dia.Where(a => a.MaterialId == materialId).Sum(a => a.CantidadDeCupos)</td>
+                                <td colspan="3"></td>
+                                <td colspan="2">Devoluciones del dia</td>
+                            </tr>
+                        </thead>
+                        //proveedores del dia
+                        foreach (var proveedor in dia.Where(a => a.MaterialId == materialId).GroupBy(x => x.ProveedorDesc).OrderBy(a => a.Key).ToList())
+                        {
+                            <tr class="cabecera-proveedor @dia.Key.ToString("ddMMyyyy") p@(proveedor.First().ProveedorCUIT) pall todo" hidden>
+                                <td colspan="3" style="padding:0 8px 0 0;">
+                                    <div class="material@(proveedor.First().MaterialId)">
+                                        @proveedor.First().MaterialDesc
+                                    </div>
+                                </td>
+                                <td colspan="3">
+                                    <label class="fa fa-caret-square-o-down" name="p@(dia.Key.ToString("ddMMyyyy"))" aria-hidden="true" onclick="verOcultar(this,'@dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT',true)"></label>
+                                    @proveedor.First().ProveedorDesc
+                                </td>
+                                <td>@proveedor.Sum(x => x.CantidadDeCupos)</td>
+                                <td><input type="text" class="kNumeric" max="@proveedor.Sum(x => x.CantidadDeCupos)" id="p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))" style="width:70px;" /></td>
+                                <td><a class="linkVerde" href="javascript:void(0);" onclick="AceptarSugerenciaProvDia('p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))','@(dia.Key.ToString("dd/MM/yyyy"))','@(dia.First().MaterialId)','@(proveedor.First().ProveedorId)','@(proveedor.First().ProveedorDesc.Replace("'",""))', '@(proveedor.Sum(a=>a.CantidadDeCupos))')">Aceptar Sugerencias</a></td>
+                                <td><a class="linkCeleste" href="javascript:void(0);" onclick='ModificarSugerenciaProv("p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))", "@(dia.Key.ToString("dd/MM/yyyy"))", "@(proveedor.First().ProveedorId)", "@(proveedor.First().ProveedorDesc.Replace("'",""))", "@(proveedor.First().MaterialId)", "@(proveedor.First().MaterialDesc)","@(string.Join(",",lista.Where(a => a.ProveedorId == proveedor.First().ProveedorId).GroupBy(a => a.FechaSugerida).Select(a => a.Key.ToString("ddMMyyyy") +"-"+ a.Sum(x=>x.CantidadDeCupos))))")'>Modificar Sugerencia</a></td>
+
+                                <td colspan="2"></td>
+                            </tr>
+
+                            <tr class="cabecera-sugerencia sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
+                                <th>Punt.</th>
+                                <th>Contrato SAP</th>
+                                <th>Kg</th>
+                                @*<th>Pendiente <br /> de Entrega</th>*@
+                                <th>Negocio</th>
+                                <th>Moneda</th>
+                                <th>Precio</th>
+                                <th colspan="2">Cantidad<br />Sugerida</th>
+                                <th colspan="3">Sugerencias de cupos<br /> que quiero aceptar</th>
+                                <th colspan="2"></th>
+                            </tr>
+
+                            foreach (var sugerencia in proveedor.OrderByDescending(x => x.PuntuacionTotal))
+                            {
+                                <tr class="sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
+                                    <td>@sugerencia.PuntuacionTotal</td>
+                                    <td>@sugerencia.ContratoSAP</td>
+                                    <td>@sugerencia.KgNegocio.ToString("N0")</td>
+                                    @*<td>@sugerencia.KgPendienteAplicar.ToString("N0")</td>*@
+                                    <td>@sugerencia.TipoNegocioDesc</td>
+                                    <td>@sugerencia.MonedaDesc</td>
+                                    <td>@(sugerencia.Precio == null ? "" : sugerencia.Precio.Value.ToString("N"))</td>
+                                    @*<td>@sugerencia.CantidadCupoOriginal</td>*@
+                                    <td>@sugerencia.CantidadDeCupos</td>
+                                    <td><input type="text" class="kNumeric" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="s@(sugerencia.Id)" /></td>
+                                    <td><a class="linkVerde" href="javascript:void(0);" onclick="AceptarSugerencia('s@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))', '@(sugerencia.CantidadDeCupos)')">Aceptar Sugerencia</a></td>
+                                    <td><a class="linkCeleste" href="javascript:void(0);" onclick="ModificarSugerencia('@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))','@(sugerencia.CantidadDeCupos)','@(sugerencia.MaterialId)','@(sugerencia.MaterialDesc)')">Modificar Sugerencia</a></td>
+                                    <td><input type="text" class="kNumeric" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="d@(sugerencia.Id)" /></td>
+                                    <td><a class="linkCeleste" href="javascript:void(0);" onclick="DevolverSugerencia('d@(sugerencia.Id)')">Devolver Sugerencia</a></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach (var dia in lista.GroupBy(x => x.FechaSugerida).OrderBy(x => x.Key).ToList())
-                                {
-                                <thead>
-                                    <tr class="cabecera-dia">
-                                        <td colspan="6">
-                                            <label class="fa fa-caret-square-o-down" aria-hidden="true" onclick="verOcultar(this,'@dia.Key.ToString("ddMMyyyy")',false)"></label>
-                                            <b>@dia.Key.ToString("dd/MM/yyyy")</b> &nbsp;
-                                            Sugerencias por dia:<b> @(@sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault() != null ? sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault().Total : 0)</b>
-                                        </td>
-                                        @*<td>Originales</td>*@
-                                        <td>Quedan @dia.Where(a => a.MaterialId == materialId).Sum(a=>a.CantidadDeCupos)</td>
-                                        <td colspan="3"></td>
-                                        <td colspan="2">Devoluciones del dia</td>
-                                    </tr>
-                                </thead>
-                                //proveedores del dia
-                                foreach (var proveedor in dia.Where(a => a.MaterialId == materialId).GroupBy(x => x.ProveedorDesc).OrderBy(a => a.Key).ToList())
-                                {
-                                    <tr class="cabecera-proveedor @dia.Key.ToString("ddMMyyyy") p@(proveedor.First().ProveedorCUIT) pall todo" hidden>
-                                        <td colspan="3" style="padding:0 8px 0 0;">
-                                            <div class="material@(proveedor.First().MaterialId)">
-                                                @proveedor.First().MaterialDesc
-                                            </div>
-                                        </td>
-                                        <td colspan="3">
-                                            <label class="fa fa-caret-square-o-down" name="p@(dia.Key.ToString("ddMMyyyy"))" aria-hidden="true" onclick="verOcultar(this,'@dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT',true)"></label>
-                                            @proveedor.First().ProveedorDesc
-                                        </td>
-                                        @*<td>@proveedor.Sum(x => x.CantidadDeCupos)</td>*@
-                                        <td>@proveedor.Sum(x => x.CantidadDeCupos)</td>
-                                        <td><input type="text" class="kNumeric" max="@proveedor.Sum(x => x.CantidadDeCupos)" id="p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))" style="width:70px;" /></td>
-                                        <td><a class="linkVerde" href="javascript:void(0);" onclick="AceptarSugerenciaProvDia('p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))','@(dia.Key.ToString("dd/MM/yyyy"))','@(dia.First().MaterialId)','@(proveedor.First().ProveedorId)','@(proveedor.First().ProveedorDesc.Replace("'",""))')">Aceptar Sugerencias</a></td>
-                                        <td><a class="linkCeleste" href="javascript:void(0);" onclick="ModificarSugerenciaProv('p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))','@(dia.Key.ToString("dd/MM/yyyy"))','@(proveedor.First().ProveedorId)','@(proveedor.First().ProveedorDesc.Replace("'",""))','@(proveedor.Sum(a=>a.CantidadDeCupos))','@(proveedor.First().MaterialId)','@(proveedor.First().MaterialDesc)')">Modificar Sugerencia</a></td>
-                                        <td colspan="2"></td>
-                                    </tr>
-
-                                    <tr class="cabecera-sugerencia sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
-                                        <th>Punt.</th>
-                                        <th>Contrato SAP</th>
-                                        <th>Kg</th>
-                                        @*<th>Pendiente <br /> de Entrega</th>*@
-                                        <th>Negocio</th>
-                                        <th>Moneda</th>
-                                        <th>Precio</th>
-                                        <th colspan="2">Cantidad<br />Sugerida</th>
-                                        <th colspan="3">Sugerencias de cupos<br /> que quiero aceptar</th>
-                                        <th colspan="2"></th>
-                                    </tr>
-
-                                    foreach (var sugerencia in proveedor.OrderByDescending(x => x.PuntuacionTotal))
-                                    {
-                                        <tr class="sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
-                                            <td>@sugerencia.PuntuacionTotal</td>
-                                            <td>@sugerencia.ContratoSAP</td>
-                                            <td>@sugerencia.KgNegocio.ToString("N0")</td>
-                                            @*<td>@sugerencia.KgPendienteAplicar.ToString("N0")</td>*@
-                                            <td>@sugerencia.TipoNegocioDesc</td>
-                                            <td>@sugerencia.MonedaDesc</td>
-                                            <td>@(sugerencia.Precio == null ? "" : sugerencia.Precio.Value.ToString("N"))</td>
-                                            @*<td>@sugerencia.CantidadCupoOriginal</td>*@
-                                            <td>@sugerencia.CantidadDeCupos</td>
-                                            <td><input type="text" class="kNumeric" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="s@(sugerencia.Id)" /></td>
-                                            <td><a class="linkVerde" href="javascript:void(0);" onclick="AceptarSugerencia('s@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))')">Aceptar Sugerencia</a></td>
-                                            <td><a class="linkCeleste" href="javascript:void(0);" onclick="ModificarSugerencia('@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))','@(sugerencia.CantidadDeCupos)','@(sugerencia.MaterialId)','@(sugerencia.MaterialDesc)')">Modificar Sugerencia</a></td>
-                                            <td><input type="text" class="kNumeric" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="d@(sugerencia.Id)" /></td>
-                                            <td><a class="linkCeleste" href="javascript:void(0);" onclick="DevolverSugerencia('d@(sugerencia.Id)')">Devolver Sugerencia</a></td>
-                                        </tr>
-                                    }
-                                    <tr class="sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
-                                        <td colspan="14">&nbsp;</td>
-                                    </tr>
-
-                                }
-
                             }
+                            <tr class="sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
+                                <td colspan="14">&nbsp;</td>
+                            </tr>
 
-                                </tbody>
-                            </table>
+                        }
+
+                    }
+
+                        </tbody>
+                    </table>
                         }
                 </div>
             </div>
@@ -417,7 +416,8 @@
                         <thead>
                             <tr>
                                 <th>Proveedor</th>
-                                <th>Fecha</th>
+                                <th>Fecha Original</th>
+                                <th>Fecha Elegida</th>
                                 <th>Cantidad de Cupos</th>
                                 <th></th>
                             </tr>
@@ -428,7 +428,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="myBtn btn aceptar" data-dismiss="modal" id="aceptar">Aceptar</button>
+                <button type="button" class="myBtn btn aceptar" id="aceptar">Aceptar</button>
                 <button type="button" class="myBtn btn" id="cancelar-carga" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
@@ -482,7 +482,66 @@
     </div>
 </div>
 
-<div class="modal fade" id="modificarSugerenciaModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modificarSugerenciaProveedorModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:auto;">
+        <div class="modal-content" style="width:auto;">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title" id=""></h1>
+                <div class="status confirmado-modal">
+                    <div>Modificar Sugerencia</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <input type="hidden" id="modSugerenciaId" />
+                    <input type="hidden" id="modMaterialId" />
+                    <input type="hidden" id="modProveedorId" />
+                    <table id="carga-cupos-table" class="table">
+                        <tbody id="">
+                            <tr style="height:48px;">
+                                <td class="border-0">Material</td>
+                                <td class="border-0">Proveedor</td>
+                                <td class="border-0">Fecha</td>
+                                <td class="border-0" style="border-right:1px solid #dddddd !important;">Cantidad</td>
+                                @foreach (var fecha in fechas)
+                                {
+                                    <td class="border-0">@fecha.ToString("dd MMM").Replace(".", "") <br /> (<b>@(sugerenciaPorComercial.Any(a => a.Fecha == fecha) ? sugerenciaPorComercial.First(a => a.Fecha == fecha).Total.ToString() : "0")</b>)</td>
+                                }
+                            </tr>
+                            @foreach (var dia in lista.GroupBy(x => x.FechaSugerida).OrderBy(x => x.Key).ToList())
+                            {
+                                <tr class="filaProv" id="fila@(dia.Key.ToString("ddMMyyyy"))" style="height:48px;">
+                                    @*<td><b></b>@dia.Where(a => a.MaterialId == materialId).First().MaterialDesc</td>*@
+                                    <td><b class="modMaterial"></b></td>
+                                    <td><b class="modProveedor"></b></td>
+                                    <td><b>@dia.Key.ToString("dd/MM/yyyy")</b></td>
+                                    <td style="border-right:1px solid #dddddd;"><b id="modCantidad@(dia.Key.ToString("ddMMyyyy"))"></b></td>
+                                    @foreach (var fecha in fechas)
+                                    {
+                                        <td>
+                                            <input type="text" id="mod@(dia.Key.ToString("ddMMyyyy")+"_"+fecha.ToString("ddMMyyyy"))" class="kNumeric diaProv" style="width:70px;" />
+                                        </td>
+                                    }
+                                </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn btn" id="aceptarModificarPorProveedor">Aceptar</button>
+                <button type="button" class="myBtn btn" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modificarSugerenciaNegocioModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document" style="width:auto;">
         <div class="modal-content" style="width:auto;">
             <div class="modal-header">
@@ -519,7 +578,7 @@
                                 @foreach (var fecha in fechas)
                                 {
                                     <td>
-                                        <input type="text" id="d@(fecha.ToString("ddMMyyyy"))" class="kNumeric dia" style="width:70px;" />
+                                        <input type="text" id="d@(fecha.ToString("ddMMyyyy"))" class="kNumeric diaNeg" style="width:70px;" />
                                     </td>
                                 }
                             </tr>
@@ -528,7 +587,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="myBtn btn" id="aceptarModificar">Aceptar</button>
+                <button type="button" class="myBtn btn" id="aceptarModificarPorNegocio">Aceptar</button>
                 <button type="button" class="myBtn btn" data-dismiss="modal">Cancelar</button>
             </div>
         </div>

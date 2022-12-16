@@ -22,6 +22,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 join prove in contexto.Set<Proveedor>() on pCom.ProveedorId equals prove.ProveedorId
                 join comercial in contexto.Set<Comercial>() on pCom.ComercialId equals comercial.ComercialId
                 join est in contexto.Set<Estado>() on prove.EstadoId equals est.EstadoId into estados
+                join estHome in contexto.Set<EstadoHome>() on prove.EstadoHomeId equals estHome.Id
                 from ests in estados.DefaultIfEmpty()
                 where prove.SegmentacionId==5 || prove.SegmentacionId == 7
                 group prove by prove into provs
@@ -47,7 +48,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     GrupoDeCompras = "",
                     Segmentacion = provs.Key.SegmentacionId,
                     RiesgoComercialSap = provs.Key.RiesgoComercialSap,
-                    Facacop = contexto.Set<FACACOP>().Where(x => x.CUIT == provs.Key.CUIT).Any() ? 1 : 0
+                    Facacop = contexto.Set<FACACOP>().Where(x => x.CUIT == provs.Key.CUIT).Any() ? 1 : 0,
+                    EstadoHomeId = (int)provs.Key.EstadoHomeId,
+                    EstadoHomeMensaje = provs.Key.EstadoHomeMensaje,
+                    EstadoHomeDescripcion = provs.Key.EstadoHome.Descripcion
                 };
 
             return resultado.ToList();

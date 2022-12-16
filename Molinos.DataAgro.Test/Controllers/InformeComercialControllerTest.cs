@@ -164,11 +164,14 @@ namespace Molinos.DataAgro.Test.Controllers
                 Errores = new List<ErrorMessage>() { }
             });
             informeComercialManagerMock.Setup(x => x.GenerarInformeComercial(informeComercial, 1)).Returns(rtaInforme);
+            informeComercialManagerMock.Setup(x => x.EnviarMailInformeComercial("downloadKey"));
+
             var result = target.Listar(informeComercial, null, null, null, null, null, null, null);
 
             homeManagerMock.Verify(x => x.TraerIdComercial(It.IsAny<string>()), Times.Once);
             informeComercialManagerMock.Verify(x => x.GrabarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>(), It.IsAny<List<NuevoProduccion>>(), It.IsAny<List<NuevoAcopio>>(), It.IsAny<ContactoComercial>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Once);
             informeComercialManagerMock.Verify(x => x.GenerarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.EnviarMailInformeComercial(It.IsAny<string>()), Times.Once);
 
             var model = result.Result as JsonResult;
             Assert.NotNull(result);

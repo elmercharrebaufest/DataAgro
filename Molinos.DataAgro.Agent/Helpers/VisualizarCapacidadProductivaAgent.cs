@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Agent
                             Porcentaje = item.PORC,
                             Material = materiales.Where(x => x.Codigo == item.MATNR).FirstOrDefault().Descripcion,
                             Campania = cosecha.Where(x => x.Descripcion == item.COSECHA).FirstOrDefault().Descripcion,
+                            FechaActualizacion = !string.IsNullOrEmpty(item.FECHA_ACT) ? DateTime.Parse(item.FECHA_ACT) : (DateTime?)null
                         });
                     }
                 }

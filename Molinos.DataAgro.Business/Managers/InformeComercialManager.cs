@@ -1,5 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
+using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -9,19 +10,26 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 
 namespace Molinos.DataAgro.Business
 {
     public class InformeComercialManager : IInformeComercialManager
     {
-        private readonly IRepositorio repositorio;
-        private ILogger logger;
+        private IRepositorio repositorio;
+        private readonly ILogger logger;
+        private IMailManager mailManager;
+        private IHttpContextManager httpContextManager;
 
-        public InformeComercialManager(ILogger logger, IRepositorio repositorio)
+        public InformeComercialManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IHttpContextManager httpContextManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
+            this.mailManager = mailManager;
+            this.httpContextManager = httpContextManager;
         }
 
         //--------------------------------------------------
@@ -230,7 +238,7 @@ namespace Molinos.DataAgro.Business
 
             inf.ProveedorId = informe.ProveedorId;
             inf.EstadoId = (int)EnumEstadoInforme.Generado;
-            inf.CampañaId = informe.InformeComercialId == 0 ? informe.CampañaId : inf.Campaña.CampañaId;
+            inf.CampañaId = informe.InformeComercialId == 0 || informe.InformeComercialId == null ? informe.CampañaId : inf.Campaña.CampañaId;
             informe.CampañaId = inf.CampañaId ?? inf.Campaña.CampañaId;
             inf.FechaAlta = DateTime.Now;
             inf.Comercial = repositorio.Obtener<Comercial>(IdActiveDirectory);
@@ -296,8 +304,8 @@ namespace Molinos.DataAgro.Business
                     InformeComercial = produ.InformeComercial,
                     Localidad = produ.Localidad,
                     Toneladas = produ.Toneladas != null ? produ.Toneladas : 0,
-                    Propia = produ.Propia,
-                    Alquilada = produ.Alquilada
+                    Propia = !produ.Propia,
+                    Alquilada = !produ.Alquilada
                 };
                 repositorio.Agregar(informeAlmacenamiento);
             }
@@ -706,6 +714,50 @@ namespace Molinos.DataAgro.Business
             }
 
             return error;
+        }
+
+        public void EnviarMailInformeComercial(string identificador)
+        {
+            var pdf = repositorio.Obtener<Reportes, ReportesDto>(x => x.Identificador == identificador, x => new ReportesDto { Identificador = x.Identificador, Contenido = x.Contenido, FileName = x.FileName });
+            var razonSocial = pdf.FileName.Substring(pdf.FileName.IndexOf('-') + 1);
+            razonSocial = razonSocial.Remove(razonSocial.Length - 4);
+            try
+            {
+                var context = new DataAgroDbContext();
+                repositorio = new RepositorioEF(context);
+                mailManager = new MailManager(logger, repositorio);
+                httpContextManager = new HttpContextManager();
+                var pathLogo = httpContextManager.ObtenerPathLogoMail();
+
+                LinkedResource res = new LinkedResource(pathLogo)
+                {
+                    ContentId = Guid.NewGuid().ToString()
+                };
+
+                string htmlBody = "";
+                htmlBody += "En el presente mail se adjunta un nuevo informe comercial generado para " + razonSocial + ". <br />";
+
+                htmlBody += "<br /> <br />  Saludos Cordiales," +
+                    " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                    @"<img src='cid:" + res.ContentId + @"'/>" +
+                    "<br /> <br /> www.molinosagro.com.ar";
+                AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+                alternateView.LinkedResources.Add(res);
+
+                var mail = ConfigurationManager.AppSettings["EmailInformeComercial"].ToString().Split(';').ToList();
+                
+                var asunto = "Nuevo Informe Comercial:" + razonSocial;
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    asunto = "Mail Pruebas - Nuevo Informe Comercial:" + razonSocial;
+                }
+                mailManager.EnviarMail(mail, asunto, "", null, alternateView, pdf.Contenido, "Informe Comercial"+razonSocial+".pdf");
+
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error al enviar mail en EnviarMailInformeComercial", e.Message);
+            }
         }
 
     }

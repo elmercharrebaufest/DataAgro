@@ -762,11 +762,16 @@ namespace Molinos.DataAgro.Report
 
             workSheet14.Cells[1, 4].Value = "Campaña";
             workSheet14.Column(4).AutoFit();
+            workSheet14.Column(5).Style.Numberformat.Format = "#,#";
             workSheet14.Column(5).AutoFit();
 
             workSheet14.Cells[1, 6].Value = "Unidad de Medida";
             workSheet14.Column(6).AutoFit();
             workSheet14.Column(7).AutoFit();
+
+            workSheet14.Cells[1, 8].Value = "Fecha de Actualización";
+            workSheet14.Column(8).Style.Numberformat.Format = "DD/MM/YYYY";
+            workSheet14.Column(8).AutoFit();
 
             var identif = Varios.GetIdentif();
 

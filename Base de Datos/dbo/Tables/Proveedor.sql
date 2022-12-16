@@ -39,7 +39,9 @@
 	[ClasificacionCompraNetId]	INT				NULL,
 	[BoletoCompraNetId]			INT				NULL,
 	[BolsaCompraNetId]			INT				NULL,
-	[Consignatario]				BIT				NULL
+	[Consignatario]				BIT				NULL,
+    [EstadoHomeId]				INT             NULL,
+    [EstadoHomeMensaje]			NVARCHAR (500)  NULL
 
     CONSTRAINT [PK_Contacto] PRIMARY KEY CLUSTERED ([ProveedorId] ASC),
     [ComisionPorcentaje] DECIMAL(11, 2) NULL, 

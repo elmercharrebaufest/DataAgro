@@ -1028,25 +1028,31 @@ function InicializarElementos() {
             $(".datoscontrato").hide();
             $("#datosContrato").hide();
 
-            console.log(($("#material").val() === "4" || $("#material").val() === "5") && $("#tipoId").val() == "2");
-            if (($("#material").val() === "4" || $("#material").val() === "5") && $("#tipoId").val() == "2") {
-                $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(0);
-                if (viewModel.AperturaPrecio[2]) {
-                    viewModel.AperturaPrecio[2].Porcentaje = 0;
-                }
-                InsertarAperturasViewModel(CalcularPrecioTotalApertura());
-            } else {
-                var cuitAux = $("#buscadorProveedor").val().split('(');
-                if (cuitAux[0] != "") {
-                    var cuit = cuitAux[1].split(')');
-                    var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
-                    var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
-                    $("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
-                    if (viewModel.AperturaPrecio[2]) {
-                        viewModel.AperturaPrecio[2].Porcentaje = compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0;
+
+            var cuitAux = $("#buscadorProveedor").val().split('(');
+            if (cuitAux[0] != "") {
+                var cuit = cuitAux[1].split(')');
+                var proveedorId = MSExecuteOnServer('/CompraNet/ObtenerProveedorId', { Cuit: cuit[0], corredor: false });
+                var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
+                if (($("#material").val() === "4" || $("#material").val() === "5")) {
+                    if (compraNet.ComisionPorcentaje != null && compraNet.ComisionPorcentaje > 0 && !$("#buscadorCorredor").val()) {
+                        $("#tipoPeriodoDBId").data("kendoDropDownList").value("1");
+                        $("#TipoDBId").data("kendoDropDownList").value("2");
+                        $("#PorcentajeDescuentoId").val(compraNet.ComisionPorcentaje);
+                        AgregarDescuentos();
+                    }
+                    for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                        if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 1) {
+                            viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < viewModel.Descuentos.length; i++) {
+                        if (viewModel.Descuentos[i].TipoPeriodoDBId == 1 && viewModel.Descuentos[i].TipoDBId == 2) {
+                            viewModel.Descuentos.remove(viewModel.Descuentos[i]);
+                        }
                     }
                 }
-                InsertarAperturasViewModel(CalcularPrecioTotalApertura());
             }
         }
     });

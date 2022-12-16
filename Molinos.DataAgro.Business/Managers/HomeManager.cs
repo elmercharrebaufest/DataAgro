@@ -62,6 +62,10 @@ namespace Molinos.DataAgro.Business.Managers
                 res.TotalNoOperandoContactos = queryPorEstado.Where(x => x.Estado == "No operando").Select(a => a.CUIT).Distinct().Count();
                 res.TotalBajaContactos = queryPorEstado.Where(x => x.Estado == "Baja").Select(a => a.CUIT).Distinct().Count();
                 res.TotalSinInteresContactos = queryPorEstado.Where(x => x.Estado == "Sin interés de operar").Select(a => a.CUIT).Distinct().Count();
+
+                res.TotalHabilitadoContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "Habilitado").Select(a => a.CUIT).Distinct().Count();
+                res.TotalLegajoIrregularContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "Legajo irregular").Select(a => a.CUIT).Distinct().Count();
+                res.TotalNoHabilitadoContactos = queryPorEstado.Where(x => x.EstadoHomeDescripcion == "No habilitado").Select(a => a.CUIT).Distinct().Count();
             }
             else
             {
@@ -72,6 +76,10 @@ namespace Molinos.DataAgro.Business.Managers
                 res.TotalNoOperandoContactos = cuenta.Where(x => x.Estado == "No operando").Select(a => a.Cuit).Distinct().Count();
                 res.TotalBajaContactos = cuenta.Where(x => x.Estado == "Baja").Select(a => a.Cuit).Distinct().Count();
                 res.TotalSinInteresContactos = cuenta.Where(x => x.Estado == "Sin interés de operar").Select(a => a.Cuit).Distinct().Count();
+
+                res.TotalHabilitadoContactos = cuenta.Where(x => x.EstadoHomeDescripcion == "Habilitado").Select(a => a.Cuit).Distinct().Count();
+                res.TotalLegajoIrregularContactos = cuenta.Where(x => x.EstadoHomeDescripcion == "Legajo irregular").Select(a => a.Cuit).Distinct().Count();
+                res.TotalNoHabilitadoContactos = cuenta.Where(x => x.EstadoHomeDescripcion == "No habilitado").Select(a => a.Cuit).Distinct().Count();
             }
 
 
@@ -113,7 +121,11 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     cont.RptOpera = "Operable";
-                }               
+                }
+                cont.EstadoHomeId = con.FirstOrDefault().EstadoHomeId;
+                cont.EstadoHomeMensaje = con.FirstOrDefault().EstadoHomeMensaje;
+                cont.EstadoHomeDescripcion = con.FirstOrDefault().EstadoHomeDescripcion;
+
                 lista.Add(cont);
             }
 
@@ -444,7 +456,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                         ARecibirAFijar = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.Centro != "8107" && x.ClaseDoc == "ZPAF" && x.PendienteAplicar > 0 && x.FechaDesde < fechaCorteCampaña)
                             .Sum(x => x.ToneladaFijada - x.ToneladaAplicada > 0 ?
-                            ((x.PendienteAplicar - (x.ToneladaFijada - x.ToneladaAplicada)) < 0 ? 0 : 
+                            ((x.PendienteAplicar - (x.ToneladaFijada - x.ToneladaAplicada)) < 0 ? 0 :
                             x.PendienteAplicar - (x.ToneladaFijada - x.ToneladaAplicada)) : x.PendienteAplicar),
 
                         FasonFas = c.Where(x => !String.IsNullOrEmpty(x.CorredorCuit) && x.ClaseDoc == "ZFAZ").Sum(x => x.ToneladaContrato)

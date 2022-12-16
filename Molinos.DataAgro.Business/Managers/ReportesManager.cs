@@ -2832,7 +2832,7 @@ namespace Molinos.DataAgro.Business.Managers
                 while (proveedores.Count > 0)
                 {
                     logger.Debug("Proveedores pesificados pendientes " + proveedores.Count());
-                    var index = proveedores.Count >= 200 ? 200 : proveedores.Count;
+                    var index = proveedores.Count >= 15 ? 15 : proveedores.Count;
                     var lista = proveedores.Take(index).ToList();
                     proveedores.RemoveRange(0, index);
                     datos.AddRange(pesificarAgent.ConsultarTodo(lista.Select(x => x.Cuit).Distinct().ToList()));

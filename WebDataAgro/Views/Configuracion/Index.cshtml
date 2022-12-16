@@ -192,6 +192,26 @@
 
 
             </div>
+
+            <h4>Bolsa de Comercio Rosario (BCR)</h4>
+
+            <div class="row-botones-material row padding">
+                <div class="col-md-2">
+                    <label>Api Key</label>
+                </div>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(m => m.ApiKeyBolsaRosario, new { @class = "CantidadDeDias k-input form-control" })
+                </div>
+            </div>
+            <div class="row-botones-material row padding">
+                <div class="col-md-2">
+                    <label>Secret</label>
+                </div>
+                <div class="col-md-7">
+                    @Html.TextBoxFor(m => m.SecretBolsaRosario, new { @class = "CantidadDeDias k-input form-control" })
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-3">
                     <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>

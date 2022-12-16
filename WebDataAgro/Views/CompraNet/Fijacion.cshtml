@@ -610,7 +610,8 @@
             </div>
         </div>
         <div class="col-md-6">
-            <span id="virtual" class=" @(!fijacionVirtual ? "hide" : "")">
+            @*<span id="virtual" class=" @(!fijacionVirtual ? "hide" : "")">*@
+            <span id="virtual">
                 <label>Virtual</label>
                 <span style="margin-left: 37px">
                     <input id="virtualId" class="campo-input-input" name="virtual" type="checkbox" onclick="EsVirtual()">
@@ -744,7 +745,8 @@
             <img id="errcomercialId" src="~/Content/Images/error.png" style="display:none" />
         </div>
     </div>
-    <div class="row acuerdo" id="pagoCbuId" hidden @(fijacionVirtual ? "hide" : "")>
+    @*<div class="row acuerdo" id="pagoCbuId" hidden @(fijacionVirtual ? "hide" : "")>*@
+    <div class="row acuerdo" id="pagoCbuId" hidden>
         <div class="col-sm-2">
             <label>Pago CBU</label>
         </div>

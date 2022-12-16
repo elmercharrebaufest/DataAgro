@@ -189,5 +189,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public decimal Cantidad { get; set; }
         public string UnidadMedida { get; set; }
         public decimal Porcentaje { get; set; }
+        public DateTime? FechaActualizacion { get; set; }
     }
 }

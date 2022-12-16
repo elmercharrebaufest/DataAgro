@@ -135,29 +135,36 @@ and ((@Zona is null)
 	or (@Zona  ='0')
 	or (e.GrupoDeComprasId = @Zona))
 	
-	DECLARE @ProveedorEstado TABLE(ProveedorId INT, EstadoId INT)
+DECLARE @ProveedorEstado TABLE(ProveedorId INT, EstadoId INT)
+DECLARE @ProveedorEstadoHome TABLE(ProveedorId INT, EstadoId INT)
 
-	INSERT INTO @ProveedorEstado 
-	select 
-		distinct t.item , 
-		case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
-		then 4 else 
-			case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
-			then 5  else
-					case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
-					then 1  else
-							case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
-							then 2 else
-								case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
-								then 3  else
-										(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.item)
-								ENd
+INSERT INTO @ProveedorEstado 
+select 
+	distinct t.item , 
+	case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 4 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+	then 4 else 
+		case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 5 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+		then 5  else
+				case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 1 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+				then 1  else
+						case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 2 and pee.ComercialId in (select ComercialId from  @EmpleadoTable)) 
+						then 2 else
+							case when exists(select 1 from ProveedorEstado pee where t.item = pee.ProveedorId and  pee.estadoId = 3 and pee.ComercialId in (select ComercialId from  @EmpleadoTable))
+							then 3  else
+									(select EstadoId From Proveedor PP WHERE PP.ProveedorId = t.item)
 							ENd
-					ENd
-			ENd
-		ENd as Estado
-		from @Proveedores t 
-		LEFT join ProveedorEstado pe on t.item = pe.ProveedorId and pe.ComercialId in (select ComercialId from  @EmpleadoTable)
+						ENd
+				ENd
+		ENd
+	ENd as Estado
+	from @Proveedores t 
+	LEFT join ProveedorEstado pe on t.item = pe.ProveedorId and pe.ComercialId in (select ComercialId from  @EmpleadoTable)
+
+INSERT INTO @ProveedorEstadoHome
+SELECT DISTINCT t.item, p.EstadoHomeId
+FROM @Proveedores t 
+LEFT JOIN Proveedor p ON t.Item=p.ProveedorId
+LEFT JOIN EstadoHome eh ON p.EstadoHomeId=eh.Id
 
 IF (@ComercialFiltro IS NOT NULL OR @ComercialFiltro!= '0' )
 	DELETE @EmpleadoTable WHERE ComercialId != @ComercialFiltro
@@ -181,15 +188,19 @@ SELECT
 	p.ProveedorId,
 	p.FechaUltimoContacto,
 	est.Descripcion as Estado ,
-	CASE WHEN fc.CUIT is null then 0 else 1 end as Facacop,p.RiesgoComercialSap, isnull((select TOP 1 EstadoCuit from SISA where CUIT = p.CUIT),'') as EstadoCuit 
+	CASE WHEN fc.CUIT is null then 0 else 1 end as Facacop,p.RiesgoComercialSap, isnull((select TOP 1 EstadoCuit from SISA where CUIT = p.CUIT),'') as EstadoCuit,
+	p.EstadoHomeId, p.EstadoHomeMensaje, eh.Descripcion as EstadoHomeDescripcion, eh.Color
 FROM Proveedor p
 left join ProveedorComercial pc on p.ProveedorId = pc.ProveedorId
 inner join @EmpleadoTable  e on e.ComercialId = pc.ComercialId
 LEFT join @ProveedorEstado PEE ON PEE.ProveedorId = p.ProveedorId
+LEFT join @ProveedorEstadoHome PEEH ON PEEH.ProveedorId = p.ProveedorId
 LEFT join Estado est on est.EstadoId = pee.EstadoId
 left join FACACOP fc on p.CUIT = fc.CUIT
 /*left join RG2300 rg on p.CUIT = rg.CUIT*/
 LEFT JOIN ContactoComercial CC ON CC.ProveedorId = p.ProveedorId AND CC.EsPrincipal = 1
+LEFT JOIN EstadoHome eh ON p.EstadoHomeId = eh.Id
 where exists (select 1 from @Proveedores where Item= p.ProveedorId)
 and (( @EstadoDelContacto is null)
-	or (exists ( select 1 from @EstadoDelContactoSecuencia where Item = pee.EstadoId)))
+/*	or (exists ( select 1 from @EstadoDelContactoSecuencia where Item = pee.EstadoId)))*/
+	or (exists ( select 1 from @EstadoDelContactoSecuencia where Item = PEEH.EstadoId)))

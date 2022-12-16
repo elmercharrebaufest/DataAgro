@@ -159,8 +159,9 @@ namespace Molinos.DataAgro.Business.Managers
                     Campania = x.Campania.Descripcion,
                     Cantidad = x.Cantidad,
                     UnidadMedida = x.UnidadMedida,
-                    Porcentaje = x.Porcentaje
-                }, x=> x.ProveedorId == ProveedorId).OrderByDescending(x=> x.CampaniaId).ThenByDescending(x=> x.MaterialId).ToList();
+                    Porcentaje = x.Porcentaje,
+                    FechaActualizacion = x.FechaActualizacion
+                }, x => x.ProveedorId == ProveedorId).OrderByDescending(x => x.CampaniaId).ThenByDescending(x => x.MaterialId).ToList();
             }
             catch (Exception ex)
             {
@@ -2402,7 +2403,7 @@ namespace Molinos.DataAgro.Business.Managers
                         var oCampoEliminar = repositorio.Listar<CampoMaterial>(x => x.CampoId == oParam.produccion.CampoId);
                         foreach (var campmat in oCampoEliminar)
                         {
-                            if (!oParam.produccion.objetivos.Any(x => x.campañaId == campmat.CampañaId && x.granoId == campmat.MaterialId))
+                            if (oParam.produccion.objetivos != null && !oParam.produccion.objetivos.Any(x => x.campañaId == campmat.CampañaId && x.granoId == campmat.MaterialId))
                             {
                                 repositorio.Remover(campmat);
                             }
@@ -2479,17 +2480,25 @@ namespace Molinos.DataAgro.Business.Managers
                             #region Eliminar Campo Material
 
                             var oCampoMaterialSave = repositorio.Listar<CampoMaterial>(x => x.CampoId == mod.CampoId);
-                            foreach (var can in oParam.produccion.CamposProduccion)
+                            //foreach (var can in oParam.produccion.CamposProduccion)
+                            //{
+                            //if (can.eliminarproduccion != null && can.eliminarproduccion.Count > 0)
+                            //{
+                            //    foreach (var camp in oCampoMaterialSave)
+                            //    {
+                            //        if (can.eliminarproduccion.Any(x => x.campañaId == camp.CampañaId && x.granoId == camp.MaterialId))
+                            //        {
+                            //            repositorio.Remover(camp);
+                            //        }
+                            //    }
+                            //}
+                            //}
+                            foreach (var campMatSave in oCampoMaterialSave)
                             {
-                                if (can.eliminarproduccion != null && can.eliminarproduccion.Count > 0)
+                                var aux = oParam.produccion.CamposProduccion.Where(x => x.CampoId == mod.CampoId).SingleOrDefault();
+                                if (aux != null && !aux.granos.Any(x => x.granoId == campMatSave.MaterialId && x.campañaId == campMatSave.CampañaId))
                                 {
-                                    foreach (var camp in oCampoMaterialSave)
-                                    {
-                                        if (can.eliminarproduccion.Any(x => x.campañaId == camp.CampañaId && x.granoId == camp.MaterialId))
-                                        {
-                                            repositorio.Remover(camp);
-                                        }
-                                    }
+                                    repositorio.Remover(campMatSave);
                                 }
                             }
 
@@ -2650,7 +2659,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                             #region Eliminar Campo Material
 
-                            foreach (var can in oParam.almacenamiento.CamposAlmacenamiento)
+                            foreach (var can in oParam.almacenamiento.CamposAlmacenamiento.Where(x => x.CampoId == acopio.AcopioId))
                             {
                                 if (can.eliminargranoalmacenamientograno != null && can.eliminargranoalmacenamientograno.Count > 0)
                                 {
@@ -3823,7 +3832,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
-            logger.Debug("Enviando mail canje en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id );
+            logger.Debug("Enviando mail canje en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id);
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoCanje(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, email, false));
         }
@@ -4422,7 +4431,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
-            logger.Debug("Enviando mail PD en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id );
+            logger.Debug("Enviando mail PD en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id);
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoPrestamoDevolucion(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, email, false));
         }
@@ -4778,6 +4787,241 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
         }
+
+        public void ActualizarProveedoresHome()
+        {
+            List<Proveedor> listProveedores = repositorio.Listar<Proveedor>();
+            List<EstadoHome> listEstadosHome = repositorio.Listar<EstadoHome>();
+            List<FACACOP> listProveedorEnFacacop = repositorio.Listar<FACACOP>();
+
+            foreach (Proveedor p in listProveedores)
+            {
+                List<string> mensajeEnHome = new List<string>();
+                int cantNoHabilitados = 0, cantLegajoIrregular = 0;
+
+                //List<SISA> proveedorEnSISA2 = listProveedorEnSISA.Where(x => x.CUIT == p.CUIT).ToList();
+
+                MensajeProveedorDto mensajeProveedorSISA = EvaluarProveedor(p.CUIT, p.SegmentacionId, p.RiesgoComercialSap);
+                if (mensajeProveedorSISA.DescripcionEstado != null)
+                {
+                    if (mensajeProveedorSISA.DescripcionEstado.Contains("No habilitado"))
+                    {
+                        mensajeEnHome.Add(mensajeProveedorSISA.Mensaje);
+                        cantNoHabilitados += 1;
+                    }
+                }
+
+                var proveedorEnFacacop = listProveedorEnFacacop.Where(x => x.CUIT == p.CUIT).FirstOrDefault();
+
+                AltaTempranaNRCODto alta = altaTempranaAgent.ObtenerAlta(p.CUIT);
+
+                // ========== Control Estado: No habilitados ==========
+                if (string.IsNullOrEmpty(alta.Mensaje))
+                {
+                    //if (alta.AuthGralMP.Contains("MP02") || alta.AuthSociedadMP.Contains("MP02"))
+                    if (!alta.AuthGralMP.Contains("MP01") || !alta.AuthSociedadMP.Contains("MP01"))
+                    {
+                        mensajeEnHome.Add("Proveedor sin autorización");
+                        cantNoHabilitados += 1;
+                    }
+
+                    // - Cuit con pet borrado
+                    //if (alta.PeticionBorradoGral.Length > 0 || alta.PeticionBorradoSociedad.Length > 0)
+                    if (alta.PeticionBorradoSociedad.Length > 0)
+                    {
+                        mensajeEnHome.Add("Prov con pet borrado MOA");
+                        cantNoHabilitados += 1;
+                    }
+                    // - Sin fecha act legajo
+                    if (alta.FechaActualizacionLegajo == "")
+                    {
+                        mensajeEnHome.Add("Proveedor no habilitado");
+                        cantNoHabilitados += 1;
+                    }
+                }
+                else
+                {
+                    // - Sin alta sap
+                    mensajeEnHome.Add("Cuit sin alta en MOA (no existe cuit en sap)");
+                    cantNoHabilitados += 1;
+                }
+
+                // - Apócrifos
+                if (proveedorEnFacacop != null)
+                {
+                    mensajeEnHome.Add("Cuit apócrifo (Dato en apócrifo)");
+                    cantNoHabilitados += 1;
+                }
+
+                if (cantNoHabilitados > 0)
+                {
+                    string mensaje = string.Join(". ", mensajeEnHome);
+                    var estadoHome = listEstadosHome.Find(x => x.Descripcion.Contains("No habilitado"));
+                    if (estadoHome != null)
+                    {
+                        p.EstadoHomeId = estadoHome.Id;
+                        p.EstadoHomeMensaje = mensaje;
+                    }
+                }
+
+                // ========== Control Estado: Legajo irregular ==========
+                if (cantNoHabilitados == 0)
+                {
+                    // - Riesgo comercial A
+                    if (p.RiesgoComercialSap != null && p.RiesgoComercialSap.Contains("A"))
+                    {
+                        mensajeEnHome.Add("Proveedor con riesgo comercial consulta a Datos Maestros");
+                        cantLegajoIrregular += 1;
+                    }
+
+                    // - Falta act cosecha (31.12.9999)
+                    //List<HistoricoFechaActualizacionLegajo> listHistoricoFechaActualizacionLegajo = alta.HistoricoFechaActualizacionLegajo;
+                    //List<HistoricoFechaActualizacionLegajo> listHistoricoFechaFiltrado = listHistoricoFechaActualizacionLegajo.Where(x => x.FechaAtualizacion == "31.12.9999" || x.FechaAtualizacion == "").ToList();
+                    if (alta.FechaActualizacionLegajo.Contains("31.12.9999"))
+                    {
+                        mensajeEnHome.Add("Debe actualizar datos para la cosecha actual (Tiene fecha genérica en fecha act legajo)");
+                        cantLegajoIrregular += 1;
+                    }
+
+                    if (mensajeProveedorSISA.DescripcionEstado != null)
+                    {
+                        if (mensajeProveedorSISA.DescripcionEstado.Contains("Legajo irregular"))
+                        {
+                            mensajeEnHome.Add(mensajeProveedorSISA.Mensaje);
+                            cantLegajoIrregular += 1;
+                        }
+                    }
+
+                    if (cantLegajoIrregular > 0)
+                    {
+                        string mensaje = string.Join(". ", mensajeEnHome);
+                        var estadoHome = listEstadosHome.Find(x => x.Descripcion.Contains("Legajo irregular"));
+                        if (estadoHome != null)
+                        {
+                            p.EstadoHomeId = estadoHome.Id;
+                            p.EstadoHomeMensaje = mensaje;
+                        }
+                    }
+                }
+
+                if (cantLegajoIrregular == 0 && cantNoHabilitados == 0)
+                {
+                    var estadoHome = listEstadosHome.Find(x => x.Descripcion.Contains("Habilitado"));
+                    if (estadoHome != null)
+                    {
+                        p.EstadoHomeId = estadoHome.Id;
+                        p.EstadoHomeMensaje = "Proveedor habilitado";
+                    }
+                }
+            }
+            repositorio.GuardarCambios();
+        }
+
+        private MensajeProveedorDto EvaluarProveedor(string cuit, int segmentacionId, string riesgoComercialSap)
+        {
+            List<MensajeProveedorDto> listMensajeProveedor = new List<MensajeProveedorDto>();
+
+            var sisa = new SISA();
+            if (segmentacionId == 5 || segmentacionId == 7) // CORREDOR
+            {
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.CodCategoria == 2 && x.SituacionCategoria == "AL");
+
+                if (sisa != null)
+                {
+                    if (sisa.EstadoCuit == 3 && riesgoComercialSap != "E")
+                    {
+                        MensajeProveedorDto msje = InstanciarMensaje("Legajo irregular", "Proveedor no operable por estado 3 en SISA");
+                        listMensajeProveedor.Add(msje);
+                    }
+                    else if (sisa.EstadoCuit == 0)
+                    {
+                        MensajeProveedorDto msje = InstanciarMensaje("No habilitado", "Proveedor no operable por estado inactivo en SISA");
+                        listMensajeProveedor.Add(msje);
+                    }
+                    if (sisa.SituacionCategoria != "AL")
+                    {
+                        MensajeProveedorDto msje = InstanciarMensaje("No habilitado", "Proveedor no operable por Situación Categoría BA");
+                        listMensajeProveedor.Add(msje);
+                    }
+                }
+                else
+                {
+                    MensajeProveedorDto msje = InstanciarMensaje("No habilitado", "Proveedor no operable por no estar habilitado en SISA");
+                    listMensajeProveedor.Add(msje);
+                }
+            }
+            else
+            { // PROVEEDOR
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL");
+
+                if (sisa != null)
+                {
+                    if (sisa.EstadoCuit == 3 && riesgoComercialSap != "E")
+                    {
+                        MensajeProveedorDto msje = InstanciarMensaje("Legajo irregular", "Proveedor no operable por estado 3 en SISA");
+                        listMensajeProveedor.Add(msje);
+                    }
+                    else if (sisa.EstadoCuit == 0)
+                    {
+                        MensajeProveedorDto msje = InstanciarMensaje("No habilitado", "Proveedor no operable por estado inactivo en SISA");
+                        listMensajeProveedor.Add(msje);
+                    }
+                    if (sisa.SituacionCategoria != "AL")
+                    {
+                        MensajeProveedorDto msje = InstanciarMensaje("No habilitado", "Proveedor no operable por Situación Categoría BA");
+                        listMensajeProveedor.Add(msje);
+                    }
+                }
+                else
+                {
+                    MensajeProveedorDto msje = InstanciarMensaje("No habilitado", "Proveedor no operable por no estar habilitado en SISA");
+                    listMensajeProveedor.Add(msje);
+                }
+            }
+
+            int contLegIrr = listMensajeProveedor.Where(x => x.DescripcionEstado == "Legajo irregular").Count();
+            int contNoHab = listMensajeProveedor.Where(x => x.DescripcionEstado == "No habilitado").Count();
+
+            string mensaje = "";
+            List<string> mensajeEnHome = new List<string>();
+            MensajeProveedorDto msjeFinal = new MensajeProveedorDto();
+
+            if (contNoHab > 0)
+            {
+                List<MensajeProveedorDto> msjeNoHab = listMensajeProveedor.Where(x => x.DescripcionEstado == "No habilitado").ToList();
+
+                foreach (MensajeProveedorDto m in msjeNoHab)
+                {
+                    mensajeEnHome.Add(m.Mensaje);
+                }
+
+                mensaje = string.Join(". ", mensajeEnHome);
+
+                msjeFinal = InstanciarMensaje("No habilitado", mensaje);
+            }
+            else if (contLegIrr > 0)
+            {
+                List<MensajeProveedorDto> msjeLegIrr = listMensajeProveedor.Where(x => x.DescripcionEstado == "Legajo irregular").ToList();
+
+                foreach (MensajeProveedorDto m in msjeLegIrr)
+                {
+                    mensajeEnHome.Add(m.Mensaje);
+                }
+
+                mensaje = string.Join(". ", mensajeEnHome);
+
+                msjeFinal = InstanciarMensaje("Legajo irregular", mensaje);
+            }
+
+            return msjeFinal;
+        }
+
+        private MensajeProveedorDto InstanciarMensaje(string dsc, string msje)
+        {
+            MensajeProveedorDto mensaje = new MensajeProveedorDto() { DescripcionEstado = dsc, Mensaje = msje };
+            return mensaje;
+        }
+
     }
 
 }

@@ -141,6 +141,9 @@
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\CapacidadProductivaDto.cs" />
+    <Compile Include="Dto\EstadoHomeDto.cs" />
+    <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
+    <Compile Include="Dto\CampoMaterialDto.cs" />
     <Compile Include="Dto\ServicioValorDto.cs" />
     <Compile Include="Dto\ClasificacionHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\ProvinciaHabilitadoSinBoletoDto.cs" />
@@ -153,6 +156,7 @@
     <Compile Include="Dto\SustentableDto.cs" />
     <Compile Include="Dto\MailProveedorDto.cs" />
     <Compile Include="Dto\ResultadoAltaCampoSustentable.cs" />
+    <Compile Include="Dto\TokenBCR.cs" />
     <Compile Include="Dto\TopeSugerenciasPorDiaPorProveedor.cs" />
     <Compile Include="Dto\BoletoArchivoDto.cs" />
     <Compile Include="Dto\BoletoGeneradoDto.cs" />
@@ -367,6 +371,7 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\CapacidadProductiva.cs" />
+    <Compile Include="Entities\EstadoHome.cs" />
     <Compile Include="Entities\ServicioValor.cs" />
     <Compile Include="Entities\TipoServicio.cs" />
     <Compile Include="Entities\Servicio.cs" />

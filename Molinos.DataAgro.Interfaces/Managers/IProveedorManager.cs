@@ -80,5 +80,6 @@ namespace Molinos.DataAgro.Interfaces
         List<ProveedorDto> ListarProveedorTodos(string proveedor);
         ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTercero campo);
         void GrabarMailProveedor();
+        void ActualizarProveedoresHome();
     }
 }

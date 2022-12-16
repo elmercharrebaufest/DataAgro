@@ -25,10 +25,9 @@
 <link rel="stylesheet" href="~/Content/agregarproveedor.css" />
 <link rel="stylesheet" href="~/Content/agregarproveedorResponsive.css" />
 
-<script type="text/javascript" src="~/Scripts/App/AgregarCorredor.js"></script>
-<script type="text/javascript" src="~/Scripts/App/agregarproveedor.js"></script>
-<script type="text/javascript" src="~/Scripts/App/agregarproveedoredit.js"></script>
-<script type="text/javascript" src="~/Scripts/App/ValidacionProveedor.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/Proveedor")
+}
 
 <div class="container">
     <div class="row bordertopbottom">
@@ -732,10 +731,10 @@
             </div>
             <div class="formulario-campo" style="text-align:left;">
                 <div style="width:45%;display: inline-block;" class="almacenamiento-titulo-grano">
-                    Hectareas Totales
+                    Hectáreas Totales
                 </div>
                 <div style="width:45%;display: contents;" class="almacenamiento-titulo-grano">
-                    Hectareas Cultivables
+                    Hectáreas Cultivables
                 </div>
             </div>
             <div class="formulario-campo" style="text-align:left;">
@@ -892,19 +891,19 @@
 
     </div>
 </div>
-    <div class="formulario-footer">
-        <div class="formulario-footer-cancelar">
-            Cancelar
+<div class="formulario-footer">
+    <div class="formulario-footer-cancelar">
+        Cancelar
+    </div>
+    <div class="formulario-footer-guardar-contacto guardar-proveedor">
+        Guardar
+    </div>
+    <span @(ocultarCamposEditar ? "hidden" : "")>
+        <div class="formulario-footer-siguiente">
+            Siguiente
         </div>
-        <div class="formulario-footer-guardar-contacto guardar-proveedor">
-            Guardar
-        </div>
-        <span @(ocultarCamposEditar ? "hidden" : "")>
-            <div class="formulario-footer-siguiente">
-                Siguiente
-            </div>
-        </span>
-  </div>
+    </span>
+</div>
 
 
 
@@ -916,10 +915,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Agregar contacto</h4>
+                <h4 class="modal-title">Hay cambios sin guardar</h4>
             </div>
             <div class="modal-body">
-                <p>Quiere guardar los cambios antes de salir?</p>
+                <p>¿Desea guardar los cambios antes de salir?</p>
             </div>
             <div class="modal-footer">
                 <div class="modal-salir-sin-guardar">
@@ -932,3 +931,29 @@
         </div>
     </div>
 </div>
+
+<div id="modalGenerarInforme" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Generar Informe Comercial</h4>
+            </div>
+            <div class="modal-body">
+                <p>¿Desea generar un informe comercial actualizado para este proveedor?</p>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-generar-informe guardar-con-informe" onclick="GuardarModalInforme(true)">
+                    Sí
+                </div>
+                <div class="modal-generar-informe" onclick="GuardarModalInforme(false)">
+                    No
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Shared/_PleaseWait.cshtml")

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -15,6 +16,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Mensaje { get; set; }
         public string ProveedorGrano { get; set; }
         public string BoletoFisico { get; set; }
+
+        public string PeticionBorradoGral { get; set; }
+        public string PeticionBorradoSociedad { get; set; }
+        public string BloqueoProveedorGral { get; set; }
+        public string BloqueoProveedorSociedad { get; set; }
+        public string RiesgoComercial { get; set; }
+        public string AuthGralMP { get; set; }
+        public string AuthSociedadMP { get; set; }
+        public string BloqueoProveedor { get; set; }
+        public string FechaActualizacionLegajo { get; set; }
+        public List<HistoricoFechaActualizacionLegajo> HistoricoFechaActualizacionLegajo { get; set; }
     }
     public partial class Ruca
     {
@@ -28,6 +40,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Consignatario { get; set; }
         public string PlanCanje { get; set; }
         public string Directo { get; set; }
+    }
+
+    public partial class HistoricoFechaActualizacionLegajo
+    {
+        public string Material { get; set; }
+        public string Cosecha { get; set; }
+        public string FechaAtualizacion { get; set; }
     }
 }
 

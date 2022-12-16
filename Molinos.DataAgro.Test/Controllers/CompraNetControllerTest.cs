@@ -484,7 +484,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             proveedorManagerMock.Verify(x => x.TraerProveedor(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false,\"EstadoHomeId\":null,\"EstadoHomeMensaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1043,6 +1043,27 @@ namespace Molinos.DataAgro.Test.Controllers
                         Corredor = "SI",
                         Fason = "SI",
                         Otros = new ValoresRuca { Directo = "SI", Consignatario = "SI", PlanCanje = "SI" }
+                    },
+
+                    ProveedorGrano = "",
+                    BoletoFisico = "",
+
+                    PeticionBorradoGral = "",
+                    PeticionBorradoSociedad = "",
+                    BloqueoProveedorGral = "",
+                    BloqueoProveedorSociedad = "",
+                    RiesgoComercial = "",
+                    AuthGralMP = "",
+                    AuthSociedadMP = "",
+                    BloqueoProveedor = "",
+                    FechaActualizacionLegajo = "",
+                    HistoricoFechaActualizacionLegajo = new List<HistoricoFechaActualizacionLegajo>()
+                    {
+                        new HistoricoFechaActualizacionLegajo() {
+                            Cosecha = "",
+                            Material = "",
+                            FechaAtualizacion = ""
+                        }
                     }
                 });
             var result = target.ValidarProveedor(1);
@@ -1051,7 +1072,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.ValidarProveedor(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AltaTemprana\":\"SI\",\"FechaActualizacion\":\"SI\",\"Nosis\":\"SI\",\"Bolsa\":\"SI\",\"PlanCanje\":\"SI\",\"Consignatario\":\"SI\",\"Ruca\":{\"Otros\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Acopiador\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Corredor\":\"SI\",\"Fason\":\"SI\"},\"Carta\":\"SI\",\"Mensaje\":\"\",\"ProveedorGrano\":null,\"BoletoFisico\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"AltaTemprana\":\"SI\",\"FechaActualizacion\":\"SI\",\"Nosis\":\"SI\",\"Bolsa\":\"SI\",\"PlanCanje\":\"SI\",\"Consignatario\":\"SI\",\"Ruca\":{\"Otros\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Acopiador\":{\"Consignatario\":\"SI\",\"PlanCanje\":\"SI\",\"Directo\":\"SI\"},\"Corredor\":\"SI\",\"Fason\":\"SI\"},\"Carta\":\"SI\",\"Mensaje\":\"\",\"ProveedorGrano\":\"\",\"BoletoFisico\":\"\",\"PeticionBorradoGral\":\"\",\"PeticionBorradoSociedad\":\"\",\"BloqueoProveedorGral\":\"\",\"BloqueoProveedorSociedad\":\"\",\"RiesgoComercial\":\"\",\"AuthGralMP\":\"\",\"AuthSociedadMP\":\"\",\"BloqueoProveedor\":\"\",\"FechaActualizacionLegajo\":\"\",\"HistoricoFechaActualizacionLegajo\":[{\"Material\":\"\",\"Cosecha\":\"\",\"FechaAtualizacion\":\"\"}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -1373,7 +1394,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
 
             contratoManagerMock.Setup(x => x.DevolverContratosParaAsociar(It.IsAny<int>(), It.IsAny<string>())).Returns(new List<NegocioAsociadoDto>());
-            var result = target.DevolverContratosParaAsociar(1,"") as JsonResult;
+            var result = target.DevolverContratosParaAsociar(1, "") as JsonResult;
             contratoManagerMock.Verify(x => x.DevolverContratosParaAsociar(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
         }
@@ -1434,7 +1455,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Setup(x => x.ValidarCopiarContrato(It.IsAny<int>())).Returns(false);
             var result = target.ValidarCopiarContrato(1) as JsonResult;
-            contratoManagerMock.Verify(x => x.ValidarCopiarContrato( It.IsAny<int>()), Times.Once);
+            contratoManagerMock.Verify(x => x.ValidarCopiarContrato(It.IsAny<int>()), Times.Once);
             Assert.NotNull(result);
         }
 
@@ -1526,7 +1547,7 @@ namespace Molinos.DataAgro.Test.Controllers
             //acuerdoManagerMock.Setup(x => x.TraerAcuerdo(It.IsAny<int>()))
             //    .Returns(new BasicoContrato{ Id = 1});
             contratoManagerMock.Setup(m => m.AltaMasivaContratos(dsExcel, It.IsAny<string>(), GlobalVariables.ComercialId))
-                .Returns(new List<ExcelValidatorResumeItem>() { new ExcelValidatorResumeItem { Row = 0, ContratoCorredor = "110001"} });
+                .Returns(new List<ExcelValidatorResumeItem>() { new ExcelValidatorResumeItem { Row = 0, ContratoCorredor = "110001" } });
             var result = target.AltaMasivaContratosExcel("110001") as JsonResult;
             Assert.NotNull(result);
             //acuerdoManagerMock.Verify(x => x.TraerAcuerdo(It.IsAny<int>()), Times.Once);

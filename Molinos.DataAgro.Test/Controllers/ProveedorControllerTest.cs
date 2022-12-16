@@ -1,11 +1,15 @@
-﻿using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Business;
+using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report.Clases;
+using Molinos.DataAgro.Repository;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -28,6 +32,8 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<ICampañaManager> campanaManagerMock;
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<IReportesManager> reportesManagerMock;
+        private Mock<IInformeComercialManager> informeComercialManagerMock;
+        private Mock<IRepositorio> repositorioMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -41,12 +47,14 @@ namespace Molinos.DataAgro.Test.Controllers
             campanaManagerMock = new Mock<ICampañaManager>();
             comercialManagerMock = new Mock<IComercialManager>();
             reportesManagerMock = new Mock<IReportesManager>();
+            informeComercialManagerMock = new Mock<IInformeComercialManager>();
+            repositorioMock = new Mock<IRepositorio>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             HttpContext.Current.Session["perfil"] = 1;
             target = new ProveedorController(proveedorManagerMock.Object, 
                 homeManagerMock.Object, campanaManagerMock.Object, 
                 comercialManagerMock.Object, reportesManagerMock.Object, 
-                localidadManagerMock.Object, provinciaManagerMock.Object);
+                localidadManagerMock.Object, provinciaManagerMock.Object, informeComercialManagerMock.Object, repositorioMock.Object);
         }
 
         [Test]
@@ -206,32 +214,76 @@ namespace Molinos.DataAgro.Test.Controllers
         public void GrabarProveedorNuevoTest()
         {
             var prove = new NuevoProveedor { ProveedorId = 0, basicos = new Basico { cuit = "111", RazonSocial = "A", } };
+            var modificados = new CampaniaDto { CampaniaId = new List<int> { 9 }, CampaniaDesc = new List<string> { "20-21" }, ComercialId = 57  };
             proveedorManagerMock.Setup(x => x.GrabarNuevoProveedor(prove, GlobalVariables.IdActiveDirectory)).Returns(new GrabarProveedorResult { ProveedorId = 2, Errores = new List<ErrorMessage>() });
-            var result = target.GrabarProveedor(prove);
 
-            proveedorManagerMock.Verify(x => x.GrabarNuevoProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>()), Times.Once);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercial, int>>>(), It.IsAny<Expression<Func<InformeComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<int>() { 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campo, int>>>(), It.IsAny<Expression<Func<Campo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<int>() { 2 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Acopio, int>>>(), It.IsAny<Expression<Func<Acopio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<int>() { 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoMaterial, CampoMaterialDto>>>(), It.IsAny<Expression<Func<CampoMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<CampoMaterialDto>() { new CampoMaterialDto { CampoId = 5, MaterialId = 3 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                    .Returns(new List<AcopioMaterial>());
+
+            informeComercialManagerMock.Setup(x => x.EliminarInformes(It.IsAny<int>())).Returns(new Resultado());
+            informeComercialManagerMock.Setup(x => x.GrabarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>(), It.IsAny<List<NuevoProduccion>>(), It.IsAny<List<NuevoAcopio>>(), It.IsAny<ContactoComercial>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>())).Returns(new InformeResult { InformeId = 1 });
+            informeComercialManagerMock.Setup(x => x.GenerarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>())).Returns(new RptInformeComercialInfo { CUIT = "333333333", RazonSocial = "PARISI" });
+            informeComercialManagerMock.Setup(x => x.EnviarMailInformeComercial("downloadKey"));
+
+            var result = target.GrabarProveedor(prove, modificados) as JsonResult;
+
             proveedorManagerMock.Verify(x => x.UpdateProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Never);
+            proveedorManagerMock.Verify(x => x.GrabarNuevoProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.EliminarInformes(It.IsAny<int>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.GrabarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>(), It.IsAny<List<NuevoProduccion>>(), It.IsAny<List<NuevoAcopio>>(), It.IsAny<ContactoComercial>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.GenerarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.EnviarMailInformeComercial(It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":2,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+
+            var model = serializer.Deserialize<GrabarProveedorResult>(serializer.Serialize(result.Data));
+            Assert.AreEqual(false, model.HayErrores);
+            Assert.AreEqual(1, model.DownloadKey.Count);
         }
         [Test]
         public void GrabarProveedorUpdateTest()
         {
             HttpContext.Current.Session["comercialId"] = 1;
             var prove = new NuevoProveedor { ProveedorId = 1, basicos = new Basico { cuit = "111", RazonSocial = "A", } };
+            var modificados = new CampaniaDto { CampaniaId = new List<int> { 9 }, CampaniaDesc = new List<string> { "20-21" }, ComercialId = 57 };
             proveedorManagerMock.Setup(x => x.UpdateProveedor(prove, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo, GlobalVariables.ComercialId)).Returns(new GrabarProveedorResult { ProveedorId = 1, Errores = new List<ErrorMessage>() });
-            var result = target.GrabarProveedor(prove);
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercial, int>>>(), It.IsAny<Expression<Func<InformeComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<int>() { 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Campo, int>>>(), It.IsAny<Expression<Func<Campo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<int>() { 2 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Acopio, int>>>(), It.IsAny<Expression<Func<Acopio, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<int>() { 1 });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<CampoMaterial, CampoMaterialDto>>>(), It.IsAny<Expression<Func<CampoMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<CampoMaterialDto>() { new CampoMaterialDto { CampoId = 5, MaterialId = 3 } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AcopioMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                            .Returns(new List<AcopioMaterial>());
+
+            informeComercialManagerMock.Setup(x => x.EliminarInformes(It.IsAny<int>())).Returns(new Resultado());
+            informeComercialManagerMock.Setup(x => x.GrabarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>(), It.IsAny<List<NuevoProduccion>>(), It.IsAny<List<NuevoAcopio>>(), It.IsAny<ContactoComercial>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>())).Returns(new InformeResult { InformeId = 1 });
+            informeComercialManagerMock.Setup(x => x.GenerarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>())).Returns(new RptInformeComercialInfo { CUIT = "333333333", RazonSocial = "PARISI"});
+            informeComercialManagerMock.Setup(x => x.EnviarMailInformeComercial("downloadKey"));
+
+            var result = target.GrabarProveedor(prove, modificados) as JsonResult;
 
             proveedorManagerMock.Verify(x => x.UpdateProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Once);
             proveedorManagerMock.Verify(x => x.GrabarNuevoProveedor(It.IsAny<NuevoProveedor>(), It.IsAny<string>()), Times.Never);
+            informeComercialManagerMock.Verify(x => x.EliminarInformes(It.IsAny<int>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.GrabarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>(), It.IsAny<List<NuevoProduccion>>(), It.IsAny<List<NuevoAcopio>>(), It.IsAny<ContactoComercial>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int?>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.GenerarInformeComercial(It.IsAny<ParamInformeComercial>(), It.IsAny<int>()), Times.Once);
+            informeComercialManagerMock.Verify(x => x.EnviarMailInformeComercial(It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            
+            var model = serializer.Deserialize<GrabarProveedorResult>(serializer.Serialize(result.Data));
+            Assert.AreEqual(false, model.HayErrores);
+            Assert.AreEqual(1, model.DownloadKey.Count);
         }
 
         [Test]
@@ -417,7 +469,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Proveedor\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false,\"EstadoHomeId\":null,\"EstadoHomeMensaje\":null},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -426,30 +478,28 @@ namespace Molinos.DataAgro.Test.Controllers
             HttpContext.Current.Session["comercialId"] = 1;
             var corredor = new NuevoCorredor { CorredorId = 1, basicos = new Basico { RazonSocial = "A", cuit = "201", segmentacion = 5 }, contacto = new Contacto { provincia = 1, localidad = 2 } };
             proveedorManagerMock.Setup(x => x.UpdateCorredor(corredor, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo, GlobalVariables.ComercialId)).Returns(new GrabarProveedorResult { ProveedorId = 1, Errores = new List<ErrorMessage>() });
-            var result = target.GrabarCorredor(corredor);
+            var result = target.GrabarCorredor(corredor) as JsonResult;
 
             proveedorManagerMock.Verify(x => x.UpdateCorredor(It.IsAny<NuevoCorredor>(), It.IsAny<string>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Once);
             proveedorManagerMock.Verify(x => x.GrabarNuevoCorredor(It.IsAny<NuevoCorredor>(), It.IsAny<string>()), Times.Never);
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            var model = serializer.Deserialize<GrabarProveedorResult>(serializer.Serialize(result.Data));
+            Assert.AreEqual(false, model.HayErrores);
+            Assert.AreEqual(0, model.DownloadKey.Count);
         }
         [Test]
         public void GrabarCorredorNuevoTest()
         {
             var corredor = new NuevoCorredor { CorredorId = 0, basicos = new Basico { RazonSocial = "A", cuit = "201", segmentacion = 5 }, contacto = new Contacto { provincia = 1, localidad = 2 } };
             proveedorManagerMock.Setup(x => x.GrabarNuevoCorredor(corredor, GlobalVariables.IdActiveDirectory)).Returns(new GrabarProveedorResult { ProveedorId = 1, Errores = new List<ErrorMessage>() });
-            var result = target.GrabarCorredor(corredor);
+            var result = target.GrabarCorredor(corredor) as JsonResult;
 
             proveedorManagerMock.Verify(x => x.UpdateCorredor(It.IsAny<NuevoCorredor>(), It.IsAny<string>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Never);
             proveedorManagerMock.Verify(x => x.GrabarNuevoCorredor(It.IsAny<NuevoCorredor>(), It.IsAny<string>()), Times.Once);
             Assert.NotNull(result);
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);
+            var model = serializer.Deserialize<GrabarProveedorResult>(serializer.Serialize(result.Data));
+            Assert.AreEqual(false, model.HayErrores);
+            Assert.AreEqual(0, model.DownloadKey.Count);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
@@ -43,10 +44,11 @@ namespace Molinos.DataAgro.Business.Managers
                 CampaniaId = cp.CampaniaId,
                 Cantidad = cp.Cantidad,
                 UnidadMedida = cp.UnidadMedida,
-                Porcentaje = cp.Porcentaje
+                Porcentaje = cp.Porcentaje,
+                FechaActualizacion = cp.FechaActualizacion
             }).ToList();
 
-            repositorio.AgregarTodos<CapacidadProductiva>(listaFinal);
+            repositorio.AgregarTodos(listaFinal);
             repositorio.GuardarCambios();
         }
     }

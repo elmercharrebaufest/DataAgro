@@ -21,8 +21,10 @@
     [ImporteSustentableEspecial] DECIMAL(11, 2) NULL DEFAULT 20, 
 
     [AlgoritmoKilosMinimosParaSugerencia] INT NOT NULL DEFAULT 20000, 
-    [Actualizacion] INT NULL DEFAULT 30000, 
     [AlgoritmoProcMaxSugerenciasProveedorDia] INT NOT NULL DEFAULT 30, 
+    [Actualizacion] INT NULL DEFAULT 30000, 
+    [ApiKeyBolsaRosario] VARCHAR(500) DEFAULT 'D0DBE53F-0B11-EA11-9428-00155D09A724' NOT NULL,
+    [SecretBolsaRosario] VARCHAR(500) DEFAULT '3b22d031fcf1a3d5ee52626c00be2d73eaa331d8b86a35b1ab12ec0895d6d842' NOT NULL,
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

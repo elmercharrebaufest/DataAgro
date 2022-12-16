@@ -253,6 +253,11 @@ namespace WebDataAgro
                                     "~/Scripts/KendoExtensions.js",
                                     "~/Scripts/App/Filtros.js",
                                     "~/Scripts/App/NegocioPesificacion.js"));
+            bundles.Add(new ScriptBundle("~/bundles/Proveedor").Include(
+                                    "~/Scripts/App/AgregarCorredor.js",
+                                    "~/Scripts/App/agregarproveedor.js",
+                                    "~/Scripts/App/agregarproveedoredit.js",
+                                    "~/Scripts/App/ValidacionProveedor.js"));
             bundles.IgnoreList.Clear();
         }
     }

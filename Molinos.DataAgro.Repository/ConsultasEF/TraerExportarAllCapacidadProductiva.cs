@@ -30,7 +30,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                            Campania = x.Campania.Descripcion,
                            Cantidad = x.Cantidad,
                            UnidadMedida = x.UnidadMedida,
-                           Porcentaje = x.Porcentaje
+                           Porcentaje = x.Porcentaje,
+                           FechaActualizacion = x.FechaActualizacion
                        });
             return resultado.Distinct().ToList();
         }

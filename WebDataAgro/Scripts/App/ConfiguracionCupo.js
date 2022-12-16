@@ -576,6 +576,8 @@ function GuardarLimiteCupo() {
     BlockUi("Guardando...");
     var limites = [];
     var total = 0;
+    var cantErr = 0;
+
     for (var i = 0; i < cantidadZonas; i++) {
         var zonaId = $('#zonaId' + i).val();
         var obj = {
@@ -587,10 +589,26 @@ function GuardarLimiteCupo() {
         };
         limites.push(obj);
         total += parseInt($("#cantidad" + zonaId).val());
+
+        if ($("#cantidad" + zonaId).val() == "") {
+            cantErr += 1
+        };
+    }
+
+    if (cantErr > 0) {
+        MensErr("Por favor, completar la cantidad de cupo para cada zona.");
+        $.unblockUI();
+        return false;
     }
 
     var configuraciones = SeleccionarElementos();
     var configuracionesIds = [];
+
+    if (configuraciones.length > 0 && $("#limiteCupo" + configuraciones[0].Id).val() == "") {
+        MensErr("Debe ingresar un valor para el Límite del Cupo.");
+        $.unblockUI();
+        return false;
+    }
 
     if (configuraciones.length > 0 && total != Number($("#limiteCupo" + configuraciones[0].Id).val())) {
         MensErr("La cantidad ingresada es diferente al limite configurado.");
@@ -600,7 +618,7 @@ function GuardarLimiteCupo() {
 
     for (var i = 0; i < configuraciones.length; i++) {
         configuracionesIds.push(configuraciones[i].id);
-    } 
+    }
     if ($("#configuracionCupoId").val() != "") {
         var limitesSAP = MSExecuteOnServer("/ConfiguracionCupo/TraerLimitesCupo", { id: $("#configuracionCupoId").val() });
         for (var i = 0; i < 10; i++) {
@@ -620,11 +638,18 @@ function GuardarLimiteCupo() {
     }
 
 
-
+    // Configurar zonas INDIVIDUAL
     var resultado;
     if (configuracionesIds.length == 0) {
         var idConfiguracion = $("#configuracionCupoId").val()
         if (ValidarZona(idConfiguracion)) {
+
+            if ($("#limiteCupo" + idConfiguracion).val() == "" || $("#limiteAlgoritmo" + idConfiguracion).val() == "") {
+                MensErr("Los Límites de Cupo y Algoritmo deben completarse.");
+                $.unblockUI();
+                return false;
+            }
+
             resultado = MSExecuteOnServer('/ConfiguracionCupo/ModificarConfiguracion', {
                 id: idConfiguracion,
                 limite: $("#limiteCupo" + idConfiguracion).val() == 0 ? null : $("#limiteCupo" + idConfiguracion).val(),
@@ -651,9 +676,15 @@ function GuardarLimiteCupo() {
 
     } else {
         var limiteAlgoritmo = $('#limiteAlgoritmo' + configuraciones[0].Id).val();
-        resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo});
+        if (limiteAlgoritmo != "") {
+            resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo });
+        } else {
+            MensErr("Debe ingresar un valor para el Límite del Algoritmo.")
+            $.unblockUI();
+            return false;
+        }
     }
-    
+
     if (resultado.HayError) {
         //$("#error-alert").text(resultado.Errores[0].Message);
         //$(".alert-danger").show();

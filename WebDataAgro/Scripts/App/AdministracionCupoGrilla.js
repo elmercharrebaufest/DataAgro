@@ -680,7 +680,7 @@ function SeleccionarElementos() {
 
     selectedRows.each(function (index, row) {
         var selectedItem = grid.dataItem(row);
-        if (selectedItem.EstadoId == 3) {
+        if (selectedItem.EstadoId == 4) {
             obj.push(selectedItem);
         }
     });

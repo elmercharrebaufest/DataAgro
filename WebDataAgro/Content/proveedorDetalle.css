@@ -17,6 +17,12 @@
     font-family: "G-Open Sans-n8", Arial;
 }
 
+.detalle-contacto-header-estadoHome span:first-of-type {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "G-Open Sans-n8", Arial;
+}
+
 .detalle-contacto-header-campana-filtro-select {
     color: rgb(36, 36, 36);
     border-width: 1px;

@@ -122,8 +122,12 @@ function cargarDatosAFijarEnFijacion(afijar) {
         return;
     }
 
-    $(".datoscontrato").show();
-    $("#datosContrato").show();
+    // si hay contrato seleccionado, ejecutar estas dos lineas.
+    if ($("#contratoId").val() != "") {
+        $(".datoscontrato").show();
+        $("#datosContrato").show();
+    }
+
     $("#kgsTotalesContrato").text(afijar.KgContratoTotal);
     $("#kgspendientescontrato").text(afijar.KilosPendiente);
     $("#kgsaplicadoscontrato").text(afijar.KilosAplicados);
@@ -447,8 +451,11 @@ function InicializarElementos() {
         $("#buscadorProveedor").data("kendoAutoComplete").trigger("change");
         if ($("#tipoId").val() == "6") {
             $("#dolarizadoExpressDiv").hide();
-
         }
+        $("#virtualId").prop("checked", false);
+        $("#chequeElectronicoId").show();
+        $("#pizarraDiv").show();
+        $("#pagoCbuId").show();
     });
 
 
@@ -4950,17 +4957,20 @@ function OcultarCamposSiEsVirtual() {
         //$("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
         //$("#CheckFijacion").prop("checked", false);
         //$("#cantidadId").data("kendoNumericTextBox").value("");
-        //$("#chequeElectronicoId").show();
+        $("#chequeElectronicoId").show();
         //HayChequeElectronicoOtros();
-        //$("#pizarraDiv").show();
+        $("#pizarraDiv").show();
         //ClickEnPizarra();
         //$(".visualizar-canje").hide();
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").wrapper.find("input").css("background-color", "white");
         $("#aperturaPrecioImporteFinancieroId").data("kendoNumericTextBox").readonly(false);
+        $("#datosContrato").hide();
+        $(".datoscontrato").hide();
+        $("#pagoCbuId").show();
     }
 }
 function EsVirtual() {
-
+    $("#datosContrato").hide();
     $("#CheckFijacion").prop("checked", false);
     $("#cantidadId").data("kendoNumericTextBox").value("");
     $('#contratoId').val("");

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using WebDataAgro.Helpers;
 using System.Text;
 using System.Globalization;
+using Molinos.DataAgro.Repository;
 
 namespace WebDataAgro.Controllers
 {
@@ -28,15 +29,16 @@ namespace WebDataAgro.Controllers
         private IHomeManager mobjHomeManager;
         private ICampañaManager mobjCampañaManager;
         private ILocalidadManager mobjLocalidadManager;
-
         private IComercialManager mobComercialManager;
         private IReportesManager mobjreportesManager;
         private IProvinciaManager mobjProvinciaManager;
+        private readonly IInformeComercialManager mobjInformeComercialManager;
+        private readonly IRepositorio repositorio;
 
         public ProveedorController(IProveedorManager oProveedorManager, IHomeManager oHomeManager,
-            ICampañaManager oCampañaManager, IComercialManager oComercialManager, 
-            IReportesManager oReportesManager, ILocalidadManager oLocalidadManager, 
-            IProvinciaManager oProvinciaManager)
+            ICampañaManager oCampañaManager, IComercialManager oComercialManager,
+            IReportesManager oReportesManager, ILocalidadManager oLocalidadManager,
+            IProvinciaManager oProvinciaManager, IInformeComercialManager oInformeComercialManager, IRepositorio repositorio)
         {
 
             mobjProveedorManager = oProveedorManager;
@@ -46,12 +48,14 @@ namespace WebDataAgro.Controllers
             mobjreportesManager = oReportesManager;
             mobjLocalidadManager = oLocalidadManager;
             mobjProvinciaManager = oProvinciaManager;
+            mobjInformeComercialManager = oInformeComercialManager;
+            this.repositorio = repositorio;
         }
 
 
         // GET: Contactos
         public ActionResult Index()
-        {            
+        {
             return View();
         }
 
@@ -231,7 +235,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult GrabarProveedor(NuevoProveedor oParam)
+        public ActionResult GrabarProveedor(NuevoProveedor oParam, CampaniaDto modificados)
         {
 
             GrabarProveedorResult model = new GrabarProveedorResult();
@@ -245,6 +249,72 @@ namespace WebDataAgro.Controllers
                 model = mobjProveedorManager.GrabarNuevoProveedor(oParam, GlobalVariables.IdActiveDirectory);
             }
 
+            if (modificados != null && modificados.ComercialId != null)
+            {
+                var informeId = repositorio.Listar<InformeComercial, int>(x => x.InformeComercialId, x => x.CampañaId != null && x.ProveedorId == model.ProveedorId && modificados.CampaniaId.Contains((int)x.CampañaId));
+                var produccionPorProve = repositorio.Listar<Campo, int>(x => x.CampoId, x => x.ProveedorId == model.ProveedorId);
+                var acopiosPorProve = repositorio.Listar<Acopio, int>(x => x.AcopioId, x => x.ProveedorId == model.ProveedorId);
+                var campoMaterial = repositorio.Listar<CampoMaterial, CampoMaterialDto>(x => new CampoMaterialDto { MaterialId = x.MaterialId, CampoId = (int)x.CampoId }, x => x.CampoId.HasValue);
+                var acopioMaterial = repositorio.Listar<AcopioMaterial>();
+                var materialesCampania = new List<int>();
+                for (int i = 0; i < produccionPorProve.Count(); i++)
+                {
+                    if (campoMaterial != null && campoMaterial.Count() > 0)
+                    {
+                        materialesCampania.AddRange(campoMaterial.Where(x => x.CampoId == produccionPorProve[i]).Select(x => x.MaterialId));
+                    }
+                }
+                for (int i = 0; i < acopiosPorProve.Count(); i++)
+                {
+                    if (acopioMaterial != null)
+                    {
+                        materialesCampania.AddRange(acopioMaterial.Where(x => x.AcopioId == acopiosPorProve[i]).Select(x => x.MaterialId));
+                    }
+                }
+
+                materialesCampania.Distinct().ToList();
+
+                //borrar los informes que existan para las campañas que estoy recibiendo
+                foreach (var i in informeId)
+                {
+                    var resultEliminar = mobjInformeComercialManager.EliminarInformes(i);
+                }
+
+                //generar nuevos informes para las campañas que estoy recibiendo
+                for (var i = 0; i < modificados.CampaniaId.Distinct().Count(); i++)
+                {
+                    var paramGrabar = new ParamInformeComercial
+                    {
+                        Campaña = modificados.CampaniaDesc[i],
+                        CampañaId = modificados.CampaniaId[i],
+                        ProveedorId = (int)model.ProveedorId,
+                        Materiales = new List<ParamInformeComercialMaterial>()
+                    };
+                    for (var j = 0; j < materialesCampania.Count(); j++)
+                    {
+                        paramGrabar.Materiales.Add(new ParamInformeComercialMaterial { MaterialId = materialesCampania[j] });
+                    }
+
+                    var resultGrabar = mobjInformeComercialManager.GrabarInformeComercial(paramGrabar, (int)modificados.ComercialId, null, null, null, "", "", 0);
+
+                    if (!resultGrabar.HayErrores)
+                    {
+                        var oLstInformeComercial = new LstInformeComercial(mobjreportesManager);
+
+                        var datos = mobjInformeComercialManager.GenerarInformeComercial(paramGrabar, (int)resultGrabar.InformeId);
+
+                        var identif = oLstInformeComercial.GenerarListadoAsync(datos).Result;
+
+                        model.DownloadKey.Add(Util.GetDownloadKey(identif));
+
+                        mobjInformeComercialManager.EnviarMailInformeComercial(identif);
+                    }
+                    else
+                    {
+                        model.Errores = resultGrabar.Errores;
+                    }
+                }
+            }
             return new JsonResult()
             {
                 Data = model,

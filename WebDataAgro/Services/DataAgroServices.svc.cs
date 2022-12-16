@@ -1082,7 +1082,7 @@ namespace WebDataAgro.Services
 
 
                 resultado.HayError = resultado.ListaErrores.Count() > 0;
-                logger.Debug("ValidarProveedorComercial resultado" + resultado.ToJson());
+                //logger.Debug("ValidarProveedorComercial resultado" + resultado.ToJson());
 
                 return resultado;
             }

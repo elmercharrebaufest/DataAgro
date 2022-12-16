@@ -2,6 +2,7 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
+using Molinos.DataAgro.Interfaces.Managers;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -31,6 +32,8 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IAdministracionCupoManager> administracionCupoManagerMock;
         private Mock<IHedgeManager> oHedgeManagerMock;
         private Mock<IProveedorManager> proveedorManagerMock;
+        private Mock<IPrecioPizarraManager> precioPizarraManagerMock;
+        private Mock<IHomeManager> homeManagerMock;
 
         private JavaScriptSerializer serializer;
 
@@ -50,6 +53,7 @@ namespace Molinos.DataAgro.Test.Controllers
             oHedgeManagerMock = new Mock<IHedgeManager>();
             diferencialManagerMock = new Mock<IDiferencialManager>();
             proveedorManagerMock = new Mock<IProveedorManager>();
+            precioPizarraManagerMock = new Mock<IPrecioPizarraManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new TareasProgramadasController(loggerMock.Object,
                                                      contratoManagerMock.Object,
@@ -61,7 +65,8 @@ namespace Molinos.DataAgro.Test.Controllers
                                                      administracionCupoManagerMock.Object,
                                                      oHedgeManagerMock.Object,
                                                      diferencialManagerMock.Object,
-                                                     proveedorManagerMock.Object);
+                                                     proveedorManagerMock.Object,
+                                                     precioPizarraManagerMock.Object);
         }
 
         [Test]
@@ -100,7 +105,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void CrearSugerenciaCupo()
         {
-            cupoManagerMock.Setup(x => x.CrearSugerenciaCupo(It.IsAny<int>(), It.IsAny<FormulaDto>(),It.IsAny<ConfiguracionCupo>()));
+            cupoManagerMock.Setup(x => x.CrearSugerenciaCupo(It.IsAny<int>(), It.IsAny<FormulaDto>(), It.IsAny<ConfiguracionCupo>()));
             var result = target.CrearSugerenciaCupo() as ContentResult;
 
             Assert.NotNull(result);
@@ -118,7 +123,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
         }
-        
+
         [Test]
         public void EnviarMailSugerenciasPendientesPorComercialTest()
         {
@@ -168,11 +173,11 @@ namespace Molinos.DataAgro.Test.Controllers
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
         }
-        
+
         [Test]
         public void ActualizarCumplimientoCuposMasivoTest()
         {
-            var result = target.ActualizarCumplimientoCuposMasivo("20210101","20210201") as ContentResult;
+            var result = target.ActualizarCumplimientoCuposMasivo("20210101", "20210201") as ContentResult;
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);
@@ -202,6 +207,24 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ActualizarEstadoDeContratosTest()
         {
             var result = target.ActualizarEstadoDeContratos() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ActualizarPrecioPizarra()
+        {
+            var result = target.ActualizarPrecioPizarra() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ActualizarProveedoresHomeTest()
+        {
+            var result = target.ActualizarProveedoresHome() as ContentResult;
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);

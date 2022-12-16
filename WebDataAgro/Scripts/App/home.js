@@ -422,15 +422,26 @@ function actualizarContactos(contactos) {
     $(".cont-op").html(contactos.TotalOperandoContactos);
     $(".cont-no-op").html(contactos.TotalNoOperandoContactos);
     $(".cont-baj").html(contactos.TotalBajaContactos);
+
+    $(".cont-habilitado").html(contactos.TotalHabilitadoContactos);
+    $(".cont-legajo-irregular").html(contactos.TotalLegajoIrregularContactos);
+    $(".cont-no-habilitado").html(contactos.TotalNoHabilitadoContactos);
 }
+
+//function ObtenerEstadoActual() {
+//    return $(".cont-agend-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? null :
+//        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 1 :
+//            $(".cont-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 2 :
+//                $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 3 :
+//                    $(".cont-baj-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 4 :
+//                        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 5 : null
+//}
 
 function ObtenerEstadoActual() {
     return $(".cont-agend-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? null :
-        $(".cont-alta-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 1 :
-            $(".cont-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 2 :
-                $(".cont-no-op-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 3 :
-                    $(".cont-baj-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 4 :
-                        $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 5 : null
+        $(".cont-habilitado-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 1 :
+            $(".cont-legajo-irregular-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 2 :
+                $(".cont-no-habilitado-det .contenedor-principal-miscontactos-detalle").hasClass("miscontactos-selected") ? 3 : null
 }
 
 function ArmarCabeceraContactos() {
@@ -470,6 +481,24 @@ function ArmarCabeceraContactos() {
         updateFiltro(5);
     });
 
+    $(".cont-habilitado-det").click(function () {
+        LimpiarClase();
+        $(".cont-habilitado-det .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
+        updateFiltro(1);
+    });
+
+    $(".cont-legajo-irregular-det").click(function (e) {
+        LimpiarClase();
+        $(".cont-legajo-irregular-det .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
+        updateFiltro(2);
+    });
+
+    $(".cont-no-habilitado-det").click(function () {
+        LimpiarClase();
+        $(".cont-no-habilitado-det .contenedor-principal-miscontactos-detalle").addClass("miscontactos-selected");
+        updateFiltro(3);
+    });
+
     function LimpiarClase() {
         $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-alta-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
@@ -478,6 +507,10 @@ function ArmarCabeceraContactos() {
         $(".cont-baj-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-alta-no-clie .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
         $(".cont-agend-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+
+        $(".cont-habilitado-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+        $(".cont-legajo-irregular-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
+        $(".cont-no-habilitado-det .contenedor-principal-miscontactos-detalle").removeClass("miscontactos-selected");
     }
 }
 
@@ -486,6 +519,9 @@ function ArmarContactos(contactos) {
     for (var ii in contactos) {
         $("#verMasContactos").show();
         (function (i) {
+            var colorHome = contactos[i].EstadoHomeId == 1 ? 'green' : contactos[i].EstadoHomeId == 2 ? 'yellow' : 'red';
+            var colorTextoEstadoHome = contactos[i].EstadoHomeId == 2 ? 'grey' : 'white';
+            var estadoHomeMensaje = contactos[i].EstadoHomeMensaje == null ? "" : contactos[i].EstadoHomeMensaje;
             var clase = '';
             var onClick = '';
             var htmlurl = MSGetUrl('/Proveedor/Detalle?ProveedorId=' + contactos[i].ProveedorId);
@@ -498,6 +534,10 @@ function ArmarContactos(contactos) {
             contactos[i].Corredor ? htmlaux += ' detalleCorredor' : '';
             htmlaux += '">'
                 + '<div class="lista-contactos-estado">'
+                + '<br>'
+                //+ '<span class="lista-contactos-estadoHome-titulo" style="background:' + colorHome + '; color:' + colorTextoEstadoHome + ';">Estado Home: <b>' + contactos[i].EstadoHomeMensaje + '</b></span>'
+                + '<span class="lista-contactos-estadoHome-titulo" style="background:' + colorHome + '; color:' + colorTextoEstadoHome + ';"> <b>' + estadoHomeMensaje + '</b></span>'
+                + '<br>'
                 + '<span class="lista-contactos-estado-titulo">Estado:</span>'
                 + '<span class="lista-contactos-estado-ab"> ' + contactos[i].Estado + '</span>'
                 + '<span class="lista-contactos-estado-estrellas">';
@@ -759,7 +799,7 @@ function armarSelects(result) {
         }
         htmlComercial += '</select>';
         $(".filtro-comercial").append(htmlComercial);
-        
+
     } else {
         $(".filtro-comercial").parent().hide();
     }

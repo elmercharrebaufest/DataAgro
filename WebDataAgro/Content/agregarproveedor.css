@@ -385,6 +385,8 @@ campo-granos-almacenamiento button,
     text-align: right;
 }
 
+.modal-generar-informe,
+.guardarConInforme,
 .formulario-footer-cancelar,
 .modal-cancelar,
 .formulario-footer-guardar-contacto,
@@ -412,6 +414,8 @@ campo-granos-almacenamiento button,
         text-decoration: underline;
     }
 
+.modal-generar-informe,
+.guardarConInforme,
 .modal-guardar-contacto,
 .formulario-footer-guardar-contacto,
 #GuardarContactoComercial,
@@ -448,18 +452,21 @@ campo-granos-almacenamiento button,
         color: rgb(38, 51, 123) !important;
     }
 
+.modal-generar-informe,
 .modal-cancelar,
 .formulario-footer-siguiente {
     background-color: rgb(38, 51, 123);
     color: rgb(255, 255, 255);
 }
 
+    .modal-generar-informe:hover,
     .modal-cancelar:hover,
     .formulario-footer-siguiente:hover {
         color: rgb(38, 51, 123);
         background-color: rgb(255, 255, 255);
     }
 
+.guardarConInforme:hover,
 .modal-guardar-contacto:hover,
 .formulario-footer-guardar-contacto:hover,
 #GuardarContactoComercial:hover,

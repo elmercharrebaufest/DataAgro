@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
@@ -18,11 +19,13 @@ namespace Molinos.DataAgro.Business.Managers
         private ILogger logger;
         private readonly IRepositorio repositorio;
         private IPrecioPizarraAgent precioPizarraAgent;
-        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent crearPrecioPizarraAgent)
+        private IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent;
+        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent crearPrecioPizarraAgent, IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.precioPizarraAgent = crearPrecioPizarraAgent;
+            this.clienteBolsaRosarioAPIAgent = clienteBolsaRosarioAPIAgent;
         }
         public Resultado GrabarPrecioPizarra(PrecioPizarra precioPizarra)
         {
@@ -99,7 +102,6 @@ namespace Molinos.DataAgro.Business.Managers
                 MonedaId = x.MonedaId,
                 Moneda = x.Moneda.Descripcion + "",
                 UnidadMedida = x.UnidadMedida
-
             });
         }
 
@@ -178,6 +180,50 @@ namespace Molinos.DataAgro.Business.Managers
                 MaterialId = x.MaterialId,
                 PizarraId = x.PizarraId
             });
+        }
+
+        public void ActualizarPrecioPizarra(DateTime fecha)
+        {
+            List<DataBCR> listaPreciosBCR;
+            List<int> listIdMaterialesBCR = new List<int>();
+
+            string activeCreador = PermisosHelper.ObtenerUsuario();
+            Comercial oComercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == activeCreador);
+            var listMateriales = repositorio.Listar<Material, int>(x => x.MaterialId, y => y.MaterialId != 5);
+
+            var precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => x.MaterialId != 5 &&
+                                                                               x.PizarraId == 1 &&
+                                                                               x.FechaDesde == fecha).Select(x => x.MaterialId).ToList();
+
+            listMateriales = listMateriales.Where(x => !precioPizarraFiltrado.Contains(x)).ToList();
+
+            // TRIGO PAN(1), MAÍZ(2), GIRASOL(20), SOJA(21)
+            foreach (var p in listMateriales)
+            {
+                listIdMaterialesBCR.Add(p == 1 ? 2 : p == 2 ? 1 : p == 3 ? 21 : 20);
+            }
+
+            listaPreciosBCR = clienteBolsaRosarioAPIAgent.ConsultarPrecios(fecha, listIdMaterialesBCR.ToArray());
+
+            Moneda oMoneda = repositorio.Obtener<Moneda>(x => x.Descripcion.Contains("ARP"));
+            Pizarra oPizarra = repositorio.Obtener<Pizarra>(x => x.Descripcion.Contains("ROSARIO"));
+
+            foreach (var lp in listaPreciosBCR)
+            {
+                PrecioPizarra pp = new PrecioPizarra();
+
+                pp.Precio = (int)Math.Round(lp.precio_Cotizacion);
+                pp.MaterialId = lp.id_MaterialDA;
+                pp.PizarraId = oPizarra.Id;
+                pp.FechaDesde = lp.fecha_Operacion_Pizarra;
+                pp.FechaHasta = lp.fecha_Operacion_Pizarra;
+                pp.MonedaId = oMoneda.MonedaId;
+                pp.UnidadMedida = "TON";
+                pp.ComercialId = oComercial.ComercialId;
+
+                Resultado oEntityErrors = GrabarPrecioPizarra(pp);
+            }
+
         }
     }
 }

@@ -10,6 +10,7 @@ using System;
 using Molinos.DataAgro.Entities.Dto;
 using WebDataAgro.Helpers.Excel;
 using System.Linq;
+using Molinos.DataAgro.Interfaces.Managers;
 
 namespace WebDataAgro.Controllers
 {
@@ -26,12 +27,13 @@ namespace WebDataAgro.Controllers
         private readonly IHedgeManager oHedgeManager;
         private readonly IDiferencialManager diferencialManager;
         private readonly IProveedorManager proveedorManager;
+        private readonly IPrecioPizarraManager precioPizarraManager;
 
         public TareasProgramadasController(ILogger logger, IContratoManager contratoManager, IFijacionDePrecioContratoManager fijacionManager,
             ICupoManager cupoManager, IContratoAcuerdoManager contratoAcuerdoManager,
             IReportesManager reportesManager, INegocioManager negocioManager,
             IAdministracionCupoManager administracionCupoManager, IHedgeManager oHedgeManager, IDiferencialManager diferencialManager,
-            IProveedorManager proveedorManager)
+            IProveedorManager proveedorManager, IPrecioPizarraManager precioPizarraManager)
 
         {
             this.logger = logger;
@@ -45,6 +47,7 @@ namespace WebDataAgro.Controllers
             this.oHedgeManager = oHedgeManager;
             this.diferencialManager = diferencialManager;
             this.proveedorManager = proveedorManager;
+            this.precioPizarraManager = precioPizarraManager;
         }
 
         public ActionResult EnvioMailPendientes()
@@ -308,6 +311,29 @@ namespace WebDataAgro.Controllers
             }
             return Content("ok");
         }
+
+        public ActionResult ActualizarPrecioPizarra()
+        {
+            if (DateTime.Now > DateTime.Now.Date.AddHours(10) && DateTime.Now < DateTime.Now.Date.AddHours(11).AddMinutes(1))
+            {
+                logger.Info($"Actualizar Precios Pizarra");
+                precioPizarraManager.ActualizarPrecioPizarra(DateTime.Now.Date.AddDays(-1));
+                logger.Info($"Actualizar Precios Pizarra - Finalizado");
+            }
+            return Content("ok");
+        }
+
+        public ActionResult ActualizarProveedoresHome()
+        {
+            //if (DateTime.Now > DateTime.Now.Date.AddHours(10) && DateTime.Now < DateTime.Now.Date.AddHours(11).AddMinutes(1))
+            //{
+                logger.Info($"Actualizar Proveedores Home");
+                proveedorManager.ActualizarProveedoresHome();
+                logger.Info($"Actualizar Proveedores Home - Finalizado");
+            //}
+            return Content("ok");
+        }
+
         public ActionResult ActualizarEstadoDeContratos()
         {
             logger.Info($"Inicio Actualizar EstadoContrato");

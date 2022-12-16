@@ -34,7 +34,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 .Where(x => x.Centro.CodigoSap == centroId && x.FechaSugerida >= desde
                 && x.FechaSugerida <= hasta && x.MaterialId == materialId
                 && x.ComercialId == comercialId && x.Aceptado == null
-                && (x.Solicitudes.All(y=> y.EstadoId == 2) || x.Solicitudes.Count() == 0 ))
+                && (x.Solicitudes.All(y=> y.EstadoId != (int)EnumEstadoAdministracionCupo.Pendiente) || x.Solicitudes.Count() == 0 ))
                 .Select(sugerido => new SugerenciaCupoDto
                 {
                     Id = sugerido.Id,

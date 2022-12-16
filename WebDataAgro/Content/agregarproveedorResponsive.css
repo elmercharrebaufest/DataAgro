@@ -79,9 +79,9 @@
             text-align:center;
         }
 
-        .modal-guardar-contacto, .formulario-footer-guardar-contacto, #GuardarContactoComercial, .datos-almacenamiento-cap-prod-editor-contenedor-guardar, .datos-produccion-cap-prod-editor-contenedor-guardar, .formulario-footer-siguiente, .modal-cancelar{
-            width:140px;
-        }
+    .modal-guardar-contacto, .formulario-footer-guardar-contacto, #GuardarContactoComercial, .datos-almacenamiento-cap-prod-editor-contenedor-guardar, .datos-produccion-cap-prod-editor-contenedor-guardar, .formulario-footer-siguiente, .modal-cancelar, .guardarConInforme, .modal-generar-informe {
+        width: 140px;
+    }
 
         .formulario-footer-siguiente{
             width:80px;

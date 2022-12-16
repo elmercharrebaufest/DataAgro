@@ -76,6 +76,8 @@ namespace Molinos.DataAgro.Agent.VisualizarCapacidadProductiva {
         
         private decimal pORCField;
         
+        private string fECHA_ACTField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
         public string LIFNR {
@@ -145,6 +147,18 @@ namespace Molinos.DataAgro.Agent.VisualizarCapacidadProductiva {
             set {
                 this.pORCField = value;
                 this.RaisePropertyChanged("PORC");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public string FECHA_ACT {
+            get {
+                return this.fECHA_ACTField;
+            }
+            set {
+                this.fECHA_ACTField = value;
+                this.RaisePropertyChanged("FECHA_ACT");
             }
         }
         
