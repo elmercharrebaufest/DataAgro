@@ -536,7 +536,7 @@ function ArmarContactos(contactos) {
                 + '<div class="lista-contactos-estado">'
                 + '<br>'
                 //+ '<span class="lista-contactos-estadoHome-titulo" style="background:' + colorHome + '; color:' + colorTextoEstadoHome + ';">Estado Home: <b>' + contactos[i].EstadoHomeMensaje + '</b></span>'
-                + '<span class="lista-contactos-estadoHome-titulo" style="background:' + colorHome + '; color:' + colorTextoEstadoHome + ';"> <b>' + estadoHomeMensaje + '</b></span>'
+                + '<span class="lista-contactos-estadoHome-titulo" style="background:' + colorHome + '; color:' + colorTextoEstadoHome + ';"> ' + estadoHomeMensaje + '  </span>'
                 + '<br>'
                 + '<span class="lista-contactos-estado-titulo">Estado:</span>'
                 + '<span class="lista-contactos-estado-ab"> ' + contactos[i].Estado + '</span>'
