@@ -66,6 +66,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         {
                             p.id_MaterialDA = idMaterial == 1 ? 2 : idMaterial == 2 ? 1 : idMaterial == 20 ? 4 : 3;
                             p.fecha_Operacion_Pizarra = p.fecha_Operacion_Pizarra.Date;
+                            logger.Debug("Precio Pizarra - ID Material: " + p.id_MaterialDA + " - Fecha Op.: " + p.fecha_Operacion_Pizarra + " - Precio: " + p.precio_Cotizacion);
                             listPrecios.Add(p);
                         }
                     }
