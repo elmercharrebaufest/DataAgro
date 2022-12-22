@@ -61,10 +61,15 @@ namespace Molinos.DataAgro.Business.Managers
                     resultado.Error("Solicitud", "La solicitud no puede ser editada. No se encuentra en estado pendiente");
                     return resultado;
                 }
-                if(solicitud.CantidadCupo != cantidadOriginal || solicitud.CantidadFleteProcedencia != cantidadFleteOriginal)
+                if (solicitud.CantidadCupo != cantidadOriginal || solicitud.CantidadFleteProcedencia != cantidadFleteOriginal)
                 {
                     resultado.Error("Solicitud", $"- La solicitud con fecha { solicitud.Fecha.ToString("dd-MM-yyyy") }, proveedor { solicitud.Proveedor.RazonSocial } y destino {solicitud.Centro.Descripcion} no puede ser confirmada/aceptada porque ha sido editada por el usuario.<br /><br />");
                     return resultado;
+                }
+                var error = cupoManager.ValidarDisponibilidadCupera(solicitud.MaterialId, solicitud.CentroId, solicitud.Fecha, cantidad + cantidadFp);
+                if (error.HayError)
+                {
+                    return error;
                 }
                 if (solicitud.TipoAdministracionCupoId == (int)EnumTipoAdministracionCupo.Algoritmo)
                 {
@@ -498,6 +503,37 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error("Error al actualizar la solicitud", e.Message);
             }
             return resultado;
+        }
+
+        public CupoResult AceptarCupoExcedenteMasivo(List<AdministracionCupoDto> solicitudes, string motivo, string IdActiveDirectory)
+        {
+            CupoResult resultados = new CupoResult();
+
+            List<AdministracionCupoDto> keys = new List<AdministracionCupoDto>();
+            foreach (var adm in solicitudes.GroupBy(a => new { a.Fecha, a.MaterialId, a.CentroId }))
+            {
+                int cantidad = adm.Sum(a => a.CantidadDeCupo + a.CantidadFleteProcedencia);
+                var error = cupoManager.ValidarDisponibilidadCupera(adm.Key.MaterialId, adm.Key.CentroId, adm.Key.Fecha, cantidad);
+                if (error.HayError)
+                {
+                    keys.Add(new AdministracionCupoDto { MaterialId = adm.Key.MaterialId, CentroId = adm.Key.CentroId, Fecha = adm.Key.Fecha });
+                    resultados.Errores.AddRange(error.Errores);
+                }
+            }
+
+
+            foreach (var adm in solicitudes)
+            {
+                if (keys.Any(a => a.Fecha == adm.Fecha && a.MaterialId == adm.MaterialId && a.CentroId == adm.CentroId))
+                {
+                    continue;
+                }
+                var resultado = AceptarCupoExcedente(adm.Id, adm.CantidadDeCupo, adm.CantidadFleteProcedencia, adm.CantidadDeCupoOriginal, adm.CantidadFleteProcedenciaOriginal, IdActiveDirectory, motivo);
+                if (resultado.HayError)
+                    resultados.Errores.AddRange(resultado.Errores);
+            }
+
+            return resultados;
         }
     }
 }

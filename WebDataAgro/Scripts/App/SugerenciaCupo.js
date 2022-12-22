@@ -207,7 +207,7 @@ function CargarEventos() {
                 url = '/SugerenciaCupo/ModificarSugerenciaCupo';
                 data = itemsConfirmados;
             }
-            $("#CargaCupos").hide();
+            $("#CargaCupos").modal("hide");
             $("#cuerpo-carga-cupos").empty();
             var resultados = MSExecuteOnServer(url, data);
             mostrarResultados(resultados);
@@ -274,13 +274,13 @@ function CargarEventos() {
                     for (var i = 0; i < listaCantidad.length; i++) {
                         if (listaCantidad[i].fecha == this.id.substr(3, 2) + this.id.substr(5, 2) + this.id.substr(7, 4)) {
                             listaCantidad[i].cantidadAceptadaFila += $(this).data("kendoNumericTextBox").value();
-                        }                        
+                        }
                     }
                 }
-                
+
                 var fechaOriginal = this.id.substr(3, 2) + "/" + this.id.substr(5, 2) + "/" + this.id.substr(7, 4);
                 var fechaSolicitud = this.id.substr(12, 2) + "/" + this.id.substr(14, 2) + "/" + this.id.substr(16, 4);
-                
+
                 if ($(this).data("kendoNumericTextBox").value() > 0) {
                     itemsConfirmados.push({
                         nro: n++,
@@ -301,7 +301,7 @@ function CargarEventos() {
             }
 
         });
-        
+
         var errores = "";
         for (var i = 0; i < listaCantidad.length; i++) {
             if (listaCantidad[i].cantidad < listaCantidad[i].cantidadAceptadaFila) {
@@ -392,7 +392,7 @@ function DevolverSugerencia(id) {
     BlockUi('Cargando...');
     setTimeout(function () {
         var cantidad = $("#" + id).data("kendoNumericTextBox").value();
-        if (cantidad == null || cantidad == "" || cantidad == 0 ) {
+        if (cantidad == null || cantidad == "" || cantidad == 0) {
             MensErr("Ingrese la cantidad de cupos a devolver");
             $.unblockUI();
             return;

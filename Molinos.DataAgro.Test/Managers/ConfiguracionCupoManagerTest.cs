@@ -145,6 +145,8 @@ namespace Molinos.DataAgro.Test.Managers
             };
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<LimiteCupo, LimiteCupoDto>>>(), It.IsAny<Expression<Func<LimiteCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<LimiteCupoDto>() { new LimiteCupoDto { Id = 1, CantidadCupo = 1, ZonaCupoId = 1, ZonaCupo = "aaa" } });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Cupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+                .Returns(new List<Cupo>() { new Cupo { Id = 1, ZonaCupoId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, string>>>(), It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
            Returns(new List<string>() { "CBA" });
             cupoManager.Setup(x => x.TraerCupoDisponibilidad(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>());

@@ -55,6 +55,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FechaCreacionConHora = cupo.FechaCreacion,
                     CantidadFleteProcedenciaOriginal = cupo.CantidadFleteProcedencia,
                     CantidadDeCupoOriginal = cupo.CantidadCupo,
+                    CentroId = cupo.CentroId,
+                    MaterialId  =cupo.MaterialId
                 };
             return new KendoGrid<AdministracionCupoDto>(request, query);
         }

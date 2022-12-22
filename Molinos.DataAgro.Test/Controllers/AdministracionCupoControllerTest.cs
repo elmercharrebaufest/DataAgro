@@ -124,7 +124,7 @@ namespace Molinos.DataAgro.Test.Controllers
                     ZonaId = 1,
                 }
             };
-            administracionManagerMock.Setup(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
+            administracionManagerMock.Setup(x => x.AceptarCupoExcedenteMasivo(It.IsAny<List<AdministracionCupoDto>>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
             var result = target.AceptarMasivo(adm, "");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);

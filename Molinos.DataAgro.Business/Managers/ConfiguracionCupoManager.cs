@@ -320,7 +320,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var configuraciones = repositorio.ObtenerConsultaEscalar(new TraerConfiguracionesCupo(request));
             //var listaConfiguraciones = configuraciones.Data.ToList();
-            
+
             if (configuraciones.Data.Count() == 0)
                 return configuraciones;
 
@@ -341,10 +341,11 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    var disponibilidad = disponibilidades.Where(a => a.Fecha == configuracion.Fecha && a.CentroCodigo == configuracion.CentroCodigoSap && a.MaterialCodigo == configuracion.MaterialCodigoSap).ToList();
+                    var consumidos = repositorio.Contar<Cupo>(x => x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId && x.FechaIngreso == configuracion.Fecha &&
+                                          x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
 
-                    configuracion.CuposConsumidos += disponibilidad.Sum(X => X.Consumidos);
-                    configuracion.CuposDisponibles += disponibilidad.Sum(X => X.Disponibles);
+                    configuracion.CuposConsumidos = consumidos;
+                    configuracion.CuposDisponibles = configuracion.LimiteCupo - consumidos;
                 }
             }
             return configuraciones;
@@ -368,30 +369,30 @@ namespace Molinos.DataAgro.Business.Managers
             //    configuracion.CuposDisponibles = configuracion.LimiteCupo - configuracion.CuposConsumidos;
             //}
             var listaZonas = repositorio.Listar<ZonaCupo, string>(x => x.CodigoSap);
-            if (!centro.NoPropio)
+            //if (!centro.NoPropio)
+            //{
+            //    var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.Centro.CodigoSap }, configuracion.Material.Codigo);
+            //    foreach (var d in disponibilidad)
+            //    {
+            //        if (zonas.Any(x => x.ZonaCupo == d.ZonaId))
+            //        {
+            //            zonas.Where(x => x.ZonaCupo == d.ZonaId).FirstOrDefault().Consumidos = d.Consumidos;
+            //            zonas.Where(x => x.ZonaCupo == d.ZonaId).FirstOrDefault().Disponible = d.Disponibles;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            var consumidos = repositorio.Listar<Cupo>(x =>
+                                       x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId && x.FechaIngreso == configuracion.Fecha &&
+                                       x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+            foreach (var zona in zonas)
             {
-                var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.Centro.CodigoSap }, configuracion.Material.Codigo);
-                foreach (var d in disponibilidad)
-                {
-                    if (zonas.Any(x => x.ZonaCupo == d.ZonaId))
-                    {
-                        zonas.Where(x => x.ZonaCupo == d.ZonaId).FirstOrDefault().Consumidos = d.Consumidos;
-                        zonas.Where(x => x.ZonaCupo == d.ZonaId).FirstOrDefault().Disponible = d.Disponibles;
-                    }
-                }
+                var consumidosZona = consumidos.Where(a => a.ZonaCupoId == zona.ZonaCupoId).ToList().Count();
+                zona.Disponible = zona.CantidadCupo - consumidosZona;
+                zona.Consumidos = consumidosZona;
             }
-            else
-            {
-                var consumidos = repositorio.Listar<Cupo>(x =>
-                                           x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId && x.FechaIngreso == configuracion.Fecha &&
-                                           x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
-                foreach (var zona in zonas)
-                {
-                    var consumidosZona = consumidos.Where(a => a.ZonaCupoId == zona.ZonaCupoId).ToList().Count();
-                    zona.Disponible = zona.CantidadCupo - consumidosZona;
-                    zona.Consumidos = consumidosZona;
-                }
-            }
+            //}
             return zonas;
         }
         private Resultado ValidarLimite(List<LimiteCupo> limite)
@@ -438,9 +439,12 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var disponibilidad = cupoManager.TraerCupoDisponibilidad(configuracion.Fecha, configuracion.Fecha, "", new List<string>() { configuracion.CentroCodigoSap }, configuracion.MaterialCodigoSap);
-                configuracion.CuposConsumidos = disponibilidad.Sum(x => x.Consumidos);
-                configuracion.CuposDisponibles = disponibilidad.Sum(x => x.Disponibles);
+                var consumidos = repositorio.Contar<Cupo>(x =>
+                                       x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId && x.FechaIngreso == configuracion.Fecha &&
+                                       x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+
+                configuracion.CuposConsumidos = consumidos;
+                configuracion.CuposDisponibles = configuracion.LimiteCupo - consumidos;
             }
             return configuracion;
         }

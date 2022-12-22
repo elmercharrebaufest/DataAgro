@@ -18,6 +18,8 @@ namespace Molinos.DataAgro.Interfaces
         CupoResult AceptarCupoExcedente(int administracionId, int cantidad, int cantidadFp, int cantidadOriginal, int cantidadFleteOriginal, string idActiveDirectory, string motivo);
         void RechazarSolicitudesVencidas();
         string ActualizarSolicitud(int id, int cantidadCupo, int cantidadFlete, bool estado);
+        CupoResult AceptarCupoExcedenteMasivo(List<AdministracionCupoDto> solicitudes, string motivo, string IdActiveDirectory);
+
     }
 }
 

@@ -75,12 +75,7 @@ namespace WebDataAgro.Controllers
             CupoResult resultados = new CupoResult();
             if (solicitudes.Count > 0)
             {
-                foreach (var adm in solicitudes)
-                {
-                    var resultado = administracionCupoManager.AceptarCupoExcedente(adm.Id, adm.CantidadDeCupo, adm.CantidadFleteProcedencia, adm.CantidadDeCupoOriginal, adm.CantidadFleteProcedenciaOriginal, GlobalVariables.IdActiveDirectory, motivo);
-                    if (resultado.HayError)
-                        resultados.Errores.AddRange(resultado.Errores);
-                }
+                resultados = administracionCupoManager.AceptarCupoExcedenteMasivo(solicitudes, motivo, GlobalVariables.IdActiveDirectory);
             }
             else
             {

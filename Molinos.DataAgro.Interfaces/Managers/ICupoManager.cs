@@ -73,5 +73,7 @@ namespace Molinos.DataAgro.Interfaces
         SugerenciaCupo ClonarSugerencia(SugerenciaCupo s);
         //void EjecutarAlgoritmoManual(int materialId, FormulaDto formula, ConfiguracionCupo configuracion = null, string path = "");
         List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos();
+        CupoResult ValidarDisponibilidadCupera(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
+
     }
 }

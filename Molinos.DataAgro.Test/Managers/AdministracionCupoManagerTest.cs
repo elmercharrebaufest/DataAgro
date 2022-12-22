@@ -76,6 +76,7 @@ namespace Molinos.DataAgro.Test.Managers
         [Test]
         public void AceptarCupoExcedenteSinError()
         {
+            cupoManagerMock.Setup(x => x.ValidarDisponibilidadCupera(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<int>())).Returns(new CupoResult());
             repositorioMock.Setup(y => y.Obtener<AdministracionCupo>(It.IsAny<int>()))
                 .Returns(new AdministracionCupo
                 {
