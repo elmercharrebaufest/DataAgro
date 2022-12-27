@@ -21,7 +21,7 @@ namespace Molinos.DataAgro.Business
         public override decimal Calcular(CriterioFechaDeEntrega criterio)
         {
             int dias = (int)(criterio.Dto.FechaHasta.Date - DateTime.Now.Date).TotalDays;
-            if (dias==0)
+            if (dias <= 0)
             {
                 return 1;
             }

@@ -182,18 +182,27 @@ namespace Molinos.DataAgro.Business.Managers
             });
         }
 
-        public void ActualizarPrecioPizarra(DateTime fecha)
+        public void ActualizarPrecioPizarra(DateTime fecha, bool manual)
         {
             List<DataBCR> listaPreciosBCR;
             List<int> listIdMaterialesBCR = new List<int>();
+            List<int> precioPizarraFiltrado;
+            List<PrecioPizarra> precioPizarraFiltrado2;
 
             string activeCreador = PermisosHelper.ObtenerUsuario();
             Comercial oComercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == activeCreador);
             var listMateriales = repositorio.Listar<Material, int>(x => x.MaterialId, y => y.MaterialId != 5);
 
-            var precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => x.MaterialId != 5 &&
+            if (manual)
+            {
+                precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => 1 == 2).Select(x => x.MaterialId).ToList();
+            }
+            else
+            {
+                precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => x.MaterialId != 5 &&
                                                                                x.PizarraId == 1 &&
                                                                                x.FechaDesde == fecha).Select(x => x.MaterialId).ToList();
+            }
 
             listMateriales = listMateriales.Where(x => !precioPizarraFiltrado.Contains(x)).ToList();
 
@@ -204,6 +213,25 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             listaPreciosBCR = clienteBolsaRosarioAPIAgent.ConsultarPrecios(fecha, listIdMaterialesBCR.ToArray());
+
+            if (manual)
+            {
+                foreach (var lpBCR in listaPreciosBCR)
+                {
+                    precioPizarraFiltrado2 = repositorio.Listar<PrecioPizarra>(x => x.MaterialId == lpBCR.id_MaterialDA &&
+                                                                                    x.PizarraId == 1 &&
+                                                                                    x.FechaDesde == fecha &&
+                                                                                    x.Precio != (int)Math.Round(lpBCR.precio_Cotizacion)).ToList();
+
+                    if (precioPizarraFiltrado2.Count > 0)
+                    {
+                        foreach (var ppf2 in precioPizarraFiltrado2)
+                        {
+                            var rta = EliminarPizarra(ppf2.Id);
+                        }
+                    }
+                }
+            }
 
             Moneda oMoneda = repositorio.Obtener<Moneda>(x => x.Descripcion.Contains("ARP"));
             Pizarra oPizarra = repositorio.Obtener<Pizarra>(x => x.Descripcion.Contains("ROSARIO"));

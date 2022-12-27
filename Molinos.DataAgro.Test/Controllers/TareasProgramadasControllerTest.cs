@@ -213,7 +213,7 @@ namespace Molinos.DataAgro.Test.Controllers
         }
 
         [Test]
-        public void ActualizarPrecioPizarra()
+        public void ActualizarPrecioPizarraTest()
         {
             var result = target.ActualizarPrecioPizarra() as ContentResult;
             Assert.NotNull(result);

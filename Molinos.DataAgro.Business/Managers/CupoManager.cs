@@ -337,8 +337,10 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
             var creados = repositorio.Contar<Cupo>(
-                                                x => x.NegocioId == null && x.ConfiguracionEspacioDinamicoId == null && x.FechaIngreso == fechaIngreso
-                                                && x.MaterialId == materialId && x.CentroId == centroId && x.EstadoCupoId != 9 && x.EstadoCupoId != 4);
+                                                x => x.FechaIngreso == fechaIngreso 
+                                                && x.MaterialId == materialId 
+                                                && x.CentroId == centroId 
+                                                && x.EstadoCupoId != 9 && x.EstadoCupoId != 4);
             fechaIngreso = fechaIngreso.Date;
             var total = repositorio.Obtener<ConfiguracionCupo, int>(
                 x => x.MaterialId == materialId && x.Fecha == fechaIngreso && x.CentroId == centroId,

@@ -29,7 +29,7 @@ function LimpiarForm() {
     $(".limpiar").val("");
     $("#MonedaId").val("ARP  ");
     InicializarDate();
-   
+
 }
 
 function mostrarocultar(element) {
@@ -69,8 +69,8 @@ $(".number").kendoNumericTextBox({
     min: 0
 });
 
-$("#MaterialId").change(CargarPizarraHistorico);  
-$("#PizarraId").change(CargarPizarraHistorico);  
+$("#MaterialId").change(CargarPizarraHistorico);
+$("#PizarraId").change(CargarPizarraHistorico);
 
 function CargarPizarraHistorico() {
     var materialId = $("#MaterialId").val();
@@ -90,10 +90,38 @@ function CargarPizarraHistorico() {
                 linea += '<td>' + data[i].Moneda + '</td>';
                 linea += '<td>' + data[i].UnidadMedida + '</td>';
                 linea += '<td>' + data[i].Material + '</td>';
-                linea += '<td> <a class="fa fa-minus-circle danger" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#listaPrecioPizarra" href="/PrecioPizarra/EliminarPrecio/' + data[i].Id +'"> </a></td></tr>';
+                linea += '<td> <a class="fa fa-minus-circle danger" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#listaPrecioPizarra" href="/PrecioPizarra/EliminarPrecio/' + data[i].Id + '"> </a></td></tr>';
                 tabla.append(linea);
             }
         }
     }
 
+}
+
+function ActualizarPrecioPizarraBCR() {
+    var currentDateObj = new Date();
+    var numberOfMlSeconds = currentDateObj.getTime();
+    var addMlSeconds = 60 * 60000 * -24;
+    var newDateObj = new Date(numberOfMlSeconds + addMlSeconds);
+
+    var fecha2 = formatoFecha(newDateObj, 'dd/mm/yy');
+    var fecha1 = fecha2 + " 00:00:00";
+
+    var data = MSExecuteOnServer('/PrecioPizarra/ActualizarPrecioPizarra', { fecha: fecha1, manual: true });
+    if (data == "Ok") {
+        MensInfo("Actualización de Precio Pizarra finalizó correctamente!");
+    } else {
+        MensInfo("Actualización de Precio Pizarra no se ejecutó correctamente.");
+    }
+}
+
+function formatoFecha(fecha, formato) {
+    const map = {
+        dd: fecha.getDate(),
+        mm: fecha.getMonth() + 1,
+        yy: fecha.getFullYear().toString().slice(-2),
+        yyyy: fecha.getFullYear()
+    }
+
+    return formato.replace(/dd|mm|yy|yyy/gi, matched => map[matched])
 }

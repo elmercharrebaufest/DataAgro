@@ -101,6 +101,23 @@ namespace WebDataAgro.Controllers
                 Data = oPrecioPizarraManager.TraerTodoPrecioPizarraPorMaterialYPizarra(materialId, pizarraId)
             };
         }
+
+        public ActionResult ActualizarPrecioPizarra(DateTime fecha, bool manual)
+        {
+            try
+            {
+                oPrecioPizarraManager.ActualizarPrecioPizarra(fecha, manual);
+                return new JsonResult()
+                {
+                    Data = "Ok"
+                };
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public ActionResult EliminarPrecio(int id)
         {
             var precioPizarra = oPrecioPizarraManager.TraerPrecioPizarraPorId(id);

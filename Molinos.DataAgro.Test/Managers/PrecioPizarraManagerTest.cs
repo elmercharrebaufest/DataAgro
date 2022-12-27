@@ -170,7 +170,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             precioPizarraAgentMock.Setup(y => y.Crear(It.IsAny<PrecioPizarra>())).Returns("OK");
 
-            target.ActualizarPrecioPizarra(new DateTime(2019, 8, 6));
+            target.ActualizarPrecioPizarra(new DateTime(2019, 8, 6), false);
 
             repositorioMock.Verify(x => x.Agregar(It.IsAny<PrecioPizarra>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
