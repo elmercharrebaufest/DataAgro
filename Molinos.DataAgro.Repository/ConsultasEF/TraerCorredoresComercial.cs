@@ -22,8 +22,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 join prove in contexto.Set<Proveedor>() on pCom.ProveedorId equals prove.ProveedorId
                 join comercial in contexto.Set<Comercial>() on pCom.ComercialId equals comercial.ComercialId
                 join est in contexto.Set<Estado>() on prove.EstadoId equals est.EstadoId into estados
-                join estHome in contexto.Set<EstadoHome>() on prove.EstadoHomeId equals estHome.Id
+                join estHome in contexto.Set<EstadoHome>() on prove.EstadoHomeId equals estHome.Id into estadosHome
                 from ests in estados.DefaultIfEmpty()
+                from estHomes in estadosHome.DefaultIfEmpty()
+
                 where prove.SegmentacionId==5 || prove.SegmentacionId == 7
                 group prove by prove into provs
                 select new Contactos

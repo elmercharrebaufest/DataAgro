@@ -37,7 +37,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                 join comercial in contexto.Set<Comercial>() on pCom.ComercialId equals comercial.ComercialId
                 join est in contexto.Set<Estado>() on prove.EstadoId equals est.EstadoId into estados
                 from ests in estados.DefaultIfEmpty()
-                where idComerciales.Contains(pCom.ComercialId)
+                    //where idComerciales.Contains(pCom.ComercialId)
+                where prove.SegmentacionId == 5 || prove.SegmentacionId == 7
                 group prove by prove into provs
                 select new ContactoAll
                 {

@@ -69,17 +69,17 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial()));
-                res.TotalContactos = cuenta.Select(a => a.Cuit).Distinct().Count();
-                res.TotalPotencialContactos = cuenta.Where(x => x.Estado == "Cliente Potencial").Select(a => a.Cuit).Distinct().Count();
-                res.TotalOperandoContactos = cuenta.Where(x => x.Estado == "Operando").Select(a => a.Cuit).Distinct().Count();
-                res.TotalNoOperandoContactos = cuenta.Where(x => x.Estado == "No operando").Select(a => a.Cuit).Distinct().Count();
-                res.TotalBajaContactos = cuenta.Where(x => x.Estado == "Baja").Select(a => a.Cuit).Distinct().Count();
-                res.TotalSinInteresContactos = cuenta.Where(x => x.Estado == "Sin interés de operar").Select(a => a.Cuit).Distinct().Count();
+                //var cuenta = DevolverContactosIni(repositorio.ListarConsulta(new TraerCorredoresComercial()));
+                res.TotalContactos = res.Contactos.Select(a => a.Cuit).Distinct().Count();
+                res.TotalPotencialContactos = res.Contactos.Where(x => x.Estado == "Cliente Potencial").Select(a => a.Cuit).Distinct().Count();
+                res.TotalOperandoContactos = res.Contactos.Where(x => x.Estado == "Operando").Select(a => a.Cuit).Distinct().Count();
+                res.TotalNoOperandoContactos = res.Contactos.Where(x => x.Estado == "No operando").Select(a => a.Cuit).Distinct().Count();
+                res.TotalBajaContactos = res.Contactos.Where(x => x.Estado == "Baja").Select(a => a.Cuit).Distinct().Count();
+                res.TotalSinInteresContactos = res.Contactos.Where(x => x.Estado == "Sin interés de operar").Select(a => a.Cuit).Distinct().Count();
 
-                res.TotalHabilitadoContactos = cuenta.Where(x => x.EstadoHomeDescripcion == "Habilitado").Select(a => a.Cuit).Distinct().Count();
-                res.TotalLegajoIrregularContactos = cuenta.Where(x => x.EstadoHomeDescripcion == "Legajo irregular").Select(a => a.Cuit).Distinct().Count();
-                res.TotalNoHabilitadoContactos = cuenta.Where(x => x.EstadoHomeDescripcion == "No habilitado").Select(a => a.Cuit).Distinct().Count();
+                res.TotalHabilitadoContactos = res.Contactos.Where(x => x.EstadoHomeDescripcion == "Habilitado").Select(a => a.Cuit).Distinct().Count();
+                res.TotalLegajoIrregularContactos = res.Contactos.Where(x => x.EstadoHomeDescripcion == "Legajo irregular").Select(a => a.Cuit).Distinct().Count();
+                res.TotalNoHabilitadoContactos = res.Contactos.Where(x => x.EstadoHomeDescripcion == "No habilitado").Select(a => a.Cuit).Distinct().Count();
             }
 
 
