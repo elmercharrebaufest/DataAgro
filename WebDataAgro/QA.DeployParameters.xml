@@ -13,7 +13,7 @@
   <setParameter name="CredentialUserNamePesificados Key" value="materias.primas@molinosagro.com.ar" />
   <setParameter name="CredentialPasswordPesificados Key" value="D4taAgr017" />
   <setParameter name="EmailAgenda Key" value="0" />
-  <setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com; administracion@molinosagro.com.ar" />
+  <setParameter name="EmailInformeComercial Key" value="dataagro@baufest.com; documentacion@molinosagro.com.ar" />
   <setParameter name="SmtpAnonimo Key" value="S" />
   <setParameter name="maildeUsuarios Key" value="scato-soporte@baufest.com" />
   <setParameter name="SapPass Key" value="Data2015" />

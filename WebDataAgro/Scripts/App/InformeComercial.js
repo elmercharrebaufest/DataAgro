@@ -5,6 +5,7 @@ var estaModificando = false;
 var datosModificacion;
 var activo = 0;
 var variablesUltima = "";
+
 $(document).ready(function () {
     $("#tabstrip").kendoTabStrip();
 
@@ -124,7 +125,7 @@ function InicializarElementos() {
         $(".proveedor-input").val("");
         $("#gridInformeComercial").data("kendoGrid").dataSource.data([]);
         $("#gridInformeComercialNuevo").data("kendoGrid").dataSource.data([]);
-        $("#ninforme .k-link").html("Nuevo Informe");
+        $("#ninforme .k-link").html("Informes Pendientes");
         $("#informer .k-link").html("Informes Realizados");
     });
 }
@@ -172,7 +173,7 @@ function reiniciarPagina() {
     $("#gridInformeComercial").data("kendoGrid").dataSource.data([]);
     $("#gridInformeComercialNuevo").data("kendoGrid").dataSource.data([]);
 
-    $("#ninforme .k-link").html("Nuevo Informe");
+    $("#ninforme .k-link").html("Informes Pendientes");
     $("#informer .k-link").html("Informes Realizados");
 }
 
@@ -345,8 +346,10 @@ function CreateGridInformeComercial() {
             { field: "InformeComercialId", hidden: true },
             { field: "EstadoId", hidden: true },
             { field: "Comercial" },
-            { field: "Estado" },
+            { field: "Estado", hidden: true },
+            { field: "Campaña" },
             { field: "Material", template: "#=Material#" },
+            { field: "FechaAlta", type: "date", title: "Fecha de Generación", template: "#= kendo.toString(kendo.parseDate(FechaAlta), 'dd/MM/yyyy hh:mm') #" },
             {
                 field: "Modificar", title: "", width: 40, template: function (dataItem) {
                     if (dataItem.EstadoId == 1) {
@@ -414,7 +417,7 @@ function llenarInput(variables) {
     MSExecuteOnServerAsync('/InformeComercial/ListarMateriales', { filtro: id }, funcReturnListaMateriales, false);
 
     function funcReturnListaMateriales(result) {
-        $("#ninforme .k-link").html("Nuevo Informe (" + result.materiales.length + ")")
+        $("#ninforme .k-link").html("Informes Pendientes (" + result.materiales.length + ")")
         $("#informer .k-link").html("Informes Realizados (" + result.InformeGenerado.length + ")")
         if (result.materiales.length == 0 && result.InformeGenerado.length == 0) {
             $("#gridInformeComercial").data("kendoGrid").dataSource.data([]);
@@ -456,6 +459,8 @@ function llenarInput(variables) {
                         obj.Comercial = result.InformeGenerado[i].Comercial;
                         obj.Estado = result.InformeGenerado[i].EstadoInforme;
                         obj.Material = result.InformeGenerado[i].Materiales;
+                        obj.Campaña = result.InformeGenerado[i].Campaña;
+                        obj.FechaAlta = result.InformeGenerado[i].FechaAlta;
                         obj.Modificar = "";
                         obj.Eliminar = "";
                         obj.Descargar = "";
