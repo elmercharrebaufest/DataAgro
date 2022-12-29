@@ -134,6 +134,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public int EstadoId { get; set; }
         public string EstadoInforme { get; set; }
+        public DateTime FechaAlta { get; set; }
 
 
 
