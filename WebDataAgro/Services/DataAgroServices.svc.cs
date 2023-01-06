@@ -1190,6 +1190,24 @@ namespace WebDataAgro.Services
             return resultado;
         }
 
+        public List<SISA> BuscarProveedorEnSisa(string cuit)
+        {
+            try
+            {
+                logger.Debug("BuscarProveedorEnSisa " + cuit);
+
+                var sisa = repositorio.Listar<SISA>(x => x.CUIT == cuit);
+
+
+                return sisa;
+            }
+            catch (Exception e)
+            {
+                logger.Debug(e);
+                throw;
+            }
+
+        }
 
         #endregion
     }

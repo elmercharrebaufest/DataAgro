@@ -1043,6 +1043,18 @@ namespace Molinos.DataAgro.Test.Services
             Assert.NotNull(result);
             Assert.AreEqual(false, result.HayError);
         }
+
+        [Test]
+        public void BuscarProveedorEnSisaTestOk()
+        {
+            var cuit = "30345456230";
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
+               .Returns(new List<SISA>() { new SISA { Id = 1 } });
+            var result = target.BuscarProveedorEnSisa(cuit) ;
+
+            Assert.NotNull(result);
+            Assert.AreEqual(1, result.Count);
+        }
     }
 }
 

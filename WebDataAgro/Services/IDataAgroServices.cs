@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Dto;
+using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
@@ -59,6 +60,9 @@ namespace WebDataAgro.Services
 
         [OperationContract]
         ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTerceroDto campo);
+
+        [OperationContract]
+        List<SISA> BuscarProveedorEnSisa(string cuit);
         #endregion
     }
 }

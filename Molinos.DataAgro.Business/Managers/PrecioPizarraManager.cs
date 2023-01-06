@@ -247,7 +247,8 @@ namespace Molinos.DataAgro.Business.Managers
                 pp.FechaHasta = lp.fecha_Operacion_Pizarra;
                 pp.MonedaId = oMoneda.MonedaId;
                 pp.UnidadMedida = "TON";
-                pp.ComercialId = oComercial.ComercialId;
+                //pp.ComercialId = oComercial.ComercialId;
+                pp.ComercialId = oComercial != null ? oComercial.ComercialId : repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == "DATAAGRO").ComercialId;
 
                 Resultado oEntityErrors = GrabarPrecioPizarra(pp);
             }
