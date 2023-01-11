@@ -91,6 +91,14 @@ namespace Molinos.DataAgro.Business.Managers
                     cupo.ComercialCreador = comercialCreador;
                 }
 
+                // TODO: GSIAN - Sustentable no debe estar en pasaje QA
+                //var negocio = repositorio.Obtener<Contrato>(cupo.NegocioId);
+                //if (negocio != null)
+                //{
+                //    cupo.Sustentable = negocio.Sustentable;
+                //}
+
+
                 if (!error.HayError)
                 {
                     cupo.Material = repositorio.Obtener<Material>(cupo.MaterialId);
@@ -278,7 +286,11 @@ namespace Molinos.DataAgro.Business.Managers
                         cupoSave.NegocioId = cupo.NegocioId;
                         cupoSave.ComercialId = cupo.ComercialId;
                         cupoSave.Comercial = cupo.Comercial;
+                        // TODO: GSIAN - Sustentable no debe estar en pasaje QA
+                        //cupoSave.Sustentable = cupo.Sustentable;
+
                         //cupoSave.ConDescarga = cupo.ConDescarga;
+
                         if (cupoSave.Centro.NoPropio)
                         {
                             if (!string.IsNullOrEmpty(cupoSave.CTG))
@@ -530,7 +542,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (proveedor.SegmentacionId != 5 && proveedor.SegmentacionId != 7)
                 {
-                    var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+                    string tipoProv = proveedor.SegmentacionId == 5 || proveedor.SegmentacionId == 7 ? "CORR" : "PROV";
+                    var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT, tipoProv);
                     if (string.IsNullOrEmpty(alta.Mensaje))
                     {
                         if (alta.ProveedorGrano == "SI")
@@ -4453,6 +4466,8 @@ namespace Molinos.DataAgro.Business.Managers
                             TipoNegocioId = 7,
                             ConDescarga = solicitud.ConDescarga,
                             ComercialCreadorId = solicitud.ComercialCreadorId,
+                            // TODO: GSIAN - Sustentable no debe estar en pasaje QA
+                            //Sustentable = solicitud.Sustentable,
                         };
                         if (solicitud.CantidadCupo > 0)
                         {
@@ -4533,7 +4548,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 ProveedorId = solicitud.ProveedorId,
                                 SugerenciaCupoId = solicitud.SugerenciaCupoId,
                                 TipoAdministracionCupoId = solicitud.TipoAdministracionCupoId,
-                                ZonaId = solicitud.ZonaId
+                                ZonaId = solicitud.ZonaId,
+                                // TODO: GSIAN - Sustentable no debe estar en pasaje QA
+                                //Sustentable = solicitud.Sustentable,
                             };
                             repositorio.Agregar(solicitudItem);
 
@@ -4565,7 +4582,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 ProveedorId = solicitud.ProveedorId,
                                 SugerenciaCupoId = solicitud.SugerenciaCupoId,
                                 TipoAdministracionCupoId = solicitud.TipoAdministracionCupoId,
-                                ZonaId = solicitud.ZonaId
+                                ZonaId = solicitud.ZonaId,
+                                // TODO: GSIAN - Sustentable no debe estar en pasaje QA
+                                //Sustentable = solicitud.Sustentable,
                             };
                             repositorio.Agregar(solicitudCupo);
                         }

@@ -414,7 +414,8 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+            string tipoProv = proveedor.SegmentacionId == 5 || proveedor.SegmentacionId == 7 ? "CORR" : "PROV";
+            var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT, tipoProv);
             if (oParam.Venta != true)
             {
                 if (string.IsNullOrEmpty(alta.Mensaje))
@@ -3925,7 +3926,8 @@ namespace Molinos.DataAgro.Business.Managers
         public AltaTempranaNRCODto ValidarProveedor(int proveedorId)
         {
             var proveedor = repositorio.Obtener<Proveedor>(proveedorId);
-            return altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+            string tipoProv = proveedor.SegmentacionId == 5 || proveedor.SegmentacionId == 7 ? "CORR" : "PROV";
+            return altaTempranaAgent.ObtenerAlta(proveedor.CUIT, tipoProv);
         }
 
         public Resultado ActualizarContratoSAP(Contrato contrato, bool validacionesMinimas)
@@ -6839,7 +6841,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (planCanje || consignatario)
                 {
-                    var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT);
+                    string tipoProv = proveedor.SegmentacionId == 5 || proveedor.SegmentacionId == 7 ? "CORR" : "PROV";
+                    var alta = altaTempranaAgent.ObtenerAlta(proveedor.CUIT, tipoProv);
 
                     if (string.IsNullOrEmpty(alta.Mensaje))
                     {

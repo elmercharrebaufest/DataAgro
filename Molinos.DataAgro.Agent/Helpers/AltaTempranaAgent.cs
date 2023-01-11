@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Agent
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
-        public AltaTempranaNRCODto ObtenerAlta(string cuit)
+        public AltaTempranaNRCODto ObtenerAlta(string cuit, string tipoProv)
         {
             if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
             {
@@ -79,10 +79,11 @@ namespace Molinos.DataAgro.Agent
                     var agent = new SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_COClient();
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
-
+                    
                     var rq = new Z_MPRFC_ALTA_TEMPRANA_N_R_CO()
                     {
-                        IM_CUIT = cuit
+                        IM_CUIT = cuit,
+                        IM_KTOKK = tipoProv,
                     };
                     var log = new Log
                     {

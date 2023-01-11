@@ -4027,7 +4027,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Equals(null);
 
-            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>()))
+            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(new AltaTempranaNRCODto { 
                     Mensaje = "", 
                     AuthGralMP = "MP01", 
@@ -4056,7 +4056,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Returns(new FACACOP { CUIT="1" });
 
-            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>()))
+            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(new AltaTempranaNRCODto
                 {
                     Mensaje = "",
@@ -4087,7 +4087,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(y => y.Obtener<FACACOP>(It.IsAny<Expression<Func<FACACOP, bool>>>())).Returns(new FACACOP { CUIT = "1" });
 
-            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>()))
+            altaTempranaMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(new AltaTempranaNRCODto
                 {
                     Mensaje = "",

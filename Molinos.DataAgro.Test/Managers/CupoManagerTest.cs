@@ -233,7 +233,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA());
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "20358654668", Deshabilitado = false });
-            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
+            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Centro, bool>>>())).Returns(new Centro { Id = 1, NoPropio = false });
             var result = target.Validar(new Cupo() { Fason = true, MaterialId = 3, ProveedorId = 1, FechaIngreso = new DateTime(2019, 12, 30) }, 0, new DateTime(2019, 12, 1));
 
@@ -743,7 +743,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<Expression<Func<Proveedor, bool>>>())).Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA { EstadoCuit = 1 });
-            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
+            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
 
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AdministracionCupo, int>>>(), It.IsAny<Expression<Func<AdministracionCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                .Returns(new List<int>());
@@ -988,7 +988,7 @@ namespace Molinos.DataAgro.Test.Managers
               .Returns(new Proveedor { ProveedorId = 1, CUIT = "1" });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<SISA, bool>>>()))
                 .Returns(new SISA { EstadoCuit = 1 });
-            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
+            altaTempranaAgent.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto { ProveedorGrano = "No" });
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<Centro,bool>>>())).Returns(new Centro { Id = 1, NoPropio = false });
             var resultado = target.GenerarSolicitudExtraordinaria(solicitud);
 

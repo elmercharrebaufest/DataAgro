@@ -3028,7 +3028,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (item.Corredor == "")
                     {
-                        var alta = altaTempranaAgent.ObtenerAlta(item.Cuit);
+                        string tipoProv = item.Corredor == "" ? "PROV" : "CORR";
+                        var alta = altaTempranaAgent.ObtenerAlta(item.Cuit, tipoProv);
 
                         if (string.IsNullOrEmpty(alta.Mensaje))
                         {
@@ -4813,7 +4814,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var proveedorEnFacacop = listProveedorEnFacacop.Where(x => x.CUIT == p.CUIT).FirstOrDefault();
 
-                AltaTempranaNRCODto alta = altaTempranaAgent.ObtenerAlta(p.CUIT);
+                string tipoProv = p.SegmentacionId == 5 || p.SegmentacionId == 7 ? "CORR" : "PROV";
+                AltaTempranaNRCODto alta = altaTempranaAgent.ObtenerAlta(p.CUIT, tipoProv);
 
                 // ========== Control Estado: No habilitados ==========
                 if (string.IsNullOrEmpty(alta.Mensaje))

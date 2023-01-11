@@ -340,7 +340,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -407,7 +407,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); diferencialManagerMock.Setup(y => y.ValidarComprasDiferencial(It.IsAny<int>())).Throws(new Exception("Error diferencial"));
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -492,7 +492,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, double>>>(), It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()));
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -610,7 +610,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -730,7 +730,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Negocio>(It.IsAny<int>())).Returns(new Negocio { Fecha = DateTime.Now });
 
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("error");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "NO",
@@ -842,7 +842,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Negocio>(It.IsAny<int>())).Returns(new Negocio { Fecha = DateTime.Now });
 
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -940,7 +940,7 @@ namespace Molinos.DataAgro.Test.Managers
             contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato { Cantidad = 1 });
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadAcuerdo = 39 });
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -1012,7 +1012,7 @@ namespace Molinos.DataAgro.Test.Managers
             contratoAcuerdoManagerMock.Setup(y => y.TraerAcuerdo(It.IsAny<int>())).Returns(new BasicoContrato { Cantidad = 1 });
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadAcuerdo = 20 });
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -2525,7 +2525,7 @@ namespace Molinos.DataAgro.Test.Managers
             };
 
             repositorioMock.Setup(y => y.Obtener<Proveedor>(It.IsAny<int>())).Returns(proveedor);
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto());
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto());
             var resultado = target.ValidarProveedor(It.IsAny<int>());
             Assert.IsNotNull(resultado);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
@@ -2633,7 +2633,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, string>>>())).Returns("a");
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10 });
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("error");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "NO",
@@ -2756,7 +2756,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
 
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -3147,7 +3147,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
           
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -3281,7 +3281,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
 
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -3414,7 +3414,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Material, bool>>>(), It.IsAny<Expression<Func<Material, string>>>())).Returns("a");
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Campaña, bool>>>(), It.IsAny<Expression<Func<Campaña, string>>>())).Returns("a");
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -3741,7 +3741,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
 
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -4357,7 +4357,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -4548,7 +4548,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
             capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -4652,7 +4652,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000, RedespachoMaximoUSDM = 60 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -4718,7 +4718,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000, RedespachoMaximoUSDM = 60, RedespachoMaximoARP = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -4784,7 +4784,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000, RedespachoMaximoUSDM = 60, RedespachoMaximoARP = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -4914,7 +4914,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 90, CantidadDiasDolarizadoLimiteMaximo = 90, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -5010,7 +5010,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -5079,7 +5079,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -5148,7 +5148,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -5228,7 +5228,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -5329,7 +5329,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",
@@ -5587,7 +5587,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CorredorProveedor, bool>>>())).Returns(true);
-            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>())).Returns(new AltaTempranaNRCODto
+            altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto
             {
                 AltaTemprana = "SI",
                 Bolsa = "SI",

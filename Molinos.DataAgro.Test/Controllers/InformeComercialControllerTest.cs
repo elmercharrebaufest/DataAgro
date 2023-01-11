@@ -207,7 +207,8 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"materiales\":[{\"ProveedorId\":1,\"MaterialId\":1,\"CampañaId\":1,\"Campaña\":null,\"Material\":null}],\"InformeGenerado\":[{\"InformeComercialId\":1,\"Cuit\":\"aaa\",\"RazonSocial\":null,\"Campaña\":\"18-19\",\"Materiales\":null,\"Comercial\":null,\"EstadoId\":0,\"EstadoInforme\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                //"{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"materiales\":[{\"ProveedorId\":1,\"MaterialId\":1,\"CampañaId\":1,\"Campaña\":null,\"Material\":null}],\"InformeGenerado\":[{\"InformeComercialId\":1,\"Cuit\":\"aaa\",\"RazonSocial\":null,\"Campaña\":\"18-19\",\"Materiales\":null,\"Comercial\":null,\"EstadoId\":0,\"EstadoInforme\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"materiales\":[{\"ProveedorId\":1,\"MaterialId\":1,\"CampañaId\":1,\"Campaña\":null,\"Material\":null}],\"InformeGenerado\":[{\"InformeComercialId\":1,\"Cuit\":\"aaa\",\"RazonSocial\":null,\"Campaña\":\"18-19\",\"Materiales\":null,\"Comercial\":null,\"EstadoId\":0,\"EstadoInforme\":null,\"FechaAlta\":\"\\/Date(-62135586000000)\\/\"}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

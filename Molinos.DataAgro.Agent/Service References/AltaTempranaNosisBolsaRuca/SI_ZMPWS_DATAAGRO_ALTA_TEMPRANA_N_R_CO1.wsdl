@@ -37,6 +37,7 @@
         <xsd:complexType>
           <xsd:sequence>
             <xsd:element name="IM_CUIT" type="rfc:char16" />
+            <xsd:element name="IM_KTOKK" type="rfc:char4" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>

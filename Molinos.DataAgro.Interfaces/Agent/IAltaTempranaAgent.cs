@@ -4,6 +4,6 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IAltaTempranaAgent
     {
-        AltaTempranaNRCODto ObtenerAlta(string cuit);
+        AltaTempranaNRCODto ObtenerAlta(string cuit, string tipoProv);
     }
 }

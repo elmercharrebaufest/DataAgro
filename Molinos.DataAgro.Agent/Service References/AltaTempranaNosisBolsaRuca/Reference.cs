@@ -25,7 +25,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4161.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -33,6 +33,8 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     public partial class Z_MPRFC_ALTA_TEMPRANA_N_R_CO : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string iM_CUITField;
+        
+        private string iM_KTOKKField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -43,6 +45,18 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
             set {
                 this.iM_CUITField = value;
                 this.RaisePropertyChanged("IM_CUIT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string IM_KTOKK {
+            get {
+                return this.iM_KTOKKField;
+            }
+            set {
+                this.iM_KTOKKField = value;
+                this.RaisePropertyChanged("IM_KTOKK");
             }
         }
         
@@ -57,7 +71,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4161.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -117,7 +131,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4161.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -191,7 +205,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4161.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -251,7 +265,7 @@ namespace Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4161.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
