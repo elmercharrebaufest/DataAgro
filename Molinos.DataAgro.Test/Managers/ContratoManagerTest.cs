@@ -5168,7 +5168,7 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-            Assert.AreEqual(11, resultado.ListaErrores.Count);
+            Assert.AreEqual(12, resultado.ListaErrores.Count);
 
         }
 
@@ -5204,7 +5204,7 @@ namespace Molinos.DataAgro.Test.Managers
                 AperturaPrecio = new List<AperturaPrecio>(),
                 Venta = true,
                 CamaraId = 1,
-                ProcedenciaVentaId = 1,
+                ProcedenciaVentaId = 79,
                 FleteACargo = "a",
                 KgBalanza = "1",
                 ComisionAFavorId = 1,
@@ -5226,6 +5226,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<RangoPrecio, bool>>>())).Returns(new RangoPrecio { PrecioMaximo = 50000, PrecioMinimo = 1 });
             repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<ProveedorEstado, bool>>>())).Returns(new ProveedorEstado { EstadoId = 1 });
             repositorioMock.Setup(y => y.Obtener<Configuracion>(It.IsAny<int>())).Returns(new Configuracion { CantidadDias = 10, ImporteSustentable = 10, CantidadMaxima = 1000 });
+            repositorioMock.Setup(y => y.Obtener(It.IsAny<Expression<Func<Provincia, bool>>>(), It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Provincia, bool>>>())).Returns(true);
             repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<Localidad, bool>>>())).Returns(true); capacidadProductivaAgentMock.Setup(y => y.ObtenerCapacidadProductiva(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns("OK");
             altaTempranaAgentMock.Setup(y => y.ObtenerAlta(It.IsAny<string>(), It.IsAny<string>())).Returns(new AltaTempranaNRCODto

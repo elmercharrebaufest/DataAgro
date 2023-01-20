@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
@@ -16,6 +17,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Alquilado { get; set; }
         public bool? RtaOkSap { get; set; }
         public string MensajeSap { get; set; }
+        public DateTime? FechaDescarga { get; set; }
 
         [ForeignKey("InformeComercialId")]
         public virtual InformeComercial InformeComercial { get; set; }

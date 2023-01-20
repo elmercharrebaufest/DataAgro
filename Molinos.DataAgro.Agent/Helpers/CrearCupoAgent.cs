@@ -57,7 +57,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             MATNR = cupo.Material.Codigo,
                             PROVEEDOR = corredor + cupo.Proveedor.CUIT.Remove(cupo.Proveedor.CUIT.Length - 1).Remove(0, 2),
                             DESCPROV = cupo.Proveedor.RazonSocial.Length > 35 ? cupo.Proveedor.RazonSocial.Substring(0, 35) : cupo.Proveedor.RazonSocial,
-                            PLANTA = cupo.Centro.CodigoSap,
+                            PLANTA = cupo.Centro.CodigoSap == "1029" && cupo.Sustentable == true ? "1600" : cupo.Centro.CodigoSap,
                             ZONA = cupo.ZonaCupo.CodigoSap,
                             OBSERVACIONES = cupo.Observaciones,
                             DESTINATARIO = cupo.Destinatario,

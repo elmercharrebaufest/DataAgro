@@ -19,9 +19,9 @@ namespace WebDataAgro.Controllers
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class InformeComercialController : Controller
     {
-        private ICondicionManager mobjCondicionManager;
-        private IInformeComercialManager mobjInformeComercialManager;
-        private IHomeManager mobjHomeManager;
+        private readonly ICondicionManager mobjCondicionManager;
+        private readonly IInformeComercialManager mobjInformeComercialManager;
+        private readonly IHomeManager mobjHomeManager;
         private readonly IComercialManager mobjComercialManager;
         private readonly IMaterialManager mobjMaterialManager;
         private readonly ICampañaManager mobjCampaniaManager;
@@ -298,12 +298,6 @@ namespace WebDataAgro.Controllers
         {
             if (filtro.Sort == null)
             {
-                if(filtro.Filter != null && filtro.Filter.Filters!=null && filtro.Filter.Filters.Any(x => x.Field == "MaterialId")) 
-                {
-                    filtro.Filter.Filters.Where(x => x.Field == "MaterialId").FirstOrDefault().Operator="contains";
-                    filtro.Filter.Filters.Where(x => x.Field == "MaterialId").FirstOrDefault().Value = filtro.Filter.Filters.Where(x => x.Field == "MaterialId").FirstOrDefault().Value.ToString();
-                }
-
                 filtro.Sort = new List<Sort> {
                     new Sort {Field = "RazonSocial", Dir = "desc" }
                 };
@@ -321,6 +315,15 @@ namespace WebDataAgro.Controllers
             return new JsonResult()
             {
                 Data = "Ok",
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult EnviarCapacidadProductivaSAP(List<EnviarCapacidadProductivaSAPDto> enviar)
+        {
+            return new JsonResult()
+            {
+                Data = mobjInformeComercialManager.EnviarCapacidadProductivaSAP(enviar),
                 MaxJsonLength = Int32.MaxValue
             };
         }

@@ -9,6 +9,7 @@
     [Alquilado]                   BIT             NULL,
     [RtaOkSap]                    BIT             NULL,
     [MensajeSap]                  VARCHAR (500)   NULL,
+    [FechaDescarga]               DATETIME        NULL,
     CONSTRAINT [PK_InformeComerciaDetalle] PRIMARY KEY CLUSTERED ([InformeComerciaProduccionId] ASC),
     CONSTRAINT [FK_InformeComerciaDetalle_Material] FOREIGN KEY ([MaterialId]) REFERENCES [dbo].[Material] ([MaterialId]),
     CONSTRAINT [FK_InformeComerciaDetalle_InformeComercial] FOREIGN KEY ([InformeComercialId]) REFERENCES [dbo].[InformeComercial] ([InformeComercialId])

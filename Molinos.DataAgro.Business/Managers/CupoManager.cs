@@ -349,9 +349,9 @@ namespace Molinos.DataAgro.Business.Managers
                 return error;
             }
             var creados = repositorio.Contar<Cupo>(
-                                                x => x.FechaIngreso == fechaIngreso 
-                                                && x.MaterialId == materialId 
-                                                && x.CentroId == centroId 
+                                                x => x.FechaIngreso == fechaIngreso
+                                                && x.MaterialId == materialId
+                                                && x.CentroId == centroId
                                                 && x.EstadoCupoId != 9 && x.EstadoCupoId != 4);
             fechaIngreso = fechaIngreso.Date;
             var total = repositorio.Obtener<ConfiguracionCupo, int>(
@@ -817,7 +817,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Material = x.Material.Descripcion,
                 ProveedorId = x.ProveedorId,
                 ComercialId = x.ComercialId
-            }, x => x.EstadoCupoId == 4 && c.Contains(x.Id)).ToList();
+            }, x => /*x.EstadoCupoId == 4 &&*/ c.Contains(x.Id)).ToList();
 
             if (!resultado.HayError)
             {

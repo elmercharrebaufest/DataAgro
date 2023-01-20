@@ -333,7 +333,7 @@ namespace WebDataAgro.Controllers
             }
             centros.Centro = centros.Centro.OrderBy(x=>x.Orden).ToList();
             var listaCentro = new List<SelectListItem>();
-            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden != null).OrderBy(y => y.Orden))
+            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden != null && x.Descripcion.Contains("SUSTENTABLE") == false).OrderBy(y => y.Orden))
             {
                 listaCentro.Add(new SelectListItem
                 {
@@ -342,7 +342,7 @@ namespace WebDataAgro.Controllers
                     Selected = i.CodigoSap == "1029" ? true : false
                 });
             }
-            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden == null).OrderBy(y => y.Descripcion))
+            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden == null && x.Descripcion.Contains("SUSTENTABLE") == false).OrderBy(y => y.Descripcion))
             {
                 listaCentro.Add(new SelectListItem
                 {
@@ -408,7 +408,8 @@ namespace WebDataAgro.Controllers
                 FechaGeneracion = DateTime.Now,
                 NegocioId = cupo.Negocio,
                 ZonaCupoId = cupo.ZonaId,
-                ConDescarga = cupo.ConDescarga
+                ConDescarga = cupo.ConDescarga,
+                Sustentable = cupo.Sustentable
             };
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {

@@ -4800,6 +4800,24 @@ namespace Molinos.DataAgro.Business.Managers
                 List<string> mensajeEnHome = new List<string>();
                 int cantNoHabilitados = 0, cantLegajoIrregular = 0;
 
+                //p.CUIT = "30500858628";
+                //p.SegmentacionId = 11;
+                //p.RiesgoComercialSap = "B";
+
+                //p.CUIT = "30500959629";
+                //p.SegmentacionId = 2;
+                //p.RiesgoComercialSap = "A";
+
+                //p.CUIT = "33502232229";
+                //p.SegmentacionId = 9;
+                //p.RiesgoComercialSap = null;
+
+                //p.CUIT = "30502874353";
+                //p.SegmentacionId = 2;
+                //p.RiesgoComercialSap = null;
+
+                //p.CUIT = "30507119235";
+
                 //List<SISA> proveedorEnSISA2 = listProveedorEnSISA.Where(x => x.CUIT == p.CUIT).ToList();
 
                 MensajeProveedorDto mensajeProveedorSISA = EvaluarProveedor(p.CUIT, p.SegmentacionId, p.RiesgoComercialSap);

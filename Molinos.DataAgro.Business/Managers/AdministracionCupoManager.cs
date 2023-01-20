@@ -115,7 +115,8 @@ namespace Molinos.DataAgro.Business.Managers
                         TipoNegocioId = solicitud.SugerenciaCupo.TipoNegocioId,
                         ConDescarga = solicitud.ConDescarga,
                         AdministracionCupoId = administracionId,
-                        ComercialCreadorId = solicitud.ComercialCreadorId
+                        ComercialCreadorId = solicitud.ComercialCreadorId,
+                        Sustentable = solicitud.Sustentable
                     };
                     if (cantidad > 0)
                     {
@@ -181,7 +182,8 @@ namespace Molinos.DataAgro.Business.Managers
                         ConfiguracionEspacioDinamicoId = null,
                         TipoNegocioId = 7,//para que lo envie a SAP como cupo con marca de propuesta y no valide limites en SAP
                         AdministracionCupoId = administracionId,
-                        ComercialCreadorId = solicitud.ComercialCreadorId
+                        ComercialCreadorId = solicitud.ComercialCreadorId,
+                        Sustentable = solicitud.Sustentable
                     };
 
                     if (cantidad > 0)
@@ -211,7 +213,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (resultado.ListaCupos.Count > 0)
                         solicitud.Motivo = motivo;
-                        EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, resultado.ListaCupos, active);
+                    EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, resultado.ListaCupos, active);
 
                     if (!resultado.HayError)
                     {
@@ -337,7 +339,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "(*)<strong> Cupos con flete procedencia </strong> <br />";
+            if (solicitud.CantidadFleteProcedencia > 0)
+            {
+                htmlBody += "(*)<strong> Cupos con flete procedencia </strong> <br />";
+            }
             //"<br /><br /> En el caso que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
             htmlBody += "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
@@ -478,7 +483,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-        public string ActualizarSolicitud(int id, int cantidadCupo, int cantidadFlete,  bool estado)
+        public string ActualizarSolicitud(int id, int cantidadCupo, int cantidadFlete, bool estado)
         {
             var resultado = "Error";
             try
@@ -487,7 +492,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (solicitud != null && solicitud.EstadoId == (int)EnumEstadoAdministracionCupo.Pendiente)
                 {
                     if (!estado)
-                    {                       
+                    {
                         solicitud.CantidadCupo = cantidadCupo;
                         solicitud.CantidadFleteProcedencia = cantidadFlete;
                     }

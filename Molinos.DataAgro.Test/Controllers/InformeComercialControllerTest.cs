@@ -237,7 +237,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"InformeComercialId\":1,\"Cuit\":\"12\",\"RazonSocial\":\"C\",\"Campaña\":\"18-19\",\"MaterialesList\":[\"\"],\"Comercial\":\"a\",\"Seleccionado\":true,\"ProveedorId\":0,\"CampanaId\":null,\"ComercialId\":null,\"MaterialesIdList\":[1],\"Materiales\":\"\",\"MaterialId\":\"1\",\"FechaAlta\":null,\"FechaDescarga\":null,\"OrigenDA\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"InformeComercialId\":1,\"Cuit\":\"12\",\"RazonSocial\":\"C\",\"Campaña\":\"18-19\",\"MaterialesList\":[\"\"],\"Comercial\":\"a\",\"Seleccionado\":true,\"ProveedorId\":0,\"CampanaId\":null,\"ComercialId\":null,\"MaterialesIdList\":[1],\"Materiales\":\"\",\"MaterialId\":\"1\",\"FechaAlta\":null,\"OrigenDA\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -396,6 +396,33 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             Assert.AreEqual(
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Cuit\":\"1\",\"RazonSocial\":\"E\",\"FechaDeGeneracion\":null,\"Comercial\":\"B\",\"Estado\":\"C\",\"Material\":\"D\",\"Observaciones\":null,\"InformeComercialId\":2}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                a);
+        }
+        [Test]
+        public void ActualizarFechaDescargaInformeComercialTest()
+        {
+            var enviar = new List<int>() { 1, 2, 3 };
+            informeComercialManagerMock.Setup(x => x.GuardarFechaDescargaInformeComercial(enviar));
+
+            var result = target.ActualizarFechaDescargaInformeComercial(enviar) as JsonResult;
+
+            informeComercialManagerMock.Verify(x => x.GuardarFechaDescargaInformeComercial(It.IsAny<List<int>>()), Times.Once);
+            Assert.NotNull(result);
+            Assert.AreEqual("Ok", result.Data);
+        }
+        [Test]
+        public void EnviarCapacidadProductivaSAPTest()
+        {
+            var enviar = new List<EnviarCapacidadProductivaSAPDto>() { new EnviarCapacidadProductivaSAPDto { Id = 1, Cuit = "12345678900", Campania = "20-21", Material = "000000000019908017", UnidadMedida = "TON", Porcentaje = 30, Cantidad = 7000 } };
+            informeComercialManagerMock.Setup(x => x.EnviarCapacidadProductivaSAP(enviar)).Returns(new Resultado());
+
+            var result = target.EnviarCapacidadProductivaSAP(enviar);
+
+            informeComercialManagerMock.Verify(x => x.EnviarCapacidadProductivaSAP(It.IsAny<List<EnviarCapacidadProductivaSAPDto>>()), Times.Once);
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

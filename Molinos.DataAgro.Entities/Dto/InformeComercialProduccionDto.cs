@@ -1,4 +1,5 @@
 ﻿using Molinos.DataAgro.Entities.Entities;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,7 +18,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? Alquilado { get; set; }
         public bool? RtaOkSap { get; set; }
         public string MensajeSap { get; set; }
-        
+        public DateTime? FechaDescarga { get; set; }
+
         public virtual InformeComercial InformeComercial { get; set; }       
         public virtual Material Material { get; set; }      
         public virtual Localidad Localidad { get; set; }

@@ -82,7 +82,7 @@ namespace WebDataAgro.Controllers
             ViewBag.MuestraModal = muestraModal;
             var centros = centroManager.TraerTodoCentro();
             var listaCentro = new List<SelectListItem>();
-            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden != null).OrderBy(y => y.Orden))
+            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden != null && x.Descripcion.Contains("SUSTENTABLE") == false).OrderBy(y => y.Orden))
             {
                 listaCentro.Add(new SelectListItem
                 {
@@ -91,7 +91,7 @@ namespace WebDataAgro.Controllers
                     Selected = i.CodigoSap == centroId
                 });
             }
-            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden == null).OrderBy(y => y.Descripcion))
+            foreach (var i in centros.Centro.Where(x => x.CargaCupos == true && x.Orden == null && x.Descripcion.Contains("SUSTENTABLE") == false).OrderBy(y => y.Descripcion))
             {
                 listaCentro.Add(new SelectListItem
                 {
@@ -224,7 +224,7 @@ namespace WebDataAgro.Controllers
 
             if (items.First().idSugerencia > 0)
             {
-                resultado = cupoManager.ModificarSugerenciaCupo(items.OrderBy(a=>a.fecha).ToList());
+                resultado = cupoManager.ModificarSugerenciaCupo(items.OrderBy(a => a.fecha).ToList());
             }
             else
             {

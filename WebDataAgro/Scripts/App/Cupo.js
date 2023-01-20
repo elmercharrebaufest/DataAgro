@@ -19,7 +19,6 @@ var anularBsAs;
 var externo;
 var materialDisponible;
 
-
 $(document).ready(function () {
     anularCupo = ConvertirStringABool(anularCupo);
     modificarCupo = ConvertirStringABool(modificarCupo);
@@ -54,7 +53,6 @@ $(document).ready(function () {
     });
 
     $.unblockUI();
-
     InicializarCuposIndex();
     AutoRecargar();
 
@@ -66,6 +64,40 @@ $(document).ready(function () {
 
 });
 
+function InicializarMultiSelect(textField, valueField, url, columna, serverFiltering, filterType) {   
+    console.log(textField, valueField, url, columna, serverFiltering, filterType);
+    $("#" + columna).kendoMultiSelect({
+        placeholder: "Seleccione " + columna + "...",
+        dataTextField: textField,
+        dataValueField: valueField,
+        autoBind: false,
+        dataSource: {
+            serverFiltering: serverFiltering,
+            transport: {
+                read: {
+                    url: url,
+                    data: function () {
+                        return {
+                            text: $("#" + columna).data("kendoMultiSelect").input.val()
+                        };
+                    },
+                }
+            },
+        },
+        filter: filterType,
+        change: function (e) {
+            var grilla = $('#gridCupo').data("kendoGrid");
+            var values = this.value().filter(x => { return x !== '' });
+            if (values.length === 0) {
+                removerFiltros(grilla, columna, "eq", "");
+            } else {
+                AddFilters(grilla, columna, "eq", values);
+            }
+            console.log(values);
+        },
+
+    });
+}
 
 function InicializarCuposIndex() {
 
@@ -139,7 +171,8 @@ function InicializarCuposIndex() {
                     FechaIngreso: { type: "date" },
                     //FechaGeneracion: { type: "date" },
                     FechaRegistro: { type: "date" },
-                    FleteProcedencia: { type: "boolean" }
+                    FleteProcedencia: { type: "boolean" },
+                    Sustentable: { type: "boolean" }
                 }
             }
         },
@@ -227,9 +260,9 @@ function InicializarCuposIndex() {
                 }, filterable: {
                     multi: true, dataSource: [{
                         Centro: "S. Lorenzo"
-                    }, {
-                        Centro: "SAN LORENZO SUSTENTABLE / CALIDAD"
-                    }, {
+                    },
+                        //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
+                    {
                         Centro: "Rio del Valle"
                     }, {
                         Centro: "General Pinedo"
@@ -301,6 +334,9 @@ function InicializarCuposIndex() {
             },
             {
                 field: "FleteProcedencia", title: "Flete", type: "string", width: 60, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; }
+            },
+            {
+                field: "Sustentable", title: "Sustentable", type: "string", width: 60, template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; }
             },
             //{ field: "Observaciones", type: "string", width: 150, hidden: externo },
             { field: "Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectComercial } },
@@ -491,49 +527,10 @@ function InicializarCuposIndex() {
         columna = columna == null ? valueField : columna;
         serverFiltering = serverFiltering == null ? true : serverFiltering;
         filterType = filterType == null ? "starswith" : filterType;
-        element.kendoMultiSelect({
-            itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
-            dataBound: function () {
-                var items = this.ul.find("li");
-                setTimeout(function () {
-                    checkInputs(items);
-                });
-            },
 
-            dataTextField: textField,
-            dataValueField: valueField,
-            autoClose: true,
-            autoBind: false,
-            delay: 300,
-            dataSource: {
-                serverFiltering: serverFiltering,
-                filter: [],
-                transport: {
-                    read: {
-                        url: url,
-                        data: function () {
-                            return {
-                                text: element.data("kendoMultiSelect").input.val()
-                            };
-                        },
-                        prefix: ""
-                    }
-                },
-            },
-            filter: filterType,
-            change: function (e) {
-                var items = this.ul.find("li");
-                checkInputs(items);
-                var grilla = $('#gridCupo').data("kendoGrid");
-                //this.value = this.value().filter(x => { return x !== '' });
-                var values = this.value().filter(x => { return x !== '' });
-                if (values.length === 0) {
-                    removerFiltros(grilla, columna, "eq", "");
-                } else {
-                    AddFilters(grilla, columna, "eq", values);
-                }
-            }
-        });
+        $(element).replaceWith('<select id="' + columna+'"></select>');
+        InicializarMultiSelect(textField, valueField, url, columna, serverFiltering, filterType);
+
         setTimeout(function () {
             $(".k-multiselect").parent().children(".k-dropdown").remove();
             $(".k-multiselect").parent().children("div").find('button').remove();

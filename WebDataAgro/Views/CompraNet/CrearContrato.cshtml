@@ -307,11 +307,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-offset-1 col-md-1 @(venta != true ? "hide" : "")  ">
+            <div class="col-md-offset-1 col-md-2 @(venta != true ? "hide" : "")  ">
                 <label style="width:65px">Venta</label>
                 <input id="ventaId" class="campo-input-input" data-bind="checked:Parametros.Venta, disabled: isControlDisabled" type="checkbox" onclick="Venta()" />
             </div>
-            <div class="noFason noAgente hijoDiv ampliar contratoAPrecio col-md-1" style="padding-right:0">
+            <div class="noFason noAgente hijoDiv ampliar contratoAPrecio col-md-2" style="padding-right:0">
                 <label style="width:65px">Fij. Conv.</label>
                 <input id="hijoId" class="campo-input-input" data-bind="checked:Parametros.Hijo, disabled: isControlDisabled" type="checkbox" />
                 <img id="errhijoId" src="~/Content/Images/error.png" style="display:none" />

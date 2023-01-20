@@ -6,6 +6,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public int ProvinciaId { get; set; }
         public string Nombre { get; set; }
+        public bool HabilitadoVenta { get; set; }
     }
 }
    

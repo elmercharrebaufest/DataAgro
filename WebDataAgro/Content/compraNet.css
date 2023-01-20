@@ -31,8 +31,15 @@
     display: none
 }
 
-.k-icon.k-i-close {
+/*.k-icon.k-i-close {
     display: none !important;
+}*/
+k-icon k-i-loading k-hidden {
+    display: none !important;
+}
+
+.k-i-loading {
+    display: none;
 }
 
 #LocalidadCrearContrato {

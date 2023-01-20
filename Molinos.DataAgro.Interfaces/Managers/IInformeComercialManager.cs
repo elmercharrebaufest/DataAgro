@@ -21,8 +21,6 @@ namespace Molinos.DataAgro.Interfaces
 
         List<InformeList> TraerInformesGenerados();
 
-        void GuardarFechaDescargaInformeComercial(List<int> ids);
-
         List<ResultCapacidadProductiva> TraerCapacidadProductiva(string proveedores);
 
         int GrabarCapacidadProductiva(string informes);
@@ -36,6 +34,11 @@ namespace Molinos.DataAgro.Interfaces
         List<MaterialesModificacionInforme> TraerInformeMateriales(int InformeId);
 
         Resultado RespuestaDeSapCapacidadProductiva(string cuit, string material, string respuesta);
+        
         void EnviarMailInformeComercial(string identificador);
+
+        void GuardarFechaDescargaInformeComercial(List<int> ids);
+
+        Resultado EnviarCapacidadProductivaSAP(List<EnviarCapacidadProductivaSAPDto> enviar);
     }
 }

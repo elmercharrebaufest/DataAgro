@@ -64,7 +64,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":1,\"Nombre\":\"A\"},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":1,\"Nombre\":\"A\",\"HabilitadoVenta\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -83,7 +83,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":0,\"Nombre\":\"\",\"Orden\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":0,\"Nombre\":\"\",\"Orden\":0,\"HabilitadoVenta\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -110,7 +110,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":0,\"Nombre\":\"\",\"Orden\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Provincia\":{\"ProvinciaId\":0,\"Nombre\":\"\",\"Orden\":0,\"HabilitadoVenta\":false},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

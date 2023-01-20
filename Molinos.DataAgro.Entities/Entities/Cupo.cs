@@ -90,6 +90,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [ForeignKey("ComercialCreadorId")]
         public virtual Comercial ComercialCreador { get; set; }
         public int? ComercialCreadorId { get; set; }
+        public bool? Sustentable { get; set; }
 
         public object Clone()
         {

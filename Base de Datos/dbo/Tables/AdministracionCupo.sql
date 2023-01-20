@@ -21,6 +21,7 @@
     [FechaDecision] DATETIME NULL, 
     [ConDescarga] BIT NULL, 
     [Motivo] VARCHAR(50) NULL, 
+    [Sustentable] BIT NULL,
     CONSTRAINT [PK_AdministracionCupo] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_AdministracionCupo_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
     CONSTRAINT [FK_AdministracionCupo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [dbo].[Proveedor] ([ProveedorId]),

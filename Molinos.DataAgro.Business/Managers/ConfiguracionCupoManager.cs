@@ -555,7 +555,7 @@ namespace Molinos.DataAgro.Business.Managers
                 x => new ConfiguracionCupoDto
                 {
                     LimiteCupo = limite != null ? limite.Value : x.LimiteCupo,
-                    LimiteAlgoritmo = algoritmo != null ? algoritmo.Value : x.LimiteAlgoritmo,
+                    LimiteAlgoritmo = algoritmo ?? 0,// != null ? algoritmo.Value : x.LimiteAlgoritmo,
                     CierreCupera = bloquear != null ? bloquear.Value : x.CierreCupera,
                     LiberarCupera = liberar != null ? liberar.Value : x.LiberarCupera,
                     Id = x.Id,

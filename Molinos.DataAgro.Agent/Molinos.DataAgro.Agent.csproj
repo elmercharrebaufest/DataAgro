@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ClienteBolsaRosarioAPIAgent.cs" />
+    <Compile Include="Helpers\EnviarCapacidadProductivaSAPAgent.cs" />
     <Compile Include="Helpers\ValidarPesificacionesAgent.cs" />
     <Compile Include="Helpers\ValidarLiquidacionParcialAgent.cs" />
     <Compile Include="Helpers\ValidarLiquidacionFinalAgent.cs" />
@@ -216,6 +217,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\EnviarBoleto\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\EnviarCapacidadProductivaSAP\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -506,6 +512,13 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\EnviarBoleto\SI_ZMPWS_DATAAGRO_ENVIAR_BOLETOS_GENE.wsdl" />
+    <None Include="Service References\EnviarCapacidadProductivaSAP\Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP.SI_ZMPWS_DATAAGRO_ACTU_CAP_PRODUCTIVAResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EnviarCapacidadProductivaSAP\Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP.Z_MPRFC_ACT_CAPACIDAD_PRODResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EnviarCapacidadProductivaSAP\SI_ZMPWS_DATAAGRO_ACTU_CAP_PRODUCTIVA.wsdl" />
     <None Include="Service References\FinalizarContrato\SI_ZMPWS_DATAAGRO_PRE_SLIP.wsdl" />
     <None Include="Service References\FinalizarFijacion\SI_ZMPWS_DATAAGRO_REGISTRAR_FIJACION1.wsdl" />
     <None Include="Service References\InsertarFijacionesVirtuales\Molinos.DataAgro.Agent.InsertarFijacionesVirtuales.SI_ZMPWS_DATAAGRO_INSERTAR_FIJ_VIR_CANJEResponse.datasource">
@@ -1925,6 +1938,7 @@
     <WCFMetadataStorage Include="Service References\CumplimientoCupos\" />
     <WCFMetadataStorage Include="Service References\DisponibilidadCupos\" />
     <WCFMetadataStorage Include="Service References\EnviarBoleto\" />
+    <WCFMetadataStorage Include="Service References\EnviarCapacidadProductivaSAP\" />
     <WCFMetadataStorage Include="Service References\InsertarFijacionesVirtuales\" />
     <WCFMetadataStorage Include="Service References\ListaCBUProveedor\" />
     <WCFMetadataStorage Include="Service References\ListadoCCPPendiente\" />
@@ -2541,6 +2555,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\VisualizarCapacidadProductiva\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EnviarCapacidadProductivaSAP\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EnviarCapacidadProductivaSAP\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EnviarCapacidadProductivaSAP\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

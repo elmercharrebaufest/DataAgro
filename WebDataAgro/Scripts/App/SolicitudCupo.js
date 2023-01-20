@@ -126,7 +126,6 @@ function CargarGrilla() {
                     } else if (dataItem.EstadoId == 1) {
                         return '<div class="statuseliminado "></div>' + dataItem.Proveedor;
                     }
-
                 },
                 filterable: { ui: createMultiSelectProveedor }
             },
@@ -187,40 +186,21 @@ function CargarGrilla() {
                 field: "Centro", type: "string", title: "Destino", editable: function (dataItem) {
                     return false;
                 }, attributes: { "class": "mobile-xs mobile-md" }, filterable: {
-                    multi: true, dataSource: [{
-                        Centro: "S. Lorenzo"
-                    }, {
-                        Centro: "SAN LORENZO SUSTENTABLE / CALIDAD"
-                    }, {
-                        Centro: "Rio del Valle"
-                    }, {
-                        Centro: "General Pinedo"
-                    }, {
-                        Centro: "Vicentin Virtual"
-                    }, {
-                        Centro: "Bahia Blanca"
-                    }, {
-                        Centro: "Pergamino"
-                    }, {
-                        Centro: "Bandera"
-                    },
-                    {
-                        Centro: "La Cautiva"
-                    },
-                    {
-                        Centro: "Lincoln"
-                    },
-                    {
-                        Centro: "Prest Dev. Buenos Aires"
-                    },
-                    {
-                        Centro: "Prest Dev. Santa Fe"
-                    },
-                    {
-                        Centro: "Chivilcoy"
-                    }, {
-                        Centro: "LE"
-                    }]
+                    multi: true, dataSource: [
+                        { Centro: "S. Lorenzo" },
+                        //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
+                        { Centro: "Rio del Valle" },
+                        { Centro: "General Pinedo" },
+                        { Centro: "Vicentin Virtual" },
+                        { Centro: "Bahia Blanca" },
+                        { Centro: "Pergamino" },
+                        { Centro: "Bandera" },
+                        { Centro: "La Cautiva" },
+                        { Centro: "Lincoln" },
+                        { Centro: "Prest Dev. Buenos Aires" },
+                        { Centro: "Prest Dev. Santa Fe" },
+                        { Centro: "Chivilcoy" },
+                        { Centro: "LE" }]
                 }, width: 130, template: "#=Centro#",
             },
             {
@@ -246,7 +226,7 @@ function CargarGrilla() {
                         min: 0,
                         change: function () {
                             ActualizarSolicitud(options.model.Id)
-                        },                                   
+                        },
                     });
                 }
             },
@@ -254,7 +234,7 @@ function CargarGrilla() {
                 field: "CantidadFleteProcedencia", title: "Cantidad Flete Procedencia",
                 filterable: { extra: false },
                 editable: function (dataItem) {
-                    return (dataItem.EstadoId == 3 && dataItem.TipoAdministracionCupo == "Extraordinaria")? true : false;
+                    return (dataItem.EstadoId == 3 && dataItem.TipoAdministracionCupo == "Extraordinaria") ? true : false;
                 },
                 editor: function (container, options) {
                     // create an input element
@@ -291,11 +271,16 @@ function CargarGrilla() {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
                     var estadoContent = ''
+                    var iconoSustentable = dataItem.Sustentable == true ? botonSustentable('fa-solid fa-leaf') : '';
                     if (dataItem.EstadoId == 4) { //pendiente
                         if (dataItem.ConDescarga == true) {
-                            return '<div class="status pendiente" style="text-align: center;">Pendiente <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i></div>' + botonBorrar(dataItem, 'fa-trash pend');
+                            return '<div class="status pendiente" style="text-align: center;">Pendiente <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i></div>' +
+                                botonBorrar(dataItem, 'fa-trash pend') +
+                                iconoSustentable;
                         } else {
-                            return '<div class="status pendiente" style="text-align: center;">Pendiente</div>' + botonBorrar(dataItem, 'fa-trash pend');
+                            return '<div class="status pendiente" style="text-align: center;">Pendiente</div>' +
+                                botonBorrar(dataItem, 'fa-trash pend') +
+                                iconoSustentable;
                         }
                     }
                     if (dataItem.EstadoId == 3) { //aceptado
@@ -313,7 +298,7 @@ function CargarGrilla() {
                         estadoContent += '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>'
                     }
                     estadoContent += '</div>'
-                    return estadoContent;
+                    return estadoContent + iconoSustentable;
                 }
             }
         ],
@@ -568,7 +553,9 @@ function InicializarElementos() {
         checkSoja();
     });
 
-
+    $("#Sustentable").change(function () {
+        MostrarVisualizarStock();
+    });
 }
 
 function CrearTablaFechaHasta() {
@@ -630,6 +617,7 @@ function LimpiarModalSolicitudExtraordinaria() {
     $("#FasonES").prop("checked", false);
     $("#FleteAcarreoES").prop("checked", false);
     checkSoja();
+    $("#Sustentable").prop("checked", false);
 }
 
 function AbrirModalSolicitudExtraordinaria() {
@@ -641,8 +629,13 @@ function checkSoja() {
     if ($("#MaterialIdSE").val() !== "3") {
         $("#calidadDivSE").hide();
         $("#CalidadIdSE").data("kendoDropDownList").value("");
+
+        $("#sustentableDivSE").hide();
+        $("#Sustentable").prop("checked", false);
     } else {
         $("#calidadDivSE").show();
+
+        $("#sustentableDivSE").show();
     }
 }
 
@@ -693,10 +686,15 @@ function grabarSolicitudExtraordinaria() {
     var table = document.getElementById("cargaMasiva-cupos-table");
     for (let i = 0, n = table.rows.length; i < (n - 1); i++) {
         let row = table.rows[i]
-        dataTabla.push({ Fecha: $('[name="Dias[' + i + '].Fecha"]').val(), Cantidad: $('[name="Dias[' + i + '].Cantidad"]').val() })
-        if ($('[name="Dias[' + i + '].Cantidad"]').val() < 1) {
-            MensErr("Ingrese la cantidad de cupos para el " + $('[name="Dias[' + i + '].Fecha"]').val() ); return;
+        if ($('[name="Dias[' + i + '].Cantidad"]').val() > 0) {
+            dataTabla.push({ Fecha: $('[name="Dias[' + i + '].Fecha"]').val(), Cantidad: $('[name="Dias[' + i + '].Cantidad"]').val() })
         }
+        //if ($('[name="Dias[' + i + '].Cantidad"]').val() < 1) {
+        //    MensErr("Ingrese la cantidad de cupos para el " + $('[name="Dias[' + i + '].Fecha"]').val() ); return;
+        //}
+    }
+    if (dataTabla.length == 0 && table.rows.length > 2) {
+        MensErr("Ingrese cantidad de cupos para alguno de los dias."); return;
     }
 
     BlockUi('Grabando...');
@@ -715,6 +713,7 @@ function grabarSolicitudExtraordinaria() {
             CentroId: $("#CentroIdSE").data("kendoDropDownList").value(),
             Calidad: $("#MaterialIdSE").data("kendoDropDownList").value() == 3 ? $("#CalidadIdSE").data("kendoDropDownList").text() : "",
             ConDescarga: $("#ConDescarga").is(':checked'),
+            Sustentable: $("#Sustentable").is(':checked'),
             Dias: dataTabla
         };
         result = MSExecuteOnServer('/SugerenciaCupo/GenerarSolicitudExtraordinaria', solicitud);
@@ -751,9 +750,12 @@ function ListarRespuesta(result) {
         MensErr(result.ListaErrores[0].Message);
     } else {
         if (cuposGeneradosTabla.length > 0) {
-            cuposCreados(cuposGeneradosTabla);
+            $("#cupos-generados-modal-solicitud").html(cuposGeneradosTabla.join("</br>"));
+            $('#resultadoCupoSolicitud').modal('toggle');
         }
     }
+
+
     //if (result.HayError && cuposGeneradosTabla.length < 0) {
     //    for (var i = 0; i < result.ListaErrores.length; i++) {
     //        erroresTabla = erroresTabla.concat(result.ListaErrores[i].Message);
@@ -869,13 +871,14 @@ function VisualizarStock() {
         $("#cargarDatosEstablecimiento").html(table);
         $("#modalEstablecimientos").modal("show");
     } else {
-            MensErr("No se encontraron establecimientos con stock disponible.")
+        MensErr("No se encontraron establecimientos con stock disponible.")
     }
 
 }
 
 function MostrarVisualizarStock() {
-    if ($("#buscadorProveedorSE").val() != "" && $("#CentroIdSE").val() == "1600" && $("#MaterialIdSE").val() == "3") {
+    //if ($("#buscadorProveedorSE").val() != "" && $("#CentroIdSE").val() == "1600" && $("#MaterialIdSE").val() == "3") {
+    if ($("#buscadorProveedorSE").val() != "" && $("#Sustentable").is(':checked') == true && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
         $("#stock").show();
     } else {
         $("#stock").hide();
@@ -887,7 +890,7 @@ function ObtenerIdSolicitudSeleccionada(id) {
     return grid.filter(function (x) { return (x.Id == id) });
 }
 function ActualizarSolicitud(id) {
-   
+
     var solicitudSeleccionada = ObtenerIdSolicitudSeleccionada(id)
     $("#CantidadDeCupoAceptado").val(solicitudSeleccionada[0].CantidadDeCupo);
     $("#CantidadCupoFleteAceptado").val(solicitudSeleccionada[0].CantidadFleteProcedencia);
@@ -910,7 +913,7 @@ function ActualizarSolicitud(id) {
     setTimeout(
         function () {
             result = MSExecuteOnServer('/AdministracionCupo/ActualizarSolicitud', { id: id, cantidadCupo: cantidad, cantidadFlete: cantidadFp, estado: false });
-            if (result != "Ok") {     
+            if (result != "Ok") {
                 MensErr("La solicitud no puede editarse");
             }
             recargarGrilla();
@@ -942,6 +945,9 @@ function AnularSolicitud() {
 
 function botonBorrar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Anular" style="color: #ffc100;" onclick="AbrirModalRechazar(' + dataItem.Id + ') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+}
+function botonSustentable(icono) {
+    return '<button data-toggle="tooltip" title="Sustentable" disabled><i class="fa ' + icono + '"></i></button>';
 }
 
 function OcultarCargaMasiva() {

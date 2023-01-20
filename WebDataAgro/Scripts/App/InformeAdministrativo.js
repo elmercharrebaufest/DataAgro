@@ -1,9 +1,8 @@
-﻿var checkedIds = {};
+﻿var checkedIds = [];
 
 $(document).ready(function () {
     kendo.culture("es-AR");
     inicializarTodosKendoDate($(".filtroFecha"));
-    //$("#fechaCargaId").data("kendoDatePicker").value(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
     CreateGridInformeAdministrativo();
     InicializarElementos2();
 
@@ -25,6 +24,7 @@ function CreateGridInformeAdministrativo() {
         transport: {
             parameterMap: function (options, operation) {
                 if (operation == "read") {
+                    options.take = 0;
                     return JSON.stringify(options)
                 }
                 if (options.filter) {
@@ -48,18 +48,24 @@ function CreateGridInformeAdministrativo() {
             data: 'Data',
             total: 'Total',
             model: {
-                id: 'InformeComercialId',
+                id: 'InformeComerciaProduccionId',
                 fields: {
+                    InformeComerciaProduccionId: { type: "number" },
                     InformeComercialId: { type: "number" },
                     Cuit: { type: "string" },
                     RazonSocial: { type: "string" },
                     Campaña: { type: "string" },
-                    Materiales: { type: "string" },
+                    Material: { type: "string" },
                     Comercial: { type: "string" },
                     FechaAlta: { type: "date" },
+                    FechaAltaConHora: { type: "date" },
                     FechaDescarga: { type: "date" },
+                    FechaDescargaConHora: { type: "date" },
                     OrigenDA: { type: "string" },
                     Seleccionado: { type: "boolean" },
+                    MaterialSAP: { type: "string" },
+                    Seleccionado: { type: "boolean" },
+                    Toneladas: { type: "number" },
                 }
             }
         },
@@ -67,19 +73,14 @@ function CreateGridInformeAdministrativo() {
         serverPaging: true,
         serverSorting: true,
         serverFiltering: false,
-        pageSize: 20,
+        //pageSize: 20,
 
         batch: true,
     };
 
     //Grid definition
     $("#grilla-informes").kendoGrid({
-        toolbar: ["excel"],
-        //toolbar: ['Export'],
-        excel: {
-            fileName: "Informe_Administrativo.xlsx",
-            allPages: true,
-        },
+        toolbar: kendo.template($("#templateToolbar").html()),
         dataSource: ds,
         dataBound: function () {
             $("td:has(div.statuspendiente)").css('border-bottom', '5px solid #ffc100');
@@ -93,29 +94,16 @@ function CreateGridInformeAdministrativo() {
             $("td:has(div.statusreconfirmarfinalizado)").css('border-bottom', '5px solid #ac67ca');
         },
         columns: [
-            //define template column with checkbox and attach click event handler
-            //{
-            //    title: 'Select All',
-            //    //headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox header-checkbox'><label class='k-checkbox-label' for='header-chb'></label>",
-            //    headerTemplate: "<input type='checkbox' id='header-chb' class='k-checkbox k-checkbox-md k-rounded-md header-checkbox'><label class='k-checkbox-label' for='header-chb'></label>",
-            //    template: function (dataItem) {
-            //        //return "<input type='checkbox' id='" + dataItem.InformeComercialId + "' class='k-checkbox row-checkbox'><label class='k-checkbox-label' for='" + dataItem.InformeComercialId + "'></label>";
-            //        return "<input type='checkbox' id='" + dataItem.InformeComercialId + "' class='k-checkbox k-checkbox-md k-rounded-md row-checkbox'><label class='k-checkbox-label' for='" + dataItem.InformeComercialId + "'></label>";
-            //    },
-            //    width: 80,
-            //    attributes: { class: "k-text-center" },
-            //    headerAttributes: { class: "k-text-center" },
-            //},
-            { field: "InformeComercialId", selectable: true, exportable: { excel: false }, width: 50, title: "Id" },
-            //{ field: "InformeComercialId", title: "InformeComercialId"},
+            { field: "InformeComercialId", selectable: true, exportable: { excel: false }, width: 50, title: "Id", sortable: false },
             { field: "Cuit", width: 150 },
             { field: "RazonSocial", title: "Razón Social", width: 250 },
             { field: "Campaña", width: 100 },
-            { field: "Materiales", template: "#=Materiales#" },
+            { field: "Material" },
+            { field: "Toneladas", title: "Toneladas" },
             { field: "Comercial" },
-            { field: "FechaAlta", title: "Fecha de Generación", width: 150, format: _DefaultDateTemplate },
-            { field: "FechaDescarga", title: "Fecha de Descarga", width: 150, format: _DefaultDateTemplate },
-            { field: "OrigenDA", title: "Origen DA", width: 100 }
+            { field: "FechaAltaConHora", title: "Fecha de Generación", width: 150, format: "{0:dd/MM/yyyy HH:mm}" },
+            { field: "FechaDescargaConHora", title: "Fecha de Descarga", width: 150, format: "{0:dd/MM/yyyy HH:mm}" },
+            { field: "OrigenDA", title: "Origen DA", width: 100 },
         ],
         persistSelection: true,
         excelExport: function (e) {
@@ -133,9 +121,7 @@ function CreateGridInformeAdministrativo() {
                 return;
             }
 
-
             sheet.rows = sheet.rows.filter(x => x.type == "header" || grid.selectedKeyNames().some(y => x.cells[0].value == y));
-            
 
             if (grid.selectedKeyNames().length > 0) {
                 var objInforme = { ids: grid.selectedKeyNames() };
@@ -160,8 +146,8 @@ function CreateGridInformeAdministrativo() {
                 last: "Ir a la &uacute;ltima p&aacute;gina",
                 refresh: "Recargar"
             },
-            input: true,
-            numeric: true
+            //    input: true,
+            //    numeric: true
         },
         scrollable: true,
         sortable: {
@@ -174,98 +160,10 @@ function CreateGridInformeAdministrativo() {
         height: 550,
         filterable: false,
         batch: true,
-        pageSize: 20,
-        pageable: true,
+        //pageSize: 20,
+        //pageable: false,
         //dataBound: onDataBound,
     });
-
-    $(".k-grid-Export").on('click', function (e) {
-
-        var grid = $("#grilla-informes").data("kendoGrid");
-        var view = grid.dataSource.data();
-
-        var arrInformeComercial = [];
-        var arrInformeComercial = new Array();
-
-        for (var i = 0; i < view.length; i++) {
-            if (checkedIds[view[i].InformeComercialId]) {
-                console.log(view[i].InformeComercialId);
-                view[i].Seleccionado = true;
-                arrInformeComercial.push(view[i].InformeComercialId);
-            }
-        };
-
-        if (arrInformeComercial.length > 0) {
-            var objInforme = { ids: arrInformeComercial };
-            MSExecuteOnServer('/InformeComercial/ActualizarFechaDescargaInformeComercial', objInforme);
-        }
-
-        var grid = $("#grilla-informes").getKendoGrid();
-
-        var rows = [{
-            cells: [
-                { value: "Cuit" },
-                { value: "RazonSocial" },
-                { value: "Campaña" },
-                { value: "Materiales" },
-                { value: "Comercial" },
-                { value: "FechaAlta" },
-                { value: "FechaDescarga" },
-                { value: "OrigenDA" },
-            ]
-        }];
-
-        var fechaDescarga = new Date().getDate() + "/" + new Date().getMonth() + "/" + new Date().getFullYear();
-
-        var trs = $("#grilla-informes").find('tr');
-
-        for (var i = 0; i < trs.length; i++) {
-            if ($(trs[i]).find(":checkbox").is(":checked")) {
-                var dataItem = grid.dataItem(trs[i]);
-                rows.push({
-                    cells: [
-                        { value: dataItem.Cuit },
-                        { value: dataItem.RazonSocial },
-                        { value: dataItem.Campaña },
-                        { value: dataItem.Materiales },
-                        { value: dataItem.Comercial },
-                        { value: dataItem.FechaAlta },
-                        { value: fechaDescarga }, //{ value: dataItem.FechaDescarga },
-                        { value: dataItem.OrigenDA },
-                    ]
-                });
-            }
-        }
-
-        grid.dataSource.pageSize(20);
-        grid.refresh();
-
-        excelExport(rows);
-    })
-
-    function excelExport(rows) {
-
-        var workbook = new kendo.ooxml.Workbook({
-            sheets: [
-                {
-                    columns: [
-                        { width: 150 }, //{ autoWidth: true },
-                        { width: 250 },
-                        { width: 100 },
-                        { width: 200 },
-                        { width: 200 },
-                        { width: 150 },
-                        { width: 150 },
-                        { width: 100 },
-                    ],
-                    title: "Informe_Administrativo",
-                    rows: rows
-                }
-            ]
-        });
-
-        kendo.saveAs({ dataURI: workbook.toDataURL(), fileName: "Informe_Administrativo.xlsx" });
-    }
 
     var grid = $("#grilla-informes").data("kendoGrid");
     //bind click event to the checkbox
@@ -367,47 +265,6 @@ function InicializarElementos2() {
 
 function Filtrar() {
     $('#grilla-informes').data('kendoGrid').dataSource.read();
-}
-
-//var InicializarElementos = function () {
-//    kendo.culture("es-AR");
-
-//    $("#butDescargar").click(function () {
-//        DescargarElementos();
-//    });
-//}
-
-var DescargarElementos = function () {
-    var checked = [];
-    for (var i in checkedIds) {
-        if (checkedIds[i]) {
-            checked.push(i);
-        }
-    }
-    var funcReturn = function (data) {
-        if (data != null) {
-            if (data.Errores.length > 0) {
-                MensErr("No se encontraron resultados para los filtros elegidos.");
-                return false;
-            }
-            else {
-                CargarGrilla();
-                if (data.DownloadKey.length > 0) {
-                    var url = MSGetUrl('/DownLoad/Excel?key=' + data.DownloadKey);
-                    window.location = url;
-                }
-            }
-        }
-        else {
-            MensErr("No se encontraron resultados para los filtros elegidos.");
-            return false;
-        }
-    }
-
-    if (checked.length > 0) {
-        var datos = { Informes: checked.join(',') };
-        MSExecuteOnServerAsync('/InformeComercial/GenerarExcel', datos, funcReturn, true);
-    }
 }
 
 var CreateGridInformes = function () {
@@ -543,4 +400,114 @@ var CargarGrilla = function () {
     }
 
     MSExecuteOnServerAsync('/InformeComercial/ListarInformes', {}, funcreturn, true);
+}
+
+function customExport() {
+    var grid = $("#grilla-informes").data("kendoGrid");
+    var allData = grid.dataSource.data();
+    var arrInformeComercial = [];
+
+    if (grid.selectedKeyNames().length > 0) {
+        var ids = $("#grilla-informes").data("kendoGrid").selectedKeyNames();
+        var objInforme = { ids: grid.selectedKeyNames() };
+        MSExecuteOnServer('/InformeComercial/ActualizarFechaDescargaInformeComercial', objInforme);
+
+        for (var i = 0; i < allData.length; i++) {
+            if (ids.find(element => element == allData[i].InformeComerciaProduccionId.toString())) {
+                arrInformeComercial.push({
+                    CUIT: allData[i].Cuit,
+                    Material: (allData[i].MaterialSAP).replace("0000000000", ""),
+                    Cosecha: allData[i].Campaña,
+                    Toneladas: allData[i].Toneladas
+                });
+            }
+        };
+
+        grid.dataSource.page(1);
+
+        toCSV(arrInformeComercial, "Informe Administrativo.csv", ['CUIT', 'Material', 'Cosecha', 'Toneladas'], true);
+    } else
+        MensAlerta("Debe seleccionar informes de la grilla para exportar a CSV.");
+}
+
+var toCSV = function (data, fileName, headers, addheaders) {
+    var csv = '';
+    var rows = [];
+
+    if (addheaders) {
+        var headersArray = [];
+        //add the header row
+        for (var col in headers) {
+            col = col.replace(/"/g, '""');
+            csv += headers[col];
+            headersArray.push(headers[col]);
+        }
+        rows.push(headersArray);
+    }
+
+    //add each row of data
+    for (var row in data) {
+        var rowData = [];
+        var i = 0;
+        for (var col in data[row]) {
+            var value = data[row][col];
+            value = value.toString();
+
+            value = value.replace(/"/g, '""');
+            csv += value;
+            rowData.push(value);
+            i++;
+        }
+        rows.push(rowData);
+    }
+    let csvContent = "data:text/csv;charset=utf-8,";
+
+    rows.forEach(function (rowArray) {
+        let row = rowArray.join(";");
+        csvContent += row + "\r\n";
+    });
+
+    var encodedUri = encodeURI(csvContent);
+    var link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", fileName);
+    document.body.appendChild(link); // Required for FF
+
+    link.click(); // This will download the data file.
+};
+
+function enviarCapProdSAP() {
+    var grid = $("#grilla-informes").data("kendoGrid");
+    var allData = grid.dataSource.data();
+    var enviar = [];
+
+    var ids = $("#grilla-informes").data("kendoGrid").selectedKeyNames();
+
+    if (grid.selectedKeyNames().length > 0) {
+
+        for (var i = 0; i < allData.length; i++) {
+            if (ids.find(element => element == allData[i].InformeComerciaProduccionId.toString())) {
+                enviar.push({
+                    Id: allData[i].InformeComerciaProduccionId,
+                    Cuit: allData[i].Cuit,
+                    Material: allData[i].MaterialSAP,
+                    Campania: allData[i].Campaña,
+                    Cantidad: allData[i].Toneladas,
+                    UnidadMedida: "TON",
+                    Porcentaje: 30
+                });
+            }
+        };
+
+        var result = MSExecuteOnServer('/InformeComercial/EnviarCapacidadProductivaSAP', enviar);
+        if (result != null) {
+            if (result.HayError) {
+                ShowErrorMessages(result.Errores);
+            } else {
+                MensInfo("Los datos se enviaron correctamente.");
+            }
+        }
+        grid.dataSource.page(1);
+    } else
+        MensAlerta("Debe seleccionar informes de la grilla para enviar a SAP.");
 }

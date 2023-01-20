@@ -153,6 +153,14 @@
             <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButton()" style="margin-left:3%; font-size:20px;color:red"></i>
         </div>
 
+        <div class="col-md-2">
+            <label>Hoja Sustentable</label>
+        </div>
+        <div class="col-md-4 filtroBoleano" id="SustentableId" name="Sustentable">
+            Sí: @Html.RadioButton("Sustentable", true, new { @class = "filtroBoleano ocultarAnular", @id = "Sustentable" })
+            No: @Html.RadioButton("Sustentable", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonSustentable()" style="margin-left:3%; font-size:20px;color:red"></i>
+        </div>
     </div>
     <br />
     @*<div class="row">

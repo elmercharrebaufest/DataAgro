@@ -23,13 +23,15 @@ namespace Molinos.DataAgro.Business
         private readonly ILogger logger;
         private IMailManager mailManager;
         private IHttpContextManager httpContextManager;
+        private readonly IEnviarCapacidadProductivaSAPAgent enviarCapacidadProductivaSAPAgent;
 
-        public InformeComercialManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IHttpContextManager httpContextManager)
+        public InformeComercialManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IHttpContextManager httpContextManager, IEnviarCapacidadProductivaSAPAgent enviarCapacidadProductivaSAPAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.mailManager = mailManager;
             this.httpContextManager = httpContextManager;
+            this.enviarCapacidadProductivaSAPAgent = enviarCapacidadProductivaSAPAgent;
         }
 
         //--------------------------------------------------
@@ -571,9 +573,8 @@ namespace Molinos.DataAgro.Business
 
         public DataSourceResult TraerInformesFiltrados(DataSourceRequest filtro)
         {
-            var result = repositorio.ObtenerConsultaEscalar(new TraerInformesSinFiltro());
-            var resultado = result.AsQueryable<InformeList>().ToDataSourceResult<InformeList>(filtro);
-            return resultado;
+            var result = repositorio.ObtenerConsultaEscalar(new TraerInformes(filtro));
+            return result;
         }
 
         public List<InformeList> TraerInformesGenerados()
@@ -622,7 +623,7 @@ namespace Molinos.DataAgro.Business
         {
             try
             {
-                List<InformeComercial> oInformesComercial = repositorio.Listar<InformeComercial>(x => ids.Contains(x.InformeComercialId));
+                List<InformeComercialProduccion> oInformesComercial = repositorio.Listar<InformeComercialProduccion>(x => ids.Contains(x.InformeComerciaProduccionId));
 
                 foreach (var oInformeComercial in oInformesComercial)
                 {
@@ -668,7 +669,6 @@ namespace Molinos.DataAgro.Business
 
             return error;
         }
-
 
         public Resultado RespuestaDeSapCapacidadProductiva(string cuit, string Material, string Respuesta)
         {
@@ -745,13 +745,13 @@ namespace Molinos.DataAgro.Business
                 alternateView.LinkedResources.Add(res);
 
                 var mail = ConfigurationManager.AppSettings["EmailInformeComercial"].ToString().Split(';').ToList();
-                
+
                 var asunto = "Nuevo Informe Comercial:" + razonSocial;
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
                 {
                     asunto = "Mail Pruebas - Nuevo Informe Comercial:" + razonSocial;
                 }
-                mailManager.EnviarMail(mail, asunto, "", null, alternateView, pdf.Contenido, "Informe Comercial"+razonSocial+".pdf");
+                mailManager.EnviarMail(mail, asunto, "", null, alternateView, pdf.Contenido, "Informe Comercial" + razonSocial + ".pdf");
 
             }
             catch (Exception e)
@@ -760,6 +760,34 @@ namespace Molinos.DataAgro.Business
             }
         }
 
+        public Resultado EnviarCapacidadProductivaSAP(List<EnviarCapacidadProductivaSAPDto> enviar)
+        {
+            var ids = enviar.Select(x => x.Id).ToList();
+            var lista = repositorio.Listar<InformeComercialProduccion>(x => ids.Contains(x.InformeComerciaProduccionId));
+            var resultado = new Resultado();
+            foreach (var item in lista)
+            {
+                try
+                {
+                    var respuesta = enviarCapacidadProductivaSAPAgent.EnviarCapacidadProductivaSAP(enviar.Where(x => item.InformeComerciaProduccionId == x.Id).Single());
+                    if (respuesta != "OK")
+                    {
+                        resultado.Error("Error SAP", "Error al enviar a SAP el informe número " + item.InformeComerciaProduccionId.ToString() + ". " + respuesta);
+                    }
+                    else
+                    {
+                        item.FechaDescarga = DateTime.Now;
+                    }
+                }
+                catch (Exception e)
+                {
+                    resultado.Error("Error SAP", "Error al enviar a SAP el informe número " + item.InformeComerciaProduccionId.ToString() + ". " + e.Message);
+                    logger.Error(e);
+                }
+            }
+            repositorio.GuardarCambios();
+            return resultado;
+        }
     }
 
     public class Result

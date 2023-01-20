@@ -180,9 +180,9 @@ function CargarGrillaConfig() {
                 }, filterable: {
                     multi: true, dataSource: [{
                         Centro: "S. Lorenzo"
-                    }, {
-                        Centro: "SAN LORENZO SUSTENTABLE / CALIDAD"
-                    }, {
+                    },
+                        //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
+                    {
                         Centro: "Rio del Valle"
                     }, {
                         Centro: "General Pinedo"
@@ -283,28 +283,33 @@ function CargarGrillaConfig() {
                 itemTemplate: function (e) {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
+                    var iconoSustentable = dataItem.Sustentable == true ? botonSustentable('fa-solid fa-leaf') : '';
+
                     if (dataItem.EstadoId == 4) { //pendiente
                         return '<div class="status pendiente" style="text-align: center;">Pendiente'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
                             '</div>' +
                             botonAprobar(dataItem, 'fa-check pend') +
-                            botonBorrar(dataItem, 'fa-trash pend');
-
+                            botonBorrar(dataItem, 'fa-trash pend') +
+                            iconoSustentable;
                     }
                     if (dataItem.EstadoId == 3) { //confirmado                       
                         return '<div class="status confirmado" style="text-align: center;">Confirmado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
-                            '</div>';
+                            '</div>' +
+                            iconoSustentable;
                     }
                     if (dataItem.EstadoId == 2) { //Rechazado
                         return '<div class="status borrado" style="text-align: center;">Rechazado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
-                            + '</div>';
+                            + '</div>' +
+                            iconoSustentable;
                     }
                     if (dataItem.EstadoId == 1) { //anulado
                         return '<div class="status anulado" style="text-align: center;">Anulado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
-                            + '</div>';
+                            + '</div>' +
+                            iconoSustentable;
                     }
                 }
             }
@@ -421,42 +426,57 @@ function CargarGrillaConfig() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
-    function createMultiSelect(element, textField, valueField, url, columna) {
+    function createMultiSelect(element, textField, valueField, url, columna, serverFiltering, filterType) {
         element.removeAttr("data-bind");
         columna = columna == null ? valueField : columna;
-        console.log(columna);
-        element.kendoMultiSelect({
-            itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
-            dataBound: function () {
-                var items = this.ul.find("li");
-                setTimeout(function () {
-                    checkInputs(items);
-                });
-            },
+        serverFiltering = serverFiltering == null ? true : serverFiltering;
+        filterType = filterType == null ? "starswith" : filterType;
 
+        $(element).replaceWith('<select id="' + columna + '"></select>');
+        InicializarMultiSelect(textField, valueField, url, columna, serverFiltering, filterType);
+
+        setTimeout(function () {
+            $(".k-multiselect").parent().children(".k-dropdown").remove();
+            $(".k-multiselect").parent().children("div").find('button').remove();
+        }, 200);
+    }
+
+    function createMultiSelectProveedor(element) {
+        return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedor");
+    }
+    function createMultiSelectComercial(element) {
+        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial", "ComercialId", false, "contains");
+    }
+
+    function InicializarMultiSelect(textField, valueField, url, columna, serverFiltering, filterType) {
+        console.log(textField, valueField, url, columna, serverFiltering, filterType);
+        $("#" + columna).kendoMultiSelect({
+            placeholder: "Seleccione " + textField + "...",
             dataTextField: textField,
             dataValueField: valueField,
-            autoClose: false,
             autoBind: false,
-            delay: 300,
             dataSource: {
-                serverFiltering: true,
-                filter: [],
+                serverFiltering: serverFiltering,
                 transport: {
                     read: {
                         url: url,
                         data: function () {
                             return {
-                                text: element.data("kendoMultiSelect").input.val()
+                                text: $("#" + columna).data("kendoMultiSelect").input.val()
                             };
                         },
-                        prefix: ""
                     }
                 },
             },
+            filter: filterType,
             change: function (e) {
-                var items = this.ul.find("li");
-                checkInputs(items);
+                //var grilla = $('#gridInformeCompraNet').data("kendoGrid");
+                //var values = this.value().filter(x => { return x !== '' });
+                //if (values.length === 0) {
+                //    removerFiltros(grilla, columna, "eq", "");
+                //} else {
+                //    AddFilters(grilla, columna, "eq", values);
+                //}
                 var grilla = $('#gridInformeCompraNet').data("kendoGrid");
                 var values = this.value();
                 $.each(values, function (i, v) {
@@ -468,28 +488,21 @@ function CargarGrillaConfig() {
                 if (values.length === 0) {
                     addOrRemoveFilter(grilla, columna, "eq", null);
                 }
-            }
-        });
-        setTimeout(function () {
-            $(".k-multiselect").parent().children(".k-dropdown").remove();
-            $(".k-multiselect").parent().children("div").find('button').remove();
-        }, 200);
-    }
+                console.log(values);
+            },
 
-    function createMultiSelectProveedor(element) {
-        return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedor");
-    }
-    function createMultiSelectComercial(element) {
-        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial");
+        });
     }
 }
 
 function botonAprobar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalAceptarSugerencia(' + dataItem.id + ')"><i class="fa ' + icono + '"></i></button>';
-
 }
 function botonBorrar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Rechazar" onclick="ModalRechazarSugerencia(' + dataItem.id + ') "><i class="fa  ' + icono + '" aria-hidden="true"></i></button>';
+}
+function botonSustentable(icono) {
+    return '<button data-toggle="tooltip" title="Sustentable" disabled><i class="fa ' + icono + '"></i></button>';
 }
 
 function ModalAceptarSugerencia(id) {

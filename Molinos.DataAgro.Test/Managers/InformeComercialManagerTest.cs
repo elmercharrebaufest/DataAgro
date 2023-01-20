@@ -1,7 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
@@ -12,11 +10,8 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq.Expressions;
 using System.Web;
-using System.Web.Script.Serialization;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -29,19 +24,19 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogger> logger;
         private Mock<IMailManager> mailManagerMock;
         private Mock<IHttpContextManager> httpContextManagerMock;
-        private JavaScriptSerializer serializer;
+        private Mock<IEnviarCapacidadProductivaSAPAgent> enviarCapProdSAPAgentMock;
 
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();
             logger = new Mock<ILogger>();
             repositorioMock = new Mock<IRepositorio>();
             mailManagerMock = new Mock<IMailManager>();
-            httpContextManagerMock= new Mock<IHttpContextManager>();
+            httpContextManagerMock = new Mock<IHttpContextManager>();
+            enviarCapProdSAPAgentMock = new Mock<IEnviarCapacidadProductivaSAPAgent>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
-            target = new InformeComercialManager(logger.Object, repositorioMock.Object, mailManagerMock.Object, httpContextManagerMock.Object);
+            target = new InformeComercialManager(logger.Object, repositorioMock.Object, mailManagerMock.Object, httpContextManagerMock.Object, enviarCapProdSAPAgentMock.Object);
         }
 
         [Test]
@@ -344,6 +339,18 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>()), Times.Exactly(2));
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
+            Assert.NotNull(result);
+            Assert.IsFalse(result.HayError);
+        }
+        [Test]
+        public void EnviarCapacidadProductivaSAPOk()
+        {
+            var enviar = new List<EnviarCapacidadProductivaSAPDto>() { new EnviarCapacidadProductivaSAPDto { Id = 1, Cuit = "12345678900", Campania = "20-21", Material = "000000000019908017", UnidadMedida = "TON", Porcentaje = 30, Cantidad = 7000 } };
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<InformeComercialProduccion>() { new InformeComercialProduccion { InformeComerciaProduccionId = 1, InformeComercialId = 1, MaterialId = 3 } });
+            enviarCapProdSAPAgentMock.Setup(x => x.EnviarCapacidadProductivaSAP(It.IsAny<EnviarCapacidadProductivaSAPDto>())).Returns("OK");
+            var result = target.EnviarCapacidadProductivaSAP(enviar);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
         }

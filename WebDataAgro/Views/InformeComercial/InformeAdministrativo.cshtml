@@ -41,7 +41,7 @@
             <label>Material</label>
         </div>
         <div class="col-md-4">
-            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaTextBox", @id = "materialId" })
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "materialId" })
         </div>
 
         <div class="col-md-2">
@@ -94,3 +94,10 @@
     <div id="grilla-informes" class="tabla-result">
     </div>
 </div>
+<script type="text/x-kendo-template" id="templateToolbar">
+    <div class="">
+        <a class="k-button k-button-icontext" onclick="customExport()" href="\\#"><span class="k-icon k-i-file-csv"></span> <b>Exportar CSV</b> </a>
+
+        <a class="k-button k-button-icontext" onclick="enviarCapProdSAP()" href="\\#"><span class="k-icon k-i-arrow-right"></span> <b>Enviar a SAP</b> </a>
+    </div>
+</script>

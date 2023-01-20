@@ -182,7 +182,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Materiales { get { return string.Join(", ", this.MaterialesList.Distinct()) ?? ""; } }
         public string MaterialId { get { return string.Join(", ", this.MaterialesIdList.Distinct()) ?? ""; } }
         public DateTime? FechaAlta { get; set; }
-        public DateTime? FechaDescarga { get; set; }
         public string OrigenDA { get; set; }
 
         public InformeList()
@@ -253,6 +252,34 @@ namespace Molinos.DataAgro.Entities.Dto
         public int LocalidadId { get; set; }
         public bool ArrendaPropia { get; set; }
         public int CampañaId { get; set; }
+    }
+    public class InformeProduccionList
+    {
+        public int InformeComerciaProduccionId { get; set; }
+        public int InformeComercialId { get; set; }
+        public string Cuit { get; set; }
+        public string RazonSocial { get; set; }
+        public string Campaña { get; set; }
+        public string Material { get; set; }
+        public string MaterialSAP { get; set; }
+        public decimal? Toneladas { get; set; }
+        public string Comercial { get; set; }
+        public bool Seleccionado { get; set; }
+        public int ProveedorId { get; set; }
+        public int? CampanaId { get; set; }
+        public int? ComercialId { get; set; }
+        public int MaterialId { get; set; }
+        public DateTime? FechaAlta { get; set; }
+        public DateTime? FechaAltaConHora { get; set; }
+        public DateTime? FechaDescarga { get; set; }
+        public DateTime? FechaDescargaConHora { get; set; }
+        public string OrigenDA { get; set; }
+
+        public InformeProduccionList()
+        {
+            Seleccionado = false;
+        }
+
     }
 
 }

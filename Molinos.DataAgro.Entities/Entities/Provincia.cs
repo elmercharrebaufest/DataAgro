@@ -10,7 +10,8 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Nombre { get; set; }
 
         public int Orden { get; set; }
-        
+        public bool HabilitadoVenta { get; set; }
+
         public Provincia()
         {
             this.Nombre = "";

@@ -171,6 +171,7 @@
     <Compile Include="Agent\IRelacionCorredorProveedorAgent.cs" />
     <Compile Include="Agent\IRiesgoComercialAgent.cs" />
     <Compile Include="Agent\IValidarLiquidacionParaFijacionAgent.cs" />
+    <Compile Include="Agent\IEnviarCapacidadProductivaSAPAgent.cs" />
     <Compile Include="Agent\IVisualizarCapacidadProductivaAgent.cs" />
     <Compile Include="Clausulas\IServicioClausulas.cs" />
     <Compile Include="Criterios\IServicioCriterios.cs" />

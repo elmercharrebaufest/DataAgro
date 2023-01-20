@@ -88,7 +88,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CuitOrigenAfip = cupo.CuitOrigenAfip,
                     MotivoRechazo = cupo.MotivoRechazo,
                     //Fecha = SqlFunctions.DateName("day", cupo.FechaIngreso) + "/" + SqlFunctions.DatePart("month", cupo.FechaIngreso) + "/" + SqlFunctions.DateName("year", cupo.FechaIngreso),
-                    EstadoOrden = cupo.EstadoCupo.Orden
+                    EstadoOrden = cupo.EstadoCupo.Orden,
+                    Sustentable = cupo.Sustentable
                 };
 
             GridHelper.TruncateTime(request.Filter, ref queryCupos);

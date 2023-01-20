@@ -158,9 +158,9 @@ function CargarGrillaConfig() {
                 }, filterable: {
                     multi: true, dataSource: [{
                         Centro: "S. Lorenzo"
-                    }, {
-                        Centro: "SAN LORENZO SUSTENTABLE / CALIDAD"
-                    }, {
+                    },
+                        //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
+                    {
                         Centro: "Rio del Valle"
                     }, {
                         Centro: "General Pinedo"

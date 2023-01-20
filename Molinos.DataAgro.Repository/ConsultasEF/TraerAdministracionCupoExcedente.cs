@@ -56,7 +56,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     CantidadFleteProcedenciaOriginal = cupo.CantidadFleteProcedencia,
                     CantidadDeCupoOriginal = cupo.CantidadCupo,
                     CentroId = cupo.CentroId,
-                    MaterialId  =cupo.MaterialId
+                    MaterialId = cupo.MaterialId,
+                    Sustentable = cupo.Sustentable
                 };
             return new KendoGrid<AdministracionCupoDto>(request, query);
         }

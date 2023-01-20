@@ -105,7 +105,7 @@ function MSExecuteOnServerAsync(url, datos, fncallback, iswait) {
             if (owait != null) {
                 owait.modal('hide');
             }
-            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información técnica: " + JSON.stringify(datos));
 
             //alert(kendo.stringify(error));
         }
@@ -128,7 +128,7 @@ function MSExecuteURLOnServer(url) {
             respuesta = data;
         },
         error: function (error) {
-            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información técnica: " + JSON.stringify(datos));
 
         }
     });
@@ -155,7 +155,7 @@ function MSRedirectURLOnServer(url, datos) {
             }
         },
         error: function (error) {
-            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información técnica: " + JSON.stringify(datos));
 
         }
     });
@@ -179,7 +179,7 @@ function MSExecuteURLOnServerAsync(url, fncallback, htmlloading) {
         },
         error: function (error) {
             MSHideLoading(htmlloading);
-            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información técnica: " + JSON.stringify(datos));
 
             //alert(kendo.stringify(error));
         }
@@ -204,7 +204,7 @@ function ExecuteURLOnServer(url, fncallback, htmlloading) {
         },
         error: function (error) {
             MSHideLoading(htmlloading);
-            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información tecnica: " + JSON.stringify(datos));
+            MensErr("No se pudieron enviar los datos al servidor \n URL: " + url + "\n Información técnica: " + JSON.stringify(datos));
 
             //alert(kendo.stringify(error));
         }
@@ -215,9 +215,9 @@ function ExecuteURLOnServer(url, fncallback, htmlloading) {
 function MensErr(mensaje) {
 
     BootstrapDialog.show({
-        title: 'Error !!!',
+        title: 'Error',
         cssClass: 'error-dialog modal-superior',
-        message: mensaje,
+        message: "\n"+mensaje,
         draggable: true,
         buttons: [{
             label: 'Cerrar',
@@ -234,8 +234,8 @@ function MensErr(mensaje) {
 function MensInfo(mensaje) {
 
     BootstrapDialog.show({
-        title: 'Mensaje...',
-        message: mensaje,
+        title: 'Mensaje',
+        message: "\n"+mensaje,
         draggable: true,
         buttons: [{
             label: 'Cerrar',
@@ -249,8 +249,8 @@ function MensInfo(mensaje) {
 
 function MensAlerta(mensaje) {
     BootstrapDialog.confirm({
-        title: 'Alerta...',
-        message: mensaje,
+        title: 'Alerta',
+        message: "\n"+mensaje,
         type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
         closable: false, // <-- Default value is false
         draggable: false, // <-- Default value is false
@@ -260,8 +260,8 @@ function MensAlerta(mensaje) {
 function MensAlerta(mensaje) {
 
     BootstrapDialog.show({
-        title: 'Alerta...',
-        message: mensaje,
+        title: 'Alerta',
+        message: "\n"+mensaje,
         draggable: true,
         type: BootstrapDialog.TYPE_WARNING,
         buttons: [{
@@ -277,8 +277,8 @@ function MensAlerta(mensaje) {
 function MensInfoReload(mensaje) {
 
     BootstrapDialog.show({
-        title: 'Mensaje...',
-        message: mensaje,
+        title: 'Mensaje',
+        message: "\n"+mensaje,
         draggable: true,
         buttons: [{
             label: 'Cerrar',
@@ -295,8 +295,8 @@ function MensInfoReload(mensaje) {
 function Confirma(mensaje, fncallback) {
        
     BootstrapDialog.show({
-        title: 'Confirmación...',
-        message: mensaje,
+        title: 'Confirmación',
+        message: "\n"+mensaje,
         draggable: true,
         buttons: [{
             label: 'Aceptar',

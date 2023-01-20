@@ -128,6 +128,9 @@ function InicializarCargaCupos() {
         //}
 
     });
+    $("#Sustentable").change(function () {
+        MostrarVisualizarStock();
+    });
     if ($("#Id").val() != null && $("#Id").val() != "0") {
 
         $("#material").attr('disabled', 'disabled');
@@ -282,7 +285,8 @@ function cuposCreados(error, lista) {
         if ($("#MaterialId").val() == 2 && lista.length > 0) {
             lista.unshift("Trigo libre de HB4");
         }
-        if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
+        //if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
+        if ($("#buscadorProveedor").val() != "" && $("#Sustentable").is(':checked') == true && $("#planta").val() == "1029" && $("#material").val() == "3") {
             MostrarVisualizarStock();
             VisualizarStock(true);
             $("#copy_btn2").show();
@@ -318,7 +322,8 @@ function copiarGenerados() {
     $("#copiar-cupos-generados-modal").empty();
     $("#copiar-cupos-generados-modal").append($("#cupos-generados-modal").html());
 
-    if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
+    //if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
+    if ($("#buscadorProveedor").val() != "" && $("#Sustentable").is(':checked') == true && $("#planta").val() == "1029" && $("#material").val() == "3") {
         var cuitProv = $("#buscadorProveedor").val().split('(');
         if (cuitProv[1] != null) {
             var cuitP = cuitProv[1].split(')');
@@ -481,7 +486,8 @@ function VisualizarStock(noabrir) {
 }
 
 function MostrarVisualizarStock() {
-    if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
+    //if ($("#buscadorProveedor").val() != "" && $("#planta").val() == "1600" && $("#material").val() == "3") {
+    if ($("#buscadorProveedor").val() != "" && $("#Sustentable").is(':checked') == true && $("#planta").val() == "1029" && $("#material").val() == "3") {
         $("#stock").show();
     } else {
         $("#stock").hide();
@@ -565,8 +571,9 @@ function GuardarCupo() {
 
             NoPropio: $("#NoPropio").val(),
             FechaIngreso: $("#FechaIngreso").val(),
-            CuposNoPropios: $("#CuposNoPropios").val()
+            CuposNoPropios: $("#CuposNoPropios").val(),
 
+            Sustentable: $("#Sustentable").is(':checked'),
         };
 
         var resultado = MSExecuteOnServer('/Cupo/GuardarCupo', { cupo });

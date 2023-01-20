@@ -63,6 +63,7 @@ function InicializarCuposIndex() {
                     FechaIngreso: { type: "date" },
                     FechaGeneracion: { type: "date" },
                     FleteProcedencia: { type: "boolean" },
+                    Sustentable: { type: "boolean" },
                     CTGFechaDesde: { type: "date" },
                     CTGFechaDesde: { type: "date" }
 
@@ -126,6 +127,7 @@ function InicializarCuposIndex() {
             { field: "Calidad", type: "string", width: 150 },
             { field: "ZonaCupo", title: "Zona", type: "string", width: 150 },
             { field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; } },
+            { field: "Sustentable", title: "Sustentable", type: "string", width: 150, template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
             { field: "CupoStop", title: "Cupo STOP", type: "string", width: 150 },
             {
                 field: "EstadoCupo", title: "Estado", sortable: false, width: 200,
@@ -206,12 +208,16 @@ function InicializarCuposIndex() {
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
             var templateflete = kendo.template(this.columns[9].template);
+            var templatesustentable = kendo.template(this.columns[10].template);
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
                 var dataitem = { fleteprocedencia: row.cells[9].value };
                 row.cells[9].value = templateflete(dataitem);
+
+                var dataitemSustentable = { sustentable: row.cells[10].value };
+                row.cells[10].value = templatesustentable(dataitemSustentable);
 
 
                 //la fecha en chrome aparece corrida un dia, solucion:
@@ -323,6 +329,9 @@ function mostrarocultar(element) {
 }
 function deseleccionarRadioButton() {
     $('[name=FleteProcedencia]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonSustentable() {
+    $('[name=Sustentable]:checked').prop('checked', false);
 }
 
 function ConvertirFechaRegistroAString(filtros) {

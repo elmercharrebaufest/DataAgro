@@ -251,7 +251,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             if (oParam.ProveedorId == 0)
             {
-                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacío.");
                 return oErrorMessages;
             }
             if (oParam.CampanaId == null || oParam.CampanaId == 0)
@@ -261,24 +261,24 @@ namespace Molinos.DataAgro.Business.Managers
             var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
             if (proveedor == null)
             {
-                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' es obligatorio");
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' es obligatorio.");
                 return oErrorMessages;
             }
             if (proveedor.Deshabilitado.HasValue && proveedor.Deshabilitado.Value != false)
             {
-                oErrorMessages.Error("ProveedorId", "Proveedor deshabilitado");
+                oErrorMessages.Error("ProveedorId", "Proveedor deshabilitado.");
                 return oErrorMessages;
             }
             if (oParam.ProveedorId == -1)
             {
-                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' debe tener un proveedor existente");
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' debe tener un proveedor existente.");
                 return oErrorMessages;
             }
             if (!string.IsNullOrEmpty(proveedor.RiesgoComercialSap))
             {
                 if (proveedor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto");
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Riesgo Comercial Alto.");
                 }
             }
             if (oParam.TipoAgenteCompraId == null)
@@ -321,7 +321,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.ClasificacionId == 0)
             {
-                oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacio");
+                oErrorMessages.Error("ClasificacionId", "El campo 'Clasificación' no debe estar vacío.");
             }
             var config = repositorio.Obtener<Configuracion>(1);
             var importeSustentable = PermisosHelper.Is(PermisosDataAgro.ImporteSustentableEspecial) ? config.ImporteSustentableEspecial : config.ImporteSustentable;
@@ -365,7 +365,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por CUIT o Categoria Inactivo");
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por CUIT o Categoría Inactivo");
                 }
 
                 if (corredor != null)
@@ -389,19 +389,19 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        oErrorMessages.Error("CorredorId", "Corredor No Operable por CUIT o Categoria Inactivo");
+                        oErrorMessages.Error("CorredorId", "Corredor No Operable por CUIT o Categoría Inactivo");
                     }
                 }
             }
 
             if (repositorio.Existe<ProveedorEstado>(x => x.ProveedorId == oParam.ProveedorId && x.EstadoId == 4))
             {
-                oErrorMessages.Error("Estado", "Proveedor no Operable por Estado BAJA");
+                oErrorMessages.Error("Estado", "Proveedor no Operable por Estado BAJA.");
             }
             var facacop = repositorio.Obtener<FACACOP>(x => x.CUIT == proveedor.CUIT);
             if (facacop != null)
             {
-                oErrorMessages.Error("ProveedorId", "Proveedor No Operable por ser Apócrifo");
+                oErrorMessages.Error("ProveedorId", "Proveedor No Operable por ser Apócrifo.");
             }
 
             if (!validacionesMinimas)
@@ -410,7 +410,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (!repositorio.Existe<CorredorProveedor>(x => x.CorredorId == oParam.CorredorId && x.ProveedorId == oParam.ProveedorId))
                     {
-                        oErrorMessages.Error("Corredor", "El Proveedor no pertenece al Corredor seleccionado");
+                        oErrorMessages.Error("Corredor", "El Proveedor no pertenece al Corredor seleccionado.");
                     }
                 }
             }
@@ -422,46 +422,46 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (oParam.Consignatario.HasValue && oParam.Consignatario.Value && alta.Consignatario == "NO")
                     {
-                        oErrorMessages.Error("Consignatario", "El proveedor no está habilitado como Consignatario");
+                        oErrorMessages.Error("Consignatario", "El proveedor no está habilitado como Consignatario.");
                     }
                     if (oParam.PlanCanje.HasValue && oParam.PlanCanje.Value && alta.PlanCanje == "NO")
                     {
-                        oErrorMessages.Error("PlanCanje", "El proveedor no está habilitado como Proveedor Plan canje");
+                        oErrorMessages.Error("PlanCanje", "El proveedor no está habilitado como Proveedor Plan Canje.");
                     }
                     var boletoCompraNetProvincias = repositorio.Listar<BoletoCompraNetProvincia>(x => x.BoletoCompraNetId == 4);
                     if (oParam.BoletoId == 4 && !boletoCompraNetProvincias.Any(x => x.ProvinciaId == oParam.ProvinciaId))
                     {
-                        oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
+                        oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta.");
                     }
                     else if (oParam.BoletoId == 4 && boletoCompraNetProvincias.Any(x => x.ProvinciaId == oParam.ProvinciaId) && alta.Carta == "NO")
                     {
-                        oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta");
+                        oErrorMessages.Error("Carta Oferta", "No está habilitado Carta Oferta.");
                     }
 
                     if (alta.AltaTemprana == "SI")
                     {
                         if (alta.Bolsa == "NO" && alta.Nosis == "NO")
                         {
-                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa");
+                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado ni legajo de la bolsa.");
                         }
                         if (alta.Bolsa == "NO" && alta.Nosis == "SI")
                         {
-                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa");
+                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene legajo de la bolsa.");
                         }
                         if (alta.Bolsa == "SI" && alta.Nosis == "NO")
                         {
-                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado");
+                            oErrorMessages.Error("", "El vendedor de alta temprana no tiene informe Nosis aprobado.");
                         }
                     }
                     if (alta.ProveedorGrano == "SI")
                     {
-                        oErrorMessages.Error("MateriasPrimas", "El proveedor es un vendedor eventual");
+                        oErrorMessages.Error("MateriasPrimas", "El proveedor es un vendedor eventual.");
                     }
                     if (!validacionesMinimas)
                     {
                         if (alta.BoletoFisico == "NO" && oParam.BoletoId == 2)
                         {
-                            oErrorMessages.Error("BoletoFisico", "No está habilitado Boleto Físico");
+                            oErrorMessages.Error("BoletoFisico", "No está habilitado Boleto Físico.");
                         }
                     }
                 }
@@ -472,30 +472,30 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.MaterialId == 0)
             {
-                oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
+                oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacío.");
             }
             if (oParam.Cantidad == 0)
             {
-                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacio");
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacío.");
             }
             if (oParam.Cantidad < 0)
             {
-                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo.");
             }
             if (oParam.CampanaId == 0)
             {
-                oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacio");
+                oErrorMessages.Error("CampanaId", "El campo 'Campaña' no debe estar vacío.");
             }
             var centro = repositorio.Obtener<Centro>(x => x.Id == oParam.DestinoId);
             if (!validacionesMinimas || (oParam.EsFason != true && validacionesMinimas))
             {
                 if (oParam.DestinoId == 0 || oParam.DestinoId == null)
                 {
-                    oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacio");
+                    oErrorMessages.Error("DestinoId", "El campo 'Destino' no debe estar vacío.");
                 }
                 if (oParam.TipoNegocioId == 1 && (oParam.CondicionFijacionId == null || oParam.DesdeFijacion == null || oParam.HastaFijacion == null) && oParam.PrestamoDevolucion != true && oParam.Canje != true)
                 {
-                    oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no debe estar vacio cuando el contrato es 'A FIJAR'");
+                    oErrorMessages.Error("CondicionFijacionId", "Las Condiciones de Fijaciones no deben estar vacías cuando el contrato es 'A Fijar'.");
                 }
                 if (!validacionesMinimas)
                 {
@@ -505,7 +505,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             if (centro.ValidaRedespacho == true && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) /*&& oParam.Pizarra != true*/)
                             {
-                                oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
+                                oErrorMessages.Error("Descuentos", "Se debe completar Redespacho en Acopios.");
                             }
 
                             //if (centro.ValidaRedespacho == true && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoDBId == 1 && x.TipoPeriodoDBId == 1)) && oParam.Pizarra == true)
@@ -515,12 +515,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                             if (centro.ValidaRedespacho == false && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho) /*&& oParam.Pizarra != true*/)
                             {
-                                oErrorMessages.Error("Descuentos", " Solo se debe completar Redespacho en Acopios.");
+                                oErrorMessages.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
                             }
 
                             if (oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero) /*&& oParam.Pizarra != true*/)
                             {
-                                oErrorMessages.Error("Descuentos", "El costo financiero no puede ser negativo");
+                                oErrorMessages.Error("Descuentos", "El costo financiero no puede ser negativo.");
                             }
 
                         }
@@ -539,11 +539,11 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     if (oParam.Warrant == true || oParam.CD == true)
                     {
-                        oErrorMessages.Error("SinBoleto", "Los contratos Sin Boleto no pueden tener la tilde CD/Warrant");
+                        oErrorMessages.Error("SinBoleto", "Los contratos Sin Boleto no pueden tener la tilde CD/Warrant.");
                     }
                     if (!string.IsNullOrEmpty(oParam.ContratoMadre))
                     {
-                        oErrorMessages.Error("Convenir", "Los contratos Sin Boleto no pueden tener la tilde Fij. Convenio");
+                        oErrorMessages.Error("Convenir", "Los contratos Sin Boleto no pueden tener la tilde Fij. Convenio.");
                     }
                 }
             }
@@ -568,65 +568,65 @@ namespace Molinos.DataAgro.Business.Managers
                 var sumaContratosHijos = repositorio.Listar<Contrato>(x => x.ContratoMadre == sap && x.Id != oParam.Id && (x.EstadoId <= 5 || x.EstadoId == 7)).Select(x => x.Cantidad).Sum();
                 if (cantidadMadre - sumaContratosHijos < oParam.Cantidad)
                 {
-                    oErrorMessages.Error("Cantidad", "La cantidad supera a la cantidad del Convenio");
+                    oErrorMessages.Error("Cantidad", "La cantidad supera a la cantidad del convenio.");
                 }
             }
             if (!validacionesMinimas || (string.IsNullOrEmpty(oParam.ContratoMadre) && validacionesMinimas))
             {
                 if (oParam.Precio == 0 && oParam.TipoNegocioId != 1 && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
                 {
-                    oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
+                    oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacío.");
                 }
 
                 if ((oParam.PrecioNeto == 0 || oParam.PrecioNeto == null) && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
                 {
-                    oErrorMessages.Error("Precio", "El campo 'Precio Neto' no debe estar vacio");
+                    oErrorMessages.Error("Precio", "El campo 'Precio Neto' no debe estar vacío.");
                 }
 
                 if ((string.IsNullOrEmpty(oParam.MonedaId) && oParam.TipoNegocioId != 1) && (!oParam.Pizarra.Value && oParam.TipoNegocioId == 2))
                 {
-                    oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
+                    oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacío.");
                 }
             }
 
 
             if ((oParam.LocalidadId == 0 || oParam.LocalidadId == null) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
-                oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacio");
+                oErrorMessages.Error("LocalidadId", "El campo 'Localidad' no debe estar vacío.");
             }
             if ((oParam.LocalidadId == -1) && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
-                oErrorMessages.Error("LocalidadId", "El campo 'Localidad' debe tener un valor existente");
+                oErrorMessages.Error("LocalidadId", "El campo 'Localidad' debe tener un valor existente.");
             }
             if (oParam.ProvinciaId == null && (oParam.TipoNegocioId == 1 || oParam.TipoNegocioId == 2))
             {
-                oErrorMessages.Error("ProvinciaId", "El campo 'Provincia' no debe estar vacio");
+                oErrorMessages.Error("ProvinciaId", "El campo 'Provincia' no debe estar vacío.");
             }
             if (oParam.FechaEntrega.Year == 1)
             {
-                oErrorMessages.Error("FechaEntrega", "El campo 'Fecha de Entrega' no debe estar vacio");
+                oErrorMessages.Error("FechaEntrega", "El campo 'Fecha de Entrega' no debe estar vacío.");
             }
             if (oParam.FechaDesde.Year == 1)
             {
-                oErrorMessages.Error("FechaDesde", "El campo 'Fecha Desde' no debe estar vacio");
+                oErrorMessages.Error("FechaDesde", "El campo 'Fecha Desde' no debe estar vacío.");
             }
             if (oParam.FechaHasta.Year == 1)
             {
-                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacio");
+                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacío.");
             }
             if (oParam.FechaHasta.Year == 1)
             {
-                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacio");
+                oErrorMessages.Error("FechaHasta", "El campo 'Fecha Hasta' no debe estar vacío.");
             }
 
             if (oParam.TipoNegocioId == 0)
             {
-                oErrorMessages.Error("TipoNegocioId", "El campo 'Tipo de Negocio' no debe estar vacio");
+                oErrorMessages.Error("TipoNegocioId", "El campo 'Tipo de Negocio' no debe estar vacío.");
             }
 
             if (oParam.ComercialId == 0 || oParam.ComercialId == null)
             {
-                oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
+                oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacío.");
             }
             //if (oParam.ProvinciaId == 1 && oParam.ClasificacionId == 1 && oParam.EstablecimientoPropio == null)
             //{
@@ -635,22 +635,22 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.BoletoId == 0 || oParam.BoletoId == null)
             {
-                oErrorMessages.Error("BoletoId", "Boleto no debe estar vacio");
+                oErrorMessages.Error("BoletoId", "Boleto no debe estar vacío.");
             }
             if (oParam.BoletoId != 5)
             {
                 if ((oParam.BoletoId == 1 || oParam.BoletoId == 2 || oParam.BoletoId == 4) && (oParam.BolsaId == 0 || oParam.BolsaId == null))
                 {
-                    oErrorMessages.Error("BolsaId", "Bolsa no debe estar vacio cuando existe Boleto");
+                    oErrorMessages.Error("BolsaId", "Bolsa no debe estar vacío cuando existe Boleto.");
                 }
             }
             if (oParam.BoletoId == 4 && oParam.BolsaId != 1)
             {
-                oErrorMessages.Error("BolsaCartaOfertaId", "La Bolsa debe ser Buenos Aires cuando el Boleto es 'Carta Oferta'");
+                oErrorMessages.Error("BolsaCartaOfertaId", "La Bolsa debe ser Buenos Aires cuando el Boleto es 'Carta Oferta'.");
             }
             if (oParam.FechaDesde > oParam.FechaHasta)
             {
-                oErrorMessages.Error("FechaDesdeHasta", "Fecha Desde no puede ser mayor a Fecha hasta.");
+                oErrorMessages.Error("FechaDesdeHasta", "'Fecha Desde' no puede ser mayor a 'Fecha Hasta'.");
             }
             if (oParam.DesdeFijacion > oParam.HastaFijacion)
             {
@@ -663,7 +663,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (rangosPrecio != null && oParam.TipoNegocioId == 2 && (oParam.Precio < rangosPrecio.PrecioMinimo || oParam.Precio > rangosPrecio.PrecioMaximo))
                     {
-                        oErrorMessages.Error("Precio", "Precio fuera de Rango, Precio Mínimo: " + rangosPrecio.PrecioMinimo + " Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
+                        oErrorMessages.Error("Precio", "Precio fuera de Rango - Precio Mínimo: " + rangosPrecio.PrecioMinimo + " y Precio Máximo: " + rangosPrecio.PrecioMaximo + " para " + rangosPrecio.Material.Descripcion + " en " + rangosPrecio.Moneda.Descripcion);
                     }
                 }
             }
@@ -694,12 +694,12 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oParam.StandardDeCalidadId == 0 || oParam.StandardDeCalidadId == null)
                 {
-                    oErrorMessages.Error("", "Debe seleccionar alguna Calidad");
+                    oErrorMessages.Error("", "Debe seleccionar alguna Calidad.");
                 }
             }
             if (oParam.MaterialId == 5 && (oParam.ZonaId == 0 || oParam.ZonaId == null))
             {
-                oErrorMessages.Error("", "Zona es obligatoria para Girasol Alto Oleico");
+                oErrorMessages.Error("", "Zona es obligatoria para Girasol Alto Oleico.");
             }
             if (oParam.AperturaPrecio != null)
             {
@@ -724,7 +724,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oParam.FechaCierta == null && oParam.PagoDiferido != true && concepto != null)
                 {
-                    oErrorMessages.Error("", ".Días de diferimiento es obligatorio con el concepto financiero");
+                    oErrorMessages.Error("", "Días de diferimiento es obligatorio con el concepto financiero.");
                 }
                 //if (oParam.FechaCierta != null && oParam.ObligatoriedadCostoFinanciero != false)
                 //{
@@ -744,7 +744,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (!((concepto != null && (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value) && (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0)) ||
                         (concepto == null && (!oParam.PagoDiferido.HasValue || (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) && (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
                     {
-                        oErrorMessages.Error("", "Dias de diferimiento/costo financiero es obligatorio con el pago diferido en pesos");
+                        oErrorMessages.Error("", "Días de diferimiento/costo financiero es obligatorio con el pago diferido en pesos.");
                     }
                 }
                 //}
@@ -767,57 +767,57 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId != 3 && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0)))
                 {
-                    oErrorMessages.Error("", "Se debe completar la Posicion con el concepto Basis");
+                    oErrorMessages.Error("", "Se debe completar la Posición con el concepto Basis");
                 }
 
 
                 if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId != null && oParam.TipoPosicionCBOTId != 3)
                 {
-                    oErrorMessages.Error("", "Se debe completar el campo posicion con CBOT o MAT");
+                    oErrorMessages.Error("", "Se debe completar el campo posición con CBOT o MAT");
                 }
 
                 if (string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId == 3)
                 {
-                    oErrorMessages.Error("", "Se debe completar el campo posicion con a Fijar PASE");
+                    oErrorMessages.Error("", "Se debe completar el campo posición con a Fijar PASE");
                 }
                 if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && (oParam.TipoPosicionCBOTId == null || oParam.TipoPosicionCBOTId == 0))
                 {
-                    oErrorMessages.Error("", "Se debe completar MAT, CBOT o PASE cuando este completo el campo Posicion");
+                    oErrorMessages.Error("", "Se debe completar MAT, CBOT o PASE cuando esté completo el campo Posición.");
                 }
                 if (!string.IsNullOrEmpty(oParam.PosicionCBOT) && oParam.TipoPosicionCBOTId != 3 && (oParam.AperturaPrecio != null && !oParam.AperturaPrecio.Exists(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Basis && (x.Importe != 0 || x.Porcentaje != 0))))
                 {
-                    oErrorMessages.Error("", "Se debe completar el concepto Basis con Posicion CBOT o MAT");
+                    oErrorMessages.Error("", "Se debe completar el concepto Basis con Posición CBOT o MAT.");
                 }
             }
 
             if ((oParam.StandardDeCalidadId == 2 && oParam.Calidad == null))
             {
-                oErrorMessages.Error("", "Se debe completar el campo Valor de Calidad");
+                oErrorMessages.Error("", "Se debe completar el campo Valor de Calidad.");
             }
             if (oParam.Calidad != null)
             {
                 var calidad = oParam.Calidad.LastOrDefault(x => x.CalidadEspecialId == 1);
                 if (calidad != null && calidad.PorcentajeHasta < 40)
                 {
-                    oErrorMessages.Error("", "Falta completar el rango de Dañados");
+                    oErrorMessages.Error("", "Debe completar el rango de Dañados.");
                 }
                 calidad = oParam.Calidad.LastOrDefault(x => x.CalidadEspecialId == 2);
                 if (calidad != null && calidad.PorcentajeHasta < 100)
                 {
-                    oErrorMessages.Error("", "Falta completar el rango de Granos Verdes");
+                    oErrorMessages.Error("", "Debe completar el rango de Granos Verdes.");
                 }
                 if (calidad != null && calidad.Valor > 10)
                 {
-                    oErrorMessages.Error("", "El Valor no puede ser mayor a 10 en rango de Granos Verdes");
+                    oErrorMessages.Error("", "El Valor no puede ser mayor a 10 en rango de Granos Verdes.");
                 }
             }
             if (oParam.Dolarizado.HasValue && oParam.Dolarizado.Value && !oParam.FechaDolarizado.HasValue)
             {
-                oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
+                oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en Negocios Dolarizados.");
             }
             if (oParam.DolarizadoExpress.HasValue && oParam.DolarizadoExpress.Value && !oParam.FechaDolarizado.HasValue)
             {
-                oErrorMessages.Error("DolarizadoExpress", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
+                oErrorMessages.Error("DolarizadoExpress", "Se debe completar la Fecha de pesificación en Negocios Dolarizados.");
             }
             if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && oParam.MaterialId != 3)
             {
@@ -827,13 +827,13 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oParam.ImporteSustentable.HasValue && oParam.ImporteSustentable.Value != 0 && oParam.TarifaAConvenir == true)
                 {
-                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o Tarifa a Convenir");
+                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o Tarifa a Convenir.");
                 }
                 if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value < 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
                 {
                     if (!(oParam.TarifaAConvenir.HasValue ? oParam.TarifaAConvenir.Value : false))
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable");
+                        oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable.");
                     }
                 }
                 if (oParam.MercsDeposito == true)
@@ -849,7 +849,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oParam.FechaDesdeSustentable.HasValue && oParam.FechaHastaSustentable.HasValue
                         && oParam.FechaHastaSustentable.Value < oParam.FechaDesdeSustentable.Value)
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar rango de fechas válido de sustentable");
+                        oErrorMessages.Error("Sustentable", "Debe indicar un rango de fechas válido de sustentable");
                     }
                 }
             }
@@ -927,7 +927,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.PorcentajeDePago == null || oParam.PorcentajeDePago.Value > 100 || oParam.PorcentajeDePago.Value < 0)
             {
-                oErrorMessages.Error("PorcentajeDePago", "El Porcentaje de Pago debe ser entre 0 y 100.");
+                oErrorMessages.Error("PorcentajeDePago", "El Porcentaje de Pago debe estar entre 0 y 100.");
             }
             if (!validacionesMinimas)
             {
@@ -935,7 +935,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (string.IsNullOrEmpty(oParam.CaratulaMAT))
                     {
-                        oErrorMessages.Error("CaratulaMAT", "Debe completar Caratula MAT.");
+                        oErrorMessages.Error("CaratulaMAT", "Debe completar Carátula MAT.");
                     }
                     if (oParam.PrecioAjusteComision == null)
                     {
@@ -977,7 +977,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                                 if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                                 {
-                                    oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                                    oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por el cual la Fecha Operación es anterior al día de la fecha.");
                                 }
 
                                 if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
@@ -1007,12 +1007,12 @@ namespace Molinos.DataAgro.Business.Managers
                                 if ((oParam.FechaOperacion < diaAnterior && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior)
                                     && oParam.PrestamoDevolucion != true && oParam.Canje != true && oParam.Venta != true))
                                 {
-                                    oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+                                    oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día hábil." + diaAnterior.ToString("dd/MM/yyyy"));
                                 }
 
                                 if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                                 {
-                                    oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                                    oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por el cual la Fecha Operación es anterior al día de la fecha.");
                                 }
 
                                 if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
@@ -1035,15 +1035,15 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (!oParam.Monto.HasValue)
                         {
-                            oErrorMessages.Error("Monto", "Se Debe completar el campo Monto cuando hay Canje");
+                            oErrorMessages.Error("Monto", "Se debe completar el campo Monto cuando hay canje");
                         }
                         if (String.IsNullOrEmpty(oParam.MonedaCanjeId))
                         {
-                            oErrorMessages.Error("Moneda", "Se Debe completar la Moneda que corresponde al campo Canje");
+                            oErrorMessages.Error("Moneda", "Se debe completar la Moneda que corresponde al campo Canje");
                         }
                         if (String.IsNullOrEmpty(oParam.Insumo))
                         {
-                            oErrorMessages.Error("Insumo", "Se Debe completar el campo Insumo cuando hay Canje");
+                            oErrorMessages.Error("Insumo", "Se debe completar el campo Insumo cuando hay Canje");
                         }
                     }
                     //}
@@ -1053,7 +1053,7 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             if (!oParam.PlantaDestinoId.HasValue)
                             {
-                                oErrorMessages.Error("PlantaDestino", "Se Debe completar el campo Planta Destino cuando hay Préstamo Devolución");
+                                oErrorMessages.Error("PlantaDestino", "Se debe completar el campo Planta Destino cuando hay Préstamo Devolución");
                             }
                         }
                     }
@@ -1102,7 +1102,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     if (!validarPagoCbu)
                     {
-                        oErrorMessages.Error("PagoCbu", "El cbu ingresado no es válido");
+                        oErrorMessages.Error("PagoCbu", "El CBU ingresado no es válido.");
                     }
 
                 }
@@ -1171,7 +1171,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.DolarizadoCorredor != true && oParam.Dolarizado != true && oParam.DolarizadoExpress != true && oParam.FechaDolarizado != null)
             {
-                oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado si completó Fecha límite .");
+                oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado si completó Fecha límite.");
             }
 
             //if (!validacionesMinimas)
@@ -1196,7 +1196,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var limitePesificado = /*PermisosHelper.Is(PermisosDataAgro.ModificarLimitePesificado) ? config.CantidadDiasPesificadoLimite :*/ config.DiasDiferimiento;
                     if (oParam.DiasPesificado.Value > limitePesificado)
                     {
-                        oErrorMessages.Error("Pago Diferido", "Los dias de pesificado deben ser menor o igual que los " + limitePesificado + " días");
+                        oErrorMessages.Error("Pago Diferido", "Los días de pesificado deben ser menor o igual que los " + limitePesificado + " días.");
                     }
                 }
             }
@@ -1208,116 +1208,113 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (!repositorio.Existe<Localidad>(a => a.LocalidadId == oParam.LocalidadId))
             {
-                oErrorMessages.Error("Localidad", "La localidad seleccionada no es valida.");
+                oErrorMessages.Error("Localidad", "La localidad seleccionada no es válida.");
             }
             if (!repositorio.Existe<Provincia>(a => a.ProvinciaId == oParam.ProvinciaId))
             {
-                oErrorMessages.Error("Provincia", "La provincia seleccionada no es valida.");
+                oErrorMessages.Error("Provincia", "La provincia seleccionada no es válida.");
             }
 
             if (oParam.Descuentos != null)
             {
                 if (oParam.Descuentos.Any(a => a.FechaDesde != null && a.FechaHasta != null && a.FechaDesde > a.FechaHasta))
                 {
-                    oErrorMessages.Error("Descuentos", "La fecha desde de descuento o bonificacion no puede ser mayor a la fecha hasta.");
+                    oErrorMessages.Error("Descuentos", "La fecha 'Desde' de descuento o bonificación no puede ser mayor a la fecha 'Hasta'.");
                 }
                 if (oParam.Descuentos.Any(a => (a.TipoPeriodoDBId == 3 || a.TipoPeriodoDBId == 2) && (a.FechaDesde == null || a.FechaHasta == null)))
                 {
-                    oErrorMessages.Error("Descuentos", "La fecha desde y hasta de descuento o bonificacion es obligatoria.");
+                    oErrorMessages.Error("Descuentos", "La fecha 'Desde' y 'Hasta' de descuento o bonificación es obligatoria.");
                 }
                 if (!validacionesMinimas)
                 {
                     if (oParam.Descuentos.Any(a => a.TipoPeriodoDBId == 3 || a.TipoPeriodoDBId == 2) && oParam.TipoNegocioId == 2)
                     {
-                        oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación o de Entrega en un a precio.");
+                        oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificación por Fecha de Fijación o de Entrega en un negocio a precio.");
                     }
                 }
 
                 if (oParam.Descuentos.Any(a => a.TipoDBId == 1 && (a.Importe > 0 || a.Porcentaje > 0)) && oParam.TipoNegocioId == 2 && oParam.Precio > 0)
                 {
-                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion Sobre Precio cuando tiene precio.");
+                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificación Sobre Precio cuando tiene precio.");
                 }
 
                 if (oParam.TipoNegocioId == 1 && oParam.Descuentos.Any(a => a.TipoPeriodoDBId == 3 && (a.FechaDesde < oParam.DesdeFijacion || a.FechaDesde > oParam.HastaFijacion || a.FechaHasta < oParam.DesdeFijacion || a.FechaHasta > oParam.HastaFijacion)))
                 {
-                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Fecha de Fijación fuera del rango de Fijación.");
+                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificación por Fecha de Fijación fuera del rango de Fijación.");
                 }
                 if (oParam.TipoNegocioId == 1 && oParam.Descuentos.Any(a => a.TipoPeriodoDBId == 2 && (a.FechaDesde < oParam.FechaDesde || a.FechaDesde > oParam.FechaHasta || a.FechaHasta < oParam.FechaDesde || a.FechaHasta > oParam.FechaHasta)))
                 {
-                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificacion por Por Fecha de Entrega fuera del rango de Entrega.");
+                    oErrorMessages.Error("Descuentos", "No se puede cargar descuento o bonificación por Fecha de Entrega fuera del rango de Entrega.");
                 }
             }
             if (oParam.ContratoCorredor != null && oParam.ContratoCorredor.Length > 10)
             {
-                oErrorMessages.Error("ContratoCorredor", "El numero de contrato corredor no puede ser más largo que 10 caracteres.");
+                oErrorMessages.Error("ContratoCorredor", "El número de contrato corredor no puede ser más largo que 10 caracteres.");
             }
             if (oParam.ContratoVendedor != null && oParam.ContratoVendedor.Length > 10)
             {
-                oErrorMessages.Error("ContratoVendedor", "El numero de contrato vendedor no puede ser más largo que 10 caracteres.");
+                oErrorMessages.Error("ContratoVendedor", "El número de contrato vendedor no puede ser más largo que 10 caracteres.");
             }
             if (oParam.AnulaYReemplazaContratoId != null && string.IsNullOrEmpty(oParam.MotivoReemplazo))
             {
-                oErrorMessages.Error("MotivoReemplazo", "Complete el motivo de reemplazo.");
+                oErrorMessages.Error("MotivoReemplazo", "Debe completar el motivo de reemplazo.");
             }
             if (oParam.Venta == true)
             {
                 if (oParam.CondicionDePagoDiaFijacion > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) || oParam.CondicionDePagoFijacionVentaId == null))
                 {
-                    oErrorMessages.Error("DiaVenta", "Debe completar la condición de pago");
+                    oErrorMessages.Error("DiaVenta", "Debe completar la condición de pago.");
                 }
 
                 if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
                 {
-                    oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pago");
+                    oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pago.");
                 }
 
                 if (oParam.CondicionDePagoFijacionVentaId.HasValue && oParam.CondicionDePagoFijacionVentaId > 0 && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
                 {
-                    oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pago");
+                    oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pago.");
                 }
-
-
 
                 if (!oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.MonedaId == "USDM ")
                 {
 
-                    oErrorMessages.Error("DiaVenta", "La condicion de pesificado en condiciones adicionales de venta es obligatoria con la moneda USD");
+                    oErrorMessages.Error("DiaVenta", "La condicion de pesificación en 'Condiciones Adicionales de Venta' es obligatoria con la moneda USD.\n\n");
                 }
 
                 if (oParam.MonedaId == "USDM ")
                 {
                     if (oParam.CondicionDePagoDiaPesificado > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) || oParam.CondicionDePagoPesificadoVentaId == null))
                     {
-                        oErrorMessages.Error("DiaVenta", "Debe completar la condición de pesificación");
+                        oErrorMessages.Error("DiaVenta", "Debe completar la condición de pesificación.");
                     }
 
                     if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
                     {
-                        oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
+                        oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pesificación.");
                     }
 
                     if (oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.CondicionDePagoPesificadoVentaId > 0 && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
                     {
-                        oErrorMessages.Error("DiaVenta", "Debe completar los dias en la condición de pesificación");
+                        oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pesificación.");
                     }
                 }
 
-
                 if (oParam.BoletoVentaId == 5 && string.IsNullOrEmpty(oParam.MailVentaBoleto))
                 {
-                    oErrorMessages.Error("DiaVenta", "El campo mail es obligatorio cuando el boleto es a convenir");
+                    oErrorMessages.Error("DiaVenta", "El campo mail es obligatorio cuando el boleto es a convenir.");
                 }
 
                 if (oParam.ComisionAFavorId > 0 && (!oParam.PorcentajeComisionVenta.HasValue ||
                     (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value <= 0)))
                 {
-                    oErrorMessages.Error("ComisionAFavor", "Debe completar el porcentaje de comisión en las condiciones de venta cuando Comision a Favor está completo");
+                    oErrorMessages.Error("ComisionAFavor", "Debe completar el porcentaje de comisión en las condiciones de venta cuando Comisión a Favor está completo.\n\n");
                 }
 
                 if (oParam.ComisionAFavorId == null && (oParam.PorcentajeComisionVenta.HasValue ||
                   (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value > 0)))
                 {
-                    oErrorMessages.Error("ComisionAFavor", "Debe completar la Comisión a Favor en las condiciones de venta cuando Porcentaje de comision está completo");
+                    oErrorMessages.Error("ComisionAFavor", "Debe completar la Comisión a Favor en las condiciones de venta cuando Porcentaje de Comisión está completo.\n\n");
                 }
 
                 //if (oParam.CamaraId == null)
@@ -1326,15 +1323,15 @@ namespace Molinos.DataAgro.Business.Managers
                 //}
                 if (oParam.ProcedenciaVentaId == null)
                 {
-                    oErrorMessages.Error("ProcedenciaVentaId", "El campo Destino de la mercadería es obligatorio");
+                    oErrorMessages.Error("ProcedenciaVentaId", "El campo Destino de la Mercadería es obligatorio.");
                 }
                 if (string.IsNullOrEmpty(oParam.FleteACargo))
                 {
-                    oErrorMessages.Error("FleteACargo", "El campo Flete a Cargo de es obligatorio");
+                    oErrorMessages.Error("FleteACargo", "El campo Flete a Cargo es obligatorio.");
                 }
                 if (string.IsNullOrEmpty(oParam.KgBalanza))
                 {
-                    oErrorMessages.Error("KgBalanza", "El campo Kg Balanza es obligatorio");
+                    oErrorMessages.Error("KgBalanza", "El campo Kg Balanza es obligatorio.");
                 }
                 //if (oParam.ComisionAFavorId == null)
                 //{
@@ -1346,42 +1343,47 @@ namespace Molinos.DataAgro.Business.Managers
                 //}
                 if (string.IsNullOrEmpty(oParam.Pago))
                 {
-                    oErrorMessages.Error("Pago", "El campo Pago es obligatorio");
+                    oErrorMessages.Error("Pago", "El campo Pago es obligatorio.");
                 }
                 if (oParam.BoletoVentaId == null)
                 {
-                    oErrorMessages.Error("BoletoVentaId", "El campo Boleto es obligatorio");
+                    oErrorMessages.Error("BoletoVentaId", "El campo Boleto es obligatorio.");
                 }
                 if (oParam.CondicionDePagoDiaPesificado == null)
                 {
-                    oErrorMessages.Error("CondicionDePagoDiaPesificado", "El campo 'Cantidad de dias' de Condicion de pesificación es obligatorio");
+                    oErrorMessages.Error("CondicionDePagoDiaPesificado", "El campo 'Cantidad de días' de Condición de pesificación es obligatorio.");
                 }
                 if (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado))
                 {
-                    oErrorMessages.Error("CondicionDePagoTipoPesificado", "El campo 'Condicion' de Condicion de pesificación es obligatorio");
+                    oErrorMessages.Error("CondicionDePagoTipoPesificado", "El campo 'Condición' de Condición de pesificación es obligatorio.");
                 }
                 if (oParam.CondicionDePagoPesificadoVentaId == null)
                 {
-                    oErrorMessages.Error("CondicionDePagoPesificadoVentaId", "El campo 'Plazo' de Condicion de pesificación es obligatorio");
+                    oErrorMessages.Error("CondicionDePagoPesificadoVentaId", "El campo 'Plazo' de Condición de pesificación es obligatorio.");
                 }
 
                 if (oParam.FechaCierta.HasValue)
                 {
                     if (oParam.CondicionDePagoDiaFijacion == null)
                     {
-                        oErrorMessages.Error("CondicionDePagoDiaFijacion", "El campo 'Cantidad de dias' de Condicion de Pago es obligatorio");
+                        oErrorMessages.Error("CondicionDePagoDiaFijacion", "El campo 'Cantidad de días' de Condición de Pago es obligatorio.");
                     }
                     if (string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion))
                     {
-                        oErrorMessages.Error("CondicionDePagoTipoFijacion", "El campo 'Condicion' de Condicion de Pago es obligatorio");
+                        oErrorMessages.Error("CondicionDePagoTipoFijacion", "El campo 'Condición' de Condición de Pago es obligatorio.");
                     }
                     if (oParam.CondicionDePagoFijacionVentaId == null)
                     {
-                        oErrorMessages.Error("CondicionDePagoFijacionVentaId", "El campo 'Plazo' de Condicion de Pago es obligatorio");
+                        oErrorMessages.Error("CondicionDePagoFijacionVentaId", "El campo 'Plazo' de Condicion de Pago es obligatorio.");
                     }
                 }
 
-
+                var provinciaElegida = repositorio.Obtener<Localidad, int>(x => x.LocalidadId == oParam.ProcedenciaVentaId, x => x.ProvinciaId);
+                var habilitadoVenta = repositorio.Obtener<Provincia, bool>(x => x.ProvinciaId == provinciaElegida, x => x.HabilitadoVenta);
+                if (!habilitadoVenta)
+                {
+                    oErrorMessages.Error("HabilitadoVenta", "La provincia elegida como destino de la mercadería no está habilitada para ventas.\n\n");
+                }
             }
 
             if (proveedor != null && !string.IsNullOrEmpty(oParam.UsuarioTercero))

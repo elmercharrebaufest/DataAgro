@@ -476,7 +476,30 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn k-button" data-dismiss="modal">Aceptar</button>
-                <button type="button" class="btn k-button" onclick="copiarGenerados()"><i class="fa fa-copy"></i> Copiar</button>
+                <button type="button" class="btn k-button" onclick="copiarGenerados('cupos-generados-modal')"><i class="fa fa-copy"></i> Copiar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="resultadoCupoSolicitud" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title"></h1>
+                <div class="status confirmado-modal">
+                    <div>Resultado Solicitud</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="error-modal" hidden></div>
+                <div id="cupos-generados-modal-solicitud"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn k-button" data-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn k-button" onclick="copiarGenerados('cupos-generados-modal-solicitud')"><i class="fa fa-copy"></i> Copiar</button>
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿	CREATE TABLE [dbo].[InformeComercial] (
+﻿    CREATE TABLE [dbo].[InformeComercial] (
     [InformeComercialId] INT           IDENTITY (1, 1) NOT NULL,
     [ProveedorId]        INT           NULL,
     [FechaAlta]          DATETIME      NULL,
@@ -17,7 +17,6 @@
     [CampañaId]          INT           NULL,
     [EstadoId]           INT           NULL,
     [DomicilioReal] 	 VARCHAR(50)   NULL,
-    [FechaDescarga]      DATETIME      NULL,
     [OrigenDA]           BIT           NULL,
     CONSTRAINT [PK_InformeComercial] PRIMARY KEY CLUSTERED ([InformeComercialId] ASC),
     CONSTRAINT [FK_InformeComercial_Campaña] FOREIGN KEY ([CampañaId]) REFERENCES [dbo].[Campaña] ([CampañaId]),

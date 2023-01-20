@@ -190,6 +190,18 @@ else if (!Html.ViewData.ModelState.IsValid)
                 @Html.TextBoxFor(x => x.CuitId, new { @class = "form-control w95", @style = "display:none;", @id = "cuit" })
             </div>
         </div>
+
+        <div class="row">
+            <div>
+                <div class="col-sm-2 noRightPadding">
+                    <label>Sustentable </label>
+                </div>
+                <div class="col-sm-4 ">
+                    @Html.CheckBoxFor(x => x.Sustentable, new { @id = "Sustentable" })
+                </div>
+            </div>
+        </div>
+
         @*<div class="row" id="descargaRowId" hidden>
             <div class="col-sm-6">
 

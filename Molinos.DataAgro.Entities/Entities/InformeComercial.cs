@@ -27,7 +27,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public string DomicilioReal { get; set; }
         public int? CampañaId { get; set; }
         public int? EstadoId { get; set; }
-        public DateTime? FechaDescarga { get; set; }
         public bool? OrigenDA { get; set; }
 
         [InverseProperty("InformeComercial")]

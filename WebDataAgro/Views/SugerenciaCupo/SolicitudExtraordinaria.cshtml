@@ -29,7 +29,7 @@
 
                     </div>
                     <div class="col-xs-2">
-                        <span>Comecial</span>
+                        <span>Comercial</span>
                     </div>
                     <div class="col-xs-4">
                         @Html.DropDownList("ComercialIdSE", ViewBag.Comercial as SelectList, "Seleccionar", new { @class = "form-control" })
@@ -138,13 +138,30 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
+                    @*<div class="col-sm-6">
 
                     </div>
                     <div class="col-sm-2">
                         <label>Con Descarga</label>
                     </div>
                     <div class="col-sm-2">
+                        @Html.CheckBox("ConDescarga")
+                    </div>*@
+
+
+
+                    <div id="sustentableDivSE" hidden>
+                        <div class="col-sm-4">
+                            <label style="margin-left: 0px !important">Sustentable</label>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.CheckBox("Sustentable")
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>Con Descarga</label>
+                    </div>
+                    <div class="col-sm-4">
                         @Html.CheckBox("ConDescarga")
                     </div>
                 </div>
