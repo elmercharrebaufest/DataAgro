@@ -5168,7 +5168,7 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.GrabarContrato(oContrato);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<Contrato>()), Times.Never);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-            Assert.AreEqual(12, resultado.ListaErrores.Count);
+            Assert.AreEqual(1, resultado.ListaErrores.Count);
 
         }
 

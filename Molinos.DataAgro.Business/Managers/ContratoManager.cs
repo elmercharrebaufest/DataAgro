@@ -1261,78 +1261,78 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.Venta == true)
             {
-                if (oParam.CondicionDePagoDiaFijacion > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) || oParam.CondicionDePagoFijacionVentaId == null))
-                {
-                    oErrorMessages.Error("DiaVenta", "Debe completar la condición de pago.");
-                }
+                //if (oParam.CondicionDePagoDiaFijacion > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) || oParam.CondicionDePagoFijacionVentaId == null))
+                //{
+                //    oErrorMessages.Error("DiaVenta", "Debe completar la condición de pago.");
+                //}
 
-                if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
-                {
-                    oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pago.");
-                }
+                //if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion) && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
+                //{
+                //    oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pago.");
+                //}
 
-                if (oParam.CondicionDePagoFijacionVentaId.HasValue && oParam.CondicionDePagoFijacionVentaId > 0 && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
-                {
-                    oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pago.");
-                }
+                //if (oParam.CondicionDePagoFijacionVentaId.HasValue && oParam.CondicionDePagoFijacionVentaId > 0 && (!oParam.CondicionDePagoDiaFijacion.HasValue || oParam.CondicionDePagoDiaFijacion.Value <= 0))
+                //{
+                //    oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pago.");
+                //}
 
-                if (!oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.MonedaId == "USDM ")
-                {
+                //if (!oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.MonedaId == "USDM ")
+                //{
 
-                    oErrorMessages.Error("DiaVenta", "La condicion de pesificación en 'Condiciones Adicionales de Venta' es obligatoria con la moneda USD.\n\n");
-                }
+                //    oErrorMessages.Error("DiaVenta", "La condicion de pesificación en 'Condiciones Adicionales de Venta' es obligatoria con la moneda USD.\n\n");
+                //}
 
-                if (oParam.MonedaId == "USDM ")
-                {
-                    if (oParam.CondicionDePagoDiaPesificado > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) || oParam.CondicionDePagoPesificadoVentaId == null))
-                    {
-                        oErrorMessages.Error("DiaVenta", "Debe completar la condición de pesificación.");
-                    }
+                //if (oParam.MonedaId == "USDM ")
+                //{
+                //    if (oParam.CondicionDePagoDiaPesificado > 0 && (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) || oParam.CondicionDePagoPesificadoVentaId == null))
+                //    {
+                //        oErrorMessages.Error("DiaVenta", "Debe completar la condición de pesificación.");
+                //    }
 
-                    if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
-                    {
-                        oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pesificación.");
-                    }
+                //    if (!string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado) && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
+                //    {
+                //        oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pesificación.");
+                //    }
 
-                    if (oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.CondicionDePagoPesificadoVentaId > 0 && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
-                    {
-                        oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pesificación.");
-                    }
-                }
+                //    if (oParam.CondicionDePagoPesificadoVentaId.HasValue && oParam.CondicionDePagoPesificadoVentaId > 0 && (!oParam.CondicionDePagoDiaPesificado.HasValue || oParam.CondicionDePagoDiaPesificado.Value <= 0))
+                //    {
+                //        oErrorMessages.Error("DiaVenta", "Debe completar los días en la condición de pesificación.");
+                //    }
+                //}
 
                 if (oParam.BoletoVentaId == 5 && string.IsNullOrEmpty(oParam.MailVentaBoleto))
                 {
                     oErrorMessages.Error("DiaVenta", "El campo mail es obligatorio cuando el boleto es a convenir.");
                 }
 
-                if (oParam.ComisionAFavorId > 0 && (!oParam.PorcentajeComisionVenta.HasValue ||
-                    (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value <= 0)))
-                {
-                    oErrorMessages.Error("ComisionAFavor", "Debe completar el porcentaje de comisión en las condiciones de venta cuando Comisión a Favor está completo.\n\n");
-                }
+                //if (oParam.ComisionAFavorId > 0 && (!oParam.PorcentajeComisionVenta.HasValue ||
+                //    (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value <= 0)))
+                //{
+                //    oErrorMessages.Error("ComisionAFavor", "Debe completar el porcentaje de comisión en las condiciones de venta cuando Comisión a Favor está completo.\n\n");
+                //}
 
-                if (oParam.ComisionAFavorId == null && (oParam.PorcentajeComisionVenta.HasValue ||
-                  (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value > 0)))
-                {
-                    oErrorMessages.Error("ComisionAFavor", "Debe completar la Comisión a Favor en las condiciones de venta cuando Porcentaje de Comisión está completo.\n\n");
-                }
+                //if (oParam.ComisionAFavorId == null && (oParam.PorcentajeComisionVenta.HasValue ||
+                //  (oParam.PorcentajeComisionVenta.HasValue && oParam.PorcentajeComisionVenta.Value > 0)))
+                //{
+                //    oErrorMessages.Error("ComisionAFavor", "Debe completar la Comisión a Favor en las condiciones de venta cuando Porcentaje de Comisión está completo.\n\n");
+                //}
 
                 //if (oParam.CamaraId == null)
                 //{
                 //    oErrorMessages.Error("Camara", "El campo Camara es obligatorio");
                 //}
-                if (oParam.ProcedenciaVentaId == null)
-                {
-                    oErrorMessages.Error("ProcedenciaVentaId", "El campo Destino de la Mercadería es obligatorio.");
-                }
-                if (string.IsNullOrEmpty(oParam.FleteACargo))
-                {
-                    oErrorMessages.Error("FleteACargo", "El campo Flete a Cargo es obligatorio.");
-                }
-                if (string.IsNullOrEmpty(oParam.KgBalanza))
-                {
-                    oErrorMessages.Error("KgBalanza", "El campo Kg Balanza es obligatorio.");
-                }
+                //if (oParam.ProcedenciaVentaId == null)
+                //{
+                //    oErrorMessages.Error("ProcedenciaVentaId", "El campo Destino de la Mercadería es obligatorio.");
+                //}
+                //if (string.IsNullOrEmpty(oParam.FleteACargo))
+                //{
+                //    oErrorMessages.Error("FleteACargo", "El campo Flete a Cargo es obligatorio.");
+                //}
+                //if (string.IsNullOrEmpty(oParam.KgBalanza))
+                //{
+                //    oErrorMessages.Error("KgBalanza", "El campo Kg Balanza es obligatorio.");
+                //}
                 //if (oParam.ComisionAFavorId == null)
                 //{
                 //    oErrorMessages.Error("ComisionAFavorId", "El campo Comisión a Favor es obligatorio");
@@ -1341,42 +1341,42 @@ namespace Molinos.DataAgro.Business.Managers
                 //{
                 //    oErrorMessages.Error("PorcentajeComisionVenta", "El campo Porcentaje Comision Venta es obligatorio");
                 //}
-                if (string.IsNullOrEmpty(oParam.Pago))
-                {
-                    oErrorMessages.Error("Pago", "El campo Pago es obligatorio.");
-                }
-                if (oParam.BoletoVentaId == null)
-                {
-                    oErrorMessages.Error("BoletoVentaId", "El campo Boleto es obligatorio.");
-                }
-                if (oParam.CondicionDePagoDiaPesificado == null)
-                {
-                    oErrorMessages.Error("CondicionDePagoDiaPesificado", "El campo 'Cantidad de días' de Condición de pesificación es obligatorio.");
-                }
-                if (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado))
-                {
-                    oErrorMessages.Error("CondicionDePagoTipoPesificado", "El campo 'Condición' de Condición de pesificación es obligatorio.");
-                }
-                if (oParam.CondicionDePagoPesificadoVentaId == null)
-                {
-                    oErrorMessages.Error("CondicionDePagoPesificadoVentaId", "El campo 'Plazo' de Condición de pesificación es obligatorio.");
-                }
+                //if (string.IsNullOrEmpty(oParam.Pago))
+                //{
+                //    oErrorMessages.Error("Pago", "El campo Pago es obligatorio.");
+                //}
+                //if (oParam.BoletoVentaId == null)
+                //{
+                //    oErrorMessages.Error("BoletoVentaId", "El campo Boleto es obligatorio.");
+                //}
+                //if (oParam.CondicionDePagoDiaPesificado == null)
+                //{
+                //    oErrorMessages.Error("CondicionDePagoDiaPesificado", "El campo 'Cantidad de días' de Condición de pesificación es obligatorio.");
+                //}
+                //if (string.IsNullOrEmpty(oParam.CondicionDePagoTipoPesificado))
+                //{
+                //    oErrorMessages.Error("CondicionDePagoTipoPesificado", "El campo 'Condición' de Condición de pesificación es obligatorio.");
+                //}
+                //if (oParam.CondicionDePagoPesificadoVentaId == null)
+                //{
+                //    oErrorMessages.Error("CondicionDePagoPesificadoVentaId", "El campo 'Plazo' de Condición de pesificación es obligatorio.");
+                //}
 
-                if (oParam.FechaCierta.HasValue)
-                {
-                    if (oParam.CondicionDePagoDiaFijacion == null)
-                    {
-                        oErrorMessages.Error("CondicionDePagoDiaFijacion", "El campo 'Cantidad de días' de Condición de Pago es obligatorio.");
-                    }
-                    if (string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion))
-                    {
-                        oErrorMessages.Error("CondicionDePagoTipoFijacion", "El campo 'Condición' de Condición de Pago es obligatorio.");
-                    }
-                    if (oParam.CondicionDePagoFijacionVentaId == null)
-                    {
-                        oErrorMessages.Error("CondicionDePagoFijacionVentaId", "El campo 'Plazo' de Condicion de Pago es obligatorio.");
-                    }
-                }
+                //if (oParam.FechaCierta.HasValue)
+                //{
+                //    if (oParam.CondicionDePagoDiaFijacion == null)
+                //    {
+                //        oErrorMessages.Error("CondicionDePagoDiaFijacion", "El campo 'Cantidad de días' de Condición de Pago es obligatorio.");
+                //    }
+                //    if (string.IsNullOrEmpty(oParam.CondicionDePagoTipoFijacion))
+                //    {
+                //        oErrorMessages.Error("CondicionDePagoTipoFijacion", "El campo 'Condición' de Condición de Pago es obligatorio.");
+                //    }
+                //    if (oParam.CondicionDePagoFijacionVentaId == null)
+                //    {
+                //        oErrorMessages.Error("CondicionDePagoFijacionVentaId", "El campo 'Plazo' de Condicion de Pago es obligatorio.");
+                //    }
+                //}
 
                 var provinciaElegida = repositorio.Obtener<Localidad, int>(x => x.LocalidadId == oParam.ProcedenciaVentaId, x => x.ProvinciaId);
                 var habilitadoVenta = repositorio.Obtener<Provincia, bool>(x => x.ProvinciaId == provinciaElegida, x => x.HabilitadoVenta);
