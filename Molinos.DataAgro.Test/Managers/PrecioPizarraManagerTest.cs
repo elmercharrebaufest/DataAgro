@@ -26,6 +26,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<ILogger> logger;
         private Mock<IPrecioPizarraAgent> precioPizarraAgentMock;
         private Mock<IClienteBolsaRosarioAPIAgent> clienteBolsaRosarioAPIAgentMock;
+        private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
 
         [SetUp]
         public void SetUp()
@@ -34,7 +35,10 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock = new Mock<IRepositorio>();
             precioPizarraAgentMock = new Mock<IPrecioPizarraAgent>();
             clienteBolsaRosarioAPIAgentMock = new Mock<IClienteBolsaRosarioAPIAgent>();
-            target = new PrecioPizarraManager(repositorioMock.Object, logger.Object, precioPizarraAgentMock.Object, clienteBolsaRosarioAPIAgentMock.Object);
+            diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
+
+            target = new PrecioPizarraManager(repositorioMock.Object, logger.Object, precioPizarraAgentMock.Object, clienteBolsaRosarioAPIAgentMock.Object,
+                diasHabilesAgentMock.Object);
         }
 
         [Test]

@@ -25,18 +25,19 @@ namespace Molinos.DataAgro.Agent.StatusContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_STATUS_DE_CONTRATO : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string iM_CONTRATOField;
+        private string[] iM_CONTRATOField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string IM_CONTRATO {
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public string[] IM_CONTRATO {
             get {
                 return this.iM_CONTRATOField;
             }
@@ -57,108 +58,141 @@ namespace Molinos.DataAgro.Agent.StatusContrato {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:sap-com:document:sap:rfc:functions")]
+    public partial class ZMPES6980 : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string cONTRATOField;
+        
+        private string sTATUSField;
+        
+        private string nUM_SIOField;
+        
+        private string nO_INFORMAR_SIOField;
+        
+        private string fECHA_SIOField;
+        
+        private string fE_VUELTAField;
+        
+        private string mENSAJEField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string CONTRATO {
+            get {
+                return this.cONTRATOField;
+            }
+            set {
+                this.cONTRATOField = value;
+                this.RaisePropertyChanged("CONTRATO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string STATUS {
+            get {
+                return this.sTATUSField;
+            }
+            set {
+                this.sTATUSField = value;
+                this.RaisePropertyChanged("STATUS");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        public string NUM_SIO {
+            get {
+                return this.nUM_SIOField;
+            }
+            set {
+                this.nUM_SIOField = value;
+                this.RaisePropertyChanged("NUM_SIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        public string NO_INFORMAR_SIO {
+            get {
+                return this.nO_INFORMAR_SIOField;
+            }
+            set {
+                this.nO_INFORMAR_SIOField = value;
+                this.RaisePropertyChanged("NO_INFORMAR_SIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        public string FECHA_SIO {
+            get {
+                return this.fECHA_SIOField;
+            }
+            set {
+                this.fECHA_SIOField = value;
+                this.RaisePropertyChanged("FECHA_SIO");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        public string FE_VUELTA {
+            get {
+                return this.fE_VUELTAField;
+            }
+            set {
+                this.fE_VUELTAField = value;
+                this.RaisePropertyChanged("FE_VUELTA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        public string MENSAJE {
+            get {
+                return this.mENSAJEField;
+            }
+            set {
+                this.mENSAJEField = value;
+                this.RaisePropertyChanged("MENSAJE");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9037.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_STATUS_DE_CONTRATOResponse : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private string eX_CONTRATOField;
-        
-        private string eX_FECHA_SIOField;
-        
-        private string eX_FE_VUELTAField;
-        
-        private string eX_MENSAJEField;
-        
-        private string eX_NO_INFORMAR_SIOField;
-        
-        private string eX_NUM_SIOField;
-        
-        private string eX_STATUSField;
+        private ZMPES6980[] eX_SALIDAField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
-        public string EX_CONTRATO {
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
+        public ZMPES6980[] EX_SALIDA {
             get {
-                return this.eX_CONTRATOField;
+                return this.eX_SALIDAField;
             }
             set {
-                this.eX_CONTRATOField = value;
-                this.RaisePropertyChanged("EX_CONTRATO");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
-        public string EX_FECHA_SIO {
-            get {
-                return this.eX_FECHA_SIOField;
-            }
-            set {
-                this.eX_FECHA_SIOField = value;
-                this.RaisePropertyChanged("EX_FECHA_SIO");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
-        public string EX_FE_VUELTA {
-            get {
-                return this.eX_FE_VUELTAField;
-            }
-            set {
-                this.eX_FE_VUELTAField = value;
-                this.RaisePropertyChanged("EX_FE_VUELTA");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
-        public string EX_MENSAJE {
-            get {
-                return this.eX_MENSAJEField;
-            }
-            set {
-                this.eX_MENSAJEField = value;
-                this.RaisePropertyChanged("EX_MENSAJE");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
-        public string EX_NO_INFORMAR_SIO {
-            get {
-                return this.eX_NO_INFORMAR_SIOField;
-            }
-            set {
-                this.eX_NO_INFORMAR_SIOField = value;
-                this.RaisePropertyChanged("EX_NO_INFORMAR_SIO");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
-        public string EX_NUM_SIO {
-            get {
-                return this.eX_NUM_SIOField;
-            }
-            set {
-                this.eX_NUM_SIOField = value;
-                this.RaisePropertyChanged("EX_NUM_SIO");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
-        public string EX_STATUS {
-            get {
-                return this.eX_STATUSField;
-            }
-            set {
-                this.eX_STATUSField = value;
-                this.RaisePropertyChanged("EX_STATUS");
+                this.eX_SALIDAField = value;
+                this.RaisePropertyChanged("EX_SALIDA");
             }
         }
         

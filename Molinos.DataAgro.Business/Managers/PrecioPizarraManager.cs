@@ -20,12 +20,16 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private IPrecioPizarraAgent precioPizarraAgent;
         private IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent;
-        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent crearPrecioPizarraAgent, IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent)
+        private readonly IDiasHabilesAgent diasHabilesAgent;
+
+        public PrecioPizarraManager(IRepositorio repositorio, ILogger logger, IPrecioPizarraAgent crearPrecioPizarraAgent, IClienteBolsaRosarioAPIAgent clienteBolsaRosarioAPIAgent, 
+            IDiasHabilesAgent diasHabilesAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.precioPizarraAgent = crearPrecioPizarraAgent;
             this.clienteBolsaRosarioAPIAgent = clienteBolsaRosarioAPIAgent;
+            this.diasHabilesAgent = diasHabilesAgent;
         }
         public Resultado GrabarPrecioPizarra(PrecioPizarra precioPizarra)
         {
@@ -83,6 +87,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (precioMayorHasta != null && precioMayorHasta.FechaHasta >= precioPizarra.FechaDesde) error.Errores.Add(new ErrorMessage(400, "El rango ingresado no puede ser menor que la fecha hasta del último registro " + precioMayorHasta.FechaHasta.ToString("dd/MM/yyyy")));
             if (precioPizarra.Precio == 0) error.Errores.Add(new ErrorMessage(400, "El campo Precio no puede estar vacío"));
             if (precioPizarra.ComercialId == null) error.Errores.Add(new ErrorMessage(400, "El campo Comercial no puede estar vacío"));
+            if (precioPizarra.FechaDesde.CompareTo(DateTime.Today) >= 0) error.Errores.Add(new ErrorMessage(400, "El campo Fecha Desde no puede ser igual o mayor a la fecha del día"));
             return error;
         }
 
@@ -188,6 +193,8 @@ namespace Molinos.DataAgro.Business.Managers
             List<int> listIdMaterialesBCR = new List<int>();
             List<int> precioPizarraFiltrado;
             List<PrecioPizarra> precioPizarraFiltrado2;
+            // El parámetro fecha ya no se utilizará. Se requiere el "último día hábil"
+            var diaHabilAnterior = diasHabilesAgent.UltimoDiaHabil(DateTime.Now.Date);
 
             string activeCreador = PermisosHelper.ObtenerUsuario();
             Comercial oComercial = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == activeCreador);
@@ -201,7 +208,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 precioPizarraFiltrado = repositorio.Listar<PrecioPizarra>(x => x.MaterialId != 5 &&
                                                                                x.PizarraId == 1 &&
-                                                                               x.FechaDesde == fecha).Select(x => x.MaterialId).ToList();
+                                                                               x.FechaDesde == diaHabilAnterior).Select(x => x.MaterialId).ToList();
             }
 
             listMateriales = listMateriales.Where(x => !precioPizarraFiltrado.Contains(x)).ToList();
@@ -212,7 +219,7 @@ namespace Molinos.DataAgro.Business.Managers
                 listIdMaterialesBCR.Add(p == 1 ? 2 : p == 2 ? 1 : p == 3 ? 21 : 20);
             }
 
-            listaPreciosBCR = clienteBolsaRosarioAPIAgent.ConsultarPrecios(fecha, listIdMaterialesBCR.ToArray());
+            listaPreciosBCR = clienteBolsaRosarioAPIAgent.ConsultarPrecios(diaHabilAnterior, listIdMaterialesBCR.ToArray());
 
             if (manual)
             {
@@ -220,7 +227,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     precioPizarraFiltrado2 = repositorio.Listar<PrecioPizarra>(x => x.MaterialId == lpBCR.id_MaterialDA &&
                                                                                     x.PizarraId == 1 &&
-                                                                                    x.FechaDesde == fecha &&
+                                                                                    x.FechaDesde == diaHabilAnterior &&
                                                                                     x.Precio != (int)Math.Round(lpBCR.precio_Cotizacion)).ToList();
 
                     if (precioPizarraFiltrado2.Count > 0)

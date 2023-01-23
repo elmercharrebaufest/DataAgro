@@ -6,6 +6,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace Molinos.DataAgro.Agent
@@ -38,7 +39,7 @@ namespace Molinos.DataAgro.Agent
 
                     var rq = new Z_MPRFC_STATUS_DE_CONTRATO()
                     {
-                        IM_CONTRATO = contratoSap
+                        IM_CONTRATO = new List<string> { contratoSap }.ToArray()
                     };
                     var log = new Log
                     {
@@ -54,14 +55,22 @@ namespace Molinos.DataAgro.Agent
                     log = repositorio.Obtener<Log>(logId.Id);
                     log.Xml += valor.ToXml();
                     repositorio.GuardarCambios();
+                    if (valor.EX_SALIDA == null || valor.EX_SALIDA.Length == 0)
+                    {
+                        return new EstadoSAPDto();
+                    }
+
+                    //parche hasta que se haga para varios
+                    var valor2 = valor.EX_SALIDA[0];
+
                     long numsio = 0;
-                    long.TryParse(valor.EX_NUM_SIO, out numsio);
-                    logger.Debug("valor.EX_STATUS: ." + valor.EX_STATUS + ".");
+                    long.TryParse(valor2.NUM_SIO, out numsio);
+                    logger.Debug("valor.EX_STATUS: ." + valor2.STATUS + ".");
                     logger.Debug("numsio: ." + numsio + ".");
                     var estado = new EstadoSAPDto()
                     {
                         NumeroSio = numsio,
-                        Status = valor.EX_STATUS
+                        Status = valor2.STATUS
                     };
                     return estado;
                     //if (string.IsNullOrEmpty(valor.EX_STATUS) && numsio == 0)
@@ -81,6 +90,6 @@ namespace Molinos.DataAgro.Agent
                 }
             }
         }
-      
+
     }
 }

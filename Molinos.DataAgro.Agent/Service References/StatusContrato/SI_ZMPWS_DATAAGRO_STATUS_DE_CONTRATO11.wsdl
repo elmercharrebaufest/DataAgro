@@ -8,20 +8,14 @@
       <xsd:element name="Z_MPRFC_STATUS_DE_CONTRATOResponse">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="EX_CONTRATO" type="rfc:char10" />
-            <xsd:element name="EX_FECHA_SIO" type="rfc:date10" />
-            <xsd:element name="EX_FE_VUELTA" type="rfc:date10" />
-            <xsd:element name="EX_MENSAJE" type="rfc:char50" />
-            <xsd:element name="EX_NO_INFORMAR_SIO" type="rfc:char1" />
-            <xsd:element name="EX_NUM_SIO" type="rfc:numeric11" />
-            <xsd:element name="EX_STATUS" type="rfc:char1" />
+            <xsd:element name="EX_SALIDA" type="rfc:ZMPTT7000" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="Z_MPRFC_STATUS_DE_CONTRATO">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="IM_CONTRATO" type="rfc:char10" />
+            <xsd:element name="IM_CONTRATO" type="rfc:ZMPTT6990" />
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
@@ -41,17 +35,38 @@
           <xsd:maxLength value="10" />
         </xsd:restriction>
       </xsd:simpleType>
-      <xsd:simpleType name="char50">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="50" />
-        </xsd:restriction>
-      </xsd:simpleType>
       <xsd:simpleType name="numeric11">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="11" />
           <xsd:pattern value="\d*" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char50">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="50" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="ZMPTT6990">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:char10" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPES6980">
+        <xsd:sequence>
+          <xsd:element name="CONTRATO" type="rfc:char10" />
+          <xsd:element name="STATUS" type="rfc:char1" />
+          <xsd:element name="NUM_SIO" type="rfc:numeric11" />
+          <xsd:element name="NO_INFORMAR_SIO" type="rfc:char1" />
+          <xsd:element name="FECHA_SIO" type="rfc:date10" />
+          <xsd:element name="FE_VUELTA" type="rfc:date10" />
+          <xsd:element name="MENSAJE" type="rfc:char50" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ZMPTT7000">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="item" type="rfc:ZMPES6980" />
+        </xsd:sequence>
+      </xsd:complexType>
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="rfc.Z_MPRFC_STATUS_DE_CONTRATO">
