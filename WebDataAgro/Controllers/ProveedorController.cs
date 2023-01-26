@@ -272,7 +272,7 @@ namespace WebDataAgro.Controllers
                     }
                 }
 
-                materialesCampania.Distinct().ToList();
+                var matCampania = materialesCampania.Distinct().ToList();
 
                 //borrar los informes que existan para las campañas que estoy recibiendo
                 foreach (var i in informeId)
@@ -290,9 +290,9 @@ namespace WebDataAgro.Controllers
                         ProveedorId = (int)model.ProveedorId,
                         Materiales = new List<ParamInformeComercialMaterial>()
                     };
-                    for (var j = 0; j < materialesCampania.Count(); j++)
+                    for (var j = 0; j < matCampania.Count(); j++)
                     {
-                        paramGrabar.Materiales.Add(new ParamInformeComercialMaterial { MaterialId = materialesCampania[j] });
+                        paramGrabar.Materiales.Add(new ParamInformeComercialMaterial { MaterialId = matCampania[j] });
                     }
 
                     var resultGrabar = mobjInformeComercialManager.GrabarInformeComercial(paramGrabar, (int)modificados.ComercialId, null, null, null, "", "", 0);

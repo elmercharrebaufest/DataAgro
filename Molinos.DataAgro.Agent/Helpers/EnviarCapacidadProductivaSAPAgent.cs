@@ -22,7 +22,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
         public string EnviarCapacidadProductivaSAP(EnviarCapacidadProductivaSAPDto capProd)
         {
-            logger.Debug("Eviando capacidad productiva a SAP - Cuit: " + capProd.Cuit + ", Campaña: " +capProd.Campania);
+            logger.Debug("Enviando capacidad productiva a SAP - Cuit: " + capProd.Cuit + ", Campaña: " +capProd.Campania);
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
                 return "OK";
