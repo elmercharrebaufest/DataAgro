@@ -529,6 +529,7 @@ namespace Molinos.DataAgro.Business
                 oParanInforme.ClienteAnt = oInformeComercial.ClienteAnt;
                 oParanInforme.Domicilio = oInformeComercial.DomicilioReal;
                 oParanInforme.Comentarios = oInformeComercial.Comentarios;
+                oParanInforme.ComercialId = oInformeComercial.ComercialId ?? 0;
 
                 if (oInformeComercial.Chacra != null)
                 {
@@ -623,11 +624,19 @@ namespace Molinos.DataAgro.Business
         {
             try
             {
-                List<InformeComercialProduccion> oInformesComercial = repositorio.Listar<InformeComercialProduccion>(x => ids.Contains(x.InformeComerciaProduccionId));
+                List<InformeProduccionList> oInformesComercial = repositorio.Listar<InformeComercialProduccion, InformeProduccionList>(
+                    x => new InformeProduccionList { InformeComercialId = x.InformeComercialId, MaterialId = x.MaterialId ?? 0 },
+                    x => ids.Contains(x.InformeComerciaProduccionId));
 
-                foreach (var oInformeComercial in oInformesComercial)
+                var idsInformeComercial = oInformesComercial.Select(x => x.InformeComercialId).ToList();
+
+                var lista = repositorio.Listar<InformeComercialProduccion>(x => idsInformeComercial.Contains(x.InformeComercialId));
+                foreach (var item in oInformesComercial)
                 {
-                    oInformeComercial.FechaDescarga = DateTime.Now;
+                    foreach (var informe in lista.Where(x => x.InformeComercialId == item.InformeComercialId && x.MaterialId == item.MaterialId))
+                    {
+                        informe.FechaDescarga = DateTime.Now;
+                    }
                 }
 
                 repositorio.GuardarCambios();
@@ -763,25 +772,31 @@ namespace Molinos.DataAgro.Business
         public Resultado EnviarCapacidadProductivaSAP(List<EnviarCapacidadProductivaSAPDto> enviar)
         {
             var ids = enviar.Select(x => x.Id).ToList();
-            var lista = repositorio.Listar<InformeComercialProduccion>(x => ids.Contains(x.InformeComerciaProduccionId));
             var resultado = new Resultado();
-            foreach (var item in lista)
+
+            var lista = repositorio.Listar<InformeComercialProduccion>(x => ids.Contains(x.InformeComercialId));
+
+            foreach (var item in enviar)
             {
                 try
                 {
-                    var respuesta = enviarCapacidadProductivaSAPAgent.EnviarCapacidadProductivaSAP(enviar.Where(x => item.InformeComerciaProduccionId == x.Id).Single());
+
+                    var respuesta = enviarCapacidadProductivaSAPAgent.EnviarCapacidadProductivaSAP(item);
                     if (respuesta != "OK")
                     {
-                        resultado.Error("Error SAP", "Error al enviar a SAP el informe número " + item.InformeComerciaProduccionId.ToString() + ". " + respuesta);
+                        resultado.Error("Error SAP", "Error al enviar a SAP el informe número " + item.Id.ToString() + ", material " + item.MaterialDescripcion + "." + respuesta);
                     }
                     else
                     {
-                        item.FechaDescarga = DateTime.Now;
+                        foreach (var informe in lista.Where(x => x.InformeComercialId == item.Id && x.Material.Codigo == item.Material))
+                        {
+                            informe.FechaDescarga = DateTime.Now;
+                        }
                     }
                 }
                 catch (Exception e)
                 {
-                    resultado.Error("Error SAP", "Error al enviar a SAP el informe número " + item.InformeComerciaProduccionId.ToString() + ". " + e.Message);
+                    resultado.Error("Error SAP", "Error al enviar a SAP el informe número " + item.Id.ToString() + ", material: " + item.MaterialDescripcion + "." + e.Message);
                     logger.Error(e);
                 }
             }

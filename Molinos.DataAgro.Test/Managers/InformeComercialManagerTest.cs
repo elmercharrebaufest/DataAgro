@@ -347,12 +347,28 @@ namespace Molinos.DataAgro.Test.Managers
         {
             var enviar = new List<EnviarCapacidadProductivaSAPDto>() { new EnviarCapacidadProductivaSAPDto { Id = 1, Cuit = "12345678900", Campania = "20-21", Material = "000000000019908017", UnidadMedida = "TON", Porcentaje = 30, Cantidad = 7000 } };
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                .Returns(new List<InformeComercialProduccion>() { new InformeComercialProduccion { InformeComerciaProduccionId = 1, InformeComercialId = 1, MaterialId = 3 } });
+                .Returns(new List<InformeComercialProduccion>() { new InformeComercialProduccion { InformeComerciaProduccionId = 1, InformeComercialId = 1, MaterialId = 3, Material = new Material { Codigo = "000000000019908017" } } });
             enviarCapProdSAPAgentMock.Setup(x => x.EnviarCapacidadProductivaSAP(It.IsAny<EnviarCapacidadProductivaSAPDto>())).Returns("OK");
             var result = target.EnviarCapacidadProductivaSAP(enviar);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
             Assert.NotNull(result);
             Assert.IsFalse(result.HayError);
+        }
+
+        [Test]
+        public void GuardarFechaDescargaInformeComercialTestOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                 .Returns(new List<InformeComercialProduccion>() { new InformeComercialProduccion { InformeComerciaProduccionId = 1, InformeComercialId = 1, MaterialId = 3, Material = new Material { Codigo = "000000000019908017" } } });
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<InformeComercialProduccion, InformeProduccionList>>>(), It.IsAny<Expression<Func<InformeComercialProduccion, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+           .Returns(new List<InformeProduccionList>() { new InformeProduccionList { InformeComercialId = 1, MaterialId = 3 } });
+
+
+            enviarCapProdSAPAgentMock.Setup(x => x.EnviarCapacidadProductivaSAP(It.IsAny<EnviarCapacidadProductivaSAPDto>())).Returns("OK");
+
+            target.GuardarFechaDescargaInformeComercial(new List<int> { 1 });
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
     }
 }

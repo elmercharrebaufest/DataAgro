@@ -44,7 +44,30 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FechaDescargaConHora = x.FechaDescarga,
                     OrigenDA = x.InformeComercial.OrigenDA == true ? "Si" : "No",
                 };
-
+            resultado = resultado.GroupBy(a => new { a.InformeComercialId, a.MaterialId }).Select(x =>
+               new InformeProduccionList
+               {
+                   InformeComerciaProduccionId = x.FirstOrDefault().InformeComerciaProduccionId,
+                   InformeComercialId = x.FirstOrDefault().InformeComercialId,
+                   Cuit = x.FirstOrDefault().Cuit,
+                   RazonSocial = x.FirstOrDefault().RazonSocial,
+                   Campaña = x.FirstOrDefault().Campaña,
+                   Material = x.FirstOrDefault().Material,
+                   MaterialId = x.FirstOrDefault().MaterialId,
+                   MaterialSAP = x.FirstOrDefault().MaterialSAP,
+                   Toneladas = x.Sum(a => a.Toneladas),
+                   Comercial = x.FirstOrDefault().Comercial,
+                   Seleccionado = false,
+                   ProveedorId = x.FirstOrDefault().ProveedorId,
+                   CampanaId = x.FirstOrDefault().CampanaId,
+                   ComercialId = x.FirstOrDefault().ComercialId,
+                   FechaAlta = x.FirstOrDefault().FechaAlta,
+                   FechaAltaConHora = x.FirstOrDefault().FechaAltaConHora,
+                   FechaDescarga = x.FirstOrDefault().FechaDescarga,
+                   FechaDescargaConHora = x.FirstOrDefault().FechaDescargaConHora,
+                   OrigenDA = x.FirstOrDefault().OrigenDA,
+               }
+            );
             return resultado.ToDataSourceResult(filtro);
         }
 

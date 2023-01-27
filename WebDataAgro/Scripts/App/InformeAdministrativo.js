@@ -156,7 +156,7 @@ function CreateGridInformeAdministrativo() {
             showIndexes: false
         },
         //selectable: "row",
-        selectable: "multiple",
+        //selectable: "multiple",
         height: 550,
         filterable: false,
         batch: true,
@@ -488,9 +488,10 @@ function enviarCapProdSAP() {
         for (var i = 0; i < allData.length; i++) {
             if (ids.find(element => element == allData[i].InformeComerciaProduccionId.toString())) {
                 enviar.push({
-                    Id: allData[i].InformeComerciaProduccionId,
+                    Id: allData[i].InformeComercialId,
                     Cuit: allData[i].Cuit,
                     Material: allData[i].MaterialSAP,
+                    MaterialDescripcion: allData[i].Material,
                     Campania: allData[i].Campaña,
                     Cantidad: allData[i].Toneladas,
                     UnidadMedida: "TON",
