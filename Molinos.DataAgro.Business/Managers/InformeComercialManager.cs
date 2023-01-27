@@ -529,7 +529,7 @@ namespace Molinos.DataAgro.Business
                 oParanInforme.ClienteAnt = oInformeComercial.ClienteAnt;
                 oParanInforme.Domicilio = oInformeComercial.DomicilioReal;
                 oParanInforme.Comentarios = oInformeComercial.Comentarios;
-                oParanInforme.ComercialId = oInformeComercial.ComercialId ?? 0;
+                //oParanInforme.ComercialId = oInformeComercial.ComercialId ?? 0;
 
                 if (oInformeComercial.Chacra != null)
                 {
