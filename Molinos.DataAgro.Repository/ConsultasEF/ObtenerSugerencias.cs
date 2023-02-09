@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PuntuacionTotal = sugerido.Puntuacion,
                     KgNegocio = sugerido.KgNegocio,
                     KgPendienteAplicar = sugerido.KgPendienteAplicar,
+                    Sustentable = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).Sustentable == true ? true : false
                 }).ToList();
 
             //var solicitudes = contexto.Set<AdministracionCupo>()

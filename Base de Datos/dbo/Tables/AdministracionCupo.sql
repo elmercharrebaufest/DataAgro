@@ -20,7 +20,7 @@
     [Calidad] VARCHAR(50) NULL, 
     [FechaDecision] DATETIME NULL, 
     [ConDescarga] BIT NULL, 
-    [Motivo] VARCHAR(50) NULL, 
+    [Motivo] VARCHAR(2000) NULL, 
     [Sustentable] BIT NULL,
     CONSTRAINT [PK_AdministracionCupo] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_AdministracionCupo_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),

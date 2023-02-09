@@ -24,7 +24,7 @@ namespace Molinos.DataAgro.Agent
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
 
-        public List<CapacidadProductivaDto> VisualizarCapacidadProductiva (int proveedorID)
+        public List<CapacidadProductivaDto> VisualizarCapacidadProductiva(int proveedorID)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Molinos.DataAgro.Agent
                             Porcentaje = item.PORC,
                             Material = materiales.Where(x => x.Codigo == item.MATNR).FirstOrDefault().Descripcion,
                             Campania = cosecha.Where(x => x.Descripcion == item.COSECHA).FirstOrDefault().Descripcion,
-                            FechaActualizacion = !string.IsNullOrEmpty(item.FECHA_ACT) ? DateTime.Parse(item.FECHA_ACT) : (DateTime?)null
+                            FechaActualizacion = !string.IsNullOrEmpty(item.FECHA_ACT) ? DateTime.Parse(item.FECHA_ACT) <= new DateTime(1900, 1, 1) ? (DateTime?)null : DateTime.Parse(item.FECHA_ACT) : (DateTime?)null
                         });
                     }
                 }
@@ -68,8 +68,8 @@ namespace Molinos.DataAgro.Agent
                 logger.Error("No se pudo obtener la capacidad productiva para el ID " + proveedorID);
                 logger.Error(e);
                 return new List<CapacidadProductivaDto> { };
-            } 
-            
+            }
+
         }
     }
 }

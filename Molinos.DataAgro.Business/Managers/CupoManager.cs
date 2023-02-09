@@ -1473,7 +1473,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (result.HayError)
                 {
                     // proxima etapa guardar detalle del error para mostrar al comecial por que se 
-                    negocios[i].Inhabilitado = "Proveedor Inhabilitado";
+                    negocios[i].Inhabilitado = string.Join(", ", result.ListaErrores.Select(a=>a.Message).ToList());
                     negocioInhabilitados.Add(negocios[i]);
                     negocios.RemoveAt(i);
                 }
@@ -1793,11 +1793,13 @@ namespace Molinos.DataAgro.Business.Managers
                     CDWarrant = x.Warrant == true ? true : false,
                     Fason = x.EsFason,
                     CentroDesc = x.Destino.Descripcion,
+                    Sustentable = x.Sustentable ?? false
                 },
                     x =>
                     //(formula.NegociosDesde >= x.FechaDesde && formula.NegociosHasta < x.FechaHasta) || (formula.NegociosHasta <= x.FechaHasta &&
                     //formula.NegociosHasta > x.FechaDesde) || (formula.NegociosDesde <= x.FechaDesde && formula.NegociosHasta >= x.FechaHasta))
-                    x.Sustentable != true &&
+                    //x.Sustentable != true &&
+                    x.EsFason != true &&
                     formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId /*&& x.MercsDeposito != true*/ && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
@@ -1848,9 +1850,10 @@ namespace Molinos.DataAgro.Business.Managers
 
                 var KgPendiente = contratosKgPendiente.Where(a => a.ContratoSAP == item.ContratoSAP).FirstOrDefault().KgPendiente;
 
+                item.KgPendienteAplicar = KgPendiente;
+
                 if (KgPendiente >= kilosMinimosParaSugerencia)
                 {
-                    item.KgPendienteAplicar = KgPendiente;
                     var cantidadcupos = Convert.ToSingle(KgPendiente) / 30000;
                     item.CantidadDeCupos = KgPendiente / 30000;
                     var excedente = (cantidadcupos - Math.Truncate(cantidadcupos)) * 100;
@@ -1901,8 +1904,37 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
 
+            //traer stock para cupos sustentables por proveedor
+            var stockSustentable = contratos.Where(x => x.CantidadDeCupos > 0 && x.Sustentable).Select(a => a.ProveedorCUIT).Distinct().Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
 
+            var cuposPendientesSustentables = repositorio.Listar<Cupo, CupoDto>(
+                x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId, Sustentable = x.Sustentable, Proveedor = x.Proveedor.CUIT },
+                x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.FechaIngreso >= ayer && x.Sustentable == true)
+                .GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
 
+            foreach (var item in stockSustentable)
+            {
+                item.Cantidad = TraerCuposDisponiblesEnEstablecimientos(item.Proveedor);
+                var sustentablesPendientes = cuposPendientesSustentables.Where(x => x.Key == item.Proveedor).FirstOrDefault();
+                item.Cantidad -= sustentablesPendientes.Value;
+            }
+            //limitar la cantidada de sugerencias de sustentable al stock disponible 
+            foreach (var contratosPorProveedor in contratos.Where(x => x.CantidadDeCupos > 0 && x.Sustentable).GroupBy(a => a.ProveedorCUIT).ToList())
+            {
+                foreach (var contrato in contratosPorProveedor.ToList())
+                {
+                    if (contrato.CantidadDeCupos <= stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad)
+                    {
+                        stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad -= contrato.CantidadDeCupos;
+                    }
+                    else
+                    {
+                        contrato.CantidadDeCupos = Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
+                        contrato.CuposPendientes = Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
+                        stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad = 0;
+                    }
+                }
+            }
 
 
             TipoNegocio tipoNegocioEspacioDinamico = repositorio.ObtenerPrimero<TipoNegocio>(a => a.Descripcion == "ESPACIO DINAMICO");
@@ -6022,6 +6054,24 @@ namespace Molinos.DataAgro.Business.Managers
         public List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos()
         {
             return clienteStopAgent.ConsultarMisTurnosActivos();
+        }
+
+        private int TraerCuposDisponiblesEnEstablecimientos(string cuit)
+        {
+            var establecimientos = TraerEstablecimientos(cuit);
+            var cantidadCupo = 0;
+            if (establecimientos != null && establecimientos.Count > 0)
+            {
+                foreach (var establecimiento in establecimientos)
+                {
+                    if (establecimiento.Cantidad >= 28000)
+                    {
+                        cantidadCupo += (int)Math.Floor(establecimiento.Cantidad / 28000);
+                    }
+                }
+            }
+
+            return cantidadCupo;
         }
     }
 }

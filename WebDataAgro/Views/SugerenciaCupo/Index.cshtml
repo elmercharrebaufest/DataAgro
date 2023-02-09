@@ -231,7 +231,7 @@
                     <div class="float-left margen-15 borde-cheks">
                         <div class="form-check-inline">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 1 ? "checked" : "") value="1" disabled> Maiz
+                                <input type="radio" class="form-check-input" name="materialId" @(materialId == 1 ? "checked" : "") value="1"> Maiz
                             </label>
                         </div>
                         <div class="form-check-inline">
@@ -338,7 +338,14 @@
                             {
                                 <tr class="sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
                                     <td>@sugerencia.PuntuacionTotal</td>
-                                    <td>@sugerencia.ContratoSAP</td>
+                                    <td>
+                                        @sugerencia.ContratoSAP
+                                        
+                                        @if (sugerencia.Sustentable)
+                                        {
+                                            <i class='fa fa-solid fa-leaf'></i>
+                                        }
+                                    </td>
                                     <td>@sugerencia.KgNegocio.ToString("N0")</td>
                                     @*<td>@sugerencia.KgPendienteAplicar.ToString("N0")</td>*@
                                     <td>@sugerencia.TipoNegocioDesc</td>

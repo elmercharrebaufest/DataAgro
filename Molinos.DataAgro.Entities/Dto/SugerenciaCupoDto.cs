@@ -72,6 +72,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Inhabilitado { get; set; }
         public int CuposPendientes { get; set; }
         public int SolicitudesPendientes { get; set; }
+        public bool Sustentable { get; set; }
 
         public object Clone()
         {

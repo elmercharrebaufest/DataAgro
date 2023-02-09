@@ -1395,7 +1395,9 @@ function eliminarCampoProduccion(val) {
     aGuardar = aGuardar.filter(function (el) {
         return el.item !== parseInt(item);
     });
-    recalcularSegmentacion();
+    if (aGuardar.length > 0) {
+        recalcularSegmentacion();
+    }
 }
 function eliminarCampoEstablecimiento(val) {
     var item = $(val).attr("id").split("eliminarEstablecimiento")[1];

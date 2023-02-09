@@ -19,6 +19,9 @@ namespace Molinos.DataAgro.Report.ActiveReport
                     contentString = contentString.Replace("Please report infractions or address questions to sales@grapecity.us.com.", "");
                     contentString = contentString.Replace("Copyright © 2002-2010", "");
                     contentString = contentString.Replace("GrapeCity, inc. All rights reserved.", "");
+                    contentString = contentString.Replace("Please report infractions or", "");
+                    contentString = contentString.Replace("address questions to sales@grapecity.us.com.", "");
+
                     reader.SetPageContent(i, PdfEncodings.ConvertToBytes(contentString, PdfObject.TEXT_PDFDOCENCODING));
                 }
                 var resultado = new MemoryStream();

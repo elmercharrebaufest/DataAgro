@@ -34,7 +34,7 @@
   <setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperaciones.com.ar/" />
 
 	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="Si" />
-	<setParameter name="CupoMaizPorSugerencias Key" value="No" />
+	<setParameter name="CupoMaizPorSugerencias Key" value="Si" />
 
 	<setParameter name="PathBoletos Key" value="\\MOAFSP01\MATERIAS_PRIMAS\CONTRATOSGAP\" />
 
