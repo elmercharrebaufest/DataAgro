@@ -634,6 +634,7 @@ namespace Molinos.DataAgro.Test.Managers
                     FechaIngreso = DateTime.Now.Date,
                     FechaGeneracion = DateTime.Now.Date,
                     NegocioId = 56,
+                    Proveedor = "",
                 }});
             var formula = new Formula
             {
