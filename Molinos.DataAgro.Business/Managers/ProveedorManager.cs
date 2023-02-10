@@ -542,10 +542,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
 
-                SmtpClient oCliente = default;
+                SmtpClient oCliente = default(SmtpClient);
 
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
-                {
+                int Condicion = 0;
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                {                    
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
                 else

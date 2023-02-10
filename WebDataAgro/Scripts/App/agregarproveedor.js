@@ -2625,6 +2625,7 @@ function eliminarContactoComercial(val) {
     aGuardarContactoComercial = aGuardarContactoComercial.filter(function (el) {
         return el.item !== parseInt(item);
     });
+    cantContactoComercial += -1;
 }
 
 function editarContactoComercial(id) {
