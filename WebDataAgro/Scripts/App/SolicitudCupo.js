@@ -1,5 +1,6 @@
 ﻿var externo;
 var dataTabla = [];
+var stockDisponible = true;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -514,6 +515,7 @@ function InicializarElementos() {
         dataTextField: "Text",
         dataValueField: "Value",
         change: function () {
+            checkSoja();
             MostrarVisualizarStock();
         }
     });
@@ -635,7 +637,12 @@ function checkSoja() {
     } else {
         $("#calidadDivSE").show();
 
-        $("#sustentableDivSE").show();
+        if ($("#CentroIdSE").val() == "1029") {
+            $("#sustentableDivSE").show();
+        } else {
+            $("#sustentableDivSE").hide();
+            $("#Sustentable").prop("checked", false);
+        }
     }
 }
 
@@ -682,6 +689,17 @@ function grabarSolicitudExtraordinaria() {
     if ($("#FasonES").is(':checked') && $("#CuitES").val() == "") {
         MensErr("Complete el CUIT del destinatario"); return;
     }
+
+    if ($("#buscadorProveedorSE").val() != "" && $("#Sustentable").is(':checked') == true && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
+        VisualizarStock(true);
+        if (!stockDisponible) {
+            MensErr("No se pudo guardar porque no existen establecimientos con stock disponible");
+            return;
+        }
+    } else {
+        stockDisponible = true;
+    }
+
     dataTabla = [];
     var table = document.getElementById("cargaMasiva-cupos-table");
     for (let i = 0, n = table.rows.length; i < (n - 1); i++) {
@@ -840,7 +858,7 @@ function imageToBlob(imageURL) {
     })
 }
 
-function VisualizarStock() {
+function VisualizarStock(noabrir) {
 
     var cuitProv = $("#buscadorProveedorSE").val().split('(');
     if (cuitProv[1] != null) {
@@ -851,6 +869,7 @@ function VisualizarStock() {
     }
     var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0] });
     if (result != null && result.length > 0) {
+        stockDisponible = true;
         var table = "<tr>";
         table += '<th colspan = "3">Cosecha ' + result[0].Cosecha + '</th>';
         table += "</tr>";
@@ -869,9 +888,14 @@ function VisualizarStock() {
         }
 
         $("#cargarDatosEstablecimiento").html(table);
-        $("#modalEstablecimientos").modal("show");
+        if (noabrir != true) {
+            $("#modalEstablecimientos").modal("show");
+        }
     } else {
-        MensErr("No se encontraron establecimientos con stock disponible.")
+        stockDisponible = false;
+        if (noabrir != true) {
+            MensErr("No se encontraron establecimientos con stock disponible.")
+        }
     }
 
 }

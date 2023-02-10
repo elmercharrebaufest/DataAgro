@@ -1,4 +1,5 @@
 ﻿var listaCantidad = new Array();
+var sugerenciasADevolver = [];
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -48,7 +49,8 @@ $(document).ready(function () {
                 read: {
                     type: 'post',
                     dataType: 'json',
-                    url: "/Proveedor/BuscarProveedoresConCorredor"
+                    //url: "/Proveedor/BuscarProveedoresConCorredor"
+                    url: "/Proveedor/BuscarProveedoresEnSugerencia"
                 },
                 parameterMap: function (data, type) {
                     return { filtro: "", filtroProveedor: $('#buscadorProveedor').val(), corredor: 0 };
@@ -151,8 +153,13 @@ function CargarEventos() {
         }
 
     });
+
     $('#CargaCupos').on('hidden.bs.modal', function () {
         $("#cuerpo-carga-cupos").empty();
+    });
+
+    $('#devolucionSugerenciasModal').on('hidden.bs.modal', function () {
+        $("#cuerpo-devolver-sugerencias").empty();
     });
 
     $("#boton-si").click(function () {
@@ -248,11 +255,11 @@ function CargarEventos() {
 
         });
         if (total == 0) {
-            MensErr("Ingrese la cantidad de sugerencias que desea cambiar de dia.");
+            MensErr("Ingrese la cantidad de sugerencias que desea cambiar de día.");
             return;
         }
         if (total > maximo) {
-            MensErr("El maximo de sugerencias a modificar es " + maximo);
+            MensErr("El máximo de sugerencias a modificar es " + maximo);
         } else {
             $("#modificarSugerenciaNegocioModal").modal("hide");
             $("#fleteProcedenciaModal").modal("show");
@@ -305,11 +312,11 @@ function CargarEventos() {
         var errores = "";
         for (var i = 0; i < listaCantidad.length; i++) {
             if (listaCantidad[i].cantidad < listaCantidad[i].cantidadAceptadaFila) {
-                errores += "Para la fecha " + listaCantidad[i].fecha.substr(0, 2) + "/" + listaCantidad[i].fecha.substr(2, 2) + "/" + listaCantidad[i].fecha.substr(4, 4) + " el limite de cupos es  " + listaCantidad[i].cantidad + ".\n";
+                errores += "Para la fecha " + listaCantidad[i].fecha.substr(0, 2) + "/" + listaCantidad[i].fecha.substr(2, 2) + "/" + listaCantidad[i].fecha.substr(4, 4) + " el límite de cupos es  " + listaCantidad[i].cantidad + ".\n";
             }
         }
         if (!hayCambios) {
-            MensErr("Ingrese la cantidad de sugerencias que desea cambiar de dia.");
+            MensErr("Ingrese la cantidad de sugerencias que desea cambiar de día.");
             return;
         }
         if (errores != "") {
@@ -324,6 +331,10 @@ function CargarEventos() {
         BlockUi("Cargando...");
         location.reload();
     });
+
+    //$("#devolucionSugerenciasModal").on('hidden.bs.modal', function () {
+    //    location.reload();
+    //});
 
     $(".ComercialSeleccionado").on('change', function () {
         var comercial = $(this).data("kendoDropDownList").value();
@@ -343,6 +354,20 @@ function CargarEventos() {
         $(".pall").show();
         $('#proveedorCUIT').val("");
         closeAll();
+    });
+
+    $("#aceptarDevolverSugerencias").click(function () {
+        BlockUi('Cargando...');
+        setTimeout(function () {
+            $("#devolucionSugerenciasModal").modal("hide");
+            var url = '/SugerenciaCupo/DevolverSugerenciasMasivo';
+            var data = sugerenciasADevolver;
+            var resultados = MSExecuteOnServer(url, data);
+            $.unblockUI();
+            mostrarResultados(resultados);
+            location.reload();
+        }, 250);
+        $("#cuerpo-devolver-sugerencias").empty();
     });
 }
 function redirect(comercial, material, mostrarResultado) {
@@ -388,23 +413,24 @@ function AceptarSugerencia(id, fecha, proveedorId, razonSocial, cantCupos) {
     });
     $("#fleteProcedenciaModal").modal("show");
 }
-function DevolverSugerencia(id) {
-    BlockUi('Cargando...');
-    setTimeout(function () {
-        var cantidad = $("#" + id).data("kendoNumericTextBox").value();
-        if (cantidad == null || cantidad == "" || cantidad == 0) {
-            MensErr("Ingrese la cantidad de cupos a devolver");
-            $.unblockUI();
-            return;
-        }
-        id = id.replace('d', '');
-        $("#fleteProcedenciaModal").modal("hide");
-        var resultado = MSExecuteOnServer('/SugerenciaCupo/RechazarSugerenciaCupo', { idSugerencia: id, cantidad: cantidad });
-        mostrarResultado(resultado);
-        $.unblockUI();
 
-    }, 250);
-}
+//function DevolverSugerencia(id) {
+//    BlockUi('Cargando...');
+//    setTimeout(function () {
+//        var cantidad = $("#" + id).data("kendoNumericTextBox").value();
+//        if (cantidad == null || cantidad == "" || cantidad == 0) {
+//            MensErr("Ingrese la cantidad de cupos a devolver");
+//            $.unblockUI();
+//            return;
+//        }
+//        id = id.replace('d', '');
+//        $("#fleteProcedenciaModal").modal("hide");
+//        var resultado = MSExecuteOnServer('/SugerenciaCupo/RechazarSugerenciaCupo', { idSugerencia: id, cantidad: cantidad });
+//        mostrarResultado(resultado);
+//        $.unblockUI();
+
+//    }, 250);
+//}
 
 function ModificarSugerencia(id, fecha, proveedorId, razonSocial, cantidad, materialId, materialDesc) {
     aceptar = false;
@@ -744,5 +770,36 @@ function closeAll() {
     });
 
     $(".todo").hide();
+}
 
+function DevolverSugerencias() {
+    var cuerpoModal = [];
+    var sugIngresada = false;
+    $("input:text.sugerenciaDevuelta").each(function (index) {
+        if (this.id != "") {
+            if ($(this).data("kendoNumericTextBox").value() > 0) {
+                var cantidad = $(this).data("kendoNumericTextBox").value();
+                var datos = this.id.split("-");
+                cuerpoModal.push({ Id: datos[0], RazonSocial: datos[1], Material: datos[2], ContratoSAP: datos[3], CantidadSugerida: datos[4], Fecha: datos[5], CantidadDevuelta: cantidad });
+                sugerenciasADevolver.push({IdSugerencia: datos[0], Cantidad: cantidad});
+                sugIngresada = true;
+            }
+        }
+    });
+    
+    if (!sugIngresada) {
+        MensAlerta("Debe especificar la cantidad de sugerencias a devolver para uno o más negocios.");
+    } else {
+        var fila = '';
+        for (var i = 0; i < cuerpoModal.length; i++) {
+            fila = '<tr><td>' + cuerpoModal[i].Material + '</td> <td>'
+                + cuerpoModal[i].RazonSocial + '</td> <td>'
+                + cuerpoModal[i].ContratoSAP + '</td> <td>'
+                + kendo.toString(cuerpoModal[i].Fecha, "dd/MM/yyyy") + '</td> <td>'
+                + cuerpoModal[i].CantidadSugerida + '</td> <td>'
+                + cuerpoModal[i].CantidadDevuelta + '</td> <td>'
+            $("#cuerpo-devolver-sugerencias").append(fila);
+        }
+        $("#devolucionSugerenciasModal").modal("show");
+    }
 }

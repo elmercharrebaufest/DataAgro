@@ -1796,7 +1796,18 @@ namespace Molinos.DataAgro.Entities.Resources {
                 return ResourceManager.GetString("Operador", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Mails de Negocios OyT Norte.
+        /// </summary>
+        public static string OyT_Norte
+        {
+            get
+            {
+                return ResourceManager.GetString("OyT_Norte", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Pago.
         /// </summary>

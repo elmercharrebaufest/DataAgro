@@ -51,13 +51,15 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IAltaTempranaAgent altaTempranaAgent;
         private readonly ICumplimientoCuposAgent cumplimientoCuposAgent;
         private readonly IContratoKgPendienteAgent contratoKgPendienteAgent;
+        private readonly IContratoManager contratoManager;
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
             IProveedorManager proveedorManager, IMailManager mailManager, IServicioCriterios servicioCriterios,
             IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
             IComercialManager comercialManager, IServicioRepositorioScatoAgent servicioScato, IHttpContextManager httpContextManager,
-            IAltaTempranaAgent altaTempranaAgent, ICumplimientoCuposAgent cumplimientoCuposAgent, IContratoKgPendienteAgent contratoKgPendienteAgent)
+            IAltaTempranaAgent altaTempranaAgent, ICumplimientoCuposAgent cumplimientoCuposAgent, IContratoKgPendienteAgent contratoKgPendienteAgent,
+            IContratoManager contratoManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -77,6 +79,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.altaTempranaAgent = altaTempranaAgent;
             this.cumplimientoCuposAgent = cumplimientoCuposAgent;
             this.contratoKgPendienteAgent = contratoKgPendienteAgent;
+            this.contratoManager = contratoManager;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
@@ -1771,6 +1774,8 @@ namespace Molinos.DataAgro.Business.Managers
                     StandardDeCalidad = x.StandardDeCalidadId.HasValue ? x.StandardDeCalidad.Descripcion : "",
                     ComercialId = x.ComercialId.Value,
                     Destinatario = "30715118773",
+                    CUITProveedor = x.Proveedor.CUIT == "" ? "NULL" : x.Proveedor.CUIT,
+                    CUITCorredor = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.CUIT : null,
                     ProveedorCUIT = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.CUIT : x.Proveedor.CUIT,
                     ProveedorId = x.CorredorId > 0 && x.Corredor != null ? x.CorredorId : x.ProveedorId,
                     ZonaDescrip = x.Comercial.GrupoDeCompras.Descripcion,
@@ -1790,9 +1795,12 @@ namespace Molinos.DataAgro.Business.Managers
                     ProveedorDesc = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.RazonSocial : x.Proveedor.RazonSocial,
                     ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                     TipoNegocioDesc = x.TipoNegocio.Descripcion,
-                    CDWarrant = x.Warrant == true ? true : false,
+                    CDWarrant = x.Warrant == true || x.CD == true ? true : false,
                     Fason = x.EsFason,
                     CentroDesc = x.Destino.Descripcion,
+                    Canje = x.Canje == true ? true : false,
+                    MercsDeposito = x.MercsDeposito == true ? true : false,
+                    CaratulaMAT = x.CaratulaMAT != null ? true : false,
                     Sustentable = x.Sustentable ?? false
                 },
                     x =>
@@ -1804,7 +1812,6 @@ namespace Molinos.DataAgro.Business.Managers
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId /*&& x.MercsDeposito != true*/ && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
-
 
             var zonas = repositorio.Listar<ZonaCupo>();
 
@@ -1903,6 +1910,70 @@ namespace Molinos.DataAgro.Business.Managers
                     c.CDWarrant = true;
                 }
             }
+
+
+            //validar CCPP Pendientes de aplicar
+            var contratosPorProveedorCorredor = contratos.Where(x => x.CantidadDeCupos > 0).GroupBy(x => new { x.CUITProveedor, x.CUITCorredor }).ToList();
+
+            List<RestarCuposProvCorrDto> restarCuposProvCorr = new List<RestarCuposProvCorrDto>();
+            restarCuposProvCorr = contratosPorProveedorCorredor.Select(x => new RestarCuposProvCorrDto { CUITProveedor = x.Key.CUITProveedor, CUITCorredor = x.Key.CUITCorredor, cantidadCupos = 0 }).ToList();
+            var centros = repositorio.Listar<Centro>().ToList();
+            var materiales = repositorio.Listar<Material>().ToList();
+            foreach (var contratoPorProvCorr in contratosPorProveedorCorredor)
+            {
+                var centroCodigo = centros.Where(x => x.Id == contratoPorProvCorr.First().DestinoId).Single().CodigoSap;
+                var materialCodigo = materiales.Where(x => x.MaterialId == contratoPorProvCorr.First().MaterialId).Single().Codigo;
+
+                var pendienteDto = new CcPpPerndienteAplicarDto()
+                {
+                    Centro = centroCodigo,
+                    Material = materialCodigo,
+                    Proveedor = contratoPorProvCorr.First().CUITProveedor,
+                    Corredor = contratoPorProvCorr.First().CUITCorredor,
+                    AgenteCompra = "",
+                };
+
+                var pendientes = contratoManager.ListarCartasDePortePendienteAplicar(pendienteDto);
+
+                if (pendientes != null && pendientes.Count > 0)
+                {
+                    var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && string.IsNullOrEmpty(x.Contrato)).Sum(x => x.Cantidad);
+                    restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().cantidadCupos += (int)Math.Floor(cantidadCartaDePorte / 30000);
+                }
+            }
+
+
+            var contratosOrdenados = contratos.Where(x => x.CantidadDeCupos > 0).ToList()
+                .OrderByDescending(x => x.Canje)
+                .ThenByDescending(x => x.CDWarrant)
+                .ThenByDescending(x => x.MercsDeposito)
+                .ThenByDescending(x => x.TipoNegocioId)
+                .ThenBy(x => x.FechaDesde)
+                .ThenBy(x => x.FechaHasta)
+                .ThenBy(x => x.CaratulaMAT)
+                .ThenBy(x => x.ContratoSAP)
+                .ToList();
+
+            foreach (var contratoOrdenado in contratosOrdenados)
+            {
+                var cantidadCuposARestar = restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().cantidadCupos;
+
+                if (cantidadCuposARestar > 0)
+                {
+                    if (contratoOrdenado.CantidadDeCupos >= cantidadCuposARestar)
+                    {
+                        restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().cantidadCupos = 0;
+                        contratoOrdenado.CantidadDeCupos -= cantidadCuposARestar;
+                    }
+                    else
+                    {
+                        restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().cantidadCupos -= contratoOrdenado.CantidadDeCupos;
+                        contratoOrdenado.CantidadDeCupos = 0;
+                    }
+                    contratos.Where(x => x.NegocioId == contratoOrdenado.NegocioId).Single().CantidadDeCupos = contratoOrdenado.CantidadDeCupos;
+                }
+            }
+
 
             //traer stock para cupos sustentables por proveedor
             var stockSustentable = contratos.Where(x => x.CantidadDeCupos > 0 && x.Sustentable).Select(a => a.ProveedorCUIT).Distinct().Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
@@ -2087,7 +2158,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
-                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
                 resultado.Add(errorCupera);
                 return resultado;
             }
@@ -2405,7 +2476,7 @@ namespace Molinos.DataAgro.Business.Managers
                 var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
                 if (validarSiHayCierre)
                 {
-                    resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+                    resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
                     return resultado;
                 }
 
@@ -2794,7 +2865,6 @@ namespace Molinos.DataAgro.Business.Managers
             return lista;
         }
 
-
         public void EnviarMailSinCtg()
         {
             var cupos = repositorio.Listar<Cupo>(x => x.EstadoCupoId == 1 && x.FechaIngreso == DateTime.Today, 0, "CupoSap").GroupBy(x => new { ProveedorId = x.ProveedorId, ComercialId = x.ComercialId });
@@ -3010,7 +3080,6 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public void EnviarMailCupoRechazado(Cupo cupo, string idActiveDirectory)
         {
-
             var lista = new List<string>();
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == cupo.Proveedor.ProveedorId && x.Cupo == true);
 
@@ -3109,7 +3178,6 @@ namespace Molinos.DataAgro.Business.Managers
 
             return resultado;
         }
-
 
         public List<CupoDto> ListarCupo(string cupoSap)
         {
@@ -3478,7 +3546,7 @@ namespace Molinos.DataAgro.Business.Managers
             //var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
             //if (validarSiHayCierre)
             //{
-            //    resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+            //    resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
             //    return resultado;
             //}
             //var zonaCupo = repositorio.Listar<ZonaCupo>();
@@ -4660,7 +4728,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
-                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
                 resultado.Add(errorCupera);
                 return resultado;
             }
@@ -4855,67 +4923,66 @@ namespace Molinos.DataAgro.Business.Managers
             return clon;
         }
 
-        public CupoResult RechazarSugerenciaCupo(int id, int cantidad)
+        public CupoResult DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver)
         {
-            var resultado = new CupoResult();
+            CupoResult resultado = new CupoResult();
             try
             {
                 var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
-                var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+                var validarSiHayCierre = primerCierre != null && primerCierre.Cierre;
                 var activeCreador = PermisosHelper.ObtenerUsuario();
                 var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
                 if (validarSiHayCierre)
                 {
-                    resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+                    resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
                     return resultado;
                 }
 
-                SugerenciaCupo sugerencia = repositorio.Obtener<SugerenciaCupo>(a => id == a.Id && a.Aceptado == null);
-                var comercialId = sugerencia.ComercialId;
-                var sugerenciasPorComercial = repositorio.Listar<SugerenciaPorComercial>(
-                           x => x.ComercialId == comercialId);
-
-
                 List<AdministracionCupo> admCupos = new List<AdministracionCupo>();
 
-                var spc = sugerenciasPorComercial.Where(a => a.MaterialId == sugerencia.MaterialId && a.Fecha == sugerencia.FechaSugerida && a.CentroId == a.CentroId).FirstOrDefault();
-                if (cantidad == sugerencia.CantidadDeCupos)
-                    sugerencia.Aceptado = false;
-                sugerencia.CantidadDeCupos -= cantidad;
-                sugerencia.MotivoRechazo = "";
-                admCupos.Add(new AdministracionCupo
+                var sugerenciasPorComercial = repositorio.Listar<SugerenciaPorComercial>(x => x.ComercialId == comercialCreador);
+                var sugerenciasCupos = repositorio.Listar<SugerenciaCupo>(x => x.ComercialId == comercialCreador);
+
+                foreach (var sugerencia in sugerenciasADevolver)
                 {
-                    ComercialCreadorId = comercialCreador,
-                    CantidadCupo = cantidad,
-                    CentroId = sugerencia.CentroId,
-                    ComercialId = sugerencia.ComercialId,
-                    Excedente = false,
-                    EstadoId = (int)EnumEstadoAdministracionCupo.Rechazado,
-                    MaterialId = sugerencia.MaterialId,
-                    ProveedorId = sugerencia.ProveedorId,
-                    ZonaId = sugerencia.ZonaCupoId ?? 1,
-                    Fecha = sugerencia.FechaSugerida,
-                    TipoAdministracionCupoId = (int)EnumTipoAdministracionCupo.Algoritmo,
-                });
-                if (spc != null)
-                {
-                    spc.Total -= cantidad;
-                    if (spc.Total < 0)
-                        spc.Total = 0;
+                    var sug = sugerenciasCupos.Where(a => a.Id == sugerencia.IdSugerencia).First();
+                    var spc = sugerenciasPorComercial.Where(a => a.MaterialId == sug.MaterialId && a.Fecha == sug.FechaSugerida && a.CentroId == a.CentroId).FirstOrDefault();
+                    if (sugerencia.Cantidad == sug.CantidadDeCupos)
+                        sug.Aceptado = false;
+                    sug.CantidadDeCupos -= sugerencia.Cantidad;
+                    sug.MotivoRechazo = "";
+                    admCupos.Add(new AdministracionCupo
+                    {
+                        ComercialCreadorId = comercialCreador,
+                        CantidadCupo = sugerencia.Cantidad,
+                        CentroId = sug.CentroId,
+                        ComercialId = sug.ComercialId,
+                        Excedente = false,
+                        EstadoId = (int)EnumEstadoAdministracionCupo.Rechazado,
+                        MaterialId = sug.MaterialId,
+                        ProveedorId = sug.ProveedorId,
+                        ZonaId = sug.ZonaCupoId ?? 1,
+                        Fecha = sug.FechaSugerida,
+                        TipoAdministracionCupoId = (int)EnumTipoAdministracionCupo.Algoritmo,
+                    });
+                    if (spc != null)
+                    {
+                        spc.Total -= sugerencia.Cantidad;
+                        if (spc.Total < 0)
+                            spc.Total = 0;
+                    }
                 }
 
                 repositorio.AgregarTodos(admCupos);
-
                 repositorio.GuardarCambios();
                 return resultado;
             }
             catch (Exception e)
             {
                 var nuevoResultado = new CupoResult();
-                nuevoResultado.Error("eliminar", e.Message);
+                nuevoResultado.Error("Devolver sugerencias", e.Message);
                 return nuevoResultado;
             }
-
         }
 
         public List<CupoResult> AceptarSugerenciaCupoPorProveedor(int proveedorId, int materialId, DateTime fecha, int cupoNormalSolicitud, int fleteSolicitud, int comercialId, string centroCodigo)
@@ -4932,7 +4999,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
-                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
                 resultado.Add(errorCupera);
                 return resultado;
             }
@@ -5003,7 +5070,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
-                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
                 resultado.Add(errorCupera);
                 return resultado;
             }
@@ -5212,7 +5279,7 @@ namespace Molinos.DataAgro.Business.Managers
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
-                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
                 resultado.Add(errorCupera);
                 return resultado;
             }
@@ -5575,7 +5642,7 @@ namespace Molinos.DataAgro.Business.Managers
         //    if (validarSiHayCierre)
         //    {
         //        var errorCupera = new CupoResult();
-        //        errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada, por cualquier duda o inconveniente comunicarse con el Administrador de la Cupera.");
+        //        errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
         //        resultado.Add(errorCupera);
         //        return resultado;
         //    }

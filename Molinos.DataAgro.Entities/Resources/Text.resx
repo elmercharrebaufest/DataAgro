@@ -187,13 +187,13 @@
     <value>Comercial</value>
   </data>
   <data name="CondicionFijacion" xml:space="preserve">
-    <value>Condición Fijacion</value>
+    <value>Condición Fijación</value>
   </data>
   <data name="Configuraciones_Internas" xml:space="preserve">
     <value>Configuraciones Internas</value>
   </data>
   <data name="Configuracion_Canal_Operacion" xml:space="preserve">
-    <value>Configuración Canal Operacion</value>
+    <value>Configuración Canal Operación</value>
   </data>
   <data name="Configuracion_Centros" xml:space="preserve">
     <value>Configuración Centros</value>
@@ -391,7 +391,7 @@
     <value>Localidad</value>
   </data>
   <data name="Mail_Hedge" xml:space="preserve">
-    <value>Recibir Mail Fin del Dia Hedge</value>
+    <value>Recibir Mail Fin del Día Hedge</value>
   </data>
   <data name="Mail_SIO" xml:space="preserve">
     <value>Recibir Mail SIO</value>
@@ -481,7 +481,7 @@
     <value>Provincia</value>
   </data>
   <data name="RazonSocial" xml:space="preserve">
-    <value>Razon Social</value>
+    <value>Razón Social</value>
   </data>
   <data name="Reasignar_Flete" xml:space="preserve">
     <value>Reasignar Flete Procedencia</value>
@@ -891,6 +891,9 @@
     <value>Visualizar Cupo No Propio</value>
   </data>
   <data name="Pre_AnularFijacion" xml:space="preserve">
-    <value>PreAnular Fijacion</value>
+    <value>PreAnular Fijación</value>
+  </data>
+  <data name="OyT_Norte" xml:space="preserve">
+    <value>Recibir Mails de Negocios OyT Norte</value>
   </data>
 </root>

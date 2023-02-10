@@ -172,6 +172,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         ActualizarCompraNet = 349,
         [Display(ResourceType = typeof(Text), Name = "Pre_AnularFijacion")]
         PreAnularFijacion = 350,
+        [Display(ResourceType = typeof(Text), Name = "OyT_Norte")]
+        OyT_Norte = 351,
 
         //Reportes
         [Display(ResourceType = typeof(Text), Name = "Visualizar_Reporte_Agenda")]

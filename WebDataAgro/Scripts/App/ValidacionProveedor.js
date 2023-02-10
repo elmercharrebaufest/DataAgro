@@ -17,7 +17,7 @@
     }
     console.log(aGuardarAlmacenamiento, tonsAlmacenamiento);
     if ((!$("#segmentacion").val() || $("#segmentacion").val() === "null") && (tonsProduccion == 0 && tonsAlmacenamiento == 0)) {
-        MensErr("El campo Segmentacion debe estar cargado.");
+        MensErr("El campo Segmentación debe estar cargado.");
         return false;
     }
     /*if (!$("#nomReferente").val()) {
@@ -34,28 +34,28 @@
 
     if ($("#volumen-anual-total-tns").val()) {
         if (isNaN($("#volumen-anual-total-tns").val().trim().split(",").join("."))) {
-            MensErr("El formato del Total de Toneladas es invalido");
+            MensErr("El formato del Total de Toneladas es inválido.");
             return false;
         }
     }
 
     if ($("#capacidad-almacenamiento-prop").val()) {
         if (isNaN($("#capacidad-almacenamiento-prop").val().trim().split(",").join("."))) {
-            MensErr("El formato del Almacenamiento propio es invalido");
+            MensErr("El formato del Almacenamiento propio es inválido.");
             return false;
         }
     }
 
     if ($("#tons-max-aprob-sojasust").val()) {
         if (isNaN($("#tons-max-aprob-sojasust").val().trim().split(",").join("."))) {
-            MensErr("El formato del maximo de Toneladas aprobada de soja sustentable es invalido");
+            MensErr("El formato del máximo de Toneladas aprobadas de soja sustentable es inválido.");
             return false;
         }
     }
 
     if ($("#has-aprob-sojasust").val()) {
         if (isNaN($("#has-aprob-sojasust").val().trim().split(",").join("."))) {
-            MensErr("El formato de las Hectareas aprobadas de soja sustentable es invalido");
+            MensErr("El formato de las Hectáreas aprobadas de soja sustentable es inválido.");
             return false;
         }
     }
@@ -66,7 +66,7 @@
 function ValidarGranoProduccion(cantGrano) {
     if ($("#campaña" + cantGrano).val() && $("#campaña" + cantGrano).val() != "null") {
         if (!$("#grano" + cantGrano).val() || $("#grano" + cantGrano).val() == "null") {
-            MensErr("Debe ingresar un grano");
+            MensErr("Debe ingresar un grano.");
             return false;
         }
     }
@@ -78,7 +78,7 @@ function ValidarGranoProduccion(cantGrano) {
     }
     else*/
     if (isNaN($("#hectareas" + cantGrano).val().trim().split(",").join("."))) {
-        MensErr("El formato de las Hectareas es invalido");
+        MensErr("El formato de las Hectáreas es inválido.");
         return false;
     }
     /*if (!$("#toneladas" + cantGrano).val() || $("#toneladas" + cantGrano).val().trim().length == 0) {
@@ -86,7 +86,7 @@ function ValidarGranoProduccion(cantGrano) {
         return false;
     }
     else */if (isNaN($("#toneladas" + cantGrano).val().trim().split(",").join("."))) {
-        MensErr("El formato de las Toneladas es invalido");
+        MensErr("El formato de las Toneladas es inválido.");
         return false;
     }
 
@@ -95,7 +95,7 @@ function ValidarGranoProduccion(cantGrano) {
 
 function ValidarGranoAlmacenamiento(cantGranoAlmacenamiento) {
     if ($("#toneladasAlmacenamiento" + cantGranoAlmacenamiento).val() && isNaN($("#toneladasAlmacenamiento" + cantGranoAlmacenamiento).val().trim().split(",").join("."))) {
-        MensErr("El formato de las Toneladas es invalido");
+        MensErr("El formato de las Toneladas es inválido.");
         return false;
     }
     return true;
@@ -103,11 +103,11 @@ function ValidarGranoAlmacenamiento(cantGranoAlmacenamiento) {
 
 function ValidarGranoObjetivo(cantGranoObjetivo) {
     if (!$("#campañaObjetivo" + cantGranoObjetivo).val() || $("#campañaObjetivo" + cantGranoObjetivo).val() == "null") {
-        MensErr("Debe ingresar una campaña");
+        MensErr("Debe ingresar una campaña.");
         return false;
     }
     if (!$("#granoObjetivo" + cantGranoObjetivo).val() || $("#granoObjetivo" + cantGranoObjetivo).val() == "null") {
-        MensErr("Debe ingresar un grano");
+        MensErr("Debe ingresar un grano.");
         return false;
     }
 
@@ -116,7 +116,7 @@ function ValidarGranoObjetivo(cantGranoObjetivo) {
         return false;
     }
     else*/ if (isNaN($("#toneladasObjetivo" + cantGranoObjetivo).val().trim().split(",").join("."))) {
-        MensErr("El formato de las Toneladas es invalido");
+        MensErr("El formato de las Toneladas es inválido.");
         return false;
     }
 
@@ -125,12 +125,12 @@ function ValidarGranoObjetivo(cantGranoObjetivo) {
 
 function ValidarContactoComercial() {
     if (!$("#concom-nombre").val() || $("#concom-nombre").val() === "") {
-        MensErr("Se debe ingresar el Nombre de Contacto Comercial");
+        MensErr("Se debe ingresar el Nombre de Contacto Comercial.");
         return false;
     }
 
     if (!$("#concom-apellido").val() || $("#concom-apellido").val() === "") {
-        MensErr("Se debe ingresar el Apellido de Contacto Comercial");
+        MensErr("Se debe ingresar el Apellido de Contacto Comercial.");
         return false;
     }
 
@@ -151,58 +151,57 @@ function ValidarContactoComercial() {
         email = $('#concom-email' + i).val();
         if (email && email !== "") {
             if (!validateEmail(email)) {
-                MensErr("El Email " + i + " no es válido");
+                MensErr("El Email " + i + " no es válido.");
                 return false;
             }
             var mail = email.split('@');
             if (AmbientePruebas != "1") {
                 if (mail[1].toLowerCase().startsWith('molinosagro')) {
-                    MensErr("El Email" + i + " no debe ser de MolinosAgro");
+                    MensErr("El Email" + i + " no debe ser de MolinosAgro.");
                     return false;
                 }
             }
 
         }
     }
+    if (!$("#concom-Telefono1").val() || $("#concom-Telefono1").val() === "") {
+        MensErr("Debe ingresar al menos un número de teléfono de contacto.");
+        return false;
+    }
+    if (!$("#concom-TipoTelefono1").val() || $("#concom-TipoTelefono1").val() === "null") {
+        MensErr("Se debe indicar el Tipo de Teléfono de contacto.");
+        return false;
+    }
     /*
 if (!$("#concom-email1").val() || $("#concom-email1").val() === "") {
-    MensErr("El contacto comercial debe tener al menos un Email");
+    MensErr("El contacto comercial debe tener al menos un Email.");
     return false;
 } else if (!validateEmail($("#concom-email1").val())) {
     MensErr("El primer Email no es válido");
     return false;
 }
 
-if (!$("#concom-TipoTelefono1").val() || $("#concom-TipoTelefono1").val() === "null"){
-    MensErr("El contacto comercial debe tener al menos un Tipo de Telefono");
-    return false;
-}
-if (!$("#concom-Telefono1").val() || $("#concom-Telefono1").val() === "") {
-    MensErr("El contacto comercial debe tener al menos un Telefono");
-    return false;
-}
-
 if ($("#concom-email2") && $("#concom-email2").length > 0 && $("#concom-email2").val()) {
     if (!validateEmail($("#concom-email2").val())) {
-        MensErr("El segundo Email no es válido");
+        MensErr("El segundo Email no es válido.");
         return false;
     }
 }
 
 if ($("#concom-email3") && $("#concom-email3").length > 0 && $("#concom-email3").val()) {
     if (!validateEmail($("#concom-email3").val())) {
-        MensErr("El tercer Email no es válido");
+        MensErr("El tercer Email no es válido.");
         return false;
     }
 }
 
 if (!$("#concom-cargo").val() || $("#concom-cargo").val() === "") {
-    MensErr("Se debe ingresar el Cargo de Contacto Comercial");
+    MensErr("Se debe ingresar el Cargo de Contacto Comercial.");
     return false;
 }
 
 if (!$("#concom-puesto").val() || $("#concom-puesto").val() === "") {
-    MensErr("Se debe ingresar el Puesto de Contacto Comercial");
+    MensErr("Se debe ingresar el Puesto de Contacto Comercial.");
     return false;
 }
 */

@@ -160,7 +160,6 @@ namespace WebDataAgro.Controllers
             if (ids != null)
             {
                 resultado.Add(cupoManager.RechazarSugerenciaCupo(ids, motivo));
-
             }
             else
             {
@@ -212,12 +211,6 @@ namespace WebDataAgro.Controllers
             return Json(resultado);
         }
 
-        public JsonResult RechazarSugerenciaCupo(int idSugerencia, int cantidad)
-        {
-            CupoResult resultado = cupoManager.RechazarSugerenciaCupo(idSugerencia, cantidad);
-            return Json(resultado);
-        }
-
         public JsonResult ModificarSugerenciaCupo(List<AceptarSugerenciaCupoDto> items)
         {
             List<CupoResult> resultado = new List<CupoResult>();
@@ -231,6 +224,12 @@ namespace WebDataAgro.Controllers
                 resultado = cupoManager.ModificarSugerenciaCupoPorProveedor(items.OrderBy(a => a.fecha).ToList());
             }
 
+            return Json(resultado);
+        }
+
+        public JsonResult DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver)
+        {
+            CupoResult resultado = cupoManager.DevolverSugerenciasMasivo(sugerenciasADevolver);
             return Json(resultado);
         }
 

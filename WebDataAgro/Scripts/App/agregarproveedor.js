@@ -294,12 +294,12 @@ function armarSelects(result) {
             }
         })(ii);
     }
-    htmlTipoTelefono += '<input type="text" placeholder="Telefono" class="campo-input-text" id="Telefono1" />'
+    htmlTipoTelefono += '<input type="text" placeholder="Teléfono (*)" class="campo-input-text" id="Telefono1" />'
         + '<img src="../Content/Images/agregar-tel-mail.png" id="agregarTelefono" />'
         + '</select>';
     $(".campo-tiptelefono").append(htmlTipoTelefono);
 
-    htmlTipoTelefonocc += '<input type="text" placeholder="Telefono" class="campo-input-text" id="concom-Telefono1" />'
+    htmlTipoTelefonocc += '<input type="text" placeholder="Teléfono (*)" class="campo-input-text" id="concom-Telefono1" />'
         + '<img src="../Content/Images/agregar-tel-mail.png" id="concom-agregarTelefono" />'
         + '</select>';
     $(".concom-campo-telefono").append(htmlTipoTelefonocc);
@@ -1435,7 +1435,7 @@ function eliminarKMZEstablecimiento(val) {
 }
 function eliminarAlmacenamiento(val) {
     var item = $(val).attr("id").split("eliminarAlm")[1];
-    
+
     for (var i = 0; i < (aGuardarAlmacenamiento[item].granosAlmacenamiento.length); i++) {
         if ((aGuardarAlmacenamiento[item].granosAlmacenamiento[i].campañaId != "null")) {
             cambios.CampaniaId.push(aGuardarAlmacenamiento[item].granosAlmacenamiento[i].campañaId);
@@ -2283,7 +2283,11 @@ function armarFuncionalidades() {
         } else {
             if ($(this).hasClass("guardar-proveedor")) {
                 if (comprobarInputs()) {
-                    if (validar()) {
+                    if (cantContactoComercial == 0) {
+                        if (validar() && ValidarContactoComercial()) {
+                            ObtenerDatos();
+                        }
+                    } else if (validar()) {
                         ObtenerDatos();
                     }
                 }
@@ -2977,6 +2981,14 @@ function ObtenerDatos() {
         || $("#concom-cargo").val() !== "") {
         $("#GuardarContactoComercial").trigger("click");
     }
+    if (aGuardarContactoComercial.length == 0 && (
+        !$("#concom-nombre").val() || $("#concom-nombre").val() === ""
+        || !$("#concom-apellido").val() || $("#concom-apellido").val() === ""
+        || !$("#concom-Telefono1").val() || $("#concom-Telefono1").val() === ""
+        || !$("#concom-TipoTelefono1").val() || $("#concom-TipoTelefono1").val() === "null"
+    )) {
+        return false;
+    }
     var obj = {};
     obj.basicos = {};
     obj.contacto = {};
@@ -3215,7 +3227,7 @@ function GrabarProveedor(nuevoProveedor) {
     result = MSExecuteOnServer('/Proveedor/GrabarProveedor', param);
     if (generarInforme && result.DownloadKey != null) {
         for (var i = 0; i < result.DownloadKey.length; i++) {
-        descargarPdf(result.DownloadKey[i]);
+            descargarPdf(result.DownloadKey[i]);
         }
         $('#myPleaseWait').modal('hide');
     }
@@ -3544,7 +3556,6 @@ function mostrarConsignatarioProveedor() {
     }
 }
 
-
 //function checkComisionista() {
 //    if ($('#segmentacion :selected').parent().attr('label') === "Comisionistas") {
 //        //$("#comisionistaDiv").hide();
@@ -3558,24 +3569,20 @@ function mostrarConsignatarioProveedor() {
 function GuardarModalInforme(boolean) {
     generarInforme = boolean;
     $("#modalGenerarInforme").modal('hide');
-    if (generarInforme) {
-        if (comprobarInputs()) {
-            if (validar()) {
+    if (comprobarInputs()) {
+        if (cantContactoComercial == 0) {
+            if (validar() && ValidarContactoComercial()) {
                 ObtenerDatos();
             }
-        }
-    } else {
-        if (comprobarInputs()) {
-            if (validar()) {
-                ObtenerDatos();
-            }
+        } else if (validar()) {
+            ObtenerDatos();
         }
     }
 }
 
 function descargarPdf(datos) {
-        if (datos != null) {
-            var url = MSGetUrl('/DownLoad/Reporte?key=' + datos);
-            window.open(window.location.origin + "/" + url, '_blank');
-        }
+    if (datos != null) {
+        var url = MSGetUrl('/DownLoad/Reporte?key=' + datos);
+        window.open(window.location.origin + "/" + url, '_blank');
+    }
 }

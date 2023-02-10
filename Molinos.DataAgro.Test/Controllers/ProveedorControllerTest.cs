@@ -433,6 +433,20 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"OperaConMATBA\":null,\"EstaAsignado\":false}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
+        //[Test]
+        //public void BuscarProveedoresEnSugerenciaTest() {
+        //    homeManagerMock.Setup(x => x.BusquedaHome("agr", 1, GlobalVariables.Equipo, new List<int> {1,2,3})).Returns(new List<BusquedaHome> { new BusquedaHome { Id = 1, RazonSocial = "Agro A.", Cuit = "202", Filtro = "agr|AGRO A." } });
+        //    var result = target.BuscarProveedoresEnSugerencia("2011", "agr", 1); //da error por el GlobalVariables.ComercialId, que se pasa a BusquedaHome
+
+        //    homeManagerMock.Verify(x => x.BusquedaHome(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<List<int>>(), It.IsAny<List<int>>()), Times.Once);
+        //    Assert.NotNull(result);
+        //    var a = serializer.Serialize(result);
+        //    Assert.AreEqual(
+        //        "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"Id\":1,\"RazonSocial\":\"Agro A.\",\"Cuit\":\"202\",\"Corredor\":null,\"Filtro\":\"agr|AGRO A.\",\"Alias\":null,\"ClasificacionId\":null,\"RiesgoComercialSap\":null,\"Estado\":null,\"Deshabilitado\":null,\"Consignatario\":null,\"PlanCanje\":null,\"Deshabilitar\":false,\"Color\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"OperaConMATBA\":null,\"EstaAsignado\":false}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+        //        a);
+        //}
+
         [Test]
         public void BuscarLocalidadesTest()
         {

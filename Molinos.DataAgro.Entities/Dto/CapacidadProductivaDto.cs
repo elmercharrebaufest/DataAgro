@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -15,5 +13,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string UnidadMedida { get; set; }
         public decimal Porcentaje { get; set; }
         public DateTime? FechaActualizacion { get; set; }
+        public int? InformeActualizado { get; set; }
     }
 }

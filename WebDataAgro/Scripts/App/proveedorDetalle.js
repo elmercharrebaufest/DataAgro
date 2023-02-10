@@ -557,6 +557,8 @@ function armarContacto() {
     $(".comecial-a-cargo").html((basico[0].Nombres !== "" ? basico[0].Nombres + ' ' : '') + (basico[0].Apellido !== "" ? basico[0].Apellido : ''));
     $(".grupo-de-compras").html(basico[0].GrupoDeCompras ? basico[0].GrupoDeCompras : "-");
 
+    mostrarEstadoInformesComerciales(cproductiva);
+
     var domActividad = [];
     if (!basico[0].Direccion && !basico[0].CodigoPostal && !basico[0].Provincia && !basico[0].Localidad) {
         domActividad.push("-");
@@ -3234,10 +3236,7 @@ function armarCapacidadProductiva(cproductiva) {
                 field: "Material", type: "string", title: "Material", width: 105, attributes: { style: 'text-align: center' }
             },
             {
-                field: "Cantidad", type: "number", title: "Cantidad", width: 150, format: "{0:n0}", attributes: { style: 'text-align: center' }
-            },
-            {
-                field: "UnidadMedida", type: "string", title: "Unidad de Medida", width: 145, attributes: { style: 'text-align: center' }
+                field: "Cantidad", type: "number", title: "Cantidad (en TON)", width: 150, format: "{0:n0}", attributes: { style: 'text-align: center' }
             },
             {
                 field: "Porcentaje", type: "number", title: "Porcentaje", width: 110, attributes: { style: 'text-align: center' }
@@ -3247,4 +3246,74 @@ function armarCapacidadProductiva(cproductiva) {
             }
         ],
     });
+}
+
+function mostrarEstadoInformesComerciales(cproductiva) {
+    var ultimasCampanias = [];
+
+    for (var i = 1; i < 5; i++) {
+        var add = cproductiva.find(e => e.MaterialId == i); //cproductiva viene ordenada por campaniaId (mayor a menor) desde el back
+        if (add != null) {
+            ultimasCampanias.push(add);
+        }
+    }
+    
+    for (cp of ultimasCampanias) {
+        if (cp.MaterialId == 1) {
+            if (cp.InformeActualizado == 1) {
+                $(".informe-maiz").html(cp.Campania + " ");
+                $(".informe-maiz").attr('style', 'color:#00A700; font-weight: bold');
+                $("#iconMaiz").addClass("fa fa-check-circle");
+                $("#iconMaiz").attr('style', 'color:#00A700');
+            }
+            if (cp.InformeActualizado == 2) {
+                $(".informe-maiz").html(cp.Campania + " ");
+                $(".informe-maiz").attr('style', 'color:red; font-weight: bold');
+                $("#iconMaiz").addClass("fa fa-exclamation-circle");
+                $("#iconMaiz").attr('style', 'color:red');
+            }
+        };
+        if (cp.MaterialId == 2) {
+            if (cp.InformeActualizado == 1) {
+                $(".informe-trigo").html(cp.Campania + " ");
+                $(".informe-trigo").attr('style', 'color:#00A700; font-weight: bold');
+                $("#iconTrigo").addClass("fa fa-check-circle");
+                $("#iconTrigo").attr('style', 'color:#00A700');
+            }
+            if (cp.InformeActualizado == 2) {
+                $(".informe-trigo").html(cp.Campania + " ");
+                $(".informe-trigo").attr('style', 'color:red; font-weight: bold');
+                $("#iconTrigo").addClass("fa fa-exclamation-circle");
+                $("#iconTrigo").attr('style', 'color:red');
+            }
+        };
+        if (cp.MaterialId == 3) {
+            if (cp.InformeActualizado == 1) {
+                $(".informe-soja").html(cp.Campania + " ");
+                $(".informe-soja").attr('style', 'color:#00A700; font-weight: bold');
+                $("#iconSoja").addClass("fa fa-check-circle");
+                $("#iconSoja").attr('style', 'color:#00A700');
+            }
+            if (cp.InformeActualizado == 2) {
+                $(".informe-soja").html(cp.Campania + " ");
+                $(".informe-soja").attr('style', 'color:red; font-weight: bold');
+                $("#iconSoja").addClass("fa fa-exclamation-circle");
+                $("#iconSoja").attr('style', 'color:red');
+            }
+        };
+        if (cp.MaterialId == 4) {
+            if (cp.InformeActualizado == 1) {
+                $(".informe-girasol").html(cp.Campania);
+                $(".informe-girasol").attr('style', 'color:#00A700; font-weight: bold');
+                $("#iconGirasol").addClass("fa fa-check-circle");
+                $("#iconGirasol").attr('style', 'color:#00A700');
+            }
+            if (cp.InformeActualizado == 2) {
+                $(".informe-girasol").html(cp.Campania + " ");
+                $(".informe-girasol").attr('style', 'color:red; font-weight: bold');
+                $("#iconGirasol").addClass("fa fa-exclamation-circle");
+                $("#iconGirasol").attr('style', 'color:red');
+            }
+        };
+    }
 }

@@ -3,6 +3,7 @@ var fecha;
 var zonaSeleccionada;
 var fleteProcedencia;
 var reasignarCupo;
+var stockDisponible = true;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -269,8 +270,17 @@ function checkSoja() {
     if ($("#material").val() !== "3") {
         $("#calidadDiv").hide();
         $("#calidad").val("");
+        $("#sustentableDiv").hide();
+        $("#Sustentable").prop("checked", false);
     } else {
         $("#calidadDiv").show();
+
+        if ($("#planta").val() == "1029") {
+            $("#sustentableDiv").show();
+        } else {
+            $("#sustentableDiv").hide();
+            $("#Sustentable").prop("checked", false);
+        }
     }
 }
 
@@ -456,6 +466,7 @@ function VisualizarStock(noabrir) {
     }
     var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0] });
     if (result != null && result.length > 0) {
+        stockDisponible = true;
         var table = "<tr>";
         table += '<th colspan = "3">Cosecha ' + result[0].Cosecha + '</th>';
         table += "</tr>";
@@ -478,6 +489,7 @@ function VisualizarStock(noabrir) {
             $("#modalEstablecimientos").modal("show");
         }
     } else {
+        stockDisponible = false;
         if (noabrir != true) {
             MensErr("No se encontraron establecimientos con stock disponible")
         }
@@ -531,87 +543,99 @@ function copiarImagen() {
 
 
 function GuardarCupo() {
-    BlockUi("Grabando...");
-    setTimeout(function () {
-        var date1 = $("#fechaEntrega").val();
-        var date2 = $("#fechaHasta").val();
-        var diffDays = parseInt((kendo.parseDate(date2) - kendo.parseDate(date1)) / (1000 * 60 * 60 * 24), 10);
+    if ($("#buscadorProveedor").val() != "" && $("#Sustentable").is(':checked') == true && $("#planta").val() == "1029" && $("#material").val() == "3") {
+        VisualizarStock(true);
+    } else {
+        stockDisponible = true;
+    }
 
-        var dias = [];
-        for (var i = 0; i <= diffDays; i++) {
-            dias.push({ Fecha: $('[name="Dias[' + i + '].Fecha"]').val(), Cantidad: $('[name="Dias[' + i + '].Cantidad"]').val() })
-        }
+    if (stockDisponible) {
+
+        BlockUi("Grabando...");
+        setTimeout(function () {
+            var date1 = $("#fechaEntrega").val();
+            var date2 = $("#fechaHasta").val();
+            var diffDays = parseInt((kendo.parseDate(date2) - kendo.parseDate(date1)) / (1000 * 60 * 60 * 24), 10);
+
+            var dias = [];
+            for (var i = 0; i <= diffDays; i++) {
+                dias.push({ Fecha: $('[name="Dias[' + i + '].Fecha"]').val(), Cantidad: $('[name="Dias[' + i + '].Cantidad"]').val() })
+            }
 
 
 
-        var cupo = {
-            Id: $("#Id").val(),
-            Siguientes: $("#Siguientes").val(),
-            ProveedorDescripcion: $("#buscadorProveedor").val(),
-            Proveedor: $("#Proveedor").val(),
-            PlantaId: $("#planta").val(),
+            var cupo = {
+                Id: $("#Id").val(),
+                Siguientes: $("#Siguientes").val(),
+                ProveedorDescripcion: $("#buscadorProveedor").val(),
+                Proveedor: $("#Proveedor").val(),
+                PlantaId: $("#planta").val(),
 
-            FechaEntrega: $("#fechaEntrega").val(),
-            FechaHastaEntrega: $("#fechaHasta").val(),
-            CantidadCupos: $("#cantidad").val(),
+                FechaEntrega: $("#fechaEntrega").val(),
+                FechaHastaEntrega: $("#fechaHasta").val(),
+                CantidadCupos: $("#cantidad").val(),
 
-            Zona: $("#Zona").val(),
-            ZonaId: $("#zona").val(),
-            FleteAcarreo: $("#flete").is(':checked'),
-            CalidadId: $("#calidad").val(),
-            Observacion: $("#observacion").val(),
-            FasonId: $("#fason").is(':checked'),
-            CuitId: $("#cuit").val(),
-            ConDescarga: $("#ConDescarga").is(':checked'),
-            Dias: dias,
-            //CupoResult Resultado :
-            MaterialId: $("#material").val(),
-            Negocio: $("#Negocio").val(),
-            NegocioId: $("#NegocioId").val(),
+                Zona: $("#Zona").val(),
+                ZonaId: $("#zona").val(),
+                FleteAcarreo: $("#flete").is(':checked'),
+                CalidadId: $("#calidad").val(),
+                Observacion: $("#observacion").val(),
+                FasonId: $("#fason").is(':checked'),
+                CuitId: $("#cuit").val(),
+                ConDescarga: $("#ConDescarga").is(':checked'),
+                Dias: dias,
+                //CupoResult Resultado :
+                MaterialId: $("#material").val(),
+                Negocio: $("#Negocio").val(),
+                NegocioId: $("#NegocioId").val(),
 
-            NoPropio: $("#NoPropio").val(),
-            FechaIngreso: $("#FechaIngreso").val(),
-            CuposNoPropios: $("#CuposNoPropios").val(),
+                NoPropio: $("#NoPropio").val(),
+                FechaIngreso: $("#FechaIngreso").val(),
+                CuposNoPropios: $("#CuposNoPropios").val(),
 
-            Sustentable: $("#Sustentable").is(':checked'),
-        };
+                Sustentable: $("#Sustentable").is(':checked'),
+            };
 
-        var resultado = MSExecuteOnServer('/Cupo/GuardarCupo', { cupo });
-        if (resultado.Result.Resultado != null) {
-            if (resultado.irA == "") {
-                //var errorCantidadCuposSAP = resultado.Result.Resultado.ListaErrores.filter(x => x.Source == "CantidadCuposSAP");
-                var errores = [];
-                //if (errorCantidadCuposSAP != undefined) {
-                //    errores.push(errorCantidadCuposSAP.Message);
-                //}
-                for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
-                    errores.push(resultado.Error.ListaErrores[i].Message);
-                }
-                if (resultado.Result.Resultado.ListaCupos.length > 0) {
-                    cuposCreados(JSON.stringify(errores), resultado.Result.Resultado.ListaCupos);
-                } else {
-                    var listaErr = [];
+            var resultado = MSExecuteOnServer('/Cupo/GuardarCupo', { cupo });
+            if (resultado.Result.Resultado != null) {
+                if (resultado.irA == "") {
+                    //var errorCantidadCuposSAP = resultado.Result.Resultado.ListaErrores.filter(x => x.Source == "CantidadCuposSAP");
+                    var errores = [];
+                    //if (errorCantidadCuposSAP != undefined) {
+                    //    errores.push(errorCantidadCuposSAP.Message);
+                    //}
                     for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
-                        listaErr.push(resultado.Error.ListaErrores[i].Message);
+                        errores.push(resultado.Error.ListaErrores[i].Message);
                     }
-                    $("#errorDiv1").html(makeUL(listaErr));
-                    $("#errorDiv").show();
-                    $.unblockUI();
+                    if (resultado.Result.Resultado.ListaCupos.length > 0) {
+                        cuposCreados(JSON.stringify(errores), resultado.Result.Resultado.ListaCupos);
+                    } else {
+                        var listaErr = [];
+                        for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
+                            listaErr.push(resultado.Error.ListaErrores[i].Message);
+                        }
+                        $("#errorDiv1").html(makeUL(listaErr));
+                        $("#errorDiv").show();
+                        $.unblockUI();
+                    }
                 }
+                else {
+                    window.location.href = window.location.origin + resultado.irA;
+                }
+                $.unblockUI();
+            } else {
+                var listaErr = [];
+                for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
+                    listaErr.push(resultado.Error.ListaErrores[i].Message);
+                }
+                $("#errorDiv1").html(makeUL(listaErr));
+                $("#errorDiv").show();
+                $.unblockUI();
+                //MostrarVisualizarStock();
             }
-            else {
-                window.location.href = window.location.origin + resultado.irA;
-            }
-            $.unblockUI();
-        } else {
-            var listaErr = [];
-            for (var i = 0; i < resultado.Error.ListaErrores.length; i++) {
-                listaErr.push(resultado.Error.ListaErrores[i].Message);
-            }
-            $("#errorDiv1").html(makeUL(listaErr));
-            $("#errorDiv").show();
-            $.unblockUI();
-            //MostrarVisualizarStock();
-        }
-    }, 1000);
+        }, 1000);
+
+    } else {
+        MensErr("No se pudo guardar porque no existen establecimientos con stock disponible");
+    }
 }

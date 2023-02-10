@@ -356,7 +356,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"parametros\":{\"ProveedorId\":1,\"Materiales\":[{\"MaterialId\":1,\"Toneladas\":1}],\"CampañaId\":0,\"Campaña\":\"18-19\",\"EmplRelDep\":false,\"EmplRelDepCant\":null,\"Rodados\":null,\"RodadosOtros\":null,\"Chacra\":null,\"ChacraOtros\":null,\"AntigActividad\":null,\"ActuacionProd\":null,\"ClienteAnt\":null,\"Comentarios\":null,\"Domicilio\":null,\"InformeComercialId\":null,\"FechaDescarga\":null,\"OrigenDA\":null},\"materiales\":[{\"MaterialId\":1,\"Material\":\"A\",\"Seleccionado\":true}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"parametros\":{\"ProveedorId\":1,\"Materiales\":[{\"MaterialId\":1,\"Toneladas\":1}],\"CampañaId\":0,\"Campaña\":\"18-19\",\"EmplRelDep\":false,\"EmplRelDepCant\":null,\"Rodados\":null,\"RodadosOtros\":null,\"Chacra\":null,\"ChacraOtros\":null,\"AntigActividad\":null,\"ActuacionProd\":null,\"ClienteAnt\":null,\"Comentarios\":null,\"Domicilio\":null,\"InformeComercialId\":null,\"FechaDescarga\":null,\"OrigenDA\":null,\"ComercialId\":0},\"materiales\":[{\"MaterialId\":1,\"Material\":\"A\",\"Seleccionado\":true}],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]

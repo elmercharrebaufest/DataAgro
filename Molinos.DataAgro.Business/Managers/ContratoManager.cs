@@ -346,7 +346,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else if (oParam.ClasificacionId == 3)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.CodCategoria != 19 && x.SituacionCategoria == "AL");
                 }
                 if (sisa != null)
                 {
@@ -361,6 +361,10 @@ namespace Molinos.DataAgro.Business.Managers
                     if (sisa.SituacionCategoria != "AL")
                     {
                         oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
+                    }
+                    if (sisa.CodCategoria == 19)
+                    {
+                        oErrorMessages.Error("ProveedorId", "No operable por categoría Operador de Derivados Granarios");
                     }
                 }
                 else
@@ -6816,7 +6820,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else if (clasificacion == 3)
                 {
-                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.SituacionCategoria == "AL");
+                    sisa = repositorio.Obtener<SISA>(x => x.CUIT == proveedor.CUIT && x.CodCategoria != 1 && x.CodCategoria != 6 && x.CodCategoria != 19 && x.SituacionCategoria == "AL");
                 }
                 if (sisa != null)
                 {
@@ -6835,10 +6839,14 @@ namespace Molinos.DataAgro.Business.Managers
                         mensaje = "Proveedor No Operable por Situación Categoría BA";
                         return mensaje;
                     }
+                    if (sisa.CodCategoria == 19)
+                    {
+                        mensaje = "No operable por categoría Operador de Derivados Granarios";
+                    }
                 }
                 else
                 {
-                    mensaje = "Proveedor No Operable por CUIT o Categoria Inactivo";
+                    mensaje = "Proveedor No Operable por CUIT o Categoría Inactivo";
                     return mensaje;
                 }
                 if (planCanje || consignatario)

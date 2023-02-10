@@ -143,7 +143,7 @@ namespace WebDataAgro.Controllers
             {
                 ComercialId = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
             }
-
+            oParam.ComercialId = ComercialId.Value;
             var entityError = mobjInformeComercialManager.GrabarInformeComercial(oParam, ComercialId.Value, nuevosCampos, nuevosAcopios, 
                 contactoComercial, direccion, codigoPostal, localidadId);
 

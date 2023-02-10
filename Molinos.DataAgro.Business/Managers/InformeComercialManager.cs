@@ -258,6 +258,7 @@ namespace Molinos.DataAgro.Business
             inf.Comentarios = informe.Comentarios;
             inf.DomicilioReal = informe.Domicilio;
             inf.OrigenDA = informe.OrigenDA;
+            inf.ComercialId = informe.ComercialId;
 
             if (inf.InformeComercialId == 0)
             {
@@ -499,7 +500,16 @@ namespace Molinos.DataAgro.Business
             datos.ActuacionProduccion = informe.ActuacionProd;
 
             datos.ClientesAnteriores = informe.ClienteAnt;
-
+            if (informe.OrigenDA != false)
+            {
+                var oComercial = repositorio.Obtener<Comercial>(informe.ComercialId);
+                datos.AclaracionComprador = $"{oComercial?.Apellido} {oComercial?.Nombres}";
+            }
+            else
+            {
+                var comercialAsociados = string.Join(", ", oProveedor.ProveedorComercialAsociados.Select(a => a.Comercial.Apellido + " " + a.Comercial.Nombres).ToList());
+                datos.AclaracionComprador = comercialAsociados;
+            }
             datos.DomReal = informe.Domicilio;
 
             datos.Comentarios = informe.Comentarios;
@@ -529,8 +539,8 @@ namespace Molinos.DataAgro.Business
                 oParanInforme.ClienteAnt = oInformeComercial.ClienteAnt;
                 oParanInforme.Domicilio = oInformeComercial.DomicilioReal;
                 oParanInforme.Comentarios = oInformeComercial.Comentarios;
-                //oParanInforme.ComercialId = oInformeComercial.ComercialId ?? 0;
-
+                oParanInforme.ComercialId = oInformeComercial.ComercialId ?? 0;
+                oParanInforme.OrigenDA = oInformeComercial.OrigenDA;
                 if (oInformeComercial.Chacra != null)
                 {
                     oParanInforme.Chacra = oInformeComercial.Chacra;

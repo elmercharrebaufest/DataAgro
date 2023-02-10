@@ -1,6 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using Molinos.DataAgro.Agent;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -8,11 +7,9 @@ using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.DirectoryServices;
 using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
@@ -162,6 +159,23 @@ namespace Molinos.DataAgro.Business.Managers
                     Porcentaje = x.Porcentaje,
                     FechaActualizacion = x.FechaActualizacion
                 }, x => x.ProveedorId == ProveedorId).OrderByDescending(x => x.CampaniaId).ThenByDescending(x => x.MaterialId).ToList();
+                var campaniasPorMaterial = repositorio.Listar<Material, MaterialDto>(x => new MaterialDto
+                {
+                    MaterialId = x.MaterialId,
+                    CampañaId = x.CampañaId
+                });
+                for (int i = 0; i < res.CapacidadProductiva.Count; i++)
+                {
+                    var campActual = campaniasPorMaterial.Where(x => x.MaterialId == res.CapacidadProductiva[i].MaterialId).FirstOrDefault().CampañaId;
+                    if (res.CapacidadProductiva[i].CampaniaId >= campActual)
+                    {
+                        res.CapacidadProductiva[i].InformeActualizado = 1; //actualizado
+                    }
+                    else if (res.CapacidadProductiva[i].CampaniaId < campActual)
+                    {
+                        res.CapacidadProductiva[i].InformeActualizado = 2; //desactualizado. Si queda nulo, nunca tuvo informe para ese material.
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -498,6 +512,14 @@ namespace Molinos.DataAgro.Business.Managers
                         catch (Exception e) { logger.Error(e); }
                     }
                 }
+                if (oContrato.Comercial.GrupoDeComprasId == 42)
+                {
+                    var lista = BuscarMailOyTNorte(oContrato.Comercial);
+                    foreach (var item in lista)
+                    {
+                        oMensaje.To.Add(item);
+                    }
+                }
                 string pathImagen = httpContextManager.ObtenerPathLogoMail();
                 oMensaje.AlternateViews.Add(CuerpoMailContrato(pathImagen, oContrato, objDescuento, objCalidad, emailComercial, eliminar));
                 var subject = "";
@@ -520,10 +542,9 @@ namespace Molinos.DataAgro.Business.Managers
 
                 oMensaje.Headers.Add("Content-class", "urn:content-classes:calendarmessage");
 
-                SmtpClient oCliente = default(SmtpClient);
+                SmtpClient oCliente = default;
 
-                int Condicion = 0;
-                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
+                if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out int Condicion))
                 {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
@@ -597,14 +618,12 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     var corredoresComerciales = mobComercial.ListarComercialesCorredor();
                     corredoresComerciales.Remove(oFijacionDePrecioContrato.Comercial);
-
                     var sinMail = mobComercial.ListarComercialesSinRecibirMail();
                     foreach (var item in sinMail)
                     {
                         corredoresComerciales.Remove(item);
                     }
-
-
+                    logger.Debug("Enviando mail fijación a " + string.Join(", ", corredoresComerciales));
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
                     {
                         try
@@ -615,13 +634,21 @@ namespace Molinos.DataAgro.Business.Managers
                         catch (Exception e) { logger.Error(e); }
                     }
                 }
+                if (oFijacionDePrecioContrato.Comercial.GrupoDeComprasId == 42)
+                {
+                    var lista = BuscarMailOyTNorte(oFijacionDePrecioContrato.Comercial);
+                    foreach (var item in lista)
+                    {
+                        oMensaje.To.Add(item);
+                    }
+                }
+
                 string pathImagen = httpContextManager.ObtenerPathLogoMail();
 
                 oMensaje.AlternateViews.Add(CuerpoMailFijacion(pathImagen, oFijacionDePrecioContrato, emailComercial));
                 var subject = "";
                 if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
                 {
-                    //subject += "Nueva fijación Molinos Agro S.A. – ";
                     subject += "Nueva fijación Molinos Agro S.A. – ";
                 }
                 else
@@ -3830,7 +3857,10 @@ namespace Molinos.DataAgro.Business.Managers
                 lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
             }
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
-
+            if (contrato.Comercial.GrupoDeComprasId == 42)
+            {
+                lista.AddRange(BuscarMailOyTNorte(contrato.Comercial));
+            }
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
             logger.Debug("Enviando mail canje en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id);
@@ -4202,6 +4232,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
 
+            if (contrato.Comercial.GrupoDeComprasId == 42)
+            {
+                lista.AddRange(BuscarMailOyTNorte(contrato.Comercial));
+            }
             logger.Debug("Enviando mail fijacion virtual en Copia: " + string.Join(",", lista) + " proveedores: " + (emailproveedor != null ? string.Join(",", emailproveedor) : "") + ", contrato ID " + contrato.Id + " y fijacion SAP " + contrato.FijacionSAP);
 
             mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailFijacionVirtual(httpContextManager.ObtenerPathLogoMail(), contrato, email, eliminar));
@@ -4423,12 +4457,16 @@ namespace Molinos.DataAgro.Business.Managers
                         logger.Debug("Mail encontrado para " + emailComerciales + "  " + corredorComercialCopia.IdActiveDirectory);
                         if (!String.IsNullOrEmpty(emailComerciales))
                         {
-
                             lista.Add(emailComerciales);
                         }
                     }
                     catch (Exception e) { logger.Error(e); }
                 }
+            }
+
+            if (contrato.Comercial.GrupoDeComprasId == 42)
+            {
+                lista.AddRange(BuscarMailOyTNorte(contrato.Comercial));
             }
             var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
 
@@ -4972,7 +5010,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             { // PROVEEDOR
-                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL");
+                sisa = repositorio.Obtener<SISA>(x => x.CUIT == cuit && x.SituacionCategoria == "AL" && x.CodCategoria != 19);
 
                 if (sisa != null)
                 {
@@ -5040,6 +5078,33 @@ namespace Molinos.DataAgro.Business.Managers
         {
             MensajeProveedorDto mensaje = new MensajeProveedorDto() { DescripcionEstado = dsc, Mensaje = msje };
             return mensaje;
+        }
+
+        private List<string> BuscarMailOyTNorte(Comercial comercial)
+        {
+            var lista = new List<string>();
+            var oytNorte = mobComercial.ListarComercialesOyTNorte();
+            oytNorte.Remove(comercial);
+            var sinMail = mobComercial.ListarComercialesSinRecibirMail();
+            foreach (var item in sinMail)
+            {
+                oytNorte.Remove(item);
+            }
+            logger.Debug("Enviando mail OyT Norte a " + string.Join(", ", oytNorte));
+            foreach (Comercial oytNorteCopia in oytNorte)
+            {
+                try
+                {
+                    var emailComerciales = mailManager.GetEmailUserActiveDirectory(oytNorteCopia.IdActiveDirectory);
+                    if (!String.IsNullOrEmpty(emailComerciales))
+                    {
+                        lista.Add(emailComerciales);
+                    }
+                }
+                catch (Exception e) { logger.Error(e); }
+            }
+
+            return lista;
         }
 
     }

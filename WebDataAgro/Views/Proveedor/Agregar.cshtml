@@ -262,14 +262,17 @@
 
     <div id="formulario-contactocomercial" @(ocultarCamposEditar ? "hidden" : "")>
         <h2>Contactos Comerciales</h2>
+        <div class="datos-contactocomercial-guardados">
 
+        </div>
         <div class="contenedor-grupo-contactos-comerciales-edit">
             <div class="contenedor-contacto-comercial">
+                <div class="datos-produccion-cap-prod-editor-titulo" style="margin-left: 32%;">Agregar datos de Contacto</div>
                 <div class="row concom-form">
                     <input type="hidden" id="concom-id" />
                     <div class="col-lg-5">
                         <div class="label-contacto">
-                            Nombre
+                            Nombre (*)
                         </div>
                     </div>
                     <div class="col-lg-7">
@@ -281,7 +284,7 @@
                 <div class="row concom-form">
                     <div class="col-lg-5">
                         <div class="label-contacto">
-                            Apellido
+                            Apellido (*)
                         </div>
                     </div>
                     <div class="col-lg-7">
@@ -310,7 +313,7 @@
                 <div class="row concom-form">
                     <div class="col-lg-5">
                         <div class="label-contacto">
-                            Fecha nacimiento
+                            Fecha de nacimiento
                         </div>
                     </div>
                     <div class="col-lg-7">
@@ -467,9 +470,7 @@
 
             </div>
         </div>
-        <div class="datos-contactocomercial-guardados">
 
-        </div>
     </div>
 
     <div id="formulario-produccion" @(ocultarCamposEditar ? "hidden" : "")>

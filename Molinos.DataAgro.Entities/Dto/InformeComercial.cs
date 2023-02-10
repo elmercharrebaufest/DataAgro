@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string ContactoCargo2 { get; set; }
         public string ContactoTelefono2 { get; set; }
         public string ContactoMail2 { get; set; }
-
+        public string AclaracionComprador { get; set; }
 
         public RptInformeComercialInfo()
         {
@@ -84,6 +84,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? InformeComercialId { get; set; }
         public DateTime? FechaDescarga { get; set; }
         public bool? OrigenDA { get; set; }
+        public int ComercialId { get; set; }
 
         public ParamInformeComercial()
         {

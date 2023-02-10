@@ -276,11 +276,11 @@
                 <table class="table table-striped table-responsive">
                     <thead>
                         <tr class="cabecera">
-                            <th colspan="3">Dia / Material</th>
-                            <th colspan="4">Proveedor</th>
+                            <th colspan="3">Dia y Material</th>
+                            <th colspan="3">Proveedor</th>
                             <th colspan="1">Sugerencias<br />Pendientes<br />por proveedor</th>
                             <th colspan="3">Sugerencias de cupos<br />que quiero aceptar</th>
-                            <th colspan="2">Devolucion de<br />sugerencias</th>
+                            <th colspan="2"><button type="button" class="k-button" onclick="DevolverSugerencias()">Devolver Sugerencias</button></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -292,12 +292,12 @@
                                 <td colspan="6">
                                     <label class="fa fa-caret-square-o-down" aria-hidden="true" onclick="verOcultar(this,'@dia.Key.ToString("ddMMyyyy")',false)"></label>
                                     <b>@dia.Key.ToString("dd/MM/yyyy")</b> &nbsp;
-                                    Sugerencias por dia:<b> @(@sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault() != null ? sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault().Total : 0)</b>
+                                    Sugerencias del día:<b> @(@sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault() != null ? sugerenciaPorComercial.Where(x => x.Fecha == dia.Key && x.MaterialId == materialId).SingleOrDefault().Total : 0)</b>
                                 </td>
                                 @*<td>Originales</td>*@
                                 <td>Quedan @dia.Where(a => a.MaterialId == materialId).Sum(a => a.CantidadDeCupos)</td>
                                 <td colspan="3"></td>
-                                <td colspan="2">Devoluciones del dia</td>
+                                <td colspan="2">Devoluciones del día</td>
                             </tr>
                         </thead>
                         //proveedores del dia
@@ -316,10 +316,10 @@
                                 <td>@proveedor.Sum(x => x.CantidadDeCupos)</td>
                                 <td><input type="text" class="kNumeric" max="@proveedor.Sum(x => x.CantidadDeCupos)" id="p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))" style="width:70px;" /></td>
                                 <td><a class="linkVerde" href="javascript:void(0);" onclick="AceptarSugerenciaProvDia('p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))','@(dia.Key.ToString("dd/MM/yyyy"))','@(dia.First().MaterialId)','@(proveedor.First().ProveedorId)','@(proveedor.First().ProveedorDesc.Replace("'",""))', '@(proveedor.Sum(a=>a.CantidadDeCupos))')">Aceptar Sugerencias</a></td>
-                                <td><a class="linkCeleste" href="javascript:void(0);" onclick='ModificarSugerenciaProv("p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))", "@(dia.Key.ToString("dd/MM/yyyy"))", "@(proveedor.First().ProveedorId)", "@(proveedor.First().ProveedorDesc.Replace("'",""))", "@(proveedor.First().MaterialId)", "@(proveedor.First().MaterialDesc)","@(string.Join(",",lista.Where(a => a.ProveedorId == proveedor.First().ProveedorId).GroupBy(a => a.FechaSugerida).Select(a => a.Key.ToString("ddMMyyyy") +"-"+ a.Sum(x=>x.CantidadDeCupos))))")'>Modificar Sugerencia</a></td>
+                                <td><a class="linkCeleste" href="javascript:void(0);" onclick='ModificarSugerenciaProv("p@(proveedor.First().ProveedorId)_@(dia.Key.ToString("ddMMyyyy"))", "@(dia.Key.ToString("dd/MM/yyyy"))", "@(proveedor.First().ProveedorId)", "@(proveedor.First().ProveedorDesc.Replace("'",""))", "@(proveedor.First().MaterialId)", "@(proveedor.First().MaterialDesc)","@(string.Join(",",lista.Where(a => a.ProveedorId == proveedor.First().ProveedorId).GroupBy(a => a.FechaSugerida).Select(a => a.Key.ToString("ddMMyyyy") +"-"+ a.Sum(x=>x.CantidadDeCupos))))")'>Modificar Grilla</a></td>
 
-                                <td colspan="2"></td>
-                            </tr>
+                                            <td colspan="2"></td>
+                                        </tr>
 
                             <tr class="cabecera-sugerencia sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
                                 <th>Punt.</th>
@@ -329,9 +329,8 @@
                                 <th>Negocio</th>
                                 <th>Moneda</th>
                                 <th>Precio</th>
-                                <th colspan="2">Cantidad<br />Sugerida</th>
-                                <th colspan="3">Sugerencias de cupos<br /> que quiero aceptar</th>
-                                <th colspan="2"></th>
+                                <th>Cantidad<br/>sugerida</th>
+                                <th colspan="2">Sugerencias de cupos que quiero aceptar</th>
                             </tr>
 
                             foreach (var sugerencia in proveedor.OrderByDescending(x => x.PuntuacionTotal))
@@ -356,20 +355,21 @@
                                     <td><input type="text" class="kNumeric" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="s@(sugerencia.Id)" /></td>
                                     <td><a class="linkVerde" href="javascript:void(0);" onclick="AceptarSugerencia('s@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))', '@(sugerencia.CantidadDeCupos)')">Aceptar Sugerencia</a></td>
                                     <td><a class="linkCeleste" href="javascript:void(0);" onclick="ModificarSugerencia('@(sugerencia.Id)','@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))','@(sugerencia.ProveedorId)','@(sugerencia.ProveedorDesc.Replace("'",""))','@(sugerencia.CantidadDeCupos)','@(sugerencia.MaterialId)','@(sugerencia.MaterialDesc)')">Modificar Sugerencia</a></td>
-                                    <td><input type="text" class="kNumeric" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="d@(sugerencia.Id)" /></td>
-                                    <td><a class="linkCeleste" href="javascript:void(0);" onclick="DevolverSugerencia('d@(sugerencia.Id)')">Devolver Sugerencia</a></td>
+                                    <td><input type="text" class="kNumeric sugerenciaDevuelta" max="@sugerencia.CantidadDeCupos" style="width:70px;" id="@(sugerencia.Id)-@(sugerencia.ProveedorDesc.Replace("'",""))-@(sugerencia.MaterialDesc)-@sugerencia.ContratoSAP-@(sugerencia.CantidadDeCupos)-@(sugerencia.FechaSugerida.ToString("dd/MM/yyyy"))"/></td>
+                                    <td>@*<a class="linkCeleste" href="javascript:void(0);" onclick="DevolverSugerencia('d@(sugerencia.Id)')">Devolver Sugerencia</a>*@Cantidad a Devolver</td>
                                 </tr>
                             }
                             <tr class="sugerencia @dia.Key.ToString("ddMMyyyy") @dia.Key.ToString("ddMMyyyy")@proveedor.First().ProveedorCUIT todo" hidden>
                                 <td colspan="14">&nbsp;</td>
                             </tr>
 
-                        }
+                                    }
 
-                    }
+                                }
 
-                        </tbody>
-                    </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         }
                 </div>
             </div>
@@ -618,6 +618,43 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="myBtn btn" id="aceptarModificarPorNegocio">Aceptar</button>
+                <button type="button" class="myBtn btn" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="devolucionSugerenciasModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:80%; position:sticky;">
+        <div class="modal-content" style="width:80%;">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title"></h1>
+                <div class="status confirmado-modal">
+                    <div>Devolución de Sugerencias</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="carga-cupos-table" class="table">
+                        <thead>
+                            <tr>
+                                <th>Material</th>
+                                <th>Proveedor</th>
+                                <th>Contrato SAP</th>
+                                <th>Fecha</th>
+                                <th>Cantidad Sugerida</th>
+                                <th>Cantidad a Devolver</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-devolver-sugerencias"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn btn" id="aceptarDevolverSugerencias">Aceptar</button>
                 <button type="button" class="myBtn btn" data-dismiss="modal">Cancelar</button>
             </div>
         </div>

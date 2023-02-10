@@ -78,7 +78,7 @@ namespace Molinos.DataAgro.Agent
 
                                 });
                             }
-                            logger.Debug(devolucion.ToXml());
+                            //logger.Debug(devolucion.ToXml());
                         }
 
                         fecha = fecha.AddDays(1);

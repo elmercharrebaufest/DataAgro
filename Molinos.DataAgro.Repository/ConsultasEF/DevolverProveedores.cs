@@ -134,7 +134,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             else
                             {
                                 sisa = (from s in contexto.Set<SISA>()
-                                        where s.CUIT == item.Cuit && s.CodCategoria != 1 && s.CodCategoria != 6 && s.SituacionCategoria == "AL"
+                                        where s.CUIT == item.Cuit && s.CodCategoria != 1 && s.CodCategoria != 6 && s.CodCategoria != 19 && s.SituacionCategoria == "AL"
                                         select s).FirstOrDefault();
                             }
                             if (sisa != null)
@@ -154,6 +154,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 if (sisa.SituacionCategoria != "AL")
                                 {
                                     item.Estado = "No Operable por Situación Categoría BA";
+                                    item.Color = "red";
+                                    continue;
+                                }
+                                if (sisa.CodCategoria == 19)
+                                {
+                                    item.Estado = "No operable por categoría Operador de Derivados Granarios";
                                     item.Color = "red";
                                     continue;
                                 }

@@ -89,7 +89,6 @@
             this.textBox44 = new DataDynamics.ActiveReports.TextBox();
             this.label15 = new DataDynamics.ActiveReports.Label();
             this.textBox18 = new DataDynamics.ActiveReports.TextBox();
-            this.SubRptFirma = new DataDynamics.ActiveReports.SubReport();
             this.SubRptAcopiadores = new DataDynamics.ActiveReports.SubReport();
             this.label51 = new DataDynamics.ActiveReports.Label();
             this.label52 = new DataDynamics.ActiveReports.Label();
@@ -118,6 +117,9 @@
             this.label44 = new DataDynamics.ActiveReports.Label();
             this.label45 = new DataDynamics.ActiveReports.Label();
             this.pageFooter = new DataDynamics.ActiveReports.PageFooter();
+            this.label8 = new DataDynamics.ActiveReports.Label();
+            this.label17 = new DataDynamics.ActiveReports.Label();
+            this.textBox19 = new DataDynamics.ActiveReports.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.label1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picture1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Label2)).BeginInit();
@@ -197,6 +199,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.label43)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label44)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label45)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label17)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textBox19)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // pageHeader
@@ -288,7 +293,6 @@
             this.textBox44,
             this.label15,
             this.textBox18,
-            this.SubRptFirma,
             this.SubRptAcopiadores,
             this.label51,
             this.label52,
@@ -315,7 +319,10 @@
             this.label42,
             this.label43,
             this.label44,
-            this.label45});
+            this.label45,
+            this.label8,
+            this.label17,
+            this.textBox19});
             this.detail.Height = 10.533F;
             this.detail.Name = "detail";
             this.detail.Format += new System.EventHandler(this.detail_Format);
@@ -376,11 +383,11 @@
             this.SubRptCapacidadAlm.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.SubRptCapacidadAlm.CloseBorder = false;
             this.SubRptCapacidadAlm.Height = 0.386F;
-            this.SubRptCapacidadAlm.Left = 0.3550003F;
+            this.SubRptCapacidadAlm.Left = 0.355F;
             this.SubRptCapacidadAlm.Name = "SubRptCapacidadAlm";
             this.SubRptCapacidadAlm.Report = null;
             this.SubRptCapacidadAlm.ReportName = "SubRptCapacidadAlm";
-            this.SubRptCapacidadAlm.Top = 5.106F;
+            this.SubRptCapacidadAlm.Top = 5.326F;
             this.SubRptCapacidadAlm.Width = 8.083F;
             // 
             // label37
@@ -1016,17 +1023,6 @@
             this.textBox18.Top = 3.712F;
             this.textBox18.Width = 5.665F;
             // 
-            // SubRptFirma
-            // 
-            this.SubRptFirma.CloseBorder = false;
-            this.SubRptFirma.Height = 0.845F;
-            this.SubRptFirma.Left = 1.083F;
-            this.SubRptFirma.Name = "SubRptFirma";
-            this.SubRptFirma.Report = null;
-            this.SubRptFirma.ReportName = "SubRptFirma";
-            this.SubRptFirma.Top = 6.794013F;
-            this.SubRptFirma.Width = 6.354F;
-            // 
             // SubRptAcopiadores
             // 
             this.SubRptAcopiadores.Border.BottomColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -1039,11 +1035,11 @@
             this.SubRptAcopiadores.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.SubRptAcopiadores.CloseBorder = false;
             this.SubRptAcopiadores.Height = 0.4250001F;
-            this.SubRptAcopiadores.Left = 0.3550003F;
+            this.SubRptAcopiadores.Left = 0.355F;
             this.SubRptAcopiadores.Name = "SubRptAcopiadores";
             this.SubRptAcopiadores.Report = null;
             this.SubRptAcopiadores.ReportName = "SubRptAcopiadores";
-            this.SubRptAcopiadores.Top = 4.110001F;
+            this.SubRptAcopiadores.Top = 4.26F;
             this.SubRptAcopiadores.Width = 8.083F;
             // 
             // label51
@@ -1058,11 +1054,11 @@
             this.label51.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.label51.Height = 0.217F;
             this.label51.HyperLink = null;
-            this.label51.Left = 0.3550006F;
+            this.label51.Left = 0.3550003F;
             this.label51.Name = "label51";
             this.label51.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label51.Text = "Grano";
-            this.label51.Top = 3.893001F;
+            this.label51.Top = 4.043F;
             this.label51.Width = 1.006F;
             // 
             // label52
@@ -1081,7 +1077,7 @@
             this.label52.Name = "label52";
             this.label52.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label52.Text = "Superficie(has)";
-            this.label52.Top = 3.893001F;
+            this.label52.Top = 4.043F;
             this.label52.Width = 1.221F;
             // 
             // label53
@@ -1100,7 +1096,7 @@
             this.label53.Name = "label53";
             this.label53.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label53.Text = "Tn";
-            this.label53.Top = 3.893001F;
+            this.label53.Top = 4.043F;
             this.label53.Width = 0.684F;
             // 
             // label54
@@ -1119,7 +1115,7 @@
             this.label54.Name = "label54";
             this.label54.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label54.Text = "Localidad";
-            this.label54.Top = 3.893001F;
+            this.label54.Top = 4.043F;
             this.label54.Width = 1.941F;
             // 
             // label55
@@ -1134,11 +1130,11 @@
             this.label55.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.label55.Height = 0.2170024F;
             this.label55.HyperLink = null;
-            this.label55.Left = 5.206999F;
+            this.label55.Left = 5.206998F;
             this.label55.Name = "label55";
             this.label55.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label55.Text = "Provincia";
-            this.label55.Top = 3.893001F;
+            this.label55.Top = 4.043F;
             this.label55.Width = 1.912F;
             // 
             // label56
@@ -1157,7 +1153,7 @@
             this.label56.Name = "label56";
             this.label56.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label56.Text = "Propio ";
-            this.label56.Top = 3.893001F;
+            this.label56.Top = 4.043F;
             this.label56.Width = 0.599F;
             // 
             // label57
@@ -1176,7 +1172,7 @@
             this.label57.Name = "label57";
             this.label57.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label57.Text = "Alquilada";
-            this.label57.Top = 3.893001F;
+            this.label57.Top = 4.043F;
             this.label57.Width = 0.7200003F;
             // 
             // label11
@@ -1439,11 +1435,11 @@
             this.label18.Border.TopStyle = DataDynamics.ActiveReports.BorderLineStyle.Solid;
             this.label18.Height = 0.217F;
             this.label18.HyperLink = null;
-            this.label18.Left = 0.3550006F;
+            this.label18.Left = 0.3550003F;
             this.label18.Name = "label18";
             this.label18.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label18.Text = "Toneladas";
-            this.label18.Top = 4.889F;
+            this.label18.Top = 5.109F;
             this.label18.Width = 1.006F;
             // 
             // label42
@@ -1462,7 +1458,7 @@
             this.label42.Name = "label42";
             this.label42.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label42.Text = "Localidad";
-            this.label42.Top = 4.889F;
+            this.label42.Top = 5.109F;
             this.label42.Width = 3.018F;
             // 
             // label43
@@ -1481,7 +1477,7 @@
             this.label43.Name = "label43";
             this.label43.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label43.Text = "Provincia";
-            this.label43.Top = 4.889F;
+            this.label43.Top = 5.109F;
             this.label43.Width = 2.74F;
             // 
             // label44
@@ -1500,7 +1496,7 @@
             this.label44.Name = "label44";
             this.label44.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label44.Text = "Propio ";
-            this.label44.Top = 4.889F;
+            this.label44.Top = 5.109F;
             this.label44.Width = 0.5989999F;
             // 
             // label45
@@ -1519,13 +1515,48 @@
             this.label45.Name = "label45";
             this.label45.Style = "font-size: 10pt; font-weight: bold; text-align: center; ddo-char-set: 0";
             this.label45.Text = "Alquilada";
-            this.label45.Top = 4.889F;
+            this.label45.Top = 5.109F;
             this.label45.Width = 0.72F;
             // 
             // pageFooter
             // 
             this.pageFooter.Height = 0F;
             this.pageFooter.Name = "pageFooter";
+            // 
+            // label8
+            // 
+            this.label8.Height = 0.826F;
+            this.label8.HyperLink = null;
+            this.label8.Left = 0.7F;
+            this.label8.Name = "label8";
+            this.label8.Style = "font-size: 9.75pt; font-weight: normal; white-space: nowrap; ddo-char-set: 0; ddo" +
+    "-font-vertical: none";
+            this.label8.Text = "             VENDEDOR\r\n\r\nFirma:__________________\r\n\r\nAclaración:______________";
+            this.label8.Top = 7.374001F;
+            this.label8.Width = 2.293F;
+            // 
+            // label17
+            // 
+            this.label17.Height = 0.826F;
+            this.label17.HyperLink = null;
+            this.label17.Left = 4.615014F;
+            this.label17.Name = "label17";
+            this.label17.Style = "color: Black; font-size: 9.75pt; font-weight: normal; white-space: nowrap; ddo-ch" +
+    "ar-set: 0";
+            this.label17.Text = "             COMPRADOR\r\n\r\nFirma:__________________\r\n\r\nAclaración:______________";
+            this.label17.Top = 7.374001F;
+            this.label17.Width = 2.293F;
+            // 
+            // textBox19
+            // 
+            this.textBox19.DataField = "AclaracionComprador";
+            this.textBox19.Height = 0.2F;
+            this.textBox19.Left = 5.335F;
+            this.textBox19.Name = "textBox19";
+            this.textBox19.Style = "font-size: 9.75pt; ddo-char-set: 0";
+            this.textBox19.Text = null;
+            this.textBox19.Top = 7.93F;
+            this.textBox19.Width = 1.488F;
             // 
             // RptInformeComercial
             // 
@@ -1539,7 +1570,7 @@
             this.PageSettings.PaperHeight = 11.69291F;
             this.PageSettings.PaperKind = System.Drawing.Printing.PaperKind.A4;
             this.PageSettings.PaperWidth = 8.267716F;
-            this.PrintWidth = 9.06575F;
+            this.PrintWidth = 11.641F;
             this.Script = "public void detail_Format()\r\n{\r\n\t\r\n}\r\n\r\n\r\npublic void detail_BeforePrint()\r\n{\r\n\r\n" +
     "}\r\n\r\n\r\npublic void detail_AfterPrint()\r\n{\r\n\t\r\n}\r\n\r\n\r\n";
             this.Sections.Add(this.pageHeader);
@@ -1630,6 +1661,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.label43)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label44)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.label45)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.label17)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textBox19)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
 
         }
@@ -1691,7 +1725,6 @@
         private DataDynamics.ActiveReports.Detail detail;
         private DataDynamics.ActiveReports.Label label15;
         private DataDynamics.ActiveReports.TextBox textBox18;
-        private DataDynamics.ActiveReports.SubReport SubRptFirma;
         private DataDynamics.ActiveReports.SubReport SubRptAcopiadores;
         private DataDynamics.ActiveReports.Label label51;
         private DataDynamics.ActiveReports.Label label52;
@@ -1719,6 +1752,9 @@
         private DataDynamics.ActiveReports.Label label43;
         private DataDynamics.ActiveReports.Label label44;
         private DataDynamics.ActiveReports.Label label45;
+        private DataDynamics.ActiveReports.Label label8;
+        private DataDynamics.ActiveReports.Label label17;
+        private DataDynamics.ActiveReports.TextBox textBox19;
     }
 }
 

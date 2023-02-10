@@ -810,7 +810,7 @@ function armarSelects(result) {
         htmlZona += '<option value="null">Todas las zonas</option>';
         for (var ii in result.zona) {
             (function (i) {
-                htmlZona += '<option value="' + result.zona[i].ZonaId + '">' + result.zona[i].Descripcion + '</option>';
+                htmlZona += '<option value="' + result.zona[i].Id + '">' + result.zona[i].Descripcion + '</option>';
             })(ii);
         }
         htmlZona += '</select>';

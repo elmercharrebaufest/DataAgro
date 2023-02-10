@@ -362,6 +362,11 @@ namespace Molinos.DataAgro.Business
             return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.NoRecibirMail)));
         }
 
+        public List<Comercial> ListarComercialesOyTNorte()
+        {
+            return repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.OyT_Norte)));
+        }
+
         public List<GrupoDeCompras> ListarGrupoDeCompras(string filtro)
         {
             if (filtro != null)

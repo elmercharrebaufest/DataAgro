@@ -54,7 +54,7 @@ namespace Molinos.DataAgro.Report
                 this.label45.Visible = false;
                 this.textBox3.Value = "No posee";
             }
-            this.SubRptFirma.Report = new SubRptFirma();         
+            //this.SubRptFirma.Report = new SubRptFirma();         
 
         }
 

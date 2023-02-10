@@ -28,7 +28,7 @@ namespace Molinos.DataAgro.Entities.Dto
         //public int? ContratoId { get; set; }
 
         public int? ConfiguracionEspacioDinamicoId { get; set; }
-        
+
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
         public decimal PrecioPizarra { get; set; }
@@ -36,17 +36,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public FormulaDto formula { get; set; }
 
         public Dictionary<string, decimal> Puntuaciones { get; set; } = new Dictionary<string, decimal>();
-        public string PuntuacionesString{ get; set; }
+        public string PuntuacionesString { get; set; }
         public decimal PuntuacionTotal { get; set; }
         public int DestinoId { get; set; }
         public int CantidadDeCupos { get; set; }
         public int CantidadCupoOriginal { get; set; }
 
-        
+
         public decimal CantidadDeCuposMaximo { get { return this.CantidadDeCupos; } }
         public int? CantidadFleteProcedencia { get; set; }
         public string ZonaDescrip { get; set; }
-        public bool Priorizado { get; set; } 
+        public bool Priorizado { get; set; }
         public DateTime FechaSugerida { get; set; }
         public int? ProveedorId { get; set; }
         public int CentroId { get; set; }
@@ -72,12 +72,25 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Inhabilitado { get; set; }
         public int CuposPendientes { get; set; }
         public int SolicitudesPendientes { get; set; }
+        public string CUITProveedor { get; set; }
+        public string CUITCorredor { get; set; }
+
+        public bool? Canje { get; set; }
+        public bool? MercsDeposito { get; set; }
+        public bool? CaratulaMAT { get; set; }
         public bool Sustentable { get; set; }
 
         public object Clone()
         {
             return this.MemberwiseClone();
         }
+    }
+
+    public partial class RestarCuposProvCorrDto
+    {
+        public string CUITProveedor { get; set; }
+        public string CUITCorredor { get; set; }
+        public int cantidadCupos { get; set; }
     }
 }
 

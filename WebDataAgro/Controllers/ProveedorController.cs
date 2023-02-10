@@ -410,6 +410,12 @@ namespace WebDataAgro.Controllers
                 return Json(mobjProveedorManager.DevolverProveedoresConCorredor(filtroProveedor, filtro), JsonRequestBehavior.AllowGet);
             }
         }
+
+        public JsonResult BuscarProveedoresEnSugerencia(string filtro, string filtroProveedor, int? agenteCompraId) {
+            var resultado = Json(mobjHomeManager.BusquedaHome(filtroProveedor, GlobalVariables.ComercialId, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial), JsonRequestBehavior.AllowGet);
+            return resultado;
+        }
+
         public JsonResult BuscarProveedor(string filtroProveedor, bool esComisionista = false, string cuitProveedor = "")
         {
             return Json(mobjProveedorManager.DevolverProveedoresCorredores(filtroProveedor, esComisionista, cuitProveedor), JsonRequestBehavior.AllowGet);

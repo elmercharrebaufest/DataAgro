@@ -41,19 +41,15 @@ namespace Molinos.DataAgro.Interfaces
         CupoResult RechazarCupo(Cupo cupo, string idActiveDirectory);
         CupoResult AceptarCupo(Cupo cupo);
         List<CupoDto> ListarCupo(string cupoSap);
-
         List<BasicoContrato> TraerNegocioConCupoDisponible(string proveedorCuit, int material, int centro, string filtro, DateTime desde, DateTime hasta);
         Resultado AltaCupoSAP(Cupo cupoSAP);
-
         string Td(ref int linea, int largo = 1);
         string Split(string str);
-
         SugerenciaPorComercial ObtenerSugerenciaPorComercial(DateTime fecha, int comercialId, int materialId, string centro);
         List<SugerenciaCupo> SugerenciasParaAceptar(int proveedorId, int comercialId, string centro, int materialId, DateTime? fecha);
         CupoResult ConfirmarSugerencia(List<ConfirmacionSugerenciaCupoDto> datosTablaPorProveedor, List<DiaCupo> devoluciones, int materialId, string centroId, int comercialId);
 
         List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId, DateTime fecha);
-
         List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor);
         void AnulacionMasiva(List<int> equipo, string comercialId, List<int> ids, string path);
         List<CierreCupera> DevolverTodoCierreCupera();
@@ -61,10 +57,8 @@ namespace Molinos.DataAgro.Interfaces
         void EnviarMailSugerenciasPendientesPorComercial();
         CupoResult GenerarSolicitudExtraordinaria(AdministracionCupoDto solicitud);
         void EliminarSugerenciaDeCupos(ConfiguracionCupo configuracion);
-
         List<MensajeCupoDto> MostrarDetalle(int comercialSeleccionado, string centroId, int materialId);
         List<CupoResult> AceptarSugerenciaCupo(int idSugerencia, int cantidad, int cantidadFlete, bool poProveedor = false);
-        CupoResult RechazarSugerenciaCupo(int id, int cantidad);
         List<CupoResult> AceptarSugerenciaCupoPorProveedor(int proveedorId, int materialId, DateTime fecha, int cupoNormalSolicitud, int fleteSolicitud, int comercialId, string centroCodigo);
         List<CupoResult> ModificarSugerenciaCupo(List<AceptarSugerenciaCupoDto> items);
         List<CupoResult> ModificarSugerenciaCupoPorProveedor(List<AceptarSugerenciaCupoDto> items);
@@ -74,6 +68,6 @@ namespace Molinos.DataAgro.Interfaces
         //void EjecutarAlgoritmoManual(int materialId, FormulaDto formula, ConfiguracionCupo configuracion = null, string path = "");
         List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos();
         CupoResult ValidarDisponibilidadCupera(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
-
+        CupoResult DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver);
     }
 }
