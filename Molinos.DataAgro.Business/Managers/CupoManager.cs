@@ -4940,13 +4940,13 @@ namespace Molinos.DataAgro.Business.Managers
 
                 List<AdministracionCupo> admCupos = new List<AdministracionCupo>();
 
-                var sugerenciasPorComercial = repositorio.Listar<SugerenciaPorComercial>(x => x.ComercialId == comercialCreador);
-                var sugerenciasCupos = repositorio.Listar<SugerenciaCupo>(x => x.ComercialId == comercialCreador);
+                var ids = sugerenciasADevolver.Select(a => a.IdSugerencia).ToList();
+                var sugerenciasCupos = repositorio.Listar<SugerenciaCupo>(x => ids.Contains(x.Id));
 
                 foreach (var sugerencia in sugerenciasADevolver)
                 {
                     var sug = sugerenciasCupos.Where(a => a.Id == sugerencia.IdSugerencia).First();
-                    var spc = sugerenciasPorComercial.Where(a => a.MaterialId == sug.MaterialId && a.Fecha == sug.FechaSugerida && a.CentroId == a.CentroId).FirstOrDefault();
+                    var spc = repositorio.Obtener<SugerenciaPorComercial>(a => a.ComercialId == sug.ComercialId && a.MaterialId == sug.MaterialId && a.Fecha == sug.FechaSugerida && a.CentroId == a.CentroId);
                     if (sugerencia.Cantidad == sug.CantidadDeCupos)
                         sug.Aceptado = false;
                     sug.CantidadDeCupos -= sugerencia.Cantidad;
@@ -4964,6 +4964,7 @@ namespace Molinos.DataAgro.Business.Managers
                         ZonaId = sug.ZonaCupoId ?? 1,
                         Fecha = sug.FechaSugerida,
                         TipoAdministracionCupoId = (int)EnumTipoAdministracionCupo.Algoritmo,
+                        SugerenciaCupoId = sug.Id,
                     });
                     if (spc != null)
                     {
@@ -4979,6 +4980,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
+                logger.Error(e);
                 var nuevoResultado = new CupoResult();
                 nuevoResultado.Error("Devolver sugerencias", e.Message);
                 return nuevoResultado;

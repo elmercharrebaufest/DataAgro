@@ -67,7 +67,7 @@ namespace WebDataAgro.Controllers
                 Text = x.Descripcion,
                 Value = x.CampañaId.ToString(),
                 Selected = false
-            }).OrderBy(x => x.Value);
+            }).OrderByDescending(x => x.Text);
             ViewBag.Campania = campaniaListItems;
 
             var comercial = mobjComercialManager.TraerTodoComercial();
@@ -77,10 +77,9 @@ namespace WebDataAgro.Controllers
             var comercialListItems = comercial.Comercial.Select(
                x => new SelectListItem
                {
-                   Text = x.Nombres + " " + x.Apellido,
+                   Text = x.Apellido + " " + x.Nombres,
                    Value = x.ComercialId.ToString(),
-                   Selected = false
-               }).OrderBy(x => x.Value);
+               }).OrderBy(x => x.Text);
             ViewBag.Comercial = comercialListItems;
 
         }

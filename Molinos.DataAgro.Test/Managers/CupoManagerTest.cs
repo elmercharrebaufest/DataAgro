@@ -1036,14 +1036,15 @@ namespace Molinos.DataAgro.Test.Managers
                     Puntuaciones = "{\"CriterioRaiz\":0.4}",
                     FechaSugerida = DateTime.Now.Date
                 }});
-            repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<SugerenciaPorComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
-                        .Returns(new List<SugerenciaPorComercial> { new SugerenciaPorComercial { Total = 99, CentroId = 1, ComercialId = 1, Fecha = DateTime.Now.Date, MaterialId = 1, Id = 1 } });
             repositorioMock.Setup(x => x.AgregarTodos(It.IsAny<List<AdministracionCupo>>(), null)).Verifiable();
+            repositorioMock.Setup(y => y.Obtener<SugerenciaPorComercial>(It.IsAny<Expression<Func<SugerenciaPorComercial, bool>>>()))
+                           .Returns(new SugerenciaPorComercial { Total=0 });
+
             var result = target.DevolverSugerenciasMasivo(sugerenciasADevolver);
 
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<CierreCupera, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SugerenciaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<SugerenciaPorComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+            repositorioMock.Verify(x => x.Obtener<SugerenciaPorComercial>(It.IsAny<Expression<Func<SugerenciaPorComercial, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<Expression<Func<Comercial, int>>>()), Times.Once);
             repositorioMock.Verify(x => x.AgregarTodos(It.IsAny<List<AdministracionCupo>>(), null), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
