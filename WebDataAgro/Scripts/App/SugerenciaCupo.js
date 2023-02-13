@@ -365,7 +365,9 @@ function CargarEventos() {
             var resultados = MSExecuteOnServer(url, data);
             $.unblockUI();
             mostrarResultados(resultados);
-            location.reload();
+            if (resultados.ListaErrores.length == 0) {
+                cuposCreados(["La devolución se realizó correctamente."],null);
+            }            
         }, 250);
         $("#cuerpo-devolver-sugerencias").empty();
     });
