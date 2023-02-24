@@ -415,4 +415,35 @@
                            /@address" />
   </parameter>
 
+	<parameter name="HTTP_Port44 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port44']
+                           /@address" />
+	</parameter>
+	<parameter name="HTTP_Port45 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port45']
+                           /@address" />
+	</parameter>
+	<parameter name="HTTP_Port46 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port46']
+                           /@address" />
+	</parameter>
+	<parameter name="HTTP_Port47 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port47']
+                           /@address" />
+	</parameter>
+	<parameter name="HTTP_Port50 Service Endpoint Address">
+		<parameterEntry kind="XmlFile" scope="Web.config"
+						match="/configuration/system.serviceModel/client
+                           /endpoint[@name='HTTP_Port50']
+                           /@address" />
+	</parameter>
+
 </parameters>

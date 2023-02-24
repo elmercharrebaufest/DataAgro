@@ -1938,10 +1938,30 @@ namespace Molinos.DataAgro.Business.Managers
                 if (pendientes != null && pendientes.Count > 0)
                 {
                     var cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && string.IsNullOrEmpty(x.Contrato)).Sum(x => x.Cantidad);
-                    restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().cantidadCupos += (int)Math.Floor(cantidadCartaDePorte / 30000);
+
+                    if (cantidadCartaDePorte >= kilosMinimosParaSugerencia)
+                    {
+                        restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().cantidadCupos += (int)Math.Floor(cantidadCartaDePorte / 30000);
+                        var cantidadcuposCCPP = Convert.ToSingle(cantidadCartaDePorte) / 30000;
+                        var excedente = (cantidadcuposCCPP - Math.Truncate(cantidadcuposCCPP)) * 100;
+                        if (Convert.ToInt32(excedente) >= Convert.ToInt32(minimo))
+                        {
+                            restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().cantidadCupos += 1;
+                        }
+                    }
+
+                    if (cantidadCartaDePorte > 0)
+                    {
+                        logger.Debug("CcPpPerndienteAplicarDto para obtener CCPP: " + pendienteDto.ToJson());
+                        logger.Debug("ListarCartasDePortePendienteAplicar - CCPP obtenidos: " + pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && string.IsNullOrEmpty(x.Contrato)).ToList().ToJson());
+                    }
                 }
             }
 
+            if (restarCuposProvCorr.Count() > 0)
+            {
+                logger.Debug("Cupos a restar por Prov. y Corr.: " + restarCuposProvCorr.Where(x => x.cantidadCupos > 0).ToJson());
+            }
 
             var contratosOrdenados = contratos.Where(x => x.CantidadDeCupos > 0).ToList()
                 .OrderByDescending(x => x.Canje)

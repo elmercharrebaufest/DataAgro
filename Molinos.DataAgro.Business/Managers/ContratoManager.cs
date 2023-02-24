@@ -8521,7 +8521,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 foreach (var servicioSave in contratoSave.Servicios)
                 {
-                    var importe = contrato.Servicios != null && contrato.Servicios.Count > 0 ? contrato.Servicios.Where(x => x.ServicioValorId == servicioSave.ServicioValorId).FirstOrDefault().Importe : 0;
+                    var importe = contrato.Servicios != null && contrato.Servicios.Count > 0 ? contrato.Servicios.Where(x => x.ServicioValorId == servicioSave.ServicioValorId).FirstOrDefault()?.Importe : 0;
                     if (servicioSave.Importe != importe)
                     {
                         modificado = true;

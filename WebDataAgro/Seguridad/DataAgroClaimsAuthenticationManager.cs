@@ -91,8 +91,8 @@ namespace WebDataAgro.Seguridad
             }
             catch (Exception e)
             {
-                log.Error("error agregando roles al usuario {0}", nombreUsuario);
-                log.Error(e);
+                //log.Error("error agregando roles al usuario {0}", nombreUsuario);
+                //log.Error(e);
             }
 
 
