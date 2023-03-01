@@ -51,6 +51,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public string Calidad { get; set; }
         public string Motivo { get; set; }
         public bool? Sustentable { get; set; }
+        public bool? EPA { get; set; }
     }
 }
 

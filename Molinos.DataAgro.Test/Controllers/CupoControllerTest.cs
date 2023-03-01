@@ -189,9 +189,10 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Result\":{\"Id\":0,\"Siguientes\":null,\"ProveedorDescripcion\":\"a\",\"Proveedor\":1,\"PlantaId\":\"1600\",\"MaterialId\":1,\"FechaEntrega\":\"\\/Date(1579489200000)\\/\",\"FechaHastaEntrega\":\"\\/Date(1579489200000)\\/\",\"CantidadCupos\":0,\"ZonaId\":1,\"FleteAcarreo\":false,\"CalidadId\":1,\"Observacion\":\"\",\"FasonId\":false,\"CuitId\":\"A\",\"ConDescarga\":null,\"Dias\":null,\"Resultado\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"Negocio\":null,\"NegocioId\":null,\"NoPropio\":false,\"FechaIngreso\":\"\\/Date(-62135586000000)\\/\",\"CuposNoPropios\":null,\"Sustentable\":false},\"Error\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"irA\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Result\":{\"Id\":0,\"Siguientes\":null,\"ProveedorDescripcion\":\"a\",\"Proveedor\":1,\"PlantaId\":\"1600\",\"MaterialId\":1,\"FechaEntrega\":\"\\/Date(1579489200000)\\/\",\"FechaHastaEntrega\":\"\\/Date(1579489200000)\\/\",\"CantidadCupos\":0,\"ZonaId\":1,\"FleteAcarreo\":false,\"CalidadId\":1,\"Observacion\":\"\",\"FasonId\":false,\"CuitId\":\"A\",\"ConDescarga\":null,\"Dias\":null,\"Resultado\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"Negocio\":null,\"NegocioId\":null,\"NoPropio\":false,\"FechaIngreso\":\"\\/Date(-62135586000000)\\/\",\"CuposNoPropios\":null,\"Sustentable\":false,\"EPA\":false},\"Error\":{\"ListaCupos\":[],\"CuposNormales\":0,\"CuposFlete\":0,\"Estados\":null,\"Codigo\":null,\"CupoNoPropios\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"irA\":\"\"},\"JsonRequestBehavior\":1,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
                 a);
         }
+
         [Test]
         public void ModificarCupoOkTest()
         {
@@ -414,8 +415,8 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void TraerEstablecimientosTest()
         {
-            cupoManagerMock.Setup(x => x.TraerEstablecimientos(It.IsAny<string>())).Returns(new List<EstablecimientoStockDto>() { new EstablecimientoStockDto { Cantidad = 300, Cosecha = "20-21", Establecimiento = "Guard" } });
-            var result = target.TraerEstablecimientos(It.IsAny<string>());
+            cupoManagerMock.Setup(x => x.TraerEstablecimientos(It.IsAny<string>(), It.IsAny<bool>())).Returns(new List<EstablecimientoStockDto>() { new EstablecimientoStockDto { Cantidad = 300, Cosecha = "20-21", Establecimiento = "Guard" } });
+            var result = target.TraerEstablecimientos(It.IsAny<string>(), It.IsAny<bool>());
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);

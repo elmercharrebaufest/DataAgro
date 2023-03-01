@@ -101,6 +101,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
                         //Sustentable = (contrato is Contrato) && ((contrato as Contrato).ImporteSustentable != null || (contrato.TarifaAConvenir.HasValue? contrato.TarifaAConvenir.Value : false ) ) && (contrato as Contrato).ImporteSustentable > 0,
                         Sustentable = (contrato is Contrato) ? (contrato as Contrato).Sustentable.HasValue ? (contrato as Contrato).Sustentable.Value : false : false,
+                        EPA = (contrato is Contrato) && (contrato as Contrato).EPA.HasValue && (contrato as Contrato).EPA.Value,
+                        EPATipoDBId = contrato is Contrato && (contrato as Contrato).EPATipoDBId.HasValue ? (contrato as Contrato).EPATipoDBId : null,
                         Dolarizado = contrato.Dolarizado.Value,
                         Pesificado = contrato.DiasPesificado != null,
                         Negocio = (contrato is ContratoAcuerdo || contrato is AgenteCompra) ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado || contrato.EstadoId == (int)EnumEstadoContrato.PreAnulado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
@@ -314,7 +316,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Localidad = !(contrato is Contrato) || (contrato as Contrato).Localidad == null ? "" : (contrato as Contrato).Localidad.Nombre,
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
-                        Sustentable = (contrato is Contrato) && (contrato as Contrato).ImporteSustentable != null && (contrato as Contrato).ImporteSustentable > 0,
+                        Sustentable = (contrato is Contrato) && (contrato as Contrato).ImporteSustentable != null && (contrato as Contrato).ImporteSustentable > 0 && (contrato as Contrato).Sustentable == true,
+                        EPA = (contrato is Contrato) && (contrato as Contrato).EPA.HasValue && (contrato as Contrato).EPA.Value,
+                        EPATipoDBId = contrato is Contrato && (contrato as Contrato).EPATipoDBId.HasValue ? (contrato as Contrato).EPATipoDBId : null,
                         Dolarizado = contrato.Dolarizado.Value,
                         Pesificado = contrato.DiasPesificado != null,
                         Negocio = contrato is ContratoAcuerdo ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
@@ -408,7 +412,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ProveedorComisionistaId = contrato.ProveedorComisionistaId,
                         RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial,
                         FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP :  "",
-
                     };
 
                 return queryNegocios;

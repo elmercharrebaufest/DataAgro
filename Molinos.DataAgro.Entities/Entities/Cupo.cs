@@ -91,6 +91,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public virtual Comercial ComercialCreador { get; set; }
         public int? ComercialCreadorId { get; set; }
         public bool? Sustentable { get; set; }
+        public bool? EPA { get; set; }
 
         public object Clone()
         {

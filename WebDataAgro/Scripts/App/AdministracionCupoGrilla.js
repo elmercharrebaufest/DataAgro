@@ -284,32 +284,32 @@ function CargarGrillaConfig() {
                     return "<span><label><span>#= data.EstadoId || data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.EstadoId#'/></label></span>";
                 }, template: function (dataItem) {
                     var iconoSustentable = dataItem.Sustentable == true ? botonSustentable('fa-solid fa-leaf') : '';
-
+                    var iconoEPA = dataItem.EPA == true ? botonEPA('fa-pagelines') : '';
                     if (dataItem.EstadoId == 4) { //pendiente
                         return '<div class="status pendiente" style="text-align: center;">Pendiente'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
                             '</div>' +
                             botonAprobar(dataItem, 'fa-check pend') +
                             botonBorrar(dataItem, 'fa-trash pend') +
-                            iconoSustentable;
+                            iconoSustentable + iconoEPA;
                     }
                     if (dataItem.EstadoId == 3) { //confirmado                       
                         return '<div class="status confirmado" style="text-align: center;">Confirmado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" style="font-size: 15px" aria-hidden="true" title="Con Descarga"></i>' : '') +
                             '</div>' +
-                            iconoSustentable;
+                            iconoSustentable + iconoEPA;
                     }
                     if (dataItem.EstadoId == 2) { //Rechazado
                         return '<div class="status borrado" style="text-align: center;">Rechazado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
                             + '</div>' +
-                            iconoSustentable;
+                            iconoSustentable + iconoEPA;
                     }
                     if (dataItem.EstadoId == 1) { //anulado
                         return '<div class="status anulado" style="text-align: center;">Anulado'
                             + (dataItem.ConDescarga == true ? '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>' : '')
                             + '</div>' +
-                            iconoSustentable;
+                            iconoSustentable + iconoEPA;
                     }
                 }
             }
@@ -503,6 +503,9 @@ function botonBorrar(dataItem, icono) {
 }
 function botonSustentable(icono) {
     return '<button data-toggle="tooltip" title="Sustentable" disabled><i class="fa ' + icono + '"></i></button>';
+}
+function botonEPA(icono) {
+    return '<button data-toggle="tooltip" title="EPA" disabled><i class="fa ' + icono + '"></i></button>';
 }
 
 function ModalAceptarSugerencia(id) {

@@ -49,5 +49,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int CantidadFleteProcedenciaOriginal { get; set; }
         public int CantidadDeCupoOriginal { get; set; }
         public bool? Sustentable { get; set; }
+        public bool? EPA { get; set; }
     }
 }

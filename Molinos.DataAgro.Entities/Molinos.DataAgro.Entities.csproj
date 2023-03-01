@@ -145,6 +145,7 @@
     <Compile Include="Dto\EstadoHomeDto.cs" />
     <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
     <Compile Include="Dto\CampoMaterialDto.cs" />
+    <Compile Include="Dto\ReporteSojaEPADto.cs" />
     <Compile Include="Dto\ServicioValorDto.cs" />
     <Compile Include="Dto\ClasificacionHabilitadoSinBoletoDto.cs" />
     <Compile Include="Dto\ProvinciaHabilitadoSinBoletoDto.cs" />
@@ -372,7 +373,9 @@
     <Compile Include="Dto\TipoNegocioDto.cs" />
     <Compile Include="Dto\ToneladasGranoTipoDto.cs" />
     <Compile Include="Entities\CapacidadProductiva.cs" />
+    <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\EstadoHome.cs" />
+    <Compile Include="Entities\ReporteCompraNetSojaEPA.cs" />
     <Compile Include="Entities\ServicioValor.cs" />
     <Compile Include="Entities\TipoServicio.cs" />
     <Compile Include="Entities\Servicio.cs" />

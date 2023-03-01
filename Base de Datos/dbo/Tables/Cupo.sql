@@ -48,6 +48,7 @@
     [AdministracionCupoId] INT NULL, 
     [ComercialCreadorId] INT NULL, 
     [Sustentable] BIT NULL,
+    [EPA] BIT NULL,
     CONSTRAINT [PK_Cupo] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_Cupo_Proveedor] FOREIGN KEY ([ProveedorId]) REFERENCES [Proveedor]([ProveedorId]), 
     CONSTRAINT [FK_Cupo_Centro] FOREIGN KEY (CentroId) REFERENCES [Centro]([Id]),

@@ -546,7 +546,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 int Condicion = 0;
                 if (int.TryParse(ConfigurationManager.AppSettings["SmtpServerPort"], out Condicion))
-                {                    
+                {
                     oCliente = new SmtpClient(ConfigurationManager.AppSettings["SmtpServer"], int.Parse(ConfigurationManager.AppSettings["SmtpServerPort"]));
                 }
                 else
@@ -857,7 +857,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.ImporteSustentable != null && oContrato.ImporteSustentable > 0)
             {
-                htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                htmlBody += (oContrato.EPA == true ? "EPA " : "SUSTENTABLE ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
             if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
             {
@@ -1143,7 +1143,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (contrato.ImporteSustentable != null && contrato.ImporteSustentable > 0 && contrato.MonedaSustentable != null)
                 {
-                    htmlBody += "SUSTENTABLE " + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                    htmlBody += (contrato.EPA == true ? "EPA " : "SUSTENTABLE ") + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
                 }
                 if (contrato.Descuentos != null)
                 {
@@ -4001,7 +4001,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.ImporteSustentable != null && oContrato.ImporteSustentable > 0)
             {
-                htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                htmlBody += (oContrato.EPA == true ? "EPA " : "SUSTENTABLE ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
             if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
             {
@@ -4395,7 +4395,7 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 if (contrato.ImporteSustentable != null && contrato.ImporteSustentable > 0 && contrato.MonedaSustentable != null)
                 {
-                    htmlBody += "SUSTENTABLE " + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                    htmlBody += (contrato.EPA == true ? "EPA " : "SUSTENTABLE ") + contrato.ImporteSustentable + " " + contrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
                 }
             }
 
@@ -4609,7 +4609,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oContrato.ImporteSustentable != null && oContrato.ImporteSustentable > 0)
             {
-                htmlBody += "SUSTENTABLE " + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
+                htmlBody += (oContrato.EPA == true ? "EPA " : "SUSTENTABLE ") + oContrato.ImporteSustentable + " " + oContrato.MonedaSustentable.Descripcion.ToUpper() + "<br />";
             }
             if (oContrato.ClasificacionId == 1 && oContrato.CorredorId == null && oContrato.Dolarizado == true)
             {

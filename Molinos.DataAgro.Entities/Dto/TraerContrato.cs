@@ -1,5 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -7,7 +6,6 @@ namespace Molinos.DataAgro.Entities.Dto
     public class BasicoContrato
     {
         public string ChequeElectronicoValor;
-
         public int Id { get; set; }
         public string Cuit { get; set; }
         public int ContratoId { get; set; }
@@ -29,7 +27,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? Fecha { get; set; }
         public string FechaFormateado { get; set; }
         public string Hora { get; set; }
-
         public string NivelTarifa { get; set; }
         public decimal? TarifaFlete { get; set; }
         public int GrupoCompra { get; set; }
@@ -66,7 +63,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Comercial { get; set; }
         public string ComercialCreador { get; set; }
         public string Material { get; set; }
-        
         public string Campania { get; set; }
         public string Provincia { get; set; }
         public string Localidad { get; set; }
@@ -83,13 +79,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Estado_Order { get; set; }
         public string Observacion { get; set; }
         //public string Observacion_F { get; set; }
-
         public int? FijacionDePrecioContratoId { get; set; }
         public bool? Sustentable { get; set; }
         public bool? Dolarizado { get; set; }
         public bool? Pesificado { get; set; }
         public string Negocio { get; set; }
-
         public int? ClasificacionId { get; set; }
         public string ClasificacionDescripcion { get; set; }
         public int? DestinoId { get; set; }
@@ -264,8 +258,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string DestinoProvincia { get; set; }
         public string MonedaCanjeDescripcion { get; set; }
         public string CondicionalMonedaDescripcion { get; set; }
-        
-
         public int? BoletoContratoId { get; set; }
         public string RazonSocialProveedor { get; set; }
         public string Corredor { get; set; }
@@ -280,6 +272,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaHastaOriginalFormateado { get; set; }
         public List<ServicioValorDto> Servicios { get; set; }
         public bool ServicioModificado { get; set; }
+        public bool? EPA { get; set; }
+        public int? EPATipoDBId { get; set; }
     }
 
     public class StoredPorContratoResult

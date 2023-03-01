@@ -128,11 +128,11 @@
     <br />
     <div class="row">
         <div class="col-md-2">
-            <label>Fecha Hasta Fijación</label>
+            <label>Fecha Fijación 'Hasta'</label>
         </div>
         <div class="col-md-4">
             <span id="fechaHastaFijacionDiv">
-                <input id="fechaHastaFijacionId" class="filtroFecha" name="HastaFijacion-hasta" type="date" style="width: 50%" />
+                <input id="fechaHastaFijacionId" class="filtroFecha" name="HastaFijacion-hasta" type="date" style="width: 100%" />
             </span>
         </div>
         <div class="col-md-2">
@@ -195,54 +195,19 @@
     <br />
     <div class="row">
         <div class="col-md-2">
-            <label>Fecha Dolarizado</label>
-        </div>
-        <div class="col-md-2">
-            <span id="fechalimiteDiv">
-                <input id="fechalimiteId" class="filtroFecha" name="Fecha_Dolarizado-igual" type="date" style="width: 100%" />
-                @Html.CheckBox("Dolarizado", false, new { @class = "filtroBoleano", style = "position:absolute; right:55px;top:8px", @id = "DolarizadoId" })
-            </span>
-        </div>
-        <div class="col-md-2">
-            <label>Importe Sustentable</label>
-        </div>
-        <div class="col-md-2">
-            @Html.TextBox("Importe_Sustentable", "", new { @class = "number filtroBusquedaPorId", style = "width:100%", @id = "Importe_SustentableId" })
-            @Html.CheckBox("Sustentable", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "SustentableId" })
-        </div>
-        <div class="col-md-2">
-            <label>Días de Diferimiento</label>
-        </div>
-        <div class="col-md-2">
-            @Html.TextBox("Dias_Pesificado", "", new { @class = "number filtroBusquedaPorId", style = "width:100%", @id = "Dias_PesificadoId" })
-            @Html.CheckBox("Pesificado", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "PesificadoId" })
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            <label>Clasificacion</label>
+            <label>Clasificación</label>
         </div>
         <div class="col-md-4">
             @*@Html.DropDownList("ClasificacionId", new SelectList(ViewBag.Clasificacion, "Value", "Text"), new { @class = "multiselect", @id = "ClasificacionId" })*@
             <input id="ClasificacionId" name="ClasificacionId" class="multiselect" style="width:100%" type="text" placeholder="" required="required" />
         </div>
         <div class="col-md-2">
-            <label>Dolarizado Express</label>
-            @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", @id = "DolarizadoExpress" })
-        </div>
-        <div class="col-md-2">
-            <label>Usuario Externo</label>
-            @Html.CheckBox("EsUsuarioExterno", false, new { @class = "filtroBoleano", @id = "EsUsuarioExterno" })
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
             <label>Fecha Cierta</label>
+            @Html.CheckBox("FechaCiertaTilde", false, new { @class = "filtroBoleano", style = "position:absolute; right:30px;top:8px", @id = "FechaCiertaTildeId" })
         </div>
         <div class="col-md-2">
             <span id="fechaCiertaDesde">
                 <input id="FechaCierta" class="filtroFecha" name="FechaCierta-desde" type="date" style="width: 100%" />
-                @Html.CheckBox("FechaCiertaTilde", false, new { @class = "filtroBoleano", style = "position:absolute; right:55px;top:8px", @id = "FechaCiertaTildeId" })
             </span>
         </div>
         <div class="col-md-2">
@@ -250,7 +215,52 @@
                 <input id="FechaCiertaHasta" class="filtroFecha" name="FechaCierta-hasta" type="date" style="width: 100%" />
             </span>
         </div>
-       
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Fecha Dolarizado</label>
+            @Html.CheckBox("Dolarizado", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "DolarizadoId" })
+        </div>
+        <div class="col-md-3">
+            <span id="fechalimiteDiv">
+                <input id="fechalimiteId" class="filtroFecha" name="Fecha_Dolarizado-igual" type="date" style="width: 100%" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <label>Días de Diferimiento</label>
+            @Html.CheckBox("Pesificado", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "PesificadoId" })
+        </div>
+        <div class="col-md-3">
+            @Html.TextBox("Dias_Pesificado", "", new { @class = "number filtroBusquedaPorId", style = "width:100%", @id = "Dias_PesificadoId" })
+        </div>
+        <div class="col-md-2">
+            <label>Dolarizado Express</label>
+            @Html.CheckBox("DolarizadoExpress", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "DolarizadoExpress" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label>Sustentable</label>
+            @Html.CheckBox("Sustentable", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "SustentableId" })
+        </div>
+        <div class="col-md-2">
+            <label>Soja EPA</label>
+            @Html.CheckBox("EPA", false, new { @class = "filtroBoleano", style = "position:absolute; right:20px;top:8px", @id = "EPAId" })
+        </div>
+        <div class="col-md-1">
+            <label></label>
+        </div>
+        <div class="col-md-2">
+            <label>Importe Susten. o EPA</label>
+        </div>
+        <div class="col-md-3">
+            @Html.TextBox("Importe_Sustentable", "", new { @class = "number filtroBusquedaPorId", style = "width:100%", @id = "Importe_SustentableId" })
+        </div>
+        <div class="col-md-2">
+            <label>Usuario Externo</label>
+            @Html.CheckBox("EsUsuarioExterno", false, new { @class = "filtroBoleano", style = "position:absolute; right:10px;top:8px", @id = "EsUsuarioExterno" })
+        </div>
     </div>
     <br />
     <br />

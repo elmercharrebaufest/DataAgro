@@ -112,12 +112,14 @@ namespace WebDataAgro.Controllers
             var mailEnviar = mail ? ExcelReporteCompleto.GenerarExcel(this.ObtenerDatosReporte(), mobjReportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true) : new byte[1];
 
             var diferencial = diferencialManager.TraerDiferencial();
+
             oHedgeManager.CerrarDia(GlobalVariables.ComercialId,
                                     mailEnviar,
                                     GlobalVariables.IdActiveDirectory,
                                     mail,
                                     oHedgeManager.GenerarCuerpoMail(observaciones),
-                                    diferencial.DiferencialDefault);
+                                    //diferencial.DiferencialDefault
+                                    (diferencial == null ? 0 : diferencial.DiferencialDefault));
             return RedirectToAction("Index");
         }
         [HttpPost]
@@ -273,6 +275,7 @@ namespace WebDataAgro.Controllers
                 HedgeObjetivo = mobjReportesManager.TraerHedgeObjetivo(hoy, hoy, null),
                 TCPromedioDto = mobjReportesManager.TraerTcPromedio(hoy, hoy,null),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
+                SojaEPA = mobjReportesManager.TraerToneladasSojaEPA(hoy, hoy),
             };
         }
 
@@ -1162,6 +1165,7 @@ namespace WebDataAgro.Controllers
                 HedgeObjetivo = objetivos,
                 TCPromedioDto = mobjReportesManager.TraerTcPromedio(fechaDesde, fechaHasta,null),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
+                SojaEPA = mobjReportesManager.TraerToneladasSojaEPA(fechaDesde, fechaHasta, idCentro),
             };
         }
     }

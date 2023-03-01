@@ -64,6 +64,7 @@ function InicializarCuposIndex() {
                     FechaGeneracion: { type: "date" },
                     FleteProcedencia: { type: "boolean" },
                     Sustentable: { type: "boolean" },
+                    EPA: { type: "boolean" },
                     CTGFechaDesde: { type: "date" },
                     CTGFechaDesde: { type: "date" }
 
@@ -128,6 +129,7 @@ function InicializarCuposIndex() {
             { field: "ZonaCupo", title: "Zona", type: "string", width: 150 },
             { field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; } },
             { field: "Sustentable", title: "Sustentable", type: "string", width: 150, template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
+            { field: "EPA", title: "EPA", type: "string", width: 150, template: function (dataItem) { return dataItem.EPA ? "Si" : "No"; } },
             { field: "CupoStop", title: "Cupo STOP", type: "string", width: 150 },
             {
                 field: "EstadoCupo", title: "Estado", sortable: false, width: 200,
@@ -209,16 +211,19 @@ function InicializarCuposIndex() {
             var sheet = e.workbook.sheets[0];
             var templateflete = kendo.template(this.columns[9].template);
             var templatesustentable = kendo.template(this.columns[10].template);
+            var templateEPA = kendo.template(this.columns[11].template);
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
 
-                var dataitem = { fleteprocedencia: row.cells[9].value };
-                row.cells[9].value = templateflete(dataitem);
+                var dataitem = { fleteprocedencia: row.cells[8].value };
+                row.cells[8].value = templateflete(dataitem);
 
-                var dataitemSustentable = { sustentable: row.cells[10].value };
-                row.cells[10].value = templatesustentable(dataitemSustentable);
+                var dataitemSustentable = { Sustentable: row.cells[9].value };
+                row.cells[9].value = templatesustentable(dataitemSustentable);
 
+                var dataitemEPA = { EPA: row.cells[10].value };
+                row.cells[10].value = templateEPA(dataitemEPA);
 
                 //la fecha en chrome aparece corrida un dia, solucion:
                 var fecha = row.cells[0].value;
@@ -332,6 +337,9 @@ function deseleccionarRadioButton() {
 }
 function deseleccionarRadioButtonSustentable() {
     $('[name=Sustentable]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonEPA() {
+    $('[name=EPA]:checked').prop('checked', false);
 }
 
 function ConvertirFechaRegistroAString(filtros) {

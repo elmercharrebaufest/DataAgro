@@ -197,6 +197,10 @@ namespace WebDataAgro.Helpers.Excel
             CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
             CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
             CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, null); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
+            CrearCelda(row, c, null, cellBorderStyleColumnTitles); c++;
 
             var cra = new CellRangeAddress(1, 1, 2, 5);
             var cra1 = new CellRangeAddress(1, 2, 6, 6);
@@ -206,6 +210,8 @@ namespace WebDataAgro.Helpers.Excel
             var cra5 = new CellRangeAddress(1, 2, 16, 16);
 
             var cra6 = new CellRangeAddress(1, 1, 18, 20);
+            var cra7 = new CellRangeAddress(1, 1, 22, 24);
+
             sheet.AddMergedRegion(cra);
             sheet.AddMergedRegion(cra1);
             sheet.AddMergedRegion(cra2);
@@ -213,6 +219,7 @@ namespace WebDataAgro.Helpers.Excel
             sheet.AddMergedRegion(cra4);
             sheet.AddMergedRegion(cra5);
             sheet.AddMergedRegion(cra6);
+            sheet.AddMergedRegion(cra7);
 
             var celdasMerge = sheet.GetRow(1).GetCell(2);
             celdasMerge.SetCellValue("DISPONIBLE");
@@ -240,6 +247,12 @@ namespace WebDataAgro.Helpers.Excel
 
             celdasMerge = sheet.GetRow(1).GetCell(18);
             celdasMerge.SetCellValue("SOJA SUSTENTABLE");
+            celdasMerge.CellStyle = cellcolorTitles;
+
+            //celdasMerge.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+
+            celdasMerge = sheet.GetRow(1).GetCell(22);
+            celdasMerge.SetCellValue("SOJA EPA");
             celdasMerge.CellStyle = cellcolorTitles;
             #endregion
             #region row2
@@ -275,6 +288,12 @@ namespace WebDataAgro.Helpers.Excel
             c++;
             CrearCelda(row, c, "Total", cellcolorTitles);
             c++;
+            //CrearCelda(row, c, null, cellcolorTitles); c++;
+            CrearCelda(row, c, null, null); c++;
+            //SOJA EPA
+            CrearCelda(row, c, "A Precio", cellcolorTitles); c++;
+            CrearCelda(row, c, "A Fijar", cellcolorTitles); c++;
+            CrearCelda(row, c, "Total", cellcolorTitles); c++;
 
             #endregion
             #region PosicionToneladas
@@ -316,6 +335,10 @@ namespace WebDataAgro.Helpers.Excel
                     CrearCelda(row, c, model.SojaSustentable.Precio.ToString("N0"), cellBorderStyleColumnTitles); c++;
                     CrearCelda(row, c, model.SojaSustentable.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
                     CrearCelda(row, c, model.SojaSustentable.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, null, null); c++;
+                    CrearCelda(row, c, model.SojaEPA.Precio.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaEPA.Fijar.ToString("N0"), cellBorderStyleColumnTitles); c++;
+                    CrearCelda(row, c, model.SojaEPA.Total.ToString("N0"), cellBorderStyleColumnTitles); c++;
                 }
                 r++;
             }

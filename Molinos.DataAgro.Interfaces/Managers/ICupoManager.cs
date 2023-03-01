@@ -50,7 +50,7 @@ namespace Molinos.DataAgro.Interfaces
         CupoResult ConfirmarSugerencia(List<ConfirmacionSugerenciaCupoDto> datosTablaPorProveedor, List<DiaCupo> devoluciones, int materialId, string centroId, int comercialId);
 
         List<ConfiguracionCupoDto> TraerTodaConfiguracionCupoPorDia(int zonaId, int materialId, int centroId, DateTime fecha);
-        List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor);
+        List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor, bool esEPA);
         void AnulacionMasiva(List<int> equipo, string comercialId, List<int> ids, string path);
         List<CierreCupera> DevolverTodoCierreCupera();
         void CrearSugerenciaCupo();

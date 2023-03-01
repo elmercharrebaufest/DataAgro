@@ -200,6 +200,15 @@ else if (!Html.ViewData.ModelState.IsValid)
                     @Html.CheckBoxFor(x => x.Sustentable, new { @id = "Sustentable" })
                 </div>
             </div>
+
+            <div id="EPADiv" hidden>
+                <div class="col-sm-2 noRightPadding">
+                    <label>EPA </label>
+                </div>
+                <div class="col-sm-4 ">
+                    @Html.CheckBoxFor(x => x.EPA, new { @id = "EPA" })
+                </div>
+            </div>
         </div>
 
         @*<div class="row" id="descargaRowId" hidden>

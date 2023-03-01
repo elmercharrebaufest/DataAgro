@@ -32,26 +32,28 @@ namespace Molinos.DataAgro.Agent
                 {
 
                 };
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 4; i++)
                 {
-                   var e = new EstablecimientoStockDto
+                    var e = new EstablecimientoStockDto
                     {
-                       Cantidad = 56000,
-                       Establecimiento = "CAPALDI",
-                       Cosecha = "19-20",
-                       Localidad = "Buenos Aires",
-                       Provincia = "Buenos Aires"
-
+                        Cantidad = ((i % 2) == 0 ? 56000 : 56000 * 2),
+                        //Cantidad = ((i % 2) == 0 ? 56000 : 56000 * -1),
+                        //Cantidad = 56000,
+                        Establecimiento = "CAPALDI",
+                        Cosecha = "19-20",
+                        Localidad = "Buenos Aires",
+                        Provincia = "Buenos Aires",
+                        CodigoEstablecimiento = ((i % 2) == 0 ? "45000" : "75000"),
                     };
                     establecimientos.Add(e);
                 }
-                return establecimientos.ToList(); 
+                return establecimientos.ToList();
             }
             else
             {
                 try
                 {
-                    var agent = new ServicioRepositorioClient();                                   
+                    var agent = new ServicioRepositorioClient();
 
                     var valor = agent.ListarCampaniaPorCuit(cuitProveedor, campania);
                     logger.Debug(valor.ToXml());
@@ -60,7 +62,7 @@ namespace Molinos.DataAgro.Agent
                     {
                         Cantidad = x.StockDeclarado - x.StockUtilizado,
                         Establecimiento = x.NombreEstablecimiento,
-                        Cosecha = x.Cosecha,                     
+                        Cosecha = x.Cosecha,
                         Provincia = x.Provincia,
                         Localidad = string.IsNullOrEmpty(x.Localidad) ? "" : x.Localidad.Split('-').Last().Split('(').First(),
                         CodigoEstablecimiento = x.CodigoEstablecimiento

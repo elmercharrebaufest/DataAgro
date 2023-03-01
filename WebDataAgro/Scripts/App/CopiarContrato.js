@@ -646,12 +646,13 @@ function ObtenerDatos(error) {
     obj.FechaDesdeSustentable = fechaValida($("#fechaDesdeSustentableId").val()) ? $("#fechaDesdeSustentableId").val() : null;
     obj.FechaHastaSustentable = fechaValida($("#fechaHastaSustentableId").val()) ? $("#fechaHastaSustentableId").val() : null;
     obj.tarifaAConvenir = $("#tarifaAConvenirId").is(":checked");
-
     obj.FechaDolarizado = $("#tipoId").val() == "1" ? "" : $("#dolarizadoFechaId").val();
     obj.PagoDiferidoContrato = $("#pesificadoId").is(":checked") ? true : false;
     obj.PagoDiferido = obj.TipoNegocioId != 3 ? $("#pesificadoId").is(":checked") ? true : false : $("#diasDiferidoId").is(":checked") ? true : false;
     obj.Dolarizado = $("#tipoId").val() == "1" ? false : $("#dolarizadoId").is(":checked") ? true : false;
     obj.Sustentable = $("#sustentableId").is(":checked") ? true : false;
+    obj.EPA = $("#epaId").is(":checked") ? true : false;
+    obj.EPATipoDBId = $("#selectPrecioEpa").val();
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;

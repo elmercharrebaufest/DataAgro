@@ -1,4 +1,3 @@
-
 var viewModel;
 var datosIniCrearContrato;
 var filasSeleccionadas = {};
@@ -195,11 +194,11 @@ $(document).ready(function () {
     });
 
 });
+
 function htmlEncode(value) {
     if (value == null) value = "";
     return $('<div/>').text(value.toString().replace(/(\r\n|\n|\r)/gm, " ")).html();
 }
-
 function formatearFecha(fecha) {
     var fechaFormateada = kendo.toString(fecha, "dd/MM/yyyy");
     return fechaFormateada;
@@ -231,6 +230,7 @@ function botonPendiente(dataItem, icono, esModalVisualizar) {
         return "<div</div>";
     }
 }
+
 function botonNoMostrarEnTablero(dataItem, color) {
     if (ocultarEnTablero) {//crear permiso nuevo
         var title = "Oculto en Tablero";
@@ -245,11 +245,13 @@ function botonNoMostrarEnTablero(dataItem, color) {
         return "<div</div>";
     }
 }
+
 function cambiarMarca(id, ocultar) {
     var marcar = { id: id, OcultarEnTablero: ocultar };
     result = MSExecuteOnServer('/CompraNet/NoMostrarEnTablero', marcar);
     recargarGrilla();
 }
+
 function botonModificarFinalizados(dataItem, icono, esModalVisualizar) {
     var cerrarModalVisualizar = ' ';
     if (esModalVisualizar == true) {
@@ -271,6 +273,7 @@ function botonModificarFinalizados(dataItem, icono, esModalVisualizar) {
         return "<div</div>";
     }
 }
+
 function botonConfirmadoTilde(dataItem, icono, esModalVisualizar) {
     if (confirmaNegocios && !externo && puedeConfirmarNegocio(dataItem)) {
         var mensaje = ModificoPrecio(dataItem);
@@ -298,6 +301,7 @@ function botonConfirmadoTilde(dataItem, icono, esModalVisualizar) {
     }
 
 }
+
 function botonConfirmadoTildeFinalizado(dataItem, icono) {
     if (confirmaNegocios && !externo && puedeConfirmarNegocio(dataItem)) {
         return '<button data-toggle="tooltip" title="Confirmar" onclick="ModalConfirmadoTildeFinalizado(' +
@@ -330,6 +334,7 @@ function puedeConfirmarNegocio(dataItem) {
             || (dataItem.MaterialId == 5 && confirmarNegociosGirasolAO))
     );
 }
+
 function botonFinalizado(dataItem, icono, esModalVisualizar) {
     if (dataItem.TipoNegocioId == 6) {
         return '<div></div>';
@@ -367,6 +372,7 @@ function botonAprobar(dataItem, icono) {
         return '<div></div>';
     }
 }
+
 function botonVisualizar(dataItem, icono) {
     return '<button data-toggle="tooltip" title="Visualizar" onclick="ModalVisualizar(' +
         "'" + dataItem.Id + "'" + ',' +
@@ -387,6 +393,8 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.Localidad + "'" + ',' +
         "'" + dataItem.ContratoSAP + "'" + ',' +
         "'" + dataItem.Negocio + "'" + ',' +
+        "'" + dataItem.EPA + "'" + ',' +
+        "'" + dataItem.EPATipoDBId + "'" + ',' +
         "'" + dataItem.Sustentable + "'" + ',' +
         "'" + dataItem.Importe_Sustentable + "'" + ',' +
         "'" + dataItem.MonedaId_Sustentable + "'" + ',' +
@@ -422,19 +430,16 @@ function botonVisualizar(dataItem, icono) {
         "'" + formatearFecha(dataItem.DesdeFijacion) + "'" + ',' +
         "'" + formatearFecha(dataItem.HastaFijacion) + "'" + ',' +
         "'" + dataItem.MercsDeposito + "'" + ',' +
-
         "'" + dataItem.ContratoCorredor + "'" + ',' +
         "'" + dataItem.ContratoVendedor + "'" + ',' +
         "'" + dataItem.SelCargoMOA + "'" + ',' +
         "'" + dataItem.SelCargoVendedor + "'" + ',' +
-
         "'" + dataItem.TipoFason + "'" + ',' +
         "'" + dataItem.Posicion + "'" + ',' +
         "'" + dataItem.Operador + "'" + ',' +
         "'" + dataItem.PrecioNeto + "'" + ',' +
         "'" + dataItem.Id + "'" + ',' +
         "'" + dataItem.Pizarra + "'" + ',' +
-
         "'" + dataItem.ZonaDescripcion + "'" + ',' +
         "'" + dataItem.NivelTarifa + "'" + ',' +
         "'" + dataItem.TarifaFlete + "'" + ',' +
@@ -470,7 +475,6 @@ function botonVisualizar(dataItem, icono) {
         "'" + htmlEncode(dataItem.MotivoReemplazo == null ? "" : dataItem.MotivoReemplazo) + "'" + ',' +
         "'" + dataItem.AnulaYReemplazaContratoSAP + "'" + ',' +
         "'" + dataItem.ObligatoriedadBonificacionDesc + "'" + ',' +
-
         "'" + dataItem.Condicional + "'" + ',' +
         "'" + dataItem.CondicionalCantidad + "'" + ',' +
         "'" + dataItem.CondicionalFechaFormateado + "'" + ',' +
@@ -592,8 +596,6 @@ function botonPreAnular(dataItem, icono, esModalVisualizar) {
     }
 }
 
-
-
 function botonAsociarContratos(dataItem, icono) {
     if (asociarNegocios && dataItem.ContratoId && dataItem.TipoPosicionCBOT == 'PASE' && dataItem.TipoNegocioId == 1) {
         return '<button data-toggle="tooltip" title="Asociar Negocios" onclick="ModalAsociarNegocios(' +
@@ -605,9 +607,6 @@ function botonAsociarContratos(dataItem, icono) {
     }
 
 }
-
-
-
 
 function AutoRecargar() {
     setInterval(function () {
@@ -627,6 +626,7 @@ function recargarGrilla() {
     }
 
 }
+
 function Filtrar() {
     var grid = $('#gridInformeCompraNet').data('kendoGrid');
     var currentFilters = grid.dataSource.filter();
@@ -660,6 +660,7 @@ function Filtrar() {
     recargarGrilla();
 
 }
+
 function BorrarFiltro() {
     $("#ContratoSAPId").val("");
     $("#ContratoSAPHastaId").val("");
@@ -790,7 +791,7 @@ function addOrRemoveFilter(grid, field, operator, value) {
         if (filters != null) {
             for (var x = 0; x < filters.length; x++) {
                 var temp = filters[x].filters;
-               if (temp == undefined) { temp = filters[x]; }
+                if (temp == undefined) { temp = filters[x]; }
                 if (temp.field == field) {
                     removeIndex = x;
                     break;
@@ -940,7 +941,7 @@ function CreateGridInformeCompraNet() {
                 } else if ((view[i].ImporteFinanciero > 1 || view[i].ImporteRedespacho < -1 || view[i].ImporteComision > 1 || view[i].ImporteBonificacion > 1)
                     || (view[i].MaterialId == 1 && view[i].StandardCalidadId == 1)
                     || (view[i].MaterialId == 2 && (view[i].StandardCalidadId == 1 || view[i].StandardCalidadId == 2))
-                    || (view[i].MaterialId == 3 && (view[i].StandardCalidadId == 2 || view[i].Sustentable == true))
+                    || (view[i].MaterialId == 3 && (view[i].StandardCalidadId == 2 || view[i].Sustentable == true || view[i].EPA == true))
                     || ((view[i].MaterialId == 4 || view[i].MaterialId == 5) && view[i].StandardCalidadId == 6)) {
                     grid.tbody.find("tr[data-uid='" + view[i].uid + "']")
                         .addClass("calidadEspecialOSustentable");
@@ -1147,7 +1148,7 @@ function CreateGridInformeCompraNet() {
                 },
                 attributes: { "class": "mobile-xs " + classExterno }
             },
-           
+
             {
                 field: "DestinoDescripcion", type: "string", title: "Destino", width: 80, minResizableWidth: 80, attributes: { "class": "mobile-xs mobile-md" }
             },
@@ -1237,8 +1238,8 @@ function CreateGridInformeCompraNet() {
                                 botonVisualizar(dataItem, 'fa-eye fin') +
                                 ((dataItem.TipoNegocioId == 3) ? botonPreAnular(dataItem, 'fa-trash fin') : botonPreAnular(dataItem, 'fa-trash fin')) +
                                 ((dataItem.Virtual == true) ? "" : botonModificarFinalizados(dataItem, 'fa-pencil fin')) +
-                                botonAsociarContratos(dataItem, 'fa fa-inbox fin') + 
-                                ((dataItem.ContratoId) ? botonReenviarMail(dataItem, 'fa fa-envelope-o fin') : "") ;
+                                botonAsociarContratos(dataItem, 'fa fa-inbox fin') +
+                                ((dataItem.ContratoId) ? botonReenviarMail(dataItem, 'fa fa-envelope-o fin') : "");
 
                         } else {
                             descripcion = externo ? ' data-toggle="tooltip" title="Fijaci&oacute;n cerrada" ' : '';
@@ -1408,12 +1409,12 @@ function CreateGridInformeCompraNet() {
         }
     });
 
-    if ($("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width() < 100) {
-        $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width(100);
-        $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(1).width(100);
-        $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(2).width(100);
-        $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(2).width(100);
-    }
+    //if ($("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width() < 100) {
+    //    $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(1).width(100);
+    //    $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(1).width(100);
+    //    $("#gridInformeCompraNet .k-grid-header-wrap").find("colgroup col").eq(2).width(100);
+    //    $("#gridInformeCompraNet .k-grid-content").find("colgroup col").eq(2).width(100);
+    //}
 
     var checkInputs = function (elements) {
         elements.each(function () {
@@ -1423,7 +1424,7 @@ function CreateGridInformeCompraNet() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
-    function createMultiSelect(element, textField, valueField, url, columna, serverFiltering, filterType) {   
+    function createMultiSelect(element, textField, valueField, url, columna, serverFiltering, filterType) {
         element.removeAttr("data-bind");
         columna = columna == null ? valueField : columna;
         serverFiltering = serverFiltering == null ? true : serverFiltering;
@@ -1495,6 +1496,7 @@ function CreateGridInformeCompraNet() {
     }
     AvisoContratosPendientes();
 }
+
 function BuscarTotales() {
     var grid = $("#gridInformeCompraNet").data("kendoGrid");
     var filter = grid.dataSource.filter();
@@ -1554,6 +1556,7 @@ function BuscarTotales() {
 
     }
 }
+
 function isValidDate(date) {
     return date && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date);
 }
@@ -1649,6 +1652,7 @@ function Finalizar(finalizarContratoFijacion) {
     }
     recargarGrilla();
 }
+
 function ModalAprobar(contratoId, tipoId, fijacionDePrecioContratoId) {
     $(".modal-title-aprobado").empty();
     if (tipoId === "3") {
@@ -1661,6 +1665,7 @@ function ModalAprobar(contratoId, tipoId, fijacionDePrecioContratoId) {
     $("#tipoNegocioModalFinalizado").val(tipoId);
     $("#modalAprobar").modal('show');
 }
+
 function Aprobar() {
     var result;
     var aprobar = $("#contratoModalAprobar").val();
@@ -1746,8 +1751,6 @@ function ModalConfirmadoVarios() {
     }
     $("#ModalConfirmarVarios").modal('show');
 }
-
-
 
 function ConfirmarVariosContratos(modificarSinCalidad) {
     $("#confirmarVarios").hide();
@@ -1952,13 +1955,13 @@ function ModalReenviarVarios() {
     negociosFinalizados = negociosFinalizados.filter(function (neg) { return (neg.TipoNegocioId == 1 || neg.TipoNegocioId == 2 || neg.TipoNegocioId == 3) && neg.Estado == 5; });
     if (negociosFinalizados.length > 0) {
         for (var i in negociosFinalizados) {
-                var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
-            
-                if (negociosFinalizados[i].TipoNegocioId === 3) {
-                    $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Fijaci&oacute;n SAP: ' + negociosFinalizados[i].FijacionSAP + '</div>' + loader + '</div>');
-                } else {
-                    $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Contrato SAP: ' + negociosFinalizados[i].ContratoSAP.substring(3) + '</div>' + loader + '</div>');
-                }
+            var loader = '<div class="col-xs-1"><div id="estado' + i + '" class="loader" hidden></div></div><div id="error' + i + '" class="col-xs-8"> </div>';
+
+            if (negociosFinalizados[i].TipoNegocioId === 3) {
+                $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Fijaci&oacute;n SAP: ' + negociosFinalizados[i].FijacionSAP + '</div>' + loader + '</div>');
+            } else {
+                $("#emailReenviado-modal").append('<div class="row"><div class="col-xs-6">Contrato SAP: ' + negociosFinalizados[i].ContratoSAP.substring(3) + '</div>' + loader + '</div>');
+            }
         }
     } else {
         $("#emailReenviado-modal").append('<div style="text-align:center">Se deben seleccionar contratos a precio, a fijar y/o fijaciones, en estado finalizado.</div>');
@@ -1994,7 +1997,7 @@ function ReenviarVariosMails() {
             $("#estado" + i).append('<img src="/Content/Images/Aceptar.png" alt="Confirmado"/>');
         }
         $.unblockUI();
-    }, 200);    
+    }, 200);
 }
 
 function ObtenerDatosModalConfirmado() {
@@ -2060,6 +2063,7 @@ function Confirmar(confirmarContratoFijacion) {
     }
 
 }
+
 function ObtenerDatosModalPreAnular() {
     var motivo = $("#motivo-rechazoNegocio").val();
     if (motivo == null || motivo == "" || motivo == undefined) {
@@ -2088,6 +2092,7 @@ function ObtenerDatosModalPreAnular() {
         recargarGrilla();
     }
 }
+
 function ObtenerDatosModalBorrarPreAnular() {
     //var motivoRechazo = $("#motivo-rechazoSolictud").val();
     //var objConfirmado = {};
@@ -2117,6 +2122,7 @@ function ObtenerDatosModalBorrarPreAnular() {
         recargarGrilla();
     }
 }
+
 function AnularContratoPreAnulado() {
     var result;
     var id = $("#contratoModalBorrar").val();
@@ -2134,6 +2140,7 @@ function AnularContratoPreAnulado() {
         recargarGrilla();
     }
 }
+
 function ObtenerDatosModalBorrado() {
     var motivoRechazo = $("#motivo-rechazo").val();
     var objConfirmado = {};
@@ -2211,7 +2218,6 @@ function ModalConError(contratoId, proveedor, fechaDesdeHasta, tipo, material, c
     $("#trigoEspecialDivConError").append(trigoEspecial);
     $("#modalConError").modal('show');
 }
-
 
 function ModalAsociarNegocios(contratoId, estadoId) {
     $("#paseId").val(contratoId);
@@ -2362,7 +2368,7 @@ function GuardarAmpliacion(ampliacion) {
 }
 
 function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda,
-    campana, provincia, localidad, nro_SAP, negocio, sustentable, sustentablePrecio, sustentableMonedaId, tarifaAConvenir, dolarizadoFecha, pesificadoDias, informaSIO,
+    campana, provincia, localidad, nro_SAP, negocio, EPA, EPATipoDBId, sustentable, sustentablePrecio, sustentableMonedaId, tarifaAConvenir, dolarizadoFecha, pesificadoDias, informaSIO,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
@@ -2372,6 +2378,7 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional,
     CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta, RazonsocialProveedorComisionista, minimo, maximo,
     ComercialZonaId, FijacionDePrecioContratoId, TipoNegocioId, AcuerdoId, AgenteId, FasonId, Estado, MaterialId, virtual, CantidadDeposito, dolarizadoOriginal, hastaOriginal, servicioModificado) {
+    
     var dataItem = {
         Id: id,
         Estado: Estado,
@@ -2383,10 +2390,8 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         AgenteID: AgenteId,
         FasonId: FasonId,
         TipoPosicionCBOT: TipoPosicionCBOT,
-
         ComercialZonaId: ComercialZonaId,
         MaterialId: MaterialId,
-
         ComercialCreadorId: comercialId,
         DestinoId: destino,
         Moneda: moneda,
@@ -2460,7 +2465,6 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
             botonConfirmadoTildeFinalizado(dataItem, 'fa-check reconf', true) +
             botonBorrar(dataItem, 'fa-trash reconf', true))
     }
-
 
     $("#contrato").text(contrato);
     if (status == "11" || status == "7") {
@@ -2659,6 +2663,16 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
     //sustentablePrecio !== "null" && sustentableMonedaId !== "null" ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
+    if (EPA == "true") {
+        if (EPATipoDBId == 1) {
+            $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Sobre precio).");
+
+        } else if (EPATipoDBId == 2) {
+            $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Fuera de precio).");
+        } else $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId);
+    } else {
+        $("#visualizar_epaPrecio").text("null")
+    }
     if (sustentable == "true") {
         if (tarifaAConvenir == "true") {
             $("#visualizar_sustentablePrecio").text("Tarifa a Convenir");
@@ -2726,11 +2740,13 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     visualizacionRowDoble("boletoDivVisualizar", "visualizar_boleto", "bolsaDivVisualizar", "visualizar_bolsa");
     visualizacionRowDoble("pesificadoDiasDivVisualizar", "visualizar_pesificadoDias", "informaSIODivVisualizar", "visualizar_informaSIO");
     visualizacionRowDoble("dolarizadoFechaDivVisualizar", "visualizar_dolarizadoFecha", "dolarizadoFechaOriginalDivVisualizar", "visualizar_dolarizadoOriginalFecha");
-    visualizacionRowDoble("sustentableDivVisualizar", "visualizar_sustentablePrecio");
+    visualizacionRowSimple("sustentableDivVisualizar", "visualizar_sustentablePrecio");
+    visualizacionRowSimple("epaDivVisualizar", "visualizar_epaPrecio");
     visualizacionRowDoble("planCanjeDivVisualizar", "visualizar_planCanje", "establecimientoDivVisualizar", "visualizar_establecimiento");
 
     if (!sustentablePrecio === "undefined" || !sustentablePrecio === "null" || !sustentablePrecio === "false") {
         $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
+        $("#visualizar_epaPrecio").text(sustentablePrecio + " " + (sustentableMoneda != "undefined" && sustentableMoneda != "null" ? sustentableMoneda : ""));
     }
 
 
@@ -3131,7 +3147,6 @@ function visualizacionRowDoblePrecioCero(div1, div2, aFijar) {
     }
 }
 
-
 function visualizacionRowDoble(div1, span1, div2, span2) {
     if ($("#" + span1).text() === "null" && $("#" + span2).text() === "null") {
         $("#" + div1).hide();
@@ -3156,14 +3171,22 @@ function visualizacionRowDoble(div1, span1, div2, span2) {
     }
 }
 
-function visualizacionRowSimple(dato, idDiv, idText) {
-    if (dato === "undefined" || dato === "null" || dato === "false" || dato === "") {
-        $("#" + idDiv).hide();
-    }
-    else {
-        $("#" + idDiv).show();
-        $("#" + idText).text(dato);
-    }
+//function visualizacionRowSimple(dato, idDiv, idText) {  //se usaba sólo en visualizacionRowSimple("aperturaBasisDivVisualizar", "visualizar_aperturaBasis");
+//    if (dato === "undefined" || dato === "null" || dato === "false" || dato === "") {
+//        $("#" + idDiv).hide();
+//    }
+//    else {
+//        $("#" + idDiv).show();
+//        $("#" + idText).text(dato);
+//    }
+//}
+
+function visualizacionRowSimple(div, span) {
+    if ($("#" + span).text() === "null") {
+        $("#" + div).hide();
+    } else {
+        $("#" + div).show();
+    } 
 }
 
 function ModalBorrar(proveedor, id, tipoNegocio, fijacionDePrecioContratoId, fasonId, agenteId, acuerdoId, estado) {
@@ -3341,7 +3364,6 @@ function AvisoContratosPendientes() {
     });
 }
 
-
 function InicializarBuscador() {
     var grupoDeComprasDatos = MSExecuteOnServer('/CompraNet/BuscarGrupoDeCompras');
 
@@ -3378,7 +3400,6 @@ function InicializarBuscador() {
         }
     });
 }
-
 
 function InicializarPrecioMOA() {
     var precio = MSExecuteOnServer('/CompraNet/TraerPrecioMoa');
@@ -3478,6 +3499,7 @@ function ArmarPrecio(dataItem) {
         }
     }
 }
+
 function ArmarFechaDesde(dataItem) {
     var fecha = kendo.toString(dataItem.FechaDesde, "dd/MM/yyyy");
     if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2) {
@@ -3508,6 +3530,7 @@ function ArmarFechaDesde(dataItem) {
         return fecha;
     }
 }
+
 function ArmarFechaHasta(dataItem) {
     var fecha = kendo.toString(dataItem.FechaHasta, "dd/MM/yyyy");
     if (dataItem.TipoNegocioId === 1 || dataItem.TipoNegocioId === 2) {
@@ -3538,6 +3561,7 @@ function ArmarFechaHasta(dataItem) {
         return fecha;
     }
 }
+
 function ModificoPrecio(dataItem) {
     if (dataItem.TipoNegocioId !== 1) {
         if (dataItem.ComercialCreadorId == null) {
@@ -3570,6 +3594,7 @@ function mostrarDetalles() {
     $("#datosContrato").show();
     $("#tablaModificacion").hide();
 }
+
 function compararReconfirmacion() {
     var id = $("#contrato").text();
     $("#mostrar").hide();
@@ -3807,7 +3832,6 @@ function copiarImagen() {
     }, 200);
 }
 
-
 function BuscarDatosServicio(id) {
     var contrato = {
         Id: id,
@@ -3840,14 +3864,14 @@ function ArmarDescripcionServicio(servicio) {
 }
 
 function botonReenviarMail(dataItem, icono) {
-        return '<button data-toggle="tooltip" title="Reenviar Email"' +
-            'onclick="ModalReenviarMail(' +
-            "'" + dataItem.ContratoSAP + "'" + ',' +
-            "'" + dataItem.TipoNegocioId + "'" + ',' +
-            "'" + dataItem.FijacionSAP + "'" + ',' +
-            "'" + dataItem.ContratoId + "'" + ',' +
-            "'" + dataItem.FijacionDePrecioContratoId + "'" +
-            ')"><i class="fa ' + icono + ' fin"></i></button>';
+    return '<button data-toggle="tooltip" title="Reenviar Email"' +
+        'onclick="ModalReenviarMail(' +
+        "'" + dataItem.ContratoSAP + "'" + ',' +
+        "'" + dataItem.TipoNegocioId + "'" + ',' +
+        "'" + dataItem.FijacionSAP + "'" + ',' +
+        "'" + dataItem.ContratoId + "'" + ',' +
+        "'" + dataItem.FijacionDePrecioContratoId + "'" +
+        ')"><i class="fa ' + icono + ' fin"></i></button>';
 }
 
 function ModalReenviarMail(contratoSAP, tipoId, fijacionSAP, contratoId, fijacionDePrecioContratoId) {
@@ -3907,7 +3931,7 @@ function AddFilters(grid, field, operator, values) {
             filtros.filters.push({ field: field, operator: operator, value: v });
         }
     });
-  
+
     var currentFilters = grid.dataSource.filter();
     if (!currentFilters) {
         currentFilters = { filters: [], logic: 'and' }

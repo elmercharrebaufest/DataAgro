@@ -3439,12 +3439,12 @@ function comprobarInputs() {
         eliminarError("#Telefono4", "error-elem-Telefono4");
     }
 
-    if ($("#comentario").val() && $("#comentario").val().length > 500) {
-        mostrarError("#comentario", "error-elem-comentario", "No debe superar los 500 caracteres");
-        hayErrores = 1;
-    } else {
-        eliminarError("#comentario", "error-elem-comentario");
-    }
+    //if ($("#comentario").val() && $("#comentario").val().length > 500) {
+    //    mostrarError("#comentario", "error-elem-comentario", "No debe superar los 500 caracteres");
+    //    hayErrores = 1;
+    //} else {
+    //    eliminarError("#comentario", "error-elem-comentario");
+    //}
 
     if ($("#direccion").val() && $("#direccion").val().length > 100) {
         mostrarError("#direccion", "error-elem-direccion", "No debe superar los 100 caracteres");

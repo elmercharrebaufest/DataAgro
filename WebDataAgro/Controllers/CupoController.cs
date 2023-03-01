@@ -409,7 +409,8 @@ namespace WebDataAgro.Controllers
                 NegocioId = cupo.Negocio,
                 ZonaCupoId = cupo.ZonaId,
                 ConDescarga = cupo.ConDescarga,
-                Sustentable = cupo.Sustentable
+                Sustentable = cupo.Sustentable,
+                EPA = cupo.EPA,
             };
             if (PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
             {
@@ -600,11 +601,11 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult TraerEstablecimientos(string cuitProveedor)
+        public ActionResult TraerEstablecimientos(string cuitProveedor, bool esEPA)
         {
             return new JsonResult()
             {
-                Data = cupoManager.TraerEstablecimientos(cuitProveedor),
+                Data = cupoManager.TraerEstablecimientos(cuitProveedor, esEPA),
                 MaxJsonLength = Int32.MaxValue
             };
         }

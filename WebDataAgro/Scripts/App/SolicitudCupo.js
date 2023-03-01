@@ -1,6 +1,7 @@
 ﻿var externo;
 var dataTabla = [];
 var stockDisponible = true;
+//var stockInsuficiente = false;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -273,15 +274,16 @@ function CargarGrilla() {
                 }, template: function (dataItem) {
                     var estadoContent = ''
                     var iconoSustentable = dataItem.Sustentable == true ? botonSustentable('fa-solid fa-leaf') : '';
+                    var iconoEPA = dataItem.EPA == true ? botonEPA('fa-pagelines') : '';
                     if (dataItem.EstadoId == 4) { //pendiente
                         if (dataItem.ConDescarga == true) {
                             return '<div class="status pendiente" style="text-align: center;">Pendiente <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i></div>' +
                                 botonBorrar(dataItem, 'fa-trash pend') +
-                                iconoSustentable;
+                                iconoSustentable + iconoEPA;
                         } else {
                             return '<div class="status pendiente" style="text-align: center;">Pendiente</div>' +
                                 botonBorrar(dataItem, 'fa-trash pend') +
-                                iconoSustentable;
+                                iconoSustentable + iconoEPA;
                         }
                     }
                     if (dataItem.EstadoId == 3) { //aceptado
@@ -299,7 +301,7 @@ function CargarGrilla() {
                         estadoContent += '  <i class="fa fa-truck" aria-hidden="true" title="Con Descarga"></i>'
                     }
                     estadoContent += '</div>'
-                    return estadoContent + iconoSustentable;
+                    return estadoContent + iconoSustentable + iconoEPA;
                 }
             }
         ],
@@ -556,6 +558,16 @@ function InicializarElementos() {
     });
 
     $("#Sustentable").change(function () {
+        if ($("#Sustentable").is(':checked') == true) {
+            $("#EPA").prop("checked", false);
+        }
+        MostrarVisualizarStock();
+    });
+
+    $("#EPA").change(function () {
+        if ($("#EPA").is(':checked') == true) {
+            $("#Sustentable").prop("checked", false);
+        }
         MostrarVisualizarStock();
     });
 }
@@ -620,6 +632,7 @@ function LimpiarModalSolicitudExtraordinaria() {
     $("#FleteAcarreoES").prop("checked", false);
     checkSoja();
     $("#Sustentable").prop("checked", false);
+    $("#EPA").prop("checked", false);
 }
 
 function AbrirModalSolicitudExtraordinaria() {
@@ -634,14 +647,19 @@ function checkSoja() {
 
         $("#sustentableDivSE").hide();
         $("#Sustentable").prop("checked", false);
+        $("#EPADivSE").hide();
+        $("#EPA").prop("checked", false);
     } else {
         $("#calidadDivSE").show();
 
         if ($("#CentroIdSE").val() == "1029") {
             $("#sustentableDivSE").show();
+            $("#EPADivSE").show();
         } else {
             $("#sustentableDivSE").hide();
             $("#Sustentable").prop("checked", false);
+            $("#EPADivSE").hide();
+            $("#EPA").prop("checked", false);
         }
     }
 }
@@ -690,14 +708,19 @@ function grabarSolicitudExtraordinaria() {
         MensErr("Complete el CUIT del destinatario"); return;
     }
 
-    if ($("#buscadorProveedorSE").val() != "" && $("#Sustentable").is(':checked') == true && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
+    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true ) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
         VisualizarStock(true);
         if (!stockDisponible) {
             MensErr("No se pudo guardar porque no existen establecimientos con stock disponible");
             return;
         }
+        //else if (stockInsuficiente) {
+        //    MensErr("Los establecimientos no cuentan con stock suficiente.");
+        //    return;
+        //}
     } else {
         stockDisponible = true;
+        //stockInsuficiente = false;
     }
 
     dataTabla = [];
@@ -732,6 +755,7 @@ function grabarSolicitudExtraordinaria() {
             Calidad: $("#MaterialIdSE").data("kendoDropDownList").value() == 3 ? $("#CalidadIdSE").data("kendoDropDownList").text() : "",
             ConDescarga: $("#ConDescarga").is(':checked'),
             Sustentable: $("#Sustentable").is(':checked'),
+            EPA: $("#EPA").is(':checked'),
             Dias: dataTabla
         };
         result = MSExecuteOnServer('/SugerenciaCupo/GenerarSolicitudExtraordinaria', solicitud);
@@ -859,7 +883,7 @@ function imageToBlob(imageURL) {
 }
 
 function VisualizarStock(noabrir) {
-
+    var esEPA = $("#EPA").is(':checked');
     var cuitProv = $("#buscadorProveedorSE").val().split('(');
     if (cuitProv[1] != null) {
         var cuitP = cuitProv[1].split(')');
@@ -867,9 +891,11 @@ function VisualizarStock(noabrir) {
     else {
         cuitP = cuitProv;
     }
-    var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0] });
+    var result = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: cuitP[0], esEPA: esEPA });
     if (result != null && result.length > 0) {
         stockDisponible = true;
+        //var cantidadCuposEstablecimientos = 0;
+        //var cantidadKilosEstablecimientos = 0;
         var table = "<tr>";
         table += '<th colspan = "3">Cosecha ' + result[0].Cosecha + '</th>';
         table += "</tr>";
@@ -885,7 +911,26 @@ function VisualizarStock(noabrir) {
             table += '<td>' + kendo.toString(result[i].Cantidad, "n0") + '</td>';
             table += '<td>' + result[i].Localidad + '(' + result[i].Provincia + ')' + '</td>';
             table += "</tr>";
+
+            //cantidadKilosEstablecimientos += result[i].Cantidad;
         }
+
+        //stringToDate("17/9/2014", "dd/MM/yyyy", "/");
+        //var fechaDesde = stringToDate($("#FechaSE")[0].value, "dd/MM/yyyy", "/");
+        //var fechaHasta = stringToDate($("#FechaHastaSE")[0].value, "dd/MM/yyyy", "/");
+        //var cantidadDias = ((fechaHasta.getTime() - fechaDesde.getTime()) / 86400000) + 1;
+        //var cantidadCuposDias = parseInt($("#CantidadCupoSE")[0].value) * cantidadDias;
+
+        //cantidadCuposEstablecimientos = cantidadKilosEstablecimientos / 30000;
+        
+        //if (cantidadCuposDias > cantidadCuposEstablecimientos) {
+        //    stockInsuficiente = true;
+        //    if (noabrir != true) {
+        //        MensErr("Los establecimientos no cuentan con stock suficiente.")
+        //    }
+        //} else {
+        //    stockInsuficiente = false;
+        //}
 
         $("#cargarDatosEstablecimiento").html(table);
         if (noabrir != true) {
@@ -902,7 +947,7 @@ function VisualizarStock(noabrir) {
 
 function MostrarVisualizarStock() {
     //if ($("#buscadorProveedorSE").val() != "" && $("#CentroIdSE").val() == "1600" && $("#MaterialIdSE").val() == "3") {
-    if ($("#buscadorProveedorSE").val() != "" && $("#Sustentable").is(':checked') == true && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
+    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
         $("#stock").show();
     } else {
         $("#stock").hide();
@@ -973,6 +1018,9 @@ function botonBorrar(dataItem, icono) {
 function botonSustentable(icono) {
     return '<button data-toggle="tooltip" title="Sustentable" disabled><i class="fa ' + icono + '"></i></button>';
 }
+function botonEPA(icono) {
+    return '<button data-toggle="tooltip" title="EPA" disabled><i class="fa ' + icono + '"></i></button>';
+}
 
 function OcultarCargaMasiva() {
 
@@ -980,3 +1028,19 @@ function OcultarCargaMasiva() {
     datepicker.value("");
     $("#boton-carga-masiva").hide();
 }
+
+function stringToDate(_date, _format, _delimiter) {
+    var formatLowerCase = _format.toLowerCase();
+    var formatItems = formatLowerCase.split(_delimiter);
+    var dateItems = _date.split(_delimiter);
+    var monthIndex = formatItems.indexOf("mm");
+    var dayIndex = formatItems.indexOf("dd");
+    var yearIndex = formatItems.indexOf("yyyy");
+    var month = parseInt(dateItems[monthIndex]);
+    month -= 1;
+    var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+    return formatedDate;
+}
+//stringToDate("17/9/2014", "dd/MM/yyyy", "/");
+//stringToDate("9/17/2014", "mm/dd/yyyy", "/")
+//stringToDate("9-17-2014", "mm-dd-yyyy", "-")

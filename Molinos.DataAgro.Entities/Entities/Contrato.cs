@@ -1,9 +1,7 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Helpers;
+﻿using Molinos.DataAgro.Entities.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
@@ -26,7 +24,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? EstablecimientoPropio { get; set; }
         public int? BoletoId { get; set; }
         public int? BolsaId { get; set; }
-
         public bool? MercsDeposito { get; set; }
         public decimal? PorcentajeComision { get; set; }
         public string ContratoVendedor { get; set; }
@@ -46,7 +43,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public string CaratulaExtension { get; set; }        
         public int? AnulaYReemplazaContratoId { get; set; }
         public string MotivoReemplazo { get; set; }
-
         public bool? Condicional { get; set; }
         public decimal? CondicionalPrecio { get; set; }
         public string CondicionalMonedaId { get; set; }
@@ -56,7 +52,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public string CondicionalPosicion { get; set; }
         public int? CondicionalContratoId { get; set; }
         //public bool? TarifaAConvenir { get; set; }
-                    
+        public bool? EPA { get; set; }
+        public int? EPATipoDBId { get; set; }
+
         [ForeignKey("CondicionalMonedaId")]
         public virtual Moneda CondicionalMoneda { get; set; }
 

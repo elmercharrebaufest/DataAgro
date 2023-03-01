@@ -172,7 +172,8 @@ function InicializarCuposIndex() {
                     //FechaGeneracion: { type: "date" },
                     FechaRegistro: { type: "date" },
                     FleteProcedencia: { type: "boolean" },
-                    Sustentable: { type: "boolean" }
+                    Sustentable: { type: "boolean" },
+                    EPA: { type: "boolean" }
                 }
             }
         },
@@ -337,6 +338,9 @@ function InicializarCuposIndex() {
             },
             {
                 field: "Sustentable", title: "Sustentable", type: "string", width: 60, template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; }
+            },
+            {
+                field: "EPA", title: "EPA", type: "string", width: 60, template: function (dataItem) { return dataItem.EPA ? "Si" : "No"; }
             },
             //{ field: "Observaciones", type: "string", width: 150, hidden: externo },
             { field: "Comercial", type: "string", width: 100, filterable: { ui: createMultiSelectComercial } },

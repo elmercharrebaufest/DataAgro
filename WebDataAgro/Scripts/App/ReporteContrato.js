@@ -79,6 +79,7 @@ function CreateGridInformeCompraNet() {
                     Pesificado: { type: "boolean" },
                     AnulaYReemplazaContratoSAP: { type: "number" },
                     Precio: { type: "number", format: "n2" },
+                    EPA: { type: "boolean" },
                 }
             }
         },
@@ -163,7 +164,7 @@ function CreateGridInformeCompraNet() {
                     }
             },
             {
-                field: "TipoNegocio", title: "Tipo", width: 100
+                field: "TipoNegocio", title: "Tipo", width: 95
             },
             {
                 field: "Material", width: 60, template: "#=Material#"
@@ -207,20 +208,30 @@ function CreateGridInformeCompraNet() {
                 ]
             },
 
-            { field: "Comercial", title: "Comercial", width: 180 },
-            { field: "ComercialCreador", title: "Registro <br>Comercial", width: 180 },
+            { field: "Comercial", title: "Comercial", width: 170 },
+            { field: "ComercialCreador", title: "Registro <br>Comercial", width: 170 },
             {
-                field: "Sustentable", columns: [
+                field: "Sustentable / EPA", columns: [
                     {
                         field: "Sustentable", title: "Sust.", template: function (dataItem) {
-                            //console.log(dataItem.TarifaAConvenir);
-                            return dataItem.Sustentable ? "Si" : (dataItem.TarifaAConvenir ? "Si" : "No");
+                            //return dataItem.Sustentable ? "Si" : (dataItem.TarifaAConvenir ? "Si" : "No");
+                            return dataItem.Sustentable ? "Si" : "No";
+                        }, width: 80
+                    },
+                    {
+                        field: "EPA", title: "EPA", template: function (dataItem) {
+                            return dataItem.EPA ? "Si" : "No";
                         }, width: 80
                     },
                     { field: "Importe_Sustentable", title: "Importe", filterable: false, width: 80 },
                     { field: "Moneda_Sustentable", title: "Moneda", filterable: false, width: 80 },
                     {
-                        field: "TarifaAConvenir", title: "Tarifa a Convenir", width: 120, template: function (dataItem) {
+                        field: "EPATipoDBId", title: "Tipo descuento EPA", template: function (dataItem) {
+                            return dataItem.EPATipoDBId == null ? "" : dataItem.EPATipoDBId == 1 ? "Sobre precio" : "Por fuera de precio";
+                        }, width: 110
+                    },
+                    {
+                        field: "TarifaAConvenir", title: "Tarifa a Convenir", width: 100, template: function (dataItem) {
                             return dataItem.TarifaAConvenir ? "Si" : "No";
                         }
                     },
@@ -361,15 +372,17 @@ function CreateGridInformeCompraNet() {
                     Hora: row.cells[6].value,
                     Pizarra: row.cells[15].value,
                     Sustentable: row.cells[35].value,
-                    TarifaAConvenir: row.cells[38].value,
-                    Dolarizado: row.cells[41].value,
-                    DolarizadoExpress: row.cells[43].value,
-                    DolarizadoCorredor: row.cells[45].value,
-                    Pesificado: row.cells[47].value,
-                    NoInformaSIO: row.cells[49].value,
-                    TrigoEspecial: row.cells[50].value,
-                    Cesion: row.cells[69].value,
-                    Condicional: row.cells[72].value,
+                    EPA: row.cells[36].value,
+                    EPATipoDBId: row.cells[39].value,
+                    TarifaAConvenir: row.cells[40].value,
+                    Dolarizado: row.cells[43].value,
+                    DolarizadoExpress: row.cells[45].value,
+                    DolarizadoCorredor: row.cells[47].value,
+                    Pesificado: row.cells[49].value,
+                    NoInformaSIO: row.cells[51].value,
+                    TrigoEspecial: row.cells[52].value,
+                    Cesion: row.cells[71].value,
+                    Condicional: row.cells[74].value,
                 };
 
                 var operacionFecha = row.cells[5].value;
@@ -394,18 +407,20 @@ function CreateGridInformeCompraNet() {
                 row.cells[6].value = templateHora(dataItem);
                 row.cells[15].value = templatePizarra(dataItem);
                 row.cells[35].value = templateSustentable(dataItem);
-                row.cells[38].value = row.cells[38].value == true ? "Si" : "No";
-                row.cells[41].value = templateDolarizado(dataItem);
-                row.cells[42].value = row.cells[41].value == "Si" ? row.cells[42].value : "";
-                row.cells[43].value = templateDolarizadoExpress(dataItem);
-                row.cells[44].value = row.cells[43].value == "Si" ? row.cells[44].value : "";
-                row.cells[45].value = templateDolarizadoCorredor(dataItem);
-                row.cells[46].value = row.cells[45].value == "Si" ? row.cells[46].value : "";
-                row.cells[47].value = templatePesificado(dataItem);
-                row.cells[49].value = templateSIO(dataItem);
-                row.cells[50].value = templateTrigoEsp(dataItem);
-                row.cells[69].value = templateCesion(dataItem);
-                row.cells[72].value = templateCondicional(dataItem);
+                row.cells[36].value = row.cells[36].value == true ? "Si" : "No";
+                row.cells[39].value = row.cells[39].value == null ? "" : row.cells[39].value == 1 ? "Sobre precio" : "Por fuera del precio";
+                row.cells[40].value = row.cells[40].value == true ? "Si" : "No";
+                row.cells[43].value = templateDolarizado(dataItem);
+                row.cells[44].value = row.cells[41].value == "Si" ? row.cells[42].value : "";
+                row.cells[45].value = templateDolarizadoExpress(dataItem);
+                row.cells[46].value = row.cells[43].value == "Si" ? row.cells[44].value : "";
+                row.cells[47].value = templateDolarizadoCorredor(dataItem);
+                row.cells[48].value = row.cells[45].value == "Si" ? row.cells[46].value : "";
+                row.cells[49].value = templatePesificado(dataItem);
+                row.cells[51].value = templateSIO(dataItem);
+                row.cells[52].value = templateTrigoEsp(dataItem);
+                row.cells[71].value = templateCesion(dataItem);
+                row.cells[74].value = templateCondicional(dataItem);
 
             }
         },

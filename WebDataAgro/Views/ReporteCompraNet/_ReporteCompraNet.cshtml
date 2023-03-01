@@ -771,24 +771,60 @@
                             <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', 'SOJA SUSTENTABLE A Precio', '','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==2).Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==2).Select(a => a.Key))')">
                                 @Model.SojaSustentable.Precio.ToString("N0")
                             </a>
-                            <a class="fa fa-pagelines" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA SUSTENTABLE A Precio', '','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==2).Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==2).Select(a => a.Key))')"></a>
+                            <a class="fa fa-solid fa-leaf" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA SUSTENTABLE A Precio', '','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==2).Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==2).Select(a => a.Key))')"></a>
                         </td>
                         <td class="@(Model.SojaSustentable.Fijar != 0 ? "":"hide")">
                             <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', 'SOJA SUSTENTABLE A Fijar', '','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==1).Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==1).Select(a => a.Key))')">
                                 @Model.SojaSustentable.Fijar.ToString("N0")
                             </a>
-                            <a class="fa fa-pagelines" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA SUSTENTABLE A Fijar', '','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==1).Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==1).Select(a => a.Key))')"></a>
+                            <a class="fa fa-solid fa-leaf" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA SUSTENTABLE A Fijar', '','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==1).Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Where(a=>a.Key==1).Select(a => a.Key))')"></a>
                         </td>
                         <th>
                             <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', 'SOJA SUSTENTABLE A Precio', '','@String.Join(",", Model.SojaSustentable.Ids.Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Select(a => a.Key))')">
                                 @Model.SojaSustentable.Total.ToString("N0")
                             </a>
-                            <a class="fa fa-pagelines" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA SUSTENTABLE A Precio', '','@String.Join(",", Model.SojaSustentable.Ids.Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Select(a => a.Key))')"></a>
+                            <a class="fa fa-solid fa-leaf" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA SUSTENTABLE A Precio', '','@String.Join(",", Model.SojaSustentable.Ids.Select(a => a.Value))','@String.Join(",", Model.SojaSustentable.Ids.Select(a => a.Key))')"></a>
                         </th>
                     </tr>
                 </tbody>
             </table>
         </div>
+
+        <div class="table-responsive col-xs-6 col-md-3 @(Model.SojaEPA.Total != 0 ?"":"hide")">
+            <table class="table-condensed " id="SojaEPA">
+                <tbody>
+                    <tr>
+                        <th class="titulos" colspan="3">SOJA EPA</th>
+                    </tr>
+                    <tr>
+                        <th class="@(Model.SojaEPA.Precio != 0 ? "":"hide")">A Precio</th>
+                        <th class="@(Model.SojaEPA.Fijar != 0 ? "":"hide")">A Fijar</th>
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        <td class="@(Model.SojaEPA.Precio != 0 ? "":"hide")">
+                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', 'SOJA EPA A Precio', '','@String.Join(",", Model.SojaEPA.Ids.Where(a=>a.Key==2).Select(a => a.Value))','@String.Join(",", Model.SojaEPA.Ids.Where(a=>a.Key==2).Select(a => a.Key))')">
+                                @Model.SojaEPA.Precio.ToString("N0")
+                            </a>
+                            <a class="fa fa-pagelines" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA EPA A Precio', '','@String.Join(",", Model.SojaEPA.Ids.Where(a=>a.Key==2).Select(a => a.Value))','@String.Join(",", Model.SojaEPA.Ids.Where(a=>a.Key==2).Select(a => a.Key))')"></a>
+                        </td>
+                        <td class="@(Model.SojaEPA.Fijar != 0 ? "":"hide")">
+                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', 'SOJA EPA A Fijar', '','@String.Join(",", Model.SojaEPA.Ids.Where(a=>a.Key==1).Select(a => a.Value))','@String.Join(",", Model.SojaEPA.Ids.Where(a=>a.Key==1).Select(a => a.Key))')">
+                                @Model.SojaEPA.Fijar.ToString("N0")
+                            </a>
+                            <a class="fa fa-pagelines" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA EPA A Fijar', '','@String.Join(",", Model.SojaEPA.Ids.Where(a=>a.Key==1).Select(a => a.Value))','@String.Join(",", Model.SojaEPA.Ids.Where(a=>a.Key==1).Select(a => a.Key))')"></a>
+                        </td>
+                        <th>
+                            <a id="AbrirModal" data-toggle="tooltip" title="Visualizar detalle" class="" onclick="AbrirModalIds('', 'SOJA EPA A Precio', '','@String.Join(",", Model.SojaEPA.Ids.Select(a => a.Value))','@String.Join(",", Model.SojaEPA.Ids.Select(a => a.Key))')">
+                                @Model.SojaEPA.Total.ToString("N0")
+                            </a>
+                            <a class="fa fa-pagelines" data-toggle="tooltip" aria-hidden="true" onclick="AbrirModalSustentableIds('', 'SOJA EPA A Precio', '','@String.Join(",", Model.SojaEPA.Ids.Select(a => a.Value))','@String.Join(",", Model.SojaEPA.Ids.Select(a => a.Key))')"></a>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div class="table-responsive col-xs-6 col-md-3">
             <table class="table-condensed noSideMargin" id="MonedaKilo">
                 <tbody>

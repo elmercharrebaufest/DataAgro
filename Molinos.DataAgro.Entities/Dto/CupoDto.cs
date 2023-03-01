@@ -65,5 +65,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? ConDescarga { get; set; }
         public string Codigo { get; set; }
         public bool? Sustentable { get; set; }
+        public bool? EPA { get; set; }
     }  
 }

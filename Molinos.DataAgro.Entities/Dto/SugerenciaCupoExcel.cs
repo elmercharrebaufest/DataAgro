@@ -32,6 +32,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Destinatario { get; set; }
         public int CuposPendientes { get; set; }
         public int SolicitudesPendientes { get; set; }
+        public string Observaciones { get; set; }
     }
 
     public partial class SugerenciaCupoAgrupadasExcel

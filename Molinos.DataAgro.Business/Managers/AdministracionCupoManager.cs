@@ -116,7 +116,8 @@ namespace Molinos.DataAgro.Business.Managers
                         ConDescarga = solicitud.ConDescarga,
                         AdministracionCupoId = administracionId,
                         ComercialCreadorId = solicitud.ComercialCreadorId,
-                        Sustentable = solicitud.Sustentable
+                        Sustentable = solicitud.Sustentable,
+                        EPA = solicitud.EPA,
                     };
                     if (cantidad > 0)
                     {
@@ -183,7 +184,8 @@ namespace Molinos.DataAgro.Business.Managers
                         TipoNegocioId = 7,//para que lo envie a SAP como cupo con marca de propuesta y no valide limites en SAP
                         AdministracionCupoId = administracionId,
                         ComercialCreadorId = solicitud.ComercialCreadorId,
-                        Sustentable = solicitud.Sustentable
+                        Sustentable = solicitud.Sustentable,
+                        EPA = solicitud.EPA,
                     };
 
                     if (cantidad > 0)

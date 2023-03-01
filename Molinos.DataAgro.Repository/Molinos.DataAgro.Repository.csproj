@@ -148,6 +148,8 @@
     <Compile Include="ConsultasEF\TraerTodoRango.cs" />
     <Compile Include="ConsultasEF\TraerTodosCupos.cs" />
     <Compile Include="ConsultasEF\TraerTodosLogsDataAgro.cs" />
+    <Compile Include="ConsultasEF\TraerToneladasSojaEPA.cs" />
+    <Compile Include="ConsultasEF\TraerToneladasSojaSustentable.cs" />
     <Compile Include="ConsultasEF\TraerVentaStock.cs" />
     <Compile Include="ConsultasEF\TraerSituacionCultivoParcial.cs" />
     <Compile Include="ConsultasEF\TraerBusquedaContactos.cs" />
@@ -160,7 +162,6 @@
     <Compile Include="ConsultasEF\TraerAvanceSiembra.cs" />
     <Compile Include="ConsultasEF\TraerAvanceCosecha.cs" />
     <Compile Include="ConsultasEF\TraerTotalesPesosDolares.cs" />
-    <Compile Include="ConsultasEF\TraerToneladasSojaSustentable.cs" />
     <Compile Include="ConsultasEF\TraerToneladasPorGrano.cs" />
     <Compile Include="ConsultasEF\TraerAgenda.cs" />
     <Compile Include="ConsultasEF\TraerComprasHome.cs" />

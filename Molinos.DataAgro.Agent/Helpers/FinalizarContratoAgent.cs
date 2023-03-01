@@ -1,7 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.FinalizarContrato;
 using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
@@ -89,6 +88,38 @@ namespace Molinos.DataAgro.Agent.Helpers
                             //MONEDA = contrato.MonedaSustentableId,
                             PORC_DB = 0
                         });
+                    }
+
+                    decimal? precioNetoEPA = null;
+                    if (contrato.EPA == true && contrato.EPATipoDBId.HasValue)
+                    {
+                        listaDescuentos.Add(new ZMPES5290
+                        {
+                            TIPO_PERIODO = "I",
+                            TIPO_DB = "B",
+                            FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
+                            FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
+                            IMPORTE_DB = contrato.EPATipoDBId == 1 ? 0 : contrato.ImporteSustentable.Value,
+                            MONEDA_DB = contrato.EPATipoDBId == 1 ? "USDM" : contrato.MonedaSustentableId,
+                            PORC_DB = 0,
+                            PRECIO = 0
+                        });
+
+                        if (contrato.TipoNegocioId == 2 && contrato.EPATipoDBId == 1) //a precio y sobre precio
+                        {
+                            decimal porcentajeComision = contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecio.CodigoSap == "CO").FirstOrDefault()?.Porcentaje ?? 0;
+                            decimal precioOriginal = contrato.Precio;
+                            decimal precioTarifaFlete = contrato.TarifaFlete ?? 0;
+                            precioOriginal += contrato.ImporteSustentable ?? 0;
+                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecio.CodigoSap == "FI").FirstOrDefault()?.Importe ?? 0;
+                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecio.CodigoSap == "RE").FirstOrDefault()?.Importe ?? 0;
+                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecio.CodigoSap == "BO").FirstOrDefault()?.Importe ?? 0;
+                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecio.CodigoSap == "BO").FirstOrDefault()?.Porcentaje ?? 0
+                                            * contrato.Precio / 100; porcentajeComision /= 100;
+                            precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
+                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecio.CodigoSap == "CO").FirstOrDefault()?.Importe ?? 0;
+                            precioNetoEPA = Math.Round(precioOriginal, 2);
+                        }
                     }
 
                     if (contrato.PrecioPactado != null && contrato.PrecioPactado.Count > 0)
@@ -187,6 +218,15 @@ namespace Molinos.DataAgro.Agent.Helpers
                     var listaApertura = new List<ZMPES5440>();
                     //if (contrato.TipoNegocioId == 2)
                     //{
+                    if (contrato.EPA == true && contrato.EPATipoDBId == 1) //bonificación sobre precio
+                    {
+                        listaApertura.Add(new ZMPES5440
+                        {
+                            CONCEPTO = "BO",
+                            IMPORTE = (decimal)contrato.ImporteSustentable,
+                            MONEDA = contrato.MonedaSustentable.Descripcion == "USD" ? "USDM" : contrato.MonedaSustentable.Descripcion,
+                        });
+                    }
                     foreach (AperturaPrecio apertura in contrato.AperturaPrecio)
                     {
                         if (apertura.Importe != 0 || apertura.Porcentaje != 0)
@@ -288,11 +328,11 @@ namespace Molinos.DataAgro.Agent.Helpers
                     rq2.IM_CONTRATO.MATERIAL = contrato.Material.Codigo;
                     rq2.IM_CONTRATO.PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "";
                     rq2.IM_CONTRATO.PRECIO_PIZARRA = contrato.Precio;
-                    //rq2.IM_CONTRATO.PRECIO = contrato.PrecioNeto ?? contrato.Precio;
-                    rq2.IM_CONTRATO.PRECIO = (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio;
+                    rq2.IM_CONTRATO.PRECIO = contrato.EPA == true && precioNetoEPA.HasValue ? precioNetoEPA.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio;
                     rq2.IM_CONTRATO.PROVEEDOR = contrato.Proveedor.CUIT;
                     rq2.IM_CONTRATO.PROVINCIA = contrato.ProvinciaId.ToString();
-                    rq2.IM_CONTRATO.SUSTENTABLE = contrato.Sustentable == true ? "X" : "";
+                    rq2.IM_CONTRATO.SUSTENTABLE = contrato.Sustentable == true || contrato.EPA == true ? "X" : "";
+                    rq2.IM_CONTRATO.EPA = contrato.EPA == true ? "X" : "";
                     rq2.IM_CONTRATO.ESPECIAL = contrato.StandardDeCalidad != null ? contrato.StandardDeCalidad.CodigoSap : especialString;
                     rq2.IM_CONTRATO.FECHA = contrato.ContratoAcuerdoId == null || contrato.ContratoAcuerdoId == 0 ? contrato.FechaOperacion.ToString("yyyy-MM-dd") : repositorio.Obtener<ContratoAcuerdo, DateTime>(x => x.Id == contrato.ContratoAcuerdoId, x => x.Fecha).ToString("yyyy-MM-dd");
                     rq2.IM_CONTRATO.USUARIO = contrato.Comercial.IdActiveDirectory;
@@ -377,7 +417,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     rq2.IM_TIPO_NEGOCIO = contrato.Madre == true ? "MADRE" : contrato.Madre == false ? "HIJO" : contrato.EsFason == true ? "FASON" : contrato.PrestamoDevolucion == true ? "PRESTAMO_DEVOLUCION" : contrato.Venta == true ? "VENTA" : contrato.TipoNegocio.Descripcion;
                     rq2.IM_APERTURA = listaApertura.ToArray();
                     rq2.IM_SERVICIOS = servicioSap.ToArray();
-                    
+
                     logger.Debug(rq2.ToXml());
 
                     var log = new Log

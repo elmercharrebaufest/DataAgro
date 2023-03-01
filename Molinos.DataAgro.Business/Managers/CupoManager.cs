@@ -98,6 +98,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (negocio != null)
                 {
                     cupo.Sustentable = negocio.Sustentable;
+                    cupo.EPA = negocio.EPA == null ? false : negocio.EPA;
                 }
 
 
@@ -289,6 +290,7 @@ namespace Molinos.DataAgro.Business.Managers
                         cupoSave.ComercialId = cupo.ComercialId;
                         cupoSave.Comercial = cupo.Comercial;
                         cupoSave.Sustentable = cupo.Sustentable;
+                        cupoSave.EPA = cupo.EPA == null ? false : cupo.EPA;
 
                         //cupoSave.ConDescarga = cupo.ConDescarga;
 
@@ -451,10 +453,10 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    error.Errores.Add(new ErrorMessage(400, "Debe seleccionar un negocio"));
             //}
-            var tieneQueValidar = proveedor.SegmentacionId == 2 || proveedor.SegmentacionId == 3 && proveedor.SegmentacionId == 4;
-            if (proveedor != null && tieneQueValidar && centro != null && centro.CodigoSap == "1600")
+            var tieneQueValidar = proveedor.SegmentacionId == 2 || proveedor.SegmentacionId == 3 || proveedor.SegmentacionId == 4;
+            if (proveedor != null && tieneQueValidar && centro != null && ((cupo.Sustentable ?? false) || (cupo.EPA ?? false)))
             {
-                var establecimientos = TraerEstablecimientos(proveedor.CUIT);
+                var establecimientos = TraerEstablecimientos(proveedor.CUIT, cupo.EPA ?? false);
                 var cantidadCupo = 0;
                 if (establecimientos != null && establecimientos.Count > 0)
                 {
@@ -1023,7 +1025,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
 
-            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
+            if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
             {
                 htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
             }
@@ -1031,7 +1033,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += cupo.Observaciones + "<br />";
             }
-            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
+            if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
             {
 
                 if (cupo.MaterialId == 1)
@@ -1042,15 +1044,19 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "ESPECIAL<br />";
                 }
-                if (cupo.MaterialId == 3)
+                if (cupo.MaterialId == 3 && (cupo.Sustentable ?? false))
                 {
                     htmlBody += "SUSTENTABLE<br />";
+                }
+                if (cupo.MaterialId == 3 && (cupo.EPA ?? false))
+                {
+                    htmlBody += "EPA<br />";
                 }
 
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            if (cupo.Centro.CodigoSap == "1600" && cupo.MaterialId == 3)
+            if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && cupo.MaterialId == 3)
             {
                 htmlBody += TablaSustentable(cupo);
             }
@@ -1118,7 +1124,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + cupo.Centro.RazonSocial + " - " + cupo.Centro.CUIT + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
 
-            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
+            if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
             {
                 htmlBody += "<tr>" + th + "OBSERVACIÓN</th>" + Td(ref linea);
             }
@@ -1126,7 +1132,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += cupo.Observaciones + "<br />";
             }
-            if (cupo.Centro.CodigoSap == "1600" && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
+            if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3))
             {
 
                 if (cupo.MaterialId == 1)
@@ -1145,7 +1151,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            if (cupo.Centro.CodigoSap == "1600" && cupo.MaterialId == 3)
+            if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && cupo.MaterialId == 3)
             {
                 htmlBody += TablaSustentable(cupo);
             }
@@ -1261,9 +1267,10 @@ namespace Molinos.DataAgro.Business.Managers
             }
             string htmlBody = "";
 
-            if (cupo.Centro.CodigoSap == "1600")
+            //if (cupo.Centro.CodigoSap == "1600")
+            if ((cupo.Sustentable ?? false) || (cupo.EPA ?? false))
             {
-                var establecimientos = TraerEstablecimientos(cupo.Proveedor.CUIT);
+                var establecimientos = TraerEstablecimientos(cupo.Proveedor.CUIT, cupo.EPA ?? false);
                 if (establecimientos != null && establecimientos.Count > 0)
                 {
                     var table = "<table style =\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\"><tr>";
@@ -1341,12 +1348,14 @@ namespace Molinos.DataAgro.Business.Managers
                     Centro = item.CentroDesc,
                     CDWarrant = item.CDWarrant == true ? "SI" : "NO",
                     Fason = item.Fason == true ? "SI" : "NO",
-                    Priorizado = string.IsNullOrEmpty(item.Inhabilitado) ? item.Priorizado == true ? "SI" : "NO" : item.Inhabilitado,
+                    //Priorizado = string.IsNullOrEmpty(item.Inhabilitado) ? item.Priorizado == true ? "SI" : "NO" : item.Inhabilitado,
+                    Priorizado = item.Priorizado == true ? "SI" : "NO",
                     Puntaje = item.PuntuacionTotal <= 0 ? 0 : item.PuntuacionTotal,
                     CantidadSugerida = item.CantidadDeCupos,
                     CuposPendientes = item.CuposPendientes,
                     SolicitudesPendientes = item.SolicitudesPendientes,
-                    FechaSugerida = item.FechaSugerida
+                    FechaSugerida = item.FechaSugerida,
+                    Observaciones = item.Inhabilitado
                 };
                 listaExcel.Add(excel);
             }
@@ -1476,7 +1485,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (result.HayError)
                 {
                     // proxima etapa guardar detalle del error para mostrar al comecial por que se 
-                    negocios[i].Inhabilitado = string.Join(", ", result.ListaErrores.Select(a=>a.Message).ToList());
+                    negocios[i].Inhabilitado += (negocios[i].Inhabilitado == "" ? "" : ". ") + string.Join(", ", result.ListaErrores.Select(a => a.Message).ToList());
                     negocioInhabilitados.Add(negocios[i]);
                     negocios.RemoveAt(i);
                 }
@@ -1801,12 +1810,15 @@ namespace Molinos.DataAgro.Business.Managers
                     Canje = x.Canje == true ? true : false,
                     MercsDeposito = x.MercsDeposito == true ? true : false,
                     CaratulaMAT = x.CaratulaMAT != null ? true : false,
-                    Sustentable = x.Sustentable ?? false
+                    Sustentable = x.Sustentable ?? false,
+                    Inhabilitado = "",
+                    EPA = x.EPA ?? false,
                 },
                     x =>
                     //(formula.NegociosDesde >= x.FechaDesde && formula.NegociosHasta < x.FechaHasta) || (formula.NegociosHasta <= x.FechaHasta &&
                     //formula.NegociosHasta > x.FechaDesde) || (formula.NegociosDesde <= x.FechaDesde && formula.NegociosHasta >= x.FechaHasta))
                     //x.Sustentable != true &&
+                    //x.EPA != true && // Por ahora comentado para evitar error. Preguntar si lo incluimos o no.
                     x.EsFason != true &&
                     formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId /*&& x.MercsDeposito != true*/ && x.MaterialId == formula.MaterialId);
@@ -1877,6 +1889,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     item.CantidadDeCupos -= cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
                     item.CuposPendientes = cuposPendientes.Where(a => a.Key == item.NegocioId).Single().Value;
+                    item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.CuposPendientes + " cupos pendientes del negocio " + item.ContratoSAP;
                 }
                 //analizar si tiene sentido por que ahora la cantiad depende de los kg pendientes y no de la cantidad de cupos por negocios
                 //if (cuposNoCumplidos.Any(x => x.NegocioId == item.NegocioId))
@@ -1891,7 +1904,7 @@ namespace Molinos.DataAgro.Business.Managers
                     item.SolicitudesPendientes = solicitudesPendientes
                         .Where(a => a.SugerenciaCupo != null && a.SugerenciaCupo.NegocioId == item.NegocioId)
                         .Sum(a => a.CantidadCupo + a.CantidadFleteProcedencia);
-
+                    item.Inhabilitado += (item.Inhabilitado == "" ? "" : ". ") + "Posee " + item.SolicitudesPendientes + " solicitudes pendientes del negocio " + item.ContratoSAP;
                 }
             }
 
@@ -1980,22 +1993,28 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (cantidadCuposARestar > 0)
                 {
+                    var msje = "";
                     if (contratoOrdenado.CantidadDeCupos >= cantidadCuposARestar)
                     {
+                        msje = "Por CP pendiente a aplicar, se restan " + cantidadCuposARestar + " cupos al negocio " + contratoOrdenado.ContratoSAP;
                         restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().cantidadCupos = 0;
                         contratoOrdenado.CantidadDeCupos -= cantidadCuposARestar;
                     }
                     else
                     {
+                        msje = "Por CP pendiente a aplicar, se restan " + contratoOrdenado.CantidadDeCupos + " cupos al negocio " + contratoOrdenado.ContratoSAP;
                         restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().cantidadCupos -= contratoOrdenado.CantidadDeCupos;
                         contratoOrdenado.CantidadDeCupos = 0;
                     }
                     contratos.Where(x => x.NegocioId == contratoOrdenado.NegocioId).Single().CantidadDeCupos = contratoOrdenado.CantidadDeCupos;
+
+                    var lInhabilitado = contratos.Where(x => x.NegocioId == contratoOrdenado.NegocioId).Single().Inhabilitado;
+                    contratos.Where(x => x.NegocioId == contratoOrdenado.NegocioId).Single().Inhabilitado += (lInhabilitado == "" ? "" : ". ") + msje;
                 }
             }
 
 
-            //traer stock para cupos sustentables por proveedor
+            //traer stock para cupos SUSTENTABLES por proveedor
             var stockSustentable = contratos.Where(x => x.CantidadDeCupos > 0 && x.Sustentable).Select(a => a.ProveedorCUIT).Distinct().Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
 
             var cuposPendientesSustentables = repositorio.Listar<Cupo, CupoDto>(
@@ -2005,11 +2024,11 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var item in stockSustentable)
             {
-                item.Cantidad = TraerCuposDisponiblesEnEstablecimientos(item.Proveedor);
+                item.Cantidad = TraerCuposDisponiblesEnEstablecimientos(item.Proveedor, false);
                 var sustentablesPendientes = cuposPendientesSustentables.Where(x => x.Key == item.Proveedor).FirstOrDefault();
                 item.Cantidad -= sustentablesPendientes.Value;
             }
-            //limitar la cantidada de sugerencias de sustentable al stock disponible 
+            //limitar la cantidad de sugerencias de SUSTENTABLE al stock disponible 
             foreach (var contratosPorProveedor in contratos.Where(x => x.CantidadDeCupos > 0 && x.Sustentable).GroupBy(a => a.ProveedorCUIT).ToList())
             {
                 foreach (var contrato in contratosPorProveedor.ToList())
@@ -2022,7 +2041,53 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         contrato.CantidadDeCupos = Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
                         contrato.CuposPendientes = Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
+
+                        if (contrato.CuposPendientes > 0) { 
+                            contrato.Inhabilitado += ((contrato.Inhabilitado == "" ? "" : ". ") + "Tiene " +
+                                Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad) + " cupos SUST pendientes para negocio " +
+                                contrato.ContratoSAP);
+                        }
+
                         stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad = 0;
+                    }
+                }
+            }
+
+            // Traer stock para cupos EPA por proveedor
+            var stockEPA = contratos.Where(x => x.CantidadDeCupos > 0 && x.EPA).Select(a => a.ProveedorCUIT).Distinct().Select(ProveedorCUIT => new EstablecimientoStockDto { Proveedor = ProveedorCUIT, Cantidad = 0 }).ToList();
+
+            var cuposPendientesEPA = repositorio.Listar<Cupo, CupoDto>(
+                x => new CupoDto { Id = x.Id, Cumplimiento = x.Cumplimiento, FechaIngreso = x.FechaIngreso, NegocioId = x.NegocioId, EPA = x.EPA, Proveedor = x.Proveedor.CUIT },
+                x => x.Cumplimiento != true && x.NegocioId != null && negociosId.Contains(x.NegocioId ?? 0) && x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.FechaIngreso >= ayer && x.EPA == true)
+                .GroupBy(x => x.Proveedor).ToDictionary(a => a.Key, a => a.Count());
+
+            foreach (var item in stockEPA)
+            {
+                item.Cantidad = TraerCuposDisponiblesEnEstablecimientos(item.Proveedor, true);
+                var epaPendientes = cuposPendientesEPA.Where(x => x.Key == item.Proveedor).FirstOrDefault();
+                item.Cantidad -= epaPendientes.Value;
+            }
+            // Limitar la cantidad de sugerencias de EPA al stock disponible 
+            foreach (var contratosPorProveedor in contratos.Where(x => x.CantidadDeCupos > 0 && x.EPA).GroupBy(a => a.ProveedorCUIT).ToList())
+            {
+                foreach (var contrato in contratosPorProveedor.ToList())
+                {
+                    if (contrato.CantidadDeCupos <= stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad)
+                    {
+                        stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad -= contrato.CantidadDeCupos;
+                    }
+                    else
+                    {
+                        contrato.CantidadDeCupos = Decimal.ToInt32(stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
+                        contrato.CuposPendientes = Decimal.ToInt32(stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
+
+                        if (contrato.CuposPendientes > 0) { 
+                            contrato.Inhabilitado += ((contrato.Inhabilitado == "" ? "" : ". ") + "Tiene " +
+                                Decimal.ToInt32(stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad) + " cupos EPA pendientes para negocio " +
+                                contrato.ContratoSAP);
+                        }
+
+                        stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad = 0;
                     }
                 }
             }
@@ -3920,12 +3985,23 @@ namespace Molinos.DataAgro.Business.Managers
             return limitePorZona;
         }
 
-        public List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor)
+        public List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor, bool esEPA)
         {
             var cosecha = repositorio.Obtener<Material, string>(x => x.MaterialId == 3, x => x.Campaña.Descripcion);
             try
             {
                 var establecimiento = servicioScato.ListarEstablecimientos(proveedor, cosecha);
+                establecimiento.RemoveAll(x => x.Cantidad < 0);
+
+                if (esEPA)
+                {
+                    establecimiento.RemoveAll(x => Convert.ToInt32(x.CodigoEstablecimiento) < 70000 || Convert.ToInt32(x.CodigoEstablecimiento) > 80000);
+                }
+                else
+                {
+                    establecimiento.RemoveAll(x => Convert.ToInt32(x.CodigoEstablecimiento) >= 70000 && Convert.ToInt32(x.CodigoEstablecimiento) <= 80000);
+                }
+
                 return establecimiento;
             }
             catch (Exception e)
@@ -4510,7 +4586,7 @@ namespace Molinos.DataAgro.Business.Managers
                     result.Error("Zona", "El comercial seleccionado no tiene zona cupo asignada.");
                     return result;
                 }
-                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id }, solicitud.CantidadCupo + solicitud.CantidadFleteProcedencia, solicitud.Fecha);
+                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id, Sustentable = solicitud.Sustentable, EPA = solicitud.EPA }, solicitud.CantidadCupo + solicitud.CantidadFleteProcedencia, solicitud.Fecha);
                 if (resultado.HayError)
                 {
                     result.Errores = resultado.Errores;
@@ -4585,6 +4661,7 @@ namespace Molinos.DataAgro.Business.Managers
                             ConDescarga = solicitud.ConDescarga,
                             ComercialCreadorId = solicitud.ComercialCreadorId,
                             Sustentable = solicitud.Sustentable,
+                            EPA = solicitud.EPA,
                         };
                         if (solicitud.CantidadCupo > 0)
                         {
@@ -4667,6 +4744,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 TipoAdministracionCupoId = solicitud.TipoAdministracionCupoId,
                                 ZonaId = solicitud.ZonaId,
                                 Sustentable = solicitud.Sustentable,
+                                EPA = solicitud.EPA,
                             };
                             repositorio.Agregar(solicitudItem);
 
@@ -4700,6 +4778,7 @@ namespace Molinos.DataAgro.Business.Managers
                                 TipoAdministracionCupoId = solicitud.TipoAdministracionCupoId,
                                 ZonaId = solicitud.ZonaId,
                                 Sustentable = solicitud.Sustentable,
+                                EPA = solicitud.EPA,
                             };
                             repositorio.Agregar(solicitudCupo);
                         }
@@ -6145,9 +6224,9 @@ namespace Molinos.DataAgro.Business.Managers
             return clienteStopAgent.ConsultarMisTurnosActivos();
         }
 
-        private int TraerCuposDisponiblesEnEstablecimientos(string cuit)
+        private int TraerCuposDisponiblesEnEstablecimientos(string cuit, bool esEPA)
         {
-            var establecimientos = TraerEstablecimientos(cuit);
+            var establecimientos = TraerEstablecimientos(cuit, esEPA);
             var cantidadCupo = 0;
             if (establecimientos != null && establecimientos.Count > 0)
             {

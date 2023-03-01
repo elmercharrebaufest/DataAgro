@@ -1,5 +1,7 @@
 ﻿var listaCantidad = new Array();
 var sugerenciasADevolver = [];
+var sustentable = false;
+var epa = false;
 
 $(document).ready(function () {
     $('#menuproveedor').hide();
@@ -401,7 +403,9 @@ function AceptarSugerenciaProvDia(id, fecha, material, proveedorId, razonSocial,
     $("#fleteProcedenciaModal").modal("show");
 }
 
-function AceptarSugerencia(id, fecha, proveedorId, razonSocial, cantCupos) {
+function AceptarSugerencia(id, fecha, proveedorId, razonSocial, cantCupos, esSustentable, esEPA) {
+    sustentable = esSustentable == undefined ? false : true;
+    epa = esEPA == undefined ? false : true;
     aceptar = true;
     itemsConfirmados = new Array();
     itemsConfirmados.push({
@@ -434,7 +438,9 @@ function AceptarSugerencia(id, fecha, proveedorId, razonSocial, cantCupos) {
 //    }, 250);
 //}
 
-function ModificarSugerencia(id, fecha, proveedorId, razonSocial, cantidad, materialId, materialDesc) {
+function ModificarSugerencia(id, fecha, proveedorId, razonSocial, cantidad, materialId, materialDesc, esSustentable, esEPA) {
+    sustentable = esSustentable == undefined ? false : true;
+    epa = esEPA == undefined ? false : true;
     aceptar = false;
     $("#modSugerenciaId").val(id);
     $("#modMaterialId").val(materialId);
@@ -510,8 +516,30 @@ function mostrarResultados(result) {
         }
     }
     if (cupos.length > 0) {
+        var table = "";
+        if (sustentable || epa) {
+            var result2 = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: itemsConfirmados[0].proveedorId, esEPA: epa });
+            if (result2 != null && result2.length > 0) {
+                table = "<tr>";
+                table += '<th colspan = "3">Cosecha ' + result2[0].Cosecha + '</th>';
+                table += "</tr>";
+                table += "<tr>";
+                table += "<th> Establecimiento</th>"
+                table += "<th> Cantidad (Kg)</th>"
+                table += "<th> Localidad(Provincia) </th>"
+                table += "</tr>";
+                for (var i = 0; i < result2.length; i++) {
+                    table += "<tr>";
+                    table += '<td>' + result2[i].Establecimiento + '</td>';
+                    table += '<td>' + kendo.toString(result2[i].Cantidad, "n0") + '</td>';
+                    table += '<td>' + result2[i].Localidad + '(' + result2[i].Provincia + ')' + '</td>';
+                    table += "</tr>";
+                }
+            }
+        }
+
         //MensInfo("Cupos generados: " + cuposGenerados.join());
-        cuposCreados(cupos);
+        cuposCreados(cupos, table);
         //grid._selectedIds = {};
         //grid.clearSelection();
         //grid.dataSource.read();
@@ -521,16 +549,26 @@ function mostrarResultados(result) {
     }
 }
 
-function cuposCreados(lista) {
+function cuposCreados(lista, table) {
     $("#cupos-generados-modal").html(lista.join("</br>"));
+
+    if (table != "") {
+        $("#cargarDatosEstablecimiento2").html(table);
+    }
+
     $('#resultadoCupo').modal('toggle');
 }
 
 
 function copiarGenerados(idDiv) {
-    var listaCupos = $("#"+idDiv).html().replace(/<br>/g, "\n");
+    var listaCupos = $("#" + idDiv).html().replace(/<br>/g, "\n");
     listaCupos = listaCupos.split('<strong>').join("");
     listaCupos = listaCupos.split('</strong>').join("");
+
+    var copiarEstablecimientos = document.getElementById("cargarDatosEstablecimiento2").innerText;
+
+    listaCupos += "\n\n" + copiarEstablecimientos;
+
     //como un replaceall 
     var copy = function (e) {
         e.preventDefault();
@@ -783,12 +821,12 @@ function DevolverSugerencias() {
                 var cantidad = $(this).data("kendoNumericTextBox").value();
                 var datos = this.id.split("-");
                 cuerpoModal.push({ Id: datos[0], RazonSocial: datos[1], Material: datos[2], ContratoSAP: datos[3], CantidadSugerida: datos[4], Fecha: datos[5], CantidadDevuelta: cantidad });
-                sugerenciasADevolver.push({IdSugerencia: datos[0], Cantidad: cantidad});
+                sugerenciasADevolver.push({ IdSugerencia: datos[0], Cantidad: cantidad });
                 sugIngresada = true;
             }
         }
     });
-    
+
     if (!sugIngresada) {
         MensAlerta("Debe especificar la cantidad de sugerencias a devolver para uno o más negocios.");
     } else {

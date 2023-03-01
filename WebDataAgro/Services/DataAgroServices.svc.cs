@@ -465,6 +465,12 @@ namespace WebDataAgro.Services
                 contrato.StandardDeCalidadId = 7;
             }
             contrato.Sustentable = contratoSAP.Sustentable == "X";
+            contrato.EPA = contratoSAP.EPA == "X";
+            if (contrato.EPA == true)
+            {
+                contrato.ImporteSustentable = contratoSAP.EPAImporte;
+                contrato.MonedaSustentableId = contratoSAP.EPAMoneda;
+            }
             contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
             contrato.Warrant = contratoSAP.AutCg == "X";
 

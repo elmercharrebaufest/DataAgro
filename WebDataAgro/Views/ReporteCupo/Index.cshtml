@@ -163,6 +163,25 @@
         </div>
     </div>
     <br />
+
+    <div class="row">
+        <div class="col-md-2">
+            <label></label>
+        </div>
+        <div class="col-md-4">
+        </div>
+
+        <div class="col-md-2">
+            <label>Soja EPA</label>
+        </div>
+        <div class="col-md-4 filtroBoleano" id="EPAId" name="EPA">
+            Sí: @Html.RadioButton("EPA", true, new { @class = "filtroBoleano ocultarAnular", @id = "EPA" })
+            No: @Html.RadioButton("EPA", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonEPA()" style="margin-left:3%; font-size:20px;color:red"></i>
+        </div>
+    </div>
+    <br />
+
     @*<div class="row">
             <div class="col-md-12" style="text-align:right">
                 <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Filtrar</button>

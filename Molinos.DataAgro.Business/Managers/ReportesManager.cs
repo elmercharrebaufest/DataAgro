@@ -396,6 +396,12 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return repositorio.ObtenerConsultaEscalar(new TraerToneladasSojaSustentable(fechaDesde, fechaHasta, centroId));
         }
+
+        public ReporteSojaEPADto TraerToneladasSojaEPA(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0)
+        {
+            return repositorio.ObtenerConsultaEscalar(new TraerToneladasSojaEPA(fechaDesde, fechaHasta, centroId));
+        }
+
         public List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool TraerPosicionMaterialCampaña = false, bool verFijaciones = true)
         {
             if (materialId == null || materialId.Count() == 0) materialId = repositorio.Listar<Material, int>(x => x.MaterialId).ToList();
@@ -2420,6 +2426,7 @@ namespace Molinos.DataAgro.Business.Managers
                 HedgeObjetivo = objetivos,
                 TCPromedioDto = TraerTcPromedio(fechaDesde, fechaHasta, materialId, verFijaciones),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
+                SojaEPA = (materialId == null || materialId.Contains(3)) ? TraerToneladasSojaEPA(fechaDesde, fechaHasta, idCentro) : new ReporteSojaEPADto(),
             };
             return result;
         }
@@ -2450,6 +2457,7 @@ namespace Molinos.DataAgro.Business.Managers
                 List<ReporteCompraNetPosicionCompras> posicionCompras = new List<ReporteCompraNetPosicionCompras>();
                 List<ReporteCompraNetPrecioCantidad> precioCantidad = new List<ReporteCompraNetPrecioCantidad>();
                 ReporteCompraNetSojaSustentable sojaSustentable = new ReporteCompraNetSojaSustentable();
+                ReporteCompraNetSojaEPA sojaEPA = new ReporteCompraNetSojaEPA();
                 List<ReporteCompraNetHedgeMaterial> hedgeMaterial = new List<ReporteCompraNetHedgeMaterial>();
                 ReporteCompraNetHedgeCargaObjetivo hedgeObjetivo = new ReporteCompraNetHedgeCargaObjetivo();
                 ReporteCompraNetHedgeTCPromedio TCPromedioDto = new ReporteCompraNetHedgeTCPromedio();
@@ -2516,6 +2524,13 @@ namespace Molinos.DataAgro.Business.Managers
                     AFijar = result.SojaSustentable.Fijar,
                     APrecio = result.SojaSustentable.Precio,
                     Total = result.SojaSustentable.Total
+                };
+                logger.Debug("GrabarDatosReporteCompraNet - inicio sojaEPA");
+                sojaEPA = new ReporteCompraNetSojaEPA
+                {
+                    AFijar = result.SojaEPA.Fijar,
+                    APrecio = result.SojaEPA.Precio,
+                    Total = result.SojaEPA.Total
                 };
                 logger.Debug("GrabarDatosReporteCompraNet - inicio hedge material");
                 foreach (var material in result.HedgeMaterial)
@@ -2648,6 +2663,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.RemoverTodos<ReporteCompraNetPosicionCompras>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetPrecioCantidad>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetSojaSustentable>(a => true);
+                repositorio.RemoverTodos<ReporteCompraNetSojaEPA>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetHedgeMaterial>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetHedgeCargaObjetivo>(a => true);
                 repositorio.RemoverTodos<ReporteCompraNetHedgeTCPromedio>(a => true);
@@ -2660,6 +2676,7 @@ namespace Molinos.DataAgro.Business.Managers
                 repositorio.AgregarTodos(posicionCompras);
                 repositorio.AgregarTodos(precioCantidad);
                 repositorio.Agregar(sojaSustentable);
+                repositorio.Agregar(sojaEPA);
                 repositorio.AgregarTodos(hedgeMaterial);
                 repositorio.Agregar(hedgeObjetivo);
                 repositorio.Agregar(TCPromedioDto);

@@ -1,25 +1,15 @@
-﻿using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
     public partial class SugerenciaCupoDto : ICloneable
     {
-
         public int ComercialId;
-
         public int Id { get; set; }
         public int MaterialId { get; set; }
-
         public string MaterialDesc { get; set; }
-
         public decimal? Precio { get; set; }
-
         public string MonedaId { get; set; }
 
         //public int? AgenteCompraId { get; set; }
@@ -28,21 +18,16 @@ namespace Molinos.DataAgro.Entities.Dto
         //public int? ContratoId { get; set; }
 
         public int? ConfiguracionEspacioDinamicoId { get; set; }
-
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
         public decimal PrecioPizarra { get; set; }
-
         public FormulaDto formula { get; set; }
-
         public Dictionary<string, decimal> Puntuaciones { get; set; } = new Dictionary<string, decimal>();
         public string PuntuacionesString { get; set; }
         public decimal PuntuacionTotal { get; set; }
         public int DestinoId { get; set; }
         public int CantidadDeCupos { get; set; }
         public int CantidadCupoOriginal { get; set; }
-
-
         public decimal CantidadDeCuposMaximo { get { return this.CantidadDeCupos; } }
         public int? CantidadFleteProcedencia { get; set; }
         public string ZonaDescrip { get; set; }
@@ -59,10 +44,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Destinatario { get; set; }
         public string StandardDeCalidad { get; set; }
         public int TipoNegocioId { get; set; }
-
         public string ContratoSAP { get; set; }
         public int? NegocioId { get; set; }
-
         public bool CDWarrant { get; set; }
         public double KgNegocio { get; set; }
         public double KgPendienteAplicar { get; set; }
@@ -74,11 +57,11 @@ namespace Molinos.DataAgro.Entities.Dto
         public int SolicitudesPendientes { get; set; }
         public string CUITProveedor { get; set; }
         public string CUITCorredor { get; set; }
-
         public bool? Canje { get; set; }
         public bool? MercsDeposito { get; set; }
         public bool? CaratulaMAT { get; set; }
         public bool Sustentable { get; set; }
+        public bool EPA { get; set; }
 
         public object Clone()
         {

@@ -536,7 +536,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oParam.BoletoId == 5)
                 {
-                    var res = ValidarSinBoleto(oParam.Cantidad, oParam.Id, oParam.MaterialId, oParam.DestinoId, oParam.ClasificacionId, (oParam.CorredorId != null && oParam.CorredorId != 0), oParam.TipoNegocioId, oParam.ProvinciaId, oParam.ProveedorId, oParam.Sustentable);
+                    var sustentableOEPA = oParam.Sustentable | oParam.EPA;
+                    var res = ValidarSinBoleto(oParam.Cantidad, oParam.Id, oParam.MaterialId, oParam.DestinoId, oParam.ClasificacionId, (oParam.CorredorId != null && oParam.CorredorId != 0), oParam.TipoNegocioId, oParam.ProvinciaId, oParam.ProveedorId, sustentableOEPA);
                     if (res != null && res.HayError)
                     {
                         oErrorMessages.Errores.AddRange(res.Errores);
@@ -817,21 +818,21 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.Dolarizado.HasValue && oParam.Dolarizado.Value && !oParam.FechaDolarizado.HasValue)
             {
-                oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en Negocios Dolarizados.");
+                oErrorMessages.Error("Dolarizado", "Se debe completar la Fecha de pesificación en Negocios Dolarizados.");
             }
             if (oParam.DolarizadoExpress.HasValue && oParam.DolarizadoExpress.Value && !oParam.FechaDolarizado.HasValue)
             {
                 oErrorMessages.Error("DolarizadoExpress", "Se debe completar la Fecha de pesificación en Negocios Dolarizados.");
             }
-            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value && oParam.MaterialId != 3)
+            if (((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value)) && oParam.MaterialId != 3)
             {
-                oErrorMessages.Error("Sustentable", "Sustentable solo esta habilitado para el material Soja.");
+                oErrorMessages.Error("Sustentable", "Sustentable/EPA solo está habilitado para el material Soja.");
             }
-            if (oParam.Sustentable.HasValue && oParam.Sustentable.Value)
+            if ((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value))
             {
                 if (oParam.ImporteSustentable.HasValue && oParam.ImporteSustentable.Value != 0 && oParam.TarifaAConvenir == true)
                 {
-                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o Tarifa a Convenir.");
+                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o tarifa a convenir.");
                 }
                 if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value < 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
                 {
@@ -855,6 +856,10 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("Sustentable", "Debe indicar un rango de fechas válido de sustentable");
                     }
+                }
+                if (oParam.EPA.HasValue && oParam.EPA.Value && !oParam.EPATipoDBId.HasValue)
+                {
+                    oErrorMessages.Error("Sustentable EPA", "Debe indicar si el importe para EPA es sobre el precio o por fuera del precio.");
                 }
             }
             var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? config.CantidadDiasDolarizadoLimiteMaximo : config.CantidadDias;
@@ -1538,7 +1543,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (!validacionesMinimas)
             {
-                if (oParam.MaterialId == 3 && oParam.Sustentable == true)
+                if (oParam.MaterialId == 3 && (oParam.Sustentable == true || oParam.EPA == true))
                 {
                     var campania = repositorio.Obtener<Campaña>(oParam.CampanaId);
 
@@ -1836,6 +1841,8 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.Dolarizado = oContrato.Dolarizado;
             oContratoSave.DolarizadoCorredor = oContrato.DolarizadoCorredor;
             oContratoSave.Sustentable = oContrato.Sustentable;
+            oContratoSave.EPA = oContrato.EPA;
+            oContratoSave.EPATipoDBId = oContrato.EPA == true ? oContrato.EPATipoDBId : null;
             oContratoSave.FechaCierta = oContrato.FechaCierta;
             oContratoSave.PorcentajeDePago = oContrato.PorcentajeDePago;
             oContratoSave.TipoAgenteCompraId = oContrato.TipoAgenteCompraId;
@@ -2652,6 +2659,8 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.NivelTarifaId = contratoOriginal.NivelTarifaId == 0 ? null : contratoOriginal.NivelTarifaId;
                             oContratoSave.Dolarizado = contratoOriginal.Dolarizado;
                             oContratoSave.Sustentable = contratoOriginal.Sustentable;
+                            oContratoSave.EPA = contratoOriginal.EPA;
+                            oContratoSave.EPATipoDBId = contratoOriginal.EPATipoDBId;
                             oContratoSave.FechaCierta = contratoOriginal.FechaCierta;
                             oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
                             oContratoSave.ContratoAcuerdoId = contratoOriginal.ContratoAcuerdoId;
@@ -3073,6 +3082,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Estado = x.EstadoId,
                 Estado_Contrato = x.Estado.Descripcion,
                 Sustentable = x.Sustentable,
+                EPA = x.EPA,
+                EPATipoDBId = x.EPATipoDBId,
                 Importe_Sustentable = x.ImporteSustentable,
                 Moneda_Sustentable = x.MonedaSustentableId,
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
@@ -3971,6 +3982,8 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.TarifaAConvenir = contrato.TarifaAConvenir;
             contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
             contratoSave.Sustentable = contrato.Sustentable;
+            contratoSave.EPA = contrato.EPA;
+            contratoSave.EPATipoDBId = contrato.EPATipoDBId;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
             contratoSave.Dolarizado = contrato.Dolarizado;
             contratoSave.DolarizadoCorredor = contrato.DolarizadoCorredor;
@@ -4112,6 +4125,8 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.TarifaAConvenir = contrato.TarifaAConvenir;
             contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
             contratoSave.Sustentable = contrato.Sustentable;
+            contratoSave.EPA = contrato.EPA;
+            contratoSave.EPATipoDBId = contrato.EPATipoDBId;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
             contratoSave.Dolarizado = contrato.Dolarizado;
             contratoSave.DolarizadoCorredor = contrato.DolarizadoCorredor;
@@ -5174,6 +5189,8 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.ImporteSustentable = contratoSap.ImporteSustentable;
                 contrato.TarifaAConvenir = contratoSap.TarifaAConvenir;
                 contrato.Sustentable = contratoSap.Sustentable;
+                contrato.EPA = contratoSap.EPA;
+                contrato.EPATipoDBId = contratoSap.EPATipoDBId;
                 contrato.MonedaSustentableId = contratoSap.MonedaSustentableId;
                 contrato.FechaDolarizado = contratoSap.FechaDolarizado;
                 contrato.Dolarizado = contratoSap.Dolarizado;
@@ -5505,6 +5522,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             bc.FijacionDePrecioContratoId = (negocio is FijacionDePrecioContrato) ? (int?)(negocio as FijacionDePrecioContrato).Id : null;
             bc.Sustentable = (negocio is Contrato) ? (negocio as Contrato).Sustentable.HasValue ? (negocio as Contrato).Sustentable.Value : false : false;
+            bc.EPA = (negocio is Contrato) && (negocio as Contrato).EPA.HasValue && (negocio as Contrato).EPA.Value;
+            bc.EPATipoDBId = negocio is Contrato && (negocio as Contrato).EPATipoDBId.HasValue ? (negocio as Contrato).EPATipoDBId : null;
             bc.TarifaAConvenir = negocio.TarifaAConvenir;
             bc.Dolarizado = negocio.Dolarizado.Value;
             bc.Pesificado = negocio.DiasPesificado != null;
@@ -7238,13 +7257,13 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug($"cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar.ToJson()}");
 
             //Soja Comun
-            if (tieneSustentable == false)
+            if (tieneSustentable != true)
             {
-                cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable).Sum(x => x.Cantidad);
-                cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
-                logger.Debug($"soja comun {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && (x.Canje || x.CD || x.Warrant)).ToJson()}");
-                cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true).Sum(x => x.Cantidad);
-                cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable != true && contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
+                cantidadCartaDePorte = pendientes.Where(x => !string.IsNullOrEmpty(x.CartasPorte) && !x.Sustentable && !x.EPA).Sum(x => x.Cantidad);
+                cantidadContratoDeSAP = pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && !x.EPA && (x.Canje || x.CD || x.Warrant)).Sum(x => x.KgContrato);
+                logger.Debug($"soja comun {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && !x.Sustentable && !x.EPA && (x.Canje || x.CD || x.Warrant)).ToJson()}");
+                cantidadNegocioPendiente = contratosPendientes.Where(x => x.Sustentable != true && x.EPA != true).Sum(x => x.Cantidad);
+                cantidadContratosKilosPendientesAplicar = pendientes.Where(x => x.Sustentable != true && x.EPA != true && contratosFinalizados.Select(y => y.ContratoSAP).Contains(x.Contrato)).Sum(x => x.KgContrato);
             }
             logger.Debug($"soja sustentable {pendientes.Where(x => !string.IsNullOrEmpty(x.Contrato) && (x.Canje || x.CD || x.Warrant)).ToJson()}");
             logger.Debug($"CantidadCartaDePorte {cantidadCartaDePorte}, cantidadContratoDeSAP {cantidadContratoDeSAP}, cantidadNegocioPendiente {cantidadNegocioPendiente}, cantidadContratosKilosPendientesAplicar {cantidadContratosKilosPendientesAplicar}");

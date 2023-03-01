@@ -89,7 +89,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     MotivoRechazo = cupo.MotivoRechazo,
                     //Fecha = SqlFunctions.DateName("day", cupo.FechaIngreso) + "/" + SqlFunctions.DatePart("month", cupo.FechaIngreso) + "/" + SqlFunctions.DateName("year", cupo.FechaIngreso),
                     EstadoOrden = cupo.EstadoCupo.Orden,
-                    Sustentable = cupo.Sustentable
+                    Sustentable = cupo.Sustentable,
+                    EPA = cupo.EPA
                 };
 
             GridHelper.TruncateTime(request.Filter, ref queryCupos);

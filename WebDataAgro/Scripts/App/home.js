@@ -1148,6 +1148,6 @@ function Remover($filasEncabezado) {
     });
 }
 
-
-
-
+function BorrarCookies() {
+    window.location = '/home/borrarcookie';
+}

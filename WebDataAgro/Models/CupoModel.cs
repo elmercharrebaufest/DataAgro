@@ -46,6 +46,7 @@ namespace WebDataAgro.Models
         public DateTime FechaIngreso { get; set; }
         public string CuposNoPropios { get; set; }
         public bool Sustentable { get; set; }
+        public bool EPA { get; set; }
 
     }
     

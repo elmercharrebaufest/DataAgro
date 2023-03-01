@@ -2,7 +2,6 @@
 using Molinos.DataAgro.Agent.CartasDePortePendienteAplicar;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
@@ -54,7 +53,7 @@ namespace Molinos.DataAgro.Agent
                 new CcPpPerndienteAplicarDto() {
                     Contrato = "",
                     AgenteCompra = "Agente compra",
-                    Cantidad = 100000000,
+                    Cantidad = 30000,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
@@ -68,7 +67,7 @@ namespace Molinos.DataAgro.Agent
                 new CcPpPerndienteAplicarDto() {
                     Contrato = "",
                     AgenteCompra = "Agente compra",
-                    Cantidad = 10000000,
+                    Cantidad = 30000,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",
@@ -125,7 +124,8 @@ namespace Molinos.DataAgro.Agent
                                 Sustentable = item.SUSTENTABLE == "X",
                                 Region = item.REGION,
                                 Contrato = item.CONTRATO ?? "",
-                                KgContrato = item.KILOS_CONT
+                                KgContrato = item.KILOS_CONT,
+                                EPA = item.EPA == "X"
                             }).OrderBy(a => a.FechaIngresoFecha).ToList();
                     }
                     return listaccpp;

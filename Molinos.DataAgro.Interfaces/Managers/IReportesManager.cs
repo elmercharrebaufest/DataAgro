@@ -57,6 +57,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ResultAcopioMapaReportes> TraerCapacidadDeAcopioMapaExportacion(ParamReportes oParamReportes, List<int> equipo);
         List<ToneladasGranoTipoDto> TraerToneladasGranoTipo(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0);
         ReporteSojaSustDto TraerToneladasSojaSust(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);
+        ReporteSojaEPADto TraerToneladasSojaEPA(DateTime fechaDesde, DateTime fechaHasta, int centroId = 0);
         List<PosicionComprasDto> TraerPosicionCompras(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool TraerPosicionMaterialCampaña = false, bool verFijaciones = true);
         List<PricingCampaniaDto> TraerPricingCampania(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool verFijaciones = true);
         List<PrecioCantidadDto> TraerMonedaCantidad(DateTime fechaDesde, DateTime fechaHasta, List<int> materialId, int centroId = 0, bool verFijaciones = true);

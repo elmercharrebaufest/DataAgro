@@ -14,6 +14,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public HedgeCargaObjetivoDto HedgeObjetivo { get; set; }
         public HedgeTCPromedioDto TCPromedioDto { get; set; }
         public AgenteCompraModel AgenteCompras { get; set; }
+        public ReporteSojaEPADto SojaEPA { get; set; }
     }
     public class HedgeMaterialModel
     {

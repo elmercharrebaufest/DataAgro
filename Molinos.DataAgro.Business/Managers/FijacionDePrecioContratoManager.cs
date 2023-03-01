@@ -1138,6 +1138,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Observacion = fijac.Observacion ?? "",
                 FijacionDePrecioContratoId = fijac.Id,
                 Sustentable = false,
+                EPA = false,
                 Dolarizado = fijac.Dolarizado.Value,
                 Pesificado = false,
                 TrigoEspecial = fijac.TrigoEspecial,
