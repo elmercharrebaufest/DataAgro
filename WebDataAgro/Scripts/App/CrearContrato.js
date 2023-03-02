@@ -4192,12 +4192,6 @@ function CargarDatosEditar(contrato, hijo) {
         if (contrato.EPATipoDBId != null) {
             $("#selectPrecioEpa").data("kendoDropDownList").value(contrato.EPATipoDBId);
             $("#selectPrecioEpa").data("kendoDropDownList").trigger("change");
-            if (contrato.Estado == 5) {
-                $("#epaId").attr("disabled", true); 
-                $("#sustentablePrecioId").data("kendoNumericTextBox").enable(false);
-                $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
-                $("#selectPrecioEpa").data("kendoDropDownList").enable(false);
-            }
         }
     }
 
@@ -6406,6 +6400,9 @@ function MostrarServiciosYCalidades() {
 function EPATipoDB() {
     if ($("#selectPrecioEpa").val() == 1) {
         var monedaContrato = $("#precioMonedaId").val();
+        if (monedaContrato != $("#sustentableMonedaId").data("kendoDropDownList").value()) {
+            $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
+        }
         $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
         $("#sustentableMonedaId").data("kendoDropDownList").value(monedaContrato);
     } else {
