@@ -3164,6 +3164,7 @@ function ClickEnPizarra() {
         $("#precioId").trigger('change');
         $("#precioTotalApertura").data("kendoNumericTextBox").value("");
         $("#precioMonedaId").data("kendoDropDownList").value("ARP  ");
+        $("#precioMonedaId").data("kendoDropDownList").trigger("change");
 
         $("#pagoDiferidoFijacionDiv").removeClass("inline-fijacion");
         $("#pagoDiferidoFijacionDiv").addClass("hide-fijacion");

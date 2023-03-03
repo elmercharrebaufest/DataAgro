@@ -838,7 +838,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (!(oParam.TarifaAConvenir.HasValue ? oParam.TarifaAConvenir.Value : false))
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable.");
+                        oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o EPA.");
                     }
                 }
                 if (oParam.MercsDeposito == true)
