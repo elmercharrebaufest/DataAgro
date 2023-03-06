@@ -288,7 +288,8 @@ namespace WebDataAgro.Controllers
                         Campaña = modificados.CampaniaDesc[i],
                         CampañaId = modificados.CampaniaId[i],
                         ProveedorId = (int)model.ProveedorId,
-                        Materiales = new List<ParamInformeComercialMaterial>()
+                        Materiales = new List<ParamInformeComercialMaterial>(),
+                        ComercialId = (int)modificados.ComercialId
                     };
                     for (var j = 0; j < matCampania.Count(); j++)
                     {
