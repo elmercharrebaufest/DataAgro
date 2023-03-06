@@ -30,7 +30,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             if (ConfigurationManager.AppSettings["SinConexionSap"] == "1")
             {
-                
+
                 return "OK";
             }
             try
@@ -274,6 +274,10 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                 }
+                if (contrato.EPATipoDBId != contratoGuardado.EPATipoDBId && (contrato.EPATipoDBId == 1 || contratoGuardado.EPATipoDBId == 1))
+                {
+                    apModificado = true;
+                }
                 var listaApertura = new List<ZMPES5440>();
                 if (contrato.EPA == true && contrato.EPATipoDBId == 1) //bonificación sobre precio
                 {
@@ -299,7 +303,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                                 PORC = apertura.Porcentaje
                             });
                         }
-                        
+
                     }
                 }
 
@@ -613,7 +617,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     CALIDAD = calModificado ? "X" : "",
                     DESC_BONIF = descModificado ? "X" : "",
                     TOPES_FIJ = topFija ? "X" : "",
-                    SERVICIOS = apServicio ? "X" : "" 
+                    SERVICIOS = apServicio ? "X" : ""
                 };
                 rq.IM_DESC_BONIF = listaDescuentos.ToArray();
                 rq.IM_CALIDAD = listaCalidades.ToArray();
