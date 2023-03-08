@@ -1079,7 +1079,7 @@ function DatosProveedor() {
 
 
 function MostrarCcPpPendientesAplicar() {
-    if ($("#mercsDepositoId").is(":checked") && $("#sustentableId").is(":checked")) {
+    if ($("#mercsDepositoId").is(":checked") && ($("#sustentableId").is(":checked") || $("#epaId").is(":checked"))) {
         $(".fechaHastaSustentableDiv").show();
         var cuitP = "";
         var cuitC = "";

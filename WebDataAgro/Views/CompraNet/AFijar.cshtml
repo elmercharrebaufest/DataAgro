@@ -767,10 +767,6 @@
                     <img id="errsustentableMonedaId" src="~/Content/Images/error.png" style="display:none" />
                 </div>
             </div>
-            <div class="col-sm-4 col-md-2 precioEpa" hidden>
-                <select id="selectPrecioEpa" data-bind="source: TipoDBCombo, value: Parametros.EPATipoDBId, disabled: isControlDisabled" style="width:100%"></select>
-                <img id="errselectPrecioEpa" src="~/Content/Images/error.png" style="display:none" />
-            </div>
             <div class="fechaHastaSustentableDiv col-sm-6 col-md-5 left" hidden>
                 <div class="col-sm-3 left" data-toggle="tooltip" data-placement="top" id="fechaTooltipSustentable">
                     <label>Desde-Hasta</label>
@@ -787,6 +783,10 @@
                         <img id="errfechaHastaSustentableId" src="~/Content/Images/error.png" style="display:none" />
                     </span>
                 </div>
+            </div>
+            <div class="col-sm-4 col-md-2 precioEpa" hidden>
+                <select id="selectPrecioEpa" data-bind="source: TipoDBCombo, value: Parametros.EPATipoDBId, disabled: isControlDisabled" style="width:100%"></select>
+                <img id="errselectPrecioEpa" src="~/Content/Images/error.png" style="display:none" />
             </div>
             <div class="col-sm-2 col-md-3 sustentableDiv" id="divSustentableSinTarifa" hidden>
                 <label class="sojaSustentable" style="width:120px">Tarifa a Convenir</label>
