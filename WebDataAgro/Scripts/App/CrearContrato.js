@@ -5816,7 +5816,6 @@ function HaySustentable() {
         $(".sustentableDiv").show();
     } else if ($("#epaId").is(":checked")) {
         $(".sojaSustentable").hide();
-        MostrarCcPpPendientesAplicar();
         $(".sustentableDiv").show();
         $(".precioEpa").show();
     } else {
@@ -6406,7 +6405,9 @@ function EPATipoDB() {
         }
         $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
         $("#sustentableMonedaId").data("kendoDropDownList").value(monedaContrato);
+        MostrarCcPpPendientesAplicar();
     } else {
         $("#sustentableMonedaId").data("kendoDropDownList").enable(true);
+        MostrarCcPpPendientesAplicar();
     }
 }
