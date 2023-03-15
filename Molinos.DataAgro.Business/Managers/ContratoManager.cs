@@ -5812,18 +5812,23 @@ namespace Molinos.DataAgro.Business.Managers
             var materiales = mobjMaterialManager.TraerTodoMaterial().Material;
             var monedas = repositorio.Listar<Moneda, MonedaQry>(x => new MonedaQry() { MonedaId = x.MonedaId, Descripcion = x.Descripcion });
 
+            var cuitsProveedor = contratos.Select(a => a.Cuit).ToList();
+            var proveedores = repositorio.Listar<Proveedor, ProveedorDto>(
+                a => new ProveedorDto { ProveedorId = a.ProveedorId, CUIT = a.CUIT, RazonSocial = a.RazonSocial },
+                a => cuitsProveedor.Contains(a.CUIT) && a.Segmentacion.Grupo != "Corredores").ToList();
+
             foreach (var item in contratos)
             {
 
 
-                var proveedorid = mobjProveedorManager.ObtenerIdProveedorPorCuit(item.Cuit);
-                if (proveedorid == 0)
+                var proveedorid = proveedores.Where(a => a.CUIT == item.Cuit).FirstOrDefault()?.ProveedorId;
+                if (proveedorid == 0 || proveedorid == null)
                 {
                     results.Add(new GrabarContratoResult { ContratoId = int.Parse(item.Observacion), Errores = new List<ErrorMessage> { new ErrorMessage { Source = "Proveedor", Message = "El cuit no existe." } } });
                     continue;
                 }
-                var proveedor = mobjProveedorManager.TraerProveedor(proveedorid, comercial.IdActiveDirectory, new List<int>()).BasicoProveedorTraerPorProveedores.First();
-                var boletobolsa = mobjProveedorManager.TraerBoletoBolsa(proveedorid);
+                var proveedor = proveedores.Where(a => a.CUIT == item.Cuit).FirstOrDefault();
+                var boletobolsa = mobjProveedorManager.TraerBoletoBolsa(proveedorid.Value);
                 item.Proveedor = proveedor.RazonSocial;
                 item.Material = materiales.Where(a => a.MaterialId == item.MaterialId).Single().Descripcion;
                 item.FechaOperacion = acuerdo.FechaOperacion.Value.Date;
@@ -5982,6 +5987,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
                 else
                 {
+                    logger.Debug($"GrabarContratoMasivo contratoCorredor {item.ContratoCorredor}, proveedorid {contrato.ProveedorId}, corredorid {contrato.CorredorId}");
+                    logger.Debug(contrato.ToJson());
                     var result = GrabarContrato(contrato);
                     result.ContratoId = int.Parse(item.Observacion);
                     results.Add(result);
@@ -7572,9 +7579,9 @@ namespace Molinos.DataAgro.Business.Managers
                             }};
                         };
                         int descuentos = DBNull.Value.Equals(rows.ElementAt(ii)[24]) ? 0 : tipoDB.Where(a => a.Descripcion.ToLower() == rows.ElementAt(ii)[24].ToString().Trim().ToLower()).Single().Id;
-                        if (descuentos != 0) 
+                        if (descuentos != 0)
                         {
-                            if (rows.ElementAt(ii)[23] == null || string.IsNullOrEmpty(rows.ElementAt(ii)[23].ToString())) 
+                            if (rows.ElementAt(ii)[23] == null || string.IsNullOrEmpty(rows.ElementAt(ii)[23].ToString()))
                             {
                                 ExcelValidatorRowResult excelValidatorRowResult = resultValidation.RowsResult.Where(a => a.Row == ii).Single();
                                 var ret = new ExcelValidatorItemResult();
