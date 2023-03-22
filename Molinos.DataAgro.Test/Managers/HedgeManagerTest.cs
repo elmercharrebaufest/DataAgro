@@ -1,19 +1,14 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Business;
-using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq.Expressions;
 using System.Web;
 using System.Web.Script.Serialization;
@@ -42,7 +37,7 @@ namespace Molinos.DataAgro.Test.Managers
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
 
             target = new HedgeManager(logger.Object, repositorioMock.Object,
-                mailManagerMock.Object,reportesManagerMock.Object);
+                mailManagerMock.Object, reportesManagerMock.Object);
         }
 
         [Test]
@@ -54,14 +49,13 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.NotNull(result);
         }
-
         [Test]
         public void TraerTodosHedgeMaterialOk()
         {
-            
-            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<HedgeMaterial, HedgeMaterialDto>>>(),It.IsAny<Expression<Func<HedgeMaterial, bool>>>(), It.IsAny <int>(),It.IsAny<string>(),It.IsAny<DirOrden>()))
-                .Returns(new List<HedgeMaterialDto>() { new HedgeMaterialDto {Id=1 } });
-            
+
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<HedgeMaterial, HedgeMaterialDto>>>(), It.IsAny<Expression<Func<HedgeMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<HedgeMaterialDto>() { new HedgeMaterialDto { Id = 1 } });
+
             var resultado = target.TraerTodosHedgeMaterial();
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HedgeMaterial, HedgeMaterialDto>>>(), It.IsAny<Expression<Func<HedgeMaterial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
 
@@ -94,11 +88,23 @@ namespace Molinos.DataAgro.Test.Managers
             Assert.AreEqual(1, resultado.Count);
         }
         [Test]
+        public void TraerTodosHedgeMargenMoliendaOk()
+        {
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<HedgeMargenMolienda, HedgeMargenMoliendaDto>>>(), It.IsAny<Expression<Func<HedgeMargenMolienda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+                .Returns(new List<HedgeMargenMoliendaDto>() { new HedgeMargenMoliendaDto { Id = 1 } });
+
+            var resultado = target.TraerTodosHedgeMargenMolienda();
+            repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<HedgeMargenMolienda, HedgeMargenMoliendaDto>>>(), It.IsAny<Expression<Func<HedgeMargenMolienda, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.AreEqual(1, resultado.Count);
+        }
+        [Test]
         public void GrabarHedgeMaterialOk()
         {
             var fecha = new DateTime(2019, 04, 20);
             var hed = new List<HedgeMaterial>() { new HedgeMaterial { Id = 1, Cantidad = 1, ComercialId = 1, Fecha = fecha }, new HedgeMaterial { Cantidad = 0, ComercialId = 1, Fecha = fecha } };
-                      
+
             repositorioMock.Setup(x => x.ObtenerMayor(It.IsAny<Expression<Func<FinDelDia, bool>>>(), It.IsAny<Expression<Func<FinDelDia, DateTime>>>(), It.IsAny<Expression<Func<FinDelDia, FinDelDiaDto>>>()))
                 .Returns(new FinDelDiaDto { Cerrado = false, Diferencial = 1000 });
 
@@ -129,13 +135,29 @@ namespace Molinos.DataAgro.Test.Managers
         public void GrabarHedgeTCOk()
         {
             var fecha = new DateTime(2019, 04, 20);
-            var hed = new HedgeTC { Id = 1, HedgePesos = 1, TipoCambio=1 , ComercialId = 1, Fecha = fecha };
+            var hed = new HedgeTC { Id = 1, HedgePesos = 1, TipoCambio = 1, ComercialId = 1, Fecha = fecha };
 
             repositorioMock.Setup(x => x.ObtenerMayor(It.IsAny<Expression<Func<FinDelDia, bool>>>(), It.IsAny<Expression<Func<FinDelDia, DateTime>>>(), It.IsAny<Expression<Func<FinDelDia, FinDelDiaDto>>>()))
                 .Returns(new FinDelDiaDto { Cerrado = false, Diferencial = 1000 });
 
             var resultado = target.GrabarHedgeTC(hed, 1);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<HedgeTC>()), Times.Once);
+
+            Assert.NotNull(resultado);
+            Assert.IsTrue(resultado.HayErrores);
+            Assert.AreEqual(200, resultado.ListaErrores[0].ErrorCode);
+        }
+        [Test]
+        public void GrabarHedgeMargenMoliendaOk()
+        {
+            var fecha = new DateTime(2022, 08, 20);
+            var hed = new HedgeMargenMolienda { Id = 1, MargenMolienda = 1, ComercialId = 1, Fecha = fecha };
+
+            repositorioMock.Setup(x => x.ObtenerMayor(It.IsAny<Expression<Func<FinDelDia, bool>>>(), It.IsAny<Expression<Func<FinDelDia, DateTime>>>(), It.IsAny<Expression<Func<FinDelDia, FinDelDiaDto>>>()))
+                .Returns(new FinDelDiaDto { Cerrado = false, Diferencial = 1000 });
+
+            var resultado = target.GrabarHedgeMargenMolienda(hed, 1);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<HedgeMargenMolienda>()), Times.Once);
 
             Assert.NotNull(resultado);
             Assert.IsTrue(resultado.HayErrores);
@@ -152,7 +174,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<HedgeTC, bool>>>()))
                 .Returns(hed);
 
-            var resultado = target.EliminarHedgeTC( 1);
+            var resultado = target.EliminarHedgeTC(1);
             repositorioMock.Verify(x => x.Obtener(It.IsAny<Expression<Func<HedgeTC, bool>>>()), Times.Once);
             repositorioMock.Verify(x => x.Remover(It.IsAny<HedgeTC>()), Times.Once);
 
@@ -172,14 +194,14 @@ namespace Molinos.DataAgro.Test.Managers
 
             repositorioMock.Setup(x => x.Obtener(It.IsAny<Expression<Func<FinDelDia, bool>>>()))
                 .Returns(new FinDelDia { Id = 1, ComercialId = 1 });
-            repositorioMock.Setup(y => y.Listar( It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<Contrato>() { new Contrato { Id = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FijacionDePrecioContrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<FijacionDePrecioContrato>() { new FijacionDePrecioContrato { Id = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Fason, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                             .Returns(new List<Fason>() { new Fason { Id = 1 } });
 
-            var resultado = target.CerrarDia(1, arc,"a",false,"a",10);
+            var resultado = target.CerrarDia(1, arc, "a", false, "a", 10);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<FinDelDia>()), Times.Once);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Exactly(2));
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
@@ -195,13 +217,13 @@ namespace Molinos.DataAgro.Test.Managers
             var fecha = new DateTime(2019, 04, 20);
             var arc = new byte[10];
             var hed = new HedgeTC { Id = 1, HedgePesos = 1, TipoCambio = 1, ComercialId = 1, Fecha = fecha };
-            
+
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<FinDelDia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<FinDelDia>() { new FinDelDia { Id = 1 } });
-            
+
             var resultado = target.ReabrirDia(1, 10);
             repositorioMock.Verify(x => x.Listar(It.IsAny<Expression<Func<FinDelDia, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()), Times.Once);
-            
+
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
             Assert.NotNull(resultado);

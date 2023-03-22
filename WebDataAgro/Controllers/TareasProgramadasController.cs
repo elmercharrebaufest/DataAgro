@@ -1,15 +1,9 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using System.Web.Mvc;
 using static WebDataAgro.MvcApplication;
-using System.Web.Script.Serialization;
-using Molinos.DataAgro.Entities.Entities;
-using System.Collections.Generic;
 using System;
-using Molinos.DataAgro.Entities.Dto;
 using WebDataAgro.Helpers.Excel;
-using System.Linq;
 using Molinos.DataAgro.Interfaces.Managers;
 
 namespace WebDataAgro.Controllers
@@ -82,6 +76,7 @@ namespace WebDataAgro.Controllers
             logger.Info($"Borrado Automatico - Finalizado");
             return Content("ok");
         }
+
         public ActionResult ConsultarCuposDiarios()
         {
             logger.Info($"Transmitiendo cupos a STOP");
@@ -144,13 +139,12 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
-
         public ActionResult CerrarDia()
         {
             logger.Info($"CerrarDiaHedge - Iniciando");
             var mailEnviar = ExcelReporteCompleto.GenerarExcel(oHedgeManager.ObtenerDatosReporte(), reportesManager.PosicionPorMaterial(DateTime.Now, DateTime.Now), true);
-            var hoy = DateTime.Now.Date;
-            oHedgeManager.EnviarMail(GlobalVariables.ComercialId, hoy, oHedgeManager.GenerarCuerpoMail(""), mailEnviar);
+            var diferencial = diferencialManager.TraerDiferencial();
+            oHedgeManager.JobCerrarDia(GlobalVariables.ComercialId, GlobalVariables.IdActiveDirectory, mailEnviar, diferencial == null ? 0 : diferencial.DiferencialDefault);
             logger.Info($"CerrarDiaHedge - Finalizado");
             return Content("ok");
         }
@@ -169,7 +163,6 @@ namespace WebDataAgro.Controllers
 
         }
 
-
         public ActionResult ConsultarContratosPrimary()
         {
             logger.Info($"ConsultarContratosPrimary - inicio");
@@ -177,7 +170,6 @@ namespace WebDataAgro.Controllers
             logger.Info($"ConsultarContratosPrimary - Finalizado");
             return Content("ok");
         }
-
 
         public ActionResult ActualizarRazonSocial()
         {
@@ -272,7 +264,6 @@ namespace WebDataAgro.Controllers
             return Content("ok");
         }
 
-
         public ActionResult EnvioMailNegociosAnulaYReemplaza()
         {
             logger.Info($"EnvioMailNegociosAnulaYReemplaza - Iniciando");
@@ -327,9 +318,9 @@ namespace WebDataAgro.Controllers
         {
             //if (DateTime.Now > DateTime.Now.Date.AddHours(10) && DateTime.Now < DateTime.Now.Date.AddHours(11).AddMinutes(1))
             //{
-                logger.Info($"Actualizar Proveedores Home");
-                proveedorManager.ActualizarProveedoresHome();
-                logger.Info($"Actualizar Proveedores Home - Finalizado");
+            logger.Info($"Actualizar Proveedores Home");
+            proveedorManager.ActualizarProveedoresHome();
+            logger.Info($"Actualizar Proveedores Home - Finalizado");
             //}
             return Content("ok");
         }

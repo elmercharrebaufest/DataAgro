@@ -7,6 +7,10 @@ var grupocampoacopio = {};
 var campaniaSeleccionada;
 var grupoestablecimiento = {};
 var _DefaultDateTemplate = "{0:dd/MM/yyyy}";
+var paginaActividades = 1;
+var tomoDeAXRegistros = 2;
+var actividadHistoriaFiltro = null;
+var elemParaEliminarTrasEdicion = null;
 
 $(document).ready(function () {
     kendo.culture("es-AR");
@@ -15,6 +19,7 @@ $(document).ready(function () {
     modificarHeader();
     armarContacto();
     armarEstilosyFuncionesDetalle();
+    armarFunciones();
 
     $("#Grafico").click(function () {
         $("#grano").show();
@@ -2012,7 +2017,7 @@ function armarEstilosyFuncionesDetalle() {
         });
     });
 
-    $("#palabra-clave").change(function () {
+    $("#palabra-clave").keyup(function () {
         updateFiltro();
     });
 }
@@ -2619,13 +2624,23 @@ function guardarProveedor() {
 }
 
 function editarActividad(elem) {
+    reArmarAgenda();
+
     var id = $(elem).prop("id").split("editar")[1];
-    var obj = resultDatos.ActividadHistoriaTraerPorProveedores.filter(function (x) { return x.ActividadId == id });
+
+    if (actividadHistoriaFiltro == null) {
+        var obj = resultDatos.ActividadHistoriaTraerPorProveedores.filter(function (x) { return x.ActividadId == id });
+    } else {
+        var obj = actividadHistoriaFiltro.filter(function (x) { return x.ActividadId == id });
+    }
+
     if (obj) {
         obj = obj[0];
     } else {
         return false;
     }
+
+    elemParaEliminarTrasEdicion = elem;
 
     $("#actividadId").val(obj.ActividadId);
     $("#fechaHoraActividad").val(obj.FechaHoraActividad);
@@ -2644,6 +2659,12 @@ function editarActividad(elem) {
         $(".campofechadesde").show();
         $(".campofechahasta").show();
         $(".campoenviar").show();
+    } else {
+        $(".titulo-recordatorio").hide();
+        $(".campoasunto").hide();
+        $(".campofechadesde").hide();
+        $(".campofechahasta").hide();
+        $(".campoenviar").hide();
     }
 
     if (obj.FechaHoraRecordatorio) {
@@ -2658,6 +2679,47 @@ function editarActividad(elem) {
     }
 }
 
+function reArmarAgenda() {
+    var datos = {
+        ProveedorId: ProveedorId
+    };
+    var result = resultDatos = MSExecuteOnServer('/Proveedor/TraerProveedor', datos);
+    var actividad = result.ActividadTraerPorProveedores;
+
+    if (actividadHistoriaFiltro == null) {
+        var actividadhistoria = result.ActividadHistoriaTraerPorProveedores;
+    } else {
+        var actividadhistoria = actividadHistoriaFiltro;
+    }
+
+    var contAct = 0;
+    var htmlProxAct = "";
+    var htmlHist = "";
+
+    if (!actividad.length) {
+        htmlProxAct = "<div class='nohayrecordatorios'>No hay recordatorios registrados.</div>";
+    } else {
+        armarProxActividad(actividad, function (fhtmlHist, fhtmlProxAct) {
+            htmlProxAct = fhtmlProxAct;
+            //htmlHist = fhtmlHist;
+        })
+    }
+    if (!actividadhistoria.length) {
+        htmlHist = "<div class='nohayrecordatorios'>No hay actividades registradas.</div>";
+    } else {
+        armarActividad(actividadhistoria, function (fhtmlHist, fhtmlProxAct) {
+            //htmlProxAct = fhtmlProxAct;
+            htmlHist = fhtmlHist;
+        });
+    }
+
+    if (MostrarAgenda) {
+        setTimeout(function () {
+            $("#agenda").trigger("click");
+        }, 1000);
+    }
+}
+
 function eliminarActividad(elem) {
     var id = $(elem).prop("id").split("eliminar")[1];
     var result = MSExecuteOnServer('/Proveedor/EliminarRecordatorio', { id: id });
@@ -2665,13 +2727,65 @@ function eliminarActividad(elem) {
     $(elem).parent().parent().remove();
 }
 
+function eliminarActividadEditada(elem) {
+    var id = $(elem).prop("id").split("editar")[1];
+    var result = MSExecuteOnServer('/Proveedor/EliminarRecordatorio', { id: id });
+
+    $(elem).parent().parent().remove();
+    elemParaEliminarTrasEdicion = null;
+}
+
+var hideText_btn = '';
+var hideText = '';
+
+function toggleText() {
+    hideText.classList.toggle('show');
+
+    if (hideText.classList.contains('show')) {
+        hideText_btn.innerHTML = 'Leer menos';
+    } else {
+        hideText_btn.innerHTML = 'Leer mas';
+    }
+}
+
+function leerMas(i) {
+    hideText_btn = document.getElementById('hideText_btn' + i);
+    hideText = document.getElementById('hideText' + i);
+    hideText_btn.addEventListener('click', toggleText);
+}
+
+function leerMasActividad(i) {
+    var text = $('#text-overflow' + i),
+        btn = $('#btn-overflow' + i),
+        h = text[0].scrollHeight;
+
+    if (btn.hasClass('less')) {
+        btn.removeClass('less');
+        btn.addClass('more');
+        btn.text('Show less');
+        text.animate({ 'height': h });
+    } else {
+        btn.addClass('less');
+        btn.removeClass('more');
+        btn.text('Show more');
+        text.animate({ 'height': 120 });
+    }
+}
+
 function armarActividad(actividad, ret) {
     var contAct = 0;
     var htmlHist = "";
     var htmlProxAct = "";
     for (var ii in actividad) {
+        $("#verMasActividades").show();
         (function (i) {
-            htmlHist += '<div class="historial-actividad-grupo-detalle">' +
+            if (actividad[i].TipoActividad == 'Agenda') {
+                var clase = 'historial-actividad-grupo-detalle-agenda';
+            } else {
+                var clase = 'historial-actividad-grupo-detalle';
+            }
+
+            htmlHist += '<div class="' + clase + '">' +
                 '<div class="historial-actividad-grupo-detalle-titulo">' +
                 actividad[i].TipoActividad +
                 '</div>';
@@ -2687,12 +2801,14 @@ function armarActividad(actividad, ret) {
                     '</div>';
             }
 
-            htmlHist += '<div class="historial-actividad-grupo-detalle-comentario">' +
-                '<img src="../Content/Images/mensaje-agenda.png" /> <span>' + actividad[i].Detalle + '</span>' +
+            htmlHist += '<div class="historial-actividad-grupo-detalle-comentario text-overflow" id="text-overflow' + i + '">' +
+                '<img src="../Content/Images/mensaje-agenda.png" /> <span> &nbsp' + actividad[i].Detalle + '</span>' +
                 '</div>' +
+                (actividad[i].Detalle.length > 290 ? '<a class="btn-overflow less btn btn-primary" style="cursor: pointer" id="btn-overflow' + i + '" onclick="leerMasActividad(' + i + ')">Show more</a>' : '') +
                 '<div class="historial-actividad-grupo-detalle-fecha">' +
                 kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraActividad), "MMMM HH:mm") +
                 '</div>';
+
             if (actividad[i].FechaHoraRecordatorio) {
                 htmlHist += '<div class="historial-actividad-grupo-detalle-recordatorio">' +
                     '<img src="../Content/Images/notificaciones-reloj.png" /><span>Recordatorio: ' + kendo.toString(kendo.parseDate(actividad[i].FechaHoraRecordatorio), "ddd dd") + " de " + kendo.toString(kendo.parseDate(actividad[i].FechaHoraRecordatorio), "MMMM HH:mm") + '</span>' +
@@ -2742,9 +2858,31 @@ function armarProxActividad(actividad, ret) {
 
 function guardarActividad() {
     var obj = {};
+
+    if ((!$("#tipo-actividad").val() || $("#tipo-actividad").val() === "null")) {
+        MensErr("La actividad debe tener un Tipo de Actividad");
+        return false;
+    }
+
     if ((!$("#contacto-actividad").val() || $("#contacto-actividad").val() === "null")) {
         MensErr("La actividad debe tener un contacto");
         return false;
+    }
+
+    if ($("#tipo-actividad").val() == "3") {
+        if (!$("#agendaAsunto").val() || $("#agendaAsunto").val() === "null") {
+            MensErr("La Agenda debe tener un Asunto.");
+            return false;
+        }
+        if ($("#datepicker").val() == "" || $("#datepicker-hasta").val() == "") {
+            MensErr("Por favor, completar las fechas de la Agenda.");
+            return false;
+        }
+        if ($("#timepicker").val().includes("hours") || $("#timepicker").val().includes("minutes") ||
+            $("#timepicker-hasta").val().includes("hours") || $("#timepicker-hasta").val().includes("minutes")) {
+            MensErr("Por favor, completar los horarios de la Agenda.");
+            return false;
+        }
     }
 
     obj.ActividadId = $("#actividadId").val();
@@ -2861,6 +2999,10 @@ function guardarActividad() {
         }*/
     });
 
+    if (elemParaEliminarTrasEdicion != null) {
+        eliminarActividadEditada(elemParaEliminarTrasEdicion);
+    }
+
     var result = MSExecuteOnServer('/Proveedor/TraerProveedor', { ProveedorId: ProveedorId });
     var actividad = result.ActividadTraerPorProveedores;
     var basico = result.BasicoProveedorTraerPorProveedores;
@@ -2894,40 +3036,81 @@ function guardarActividad() {
     $(".actividad-ultimo-contacto").html(basico[0].FechaUltimoContacto ? kendo.toString(kendo.parseDate(basico[0].FechaUltimoContacto), "dd/MM") : "-");
     $(".historial-actividad-grupo-contenedor").append(htmlHist);
     ArmarNotificaciones();
+
+    $('span.k-i-warning').each(function () {
+        $(this).hide();
+    });
+    $('div.agenda-contenedor-recordatorio-hora span').each(function () {
+        $('.k-widget.k-timepicker')
+            .removeClass('k-input')
+            .addClass('.bordes-fecha-hora')
+    });
+    $('div.agenda-contenedor-recordatorio-fecha span').each(function () {
+        $('.k-widget.k-datepicker')
+            .removeClass('k-input')
+            .addClass('.bordes-fecha-hora')
+    });
 }
 
 function setChangeChecks() {
+
     $('form :input').change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
     $("#tipo-act-Reunion-personal").change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
     $("#tipo-act-Todas").change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
     $("#tipo-act-Llamada").change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
     $("#tipo-act-Evento-Molinos").change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
     $("#tipo-act-Mail-chat").change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
     $("#tipo-act-Cupones").change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
     $("#tipo-act-Notas").change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
     $("#tipo-act-Cierre-de-operaciones").change(function () {
+        paginaActividades = 0;
         updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
+    });
+    $("#tipo-act-Visita").change(function () {
+        paginaActividades = 0;
+        updateFiltro();
+        if (paginaActividades == 0) paginaActividades = 1;
     });
 }
 
-function updateFiltro() {
+function updateFiltro(paginaActividades) {
+    paginaActividades = (paginaActividades == undefined ? 0 : paginaActividades);
     filtro = {};
+    filtro.ProveedorId = ProveedorId;
+    filtro.pagina = 1;
 
     if ($("#palabra-clave").val() && $("#palabra-clave").val() != "null")
         filtro.detalle = $("#palabra-clave").val();
@@ -2936,41 +3119,9 @@ function updateFiltro() {
         filtro.Segmentacion = $("#periodo-tiempo").val();
     */
 
-    if ($("#tipo-act-Todas").is(":checked") ||
-        $("#tipo-act-Llamada").is(":checked") ||
-        $("#tipo-act-Reunion-personal").is(":checked") ||
-        $("#tipo-act-Evento-Molinos").is(":checked") ||
-        $("#tipo-act-Mail-chat").is(":checked") ||
-        $("#tipo-act-Cierre-de-operaciones").is(":checked") ||
-        $("#tipo-act-Cupones").is(":checked") ||
-        $("#tipo-act-Notas").is(":checked")
-    ) {
-        if ($("#tipo-act-Todas").is(":checked")) {
-            $("#tipo-act-Llamada").prop("checked", false);
-            $("#tipo-act-Reunion-personal").prop("checked", false);
-            $("#tipo-act-Evento-Molinos").prop("checked", false);
-            $("#tipo-act-Mail-chat").prop("checked", false);
-            $("#tipo-act-Cierre-de-operaciones").prop("checked", false);
-            $("#tipo-act-Cupones").prop("checked", false);
-            $("#tipo-act-Notas").prop("checked", false);
-        }
+    filtro = DevolverFiltroConTipoActividad(filtro);
 
-        filtro.Actividad = [];
-        $("#tipo-act-Todas").is(":checked") && filtro.Actividad.push($("#tipo-act-Todas").prop("value"));
-        $("#tipo-act-Llamada").is(":checked") && filtro.Actividad.push($("#tipo-act-Llamada").prop("value"));
-        $("#tipo-act-Reunion-personal").is(":checked") && filtro.Actividad.push($("#tipo-act-Reunion-personal").prop("value"));
-        $("#tipo-act-Evento-Molinos").is(":checked") && filtro.Actividad.push($("#tipo-act-Evento-Molinos").prop("value"));
-        $("#tipo-act-Mail-chat").is(":checked") && filtro.Actividad.push($("#tipo-act-Mail-chat").prop("value"));
-        $("#tipo-act-Cierre-de-operaciones").is(":checked") && filtro.Actividad.push($("#tipo-act-Cierre-de-operaciones").prop("value"));
-        $("#tipo-act-Cupones").is(":checked") && filtro.Actividad.push($("#tipo-act-Cupones").prop("value"));
-        $("#tipo-act-Notas").is(":checked") && filtro.Actividad.push($("#tipo-act-Notas").prop("value"));
-        filtro.TipoActividadId = filtro.Actividad.join("|");
-        if (filtro.Actividad === "null")
-            filtro.TipoActividadId = null;
-    }
-
-    filtro.ProveedorId = ProveedorId;
-    var result = resultDatos = MSExecuteOnServer('/Proveedor/TraerFiltros', filtro);
+    var result = MSExecuteOnServer('/Proveedor/TraerFiltros', { TipoActividadId: filtro.TipoActividadId, ProveedorId: filtro.ProveedorId, oParam: filtro });
 
     $(".historial-actividad-grupo-contenedor").empty();
     var htmlHist = "";
@@ -3257,7 +3408,7 @@ function mostrarEstadoInformesComerciales(cproductiva) {
             ultimasCampanias.push(add);
         }
     }
-    
+
     for (cp of ultimasCampanias) {
         if (cp.MaterialId == 1) {
             if (cp.InformeActualizado == 1) {
@@ -3316,4 +3467,104 @@ function mostrarEstadoInformesComerciales(cproductiva) {
             }
         };
     }
+}
+
+function armarFunciones() {
+    $("#exportarExcel").click(function () {
+        exportar(1);
+    });
+}
+
+function exportar(value) {
+    //var filtro = generarFiltro(ObtenerEstadoActual());
+    var filtro = {};
+    filtro.ProveedorId = ProveedorId;
+
+    if (value == 0) {
+        //DescargarPDF(filtro);
+    }
+    else if (value == 1) {
+        DescargarExcel(filtro);
+    }
+    else {
+        //DescargarExportAll(filtro);
+    }
+}
+
+function DescargarExcel(param) {
+    var funcReturn = function (data) {
+        if (data != null) {
+            if (data.DownloadKey.length > 0) {
+                var url = MSGetUrl('/DownLoad/Excel?key=' + data.DownloadKey);
+                window.location = url;
+            }
+        }
+    }
+
+    MSExecuteOnServerAsync('/Proveedor/ExportarActividadesExcel', param, funcReturn, true);
+}
+
+function TraerSiguiente() {
+    paginaActividades += 1;
+    paginaActividades = (paginaActividades == undefined ? 0 : paginaActividades);
+    filtro = {};
+    filtro.ProveedorId = ProveedorId;
+    filtro.pagina = paginaActividades;
+    filtro.cantidadRegistros = filtro.pagina == undefined ? tomoDeAXRegistros : (filtro.pagina * tomoDeAXRegistros);
+
+    if ($("#palabra-clave").val() && $("#palabra-clave").val() != "null")
+        filtro.detalle = $("#palabra-clave").val();
+
+    filtro = DevolverFiltroConTipoActividad(filtro);
+
+    var result = MSExecuteOnServer('/Proveedor/TraerFiltros', { TipoActividadId: filtro.TipoActividadId, ProveedorId: filtro.ProveedorId, oParam: filtro });
+    actividadHistoriaFiltro = result.ActividadHistoriaTraerPorProveedores;
+
+    $(".historial-actividad-grupo-contenedor").empty();
+    var htmlHist = "";
+    armarActividad(result.ActividadHistoriaTraerPorProveedores, function (fhtmlHist, fhtmlProxAct) {
+        htmlHist = fhtmlHist;
+    });
+    $(".historial-actividad-grupo-contenedor").append(htmlHist);
+}
+
+function DevolverFiltroConTipoActividad(objFiltro) {
+
+    if ($("#tipo-act-Todas").is(":checked") ||
+        $("#tipo-act-Llamada").is(":checked") ||
+        $("#tipo-act-Reunion-personal").is(":checked") ||
+        $("#tipo-act-Evento-Molinos").is(":checked") ||
+        $("#tipo-act-Mail-chat").is(":checked") ||
+        $("#tipo-act-Cierre-de-operaciones").is(":checked") ||
+        $("#tipo-act-Cupones").is(":checked") ||
+        $("#tipo-act-Notas").is(":checked") ||
+        $("#tipo-act-Visita").is(":checked")
+    ) {
+        if ($("#tipo-act-Todas").is(":checked")) {
+            $("#tipo-act-Llamada").prop("checked", false);
+            $("#tipo-act-Reunion-personal").prop("checked", false);
+            $("#tipo-act-Evento-Molinos").prop("checked", false);
+            $("#tipo-act-Mail-chat").prop("checked", false);
+            $("#tipo-act-Cierre-de-operaciones").prop("checked", false);
+            $("#tipo-act-Cupones").prop("checked", false);
+            $("#tipo-act-Notas").prop("checked", false);
+            $("#tipo-act-Visita").prop("checked", false);
+        }
+
+        objFiltro.Actividad = [];
+        $("#tipo-act-Todas").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Todas").prop("value"));
+        $("#tipo-act-Llamada").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Llamada").prop("value"));
+        $("#tipo-act-Reunion-personal").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Reunion-personal").prop("value"));
+        $("#tipo-act-Evento-Molinos").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Evento-Molinos").prop("value"));
+        $("#tipo-act-Mail-chat").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Mail-chat").prop("value"));
+        $("#tipo-act-Cierre-de-operaciones").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Cierre-de-operaciones").prop("value"));
+        $("#tipo-act-Cupones").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Cupones").prop("value"));
+        $("#tipo-act-Notas").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Notas").prop("value"));
+        $("#tipo-act-Visita").is(":checked") && objFiltro.Actividad.push($("#tipo-act-Visita").prop("value"));
+        objFiltro.TipoActividadId = objFiltro.Actividad.join("|");
+        if (objFiltro.Actividad === "null")
+            objFiltro.TipoActividadId = null;
+    }
+
+    return objFiltro;
 }

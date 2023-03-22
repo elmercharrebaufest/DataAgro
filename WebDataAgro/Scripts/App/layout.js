@@ -75,7 +75,7 @@ function mobile() {
         $(".li-contacto").addClass("float-right");
     }
 
-    if (ww < 750) {        
+    if (ww < 750) {
         $(".padding").css({ paddingTop: "0px" });
 
         $("#segundo").addClass("left");
@@ -159,7 +159,7 @@ function mobile() {
         $("#menuproveedor").attr("style", "display: none;");
         $("#buscar-proveedor").attr("style", "display:none;");
         $("#findproveedor").removeAttr("style");
-        $("#segundo").removeClass("left");        
+        $("#segundo").removeClass("left");
         $("#segundo").removeClass("floatito");
         $("#segundo").appendTo("#myNavbar");
         $(".icons").removeClass("float-left");
@@ -168,7 +168,7 @@ function mobile() {
 }
 
 $(document).ready(function () {
-    var ww = document.body.clientWidth; 
+    var ww = document.body.clientWidth;
     mobile();
     OcultarActividadesMobile();
 
@@ -178,7 +178,7 @@ $(document).ready(function () {
     $("#notificaciones-a").hover(function () {
         var alt = 70 + $(document).scrollTop();
         $(".notificaciones-contenedor").show().css({
-            left: $("#notificaciones-a").offset().left-117,
+            left: $("#notificaciones-a").offset().left - 117,
             top: alt,
             overflow: 'auto',
             'max-height': '280px'
@@ -363,9 +363,9 @@ $(document).ready(function () {
     $(".buscador-nav-input").focus(function (e) {
         e.stopPropagation();
         e.preventDefault();
-        armarBusquedaResult();
+        armarBusquedaResult(e, $(this).attr('id'));
     })
-    
+
     $(".mis-postit").click(function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -379,7 +379,7 @@ $(document).ready(function () {
 
     $(".salir-postit").click(function () {
         $("#modalPostit").modal('hide');
-    });    
+    });
 });
 
 function InicializarPost() {
@@ -403,7 +403,7 @@ function guardarPost() {
 }
 
 function armarBusquedaResult(value, inputId) {
-    if ($("#"+inputId).val().length >= 3) {
+    if ($("#" + inputId).val().length >= 3) {
         $(".buscar-result").empty();
 
         //aca tiene que ir a buscar
@@ -422,7 +422,7 @@ function armarBusquedaResult(value, inputId) {
 
             var url = MSGetUrl("/Content/Images/usuario-busqueda.png");
             if (result[i].EstaAsignado) {
-              url =  MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[i].Id)
+                url = MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[i].Id)
             } else {
                 url = MSGetUrl("/proveedor/ReporteProveedor?valor=" + result[i].Cuit)
             }
@@ -436,7 +436,7 @@ function armarBusquedaResult(value, inputId) {
 
         if (result.length == 1) {
             if (value && (value.keyCode || value.which) == 13) {
-                
+
                 var htmlurl = MSGetUrl("/proveedor/Detalle?ProveedorId=" + result[0].Id);
                 var htmlurl = MSGetUrl("/proveedor/ObtenerReporteProveedor?Valor=" + result[0].Cuit);
                 window.location.href = window.location.origin + htmlurl;

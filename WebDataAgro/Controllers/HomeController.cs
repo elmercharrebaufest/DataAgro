@@ -5,9 +5,9 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report;
-using Newtonsoft.Json;
 using System;
 using System.IdentityModel.Services;
+using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
 using WebDataAgro.Core;
@@ -44,7 +44,6 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
-
         public ActionResult ErrorDePermisos()
         {
 
@@ -57,7 +56,7 @@ namespace WebDataAgro.Controllers
             return View("ErrorUsuarioSinDerechos");
         }
 
-        public ActionResult Inicializar()
+        public ActionResult Inicializar(int? comercialId, int? zonaId)
         {
             var model = new ResultIniContactoModel();
             var filtro = new oParamBusqueda
@@ -70,24 +69,34 @@ namespace WebDataAgro.Controllers
 
             model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, equipo);
             model.Datos = mobjHomeManager.TraerInfoIniciales(equipo);
-            model.Detalle = mobjHomeManager.TraerTodoCompraDetalle(equipo);
-            model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, equipo);
-
+            model.Detalle = mobjHomeManager.TraerTodoCompraDetalle(equipo, comercialId, zonaId);
+            //model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, equipo);
+            model.Campaña = new CampañaHome();
             if (result != null)
             {
                 model.Contactos = result;
             }
-            if (model.Campaña != null)
+            if (model.Detalle != null)
+            {
+                foreach (var item in model.Detalle.GroupBy(a => a.Material))
+                {
+                    model.Campaña.Materiales.Add(
+                        new MaterialCampaña
+                        {
+                            Campaña = item.First().Campana,
+                            Nombre = item.First().Material,
+                            Toneladas = 0
+                        });
+                }
+            }
+            if (model.Campaña.Materiales != null)
             {
                 foreach (var item in model.Campaña.Materiales)
                 {
-                    if (item.Nombre != "Otros")
-                    {
-                        var det = model.Detalle.Find(x => x.Campana == item.Campaña && x.Material == item.Nombre);
-                        item.Toneladas = det.ConCorredor.ARecibirAFijar + det.ConCorredor.ComprasConPrecio + det.ConCorredor.FasonFas + det.ConCorredor.RecibidoSinPrecio
-                            + det.DirectoAcopiador.ARecibirAFijar + det.DirectoAcopiador.ComprasConPrecio + det.DirectoAcopiador.FasonFas + det.DirectoAcopiador.RecibidoSinPrecio
-                            + det.DirectoProductor.ARecibirAFijar + det.DirectoProductor.ComprasConPrecio + det.DirectoProductor.FasonFas + det.DirectoProductor.RecibidoSinPrecio;
-                    }
+                    var det = model.Detalle.Find(x => x.Campana == item.Campaña && x.Material == item.Nombre);
+                    item.Toneladas = det.ConCorredor.ARecibirAFijar + det.ConCorredor.ComprasConPrecio + det.ConCorredor.FasonFas + det.ConCorredor.RecibidoSinPrecio
+                        + det.DirectoAcopiador.ARecibirAFijar + det.DirectoAcopiador.ComprasConPrecio + det.DirectoAcopiador.FasonFas + det.DirectoAcopiador.RecibidoSinPrecio
+                        + det.DirectoProductor.ARecibirAFijar + det.DirectoProductor.ComprasConPrecio + det.DirectoProductor.FasonFas + det.DirectoProductor.RecibidoSinPrecio;
                 }
             }
 

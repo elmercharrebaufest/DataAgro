@@ -25,12 +25,14 @@ namespace Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true, Namespace="urn:sap-com:document:sap:rfc:functions")]
     public partial class Z_MPRFC_ACT_CAPACIDAD_PROD : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string iM_COMERCIALField;
         
         private string iM_CUITField;
         
@@ -42,6 +44,18 @@ namespace Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string IM_COMERCIAL {
+            get {
+                return this.iM_COMERCIALField;
+            }
+            set {
+                this.iM_COMERCIALField = value;
+                this.RaisePropertyChanged("IM_COMERCIAL");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
         public string IM_CUIT {
             get {
                 return this.iM_CUITField;
@@ -53,7 +67,7 @@ namespace Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        [System.Xml.Serialization.XmlArrayAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
         [System.Xml.Serialization.XmlArrayItemAttribute("item", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=false)]
         public ZMPES6970[] IM_DETALLE {
             get {
@@ -66,7 +80,7 @@ namespace Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public string IM_INTAD {
             get {
                 return this.iM_INTADField;
@@ -78,7 +92,7 @@ namespace Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string IM_TLFNS {
             get {
                 return this.iM_TLFNSField;
@@ -100,7 +114,7 @@ namespace Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -216,7 +230,7 @@ namespace Molinos.DataAgro.Agent.EnviarCapacidadProductivaSAP {
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]

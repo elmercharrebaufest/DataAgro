@@ -1,7 +1,5 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -30,9 +28,6 @@ namespace Molinos.DataAgro.Business.Managers
     {
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
-
-
-
         private readonly IMaterialManager mobjMaterialManager;
         private readonly ITipoNegocioManager mobjTipoNegocioManager;
         private readonly ICampañaManager mobjCampaniaManager;
@@ -256,7 +251,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (oParam.CampanaId == null || oParam.CampanaId == 0)
             {
-                oErrorMessages.Error("campanaId", "El campo 'Campaña' no debe estar vacio");
+                oErrorMessages.Error("campanaId", "El campo 'Campaña' no debe estar vacío");
             }
             var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
             if (proveedor == null)
@@ -285,7 +280,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (proveedor.OperaConMATBA == true)
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor SOLO Opera con MATBA");
+                    oErrorMessages.Error("ProveedorId", "Proveedor SOLO Opera con MATBA.");
                 }
             }
             Proveedor corredor = null;
@@ -296,24 +291,24 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (corredor.RiesgoComercialSap.ToLower() == ConfigurationManager.AppSettings["RiesgoComercialAltoSap"])
                     {
-                        oErrorMessages.Error("CorredorId", "Corredor No Operable por Riesgo Comercial Alto");
+                        oErrorMessages.Error("CorredorId", "Corredor No Operable por Riesgo Comercial Alto.");
                     }
                 }
 
                 if (repositorio.Existe<ProveedorEstado>(x => x.ProveedorId == oParam.CorredorId && x.EstadoId == 4))
                 {
-                    oErrorMessages.Error("Estado", "Corredor no Operable por Estado BAJA");
+                    oErrorMessages.Error("Estado", "Corredor no Operable por Estado BAJA.");
                 }
 
                 if (repositorio.Existe<FACACOP>(x => x.CUIT == corredor.CUIT))
                 {
-                    oErrorMessages.Error("CorredorId", "Corredor No Operable por ser Apócrifo");
+                    oErrorMessages.Error("CorredorId", "Corredor No Operable por ser Apócrifo.");
                 }
                 if (oParam.TipoAgenteCompraId == null)
                 {
                     if (corredor.OperaConMATBA == true)
                     {
-                        oErrorMessages.Error("CorredorId", "Corredor SOLO Opera con MATBA");
+                        oErrorMessages.Error("CorredorId", "Corredor SOLO Opera con MATBA.");
                     }
                 }
             }
@@ -328,7 +323,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (oParam.MonedaSustentableId == "USDM " && oParam.ImporteSustentable > importeSustentable)
             {
-                oErrorMessages.Error("Importe", "Se excede Tarifa Sustentable");
+                oErrorMessages.Error("Importe", "Se excede la tarifa Sustentable o EPA.");
             }
 
             int[] otros = { 2, 3, 4, 8, 9, 10, 11, 12, 13 };
@@ -352,24 +347,24 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     if (sisa.EstadoCuit == 3 && proveedor.RiesgoComercialSap != "E")
                     {
-                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3");
+                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT 3.");
                     }
                     else if (sisa.EstadoCuit == 0)
                     {
-                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT Inactivo");
+                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Estado de CUIT Inactivo.");
                     }
                     if (sisa.SituacionCategoria != "AL")
                     {
-                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA");
+                        oErrorMessages.Error("ProveedorId", "Proveedor No Operable por Situación Categoría BA.");
                     }
                     if (sisa.CodCategoria == 19)
                     {
-                        oErrorMessages.Error("ProveedorId", "No operable por categoría Operador de Derivados Granarios");
+                        oErrorMessages.Error("ProveedorId", "No operable por categoría Operador de Derivados Granarios.");
                     }
                 }
                 else
                 {
-                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por CUIT o Categoría Inactivo");
+                    oErrorMessages.Error("ProveedorId", "Proveedor No Operable por CUIT o Categoría Inactivo.");
                 }
 
                 if (corredor != null)
@@ -380,20 +375,20 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (sisa.EstadoCuit == 3 && corredor.RiesgoComercialSap != "E")
                         {
-                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Estado de CUIT 3");
+                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Estado de CUIT 3.");
                         }
                         else if (sisa.EstadoCuit == 0)
                         {
-                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Estado de CUIT Inactivo");
+                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Estado de CUIT Inactivo.");
                         }
                         if (sisa.SituacionCategoria != "AL")
                         {
-                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Situación Categoría BA");
+                            oErrorMessages.Error("CorredorId", "Corredor No Operable por Situación Categoría BA.");
                         }
                     }
                     else
                     {
-                        oErrorMessages.Error("CorredorId", "Corredor No Operable por CUIT o Categoría Inactivo");
+                        oErrorMessages.Error("CorredorId", "Corredor No Operable por CUIT o Categoría Inactivo.");
                     }
                 }
             }
@@ -3726,7 +3721,6 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.ListarConsulta(new DevolverContratosAcuerdo(filtro));
         }
 
-
         public BasicoContrato TraerContratoAcuerdoACopiar(int contratoId)
         {
             var hoy = DateTime.Now.Date;
@@ -5716,7 +5710,6 @@ namespace Molinos.DataAgro.Business.Managers
             return repositorio.Obtener<TipoNegocio>(x => x.TipoNegocioId == tipo);
         }
 
-
         public Resultado AnularContratoCarga(int contratoId, string motivoRechazo)
         {
             var oEntityErrors = new Resultado();
@@ -6264,7 +6257,6 @@ namespace Molinos.DataAgro.Business.Managers
                 mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoVenta(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory), false, importe));
             }
         }
-
 
         private AlternateView CuerpoMailContratoVenta(String filePath, Contrato oContrato, List<DescuentoBonificacion> objDescuento, List<Calidad> objCalidad, string emailComercial, bool? eliminar, decimal importe)
         {

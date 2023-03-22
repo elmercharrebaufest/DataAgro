@@ -6,7 +6,7 @@ namespace Molinos.DataAgro.Entities.Dto
     public class CampañaHome
     {
         public string Nombre { get; set; }
-        public List<MaterialCampaña> Materiales { get; set; }
+        public List<MaterialCampaña> Materiales { get; set; } = new List<MaterialCampaña>();
     }
 
     public class MaterialCampaña
@@ -69,7 +69,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int EstadoCuit { get; set; }
         public string Situacion { get; set; }
         public string Estado { get; set; }
-        public string Condicion { get; set;}
+        public string Condicion { get; set; }
         public DateTime? FechaAlta { get; set; }
         public string GrupoDeCompras { get; set; }
         public int Segmentacion { get; set; }

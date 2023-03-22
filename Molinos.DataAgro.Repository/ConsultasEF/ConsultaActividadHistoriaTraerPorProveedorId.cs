@@ -14,27 +14,29 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         private readonly string detalle;
         private readonly string tipoActividad;
         private readonly bool actual;
+        private readonly int cantidadRegistros;
 
-        public ConsultaActividadHistoriaTraerPorProveedorId(int proveedorId, bool actual, string detalle = null, string tipoActividad = null)
+        public ConsultaActividadHistoriaTraerPorProveedorId(int proveedorId, bool actual, string detalle = null, string tipoActividad = null, int cantidadRegistros = 2)
         {
             this.proveedorId = proveedorId;
             this.detalle = detalle;
             this.tipoActividad = tipoActividad;
             this.actual = actual;
+            this.cantidadRegistros = cantidadRegistros;
         }
 
-        private static List<ActividadTraer> Query(DbContext contexto, int proveedorId, string detalle, string tipoActividad, bool actual)
+        private static List<ActividadTraer> Query(DbContext contexto, int proveedorId, string detalle, string tipoActividad, bool actual, int cantidadRegistros)
         {
             int[] actividad;
-            
+
             var hoy = DateTime.Now;
-            if (!string.IsNullOrWhiteSpace(tipoActividad)&&tipoActividad!="0")
+            if (!string.IsNullOrWhiteSpace(tipoActividad) && tipoActividad != "0")
             {
                 var idactividad = tipoActividad.Split('|');
                 var ids = new List<int>();
                 foreach (var id in idactividad)
                 {
-                    ids.Add(int.Parse(id));                    
+                    ids.Add(int.Parse(id));
                 }
                 actividad = ids.ToArray();
             }
@@ -54,8 +56,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                             from c in cs.DefaultIfEmpty()
                             join cc in contexto.Set<ContactoComercial>() on a.ContactoComercialId equals cc.ContactoComercialId into ccs
                             from cc in ccs.DefaultIfEmpty()
-                            where a.ProveedorId == proveedorId && (actividad.Contains(a.TipoActividadId) && a.Detalle.Contains(detalle)) && actual? a.FechaHoraRecordatorio >= hoy: a.ProveedorId == proveedorId
-                            orderby a.FechaHoraActividad
+                            where a.ProveedorId == proveedorId && (detalle == "" ? actividad.Contains(a.TipoActividadId) : (actividad.Contains(a.TipoActividadId) && a.Detalle.Contains(detalle))) && (actual ? (a.FechaHoraRecordatorio >= hoy) : (a.ProveedorId == proveedorId))
+                            orderby a.FechaHoraActividad descending
                             select new ActividadTraer
                             {
                                 ActividadId = a.ActividadId,
@@ -66,17 +68,26 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 TipoActividad = ta.Descripcion,
                                 ComercialId = c.ComercialId,
                                 ContactoComercialId = cc.ContactoComercialId,
-                                ContactoComercial = cc.Nombres + " " + cc.Apellido
+                                ContactoComercial = cc.Nombres + " " + cc.Apellido,
+                                FechaHoraActividad = a.FechaHoraActividad
                             };
 
-            return resultado.ToList();
+            cantidadRegistros = cantidadRegistros == 0 ? 2 : cantidadRegistros;
+            if (resultado.Count() < cantidadRegistros)
+            {
+                return resultado.ToList();
+            }
+            else
+            {
+                return resultado.Take(cantidadRegistros).ToList();
+            }
         }
 
         public virtual List<ActividadTraer> Ejecutar(DbContext contexto)
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, proveedorId, detalle, tipoActividad, actual);
+                return Query(contexto, proveedorId, detalle, tipoActividad, actual, cantidadRegistros);
             }
         }
     }

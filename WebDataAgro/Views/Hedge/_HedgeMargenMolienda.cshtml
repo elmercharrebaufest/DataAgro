@@ -1,0 +1,77 @@
+﻿@model WebDataAgro.Models.HedgeModel
+
+<div class="container">
+    @using (Ajax.BeginForm("GrabarHedgeMargenMolienda", null, new AjaxOptions { UpdateTargetId = "margenMolienda", InsertionMode = InsertionMode.Replace, OnSuccess = "margenInput" }, new { }))
+    {
+
+        <div id="formularioMargenMolienda" class="table-container">
+            @if (Model.Resultado.HayError)
+            {
+                if (Model.Resultado.Errores[0].ErrorCode != 200)
+                {
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        @Model.Resultado.Errores[0]
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        @Model.Resultado.Errores[0]
+                    </div>
+                }
+            }
+            <table id="tabla-margen" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Margen de Molienda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>
+                            Día de hoy
+                        </th>
+                        <td>
+                            @Html.TextBoxFor(model => Model.HedgeMargenMolienda.MargenMolienda, new { @class = "number-input number-input-margen", @id = "margenMolienda" })
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <div id="row-botones-margen">
+                <input id="guardarHedgeMargenMolBtn" type="submit" class="formulario-footer-guardar-contrato k-button k-button-icontext" value="Guardar" />
+                @Ajax.ActionLink("Cancelar", "HedgeMargenMoliendaPartial", null, new AjaxOptions { UpdateTargetId = "margenMolienda", InsertionMode = InsertionMode.Replace, OnSuccess = "margenInput" }, new { @class = "formulario-footer-cancelar k-button k-button-icontext" })
+            </div>
+            <br />
+        </div>
+        <div class="row">
+            <div class="col-xs-8 m-grid-col-xs-offset-2">
+                <div class="historial-desplegable" data-toggle="collapse" data-target="#historialMargen" onclick="mostrarocultar('#mostrar-margen')">
+                    <span class="historial">Historial</span><span id="mostrar-margen" class="mostrar-historial">Ocultar</span>
+                </div>
+                <div id="historialMargen" class="collapse in">
+                    <table class="tabla-historial table">
+                        <tr>
+                            <th>Margen de Molienda</th>
+                            <th>Comercial</th>
+                            <th>Hora</th>
+                        </tr>
+                        @foreach (var mat in Model.HistorialMargenMolienda)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(model => mat.MargenMolienda)</td>
+                                <td>@Html.DisplayFor(model => mat.Comercial)</td>
+                                @{var fecha = mat.Fecha.ToShortTimeString();}
+                                <td>@Html.DisplayFor(model => fecha)</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>

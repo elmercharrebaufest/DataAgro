@@ -11,7 +11,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
-using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace Molinos.DataAgro.Test.Controllers
@@ -33,7 +32,6 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IHedgeManager> oHedgeManagerMock;
         private Mock<IProveedorManager> proveedorManagerMock;
         private Mock<IPrecioPizarraManager> precioPizarraManagerMock;
-        private Mock<IHomeManager> homeManagerMock;
 
         private JavaScriptSerializer serializer;
 
@@ -41,7 +39,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();
+            serializer = new JavaScriptSerializer();
             loggerMock = new Mock<ILogger>();
             contratoManagerMock = new Mock<IContratoManager>();
             fijacionManagerMock = new Mock<IFijacionDePrecioContratoManager>();
@@ -213,6 +211,15 @@ namespace Molinos.DataAgro.Test.Controllers
         }
 
         [Test]
+        public void ActualizarMailProveedorTest()
+        {
+            var result = target.ActualizarMailProveedor() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
         public void ActualizarPrecioPizarraTest()
         {
             var result = target.ActualizarPrecioPizarra() as ContentResult;
@@ -225,6 +232,15 @@ namespace Molinos.DataAgro.Test.Controllers
         public void ActualizarProveedoresHomeTest()
         {
             var result = target.ActualizarProveedoresHome() as ContentResult;
+            Assert.NotNull(result);
+            var expectedResult = new ContentResult { Content = "ok" };
+            Assert.AreEqual(result.Content, expectedResult.Content);
+        }
+
+        [Test]
+        public void ConfirmacionAutomaticaPizarra13HrsTest()
+        {
+            var result = target.ConfirmacionAutomaticaPizarra13Hrs() as ContentResult;
             Assert.NotNull(result);
             var expectedResult = new ContentResult { Content = "ok" };
             Assert.AreEqual(result.Content, expectedResult.Content);

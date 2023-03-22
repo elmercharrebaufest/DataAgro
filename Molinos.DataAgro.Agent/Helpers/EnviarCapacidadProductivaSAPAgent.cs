@@ -37,6 +37,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 var rq = new Z_MPRFC_ACT_CAPACIDAD_PROD()
                 {
+                    IM_COMERCIAL = capProd.UsuarioSAP,
                     IM_CUIT = capProd.Cuit,
                     IM_DETALLE = new List<ZMPES6970> { new ZMPES6970 
                         { CUIT = capProd.Cuit, MATNR = capProd.Material, COSECHA = capProd.Campania, 

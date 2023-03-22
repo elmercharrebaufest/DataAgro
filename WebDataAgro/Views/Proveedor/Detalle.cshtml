@@ -510,6 +510,10 @@
                     <div class="wd70p">
                         <div class="datos-contacto-titular">
                             <span>Agenda</span>
+                            <a id="exportarExcel" class="exportar-actividades">
+                                <img src="~/Content/Images/descargar-pdf-excel.png" />
+                                <span style="font-size: 12px;">Exportar a Excel</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -621,10 +625,11 @@
                             <div class="filtro-agenda-campo-input">
                                 <label for="tipo-act-Todas"><input type="checkbox" value="0" name="Todas" id="tipo-act-Todas" /> <b>Todas</b></label>
                                 <label for="tipo-act-Llamada"><input type="checkbox" value="1" name="Llamada" id="tipo-act-Llamada" /> Llamada</label>
-                                <label for="tipo-act-Reunion-personal"><input type="checkbox" value="2" name="Reunion-personal" id="tipo-act-Reunion-personal" /> Agenda</label>
-                                <label for="tipo-act-Evento-Molinos"><input type="checkbox" value="3" name="Evento-Molinos" id="tipo-act-Evento-Molinos" /> Tareas</label>
+                                <label for="tipo-act-Reunion-personal"><input type="checkbox" value="3" name="Reunion-personal" id="tipo-act-Reunion-personal" /> Agenda</label>
+                                <label for="tipo-act-Evento-Molinos"><input type="checkbox" value="2" name="Evento-Molinos" id="tipo-act-Evento-Molinos" /> Tareas</label>
                                 <label for="tipo-act-Mail-chat"><input type="checkbox" value="4" name="Mail-chat" id="tipo-act-Mail-chat" /> Mail</label>
                                 <label for="tipo-act-Cierre-de-operaciones"><input type="checkbox" value="5" name="Cierre-de-operaciones" id="tipo-act-Cierre-de-operaciones" />Chat</label>
+                                <label for="tipo-act-Visita"><input type="checkbox" value="6" name="Visita" id="tipo-act-Visita" />Visita</label>
                             </div>
                         </div>
                     </form>
@@ -639,6 +644,12 @@
                     <div class="historial-actividad-grupo-contenedor">
 
                     </div>
+
+                    <div class="text-center">
+                        <button id="verMasActividades" onclick="TraerSiguiente()" class="k-button k-button-icontext" type="button" style="display:none">Ver Más </button>
+                        <div id="cargandoActividades" class="lds-roller" style="display:none"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    </div>
+
                 </div>
             </div>
         </div>

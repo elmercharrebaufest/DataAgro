@@ -1,13 +1,11 @@
 ﻿var conts = [];
 var viewModel;
 var htmlaux = "";
-
 var filtro = {};
 var pagina = 1;
 var visualiza;
-
 var datosCompra;
-
+var huboFiltro = false;
 var checkear = function (el, nam) {
     var str = "." + $(el).attr('class');
     var elem = $(str + " input[name='" + nam + "']");
@@ -33,6 +31,7 @@ $(document).ready(function () {
     });
 
 });
+
 function MostrarTooltip(e) {
     $(e + '[data-toggle="tooltip"]').click(function () {
         $(e + "[data-toggle='tooltip']").on('shown.bs.tooltip', function () {
@@ -43,6 +42,7 @@ function MostrarTooltip(e) {
         });
     });
 }
+
 function InicializarDatos() {
     var result = MSExecuteOnServer('/Home/Inicializar');
     kendo.culture("es-AR");
@@ -159,7 +159,6 @@ function armarCarouselHome() {
         })(ii);
     }
 
-    console.log("notifaux", notificacionesAux);
     if (notificacionesAux && Object.keys(notificacionesAux).length > 0) {
         for (var ii in notificacionesAux) {
             (function (i) {
@@ -397,22 +396,33 @@ function generarFiltro(estado) {
 }
 
 function updateFiltro(estado) {
-
-    $(".lista-contactos-general").empty();
     var filtro = generarFiltro(estado);
     pagina = 1;
-    var result = MSExecuteOnServer('/Home/TraerBusquedaContacto', filtro);
-
-    if (result != null) {
-        if (ExistsErrorMessages(result.Errores)) {
-            ShowTooltipMessages("err", result.Errores);
+    BlockUi('Cargando...');
+    setTimeout(function () {
+        var result = MSExecuteOnServer('/Home/TraerBusquedaContacto', filtro);
+        if (result != null) {
+            if (ExistsErrorMessages(result.Errores)) {
+                ShowTooltipMessages("err", result.Errores);
+            }
+            else {
+                $(".lista-contactos-general").empty();
+                if (filtro.Comercial != null || filtro.Zona != null) {
+                    $(".contenedor-principal-campanas-detalle").html("");
+                    ActualizarComprayDetalle(filtro.Comercial, filtro.Zona);
+                    huboFiltro = true;
+                } else if (huboFiltro) {
+                    $(".contenedor-principal-campanas-detalle").html("");
+                    ActualizarComprayDetalle(null, null);
+                    huboFiltro = false;
+                }
+                conts = result.Contactos.Contactos;
+                actualizarContactos(result.Contactos);
+                ArmarContactos(conts);
+            }
         }
-        else {
-            conts = result.Contactos.Contactos;
-            actualizarContactos(result.Contactos);
-            ArmarContactos(conts);
-        }
-    }
+        $.unblockUI();
+    }, 150);
 }
 
 function actualizarContactos(contactos) {
@@ -671,6 +681,7 @@ function ArmarCamapaña(campañas) {
     }
     $(".contenedor-principal-campanas-detalle").append(html);
 }
+
 function ArmarObjetivo(objetivos) {
     var html = "";
     for (var ii in objetivos) {
@@ -840,7 +851,6 @@ function armarSelects(result) {
             });
         })(jj);
     }
-    console.log("asdas", grupos)
 
     var htmlSegmentacion = "";
     htmlSegmentacion += '<select id="segmentacion-sel">';
@@ -984,7 +994,6 @@ function DescargarExportAll(param) {
 
 function armarFuncionalidadesHome() {
     $(".sap").hover(function () {
-        console.log("hover sap");
         $(".sap .link-externos img").css({
             opacity: 1
         });
@@ -995,7 +1004,6 @@ function armarFuncionalidadesHome() {
     });
 
     $(".scato").hover(function () {
-        console.log("hover sap");
         $(".scato .link-externos img").css({
             opacity: 1
         });
@@ -1006,7 +1014,6 @@ function armarFuncionalidadesHome() {
     });
 
     $(".field").hover(function () {
-        console.log("hover sap");
         $(".field .link-externos img").css({
             opacity: 1
         });
@@ -1121,7 +1128,6 @@ function EliminarObjetivo(id) {
     }
 }
 
-
 function BorrarFilasVacias() {
     var $filasEncabezado = $("#tablaTrigo tr:not('.encabezado')");
     Remover($filasEncabezado);
@@ -1150,4 +1156,71 @@ function Remover($filasEncabezado) {
 
 function BorrarCookies() {
     window.location = '/home/borrarcookie';
+}
+
+function ActualizarComprayDetalle(comercial, zona) {
+    var result = MSExecuteOnServer('/Home/Inicializar', { comercialId: comercial, zonaId: zona });
+    datosCompra = result.Detalle;
+    var param = {
+        "materialId": null,
+        "campaniaId": null,
+        "toneladas": null
+    };
+    viewModel = kendo.observable({
+        Parametros: param,
+        campaniaCombo: [],
+        materialCombo: [],
+
+        Soja: [],
+        Trigo: [],
+        Maiz: [],
+        Girasol: [],
+    });
+    for (var i = 0; i < datosCompra.length; i++) {
+
+        datosCompra[i].ConCorredor.ComprasConPrecio = kendo.toString(datosCompra[i].ConCorredor.ComprasConPrecio, "n2")
+        datosCompra[i].DirectoAcopiador.ComprasConPrecio = kendo.toString(datosCompra[i].DirectoAcopiador.ComprasConPrecio, "n2")
+        datosCompra[i].DirectoProductor.ComprasConPrecio = kendo.toString(datosCompra[i].DirectoProductor.ComprasConPrecio, "n2")
+        datosCompra[i].ConCorredor.RecibidoSinPrecio = kendo.toString(datosCompra[i].ConCorredor.RecibidoSinPrecio, "n2")
+        datosCompra[i].DirectoAcopiador.RecibidoSinPrecio = kendo.toString(datosCompra[i].DirectoAcopiador.RecibidoSinPrecio, "n2")
+        datosCompra[i].DirectoProductor.RecibidoSinPrecio = kendo.toString(datosCompra[i].DirectoProductor.RecibidoSinPrecio, "n2")
+        datosCompra[i].ConCorredor.ARecibirAFijar = kendo.toString(datosCompra[i].ConCorredor.ARecibirAFijar, "n2")
+        datosCompra[i].DirectoAcopiador.ARecibirAFijar = kendo.toString(datosCompra[i].DirectoAcopiador.ARecibirAFijar, "n2")
+        datosCompra[i].DirectoProductor.ARecibirAFijar = kendo.toString(datosCompra[i].DirectoProductor.ARecibirAFijar, "n2")
+        datosCompra[i].ConCorredor.FasonFas = kendo.toString(datosCompra[i].ConCorredor.FasonFas, "n2")
+        datosCompra[i].DirectoAcopiador.FasonFas = kendo.toString(datosCompra[i].DirectoAcopiador.FasonFas, "n2")
+        datosCompra[i].DirectoProductor.FasonFas = kendo.toString(datosCompra[i].DirectoProductor.FasonFas, "n2")
+    }
+
+    kendo.bind($("#tabla-soja"), viewModel);
+    kendo.bind($("#tabla-tri"), viewModel);
+    kendo.bind($("#tabla-maiz"), viewModel);
+    kendo.bind($("#tabla-gi"), viewModel);
+    var soja = datosCompra.filter(function (x) { return (x.Material == "Soja") });
+    var maiz = datosCompra.filter(function (x) { return (x.Material == "Maiz") })
+    var trigo = datosCompra.filter(function (x) { return (x.Material == "Trigo") })
+    var girasol = datosCompra.filter(function (x) { return (x.Material == "Girasol") });
+
+    if (soja.length > 0) {
+        $("#mostrarSoja").show();
+        $("#sojaCampania").text(soja[0].Campana);
+    }
+    if (maiz.length > 0) {
+        $("#mostrarMaiz").show();
+        $("#maizCampania").text(maiz[0].Campana);
+    }
+    if (trigo.length > 0) {
+        $("#mostrarTrigo").show();
+        $("#trigoCampania").text(trigo[0].Campana);
+    }
+    if (girasol.length > 0) {
+        $("#mostrarGir").show();
+        $("#girCampania").text(girasol[0].Campana);
+    }
+    viewModel.set("Soja", soja);
+    viewModel.set("Trigo", trigo);
+    viewModel.set("Maiz", maiz);
+    viewModel.set("Girasol", girasol);
+
+    ArmarCamapaña(result.Campaña);
 }

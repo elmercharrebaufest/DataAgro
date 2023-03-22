@@ -15,9 +15,9 @@ namespace Molinos.DataAgro.Business.Managers
     public class HomeManager : IHomeManager
     {
         private readonly IRepositorio repositorio;
-        private ICampañaManager mobCampaña;
+        private readonly ICampañaManager mobCampaña;
         private readonly IObjetivoManager objetivoManager;
-        private ILogger logger;
+        private readonly ILogger logger;
 
         public HomeManager(ILogger logger, IRepositorio repositorio, ICampañaManager campañaManager, IObjetivoManager objetivoManager)
         {
@@ -220,10 +220,12 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return mobCampaña.TraerCampañaHome(idComercial, equipo);
         }
+
         public ObjetivoHome TraerInfoObjetivo(int idComercial, List<int> equipo)
         {
             return objetivoManager.TraerObjetivoHome(idComercial, equipo);
         }
+
         public int TraerIdComercial(string idActiveDirectory)
         {
             return repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == idActiveDirectory, x => x.ComercialId);
@@ -380,6 +382,7 @@ namespace Molinos.DataAgro.Business.Managers
                 return new ExportAll();
             }
         }
+
         public List<int> ListarTodosLosComercialesConMismaZona(int comercialId)
         {
             var grupoId = repositorio.Obtener<Comercial, int>(x => x.ComercialId == comercialId, x => x.GrupoDeComprasId.Value);
@@ -415,7 +418,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        public List<CompraDto> TraerTodoCompraDetalle(List<int> equipo)
+        public List<CompraDto> TraerTodoCompraDetalle(List<int> equipo, int? comercialId, int? zonaId)
         {
             var material = repositorio.Listar<Material>();
             var compraDto = new List<CompraDto>();
@@ -433,6 +436,8 @@ namespace Molinos.DataAgro.Business.Managers
                 equipo.Contains(x.ComercialId.Value)
                 && (proveedorIds.Contains(x.ProveedorId) || proveedorIds.Contains(x.CorredorId))
                 && mat.MaterialId == x.MaterialId
+                && (comercialId == null || comercialId == x.ComercialId)
+                && (zonaId == null || zonaId == x.Comercial.GrupoDeComprasId)
                 );
 
                 int año = int.Parse(DateTime.Now.Year.ToString().Substring(0, 2) + mat.Campaña.Descripcion.Substring(3, 2)) + 1;
@@ -601,6 +606,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return campanaMaterialDetallePorMeseExcelDtos;
         }
+
         public List<CompraCampanaActualDto> TraerTodoCompraCampanaActual(List<int> equipo)
         {
             var proveedorIds = new List<int?>();
@@ -652,5 +658,4 @@ namespace Molinos.DataAgro.Business.Managers
         public int Id { set; get; }
         public string Nombre { set; get; }
     }
-
 }

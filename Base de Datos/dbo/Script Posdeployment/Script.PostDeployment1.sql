@@ -351,5 +351,6 @@ IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'Habilitado') BEGIN 
 IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'Legajo irregular') BEGIN insert into EstadoHome (Descripcion, Color) values ('Legajo irregular', 'yellow'); END
 IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'No habilitado') BEGIN insert into EstadoHome (Descripcion, Color) values ('No habilitado', 'red'); END
 
-
+--TipoActividad
+IF NOT EXISTS (select 1 from TipoActividad where Descripcion = 'Visita') BEGIN insert into TipoActividad (Descripcion) values ('Visita'); END
 

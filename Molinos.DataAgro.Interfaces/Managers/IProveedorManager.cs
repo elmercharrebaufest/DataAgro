@@ -81,5 +81,7 @@ namespace Molinos.DataAgro.Interfaces
         ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTercero campo);
         void GrabarMailProveedor();
         void ActualizarProveedoresHome();
+        List<ActividadExportar> ExportarActividades(HistorialActiviad oParam, string idActiveDirectory);
+        ProveedorCategoriasSISA ValidarCategoriaSISA(CuitSegmentacion cuitSegmentacion);
     }
 }

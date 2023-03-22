@@ -56,6 +56,39 @@ namespace Molinos.DataAgro.Agent
                 }
             }
         }
+        public decimal TraerTipoDeCambioMoneda(DateTime? fecha, string moneda)
+        {
+            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
+            {
+                return 94;
+            }
+            else
+            {
+                try
+                {
+                    if (fecha == null)
+                    {
+                        fecha = DateTime.Now.Date;
+                    }
+                    var agent = new SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIOClient();
+
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new Z_MPRFC_TIPO_DE_CAMBIO() { DATE = fecha.Value.Date.ToString("yyyy-MM-dd"), FOREIGN_AMOUNT = 1, FOREIGN_CURRENCY = moneda, LOCAL_CURRENCY = "ARP  " };
+                    logger.Debug(rq.ToXml());
+
+                    var devolucion = agent.SI_ZMPWS_DATAAGRO_TIPO_DE_CAMBIO(rq);
+                    logger.Debug(devolucion.ToXml());
+                    return devolucion.EXCHANGE_RATE;
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                    return 1;
+                }
+            }
+        }
 
         public decimal TraerTipoDeCambioUltimoDiaHabil(DateTime? fecha)
         {

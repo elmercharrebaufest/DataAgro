@@ -413,7 +413,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void EnviarCapacidadProductivaSAPTest()
         {
-            var enviar = new List<EnviarCapacidadProductivaSAPDto>() { new EnviarCapacidadProductivaSAPDto { Id = 1, Cuit = "12345678900", Campania = "20-21", Material = "000000000019908017", UnidadMedida = "TON", Porcentaje = 30, Cantidad = 7000 } };
+            var enviar = new List<EnviarCapacidadProductivaSAPDto>() { new EnviarCapacidadProductivaSAPDto { Id = 1, Cuit = "12345678900", Campania = "20-21", Material = "000000000019908017", UnidadMedida = "TON", Porcentaje = 30, Cantidad = 7000, MaterialDescripcion = "Soja", UsuarioSAP = "NUNEZML" } };
             informeComercialManagerMock.Setup(x => x.EnviarCapacidadProductivaSAP(enviar)).Returns(new Resultado());
 
             var result = target.EnviarCapacidadProductivaSAP(enviar);

@@ -14,10 +14,9 @@ using System.Net.Mail;
 
 namespace Molinos.DataAgro.Business
 {
-
     public class HedgeManager : IHedgeManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IMailManager mailManager;
         private readonly IReportesManager reportesManager;
@@ -29,7 +28,6 @@ namespace Molinos.DataAgro.Business
             this.mailManager = mailManager;
             this.reportesManager = reportesManager;
         }
-
         public FinDelDiaDto Dia()
         {
             var hoy = DateTime.Now.Date;
@@ -41,7 +39,6 @@ namespace Molinos.DataAgro.Business
 
             return dia;
         }
-
         public List<HedgeMaterialDto> TraerTodosHedgeMaterial()
         {
             var hoy = DateTime.Now.Date;
@@ -83,6 +80,17 @@ namespace Molinos.DataAgro.Business
                 HedgePesos = x.HedgePesos,
                 Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido
             }, x => DbFunctions.TruncateTime(x.Fecha) == hoy);
+        }
+        public List<HedgeMargenMoliendaDto> TraerTodosHedgeMargenMolienda()
+        {
+            var hoy = DateTime.Now.Date;
+            return repositorio.Listar<HedgeMargenMolienda, HedgeMargenMoliendaDto>(x => new HedgeMargenMoliendaDto
+            {
+                Id = x.Id,
+                MargenMolienda = x.MargenMolienda,
+                Fecha = x.Fecha,
+                Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido
+            }, x => DbFunctions.TruncateTime(x.Fecha) == hoy).OrderByDescending(a => a.Fecha).ToList();
         }
         public Resultado GrabarHedgeMaterial(List<HedgeMaterial> hedgeMat, int comercialId)
         {
@@ -208,6 +216,43 @@ namespace Molinos.DataAgro.Business
             }
             return oEntityErrors;
         }
+        public Resultado GrabarHedgeMargenMolienda(HedgeMargenMolienda hedgeMargen, int comercialId)
+        {
+            var oEntityErrors = new Resultado();
+            oEntityErrors = ValidarFinDelDia(oEntityErrors);
+            if (oEntityErrors.HayError)
+            {
+                return oEntityErrors;
+            }
+            if (hedgeMargen.MargenMolienda == 0)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage(400, "El margen de molienda no se puede guardar en cero."));
+                return oEntityErrors;
+            }
+            else if (hedgeMargen.MargenMolienda > 99 || hedgeMargen.MargenMolienda < -99)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage(400, "El margen de molienda debe estar entre -99 y 99."));
+                return oEntityErrors;
+            }
+            try
+            {
+                hedgeMargen.ComercialId = comercialId;
+                hedgeMargen.Fecha = DateTime.Now;
+                repositorio.Agregar(hedgeMargen);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+                oEntityErrors.Error(ex.Source, ex.Message);
+                throw;
+            }
+            if (!oEntityErrors.HayError)
+            {
+                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se guardó correctamente"));
+            }
+            return oEntityErrors;
+        }
         public Resultado EliminarHedgeTC(int hedgeTCId)
         {
             var oEntityErrors = new Resultado();
@@ -230,7 +275,7 @@ namespace Molinos.DataAgro.Business
             }
             if (!oEntityErrors.HayError)
             {
-                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se Eliminó Correctamente"));
+                oEntityErrors.Errores.Add(new ErrorMessage(200, "Se eliminó correctamente"));
             }
             return oEntityErrors;
         }
@@ -299,7 +344,7 @@ namespace Molinos.DataAgro.Business
                                    null,
                                    AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),
                                    archivo,
-                                   "Cierre del dia.xls");
+                                   "Cierre del dia " + hoy.Day + "-" + hoy.Month + ".xls");
         }
         public Resultado ReabrirDia(int comercialId, double? diferencial)
         {
@@ -316,7 +361,7 @@ namespace Molinos.DataAgro.Business
                 }
                 else
                 {
-                    oEntityErrors.Errores.Add(new ErrorMessage(400, "El día ya se encuentra abierto"));
+                    oEntityErrors.Errores.Add(new ErrorMessage(400, "El día ya se encuentra abierto."));
                 }
             }
             catch (Exception ex)
@@ -336,7 +381,7 @@ namespace Molinos.DataAgro.Business
 
             if (finDia == null)
             {
-                mensaje.Errores.Add(new ErrorMessage(1, "Se cerrara el día, enviándose un mail a Gerentes y Directivos."));
+                mensaje.Errores.Add(new ErrorMessage(1, "Se cerrará el día, enviándose un mail a Gerentes y Directivos."));
             }
             else if (finDia.Diferencial.HasValue)
             {
@@ -345,16 +390,16 @@ namespace Molinos.DataAgro.Business
                 repositorio.Listar<Fason>(x => DbFunctions.TruncateTime(x.Fecha) == hoy && x.FinDelDiaId == null && (x.EstadoId == 2 || x.EstadoId == 4 || x.EstadoId == 5)).Sum(x => x.Cantidad);
                 if (finDia.Diferencial.Value < cantidad)
                 {
-                    mensaje.Errores.Add(new ErrorMessage(1, "Se cerrara el día, enviándose un mail a Gerentes y Directivos. ¿Aceptar?"));
+                    mensaje.Errores.Add(new ErrorMessage(1, "Se cerrará el día, enviándose un mail a Gerentes y Directivos."));
                 }
                 else
                 {
-                    mensaje.Errores.Add(new ErrorMessage(2, "Se cerrara el día. ¿Aceptar?"));
+                    mensaje.Errores.Add(new ErrorMessage(2, "Se cerrará el día. ¿Aceptar?"));
                 }
             }
             else
             {
-                mensaje.Errores.Add(new ErrorMessage(2, "Se cerrara el día. ¿Aceptar?"));
+                mensaje.Errores.Add(new ErrorMessage(2, "Se cerrará el día. ¿Aceptar?"));
             }
             return mensaje;
         }
@@ -366,21 +411,6 @@ namespace Molinos.DataAgro.Business
                 res.Errores.Add(new ErrorMessage(400, "El día se encuentra cerrado"));
             }
             return res;
-        }
-        public List<HedgeMaterialModel> TransformarAModel(List<HedgeMaterialDto> hedgeMat)
-        {
-            var lista = new List<HedgeMaterialModel>()
-            {
-                new HedgeMaterialModel {MaterialId = 1, MaterialDescripcion ="Hedge Maíz",
-                Disponible = hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 1).Sum(x=>x.Cantidad),
-                Forward= hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 2).Sum(x=>x.Cantidad),
-                NewCrop= hedgeMat.Where(x=>x.MaterialId == 1 && x.TipoHedgeMaterialId == 3).Sum(x=>x.Cantidad)},
-                new HedgeMaterialModel {MaterialId = 3, MaterialDescripcion ="Hedge Soja",
-                Disponible = hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 1).Sum(x=>x.Cantidad),
-                Forward= hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 2).Sum(x=>x.Cantidad),
-                NewCrop= hedgeMat.Where(x=>x.MaterialId == 3 && x.TipoHedgeMaterialId == 3).Sum(x=>x.Cantidad) }
-            };
-            return lista;
         }
         private ReporteCompraNetModel ObtenerDatosReporte(DateTime fechaDesde, DateTime fechaHasta, string centroId)
         {
@@ -402,7 +432,7 @@ namespace Molinos.DataAgro.Business
                 PosicionCompras = reportesManager.TraerPosicionCompras(fechaDesde, fechaHasta, null, idCentro),
                 PricingCampania = reportesManager.TraerPricingCampania(fechaDesde, fechaHasta, null, idCentro),
                 PrecioCantidad = reportesManager.TraerMonedaCantidad(fechaDesde, fechaHasta, null, idCentro),
-                HedgeMaterial = TransformarAModel(reportesManager.TraerTodosHedgeMaterial(fechaDesde, fechaHasta, null)),
+                HedgeMaterial = TransformarAModelHedge(reportesManager.TraerTodosHedgeMaterial(fechaDesde, fechaHasta, null)),
                 HedgeObjetivo = objetivos,
                 TCPromedioDto = reportesManager.TraerTcPromedio(fechaDesde, fechaHasta, null),
                 AgenteCompras = new AgenteCompraModel { ListaAgenteCompras = agentes, ListaOperadores = op },
@@ -461,21 +491,21 @@ namespace Molinos.DataAgro.Business
             var newcFijacion = Model.PosicionCompras.Any(x => x.PosicionKilos.Any(y => y.NewFijac > 0));
             var newcAgente = Model.ToneladasGranoTipo.Any(x => x.NewAgente != 0);
             var newc = 4 - (newcAFijar ? 0 : 1) - (newcAPrecio ? 0 : 1) - (newcFijacion ? 0 : 1) - (newcAgente ? 0 : 1);
-
             var hedgeMat = Model.HedgeMaterial.Any(x => x.Disponible != 0 || x.Forward != 0 || x.NewCrop != 0);
             var hedgeObj = Model.HedgeObjetivo.RemitirObjetivo != 0 && Model.HedgeObjetivo.PricingObjetivo != 0 ? 1 : 0;
             var pricing = Model.PricingCampania.Count != 0;
+            var margenMolienda = TraerTodosHedgeMargenMolienda().FirstOrDefault();
 
             var htmlBody = "";
-
 
             htmlBody += "Estimados,";
             htmlBody += "<br></br>";
             htmlBody += "A continuación se detallan las compras correspondientes al cierre del día.";
             htmlBody += "<br></br>";
+            htmlBody += "Margen de Molienda: " + (margenMolienda == null ? "No especificado." : margenMolienda.MargenMolienda.ToString());
+            htmlBody += "<br />";
             htmlBody += "Observaciones: " + (String.IsNullOrEmpty(observaciones) ? "Sin observaciones." : observaciones);
             htmlBody += "<br></br>";
-
 
             if (pricing)
             {
@@ -932,16 +962,23 @@ namespace Molinos.DataAgro.Business
                     </table><br><br>";
             }
 
-
             htmlBody += "<br></br>";
 
             htmlBody += "<br></br>";
-
 
             return htmlBody;
         }
-
-
+        public void JobCerrarDia(int comercialId, string idActiveDirectory, byte[] archivo, int diferencial)
+        {
+            var dia = Dia();
+            if (dia == null)
+            {
+                CerrarDia(comercialId, archivo, idActiveDirectory, true, GenerarCuerpoMail(""), diferencial);
+            } else if (dia.Cerrado == false)
+            {
+                CerrarDia(comercialId, archivo, idActiveDirectory, true, GenerarCuerpoMail(""), diferencial);
+            }
+        }
     }
 }
 

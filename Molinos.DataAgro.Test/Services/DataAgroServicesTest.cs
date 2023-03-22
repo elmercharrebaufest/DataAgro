@@ -1001,7 +1001,7 @@ namespace Molinos.DataAgro.Test.Services
         [Test]
         public void TraerTipoDeCambioTestOk()
         {
-            var result = target.TraerTipoDeCambio(DateTime.Now.Date);
+            var result = target.TraerTipoDeCambio(DateTime.Now.Date, null);
             Assert.IsNotNull(result);
         }
 
@@ -1050,7 +1050,7 @@ namespace Molinos.DataAgro.Test.Services
             var cuit = "30345456230";
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<SISA, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>()))
                .Returns(new List<SISA>() { new SISA { Id = 1 } });
-            var result = target.BuscarProveedorEnSisa(cuit) ;
+            var result = target.BuscarProveedorEnSisa(cuit);
 
             Assert.NotNull(result);
             Assert.AreEqual(1, result.Count);

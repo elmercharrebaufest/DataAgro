@@ -12,5 +12,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string UnidadMedida { get; set; }
         public decimal Porcentaje { get; set; }
         public string MaterialDescripcion { get; set; }
+        public string UsuarioSAP { get; set; }
     }
 }

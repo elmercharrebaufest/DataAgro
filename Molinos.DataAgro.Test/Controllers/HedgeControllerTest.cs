@@ -94,7 +94,19 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.AreEqual("_HedgeTC", result.ViewName);
             Assert.IsInstanceOf<HedgeModel>(result.Model);
         }
+        [Test]
+        public void HedgeMargenMoliendaPartialTest()
+        {
+            hedgeManagerMock.Setup(x => x.TraerTodosHedgeMargenMolienda()).Returns(new List<HedgeMargenMoliendaDto>());
+            var result = target.HedgeMargenMoliendaPartial(new Resultado()) as PartialViewResult;
 
+            Assert.NotNull(result);
+
+            hedgeManagerMock.Verify(x => x.TraerTodosHedgeMargenMolienda(), Times.Once);
+
+            Assert.AreEqual("_HedgeMargenMolienda", result.ViewName);
+            Assert.IsInstanceOf<HedgeModel>(result.Model);
+        }
         [Test]
         public void GrabarHedgeMaterialTest()
         {
@@ -152,6 +164,24 @@ namespace Molinos.DataAgro.Test.Controllers
             hedgeManagerMock.Verify(x => x.GrabarHedgeTC(It.IsAny<HedgeTC>(), It.IsAny<int>()), Times.Once);
 
             Assert.AreEqual("_HedgeTC", result.ViewName);
+        }
+        [Test]
+        public void GrabarHedgeMargenMoliendaTest()
+        {
+            var hedge = new HedgeModel
+            {
+                HedgeMargenMolienda = new HedgeMargenMoliendaModel { MargenMolienda = 1 }
+            };
+            hedgeManagerMock.Setup(x => x.GrabarHedgeMargenMolienda(new HedgeMargenMolienda(), 1)).Returns(new Resultado { Errores = new List<ErrorMessage>() });
+            hedgeManagerMock.Setup(x => x.TraerTodosHedgeMargenMolienda()).Returns(new List<HedgeMargenMoliendaDto>());
+
+            var result = target.GrabarHedgeMargenMolienda(hedge) as PartialViewResult;
+
+            Assert.NotNull(result);
+
+            hedgeManagerMock.Verify(x => x.GrabarHedgeMargenMolienda(It.IsAny<HedgeMargenMolienda>(), It.IsAny<int>()), Times.Once);
+
+            Assert.AreEqual("_HedgeMargenMolienda", result.ViewName);
         }
         [Test]
         public void EliminarHedgeTCTest()

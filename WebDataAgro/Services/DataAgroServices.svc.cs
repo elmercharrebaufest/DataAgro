@@ -1106,9 +1106,17 @@ namespace WebDataAgro.Services
             return oFacacop;
         }
 
-        public decimal TraerTipoDeCambio(DateTime? fecha)
+        public decimal TraerTipoDeCambio(DateTime? fecha, string moneda)
         {
-            return tipoDeCambioAgent.TraerTipoDeCambio(fecha);
+            if (string.IsNullOrEmpty(moneda))
+            {
+                return tipoDeCambioAgent.TraerTipoDeCambio(fecha);
+            }
+            else
+            {
+                moneda = moneda.Trim().ToUpper().PadRight(5,' ');
+                return tipoDeCambioAgent.TraerTipoDeCambioMoneda(fecha, moneda);
+            }
         }
 
 

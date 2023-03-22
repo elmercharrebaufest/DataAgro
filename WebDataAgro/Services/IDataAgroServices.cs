@@ -53,7 +53,7 @@ namespace WebDataAgro.Services
         [OperationContract]
         bool ProveedorApocrifo(string cuit);
         [OperationContract]
-        decimal TraerTipoDeCambio(DateTime? fecha);
+        decimal TraerTipoDeCambio(DateTime? fecha, string moneda);
 
         [OperationContract]
         ResultadoSap ActualizarCesionContratoSAP(string contratoSAP, bool cesion);

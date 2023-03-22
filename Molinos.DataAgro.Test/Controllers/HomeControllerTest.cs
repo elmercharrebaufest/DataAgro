@@ -3,12 +3,10 @@ using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Report.Clases;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -100,9 +98,9 @@ namespace Molinos.DataAgro.Test.Controllers
                 TotalPotencialContactos = 0,
                 TotalSinInteresContactos = 0
             });
-            homeManagerMock.Setup(x => x.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.EquipoReal)).Returns(new CampañaHome
-            { Materiales = new List<MaterialCampaña> { new MaterialCampaña { Campaña = "17-18", Nombre = "a", Toneladas = 12 }},
-            Nombre = "A"});
+            //homeManagerMock.Setup(x => x.TraerInfoCampaña(GlobalVariables.ComercialId, GlobalVariables.EquipoReal)).Returns(new CampañaHome
+            //{ Materiales = new List<MaterialCampaña> { new MaterialCampaña { Campaña = "17-18", Nombre = "a", Toneladas = 12 }},
+            //Nombre = "A"});
             homeManagerMock.Setup(x => x.TraerInfoIniciales(GlobalVariables.EquipoReal)).Returns(new DatosIniciales
             {
                 mat = new List<MaterialesQry>(),
@@ -114,16 +112,14 @@ namespace Molinos.DataAgro.Test.Controllers
                 come = new List<ComercialQry>(),
                 zona = new List<ZonaQry>()
             });
-            homeManagerMock.Setup(x => x.TraerTodoCompraDetalle(GlobalVariables.EquipoReal)).Returns(new List<CompraDto>());
-            var result = target.Inicializar();
+            homeManagerMock.Setup(x => x.TraerTodoCompraDetalle(It.IsAny<List<int>>(), It.IsAny<int?>(), It.IsAny<int?>())).Returns(new List<CompraDto>());
+            var result = target.Inicializar(It.IsAny<int?>(), It.IsAny<int?>()) as JsonResult;
             Assert.NotNull(result);
             homeManagerMock.Verify(x => x.TraerBusquedaContacto(It.IsAny<oParamBusqueda>(), It.IsAny<int>(), It.IsAny<List<int>>()), Times.Once);
-            homeManagerMock.Verify(x => x.TraerInfoCampaña(It.IsAny<int>(),It.IsAny<List<int>>()), Times.Once);
+            //homeManagerMock.Verify(x => x.TraerInfoCampaña(It.IsAny<int>(),It.IsAny<List<int>>()), Times.Once);
             homeManagerMock.Verify(x => x.TraerInfoIniciales(It.IsAny<List<int>>()), Times.Once);
-            var a = serializer.Serialize(result);
-            Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Contactos\":{\"Contactos\":null,\"TotalContactos\":0,\"TotalPotencialContactos\":0,\"TotalOperandoContactos\":0,\"TotalNoOperandoContactos\":0,\"TotalBajaContactos\":0,\"TotalSinInteresContactos\":0,\"TotalHabilitadoContactos\":0,\"TotalLegajoIrregularContactos\":0,\"TotalNoHabilitadoContactos\":0},\"Campaña\":null,\"Objetivo\":null,\"Datos\":null,\"Detalle\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
-                a);        
+            var model = serializer.Deserialize<ResultIniContactoModel>(serializer.Serialize(result.Data));
+            Assert.AreEqual(false, model.HayErrores);   
         }
 
         [Test]

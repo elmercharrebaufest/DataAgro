@@ -43,6 +43,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     FechaDescarga = DbFunctions.TruncateTime(x.FechaDescarga),
                     FechaDescargaConHora = x.FechaDescarga,
                     OrigenDA = x.InformeComercial.OrigenDA == true ? "Si" : "No",
+                    UsuarioSAP = x.InformeComercial.Comercial.IdUsuarioSAP
                 };
             resultado = resultado.GroupBy(a => new { a.InformeComercialId, a.MaterialId }).Select(x =>
                new InformeProduccionList
@@ -66,6 +67,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                    FechaDescarga = x.FirstOrDefault().FechaDescarga,
                    FechaDescargaConHora = x.FirstOrDefault().FechaDescargaConHora,
                    OrigenDA = x.FirstOrDefault().OrigenDA,
+                   UsuarioSAP = x.FirstOrDefault().UsuarioSAP
                }
             );
             return resultado.ToDataSourceResult(filtro);

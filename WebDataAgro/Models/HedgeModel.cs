@@ -12,10 +12,11 @@ namespace WebDataAgro.Models
         public List<HedgeObjetivoDto> HistorialObjetivo { get; set; }
         public HedgeTCModel HedgeTC { get; set; }
         public TcModel TCModel { get; set; }
+        public HedgeMargenMoliendaModel HedgeMargenMolienda { get; set; }
+        public List<HedgeMargenMoliendaDto> HistorialMargenMolienda { get; set; }
         public Resultado Resultado { get; set; }
     }
 
-   
     public class HedgeObjetivoModel
     {
         public int MaterialId { get; set; }
@@ -26,12 +27,16 @@ namespace WebDataAgro.Models
     public class HedgeTCModel
     {
         public List<HedgeTCDto> HedgeTC { get; set; }
-        public decimal TotalTC  { get; set; }
+        public decimal TotalTC { get; set; }
         public decimal TotalHedge { get; set; }
     }
     public class TcModel
     {
         public decimal TC { get; set; }
         public decimal HedgePesos { get; set; }
+    }
+    public class HedgeMargenMoliendaModel
+    {
+        public int MargenMolienda { get; set; }
     }
 }

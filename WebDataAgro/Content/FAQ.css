@@ -1,0 +1,36 @@
+﻿.documento {
+    color: #3f4845;
+    font-size: 15px;
+    width: 90%;
+    background: #fff;
+    border-radius: 11px;
+    padding: 20px;
+    display: block;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    box-shadow: 2px 2px 2px -3px rgb(0 0 0 / 45%);
+    opacity: .8;
+    /*filter: alpha(opacity=80);*/
+    cursor: pointer;
+    transition: .25s linear;
+}
+
+.centrarFAQ {
+    display: flex;
+    justify-content: center;
+}
+
+    .documento .doc-header {
+        border-bottom: 2px solid #707070;
+        margin-bottom: 5px;
+    }
+
+    .documento .doc-description {
+        color: #707070;
+        font-weight: 400;
+        margin: 10px 0 5px;
+    }
+
+.fa-file-pdf-o {
+    color: #ef1e24;
+}

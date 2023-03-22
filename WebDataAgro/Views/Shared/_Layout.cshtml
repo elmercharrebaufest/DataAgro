@@ -1,7 +1,4 @@
-﻿@using Molinos.DataAgro.Entities.Common.Enums;
-
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -108,13 +105,13 @@
                             <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="reportes">
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDinamico))
-        {
-            <li>
-                <a href="/Cubproveedores" class="nav-link misreporteslink">
-                    <i class="icon-bar-chart font-color"></i> Reporte Dinámico
-                </a>
-            </li>
-        }*@
+                                    {
+                                        <li>
+                                            <a href="/Cubproveedores" class="nav-link misreporteslink">
+                                                <i class="icon-bar-chart font-color"></i> Reporte Dinámico
+                                            </a>
+                                        </li>
+                                    }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteAgenda))
                                 {
                                     <li>
@@ -175,7 +172,7 @@
                                 {
                                     <li>
                                         <a href="/ReporteEvolucionFijacion" class="nav-link misreporteslink">
-                                            <i class="icon-bar-chart"></i> Reporte Evolucion Fijacion
+                                            <i class="icon-bar-chart"></i> Reporte Evolución Fijación
                                         </a>
                                     </li>
                                 }
@@ -682,6 +679,11 @@
                             </ul>
                         </li>
                     }
+                    @*<li class="mis-contactos">
+                        <a href="~/FAQ" class="nav-no-padding background-hover">
+                            <span>Manuales Originación</span>
+                        </a>
+                    </li>*@
                 </ul>
                 <ul id="segundo" class="nav navbar-nav navbar-right" style="float: right;">
                     @if (PermisosHelper.Is(PermisosDataAgro.VisualizarDatosProveedor))

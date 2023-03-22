@@ -234,6 +234,7 @@
     <Compile Include="Controllers\CartaDePresentacionController.cs" />
     <Compile Include="Controllers\CampanaController.cs" />
     <Compile Include="Controllers\HabilitacionBoletoController.cs" />
+    <Compile Include="Controllers\FAQController.cs" />
     <Compile Include="Controllers\LogServerController.cs" />
     <Compile Include="Controllers\ReporteContratosAFijarPaseController.cs" />
     <Compile Include="Controllers\ReporteEvolucionFijacionController.cs" />
@@ -416,6 +417,7 @@
     <Content Include="Content\contactoDetalle.css" />
     <Content Include="Content\cupoNoPropio.css" />
     <Content Include="Content\diffPlex.css" />
+    <Content Include="Content\FAQ.css" />
     <Content Include="Content\generarboleto.css" />
     <Content Include="Content\Images\Circular.PNG" />
     <Content Include="Content\Images\logo-sharepoint.png">
@@ -2821,6 +2823,7 @@
     <Content Include="Templates\AltaMasivaMATBA.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\FAQ\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

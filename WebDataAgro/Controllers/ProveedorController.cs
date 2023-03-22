@@ -19,6 +19,7 @@ using WebDataAgro.Helpers;
 using System.Text;
 using System.Globalization;
 using Molinos.DataAgro.Repository;
+using Molinos.DataAgro.Report;
 
 namespace WebDataAgro.Controllers
 {
@@ -235,6 +236,15 @@ namespace WebDataAgro.Controllers
             };
         }
 
+        public ActionResult ValidarCategoriaSISA(CuitSegmentacion cuitSegmentacion)
+        {
+            return new JsonResult()
+            {
+                Data = mobjProveedorManager.ValidarCategoriaSISA(cuitSegmentacion),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
         public ActionResult GrabarProveedor(NuevoProveedor oParam, CampaniaDto modificados)
         {
 
@@ -412,7 +422,8 @@ namespace WebDataAgro.Controllers
             }
         }
 
-        public JsonResult BuscarProveedoresEnSugerencia(string filtro, string filtroProveedor, int? agenteCompraId) {
+        public JsonResult BuscarProveedoresEnSugerencia(string filtro, string filtroProveedor, int? agenteCompraId)
+        {
             var resultado = Json(mobjHomeManager.BusquedaHome(filtroProveedor, GlobalVariables.ComercialId, GlobalVariables.Equipo, GlobalVariables.CorredoresComercial), JsonRequestBehavior.AllowGet);
             return resultado;
         }
@@ -642,6 +653,19 @@ namespace WebDataAgro.Controllers
             return campos;
         }
 
+        public ActionResult ExportarActividadesExcel(HistorialActiviad filtro)
+        {
+            var model = new ReportesModel();
 
+            List<ActividadExportar> datos = mobjProveedorManager.ExportarActividades(filtro, GlobalVariables.IdActiveDirectory);
+
+            var oLstAgendaActividad = new LstAgendaActividad(mobjreportesManager);
+
+            var identif = oLstAgendaActividad.GenerarExcel(datos);
+
+            model.DownloadKey = Util.GetDownloadKey(identif);
+
+            return Json(model);
+        }
     }
 }

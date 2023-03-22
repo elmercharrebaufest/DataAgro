@@ -202,7 +202,7 @@ namespace Molinos.DataAgro.Agent
                             Importe = apertura.IMPORTE,
                             Porcentaje = apertura.PORC,
                             MonedaId = apertura.MONEDA,
-                            Moneda = monedas.Where(x => x.MonedaId.Trim() == apertura.MONEDA.Trim()).FirstOrDefault().Descripcion
+                            Moneda = monedas.Where(x => x.MonedaId.Trim() == apertura.MONEDA.Trim()).FirstOrDefault()?.Descripcion
                         };
                         aperturas.Add(a);
                     }

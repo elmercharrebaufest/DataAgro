@@ -1066,7 +1066,7 @@ function armarSelects(result) {
 
 
         //if (!$("#kmz-almacenamiento").val()) {
-        if ($("#localidadId-almacenamiento").val() == "null") {
+        if ($("#localidadId-almacenamiento").val() == "") {
             MensErr("Debe ingresar una localidad");
             return false;
         } else {
@@ -3369,6 +3369,23 @@ function validateNumber(number) {
 
 function comprobarInputs() {
     var hayErrores = 0;
+
+    var valorCuit = $("#cuit").val();
+    var valorSegmentacion = $("#segmentacion").val();
+    var data = { cuit: valorCuit, segmentacion: valorSegmentacion };
+    var result = MSExecuteOnServer('/Proveedor/ValidarCategoriaSISA', data);
+    if (result) {
+        if (result.Existe == 1) {
+            if (result.Mensaje != "") {
+                MensAlerta(result.Mensaje);
+                hayErrores = 1;
+            }
+        } else {
+            MensInfo(result.Mensaje);
+            hayErrores = 1;
+        }
+    }
+
     if ($("#cuit").val() && $("#cuit").val().length > 20) {
         mostrarError("#cuit", "error-elem-cuit", "No debe superar los 20 caracteres");
         hayErrores = 1;

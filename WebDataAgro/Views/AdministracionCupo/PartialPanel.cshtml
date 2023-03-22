@@ -187,7 +187,7 @@
                             var dias = noAceptadas.Where(x => x.Material.Replace(" ", "") == m.Key.Replace(" ", "")).SelectMany(x => x.Diacupo.Select(y => y.Fecha)).Distinct().OrderBy(x => x).ToList();
                         }
                         <tr>
-                            <th style="width: 360px"></th>
+                            <th style="width: 25%"></th>
                             @foreach (var r in dias)
                             {
                                 var fecha = r.ToString("dd/MM/yyyy");

@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return new StoredHistorialResult
             {
-                ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, false, oParam.detalle, actividadId))
+                ActividadHistoriaTraerPorProveedores = repositorio.ListarConsulta(new ConsultaActividadHistoriaTraerPorProveedorId(ProveedorId, false, oParam.detalle, actividadId, oParam.cantidadRegistros))
                 //ActividadHistoriaTraerPorProveedores = repositorio.SelStore<HistorialTraer>("DataAgro_ActividadHistoriaTraerPorProveedorId", 0, ProveedorId, oParam.detalle, TipoActividadId)
             };
         }
@@ -301,7 +301,7 @@ namespace Molinos.DataAgro.Business.Managers
                 : repositorio.Obtener<Actividad>(x => x.ActividadId == oParam.ActividadId) ?? new Actividad();
             oActividadSave.ComercialId = oParam.ComercialId;
             oActividadSave.ContactoComercialId = oParam.contacto;
-            oActividadSave.Detalle = oParam.detalle;
+            oActividadSave.Detalle = oParam.detalle ?? "";
             oActividadSave.FechaHoraActividad = oParam.fechaYHoraActividad;
             oActividadSave.FechaHoraRecordatorio = oParam.fechaYHoraRecordatorio;
             oActividadSave.ProveedorId = oParam.ProveedorId;
@@ -5106,6 +5106,146 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             return lista;
+        }
+
+        private List<HistorialActiviad> DevolverContactosIni(List<HistorialActiviad> list)
+        {
+            var lista = new List<HistorialActiviad>();
+            //ContactoIni cont = null;
+            //var a = list.GroupBy(x => x.ProveedorId);
+            //foreach (var con in a)
+            //{
+            //    cont = new ContactoIni();
+            //    cont.Calificacion = con.FirstOrDefault().Calificacion;
+            //    cont.ComercialCargo = string.Join("; ", con.Select(x => x.ComercialAcargo).Distinct());
+            //    cont.Operando = true;
+            //    cont.Cuit = con.FirstOrDefault().CUIT;
+            //    cont.Mail = (String.IsNullOrEmpty(con.FirstOrDefault().Email1) ? String.Empty : (con.FirstOrDefault().Email1)) +
+            //                (String.IsNullOrEmpty(con.FirstOrDefault().Email2) ? String.Empty : (";" + con.FirstOrDefault().Email2)) +
+            //                (String.IsNullOrEmpty(con.FirstOrDefault().Email3) ? String.Empty : (";" + con.FirstOrDefault().Email3)) +
+            //                (String.IsNullOrEmpty(con.FirstOrDefault().Email4) ? String.Empty : (";" + con.FirstOrDefault().Email4));
+            //    cont.ProveedorId = con.FirstOrDefault().ProveedorId;
+            //    cont.RazonSocial = con.FirstOrDefault().RazonSocial;
+            //    cont.Telefono = (String.IsNullOrEmpty(con.FirstOrDefault().Telefono1) ? String.Empty : (con.FirstOrDefault().Telefono1)) +
+            //                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono2) ? String.Empty : (";" + con.FirstOrDefault().Telefono2)) +
+            //                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono3) ? String.Empty : (";" + con.FirstOrDefault().Telefono3)) +
+            //                (String.IsNullOrEmpty(con.FirstOrDefault().Telefono4) ? String.Empty : (";" + con.FirstOrDefault().Telefono4));
+            //    cont.UltimoContacto = DevolverUltimoContacto(con.FirstOrDefault().FechaUltimoContacto);
+            //    cont.Estado = con.FirstOrDefault().Estado;
+            //    cont.FechaAlta = con.FirstOrDefault().FechaAlta;
+            //    cont.GrupoDeCompras = string.Join("; ", con.Select(x => x.GrupoDeCompras).Distinct());
+            //    cont.Corredor = con.FirstOrDefault().Segmentacion == 5 || con.FirstOrDefault().Segmentacion == 7 ? true : false;
+            //    CargarOperabilidad(cont, con.FirstOrDefault());
+            //    if (cont.NoOperable == true)
+            //    {
+            //        cont.RptOpera = "No operable";
+            //    }
+            //    else
+            //    {
+            //        cont.RptOpera = "Operable";
+            //    }
+            //    cont.EstadoHomeId = con.FirstOrDefault().EstadoHomeId;
+            //    cont.EstadoHomeMensaje = con.FirstOrDefault().EstadoHomeMensaje;
+            //    cont.EstadoHomeDescripcion = con.FirstOrDefault().EstadoHomeDescripcion;
+
+            //    lista.Add(cont);
+            //}
+
+            //lista = lista.OrderBy(x => x.RazonSocial).ToList();
+
+            return lista;
+        }
+
+        public List<ActividadExportar> ExportarActividades(HistorialActiviad oParam, string idActiveDirectory)
+        {
+            var oComerciales = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory.ToLower() == idActiveDirectory.ToLower());
+
+            if (oComerciales != null)
+            {
+                List<TipoActividad> listTipoActividad = repositorio.Listar<TipoActividad>().ToList();
+                List<Actividad> listHistorialActiviad = repositorio.Listar<Actividad>(x => x.ProveedorId == oParam.ProveedorId).ToList();
+                List<ActividadExportar> listActividadExportar = new List<ActividadExportar>();
+
+                foreach (var i in listHistorialActiviad)
+                {
+                    ActividadExportar actividadExp = new ActividadExportar();
+                    actividadExp.ActividadId = i.ActividadId;
+                    actividadExp.TipoActividadId = i.TipoActividadId;
+                    actividadExp.tipoActividad = i.TipoActividadId > 0 ? listTipoActividad.Where(x => x.TipoActividadId == i.TipoActividadId).First().Descripcion : "";
+                    actividadExp.Detalle = i.Detalle;
+                    actividadExp.ProveedorId = i.ProveedorId;
+                    actividadExp.proveedor = i.ProveedorId > 0 ? i.Proveedor.RazonSocial : "";
+                    actividadExp.FechaHoraActividad = i.FechaHoraActividad;
+                    actividadExp.FechaHoraRecordatorio = i.FechaHoraRecordatorio;
+                    actividadExp.ComercialId = i.ComercialId;
+                    actividadExp.comercial = i.ComercialId > 0 ? String.Concat(i.Comercial.Apellido, ' ', i.Comercial.Nombres) : "";
+                    actividadExp.ContactoComercialId = i.ContactoComercialId;
+                    actividadExp.contactoComercial = i.ContactoComercialId > 0 ? String.Concat(i.ContactoComercial.Apellido, ' ', i.ContactoComercial.Nombres) : "";
+                    actividadExp.FechaHoraRecordatorioFin = i.FechaHoraRecordatorioFin;
+                    actividadExp.asunto = i.asunto;
+                    listActividadExportar.Add(actividadExp);
+                }
+
+                return listActividadExportar;
+            }
+            else
+                return new List<ActividadExportar>();
+        }
+
+        public ProveedorCategoriasSISA ValidarCategoriaSISA(CuitSegmentacion cuitSegmentacion)
+        {
+            List<SISA> sisa = repositorio.Listar<SISA>(x => x.CUIT == cuitSegmentacion.CUIT).ToList();
+            ProveedorCategoriasSISA proveedorCategoriasSISA = new ProveedorCategoriasSISA();
+            if (sisa != null)
+            {
+                List<CategoriasSISA> categoriasSISA = new List<CategoriasSISA>();
+                foreach (var a in sisa)
+                {
+                    categoriasSISA.Add(new CategoriasSISA { CodCategoria = a.CodCategoria, Categoria = a.Categoria });
+                }
+
+                List<CategoriasSISA> cat = new List<CategoriasSISA>();
+
+                if (cuitSegmentacion.Segmentacion == 2 || cuitSegmentacion.Segmentacion == 3 || cuitSegmentacion.Segmentacion == 4)
+                {
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 1).ToList();
+                }
+                else if (cuitSegmentacion.Segmentacion == 5 || cuitSegmentacion.Segmentacion == 7)
+                {
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 2).ToList();
+                }
+                else if (cuitSegmentacion.Segmentacion == 9 || cuitSegmentacion.Segmentacion == 10 || cuitSegmentacion.Segmentacion == 11 || cuitSegmentacion.Segmentacion == 15)
+                {
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 6).ToList();
+                }
+                else if (cuitSegmentacion.Segmentacion == 13)
+                {
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 5 || x.CodCategoria == 15).ToList();
+                }
+                else if (cuitSegmentacion.Segmentacion == 12)
+                {
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 1 || x.CodCategoria == 6 || x.CodCategoria == 19).ToList();
+                }
+
+                if (cat.Count == 0)
+                {
+                    proveedorCategoriasSISA.Mensaje = "La Segmentación seleccionada no corresponde a los datos de SISA para el CUIT.";
+                    proveedorCategoriasSISA.Existe = 1;
+                }
+                else {
+                    proveedorCategoriasSISA.Mensaje = "";
+                    proveedorCategoriasSISA.Existe = 1;
+                }
+
+                proveedorCategoriasSISA.CUIT = cuitSegmentacion.CUIT;
+                proveedorCategoriasSISA.CategoriasSISA = categoriasSISA;
+            }
+            else
+            {
+                proveedorCategoriasSISA = new ProveedorCategoriasSISA() { CUIT = cuitSegmentacion.CUIT, Existe = 0, Mensaje = "CUIT no existe en SISA" };
+            }
+
+            return proveedorCategoriasSISA;
         }
 
     }

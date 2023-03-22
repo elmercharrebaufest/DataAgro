@@ -15,7 +15,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly IVisualizarCapacidadProductivaAgent capProdAgent;
 
-        public CapacidadProductivaManager (ILogger logger, IRepositorio repositorio, IVisualizarCapacidadProductivaAgent capProdAgent)
+        public CapacidadProductivaManager(ILogger logger, IRepositorio repositorio, IVisualizarCapacidadProductivaAgent capProdAgent)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -26,11 +26,12 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return capProdAgent.VisualizarCapacidadProductiva(proveedorId);
         }
+        
         public void ActualizarCapacidadProductiva()
         {
             List<CapacidadProductivaDto> listaCP = new List<CapacidadProductivaDto>();
             var proveedoresTodos = repositorio.Listar<Proveedor, ProveedorDto>(x => new ProveedorDto { CUIT = x.CUIT, ProveedorId = x.ProveedorId, RazonSocial = x.RazonSocial, SegmentacionId = x.SegmentacionId });
-            
+
             foreach (ProveedorDto p in proveedoresTodos)
             {
                 listaCP.AddRange(capProdAgent.VisualizarCapacidadProductiva(p.ProveedorId));

@@ -275,6 +275,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaDescarga { get; set; }
         public DateTime? FechaDescargaConHora { get; set; }
         public string OrigenDA { get; set; }
+        public string UsuarioSAP { get; set; }
 
         public InformeProduccionList()
         {

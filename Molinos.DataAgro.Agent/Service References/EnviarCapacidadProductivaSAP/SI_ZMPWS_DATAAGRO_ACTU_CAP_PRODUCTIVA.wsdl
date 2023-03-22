@@ -15,9 +15,10 @@
       <xsd:element name="Z_MPRFC_ACT_CAPACIDAD_PROD">
         <xsd:complexType>
           <xsd:sequence>
+            <xsd:element name="IM_COMERCIAL" type="rfc:char15" />
             <xsd:element name="IM_CUIT" type="rfc:char16" />
             <xsd:element name="IM_DETALLE" type="rfc:ZMPTT6980" />
-            <xsd:element name="IM_INTAD" type="rfc:char130" />
+            <xsd:element name="IM_INTAD" type="rfc:date10" />
             <xsd:element name="IM_TLFNS" type="rfc:char30" />
           </xsd:sequence>
         </xsd:complexType>
@@ -60,6 +61,11 @@
           <xsd:fractionDigits value="2" />
         </xsd:restriction>
       </xsd:simpleType>
+      <xsd:simpleType name="char15">
+        <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="15" />
+        </xsd:restriction>
+      </xsd:simpleType>
       <xsd:simpleType name="char200">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="200" />
@@ -68,11 +74,6 @@
       <xsd:simpleType name="char18">
         <xsd:restriction base="xsd:string">
           <xsd:maxLength value="18" />
-        </xsd:restriction>
-      </xsd:simpleType>
-      <xsd:simpleType name="char130">
-        <xsd:restriction base="xsd:string">
-          <xsd:maxLength value="130" />
         </xsd:restriction>
       </xsd:simpleType>
       <xsd:complexType name="ZMPTT6980">

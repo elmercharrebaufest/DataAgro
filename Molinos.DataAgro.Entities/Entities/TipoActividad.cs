@@ -7,7 +7,7 @@ namespace Molinos.DataAgro.Entities.Entities
         [Key]
         public int TipoActividadId { get; set; }
         public string Descripcion { get; set; }
-        public int? CamposExtra { get; set; }
+        //public int? CamposExtra { get; set; }
     }
 
 

@@ -10,6 +10,7 @@ $(document).ready(function () {
     //CreateGridInformes();
     //CargarGrilla();
 });
+
 function onChange(arg) {
     console.log("The selected product ids are: [" + this.selectedKeyNames().join(", ") + "]");
 }
@@ -418,14 +419,15 @@ function customExport() {
                     CUIT: allData[i].Cuit,
                     Material: (allData[i].MaterialSAP).replace("0000000000", ""),
                     Cosecha: allData[i].Campaña,
-                    Toneladas: allData[i].Toneladas
+                    Toneladas: allData[i].Toneladas,
+                    UsuarioSAP: allData[i].UsuarioSAP
                 });
             }
         };
 
         grid.dataSource.page(1);
 
-        toCSV(arrInformeComercial, "Informe Administrativo.csv", ['CUIT', 'Material', 'Cosecha', 'Toneladas'], true);
+        toCSV(arrInformeComercial, "Informe Administrativo.csv", ['CUIT', 'Material', 'Cosecha', 'Toneladas', 'Comercial'], true);
     } else
         MensAlerta("Debe seleccionar informes de la grilla para exportar a CSV.");
 }
@@ -471,7 +473,7 @@ var toCSV = function (data, fileName, headers, addheaders) {
     var link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", fileName);
-    document.body.appendChild(link); // Required for FF
+    document.body.appendChild(link);
 
     link.click(); // This will download the data file.
 };
@@ -495,7 +497,8 @@ function enviarCapProdSAP() {
                     Campania: allData[i].Campaña,
                     Cantidad: allData[i].Toneladas,
                     UnidadMedida: "TON",
-                    Porcentaje: 30
+                    Porcentaje: 30,
+                    UsuarioSAP: allData[i].UsuarioSAP
                 });
             }
         };

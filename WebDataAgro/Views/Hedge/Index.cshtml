@@ -10,26 +10,32 @@
 @section Scripts{
     <script type="text/javascript" src="~/Scripts/App/hedge.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <script> 
+    <script>
+
     diaCerrado = '@ViewBag.DiaCerrado';
     diferencial = '@ViewBag.Diferencial';</script>
 }
 
 <div class="container">
     <div class="row bordertopbottom">
-        <div class="col-xs-4 wizard-header-group" id="HedgeMaterialTab">
+        <div class="col-xs-3 wizard-header-group" id="HedgeMaterialTab">
             <div class="wizard-header-contenedor whc-selected">
                 Hedge Material
             </div>
         </div>
-        <div class="col-xs-4 wizard-header-group" id="ObjetivosTab">
+        <div class="col-xs-3 wizard-header-group" id="ObjetivosTab">
             <div class="wizard-header-contenedor">
                 Carga Objetivos
             </div>
         </div>
-        <div class="col-xs-4 wizard-header-group" id="HedgeTCTab">
+        <div class="col-xs-3 wizard-header-group" id="HedgeTCTab">
             <div class="wizard-header-contenedor">
                 Hedge TC
+            </div>
+        </div>
+        <div class="col-xs-3 wizard-header-group" id="MargenMoliendaTab">
+            <div class="wizard-header-contenedor">
+                Margen de Molienda - GCM
             </div>
         </div>
     </div>
@@ -46,6 +52,10 @@
 
     <div id="hedgeTC" hidden>
         @Html.Action("HedgeTCPartial", "Hedge", new { hedgeMaterial = Model })
+    </div>
+
+    <div id="margenMolienda" hidden>
+        @Html.Action("HedgeMargenMoliendaPartial", "Hedge", new { hedgeMaterial = Model })
     </div>
 
     <div class="row">

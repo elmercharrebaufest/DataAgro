@@ -232,7 +232,7 @@ namespace Molinos.DataAgro.Test.Managers
                      }
                  });
             var equipo = new List<int> { 1, 2, 3 };
-            var resultado = target.TraerTodoCompraDetalle(It.IsAny<List<int>>());
+            var resultado = target.TraerTodoCompraDetalle(It.IsAny<List<int>>(), It.IsAny<int>(), It.IsAny<int>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
         [Test]
