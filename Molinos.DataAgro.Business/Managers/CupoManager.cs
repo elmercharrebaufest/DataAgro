@@ -1818,7 +1818,7 @@ namespace Molinos.DataAgro.Business.Managers
                     //(formula.NegociosDesde >= x.FechaDesde && formula.NegociosHasta < x.FechaHasta) || (formula.NegociosHasta <= x.FechaHasta &&
                     //formula.NegociosHasta > x.FechaDesde) || (formula.NegociosDesde <= x.FechaDesde && formula.NegociosHasta >= x.FechaHasta))
                     //x.Sustentable != true &&
-                    x.EPA != true &&
+                    //x.EPA != true &&
                     x.EsFason != true &&
                     formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId /*&& x.MercsDeposito != true*/ && x.MaterialId == formula.MaterialId);
