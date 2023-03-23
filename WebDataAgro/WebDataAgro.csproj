@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -2775,7 +2775,6 @@
     <Content Include="Views\ConfiguracionBolsa\_ListaBolsa.cshtml" />
     <Content Include="Views\ConfiguracionBolsa\Index.cshtml" />
     <Content Include="Views\ReportePrecioMoaPizarra\Index.cshtml" />
-   
     <Content Include="Views\CompraNet\ModalConfirmarBolsa.cshtml" />
     <Content Include="Views\CompraNet\_ModalCCPPPendienteAplicar.cshtml" />
     <Content Include="Views\ConfiguracionInterna\_GrabarPagoDiferidoPartial.cshtml" />
@@ -2787,7 +2786,6 @@
     <Content Include="Views\LogServer\Index.cshtml" />
     <Content Include="Views\ConfiguracionInterna\_ListaSustentable.cshtml" />
     <Content Include="Views\ConfiguracionInterna\_GrabarSustentablePartial.cshtml" />
-   
     <Content Include="Views\CompraNet\_ModalObtenerCapacidadProductivaPendiente.cshtml" />
     <Content Include="Views\CompraNet\ModalContratosPendientes.cshtml" />
     <Content Include="Views\CompraNet\ModalConfirmarBonificacion.cshtml" />
@@ -2824,6 +2822,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\FAQ\Index.cshtml" />
+    <Content Include="Views\Hedge\_HedgeMargenMolienda.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
