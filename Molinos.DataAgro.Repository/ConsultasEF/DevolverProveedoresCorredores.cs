@@ -46,7 +46,10 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                                 PlanCanje = provs.Key.PlanCanje,
                                 Deshabilitar = false,
                                 Color = "",
-                                CuposConRiesgo = provs.Key.CuposConRiesgo
+                                CuposConRiesgo = provs.Key.CuposConRiesgo,
+                                Segmentacion = provs.Key.Segmentacion.Descripcion,
+                                Grupo = provs.Key.Segmentacion.Grupo,
+                                SegmentacionId = provs.Key.SegmentacionId,
                             };
             var lista = resultado.Distinct().Take(15).ToList();
             if (validarSisa == true)

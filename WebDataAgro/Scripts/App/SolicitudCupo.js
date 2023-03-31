@@ -708,7 +708,7 @@ function grabarSolicitudExtraordinaria() {
         MensErr("Complete el CUIT del destinatario"); return;
     }
 
-    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true ) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3") {
+    if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3" && grupoSegmentacion == "Productores") {
         VisualizarStock(true);
         if (!stockDisponible) {
             MensErr("No se pudo guardar porque no existen establecimientos con stock disponible");
@@ -922,7 +922,7 @@ function VisualizarStock(noabrir) {
         //var cantidadCuposDias = parseInt($("#CantidadCupoSE")[0].value) * cantidadDias;
 
         //cantidadCuposEstablecimientos = cantidadKilosEstablecimientos / 30000;
-        
+
         //if (cantidadCuposDias > cantidadCuposEstablecimientos) {
         //    stockInsuficiente = true;
         //    if (noabrir != true) {

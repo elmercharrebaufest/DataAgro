@@ -21,5 +21,8 @@
         public bool? CuposConRiesgo { get; set; }
         public bool? OperaConMATBA { get; set; }
         public bool EstaAsignado { get; set; }
+        public string Segmentacion { get; set; }
+        public string Grupo { get; set; }
+        public int SegmentacionId { get; set; }
     }
 }

@@ -702,6 +702,7 @@
 @Html.Partial("ModalAnularSolicitud")
 
 <script>
+    var grupoSegmentacion = "";
     $("#CantidadCupoSE").kendoNumericTextBox({// al pasasrlo al js de solicitudCupo.js se rompe por mas que se ejecute en el document ready
         optionLabel: "SELECCIONE CANTIDAD DE CUPOS...",
         culture: "es-AR",
@@ -739,6 +740,8 @@
             }
 
             $("#ProveedorIdSE").val(e.dataItem.Id);
+            grupoSegmentacion = e.dataItem.Grupo;
+            console.log(grupoSegmentacion);
         },
         dataSource: {
             severFiltering: true,
