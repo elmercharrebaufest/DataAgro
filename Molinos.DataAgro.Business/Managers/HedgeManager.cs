@@ -971,6 +971,8 @@ namespace Molinos.DataAgro.Business
         public void JobCerrarDia(int comercialId, string idActiveDirectory, byte[] archivo, int diferencial)
         {
             var dia = Dia();
+            comercialId = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == "DATAAGRO").ComercialId;
+
             if (dia == null)
             {
                 CerrarDia(comercialId, archivo, idActiveDirectory, true, GenerarCuerpoMail(""), diferencial);

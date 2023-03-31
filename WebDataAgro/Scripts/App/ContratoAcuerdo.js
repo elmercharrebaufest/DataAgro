@@ -1973,6 +1973,7 @@ function InicializarElementos() {
 
 
     $(".formulario-footer-guardar-contrato").click(function () {
+        $(this).prop('disabled', true);
         BlockUi('Guardando...');
         var desdeFijacionNull = $("#fechaDesdeTopeId").val() == null || $("#fechaDesdeTopeId").val() == undefined || $("#fechaDesdeTopeId").val() == "";
         var hastaFijacionNull = $("#fechaHastaTopeId").val() == null || $("#fechaHastaTopeId").val() == undefined || $("#fechaHastaTopeId").val() == "";
@@ -1993,7 +1994,7 @@ function InicializarElementos() {
                 $.unblockUI();
             }
         }
-
+        $(this).prop('disabled', false);
     });
 
     $(".formulario-footer-cancelar").click(function () {
