@@ -8,6 +8,7 @@ using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Net.Mail;
@@ -328,6 +329,7 @@ namespace Molinos.DataAgro.Business
         }
         public void EnviarMail(int comercialId, DateTime hoy, string cuerpoMail, byte[] archivo)
         {
+            var asunto = "Cierre del día " + hoy.Day + "/" + hoy.Month;
             List<string> to = new List<string>();
             var comerciales = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailHedge)));
             foreach (var comercial in comerciales)
@@ -336,15 +338,21 @@ namespace Molinos.DataAgro.Business
                 if (!string.IsNullOrEmpty(mail))
                     to.Add(mail);
             }
-            var externos = repositorio.Listar<CierreDelDiaMailExternos, string>(x => x.Mail);
-            to.AddRange(externos);
-            mailManager.EnviarMail(to,
-                                   "Cierre del dia " + hoy.Day + "/" + hoy.Month,
-                                   string.Empty,
-                                   null,
-                                   AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),
-                                   archivo,
-                                   "Cierre del dia " + hoy.Day + "-" + hoy.Month + ".xls");
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            {
+                var externos = repositorio.Listar<CierreDelDiaMailExternos, string>(x => x.Mail);
+                to.AddRange(externos);
+            }
+            else
+            {
+                asunto = "Mail Prueba - " + asunto;
+                to.Add("baufestdataagro@outlook.com");
+            }
+
+            mailManager.EnviarMail(to, asunto, string.Empty, null,
+                               AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),
+                               archivo,
+                               "Cierre del dia " + hoy.Day + "-" + hoy.Month + ".xls");
         }
         public Resultado ReabrirDia(int comercialId, double? diferencial)
         {
@@ -976,7 +984,8 @@ namespace Molinos.DataAgro.Business
             if (dia == null)
             {
                 CerrarDia(comercialId, archivo, idActiveDirectory, true, GenerarCuerpoMail(""), diferencial);
-            } else if (dia.Cerrado == false)
+            }
+            else if (dia.Cerrado == false)
             {
                 CerrarDia(comercialId, archivo, idActiveDirectory, true, GenerarCuerpoMail(""), diferencial);
             }

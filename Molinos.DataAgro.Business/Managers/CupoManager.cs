@@ -653,7 +653,7 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug("AnularCupoStop HayError " + cupoSap.CupoSap + " " + resultadoStop.Errores.Select(a => a.Message).ToJson());
                     foreach (var e in resultadoStop.Errores)
                     {
-                        nuevoResultado.Error("Error", $"Error al anular el cupo { cupoSap.CupoSap } en STOP: {e.Message}."); ;
+                        nuevoResultado.Error("Error", $"Error al anular el cupo {cupoSap.CupoSap} en STOP: {e.Message}."); ;
                     }
                     return nuevoResultado;
                 }
@@ -2042,7 +2042,8 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.CantidadDeCupos = Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
                         contrato.CuposPendientes = Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
 
-                        if (contrato.CuposPendientes > 0) { 
+                        if (contrato.CuposPendientes > 0)
+                        {
                             contrato.Inhabilitado += ((contrato.Inhabilitado == "" ? "" : ". ") + "Tiene " +
                                 Decimal.ToInt32(stockSustentable.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad) + " cupos SUST pendientes para negocio " +
                                 contrato.ContratoSAP);
@@ -2081,7 +2082,8 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.CantidadDeCupos = Decimal.ToInt32(stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
                         contrato.CuposPendientes = Decimal.ToInt32(stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad);
 
-                        if (contrato.CuposPendientes > 0) { 
+                        if (contrato.CuposPendientes > 0)
+                        {
                             contrato.Inhabilitado += ((contrato.Inhabilitado == "" ? "" : ". ") + "Tiene " +
                                 Decimal.ToInt32(stockEPA.Where(a => a.Proveedor == contratosPorProveedor.Key).First().Cantidad) + " cupos EPA pendientes para negocio " +
                                 contrato.ContratoSAP);
@@ -4720,8 +4722,8 @@ namespace Molinos.DataAgro.Business.Managers
                             AdministracionCupo solicitudItem = new AdministracionCupo
                             {
                                 Calidad = solicitud.Calidad,
-                                CantidadCupo = itemD.Cantidad.HasValue ? itemD.Cantidad.Value : 0,
-                                CantidadFleteProcedencia = solicitud.CantidadFleteProcedencia,
+                                CantidadCupo = solicitud.CantidadCupo > 0 ? itemD.Cantidad.HasValue ? itemD.Cantidad.Value : 0 : 0,
+                                CantidadFleteProcedencia = solicitud.CantidadFleteProcedencia > 0 ? itemD.Cantidad.HasValue ? itemD.Cantidad.Value : 0 : 0,
                                 //Centro = solicitud.Centro,
                                 CentroId = solicitud.CentroId,
                                 //Comercial = solicitud.Comercial,

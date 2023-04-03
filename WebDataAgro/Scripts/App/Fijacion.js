@@ -20,6 +20,7 @@ var aFijar = null;
 var noTieneAperturasEnAFijar = false;
 var modificarPesificadoFinalizado;
 var fijacionVirtual;
+
 $(document).ready(function () {
     $('#menuproveedor').hide();
     $('#rootwizard').bootstrapWizard({
@@ -34,9 +35,11 @@ $(document).ready(function () {
     AutocompleteProcedencia();
     inicializarGrillaContratosPendientes();
 });
+
 $(document.body).delegate('[type="checkbox"][readonly="readonly"]', 'click', function (e) {
     e.preventDefault();
 });
+
 function InicializarBordesRojos() {
     $("select.required-box, input.required-box").on("change", function (e) {
         var padre = $(this).hasClass("required-box-parent") ? $(this) : $(this).parent().parent();
@@ -258,6 +261,12 @@ function cargarDatosAFijarEnFijacion(afijar) {
 
     if (afijar.Pase == true) {
         MensajeTipoNegocio();
+    }
+
+    if (afijar.CondicionFijacionCod == 07) {
+        $("#pizarraDiv").hide();
+    } else {
+        $("#pizarraDiv").show();
     }
 }
 
@@ -2706,7 +2715,6 @@ function InicializarElementos() {
     //FIN INICIALIZARELEMENTOS
 }
 
-
 function CambioCalidades(calidades) {
     if ($("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Camara"
         && $("#calidadesEspecialesId").data("kendoDropDownList").text() !== "Fabrica"
@@ -3270,7 +3278,6 @@ function obtenerLocalidadProvincia() {
     }
 }
 
-
 function AgregarDescuentos() {
     var descuento = {
         Id: 0,
@@ -3526,7 +3533,6 @@ function InicializarAcuerdoEdit() {
     CargarDatosEditar(contratoEdit);
     InicializarBordesRojos();
 }
-
 
 function CargarDatosEditar(contrato, hijo) {
     InicializarBordesRojos();
@@ -4265,7 +4271,6 @@ function InsertarAperturasViewModel(total) {
     }
 }
 
-
 function InicializarAperturaDePrecios() {
     $("#precioTotalApertura").kendoNumericTextBox({
         culture: "es-AR",
@@ -4692,7 +4697,6 @@ function MostrarTablaPrecioPactado() {
     }
 }
 
-
 function CambiarAperturaAMonedaActual() {
     if (ImporteSobrePrecio != 0 || PorcentajeSobrePrecio != 0) {
         //if ($.trim(MonedaSobrePrecio) != $.trim($("#precioMonedaId").val())) {
@@ -4922,6 +4926,7 @@ function EstablecerCostoFinanciero() {
         }
     }
 }
+
 function SetearDiaPesificado() {
     if ($("#diasDiferidoFijacionId").data("kendoNumericTextBox").value() != "" && $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value() != null) {
         $("#diasDiferidoFijacionId").data("kendoNumericTextBox").value('');
@@ -5044,7 +5049,6 @@ function RechazarCostoFinanciero() {
     }
 }
 
-
 function AbrirModalContratosPendientes() {
     limpiarContrato();
     BlockUi('Consultando...');
@@ -5087,7 +5091,6 @@ function ValidarProveedorSisa() {
         $("#mensaje").val("");
     }
 }
-
 
 function ArmarGrillaContratosPendientes() {
 
@@ -5132,6 +5135,7 @@ function ArmarGrillaContratosPendientes() {
     $("#modalContratosPendientes").modal("show");
 
 }
+
 function inicializarGrillaContratosPendientes() {
     $(document).ready(function () {
         $("#grid").kendoGrid({
@@ -5366,6 +5370,3 @@ function HayTarifaAConvenir() {
 function MensajeTipoNegocio() {
     MensAlerta("El contrato seleccionado es un A FIJAR PASE. Consulte con MESA BA antes de fijar.");
 }
-
-
-
