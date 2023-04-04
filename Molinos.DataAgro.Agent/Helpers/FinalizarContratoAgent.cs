@@ -8,6 +8,7 @@ using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Transactions;
 
@@ -242,7 +243,17 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     //}
                     logger.Debug("Apertura: " + contrato.AperturaPrecio);
-                    var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable().Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1).FirstOrDefault();
+                    var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable()
+                        .Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1)
+                        .Select(a => new DescuentoBonificacion
+                        {
+                            TipoPeriodoDBId = a.TipoPeriodoDBId,
+                            TipoDBId = a.TipoDBId,
+                            Importe = a.Importe,
+                            Porcentaje = a.Porcentaje,
+                            MonedaId = a.MonedaId,
+                        })
+                        .FirstOrDefault();
                     if (contrato.Pizarra == true &&
                         (contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho && x.Importe != 0)
                             || contrato.AperturaPrecio.Any(x => x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && x.Porcentaje > 0)
@@ -271,7 +282,8 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     if (contrato.EPA == true && contrato.EPATipoDBId == 1)
                     {
-                        descuentoGeneralSobrePrecio = descuentoGeneralSobrePrecio ?? new DescuentoBonificacion {
+                        descuentoGeneralSobrePrecio = descuentoGeneralSobrePrecio ?? new DescuentoBonificacion
+                        {
                             TipoPeriodoDBId = 1,
                             TipoDBId = 1,
                             Importe = 0,
@@ -279,7 +291,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         };
 
                         descuentoGeneralSobrePrecio.Importe += contrato.ImporteSustentable ?? 0;
-                        descuentoGeneralSobrePrecio.MonedaId += contrato.MonedaSustentableId;
+                        descuentoGeneralSobrePrecio.MonedaId = contrato.MonedaSustentableId;
                     }
                     logger.Debug("Servicio: " + contrato.AperturaPrecio);
                     foreach (var servicio in servicios)
