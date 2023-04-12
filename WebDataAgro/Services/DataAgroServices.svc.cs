@@ -11,8 +11,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.ServiceModel;
-using System.Web.Mvc;
-using WebDataAgro.Atributos;
 
 namespace WebDataAgro.Services
 {
@@ -320,10 +318,13 @@ namespace WebDataAgro.Services
             foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
             {
                 var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
+                if (!(contratoSAP.EPA == "X" && ConceptoAperturaPrecioId == 4))
+                {
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
+                    aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
+                }
 
-                aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
-                aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
-                aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
             }
             //foreach (var item in aperturas.Where(a => string.IsNullOrEmpty(a.MonedaId)))
             //{
@@ -464,12 +465,28 @@ namespace WebDataAgro.Services
             {
                 contrato.StandardDeCalidadId = 7;
             }
-            contrato.Sustentable = contratoSAP.Sustentable == "X";
+            contrato.Sustentable = contratoSAP.Sustentable == "X" && contratoSAP.EPA != "X";
             contrato.EPA = contratoSAP.EPA == "X";
             if (contrato.EPA == true)
             {
-                contrato.ImporteSustentable = contratoSAP.EPAImporte;
-                contrato.MonedaSustentableId = contratoSAP.EPAMoneda;
+                if (contratoSAP.Apertura != null && contratoSAP.Apertura.Any(x=> x.Concepto == "BO" && x.Importe > 0)) //es Sobre Precio
+                {
+                    contrato.EPATipoDBId = 1;
+                    contrato.ImporteSustentable = contratoSAP.Apertura.Where(x => x.Concepto == "BO").Single().Importe;
+                    contrato.MonedaSustentableId = contratoSAP.Apertura.Where(x => x.Concepto == "BO").Single().Moneda;
+                }
+                else if (contratoSAP.DescuentoBonificaciones != null && contratoSAP.DescuentoBonificaciones.Any()) //es Fuera de Precio
+                {
+                    contrato.EPATipoDBId = 2;
+                    contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.Where(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Single().Importe;
+                    contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.Where(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Single().MonedaDB;
+                }
+            }
+            else
+            {
+                contrato.EPATipoDBId = null;
+                contrato.ImporteSustentable = null;
+                contrato.MonedaSustentableId = null;
             }
             contrato.TarifaFlete = contratoSAP.FleteTarifa == 0 ? (decimal?)null : contratoSAP.FleteTarifa;
             contrato.Warrant = contratoSAP.AutCg == "X";
@@ -746,6 +763,7 @@ namespace WebDataAgro.Services
 
 
         }
+        
         public ResultadoSap AnularFijacionSAP(FijacionSAP fijacionSAP)
         {
             var oEntityErrors = new ResultadoSap();
@@ -1114,11 +1132,10 @@ namespace WebDataAgro.Services
             }
             else
             {
-                moneda = moneda.Trim().ToUpper().PadRight(5,' ');
+                moneda = moneda.Trim().ToUpper().PadRight(5, ' ');
                 return tipoDeCambioAgent.TraerTipoDeCambioMoneda(fecha, moneda);
             }
         }
-
 
         public ResultadoSap ActualizarCesionContratoSAP(string contratoSAP, bool cesion)
         {
@@ -1225,6 +1242,4 @@ namespace WebDataAgro.Services
 
         #endregion
     }
-
-
 }

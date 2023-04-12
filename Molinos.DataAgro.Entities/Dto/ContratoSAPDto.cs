@@ -26,8 +26,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int Provincia { get; set; }
         public string Sustentable { get; set; }
         public string EPA { get; set; }
-        public decimal? EPAImporte { get; set; }
-        public string EPAMoneda { get; set; }
         public string Especial { get; set; }
         public string Procedencia { get; set; }
         public string Centro { get; set; }

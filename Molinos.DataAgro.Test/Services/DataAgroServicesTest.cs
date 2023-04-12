@@ -10,12 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using WebDataAgro.Controllers;
 using WebDataAgro.Services;
 
 namespace Molinos.DataAgro.Test.Services

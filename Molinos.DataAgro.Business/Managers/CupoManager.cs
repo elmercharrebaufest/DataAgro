@@ -1818,7 +1818,7 @@ namespace Molinos.DataAgro.Business.Managers
                     //(formula.NegociosDesde >= x.FechaDesde && formula.NegociosHasta < x.FechaHasta) || (formula.NegociosHasta <= x.FechaHasta &&
                     //formula.NegociosHasta > x.FechaDesde) || (formula.NegociosDesde <= x.FechaDesde && formula.NegociosHasta >= x.FechaHasta))
                     //x.Sustentable != true &&
-                    //x.EPA != true &&
+                    x.EPA != true &&
                     x.EsFason != true &&
                     formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId /*&& x.MercsDeposito != true*/ && x.MaterialId == formula.MaterialId);
@@ -3987,9 +3987,21 @@ namespace Molinos.DataAgro.Business.Managers
             return limitePorZona;
         }
 
+        /// <summary>
+        /// Obtienen los establecimientos cargados en scato.
+        /// </summary>
+        /// <param name="proveedor">Puede ser el cuit o el id del proveedor.</param>
+        /// <param name="esEPA">Es para indicar si hay que buscar establecimientos EPA o Sustentables.</param>
+        /// <returns>Devuelve la lista de establecimientos.</returns>
         public List<EstablecimientoStockDto> TraerEstablecimientos(string proveedor, bool esEPA)
         {
             var cosecha = repositorio.Obtener<Material, string>(x => x.MaterialId == 3, x => x.Campaña.Descripcion);
+            int proveedorId = 0;
+            int.TryParse(proveedor, out proveedorId);
+            if (proveedorId > 0)
+            {
+                proveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == proveedorId, x => x.CUIT);
+            }
             try
             {
                 var establecimiento = servicioScato.ListarEstablecimientos(proveedor, cosecha);
@@ -3997,11 +4009,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (esEPA)
                 {
-                    establecimiento.RemoveAll(x => Convert.ToInt32(x.CodigoEstablecimiento) < 70000 || Convert.ToInt32(x.CodigoEstablecimiento) > 80000);
+                    establecimiento.RemoveAll(x => Convert.ToInt32(x.CodigoEstablecimiento) < 700000 || Convert.ToInt32(x.CodigoEstablecimiento) > 720000);
                 }
                 else
                 {
-                    establecimiento.RemoveAll(x => Convert.ToInt32(x.CodigoEstablecimiento) >= 70000 && Convert.ToInt32(x.CodigoEstablecimiento) <= 80000);
+                    establecimiento.RemoveAll(x => Convert.ToInt32(x.CodigoEstablecimiento) >= 700000 && Convert.ToInt32(x.CodigoEstablecimiento) <= 720000);
                 }
 
                 return establecimiento;

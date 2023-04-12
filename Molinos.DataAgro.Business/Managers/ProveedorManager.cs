@@ -5208,23 +5208,29 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (cuitSegmentacion.Segmentacion == 2 || cuitSegmentacion.Segmentacion == 3 || cuitSegmentacion.Segmentacion == 4)
                 {
-                    cat = categoriasSISA.Where(x => x.CodCategoria == 1).ToList();
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 1).ToList(); // PROD
                 }
                 else if (cuitSegmentacion.Segmentacion == 5 || cuitSegmentacion.Segmentacion == 7)
                 {
-                    cat = categoriasSISA.Where(x => x.CodCategoria == 2).ToList();
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 2).ToList(); // CORR
                 }
                 else if (cuitSegmentacion.Segmentacion == 9 || cuitSegmentacion.Segmentacion == 10 || cuitSegmentacion.Segmentacion == 11 || cuitSegmentacion.Segmentacion == 15)
                 {
-                    cat = categoriasSISA.Where(x => x.CodCategoria == 6).ToList();
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 6).ToList(); // ACOPIA
                 }
                 else if (cuitSegmentacion.Segmentacion == 13)
                 {
-                    cat = categoriasSISA.Where(x => x.CodCategoria == 5 || x.CodCategoria == 15).ToList();
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 5 || x.CodCategoria == 15).ToList(); // EXPORT
                 }
                 else if (cuitSegmentacion.Segmentacion == 12)
                 {
+                    // PROD + CORR + DER.GRANARIOS (Grandes Cuentas)
                     cat = categoriasSISA.Where(x => x.CodCategoria == 1 || x.CodCategoria == 6 || x.CodCategoria == 19).ToList();
+                }
+                else if (cuitSegmentacion.Segmentacion == 14)
+                {
+                    // Prov Insumos + Otro + Comerciante
+                    cat = categoriasSISA.Where(x => x.CodCategoria == 10 || x.CodCategoria == 7 || x.CodCategoria == 13 || x.CodCategoria == 14).ToList();
                 }
 
                 if (cat.Count == 0)

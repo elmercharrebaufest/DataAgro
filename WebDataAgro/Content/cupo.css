@@ -299,6 +299,25 @@ div > label {
         width: 500px;
     }
 }
+
+@media screen and (min-width: 1024px) /*and (max-width: 1632px)*/ {
+    .modal-dialog {
+        width: 800px !important;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .modal-dialog {
+        width: 700px !important;
+    }
+}
+
+@media screen and (min-width: 440px) and (max-width: 767px) {
+    .modal-dialog {
+        width: 400px !important;
+    }
+}
+
 .margen-15{
     margin:15px;
 }
@@ -404,4 +423,31 @@ span.k-widget.k-numerictextbox.cantidad-masiva {
 }
 .k-grid-header th.k-header > .k-link {
     text-overflow: unset;
+}
+
+@media screen and (min-width: 912px) and (max-width: 1255px) {
+    #buscadorProveedor-list {
+        white-space: pre-wrap !important;
+        max-width: 300px;
+    }
+}
+
+@media screen and (min-width: 300px) and (max-width: 604px) {
+    #buscadorProveedor-list {
+        white-space: pre-wrap !important;
+        max-width: 300px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    #buscadorProveedorSE-list {
+        white-space: pre-wrap !important;
+        max-width: 500px;
+    }
+}
+@media screen and (min-width: 300px) and (max-width: 768px) {
+    #buscadorProveedorSE-list {
+        white-space: pre-wrap !important;
+        max-width: 300px;
+    }
 }

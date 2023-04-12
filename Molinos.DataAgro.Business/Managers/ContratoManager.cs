@@ -829,22 +829,22 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o tarifa a convenir.");
                 }
-                if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value < 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
+                if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value <= 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
                 {
-                    if (!(oParam.TarifaAConvenir.HasValue ? oParam.TarifaAConvenir.Value : false))
+                    if (!(oParam.TarifaAConvenir ?? false))
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o EPA.");
+                        oErrorMessages.Error("Sustentable", "Debe indicar la moneda y tarifa (mayor a cero) de sustentable o EPA.");
                     }
                 }
                 if (oParam.MercsDeposito == true)
                 {
                     if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar fecha desde de sustentable");
+                        oErrorMessages.Error("Sustentable", "Debe indicar fecha desde de sustentable/EPA.");
                     }
                     if (!oParam.FechaHastaSustentable.HasValue || oParam.FechaHastaSustentable.Value == null)
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar fecha hasta de sustentable");
+                        oErrorMessages.Error("Sustentable", "Debe indicar fecha hasta de sustentable/EPA.");
                     }
                     if (oParam.FechaDesdeSustentable.HasValue && oParam.FechaHastaSustentable.HasValue
                         && oParam.FechaHastaSustentable.Value < oParam.FechaDesdeSustentable.Value)
