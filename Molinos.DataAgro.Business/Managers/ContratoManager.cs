@@ -821,40 +821,58 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value)) && oParam.MaterialId != 3)
             {
-                oErrorMessages.Error("Sustentable", "Sustentable/EPA solo está habilitado para el material Soja.");
+                oErrorMessages.Error("SustentableEPA", "Sustentable/EPA solo está habilitado para el material Soja.");
             }
             if ((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value))
             {
-                if (oParam.ImporteSustentable.HasValue && oParam.ImporteSustentable.Value != 0 && oParam.TarifaAConvenir == true)
-                {
-                    oErrorMessages.Error("Sustentable", "Debe indicar tarifa de sustentable o tarifa a convenir.");
-                }
-                if (!oParam.ImporteSustentable.HasValue || oParam.ImporteSustentable.Value <= 0 || string.IsNullOrEmpty(oParam.MonedaSustentableId))
-                {
-                    if (!(oParam.TarifaAConvenir ?? false))
-                    {
-                        oErrorMessages.Error("Sustentable", "Debe indicar la moneda y tarifa (mayor a cero) de sustentable o EPA.");
-                    }
-                }
                 if (oParam.MercsDeposito == true)
                 {
                     if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar fecha desde de sustentable/EPA.");
+                        oErrorMessages.Error("SustentableEPA", "Debe indicar la fecha 'Desde' de sustentable/EPA.");
                     }
                     if (!oParam.FechaHastaSustentable.HasValue || oParam.FechaHastaSustentable.Value == null)
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar fecha hasta de sustentable/EPA.");
+                        oErrorMessages.Error("SustentableEPA", "Debe indicar la fecha 'Hasta' de sustentable/EPA.");
                     }
                     if (oParam.FechaDesdeSustentable.HasValue && oParam.FechaHastaSustentable.HasValue
                         && oParam.FechaHastaSustentable.Value < oParam.FechaDesdeSustentable.Value)
                     {
-                        oErrorMessages.Error("Sustentable", "Debe indicar un rango de fechas válido de sustentable");
+                        oErrorMessages.Error("SustentableEPA", "Debe indicar un rango de fechas válido para sustentable/EPA.");
                     }
                 }
-                if (oParam.EPA.HasValue && oParam.EPA.Value && !oParam.EPATipoDBId.HasValue)
+                
+                if (oParam.EPA.GetValueOrDefault())
                 {
-                    oErrorMessages.Error("Sustentable EPA", "Debe indicar si el importe para EPA es sobre el precio o por fuera del precio.");
+                    if (oParam.ImporteSustentable.HasValue)
+                    {
+                        if (oParam.ImporteSustentable.Value <= 0)
+                        {
+                            oErrorMessages.Error("EPA", "La tarifa para EPA debe ser mayor a cero.");
+                        }
+                        if (string.IsNullOrEmpty(oParam.MonedaSustentableId))
+                        {
+                            oErrorMessages.Error("EPA", "Debe indicar la moneda para EPA.");
+                        }
+                    } else
+                    {
+                        oErrorMessages.Error("EPA", "Debe indicar la tarifa para EPA.");
+                    }
+                    if (!oParam.EPATipoDBId.HasValue)
+                    {
+                        oErrorMessages.Error("EPA", "Debe indicar si el importe para EPA es sobre el precio o por fuera del precio.");
+                    }
+                }
+                if (oParam.Sustentable.GetValueOrDefault())
+                {
+                    if (!oParam.ImporteSustentable.HasValue && oParam.TarifaAConvenir != true)
+                    {
+                        oErrorMessages.Error("Sustentable", "Debe indicar la tarifa de sustentable o tildar 'Tarifa a Convenir'.");
+                    }
+                    if (oParam.ImporteSustentable.HasValue && string.IsNullOrEmpty(oParam.MonedaSustentableId))
+                    {
+                        oErrorMessages.Error("Sustentable", "Debe indicar la moneda para Sustentable.");
+                    }
                 }
             }
             var cantidadDias = PermisosHelper.Is(PermisosDataAgro.ModificarLimiteDolarizado) ? config.CantidadDiasDolarizadoLimiteMaximo : config.CantidadDias;
