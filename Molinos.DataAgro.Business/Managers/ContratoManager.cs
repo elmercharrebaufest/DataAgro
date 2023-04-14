@@ -547,20 +547,19 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            if (oParam.Venta != true)
+
+            if (oParam.Venta != true && oParam.ClasificacionId == 1 && !validacionesMinimas)
             {
-                if (oParam.ClasificacionId == 1)
+                var centroCodigoSap = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
+                var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
+                var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
+                var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centroCodigoSap, cosecha, material);
+                if (result.ToUpper() != "OK".ToUpper())
                 {
-                    var centroCodigoSap = repositorio.Obtener<Centro, string>(x => x.Id == oParam.DestinoId, x => x.CodigoSap);
-                    var material = repositorio.Obtener<Material, string>(x => x.MaterialId == oParam.MaterialId, x => x.Codigo);
-                    var cosecha = repositorio.Obtener<Campaña, string>(x => x.CampañaId == oParam.CampanaId, x => x.Descripcion);
-                    var result = capacidadProductiva.ObtenerCapacidadProductiva(proveedor.CUIT, (decimal)oParam.Cantidad, centroCodigoSap, cosecha, material);
-                    if (result.ToUpper() != "OK".ToUpper())
-                    {
-                        oErrorMessages.Error("Capacidad Productiva", result);
-                    }
+                    oErrorMessages.Error("Capacidad Productiva", result);
                 }
             }
+
             if (!string.IsNullOrEmpty(oParam.ContratoMadre))
             {
                 var sap = oParam.ContratoMadre.PadLeft(10, '0');
