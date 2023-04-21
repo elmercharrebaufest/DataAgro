@@ -258,7 +258,12 @@ namespace WebDataAgro.Controllers
             cupo.CantidadCupos = cupo.CantidadCupos
                                  != null ? cupo.CantidadCupos : 0;
             var cupoNuevo = TransformarAEntidad(cupo);
-            var error = cupoManager.Validar(cupoNuevo, cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
+
+            int sumaCuposCargaMasiva = 0;
+            bool cargaMasiva = cupo.Dias != null && cupo.Dias.Count() > 0;
+            if (cargaMasiva) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
+
+            var error = cupoManager.Validar(cupoNuevo, cargaMasiva ? sumaCuposCargaMasiva : cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
             if (cupoNuevo.MaterialId == 3 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
             {
                 if (error.Errores == null) error.Errores = new List<ErrorMessage>();

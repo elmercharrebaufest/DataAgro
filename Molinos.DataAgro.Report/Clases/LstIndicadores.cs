@@ -644,7 +644,7 @@ namespace Molinos.DataAgro.Report
 
             var excel = new ExcelPackage();
 
-            var oColumnas = oDatos.contacto;
+            var oColumnas = oDatos.Contacto;
 
             var workSheet = excel.Workbook.Worksheets.Add("Datos del Proveedor");
 
@@ -652,7 +652,7 @@ namespace Molinos.DataAgro.Report
 
             var workSheet2 = excel.Workbook.Worksheets.Add("Objetivo");
 
-            workSheet2.Cells[1, 1].LoadFromCollection(oDatos.objetivo, true);
+            workSheet2.Cells[1, 1].LoadFromCollection(oDatos.Objetivo, true);
 
             var workSheet3 = excel.Workbook.Worksheets.Add("Datos de contacto");
 
@@ -660,19 +660,19 @@ namespace Molinos.DataAgro.Report
 
             var workSheet4 = excel.Workbook.Worksheets.Add("Produccion");
 
-            workSheet4.Cells[1, 1].LoadFromCollection(oDatos.produccion, true);
+            workSheet4.Cells[1, 1].LoadFromCollection(oDatos.Produccion, true);
 
             var workSheet5 = excel.Workbook.Worksheets.Add("Almacenamiento");
 
-            workSheet5.Cells[1, 1].LoadFromCollection(oDatos.almacenamiento, true);
+            workSheet5.Cells[1, 1].LoadFromCollection(oDatos.Almacenamiento, true);
 
             var workSheet6 = excel.Workbook.Worksheets.Add("Agenda");
 
-            workSheet6.Cells[1, 1].LoadFromCollection(oDatos.agenda, true);
+            workSheet6.Cells[1, 1].LoadFromCollection(oDatos.Agenda, true);
 
             var workSheet7 = excel.Workbook.Worksheets.Add("Compras");
 
-            workSheet7.Cells[1, 1].LoadFromCollection(oDatos.compras, true);
+            workSheet7.Cells[1, 1].LoadFromCollection(oDatos.Compras, true);
 
             var oPropRow = oColumnas.GetType().GetProperties();
 
@@ -746,9 +746,9 @@ namespace Molinos.DataAgro.Report
             workSheet.Cells[1, 19].Value = "Fecha de Alta";
             workSheet.Column(19).AutoFit();
 
-            if (oDatos.objetivo.Count > 0)
+            if (oDatos.Objetivo.Count > 0)
             {
-                oPropRow = oDatos.objetivo[0].GetType().GetProperties();
+                oPropRow = oDatos.Objetivo[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -826,9 +826,9 @@ namespace Molinos.DataAgro.Report
             workSheet3.Cells[1, 2].Value = "Razón Social";
             workSheet3.Column(2).AutoFit();
 
-            if (oDatos.produccion.Count > 0)
+            if (oDatos.Produccion.Count > 0)
             {
-                oPropRow = oDatos.produccion[0].GetType().GetProperties();
+                oPropRow = oDatos.Produccion[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -861,10 +861,10 @@ namespace Molinos.DataAgro.Report
             workSheet4.Cells[1, 2].Value = "Razón Social";
             workSheet4.Column(2).AutoFit();
 
-            if (oDatos.almacenamiento.Count > 0)
+            if (oDatos.Almacenamiento.Count > 0)
             {
 
-                oPropRow = oDatos.almacenamiento[0].GetType().GetProperties();
+                oPropRow = oDatos.Almacenamiento[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -910,9 +910,9 @@ namespace Molinos.DataAgro.Report
             workSheet5.Cells[1, 13].Value = "Habilitado Soja Sustentable";
             workSheet5.Column(13).AutoFit();
 
-            if (oDatos.agenda.Count > 0)
+            if (oDatos.Agenda.Count > 0)
             {
-                oPropRow = oDatos.agenda[0].GetType().GetProperties();
+                oPropRow = oDatos.Agenda[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -965,9 +965,9 @@ namespace Molinos.DataAgro.Report
             workSheet6.Cells[1, cantColumns].Value = "Hora Hasta";
             workSheet6.Column(cantColumns).AutoFit();
 
-            if (oDatos.compras.Count > 0)
+            if (oDatos.Compras.Count > 0)
             {
-                oPropRow = oDatos.compras[0].GetType().GetProperties();
+                oPropRow = oDatos.Compras[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 

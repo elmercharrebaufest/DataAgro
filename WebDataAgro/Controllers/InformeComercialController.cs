@@ -298,7 +298,7 @@ namespace WebDataAgro.Controllers
             if (filtro.Sort == null)
             {
                 filtro.Sort = new List<Sort> {
-                    new Sort {Field = "RazonSocial", Dir = "desc" }
+                    new Sort {Field = "RazonSocial", Dir = "asc" }
                 };
             }
 

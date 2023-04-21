@@ -1023,7 +1023,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
-            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (cupo.Sustentable == true ? " (Sustentable)" : cupo.EPA == true ? " (EPA)" : "") + "</td></tr>";
 
             if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
             {
@@ -1122,7 +1122,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + Td(ref linea) + cupo.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + cupo.Centro.RazonSocial + " - " + cupo.Centro.CUIT + "</td></tr>";
-            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (cupo.Sustentable == true ? " (Sustentable)" : cupo.EPA == true ? " (EPA)" : "") + "</td></tr>";
 
             if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
             {
@@ -1143,9 +1143,13 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     htmlBody += "ESPECIAL<br />";
                 }
-                if (cupo.MaterialId == 3)
+                if (cupo.MaterialId == 3 && (cupo.Sustentable ?? false))
                 {
                     htmlBody += "SUSTENTABLE<br />";
+                }
+                if (cupo.MaterialId == 3 && (cupo.EPA ?? false))
+                {
+                    htmlBody += "EPA<br />";
                 }
 
             }
@@ -1550,6 +1554,11 @@ namespace Molinos.DataAgro.Business.Managers
                     logger.Debug("CrearSugerenciaCupo - DisponibilidadEnPlanta menor a algoritmo:" + config.Fecha.ToString("dd/MM/yyyy") + ", cantidad:" + config.LimiteAlgoritmo + ", materialid:" + config.MaterialId + ", disponibles: " + (config.LimiteCupo - cuposTomados));
                     config.LimiteAlgoritmo = config.LimiteCupo - cuposTomados;
                 }
+            }
+
+            foreach (var disponibilidad in disponibilidadEnPlantas)
+            {
+                if (disponibilidad.Fecha == DateTime.Today) disponibilidad.LimiteAlgoritmo = 0;
             }
 
             foreach (var item in disponibilidadEnPlantas)
@@ -4600,7 +4609,12 @@ namespace Molinos.DataAgro.Business.Managers
                     result.Error("Zona", "El comercial seleccionado no tiene zona cupo asignada.");
                     return result;
                 }
-                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id, Sustentable = solicitud.Sustentable, EPA = solicitud.EPA }, solicitud.CantidadCupo + solicitud.CantidadFleteProcedencia, solicitud.Fecha);
+
+                int sumaCuposCargaMasiva = 0;
+                bool cargaMasiva = solicitud.Dias != null && solicitud.Dias.Count() > 0;
+                if (cargaMasiva) sumaCuposCargaMasiva = solicitud.Dias.Sum(x => (int)x.Cantidad);
+
+                var resultado = Validar(new Cupo { ProveedorId = solicitud.ProveedorId.Value, FechaIngreso = solicitud.Fecha, CentroId = centro, ZonaCupoId = zona.Id, Sustentable = solicitud.Sustentable, EPA = solicitud.EPA }, cargaMasiva ? sumaCuposCargaMasiva : (solicitud.CantidadCupo + solicitud.CantidadFleteProcedencia), solicitud.Fecha);
                 if (resultado.HayError)
                 {
                     result.Errores = resultado.Errores;

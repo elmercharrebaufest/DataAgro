@@ -5,32 +5,31 @@ namespace Molinos.DataAgro.Entities.Dto
 {
     public class ExportAll
     {
-
-        public List<ContactoAll> contacto { get; set; }
-        public List<ObjetivoAll> objetivo { get; set; }
+        public List<ContactoAll> Contacto { get; set; }
+        public List<ObjetivoAll> Objetivo { get; set; }
         public List<ContactosPrincipalesAll> ContactosPrincipales { get; set; }
-        public List<ProduccionAll> produccion { get; set; }
-        public List<AlmacenamientoAll> almacenamiento { get; set; }
-        public List<CampoDetalleAll> establecimiento { get; set; }
-        public List<AgendaAll> agenda { get; set; }
-        public List<ComprasAll> compras { get; set; }
+        public List<ProduccionAll> Produccion { get; set; }
+        public List<AlmacenamientoAll> Almacenamiento { get; set; }
+        public List<CampoDetalleAll> Establecimiento { get; set; }
+        public List<AgendaAll> Agenda { get; set; }
+        public List<ComprasAll> Compras { get; set; }
         public List<CompraCampanaActualDto> CompraCampanaActual { get; set; }
         public List<CampanaMaterialDetallePorMeseExcelDto> Situacion { get; set; }
         public List<CapacidadProductivaAll> CapacidadProductiva { get; set; }
+        public List<ActividadComercial> ActividadComercial { get; set; }
 
         public ExportAll()
         {
-            contacto = new List<ContactoAll>();
-            objetivo = new List<ObjetivoAll>();
+            Contacto = new List<ContactoAll>();
+            Objetivo = new List<ObjetivoAll>();
             ContactosPrincipales = new List<ContactosPrincipalesAll>();
-            produccion = new List<ProduccionAll>();
-            almacenamiento = new List<AlmacenamientoAll>();
-            establecimiento = new List<CampoDetalleAll>();
-            compras = new List<ComprasAll>();
+            Produccion = new List<ProduccionAll>();
+            Almacenamiento = new List<AlmacenamientoAll>();
+            Establecimiento = new List<CampoDetalleAll>();
+            Compras = new List<ComprasAll>();
             CapacidadProductiva = new List<CapacidadProductivaAll>();
-
+            ActividadComercial = new List<ActividadComercial>();
         }
-
     }
 
     public class ContactoAll

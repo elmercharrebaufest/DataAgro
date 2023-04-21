@@ -1,21 +1,15 @@
-﻿
-using Autofac.Extras.NLog;
-using Molinos.DataAgro.Entities.Helpers;
+﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Interfaces;
 using System.Web.Mvc;
 using System;
 using static WebDataAgro.MvcApplication;
-using System.Web.Script.Serialization;
-using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 using KendoGridBinder.ModelBinder.Mvc;
 using KendoGridBinder;
 using Molinos.DataAgro.Entities.Dto;
-using System.ComponentModel;
 using System.Linq;
 using WebDataAgro.Atributos;
 using Molinos.DataAgro.Entities.Seguridad;
-using System.Web.UI.HtmlControls;
 using Molinos.DataAgro.Interfaces.Managers;
 
 namespace WebDataAgro.Controllers
@@ -42,7 +36,7 @@ namespace WebDataAgro.Controllers
         }
 
         [Autorizacion(PermisosDataAgro.SugerenciaDeCupos)]
-        public ActionResult Index(int materialId = 3, string centroId = "1029", int? ComercialSeleccionado = null, bool muestraModal = false)
+        public ActionResult Index(int? materialId = null, string centroId = "1029", int? ComercialSeleccionado = null, bool muestraModal = false)
         {
             ComercialSeleccionado = ComercialSeleccionado ?? GlobalVariables.ComercialId;
             CargarVista(materialId, centroId, ComercialSeleccionado.Value, muestraModal);
@@ -55,20 +49,14 @@ namespace WebDataAgro.Controllers
             return PartialView();
         }
 
-        private void CargarVista(int materialId = 3, string centroId = "1029", int ComercialSeleccionado = 0, bool muestraModal = false)
+        private void CargarVista(int? materialId = null, string centroId = "1029", int ComercialSeleccionado = 0, bool muestraModal = false)
         {
             if (!PermisosHelper.Is(PermisosDataAgro.VerTodasLasSugerencias))
             {
                 ComercialSeleccionado = GlobalVariables.ComercialId;
             }
             //var lista = cupoManager.ObtenerSugerenciaCupoAgrupadasPorProveedor(ComercialSeleccionado, materialId, centroId);
-            var lista = cupoManager.ObtenerSugerenciaCupo(ComercialSeleccionado, materialId);
 
-            var sugerenciaPorComercial = cupoManager.ObtenerSugerenciaPorComercialFecha(ComercialSeleccionado, materialId, centroId);
-            ViewBag.Sugerencia = sugerenciaPorComercial;
-            ViewBag.Lista = lista;
-            ViewBag.Material = materialId;
-            ViewBag.Fechas = cupoManager.FechasComprendidas(materialId);
             var material = oMaterialManager.TraerTodoMaterial();
 
             var materialesListItems = material.Material.Select(
@@ -124,8 +112,18 @@ namespace WebDataAgro.Controllers
             var calidades = new List<SelectListItem>() { new SelectListItem { Text = "Camara", Value = "1",Selected =false},
                 new SelectListItem { Text = "Fabrica", Value = "2",Selected =true } };
             ViewBag.Calidad = new SelectList(calidades, "Value", "Text", 2);
+            ViewBag.Fechas = new List<DateTime>();
 
-            ViewBag.Mensajes = cupoManager.MostrarDetalle(ComercialSeleccionado, centroId, materialId);
+            if (materialId.HasValue)
+            {
+                var lista = cupoManager.ObtenerSugerenciaCupo(ComercialSeleccionado, materialId);
+                var sugerenciaPorComercial = cupoManager.ObtenerSugerenciaPorComercialFecha(ComercialSeleccionado, materialId.Value, centroId);
+                ViewBag.Sugerencia = sugerenciaPorComercial;
+                ViewBag.Lista = lista;
+                ViewBag.Material = materialId;
+                ViewBag.Fechas = cupoManager.FechasComprendidas(materialId);
+                ViewBag.Mensajes = cupoManager.MostrarDetalle(ComercialSeleccionado, centroId, materialId.Value);
+            }
         }
         public ActionResult DatosConfiguracion(KendoGridMvcRequest request, int? ComercialId)
         {

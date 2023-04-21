@@ -43,7 +43,7 @@ namespace Molinos.DataAgro.Agent
                         Cosecha = "19-20",
                         Localidad = "Buenos Aires",
                         Provincia = "Buenos Aires",
-                        CodigoEstablecimiento = ((i % 2) == 0 ? "45000" : "75000"),
+                        CodigoEstablecimiento = ((i % 2) == 0 ? "45000" : "720000"),
                     };
                     establecimientos.Add(e);
                 }
@@ -88,7 +88,7 @@ namespace Molinos.DataAgro.Agent
                     int number;
 
                     bool success = int.TryParse(establecimiento.CodigoEstablecimiento, out number);
-                    if (success && number < 90000)
+                    if (success /*&& number < 90000*/)
                     {
                         establecimientos.Add(establecimiento);
                     }

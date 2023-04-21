@@ -55,6 +55,9 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? EPA { get; set; }
         public int? EPATipoDBId { get; set; }
 
+        [ForeignKey("EPATipoDBId")]
+        public virtual TipoDB EPATipoDB { get; set; }
+
         [ForeignKey("CondicionalMonedaId")]
         public virtual Moneda CondicionalMoneda { get; set; }
 

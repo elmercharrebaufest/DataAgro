@@ -332,7 +332,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "CUPOS SIN FLETE: </th>" + cupoManager.Td(ref linea) + cantidad + " de " + solicitud.CantidadCupo + "</td></tr>";
             htmlBody += "<tr>" + th + "CUPOS CON FLETE: </th>" + cupoManager.Td(ref linea) + cantidadFp + " de " + solicitud.CantidadFleteProcedencia + "</td></tr>";
             htmlBody += "<tr>" + th + "VENDEDOR/CORREDOR: </th>" + cupoManager.Td(ref linea) + solicitud.Proveedor.RazonSocial.ToUpper() + "</td></tr>";
-            htmlBody += "<tr>" + th + "GRANO: </th>" + cupoManager.Td(ref linea) + solicitud.Material.Descripcion.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO: </th>" + cupoManager.Td(ref linea) + solicitud.Material.Descripcion.ToUpper() + (solicitud.Sustentable == true ? " (Sustentable)" : solicitud.EPA == true ? " (EPA)" : "") + "</td></tr>";
             htmlBody += "<tr>" + th + "CUPOS GENERADOS: </th>" + cupoManager.Td(ref linea);
 
             foreach (var cupo in listaCupo)

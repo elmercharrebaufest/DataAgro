@@ -190,7 +190,7 @@
     var fechas = (List<DateTime>)ViewBag.Fechas;
     var lista = (List<Molinos.DataAgro.Entities.Dto.SugerenciaCupoDto>)ViewBag.Lista;
     var sugerenciaPorComercial = (List<Molinos.DataAgro.Entities.Dto.SugerenciaPorComercialDto>)ViewBag.Sugerencia;
-    var materialId = (int)ViewBag.Material;
+    var materialId = ViewBag.Material;
 }
 
 <link href="~/Content/cupo.css" rel="stylesheet" />
@@ -291,11 +291,17 @@
 
                     @if (lista == null || lista.Where(a => a.MaterialId == materialId).Count() == 0)
                     {
-                        <label>No hay sugerencias disponibles</label>
+                        if (materialId == null)
+                        {
+                            <label>Debe seleccionar un material para ver las sugerencias.</label>
+                        }
+                        else
+                        {
+                            <label>No hay sugerencias disponibles para este material.</label>
+                        }
                     }
                     else
                     {
-
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead>
@@ -393,7 +399,6 @@
                                         </tr>
 
                                     }
-
                                 }
 
                                     </tbody>
@@ -575,23 +580,25 @@
                                     <td class="border-0">@fecha.ToString("dd MMM").Replace(".", "") <br /> (<b>@(sugerenciaPorComercial.Any(a => a.Fecha == fecha) ? sugerenciaPorComercial.First(a => a.Fecha == fecha).Total.ToString() : "0")</b>)</td>
                                 }
                             </tr>
-                            @foreach (var dia in lista.GroupBy(x => x.FechaSugerida).OrderBy(x => x.Key).ToList())
+                            @if (lista != null)
                             {
-                                <tr class="filaProv" id="fila@(dia.Key.ToString("ddMMyyyy"))" style="height:48px;">
-                                    @*<td><b></b>@dia.Where(a => a.MaterialId == materialId).First().MaterialDesc</td>*@
-                                    <td><b class="modMaterial"></b></td>
-                                    <td><b class="modProveedor"></b></td>
-                                    <td><b>@dia.Key.ToString("dd/MM/yyyy")</b></td>
-                                    <td style="border-right:1px solid #dddddd;"><b id="modCantidad@(dia.Key.ToString("ddMMyyyy"))"></b></td>
-                                    @foreach (var fecha in fechas)
-                                    {
-                                        <td>
-                                            <input type="text" id="mod@(dia.Key.ToString("ddMMyyyy")+"_"+fecha.ToString("ddMMyyyy"))" class="kNumeric diaProv" style="width:70px;" />
-                                        </td>
-                                    }
-                                </tr>
+                                foreach (var dia in lista.GroupBy(x => x.FechaSugerida).OrderBy(x => x.Key).ToList())
+                                {
+                                    <tr class="filaProv" id="fila@(dia.Key.ToString("ddMMyyyy"))" style="height:48px;">
+                                        @*<td><b></b>@dia.Where(a => a.MaterialId == materialId).First().MaterialDesc</td>*@
+                                        <td><b class="modMaterial"></b></td>
+                                        <td><b class="modProveedor"></b></td>
+                                        <td><b>@dia.Key.ToString("dd/MM/yyyy")</b></td>
+                                        <td style="border-right:1px solid #dddddd;"><b id="modCantidad@(dia.Key.ToString("ddMMyyyy"))"></b></td>
+                                        @foreach (var fecha in fechas)
+                                        {
+                                            <td>
+                                                <input type="text" id="mod@(dia.Key.ToString("ddMMyyyy")+"_"+fecha.ToString("ddMMyyyy"))" class="kNumeric diaProv" style="width:70px;" />
+                                            </td>
+                                        }
+                                    </tr>
+                                }
                             }
-
 
                         </tbody>
                     </table>

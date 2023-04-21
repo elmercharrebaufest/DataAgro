@@ -1042,6 +1042,7 @@ function InicializarElementos() {
                 $(".sojaSustentable").hide();
                 $(".sojaEpa").hide();
                 $(".sustentableDiv").hide();
+                $(".precioEpa").hide();
                 $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
                 $("#sustentableId").prop('checked', false);
                 $("#epaId").prop('checked', false);
@@ -5814,6 +5815,7 @@ function HaySustentable() {
         $(".precioEpa").hide();
         MostrarCcPpPendientesAplicar();
         $(".sustentableDiv").show();
+        $("#sustentableMonedaId").data("kendoDropDownList").enable(true);
     } else if ($("#epaId").is(":checked")) {
         $(".sojaSustentable").hide();
         $(".sustentableDiv").show();
@@ -5828,6 +5830,7 @@ function HaySustentable() {
         $(".sojaSustentable").show();
         $(".sojaEpa").show();
         $(".precioEpa").hide();
+        $("#selectPrecioEpa").data("kendoDropDownList").value("");
     }
     
     CompletarCantidadDisponibleDeposito();
@@ -6405,6 +6408,10 @@ function EPATipoDB() {
         }
         $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
         $("#sustentableMonedaId").data("kendoDropDownList").value(monedaContrato);
+        MostrarCcPpPendientesAplicar();
+    } else if ($("#selectPrecioEpa").val() == 2) {
+        $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
+        $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
         MostrarCcPpPendientesAplicar();
     } else {
         $("#sustentableMonedaId").data("kendoDropDownList").enable(true);

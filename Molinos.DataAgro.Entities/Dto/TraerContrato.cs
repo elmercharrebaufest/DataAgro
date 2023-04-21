@@ -274,6 +274,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool ServicioModificado { get; set; }
         public bool? EPA { get; set; }
         public int? EPATipoDBId { get; set; }
+        public string EPATipoDB { get; set; }
     }
 
     public class StoredPorContratoResult

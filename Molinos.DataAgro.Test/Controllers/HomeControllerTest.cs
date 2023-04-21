@@ -234,15 +234,17 @@ namespace Molinos.DataAgro.Test.Controllers
             homeManagerMock.Setup(x => x.ExportarAll(busqueda, GlobalVariables.IdActiveDirectory, GlobalVariables.Equipo))
                 .Returns(new ExportAll
                 {
-                    agenda= new List<AgendaAll>() { new AgendaAll { } },
-                    almacenamiento =new List<AlmacenamientoAll>(),
-                    compras= new List<ComprasAll>(),
-                    contacto= new List<ContactoAll>(),
+                    Agenda= new List<AgendaAll>() { new AgendaAll { } },
+                    Almacenamiento =new List<AlmacenamientoAll>(),
+                    Compras= new List<ComprasAll>(),
+                    Contacto= new List<ContactoAll>(),
                     ContactosPrincipales = new List<ContactosPrincipalesAll>(),
-                    objetivo= new List<ObjetivoAll>(),
-                    produccion = new List<ProduccionAll>(),
+                    Objetivo= new List<ObjetivoAll>(),
+                    Produccion = new List<ProduccionAll>(),
                     CompraCampanaActual = new List<CompraCampanaActualDto>(),
-                    Situacion = new List<CampanaMaterialDetallePorMeseExcelDto>()
+                    Situacion = new List<CampanaMaterialDetallePorMeseExcelDto>(),
+                    CapacidadProductiva = new List<CapacidadProductivaAll>(),
+                    ActividadComercial = new List<ActividadComercial>()
                 });
 
             var result = target.ExportarAll(busqueda) as JsonResult;

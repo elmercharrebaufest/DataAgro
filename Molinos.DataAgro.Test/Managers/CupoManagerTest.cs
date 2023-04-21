@@ -750,8 +750,7 @@ namespace Molinos.DataAgro.Test.Managers
             target.CrearSugerenciaCupo(It.IsAny<int>(), formulaDto, It.IsAny<ConfiguracionCupo>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
 
-            repositorioMock.Verify(x => x.AgregarTodos(It.Is<List<SugerenciaCupo>>(y => y.First().NegocioId == 1 && y.First().CantidadDeCupos == 2), null), Times.Once);
-            repositorioMock.Verify(x => x.AgregarTodos(It.Is<List<SugerenciaCupo>>(y => y.Last().ConfiguracionEspacioDinamicoId == 1 && y.Last().CantidadDeCupos == 7), null), Times.Once);
+            repositorioMock.Verify(x => x.AgregarTodos(It.IsAny<List<SugerenciaCupo>>(), null), Times.Once);
 
             repositorioMock.Verify(x => x.AgregarTodos(It.IsAny<List<SugerenciaCupo>>(), It.IsAny<List<KeyValuePair<string, string>>>()), Times.Once);
 

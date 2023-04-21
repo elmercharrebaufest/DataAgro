@@ -27,10 +27,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.repositorio = repositorio;
         }
 
-        //--------------------------------------------------
-        //  Metodos Publicos
-        //--------------------------------------------------
-
         public ResultIniContacto TraerBusquedaContacto(oParamBusqueda oParam, int pagina, List<int> equipo)
         {
             var res = new ResultIniContacto();
@@ -344,42 +340,143 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (!PermisosHelper.Is(PermisosDataAgro.VerCorredorComercial))
                 {
-                    exp.contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, idsStr, string.Join(",", equipo.Select(n => n.ToString()).ToArray()));
+                    exp.Contacto = repositorio.SelStore<ContactoAll>("DataAgro_ExportAll_Contacto", 0, idsStr, string.Join(",", equipo.Select(n => n.ToString()).ToArray()));
                 }
                 else
                 {
                     var comerciales = repositorio.Listar<Comercial, int>(x => x.ComercialId, x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
 
                     var re = repositorio.ListarConsulta(new TraerCorredoresComercialExportarAll(comerciales, oParam.ComercialId));
-                    exp.contacto.AddRange(re);
+                    exp.Contacto.AddRange(re);
                 }
-                exp.contacto = DarFormato(exp.contacto);
-                exp.objetivo = repositorio.SelStore<ObjetivoAll>("DataAgro_ExportAll_Objetivos", 0, idsStr);
+                exp.Contacto = DarFormato(exp.Contacto);
+                exp.Objetivo = repositorio.SelStore<ObjetivoAll>("DataAgro_ExportAll_Objetivos", 0, idsStr);
 
                 //exp.ContactosPrincipales = repositorio.SelStore<ContactosPrincipalesAll>("DataAgro_ExportAll_ContactosPrincipales", 0, idsStr);
-                exp.ContactosPrincipales = repositorio.ListarConsulta(new TraerExportarAllContactosComerciales(exp.contacto.Select(x => x.Cuit).ToList()));
+                exp.ContactosPrincipales = repositorio.ListarConsulta(new TraerExportarAllContactosComerciales(exp.Contacto.Select(x => x.Cuit).ToList()));
 
-                exp.produccion = repositorio.SelStore<ProduccionAll>("DataAgro_ExportAll_Produccion", 0, idsStr);
+                exp.Produccion = repositorio.SelStore<ProduccionAll>("DataAgro_ExportAll_Produccion", 0, idsStr);
 
-                exp.almacenamiento = repositorio.SelStore<AlmacenamientoAll>("DataAgro_ExportAll_Almacenamiento", 0, idsStr);
+                exp.Almacenamiento = repositorio.SelStore<AlmacenamientoAll>("DataAgro_ExportAll_Almacenamiento", 0, idsStr);
 
-                exp.agenda = repositorio.SelStore<AgendaAll>("DataAgro_ExportAll_Actividades", 0, idsStr);
+                exp.Agenda = repositorio.SelStore<AgendaAll>("DataAgro_ExportAll_Actividades", 0, idsStr);
 
-                exp.compras = repositorio.SelStore<ComprasAll>("DataAgro_ExportAll_Compras", 0, idsStr);
+                exp.Compras = repositorio.SelStore<ComprasAll>("DataAgro_ExportAll_Compras", 0, idsStr);
 
-                exp.CapacidadProductiva = repositorio.ListarConsulta(new TraerExportarAllCapacidadProductiva(exp.contacto.Select(x => x.Cuit).ToList()));
+                exp.CapacidadProductiva = repositorio.ListarConsulta(new TraerExportarAllCapacidadProductiva(exp.Contacto.Select(x => x.Cuit).ToList()));
 
-                exp.establecimiento = repositorio.ListarConsulta(new TraerExportarAllEstablecimientos(exp.contacto.Select(x => x.Cuit).ToList()));
+                exp.Establecimiento = repositorio.ListarConsulta(new TraerExportarAllEstablecimientos(exp.Contacto.Select(x => x.Cuit).ToList()));
 
-                exp.CompraCampanaActual = this.TraerTodoCompraCampanaActual(equipo);
+                exp.CompraCampanaActual = TraerTodoCompraCampanaActual(equipo);
 
-                exp.Situacion = this.TraerTodoCompraDetalleExcel(equipo);
+                exp.Situacion = TraerTodoCompraDetalleExcel(equipo);
+
+                exp.ActividadComercial = UltimaActividadComercial(equipo);
 
                 return exp;
             }
             else
             {
                 return new ExportAll();
+            }
+        }
+
+        /// <summary>
+        /// Busca la última actividad de un comercial sobre sus proveedores asignados en las tablas Negocio, Actividad, Cupo, InformeComercial y LogProveedor.
+        /// </summary>
+        /// <param name="equipo">Lista del equipo de trabajo al cual un comercial pertenece.</param>
+        /// <returns>Lista con las últimas actividades de uno o más comerciales sobre sus proveedores asignados.</returns>
+        private List<ActividadComercial> UltimaActividadComercial(List<int> equipo)
+        {
+            var negocios = repositorio.Listar<Negocio, ActividadComercial>(x => new ActividadComercial
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Negocio = x.Fecha, CUIT = x.Proveedor.CUIT }
+            , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null && x.ProveedorId != null);
+
+            var resultadoFinal = negocios.GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+            .Select(a => new ActividadComercial
+            {
+                Comercial = a.Key.Comercial,
+                Proveedor = a.Key.Proveedor,
+                CUIT = a.Key.CUIT,
+                Negocio = a.OrderByDescending(b => b.Negocio).First().Negocio
+            }).ToList();
+
+            var actividades = repositorio.Listar<Actividad, ActividadComercial>(x => new ActividadComercial
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Agenda = x.FechaHoraActividad, CUIT = x.Proveedor.CUIT }
+                , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
+                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+                .Select(a => new ActividadComercial
+                {
+                    Comercial = a.Key.Comercial,
+                    Proveedor = a.Key.Proveedor,
+                    CUIT = a.Key.CUIT,
+                    Agenda = a.OrderByDescending(b => b.Agenda).First().Agenda
+                }).ToList();
+
+            AgregarAlResultadoActividad(resultadoFinal, actividades);
+
+            var cupos = repositorio.Listar<Cupo, ActividadComercial>(x => new ActividadComercial
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Cupo = x.FechaGeneracion, CUIT = x.Proveedor.CUIT }
+                , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
+                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+                .Select(a => new ActividadComercial
+                {
+                    Comercial = a.Key.Comercial,
+                    Proveedor = a.Key.Proveedor,
+                    CUIT = a.Key.CUIT,
+                    Cupo = a.OrderByDescending(b => b.Cupo).First().Cupo
+                }).ToList();
+
+            AgregarAlResultadoActividad(resultadoFinal, cupos);
+
+            var informesCom = repositorio.Listar<InformeComercial, ActividadComercial>(x => new ActividadComercial
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, InformeComercial = x.FechaAlta, CUIT = x.Proveedor.CUIT }
+                , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
+                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+                .Select(a => new ActividadComercial
+                {
+                    Comercial = a.Key.Comercial,
+                    Proveedor = a.Key.Proveedor,
+                    CUIT = a.Key.CUIT,
+                    InformeComercial = a.OrderByDescending(b => b.InformeComercial).First().InformeComercial
+                }).ToList();
+
+            AgregarAlResultadoActividad(resultadoFinal, informesCom);
+
+            var logProveedor = repositorio.Listar<LogProveedor, ActividadComercial>(x => new ActividadComercial
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, ModificacionProveedor = x.Fecha, CUIT = x.Proveedor.CUIT }
+                , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
+                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+                .Select(a => new ActividadComercial
+                {
+                    Comercial = a.Key.Comercial,
+                    Proveedor = a.Key.Proveedor,
+                    CUIT = a.Key.CUIT,
+                    ModificacionProveedor = a.OrderByDescending(b => b.ModificacionProveedor).First().ModificacionProveedor
+                }).ToList();
+
+            AgregarAlResultadoActividad(resultadoFinal, logProveedor);
+
+            return resultadoFinal.OrderBy(x => x.Comercial).ThenBy(x => x.Proveedor).ToList();
+        }
+
+        private static void AgregarAlResultadoActividad(List<ActividadComercial> resultadoFinal, List<ActividadComercial> lista)
+        {
+            foreach (var itemNuevo in lista)
+            {
+                var existe = resultadoFinal.Where(a => a.Proveedor == itemNuevo.Proveedor && a.Comercial == itemNuevo.Comercial).SingleOrDefault();
+                if (existe != null)
+                {
+                    if (itemNuevo.Negocio != null) existe.Negocio = itemNuevo.Negocio;
+                    if (itemNuevo.Agenda != null) existe.Agenda = itemNuevo.Agenda;
+                    if (itemNuevo.Cupo != null) existe.Cupo = itemNuevo.Cupo;
+                    if (itemNuevo.InformeComercial != null) existe.InformeComercial = itemNuevo.InformeComercial;
+                    if (itemNuevo.ModificacionProveedor != null) existe.ModificacionProveedor = itemNuevo.ModificacionProveedor;
+                }
+                else
+                {
+                    resultadoFinal.Add(itemNuevo);
+                }
             }
         }
 
@@ -418,6 +515,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
+
         public List<CompraDto> TraerTodoCompraDetalle(List<int> equipo, int? comercialId, int? zonaId)
         {
             var material = repositorio.Listar<Material>();

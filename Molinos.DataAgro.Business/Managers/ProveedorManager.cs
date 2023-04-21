@@ -731,7 +731,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable == true ? " (Sustentable)" : oContrato.EPA == true ? " (EPA)" : "") + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
             if (oContrato.AnulaYReemplazaContrato != null && oContrato.AnulaYReemplazaContratoId != null)
             {
@@ -3904,7 +3904,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable == true ? " (Sustentable)" : oContrato.EPA == true ? " (EPA)" : "") + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
             if (oContrato.DestinoId != null)
             {
@@ -4511,8 +4511,8 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
-            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";           
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable == true ? " (Sustentable)" : oContrato.EPA == true ? " (EPA)" : "") + "</td></tr>";
+            htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
 
             if (oContrato.DestinoId != null)
             {

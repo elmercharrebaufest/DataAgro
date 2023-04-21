@@ -137,37 +137,40 @@ namespace Molinos.DataAgro.Report
 
             var excel = new ExcelPackage();
 
-            var oColumnas = oDatos.contacto;
+            var oColumnas = oDatos.Contacto;
 
             var workSheet = excel.Workbook.Worksheets.Add("Datos del Proveedor");
             workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
 
             var workSheet2 = excel.Workbook.Worksheets.Add("Objetivo");
 
-            workSheet2.Cells[1, 1].LoadFromCollection(oDatos.objetivo, true);
+            workSheet2.Cells[1, 1].LoadFromCollection(oDatos.Objetivo, true);
 
-            var workSheet3 = excel.Workbook.Worksheets.Add("Datos de contacto");
+            var workSheet3 = excel.Workbook.Worksheets.Add("Datos de Contacto");
 
             workSheet3.Cells[1, 1].LoadFromCollection(oDatos.ContactosPrincipales, true);
 
-            var workSheet4 = excel.Workbook.Worksheets.Add("Produccion");
+            var workSheet4 = excel.Workbook.Worksheets.Add("Producción");
 
-            workSheet4.Cells[1, 1].LoadFromCollection(oDatos.produccion, true);
+            workSheet4.Cells[1, 1].LoadFromCollection(oDatos.Produccion, true);
 
             var workSheet5 = excel.Workbook.Worksheets.Add("Almacenamiento");
 
-            workSheet5.Cells[1, 1].LoadFromCollection(oDatos.almacenamiento, true);
+            workSheet5.Cells[1, 1].LoadFromCollection(oDatos.Almacenamiento, true);
 
             var workSheet7 = excel.Workbook.Worksheets.Add("Compras");
 
-            workSheet7.Cells[1, 1].LoadFromCollection(oDatos.compras, true);
+            workSheet7.Cells[1, 1].LoadFromCollection(oDatos.Compras, true);
 
             var workSheet8 = excel.Workbook.Worksheets.Add("Establecimiento");
 
-            workSheet8.Cells[1, 1].LoadFromCollection(oDatos.establecimiento, true);
+            workSheet8.Cells[1, 1].LoadFromCollection(oDatos.Establecimiento, true);
 
             var workSheet14 = excel.Workbook.Worksheets.Add("Capacidad Productiva");
             workSheet14.Cells[1, 1].LoadFromCollection(oDatos.CapacidadProductiva, true);
+
+            var workSheet15 = excel.Workbook.Worksheets.Add("Última Actividad Comercial");
+            workSheet15.Cells[1, 1].LoadFromCollection(oDatos.ActividadComercial, true);
 
             var oPropRow = oColumnas.GetType().GetProperties();
 
@@ -203,7 +206,6 @@ namespace Molinos.DataAgro.Report
             }
 
             //workSheet.Cells[1, 1].Value = "Proveedor";
-           
 
             workSheet.Cells[1, 1].Value = "CUIT";
             workSheet.Column(1).AutoFit();
@@ -272,12 +274,12 @@ namespace Molinos.DataAgro.Report
             workSheet.Cells[1, 27].Value = "Deshabilitado";
             workSheet.Column(27).AutoFit();
 
-            workSheet.Cells[1, 32].Value = "Proveedor";         
+            workSheet.Cells[1, 32].Value = "Proveedor";
             workSheet.Column(32).Hidden = true;
 
-            if (oDatos.objetivo.Count > 0)
+            if (oDatos.Objetivo.Count > 0)
             {
-                oPropRow = oDatos.objetivo[0].GetType().GetProperties();
+                oPropRow = oDatos.Objetivo[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -355,9 +357,9 @@ namespace Molinos.DataAgro.Report
             workSheet3.Cells[1, 2].Value = "Razón Social";
             workSheet3.Column(2).AutoFit();
 
-            if (oDatos.produccion.Count > 0)
+            if (oDatos.Produccion.Count > 0)
             {
-                oPropRow = oDatos.produccion[0].GetType().GetProperties();
+                oPropRow = oDatos.Produccion[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -390,10 +392,10 @@ namespace Molinos.DataAgro.Report
             workSheet4.Cells[1, 2].Value = "Razón Social";
             workSheet4.Column(2).AutoFit();
 
-            if (oDatos.almacenamiento.Count > 0)
+            if (oDatos.Almacenamiento.Count > 0)
             {
 
-                oPropRow = oDatos.almacenamiento[0].GetType().GetProperties();
+                oPropRow = oDatos.Almacenamiento[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -442,11 +444,11 @@ namespace Molinos.DataAgro.Report
             if (PermisosHelper.Is(PermisosDataAgro.DescargaExportAllComercial))
             {
                 var workSheet6 = excel.Workbook.Worksheets.Add("Agenda");
-                workSheet6.Cells[1, 1].LoadFromCollection(oDatos.agenda, true);
+                workSheet6.Cells[1, 1].LoadFromCollection(oDatos.Agenda, true);
 
-                if (oDatos.agenda.Count > 0)
+                if (oDatos.Agenda.Count > 0)
                 {
-                    oPropRow = oDatos.agenda[0].GetType().GetProperties();
+                    oPropRow = oDatos.Agenda[0].GetType().GetProperties();
 
                     cantColumns = oPropRow.Count();
 
@@ -501,9 +503,9 @@ namespace Molinos.DataAgro.Report
                 }
             }
 
-            if (oDatos.compras.Count > 0)
+            if (oDatos.Compras.Count > 0)
             {
-                oPropRow = oDatos.compras[0].GetType().GetProperties();
+                oPropRow = oDatos.Compras[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -537,9 +539,9 @@ namespace Molinos.DataAgro.Report
             workSheet7.Column(2).AutoFit();
 
 
-            if (oDatos.establecimiento.Count > 0)
+            if (oDatos.Establecimiento.Count > 0)
             {
-                oPropRow = oDatos.establecimiento[0].GetType().GetProperties();
+                oPropRow = oDatos.Establecimiento[0].GetType().GetProperties();
 
                 cantColumns = oPropRow.Count();
 
@@ -698,7 +700,7 @@ namespace Molinos.DataAgro.Report
                 };
             }
 
-                j = 1;
+            j = 1;
             while (workSheet12.Cells[1, j].Value != null)
             {
                 workSheet12.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -711,10 +713,8 @@ namespace Molinos.DataAgro.Report
             }
 
             var situacion = oDatos.Situacion;
-
             if (situacion.Count() > 0)
             {
-
                 var workSheet13 = excel.Workbook.Worksheets.Add("Situación Compra");
 
                 workSheet13.Cells[1, 1].LoadFromCollection(situacion, true);
@@ -773,6 +773,25 @@ namespace Molinos.DataAgro.Report
             workSheet14.Column(8).Style.Numberformat.Format = "DD/MM/YYYY";
             workSheet14.Column(8).AutoFit();
 
+            j = 1;
+            while (workSheet15.Cells[1, j].Value != null)
+            {
+                workSheet15.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet15.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet15.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+            workSheet15.Cells[1, 5].Value = "Modificación del Proveedor";
+            for (int i = 1; i < 9; i++)
+            {
+                workSheet15.Column(i).AutoFit();
+                if (i>3) workSheet15.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+            }
+            
+
             var identif = Varios.GetIdentif();
 
             using (MemoryStream ms = new MemoryStream())
@@ -782,7 +801,7 @@ namespace Molinos.DataAgro.Report
                 var oReporte = new Reportes()
                 {
                     Identificador = identif,
-                    FileName = "Contactos.xlsx",
+                    FileName = "Contactos DataAgro.xlsx",
                     Contenido = ms.ToArray()
                 };
 
@@ -791,9 +810,5 @@ namespace Molinos.DataAgro.Report
 
             return identif;
         }
-      
     }
 }
-
-
-

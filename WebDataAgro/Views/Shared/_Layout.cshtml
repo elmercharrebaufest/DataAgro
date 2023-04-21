@@ -766,7 +766,60 @@
         </div>
     </div>
 
+    <div class="modal fade fade-complete" id="aboutScreen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog" role="document" style="width: 55%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">DataAgro</h4>
+                </div>
+                <div class="col-md-12">
+                    <div class="row col-md-6" style="margin-top: 2em;">
+                        <b>Gerente de proyecto:</b> <p>Alexis Zunino</p>
+                        <b>Líder del proyecto:</b> <p>Maria de los Angeles Martinez</p>
+                        <b>Arquitecto técnico:</b> <p>Eugenio Martin</p>
+                        <b>Desarrolladores:</b> <p>Daniela Rodriguez Palacio<br>Gonzalo Sian</p>
+                        <img style="margin-top: 2em;" width="200" src="~/Content/Images/logobaufest.png" />
+                    </div>
+                    <div class="row col-md-6" style="margin-top: 2em;">
+                        <b>Gerente de proyecto:</b> <p>Fernando Ponce de Leon</p>
+                        <b>Dueña del producto:</b> <p>Yindri Jeniree Bastidas</p>
+                        <img style="margin-top: 11em;" width="200" src="~/Content/Images/logomoa.png" />
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary" onclick="closeAboutScreen()" id="xz">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @RenderSection("scripts", required: false)
 
 </body>
 </html>
+
+<script type="text/javascript">
+    $(document).keydown(function (e) {
+        e = e || event;
+        if (e.ctrlKey && e.altKey && String.fromCharCode(e.keyCode) == 'B') $("#aboutScreen").modal("show");
+    });
+
+    function closeAboutScreen() {
+        $("#aboutScreen").modal("hide");
+    }
+</script>
+
+<style>
+    #aboutScreen .modal-title {
+        font-weight: bold;
+        font-size: xx-large;
+    }
+    #aboutScreen p {
+        margin-top: 0px
+    }
+    #aboutScreen .modal-header {
+        background: lightgrey;
+        padding: 8px;
+    }
+</style>

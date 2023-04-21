@@ -81,8 +81,7 @@ function ObtenerValorCentroId() {
     return $("#centroId").val() ? $("#centroId").val() : "0";
 }
 function ObtenerValorMaterialId() {
-    console.log($("#materialId").data("kendoMultiSelect").value());
-    return $("#materialId").data("kendoMultiSelect").value();
+    return $("#materialId").data("kendoMultiSelect") == null ? "" : $("#materialId").data("kendoMultiSelect").value();
 }
 function AbrirModal(material, mes, anio, fechaDesde, fechaHasta, materialNombre, mesNombre) {
     var calidad;

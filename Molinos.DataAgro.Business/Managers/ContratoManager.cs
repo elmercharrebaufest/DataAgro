@@ -840,7 +840,7 @@ namespace Molinos.DataAgro.Business.Managers
                         oErrorMessages.Error("SustentableEPA", "Debe indicar un rango de fechas válido para sustentable/EPA.");
                     }
                 }
-                
+
                 if (oParam.EPA.GetValueOrDefault())
                 {
                     if (oParam.ImporteSustentable.HasValue)
@@ -853,7 +853,8 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             oErrorMessages.Error("EPA", "Debe indicar la moneda para EPA.");
                         }
-                    } else
+                    }
+                    else
                     {
                         oErrorMessages.Error("EPA", "Debe indicar la tarifa para EPA.");
                     }
@@ -1558,11 +1559,16 @@ namespace Molinos.DataAgro.Business.Managers
                 if (oParam.MaterialId == 3 && (oParam.Sustentable == true || oParam.EPA == true))
                 {
                     var campania = repositorio.Obtener<Campaña>(oParam.CampanaId);
+                    var material = repositorio.Obtener<Material>(oParam.MaterialId);
 
 
                     if (campania.Hasta != null && oParam.FechaHasta > campania.Hasta.Value)
                     {
                         oErrorMessages.Error("Condicional", "La fecha entrega no puede abarcar días posteriores al " + campania.Hasta.Value.ToString("dd-MM-yyyy") + " para la campaña " + campania.Descripcion);
+                    }
+                    if (oParam.CampanaId < material.CampañaId)
+                    {
+                        oErrorMessages.Error("Campaña", $"En negocios sustentables/EPA la campaña no puede ser menor a la campaña actual ({material.Campaña.Descripcion}).");
                     }
                 }
             }
@@ -3096,6 +3102,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Sustentable = x.Sustentable,
                 EPA = x.EPA,
                 EPATipoDBId = x.EPATipoDBId,
+                EPATipoDB = x.EPATipoDB != null ? x.EPATipoDB.Descripcion : "",
                 Importe_Sustentable = x.ImporteSustentable,
                 Moneda_Sustentable = x.MonedaSustentableId,
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
@@ -6361,7 +6368,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 htmlBody += Split(oContrato.FechaOperacion.ToShortDateString()) + "</td></tr>";
             }
-            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + "</td></tr>";
+            htmlBody += "<tr>" + th + "GRANO</th>" + Td(ref linea) + oContrato.Material.Descripcion.ToUpper() + (oContrato.Sustentable == true ? " (Sustentable)" : oContrato.EPA == true ? " (EPA)" : "") + "</td></tr>";
             htmlBody += "<tr>" + th + "CONTRATO</th>" + Td(ref linea) + Split(oContrato.ContratoSAP.TrimStart('0')) + "</td></tr>";
             if (oContrato.DestinoId != null)
             {

@@ -423,6 +423,8 @@
     <Content Include="Content\Images\logo-sharepoint.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Images\logobaufest.png" />
+    <Content Include="Content\Images\logomoa.png" />
     <Content Include="Content\Images\molinosCircular.PNG" />
     <Content Include="Content\Images\storeCircular.PNG" />
     <Content Include="Content\logDataAgro.css" />

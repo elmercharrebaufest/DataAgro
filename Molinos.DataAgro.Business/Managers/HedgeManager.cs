@@ -537,6 +537,7 @@ namespace Molinos.DataAgro.Business
                         <th style= 'border-left: 0px;border-right: 0px !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>CAMPAÑA</th>";
                 htmlBody += "<th style= 'border-left: 0px; border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>SL</th>";
                 htmlBody += "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>Acopios</th>";
+                htmlBody += "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>BB</th>";
                 htmlBody += "<th style= 'border-left: 0px;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> TOTALES </th> ";
                 htmlBody += "</tr>";
                 htmlBody += "</thead>";
@@ -593,6 +594,7 @@ namespace Molinos.DataAgro.Business
 
                     htmlBody += $"<td style= 'border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'>" + (datos.SanLorenzo == 0 ? "" : datos.SanLorenzo.ToString("N0")) + "</td>";
                     htmlBody += $"<td style= 'border-left: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;border-right: none !important;'>" + (datos.Acopio == 0 ? "" : datos.Acopio.ToString("N0")) + "</td>";
+                    htmlBody += $"<td style= 'border-left: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;border-right: none !important;'>" + (datos.BahiaBlanca == 0 ? "" : datos.BahiaBlanca.ToString("N0")) + "</td>";
                     htmlBody += $"<td style='font-size: 15px;border-left: none !important;border-right: none !important;border-top: 1px solid #000000;border-bottom: 1px solid #000000;padding: 4px 4px;'> " + sumaPricing + "</td>";
                     htmlBody += "</tr>";
 
