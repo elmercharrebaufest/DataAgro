@@ -1556,19 +1556,19 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (!validacionesMinimas)
             {
-                if (oParam.MaterialId == 3 && (oParam.Sustentable == true || oParam.EPA == true))
+                if (oParam.MaterialId == 3 && oParam.Sustentable == true)
                 {
                     var campania = repositorio.Obtener<Campaña>(oParam.CampanaId);
                     var material = repositorio.Obtener<Material>(oParam.MaterialId);
 
+                    if (oParam.CampanaId < material.CampañaId)
+                    {
+                        oErrorMessages.Error("Campaña", $"En negocios sustentables la campaña elegida no puede ser menor a la campaña actual de soja ({material.Campaña.Descripcion}).");
+                    }
 
                     if (campania.Hasta != null && oParam.FechaHasta > campania.Hasta.Value)
                     {
-                        oErrorMessages.Error("Condicional", "La fecha entrega no puede abarcar días posteriores al " + campania.Hasta.Value.ToString("dd-MM-yyyy") + " para la campaña " + campania.Descripcion);
-                    }
-                    if (oParam.CampanaId < material.CampañaId)
-                    {
-                        oErrorMessages.Error("Campaña", $"En negocios sustentables/EPA la campaña no puede ser menor a la campaña actual ({material.Campaña.Descripcion}).");
+                        oErrorMessages.Error("Condicional", "La fecha de entrega no puede abarcar días posteriores al " + campania.Hasta.Value.ToString("dd-MM-yyyy") + " para la campaña " + campania.Descripcion);
                     }
                 }
             }
@@ -6287,8 +6287,8 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string th;
-            string style1 = "";
-            string style2 = "";
+            string style1;
+            string style2;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";

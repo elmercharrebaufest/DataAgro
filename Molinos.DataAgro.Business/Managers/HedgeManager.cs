@@ -147,8 +147,7 @@ namespace Molinos.DataAgro.Business
             {
                 return oEntityErrors;
             }
-            var modificado = false;
-            var hoy = DateTime.Now.Date;
+            //var modificado = false;
             foreach (var hM in hedgeMat)
             {
                 EntityValid.ValidateAll(hM, oEntityErrors);
@@ -161,7 +160,7 @@ namespace Molinos.DataAgro.Business
                     hM.ComercialId = comercialId;
                     hM.Fecha = DateTime.Now;
                     repositorio.Agregar(hM);
-                    modificado = true;
+                    //modificado = true;
                 }
 
             }
@@ -981,7 +980,11 @@ namespace Molinos.DataAgro.Business
         public void JobCerrarDia(int comercialId, string idActiveDirectory, byte[] archivo, int diferencial)
         {
             var dia = Dia();
+            var diaDeLaSemana = DateTime.Today.DayOfWeek;
+            var feriado = repositorio.Existe<FechaFeriado>(x => x.Feriado == DateTime.Today);
             comercialId = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == "DATAAGRO").ComercialId;
+
+            if (diaDeLaSemana == DayOfWeek.Saturday || diaDeLaSemana == DayOfWeek.Sunday || feriado) return;
 
             if (dia == null)
             {
@@ -994,4 +997,3 @@ namespace Molinos.DataAgro.Business
         }
     }
 }
-
