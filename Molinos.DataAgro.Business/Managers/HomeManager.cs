@@ -469,7 +469,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             foreach (var itemNuevo in lista)
             {
-                var existe = resultadoFinal.Where(a => a.Proveedor == itemNuevo.Proveedor && a.Comercial == itemNuevo.Comercial).SingleOrDefault();
+                var existe = resultadoFinal.Where(a => a.Proveedor == itemNuevo.Proveedor && a.Comercial == itemNuevo.Comercial && a.FechaAlta == itemNuevo.FechaAlta).SingleOrDefault();
                 if (existe != null)
                 {
                     if (itemNuevo.Negocio != null) existe.Negocio = itemNuevo.Negocio;
