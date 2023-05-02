@@ -10,7 +10,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? Negocio { get; set; }
         public DateTime? ModificacionProveedor { get; set; }
         public DateTime? InformeComercial { get; set; }
-        public DateTime? Cupo { get; set; }
         public DateTime? Agenda { get; set; }
+        public DateTime? Cupo { get; set; }
+        public DateTime? FechaAlta { get; set; }
     }
 }

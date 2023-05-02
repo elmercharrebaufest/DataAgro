@@ -389,69 +389,74 @@ namespace Molinos.DataAgro.Business.Managers
         private List<ActividadComercial> UltimaActividadComercial(List<int> equipo)
         {
             var negocios = repositorio.Listar<Negocio, ActividadComercial>(x => new ActividadComercial
-            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Negocio = x.Fecha, CUIT = x.Proveedor.CUIT }
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Negocio = x.Fecha, CUIT = x.Proveedor.CUIT, FechaAlta = x.Proveedor.FechaAlta }
             , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null && x.ProveedorId != null);
 
-            var resultadoFinal = negocios.GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+            var resultadoFinal = negocios.GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT, a.FechaAlta })
             .Select(a => new ActividadComercial
             {
                 Comercial = a.Key.Comercial,
                 Proveedor = a.Key.Proveedor,
                 CUIT = a.Key.CUIT,
+                FechaAlta = a.Key.FechaAlta,
                 Negocio = a.OrderByDescending(b => b.Negocio).First().Negocio
             }).ToList();
 
             var actividades = repositorio.Listar<Actividad, ActividadComercial>(x => new ActividadComercial
-            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Agenda = x.FechaHoraActividad, CUIT = x.Proveedor.CUIT }
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Agenda = x.FechaHoraActividad, CUIT = x.Proveedor.CUIT, FechaAlta = x.Proveedor.FechaAlta }
                 , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
-                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT, a.FechaAlta })
                 .Select(a => new ActividadComercial
                 {
                     Comercial = a.Key.Comercial,
                     Proveedor = a.Key.Proveedor,
                     CUIT = a.Key.CUIT,
+                    FechaAlta = a.Key.FechaAlta,
                     Agenda = a.OrderByDescending(b => b.Agenda).First().Agenda
                 }).ToList();
 
             AgregarAlResultadoActividad(resultadoFinal, actividades);
 
             var cupos = repositorio.Listar<Cupo, ActividadComercial>(x => new ActividadComercial
-            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Cupo = x.FechaGeneracion, CUIT = x.Proveedor.CUIT }
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Cupo = x.FechaGeneracion, CUIT = x.Proveedor.CUIT, FechaAlta = x.Proveedor.FechaAlta }
                 , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
-                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT, a.FechaAlta })
                 .Select(a => new ActividadComercial
                 {
                     Comercial = a.Key.Comercial,
                     Proveedor = a.Key.Proveedor,
                     CUIT = a.Key.CUIT,
+                    FechaAlta = a.Key.FechaAlta,
                     Cupo = a.OrderByDescending(b => b.Cupo).First().Cupo
                 }).ToList();
 
             AgregarAlResultadoActividad(resultadoFinal, cupos);
 
             var informesCom = repositorio.Listar<InformeComercial, ActividadComercial>(x => new ActividadComercial
-            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, InformeComercial = x.FechaAlta, CUIT = x.Proveedor.CUIT }
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, InformeComercial = x.FechaAlta, CUIT = x.Proveedor.CUIT, FechaAlta = x.Proveedor.FechaAlta }
                 , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
-                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT, a.FechaAlta })
                 .Select(a => new ActividadComercial
                 {
                     Comercial = a.Key.Comercial,
                     Proveedor = a.Key.Proveedor,
                     CUIT = a.Key.CUIT,
+                    FechaAlta = a.Key.FechaAlta,
                     InformeComercial = a.OrderByDescending(b => b.InformeComercial).First().InformeComercial
                 }).ToList();
 
             AgregarAlResultadoActividad(resultadoFinal, informesCom);
 
             var logProveedor = repositorio.Listar<LogProveedor, ActividadComercial>(x => new ActividadComercial
-            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, ModificacionProveedor = x.Fecha, CUIT = x.Proveedor.CUIT }
+            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, ModificacionProveedor = x.Fecha, CUIT = x.Proveedor.CUIT, FechaAlta = x.Proveedor.FechaAlta }
                 , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
-                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT })
+                .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT, a.FechaAlta })
                 .Select(a => new ActividadComercial
                 {
                     Comercial = a.Key.Comercial,
                     Proveedor = a.Key.Proveedor,
                     CUIT = a.Key.CUIT,
+                    FechaAlta = a.Key.FechaAlta,
                     ModificacionProveedor = a.OrderByDescending(b => b.ModificacionProveedor).First().ModificacionProveedor
                 }).ToList();
 

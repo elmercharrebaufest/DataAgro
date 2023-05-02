@@ -785,7 +785,8 @@ namespace Molinos.DataAgro.Report
                 j++;
             }
             workSheet15.Cells[1, 5].Value = "Modificación del Proveedor";
-            for (int i = 1; i < 9; i++)
+            workSheet15.Cells[1, 9].Value = "Fecha de Alta";
+            for (int i = 1; i < 10; i++)
             {
                 workSheet15.Column(i).AutoFit();
                 if (i>3) workSheet15.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
