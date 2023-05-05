@@ -418,8 +418,8 @@ namespace Molinos.DataAgro.Business.Managers
             AgregarAlResultadoActividad(resultadoFinal, actividades);
 
             var cupos = repositorio.Listar<Cupo, ActividadComercial>(x => new ActividadComercial
-            { Comercial = x.Comercial.Apellido + " " + x.Comercial.Nombres, Proveedor = x.Proveedor.RazonSocial, Cupo = x.FechaGeneracion, CUIT = x.Proveedor.CUIT, FechaAlta = x.Proveedor.FechaAlta }
-                , x => equipo.Contains(x.ComercialId ?? 0) && x.ComercialId != null)
+            { Comercial = x.ComercialCreador.Apellido + " " + x.ComercialCreador.Nombres, Proveedor = x.Proveedor.RazonSocial, Cupo = x.FechaGeneracion, CUIT = x.Proveedor.CUIT, FechaAlta = x.Proveedor.FechaAlta }
+                , x => equipo.Contains(x.ComercialCreadorId ?? 0) && x.ComercialCreadorId != null)
                 .GroupBy(a => new { a.Comercial, a.Proveedor, a.CUIT, a.FechaAlta })
                 .Select(a => new ActividadComercial
                 {
