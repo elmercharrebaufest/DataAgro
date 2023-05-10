@@ -824,7 +824,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if ((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value))
             {
-                if (oParam.MercsDeposito == true && oParam.SustentableTipoDBId.HasValue && oParam.SustentableTipoDBId.Value == 2)
+                if (oParam.MercsDeposito == true)
                 {
                     if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
                     {
