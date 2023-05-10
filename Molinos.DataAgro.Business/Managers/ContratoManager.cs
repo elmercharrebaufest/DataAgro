@@ -824,7 +824,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if ((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value))
             {
-                if (oParam.MercsDeposito == true)
+                if (oParam.MercsDeposito == true && oParam.SustentableTipoDBId.HasValue && oParam.SustentableTipoDBId.Value == 2)
                 {
                     if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
                     {
@@ -6287,18 +6287,18 @@ namespace Molinos.DataAgro.Business.Managers
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
             string th;
-            string style1;
+            //string style1;
             string style2;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
                 th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
-                style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                //style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
                 style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
             }
             else
             {
                 th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
-                style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
+                //style1 = "style =\"border: 2px solid white; color:#017940; background-color: #a7dabb; padding: 5px 0; width: 250px;\">";
                 style2 = "style=\"border: 2px solid white; color:#017940; background-color: #cdeadc; padding: 5px 0; width: 250px;\">";
             }
 
@@ -6307,11 +6307,11 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "";
             if (eliminar.HasValue && eliminar.Value)
             {
-                htmlBody += "En el presente mail, se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
+                htmlBody += "En el presente mail se detalla el negocio eliminado con Molinos Agro S.A.: <br /><br />  ";
             }
             else
             {
-                htmlBody += "En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
+                htmlBody += "En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A.: <br /><br />  ";
             }
 
             htmlBody += "<strong>Participantes </strong><br /><br />  ";
@@ -6639,8 +6639,8 @@ namespace Molinos.DataAgro.Business.Managers
               oContrato.CondicionDePagoDiaPesificado + " dias " + oContrato.CondicionDePagoTipoPesificado + " " + oContrato.CondicionDePagoPesificadoVenta.Descripcion : "") + "</td></tr>";
             htmlBody += "</table>";
 
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";

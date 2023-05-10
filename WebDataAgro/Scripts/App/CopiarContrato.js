@@ -1079,7 +1079,7 @@ function DatosProveedor() {
 
 
 function MostrarCcPpPendientesAplicar() {
-    if ($("#mercsDepositoId").is(":checked") && ($("#sustentableId").is(":checked") || ($("#epaId").is(":checked") && ($("#selectPrecioEpa").val() == 2)))) {
+    if ($("#mercsDepositoId").is(":checked") && ($("#sustentableId").is(":checked") || $("#epaId").is(":checked")) && $("#selectSustenTipoDB").val() == 2) {
         $(".fechaHastaSustentableDiv").show();
         var cuitP = "";
         var cuitC = "";
