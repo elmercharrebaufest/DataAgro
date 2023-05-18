@@ -65,7 +65,7 @@ namespace WebDataAgro.Controllers
             var campaniaListItems = campania.Select(x => new SelectListItem
             {
                 Text = x.Descripcion,
-                Value = x.Descripcion,
+                Value = x.CampañaId.ToString(),
                 Selected = false
             }).OrderByDescending(x => x.Text);
             ViewBag.Campania = campaniaListItems;
@@ -329,5 +329,3 @@ namespace WebDataAgro.Controllers
 
     }
 }
-
-
