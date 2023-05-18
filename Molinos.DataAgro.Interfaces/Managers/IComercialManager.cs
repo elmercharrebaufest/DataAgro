@@ -30,7 +30,6 @@ namespace Molinos.DataAgro.Interfaces
         int TraerZonaDelComercialAsociado();
         List<Comercial> ListarComercialesSinRecibirMail();
         List<Comercial> ListarComercialesOyTNorte();
+        List<ComercialQry> ListarComercialesAsignanNegocios();
     }
 }
-
-

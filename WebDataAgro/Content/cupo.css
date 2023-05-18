@@ -300,20 +300,20 @@ div > label {
     }
 }
 
-@media screen and (min-width: 1024px) /*and (max-width: 1632px)*/ {
-    .modal-dialog {
-        width: 800px !important;
+@media screen and (min-width: 1024px) {
+    .modal-dialog-SE {
+        width: 900px !important;
     }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px) {
-    .modal-dialog {
-        width: 700px !important;
+    .modal-dialog-SE {
+        width: 750px !important;
     }
 }
 
 @media screen and (min-width: 440px) and (max-width: 767px) {
-    .modal-dialog {
+    .modal-dialog-SE {
         width: 400px !important;
     }
 }

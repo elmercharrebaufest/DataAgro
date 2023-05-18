@@ -13,8 +13,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? ProvinciaId { get; set; } // ProvinciaId
         public int? LocalidadId { get; set; } // LocalidadId 
         public bool? Base { get; set; } // Base
-        public decimal? ImporteSustentable { get; set; } // Importe_Sustentable
-        public string MonedaSustentableId { get; set; } // MonedaId_Sustentable 
         public bool? NoInformaSio { get; set; } // NoInformaSIO
         public int ClasificacionId { get; set; }//ClasificacionId
         public int? CantidadCamiones { get; set; }
@@ -37,7 +35,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? Compensacion { get; set; }
         public int? NivelTarifaId { get;  set; }
         public decimal? TarifaFlete { get; set; }
-        public bool? Sustentable { get; set; }
         public bool? EsFason { get; set; }
         public decimal? PorcentajeDePago { get; set; }
         public string CaratulaExtension { get; set; }        
@@ -52,11 +49,14 @@ namespace Molinos.DataAgro.Entities.Entities
         public string CondicionalPosicion { get; set; }
         public int? CondicionalContratoId { get; set; }
         //public bool? TarifaAConvenir { get; set; }
+        public bool? Sustentable { get; set; }
+        public decimal? ImporteSustentable { get; set; } // Importe_Sustentable
+        public string MonedaSustentableId { get; set; } // MonedaId_Sustentable 
         public bool? EPA { get; set; }
-        public int? EPATipoDBId { get; set; }
+        public int? SustentableTipoDBId { get; set; }
 
-        [ForeignKey("EPATipoDBId")]
-        public virtual TipoDB EPATipoDB { get; set; }
+        [ForeignKey("SustentableTipoDBId")]
+        public virtual TipoDB SustentableTipoDB { get; set; }
 
         [ForeignKey("CondicionalMonedaId")]
         public virtual Moneda CondicionalMoneda { get; set; }
@@ -96,6 +96,7 @@ namespace Molinos.DataAgro.Entities.Entities
 
         [ForeignKey("NivelTarifaId")]
         public virtual NivelTarifa NivelTarifa { get; set; }
+        public bool? ConDescarga { get; set; }
 
         public Contrato() : base()
         {
@@ -106,6 +107,3 @@ namespace Molinos.DataAgro.Entities.Entities
         }
     }
 }
-
-
-

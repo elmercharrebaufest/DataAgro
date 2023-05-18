@@ -42,8 +42,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string IdActiveDirectory { get; set; }
         public List<ComercialCombo> Equipo { get; set; }
         public bool AsignarNegocios { get; set; }
+        public string GrupoDeCompras { get; set; }
     }
-
 }
-
-

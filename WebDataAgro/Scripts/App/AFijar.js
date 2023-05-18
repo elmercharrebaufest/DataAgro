@@ -1035,7 +1035,7 @@ function InicializarElementos() {
                 $(".sojaSustentable").hide();
                 $(".sojaEpa").hide();
                 $(".sustentableDiv").hide();
-                $(".precioEpa").hide();
+                $(".sustenTipoDB").hide();
                 $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
                 $("#sustentableId").prop('checked', false);
                 $("#epaId").prop('checked', false);
@@ -1165,7 +1165,7 @@ function InicializarElementos() {
     $("#establecimientoDiv").hide();
 
     $("#sustentableMonedaId").kendoDropDownList({
-        optionLabel: "MONEDA...",
+        optionLabel: "Moneda...",
         dataTextField: "Descripcion",
         dataValueField: "MonedaId"
     });
@@ -1971,6 +1971,7 @@ function InicializarElementos() {
     });
 
     $(".formulario-footer-cancelar").click(function () {
+        LiberarPantalla();
         window.location.href = window.location.origin + "/CompraNet";
     });
 
@@ -2649,7 +2650,7 @@ function InicializarElementos() {
         change: function () {
         }
     });
-    $("#selectPrecioEpa").kendoDropDownList({
+    $("#selectSustenTipoDB").kendoDropDownList({
         optionLabel: "Seleccionar...",
         dataTextField: "Descripcion",
         dataValueField: "Id",
@@ -2953,6 +2954,8 @@ function CrearViewModel() {
         "porcentajeDePagoId": null,
         "fechaOperacionId": null,
         "tipoPosicionCBOTId": null,
+        "conDescargaId": null,
+        "ConDescarga": null,
     };
     viewModel = kendo.observable({
         Parametros: param,
@@ -3001,6 +3004,7 @@ function CrearViewModel() {
         TipoPosicionCBOT: [],
         ObtenerCapacidadProductivaPendiente: [],
         Servicios: [],
+        ConDescarga: [],
     });
 
     kendo.bind($("#CrearContrato"), viewModel);
@@ -3218,9 +3222,20 @@ function GrabarContrato(nuevoContrato) {
             if ($("#aperturaPrecioImporteBonificacionesId").val() == "0" && $("#tipoPosicionCBOTId").data("kendoDropDownList").value() == "3" && $("#estado").val() != "5" /*&& $("#esCostoFinanciero").is(':checked') != true*/) {
                 $("#ModalConfirmarBonificacion").modal('show');
             } else {
-                result = MSExecuteOnServer('/CompraNet/GrabarContrato', nuevoContrato);
+
+                var objeto = {
+                    oParam: nuevoContrato,
+                    listCupoConDescargaFechas: nuevoContrato.ConDescargaDias,
+                }
+
+                result = MSExecuteOnServer('/CompraNet/GrabarContrato', objeto);
             }
         }
+
+        detenerIntervalo();
+        LiberarPantalla();
+        dataTabla = [];
+
     } else if (nuevoContrato.TipoNegocioId == 4) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
     } else if (nuevoContrato.TipoNegocioId == 5) {
@@ -3242,7 +3257,16 @@ function GrabarContrato(nuevoContrato) {
                 var primero = siguientesObj.shift();
                 editarContrato(primero.Id, primero.TipoNegocioId, siguientesObj);
             } else {
-                window.location.href = window.location.origin + "/CompraNet";
+                if (result.ListaCupos.length > 0) {
+                    mostrarResultados(result);
+                    $.unblockUI();
+
+                    $("#resultadoCupo").on('hidden.bs.modal', function () {
+                        window.location.href = window.location.origin + "/CompraNet";
+                    });
+                } else {
+                    window.location.href = window.location.origin + "/CompraNet";
+                }
             }
         }
     }
@@ -4097,11 +4121,11 @@ function CargarDatosEditar(contrato, hijo) {
         if (contrato.Sustentable) {
             $("#sustentableId").prop("checked", true);
             $(".sojaEpa").hide();
-            $(".precioEpa").hide();
+            $(".sustenTipoDB").show();
         } else {
             $("#epaId").prop("checked", true);
             $(".sojaSustentable").hide();
-            $(".precioEpa").show();
+            $(".sustenTipoDB").show();
         }
         $(".sustentableDiv").show();
         if (contrato.MercsDeposito == true) {
@@ -4111,13 +4135,12 @@ function CargarDatosEditar(contrato, hijo) {
         }
         if (contrato.TarifaAConvenir == true) {
             $("#tarifaAConvenirId").prop("checked", true);
-            $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
             $("#sustentablePrecioId").addClass("disabled").prop("disabled", true);
             $("#sustentableMonedaId").addClass("disabled").prop("disabled", true);
         }
-        if (contrato.EPATipoDBId != null) {
-            $("#selectPrecioEpa").data("kendoDropDownList").value(contrato.EPATipoDBId);
-            $("#selectPrecioEpa").data("kendoDropDownList").trigger("change");
+        if (contrato.SustentableTipoDBId != null) {
+            $("#selectSustenTipoDB").data("kendoDropDownList").value(contrato.SustentableTipoDBId);
+            $("#selectSustenTipoDB").data("kendoDropDownList").trigger("change");
         }
     }
 
@@ -4287,6 +4310,11 @@ function CargarDatosEditar(contrato, hijo) {
         $("#fechaHastaOriginalId").data("kendoDatePicker").value(contrato.FechaHastaOriginalFormateado);
     }
 
+    if (contrato.ConDescarga == true) {
+        $("#conDescargaId").prop("checked", true);
+        $("#conDescargaId").prop("disabled", true);
+        $("#btnConDescarga").hide();
+    }
     //Fin cargar datos editar
 }
 
@@ -4417,8 +4445,8 @@ function GuardarAperturaDePrecio() {
         viewModel.Descuentos.push(newdescuento);
     }
     DeshabilitarDescuentoSobrePrecioCuandoTieneAgente();
-    if ($("#epaId").is(":checked") == true && $("#selectPrecioEpa").data("kendoDropDownList").value() == 1) {
-        $("#selectPrecioEpa").data("kendoDropDownList").trigger("change");
+    if ($("#epaId").is(":checked") == true && $("#selectSustenTipoDB").data("kendoDropDownList").value() == 1) {
+        $("#selectSustenTipoDB").data("kendoDropDownList").trigger("change");
     }
 }
 
@@ -5139,25 +5167,27 @@ function HayMercaderia() {
 function HaySustentable() {
     if ($("#sustentableId").is(":checked")) {
         $(".sojaEpa").hide();
-        $(".precioEpa").hide();
-        MostrarCcPpPendientesAplicar();
         $(".sustentableDiv").show();
-        $("#sustentableMonedaId").data("kendoDropDownList").enable(true);
+        $(".sustenTipoDB").show();
     } else if ($("#epaId").is(":checked")) {
         $(".sojaSustentable").hide();
         $(".sustentableDiv").show();
-        $(".precioEpa").show();
+        $(".sustenTipoDB").show();
     } else {
         $(".sustentableDiv").hide();
         $("#sustentablePrecioId").data("kendoNumericTextBox").value("");
+        $("#sustentablePrecioId").addClass("disabled").prop("disabled", false);
         $("#sustentableMonedaId").data("kendoDropDownList").value("");
+        $("#sustentableMonedaId").data("kendoDropDownList").enable(true);
         $(".fechaHastaSustentableDiv").hide();
         $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
         $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
         $(".sojaSustentable").show();
         $(".sojaEpa").show();
-        $(".precioEpa").hide();
-        $("#selectPrecioEpa").data("kendoDropDownList").value("");
+        $(".sustenTipoDB").hide();
+        $("#selectSustenTipoDB").data("kendoDropDownList").value("");
+        $("#tarifaAConvenirId").prop("checked", false);
+        $("#divSustentableSinTarifa").hide();
     }
     //var maniana = new Date();
     //if ($("#fechaDesdeId").data("kendoDatePicker").value() != null && $("#fechaDesdeId").data("kendoDatePicker").value() >= maniana || $("#sustentableId").is(":checked")) {
@@ -5717,20 +5747,23 @@ function MostrarServiciosYCalidades() {
 }
 
 function EPATipoDB() {
-    if ($("#selectPrecioEpa").val() == 1) {
+    if ($("#selectSustenTipoDB").val() == 1) { //sobre precio
         var monedaContrato = $("#precioMonedaAFijarId").val();
         if (monedaContrato != $("#sustentableMonedaId").data("kendoDropDownList").value()) {
             $("#sustentablePrecioId").data('kendoNumericTextBox').value("");
         }
         $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
         $("#sustentableMonedaId").data("kendoDropDownList").value(monedaContrato);
+        $("#divSustentableSinTarifa").hide();
         MostrarCcPpPendientesAplicar();
-    } else if ($("#selectPrecioEpa").val() == 2) {
+    } else if ($("#selectSustenTipoDB").val() == 2) { //fuera de precio
         $("#sustentableMonedaId").data("kendoDropDownList").enable(false);
         $("#sustentableMonedaId").data("kendoDropDownList").value("USDM ");
+        if ($("#sustentableId").is(":checked")) $("#divSustentableSinTarifa").show();
         MostrarCcPpPendientesAplicar();
     } else {
         $("#sustentableMonedaId").data("kendoDropDownList").enable(true);
+        $("#divSustentableSinTarifa").hide();
         MostrarCcPpPendientesAplicar();
     }
 }

@@ -9,9 +9,12 @@
     <link href="~/Content/configuracionCupo.css" rel="stylesheet" />
 }
 
-<script src="~/Scripts/KendoExtensions.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/ConfiguracionCupo")
+}
+@*<script src="~/Scripts/KendoExtensions.js"></script>
 <script src="~/Scripts/App/ConfiguracionCupo.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
 <div class="container">
 
@@ -96,6 +99,12 @@
                     <div class="col-sm-4">
                         @Html.TextBoxFor(x => x.CantidadAlgoritmo, new { @class = "w100", @onchange = "SetearEnCero()" })
                     </div>
+                    <div class="col-xs-2">
+                        <span>Límite con Descarga</span>
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.TextBoxFor(x => x.CantidadDescarga, new { @class = "w100", @onchange = "SetearEnCero()" })
+                    </div>
                     <div hidden>
                         <div class="col-xs-2">
                             <span>Cerrar Cupera</span>
@@ -105,10 +114,10 @@
                         </div>
                     </div>
                     <div>
-                        <div class="col-xs-2">
+                        <div class="col-xs-2" style="padding-top:10px;">
                             <span>Liberar Cupera</span>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4" style="padding-top:10px;">
                             <input id="LiberarCupera" name="LiberarCupera" type="checkbox" value="true">
                         </div>
                     </div>
@@ -163,7 +172,7 @@
 
     .btn {
         margin-left: 0px !important;
-        width: 100%;
+        width: 100% !important;
     }
 
     .container {

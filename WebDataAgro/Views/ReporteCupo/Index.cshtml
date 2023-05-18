@@ -166,9 +166,12 @@
 
     <div class="row">
         <div class="col-md-2">
-            <label></label>
+            <label>Con Descarga</label>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 filtroBoleano" id="ConDescargaId" name="ConDescarga">
+            Sí: @Html.RadioButton("ConDescarga", true, new { @class = "filtroBoleano ocultarAnular", @id = "ConDescarga" })
+            No: @Html.RadioButton("ConDescarga", false, new { @class = "ocultarAnular" })
+            <i class="fa fa-close ocultarAnular" onclick="deseleccionarRadioButtonConDescarga()" style="margin-left:3%; font-size:20px;color:red"></i>
         </div>
 
         <div class="col-md-2">

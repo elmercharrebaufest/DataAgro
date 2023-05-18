@@ -8,5 +8,3 @@ namespace Molinos.DataAgro.Entities.Validations
         bool Validate(Resultado oErrorMessages);
     }
 }
-
-

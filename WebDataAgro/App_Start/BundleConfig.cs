@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace WebDataAgro
 {
@@ -258,49 +257,11 @@ namespace WebDataAgro
                                     "~/Scripts/App/agregarproveedor.js",
                                     "~/Scripts/App/agregarproveedoredit.js",
                                     "~/Scripts/App/ValidacionProveedor.js"));
+            bundles.Add(new ScriptBundle("~/bundles/ConfiguracionCupo").Include(
+                                    "~/Scripts/KendoExtensions.js",
+                                    "~/Scripts/App/ConfiguracionCupo.js",
+                                    "~/Scripts/jquery.unobtrusive-ajax.js"));
             bundles.IgnoreList.Clear();
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

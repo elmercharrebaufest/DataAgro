@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Entities
 {
@@ -18,9 +17,5 @@ namespace Molinos.DataAgro.Entities.Entities
         public decimal? ImporteSobrePrecioContrato { get; set; }
         public decimal? PorcentajeSobrePrecioContrato { get; set; }
         public string MonedaSobrePrecioContrato { get; set; }
-
-   
-
     }
 }
-

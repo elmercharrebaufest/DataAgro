@@ -165,7 +165,7 @@ label {
     /*padding: 1px 5px 1px 8px;*/
     /*border-right: 6px solid;*/
     font-weight: 700;
-    text-align: right;
+    text-align: center;
     /*color: #4c4b4b;*/
     /*margin-bottom: 3px;*/
     line-height: 1.2em;
@@ -289,7 +289,7 @@ label {
 }
 
 #gridInformeCompraNet td {
-    text-align: right;
+    text-align: center;
 }
 
     #gridInformeCompraNet td button {
@@ -335,12 +335,11 @@ label {
     color: #787878;
     border-color: #dbdbdb;
     background-color: #fff;
-    text-align: center;
+    text-align: left;
     text-decoration: none;
     border-style: solid;
     border-width: 1px;
     box-shadow: none !important;
-    text-align: right;
     padding: 3px 5px;
     border-bottom: 0;
     color: #333 !important;
@@ -800,10 +799,6 @@ body {
     padding-left: 14px;
 }
 
-#modalVisualizar .campo {
-    text-align: left;
-}
-
 #variosDiv {
     float: right;
 }
@@ -1026,12 +1021,11 @@ body {
     color: #787878;
     border-color: #dbdbdb;
     background-color: #fff;
-    text-align: center;
+    text-align: left;
     text-decoration: none;
     border-style: solid;
     border-width: 1px;
     box-shadow: none !important;
-    text-align: right;
     padding: 3px 5px;
     color: #333 !important;
     border-bottom: 0px;
@@ -1041,10 +1035,6 @@ body {
     #modalVisualizar .dobleColumna span {
         margin: 0 10px;
     }
-
-#modalVisualizar .dobleColumna {
-    text-align: left;
-}
 
 #modalVisualizar .bordeSeccionVisualizar {
     border: 1px solid #dbdbdb;
@@ -1135,12 +1125,11 @@ body {
     color: #787878;
     border-color: #dbdbdb;
     background-color: #fff;
-    text-align: center;
+    text-align: left;
     text-decoration: none;
     border-style: solid;
     border-width: 1px;
     box-shadow: none !important;
-    text-align: right;
     padding: 3px 5px;
     color: #333 !important;
     border-bottom: 0px;
@@ -1150,10 +1139,6 @@ body {
     #modalVisualizar .dobleColumna span {
         margin: 0 10px;
     }
-
-#modalVisualizar .dobleColumna {
-    text-align: left;
-}
 
 #modalVisualizar .bordeSeccionVisualizar {
     border: 1px solid #dbdbdb;
@@ -1274,3 +1259,104 @@ body {
 .k-grid-header th.k-header {
     line-height: 1.1em!important;
 }
+
+.uso-con-descarga {
+    color: red;
+}
+
+/* Estilo para la capa que contiene el mensaje */
+.mensaje-flotante {
+    position: fixed; /* La capa flotante se mantendrá en la misma posición de la pantalla */
+    /*top: 50%;*/ /* La mitad de la altura de la pantalla */
+    top: 90%;
+    /*left: 50%;*/ /* La mitad del ancho de la pantalla */
+    right: 0%;
+    transform: translate(-50%, -50%); /* Para centrar la capa */
+    background-color: #ffffff; /* Color de fondo de la capa */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 10px !important; /* Borde redondeado */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra */
+    z-index: 9999; /* Para que aparezca por encima de todo lo demás */
+}
+
+    /* Estilo para el contenido del mensaje */
+    .mensaje-flotante p {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+.countdown {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    margin: 0;
+    height: 70px;
+    width: 200px;
+}
+
+.derecha {
+    float: right;
+}
+
+.izquierda {
+    float: left;
+}
+
+.con-descarga {
+    width: 750px;
+}
+
+.aceptar {
+    width: 13% !important;
+}
+
+.cancelar {
+    width: 13% !important;
+}
+
+#mensaje-flotante p {
+    margin: -10px;
+}
+
+#footer-verConDescarga {
+    display: flex;
+    justify-content: center;
+}
+
+#cupos-generados-modal {
+    max-height: 240px;
+    overflow-y: auto;
+    text-align: center;
+}
+@media screen and (min-width: 768px) {
+    #resultadoCupo .modal-dialog {
+        width: 500px;
+    }
+}
+.confirmado-modal div {
+    background: #008e61 !important;
+}
+
+#cargarDatosEstablecimiento2 {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    #cargarDatosEstablecimiento2 td {
+        text-align: center;
+        border-top: none;
+        border: 1px solid #dddddd;
+    }
+
+    #cargarDatosEstablecimiento2 th {
+        text-align: center;
+        border: 1px solid #dddddd;
+    }
+
+        #cargarDatosEstablecimiento2 th:first-of-type {
+            vertical-align: middle;
+            border: 1px solid #dddddd;
+        }

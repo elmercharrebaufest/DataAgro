@@ -65,6 +65,7 @@ function InicializarCuposIndex() {
                     FleteProcedencia: { type: "boolean" },
                     Sustentable: { type: "boolean" },
                     EPA: { type: "boolean" },
+                    ConDescarga: { type: "boolean" },
                     CTGFechaDesde: { type: "date" },
                     CTGFechaDesde: { type: "date" }
 
@@ -130,6 +131,7 @@ function InicializarCuposIndex() {
             { field: "FleteProcedencia", title: "Flete", type: "string", width: 150, template: function (dataItem) { return dataItem.FleteProcedencia ? "Si" : "No"; } },
             { field: "Sustentable", title: "Sustentable", type: "string", width: 150, template: function (dataItem) { return dataItem.Sustentable ? "Si" : "No"; } },
             { field: "EPA", title: "EPA", type: "string", width: 150, template: function (dataItem) { return dataItem.EPA ? "Si" : "No"; } },
+            { field: "ConDescarga", title: "Con Descarga", type: "string", width: 150, template: function (dataItem) { return dataItem.ConDescarga ? "Si" : "No"; } },
             { field: "CupoStop", title: "Cupo STOP", type: "string", width: 150 },
             {
                 field: "EstadoCupo", title: "Estado", sortable: false, width: 200,
@@ -212,6 +214,8 @@ function InicializarCuposIndex() {
             var templateflete = kendo.template(this.columns[9].template);
             var templatesustentable = kendo.template(this.columns[10].template);
             var templateEPA = kendo.template(this.columns[11].template);
+            var templateConDescarga = kendo.template(this.columns[12].template);
+            
 
             for (var i = 1; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
@@ -224,6 +228,9 @@ function InicializarCuposIndex() {
 
                 var dataitemEPA = { EPA: row.cells[10].value };
                 row.cells[10].value = templateEPA(dataitemEPA);
+
+                var dataitemConDescarga = { ConDescarga: row.cells[11].value };
+                row.cells[11].value = templateConDescarga(dataitemConDescarga);
 
                 //la fecha en chrome aparece corrida un dia, solucion:
                 var fecha = row.cells[0].value;
@@ -340,6 +347,9 @@ function deseleccionarRadioButtonSustentable() {
 }
 function deseleccionarRadioButtonEPA() {
     $('[name=EPA]:checked').prop('checked', false);
+}
+function deseleccionarRadioButtonConDescarga() {
+    $('[name=ConDescarga]:checked').prop('checked', false);
 }
 
 function ConvertirFechaRegistroAString(filtros) {

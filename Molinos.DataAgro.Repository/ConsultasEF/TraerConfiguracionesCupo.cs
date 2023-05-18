@@ -30,6 +30,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     Id = cupo.Id,
                     LimiteCupo = cupo.LimiteCupo,
                     LimiteAlgoritmo = cupo.LimiteAlgoritmo,
+                    LimiteDescarga = cupo.LimiteDescarga,
                     Fecha = cupo.Fecha,
                     Material = cupo.Material.Descripcion,
                     Centro = cupo.Centro.Descripcion,

@@ -394,7 +394,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + dataItem.ContratoSAP + "'" + ',' +
         "'" + dataItem.Negocio + "'" + ',' +
         "'" + dataItem.EPA + "'" + ',' +
-        "'" + dataItem.EPATipoDBId + "'" + ',' +
+        "'" + dataItem.SustentableTipoDBId + "'" + ',' +
         "'" + dataItem.Sustentable + "'" + ',' +
         "'" + dataItem.Importe_Sustentable + "'" + ',' +
         "'" + dataItem.MonedaId_Sustentable + "'" + ',' +
@@ -486,6 +486,7 @@ function botonVisualizar(dataItem, icono) {
         "'" + htmlEncode(dataItem.RazonSocialProveedorComisionista == null ? "" : dataItem.RazonSocialProveedorComisionista) + "'" + ',' +
         "'" + dataItem.KgMinimo + "'" + ',' +
         "'" + dataItem.KgMaximo + "'" + ',' +
+        "'" + dataItem.ConDescarga + "'" + ',' +
         "'" + dataItem.ComercialZonaId + "'" + ',' +
         "'" + dataItem.FijacionDePrecioContratoId + "'" + ',' +
         "'" + dataItem.TipoNegocioId + "'" + ',' +
@@ -1047,8 +1048,8 @@ function CreateGridInformeCompraNet() {
                     { TipoNegocio: "FIJACION PASE" },
                     ]
                 }, title: "Tipo", width: 80, minResizableWidth: 80, attributes: {
-                    "class": "mobile-sm"
-                }, template: "#if(AnulaYReemplazaContratoId != null){# <i class='fa fa-recycle fa-2x'></i> &nbsp;#}##=TipoNegocio#"
+                    "class": "mobile-sm text-center"
+                }, template: "#=TipoNegocio##if(AnulaYReemplazaContratoId != null){#<br><br>##<i class='fa fa-recycle fa-2x'></i>#}##if(ConDescarga){#<br><br>##<i class='fa fa-truck fa-2x'></i>#}#"
             },
             {
                 field: "Material", title: "Mat.", type: "string", filterable: {
@@ -2368,15 +2369,15 @@ function GuardarAmpliacion(ampliacion) {
 }
 
 function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, tipo, material, cantidad, precio, comercial, monedaId, precioMoneda,
-    campana, provincia, localidad, nro_SAP, negocio, EPA, EPATipoDBId, sustentable, sustentablePrecio, sustentableMonedaId, tarifaAConvenir, dolarizadoFecha, pesificadoDias, informaSIO,
+    campana, provincia, localidad, nro_SAP, negocio, EPA, SustentableTipoDBId, sustentable, sustentablePrecio, sustentableMonedaId, tarifaAConvenir, dolarizadoFecha, pesificadoDias, informaSIO,
     trigoEspecial, status, Observacion, moneda, sustentableMoneda, destino, destinoDescripcion, cantidadCamiones, consignatario, planCanje, condicionFijacionId,
     cd, warrant, pagoDirectoVendedor, establecimientoPropio, boletoId, bolsaId, boletoDescripcion, bolsaDescripcion, desdeHastaFijacion, condicionFijacionDescripcion,
     clasificacionId, clasificacionDescripcion, standardDeCalidadDescripcion, calidadEspecialDescripcion, desdeFijacion, hastaFijacion, mercsFijacion,
     contratoCorredor, contratoVendedor, selCargoMOA, selCargoVendedor, tipoFason, posicion, operador, precioNeto, id, pizarra, zona, nivelTarifa, tarifaFlete,
     compensacion, rechazo, fechaCierta, porcentajeDePago, agenteDeCompra, FechaOperacion, MotivoOperacionAnterior, descripcionOperacionAnterior, pagoCbu, cheque, CalidadTercero, DolarizadoTercero, PagoDiferidoTercero,
     Canje, Monto, MonedaCanje, Insumo, Prestamo, PlantaDestino, ObservacionTercero, SustentableTercero, Venta, fechaDesdeSustentable, fechaHastaSustentable, obligatoriedad, PosicionCBOT, TipoPosicionCBOT, ProveedorCreador,
-    Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional,
-    CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP, mailVenta, RazonsocialProveedorComisionista, minimo, maximo,
+    Cesion, MotivoReemplazo, AnulaYReemplazaContratoSAP, obligatoriedadBond, Condicional, CondicionalCantidad, CondicionalFechaFormateado, CondicionalMonedaId, CondicionalPosicion, CondicionalPrecio, CondicionalContratoSAP,
+    mailVenta, RazonsocialProveedorComisionista, minimo, maximo, ConDescarga,
     ComercialZonaId, FijacionDePrecioContratoId, TipoNegocioId, AcuerdoId, AgenteId, FasonId, Estado, MaterialId, virtual, CantidadDeposito, dolarizadoOriginal, hastaOriginal, servicioModificado) {
     
     var dataItem = {
@@ -2662,12 +2663,12 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
 
     $("#visualizar_condicionFijacion").text(condicionFijacionId);
     $("#visualizar_clasificacion").text(clasificacionDescripcion);
-    //sustentablePrecio !== "null" && sustentableMonedaId !== "null" ? $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId) : $("#visualizar_sustentablePrecio").text("null");
+    
     if (EPA == "true") {
-        if (EPATipoDBId == 1) {
+        if (SustentableTipoDBId == 1) {
             $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Sobre precio).");
 
-        } else if (EPATipoDBId == 2) {
+        } else if (SustentableTipoDBId == 2) {
             $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Fuera de precio).");
         } else $("#visualizar_epaPrecio").text(sustentablePrecio + " " + sustentableMonedaId);
     } else {
@@ -2677,7 +2678,12 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         if (tarifaAConvenir == "true") {
             $("#visualizar_sustentablePrecio").text("Tarifa a Convenir");
         } else {
-            $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId);
+            if (SustentableTipoDBId == 1) {
+                $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Sobre precio).");
+
+            } else if (SustentableTipoDBId == 2) {
+                $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId + "(Fuera de precio).");
+            } else $("#visualizar_sustentablePrecio").text(sustentablePrecio + " " + sustentableMonedaId);
         }
     } else {
         $("#visualizar_sustentablePrecio").text("null")
@@ -2699,6 +2705,9 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
     if (moneda == "USDM ") {
         $("#dolarizadoFechaOriginalDivVisualizar").show();
     }
+    if (ConDescarga == "true") {
+        $("#conDescargaDivVisualizar").show();
+    } else $("#conDescargaDivVisualizar").hide();
 
     $("#visualizar_pesificadoDias").text(pesificadoDias);
     informaSIO === "true" ? $("#visualizar_informaSIO").text("Si") : $("#visualizar_informaSIO").text("null");
@@ -3128,7 +3137,26 @@ function ModalVisualizar(id, contrato, proveedor, corredor, fecha, desdeHasta, t
         $("#comisionistaProveedorDivVisualizar").hide();
     }
 
-
+    btnConDescarga.onclick = function () {
+        var cuposConDescarga = MSExecuteOnServer('/CompraNet/TraerCuposConDescarga', { contratoId: dataItem.Id });
+        //---Para ver el segundo modal por encima del de visualizar---//
+        var segundoModal = document.getElementById("modalVerCuposConDescarga");
+        segundoModal.style.zIndex = parseInt($("#modalVisualizar").css("z-index")) + 1;
+        
+        $("#cuerpo-ver-descarga").empty();
+        var fila = '';
+        for (var i = 0; i < cuposConDescarga.length; i++) {
+            var fechaCupo = new Date(parseInt(cuposConDescarga[i].FechaIngreso.substr(6)));
+            fechaCupo = kendo.toString(fechaCupo, "dd/MM/yyyy")
+            fila = '<tr>'
+                + '<td>' + fechaCupo + '</td>'
+                + '<td>' + cuposConDescarga[i].CupoSap + '</td>'
+                + '<td>' + (cuposConDescarga[i].FleteProcedencia ? 'S&iacute;' : 'No') + '</td>'
+                + '</tr>'
+            $("#cuerpo-ver-descarga").append(fila);
+        }
+        $("#modalVerCuposConDescarga").modal('show');
+    }
 }
 
 function visualizacionRowDoblePrecioCero(div1, div2, aFijar) {
@@ -3940,3 +3968,17 @@ function AddFilters(grid, field, operator, values) {
     currentFilters.filters.push(filtros);
     grid.dataSource.filter(currentFilters);
 }
+
+$("#copiar-cupos-btn").on("click", function () {
+    var copia = "";
+    $("#cuerpo-ver-descarga tr").each(function () {
+        var cupoSap = $(this).find("td:eq(1)").text();
+        copia += cupoSap + "\n";
+    });
+    // Copiar el cupoSAP al portapapeles y cambiar ícono del botón
+    navigator.clipboard.writeText(copia);
+    $("#copiar-cupos-btn i").removeClass("fa-copy").addClass("fa-check");
+});
+$("#modalVerCuposConDescarga").on("hidden.bs.modal", function () {
+    $("#copiar-cupos-btn i").removeClass("fa-check").addClass("fa-copy");
+});

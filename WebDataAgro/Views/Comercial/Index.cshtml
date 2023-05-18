@@ -67,7 +67,7 @@
 
                 </div>
 
-                <div class="row">
+                <div class="row" style="margin-top: 0.6%">
                     <div class="col-md-2">
                         <label>Nombres</label>
                     </div>
@@ -89,7 +89,7 @@
                     </div>
 
                 </div>
-                <div class="row" style="margin-top: 0.7%">
+                <div class="row" style="margin-top: 0.6%">
                     <div class="col-md-2">
                         <label>Empleador a Cargo</label>
                     </div>
@@ -97,10 +97,8 @@
                         <select id="EmpleadorACargo" data-bind="source: ComercialCombo, value: Comercial.EmpleadorACargo, disabled: isControlDisabled" style="max-width:310px"></select>
                         <img id="errEmpleadorACargo" src="~/Content/Images/error.png" style="display:none" />
                     </div>
-
                 </div>
-
-                <div class="row" style="margin-top: 1%">
+                <div class="row" style="margin-top: 0.6%">
                     <div class="col-md-2">
                         <label>Id Active Directory</label>
                     </div>
@@ -110,7 +108,7 @@
                         <img id="errUsuario" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                 </div>
-                <div class="row" style="margin-top: 1%">
+                <div class="row" style="margin-top: 0.6%">
                     <div class="col-md-2">
                         <label>Id Usuario SAP</label>
                     </div>
@@ -120,12 +118,39 @@
                         <img id="errUsuario" src="~/Content/Images/error.png" style="display:none" />
                     </div>
                 </div>
+                <div class="row" style="margin-top: 0.6%">
+                    <div class="col-md-2">
+                        <label>Zona Comercial</label>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="GrupoDeCompras" data-bind="source: ZonaCombo, value: Comercial.GrupoDeCompras, disabled: isControlDisabled" style="max-width:310px"></select>
+                        <img id="errGrupoDeCompras" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 0.6%">
+                    <div class="col-md-2">
+                        <label>E-mail</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input id="emailComercial" type="text" class="k-textbox" style="width: 101%;" data-bind="value: Comercial.Email, disabled: isControlDisabled" maxlength="100" />
+                        <img id="errEmail" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 0.6%">
+                    <div class="col-md-2">
+                        <label>Comercial Suplente</label>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="ComercialSuplente" data-bind="source: ComercialCombo, value: Comercial.ComercialSuplente, disabled: isControlDisabled" style="max-width:310px"></select>
+                        <img id="errComercialSuplente" src="~/Content/Images/error.png" style="display:none" />
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-md-2">
                         <label>Deshabilitado</label>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4" style="margin-top: 0.5%">
                         <input id="Deshabilitado" type="checkbox" data-bind="checked: Comercial.Deshabilitado, disabled: isControlDisabled" />
                         <img id="errDeshabilitado" src="~/Content/Images/error.png" style="display:none" />
 

@@ -2,11 +2,7 @@
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -18,10 +14,8 @@ namespace Molinos.DataAgro.Interfaces
         Resultado GrabarLimites(List<LimiteCupo> limite);
         ConfiguracionCupoDto TraerConfiguracionCupo(int id);
         Resultado CambioMasivo(bool aceptar);
-        Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds, int limiteAlgoritmo);
-        Resultado ModificarConfiguracion(int? id, int? limite, int? algoritmo, bool? bloquear, bool? liberar);
+        Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds, int limiteAlgoritmo, int limiteDescarga);
+        Resultado ModificarConfiguracion(int? id, int? limite, int? algoritmo, int? descarga, bool? bloquear, bool? liberar);
 
     }
 }
-
-

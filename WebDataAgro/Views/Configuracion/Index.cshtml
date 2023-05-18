@@ -212,6 +212,29 @@
                 </div>
             </div>
 
+            <div><h4>Con Descarga</h4></div>
+
+            <div class="row-botones-material row padding">
+                <div class="col-md-2">
+                    <label>Minutos cronómetro</label>
+                </div>
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.MinutosCronometroConDescarga, new { @class = "CantidadDeDias number form-control" })
+                </div>
+                <div class="col-md-2">
+                    <label>Cantidad maxima días Negocio</label>
+                </div>
+                <div class="col-md-1">
+                    @Html.TextBoxFor(m => m.CantidadMaximaDiasNegocioConDescarga, new { @class = "CantidadDeDias number-input form-control" })
+                </div>
+                <div class="col-md-2">
+                    <label>Porcentaje volumen Negocio</label>
+                </div>
+                <div class="col-md-1">
+                    @Html.TextBoxFor(m => m.PorcentajeVolumenNegocioConDescarga, new { @class = "CantidadDeDias number form-control" })
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-md-3">
                     <button type="submit" class="formulario-footer-cancelar k-button k-button-icontext">Guardar</button>

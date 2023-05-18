@@ -160,13 +160,13 @@ namespace WebDataAgro.Controllers
             if (cupoNuevo.MaterialId == 3 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
             {
                 if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                error.Errores.Add(new ErrorMessage("Los cupos de soja en centro san lorenzo los deben gestionar por la pantalla de “Sugerencias de cupos”"));
+                error.Errores.Add(new ErrorMessage("Los cupos de soja en centro San Lorenzo los deben gestionar en la pantalla de “Sugerencia de cupos”."));
 
             }
             if (cupoNuevo.MaterialId == 1 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoMaizPorSugerencias"] == "Si")
             {
                 if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                error.Errores.Add(new ErrorMessage("Los cupos de maiz los deben gestionar por la pantalla de “Sugerencias de cupos”"));
+                error.Errores.Add(new ErrorMessage("Los cupos de maíz los deben gestionar en la pantalla de “Sugerencia de cupos”."));
 
             }
             if (error.HayError)
@@ -255,8 +255,7 @@ namespace WebDataAgro.Controllers
                 cupo.Negocio = null;
             }
             var modificado = cupo.Id != 0;
-            cupo.CantidadCupos = cupo.CantidadCupos
-                                 != null ? cupo.CantidadCupos : 0;
+            cupo.CantidadCupos = cupo.CantidadCupos != null ? cupo.CantidadCupos : 0;
             var cupoNuevo = TransformarAEntidad(cupo);
 
             int sumaCuposCargaMasiva = 0;
@@ -267,13 +266,13 @@ namespace WebDataAgro.Controllers
             if (cupoNuevo.MaterialId == 3 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
             {
                 if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                error.Errores.Add(new ErrorMessage("Los cupos de soja no sustentable los deben gestionar por la pantalla de “Sugerencias de cupos”"));
+                error.Errores.Add(new ErrorMessage("Los cupos de soja no sustentable los deben gestionar en la pantalla de “Sugerencia de cupos”."));
 
             }
             if (cupoNuevo.MaterialId == 1 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoMaizPorSugerencias"] == "Si")
             {
                 if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                error.Errores.Add(new ErrorMessage("Los cupos de maiz los deben gestionar por la pantalla de “Sugerencias de cupos”"));
+                error.Errores.Add(new ErrorMessage("Los cupos de maíz los deben gestionar en la pantalla de “Sugerencia de cupos”."));
 
             }
             if (!error.HayError)
@@ -395,6 +394,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Calidad = new List<SelectListItem>() { new SelectListItem { Text = "Camara", Value = "1",Selected =false},
                 new SelectListItem { Text = "Fabrica", Value = "2",Selected =true } };
         }
+
         private Cupo TransformarAEntidad(CupoModel cupo)
         {
             var entidad = new Cupo

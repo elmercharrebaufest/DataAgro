@@ -132,7 +132,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.TraerDatosCombo(It.IsAny<int?>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"localidad\":null,\"moneda\":[],\"tiponegocio\":[],\"material\":[],\"prov\":[],\"loc\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[],\"MotivoAnterior\":null,\"TipoPosicionCBOT\":null,\"Camara\":[],\"ComisionAFavor\":[],\"CondicionDePagoFijacionVenta\":[],\"CondicionDePagoPesificadoVenta\":[],\"FleteACargo\":[],\"KgBalanza\":[],\"Pago\":[],\"CondicionPago\":[],\"BoletoVenta\":[]},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Datos\":{\"localidad\":null,\"moneda\":[],\"tiponegocio\":[],\"material\":[],\"prov\":[],\"loc\":[],\"comercial\":[],\"campaña\":[],\"proveedor\":null,\"monedaSustentable\":[],\"estadoContrato\":[],\"Clasificacion\":[],\"Bolsa\":[],\"Destino\":[],\"Condicion\":[],\"Standard\":[],\"TipoDB\":[],\"TipoPeriodoDB\":[],\"MonedaDescuento\":[],\"TipoFason\":[],\"TipoAgenteCompra\":[],\"Operador\":null,\"Zona\":[],\"NivelTarifa\":[],\"MotivoAnterior\":null,\"TipoPosicionCBOT\":null,\"Camara\":[],\"ComisionAFavor\":[],\"CondicionDePagoFijacionVenta\":[],\"CondicionDePagoPesificadoVenta\":[],\"FleteACargo\":[],\"KgBalanza\":[],\"Pago\":[],\"CondicionPago\":[],\"BoletoVenta\":[],\"MinutosCronometroConDescarga\":0},\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -154,7 +154,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var contrato = new Contrato { ComercialId = 1, MaterialId = 1, CampanaId = 1, ComercialCreadorId = 1, Base = true, NoInformaSio = true, TrigoEspecial = true };
 
             comercialManagerMock.Setup(x => x.TraerComercial(1)).Returns(new ComercialDto { GrupoDeComprasId = 1 });
-            contratoManagerMock.Setup(x => x.GrabarContrato(contrato)).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
+            contratoManagerMock.Setup(x => x.GrabarContrato(contrato, null)).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.GrabarContrato(contrato);
 
             Assert.NotNull(result);
@@ -165,16 +165,16 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
 
             comercialManagerMock.Verify(x => x.TraerComercial(It.IsAny<int>()), Times.Once);
-            contratoManagerMock.Verify(x => x.GrabarContrato(It.IsAny<Contrato>()), Times.Once);
+            contratoManagerMock.Verify(x => x.GrabarContrato(It.IsAny<Contrato>(), null), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
         public void GrabarContratoSinComercialTest()
         {
             var contrato = new Contrato { MaterialId = 1, CampanaId = 1, ComercialCreadorId = 1 };
-            contratoManagerMock.Setup(x => x.GrabarContrato(contrato)).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
+            contratoManagerMock.Setup(x => x.GrabarContrato(contrato, null)).Returns(new GrabarContratoResult { ContratoId = 1, Errores = new List<ErrorMessage>() });
             var result = target.GrabarContrato(contrato);
             Assert.NotNull(result);
             Assert.IsNull(contrato.GrupoCompra);
@@ -184,9 +184,9 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
 
             comercialManagerMock.Verify(x => x.TraerComercial(It.IsAny<int>()), Times.Never);
-            contratoManagerMock.Verify(x => x.GrabarContrato(It.IsAny<Contrato>()), Times.Once);
+            contratoManagerMock.Verify(x => x.GrabarContrato(It.IsAny<Contrato>(), null), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -199,7 +199,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.FinalizarContrato(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -212,7 +212,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.ConfirmarContrato(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -226,7 +226,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.BorrarContrato(It.IsAny<Contrato>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -240,7 +240,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             fijacionManagerMock.Verify(x => x.BorrarFijacion(It.IsAny<FijacionDePrecioContrato>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -305,7 +305,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
 
             Assert.AreEqual(
-                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":null,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":null,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                  a);
         }
         [Test]
@@ -319,7 +319,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.GrabarAmpliacionContrato(It.IsAny<Contrato>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -638,7 +638,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             fijacionManagerMock.Verify(x => x.TraerDatosFijacion(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":\"1\",\"KilosAplicados\":\"12\",\"KilosPendiente\":\"20\",\"KilosContrato\":\"200\",\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\",\"DesdeEntrega\":null,\"HastaEntrega\":null,\"Posicion\":null,\"Calidad\":null,\"Campana\":null,\"PagoDiferido\":null,\"Centro\":null,\"CentroDescripcion\":null,\"ARecibirSinPrecio\":null,\"RecibidoSinFijar\":null,\"Color\":null,\"ImporteAPrecio\":0,\"ImporteSobrePrecio\":0,\"MonedaAPrecio\":null,\"MonedaSobrePrecio\":null,\"PorcentajeAPrecio\":0,\"PorcentajeSobrePrecio\":0,\"CondicionFijacionCod\":null,\"CondicionFijacionDescripcion\":null,\"CondicionPagoCod\":null,\"CondicionPagoDescripcion\":null,\"ChequeElectronico\":null,\"Calidades\":null,\"CampanaId\":0,\"Clasificacion\":null,\"Cesion\":false,\"Anticipo\":false,\"FijacionSap\":null,\"Aperturas\":null,\"Bonificaciones\":null,\"Virtual\":false,\"KgContratoTotal\":0,\"Pase\":false,\"ProveedorComisionistaId\":null,\"Sustentables\":null,\"MercsDeposito\":false,\"TarifaAConvenir\":false,\"MercAplicada\":false}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ContratoId\":\"1\",\"KilosAplicados\":\"12\",\"KilosPendiente\":\"20\",\"KilosContrato\":\"200\",\"FechaDesde\":null,\"FechaHasta\":null,\"Filtro\":\"a|aa\",\"DesdeEntrega\":null,\"HastaEntrega\":null,\"Posicion\":null,\"Calidad\":null,\"Campana\":null,\"PagoDiferido\":null,\"Centro\":null,\"CentroDescripcion\":null,\"ARecibirSinPrecio\":null,\"RecibidoSinFijar\":null,\"Color\":null,\"ImporteAPrecio\":0,\"ImporteSobrePrecio\":0,\"MonedaAPrecio\":null,\"MonedaSobrePrecio\":null,\"PorcentajeAPrecio\":0,\"PorcentajeSobrePrecio\":0,\"CondicionFijacionCod\":null,\"CondicionFijacionDescripcion\":null,\"CondicionPagoCod\":null,\"CondicionPagoDescripcion\":null,\"ChequeElectronico\":null,\"Calidades\":null,\"CampanaId\":0,\"Clasificacion\":null,\"Cesion\":false,\"Anticipo\":false,\"FijacionSap\":null,\"Aperturas\":null,\"Bonificaciones\":null,\"Virtual\":false,\"KgContratoTotal\":0,\"Pase\":false,\"ProveedorComisionistaId\":null,\"Sustentables\":null,\"MercsDeposito\":false,\"TarifaAConvenir\":false,\"MercAplicada\":false,\"EPA\":null,\"Sustentable\":null,\"ImporteSustentable\":null,\"MonedaSustentable\":null,\"SustentableTipoDBId\":null}],\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -713,7 +713,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             fasonManagerMock.Verify(x => x.GrabarAmpliacionFason(It.IsAny<Fason>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -802,7 +802,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             fijacionManagerMock.Verify(x => x.GrabarAmpliacionFijacion(It.IsAny<FijacionDePrecioContrato>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -929,7 +929,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.AnularContrato(It.IsAny<Contrato>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1115,7 +1115,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.PreAnularContrato(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -1129,7 +1129,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.RechazarPreAnularContrato(It.IsAny<int>()/*, It.IsAny<string>()*/), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -1143,7 +1143,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.ReconfirmarFinalizado(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1156,7 +1156,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.AnularContratoPreAnulado(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 
@@ -1228,7 +1228,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.BorrarContratoPreAprobacion(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
         [Test]
@@ -1242,7 +1242,7 @@ namespace Molinos.DataAgro.Test.Controllers
 
             contratoManagerMock.Verify(x => x.AprobarContrato(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ContratoId\":1,\"ListaCupos\":[],\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
 

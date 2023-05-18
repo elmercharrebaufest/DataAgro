@@ -76,23 +76,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                             );
                         };
                     }
-                    if (contrato.Sustentable == true)
-                    {
-                        listaDescuentos.Add(new ZMPES5290
-                        {
-                            TIPO_PERIODO = "I",
-                            TIPO_DB = "B",
-                            FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
-                            FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
-                            IMPORTE_DB = contrato.TarifaAConvenir == true ? -1 : contrato.ImporteSustentable.Value,
-                            MONEDA_DB = contrato.MonedaSustentableId,
-                            //MONEDA = contrato.MonedaSustentableId,
-                            PORC_DB = 0
-                        });
-                    }
+                    decimal? precioNetoSustentable = null;
 
-                    decimal? precioNetoEPA = null;
-                    if (contrato.EPA == true && contrato.EPATipoDBId.HasValue)
+                    if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.SustentableTipoDBId.HasValue)
                     {
                         listaDescuentos.Add(new ZMPES5290
                         {
@@ -100,26 +86,14 @@ namespace Molinos.DataAgro.Agent.Helpers
                             TIPO_DB = "B",
                             FEDESDE = contrato.FechaDesdeSustentable.HasValue ? contrato.FechaDesdeSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaDesde != null ? contrato.FechaDesde.ToString("yyyy-MM-dd") : null,
                             FEHASTA = contrato.FechaHastaSustentable.HasValue ? contrato.FechaHastaSustentable.Value.ToString("yyyy-MM-dd") : contrato.FechaHasta != null ? contrato.FechaHasta.ToString("yyyy-MM-dd") : null,
-                            IMPORTE_DB = contrato.EPATipoDBId == 1 ? 0 : contrato.ImporteSustentable.Value,
-                            MONEDA_DB = contrato.EPATipoDBId == 1 ? "USDM" : contrato.MonedaSustentableId,
+                            IMPORTE_DB = (contrato.TarifaAConvenir == true && contrato.Sustentable == true) ? -1 : contrato.SustentableTipoDBId == 1 ? 0 : contrato.ImporteSustentable.Value,
+                            MONEDA_DB = contrato.MonedaSustentableId,
                             PORC_DB = 0,
                             PRECIO = 0
                         });
-
-                        if (contrato.TipoNegocioId == 2 && contrato.EPATipoDBId == 1) //a precio y sobre precio
+                        if (contrato.TipoNegocioId == 2 && contrato.SustentableTipoDBId == 1) //a precio y sobre precio
                         {
-                            decimal porcentajeComision = contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Porcentaje ?? 0;
-                            decimal precioOriginal = contrato.Precio;
-                            decimal precioTarifaFlete = contrato.TarifaFlete ?? 0;
-                            precioOriginal += contrato.ImporteSustentable ?? 0;
-                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 1).FirstOrDefault()?.Importe ?? 0;
-                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 2).FirstOrDefault()?.Importe ?? 0;
-                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 4).FirstOrDefault()?.Importe ?? 0;
-                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 4).FirstOrDefault()?.Porcentaje ?? 0
-                                            * contrato.Precio / 100; porcentajeComision /= 100;
-                            precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
-                            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Importe ?? 0;
-                            precioNetoEPA = Math.Round(precioOriginal, 2);
+                            precioNetoSustentable = PrecioNetoSustentableSobrePrecio(contrato, precioNetoSustentable);
                         }
                     }
 
@@ -216,10 +190,9 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
                     }
                     logger.Debug("Calidades: " + calidad);
+
                     var listaApertura = new List<ZMPES5440>();
-                    //if (contrato.TipoNegocioId == 2)
-                    //{
-                    if (contrato.EPA == true && contrato.EPATipoDBId == 1) //bonificación sobre precio
+                    if ((contrato.EPA == true || (contrato.Sustentable == true && contrato.TarifaAConvenir != true)) && contrato.SustentableTipoDBId == 1) //bonificación sobre precio
                     {
                         listaApertura.Add(new ZMPES5440
                         {
@@ -241,7 +214,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                             });
                         }
                     }
-                    //}
+                    
                     logger.Debug("Apertura: " + contrato.AperturaPrecio);
                     var descuentoGeneralSobrePrecio = descuentoBonificacion.AsQueryable()
                         .Where(x => x.TipoPeriodoDBId == 1 && x.TipoDBId == 1)
@@ -280,7 +253,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         }
 
                     }
-                    if (contrato.EPA == true && contrato.EPATipoDBId == 1)
+                    if ((contrato.EPA == true || contrato.Sustentable == true) && contrato.SustentableTipoDBId == 1)
                     {
                         descuentoGeneralSobrePrecio = descuentoGeneralSobrePrecio ?? new DescuentoBonificacion
                         {
@@ -352,7 +325,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                     rq2.IM_CONTRATO.MATERIAL = contrato.Material.Codigo;
                     rq2.IM_CONTRATO.PAGO_DIF_ARP = contrato.PagoDiferido.HasValue && contrato.PagoDiferido.Value ? "X" : "";
                     rq2.IM_CONTRATO.PRECIO_PIZARRA = contrato.Precio;
-                    rq2.IM_CONTRATO.PRECIO = contrato.EPA == true && precioNetoEPA.HasValue ? precioNetoEPA.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio;
+                    rq2.IM_CONTRATO.PRECIO = (contrato.EPA == true || contrato.Sustentable == true) && precioNetoSustentable.HasValue ? precioNetoSustentable.Value : (contrato.PrecioNeto.HasValue && contrato.PrecioNeto > 0) ? contrato.PrecioNeto.Value : contrato.Precio;
                     rq2.IM_CONTRATO.PROVEEDOR = contrato.Proveedor.CUIT;
                     rq2.IM_CONTRATO.PROVINCIA = contrato.ProvinciaId.ToString();
                     rq2.IM_CONTRATO.SUSTENTABLE = contrato.Sustentable == true || contrato.EPA == true ? "X" : "";
@@ -473,11 +446,27 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Error("Error comunicacion SAP");
+                logger.Error("Error comunicacion SAP: No se pudo finalizar el contrato.");
                 logger.Error(e);
                 throw;
             }
+        }
 
+        private static decimal? PrecioNetoSustentableSobrePrecio(Contrato contrato, decimal? precioNetoSustentable)
+        {
+            decimal porcentajeComision = contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Porcentaje ?? 0;
+            decimal precioOriginal = contrato.Precio;
+            decimal precioTarifaFlete = contrato.TarifaFlete ?? 0;
+            precioOriginal += contrato.ImporteSustentable ?? 0;
+            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 1).FirstOrDefault()?.Importe ?? 0;
+            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 2).FirstOrDefault()?.Importe ?? 0;
+            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 4).FirstOrDefault()?.Importe ?? 0;
+            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 4).FirstOrDefault()?.Porcentaje ?? 0
+                            * contrato.Precio / 100; porcentajeComision /= 100;
+            precioOriginal += (precioOriginal * porcentajeComision) - precioTarifaFlete;
+            precioOriginal += contrato.AperturaPrecio.Where(a => a.ConceptoAperturaPrecioId == 3).FirstOrDefault()?.Importe ?? 0;
+            precioNetoSustentable = Math.Round(precioOriginal, 2);
+            return precioNetoSustentable;
         }
 
         private string RellenarEspaciosSAP(string value, int stringLength)
@@ -492,7 +481,6 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             return value;
         }
-
         private string CalcularPosicion(DateTime fechaDesde)
         {
             var ultimoDiaHabilDelMes = diasHabilesAgent.ObtenerDiasHabilesDelMes(fechaDesde).LastOrDefault();

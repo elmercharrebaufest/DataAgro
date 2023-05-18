@@ -7,14 +7,16 @@
     [IdActiveDirectory] VARCHAR (100) NULL,
     [GrupoDeComprasId]    INT           NULL,
     [Administrador]     BIT           NULL,
-	[Cupera]			BIT			NULL,
+    [Cupera]			BIT			NULL,
     [Deshabilitado] BIT NULL , 
     [FechaDeshabilitado] DATETIME NULL, 
     [AsignarNegocios] BIT NOT NULL DEFAULT 0, 
     [IdUsuarioSAP] VARCHAR(50) NOT NULL DEFAULT '', 
+    [Email] VARCHAR(70) NULL, 
+    [ComercialSuplenteId] INT NULL, 
     CONSTRAINT [PK_Comercial] PRIMARY KEY CLUSTERED ([ComercialId] ASC),
-    CONSTRAINT [FK_Comercial_Comercial] FOREIGN KEY ([ComercialId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
+    CONSTRAINT [FK_Comercial_EmpleadorACargo] FOREIGN KEY ([EmpleadorACargoId]) REFERENCES [dbo].[Comercial] ([ComercialId]),
     CONSTRAINT [FK_Comercial_GrupoDeCompras] FOREIGN KEY ([GrupoDeComprasId]) REFERENCES [dbo].[GrupoDeCompras] ([Id]),
-    CONSTRAINT [FK_Comercial_Perfil] FOREIGN KEY ([PerfilId]) REFERENCES [dbo].[Perfil] ([PerfilId])
+    CONSTRAINT [FK_Comercial_Perfil] FOREIGN KEY ([PerfilId]) REFERENCES [dbo].[Perfil] ([PerfilId]),
+    CONSTRAINT [FK_Comercial_ComercialSuplente] FOREIGN KEY ([ComercialSuplenteId]) REFERENCES [dbo].[Comercial] ([ComercialId])
 );
-

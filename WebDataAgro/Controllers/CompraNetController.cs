@@ -1,23 +1,16 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using KendoGridBinder.Containers;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
@@ -30,38 +23,25 @@ namespace WebDataAgro.Controllers
     [Autorizacion(PermisosDataAgro.IngresoDataAgro)]
     public class CompraNetController : Controller
     {
-        private IHomeManager mobjHomeManager;
-
-        private ICompraNetManager mobjCompraNetManager;
-
-        private IContratoManager mobjContratoManager;
-
-        private IFijacionDePrecioContratoManager mobjFijacionDePrecioContratoManager;
-
-        private IComercialManager mobjComercialManager;
-
-        private ICampañaManager mobjCampañaManager;
-
-        private ILocalidadManager mobjLocalidadManager;
-
-        private IMaterialManager mobjMaterialManager;
-
-        private IProveedorManager mobjProveedorManager;
-
-        private IOperadorManager mobjOperadorManager;
-
-        private ILogger mobjLogger;
-
-        private INegocioManager mobjNegocioManager;
-
+        private readonly IHomeManager mobjHomeManager;
+        private readonly ICompraNetManager mobjCompraNetManager;
+        private readonly IContratoManager mobjContratoManager;
+        private readonly IFijacionDePrecioContratoManager mobjFijacionDePrecioContratoManager;
+        private readonly IComercialManager mobjComercialManager;
+        private readonly ICampañaManager mobjCampañaManager;
+        private readonly ILocalidadManager mobjLocalidadManager;
+        private readonly IMaterialManager mobjMaterialManager;
+        private readonly IProveedorManager mobjProveedorManager;
+        private readonly IOperadorManager mobjOperadorManager;
+        private readonly ILogger mobjLogger;
+        private readonly INegocioManager mobjNegocioManager;
         private readonly IFasonManager mobjFasonManager;
         private readonly IAgenteCompraManager mobjAgenteManager;
         private readonly IContratoAcuerdoManager mobjContratoAcuerdoManager;
         private readonly IConfiguracionInternaManager configuracionInternaManager;
-        private IConfiguracionManager mobjConfiguracionManager;
-        private ITipoDeCambioAgent tipoDeCambioAgent;
-        private ICentroManager centroManager;
-
+        private readonly IConfiguracionManager mobjConfiguracionManager;
+        private readonly ITipoDeCambioAgent tipoDeCambioAgent;
+        private readonly ICentroManager centroManager;
 
         //-----------------------------------------------------
         //  Constructor
@@ -222,13 +202,12 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult GrabarContrato(Contrato oParam)
+        public ActionResult GrabarContrato(Contrato oParam, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null)
         {
             if (oParam.Base == null) oParam.Base = false;
             if (oParam.NoInformaSio == null) oParam.NoInformaSio = false;
             if (oParam.TrigoEspecial == null) oParam.TrigoEspecial = false;
             if (oParam.EsFason == null) oParam.EsFason = false;
-
 
             if (oParam.ComercialId.HasValue)
             {
@@ -244,7 +223,7 @@ namespace WebDataAgro.Controllers
             }
             else
             {
-                model = mobjContratoManager.GrabarContrato(oParam);
+                model = mobjContratoManager.GrabarContrato(oParam, listCupoConDescargaFechas);
             }
             return new JsonResult()
             {
@@ -691,7 +670,7 @@ namespace WebDataAgro.Controllers
             if (copia.ContratoId == 0)
             {
                 var err = new Resultado();
-                err.Error("acuerdo", "Solamente se puede utilizar acuerdos con fecha de hoy o del último día hábil anterior");
+                err.Error("acuerdo", "Solamente se puede utilizar acuerdos con fecha de hoy o del último día hábil anterior.");
                 return new JsonResult()
                 {
                     Data = err,
@@ -707,12 +686,11 @@ namespace WebDataAgro.Controllers
 
         public ActionResult TraerContratoCompletoPorContratoSAP(string contratoSAP)
         {
-            BasicoContrato contrato = null;
             contratoSAP = contratoSAP.ToString().PadLeft(10, '0');
             var ids = mobjContratoManager.TraerContratosPorSap(contratoSAP);
             if (ids.Count == 1)
             {
-                contrato = mobjContratoManager.TraerContrato(ids[0].Id);
+                BasicoContrato contrato = mobjContratoManager.TraerContrato(ids[0].Id);
                 return new JsonResult()
                 {
                     Data = contrato,
@@ -1430,13 +1408,66 @@ namespace WebDataAgro.Controllers
             lock (_lockEnviarMailFijacion)
             {
                 mobjFijacionDePrecioContratoManager.EnviarMailFijacion(fijacionDePrecioContratoId, GlobalVariables.IdActiveDirectory);
-                //return Json("Ok", JsonRequestBehavior.AllowGet);
                 return new JsonResult()
                 {
                     Data = "Reenvio de email de fijacion exitoso.",
                     MaxJsonLength = Int32.MaxValue
                 };
             }
+        }
+
+        public ActionResult ControlesAccesoConDescarga(Contrato oParam)
+        {
+            oParam.UsuarioId = GlobalVariables.IdActiveDirectory;
+
+            GrabarContratoResult model = mobjContratoManager.ControlesAccesoConDescarga(oParam);
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult ValidarPantallaEnUso(PantallaEnUsoDto pantallaEnUso)
+        {
+            pantallaEnUso.UsuarioId = GlobalVariables.IdActiveDirectory;
+            Resultado model;
+
+            if (pantallaEnUso.usar)
+            {
+                model = mobjContratoManager.ValidarPantallaEnUso(pantallaEnUso);
+            }
+            else {
+                model = mobjContratoManager.LiberarPantalla(pantallaEnUso);
+            }
+
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId) {
+
+            List<ConfiguracionCupoDto> configCupo = mobjContratoManager.CantidadDiasCuposConDescarga(fechaDesdeNegocio, fechaHastaNegocio, materialId, centroId);
+
+            return new JsonResult()
+            {
+                Data = configCupo,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+
+        public ActionResult TraerCuposConDescarga (int contratoId)
+        {
+            var cuposDelNegocio = mobjContratoManager.TraerCuposConDescarga(contratoId);
+            return new JsonResult()
+            {
+                Data = cuposDelNegocio,
+                MaxJsonLength = Int32.MaxValue
+            };
         }
     }
 }

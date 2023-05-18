@@ -62,6 +62,7 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IContratosParaFijacionAgent contratosParaFijacionAgent;
         private readonly IConfiguracionInternaManager configuracionInternaManager;
         private readonly ICentroManager centroManager;
+        private readonly ICupoManager cupoManager;
 
         public ContratoManager(ILogger logger, IRepositorio repositorio,
             IMaterialManager oMSMaterialManager, ITipoNegocioManager oMSTipoNegocioManager,
@@ -85,7 +86,7 @@ namespace Molinos.DataAgro.Business.Managers
             IHttpContextManager httpContextManager, IValidacionCreditoAgent validarCreditoAgente, ITipoDeCambioAgent tipoCambioAgent,
             ICapacidadProductivaDisponibleAgent capacidadProductivaDisponibleAgent,
             INegocioManager negocioManager, IContratosParaFijacionAgent contratosParaFijacionAgent, IConfiguracionInternaManager configuracionInternaManager,
-            ICentroManager centroManager)
+            ICentroManager centroManager, ICupoManager cupoManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
@@ -123,7 +124,7 @@ namespace Molinos.DataAgro.Business.Managers
             this.contratosParaFijacionAgent = contratosParaFijacionAgent;
             this.configuracionInternaManager = configuracionInternaManager;
             this.centroManager = centroManager;
-
+            this.cupoManager = cupoManager;
         }
 
         public DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null)
@@ -238,6 +239,10 @@ namespace Molinos.DataAgro.Business.Managers
             datosCombo.CondicionPago = new List<CondicionPagoQry> { new CondicionPagoQry { Descripcion = "Corridos" }, new CondicionPagoQry { Descripcion = "Hábiles" } };
             datosCombo.BoletoVenta = repositorio.Listar<BoletoVenta, BoletoVentaQry>(
                 x => new BoletoVentaQry { Id = x.Id, Descripcion = x.Descripcion });
+
+            //datosCombo.MinutosCronometroConDescarga = repositorio.Obtener<Configuracion>(1).MinutosCronometroConDescarga;
+            Configuracion configuracion = repositorio.Obtener<Configuracion>(1);
+            datosCombo.MinutosCronometroConDescarga = configuracion == null ? 5 : configuracion.MinutosCronometroConDescarga;
 
             return datosCombo;
         }
@@ -824,7 +829,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if ((oParam.Sustentable.HasValue && oParam.Sustentable.Value) || (oParam.EPA.HasValue && oParam.EPA.Value))
             {
-                if (oParam.MercsDeposito == true)
+                if (oParam.MercsDeposito == true && oParam.SustentableTipoDBId.HasValue && oParam.SustentableTipoDBId.Value == 2)
                 {
                     if (!oParam.FechaDesdeSustentable.HasValue || oParam.FechaDesdeSustentable.Value == null)
                     {
@@ -858,7 +863,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         oErrorMessages.Error("EPA", "Debe indicar la tarifa para EPA.");
                     }
-                    if (!oParam.EPATipoDBId.HasValue)
+                    if (!oParam.SustentableTipoDBId.HasValue)
                     {
                         oErrorMessages.Error("EPA", "Debe indicar si el importe para EPA es sobre el precio o por fuera del precio.");
                     }
@@ -872,6 +877,10 @@ namespace Molinos.DataAgro.Business.Managers
                     if (oParam.ImporteSustentable.HasValue && string.IsNullOrEmpty(oParam.MonedaSustentableId))
                     {
                         oErrorMessages.Error("Sustentable", "Debe indicar la moneda para Sustentable.");
+                    }
+                    if (!oParam.SustentableTipoDBId.HasValue)
+                    {
+                        oErrorMessages.Error("Sustentable", "Debe indicar si el importe sustentable es sobre el precio o por fuera del precio.");
                     }
                 }
             }
@@ -1684,11 +1693,39 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return oEntityErrors;
         }
-        public GrabarContratoResult GrabarContrato(Contrato oContrato)
+        public GrabarContratoResult GrabarContrato(Contrato oContrato, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null)
         {
             var oEntityErrors = new GrabarContratoResult();
 
             Validar(oContrato, oEntityErrors, false);
+
+            if (oEntityErrors.Errores.Count > 0)
+            {
+                return oEntityErrors;
+            }
+
+            Cupo cupoNuevo = null;
+            if (listCupoConDescargaFechas != null)
+            {
+                cupoNuevo = TransformarContratoACupo(oContrato); // TransformarAEntidad
+
+                int sumaCuposCargaMasiva = 0;
+                bool cargaMasiva = listCupoConDescargaFechas != null && listCupoConDescargaFechas.Count() > 0;
+                if (cargaMasiva) sumaCuposCargaMasiva = listCupoConDescargaFechas.Sum(x => x.CantidadCupo) + listCupoConDescargaFechas.Sum(x => x.CantidadFlete);
+
+                var error = cupoManager.Validar(cupoNuevo, sumaCuposCargaMasiva, oContrato.FechaHasta);
+                if (error != null)
+                {
+                    oEntityErrors.Errores.AddRange(error.Errores);
+                    oEntityErrors.ListaErrores.AddRange(error.ListaErrores);
+                }
+
+                var cantidadCuposFletesPermitidos = Math.Ceiling(oContrato.Cantidad / 30000);
+                if (cantidadCuposFletesPermitidos < sumaCuposCargaMasiva)
+                {
+                    oEntityErrors.Errores.Add(new ErrorMessage(400, "La cantidad de cupos/fletes ingresados se exceden respecto a los KG del Negocio."));
+                }
+            }
 
             if (oEntityErrors.Errores.Count > 0)
             {
@@ -1860,7 +1897,7 @@ namespace Molinos.DataAgro.Business.Managers
             oContratoSave.DolarizadoCorredor = oContrato.DolarizadoCorredor;
             oContratoSave.Sustentable = oContrato.Sustentable;
             oContratoSave.EPA = oContrato.EPA;
-            oContratoSave.EPATipoDBId = oContrato.EPA == true ? oContrato.EPATipoDBId : null;
+            oContratoSave.SustentableTipoDBId = oContrato.EPA == true || oContrato.Sustentable == true ? oContrato.SustentableTipoDBId : null;
             oContratoSave.FechaCierta = oContrato.FechaCierta;
             oContratoSave.PorcentajeDePago = oContrato.PorcentajeDePago;
             oContratoSave.TipoAgenteCompraId = oContrato.TipoAgenteCompraId;
@@ -1935,6 +1972,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var cuit = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == oContrato.ProveedorId, x => x.CUIT);
             oContratoSave.MonedaCreditoDisponible = validarCreditoAgente.ValidarCredito(cuit).Moneda;
+            oContratoSave.ConDescarga = oContrato.ConDescarga;
 
             if (oContratoSave.PrecioPactado != null)
             {
@@ -2077,6 +2115,94 @@ namespace Molinos.DataAgro.Business.Managers
             var tipoDeLog = (oContratoSave.Id == 0 || string.IsNullOrEmpty(oContratoSave.ContratoSAP)) ? TipoAccionLogDataAgro.Crear : TipoAccionLogDataAgro.Modificar;
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipoDeLog, oContratoSave.GetType());
+
+            // ==== GSIAN: inicio CREAR CUPOS CON DESCARGA ====
+
+            //============== INI NUEVO ===============
+            if (listCupoConDescargaFechas != null)
+            {
+                cupoNuevo.NegocioId = oContratoSave.Id;
+                CupoResult cupoGrabado;
+
+                listCupoConDescargaFechas.ForEach(x =>
+                {
+                    if (x.CantidadCupo > 0)
+                    {
+                        cupoNuevo.FleteProcedencia = false;
+                        List<DiaCupo> listDiaCupo = new List<DiaCupo>();
+                        listDiaCupo.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadCupo });
+
+                        cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaCupo);
+
+                        oEntityErrors.Errores.AddRange(cupoGrabado.Errores);
+                        oEntityErrors.ListaCupos.AddRange(cupoGrabado.ListaCupos);
+                        oEntityErrors.ListaErrores.AddRange(cupoGrabado.ListaErrores);
+                    }
+                    if (x.CantidadFlete > 0)
+                    {
+                        cupoNuevo.FleteProcedencia = true;
+                        List<DiaCupo> listDiaFlete = new List<DiaCupo>();
+                        listDiaFlete.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadFlete });
+
+                        cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaFlete);
+
+                        CupoResult crTemp = new CupoResult();
+                        crTemp.ListaCupos.AddRange(cupoGrabado.ListaCupos.Select(a => "*" + a + "*"));
+                        cupoGrabado.ListaCupos = new List<string>();
+                        cupoGrabado.ListaCupos.AddRange(crTemp.ListaCupos);
+
+                        oEntityErrors.Errores.AddRange(cupoGrabado.Errores);
+                        oEntityErrors.ListaCupos.AddRange(cupoGrabado.ListaCupos);
+                        oEntityErrors.ListaErrores.AddRange(cupoGrabado.ListaErrores);
+                    }
+                });
+            }
+            //============== FIN NUEVO ===============
+
+            //List<DiaCupo> listDiaCupo = new List<DiaCupo>();
+            //List<DiaCupo> listDiaFlete = new List<DiaCupo>();
+            //if (error != null && !error.HayError)
+            //{
+            //    if (listCupoConDescargaFechas != null)
+            //    {
+            //        listCupoConDescargaFechas.ForEach(x =>
+            //        {
+            //            if (x.CantidadCupo > 0) listDiaCupo.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadCupo });
+            //            if (x.CantidadFlete > 0) listDiaFlete.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadFlete });
+            //        });
+            //    }
+
+            //    // Cupos
+            //    if (listDiaCupo.Count() > 0)
+            //    {
+            //        cupoNuevo.FleteProcedencia = false;
+            //        var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaCupo);
+
+            //        oEntityErrors.Errores.AddRange(cupoGrabado.Errores);
+            //        oEntityErrors.ListaCupos.AddRange(cupoGrabado.ListaCupos);
+            //        oEntityErrors.ListaErrores.AddRange(cupoGrabado.ListaErrores);
+            //    }
+
+            //    // Fletes
+            //    if (listDiaFlete.Count() > 0)
+            //    {
+            //        cupoNuevo.FleteProcedencia = true;
+            //        var cupoGrabado2 = cupoManager.GrabarCupo(cupoNuevo, listDiaFlete);
+
+            //        //cupoGrabado2.ListaCupos.ForEach(x => x = '*' + x + '*');
+
+            //        CupoResult crTemp = new CupoResult();
+            //        crTemp.ListaCupos.AddRange(cupoGrabado2.ListaCupos.Select(a => "*" + a + "*"));
+            //        cupoGrabado2.ListaCupos = new List<string>();
+            //        cupoGrabado2.ListaCupos.AddRange(crTemp.ListaCupos);
+
+            //        oEntityErrors.Errores.AddRange(cupoGrabado2.Errores);
+            //        oEntityErrors.ListaCupos.AddRange(cupoGrabado2.ListaCupos);
+            //        oEntityErrors.ListaErrores.AddRange(cupoGrabado2.ListaErrores);
+            //    }
+            //}
+            // ==== GSIAN: fin CREAR CUPOS CON DESCARGA ====
+
             if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
             {
                 try
@@ -2098,6 +2224,39 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
+
+        public Cupo TransformarContratoACupo(Contrato contrato)
+        {
+            var cuitProveedor = repositorio.Obtener<Proveedor, string>(x => x.ProveedorId == contrato.ProveedorId, x => x.CUIT);
+            var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == contrato.ComercialId);
+            var comercialId = contrato.ComercialId;
+            var grupoDeCompras = comercial.GrupoDeCompras.Descripcion;
+            var zonaComercial = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).First();
+
+            var cupoNuevo = new Cupo
+            {
+                Id = 0,
+                ProveedorId = contrato.ProveedorId.Value,
+                MaterialId = contrato.MaterialId,
+                FechaIngreso = contrato.FechaEntrega,
+                CentroId = contrato.DestinoId.Value,
+                FleteProcedencia = contrato.FleteACargo == "true" ? true : false,
+                Calidad = contrato.StandardDeCalidadId == 4 ? "Camara" : "Fabrica",
+                Observaciones = contrato.Observacion,
+                Fason = contrato.EsFason,
+                Destinatario = "30715118773",
+                ComercialId = comercialId,
+                FechaGeneracion = DateTime.Now,
+                NegocioId = contrato.Id,
+                ZonaCupoId = zonaComercial.Id,
+                ConDescarga = contrato.ConDescarga,
+                Sustentable = contrato.Sustentable,
+                EPA = contrato.EPA,
+            };
+
+            return cupoNuevo;
+        }
+
         private bool ConfirmacionAutomatica(Contrato contrato)
         {
             var hoy = DateTime.Now;
@@ -2678,7 +2837,7 @@ namespace Molinos.DataAgro.Business.Managers
                             oContratoSave.Dolarizado = contratoOriginal.Dolarizado;
                             oContratoSave.Sustentable = contratoOriginal.Sustentable;
                             oContratoSave.EPA = contratoOriginal.EPA;
-                            oContratoSave.EPATipoDBId = contratoOriginal.EPATipoDBId;
+                            oContratoSave.SustentableTipoDBId = contratoOriginal.SustentableTipoDBId;
                             oContratoSave.FechaCierta = contratoOriginal.FechaCierta;
                             oContratoSave.ContratoSAP = contratoOriginal.ContratoSAP;
                             oContratoSave.ContratoAcuerdoId = contratoOriginal.ContratoAcuerdoId;
@@ -3101,8 +3260,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Estado_Contrato = x.Estado.Descripcion,
                 Sustentable = x.Sustentable,
                 EPA = x.EPA,
-                EPATipoDBId = x.EPATipoDBId,
-                EPATipoDB = x.EPATipoDB != null ? x.EPATipoDB.Descripcion : "",
+                SustentableTipoDBId = x.SustentableTipoDBId,
+                SustentableTipoDB = x.SustentableTipoDB != null ? x.SustentableTipoDB.Descripcion : "",
                 Importe_Sustentable = x.ImporteSustentable,
                 Moneda_Sustentable = x.MonedaSustentableId,
                 Fecha_DolarizadoFormateado = x.FechaDolarizado != null ? SqlFunctions.DateName("day", x.FechaDolarizado).Trim() + "-" +
@@ -3328,7 +3487,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Hasta = y.Hasta,
                     TipoServicioId = y.ServicioValor.TipoServicio.Id,
                     Modificado = y.Modificado
-                }).ToList()
+                }).ToList(),
+                ConDescarga = x.ConDescarga,
             });
             return contrato;
         }
@@ -4001,7 +4161,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
             contratoSave.Sustentable = contrato.Sustentable;
             contratoSave.EPA = contrato.EPA;
-            contratoSave.EPATipoDBId = contrato.EPATipoDBId;
+            contratoSave.SustentableTipoDBId = contrato.SustentableTipoDBId;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
             contratoSave.Dolarizado = contrato.Dolarizado;
             contratoSave.DolarizadoCorredor = contrato.DolarizadoCorredor;
@@ -4144,7 +4304,7 @@ namespace Molinos.DataAgro.Business.Managers
             contratoSave.MonedaSustentableId = contrato.MonedaSustentableId;
             contratoSave.Sustentable = contrato.Sustentable;
             contratoSave.EPA = contrato.EPA;
-            contratoSave.EPATipoDBId = contrato.EPATipoDBId;
+            contratoSave.SustentableTipoDBId = contrato.SustentableTipoDBId;
             contratoSave.FechaDolarizado = contrato.FechaDolarizado;
             contratoSave.Dolarizado = contrato.Dolarizado;
             contratoSave.DolarizadoCorredor = contrato.DolarizadoCorredor;
@@ -4248,6 +4408,7 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.RemoverTodos(servicios);
 
             contratoSave.Servicios = contrato.Servicios;
+            contratoSave.ConDescarga = contrato.ConDescarga;
 
             if (contrato.Servicios != null && contrato.Servicios.Count > 0)
             {
@@ -5208,7 +5369,7 @@ namespace Molinos.DataAgro.Business.Managers
                 contrato.TarifaAConvenir = contratoSap.TarifaAConvenir;
                 contrato.Sustentable = contratoSap.Sustentable;
                 contrato.EPA = contratoSap.EPA;
-                contrato.EPATipoDBId = contratoSap.EPATipoDBId;
+                contrato.SustentableTipoDBId = contratoSap.SustentableTipoDBId;
                 contrato.MonedaSustentableId = contratoSap.MonedaSustentableId;
                 contrato.FechaDolarizado = contratoSap.FechaDolarizado;
                 contrato.Dolarizado = contratoSap.Dolarizado;
@@ -5541,7 +5702,7 @@ namespace Molinos.DataAgro.Business.Managers
             bc.FijacionDePrecioContratoId = (negocio is FijacionDePrecioContrato) ? (int?)(negocio as FijacionDePrecioContrato).Id : null;
             bc.Sustentable = (negocio is Contrato) ? (negocio as Contrato).Sustentable.HasValue ? (negocio as Contrato).Sustentable.Value : false : false;
             bc.EPA = (negocio is Contrato) && (negocio as Contrato).EPA.HasValue && (negocio as Contrato).EPA.Value;
-            bc.EPATipoDBId = negocio is Contrato && (negocio as Contrato).EPATipoDBId.HasValue ? (negocio as Contrato).EPATipoDBId : null;
+            bc.SustentableTipoDBId = negocio is Contrato && (negocio as Contrato).SustentableTipoDBId.HasValue ? (negocio as Contrato).SustentableTipoDBId : null;
             bc.TarifaAConvenir = negocio.TarifaAConvenir;
             bc.Dolarizado = negocio.Dolarizado.Value;
             bc.Pesificado = negocio.DiasPesificado != null;
@@ -5725,7 +5886,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             bc.ProveedorComisionistaId = (negocio is Contrato) ? (negocio as Contrato).ProveedorComisionistaId ?? null : null;
             bc.FechaHastaOriginalFormateado = (negocio is Contrato) ? (negocio as Contrato).FechaHastaOriginal != null ? (negocio as Contrato).FechaHastaOriginal.Value.ToString("dd-MM-yyyy") : "" : "";
-            bc.FechaDolarizadoOriginalFormateado = (negocio is Contrato) ? (negocio as Contrato).FechaDolarizadoOriginal != null ? (negocio as Contrato).FechaDolarizadoOriginal.Value.ToString("dd-MM-yyyy") : "" : ""; ;
+            bc.FechaDolarizadoOriginalFormateado = (negocio is Contrato) ? (negocio as Contrato).FechaDolarizadoOriginal != null ? (negocio as Contrato).FechaDolarizadoOriginal.Value.ToString("dd-MM-yyyy") : "" : "";
+            bc.ConDescarga = (negocio is Contrato) && (negocio as Contrato).ConDescarga.HasValue && (negocio as Contrato).ConDescarga.Value;
             return bc;
         }
 
@@ -8911,6 +9073,197 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 throw e;
             }
+        }
+
+        private Resultado ValidarConDescarga(Contrato oParam, Resultado oErrorMessages, bool validacionesMinimas)
+        {
+            oParam.ConDescarga = oParam.ConDescarga == null ? false : oParam.ConDescarga; //no se debería hacer. Hay que corregir el front
+
+            if ((bool)oParam.ConDescarga)
+            {
+                var dias = (oParam.FechaHasta - oParam.FechaDesde).Days;
+                var cantidadMaximaDiasNegocioConDescarga = repositorio.Obtener<Configuracion>(1).CantidadMaximaDiasNegocioConDescarga;
+                if (dias >= cantidadMaximaDiasNegocioConDescarga)
+                {
+                    oErrorMessages.Error("FechaDesdeHasta", "La cantidad de días del Negocio imposibilita la configuración de Cupos Con Descarga.");
+                }
+                if (oParam.Cantidad == 0)
+                {
+                    oErrorMessages.Error("FechaDesdeHasta", "Debe ingresar la cantidad de KG.");
+                }
+                if (oParam.ProveedorId <= 0)
+                {
+                    oErrorMessages.Error("FechaDesdeHasta", "Debe ingresar el proveedor.");
+                }
+                var fechaMaxima = DateTime.Now.Date.AddDays(cantidadMaximaDiasNegocioConDescarga-1);
+                if (oParam.FechaHasta > fechaMaxima)
+                {
+                    oErrorMessages.Error("FechaDesdeHasta", "La Fecha Desde supera el máximo establecido según parámetro.");
+                }
+            }
+
+            return oErrorMessages;
+        }
+
+        public GrabarContratoResult ControlesAccesoConDescarga(Contrato oContrato)
+        {
+            var oEntityErrors = new GrabarContratoResult();
+
+            ValidarConDescarga(oContrato, oEntityErrors, false);
+
+            if (oEntityErrors.Errores.Count > 0)
+            {
+                return oEntityErrors;
+            }
+
+            return oEntityErrors;
+        }
+
+        public Resultado ValidarPantallaEnUso(PantallaEnUsoDto pantallaEnUso)
+        {
+            var oEntityErrors = new Resultado();
+            int minutosCronometroConDescarga = repositorio.Obtener<Configuracion>(1).MinutosCronometroConDescarga;
+
+            PantallaEnUso pantalla = repositorio.Listar<PantallaEnUso>(x => x.NombrePantalla == pantallaEnUso.NombrePantalla)
+            .OrderByDescending(x => x.FechaHoraInicioUso)
+            .FirstOrDefault();
+            if (pantalla is null)
+            {
+                // PANTALLA SE ABRE POR 1RA VEZ.
+                UsarPantalla(pantallaEnUso);
+            }
+            else
+            {
+                var fechaLimiteDeUso = pantalla.FechaHoraInicioUso.AddMinutes(minutosCronometroConDescarga);
+                //   termino de usarla o paso el tiempo de uso
+                if (pantalla.FechaHoraFinUso != null || fechaLimiteDeUso < DateTime.Now)
+                {
+                    UsarPantalla(pantallaEnUso);
+                }
+                else
+                {
+                    var ComercialId = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == pantallaEnUso.UsuarioId).ComercialId;
+                    if (pantalla.ComercialId != ComercialId)
+                    {
+                        var comercial = repositorio.Obtener<Comercial>(x => x.ComercialId == pantalla.ComercialId);
+                        oEntityErrors.Error("PantallaExiste", $"Pantalla en uso por: {comercial.Apellido} {comercial.Nombres} hasta las {fechaLimiteDeUso.ToString("HH:mm:ss")}.");
+                        return oEntityErrors;
+                    }
+                }
+                //if (pantalla.FechaHoraFinUso == null && pantalla.UsuarioId != pantallaEnUso.UsuarioId)
+                //{
+                //    oEntityErrors.Error("PantallaExiste", "Pantalla en uso por: " + pantalla.UsuarioId);
+                //    return oEntityErrors;
+                //}
+                //else if (pantalla.FechaHoraFinUso != null)
+                //{
+                //    UsarPantalla(pantallaEnUso);
+                //}
+            }
+            return oEntityErrors;
+        }
+
+        public void UsarPantalla(PantallaEnUsoDto pantallaEnUso)
+        {
+            logger.Debug("Alta Pantalla en uso en BD DataAgro: " + pantallaEnUso);
+            var ComercialId = repositorio.Obtener<Comercial>(x => x.IdActiveDirectory == pantallaEnUso.UsuarioId).ComercialId;
+            PantallaEnUso p = new PantallaEnUso();
+            try
+            {
+                p.NombrePantalla = pantallaEnUso.NombrePantalla;
+                p.UsuarioId = pantallaEnUso.UsuarioId;
+                p.FechaHoraInicioUso = DateTime.Now;
+                p.FechaHoraFinUso = null;
+                p.ComercialId = ComercialId;
+
+                repositorio.Agregar(p);
+                repositorio.GuardarCambios();
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error Alta Pantalla en uso.");
+                logger.Error(e);
+            }
+        }
+
+        public Resultado LiberarPantalla(PantallaEnUsoDto pantallaEnUso)
+        {
+            logger.Debug("Liberar pantalla en uso en BD DataAgro: " + pantallaEnUso);
+            var oEntityErrors = new Resultado();
+
+            try
+            {
+                PantallaEnUso pantalla = repositorio.Listar<PantallaEnUso>(x => x.NombrePantalla == pantallaEnUso.NombrePantalla && x.FechaHoraFinUso == null)
+                    .OrderByDescending(x => x.FechaHoraInicioUso)
+                    .FirstOrDefault();
+
+                if (pantalla != null)
+                {
+                    pantalla.FechaHoraFinUso = DateTime.Now;
+                    repositorio.GuardarCambios();
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error Alta Pantalla en uso.");
+                logger.Error(e);
+            }
+
+            return oEntityErrors;
+        }
+
+        public List<ConfiguracionCupoDto> CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId)
+        {
+            DateTime fechaDesde = DateTime.ParseExact(fechaDesdeNegocio ?? DateTime.Now.ToString("dd-MM-yyyy"), "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            DateTime fechaHasta = DateTime.ParseExact(fechaHastaNegocio ?? DateTime.Now.ToString("dd-MM-yyyy"), "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+            List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.CentroId == centroId && x.MaterialId == materialId && x.Fecha >= fechaDesde && x.Fecha <= fechaHasta);
+
+            var diasParametro = repositorio.Obtener<Configuracion>(1).CantidadMaximaDiasNegocioConDescarga;
+            var diasNegocio = (fechaHasta - fechaDesde).Days;
+            var cantConfigCupo = configuracionCupo.Count();
+            if (diasParametro <= diasNegocio && diasParametro <= cantConfigCupo)
+            {
+                configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.CentroId == centroId && x.MaterialId == materialId && x.Fecha >= fechaDesde && x.Fecha <= fechaHasta).Take(diasParametro).ToList();
+            }
+
+            List<ConfiguracionCupoDto> configCupo = new List<ConfiguracionCupoDto>();
+            configuracionCupo.ForEach(x =>
+            {
+                // No tiene en cuenta anulados ni rechazados.
+                int cantidadCuposConsumidos = repositorio.Contar<Cupo>(y => y.ConDescarga == true &&
+                                                                            y.FechaIngreso == x.Fecha &&
+                                                                            y.MaterialId == materialId &&
+                                                                            y.CentroId == centroId &&
+                                                                            y.EstadoCupoId != 4 &&
+                                                                            y.EstadoCupoId != 9 );
+
+                ConfiguracionCupoDto cc = new ConfiguracionCupoDto();
+
+                cc.CentroId = x.CentroId;
+                cc.Fecha = x.Fecha;
+                cc.LimiteDescarga = x.LimiteDescarga;
+                cc.MaterialId = x.MaterialId;
+                cc.CuposConsumidos = cantidadCuposConsumidos;
+                cc.CuposDisponibles = x.LimiteDescarga - cantidadCuposConsumidos;
+                cc.LimiteDescarga = x.LimiteDescarga;
+
+                configCupo.Add(cc);
+            });
+
+            return configCupo;
+        }
+
+        public List<CupoDto> TraerCuposConDescarga(int contratoId)
+        {
+            return repositorio.Listar<Cupo, CupoDto>(x => new CupoDto
+            {
+                NegocioId = x.NegocioId,
+                FechaIngreso = x.FechaIngreso,
+                CupoSap = x.CupoSap,
+                FleteProcedencia = x.FleteProcedencia,
+                Centro = x.Centro.Descripcion
+            }, x => x.NegocioId == contratoId && x.ConDescarga.HasValue && x.ConDescarga.Value);
         }
     }
 }

@@ -286,7 +286,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(x => x.Obtener<LimiteCupo>(It.IsAny<int>())).Returns(new LimiteCupo());
             administracionCuperaAgent.Setup(x => x.AdministrarCupera(It.IsAny<ConfiguracionCupoDto>())).Returns("OK");
             repositorioMock.Setup(x => x.GuardarCambios());
-            var resultado = target.GrabarLimitesMasivo(limites, ids, 1);
+            var resultado = target.GrabarLimitesMasivo(limites, ids, 1, 1);
 
             Assert.That(!resultado.HayError);
         }

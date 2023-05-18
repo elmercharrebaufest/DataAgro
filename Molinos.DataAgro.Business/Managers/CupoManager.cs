@@ -1,9 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Agent.Helpers;
-using Molinos.DataAgro.Entities;
 using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -19,13 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using OfficeOpenXml;
 using System.IO;
 
@@ -51,7 +45,8 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IAltaTempranaAgent altaTempranaAgent;
         private readonly ICumplimientoCuposAgent cumplimientoCuposAgent;
         private readonly IContratoKgPendienteAgent contratoKgPendienteAgent;
-        private readonly IContratoManager contratoManager;
+        private readonly ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent;
+        private readonly ICentroManager centroManager;
 
         public CupoManager(IRepositorio repositorio, ILogger logger, ICrearCupoAgent crearCupoAgent,
             IEliminarCupoAgent eliminarCupoAgent, IClienteStopAgent clienteStopAgent, IModificarCupoAgent modificarCupoAgent,
@@ -59,7 +54,7 @@ namespace Molinos.DataAgro.Business.Managers
             IDisponibilidadCuposAgent disponibilidadCuposAgent, ICriterioCDWarrantAgent cdWarrant, ILogDataAgroManager logDataAgroManager,
             IComercialManager comercialManager, IServicioRepositorioScatoAgent servicioScato, IHttpContextManager httpContextManager,
             IAltaTempranaAgent altaTempranaAgent, ICumplimientoCuposAgent cumplimientoCuposAgent, IContratoKgPendienteAgent contratoKgPendienteAgent,
-            IContratoManager contratoManager)
+            ICartasDePortePendienteAplicarAgent cartasDePortePendienteAplicarAgent, ICentroManager centroManager)
         {
             this.repositorio = repositorio;
             this.logger = logger;
@@ -79,7 +74,8 @@ namespace Molinos.DataAgro.Business.Managers
             this.altaTempranaAgent = altaTempranaAgent;
             this.cumplimientoCuposAgent = cumplimientoCuposAgent;
             this.contratoKgPendienteAgent = contratoKgPendienteAgent;
-            this.contratoManager = contratoManager;
+            this.cartasDePortePendienteAplicarAgent = cartasDePortePendienteAplicarAgent;
+            this.centroManager = centroManager;
         }
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
@@ -100,7 +96,6 @@ namespace Molinos.DataAgro.Business.Managers
                     cupo.Sustentable = negocio.Sustentable;
                     cupo.EPA = negocio.EPA == null ? false : negocio.EPA;
                 }
-
 
                 if (!error.HayError)
                 {
@@ -142,11 +137,13 @@ namespace Molinos.DataAgro.Business.Managers
                                 //}
                                 cupo.FechaIngreso = d.Fecha;
 
-                                var errorV = ValidarDisponibilidadCupera(cupo.MaterialId, cupo.CentroId, cupo.FechaIngreso, d.Cantidad.Value);
-                                if (errorV.HayError)
-                                {
-                                    error.Errores.AddRange(errorV.Errores);
-                                    continue;
+                                if (cupo.ConDescarga != true) { 
+                                    var errorV = ValidarDisponibilidadCupera(cupo.MaterialId, cupo.CentroId, cupo.FechaIngreso, d.Cantidad.Value);
+                                    if (errorV.HayError)
+                                    {
+                                        error.Errores.AddRange(errorV.Errores);
+                                        continue;
+                                    }
                                 }
 
                                 try
@@ -482,7 +479,7 @@ namespace Molinos.DataAgro.Business.Managers
                     error.Errores.Add(new ErrorMessage(400, "No se encontraron establecimientos con stock disponible"));
                 }
             }
-            if (cupo.ZonaCupoId == 0 || cupo.ZonaCupoId == null)
+            if (cupo.ZonaCupoId == 0)
             {
                 error.Errores.Add(new ErrorMessage(400, "Se debe ingresar una zona"));
             }
@@ -1004,7 +1001,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             string htmlBody = "";
 
-            htmlBody += "En el presente mail, se detalla los cupos generados con Molinos Agro S.A.: <br /><br />  ";
+            htmlBody += "En el presente mail se detallan los cupos generados con Molinos Agro S.A.: <br /><br />  ";
 
             if (cupo.MaterialId == 2)
             {
@@ -1061,8 +1058,8 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += TablaSustentable(cupo);
             }
             htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br />" +
                 "<br /> www.molinosagro.com.ar <br />" +
                 "<table>" +
@@ -1103,7 +1100,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             string htmlBody = "";
 
-            htmlBody += "En el presente mail, se detalla los cupos generados con Molinos Agro S.A. - Destino: " + cupo.Centro.RazonSocial + "<br /><br />  ";
+            htmlBody += "En el presente mail se detallan los cupos generados con Molinos Agro S.A. - Destino: " + cupo.Centro.RazonSocial + "<br /><br />  ";
 
             if (cupo.MaterialId == 2)
             {
@@ -1160,8 +1157,8 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += TablaSustentable(cupo);
             }
             htmlBody += "<br /> Recordamos que el cupo tiene validez desde las 0 hrs hasta las 23:59 hrs del mismo día para el cual fue otorgado el cupo. Evitar el arribo previo o posterior a dicha fecha, ya que perjudican la operatoria, haciendo más lento el circuito de descarga y por ende mayores demoras para los transportes. A su vez, aquellos que no cumplan con la franja que corresponde al cupo podrán sufrir sanciones.";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + cupo.Comercial.Nombres + " " + cupo.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br />" +
                 "<br /> www.molinosagro.com.ar <br />" +
                 "<table>" +
@@ -1325,8 +1322,6 @@ namespace Molinos.DataAgro.Business.Managers
         {
             return FormulaToDto(repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula(material)));
         }
-
-
 
         public List<SugerenciaCupoExcel> ConvertirADtoExcel(List<SugerenciaCupoDto> dto)
         {
@@ -1785,7 +1780,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             //}
             //logger.Debug("CrearSugerenciaCupo - pongo precio pizarra a FijacionDePrecioContrato que no tienen precio");
-
+            var tienenAnulaYReemplaza = repositorio.Listar<Contrato, int>(x => (int)x.AnulaYReemplazaContratoId, x => x.AnulaYReemplazaContratoId != null);
             var contratos = repositorio.Listar<Contrato, SugerenciaCupoDto>(x =>
                 new SugerenciaCupoDto
                 {
@@ -1829,6 +1824,7 @@ namespace Molinos.DataAgro.Business.Managers
                     //x.Sustentable != true &&
                     x.EPA != true &&
                     x.EsFason != true &&
+                    !(tienenAnulaYReemplaza.Any(a => a == x.Id)) &&
                     formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
                     && x.EstadoId == 5 && x.DestinoId == formula.CentroId /*&& x.MercsDeposito != true*/ && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
@@ -1955,7 +1951,7 @@ namespace Molinos.DataAgro.Business.Managers
                     AgenteCompra = "",
                 };
 
-                var pendientes = contratoManager.ListarCartasDePortePendienteAplicar(pendienteDto);
+                var pendientes = cartasDePortePendienteAplicarAgent.ListarCartasDePortePendienteAplicar(pendienteDto);
 
                 if (pendientes != null && pendientes.Count > 0)
                 {
@@ -2176,7 +2172,6 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("CrearSugerenciaCupo - Espacio Dinamico obtenidos: " + espacioDinamicoLista.Count());
             return negociosSinSugerencia;
         }
-
 
         private void ArmarPuntuaciones(Criterio criterio, Dictionary<string, decimal> puntuaciones, int guiones)
         {
@@ -2819,7 +2814,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     Formula formula = repositorio.ObtenerConsultaEscalar(new ObtenerUltimaFormula(material.MaterialId));
                     List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.Fecha >= formula.CuposDesde && x.Fecha <= formula.CuposHasta && x.CentroId == formula.CentroId);
-                    List<ConfiguracionCupoDto> disponibilidadEnPlanta = configuracionCupo.Select(x => new ConfiguracionCupoDto { CentroId = x.CentroId, LimiteAlgoritmo = x.LimiteAlgoritmo, LimiteCupo = x.LimiteCupo, MaterialId = x.MaterialId, Fecha = x.Fecha }).ToList();
+                    List<ConfiguracionCupoDto> disponibilidadEnPlanta = configuracionCupo.Select(x => new ConfiguracionCupoDto { CentroId = x.CentroId, LimiteAlgoritmo = x.LimiteAlgoritmo, LimiteCupo = x.LimiteCupo, MaterialId = x.MaterialId, Fecha = x.Fecha, LimiteDescarga = x.LimiteDescarga }).ToList();
                     var sugerencias = repositorio.Sumar<SugerenciaCupo>(x => x.CantidadDeCupos, x => x.FechaSugerida >= formula.CuposDesde && x.FechaSugerida <= formula.CuposHasta && x.CentroId == formula.CentroId && x.Aceptado == true && x.MaterialId == material.MaterialId);
                     var fechasComprendidas = FechasComprendidas(null);
                     var sugerenciasPorComercial = repositorio.Listar<SugerenciaPorComercial, SugerenciaPorComercialDto>(a => new SugerenciaPorComercialDto { CentroId = a.CentroId, ComercialId = a.ComercialId, Fecha = a.Fecha, Id = a.Id, MaterialId = a.MaterialId, Total = a.Total });
@@ -2830,16 +2825,23 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             //Todos los cupos
                             var CantidadCuposGenerados = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) == fecha && x.CentroId == formula.CentroId && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+
                             //Cupos creados por solicitud y creados manualmente (fuera del algoritmo)
                             var CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
                             fecha && x.CentroId == formula.CentroId && (x.AdministracionCupoId != null || x.NegocioId == null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados fuera del algoritmo y solicitudes
                             var CantidadCuposGeneradosFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
-                            fecha && x.CentroId == formula.CentroId && ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                            fecha && x.CentroId == formula.CentroId && x.ConDescarga != true &&  ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+
                             //Cupos creados dentro del algoritmo
                             var CantidadCuposGeneradosDentroDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
-                           fecha && x.CentroId == formula.CentroId && (x.NegocioId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                           fecha && x.CentroId == formula.CentroId && (x.NegocioId != null && x.ConDescarga != true) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+
+                            //Cupos creados con descarga
+                            var CantidadCuposGeneradosConDescarga = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
+                           fecha && x.CentroId == formula.CentroId  && x.ConDescarga == true && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+
 
                             var hoy = DateTime.Now.Date;
                             var cupo = new DiaCupo()
@@ -2850,16 +2852,25 @@ namespace Molinos.DataAgro.Business.Managers
                                 //total de dispo para el dia 
                                 CantidadDisponibilidadPlanta = disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteCupo),
                                 //Disponibilidad en planta (admin)
-                                CantidadDisponibilidadDia = disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteCupo) - disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteAlgoritmo),
+                                CantidadDisponibilidadDia =
+                                    disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteCupo) -
+                                    disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteAlgoritmo) -
+                                    disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteDescarga),
                                 //Disponibilidad algoritmo
                                 CantidadAlgoritmo = disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteAlgoritmo),
+
+                                //Con Descarga
+                                CantidadDescarga = disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteDescarga),
+                                ConsumidosConDescarga = CantidadCuposGeneradosConDescarga,
+                                DisponibleConDescarga = disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteDescarga) - CantidadCuposGeneradosConDescarga,
 
                                 ConsumidosFueraDelAlgoritmo = CantidadCuposGeneradosFueraDelAlgoritmo,
                                 ConsumidosDentroDelAlgoritmo = CantidadCuposGeneradosDentroDelAlgoritmo,
 
-                                //Admin + devueltas - cupos aceptados por solicitud y cupos realizados fuera del algoritmo
+                                //Admin + devueltas - cupos aceptados por solicitud y cupos realizados fuera del algoritmo - 
                                 DisponiblesYDevoluciones = (disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteCupo) -
-                                disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteAlgoritmo)) +
+                                disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteAlgoritmo) -
+                                disponibilidadEnPlanta.Where(x => x.Fecha == fecha && x.MaterialId == material.MaterialId).Sum(y => y.LimiteDescarga)) +
                                 (int)repositorio.Sumar<AdministracionCupo>(x => x.CantidadCupo + x.CantidadFleteProcedencia, x => x.Fecha == fecha && !x.Excedente && x.MaterialId == material.MaterialId) -
                                 CantidadCuposGeneradosDesdeSolicitudYFueraDelAlgoritmo,
 
@@ -2900,6 +2911,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
+                logger.Debug("Panel CupoManager: " + e);
                 return lista;
             }
             return lista.OrderBy(x => x.Fecha).ToList();
@@ -3017,7 +3029,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla los cupos sin activar con Molinos Agro S.A: <br /><br />  ";
+            htmlBody += "En el presente mail se detallan los cupos sin activar con Molinos Agro S.A: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "Material" + "</td>" +
                     th + "Fecha de Cupo" + "</td>" +
@@ -3033,8 +3045,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /><br /> En el caso que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -3205,7 +3217,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla el cupo rechazado por Molinos Agro S.A: <br /><br />  ";
+            htmlBody += "En el presente mail se detalla el cupo rechazado por Molinos Agro S.A: <br /><br />  ";
 
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" + th + "FECHA DESCARGA: </th>" + Td(ref linea) + Split(cupo.FechaIngreso.ToShortDateString()) + "</td></tr>";
@@ -3217,8 +3229,8 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += "</table>";
             htmlBody += "Motivo de rechazo: " + cupo.MotivoRechazo;
-            htmlBody += "<br /><br /> En el caso que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /><br /> En caso de que sea necesario, comuníquese con  " + comercial.Nombres + " " + comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -4215,7 +4227,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla el resultado de la Anulación Masiva de cupos solicitada en el día " + momento.ToString("dd-MM-yyyy hh:mm") + "hs.: <br />";
+            htmlBody += "En el presente mail se detalla el resultado de la Anulación Masiva de cupos solicitada en el día " + momento.ToString("dd-MM-yyyy hh:mm") + "hs.: <br />";
 
             if (ok.Count > 0)
             {
@@ -4313,7 +4325,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -4419,7 +4431,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla el resultado de la Anulación de cupos <br />";
+            htmlBody += "En el presente mail se detalla el resultado de la anulación de cupos: <br />";
 
             if (cupos.Count > 0)
             {
@@ -4468,7 +4480,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -4515,7 +4527,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla las Sugerencias Pendientes a confirmar o devolver, para realizar una de estas acciones presione <a href='" + ConfigurationManager.AppSettings["UrlBaseDataAgro"] + "'>Aquí</a><br />";
+            htmlBody += "En el presente mail se detallan las Sugerencias Pendientes a confirmar o devolver. Para realizar una de estas acciones presione <a href='" + ConfigurationManager.AppSettings["UrlBaseDataAgro"] + "'>Aquí</a><br />";
 
             var materiales = repositorio.Listar<Material>().Distinct();
             foreach (var material in materiales)
@@ -4586,7 +4598,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "</td></tr></table>";
             }
 
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
               " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
               @"<img src='cid:" + res.ContentId + @"'/>" +
               "<br /> <br /> www.molinosagro.com.ar";
@@ -5391,7 +5403,6 @@ namespace Molinos.DataAgro.Business.Managers
             return resultado;
         }
 
-
         public List<CupoResult> ModificarSugerenciaCupoPorProveedor(List<AceptarSugerenciaCupoDto> sugerenciasAceptadasDesdeElFront)
         {
 
@@ -6039,26 +6050,16 @@ namespace Molinos.DataAgro.Business.Managers
             }
         }
 
-
         private AlternateView CuerpoMailNegociosAlgoritmo(String filePath)
         {
             //var emailComercial = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
             LinkedResource res = new LinkedResource(filePath);
             res.ContentId = Guid.NewGuid().ToString();
-            string th;
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
-            {
-                th = "<th style=\"border: 2px solid white; color: white; background-color: #017940; padding: 5px 0; width: 175px;\">";
-            }
-            else
-            {
-                th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
-            }
-            var linea = 0;
-            string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla adjunto el resultado de los negocios que el algoritmo tomo para priorizar <br />";
 
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            string htmlBody = "";
+            htmlBody += "En el presente mail se detalla adjunto el resultado de los negocios que el algoritmo tomó para priorizar. <br />";
+
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";

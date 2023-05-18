@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Molinos.DataAgro.Entities.Entities;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -34,7 +34,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string CondicionPagoCod { get; set; }
         public string CondicionPagoDescripcion { get; set; }
         public bool? ChequeElectronico { get; set; }
-
         public List<CalidadDto> Calidades { get; set; }
         public int CampanaId { get; set; }
         public string Clasificacion { get; set; }
@@ -46,12 +45,15 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool Virtual { get; set; }
         public decimal KgContratoTotal { get; set; }
         public bool Pase { get; set; }
-
         public int? ProveedorComisionistaId { get; set; }
         public List<SustentableDto> Sustentables { get; set; }
         public bool MercsDeposito { get; set; }
         public bool TarifaAConvenir { get; set; }
         public bool MercAplicada { get; set; }
+        public bool? EPA { get; set; }
+        public bool? Sustentable { get; set; }
+        public decimal? ImporteSustentable { get; set; }
+        public Moneda MonedaSustentable { get; set; }
+        public int? SustentableTipoDBId { get; set; }
     }
 }
-

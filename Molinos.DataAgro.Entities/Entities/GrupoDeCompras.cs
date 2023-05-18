@@ -10,7 +10,3 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool Corredor { get; set; }
     }
 }
-   
-
-
-

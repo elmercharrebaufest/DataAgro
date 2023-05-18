@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
-using WebDataAgro.Models;
 
 namespace Molinos.DataAgro.Test.Controllers
 {
@@ -43,7 +42,6 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.That(result.ViewName, Is.Null.Or.Empty);
         }
 
-
         [Test]
         public void GrabarRolProveedorTest()
         {
@@ -66,7 +64,7 @@ namespace Molinos.DataAgro.Test.Controllers
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             Assert.AreEqual(
-                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"roles\":[{\"Id\":1,\"Descripcion\":\"a\"}],\"comerciales\":[{\"ComercialId\":1,\"Apellido\":\"a\",\"Nombres\":\"a\",\"PerfilId\":0,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":null,\"GrupoDeComprasId\":null,\"GrupoDeCompras\":null,\"Administrador\":null,\"Cupera\":null,\"RolesAsociados\":null,\"NombreCompleto\":\"A A\",\"Deshabilitado\":false,\"FechaDeshabilitado\":null,\"AsignarNegocios\":true,\"IdUsuarioSAP\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"roles\":[{\"Id\":1,\"Descripcion\":\"a\"}],\"comerciales\":[{\"ComercialId\":1,\"Apellido\":\"a\",\"Nombres\":\"a\",\"PerfilId\":0,\"EmpleadorACargoId\":null,\"IdActiveDirectory\":null,\"GrupoDeComprasId\":null,\"GrupoDeCompras\":null,\"Administrador\":null,\"Cupera\":null,\"RolesAsociados\":null,\"NombreCompleto\":\"A A\",\"Deshabilitado\":false,\"FechaDeshabilitado\":null,\"AsignarNegocios\":true,\"IdUsuarioSAP\":null,\"Email\":null,\"ComercialSuplenteId\":null}]},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
     }

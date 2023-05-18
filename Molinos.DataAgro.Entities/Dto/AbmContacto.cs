@@ -1,5 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Validations;
+﻿using Molinos.DataAgro.Entities.Validations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,11 +19,6 @@ namespace Molinos.DataAgro.Entities.Dto
 
         public bool Validate(Resultado oErrorMessages)
         {
-            //if (String.IsNullOrWhiteSpace(this.)
-            //{
-            //    oErrorMessages.Add(new ErrorMessage("El campo 'Descripción' no debe estar vacio", "Descripcion"));
-            //}
-
             return oErrorMessages.HayErrores;
         }
 
@@ -39,7 +33,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int TotalNoOperandoContactos { get; set; }
         public int TotalBajaContactos { get; set; }
         public int TotalSinInteresContactos { get; set; }
-
         public int TotalHabilitadoContactos { get; set; }
         public int TotalLegajoIrregularContactos { get; set; }
         public int TotalNoHabilitadoContactos { get; set; }
@@ -94,4 +87,3 @@ namespace Molinos.DataAgro.Entities.Dto
 
     }
 }
-

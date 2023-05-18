@@ -43,5 +43,8 @@ namespace WebDataAgro.Models
         public int Actualizacion { get; set; }
         public string ApiKeyBolsaRosario { get; set; }
         public string SecretBolsaRosario { get; set; }
+        public int MinutosCronometroConDescarga { get; set; }
+        public int CantidadMaximaDiasNegocioConDescarga { get; set; }
+        public int PorcentajeVolumenNegocioConDescarga { get; set; }
     }
 }

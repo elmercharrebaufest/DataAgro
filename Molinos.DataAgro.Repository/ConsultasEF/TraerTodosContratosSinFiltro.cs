@@ -61,13 +61,6 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         ProvinciaId = contrato is Contrato ? (contrato as Contrato).ProvinciaId : null,
                         LocalidadId = contrato is Contrato ? (contrato as Contrato).LocalidadId : null,
                         Base = contrato is Contrato ? (contrato as Contrato).Base : null,
-                        Importe_Sustentable = contrato is Contrato ? ((decimal)(contrato as Contrato).ImporteSustentable) : (decimal?)null,
-                        MonedaId_Sustentable = contrato is Contrato ? (contrato as Contrato).MonedaSustentableId : "",
-                        Moneda_Sustentable = !(contrato is Contrato) || (contrato as Contrato).MonedaSustentable == null ? "" : (contrato as Contrato).MonedaSustentable.Descripcion,
-                        FechaDesde_Sustentable = DbFunctions.TruncateTime((contrato as Contrato).FechaDesdeSustentable),
-                        FechaHasta_Sustentable = DbFunctions.TruncateTime((contrato as Contrato).FechaHastaSustentable),
-                        FechaDesde_SustentableFormateado = SqlFunctions.DateName("day", (contrato as Contrato).FechaDesdeSustentable) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaDesdeSustentable) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaDesdeSustentable),
-                        FechaHasta_SustentableFormateado = SqlFunctions.DateName("day", (contrato as Contrato).FechaHastaSustentable) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaHastaSustentable) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaHastaSustentable),
                         TarifaAConvenir = contrato.TarifaAConvenir,
                         Fecha_Dolarizado = DbFunctions.TruncateTime(contrato.FechaDolarizado),//contrato is Contrato ? DbFunctions.TruncateTime((contrato as Contrato).FechaDolarizado) : contrato is FijacionDePrecioContrato ? DbFunctions.TruncateTime((contrato as FijacionDePrecioContrato).FechaDolarizado) : (DateTime?)null,
                         Dias_Pesificado = contrato.DiasPesificado,
@@ -100,9 +93,21 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         Observacion = contrato.Observacion != null ? contrato.Observacion : "",
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
                         //Sustentable = (contrato is Contrato) && ((contrato as Contrato).ImporteSustentable != null || (contrato.TarifaAConvenir.HasValue? contrato.TarifaAConvenir.Value : false ) ) && (contrato as Contrato).ImporteSustentable > 0,
-                        Sustentable = (contrato is Contrato) ? (contrato as Contrato).Sustentable.HasValue ? (contrato as Contrato).Sustentable.Value : false : false,
-                        EPA = (contrato is Contrato) && (contrato as Contrato).EPA.HasValue && (contrato as Contrato).EPA.Value,
-                        EPATipoDBId = contrato is Contrato && (contrato as Contrato).EPATipoDBId.HasValue ? (contrato as Contrato).EPATipoDBId : null,
+                        Sustentable = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.Sustentable == true :
+                                    (contrato is Contrato) && (contrato as Contrato).Sustentable.HasValue && (contrato as Contrato).Sustentable.Value,
+                        EPA = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.EPA == true :
+                                    (contrato is Contrato) && (contrato as Contrato).EPA.HasValue && (contrato as Contrato).EPA.Value,
+                        SustentableTipoDBId = contrato is FijacionDePrecioContrato && (contrato as FijacionDePrecioContrato).Contrato.SustentableTipoDBId.HasValue ? (contrato as FijacionDePrecioContrato).Contrato.SustentableTipoDBId :
+                        contrato is Contrato && (contrato as Contrato).SustentableTipoDBId.HasValue ? (contrato as Contrato).SustentableTipoDBId : null,
+                        Importe_Sustentable = (contrato is FijacionDePrecioContrato) ? (contrato as FijacionDePrecioContrato).Contrato.ImporteSustentable ??  null : 
+                                    contrato is Contrato ? ((decimal)(contrato as Contrato).ImporteSustentable) : (decimal?)null,
+                        MonedaId_Sustentable = contrato is FijacionDePrecioContrato ? (contrato as FijacionDePrecioContrato).Contrato.MonedaSustentableId :
+                                    contrato is Contrato ? (contrato as Contrato).MonedaSustentableId : "",
+                        Moneda_Sustentable = !(contrato is Contrato) || (contrato as Contrato).MonedaSustentable == null ? "" : (contrato as Contrato).MonedaSustentable.Descripcion,
+                        FechaDesde_Sustentable = DbFunctions.TruncateTime((contrato as Contrato).FechaDesdeSustentable),
+                        FechaHasta_Sustentable = DbFunctions.TruncateTime((contrato as Contrato).FechaHastaSustentable),
+                        FechaDesde_SustentableFormateado = SqlFunctions.DateName("day", (contrato as Contrato).FechaDesdeSustentable) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaDesdeSustentable) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaDesdeSustentable),
+                        FechaHasta_SustentableFormateado = SqlFunctions.DateName("day", (contrato as Contrato).FechaHastaSustentable) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaHastaSustentable) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaHastaSustentable),
                         Dolarizado = contrato.Dolarizado.Value,
                         Pesificado = contrato.DiasPesificado != null,
                         Negocio = (contrato is ContratoAcuerdo || contrato is AgenteCompra) ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado || contrato.EstadoId == (int)EnumEstadoContrato.PreAnulado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
@@ -245,6 +250,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         HastaOriginal = (contrato is Contrato) ? (contrato as Contrato).FechaHastaOriginal : null,
                         FechaHastaOriginalFormateado = (contrato is Contrato) ? (contrato as Contrato).FechaHastaOriginal != null ? SqlFunctions.DateName("day", (contrato as Contrato).FechaHastaOriginal) + "/" + SqlFunctions.DatePart("month", (contrato as Contrato).FechaHastaOriginal) + "/" + SqlFunctions.DateName("year", (contrato as Contrato).FechaHastaOriginal) : "" : "",
                         ServicioModificado = (contrato is Contrato) ? (contrato as Contrato).Servicios.Any(x => x.Modificado == true) : false,
+                        ConDescarga = (contrato is Contrato) ? (contrato as Contrato).ConDescarga.HasValue ? (contrato as Contrato).ConDescarga.Value : false : false,
                     };
 
                 return queryNegocios;
@@ -318,7 +324,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         FijacionDePrecioContratoId = (contrato is FijacionDePrecioContrato) ? (int?)(contrato as FijacionDePrecioContrato).Id : null,
                         Sustentable = (contrato is Contrato) && (contrato as Contrato).ImporteSustentable != null && (contrato as Contrato).ImporteSustentable > 0 && (contrato as Contrato).Sustentable == true,
                         EPA = (contrato is Contrato) && (contrato as Contrato).EPA.HasValue && (contrato as Contrato).EPA.Value,
-                        EPATipoDBId = contrato is Contrato && (contrato as Contrato).EPATipoDBId.HasValue ? (contrato as Contrato).EPATipoDBId : null,
+                        SustentableTipoDBId = contrato is Contrato && (contrato as Contrato).SustentableTipoDBId.HasValue ? (contrato as Contrato).SustentableTipoDBId : null,
                         Dolarizado = contrato.Dolarizado.Value,
                         Pesificado = contrato.DiasPesificado != null,
                         Negocio = contrato is ContratoAcuerdo ? contrato.Id.ToString() : (contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado)) ? (contrato as FijacionDePrecioContrato).FijacionSAP : contrato.ContratoSAP != "0" ? contrato.ContratoSAP : "",
@@ -411,12 +417,12 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                         PrecioNetoPonderado = contrato.PrecioNetoPonderado,
                         ProveedorComisionistaId = contrato.ProveedorComisionistaId,
                         RazonSocialProveedorComisionista = contrato.ProveedorComisionista.RazonSocial,
-                        FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP :  "",
+                        FijacionSAP = (contrato is FijacionDePrecioContrato) && contrato is FijacionDePrecioContrato && (contrato.EstadoId == (int)EnumEstadoContrato.Finalizado || contrato.EstadoId == (int)EnumEstadoContrato.Eliminado) ? (contrato as FijacionDePrecioContrato).FijacionSAP : "",
+                        ConDescarga = (contrato is Contrato) ? (contrato as Contrato).ConDescarga.HasValue ? (contrato as Contrato).ConDescarga.Value : false : false,
                     };
 
                 return queryNegocios;
             }
-
         }
     }
 }

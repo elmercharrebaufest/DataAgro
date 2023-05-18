@@ -53,8 +53,6 @@ function InicializarElementos() {
         }
     });
 
-
-
     $("#EmpleadorACargo").kendoDropDownList({
         dataTextField: "Apellido",
         dataValueField: "ComercialId",
@@ -64,6 +62,22 @@ function InicializarElementos() {
         if (e.keyCode == 46) {
             $("#EmpleadorACargo").data("kendoDropDownList").text("");
         }
+    });
+
+    $("#ComercialSuplente").kendoDropDownList({
+        dataTextField: "Apellido",
+        dataValueField: "ComercialId",
+    });
+
+    $("#ComercialSuplente").closest('.k-dropdown.k-widget').keydown(function (e) {
+        if (e.keyCode == 46) {
+            $("#ComercialSuplente").data("kendoDropDownList").text("");
+        }
+    });
+
+    $("#GrupoDeCompras").kendoDropDownList({
+        dataTextField: "Descripcion",
+        dataValueField: "Id"
     });
 
     $("#RolId").kendoDropDownList({
@@ -76,7 +90,6 @@ function InicializarElementos() {
             }
         },
         template: kendo.template($("#template").html())
-
     });
 
     $("#RolId").closest('.k-dropdown.k-widget').keydown(function (e) {
@@ -119,6 +132,7 @@ function CrearResultadosDataSource(datos) {
                     Deshabilitado: { type: "boolean", editable: false },
                     AsignarNegocios: { type: "boolean", editable: false },
                     FechaDeshabilitado: { type: "date", editable: false },
+                    GrupoDeCompras: { type: "string", editable: false }
                 }
             }
         },
@@ -135,7 +149,8 @@ function CreateGridCentro() {
             { field: "Rol", title: "Roles", attributes: { style: 'white-space: nowrap ' }},
             { field: "Deshabilitado", title: "Deshabilitado", template: "#if(Deshabilitado){#Si (#=kendo.toString(kendo.parseDate(FechaDeshabilitado, 'yyyy-MM-dd hh:mm:sss'), 'MM/dd/yyyy HH:mm:ss')#) #}else{}# " },
             { field: "AsignarNegocios", title: "Asignar Negocios", template: "#if(AsignarNegocios){#Si#}else{#No#}# " },
-            { filed: "Equipo", title: "Equipo", template: "#= Equipo.map(a => a.Apellido).join(', ') #" }
+            { filed: "Equipo", title: "Equipo", template: "#= Equipo.map(a => a.Apellido).join(', ') #" },
+            { field: "GrupoDeCompras", title: "Zona" }
         ],
 
         sortable: true,
@@ -256,6 +271,7 @@ function CrearViewModel() {
         PerfilCombo: [],
         ComercialCombo: [],
         RolCombo: [],
+        ZonaCombo: [],
         RolesSeleccionados: [],
         Comercial: null,
 
@@ -276,7 +292,6 @@ function CrearViewModel() {
     kendo.bind($("#Abm"), viewModel);
 }
 
-
 function InicializarCombos() {
     var funcReturn = function (data) {
         if (ExistsErrorMessages(data.Errores)) {
@@ -296,6 +311,7 @@ function AsignarCombos() {
     viewModel.set("PerfilCombo", datosIniAbmCentro.Datos.Perfil);
     viewModel.set("ComercialCombo", datosIniAbmCentro.Datos.Comercial);
     viewModel.set("RolCombo", datosIniAbmCentro.Datos.Rol);
+    viewModel.set("ZonaCombo", datosIniAbmCentro.Datos.GrupoDeCompras);
 }
 
 function InicializarBusquedaInicial() {
@@ -359,12 +375,17 @@ function UpdateViewModel(model) {
         "Deshabilitado": model.Comercial.Deshabilitado,
         "AsignarNegocios": model.Comercial.AsignarNegocios,
         "FechaDeshabilitado": model.Comercial.FechaDeshabilitado,
+        "GrupoDeCompras": model.Comercial.GrupoDeComprasId,
+        "Email": model.Comercial.Email,
+        "ComercialSuplente": model.Comercial.ComercialSuplenteId
     };
     
     viewModel.set("Comercial", comercial);
     viewModel.set("RolesSeleccionados", []);
     viewModel.Comercial.PerfilId = $("#PerfilId").data("kendoDropDownList").dataItem();
     viewModel.Comercial.EmpleadorACargo = $("#EmpleadorACargo").data("kendoDropDownList").dataItem();
+    viewModel.Comercial.ComercialSuplente = $("#ComercialSuplente").data("kendoDropDownList").dataItem();
+    viewModel.Comercial.GrupoDeCompras = $("#GrupoDeCompras").data("kendoDropDownList").dataItem();
 
     var select = $("#RolId").data("kendoDropDownList");
     
@@ -397,6 +418,9 @@ function LimpiarValidaciones() {
     $("#errIdActiveDirectory").css("display", "none");
     $("#errIdUsuarioSAP").css("display", "none");
     $("#errAdministrador").css("display", "none");
+    $("#errEmail").css("display", "none");
+    $("#errGrupoDeCompras").css("display", "none");
+    $("#errComercialSuplente").css("display", "none");
 }
 
 function HabilitarInicio() {
@@ -524,11 +548,13 @@ function Grabar() {
         "AsignarNegocios": viewModel.get("Comercial.AsignarNegocios"),
         "PerfilId": GetDropDownValue(viewModel, "Comercial.PerfilId.PerfilId"),
         "EmpleadorACargoId": GetDropDownValue(viewModel, "Comercial.EmpleadorACargo.ComercialId"),
+        "ComercialSuplenteId": GetDropDownValue(viewModel, "Comercial.ComercialSuplente.ComercialId"),
         "IdActiveDirectory": viewModel.get("Comercial.IdActiveDirectory"),
         "IdUsuarioSAP": viewModel.get("Comercial.IdUsuarioSAP"),
         "Administrador": viewModel.get("Comercial.Administrador"),
-        "Cupera": viewModel.get("Comercial.Cupera")
-        
+        "Cupera": viewModel.get("Comercial.Cupera"),
+        "GrupoDeComprasId": GetDropDownValue(viewModel, "Comercial.GrupoDeCompras.Id"),
+        "Email": viewModel.get("Comercial.Email")
     };
 
     var result = MSExecuteOnServer('/Comercial/Grabar', { oComercial: datos, roles: viewModel.RolesSeleccionados });

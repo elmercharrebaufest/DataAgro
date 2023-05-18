@@ -437,7 +437,6 @@ function CargarGrilla() {
     }
 }
 
-
 function addOrRemoveFilter(grid, field, operator, value) {
 
     var newFilter = { field: field, operator: operator, value: value };
@@ -490,16 +489,17 @@ function addOrRemoveFilter(grid, field, operator, value) {
 function recargarAceptar() {
     recargarGrilla();
 }
+
 function recargarGrilla() {
     $('#gridInformeCompraNet').data('kendoGrid').dataSource.read();
 }
+
 function AutoRecargarSolicitudes() {
     setInterval(function () {
         if (document.getElementById('checkRecarga').checked == true) {
             recargarGrilla();
         }
     }, 30000);
-
 }
 
 function InicializarElementos() {
@@ -522,7 +522,6 @@ function InicializarElementos() {
         }
     });
 
-
     $("#ComercialIdSE").kendoDropDownList({
         dataTextField: "Text",
         dataValueField: "Value",
@@ -533,23 +532,33 @@ function InicializarElementos() {
         }
     });
 
+    function changeFechaSE() {
+        $("#FechaHastaSE").data("kendoDatePicker").value("");
+        var datepicker = $("#FechaHastaSE").data("kendoDatePicker");
+        datepicker.min(kendo.parseDate($("#FechaSE").val()));
+        datepicker.value(kendo.parseDate($("#FechaSE").val()));
+    }
+
     $("#FechaSE").kendoDatePicker({
         min: new Date(),
+        close: function () {
+            changeFechaSE();
+        },
         change: function () {
-            $("#FechaHastaSE").data("kendoDatePicker").value("");
-            var datepicker = $("#FechaHastaSE").data("kendoDatePicker");
-            datepicker.min(kendo.parseDate($("#FechaSE").val()));
-            datepicker.value(kendo.parseDate($("#FechaSE").val()));
-
+            changeFechaSE();
         }
     });
+
+
+
     $("#FechaHastaSE").kendoDatePicker({
         //min: kendo.parseDate($("#FechaSE").data("kendoDatePicker").value()),
         min: kendo.parseDate($("#FechaSE").val()),
         change: function () {
-            //$("#contratoId").val("");
             CrearTablaFechaHasta();
-            $("#boton-carga-masiva").show();
+            if (($("#FechaSE").val() > $("#FechaHastaSE").val()) && $("#FechaHastaSE").val() != "") {
+                $("#boton-carga-masiva").show();
+            } else $("#boton-carga-masiva").hide();
         }
     });
 
@@ -581,11 +590,16 @@ function CrearTablaFechaHasta() {
 
     for (var i = 0; i <= diffDays; i++) {
 
-        var fila = '<tr class="fila-carga"><input name="Dias[' + i + '].Fecha" value="' + date1 + '" type="hidden"/><td>' + date1 + '</td><td><input name="Dias[' + i + '].Cantidad" class="cantidad-masiva-cupos" value="' + $("#CantidadCupoSE").data('kendoNumericTextBox').value() + '"/></td></tr>';
+        var fila = '<tr class="fila-carga">' +
+            '<input name="Dias[' + i + '].Fecha" value="' + date1 + '" type="hidden"/>' +
+            '<td>' + date1 + '</td>' +
+            '<td><input name="Dias[' + i + '].Cantidad" class="cantidad-masiva-cupos" value="' + $("#CantidadCupoSE").data('kendoNumericTextBox').value() + '"/></td>' +
+            '</tr>';
         $("#cargaMasiva-cupos-table").append(fila);
-        var newdate = kendo.parseDate(date1);
 
-        newdate.setDate(newdate.getDate() + 1); var dd = newdate.getDate();
+        var newdate = kendo.parseDate(date1);
+        newdate.setDate(newdate.getDate() + 1);
+        var dd = newdate.getDate();
         var mm = newdate.getMonth() + 1;
         var y = newdate.getFullYear();
 
@@ -603,8 +617,6 @@ function CrearTablaFechaHasta() {
         //$("#boton-carga-masiva").hide();
         $("#cancelar-carga").unbind('click');
     });
-
-
 
     $('[name="Dias[0].Cantidad"]').change(function () {
         if ($("#cantidad").val() == 0) {
@@ -683,35 +695,35 @@ function grabarSolicitudExtraordinaria() {
         MensErr("Seleccione la Calidad"); return;
     }
     if ($("#FechaSE").data("kendoDatePicker").value() == null) {
-        MensErr("Seleccione una Fecha Desde mayor o igual al dia actual."); return;
+        MensErr("Seleccione una Fecha Desde mayor o igual al día actual."); return;
     }
     if ($("#FechaSE").data("kendoDatePicker").value() < new Date().setHours(0, 0, 0, 0)) {
-        MensErr("Seleccione una Fecha Desde mayor o igual al dia actual."); return;
+        MensErr("Seleccione una Fecha Desde mayor o igual al día actual."); return;
     }
     if ($("#FechaHastaSE").data("kendoDatePicker").value() < $("#FechaSE").data("kendoDatePicker").value().setHours(0, 0, 0, 0)) {
-        MensErr("La Fecha Hasta no puede ser menor a Fecha Desde."); return;
+        MensErr("La Fecha Hasta no puede ser menor a la Fecha Desde, ni puede estar vacía."); return;
     }
     if ($("#ProveedorIdSE").val() == "") {
         $("#buscadorProveedorSE").click();
         MensErr("Seleccione un Proveedor"); return;
     }
     if ($("#ObservacionSE").val().length > 500) {
-        MensErr("La Observacion es muy larga. 500 caracteres maximo"); return;
+        MensErr("La observación es muy larga: 500 caracteres como máximo."); return;
     }
     if ($("#ComercialIdSE").data("kendoDropDownList").value() == "") {
         MensErr("Seleccione el Comercial"); return;
     }
     if ($("#CantidadCupoSE").data("kendoNumericTextBox").value() == null || $("#CantidadCupoSE").data("kendoNumericTextBox").value() == 0) {
-        MensErr("Ingrese la Cantidad"); return;
+        MensErr("Ingrese la cantidad de cupos."); return;
     }
     if ($("#FasonES").is(':checked') && $("#CuitES").val() == "") {
-        MensErr("Complete el CUIT del destinatario"); return;
+        MensErr("Complete el CUIT del destinatario."); return;
     }
 
     if ($("#buscadorProveedorSE").val() != "" && ($("#Sustentable").is(':checked') == true || $("#EPA").is(':checked') == true) && $("#CentroIdSE").val() == "1029" && $("#MaterialIdSE").val() == "3" && grupoSegmentacion == "Productores") {
         VisualizarStock(true);
         if (!stockDisponible) {
-            MensErr("No se pudo guardar porque no existen establecimientos con stock disponible");
+            MensErr("No se pudo guardar porque no existen establecimientos con stock disponible.");
             return;
         }
         //else if (stockInsuficiente) {
@@ -735,7 +747,7 @@ function grabarSolicitudExtraordinaria() {
         //}
     }
     if (dataTabla.length == 0 && table.rows.length > 2) {
-        MensErr("Ingrese cantidad de cupos para alguno de los dias."); return;
+        MensErr("Ingrese la cantidad de cupos para alguno de los días."); return;
     }
 
     BlockUi('Grabando...');
@@ -766,6 +778,7 @@ function grabarSolicitudExtraordinaria() {
         $.unblockUI();
     }, 250);
 }
+
 function ListarRespuesta(result) {
     $.unblockUI();
     var erroresTabla = new Array();
@@ -775,13 +788,11 @@ function ListarRespuesta(result) {
         cuposGeneradosTabla = cuposGeneradosTabla.concat(result.ListaCupos);
         $("#modalSolicitudExtraordinaria").modal("hide");
     }
-
     else if (result.ListaErrores != null && result.ListaErrores.length > 0) {
         for (var i = 0; i < result.ListaErrores.length; i++) {
             cuposGeneradosTabla = cuposGeneradosTabla.concat(result.ListaErrores[i].Message);
             //$("#modalSolicitudExtraordinaria").modal("hide");
         }
-
     } else {
         $("#modalSolicitudExtraordinaria").modal("hide");
         MensInfo("La solicitud se genero correctamente.");
@@ -796,7 +807,6 @@ function ListarRespuesta(result) {
             $('#resultadoCupoSolicitud').modal('toggle');
         }
     }
-
 
     //if (result.HayError && cuposGeneradosTabla.length < 0) {
     //    for (var i = 0; i < result.ListaErrores.length; i++) {
@@ -942,7 +952,6 @@ function VisualizarStock(noabrir) {
             MensErr("No se encontraron establecimientos con stock disponible.")
         }
     }
-
 }
 
 function MostrarVisualizarStock() {
@@ -958,6 +967,7 @@ function ObtenerIdSolicitudSeleccionada(id) {
     var grid = $("#gridInformeCompraNet").data("kendoGrid").dataSource.data();
     return grid.filter(function (x) { return (x.Id == id) });
 }
+
 function ActualizarSolicitud(id) {
 
     var solicitudSeleccionada = ObtenerIdSolicitudSeleccionada(id)
@@ -973,7 +983,7 @@ function ActualizarSolicitud(id) {
         cantidadFp = 0;
     }
     if (cantidad == 0 && cantidadFp == 0) {
-        MensErr("Ingrese una cantidad de cupos válida");
+        MensErr("Ingrese una cantidad de cupos válida.");
         recargarGrilla();
         return;
     }

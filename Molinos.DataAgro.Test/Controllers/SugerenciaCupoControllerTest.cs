@@ -1,23 +1,17 @@
 ﻿using Autofac.Extras.NLog;
-using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Interfaces.Managers;
-using Molinos.DataAgro.Repository;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
-using WebDataAgro.Models;
 
 namespace Molinos.DataAgro.Test.Controllers
 {
@@ -38,7 +32,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [SetUp]
         public void SetUp()
         {
-            this.serializer = new JavaScriptSerializer();
+            serializer = new JavaScriptSerializer();
             loggerMock = new Mock<ILogger>();
             cupoManagerMock = new Mock<ICupoManager>();
             materialManagerMock = new Mock<IMaterialManager>();
@@ -68,7 +62,7 @@ namespace Molinos.DataAgro.Test.Controllers
             centroManagerMock.Setup(x => x.TraerTodoCentro())
               .Returns(new ResultIniCentro { Centro = new List<CentroIni>() });
             cupoManagerMock.Setup(x => x.DevolverTodoCierreCupera()).Returns(new List<CierreCupera>());
-            comercialManagerMock.Setup(x => x.TraerTodoComercial()).Returns(new ResultIniComercial { Comercial = new List<ComercialIni>() });
+            comercialManagerMock.Setup(x => x.ListarComercialesAsignanNegocios()).Returns(new List<ComercialQry>());
 
             var result = target.Index() as ViewResult;
             Assert.NotNull(result);
@@ -107,7 +101,7 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void RechazarTest()
         {
-            List<int> ids = new List<int>{ 1 };
+            List<int> ids = new List<int> { 1 };
             var result = target.Rechazar(ids, "");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -158,13 +152,11 @@ namespace Molinos.DataAgro.Test.Controllers
             centroManagerMock.Setup(x => x.TraerTodoCentro())
               .Returns(new ResultIniCentro { Centro = new List<CentroIni>() });
             cupoManagerMock.Setup(x => x.DevolverTodoCierreCupera()).Returns(new List<CierreCupera>());
-            comercialManagerMock.Setup(x => x.TraerTodoComercial()).Returns(new ResultIniComercial { Comercial = new List<ComercialIni>() });
-
+            comercialManagerMock.Setup(x => x.ListarComercialesAsignanNegocios()).Returns(new List<ComercialQry>());
 
             var result = target.PartialTabla(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int?>()) as PartialViewResult;
 
             Assert.NotNull(result);
-
         }
 
         [Test]

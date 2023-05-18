@@ -56,7 +56,7 @@
                         @*Disponibilidad en Administrador*@
                         <tr class="ColorBackgroundTr">
                             <td style="text-align: initial">
-                                <strong><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es el Limite de cupos menos el Limite del Algoritmo">Disponibilidad en Administrador</span></strong>
+                                <strong><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es el Limite de cupos menos el Limite del Algoritmo y con descarga">Disponibilidad en Administrador</span></strong>
                                 <i class="fa fa-chevron-right" style="font-size: 11px" aria-hidden="true"></i>
                             </td>
                             @foreach (var d in m.GroupBy(x => x.Fecha))
@@ -83,6 +83,53 @@
                             }
 
                         </tr>
+
+
+
+
+
+
+
+
+                        @*Disponibilidad en Administrador con descarga*@
+                        <tr class="ColorBackgroundTr">
+                            <td style="text-align: initial">
+                                <strong><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Es el Limite de cupos con descarga">Disponibilidad con Descarga</span></strong>
+                                <i class="fa fa-chevron-right" style="font-size: 11px" aria-hidden="true"></i>
+                            </td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { CantidadDescarga = 0 }).Sum(x => x.CantidadDescarga)</td>
+                            }
+
+                        </tr>
+                        @*Consumidos*@
+                        <tr>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-placement="bottom" title="Son los cupos generados manualmente o generados desde alguna solicitud">Consumidos</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { ConsumidosConDescarga = 0 }).Sum(x => x.ConsumidosConDescarga)</td>
+                            }
+
+                        </tr>
+                        @*Disponibles *@
+                        <tr>
+                            <td style="text-align: end"><span style="cursor: pointer" data-toggle="tooltip" data-html="true" data-placement="bottom" title="Es la <strong>Disponibilidad en Administrador</strong> mas las <strong>Solicitudes Devueltas</strong> hechas por el comercial, menos los <strong>Cupos Consumidos</strong>">Disponibles</span></td>
+                            @foreach (var d in m.GroupBy(x => x.Fecha))
+                            {
+                                <td>@m.Where(x => x.Fecha == d.Key).DefaultIfEmpty(new DiaCupo { DisponibleConDescarga = 0 }).Sum(x => x.DisponibleConDescarga)</td>
+                            }
+
+                        </tr>
+
+
+
+
+
+
+
+
+
                         @*Disponibilidad Algoritmo*@
                         <tr class="ColorBackgroundTr">
                             <td style="text-align: initial">

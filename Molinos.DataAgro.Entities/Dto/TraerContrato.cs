@@ -36,13 +36,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ProvinciaId { get; set; }
         public int? LocalidadId { get; set; }
         public bool? Base { get; set; }
-        public decimal? Importe_Sustentable { get; set; }
-        public string MonedaId_Sustentable { get; set; }
-        public string Moneda_Sustentable { get; set; }
-        public DateTime? FechaDesde_Sustentable { get; set; }
-        public string FechaDesde_SustentableFormateado { get; set; }
-        public DateTime? FechaHasta_Sustentable { get; set; }
-        public string FechaHasta_SustentableFormateado { get; set; }
         public DateTime? Fecha_Dolarizado { get; set; }
         public string Fecha_DolarizadoFormateado { get; set; }
         public int? Dias_Pesificado { get; set; }
@@ -80,7 +73,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public string Observacion { get; set; }
         //public string Observacion_F { get; set; }
         public int? FijacionDePrecioContratoId { get; set; }
-        public bool? Sustentable { get; set; }
         public bool? Dolarizado { get; set; }
         public bool? Pesificado { get; set; }
         public string Negocio { get; set; }
@@ -272,9 +264,18 @@ namespace Molinos.DataAgro.Entities.Dto
         public string FechaHastaOriginalFormateado { get; set; }
         public List<ServicioValorDto> Servicios { get; set; }
         public bool ServicioModificado { get; set; }
+        public bool? Sustentable { get; set; }
+        public decimal? Importe_Sustentable { get; set; }
+        public string MonedaId_Sustentable { get; set; }
+        public string Moneda_Sustentable { get; set; }
+        public DateTime? FechaDesde_Sustentable { get; set; }
+        public string FechaDesde_SustentableFormateado { get; set; }
+        public DateTime? FechaHasta_Sustentable { get; set; }
+        public string FechaHasta_SustentableFormateado { get; set; }
         public bool? EPA { get; set; }
-        public int? EPATipoDBId { get; set; }
-        public string EPATipoDB { get; set; }
+        public int? SustentableTipoDBId { get; set; }
+        public string SustentableTipoDB { get; set; }
+        public bool? ConDescarga { get; set; }
     }
 
     public class StoredPorContratoResult

@@ -4,7 +4,6 @@ using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Managers;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -191,37 +190,37 @@ namespace Molinos.DataAgro.Business.Managers
             var proveedor = repositorio.Obtener<Proveedor>(x => x.ProveedorId == oParam.ProveedorId);
             if (proveedor == null)
             {
-                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' es obligatorio");
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' es obligatorio.");
                 return oErrorMessages;
             }
             if (proveedor.Deshabilitado.HasValue && proveedor.Deshabilitado.Value != false)
             {
-                oErrorMessages.Error("ProveedorId", "Proveedor deshabilitado");
+                oErrorMessages.Error("ProveedorId", "Proveedor deshabilitado.");
                 return oErrorMessages;
             }
             if (oParam.ProveedorId == 0)
             {
-                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacio");
+                oErrorMessages.Error("ProveedorId", "El campo 'Proveedor' no debe estar vacío.");
             }
             if (oParam.MaterialId == 0)
             {
-                oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacio");
+                oErrorMessages.Error("Material", "El campo 'Material' no debe estar vacío.");
             }
 
             if (oParam.Cantidad == 0)
             {
-                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacio");
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe estar vacío.");
             }
 
             if (oParam.Cantidad < 0)
             {
-                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo.");
             }
             var cuitCorredor = oParam.CorredorId.HasValue ? mobjProveedorManager.TraerCuit(oParam.CorredorId.Value) : "";
             var cuitProveedor = mobjProveedorManager.TraerCuit(oParam.ProveedorId ?? 0);
             if (string.IsNullOrEmpty(oParam.ContratoSAP))
             {
-                oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacio");
+                oErrorMessages.Error("ContratoId", "El campo 'Contrato' no debe estar vacío.");
                 return oErrorMessages;
             }
             if (validacionesMinimas)
@@ -232,7 +231,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (fijacion == null)
                 {
-                    oErrorMessages.Error("ContratoId", "El Contrato no existe");
+                    oErrorMessages.Error("ContratoId", "El contrato no existe.");
                     return oErrorMessages;
                 }
                 else
@@ -245,47 +244,47 @@ namespace Molinos.DataAgro.Business.Managers
                     var KilosPendiente = double.Parse(fijacion.KilosPendiente.Replace(".", "")) /*+ kilosContrato*/;
                     if (KilosPendiente < oParam.Cantidad)
                     {
-                        oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato");
+                        oErrorMessages.Error("Cantidad", "La cantidad excede a los kilos del contrato.");
                     }
                     oParam.TrigoEspecial = oParam.Virtual != true ? fijacion.Calidad != null ? fijacion.Calidad.Value : false : false;
                 }
             }
             if (oParam.Cantidad < 0)
             {
-                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo");
+                oErrorMessages.Error("Cantidad", "El campo 'Cantidad' no debe ser negativo.");
             }
             if (oParam.Precio == 0 && oParam.Pizarra.HasValue && !oParam.Pizarra.Value)
             {
-                oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacio");
+                oErrorMessages.Error("Precio", "El campo 'Precio' no debe estar vacío.");
             }
             if (oParam.MonedaId == null && oParam.Pizarra.HasValue && !oParam.Pizarra.Value)
             {
-                oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacio");
+                oErrorMessages.Error("MonedaId", "El campo 'Moneda' no debe estar vacío.");
             }
             if (oParam.ComercialId == 0 || oParam.ComercialId == null)
             {
-                oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacio");
+                oErrorMessages.Error("ComercialId", "El campo 'Comercial' no debe estar vacío.");
             }
             if (validacionesMinimas && oParam.Pizarra != true)
             {
                 var rangosPrecio = repositorio.Listar<RangoPrecio>();
                 if (rangosPrecio.Exists(x => x.MaterialId == oParam.MaterialId && x.MonedaId == oParam.MonedaId && (x.PrecioMaximo < oParam.Precio || x.PrecioMinimo > oParam.Precio)))
                 {
-                    oErrorMessages.Error("Precio", "Precio fuera de Rango");
+                    oErrorMessages.Error("Precio", "Precio fuera de Rango.");
                 }
             }
             if (oParam.CampanaId == 0 || oParam.CampanaId == null)
             {
-                oErrorMessages.Error("CampanaId", "Campaña del Contrato seleccionado fuera del rango");
+                oErrorMessages.Error("CampanaId", "Campaña del contrato seleccionado fuera del rango.");
             }
             if (oParam.PagoDiferido.HasValue && oParam.PagoDiferido.Value && oParam.DiasPesificado == null)
             {
-                oErrorMessages.Error("CampanaId", "Se debe completar la los Días en negocios de Pago Diferido");
+                oErrorMessages.Error("CampanaId", "Se deben completar los días en negocios de Pago Diferido.");
             }
             if (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value != 0 &&
                 oParam.MonedaId != "ARP  ")
             {
-                oErrorMessages.Error("pagoDiferido", "La Fijación de pago diferido siempre es en ARP");
+                oErrorMessages.Error("pagoDiferido", "La fijación de pago diferido siempre es en ARP.");
             }
 
             if (oParam.MonedaId != "USDM " && oParam.AperturaPrecio != null)
@@ -294,7 +293,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                 if (oParam.FechaCierta == null && oParam.PagoDiferido != true && concepto != null)
                 {
-                    oErrorMessages.Error("", ".Concepto financiero es obligatorio con pago diferido");
+                    oErrorMessages.Error("", "Concepto financiero es obligatorio con pago diferido.");
                 }
                 //if (oParam.FechaCierta != null && oParam.ObligatoriedadCostoFinanciero == true)
                 //{
@@ -316,7 +315,7 @@ namespace Molinos.DataAgro.Business.Managers
                         (oParam.PagoDiferido.HasValue && !oParam.PagoDiferido.Value)) &&
                         (!oParam.DiasPesificado.HasValue || (oParam.DiasPesificado.HasValue && oParam.DiasPesificado.Value == 0)))))
                     {
-                        oErrorMessages.Error("", "Días de diferimiento/costo financiero es obligatorio con el pago diferido en pesos");
+                        oErrorMessages.Error("", "Días de diferimiento/costo financiero es obligatorio con el pago diferido en pesos.");
                     }
                 }
                 //}
@@ -348,23 +347,23 @@ namespace Molinos.DataAgro.Business.Managers
 
                         if (oParam.FechaOperacion < diaAnterior.Date && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
                         {
-                            oErrorMessages.Error("FechaOperacion", "La Fecha Operacion no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+                            oErrorMessages.Error("FechaOperacion", "La Fecha de operación no puede ser anterior al último día habil (" + diaAnterior.ToString("dd/MM/yyyy") + ").");
 
                         }
 
                         if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                         {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por el cual la fecha de operación es anterior al día de la fecha.");
                         }
 
                         if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
                         {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres.");
                         }
                     }
                     if (oParam.FechaOperacion.Date > fijacionSave.Fecha.Date)
                     {
-                        oErrorMessages.Error("NoInformaSio", "Fecha de operación no puede ser mayor a " + fijacionSave.Fecha.ToString("dd/MM/yyyy"));
+                        oErrorMessages.Error("NoInformaSio", "La fecha de operación no puede ser mayor a " + fijacionSave.Fecha.ToString("dd/MM/yyyy"));
                     }
                 }
                 else
@@ -375,27 +374,27 @@ namespace Molinos.DataAgro.Business.Managers
 
                         if (oParam.FechaOperacion.Date < diaAnterior.Date && !PermisosHelper.Is(PermisosDataAgro.NegociosFechaMayorDiaAnterior))
                         {
-                            oErrorMessages.Error("FechaOperacion", "La Fecha Operación no puede ser anterior al ultimo día habil." + diaAnterior.ToString("dd/MM/yyyy"));
+                            oErrorMessages.Error("FechaOperacion", "La fecha de operación no puede ser anterior al último día habil (" + diaAnterior.ToString("dd/MM/yyyy") + ").");
 
                         }
                         if (string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior))
                         {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la Fecha Operacion es anterior al día de la fecha.");
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Ingrese el motivo por la cual la fecha de operación es anterior al día de la fecha.");
                         }
                         if (!string.IsNullOrEmpty(oParam.DescripcionOperacionAnterior) && oParam.DescripcionOperacionAnterior.Length <= 5)
                         {
-                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres");
+                            oErrorMessages.Error("MotivoOperacionAnterior", "Es obligatorio ingresar un motivo con más de 5 caracteres.");
                         }
                     }
                 }
             }
             if (oParam.Dolarizado.HasValue && oParam.Dolarizado.Value && !oParam.FechaDolarizado.HasValue)
             {
-                oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
+                oErrorMessages.Error("dolarizado", "Se debe completar la fecha de pesificación en negocios dolarizados.");
             }
             if (oParam.FechaDolarizado.HasValue && oParam.FechaDolarizado.Value < DateTime.Now.Date)
             {
-                oErrorMessages.Error("dolarizado", "La fecha de dolarizado no es válida");
+                oErrorMessages.Error("dolarizado", "La fecha de dolarizado no es válida.");
 
             }
 
@@ -408,13 +407,13 @@ namespace Molinos.DataAgro.Business.Managers
                     var fechaLimite = oParam.FechaOperacion.AddDays(cantidadDias);
                     if (oParam.FechaDolarizado.Value.Date > fechaLimite.Date)
                     {
-                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días");
+                        oErrorMessages.Error("Fecha Dolarizado", "La fecha dolarizado debe ser menor o igual que los " + cantidadDias + " días.");
                     }
                 }
             }
             if (oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero) /*&& oParam.Pizarra != true*/)
             {
-                oErrorMessages.Error("Descuentos", "El costo financiero no puede ser negativo");
+                oErrorMessages.Error("Descuentos", "El costo financiero no puede ser negativo.");
             }
 
             if (oParam.PagoDiferido == true && oParam.DiasPesificado != null)
@@ -425,44 +424,44 @@ namespace Molinos.DataAgro.Business.Managers
                     var limitePesificado = PermisosHelper.Is(PermisosDataAgro.ModificarLimitePesificado) ? conf.CantidadDiasPesificadoLimite : conf.DiasDiferimiento;
                     if (oParam.DiasPesificado.Value > limitePesificado)
                     {
-                        oErrorMessages.Error("Pago Diferido", "Los dias de pesificado deben ser menor o igual que los " + limitePesificado + " días");
+                        oErrorMessages.Error("Pago Diferido", "Los días de pesificado deben ser menos o igual a " + limitePesificado + " días.");
                     }
                 }
             }
             if (oParam.EstadoId == 5 && oParam.DolarizadoExpress.HasValue && oParam.DolarizadoExpress.Value && !oParam.FechaDolarizado.HasValue)
             {
-                oErrorMessages.Error("dolarizado", "Se debe completar la Fecha de pesificación en negocios Dolarizados");
+                oErrorMessages.Error("dolarizado", "Se debe completar la fecha de pesificación en negocios dolarizados.");
             }
             if ((oParam.DolarizadoExpress == true || oParam.Dolarizado == true || oParam.DolarizadoCorredor == true) && (oParam.Cesion == true || oParam.Anticipo == true))
             {
-                oErrorMessages.Error("dolarizado", "No se puede completar Dolarizados porque el contrato tiene Cesion o Anticipo.");
+                oErrorMessages.Error("dolarizado", "No se puede completar Dolarizados porque el contrato tiene Cesión o Anticipo.");
             }
 
             if (fijacionSave != null && PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno) && fijacionSave.EstadoId != (int)EnumEstadoContrato.PreAprobacion)
             {
-                oErrorMessages.Error("Contrato", "No se puede modificar la fijacion.");
+                oErrorMessages.Error("Contrato", "No se puede modificar la fijación.");
             }
 
             if (fijacionSave != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
             {
                 if (fijacionSave.DolarizadoTercero == true && oParam.Dolarizado != true && oParam.DolarizadoExpress != true && oParam.DolarizadoCorredor != true)
                 {
-                    oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado que marco el tercero.");
+                    oErrorMessages.Error("Dolarizado", "Se debe completar Dolarizado que marcó el tercero.");
                 }
 
                 if (fijacionSave.PagoDiferidoTercero == true && oParam.PagoDiferido != true)
                 {
-                    oErrorMessages.Error("Dolarizado", "Se debe completar Pago Diferido que marco el tercero.");
+                    oErrorMessages.Error("Dolarizado", "Se debe completar Pago Diferido que marcó el tercero.");
                 }
 
             }
             if (PermisosHelper.Is(PermisosDataAgro.ModificarFijacionVirtual) && oParam.Virtual != true)
             {
-                oErrorMessages.Error("Virtual", "Es obligatorio completar el campo fijacion virtual");
+                oErrorMessages.Error("Virtual", "Es obligatorio completar el campo fijación virtual.");
             }
             if ((oParam.MaterialId == 4 || oParam.MaterialId == 5) && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(a => a.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Comisiones && (a.Importe > 0 || a.Porcentaje > 0)))
             {
-                oErrorMessages.Error("Comisiones", "No se puede cargar el concepto comisiones en apertura de precio para negocios de Girasol");
+                oErrorMessages.Error("Comisiones", "No se puede cargar el concepto comisiones en apertura de precio para negocios de girasol.");
             }
             return oErrorMessages;
         }
@@ -592,6 +591,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ? null : oFijacionDePrecio.FechaCierta.HasValue ? oFijacionDePrecio.ObligatoriedadCostoFinanciero : null;
                 oFijacionDePrecioSave.TipoPosicionCBOTId = oFijacionDePrecio.TipoPosicionCBOTId;
                 oFijacionDePrecioSave.ProveedorComisionistaId = oFijacionDePrecio.ProveedorComisionistaId;
+                
                 if (PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                 {
                     oFijacionDePrecioSave.ObservacionTercero = oFijacionDePrecio.ObservacionTercero;
@@ -604,7 +604,6 @@ namespace Molinos.DataAgro.Business.Managers
 
                 }
 
-
                 CargarDolarizado(oFijacionDePrecio, oFijacionDePrecioSave, oContratoId, fechaDolarizado, proveedor, corredor);
                 if (oFijacionDePrecio.AperturaPrecio != null)
                 {
@@ -615,7 +614,6 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-
                 oFijacionDePrecio.ContratoSAP = oFijacionDePrecio.ContratoSAP.PadLeft(10, '0');
                 oFijacionDePrecio.Fecha = DateTime.Now;
                 oFijacionDePrecio.ObligatoriedadCostoFinanciero = oFijacionDePrecio.FechaCierta.HasValue &&
@@ -2239,7 +2237,3 @@ namespace Molinos.DataAgro.Business.Managers
 
     }
 }
-
-
-
-

@@ -71,7 +71,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IContratosParaFijacionAgent> contratosParaFijacionAgent;
         private Mock<IConfiguracionInternaManager> configuracionInternaManagerMock;
         private Mock<ICentroManager> centroManagerMock;
-
+        private Mock<ICupoManager> cupoManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -120,7 +120,7 @@ namespace Molinos.DataAgro.Test.Managers
             contratosParaFijacionAgent = new Mock<IContratosParaFijacionAgent>();
             configuracionInternaManagerMock = new Mock<IConfiguracionInternaManager>();
             centroManagerMock = new Mock<ICentroManager>();
-
+            cupoManagerMock = new Mock<ICupoManager>();
 
 
             target = new ContratoManager(logger.Object, repositorioMock.Object,
@@ -143,7 +143,7 @@ namespace Molinos.DataAgro.Test.Managers
                 contextoMock.Object, validacionCreditoAgent.Object, tipoDeCambioAgentMock.Object,
                 capacidadProductivaDisponibleAgent.Object, negocioManagerMock.Object,
                 contratosParaFijacionAgent.Object, configuracionInternaManagerMock.Object,
-                centroManagerMock.Object);
+                centroManagerMock.Object, cupoManagerMock.Object);
         }
 
         [Test]

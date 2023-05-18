@@ -340,6 +340,7 @@
     <Build Include="dbo\Tables\EstadoHome.sql" />
     <Build Include="dbo\Tables\ReporteCompraNetSojaEPA.sql" />
     <Build Include="dbo\Tables\HedgeMargenMolienda.sql" />
+    <Build Include="dbo\Tables\PantallaEnUso.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Comparacion.scmp" />

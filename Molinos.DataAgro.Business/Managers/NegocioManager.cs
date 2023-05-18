@@ -1,24 +1,17 @@
 ﻿using Autofac.Extras.NLog;
-using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
 using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Net.Mime;
-using System.Text;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -117,7 +110,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var linea = 0;
             string htmlBody = "";
-            htmlBody += "En el presente mail, se detalla los Negocios creados con fecha anterior a la actual: <br /><br />  ";
+            htmlBody += "En el presente mail se detallan los negocios creados con fecha anterior a la actual: <br /><br />  ";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" +
                     th + "Contrato" + "</td>" +
@@ -178,7 +171,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -247,7 +240,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                htmlBody += "En el presente mail, se detalla los negocios Anula y Reemplaza creados  el " + DateTime.Now.ToString("dd/MM/yyyy") + " <br /><br />  ";
+                htmlBody += "En el presente mail se detallan los negocios Anula y Reemplaza creados  el " + DateTime.Now.ToString("dd/MM/yyyy") + " <br /><br />  ";
                 htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
                 htmlBody += "<tr>" +
                         th + "Contrato" + "</td>" +
@@ -310,7 +303,7 @@ namespace Molinos.DataAgro.Business.Managers
                 htmlBody += "</td></tr></table>";
             }
 
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -334,7 +327,7 @@ namespace Molinos.DataAgro.Business.Managers
                 lista.Add(email);
             }
 
-            var subject = "Error Finalizacion negocio Molinos Agro S.A. – " + negocio.ContratoSAP;
+            var subject = "Error Finalización negocio Molinos Agro S.A. – " + negocio.ContratoSAP;
             if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
             {
                 subject = "Mail de Pruebas - " + subject;
@@ -355,11 +348,11 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
             }
-            var linea = 0;
+            
             string htmlBody = "";
 
-            htmlBody += "En el presente mail se detalla el negocio finalizado con error y contrato sap asignado: " + negocio.ContratoSAP + " <br /><br />  ";
-            htmlBody += "Por favor revisarlo con prioridad ALTA. <br /> <br /> ";
+            htmlBody += "En el presente mail se detalla el negocio finalizado con error y contrato SAP asignado: " + negocio.ContratoSAP + " <br /><br />  ";
+            htmlBody += "Por favor, revisarlo con prioridad ALTA. <br /> <br /> ";
 
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
             htmlBody += "<tr>" +
@@ -402,7 +395,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "</td></tr></table>";
 
 
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";

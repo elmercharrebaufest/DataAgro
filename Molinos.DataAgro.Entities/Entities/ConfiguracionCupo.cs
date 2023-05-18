@@ -14,7 +14,6 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime Fecha { get; set; }
         public int LimiteCupo { get; set; }
         public bool CierreCupera { get; set; }
-
         public int LimiteAlgoritmo { get; set; }
         public bool LiberarCupera { get; set; }
 
@@ -25,5 +24,6 @@ namespace Molinos.DataAgro.Entities.Entities
         [InverseProperty("ConfiguracionCupo")]
         public virtual ICollection<LimiteCupo> CantidadCupo { get; set; }
         public int LimiteAnterior { get; set; }
+        public int LimiteDescarga { get; set; }
     }
 }

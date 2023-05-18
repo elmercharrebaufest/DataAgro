@@ -18,5 +18,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public ListaCompraDetalleDto ListaConCorredor { get; set; }
         public ListaCompraDetalleDto ListaDirectoAcopiador { get; set; }
         public ListaCompraDetalleDto ListaDirectoProductor { get; set; }
+        public double TotalCompra { get; set; }
     }
 }

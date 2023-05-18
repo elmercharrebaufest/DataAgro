@@ -1,13 +1,10 @@
 ﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -18,7 +15,7 @@ namespace Molinos.DataAgro.Interfaces
 
         DatosIniContrato TraerDatosCombo(int? tipoNegocioId = null);
 
-        GrabarContratoResult GrabarContrato(Contrato oContrato);
+        GrabarContratoResult GrabarContrato(Contrato oContrato, List<CupoConDescargaFechasDto> listCupoConDescargaFechas = null);
 
         GrabarContratoResult ConfirmarContrato(int contratoId, int comercialId);
 
@@ -32,9 +29,7 @@ namespace Molinos.DataAgro.Interfaces
         List<CalidadDto> TraerCalidadesPorContrato(int contratoId, int acuerdoId);
         DatosContratoDto TraerDatosDeContrato(int contratoId);
         BasicoContrato TraerContrato(int contratoId);
-
         void EnviarMailPendiente();
-
         void FinalizacionAutomatica(string idActiveDirectory);
         void BorradoAutomatico();
         List<AvisoContratoDto> TraerContratosPendientes(List<int> equipo);
@@ -88,16 +83,10 @@ namespace Molinos.DataAgro.Interfaces
         decimal CalcularImporteDeOperacion(decimal precio, double cantidad, int materialId, DateTime fechaoperacion, string moneda);
         Resultado GrabarNegociosAsociados(List<NegocioAsociadoDto> negocios, int contratoId, decimal precioPonderado);
         bool TieneAsociados(int contratoId);
-
         bool EsUnContratoAsociado(int negocioId);
-
-
-        bool EstaConfirmadoEnSAP(string contratoSAP, int TipoNegocioId);
-
         string ValidarProveedor(int cuitProveedor, int clasificacion, bool planCanje, bool consignatario);
-
+        bool EstaConfirmadoEnSAP(string contratoSAP, int TipoNegocioId);
         bool ValidarCopiarContrato(int id);
-
         GrabarContratoResult GrabarContratoAPrecioTercero(Contrato oContrato);
         GrabarContratoResult GrabarContratoAFijarTercero(Contrato oContrato);
         bool Tiene2doCondicionalAsociado(int contratoId);
@@ -109,5 +98,10 @@ namespace Molinos.DataAgro.Interfaces
         List<ServicioValorDto> TraerTodoServicio(int? materialId, int? centroId);
         void ReenviarMailContrato(int contratoId, string idActiveDirectory);
         List<ExcelValidatorResumeItem> AltaMasivaMATBA(DataSet dsExcel, int ComercialId);
+        GrabarContratoResult ControlesAccesoConDescarga(Contrato oContrato);
+        Resultado ValidarPantallaEnUso(PantallaEnUsoDto oParam);
+        Resultado LiberarPantalla(PantallaEnUsoDto oParam);
+        List<ConfiguracionCupoDto> CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId);
+        List<CupoDto> TraerCuposConDescarga(int contratoId);
     }
 }

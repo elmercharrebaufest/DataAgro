@@ -72,32 +72,24 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? DolarizadoExpress { get; set; }
         public string PagoCBU { get; set; }
         public string MotivoOperacionAnterior { get; set; }
-
         public string ObservacionTercero { get; set; }
         public bool? CalidadTercero { get; set; }
         public bool? PagoDiferidoTercero { get; set; }
         public int? PagoDiferidoTerceroId { get; set; }
         public bool? DolarizadoTercero { get; set; }
-
         public bool? Canje { get; set; }
-
         public int? ProveedorCreadorId { get; set; }
         public decimal? Monto { get; set; }
         public string Insumo { get; set; }
         public string MonedaCanjeId { get; set; }
-
         public bool? PrestamoDevolucion { get; set; }
         public int? PlantaDestinoId { get; set; }
         public bool? DolarizadoCorredor { get; set; }
         public bool? SustentableTercero { get; set; }
         public bool? Venta { get; set; }
-
         public bool? ObligatoriedadCostoFinanciero { get; set; }
-
         public string UsuarioTercero { get; set; }
-
         public bool? Virtual { get; set; }
-
         [JsonConverter(typeof(SinHora))]
         public DateTime? FechaDesdeSustentable { get; set; } // FechaDesdeSustentable       
         [JsonConverter(typeof(SinHora))]
@@ -105,16 +97,13 @@ namespace Molinos.DataAgro.Entities.Entities
         public bool? TarifaAConvenir { get; set; }
         public string PosicionCBOT { get; set; }
         public int? TipoPosicionCBOTId { get; set; }
-
         public int? CamaraId { get; set; }
         public int? ComisionAFavorId { get; set; }
         public decimal? PorcentajeComisionVenta { get; set; }
-
         public string FleteACargo { get; set; }
         public string KgBalanza { get; set; }
         public string Pago { get; set; }
         public int? ProcedenciaVentaId { get; set; }
-
         public int? CondicionDePagoDiaFijacion { get; set; }
         public int? CondicionDePagoDiaPesificado { get; set; }
         public string CondicionDePagoTipoFijacion { get; set; }
@@ -122,28 +111,18 @@ namespace Molinos.DataAgro.Entities.Entities
         public int? CondicionDePagoFijacionVentaId { get; set; }
         public int? CondicionDePagoPesificadoVentaId { get; set; }
         public bool? Cesion { get; set; }
-
-
-
+        public string DescripcionOperacionAnterior { get; set; }
         public string CaratulaMAT { get; set; }
         public decimal? PrecioAjusteComision { get; set; }
         public string MonedaAjusteComisionId { get; set; }
         public bool? ObligatoriedadBonificacion { get; set; }
-
         public decimal? PrecioPonderado { get; set; } // Precio
         public decimal? PrecioNetoPonderado { get; set; } // PrecioNeto
-
         public int? BoletoVentaId { get; set; }
         public string MailVentaBoleto { get; set; }
-
         public int? KgMinimo { get; set; }
         public int? KgMaximo { get; set; }
-
-        
-        public string DescripcionOperacionAnterior { get; set; }
-
         public int? ProveedorComisionistaId { get; set; }
-
         public double? CantidadDeposito { get; set; }
         public bool? ConfirmadoSAP { get; set; }
 
@@ -238,6 +217,3 @@ namespace Molinos.DataAgro.Entities.Entities
         }
     }
 }
-
-
-

@@ -80,6 +80,7 @@ function CreateGridInformeCompraNet() {
                     AnulaYReemplazaContratoSAP: { type: "number" },
                     Precio: { type: "number", format: "n2" },
                     EPA: { type: "boolean" },
+                    ConDescarga: { type: "boolean" },
                 }
             }
         },
@@ -226,8 +227,8 @@ function CreateGridInformeCompraNet() {
                     { field: "Importe_Sustentable", title: "Importe", filterable: false, width: 80 },
                     { field: "Moneda_Sustentable", title: "Moneda", filterable: false, width: 80 },
                     {
-                        field: "EPATipoDBId", title: "Tipo descuento EPA", template: function (dataItem) {
-                            return dataItem.EPATipoDBId == null ? "" : dataItem.EPATipoDBId == 1 ? "Sobre precio" : "Por fuera de precio";
+                        field: "SustentableTipoDBId", title: "Tipo descuento Sust/EPA", template: function (dataItem) {
+                            return dataItem.SustentableTipoDBId == null ? "" : dataItem.SustentableTipoDBId == 1 ? "Sobre precio" : "Por fuera de precio";
                         }, width: 110
                     },
                     {
@@ -342,6 +343,7 @@ function CreateGridInformeCompraNet() {
             },
             { field: "FechaDolarizadoOriginalFormateado", type: "string", title: "Dolarizado <br>Original", width: 80,  },
             { field: "FechaHastaOriginalFormateado", type: "string", title: "Hasta <br>Original", width: 80 },
+            { field: "ConDescarga", type: "string", title: "Con <br>Descarga", template: function (dataItem) { return dataItem.ConDescarga ? "Si" : "No"; }, width: 80 },
             
         ],
         excelExport: function (e) {
@@ -364,6 +366,7 @@ function CreateGridInformeCompraNet() {
             var templateTrigoEsp = kendo.template(this.columns[40].template);
             var templateCesion = kendo.template(this.columns[59].template);
             var templateCondicional = kendo.template(this.columns[62].template);
+            var templateConDescarga = kendo.template(this.columns[75].template);
 
             for (var i = 2; i < sheet.rows.length; i++) {
                 var row = sheet.rows[i];
@@ -373,7 +376,7 @@ function CreateGridInformeCompraNet() {
                     Pizarra: row.cells[15].value,
                     Sustentable: row.cells[35].value,
                     EPA: row.cells[36].value,
-                    EPATipoDBId: row.cells[39].value,
+                    SustentableTipoDBId: row.cells[39].value,
                     TarifaAConvenir: row.cells[40].value,
                     Dolarizado: row.cells[43].value,
                     DolarizadoExpress: row.cells[45].value,
@@ -383,6 +386,7 @@ function CreateGridInformeCompraNet() {
                     TrigoEspecial: row.cells[52].value,
                     Cesion: row.cells[71].value,
                     Condicional: row.cells[74].value,
+                    ConDescarga: row.cells[87].value,
                 };
 
                 var operacionFecha = row.cells[5].value;
@@ -421,7 +425,7 @@ function CreateGridInformeCompraNet() {
                 row.cells[52].value = templateTrigoEsp(dataItem);
                 row.cells[71].value = templateCesion(dataItem);
                 row.cells[74].value = templateCondicional(dataItem);
-
+                row.cells[87].value = templateConDescarga(dataItem);
             }
         },
         pageable: {

@@ -21,12 +21,17 @@ namespace Molinos.DataAgro.Entities.Entities
         public DateTime? FechaDeshabilitado { get; set; }
         public bool AsignarNegocios { get; set; }
         public string IdUsuarioSAP { get; set; }
-
+        public int? ComercialSuplenteId { get; set; }
+        public string Email { get; set; }
 
         [ForeignKey("PerfilId")]
         public virtual Perfil Perfil { get; set; }
         [ForeignKey("EmpleadorACargoId")]
         public virtual Comercial EmpleadorACargo { get; set; }
+        [ForeignKey("ComercialSuplenteId")]
+        public virtual Comercial ComercialSuplente { get; set; }
+        [InverseProperty("ComercialSuplente")]
+        public virtual ICollection<Comercial> SuplenteDe { get; set; }
         [ForeignKey("GrupoDeComprasId")]
         public virtual GrupoDeCompras GrupoDeCompras { get; set; }
 
@@ -41,5 +46,3 @@ namespace Molinos.DataAgro.Entities.Entities
         }
     }
 }
-
-

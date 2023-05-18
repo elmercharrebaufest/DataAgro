@@ -82,7 +82,6 @@
 
             </div>
         </div>
-
     </div>
 
     <div class="copia-contratos noAcuerdo">
@@ -169,8 +168,6 @@
                 <textarea type="text" class="campo-input-text k-textbox" id="motivoOperacionAnteriorId" rows="3" maxlength="100"></textarea>
             </div>
         </div>
-
-
     </div>
 
     <div class="row">
@@ -413,7 +410,12 @@
                             - Entrega Hasta:
                         </label>
                         <span id="hastaentrega"></span>
-
+                    </div>
+                    <div style="display:inline-block">
+                        <label>
+                            - Sustentable:
+                        </label>
+                        <span id="sustentable"></span>
                     </div>
                 </div>
             </div>
@@ -421,7 +423,6 @@
     </div>
     <div class="row">
         <div class="col-sm-2" data-toggle="tooltip" data-placement="top" id="cantidadTooltip">
-
             <label>Cantidad (Kg.)</label>
         </div>
         <div class="col-sm-5 col-md-4 required-box-parent">
@@ -521,7 +522,6 @@
     </div>
 
     <div class="row">
-
         <div id="LabelPrecio" class="col-sm-2 ">
             <label>Precio Base</label>
         </div>
@@ -534,7 +534,6 @@
                 <div class="w70" id="ocultarAperturaMoneda">
                     <select id="precioMonedaId" data-bind="source: PrecioMonedaCombo, value: Parametros.precioMonedaId, disabled: isControlDisabled" style="width:100%;"></select>
                     <img id="errprecioMonedaId" src="~/Content/Images/error.png" style="display:none" />
-
                 </div>
                 <div class="w30" id="ocultarAperturaBtn">
                     <span style="display:inline-block" id="botonAperturaDePrecio">
@@ -542,7 +541,6 @@
                             <i class="fa fa-table"></i>
                         </span>
                     </span>
-
                 </div>
             </div>
 
@@ -556,7 +554,6 @@
                 <img id="errPosicionFasonId" src="~/Content/Images/error.png" style="display:none" />
             </div>
         </div>
-
 
         <div class="col-xs-10 col-sm-5 noFason noAgente  ampliar-fijacion @(fijacionVirtual ? "hide" : "")">
             @*<div class="ampliar">*@
@@ -654,7 +651,6 @@
             </div>
         </div>
     </div>
-
 
     <div style="margin-bottom: 5px;" id="clasificacionDiv" class="row noFason noAgente noAcuerdo ampliar ">
         <div class="col-sm-2 ">
@@ -869,7 +865,6 @@
                 <label>Echeq</label>
                 <input id="chequeElectronicoInput" class="campo-input-input" name="chequeElectronicoInput" type="checkbox" onclick="HayChequeElectronicoAmpliar()">
             </div>
-
         </div>
 
         <div class="row ocultar noAcuerdo">
@@ -931,8 +926,6 @@
                 <input type="text" class="k-textbox" style="width:100%" id="pagoCbu" />
             </div>
         </div>
-
-
     </div>
 
     <div class="noFason noAgente noAcuerdo ampliar">
@@ -1111,8 +1104,6 @@
         @*<div class="row">
 
             </div>*@
-
-
 
         <div id="tabla-calidades" data-template="div-calidades-template" data-bind="source:Calidades">
             <div></div>

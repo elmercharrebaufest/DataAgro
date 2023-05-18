@@ -59,6 +59,9 @@ namespace Molinos.DataAgro.Business.Managers
                 oConfiguracionSave.Actualizacion = oConfiguracion.Actualizacion;
                 oConfiguracionSave.ApiKeyBolsaRosario = oConfiguracion.ApiKeyBolsaRosario;
                 oConfiguracionSave.SecretBolsaRosario = oConfiguracion.SecretBolsaRosario;
+                oConfiguracionSave.MinutosCronometroConDescarga = oConfiguracion.MinutosCronometroConDescarga;
+                oConfiguracionSave.CantidadMaximaDiasNegocioConDescarga = oConfiguracion.CantidadMaximaDiasNegocioConDescarga;
+                oConfiguracionSave.PorcentajeVolumenNegocioConDescarga = oConfiguracion.PorcentajeVolumenNegocioConDescarga;
             }
 
             else

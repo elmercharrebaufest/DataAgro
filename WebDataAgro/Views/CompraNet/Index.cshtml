@@ -333,6 +333,38 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalVerCuposConDescarga" z-index="" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title"></h1>
+                <div class="status confirmado-modal">
+                    <div>Cupos Con Descarga</div>
+                </div>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Fecha de Ingreso</th>
+                            <th>Cupo SAP</th>
+                            <th>Flete procedencia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpo-ver-descarga"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer" id="footer-verConDescarga">
+                <button type="button" class="myBtn btn" id="copiar-cupos-btn">Copiar Cupos <i class="fa fa-copy"></i></button>
+                <button type="button" class="myBtn btn" data-dismiss="modal" >Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal pendiente-->
 @Html.Partial("ModalPendiente")
 
@@ -380,6 +412,9 @@
 
 <!-- Modal ReconfirmarFinalizado-->
 @Html.Partial("ModalConfirmadoTildeFinalizado")
+
+<!-- Modal Cupos con Descarga -->
+@Html.Partial("_ModalCuposConDescarga")
 
 <!-- Modal Reenviar Mail-->
 @Html.Partial("ModalReenviarMail")

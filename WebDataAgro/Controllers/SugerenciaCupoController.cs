@@ -11,6 +11,7 @@ using System.Linq;
 using WebDataAgro.Atributos;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces.Managers;
+using Molinos.DataAgro.Entities.Entities;
 
 namespace WebDataAgro.Controllers
 {
@@ -93,11 +94,11 @@ namespace WebDataAgro.Controllers
             ViewBag.Cierre = primerCierre != null ? primerCierre.Cierre : false;
 
             var equipo = GlobalVariables.EquipoReal;
-            var comerciales = comercialManager.TraerTodoComercial();
-            var comercialesListItems = comerciales.Comercial.Select(
+            var comerciales = comercialManager.ListarComercialesAsignanNegocios();
+            var comercialesListItems = comerciales.Select(
                     x => new SelectListItem
                     {
-                        Text = x.Nombres + " " + x.Apellido,
+                        Text = x.Comercial,
                         Value = x.ComercialId.ToString(),
                         Selected = x.ComercialId == ComercialSeleccionado
                     }).OrderBy(x => x.Text).ToList();
@@ -170,8 +171,7 @@ namespace WebDataAgro.Controllers
         public JsonResult DatosConfirmar(List<ConfirmacionSugerenciaCupoDto> datosTabla, List<DiaCupo> devoluciones, int materialId, string centroId, int? comercialId)
         {
             var comercialSeleccionado = comercialId ?? GlobalVariables.ComercialId;
-            var muestraModal = true;
-            CupoResult resultado = new CupoResult();
+            //CupoResult resultado = new CupoResult();
             if (datosTabla != null || devoluciones != null)
             {
                 cupoManager.ConfirmarSugerencia(datosTabla, devoluciones, materialId, centroId, comercialSeleccionado);

@@ -1,11 +1,8 @@
-﻿
-
-$(document).ready(function () {
+﻿$(document).ready(function () {
 
     InicializarAutocompletar();
 
 });
-
 
 function InicializarAutocompletar() {
 
@@ -239,6 +236,25 @@ function InicializarAutocompletar() {
         }
     });
 
+    $("#btnConDescarga").hide();
+
+    // GSIAN: ver porqué no funciona
+    //$("#fechaDesdeId").kendoDatePicker({
+    //    //min: kendo.parseDate($("#fechaDesdeId").val()),
+    //    change: function () {
+    //        if ($("#conDescargaId").is(":checked") == true) {
+    //            AbrirConDescarga();
+    //        }
+    //    }
+    //});
+    //$("#fechaHastaId").kendoDatePicker({
+    //    //min: kendo.parseDate($("#fechaHastaId").val()),
+    //    change: function () {
+    //        if ($("#conDescargaId").is(":checked") == true) {
+    //            AbrirConDescarga();
+    //        }
+    //    }
+    //});
 }
 
 function CargarCopiaContrato(contratoId, tipo) {
@@ -257,12 +273,12 @@ function CargarCopiaContrato(contratoId, tipo) {
             for (var i = 0; i < contratoCopia.Descuentos.length; i++) {
                 contratoCopia.Descuentos[i].Id = 0;
             }
-        } 
+        }
         if (contratoCopia.Calidades) {
             for (var i = 0; i < contratoCopia.Calidades.length; i++) {
                 contratoCopia.Calidades[i].Id = 0;
             }
-        }  
+        }
 
         if (tipo == "sap") {
             contratoCopia.MotivoOperacionAnterior = null;
@@ -350,8 +366,6 @@ function modificarContrato(contratoCopia) {
     contratoCopia.contratoId = 0;
     contratoCopia.ContratoSap = null;
 }
-
-
 
 function CargarDatosCopiar(contrato, hijo, tipo) {
     InicializarBordesRojos();
@@ -618,7 +632,7 @@ function ObtenerDatos(error) {
     //if (TipoId != "3") {
     obj.FechaDesde = $("#fechaDesdeId").val() == null || $("#fechaDesdeId").val() == undefined || $("#fechaDesdeId").val() == "" ? formatearFecha(hoy) : FormatearFecha($("#fechaDesdeId").val());
     obj.FechaHasta = $("#fechaHastaId").val() == null || $("#fechaHastaId").val() == undefined || $("#fechaHastaId").val() == "" ? formatearFecha(maniana) : FormatearFecha($("#fechaHastaId").val());
-   
+
 
     //} else {
     //    obj.FechaDesde = formatearFecha(hoy);
@@ -652,7 +666,7 @@ function ObtenerDatos(error) {
     obj.Dolarizado = $("#tipoId").val() == "1" ? false : $("#dolarizadoId").is(":checked") ? true : false;
     obj.Sustentable = $("#sustentableId").is(":checked") ? true : false;
     obj.EPA = $("#epaId").is(":checked") ? true : false;
-    obj.EPATipoDBId = $("#selectPrecioEpa").val();
+    obj.SustentableTipoDBId = $("#selectSustenTipoDB").val();
     obj.DiasPesificado = obj.TipoNegocioId != 3 ? $("#pesificadoDiasId").val() : $("#diasDiferidoFijacionId").val();
     obj.PorcentajeComision = $("#porcentajeComision").val() != "" ? $("#porcentajeComision").val() : 0;
     obj.NoInformaSio = $("#noInformaSioId").is(":checked") ? true : false;
@@ -701,11 +715,11 @@ function ObtenerDatos(error) {
     else if ($("#boletoNingunoId").is(':checked')) {
         obj.BoletoId = 3;
         obj.BolsaId = 0;
-    } 
-        else if ($("#sinBoletoId").is(':checked')) {
+    }
+    else if ($("#sinBoletoId").is(':checked')) {
         obj.BoletoId = 5;
         obj.BolsaId = 0;
-    } 
+    }
     var proveedorId;
     var corredorId;
     if ($("#buscadorProveedor").val() != "") {
@@ -926,7 +940,7 @@ function ObtenerDatos(error) {
     obj.CondicionDePagoDiaFijacion = $("#cantidadDiaCondicion").val();
     obj.CondicionDePagoTipoFijacion = $("#CondicionPagoListado").val();
     obj.BoletoVentaId = $("#BoletoVenta").val();
-    obj.MailVentaBoleto = $("#mailVenta").val(); 
+    obj.MailVentaBoleto = $("#mailVenta").val();
     obj.CondicionDePagoFijacionVentaId = $("#CondicionDePagoFijacionVentaListado").val();
 
     if (obj.TipoNegocioId == 2) {
@@ -948,6 +962,15 @@ function ObtenerDatos(error) {
         obj.Venta = true;
     }
     obj.ProveedorComisionistaId = $("#comisionistaId").val();
+
+    if ($("#conDescargaId").is(":checked") == true) {
+        obj.ConDescarga = true;
+        obj.ConDescargaDias = dataTabla;
+    } else {
+        obj.ConDescarga = false;
+        obj.ConDescargaDias = [];
+    }
+
     return obj;
 }
 
@@ -1025,6 +1048,7 @@ function InicializarDatos() {
 function fechaValida(fecha) {
     return fecha != null && fecha != undefined && fecha != "";
 }
+
 function formatearFecha(fecha) {
     var fechaFormateada = kendo.toString(fecha, "dd-MM-yyyy");
     return FormatearFecha(fechaFormateada);
@@ -1077,9 +1101,8 @@ function DatosProveedor() {
     }
 }
 
-
 function MostrarCcPpPendientesAplicar() {
-    if ($("#mercsDepositoId").is(":checked") && ($("#sustentableId").is(":checked") || ($("#epaId").is(":checked") && $("#selectPrecioEpa").val() == 2))) {
+    if ($("#mercsDepositoId").is(":checked") && ($("#sustentableId").is(":checked") || $("#epaId").is(":checked")) && $("#selectSustenTipoDB").val() == 2) {
         $(".fechaHastaSustentableDiv").show();
         var cuitP = "";
         var cuitC = "";
@@ -1140,4 +1163,319 @@ function OcultarCamposAgente() {
     } else {
         $(".ocultarAgenteDiv").show();
     }
+}
+
+var intervalActivo = false;
+var intervalId;
+var textoMensajeFlotante = '';
+$("#mensaje-flotante").hide();
+var dataTabla = [];
+var nombrePantalla = "CuposConDescarga";
+
+function comenzarCarga() {
+    if (intervalActivo) return;
+
+    console.log("minutos configurados: " + datosIniCrearContrato.Datos.MinutosCronometroConDescarga);
+    const startingMinutes = datosIniCrearContrato.Datos.MinutosCronometroConDescarga;
+    let time = startingMinutes * 60;
+    const countdownEl = document.getElementById('countdown');
+
+    intervalId = setInterval(updateCountdown, 1000); // GSIAN: 50 para que vaya rápido
+    intervalActivo = true;
+    $("#mensaje-flotante").show();
+
+    function updateCountdown() {
+        var minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        //console.log("minutes: " + minutes + " - seconds: " + seconds)
+
+        if (minutes == 0 && seconds == 0) {
+            detenerIntervalo();
+            LiberarPantalla();
+            dataTabla = [];
+            $("#modalCargarCuposConDescarga").modal("hide");
+            MensErr("El tiempo ha terminado. Debe configurar nuevamente los Cupos con Descarga.");
+        }
+
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+
+        $("#mensaje-flotante").empty();
+        textoMensajeFlotante = `<p>${minutes}:${seconds}</p>`;
+        $("#mensaje-flotante").append(textoMensajeFlotante);
+
+        countdownEl.innerHTML = `${minutes}:${seconds}`;
+        time--;
+    }
+}
+
+function detenerIntervalo() {
+    clearInterval(intervalId);
+    intervalId = null;
+    intervalActivo = false;
+    $("#mensaje-flotante").empty();
+    $("#mensaje-flotante").hide();
+}
+
+//-------------------------------------------------------
+function AbrirConDescarga() {
+
+    if (!ControlesAccesoConDescarga()) {
+        $("#conDescargaId").prop("checked", false);
+        $("#btnConDescarga").hide();
+        return;
+    }
+    $("#btnConDescarga").show();
+
+    var objeto = {
+        fechaDesdeNegocio: $("#fechaDesdeId").val(),
+        fechaHastaNegocio: $("#fechaHastaId").val(),
+        materialId: parseInt($("#material").val()),
+        centroId: parseInt($("#destinoId").val()),
+    }
+    var listDiasCuposConDescarga = MSExecuteOnServer('/CompraNet/CantidadDiasCuposConDescarga', objeto);
+
+    $("#cuerpo-carga-cupos").empty();
+    var fila = '';
+    for (var i = 0; i < listDiasCuposConDescarga.length; i++) {
+
+        var fechaCupo = new Date(parseInt(listDiasCuposConDescarga[i].Fecha.substr(6)));
+        fechaCupo = FormatearFecha(formatearFecha(fechaCupo))
+
+        var item = dataTabla.find(x => x.Fecha == fechaCupo);
+
+        if (item != undefined) {
+            fila = '<tr>'
+                + '<input name="Dias[' + i + '].Fecha" value="' + kendo.toString(fechaCupo, "dd/MM/yyyy") + '" type="hidden"/>'
+                + '<td>' + kendo.toString(fechaCupo, "dd/MM/yyyy") + '</td>'
+                + '<td><input id="cupo' + i + '" name="Dias[' + i + '].CantidadCupo" min="0"  class="cantidad-masiva" value="' + parseInt(item.CantidadCupo) + '"/> </td>'
+                + '<td><input id="flete' + i + '" name="Dias[' + i + '].CantidadFlete" min="0" class="cantidad-masiva" value="' + parseInt(item.CantidadFlete) + '"/> </td>'
+                + '<input name="Dias[' + i + '].CuposDisponibles" value="' + listDiasCuposConDescarga[i].CuposDisponibles + '" type="hidden"/>'
+                + '<td> Cupos máx.: ' + listDiasCuposConDescarga[i].CuposDisponibles + '</td>'
+                + '</tr>';
+        } else {
+            fila = '<tr>'
+                + '<input name="Dias[' + i + '].Fecha" value="' + kendo.toString(fechaCupo, "dd/MM/yyyy") + '" type="hidden"/>'
+                + '<td>' + kendo.toString(fechaCupo, "dd/MM/yyyy") + '</td>'
+                + '<td><input id="cupo' + i + '" name="Dias[' + i + '].CantidadCupo" min="0"  class="cantidad-masiva" value="' + 0 + '"/> </td>'
+                + '<td><input id="flete' + i + '" name="Dias[' + i + '].CantidadFlete" min="0" class="cantidad-masiva" value="' + 0 + '"/> </td>'
+                + '<input name="Dias[' + i + '].CuposDisponibles" value="' + listDiasCuposConDescarga[i].CuposDisponibles + '" type="hidden"/>'
+                + '<td> Cupos máx.: ' + listDiasCuposConDescarga[i].CuposDisponibles + '</td>'
+                + '</tr>';
+        }
+
+        $("#cuerpo-carga-cupos").append(fila);
+    }
+
+    $(".cantidad-masiva").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        spinners: false,
+        min: 0,
+        step: 0
+    });
+
+    $("#comenzarCarga").click();
+    $("#modalCargarCuposConDescarga").modal('show');
+}
+
+function EsConDescarga() {
+
+    if ($("#conDescargaId").is(":checked") == false) {
+        $("#btnConDescarga").hide();
+        return;
+    }
+
+    if ($('#buscadorProveedor').val() == "" || $('#fechaDesdeId').val() == "" || $('#fechaHastaId').val() == "") {
+        $("#conDescargaId").prop("checked", false);
+        $("#btnConDescarga").hide();
+        MensErr("Los siguientes campos son obligatorios: CUIT, Fecha Desde y Fecha Hasta.");
+        return;
+    }
+
+    if ($("#conDescargaId").is(":checked") == true) {
+        AbrirConDescarga();
+    } else {
+        $("#btnConDescarga").hide();
+    }
+}
+
+function ControlesAccesoConDescarga() {
+    var todoOK = false;
+    var error = false;
+    var objeto = ObtenerDatos(error);
+
+    result = MSExecuteOnServer('/CompraNet/ControlesAccesoConDescarga', objeto);
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            MensErr(result.Errores[0].Message);
+            return false;
+        }
+        else todoOK = true;
+    }
+
+    result = MSExecuteOnServer('/CompraNet/ValidarPantallaEnUso', { NombrePantalla: nombrePantalla, usar: true });
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            MensErr(result.Errores[0].Message);
+            return false;
+        }
+        else todoOK = true;
+    }
+
+    return todoOK;
+}
+
+function LiberarPantalla() {
+    var todoOK = false;
+
+    result = MSExecuteOnServer('/CompraNet/ValidarPantallaEnUso', { NombrePantalla: nombrePantalla, usar: false });
+    if (result != null) {
+        if (ExistsErrorMessages(result.Errores)) {
+            MensErr(result.Errores[0].Message);
+            return false;
+        }
+        else todoOK = true;
+    }
+
+    return todoOK;
+}
+
+function guardarCuposConDescarga() {
+    var dataTablaTemp = [];
+    
+    var table = document.getElementById("cuerpo-carga-cupos");
+    var superaCuposMaximoDia = false;
+    var cantidadTotalCuposFletes = 0;
+
+    for (let i = 0, n = table.rows.length; i <= (n - 1); i++) {
+        if ($('[name="Dias[' + i + '].CantidadCupo"]').val() > 0 || $('[name="Dias[' + i + '].CantidadFlete"]').val() > 0) {
+
+            var cuposDisponibles = $('[name="Dias[' + i + '].CuposDisponibles"]').val() == "" ? 0 : parseInt($('[name="Dias[' + i + '].CuposDisponibles"]').val());
+            var cantidadCupo = $('[name="Dias[' + i + '].CantidadCupo"]').val() == "" ? 0 : parseInt($('[name="Dias[' + i + '].CantidadCupo"]').val());
+            var cantidadFlete = $('[name="Dias[' + i + '].CantidadFlete"]').val() == "" ? 0 : parseInt($('[name="Dias[' + i + '].CantidadFlete"]').val());
+
+            var cantidadCupoFleteDia = cuposDisponibles - cantidadCupo - cantidadFlete;
+            if (cantidadCupoFleteDia < 0) superaCuposMaximoDia = true;
+
+            cantidadTotalCuposFletes += cantidadCupo + cantidadFlete;
+
+            dataTablaTemp.push(
+                {
+                    Fecha: $('[name="Dias[' + i + '].Fecha"]').val(),
+                    CantidadCupo: $('[name="Dias[' + i + '].CantidadCupo"]').val(),
+                    CantidadFlete: $('[name="Dias[' + i + '].CantidadFlete"]').val()
+                });
+        }
+    }
+
+    if (superaCuposMaximoDia) {
+        MensErr("La cantidad de cupos/fletes para uno de los días supera la cantidad disponible.");
+        return;
+    }
+    var cantidadCuposFletesPermitidos = Math.ceil($("#cantidadId").val() / 30000);
+    if (cantidadTotalCuposFletes > cantidadCuposFletesPermitidos) {
+        MensErr("La cantidad de cupos/fletes ingresados se exceden respecto a los KG del Negocio.");
+        return;
+    }
+
+    dataTabla = dataTablaTemp;
+    $("#modalCargarCuposConDescarga").modal("hide");
+}
+
+// PARA VISUALIZAR STOCK SI ES EPA O SUSTENTABLE
+
+function mostrarResultados(result) {
+    var error = new Array();
+    var cupos = new Array();
+
+    if (result.HayError) {
+        error = error.concat(result.ListaErrores);
+    }
+    if (result.ListaCupos != null && result.ListaCupos.length > 0) {
+        cupos = cupos.concat(result.ListaCupos);
+    }
+
+    if (cupos.length > 0) {
+        var table = "";
+        if ($("#sustentableId").is(":checked") || $("#epaId").is(":checked")) {
+            var result2 = MSExecuteOnServer('/Cupo/TraerEstablecimientos', { cuitProveedor: $("#proveedorId").val(), esEPA: $("#epaId").is(":checked") });
+            if (result2 != null && result2.length > 0) {
+                table = "<tr>";
+                table += '<th colspan = "3">Cosecha ' + result2[0].Cosecha + '</th>';
+                table += "</tr>";
+                table += "<tr>";
+                table += "<th> Establecimiento</th>"
+                table += "<th> Cantidad (Kg)</th>"
+                table += "<th> Localidad(Provincia) </th>"
+                table += "</tr>";
+                for (var i = 0; i < result2.length; i++) {
+                    table += "<tr>";
+                    table += '<td>' + result2[i].Establecimiento + '</td>';
+                    table += '<td>' + kendo.toString(result2[i].Cantidad, "n0") + '</td>';
+                    table += '<td>' + result2[i].Localidad + '(' + result2[i].Provincia + ')' + '</td>';
+                    table += "</tr>";
+                }
+            }
+        }
+
+        cuposCreados(cupos, table);
+    }
+    if (error.length > 0) {
+        ShowErrorMessages(error);
+    }
+}
+
+function cuposCreados(lista, table) {
+    $("#cupos-generados-modal").html(lista.join("</br>"));
+
+    if (table != "") {
+        $("#cargarDatosEstablecimiento2").html(table);
+    }
+
+    $('#resultadoCupo').modal('toggle');
+}
+
+function copiarGenerados(idDiv) {
+    var listaCupos = $("#" + idDiv).html().replace(/<br>/g, "\n");
+    listaCupos = listaCupos.split('<strong>').join("");
+    listaCupos = listaCupos.split('</strong>').join("");
+
+    var copiarEstablecimientos = document.getElementById("cargarDatosEstablecimiento2").innerText;
+
+    listaCupos += "\n\n" + copiarEstablecimientos;
+
+    //como un replaceall 
+    var copy = function (e) {
+        e.preventDefault();
+        console.log('copy');
+
+        if (e.clipboardData) {
+            e.clipboardData.setData('text/plain', listaCupos);
+        } else if (window.clipboardData) {
+            window.clipboardData.setData('Text', listaCupos);
+        }
+    };
+    window.addEventListener('copy', copy);
+    document.execCommand('copy');
+    window.removeEventListener('copy', copy);
+}
+
+function cancelarCuposConDescarga() {
+    var table = document.getElementById("cuerpo-carga-cupos");
+
+    for (let i = 0, n = table.rows.length; i <= (n - 1); i++) {
+
+        var fecha = $('[name="Dias[' + i + '].Fecha"]').val();
+        var item = dataTabla.find(x => x.Fecha == fecha);
+
+        if (item != undefined) {
+            if (parseInt(item.CantidadCupo) > 0 || parseInt(item.CantidadFlete) > 0) {
+                $('[name="Dias[' + i + '].CantidadCupo"]').data("kendoNumericTextBox").value(item.CantidadCupo);
+                $('[name="Dias[' + i + '].CantidadFlete"]').data("kendoNumericTextBox").value(item.CantidadFlete);
+            }
+        }
+    }
+
+    $("#modalCargarCuposConDescarga").modal("hide");
 }

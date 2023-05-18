@@ -8,20 +8,16 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class ConfiguracionCupoManager : IConfiguracionCupoManager
     {
-        private ILogger logger;
+        private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly IAdministracionCuperaAgent administracionCuperaAgent;
         private readonly ICupoManager cupoManager;
-
-
-
 
         public ConfiguracionCupoManager(ILogger logger, IRepositorio repositorio, IAdministracionCuperaAgent administracionCuperaAgent, ICupoManager cupoManager)
         {
@@ -29,8 +25,6 @@ namespace Molinos.DataAgro.Business.Managers
             this.repositorio = repositorio;
             this.administracionCuperaAgent = administracionCuperaAgent;
             this.cupoManager = cupoManager;
-
-
         }
 
         public Resultado GrabarConfiguracionCupo(ConfiguracionCupo configuracion, List<DiaCupo> dias)
@@ -45,6 +39,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (configuracion.LiberarCupera == true)
                 {
                     configuracion.LimiteAlgoritmo = 0;
+                    configuracion.LimiteDescarga = 0;
                 }
                 bool actualizarSugerencia = false;
                 var error = new CupoResult { ListaCupos = new List<string>() };
@@ -68,12 +63,13 @@ namespace Molinos.DataAgro.Business.Managers
                         {
                             if (d.Fecha < DateTime.Today)
                             {
-                                error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy");
+                                error.Error("CantidadCuposSAP", d.Fecha.ToShortDateString() + ": La Fecha de Ingreso no debe ser una fecha menor al día de hoy.");
                                 continue;
                             }
                             newConfiguracion.Fecha = d.Fecha.Date;
                             newConfiguracion.LimiteCupo = d.Cantidad.Value;
                             newConfiguracion.LimiteAlgoritmo = d.CantidadAlgoritmo.Value;
+                            newConfiguracion.LimiteDescarga = d.CantidadDescarga.Value;
                             newConfiguracion.CantidadCupo = new List<LimiteCupo>();
                             GenerarLimiteZona(newConfiguracion, zonas);
                             var centro = centros.Where(x => x.Id == newConfiguracion.CentroId).FirstOrDefault();
@@ -117,6 +113,7 @@ namespace Molinos.DataAgro.Business.Managers
                     if (configuracion.LiberarCupera == true)
                     {
                         configuracion.LimiteAlgoritmo = 0;
+                        configuracion.LimiteDescarga = 0;
                     }
                     var configuracionSave = repositorio.Obtener<ConfiguracionCupo>(configuracion.Id);
                     configuracion.CantidadCupo = new List<LimiteCupo>();
@@ -149,6 +146,7 @@ namespace Molinos.DataAgro.Business.Managers
                         configuracionSave.LimiteAnterior = configuracionSave.LimiteCupo;
                         configuracionSave.LimiteCupo = configuracion.LimiteCupo;
                         configuracionSave.LimiteAlgoritmo = configuracion.LimiteAlgoritmo;
+                        configuracionSave.LimiteDescarga = configuracion.LimiteDescarga;
                         configuracionSave.CierreCupera = configuracion.CierreCupera;
                         configuracionSave.LiberarCupera = configuracion.LiberarCupera;
                     }
@@ -289,13 +287,27 @@ namespace Molinos.DataAgro.Business.Managers
             //{
             //    errores.Error("cupo", "Seleccione un Material");
             //}
-            if (cupo.LimiteAlgoritmo > cupo.LimiteCupo)
+            if (cupo.LimiteCupo == 0)
             {
-                errores.Error("Limite", "El límite del Algoritmo no debe superar la cantidad de " + cupo.LimiteCupo);
+                errores.Error("Limite", "El límite de cupos no puede guardarse en cero.");
+            } else
+            {
+                if (cupo.LimiteAlgoritmo > cupo.LimiteCupo)
+                {
+                    errores.Error("Limite", "El límite del Algoritmo no debe superar el total de " + cupo.LimiteCupo + " cupos disponibles.");
+                }
+                if (cupo.LimiteDescarga > cupo.LimiteCupo)
+                {
+                    errores.Error("Limite", "El límite con Descarga no debe superar el total de " + cupo.LimiteCupo + " cupos disponibles.");
+                }
+                if (cupo.LimiteAlgoritmo + cupo.LimiteDescarga > cupo.LimiteCupo)
+                {
+                    errores.Error("Limite", "La suma del límite del Algoritmo y del límite con Descarga no debe superar el total de " + cupo.LimiteCupo + " cupos disponibles.");
+                }
             }
             if (cupo.Fecha == new DateTime())
             {
-                errores.Error("cupo", "La fecha no puede estar vacia");
+                errores.Error("Cupo", "La fecha no puede estar vacía.");
             }
             if (cupo.Id == 0)
             {
@@ -303,7 +315,7 @@ namespace Molinos.DataAgro.Business.Managers
                 DateTime hasta = dias.Max(x => x.Fecha);
                 if (repositorio.Existe<ConfiguracionCupo>(x => x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.Fecha >= desde && x.Fecha <= hasta))
                 {
-                    errores.Error("cupo", "Ya existe configuración para ese Material, Centro y Fecha");
+                    errores.Error("cupo", "Ya existe una configuración para ese Material, Centro y Fecha.");
                 }
             }
             //else
@@ -405,11 +417,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             if (limite.Sum(x => x.CantidadCupo) > config.LimiteCupo)
             {
-                resultado.Error("cantidad", "La cantidad de cupos excede el limite cargado");
+                resultado.Error("CantidadCupo", "La cantidad de cupos excede el límite cargado.");
             }
             if (limite.Sum(x => x.CantidadCupo) < config.LimiteCupo)
             {
-                resultado.Error("cantidad", "La cantidad de cupos no alcanza el limite cargado");
+                resultado.Error("CantidadCupo", "La cantidad de cupos no alcanza el límite cargado.");
             }
             return resultado;
         }
@@ -424,6 +436,7 @@ namespace Molinos.DataAgro.Business.Managers
                 LimiteCupo = x.LimiteCupo,
                 CierreCupera = x.CierreCupera,
                 LimiteAlgoritmo = x.LimiteAlgoritmo,
+                LimiteDescarga = x.LimiteDescarga,
                 LiberarCupera = x.LiberarCupera,
                 Centro = x.Centro.Descripcion,
                 Material = x.Material.Descripcion,
@@ -480,7 +493,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return errorSap;
         }
-        public Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds, int limiteAlgoritmo)
+        public Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds, int limiteAlgoritmo, int limiteDescarga)
         {
             var erroresSap = new Resultado();
             //var configuracionesCupo = repositorio.Listar<ConfiguracionCupo>(x => configuracionesIds.Contains(x.Id));
@@ -500,6 +513,7 @@ namespace Molinos.DataAgro.Business.Managers
                 configuracionCupo.LimiteAnterior = configuracionCupo.LimiteCupo;
                 configuracionCupo.LimiteCupo = limite.Sum(x => x.CantidadCupo);
                 configuracionCupo.LimiteAlgoritmo = limiteAlgoritmo;
+                configuracionCupo.LimiteDescarga = limiteDescarga;
                 var centro = centros.Where(x => x.Id == configuracionCupo.CentroId).FirstOrDefault();
                 if (!centro.NoPropio)
                 {
@@ -548,8 +562,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return erroresSap;
         }
-
-        public Resultado ModificarConfiguracion(int? id, int? limite, int? algoritmo, bool? bloquear, bool? liberar)
+        public Resultado ModificarConfiguracion(int? id, int? limite, int? algoritmo, int? descarga, bool? bloquear, bool? liberar)
         {
             var configuracionDto = repositorio.Obtener<ConfiguracionCupo, ConfiguracionCupoDto>(x => x.Id == id.Value,
                 x => new ConfiguracionCupoDto
@@ -562,6 +575,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Fecha = x.Fecha,
                     MaterialId = x.MaterialId,
                     CentroId = x.CentroId,
+                    LimiteDescarga = descarga ?? 0
                 });
             var configuracion = new ConfiguracionCupo()
             {
@@ -572,7 +586,8 @@ namespace Molinos.DataAgro.Business.Managers
                 Id = configuracionDto.Id,
                 Fecha = configuracionDto.Fecha,
                 CentroId = configuracionDto.CentroId,
-                MaterialId = configuracionDto.MaterialId
+                MaterialId = configuracionDto.MaterialId,
+                LimiteDescarga = configuracionDto.LimiteDescarga
             };
             var dias = new List<DiaCupo>();
             return GrabarConfiguracionCupo(configuracion, dias);

@@ -141,10 +141,12 @@
     <Compile Include="Common\Enums\EnumTipoRangoConfirmacionAutomatica.cs" />
     <Compile Include="CustomAtributte\Concreta.cs" />
     <Compile Include="Dto\ActividadComercial.cs" />
+    <Compile Include="Dto\CupoConDescargaFechasDto.cs" />
     <Compile Include="Dto\EnviarCapacidadProductivaSAPDto.cs" />
     <Compile Include="Dto\CapacidadProductivaDto.cs" />
     <Compile Include="Dto\EstadoHomeDto.cs" />
     <Compile Include="Dto\HedgeMargenMoliendaDto.cs" />
+    <Compile Include="Dto\PantallaEnUsoDto.cs" />
     <Compile Include="Dto\PizarraBolsaRosarioDto.cs" />
     <Compile Include="Dto\CampoMaterialDto.cs" />
     <Compile Include="Dto\ProveedorCategoriasSISA.cs" />
@@ -379,6 +381,7 @@
     <Compile Include="Entities\CriterioEsSojaSustentable.cs" />
     <Compile Include="Entities\EstadoHome.cs" />
     <Compile Include="Entities\HedgeMargenMolienda.cs" />
+    <Compile Include="Entities\PantallaEnUso.cs" />
     <Compile Include="Entities\ReporteCompraNetSojaEPA.cs" />
     <Compile Include="Entities\ServicioValor.cs" />
     <Compile Include="Entities\TipoServicio.cs" />

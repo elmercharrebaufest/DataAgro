@@ -4,7 +4,6 @@ using Molinos.DataAgro.Agent.ContratosParaFijacion;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.SqlServer;
 using System.Configuration;
 using System.Linq;
 using Autofac.Extras.NLog;
@@ -288,27 +287,25 @@ namespace Molinos.DataAgro.Agent
                     {
                         contratoParaFijacion.MercsDeposito = contDA.MercsDeposito ?? false;
                         contratoParaFijacion.Pase = contDA.TipoPosicionCBOTId == 3;
-
                         var idContratoConAnulaYReemplaza = contDA.Id;
                         existeConAnulaYReemplaza = repositorio.Existe<Contrato>(x => x.AnulaYReemplazaContratoId == contDA.Id);
                         contratoParaFijacion.ProveedorComisionistaId = contDA.ProveedorComisionistaId ?? null;
+                        contratoParaFijacion.EPA = contDA.EPA;
+                        contratoParaFijacion.Sustentable = contDA.Sustentable;
+                        contratoParaFijacion.MonedaSustentable = contDA.MonedaSustentable;
+                        contratoParaFijacion.ImporteSustentable = contDA.ImporteSustentable;
+                        contratoParaFijacion.SustentableTipoDBId = contDA.SustentableTipoDBId;
                     }
-
 
                     if (!existeConAnulaYReemplaza && double.Parse(contratoParaFijacion.KilosPendiente) > 0)
                     {
                         datosContratos.Add(contratoParaFijacion);
                     }
-
-
-
-
                 }
-
             }
             catch (Exception e)
             {
-
+                logger.Error("ContratosParaFijacionAgent: " + e);
                 throw;
             }
             return datosContratos.OrderBy(x => x.ContratoId).ToList();

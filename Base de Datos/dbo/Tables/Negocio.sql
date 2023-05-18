@@ -159,7 +159,8 @@ EstablecimientoPropio BIT NULL,
 [FechaHastaOriginal] DATETIME NULL, 
 [FechaDolarizadoOriginal] DATETIME NULL, 
 [EPA] BIT NULL, 
-[EPATipoDBId] INT NULL, 
+[SustentableTipoDBId] INT NULL, 
+[ConDescarga] BIT NULL,
 CONSTRAINT [PK_dbo.Negocio] PRIMARY KEY CLUSTERED ([Id] ASC),
 CONSTRAINT [FK_Negocio_Contrato] FOREIGN KEY ([ContratoId]) REFERENCES [Negocio]([Id]),
 CONSTRAINT [FK_Negocio_TipoNegocio] FOREIGN KEY ([TipoNegocioId]) REFERENCES [TipoNegocio]([TipoNegocioId]),
@@ -198,7 +199,7 @@ CONSTRAINT [FK_Negocio_CondicionalContrato] FOREIGN KEY ([CondicionalContratoId]
 CONSTRAINT [FK_Negocio_CondicionalMonedaId] FOREIGN KEY ([CondicionalMonedaId]) REFERENCES [Moneda]([MonedaId]),
 CONSTRAINT [FK_Negocio_BoletoVenta] FOREIGN KEY ([BoletoVentaId]) REFERENCES [BoletoVenta]([Id]),
 CONSTRAINT [FK_Negocio_ProveedorComisionita] FOREIGN KEY ([ProveedorComisionistaId]) REFERENCES [Proveedor]([ProveedorId]),
-CONSTRAINT [FK_Negocio_EPATipoDBId] FOREIGN KEY ([EPATipoDBId]) REFERENCES [TipoDB]([Id]),
+CONSTRAINT [FK_Negocio_SustentableTipoDBId] FOREIGN KEY ([SustentableTipoDBId]) REFERENCES [TipoDB]([Id]),
 )
 
 GO

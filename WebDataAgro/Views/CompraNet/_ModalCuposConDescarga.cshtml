@@ -1,0 +1,47 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="modal fade" id="modalCargarCuposConDescarga" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog con-descarga" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close" onclick="LiberarPantalla()">*@
+               
+                <h1 class="modal-title" id="CargaCupos"></h1>
+                <div class="status confirmado-modal">
+                    <div>Negocio Con Descarga</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col izquierda">
+                            <p class="countdown" id="countdown"></p>
+                        </div>
+                        <div class="col derecha">
+                            <p>
+                                <button type="button" class="btn btn-primary" onclick="comenzarCarga()" id="comenzarCarga" hidden>Comenzar carga</button>
+                            </p>
+                        </div>
+                    </div>
+                    <table id="carga-cupos-table" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Cant. Cupos c/Descarga</th>
+                                <th>Flete procedencia</th>
+                                <th>Disponibilidad CcD</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpo-carga-cupos"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="myBtn btn aceptar" id="aceptar" onclick="guardarCuposConDescarga()">Aceptar</button>
+                <button type="button" class="myBtn btn cancelar" id="cancelar-carga" onclick="cancelarCuposConDescarga()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>

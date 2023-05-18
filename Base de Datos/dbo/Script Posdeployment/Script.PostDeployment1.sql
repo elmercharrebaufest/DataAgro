@@ -354,3 +354,5 @@ IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'No habilitado') BEG
 --TipoActividad
 IF NOT EXISTS (select 1 from TipoActividad where Descripcion = 'Visita') BEGIN insert into TipoActividad (Descripcion) values ('Visita'); END
 
+--Configuración - Con Descarga
+UPDATE Configuracion SET MinutosCronometroConDescarga = 2, CantidadMaximaDiasNegocioConDescarga = 15, PorcentajeVolumenNegocioConDescarga = 30 WHERE Id = 1

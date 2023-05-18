@@ -1,5 +1,4 @@
-﻿using Molinos.DataAgro.Entities.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Molinos.DataAgro.Entities.Dto
@@ -24,7 +23,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public DateTime? FechaDeshabilitado { get; set; }
         public bool AsignarNegocios { get; set; }
         public string IdUsuarioSAP { get; set; }
+        public string Email { get; set; }
+        public int? ComercialSuplenteId { get; set; }
     }
 }
-
-

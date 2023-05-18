@@ -1,8 +1,6 @@
-﻿using KendoGridBinder.Containers;
-using KendoGridBinder.ModelBinder.Mvc;
+﻿using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -58,7 +56,7 @@ namespace WebDataAgro.Controllers
             CargarViewBag();
             if (cupo.FechaHasta < cupo.Fecha)
             {
-                ModelState.AddModelError("", "La Fecha Hasta no puede ser menor a la fecha desde");
+                ModelState.AddModelError("", "La Fecha Hasta no puede ser menor a la Fecha Desde.");
             }
             if (!ModelState.IsValid)
             {
@@ -67,7 +65,13 @@ namespace WebDataAgro.Controllers
             var dias = new List<DiaCupo>() { };
             for (var dt = cupo.Fecha; dt <= cupo.FechaHasta; dt = dt.AddDays(1))
             {
-                dias.Add(new DiaCupo { Cantidad = cupo.CantidadCupo, Fecha = dt, CantidadAlgoritmo = cupo.CantidadAlgoritmo });
+                dias.Add(new DiaCupo
+                {
+                    Cantidad = cupo.CantidadCupo,
+                    Fecha = dt,
+                    CantidadAlgoritmo = cupo.CantidadAlgoritmo,
+                    CantidadDescarga = cupo.CantidadDescarga
+                });
             }
             //ok
             var resultado = configuracionCupoManager.GrabarConfiguracionCupo(new ConfiguracionCupo
@@ -79,7 +83,8 @@ namespace WebDataAgro.Controllers
                 LimiteCupo = cupo.CantidadCupo,
                 CierreCupera = cupo.CierreCupera,
                 LimiteAlgoritmo = cupo.CantidadAlgoritmo,
-                LiberarCupera = cupo.LiberarCupera
+                LiberarCupera = cupo.LiberarCupera,
+                LimiteDescarga = cupo.CantidadDescarga
             }, dias);
             if (resultado.HayError)
             {
@@ -117,7 +122,7 @@ namespace WebDataAgro.Controllers
                     }).OrderBy(x => x.Value);
             ViewBag.Material = materialesListItems;
             var centro = centroManager.TraerTodoCentro();
-            centro.Centro = centro.Centro.Where(x=> x.NoPropio != true).ToList();
+            centro.Centro = centro.Centro.Where(x => x.NoPropio != true).ToList();
             var centroListItems = centro.Centro.Select(
                     x => new SelectListItem
                     {
@@ -142,9 +147,9 @@ namespace WebDataAgro.Controllers
             var model = configuracionCupoManager.GrabarLimites(limites);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
-        public ActionResult GrabarLimitesCupoMasivo(List<LimiteCupo> limites, List<int> configuracionesIds, int limiteAlgoritmo)
+        public ActionResult GrabarLimitesCupoMasivo(List<LimiteCupo> limites, List<int> configuracionesIds, int limiteAlgoritmo, int limiteDescarga)
         {
-            var model = configuracionCupoManager.GrabarLimitesMasivo(limites, configuracionesIds, limiteAlgoritmo);
+            var model = configuracionCupoManager.GrabarLimitesMasivo(limites, configuracionesIds, limiteAlgoritmo, limiteDescarga);
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 
@@ -160,9 +165,9 @@ namespace WebDataAgro.Controllers
             return new JsonResult() { Data = resultado, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 
-        public ActionResult ModificarConfiguracion(int? id, int? limite, int? algoritmo, bool? bloquear, bool? liberar)
+        public ActionResult ModificarConfiguracion(int? id, int? limite, int? algoritmo, int? descarga, bool? bloquear, bool? liberar)
         {
-            var resultado = configuracionCupoManager.ModificarConfiguracion(id, limite, algoritmo, bloquear, liberar);
+            var resultado = configuracionCupoManager.ModificarConfiguracion(id, limite, algoritmo, descarga, bloquear, liberar);
             return new JsonResult() { Data = resultado, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }
 

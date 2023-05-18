@@ -14,7 +14,6 @@ $(document).ready(function () {
     $("#formGrabarCupos").submit(function () {
         BlockUi('Grabando...');
     });
-
 });
 
 function mostrarocultar(element) {
@@ -31,12 +30,12 @@ $(".alert").ready(function () {
 
 function InicializarElementos() {
     $("#Fecha").kendoDatePicker({
-        //value: new Date(),
+        value: new Date(),
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
     $("#FechaHasta").kendoDatePicker({
-        //value: new Date(),
+        value: new Date(),
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
@@ -88,6 +87,15 @@ function InicializarElementos() {
         min: 0
     });
 
+    $("#CantidadDescarga").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+
     $("#ModalLimiteCupo").on("hidden.bs.modal", function () {
         $("#tablaLimite").empty();
     });
@@ -126,6 +134,7 @@ function CargarGrillaConfig() {
                     Fecha: { type: "date" },
                     LimiteCupo: { type: "number" },
                     LimiteAlgoritmo: { type: "number" },
+                    LimiteDescarga: { type: "number" },
                     LimiteCupoAnterior: { type: "number" },
                     LiberarCupera: { type: "boolean" },
                     Bloquear: { type: "boolean" },
@@ -159,7 +168,7 @@ function CargarGrillaConfig() {
                     multi: true, dataSource: [{
                         Centro: "S. Lorenzo"
                     },
-                        //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
+                    //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
                     {
                         Centro: "Rio del Valle"
                     }, {
@@ -251,6 +260,30 @@ function CargarGrillaConfig() {
                     input.appendTo(container);
 
                     $("#LimiteAlgoritmo" + options.model.Id).val(options.model.LimiteAlgoritmo);
+                    // initialize a Kendo UI numeric text box and set max value
+                    input.kendoNumericTextBox({
+                        max: options.model.LimiteCupo,
+                        min: options.model.CuposConsumidos,
+                        change: function () {
+                            AceptarConfiguracion(options.model.Id)
+                        },
+                    });
+                }, filterable: { extra: false },
+                editable: function (dataItem) {
+                    if (dataItem.NoPropio == true)
+                        return false;
+                    else
+                        return true;
+                }
+            },
+            {
+                field: "LimiteDescarga", type: "number", title: "Límite Descarga", editor: function (container, options) {
+                    // create an input element
+                    var input = $("<input name='" + options.field + "'/>");
+                    // append it to the container
+                    input.appendTo(container);
+
+                    $("#LimiteDescarga" + options.model.Id).val(options.model.LimiteDescarga);
                     // initialize a Kendo UI numeric text box and set max value
                     input.kendoNumericTextBox({
                         max: options.model.LimiteCupo,
@@ -408,6 +441,7 @@ function CargarGrillaConfig() {
         }
     });
 }
+
 function recargarGrilla() {
     $('#gridConfiguracionCupo').data('kendoGrid').dataSource.read();
 }
@@ -468,13 +502,13 @@ function AbrirModal(id) {
         for (var i = 0; i < configuraciones.length; i++) {
             ids.push(configuraciones[i].id);
             if (limite != null && limite != configuraciones[i].LimiteCupo) {
-                MensErr("Las configuraciones seleccionadas no tienen el mismo limite de Cupos.");
+                MensErr("Las configuraciones seleccionadas no tienen el mismo límite de cupos.");
                 return false;
             }
             limite = configuraciones[i].LimiteCupo;
         }
         if (ids.length <= 0) {
-            MensErr("No se seleccionó ninguna configuración");
+            MensErr("No se seleccionó ninguna configuración.");
             return false;
         }
     }
@@ -514,24 +548,28 @@ function CargarConfiguracion(id, mostrarFecha) {
         '<th  style="text-align: center"><strong>Fecha</strong></th>' +
         '<th  style="text-align: center"><strong>Límite Cupo</strong></th>' +
         '<th  style="text-align: center"><strong>Límite Algoritmo</strong></th>' +
-        '<th  style="text-align: center">Cupo</th>' +
-        '<th  style="text-align: center">Algoritmo</th></tr>');
+        '<th  style="text-align: center"><strong>Límite Descarga</strong></th></tr>'); //+
+    //'<th  style="text-align: center">Cupo</th>' +
+    //'<th  style="text-align: center">Algoritmo</th></tr>');
     var configuracion = MSExecuteOnServer("/ConfiguracionCupo/TraerConfiguracionCupo", { id: id });
     var fecha = mostrarFecha == true ? "-" : kendo.toString(kendo.parseDate(configuracion.Fecha), "dd/MM/yyyy");
     var fila =
         '<tr>' +
         '<td>' + configuracion.Centro + '</td>' +
         '<td>' + configuracion.Material + '</td>' +
-        '<td>' + fecha + '</td>' +
-        '<td>' + configuracion.LimiteCupo + '</td>' +
-        '<td>' + configuracion.LimiteAlgoritmo + '</td>';
+        '<td>' + fecha + '</td>'; //+
+    //'<td>' + configuracion.LimiteCupo + '</td>' +
+    //'<td>' + configuracion.LimiteAlgoritmo + '</td>';
+    //'<td>' + configuracion.LimiteDescarga + '</td>';
     if (configuracion.NoPropio == true) {
         fila += '<td style="text-align: left; width: 15%;"><input min="' + configuracion.Consumidos + '" value="' + configuracion.LimiteCupo + '" id="limiteCupo' + configuracion.Id + '" class="number" disabled /></td>' +
             '<td style="text-align: left; width: 15%;"><input value="' + configuracion.LimiteAlgoritmo + '" id="limiteAlgoritmo' + configuracion.Id + '" class="number" disabled/></td>' +
+            '<td style="text-align: left; width: 15%;"><input value="' + configuracion.LimiteDescarga + '" id="limiteDescarga' + configuracion.Id + '" class="number" disabled/></td>' +
             '</tr>'
     } else {
         fila += '<td style="text-align: left; width: 15%;"><input min="' + configuracion.Consumidos + '" value="' + configuracion.LimiteCupo + '" id="limiteCupo' + configuracion.Id + '" class="number"  /></td>' +
             '<td style="text-align: left; width: 15%;"><input value="' + configuracion.LimiteAlgoritmo + '" id="limiteAlgoritmo' + configuracion.Id + '" class="number" /></td>' +
+            '<td style="text-align: left; width: 15%;"><input value="' + configuracion.LimiteDescarga + '" id="limiteDescarga' + configuracion.Id + '" class="number" /></td>' +
             '</tr>';
     }
     $("#tablaConfiguracion").append(fila);
@@ -548,6 +586,7 @@ function CargarConfiguracion(id, mostrarFecha) {
     });
     $('#limiteCupo' + configuracion.Id).data("kendoNumericTextBox").value(configuracion.LimiteCupo);
     $('#limiteAlgoritmo' + configuracion.Id).data("kendoNumericTextBox").value(configuracion.LimiteAlgoritmo);
+    $('#limiteDescarga' + configuracion.Id).data("kendoNumericTextBox").value(configuracion.LimiteDescarga);
     $('#totalConsumidos').data("kendoNumericTextBox").value(configuracion.CuposConsumidos);
     $('#totalDisponibles').data("kendoNumericTextBox").value(configuracion.CuposDisponibles);
 }
@@ -596,7 +635,7 @@ function GuardarLimiteCupo() {
     }
 
     if (cantErr > 0) {
-        MensErr("Por favor, completar la cantidad de cupo para cada zona.");
+        MensErr("Por favor, completar la cantidad de cupos para cada zona.");
         $.unblockUI();
         return false;
     }
@@ -611,7 +650,7 @@ function GuardarLimiteCupo() {
     }
 
     if (configuraciones.length > 0 && total != Number($("#limiteCupo" + configuraciones[0].Id).val())) {
-        MensErr("La cantidad ingresada es diferente al limite configurado.");
+        MensErr("La cantidad ingresada es diferente al límite configurado.");
         $.unblockUI();
         return false;
     }
@@ -644,8 +683,8 @@ function GuardarLimiteCupo() {
         var idConfiguracion = $("#configuracionCupoId").val()
         if (ValidarZona(idConfiguracion)) {
 
-            if ($("#limiteCupo" + idConfiguracion).val() == "" || $("#limiteAlgoritmo" + idConfiguracion).val() == "") {
-                MensErr("Los Límites de Cupo y Algoritmo deben completarse.");
+            if ($("#limiteCupo" + idConfiguracion).val() == "" || $("#limiteAlgoritmo" + idConfiguracion).val() == "" || $("#limiteDescarga" + idConfiguracion).val() == "") {
+                MensErr("Los límites de Cupo, Algoritmo y Descarga deben completarse.\n");
                 $.unblockUI();
                 return false;
             }
@@ -654,32 +693,32 @@ function GuardarLimiteCupo() {
                 id: idConfiguracion,
                 limite: $("#limiteCupo" + idConfiguracion).val() == 0 ? null : $("#limiteCupo" + idConfiguracion).val(),
                 algoritmo: $("#limiteAlgoritmo" + idConfiguracion).val() == 0 ? null : $("#limiteAlgoritmo" + idConfiguracion).val(),
+                descarga: $("#limiteDescarga" + idConfiguracion).val() == 0 ? null : $("#limiteDescarga" + idConfiguracion).val(),
                 bloquear: null,
                 liberar: null
             });
             $.unblockUI();
-            var errores = new Array();
-            var cuposGenerados = new Array();
+
             if (resultado.HayError) {
                 $("#error-alert").text(resultado.Errores[0].Message);
                 $(".alert-danger").show();
                 setTimeout(function () { $(".alert-danger").hide(); }, 5000);
-            }
-            if (errores.length == 0) {
+            } else {
                 resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupo", { limites });
             }
         } else {
-            MensErr("La cantidad configurada de las zonas(" + $('#totalId').data("kendoNumericTextBox").value() + ") excede el limite de cupos(" + $("#limiteCupo" + idConfiguracion).val() + ")")
+            MensErr("La cantidad configurada de las zonas(" + $('#totalId').data("kendoNumericTextBox").value() + ") excede el límite de cupos(" + $("#limiteCupo" + idConfiguracion).val() + ")")
             $.unblockUI();
             return false;
         }
 
     } else {
         var limiteAlgoritmo = $('#limiteAlgoritmo' + configuraciones[0].Id).val();
-        if (limiteAlgoritmo != "") {
-            resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo });
+        var limiteDescarga = $('#limiteDescarga' + configuraciones[0].Id).val();
+        if (limiteAlgoritmo != "" && limiteDescarga != "") {
+            resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo, limiteDescarga });
         } else {
-            MensErr("Debe ingresar un valor para el Límite del Algoritmo.")
+            MensErr("Debe ingresar valores para el Límite del Algoritmo y el Límite con Descarga.")
             $.unblockUI();
             return false;
         }
@@ -708,6 +747,7 @@ function ValidarZona(idConfiguracion) {
     }
     return true;
 }
+
 function Editar(id) {
     var cupo = MSExecuteOnServer("/ConfiguracionCupo/EditarConfiguracionCupo", { id: id });
     $("#alta").collapse('show');
@@ -721,6 +761,7 @@ function Editar(id) {
     $("#FechaHasta").val(fecha);
     $("#CantidadCupo").data("kendoNumericTextBox").value(cupo.LimiteCupo);
     $("#CantidadAlgoritmo").data("kendoNumericTextBox").value(cupo.LimiteAlgoritmo);
+    $("#CantidadDescarga").data("kendoNumericTextBox").value(cupo.LimiteDescarga);
     $("#CierreCupera").attr("checked", cupo.CierreCupera);
     $("#LiberarCupera").attr("checked", cupo.LiberarCupera);
     $("#MaterialId").prop('disabled', true);
@@ -740,6 +781,7 @@ function Cancelar() {
     $("#FechaHasta").val(fecha);
     $("#CantidadCupo").data("kendoNumericTextBox").value("");
     $("#CantidadAlgoritmo").data("kendoNumericTextBox").value("");
+    $("#CantidadDescarga").data("kendoNumericTextBox").value("");
     $("#CierreCupera").attr("checked", false);
     $("#LiberarCupera").attr("checked", false);
     $("#MaterialId").prop('disabled', false);
@@ -757,7 +799,7 @@ function LimpiarConfiguracion() {
     $("#FechaHasta").val(fecha);
     $("#CantidadCupo").val("");
     $("#CantidadAlgoritmo").val("");
-
+    $("#CantidadDescarga").val("");
 }
 
 function SeleccionarElementos() {
@@ -771,6 +813,7 @@ function SeleccionarElementos() {
     });
     return obj;
 }
+
 function DeseleccionarElementos() {
     var grid = $("#gridConfiguracionCupo").data("kendoGrid");
     grid.clearSelection();
@@ -792,7 +835,6 @@ function CierreMasivoAceptar() {
 
 }
 
-
 function CierreMasivoCerrar() {
 
     var limites = MSExecuteOnServer("/ConfiguracionCupo/CambioMasivo", { cambio: true });
@@ -810,7 +852,7 @@ function AbrirMasivo() {
         ids.push(configuraciones[i].id);
     }
     if (ids.length <= 0) {
-        MensErr("No se seleccionó ninguna configuración");
+        MensErr("No se seleccionó ninguna configuración.");
     } else {
         var limites = MSExecuteOnServer("/ConfiguracionCupo/CambioMasivo", { ids: ids, aceptar: false });
         MensInfo("Se guardó correctamente");
@@ -824,7 +866,9 @@ function SetearEnCero() {
     }
     if ($("#CantidadAlgoritmo").val() == "") {
         $("#CantidadAlgoritmo").data("kendoNumericTextBox").value("0");
-
+    }
+    if ($("#CantidadDescarga").val() == "") {
+        $("#CantidadDescarga").data("kendoNumericTextBox").value("0");
     }
 }
 
@@ -848,19 +892,19 @@ function AceptarConfiguracion(idConfiguracion) {
     var configuracionSeleccionada = grid.filter(function (x) { return (x.Id == id) });
     var cantidadCupos = configuracionSeleccionada != null && configuracionSeleccionada.length > 0 && configuracionSeleccionada[0].LimiteCupo ? configuracionSeleccionada[0].LimiteCupo : null;
     var algoritmo = configuracionSeleccionada != null && configuracionSeleccionada.length > 0 && configuracionSeleccionada[0].LimiteAlgoritmo ? configuracionSeleccionada[0].LimiteAlgoritmo : null;
+    var descarga = configuracionSeleccionada != null && configuracionSeleccionada.length > 0 && configuracionSeleccionada[0].LimiteDescarga ? configuracionSeleccionada[0].LimiteDescarga : null;
     var bloquear = $("#BloquearCupera" + id).is(":checked") ?? null;
     var liberar = $("#LiberarCupera" + id).is(":checked") ?? null;
 
-    result = MSExecuteOnServer('/ConfiguracionCupo/ModificarConfiguracion', { id: id, limite: cantidadCupos, algoritmo: algoritmo, bloquear: bloquear, liberar: liberar });
+    result = MSExecuteOnServer('/ConfiguracionCupo/ModificarConfiguracion', { id: id, limite: cantidadCupos, algoritmo: algoritmo, descarga: descarga, bloquear: bloquear, liberar: liberar });
 
     $.unblockUI();
     var errores = new Array();
-    var cuposGenerados = new Array();
     if (result.HayError) {
         errores = errores.concat(result.ListaErrores);
     }
     if (errores.length == 0) {
-        MensInfo("Se grabo correctamente.");
+        MensInfo("Se grabó correctamente.");
     } else {
         ShowErrorMessages(errores);
     }

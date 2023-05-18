@@ -2825,6 +2825,7 @@
     </Content>
     <Content Include="Views\FAQ\Index.cshtml" />
     <Content Include="Views\Hedge\_HedgeMargenMolienda.cshtml" />
+    <Content Include="Views\CompraNet\_ModalCuposConDescarga.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

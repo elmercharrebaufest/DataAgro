@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             configuracionCupoManagerMock.Verify(x => x.TraerTodaConfiguracionCupo(It.IsAny<KendoGridMvcRequest>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false,\"CuposDisponibles\":0,\"NoPropio\":false,\"Sustentable\":null}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false,\"CuposDisponibles\":0,\"NoPropio\":false,\"Sustentable\":null,\"LimiteDescarga\":0}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
         [Test]
@@ -137,7 +137,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             configuracionCupoManagerMock.Verify(x => x.TraerConfiguracionCupo(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false,\"CuposDisponibles\":0,\"NoPropio\":false,\"Sustentable\":null},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false,\"CuposDisponibles\":0,\"NoPropio\":false,\"Sustentable\":null,\"LimiteDescarga\":0},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
 
@@ -159,13 +159,13 @@ namespace Molinos.DataAgro.Test.Controllers
         [Test]
         public void GrabarLimitesCupoMasivoTest()
         {
-            configuracionCupoManagerMock.Setup(x => x.GrabarLimitesMasivo(It.IsAny<List<LimiteCupo>>(), It.IsAny<List<int>>(), It.IsAny<int>()))
+            configuracionCupoManagerMock.Setup(x => x.GrabarLimitesMasivo(It.IsAny<List<LimiteCupo>>(), It.IsAny<List<int>>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(new Resultado());
-            var result = target.GrabarLimitesCupoMasivo(new List<LimiteCupo>(), new List<int>(), It.IsAny<int>());
+            var result = target.GrabarLimitesCupoMasivo(new List<LimiteCupo>(), new List<int>(), It.IsAny<int>(), It.IsAny<int>());
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
-            configuracionCupoManagerMock.Verify(x => x.GrabarLimitesMasivo(It.IsAny<List<LimiteCupo>>(), It.IsAny<List<int>>(), It.IsAny<int>()), Times.Once);
+            configuracionCupoManagerMock.Verify(x => x.GrabarLimitesMasivo(It.IsAny<List<LimiteCupo>>(), It.IsAny<List<int>>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Errores\":[],\"ListaErrores\":[],\"HayError\":false,\"HayErrores\":false},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);

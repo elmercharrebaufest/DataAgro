@@ -2,7 +2,6 @@
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
-using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Newtonsoft.Json;
@@ -318,13 +317,12 @@ namespace WebDataAgro.Services
             foreach (var aper in contratoSAP.Apertura ?? new List<AperturaPrecioSap>())
             {
                 var ConceptoAperturaPrecioId = conceptoList.FirstOrDefault(x => x.CodigoSap == aper.Concepto).Id;
-                if (!(contratoSAP.EPA == "X" && ConceptoAperturaPrecioId == 4))
+                if (!((contratoSAP.EPA == "X" || contratoSAP.Sustentable == "X") && ConceptoAperturaPrecioId == 4))
                 {
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Importe = aper.Importe;
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().MonedaId = aper.Moneda;
                     aperturas.Where(a => a.ConceptoAperturaPrecioId == ConceptoAperturaPrecioId).Single().Porcentaje = aper.Porcentaje;
                 }
-
             }
             //foreach (var item in aperturas.Where(a => string.IsNullOrEmpty(a.MonedaId)))
             //{
@@ -467,24 +465,24 @@ namespace WebDataAgro.Services
             }
             contrato.Sustentable = contratoSAP.Sustentable == "X" && contratoSAP.EPA != "X";
             contrato.EPA = contratoSAP.EPA == "X";
-            if (contrato.EPA == true)
+            if (contrato.EPA == true || contrato.Sustentable == true)
             {
                 if (contratoSAP.Apertura != null && contratoSAP.Apertura.Any(x=> x.Concepto == "BO" && x.Importe > 0)) //es Sobre Precio
                 {
-                    contrato.EPATipoDBId = 1;
+                    contrato.SustentableTipoDBId = 1;
                     contrato.ImporteSustentable = contratoSAP.Apertura.Where(x => x.Concepto == "BO").Single().Importe;
                     contrato.MonedaSustentableId = contratoSAP.Apertura.Where(x => x.Concepto == "BO").Single().Moneda;
                 }
                 else if (contratoSAP.DescuentoBonificaciones != null && contratoSAP.DescuentoBonificaciones.Any()) //es Fuera de Precio
                 {
-                    contrato.EPATipoDBId = 2;
+                    contrato.SustentableTipoDBId = 2;
                     contrato.ImporteSustentable = contratoSAP.DescuentoBonificaciones.Where(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Single().Importe;
                     contrato.MonedaSustentableId = contratoSAP.DescuentoBonificaciones.Where(x => x.TipoPeriodo == "I" && x.TipoDescBon == "B").Single().MonedaDB;
                 }
             }
             else
             {
-                contrato.EPATipoDBId = null;
+                contrato.SustentableTipoDBId = null;
                 contrato.ImporteSustentable = null;
                 contrato.MonedaSustentableId = null;
             }

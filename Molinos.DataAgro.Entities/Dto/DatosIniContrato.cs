@@ -44,7 +44,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CondicionPagoQry> CondicionPago { get; set; }
 
         public List<BoletoVentaQry> BoletoVenta { get; set; }
-
+        public int MinutosCronometroConDescarga { get; set; }
 
 
 
@@ -80,6 +80,7 @@ namespace Molinos.DataAgro.Entities.Dto
             Pago = new List<PagoQry>();
             CondicionPago = new List<CondicionPagoQry>();
             BoletoVenta = new List<BoletoVentaQry>();
+            MinutosCronometroConDescarga = 0;
         }
     }
 

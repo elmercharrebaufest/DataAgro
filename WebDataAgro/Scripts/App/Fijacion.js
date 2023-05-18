@@ -268,6 +268,10 @@ function cargarDatosAFijarEnFijacion(afijar) {
     } else {
         $("#pizarraDiv").show();
     }
+
+    if (afijar.Sustentable) $("#sustentable").text("Sí")
+    else if (afijar.EPA) $("#sustentable").text("EPA")
+    else $("#sustentable").text("No");
 }
 
 function ArmarAperturaDesdeAFijar(afijar) {
@@ -5315,40 +5319,19 @@ function inicializarGrillaContratosPendientes() {
                             (dataItem.Pase == true ? "Pase <br>" + dataItem.Posicion : "")
                             + "</strong></label>"
                     }
+                },
+                {
+                    field: "Sustentable", title: "Sustentable", template: function (dataItem) {
+                        return "<label  style=' font-weight: bold; color: " + dataItem.Color + "'> <strong>" +
+                            (dataItem.Sustentable ? "Sust." : dataItem.EPA ? "EPA" : "")
+                            + "</strong></label>"
+                    }
                 }
             ],
         }).data("kendoGrid");
     });
 
 
-}
-
-function MostrarTooltip(tooltip) {
-    $(tooltip).tooltip('show');
-}
-
-function Seleccionar(data) {
-    //var grid = $("#grid").data("kendoGrid");
-    //var data = grid.dataItem(e);
-    var grid = $("#grid").data("kendoGrid");
-    grid.tbody.find("tr[data-uid= '" + data + "']").trigger('dblclick');
-}
-
-function ValidarProveedorSisa() {
-    var mensaje = MSExecuteOnServer("/Compranet/ValidarProveedorSISA", {
-        proveedorId: $("#proveedorId").val(),
-        clasificacion: $("#clasificacion").val() != "" ? $("#clasificacion").val() : "0",
-        planCanje: $("#ventaId").is(":checked") != true ? $("#planCanjeId").is(':checked') : false,
-        consignatario: $("#ventaId").is(":checked") != true ? $("#consignatarioId").is(':checked') : false
-    });
-    if (mensaje != "" && mensaje != null) {
-        MensErr(mensaje);
-        $("#mensaje").show();
-        $("#mensaje").text(mensaje);
-    } else {
-        $("#mensaje").hide();
-        $("#mensaje").val("");
-    }
 }
 
 function HayTarifaAConvenir() {

@@ -35,9 +35,9 @@
         list-style-type: none;
     }
 
-        #menu > ul > li {
-            list-style: none;
-        }
+    #menu > ul > li {
+        list-style: none;
+    }
 
     #menu > li {
         list-style: none;
@@ -156,27 +156,43 @@
         border: none !important;
     }
 
+    .border-dataProv {
+        padding-right: 12px !important;
+        padding-left: 10px !important;
+    }
+
     #cargarDatosEstablecimiento2 {
         font-family: arial, sans-serif;
         border-collapse: collapse;
         width: 100%;
     }
 
-        #cargarDatosEstablecimiento2 td {
-            text-align: center;
-            border-top: none;
-            border: 1px solid #dddddd;
-        }
+    #cargarDatosEstablecimiento2 td {
+        text-align: center;
+        border-top: none;
+        border: 1px solid #dddddd;
+    }
 
-        #cargarDatosEstablecimiento2 th {
-            text-align: center;
-            border: 1px solid #dddddd;
-        }
+    #cargarDatosEstablecimiento2 th {
+        text-align: center;
+        border: 1px solid #dddddd;
+    }
 
-            #cargarDatosEstablecimiento2 th:first-of-type {
-                vertical-align: middle;
-                border: 1px solid #dddddd;
-            }
+    #cargarDatosEstablecimiento2 th:first-of-type {
+        vertical-align: middle;
+        border: 1px solid #dddddd;
+    }
+
+    .sticky-thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background-color: #ddffef;
+    }
+
+    .aceptar {
+        width: 13% !important;
+    }
 </style>
 <script src="~/Scripts/KendoExtensions.js"></script>
 <script src="~/Scripts/kendo/messages/kendo.messages.es-AR.min.js"></script>
@@ -306,7 +322,7 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr class="cabecera">
-                                        <th colspan="3">Dia y Material</th>
+                                        <th colspan="3">Día y Material</th>
                                         <th colspan="3">Proveedor</th>
                                         <th colspan="1">Sugerencias<br />Pendientes<br />por proveedor</th>
                                         <th colspan="3">Sugerencias de cupos<br />que quiero aceptar</th>
@@ -553,33 +569,35 @@
 
 <div class="modal fade" id="modificarSugerenciaProveedorModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document" style="width:auto;">
-        <div class="modal-content" style="width:auto;">
+        <div class="modal-content" style="width: auto; max-height: 640px; ">
             <div class="modal-header">
                 <button type="button" class="cerrar close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h1 class="modal-title" id=""></h1>
                 <div class="status confirmado-modal">
-                    <div>Modificar Sugerencia</div>
+                    <div>Modificar Sugerencias</div>
                 </div>
             </div>
             <div class="modal-body">
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow: auto; max-height: 500px;">
                     <input type="hidden" id="modSugerenciaId" />
                     <input type="hidden" id="modMaterialId" />
                     <input type="hidden" id="modProveedorId" />
                     <table id="carga-cupos-table" class="table">
-                        <tbody id="">
-                            <tr style="height:48px;">
+                        <thead class="sticky-thead">
+                            <tr style="height:50px;">
                                 <td class="border-0">Material</td>
                                 <td class="border-0">Proveedor</td>
                                 <td class="border-0">Fecha</td>
-                                <td class="border-0" style="border-right:1px solid #dddddd !important;">Cantidad</td>
+                                <td class="border-0" style="border-right:1px solid #dddddd !important; padding-right: 5px;">Cantidad</td>
                                 @foreach (var fecha in fechas)
                                 {
                                     <td class="border-0">@fecha.ToString("dd MMM").Replace(".", "") <br /> (<b>@(sugerenciaPorComercial.Any(a => a.Fecha == fecha) ? sugerenciaPorComercial.First(a => a.Fecha == fecha).Total.ToString() : "0")</b>)</td>
                                 }
                             </tr>
+                        </thead>
+                        <tbody>
                             @if (lista != null)
                             {
                                 foreach (var dia in lista.GroupBy(x => x.FechaSugerida).OrderBy(x => x.Key).ToList())
@@ -587,7 +605,7 @@
                                     <tr class="filaProv" id="fila@(dia.Key.ToString("ddMMyyyy"))" style="height:48px;">
                                         @*<td><b></b>@dia.Where(a => a.MaterialId == materialId).First().MaterialDesc</td>*@
                                         <td><b class="modMaterial"></b></td>
-                                        <td><b class="modProveedor"></b></td>
+                                        <td class="border-dataProv"><b class="modProveedor"></b></td>
                                         <td><b>@dia.Key.ToString("dd/MM/yyyy")</b></td>
                                         <td style="border-right:1px solid #dddddd;"><b id="modCantidad@(dia.Key.ToString("ddMMyyyy"))"></b></td>
                                         @foreach (var fecha in fechas)
@@ -625,7 +643,7 @@
                 </div>
             </div>
             <div class="modal-body">
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow: auto;">
                     <input type="hidden" id="modSugerenciaId" />
                     <input type="hidden" id="modMaterialId" />
                     <input type="hidden" id="modProveedorId" />
@@ -635,7 +653,7 @@
                                 <td class="border-0">Material</td>
                                 <td class="border-0">Proveedor</td>
                                 <td class="border-0">Fecha</td>
-                                <td class="border-0" style="border-right:1px solid #dddddd !important;">Cantidad</td>
+                                <td class="border-0" style="border-right: 1px solid #dddddd !important; padding-right: 5px;">Cantidad</td>
                                 @foreach (var fecha in fechas)
                                 {
                                     <td class="border-0">@fecha.ToString("dd MMM").Replace(".", "") <br /> (<b>@(sugerenciaPorComercial.Any(a => a.Fecha == fecha) ? sugerenciaPorComercial.First(a => a.Fecha == fecha).Total.ToString() : "0")</b>)</td>
@@ -643,7 +661,7 @@
                             </tr>
                             <tr style="height:48px;">
                                 <td><b id="modMaterial"></b></td>
-                                <td><b id="modProveedor"></b></td>
+                                <td class="border-dataProv"><b id="modProveedor"></b></td>
                                 <td><b id="modFecha"></b></td>
                                 <td style="border-right:1px solid #dddddd;"><b id="modCantidad"></b></td>
                                 @foreach (var fecha in fechas)
@@ -777,9 +795,3 @@
         filter: "contains"
     });
 </script>
-<style>
-    .aceptar {
-        width: 13% !important;
-    }
-</style>
-

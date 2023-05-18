@@ -90,7 +90,8 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     //Fecha = SqlFunctions.DateName("day", cupo.FechaIngreso) + "/" + SqlFunctions.DatePart("month", cupo.FechaIngreso) + "/" + SqlFunctions.DateName("year", cupo.FechaIngreso),
                     EstadoOrden = cupo.EstadoCupo.Orden,
                     Sustentable = cupo.Sustentable,
-                    EPA = cupo.EPA
+                    EPA = cupo.EPA,
+                    ConDescarga = cupo.ConDescarga,
                 };
 
             GridHelper.TruncateTime(request.Filter, ref queryCupos);

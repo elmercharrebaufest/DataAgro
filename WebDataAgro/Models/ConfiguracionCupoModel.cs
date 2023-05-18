@@ -24,5 +24,6 @@ namespace WebDataAgro.Models
         public List<DiaCupo> Dias { get; set; }
         [Required(ErrorMessageResourceType = typeof(Text), ErrorMessageResourceName = "Error_FechaRequerido")]
         public DateTime FechaHasta { get; set; }
+        public int CantidadDescarga { get; set; }
     }
 }

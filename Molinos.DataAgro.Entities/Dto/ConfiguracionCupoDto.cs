@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Molinos.DataAgro.Entities.Dto
 {
@@ -30,5 +28,6 @@ namespace Molinos.DataAgro.Entities.Dto
         public int CuposDisponibles { get; set; }
         public bool NoPropio { get; set; }
         public bool? Sustentable { get; set; }
+        public int LimiteDescarga { get; set; }
     }
 }

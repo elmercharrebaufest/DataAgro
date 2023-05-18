@@ -48,6 +48,9 @@ namespace WebDataAgro.Controllers
                 Actualizacion = conf != null ? conf.Actualizacion : 1,
                 ApiKeyBolsaRosario = conf.ApiKeyBolsaRosario,
                 SecretBolsaRosario = conf.SecretBolsaRosario,
+                MinutosCronometroConDescarga = conf != null ? conf.MinutosCronometroConDescarga : 0,
+                CantidadMaximaDiasNegocioConDescarga = conf != null ? conf.CantidadMaximaDiasNegocioConDescarga : 0,
+                PorcentajeVolumenNegocioConDescarga = conf != null ? conf.PorcentajeVolumenNegocioConDescarga : 0,
             });
         }
         [HttpPost]
@@ -94,6 +97,9 @@ namespace WebDataAgro.Controllers
                 Actualizacion = configuracion.Actualizacion,
                 ApiKeyBolsaRosario = configuracion.ApiKeyBolsaRosario,
                 SecretBolsaRosario = configuracion.SecretBolsaRosario,
+                MinutosCronometroConDescarga = configuracion.MinutosCronometroConDescarga,
+                CantidadMaximaDiasNegocioConDescarga = configuracion.CantidadMaximaDiasNegocioConDescarga,
+                PorcentajeVolumenNegocioConDescarga = configuracion.PorcentajeVolumenNegocioConDescarga,
             };
             return entidad;
         }

@@ -46,7 +46,6 @@ namespace Molinos.DataAgro.Business
             };
         }
 
-
         public List<ComercialCombo> ObtenerComerciales(List<int> equipo, int comercialId)
         {
             var qry = new CombosQueries(logger, repositorio);
@@ -57,7 +56,6 @@ namespace Molinos.DataAgro.Business
             list.RemoveAll(x => subordinados.Any(z => z == x.ComercialId));
             return list;
         }
-
 
         public ResultIniComercial TraerTodoComercial()
         {
@@ -92,11 +90,12 @@ namespace Molinos.DataAgro.Business
                      FechaDeshabilitado = x.FechaDeshabilitado,
                      Cupera = x.Cupera,
                      RolesAsociados = x.RolesAsociados.Select(y => new RolBasicoDto { Descripcion = y.Descripcion, Id = y.Id }).ToList(),
-                     AsignarNegocios = x.AsignarNegocios
+                     AsignarNegocios = x.AsignarNegocios,
+                     Email = x.Email,
+                     ComercialSuplenteId = x.ComercialSuplenteId
                  }) ?? new ComercialDto();
             return comercial;
         }
-
 
         public Resultado GrabarComercial(Comercial oComercial, List<Rol> roles)
         {
@@ -119,7 +118,7 @@ namespace Molinos.DataAgro.Business
 
                         if (user == null)
                         {
-                            oEntityErrors.Error("Usuario", "El usuario no existe en AD ");
+                            oEntityErrors.Error("Usuario", "El usuario no existe en Active Directory.");
                             return oEntityErrors;
                         }
                     }
@@ -132,12 +131,12 @@ namespace Molinos.DataAgro.Business
             }
             if (repositorio.Existe<Comercial>(x => x.IdActiveDirectory == oComercial.IdActiveDirectory && x.ComercialId != oComercial.ComercialId))
             {
-                oEntityErrors.Error("Usuario", "El usuario de Active Directory Ya ha sido usado por otro comercial");
+                oEntityErrors.Error("Usuario", "El usuario de Active Directory ya ha sido usado por otro comercial.");
                 return oEntityErrors;
             }
             if (roles == null)
             {
-                oEntityErrors.Error("Roles", "Debe asignar algún rol");
+                oEntityErrors.Error("Roles", "Debe asignar al menos un rol.");
                 return oEntityErrors;
             }
 
@@ -183,11 +182,13 @@ namespace Molinos.DataAgro.Business
                 oComercialSave.IdActiveDirectory = oComercial.IdActiveDirectory;
                 oComercialSave.IdUsuarioSAP = oComercial.IdUsuarioSAP;
                 oComercialSave.Administrador = oComercial.Administrador;
-                oComercialSave.GrupoDeCompras = oComercial.GrupoDeCompras;
+                oComercialSave.GrupoDeComprasId = oComercial.GrupoDeComprasId;
                 oComercialSave.Deshabilitado = oComercial.Deshabilitado;
                 oComercialSave.PerfilId = oComercial.PerfilId;
                 oComercialSave.Cupera = oComercial.Cupera;
                 oComercialSave.AsignarNegocios = oComercial.AsignarNegocios;
+                oComercialSave.Email = oComercial.Email;
+                oComercialSave.ComercialSuplenteId = oComercial.ComercialSuplenteId;
                 if (oComercialSave.RolesAsociados != null)
                 {
                     oComercialSave.RolesAsociados.Clear();
@@ -398,10 +399,18 @@ namespace Molinos.DataAgro.Business
             var comercial = repositorio.Obtener<ProveedorComercial, string>(x => x.Proveedor.CUIT == cuit, x => x.Comercial.GrupoDeCompras.Descripcion);
             return repositorio.Obtener<ZonaCupo, int>(x => x.Descripcion == comercial, x => x.Id);
         }
+
+        public List<ComercialQry> ListarComercialesAsignanNegocios()
+        {
+            return repositorio.Listar<Comercial, ComercialQry>(x => new ComercialQry()
+            {
+                ComercialId = x.ComercialId,
+                Comercial = x.Nombres + " " + x.Apellido,
+                IdActiveDirectory = x.IdActiveDirectory
+            },
+                    x => x.Deshabilitado != true && x.AsignarNegocios == true && 
+                    x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet)), 0, "Comercial");
+
+        }
     }
 }
-
-
-
-
-
