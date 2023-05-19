@@ -4374,7 +4374,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var lista = new List<string> { comercial.IdActiveDirectory };
                     var path = httpContextManager.ObtenerPathLogoMail();
                     var alterView = CuerpoMailProveedorAnulacionCupo(path, cupos);
-                    mailManager.EnviarMail(lista, "Anulacion de cupo", "", null, alterView, null, null);
+                    mailManager.EnviarMail(lista, "Anulación de cupo", "", null, alterView, null, null);
                 }
                 else
                 {
@@ -6119,16 +6119,16 @@ namespace Molinos.DataAgro.Business.Managers
             workSheet1.Cells[2, 1].LoadFromCollection(soja, false);
             workSheet1.Cells[1, 1].Value = "Material";
             workSheet1.Column(1).AutoFit();
-            workSheet1.Cells[1, 2].Value = "Razon Social";
+            workSheet1.Cells[1, 2].Value = "Razón Social";
             workSheet1.Column(2).AutoFit();
             ArmarAgrupacionExcel(workSheet1, soja);
             //Maiz
-            var workSheet2 = excel.Workbook.Worksheets.Add("Maiz");
+            var workSheet2 = excel.Workbook.Worksheets.Add("Maíz");
             var maiz = DevolverSugerenciasAgrupadas(oDatos, formulas).Where(x => x.Material == "Maiz").ToList();
             workSheet2.Cells[2, 1].LoadFromCollection(maiz, false);
             workSheet2.Cells[1, 1].Value = "Material";
             workSheet2.Column(1).AutoFit();
-            workSheet2.Cells[1, 2].Value = "Razon Social";
+            workSheet2.Cells[1, 2].Value = "Razón Social";
             workSheet2.Column(2).AutoFit();
             ArmarAgrupacionExcel(workSheet2, maiz);
             //Trigo
@@ -6137,7 +6137,7 @@ namespace Molinos.DataAgro.Business.Managers
             workSheet3.Cells[2, 1].LoadFromCollection(trigo, false);
             workSheet3.Cells[1, 1].Value = "Material";
             workSheet3.Column(1).AutoFit();
-            workSheet3.Cells[1, 2].Value = "Razon Social";
+            workSheet3.Cells[1, 2].Value = "Razón Social";
             workSheet3.Column(2).AutoFit();
             ArmarAgrupacionExcel(workSheet3, trigo);
             //Girasol
@@ -6146,13 +6146,15 @@ namespace Molinos.DataAgro.Business.Managers
             workSheet4.Cells[2, 1].LoadFromCollection(girasol, false);
             workSheet4.Cells[1, 1].Value = "Material";
             workSheet4.Column(1).AutoFit();
-            workSheet4.Cells[1, 2].Value = "Razon Social";
+            workSheet4.Cells[1, 2].Value = "Razón Social";
             workSheet4.Column(2).AutoFit();
             ArmarAgrupacionExcel(workSheet4, girasol);
 
             var workSheet9 = excel.Workbook.Worksheets.Add("Detalle Negocios");
             workSheet9.Cells[1, 1].LoadFromCollection(oDatos, true);
-
+            workSheet9.Cells[1, 5].Value = "Razón Social";
+            workSheet9.Column(12).Style.Numberformat.Format = "#,#";
+            workSheet9.Column(13).Style.Numberformat.Format = "#,#";
 
             //Soja
             var j = 1;
