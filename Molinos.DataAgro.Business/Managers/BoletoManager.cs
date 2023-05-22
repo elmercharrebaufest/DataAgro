@@ -10,16 +10,11 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 using iTextSharp.text;
-using iTextSharp.text.html.simpleparser;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using iTextSharp.tool.xml.parser;
@@ -27,8 +22,6 @@ using iTextSharp.tool.xml.pipeline.html;
 using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.html;
-using Image = iTextSharp.text.Image;
-using iTextSharp.text.html;
 using iTextSharp.tool.xml.css;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -266,7 +259,7 @@ namespace Molinos.DataAgro.Business.Managers
         public void EnviarMailBoleto(string boletoDescripcion, string tipoNegocio, string razonSocial, string contrato, string version, Comercial comercial, List<string> emailproveedor, byte[] pdf)
         {
             var lista = new List<string>();
-            var email = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
+            //var email = mailManager.GetEmailUserActiveDirectory(comercial.IdActiveDirectory);
             //if (comercial.IdActiveDirectory != comercial.ToUpper())
             //{
             //    lista.Add(email);
@@ -279,18 +272,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 lista.Add(comercialRegistrado);
                 lista.Add("dataagro@molinosagro.com.ar");
-                logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
+                logger.Debug("Enviando mail Boleto a Comercial Registrado " + comercialRegistrado);
             }
-            var subject = "";
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
-            {
-                subject = boletoDescripcion + " Molinos Agro S.A. – " + tipoNegocio + " - " + razonSocial;
-                //lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
-            }
-            else
-            {
-                subject = "Mail Prueba - " + boletoDescripcion + " Molinos Agro S.A. – " + tipoNegocio + " - " + razonSocial;
-            }
+            var subject = boletoDescripcion + " Molinos Agro S.A. – " + tipoNegocio + " - " + razonSocial;
 
             mailManager.EnviarMail(comercial, emailproveedor, subject, "", lista, CuerpoMailBoleto(httpContextManager.ObtenerPathLogoMail(), contrato, version), pdf, "Boleto.pdf");
         }
@@ -318,7 +302,7 @@ namespace Molinos.DataAgro.Business.Managers
                 " www.moaoperaciones.com.ar  y luego enviar a nuestras oficinas. <br />";
             htmlBody += "En caso de ser un boleto de Bolsa de Rosario, si no se envía impreso en doble faz se observará debido a que no están autorizando el obleado.<br/>" +
                 "En caso de tener alguna consulta ingresar www.moaoperaciones.com.ar " +
-                "<br/><br/>Saludos Cordiales<br/><br/>" +
+                "<br/><br/>Saludos Cordiales,<br/><br/>" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br/><br/>Molinos Agro S.A. ";
             htmlBody += "<style> table, th, td{ }</style>";
@@ -675,7 +659,5 @@ namespace Molinos.DataAgro.Business.Managers
             return mensaje;
         }
     }
-
-
 
 }

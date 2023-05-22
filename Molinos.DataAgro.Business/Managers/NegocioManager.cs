@@ -78,15 +78,8 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     listaJefes = null;
                 }
-                var subject = "";
-                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
-                {
-                    subject = "Negocios con fecha anterior";
-                }
-                else
-                {
-                    subject = "Prueba Mail - Negocios con fecha anterior";
-                }
+                var subject = "Negocios con fecha anterior";
+                
                 var rutaMolinos = httpContextManager.ObtenerPathLogoMail();
 
                 var cuerpoMail = CuerpoMailNegociosConDiaAnterior(rutaMolinos, contratos);
@@ -204,15 +197,8 @@ namespace Molinos.DataAgro.Business.Managers
                 listaJefes.Add(email);
             }
 
-            var subject = "";
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
-            {
-                subject = "Negocios con Anula y Reemplaza";
-            }
-            else
-            {
-                subject = "Prueba Mail - Negocios con Anula y Reemplaza";
-            }
+            var subject = "Negocios con Anula y Reemplaza";
+            
             var rutaMolinos = httpContextManager.ObtenerPathLogoMail();
 
             var cuerpoMail = CuerpoMailNegociosAnulaYReemplaza(rutaMolinos, contratos);
@@ -327,11 +313,8 @@ namespace Molinos.DataAgro.Business.Managers
                 lista.Add(email);
             }
 
-            var subject = "Error Finalización negocio Molinos Agro S.A. – " + negocio.ContratoSAP;
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
-            {
-                subject = "Mail de Pruebas - " + subject;
-            }
+            var subject = "Error finalización de negocio Molinos Agro S.A. – " + negocio.ContratoSAP;
+            
             mailManager.EnviarMail( ConfigurationManager.AppSettings["EmailDASoporte"].ToString().Split(';').ToList(), subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), negocio));
         }
 

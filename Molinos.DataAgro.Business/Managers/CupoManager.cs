@@ -4336,31 +4336,33 @@ namespace Molinos.DataAgro.Business.Managers
 
         private void EnviarMailProveedorAnulacionCupo(List<CupoDto> cupos)
         {
-            try
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
             {
-                if (cupos.Count > 0)
+                try
                 {
-                    foreach (var cuposPorProveedor in cupos.GroupBy(x => x.ProveedorId))
+                    if (cupos.Count > 0)
                     {
-                        var id = cuposPorProveedor.Key;
-                        var proveedorContacto = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == id && x.Cupo == true && x.Email1 != null);
-                        if (proveedorContacto.Count == 0)
+                        foreach (var cuposPorProveedor in cupos.GroupBy(x => x.ProveedorId))
                         {
-                            return;
+                            var id = cuposPorProveedor.Key;
+                            var proveedorContacto = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == id && x.Cupo == true && x.Email1 != null);
+                            if (proveedorContacto.Count == 0)
+                            {
+                                return;
+                            }
+                            var lista = proveedorContacto.ToList();
+                            var path = httpContextManager.ObtenerPathLogoMail();
+                            var cupo = cuposPorProveedor.ToList();
+                            var alterView = CuerpoMailProveedorAnulacionCupo(path, cupo);
+                            mailManager.EnviarMail(null, lista, "Anulación de cupos", "", null, alterView);
                         }
-                        var lista = proveedorContacto.ToList();
-                        var path = httpContextManager.ObtenerPathLogoMail();
-                        var cupo = cuposPorProveedor.ToList();
-                        var alterView = CuerpoMailProveedorAnulacionCupo(path, cupo);
-                        mailManager.EnviarMail(null, lista, "Anulación de cupos", "", null, alterView);
                     }
+                    else return;
                 }
-                else return;
-            }
-            catch (Exception e)
-            {
-
-                logger.Error("Error al enviar el mail EnviarMailAnulacionCupo", e.Message);
+                catch (Exception e)
+                {
+                    logger.Error("Error al enviar mail en EnviarMailProveedorAnulacionCupo", e.Message);
+                }
             }
         }
 
@@ -4385,7 +4387,7 @@ namespace Molinos.DataAgro.Business.Managers
             catch (Exception e)
             {
 
-                logger.Error("Error al enviar el mail EnviarMailAnulacionCupo", e.Message);
+                logger.Error("Error al enviar mail en EnviarMailComercialAnulacionCupo", e.Message);
             }
         }
 
@@ -4405,13 +4407,13 @@ namespace Molinos.DataAgro.Business.Managers
                     var path = httpContextManager.ObtenerPathLogoMail();
                     var cupo = cuposPorComercialCreador.ToList();
                     var alterView = CuerpoMailProveedorAnulacionCupo(path, cupo);
-                    mailManager.EnviarMail(lista, "Anulacion de cupo", "", null, alterView, null, null);
+                    mailManager.EnviarMail(lista, "Anulación de cupo", "", null, alterView, null, null);
                 }
             }
             catch (Exception e)
             {
 
-                logger.Error("Error al enviar el mail EnviarMailAnulacionCupo", e.Message);
+                logger.Error("Error al enviar mail en EnviarMailCreadorAnulacionCupo", e.Message);
             }
         }
 
@@ -6035,18 +6037,14 @@ namespace Molinos.DataAgro.Business.Managers
                     mail.AddRange(comerciales.Select(x => x.IdActiveDirectory).ToList());
                 }
                 mail.Add("dataagro@baufest.com");
-                var asunto = "Prueba - Resultado Algoritmo de cupos";
-                if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
-                {
-                    asunto = "Resultado Algoritmo de cupos";
-                }
+                var asunto = "Resultado Algoritmo de Cupos";
                 mailManager.EnviarMail(mail, asunto, "", null, alterView, excel, "Reporte Algoritmo.xlsx");
 
             }
             catch (Exception e)
             {
 
-                logger.Error("Error al enviar el mail EnviarMailNegociosDeAlgoritmo", e.Message);
+                logger.Error("Error al enviar mail en EnviarMailNegociosDeAlgoritmo", e.Message);
             }
         }
 

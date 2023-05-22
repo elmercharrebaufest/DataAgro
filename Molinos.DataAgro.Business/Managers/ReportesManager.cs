@@ -11,7 +11,6 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
@@ -3354,19 +3353,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         private void EnviarMailPesificacionVencida(List<ReportePesificadoDto> pesificado, DateTime fechaInstruccion, bool tieneCorredor, bool kgTotales, bool kgPesif)
         {
-            var subject = "";
+            var subject = "PESIFICACION DE CONTRATOS - AVISO IMPORTANTE!";
             List<string> fromEmail = new List<string>();
             List<string> mailAdmin = new List<string>();
             var hoy = DateTime.Today;
             fromEmail.Add(ConfigurationManager.AppSettings["CredentialUserNamePesificados"]);
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
-            {
-                subject += "Mail Pruebas - PESIFICACION DE CONTRATOS - AVISO IMPORTANTE!";
-            }
-            else
-            {
-                subject += "PESIFICACION DE CONTRATOS - AVISO IMPORTANTE!";
-            }
             mailAdmin.Add(ConfigurationManager.AppSettings["CredentialUserNamePesificados"]);
             mailAdmin.Add("Joaquin.Delfederico@molinosagro.com.ar");
 
@@ -3579,7 +3570,6 @@ namespace Molinos.DataAgro.Business.Managers
             var thHead = "style=\"font-size: 15px; font-weight: bold;color: #FFFFFF; text-align: center;border-left: 0px solid #D0E4F5; " +
                 "border: 0px solid #AAAAAA;padding: 3px 2px;\"";
             var td = "style=\"border: 0px solid #AAAAAA;  padding: 3px 2px;\"";
-            var linea = 0;
             string htmlBody = "";
             var cabecera = "";
             cabecera += $"{p}Estimado/s,</p>";

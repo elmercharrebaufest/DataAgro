@@ -501,7 +501,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         corredoresComerciales.Remove(item);
                     }
-                    logger.Debug("Enviando mail a " + string.Join(", ", corredoresComerciales));
+                    
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
                     {
                         try
@@ -1022,9 +1022,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
+                htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.");
             }
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -1176,7 +1176,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             htmlBody += " </td></tr>";
             htmlBody += "</td></tr></table>";
-            htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+            htmlBody += "<br />  En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales" +
                 " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -2390,11 +2390,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
-                logger.Error("EnviarMailInvitacionMOAOperaciones");
-                logger.Error(e);
+                logger.Error("EnviarMailInvitacionMOAOperaciones", e);
             }
-
-
         }
 
         private AlternateView CuerpoMailInvitacionMOAOperaciones(String filePath, ContactoComercial contacto, NuevoProveedor proveedor)
@@ -2407,7 +2404,7 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "Ingrese haciendo click <a href='" + urlMOA + "'>aquí</a>";
             htmlBody += "<table style=\"border-collapse: collapse;border: 2px solid white; text-align:center; font-size: 13px;\">";
 
-            htmlBody += "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -3636,9 +3633,9 @@ namespace Molinos.DataAgro.Business.Managers
             }
             catch (Exception e)
             {
+                logger.Error("ImportarEstablecimientos: ", e);
                 throw;
             }
-
         }
 
         public int ObtenerIdProveedorPorCuit(string cuit)
@@ -4142,8 +4139,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -4220,17 +4217,9 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 lista.Add(comercialRegistrado);
             }
-            var subject = "";
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
-            {
-                subject = eliminar ? "Anulación " : "Nuevo " + "negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
-                lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
-            }
-            else
-            {
-                subject = "Mail Prueba - " + (eliminar ? "Anulación " : "Nuevo ") + "negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
-                lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
-            }
+            var subject = eliminar ? "Anulación " : "Nuevo " + "negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+            lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
+            
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
 
             if (contrato.Comercial.GrupoDeComprasId == 42)
@@ -4404,8 +4393,8 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "</td></tr></table>";
             if (eliminar)
             {
-                htmlBody += "<br />    Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                "<br /> <br />  Saludos Cordiales" +
+                htmlBody += "<br />    Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -4413,8 +4402,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                htmlBody += "<br />  En el presente mail, se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                    "<br /> <br />  Saludos Cordiales" +
+                htmlBody += "<br />  En el presente mail se detalla el nuevo negocio generado con Molinos Agro S.A. Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oFijacionDePrecioContrato.Comercial != null ? oFijacionDePrecioContrato.Comercial.Nombres + " " + oFijacionDePrecioContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                    "<br /> <br />  Saludos Cordiales," +
                     " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
                     @"<img src='cid:" + res.ContentId + @"'/>" +
                     "<br /> <br /> www.molinosagro.com.ar";
@@ -4751,8 +4740,8 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "Planta Destino: " + oContrato.PlantaDestino.Descripcion + "<br />";
             htmlBody += "</td></tr>";
             htmlBody += "</table>";
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos, de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
-                "<br /> <br />  Saludos Cordiales" +
+            htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -4886,7 +4875,7 @@ namespace Molinos.DataAgro.Business.Managers
                 else
                 {
                     // - Sin alta sap
-                    mensajeEnHome.Add("Cuit sin alta en MOA (no existe cuit en sap)");
+                    mensajeEnHome.Add("Cuit sin alta en MOA (no existe cuit en SAP)");
                     cantNoHabilitados += 1;
                 }
 
@@ -4914,7 +4903,7 @@ namespace Molinos.DataAgro.Business.Managers
                     // - Riesgo comercial A
                     if (p.RiesgoComercialSap != null && p.RiesgoComercialSap.Contains("A"))
                     {
-                        mensajeEnHome.Add("Proveedor con riesgo comercial consulta a Datos Maestros");
+                        mensajeEnHome.Add("Proveedor con riesgo comercial. Consultar a Datos Maestros.");
                         cantLegajoIrregular += 1;
                     }
 
@@ -5233,12 +5222,11 @@ namespace Molinos.DataAgro.Business.Managers
             }
             else
             {
-                proveedorCategoriasSISA = new ProveedorCategoriasSISA() { CUIT = cuitSegmentacion.CUIT, Existe = 0, Mensaje = "CUIT no existe en SISA" };
+                proveedorCategoriasSISA = new ProveedorCategoriasSISA() { CUIT = cuitSegmentacion.CUIT, Existe = 0, Mensaje = "El CUIT no existe en SISA" };
             }
 
             return proveedorCategoriasSISA;
         }
-
     }
 
 }

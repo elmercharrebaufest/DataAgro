@@ -1340,8 +1340,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var id = fijacion.CorredorId.HasValue ? fijacion.CorredorId : fijacion.ProveedorId;
             var enviarA = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == id && x.CompraNet == true);
-            var asunto = ConfigurationManager.AppSettings["AmbientePruebas"] != "1" ? "" : "Prueba - ";
-            asunto += "Rechazo Fijación Molinos Agro S.A. –  " + fijacion.Proveedor.RazonSocial;
+            var asunto = "Rechazo Fijación Molinos Agro S.A. –  " + fijacion.Proveedor.RazonSocial;
             var copia = new List<string>() { fijacion.Comercial.IdActiveDirectory, ConfigurationManager.AppSettings["CredentialUserName"] };
             var vista = CuerpoMailFijacion(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), fijacion);
             mailManager.EnviarMail(enviarA, asunto, "", copia, vista);

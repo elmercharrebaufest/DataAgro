@@ -2679,19 +2679,19 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Finalizado)
                 {
-                    oEntityErrors.Error("", "El contrato ya se encuentra Finalizado");
+                    oEntityErrors.Error("", "El contrato ya se encuentra Finalizado.");
                 }
                 else if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Rechazado)
                 {
-                    oEntityErrors.Error("", "El contrato ya ha sido Rechazado");
+                    oEntityErrors.Error("", "El contrato ya ha sido Rechazado.");
                 }
                 else if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Pendiente || oContratoSave.EstadoId == (int)EnumEstadoContrato.Oferta)
                 {
-                    oEntityErrors.Error("", "El contrato debe ser Confirmado");
+                    oEntityErrors.Error("", "El contrato debe ser Confirmado.");
                 }
                 if (!string.IsNullOrEmpty(oContratoSave.ContratoSAP) && oContratoSave.Estado.EstadoContratoId == (int)EnumEstadoContrato.Con_Error)
                 {
-                    oEntityErrors.Error("", "El contrato ya tiene ContratoSAP asignado, por favor comunicarse con sistemas.");
+                    oEntityErrors.Error("", "El contrato ya tiene ContratoSAP asignado. Por favor, comunicarse con sistemas.");
                     negocioManager.EnviarMailErrorFinalizarNegocio(contratoId);
                 }
                 logger.Debug(" Error Intentando finalizar el contrato " + contratoId + " estado: " + oContratoSave.EstadoId);
@@ -5611,8 +5611,7 @@ namespace Molinos.DataAgro.Business.Managers
         {
             var id = contrato.CorredorId.HasValue ? contrato.CorredorId : contrato.ProveedorId;
             var enviarA = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == id && x.CompraNet == true);
-            var asunto = ConfigurationManager.AppSettings["AmbientePruebas"] != "1" ? "" : "Prueba - ";
-            asunto += "Rechazo Contrato Molinos Agro S.A. –  " + contrato.Proveedor.RazonSocial;
+            var asunto = "Rechazo Contrato Molinos Agro S.A. –  " + contrato.Proveedor.RazonSocial;
             var copia = new List<string>() { contrato.Comercial.IdActiveDirectory, ConfigurationManager.AppSettings["CredentialUserName"] };
             var vista = CuerpoMailRechazo(System.Web.HttpContext.Current.Server.MapPath("~/Content/Images/MolinosAgro.png"), contrato);
             mailManager.EnviarMail(enviarA, asunto, "", copia, vista);
@@ -5625,10 +5624,10 @@ namespace Molinos.DataAgro.Business.Managers
             try { mail = mailManager.GetEmailUserActiveDirectory(fijacion.Comercial.IdActiveDirectory); } catch (Exception e) { logger.Error("No existe mail para el usuario en AD" + e.Message); }
 
             var contacto = fijacion.Comercial != null ? fijacion.Comercial.Nombres + " " + fijacion.Comercial.Apellido + (!string.IsNullOrEmpty(mail) ? " (" + mail + ")." : ".") : "Mesa de Ayuda.";
-            var htmlBody = $"En el presente mail, se informa que el negocio generado con Molinos Agro S.A. ha sido rechazado <br />" +
+            var htmlBody = $"En el presente mail se informa que el negocio generado con Molinos Agro S.A. ha sido rechazado <br />" +
                 $"Motivo: <br />  {fijacion.MotivoRechazo} <br />" +
                 $"Ante cualquier consulta contactarse con {contacto}" +
-                "<br /> <br />  Saludos Cordiales" +
+                "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.   <br /><br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
                 "<br /> <br /> www.molinosagro.com.ar";
@@ -6185,7 +6184,7 @@ namespace Molinos.DataAgro.Business.Managers
         private void EnviarMailAltaMasiva(List<GrabarContratoResult> results, List<BasicoContrato> contratos, List<string> enviarA)
         {
             var cuerpoMail = CuerpoMailAltaMasiva(httpContextManager.ObtenerPathLogoMail(), results, contratos);
-            mailManager.EnviarMail(enviarA, "Resultado importacion alta masiva", "", null, cuerpoMail);
+            mailManager.EnviarMail(enviarA, "Resultado Importación Alta Masiva", "", null, cuerpoMail);
         }
         private AlternateView CuerpoMailAltaMasiva(string filePath, List<GrabarContratoResult> results, List<BasicoContrato> contratos)
         {
@@ -6405,7 +6404,7 @@ namespace Molinos.DataAgro.Business.Managers
             logger.Debug("Enviando mail a Comercial Registrado " + comercialRegistrado);
             var emailComerciales = "";
 
-            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarVenta)) && x.ComercialId == contrato.ComercialCreadorId) != null ? true : false;
+            var tienePermiso = repositorio.Obtener<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ModificarVenta)) && x.ComercialId == contrato.ComercialCreadorId) != null;
             logger.Debug("Usuario tiene permiso " + tienePermiso);
             if (tienePermiso)
             {
@@ -6428,17 +6427,9 @@ namespace Molinos.DataAgro.Business.Managers
                     catch (Exception e) { logger.Error(e); }
                 }
             }
-            var subject = "";
-            if (ConfigurationManager.AppSettings["AmbientePruebas"] != "1")
+            var subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
+            if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
             {
-                subject = "Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
-
-            }
-            else
-            {
-                subject = "Mail Prueba - Nuevo negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
-
-
                 var importe = CalcularImporteDeOperacion(contrato.PrecioNeto ?? contrato.Precio, contrato.Cantidad, contrato.MaterialId, contrato.FechaOperacion, contrato.MonedaId);
                 mailManager.EnviarMail(contrato.Comercial, emailproveedor, subject, "", lista, CuerpoMailContratoVenta(httpContextManager.ObtenerPathLogoMail(), contrato, objDescuento, objCalidad, mailManager.GetEmailUserActiveDirectory(contrato.Comercial.IdActiveDirectory), false, importe));
             }
@@ -6801,7 +6792,7 @@ namespace Molinos.DataAgro.Business.Managers
               oContrato.CondicionDePagoDiaPesificado + " dias " + oContrato.CondicionDePagoTipoPesificado + " " + oContrato.CondicionDePagoPesificadoVenta.Descripcion : "") + "</td></tr>";
             htmlBody += "</table>";
 
-            htmlBody += "<br /><br /> Por favor revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
+            htmlBody += "<br /><br /> Por favor, revisar que los datos sean correctos; de lo contrario contactarse con " + (oContrato.Comercial != null ? oContrato.Comercial.Nombres + " " + oContrato.Comercial.Apellido + (emailComercial != "" && emailComercial != null ? "(" + emailComercial + ")." : ".") : "Mesa de Ayuda.") +
                 "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
                 @"<img src='cid:" + res.ContentId + @"'/>" +
@@ -7576,7 +7567,8 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.Observacion = ii.ToString().Trim();
                         contrato.ComercialCreadorId = ComercialId;
 
-                        if (DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim()) < DateTime.Now.Date) { 
+                        if (DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim()) < DateTime.Now.Date)
+                        {
                             contrato.MotivoOperacionAnterior = "Alta masiva";
                         }
 
@@ -9086,11 +9078,26 @@ namespace Molinos.DataAgro.Business.Managers
 
             if ((bool)oParam.ConDescarga)
             {
-                var dias = (oParam.FechaHasta - oParam.FechaDesde).Days;
-                var cantidadMaximaDiasNegocioConDescarga = repositorio.Obtener<Configuracion>(1).CantidadMaximaDiasNegocioConDescarga;
-                if (dias >= cantidadMaximaDiasNegocioConDescarga)
+                var diasParametro = repositorio.Obtener<Configuracion>(1).CantidadMaximaDiasNegocioConDescarga;
+                var hoy = DateTime.Now.Date;
+                var fechaLimite = hoy.AddDays(diasParametro);
+
+                var fechasConDescarga = new List<DateTime>();
+                var fechasEntrega = new List<DateTime>();
+
+                for (var dt = hoy; dt <= fechaLimite; dt = dt.AddDays(1))
                 {
-                    oErrorMessages.Error("FechaDesdeHasta", "La cantidad de días del Negocio imposibilita la configuración de Cupos Con Descarga.");
+                    fechasConDescarga.Add(dt);
+                }
+                for (var dt = oParam.FechaDesde; dt <= oParam.FechaHasta; dt = dt.AddDays(1))
+                {
+                    fechasEntrega.Add(dt);
+                }
+                var fechasAmbos = fechasEntrega.Intersect(fechasConDescarga);
+
+                if (fechasAmbos.Count() == 0)
+                {
+                    oErrorMessages.Error("FechaDesdeHasta", "El rango de entrega del Negocio imposibilita la configuración de Cupos Con Descarga.");
                 }
                 if (oParam.Cantidad == 0)
                 {
@@ -9100,11 +9107,11 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("FechaDesdeHasta", "Debe ingresar el proveedor.");
                 }
-                var fechaMaxima = DateTime.Now.Date.AddDays(cantidadMaximaDiasNegocioConDescarga-1);
-                if (oParam.FechaHasta > fechaMaxima)
-                {
-                    oErrorMessages.Error("FechaDesdeHasta", "La Fecha Desde supera el máximo establecido según parámetro.");
-                }
+                //var fechaMaxima = DateTime.Now.Date.AddDays(cantidadMaximaDiasNegocioConDescarga - 1);
+                //if (oParam.FechaHasta > fechaMaxima)
+                //{
+                //    oErrorMessages.Error("FechaDesdeHasta", "La Fecha Desde supera el máximo establecido según parámetro.");
+                //}
             }
 
             return oErrorMessages;
@@ -9222,26 +9229,34 @@ namespace Molinos.DataAgro.Business.Managers
             DateTime fechaDesde = DateTime.ParseExact(fechaDesdeNegocio ?? DateTime.Now.ToString("dd-MM-yyyy"), "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaNegocio ?? DateTime.Now.ToString("dd-MM-yyyy"), "dd-MM-yyyy", CultureInfo.InvariantCulture);
 
-            List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.CentroId == centroId && x.MaterialId == materialId && x.Fecha >= fechaDesde && x.Fecha <= fechaHasta);
 
             var diasParametro = repositorio.Obtener<Configuracion>(1).CantidadMaximaDiasNegocioConDescarga;
-            var diasNegocio = (fechaHasta - fechaDesde).Days;
-            var cantConfigCupo = configuracionCupo.Count();
-            if (diasParametro <= diasNegocio && diasParametro <= cantConfigCupo)
-            {
-                configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.CentroId == centroId && x.MaterialId == materialId && x.Fecha >= fechaDesde && x.Fecha <= fechaHasta).Take(diasParametro).ToList();
-            }
+            var hoy = DateTime.Now.Date;
+            var fechaLimite = hoy.AddDays(diasParametro);
+
+            List<ConfiguracionCupo> configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x =>
+            x.CentroId == centroId && x.MaterialId == materialId
+            && x.Fecha >= hoy && x.Fecha <= fechaLimite
+            && x.Fecha <= fechaHasta && x.Fecha >= fechaDesde);
+
+            //var diasNegocio = (fechaHasta - fechaDesde).Days;
+            //var cantConfigCupo = configuracionCupo.Count();
+            //if (diasParametro <= diasNegocio && diasParametro <= cantConfigCupo)
+            //{
+            //    configuracionCupo = repositorio.Listar<ConfiguracionCupo>(x => x.CentroId == centroId && x.MaterialId == materialId && x.Fecha >= fechaDesde && x.Fecha <= fechaHasta).Take(diasParametro).ToList();
+            //}
 
             List<ConfiguracionCupoDto> configCupo = new List<ConfiguracionCupoDto>();
             configuracionCupo.ForEach(x =>
             {
                 // No tiene en cuenta anulados ni rechazados.
                 int cantidadCuposConsumidos = repositorio.Contar<Cupo>(y => y.ConDescarga == true &&
+                                                                            y.NegocioId != null &&
                                                                             y.FechaIngreso == x.Fecha &&
                                                                             y.MaterialId == materialId &&
                                                                             y.CentroId == centroId &&
                                                                             y.EstadoCupoId != 4 &&
-                                                                            y.EstadoCupoId != 9 );
+                                                                            y.EstadoCupoId != 9);
 
                 ConfiguracionCupoDto cc = new ConfiguracionCupoDto();
 

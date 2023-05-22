@@ -764,12 +764,8 @@ namespace Molinos.DataAgro.Business
                 alternateView.LinkedResources.Add(res);
 
                 var mail = ConfigurationManager.AppSettings["EmailInformeComercial"].ToString().Split(';').ToList();
-
                 var asunto = "Nuevo Informe Comercial:" + razonSocial;
-                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
-                {
-                    asunto = "Mail Pruebas - Nuevo Informe Comercial:" + razonSocial;
-                }
+
                 mailManager.EnviarMail(mail, asunto, "", null, alternateView, pdf.Contenido, "Informe Comercial" + razonSocial + ".pdf");
 
             }

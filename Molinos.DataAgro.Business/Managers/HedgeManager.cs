@@ -342,11 +342,6 @@ namespace Molinos.DataAgro.Business
                 var externos = repositorio.Listar<CierreDelDiaMailExternos, string>(x => x.Mail);
                 to.AddRange(externos);
             }
-            else
-            {
-                asunto = "Mail Prueba - " + asunto;
-                to.Add("baufestdataagro@outlook.com");
-            }
 
             mailManager.EnviarMail(to, asunto, string.Empty, null,
                                AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),

@@ -1,21 +1,15 @@
 ﻿using Autofac.Extras.NLog;
 using MailKit;
-//using GemBox.Email.Imap;
-//using GemBox.Email.Mime;
 using MailKit.Search;
 using MimeKit;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
-using Molinos.DataAgro.Entities.Validations;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.DirectoryServices;
 using System.IO;
 using System.Linq;
@@ -41,6 +35,11 @@ namespace Molinos.DataAgro.Business
         {
             try
             {
+                if (ConfigurationManager.AppSettings["AmbientePruebas"] == "1")
+                {
+                    asunto = "Mail de Prueba - " + asunto;
+                    enviarA.Add("dataagro@baufest.com");
+                }
                 var oMensaje = CrearMailBase(cuerpo, asunto, enviarA, emailRemitente);
                 if (copia != null)
                 {
@@ -258,7 +257,7 @@ namespace Molinos.DataAgro.Business
                     }
                     catch (Exception e)
                     {
-
+                        logger.Error("Error ReenviarMailCierreDia", e);
                     }
                     client.Disconnect(true);
                 }
@@ -332,7 +331,7 @@ namespace Molinos.DataAgro.Business
             }
             catch (Exception e)
             {
-                logger.Error("Error reenvio de mail", e);
+                logger.Error("Error final ReenviarMailCierreDia", e);
             }
         }
 
@@ -389,4 +388,3 @@ namespace Molinos.DataAgro.Business
         }
     }
 }
-
