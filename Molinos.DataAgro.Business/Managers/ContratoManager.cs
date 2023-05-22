@@ -7575,6 +7575,11 @@ namespace Molinos.DataAgro.Business.Managers
                         contrato.ProvinciaId = int.Parse(rows.ElementAt(ii)[14].ToString().Trim());
                         contrato.Observacion = ii.ToString().Trim();
                         contrato.ComercialCreadorId = ComercialId;
+
+                        if (DateTime.Parse(rows.ElementAt(ii)[4].ToString().Trim()) < DateTime.Now.Date) { 
+                            contrato.MotivoOperacionAnterior = "Alta masiva";
+                        }
+
                         //contrato.UsuarioTercero = GlobalVariables.ComercialId;
                         contratos.Add(contrato);
 
