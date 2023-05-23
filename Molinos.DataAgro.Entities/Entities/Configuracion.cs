@@ -41,5 +41,7 @@ namespace Molinos.DataAgro.Entities.Entities
         public int MinutosCronometroConDescarga { get; set; }
         public int CantidadMaximaDiasNegocioConDescarga { get; set; }
         public int PorcentajeVolumenNegocioConDescarga { get; set; }
+        public bool? ActivarLogDebug { get; set; }
+
     }
 }

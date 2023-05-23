@@ -38,6 +38,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IComercialManager> comercialManagerMock;
         private Mock<ICupoManager> cupoManagerMock;
         private Mock<IHttpContextManager> contextoMock;
+        private Mock<IConfiguracionManager> configuracionManagerMock;
 
         [SetUp]
         public void SetUp()
@@ -48,9 +49,10 @@ namespace Molinos.DataAgro.Test.Managers
             comercialManagerMock = new Mock<IComercialManager>();
             cupoManagerMock = new Mock<ICupoManager>();
             contextoMock = new Mock<IHttpContextManager>();
+            configuracionManagerMock = new Mock<IConfiguracionManager>();
 
             target = new AdministracionCupoManager(logger.Object, repositorioMock.Object, cupoManagerMock.Object,
-                mailManagerMock.Object, comercialManagerMock.Object, contextoMock.Object);
+                mailManagerMock.Object, comercialManagerMock.Object, contextoMock.Object, configuracionManagerMock.Object);
         }
 
         [Test]
@@ -134,6 +136,7 @@ namespace Molinos.DataAgro.Test.Managers
             var resultado = target.AceptarCupoExcedente(It.IsAny<int>(), 1, 0, 1, 0, "bmelgarejo", "prueba");
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
         }
+
         [Test]
         public void CambiarEstadoRechazadoTest()
         {

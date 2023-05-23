@@ -28,6 +28,7 @@
     [MinutosCronometroConDescarga] INT NULL DEFAULT 2,
     [CantidadMaximaDiasNegocioConDescarga] INT NULL DEFAULT 15,
     [PorcentajeVolumenNegocioConDescarga] INT NULL DEFAULT 30,
+    [ActivarLogDebug]       BIT NULL DEFAULT 1,
     CONSTRAINT [PK_Configuracion] PRIMARY KEY CLUSTERED ([Id] ASC),
 );
 

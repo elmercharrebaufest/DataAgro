@@ -80,6 +80,7 @@ namespace Molinos.DataAgro.Business.Managers
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
             var error = new CupoResult { ListaCupos = new List<string>() };
+            bool activarLogDebug = repositorio.Obtener<Configuracion>(1).ActivarLogDebug ?? false;
             try
             {
                 var comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
@@ -137,8 +138,11 @@ namespace Molinos.DataAgro.Business.Managers
                                 //}
                                 cupo.FechaIngreso = d.Fecha;
 
-                                if (cupo.ConDescarga != true) { 
+                                if (cupo.ConDescarga != true)
+                                {
+                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA ValidarDisponibilidadCupera()");
                                     var errorV = ValidarDisponibilidadCupera(cupo.MaterialId, cupo.CentroId, cupo.FechaIngreso, d.Cantidad.Value);
+                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA ValidarDisponibilidadCupera()");
                                     if (errorV.HayError)
                                     {
                                         error.Errores.AddRange(errorV.Errores);
@@ -166,7 +170,9 @@ namespace Molinos.DataAgro.Business.Managers
                                                     x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId && x.FechaIngreso == cupo.FechaIngreso &&
                                                     cupo.ZonaCupoId == x.ZonaCupoId && x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
 
+                                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA TraerLimitePorZona()");
                                                     ConfiguracionCupoDto limitePorZona = TraerLimitePorZona(cupo, d);
+                                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA TraerLimitePorZona()");
 
                                                     if (limitePorZona == null)
                                                     {
@@ -198,7 +204,9 @@ namespace Molinos.DataAgro.Business.Managers
                                                 }
                                                 else
                                                 {
+                                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA crearCupoAgent.Crear()");
                                                     listaCupos = crearCupoAgent.Crear(cupo, d.Cantidad.Value);
+                                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA crearCupoAgent.Crear()");
                                                 }
                                             }
                                             catch (Exception e)
@@ -234,7 +242,9 @@ namespace Molinos.DataAgro.Business.Managers
                                                         cupoVicentin.CupoId = cupoConId.Id;
                                                         cuposnoPropio.Add(cupoVicentin);
                                                     }
+                                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA logDataAgroManager.LogCambiosDataAgro()");
                                                     logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoConId.Id, null), TipoAccionLogDataAgro.Crear);
+                                                    if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA logDataAgroManager.LogCambiosDataAgro()");
                                                 }
                                             }
 
@@ -268,7 +278,9 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         if (error.ListaCupos.Count > 0)
                         {
+                            if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA EnviarEmail()");
                             EnviarEmail(cupo, error.ListaCupos);
+                            if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA EnviarEmail()");
                         }
                         return error;
                     }
@@ -303,7 +315,9 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         if (!cupoSave.Centro.NoPropio)
                         {
+                            if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA modificarCupoAgent.Modificar()");
                             var res = modificarCupoAgent.Modificar(cupoSave);
+                            if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA modificarCupoAgent.Modificar()");
                             if (res != "Ok")
                             {
                                 error.Error("CantidadCuposSAP", $"Error al grabar en SAP: {res}");
@@ -314,7 +328,9 @@ namespace Molinos.DataAgro.Business.Managers
                                 {
                                     if (cupoSave.CupoStop != null)
                                     {
+                                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA clienteStopAgent.ModificarCupo()");
                                         clienteStopAgent.ModificarCupo(cupoSave);
+                                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA clienteStopAgent.ModificarCupo()");
                                     }
                                 }
                                 else
@@ -325,7 +341,9 @@ namespace Molinos.DataAgro.Business.Managers
                         }
                         repositorio.GuardarCambios();
                         var asd = ObtenerCupo(cupoSave.Id, null);
+                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA logDataAgroManager.LogCambiosDataAgro()");
                         logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoSave.Id, null), TipoAccionLogDataAgro.Modificar);
+                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA logDataAgroManager.LogCambiosDataAgro()");
                         return error;
 
                     }
@@ -2832,7 +2850,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                             //Cupos creados fuera del algoritmo y solicitudes
                             var CantidadCuposGeneradosFueraDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
-                            fecha && x.CentroId == formula.CentroId && x.ConDescarga != true &&  ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                            fecha && x.CentroId == formula.CentroId && x.ConDescarga != true && ((x.NegocioId == null && x.AdministracionCupoId == null) || x.AdministracionCupoId != null) && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
                             //Cupos creados dentro del algoritmo
                             var CantidadCuposGeneradosDentroDelAlgoritmo = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
@@ -2840,7 +2858,7 @@ namespace Molinos.DataAgro.Business.Managers
 
                             //Cupos creados con descarga
                             var CantidadCuposGeneradosConDescarga = (int)repositorio.Listar<Cupo>(x => DbFunctions.TruncateTime(x.FechaIngreso) ==
-                           fecha && x.CentroId == formula.CentroId  && x.ConDescarga == true && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
+                           fecha && x.CentroId == formula.CentroId && x.ConDescarga == true && (x.EstadoCupoId != 4 && x.EstadoCupoId != 9 && x.MaterialId == material.MaterialId)).Count;
 
 
                             var hoy = DateTime.Now.Date;
