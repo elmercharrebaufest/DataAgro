@@ -676,10 +676,8 @@ function GuardarLimiteCupo() {
         }
     }
 
-
-    // Configurar zonas INDIVIDUAL
     var resultado;
-    if (configuracionesIds.length == 0) {
+    if (configuracionesIds.length == 0) { // Configurar zonas INDIVIDUAL
         var idConfiguracion = $("#configuracionCupoId").val()
         if (ValidarZona(idConfiguracion)) {
 
@@ -712,16 +710,21 @@ function GuardarLimiteCupo() {
             return false;
         }
 
-    } else {
+    } else { // Configurar zonas MASIVO
+        var limiteCupo = $("#limiteCupo" + configuraciones[0].Id).val();
         var limiteAlgoritmo = $('#limiteAlgoritmo' + configuraciones[0].Id).val();
         var limiteDescarga = $('#limiteDescarga' + configuraciones[0].Id).val();
-        if (limiteAlgoritmo != "" && limiteDescarga != "") {
-            resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo, limiteDescarga });
-        } else {
-            MensErr("Debe ingresar valores para el Límite del Algoritmo y el Límite con Descarga.")
+        if (limiteAlgoritmo == "" || limiteDescarga == "") {
+            MensErr("El Límite del Algoritmo y el Límite con Descarga no pueden estar vacíos.")
             $.unblockUI();
             return false;
-        }
+        } else if ((Number(limiteAlgoritmo) + Number(limiteDescarga)) > limiteCupo) {
+            console.log(Number(limiteAlgoritmo) + Number(limiteDescarga));
+            MensErr("La suma del límite del Algoritmo y del límite con Descarga no debe superar el total de " + limiteCupo + " cupos disponibles.")
+            $.unblockUI();
+            return false;
+        } else resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo, limiteDescarga });
+        
     }
 
     if (resultado.HayError) {
