@@ -3359,8 +3359,11 @@ namespace Molinos.DataAgro.Business.Managers
             var hoy = DateTime.Today;
             fromEmail.Add(ConfigurationManager.AppSettings["CredentialUserNamePesificados"]);
             mailAdmin.Add(ConfigurationManager.AppSettings["CredentialUserNamePesificados"]);
-            mailAdmin.Add("Joaquin.Delfederico@molinosagro.com.ar");
-
+            var destinatariosPermiso = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailPesificado))).Select(x => x.IdActiveDirectory);
+            if (destinatariosPermiso != null)
+            {
+                mailAdmin.AddRange(destinatariosPermiso);
+            }
             var comerciales = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.VerCorredorComercial)));
 
             var path = httpContextManager.ObtenerPathLogoMail();
@@ -3444,7 +3447,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 }
             }
-            catch (Exception e) { logger.Error(e); }
+            catch (Exception e) { logger.Error("EnviarMailPesificacionVencida: ", e); }
         }
         private List<string> DevolverMailComercialDeNegocio(ReportePesificadoDto reporte)
         {

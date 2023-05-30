@@ -43,6 +43,7 @@ namespace Molinos.DataAgro.Entities.Seguridad
         OcultarCamposEditar = 116,
         [Display(ResourceType = typeof(Text), Name = "ReasignarProveedorPantallaCupo")]
         ReasignarProveedorPantallaCupo = 117,
+        
         //Comercial
         [Display(ResourceType = typeof(Text), Name = "Agenda_Comercial")]
         AgendaComercial = 201,
@@ -68,7 +69,6 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VerTodosTiposNegocios = 211,
         [Display(ResourceType = typeof(Text), Name = "Lista_Comercial")]
         ListaComercial = 212,
-       
 
         //CompraNet
         [Display(ResourceType = typeof(Text), Name = "Visualizar_CompraNet")]
@@ -93,7 +93,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VerMesa = 309,
         [Display(ResourceType = typeof(Text), Name = "Mail_Hedge")]
         MailHedge = 310,
-
+        [Display(ResourceType = typeof(Text), Name = "Mail_Pesificado")]
+        MailPesificado = 311,
         [Display(ResourceType = typeof(Text), Name = "Crear_Negocios_Fason")]
         CrearNegociosFason = 312,
         [Display(ResourceType = typeof(Text), Name = "Crear_Negocios_Agente")]

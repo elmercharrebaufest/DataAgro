@@ -191,7 +191,7 @@ function CargarGrilla() {
                     multi: true, dataSource: [
                         { Centro: "S. Lorenzo" },
                         //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
-                        { Centro: "Rio del Valle" },
+                        { Centro: "Rio del Valle (Planta Soto)" },
                         { Centro: "General Pinedo" },
                         { Centro: "Vicentin Virtual" },
                         { Centro: "Bahia Blanca" },

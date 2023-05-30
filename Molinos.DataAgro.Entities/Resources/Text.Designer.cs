@@ -1391,7 +1391,18 @@ namespace Molinos.DataAgro.Entities.Resources {
                 return ResourceManager.GetString("Mail_Hedge", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Mails de Negocios Pesificados.
+        /// </summary>
+        public static string Mail_Pesificado
+        {
+            get
+            {
+                return ResourceManager.GetString("Mail_Pesificado", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Recibir Mail SIO.
         /// </summary>

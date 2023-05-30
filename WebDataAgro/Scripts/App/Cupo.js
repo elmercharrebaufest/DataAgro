@@ -264,7 +264,7 @@ function InicializarCuposIndex() {
                     },
                         //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
                     {
-                        Centro: "Rio del Valle"
+                        Centro: "Rio del Valle (Planta Soto)"
                     }, {
                         Centro: "General Pinedo"
                     }, {

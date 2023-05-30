@@ -896,4 +896,7 @@
   <data name="OyT_Norte" xml:space="preserve">
     <value>Recibir Mails de Negocios OyT Norte</value>
   </data>
+  <data name="Mail_Pesificado" xml:space="preserve">
+    <value>Recibir Mails de Negocios Pesificados</value>
+  </data>
 </root>
