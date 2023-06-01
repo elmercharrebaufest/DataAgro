@@ -3694,6 +3694,13 @@ function GrabarContrato(nuevoContrato) {
                 return;
             }
         }
+
+        if ($("#conDescargaId").is(":checked") == true && !dataTabla.find(x => x.CantidadFlete > 0 || x.CantidadCupo > 0)) {
+            MensErr("No hay Cupos y/o Fletes con Descarga configurado.");
+            $.unblockUI();
+            return;
+        }
+
         if (nuevoContrato.TipoNegocioId == 2 && $("#hijoId").is(':checked') && $("#contMadreId").val() == "") {
             MensErr("El Contrato Madre es Obligatorio al Fijar el Convenio");
             $.unblockUI();
@@ -3712,9 +3719,9 @@ function GrabarContrato(nuevoContrato) {
             }
         }
 
-        detenerIntervalo();
-        LiberarPantalla();
-        dataTabla = [];
+        //detenerIntervalo();
+        //LiberarPantalla();
+        /*dataTabla = [];*/
 
     } else if (nuevoContrato.TipoNegocioId == 4) {
         result = MSExecuteOnServer('/CompraNet/GrabarFason', nuevoContrato);
@@ -3738,6 +3745,9 @@ function GrabarContrato(nuevoContrato) {
                 editarContrato(primero.Id, primero.TipoNegocioId, siguientesObj);
             } else {
                 if (result.ListaCupos.length > 0) {
+                    detenerIntervalo();
+                    LiberarPantalla();
+                    dataTabla = [];
                     mostrarResultados(result);
                     $.unblockUI();
 

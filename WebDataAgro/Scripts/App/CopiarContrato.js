@@ -1283,6 +1283,12 @@ function EsConDescarga() {
 
     if ($("#conDescargaId").is(":checked") == false) {
         $("#btnConDescarga").hide();
+        detenerIntervalo();
+        LiberarPantalla();
+        if (dataTabla.find(x => x.CantidadFlete > 0 || x.CantidadCupo > 0)) {
+            dataTabla = [];
+            MensAlerta("La configuración de Cupos con Descarga se ha reestablecido.");
+        }
         return;
     }
 
@@ -1343,7 +1349,7 @@ function LiberarPantalla() {
 
 function guardarCuposConDescarga() {
     var dataTablaTemp = [];
-    
+
     var table = document.getElementById("cuerpo-carga-cupos");
     var superaCuposMaximoDia = false;
     var cantidadTotalCuposFletes = 0;
