@@ -4838,8 +4838,10 @@ function CargarDatosEditar(contrato, hijo) {
     }
     if (contrato.ConDescarga == true) {
         $("#conDescargaId").prop("checked", true);
-        $("#conDescargaId").prop("disabled", true);
         $("#btnConDescarga").hide();
+        if (contrato.Id > 0) {
+            $("#conDescargaId").prop("disabled", true);
+        }
     }
 
     //Fin cargar datos editar
