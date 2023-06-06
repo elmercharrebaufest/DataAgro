@@ -20,6 +20,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? ConfiguracionEspacioDinamicoId { get; set; }
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
+        public DateTime? FechaHastaOriginal { get; set; }
         public decimal PrecioPizarra { get; set; }
         public FormulaDto formula { get; set; }
         public Dictionary<string, decimal> Puntuaciones { get; set; } = new Dictionary<string, decimal>();

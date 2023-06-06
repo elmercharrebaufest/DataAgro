@@ -245,6 +245,10 @@ namespace Molinos.DataAgro.Business
                 oContratoAcuerdo.DolarizadoCorredor = true;
             }
 
+            if (oContratoAcuerdo.AperturaPrecio == null)
+                oContratoAcuerdo.AperturaPrecio = new List<AperturaPrecio>();
+            
+
             if (oContratoAcuerdo.Id == 0)
             {
                 oContratoAcuerdo.Fecha = DateTime.Now;

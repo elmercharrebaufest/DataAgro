@@ -675,7 +675,7 @@ function AutoRecargarSolicitudes() {
             recargarGrilla();
             $("#panel").html(MSExecuteURLOnServer('/AdministracionCupo/PartialPanel'));
         }
-    }, 30000);
+    }, 60000);
 
 }
 

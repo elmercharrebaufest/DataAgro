@@ -1359,7 +1359,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Material = item.MaterialDesc,
                     Moneda = String.IsNullOrEmpty(item.MonedaId) ? "" : item.MonedaId,
                     FechaDesde = item.FechaDesde,
-                    FechaHasta = item.FechaHasta,
+                    FechaHasta = item.FechaHastaOriginal ?? item.FechaHasta,
                     Comercial = item.ComercialDesc,
                     Zona = item.ZonaDescrip,
                     Centro = item.CentroDesc,
@@ -1498,7 +1498,7 @@ namespace Molinos.DataAgro.Business.Managers
             for (int i = negocios.Count - 1; i >= 0; i--)
             {
                 var negocio = negocios[i];
-                var result = ValidarProveedor(new Cupo { Id = 1, CentroId = negocio.CentroId, NegocioId = negocio.NegocioId, ProveedorId = negocio.ProveedorId.Value, FechaIngreso = negocio.FechaHasta, ZonaCupoId = 1 });
+                var result = ValidarProveedor(new Cupo { Id = 1, CentroId = negocio.CentroId, NegocioId = negocio.NegocioId, ProveedorId = negocio.ProveedorId.Value, FechaIngreso = negocio.FechaHastaOriginal ?? negocio.FechaHasta, ZonaCupoId = 1 });
                 if (result.HayError)
                 {
                     // proxima etapa guardar detalle del error para mostrar al comecial por que se 
@@ -1818,6 +1818,7 @@ namespace Molinos.DataAgro.Business.Managers
                     Precio = x.Precio,
                     FechaDesde = x.FechaDesde,
                     FechaHasta = x.FechaHasta,
+                    FechaHastaOriginal = x.FechaHastaOriginal,
                     TipoNegocioId = x.TipoNegocioId,
                     ContratoSAP = x.ContratoSAP,
                     KgNegocio = x.Cantidad,
@@ -1843,8 +1844,8 @@ namespace Molinos.DataAgro.Business.Managers
                     x.EPA != true &&
                     x.EsFason != true &&
                     !(tienenAnulaYReemplaza.Any(a => a == x.Id)) &&
-                    formula.NegociosDesde <= x.FechaHasta && formula.NegociosHasta >= x.FechaHasta
-                    && x.EstadoId == 5 && x.DestinoId == formula.CentroId /*&& x.MercsDeposito != true*/ && x.MaterialId == formula.MaterialId);
+                    formula.NegociosDesde <= (x.FechaHastaOriginal ?? x.FechaHasta) && formula.NegociosHasta >= (x.FechaHastaOriginal ?? x.FechaHasta)
+                    && x.EstadoId == 5 && x.DestinoId == formula.CentroId && x.MaterialId == formula.MaterialId);
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Count());
             logger.Debug("CrearSugerenciaCupo - Contratos todos: " + contratos.Select(a => a.ContratoSAP).ToList().ToJson());
 
@@ -2005,7 +2006,7 @@ namespace Molinos.DataAgro.Business.Managers
                 .ThenByDescending(x => x.MercsDeposito)
                 .ThenByDescending(x => x.TipoNegocioId)
                 .ThenBy(x => x.FechaDesde)
-                .ThenBy(x => x.FechaHasta)
+                .ThenBy(x => x.FechaHastaOriginal ?? x.FechaHasta)
                 .ThenBy(x => x.CaratulaMAT)
                 .ThenBy(x => x.ContratoSAP)
                 .ToList();
@@ -3370,7 +3371,7 @@ namespace Molinos.DataAgro.Business.Managers
                 Id = x.Id,
                 Fecha = x.Fecha
             }, x => x.Proveedor.CUIT == proveedorCuit && x.MaterialId == material && x.EstadoId == 5 && x.DestinoId == centro &&
-            (x.FechaDesde <= desde && x.FechaHasta >= hasta) &&
+            (x.FechaDesde <= desde && (x.FechaHastaOriginal ?? x.FechaHasta) >= hasta) &&
             (x is Contrato) && x.ContratoSAP.Contains(filtro), 15, "Fecha", Entities.Helpers.DirOrden.Desc);
 
             var negociosSugeridos = new List<BasicoContrato>();
