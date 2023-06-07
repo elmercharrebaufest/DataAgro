@@ -194,7 +194,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Verify(x => x.Obtener<Material>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Centro>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<ZonaCupo>(It.IsAny<int>()), Times.Once);
-            repositorioMock.Verify(x => x.Obtener<Configuracion>(It.IsAny<int>()), Times.Exactly(2));
+            repositorioMock.Verify(x => x.Obtener<Configuracion>(It.IsAny<int>()), Times.Once);
             repositorioMock.Verify(x => x.Obtener<Cupo>(It.IsAny<int>()), Times.Once);
             modificarCupoAgentMock.Verify(x => x.Modificar(It.IsAny<Cupo>()), Times.Once);
             clienteStopMock.Verify(x => x.ModificarCupo(It.IsAny<Cupo>()), Times.Once);

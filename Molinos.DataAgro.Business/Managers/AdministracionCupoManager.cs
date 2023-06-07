@@ -56,8 +56,11 @@ namespace Molinos.DataAgro.Business.Managers
         {
             try
             {
-                Configuracion configuracion = configuracionManager.TraerConfiguraciones();
-                bool activarLogDebug = (bool)(configuracion == null ? false : (configuracion.ActivarLogDebug ?? false));
+                bool activarLogDebug = false;
+                if (ConfigurationManager.AppSettings["ActivarLogDebug"] != null)
+                {
+                    activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1" ? true : false;
+                }
 
                 CupoResult resultado = new CupoResult();
                 var solicitud = repositorio.Obtener<AdministracionCupo>(administracionId);
@@ -175,9 +178,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     resultado.Errores.AddRange(result.Errores);
                     resultado.ListaCupos.AddRange(result.ListaCupos);
-                    if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA GuardarCambios() - 1 - Algoritmo ");
                     repositorio.GuardarCambios();
-                    if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA GuardarCambios() - 1 - Algoritmo ");
                 }
                 else
                 {
@@ -248,9 +249,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         solicitud.EstadoId = (int)EnumEstadoAdministracionCupo.Aceptado;
                         solicitud.FechaDecision = DateTime.Now;
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA GuardarCambios() - 2 - NO ES Algoritmo ");
                         repositorio.GuardarCambios();
-                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA GuardarCambios() - 2 - NO ES Algoritmo ");
                     }
                 }
 
@@ -543,8 +542,14 @@ namespace Molinos.DataAgro.Business.Managers
 
         public CupoResult AceptarCupoExcedenteMasivo(List<AdministracionCupoDto> solicitudes, string motivo, string IdActiveDirectory)
         {
+            bool activarLogDebug = false;
+            if (ConfigurationManager.AppSettings["ActivarLogDebug"] != null)
+            {
+                activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1" ? true : false;
+            }
+
             CupoResult resultados = new CupoResult();
-            bool activarLogDebug = repositorio.Obtener<Configuracion>(1).ActivarLogDebug ?? false;
+
             List<AdministracionCupoDto> keys = new List<AdministracionCupoDto>();
             foreach (var adm in solicitudes.GroupBy(a => new { a.Fecha, a.MaterialId, a.CentroId }))
             {

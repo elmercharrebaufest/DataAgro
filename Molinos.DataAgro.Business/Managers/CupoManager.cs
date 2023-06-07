@@ -80,7 +80,11 @@ namespace Molinos.DataAgro.Business.Managers
         public CupoResult GrabarCupo(Cupo cupo, List<DiaCupo> dias)
         {
             var error = new CupoResult { ListaCupos = new List<string>() };
-            bool activarLogDebug = repositorio.Obtener<Configuracion>(1).ActivarLogDebug ?? false;
+            bool activarLogDebug = false;
+            if (ConfigurationManager.AppSettings["ActivarLogDebug"] != null)
+            {
+                activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1" ? true : false;
+            }
             try
             {
                 var comercial = repositorio.Obtener<Comercial>(cupo.ComercialId);
