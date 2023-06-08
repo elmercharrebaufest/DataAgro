@@ -408,9 +408,10 @@ namespace Molinos.DataAgro.Business
                 Comercial = x.Nombres + " " + x.Apellido,
                 IdActiveDirectory = x.IdActiveDirectory
             },
-                    x => x.Deshabilitado != true && x.AsignarNegocios == true && 
-                    x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet)), 0, "Comercial");
-
+              x => x.Deshabilitado != true && ((x.AsignarNegocios == true &&
+              x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.ListaComercialCompraNet)))
+              || x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.AltaCupos))), 0, "Comercial");
+            //se listan también los usuarios con rol Cupos
         }
     }
 }
