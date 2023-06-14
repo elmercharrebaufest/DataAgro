@@ -10,6 +10,7 @@ namespace Molinos.DataAgro.Interfaces
     public interface ILogDataAgroManager
     {
         int LogCambiosDataAgro(CupoDto cambios, TipoAccionLogDataAgro tipoDeAccion);
+        int LogCambiosDataAgro(List<CupoDto> cambios, TipoAccionLogDataAgro tipoDeAccion);
         DataSourceResult ListarDatosLogDataAgro(DataSourceRequest request, List<int> equipo);
         DatosModificadosLogDataAgroDto TraerDatosModificadosPorId(int idLogDataAgro);
         int LogCambiosDataAgro(BasicoContrato cambios, TipoAccionLogDataAgro tipoDeAccion, Type tipoDeContrato);

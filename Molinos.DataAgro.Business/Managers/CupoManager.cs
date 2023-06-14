@@ -22,6 +22,8 @@ using System.Net.Mime;
 using System.Text;
 using OfficeOpenXml;
 using System.IO;
+using Molinos.DataAgro.Agent;
+using System.Text.RegularExpressions;
 
 namespace Molinos.DataAgro.Business.Managers
 {
@@ -234,23 +236,39 @@ namespace Molinos.DataAgro.Business.Managers
                                             repositorio.GuardarCambios();
 
                                             List<CupoNoPropio> cuposnoPropio = new List<CupoNoPropio>();
-                                            foreach (var cupoNuevo in cuposConSap)
+
+                                            if (cuposConSap != null && cuposConSap.Count > 0)
                                             {
-                                                if (cupo.Id == 0)
+                                                if (!cuposConSap.FirstOrDefault().Centro.NoPropio)
                                                 {
-                                                    var cupoConId = repositorio.ObtenerMayor<Cupo, int>(x => x.CupoSap == cupoNuevo.CupoSap, x => x.Id);
-                                                    if (cupoNuevo.Centro.NoPropio)
-                                                    {
-                                                        var cupoVicentin = repositorio.Obtener<CupoNoPropio>(x => x.Codigo == cupoNuevo.CupoSap);
-                                                        cupoVicentin.Cupo = cupoConId;
-                                                        cupoVicentin.CupoId = cupoConId.Id;
-                                                        cuposnoPropio.Add(cupoVicentin);
-                                                    }
+                                                    var codigoCupos = cuposConSap.Select(a => a.CupoSap).ToList();
+                                                    var ids = repositorio.Listar<Cupo, int>(x => x.Id, a => codigoCupos.Contains(a.CupoSap));
+                                                    var dtos = ObtenerCupos(ids, null);
                                                     if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA logDataAgroManager.LogCambiosDataAgro()");
-                                                    logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoConId.Id, null), TipoAccionLogDataAgro.Crear);
+                                                    logDataAgroManager.LogCambiosDataAgro(dtos, TipoAccionLogDataAgro.Crear);
                                                     if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA logDataAgroManager.LogCambiosDataAgro()");
                                                 }
+                                                else
+                                                {
+                                                    foreach (var cupoNuevo in cuposConSap)
+                                                    {
+                                                        if (cupo.Id == 0)
+                                                        {
+                                                            var cupoConId = repositorio.ObtenerMayor<Cupo, int>(x => x.CupoSap == cupoNuevo.CupoSap, x => x.Id);
+
+                                                            var cupoVicentin = repositorio.Obtener<CupoNoPropio>(x => x.Codigo == cupoNuevo.CupoSap);
+                                                            cupoVicentin.Cupo = cupoConId;
+                                                            cupoVicentin.CupoId = cupoConId.Id;
+                                                            cuposnoPropio.Add(cupoVicentin);
+
+                                                            if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA logDataAgroManager.LogCambiosDataAgro()");
+                                                            logDataAgroManager.LogCambiosDataAgro(ObtenerCupo(cupoConId.Id, null), TipoAccionLogDataAgro.Crear);
+                                                            if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA logDataAgroManager.LogCambiosDataAgro()");
+                                                        }
+                                                    }
+                                                }
                                             }
+
 
 
                                             if (listaCupos.Count < d.Cantidad.Value)
@@ -400,6 +418,48 @@ namespace Molinos.DataAgro.Business.Managers
                 return new CupoResult();
             }
         }
+
+        public CupoResult ValidarDisponibilidadCuperaConDescarga(int materialId, int centroId, DateTime fechaIngreso, int cantidad)
+        {
+            if (materialId == 0 || centroId == 0 || cantidad == 0 || fechaIngreso == DateTime.MinValue)
+            {
+                CupoResult error = new CupoResult();
+                error.Error("Cupera", $"Error en el envio de datos.");
+                return error;
+            }
+            var cuposConDescargaCreados = repositorio.Contar<Cupo>(x => x.ConDescarga == true && 
+                                                                        x.NegocioId != null && 
+                                                                        x.FechaIngreso == fechaIngreso && 
+                                                                        x.MaterialId == materialId && 
+                                                                        x.CentroId == centroId && 
+                                                                        x.EstadoCupoId != 9 && 
+                                                                        x.EstadoCupoId != 4);
+            fechaIngreso = fechaIngreso.Date;
+            int limiteDescarga = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId &&
+                                                                                  x.Fecha == fechaIngreso &&
+                                                                                  x.CentroId == centroId, x => x.LimiteDescarga);
+
+            bool cierreCupera = repositorio.Obtener<ConfiguracionCupo, bool>(x => x.MaterialId == materialId &&
+                                                                                  x.Fecha == fechaIngreso && 
+                                                                                  x.CentroId == centroId, x => x.CierreCupera);
+            if (cierreCupera)
+            {
+                CupoResult error = new CupoResult();
+                error.Error("Cupera", $"La cupera se encuentra cerrada para la fecha {fechaIngreso.ToString("dd/MM/yyyy")}");
+                return error;
+            }
+            if (cantidad > limiteDescarga - cuposConDescargaCreados)
+            {
+                CupoResult error = new CupoResult();
+                error.Error("Cupera", $"La cantidad de Cupos con Descarga solicitada ({cantidad}) excede al disponible ({limiteDescarga - cuposConDescargaCreados}) para el día " + fechaIngreso.ToString("dd/MM/yyyy"));
+                return error;
+            }
+            else
+            {
+                return new CupoResult();
+            }
+        }
+
         private ConfiguracionCupoDto TraerLimitePorZona(Cupo cupo, DiaCupo d)
         {
             return repositorio.Obtener<LimiteCupo, ConfiguracionCupoDto>(
@@ -1376,7 +1436,8 @@ namespace Molinos.DataAgro.Business.Managers
                     CuposPendientes = item.CuposPendientes,
                     SolicitudesPendientes = item.SolicitudesPendientes,
                     FechaSugerida = item.FechaSugerida,
-                    Observaciones = item.Inhabilitado
+                    Observaciones = item.Inhabilitado,
+                    Puntuaciones = item.PuntuacionesString
                 };
                 listaExcel.Add(excel);
             }
@@ -1439,6 +1500,8 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Debug("CrearSugerenciaCupo - negocios priorizados: " + negocios.Where(a => a.Priorizado).Count());
                 logger.Debug("CrearSugerenciaCupo - fin de PriorizarSegunDisponibilidad.");
 
+                negocios.ForEach(a => a.PuntuacionesString = JsonConvert.SerializeObject(a.Puntuaciones));
+
                 List<SugerenciaCupo> sugerencias = negocios.Where(a => a.Priorizado).Select(a => new SugerenciaCupo
                 {
                     //AgenteCompraId = a.AgenteCompraId,
@@ -1462,9 +1525,9 @@ namespace Molinos.DataAgro.Business.Managers
                     ComercialId = a.ComercialId,
                     StandardDeCalidad = a.StandardDeCalidad,
                     Aceptado = null,
-                    Puntuaciones = JsonConvert.SerializeObject(a.Puntuaciones),
+                    Puntuaciones = a.PuntuacionesString,
                     ContratoSAP = a.ContratoSAP,
-                    CDWarrant = a.CDWarrant == true ? true : false,
+                    CDWarrant = a.CDWarrant,
                     KgNegocio = a.KgNegocio,
                     KgPendienteAplicar = a.KgPendienteAplicar,
 
@@ -6208,6 +6271,63 @@ namespace Molinos.DataAgro.Business.Managers
                 j++;
             }
 
+
+            //-----------------
+            var workSheetFormula = excel.Workbook.Worksheets.Add("Detalle Formula");
+            List<FormulaDtoExcel> formulaDatos = new List<FormulaDtoExcel>();
+            foreach (var formula in formulas)
+            {
+                foreach (var hijo in formula.Criterio.Hijos)
+                {
+                    if (hijo.Hijos == null || hijo.Hijos.Count == 0)
+                    {
+                        formulaDatos.Add(new FormulaDtoExcel
+                        {
+                            Material = formula.Material,
+                            Criterio = hijo.Descripcion.Replace("Criterio",""),
+                            Puntuacion = Decimal.ToInt32(hijo.Puntuacion),
+                            CuposDesde = formula.CuposDesde,
+                            CuposHasta = formula.CuposHasta,
+                            NegociosDesde = formula.NegociosDesde,
+                            NegociosHasta = formula.NegociosHasta
+
+                        });
+                    }
+                }
+
+            }
+            workSheetFormula.Cells[1, 1].LoadFromCollection(formulaDatos, true);
+
+            if (formulaDatos.Count > 0)
+            {
+                oPropRow = formulaDatos[0].GetType().GetProperties();
+
+                cantColumns = oPropRow.Count();
+
+                for (int i = 1; i <= cantColumns; i++)
+                {
+                    if (oPropRow[i - 1].PropertyType.FullName.IndexOf("System.DateTime") >= 0)
+                    {
+                        workSheetFormula.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
+
+                    }
+                    workSheetFormula.Column(i).AutoFit();
+                }
+            }
+
+            j = 1;
+            while (workSheetFormula.Cells[1, j].Value != null)
+            {
+                workSheetFormula.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheetFormula.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheetFormula.Cells[1, j].Style.Font.Bold = true;
+                workSheetFormula.Cells[1, j].Value = string.Join(" ", Regex.Split(workSheetFormula.Cells[1, j].Value.ToString(), "(?<!^)(?=[A-Z])"));
+
+                j++;
+            }
+            //-----------------
 
             using (MemoryStream ms = new MemoryStream())
             {

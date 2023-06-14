@@ -103,6 +103,43 @@ namespace Molinos.DataAgro.Business.Managers
             return LogGuardarCambios(cambios, tipoDeAccion, cambios.Id, "Cupo", descripcion, cambios.ProveedorId, null, resolver);
         }
 
+        public int LogCambiosDataAgro(List<CupoDto> cambios, TipoAccionLogDataAgro tipoDeAccion)
+        {
+            var resolver = new IgnorePropertiesResolver(new[] { "EstadoOrden" });
+            var usuarioComercial = ObtenerUsuario(null, null);
+
+            List<LogDataAgro> logs = new List<LogDataAgro>();
+            foreach (var cambio in cambios)
+            {
+                string jsonObjeto = JsonConvert.SerializeObject(cambio, new JsonSerializerSettings()
+                {
+                    ContractResolver = resolver,
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize,
+                    PreserveReferencesHandling = PreserveReferencesHandling.None,
+                    Formatting = Formatting.Indented,
+                });
+
+                var logAgregado = new LogDataAgro
+                {
+                    Usuario = usuarioComercial,
+                    Fecha = DateTime.Now,
+                    DatoModificado = jsonObjeto,
+                    Clase = "Cupo",
+                    Tipo = cambio.GetType().Name,
+                    AccionRealizada = tipoDeAccion.ToString(),
+                    ClaseId = cambio.Id,
+                    Descripcion = cambio.CupoSap,
+                    ProveedorId = cambio.ProveedorId,
+                    CorredorId = null,
+                };
+
+                logs.Add(logAgregado);
+            }
+            repositorio.AgregarTodos(logs);
+            repositorio.GuardarCambios();
+            return 1;
+        }
+
         private int LogGuardarCambios<T>(T cambios, TipoAccionLogDataAgro tipoDeAccion, int id, string clase, string descripcion, int? proveedorId = null, int? corredorId = null, IgnorePropertiesResolver resolver = null, string usuario = null)
         {
             if (resolver == null)
@@ -110,48 +147,7 @@ namespace Molinos.DataAgro.Business.Managers
                 resolver = new IgnorePropertiesResolver(new[] { "" });
             }
             var usuarioComercial = "";
-
-            if (usuario != null)
-            {
-                usuarioComercial = usuario;
-            }
-            else
-            {
-                //logger.Debug("LogGuardarCambios");
-                try
-                {
-                    //logger.Debug("LogGuardarCambios ObtenerUsuario");
-                    usuarioComercial = PermisosHelper.ObtenerUsuario();
-                    //logger.Debug("LogGuardarCambios ObtenerUsuario :" + (usuarioComercial ?? "null"));
-
-                }
-                catch (Exception)
-                { }
-                if (string.IsNullOrEmpty(usuarioComercial))
-                {
-                    try
-                    {
-                        usuarioComercial = OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name.Split('\\').Last();
-                    }
-                    catch (Exception)
-                    { }
-                }
-
-                if (!string.IsNullOrEmpty(usuarioComercial))
-                {
-                    var comercial = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == usuarioComercial, x => x.Nombres + " " + x.Apellido);
-                    if (comercial != null)
-                    {
-                        usuarioComercial = comercial;
-                    }
-                }
-
-                if (usuarioComercial == null)
-                {
-                    usuarioComercial = "";
-                }
-            }
-
+            usuarioComercial = ObtenerUsuario(usuario, usuarioComercial);
 
             string jsonObjeto = JsonConvert.SerializeObject(cambios, new JsonSerializerSettings()
             {
@@ -205,6 +201,52 @@ namespace Molinos.DataAgro.Business.Managers
                 return 1;
             }
 
+        }
+
+        private string ObtenerUsuario(string usuario, string usuarioComercial)
+        {
+            if (usuario != null)
+            {
+                usuarioComercial = usuario;
+            }
+            else
+            {
+                //logger.Debug("LogGuardarCambios");
+                try
+                {
+                    //logger.Debug("LogGuardarCambios ObtenerUsuario");
+                    usuarioComercial = PermisosHelper.ObtenerUsuario();
+                    //logger.Debug("LogGuardarCambios ObtenerUsuario :" + (usuarioComercial ?? "null"));
+
+                }
+                catch (Exception)
+                { }
+                if (string.IsNullOrEmpty(usuarioComercial))
+                {
+                    try
+                    {
+                        usuarioComercial = OperationContext.Current.ServiceSecurityContext.WindowsIdentity.Name.Split('\\').Last();
+                    }
+                    catch (Exception)
+                    { }
+                }
+
+                if (!string.IsNullOrEmpty(usuarioComercial))
+                {
+                    var comercial = repositorio.Obtener<Comercial, string>(x => x.IdActiveDirectory == usuarioComercial, x => x.Nombres + " " + x.Apellido);
+                    if (comercial != null)
+                    {
+                        usuarioComercial = comercial;
+                    }
+                }
+
+                if (usuarioComercial == null)
+                {
+                    usuarioComercial = "";
+                }
+            }
+
+            return usuarioComercial;
         }
 
         private bool hayCambios(LogDataAgro logActual)

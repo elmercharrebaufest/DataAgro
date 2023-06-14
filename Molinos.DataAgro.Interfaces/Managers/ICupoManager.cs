@@ -69,5 +69,8 @@ namespace Molinos.DataAgro.Interfaces
         List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos();
         CupoResult ValidarDisponibilidadCupera(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
         CupoResult DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver);
+        // En este pasaje a QA aún no está implementado. Se comenta para evitar error
+        //List<DisponibilidadCuposDto> TraerCupoDisponibilidadDescarga(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
+        CupoResult ValidarDisponibilidadCuperaConDescarga(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
     }
 }

@@ -1720,6 +1720,15 @@ namespace Molinos.DataAgro.Business.Managers
                     oEntityErrors.ListaErrores.AddRange(error.ListaErrores);
                 }
 
+                // Validar disponibilidad según LIMITE CUPO CON DESCARGA
+                listCupoConDescargaFechas.ForEach(x => {
+                    int sumaCuposPorFecha = x.CantidadCupo + x.CantidadFlete;
+
+                    CupoResult cupoResult = cupoManager.ValidarDisponibilidadCuperaConDescarga(oContrato.MaterialId, (int)oContrato.DestinoId, x.Fecha, sumaCuposPorFecha);
+                    if (cupoResult.HayError)
+                        cupoResult.Errores.ForEach(y => oEntityErrors.Errores.Add(new ErrorMessage(400, y.Message)));
+                });
+
                 var cantidadCuposFletesPermitidos = Math.Ceiling(oContrato.Cantidad / 30000);
                 if (cantidadCuposFletesPermitidos < sumaCuposCargaMasiva)
                 {

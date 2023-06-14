@@ -25,4 +25,17 @@ namespace Molinos.DataAgro.Entities.Dto
         public int MaterialId { get; set; }
         public string Material { get; set; }
     }
+
+
+    public partial class FormulaDtoExcel
+    {
+
+        public string Material { get; set; }
+        public string Criterio { get; set; }
+        public int Puntuacion { get; set; }
+        public DateTime CuposDesde { get; set; }
+        public DateTime CuposHasta { get; set; }
+        public DateTime NegociosDesde { get; set; }
+        public DateTime NegociosHasta { get; set; }
+    }
 }

@@ -556,7 +556,7 @@ function InicializarElementos() {
         min: kendo.parseDate($("#FechaSE").val()),
         change: function () {
             CrearTablaFechaHasta();
-            if (($("#FechaSE").val() > $("#FechaHastaSE").val()) && $("#FechaHastaSE").val() != "") {
+            if (($("#FechaSE").val() < $("#FechaHastaSE").val()) && $("#FechaHastaSE").val() != "") {
                 $("#boton-carga-masiva").show();
             } else $("#boton-carga-masiva").hide();
         }
