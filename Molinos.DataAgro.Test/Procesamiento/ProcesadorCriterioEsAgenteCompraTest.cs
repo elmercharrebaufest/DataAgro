@@ -5,12 +5,6 @@ using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Test.Procesamiento
 {
@@ -30,19 +24,17 @@ namespace Molinos.DataAgro.Test.Procesamiento
         [Test]
         public void CalcularTest()
         {
-            var criterio = new CriterioEsAgenteCompra { Dto = new SugerenciaCupoDto {TipoNegocioId=5 } };
+            var criterio = new CriterioEsAgenteCompra { Dto = new SugerenciaCupoDto { TipoAgenteCompraId = 1 } };
             var resultado = target.Calcular(criterio);
-            
+
             Assert.That(resultado, Is.Not.Null);
             Assert.AreEqual(resultado, 1);
 
-             criterio = new CriterioEsAgenteCompra { Dto = new SugerenciaCupoDto { TipoNegocioId = 99 } };
-             resultado = target.Calcular(criterio);
+            criterio = new CriterioEsAgenteCompra { Dto = new SugerenciaCupoDto { TipoAgenteCompraId = null } };
+            resultado = target.Calcular(criterio);
+
             Assert.That(resultado, Is.Not.Null);
             Assert.AreEqual(resultado, 0);
-
         }
-
-
     }
 }

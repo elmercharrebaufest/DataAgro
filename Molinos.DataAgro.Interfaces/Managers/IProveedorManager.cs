@@ -80,7 +80,7 @@ namespace Molinos.DataAgro.Interfaces
         List<ProveedorDto> ListarProveedorTodos(string proveedor);
         ResultadoAltaCampoSustentable AltaCampoSustentable(CampoDetalleTercero campo);
         void GrabarMailProveedor();
-        void ActualizarProveedoresHome();
+        void ActualizarProveedoresHome(int ProveedorId=0);
         List<ActividadExportar> ExportarActividades(HistorialActiviad oParam, string idActiveDirectory);
         ProveedorCategoriasSISA ValidarCategoriaSISA(CuitSegmentacion cuitSegmentacion);
     }

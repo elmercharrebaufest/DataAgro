@@ -83,6 +83,11 @@ function CreateGridInformeAdministrativo() {
     $("#grilla-informes").kendoGrid({
         toolbar: kendo.template($("#templateToolbar").html()),
         dataSource: ds,
+        excel: {
+            fileName: "Informe Administrativo DA.xlsx",
+            allPages: true,
+            filterable: true,
+        },
         dataBound: function () {
             $("td:has(div.statuspendiente)").css('border-bottom', '5px solid #ffc100');
             $("td:has(div.statusconfirmado)").css('border-bottom', '5px solid #179e2b');
@@ -108,29 +113,58 @@ function CreateGridInformeAdministrativo() {
         ],
         persistSelection: true,
         excelExport: function (e) {
-            var mes = new Date().getMonth() + 1;
-            var sheet = e.workbook.sheets[0];
-            for (var i = 1; i < sheet.rows.length; i++) {
-                var row = sheet.rows[i];
-                row.cells[7].value = new Date().getDate() + "/" + mes + "/" + new Date().getFullYear();
-            }
-
-            var grid = $("#grilla-informes").data("kendoGrid");
-
-            if (grid.selectedKeyNames().length === 0) {
-                MensErr("Por favor, seleccione filas antes de exportar.");
-                return;
-            }
-
-            sheet.rows = sheet.rows.filter(x => x.type == "header" || grid.selectedKeyNames().some(y => x.cells[0].value == y));
-
+            var grid = this;
             if (grid.selectedKeyNames().length > 0) {
-                var objInforme = { ids: grid.selectedKeyNames() };
-                MSExecuteOnServer('/InformeComercial/ActualizarFechaDescargaInformeComercial', objInforme);
-            }
-            grid.dataSource.page(1);
+                var sheet = e.workbook.sheets[0];
+                var allData = grid.dataSource.data();
+                var selectedIds = $("#grilla-informes").data("kendoGrid").selectedKeyNames();
 
+                var headerRow = {
+                    type: "header",
+                    cells: [
+                        { value: "Id", background: "#cdcbcb" },
+                        { value: "CUIT", background: "#cdcbcb" },
+                        { value: "Razón Social", background: "#cdcbcb" },
+                        { value: "Campaña", background: "#cdcbcb"  },
+                        { value: "Material", background: "#cdcbcb" },
+                        { value: "Toneladas", background: "#cdcbcb" },
+                        { value: "Comercial", background: "#cdcbcb" },
+                        { value: "Fecha de Generación", background: "#cdcbcb" },
+                        { value: "Fecha de Descarga", background: "#cdcbcb" },
+                        { value: "Origen DA", background: "#cdcbcb" }
+                    ]
+                };
+
+                sheet.rows = [];
+                sheet.rows.push(headerRow);
+
+                // Add data rows for selected items
+                if (selectedIds.length > 0) {
+                    var exportData = allData.filter(function (item) {
+                        return selectedIds.includes(item.InformeComerciaProduccionId.toString());
+                    });
+                    exportData.forEach(function (item) {
+                        var dataRow = {
+                            type: "data",
+                            cells: [
+                                { value: item.InformeComercialId },
+                                { value: item.Cuit },
+                                { value: item.RazonSocial },
+                                { value: item.Campaña },
+                                { value: item.Material },
+                                { value: item.Toneladas },
+                                { value: item.Comercial },
+                                { value: item.FechaAltaConHora },
+                                { value: item.FechaDescargaConHora },
+                                { value: item.OrigenDA }
+                            ]
+                        };
+                        sheet.rows.push(dataRow);
+                    });
+                }
+            }
         },
+
         change: onChange,
 
         pageable: {
@@ -147,8 +181,6 @@ function CreateGridInformeAdministrativo() {
                 last: "Ir a la &uacute;ltima p&aacute;gina",
                 refresh: "Recargar"
             },
-            //    input: true,
-            //    numeric: true
         },
         scrollable: true,
         sortable: {
@@ -167,7 +199,7 @@ function CreateGridInformeAdministrativo() {
     });
 
     var grid = $("#grilla-informes").data("kendoGrid");
-    //bind click event to the checkbox
+    
     grid.table.on("click", ".row-checkbox", selectRow);
 
     $('#header-chb').change(function (ev) {
@@ -478,7 +510,7 @@ var toCSV = function (data, fileName, headers, addheaders) {
     link.click(); // This will download the data file.
 };
 
-function enviarCapProdSAP() {
+function EnviarCapProdSAP() {
     var grid = $("#grilla-informes").data("kendoGrid");
     var allData = grid.dataSource.data();
     var enviar = [];
@@ -487,21 +519,27 @@ function enviarCapProdSAP() {
 
     if (grid.selectedKeyNames().length > 0) {
 
-        for (var i = 0; i < allData.length; i++) {
-            if (ids.find(element => element == allData[i].InformeComerciaProduccionId.toString())) {
+        for (let x in allData) {
+            let i = allData[x];
+            if (i.UsuarioSAP == '') {
+                MensErr(`El informe comercial de ${i.Comercial} para el CUIT ${i.Cuit}, campaña ${i.Campaña}, material ${i.Material}  no tiene usuario SAP.`);
+                return;
+            }
+            if (ids.find(element => element == i.InformeComerciaProduccionId.toString())) {
                 enviar.push({
-                    Id: allData[i].InformeComercialId,
-                    Cuit: allData[i].Cuit,
-                    Material: allData[i].MaterialSAP,
-                    MaterialDescripcion: allData[i].Material,
-                    Campania: allData[i].Campaña,
-                    Cantidad: allData[i].Toneladas,
+                    Id: i.InformeComercialId,
+                    Cuit: i.Cuit,
+                    Material: i.MaterialSAP,
+                    MaterialDescripcion: i.Material,
+                    Campania: i.Campaña,
+                    Cantidad: i.toneladas,
                     UnidadMedida: "TON",
                     Porcentaje: 30,
-                    UsuarioSAP: allData[i].UsuarioSAP
+                    UsuarioSAP: i.UsuarioSAP
                 });
             }
-        };
+        }
+        
 
         var result = MSExecuteOnServer('/InformeComercial/EnviarCapacidadProductivaSAP', enviar);
         if (result != null) {

@@ -17,6 +17,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public List<CampanaMaterialDetallePorMeseExcelDto> Situacion { get; set; }
         public List<CapacidadProductivaAll> CapacidadProductiva { get; set; }
         public List<ActividadComercial> ActividadComercial { get; set; }
+        public List<ObjetivoCampania> ObjetivoCampania { get; set; }
 
         public ExportAll()
         {
@@ -29,6 +30,7 @@ namespace Molinos.DataAgro.Entities.Dto
             Compras = new List<ComprasAll>();
             CapacidadProductiva = new List<CapacidadProductivaAll>();
             ActividadComercial = new List<ActividadComercial>();
+            ObjetivoCampania = new List<ObjetivoCampania>();
         }
     }
 
@@ -189,5 +191,15 @@ namespace Molinos.DataAgro.Entities.Dto
         public string UnidadMedida { get; set; }
         public decimal Porcentaje { get; set; }
         public DateTime? FechaActualizacion { get; set; }
+    }
+
+    public class ObjetivoCampania
+    {
+        public string Comercial { get; set; }
+        public string Material { get; set; }
+        public string ToneladasObjetivo { get; set; }
+        public string ToneladasCompradas { get; set; }
+        public string PorcentajeDeCumplimiento { get; set; }
+        public string Campania { get; set; }
     }
 }

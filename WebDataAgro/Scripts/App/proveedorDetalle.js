@@ -3568,3 +3568,12 @@ function DevolverFiltroConTipoActividad(objFiltro) {
 
     return objFiltro;
 }
+
+function ActualizarProveedoresHomeCuit() {
+    var result = MSExecuteOnServer('/Proveedor/ActualizarProveedoresHomeCuit', { ProveedorId: ProveedorId });
+    if (result != null) {
+        MensInfoReload("Estado del Proveedor actualizado!");
+    } else {
+        MensErr("No se pudo actualizar el proveedor. Intente nuevamente y en caso de error comunicarse con sistemas.")
+    }
+}

@@ -91,5 +91,68 @@ namespace Molinos.DataAgro.Agent
             }
         }
 
+        public List<EstadoSAPDto> ValidarEstados(List<string> contratosSap)
+        {
+            if (ConfigurationManager.AppSettings["ValorPruebaSap"] == "1")
+            {
+                return new List<EstadoSAPDto> { new EstadoSAPDto { Status = "", NumeroSio = 0, ContratoSap = "" } };
+            }
+            else
+            {
+                try
+                {
+                    var agent = new SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATOClient();
+                    agent.ClientCredentials.UserName.UserName = UserSap;
+                    agent.ClientCredentials.UserName.Password = PassSap;
+
+                    var rq = new Z_MPRFC_STATUS_DE_CONTRATO()
+                    {
+                        IM_CONTRATO = contratosSap.ToArray()
+                    };
+                    var log = new Log
+                    {
+                        Fecha = DateTime.Now,
+                        Xml = rq.ToXml()
+                    };
+                    var logId = repositorio.Agregar(log);
+                    repositorio.GuardarCambios();
+                    logger.Debug(rq.ToXml());
+
+                    var valor = agent.SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO(rq);
+                    logger.Debug(valor.ToXml());
+                    log = repositorio.Obtener<Log>(logId.Id);
+                    log.Xml += valor.ToXml();
+                    repositorio.GuardarCambios();
+
+                    var estados = new List<EstadoSAPDto>();
+
+                    if (valor.EX_SALIDA != null)
+                    {
+                        foreach (var item in valor.EX_SALIDA)
+                        {
+
+                            long numsio = 0;
+                            long.TryParse(item.NUM_SIO, out numsio);
+                            logger.Debug($"contrato: .{item.CONTRATO}. EX_STATUS: .{item.STATUS}. numsio: .{numsio}.");
+                            var estado = new EstadoSAPDto()
+                            {
+                                NumeroSio = numsio,
+                                Status = item.STATUS,
+                                ContratoSap = item.CONTRATO,
+                            };
+                            estados.Add(estado);
+                        }
+                    }
+
+                    return estados;
+
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e.Message);
+                    throw;
+                }
+            }
+        }
     }
 }

@@ -667,5 +667,16 @@ namespace WebDataAgro.Controllers
 
             return Json(model);
         }
+
+        public ActionResult ActualizarProveedoresHomeCuit(int ProveedorId)
+        {
+            mobjProveedorManager.ActualizarProveedoresHome(ProveedorId);
+
+            return new JsonResult()
+            {
+                Data = Content("ok"),
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
     }
 }

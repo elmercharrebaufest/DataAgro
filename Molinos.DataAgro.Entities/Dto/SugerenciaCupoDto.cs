@@ -11,18 +11,13 @@ namespace Molinos.DataAgro.Entities.Dto
         public string MaterialDesc { get; set; }
         public decimal? Precio { get; set; }
         public string MonedaId { get; set; }
-
-        //public int? AgenteCompraId { get; set; }
-        //public int? FijacionDePrecioContratoId { get; set; }
-        //public int? FasonId { get; set; }
-        //public int? ContratoId { get; set; }
-
+        public int? TipoAgenteCompraId { get; set; }
         public int? ConfiguracionEspacioDinamicoId { get; set; }
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
         public DateTime? FechaHastaOriginal { get; set; }
         public decimal PrecioPizarra { get; set; }
-        public FormulaDto formula { get; set; }
+        public FormulaDto Formula { get; set; }
         public Dictionary<string, decimal> Puntuaciones { get; set; } = new Dictionary<string, decimal>();
         public string PuntuacionesString { get; set; }
         public decimal PuntuacionTotal { get; set; }
@@ -74,7 +69,6 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public string CUITProveedor { get; set; }
         public string CUITCorredor { get; set; }
-        public int cantidadCupos { get; set; }
+        public int CantidadCupos { get; set; }
     }
 }
-

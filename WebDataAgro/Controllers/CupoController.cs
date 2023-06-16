@@ -502,6 +502,13 @@ namespace WebDataAgro.Controllers
             return View();
         }
 
+        [Autorizacion(PermisosDataAgro.DisponibilidadDeCuposDescarga)]
+        public ActionResult DisponibilidadDescarga()
+        {
+            FillViewBag();
+            return View();
+        }
+
         private void FillViewBag()
         {
             var comercial = comercialManager.TraerComercial(GlobalVariables.ComercialId);
@@ -557,6 +564,25 @@ namespace WebDataAgro.Controllers
 
             }
             List<DisponibilidadCuposDto> model = cupoManager.TraerCupoDisponibilidad(fechaDesde, fechaHasta, ZonaId, CentroId, MaterialId);
+
+            return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
+        }
+
+        [HttpPost]
+        public ActionResult BuscaDatosDisponibilidadDescarga(string FechaDesde, string FechaHasta, string ZonaId, List<string> CentroId, string MaterialId)
+        {
+            DateTime fechaDesde = DateTime.Now.Date;
+            if (!String.IsNullOrEmpty(FechaDesde))
+            {
+                DateTime.TryParseExact(FechaDesde, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaDesde);
+            }
+            DateTime fechaHasta = DateTime.Now.Date;
+            if (!String.IsNullOrEmpty(FechaHasta))
+            {
+                DateTime.TryParseExact(FechaHasta, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaHasta);
+            }
+
+            List<DisponibilidadCuposDto> model = cupoManager.TraerCupoDisponibilidadDescarga(fechaDesde, fechaHasta, ZonaId, CentroId, MaterialId);
 
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }

@@ -215,6 +215,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         VisualizarReporteContratosAFijarPase = 418,
         [Display(ResourceType = typeof(Text), Name = "NegocioPesificado")]
         NegocioPesificado = 419,
+        [Display(ResourceType = typeof(Text), Name = "Mail_MATPrimary")]
+        MailMATPrimary = 420,
 
         //Configuracion
         [Display(ResourceType = typeof(Text), Name = "Configuracion_Canal_Operacion")]
@@ -340,6 +342,8 @@ namespace Molinos.DataAgro.Entities.Seguridad
         //Cupo NO Propio
         [Display(ResourceType = typeof(Text), Name = "Visualizar_CupoNoPropio")]
         Visualizar_CupoNoPropio = 732,
+        [Display(ResourceType = typeof(Text), Name = "Disponibilidad_De_Cupos_Descarga")]
+        DisponibilidadDeCuposDescarga = 733,
 
         //Externos
         [Display(ResourceType = typeof(Text), Name = "Servicio_Auth")]

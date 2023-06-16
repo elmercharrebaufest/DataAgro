@@ -138,7 +138,7 @@
     <Compile Include="Agent\IEnviarBoletoAgent.cs" />
     <Compile Include="Agent\IFinalizarFasonAgent.cs" />
     <Compile Include="Agent\IFinalizarFijacionVirtualAgent.cs" />
-    <Compile Include="Agent\IClientePrimariAPIAgent.cs" />
+    <Compile Include="Agent\IClientePrimaryAPIAgent.cs" />
     <Compile Include="Agent\IContratosAPesificarAgent.cs" />
     <Compile Include="Agent\IComprasDetalleAgent.cs" />
     <Compile Include="Agent\ICriterioCDWarrantAgent.cs" />

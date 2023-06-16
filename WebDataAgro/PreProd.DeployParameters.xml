@@ -33,6 +33,9 @@
   <setParameter name="VersionClienteSTOP Key" value="2.0.0" />
   <setParameter name="UrlBaseDataAgro Key" value="http://test.DataAgro.com.ar:9001/" />
   <setParameter name="UrlBaseMOAOperaciones Key" value="https://moaoperacionesqa.molinosagro.com.ar/" />
+	<setParameter name="UrlBasePrimary Key" value="https://api.anywhereportfolio.com.ar/" />
+	<setParameter name="UserPrimary Key" value="WSMOLINOSAGRO" />
+	<setParameter name="PassPrimary Key" value="kw%23!5XT7_p" />
 
 	<setParameter name="CupoSojaNoSustPorSugerencias Key" value="No" />
 	<setParameter name="CupoMaizPorSugerencias Key" value="No" />

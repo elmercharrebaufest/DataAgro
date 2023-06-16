@@ -77,6 +77,12 @@
                 @Html.Partial("PartialPanel")
             </div>
 
+            @if (panel.Count == 0)
+            {
+                <div class="alert alert-warning" role="alert">
+                    El Algoritmo de Cupos no está configurado
+                </div>
+            }
         </div>
     </div>
 </div>

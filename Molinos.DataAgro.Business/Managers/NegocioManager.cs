@@ -20,17 +20,17 @@ namespace Molinos.DataAgro.Business.Managers
         private readonly IRepositorio repositorio;
         private readonly ILogger logger;
         private readonly IMailManager mailManager;
-        private readonly IClientePrimariAPIAgent clientePrimariAPI;
+        private readonly IClientePrimaryAPIAgent clientePrimaryAPI;
         private readonly IHttpContextManager httpContextManager;
 
 
-        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimariAPIAgent clientePrimariAPI,
+        public NegocioManager(ILogger logger, IRepositorio repositorio, IMailManager mailManager, IClientePrimaryAPIAgent clientePrimaryAPI,
             IHttpContextManager httpContextManager)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.mailManager = mailManager;
-            this.clientePrimariAPI = clientePrimariAPI;
+            this.clientePrimaryAPI = clientePrimaryAPI;
             this.httpContextManager = httpContextManager;
         }
 
@@ -79,7 +79,7 @@ namespace Molinos.DataAgro.Business.Managers
                     listaJefes = null;
                 }
                 var subject = "Negocios con fecha anterior";
-                
+
                 var rutaMolinos = httpContextManager.ObtenerPathLogoMail();
 
                 var cuerpoMail = CuerpoMailNegociosConDiaAnterior(rutaMolinos, contratos);
@@ -172,10 +172,122 @@ namespace Molinos.DataAgro.Business.Managers
             alternateView.LinkedResources.Add(res);
             return alternateView;
         }
-        
-        public void ConsultarContratosPrimary()
+
+        public void MigrarContratosPrimary(DateTime fecha)
         {
-            clientePrimariAPI.ObtenerNegocios();
+            var negociosMAT = clientePrimaryAPI.ObtenerNegocios(fecha);
+            var negociosDA = repositorio.Listar<AgenteCompra>(x =>
+                DbFunctions.TruncateTime(x.Fecha) == fecha && x.TipoNegocioId == 5 && (x.EstadoId == 2 || x.EstadoId == 5));
+            var agrupadoMAT = negociosMAT.GroupBy(item => new { item.MaterialId, item.Posicion, item.OperadorId, item.MonedaId });
+            var agrupadoDA = negociosDA.GroupBy(item => new { item.MaterialId, item.Posicion, item.OperadorId, item.MonedaId });
+            var listaMAT = new List<AgenteCompra>();
+            var listaDA = new List<AgenteCompra>();
+            foreach (var mat in agrupadoMAT)
+            {
+                var negocio = new AgenteCompra()
+                {
+                    MaterialId = mat.Key.MaterialId,
+                    Material = mat.First().Material,
+                    MonedaId = mat.Key.MonedaId,
+                    Posicion = mat.Key.Posicion,
+                    Operador = mat.First().Operador,
+                    OperadorId = mat.First().OperadorId,
+                    PrecioPonderado = mat.Sum(x => x.Precio * (decimal)Math.Abs(x.Cantidad)) / mat.Sum(x => (decimal)Math.Abs(x.Cantidad))
+                };
+                listaMAT.Add(negocio);
+            }
+            foreach (var dataAgro in agrupadoDA)
+            {
+                var negocio = new AgenteCompra()
+                {
+                    MaterialId = dataAgro.Key.MaterialId,
+                    Material = dataAgro.First().Material,
+                    MonedaId = dataAgro.Key.MonedaId,
+                    Posicion = dataAgro.Key.Posicion,
+                    Operador = dataAgro.First().Operador,
+                    OperadorId = dataAgro.First().OperadorId,
+                    PrecioPonderado = dataAgro.Sum(x => x.Precio * (decimal)Math.Abs(x.Cantidad)) / dataAgro.Sum(x => (decimal)Math.Abs(x.Cantidad))
+                };
+                listaDA.Add(negocio);
+            }
+            List<string> errores = new List<string>();
+            foreach (var item in listaMAT)
+            {
+                var algo = listaDA.Select(x => new { x.MaterialId, x.MonedaId, x.Posicion, x.OperadorId }).ToList();
+                var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
+                if (elem != null)
+                {
+                    var cantidadMAT = negociosMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && item.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                    var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && item.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+
+                    if (elem.PrecioPonderado != item.PrecioPonderado)
+                    {
+                        errores.Add("Se encontró una diferencia de precios ponderados para negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
+                            " para la posición " + elem.Posicion + " y operador " + elem.Operador.Descripcion + " - en Data Agro: " + elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR")) + " y en MAT: " + item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR")));
+                    }
+
+                    if (cantidadDA != cantidadMAT)
+                    {
+                        errores.Add("Se encontró una diferencia en los kilos totales de negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
+                            " para la posición " + elem.Posicion + " y operador " + elem.Operador.Descripcion + " - en Data Agro: " + cantidadDA.ToString("N", new CultureInfo("es-AR")) + " Kg. y en MAT: " + cantidadMAT.ToString("N", new CultureInfo("es-AR")) + " Kg.");
+                    }
+                }
+                else
+                {
+                    errores.Add("No se encontraron en Data Agro negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero sí en el MAT.");
+                }
+            }
+            foreach (var item in listaDA)
+            {
+                var elem = listaMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
+                if (elem == null)
+                {
+                    errores.Add("No se encontraron en el MAT negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero sí en Data Agro.");
+                }
+            }
+            foreach (var negocio in negociosDA)
+            {
+                negocio.EstadoId = 8; //Eliminado
+            }
+            
+            foreach (var item in negociosMAT)
+            {
+                repositorio.Agregar(item);
+            }
+
+            if (errores.Count == 0)
+            {
+                var asunto = "No hay diferencias entre Data Agro y posición MATBA - " + fecha.ToString("dd/MM/yyyy");
+                errores.Add("No se encontraron diferencias entre Data Agro y posición MATBA.");
+                EnviarMailMATPrimay(asunto, errores);
+            }
+            else
+            {
+                var asunto = "Error - Diferencias entre Data Agro y posición MATBA - " + fecha.ToString("dd/MM/yyyy");
+                EnviarMailMATPrimay(asunto, errores);
+            }
+            repositorio.GuardarCambios();
+        }
+
+        private void EnviarMailMATPrimay(string asunto, List<string> cuerpo)
+        {
+            LinkedResource resource = new LinkedResource(httpContextManager.ObtenerPathLogoMail())
+            {
+                ContentId = Guid.NewGuid().ToString()
+            };
+            var destinatarios = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailMATPrimary))).Select(x => x.IdActiveDirectory).ToList();
+            string htmlBody = "En el presente mail se detalla el resultado de la comparación automática entre los negocios registrados en Data Agro y los obtenidos del MAT.<br /><br />";
+            foreach (var mensaje in cuerpo)
+            {
+                htmlBody += mensaje + "<br />";
+            }
+            htmlBody += "<br /> <br />  Saludos Cordiales," +
+                " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
+                @"<img src='cid:" + resource.ContentId + @"'/>" +
+                "<br /> <br /> www.molinosagro.com.ar";
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(resource);
+            mailManager.EnviarMail(destinatarios, asunto, "", null, alternateView);
         }
 
 
@@ -198,7 +310,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var subject = "Negocios con Anula y Reemplaza";
-            
+
             var rutaMolinos = httpContextManager.ObtenerPathLogoMail();
 
             var cuerpoMail = CuerpoMailNegociosAnulaYReemplaza(rutaMolinos, contratos);
@@ -314,8 +426,8 @@ namespace Molinos.DataAgro.Business.Managers
             }
 
             var subject = "Error finalización de negocio Molinos Agro S.A. – " + negocio.ContratoSAP;
-            
-            mailManager.EnviarMail( ConfigurationManager.AppSettings["EmailDASoporte"].ToString().Split(';').ToList(), subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), negocio));
+
+            mailManager.EnviarMail(ConfigurationManager.AppSettings["EmailDASoporte"].ToString().Split(';').ToList(), subject, "", lista, CuerpoMailContrato(httpContextManager.ObtenerPathLogoMail(), negocio));
         }
 
         private AlternateView CuerpoMailContrato(string filePath, Negocio negocio)
@@ -331,7 +443,7 @@ namespace Molinos.DataAgro.Business.Managers
             {
                 th = "<th style=\"border: 2px solid white; color: white; background-color: #400179; padding: 5px 0; width: 175px;\">";
             }
-            
+
             string htmlBody = "";
 
             htmlBody += "En el presente mail se detalla el negocio finalizado con error y contrato SAP asignado: " + negocio.ContratoSAP + " <br /><br />  ";

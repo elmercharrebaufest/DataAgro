@@ -209,7 +209,6 @@ namespace WebDataAgro.Controllers
             model.DownloadKey = Util.GetDownloadKey(identif);
 
             return Json(model);
-
         }
 
         public async Task<ActionResult> GenerarExcelIA(ParamReportesIC oParamReportes)
@@ -227,7 +226,6 @@ namespace WebDataAgro.Controllers
             model.DownloadKey = Util.GetDownloadKey(identif);
 
             return Json(model);
-
         }
 
         public async Task<ActionResult> ReImprimirPDF(int InformeComercialId)
@@ -252,7 +250,6 @@ namespace WebDataAgro.Controllers
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
         public ActionResult EliminarInformeComercial(int informeComercialId)
@@ -279,8 +276,6 @@ namespace WebDataAgro.Controllers
 
         public ActionResult ListarReportes(ParamReportesIC oParam)
         {
-            var model = new List<ReportesList>();
-
             if (oParam.ComercialIDGenerador == null)
             {
                 oParam.ComercialIDGenerador = mobjHomeManager.TraerIdComercial(GlobalVariables.IdActiveDirectory);
@@ -302,7 +297,6 @@ namespace WebDataAgro.Controllers
                 };
             }
 
-            var equipo = GlobalVariables.EquipoReal;
             var model = mobjInformeComercialManager.TraerInformesFiltrados(filtro);
 
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
@@ -326,6 +320,5 @@ namespace WebDataAgro.Controllers
                 MaxJsonLength = Int32.MaxValue
             };
         }
-
     }
 }

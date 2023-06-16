@@ -6,7 +6,7 @@ namespace Molinos.DataAgro.Interfaces
 {
     public interface IObjetivoManager
     {
-        ObjetivoHome TraerObjetivoHome(int idComercial, List<int> equipo);
+        ObjetivoHome TraerObjetivoHome(int? idComercial, List<int> equipo, int? idZona, int? idComercialLogeado);
         Resultado GuardarObjetivo(ObjetivoComercial objetivo);
         Resultado EliminarObjetivo(int id);
     }

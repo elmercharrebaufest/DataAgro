@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Molinos.DataAgro.Entities.Dto
+﻿namespace Molinos.DataAgro.Entities.Dto
 {
     public class EnviarCapacidadProductivaSAPDto
     {

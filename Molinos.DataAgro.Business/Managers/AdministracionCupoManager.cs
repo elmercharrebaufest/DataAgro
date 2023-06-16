@@ -241,9 +241,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (resultado.ListaCupos.Count > 0)
                         solicitud.Motivo = motivo;
-                    if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA EnviarMailSolicitudAceptada() - 2 - NO ES Algoritmo ");
-                    EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, resultado.ListaCupos, active);
-                    if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA EnviarMailSolicitudAceptada() - 2 - NO ES Algoritmo ");
+                    if (resultado.ListaCupos.Count > 0) { 
+                        if (activarLogDebug) logger.Debug(DateTime.Now + " - INICIA EnviarMailSolicitudAceptada() - 2 - NO ES Algoritmo ");
+                        EnviarMailSolicitudAceptada(solicitud, cantidad, cantidadFp, resultado.ListaCupos, active);
+                        if (activarLogDebug) logger.Debug(DateTime.Now + " - FINALIZA EnviarMailSolicitudAceptada() - 2 - NO ES Algoritmo ");
+                    }
 
                     if (!resultado.HayError)
                     {

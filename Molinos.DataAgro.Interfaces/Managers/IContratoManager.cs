@@ -101,7 +101,7 @@ namespace Molinos.DataAgro.Interfaces
         GrabarContratoResult ControlesAccesoConDescarga(Contrato oContrato);
         Resultado ValidarPantallaEnUso(PantallaEnUsoDto oParam);
         Resultado LiberarPantalla(PantallaEnUsoDto oParam);
-        List<ConfiguracionCupoDto> CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId);
+        List<ConfiguracionCupoDto> CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId, int comercialId);
         List<CupoDto> TraerCuposConDescarga(int contratoId);
     }
 }

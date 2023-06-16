@@ -5,6 +5,7 @@ using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
@@ -40,26 +41,38 @@ namespace Molinos.DataAgro.Business
 
         public CampañaHome TraerCampañaHome(int idComercial, List<int> equipo)
         {
-            var list = new CampañaHome();
-
-            var lista = repositorio.ListarConsulta(new TraerComprasHome(idComercial, equipo));
-
-            if (lista.Count() > 5)
+            var listaCampaña = new CampañaHome();
+            var hoy = DateTime.Now.Date;
+            var fechaCambio = new DateTime(hoy.Year, 04, 01);
+            var campaña = "";
+            if (hoy >= fechaCambio)
             {
-                list.Materiales = lista.Take(4).ToList();
-                list.Materiales.Add(new MaterialCampaña()
+                campaña = (hoy.Year - 1).ToString().Substring(2) + "-" + hoy.Year.ToString().Substring(2);
+            }
+            else
+            {
+                campaña = hoy.Year.ToString().Substring(2) + "-" + (hoy.Year + 1).ToString().Substring(2);
+            }
+            var campañaAñoFiscal = repositorio.Obtener<Campaña>(a => a.Descripcion == campaña);
+
+            var listaCompras = repositorio.ListarConsulta(new TraerComprasHome(idComercial, equipo, campañaAñoFiscal));
+
+            if (listaCompras.Count() > 5)
+            {
+                listaCampaña.Materiales = listaCompras.Take(4).ToList();
+                listaCampaña.Materiales.Add(new MaterialCampaña()
                 {
                     Nombre = "Otros",
-                    Toneladas = lista.Where(x => !list.Materiales.Any(y => y.Nombre == x.Nombre)).Sum(x => x.Toneladas),
+                    Toneladas = listaCompras.Where(x => !listaCampaña.Materiales.Any(y => y.Nombre == x.Nombre)).Sum(x => x.Toneladas),
                     Campaña = string.Empty
                 });
             }
             else
             {
-                list.Materiales = lista.ToList();
+                listaCampaña.Materiales = listaCompras.ToList();
             }
 
-            return list;
+            return listaCampaña;
         }
 
         public List<CampañaDto> TraerCampañasPorGrano(int materialId)

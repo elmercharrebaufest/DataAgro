@@ -1523,7 +1523,7 @@ namespace Molinos.DataAgro.Business.Managers
                     ProveedorId = a.ProveedorId,
                     Destinatario = a.Destinatario,
                     ComercialId = a.ComercialId,
-                    StandardDeCalidad = a.StandardDeCalidad,
+                    StandardDeCalidad = a.MaterialId == 3 ? a.StandardDeCalidad == "Camara" ? a.StandardDeCalidad : "Fabrica" : "",
                     Aceptado = null,
                     Puntuaciones = a.PuntuacionesString,
                     ContratoSAP = a.ContratoSAP,
@@ -1653,12 +1653,12 @@ namespace Molinos.DataAgro.Business.Managers
             foreach (var item in negocios.ToList())
             {
                 formula.Criterio.Dto = item;
-                formula.Criterio.Dto.formula = formula;
+                formula.Criterio.Dto.Formula = formula;
                 item.PuntuacionTotal = Math.Round(servicioCriterios.Calcular(formula.Criterio), 2);
 
                 ArmarPuntuaciones(formula.Criterio, item.Puntuaciones, 0);
 
-                item.formula = null;
+                item.Formula = null;
             }
             negocios = negocios.OrderByDescending(a => a.PuntuacionTotal).ToList();
         }
@@ -1894,15 +1894,16 @@ namespace Molinos.DataAgro.Business.Managers
                     ProveedorDesc = x.CorredorId > 0 && x.Corredor != null ? x.Corredor.RazonSocial : x.Proveedor.RazonSocial,
                     ComercialDesc = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                     TipoNegocioDesc = x.TipoNegocio.Descripcion,
-                    CDWarrant = x.Warrant == true || x.CD == true ? true : false,
+                    CDWarrant = x.Warrant == true || x.CD == true,
                     Fason = x.EsFason,
                     CentroDesc = x.Destino.Descripcion,
-                    Canje = x.Canje == true ? true : false,
-                    MercsDeposito = x.MercsDeposito == true ? true : false,
-                    CaratulaMAT = x.CaratulaMAT != null ? true : false,
+                    Canje = x.Canje == true,
+                    MercsDeposito = x.MercsDeposito == true,
+                    CaratulaMAT = x.CaratulaMAT != null,
                     Sustentable = x.Sustentable ?? false,
                     Inhabilitado = "",
                     EPA = x.EPA ?? false,
+                    TipoAgenteCompraId = x.TipoAgenteCompraId
                 },
                     x =>
                     //(formula.NegociosDesde >= x.FechaDesde && formula.NegociosHasta < x.FechaHasta) || (formula.NegociosHasta <= x.FechaHasta &&
@@ -2020,7 +2021,7 @@ namespace Molinos.DataAgro.Business.Managers
             var contratosPorProveedorCorredor = contratos.Where(x => x.CantidadDeCupos > 0).GroupBy(x => new { x.CUITProveedor, x.CUITCorredor }).ToList();
 
             List<RestarCuposProvCorrDto> restarCuposProvCorr = new List<RestarCuposProvCorrDto>();
-            restarCuposProvCorr = contratosPorProveedorCorredor.Select(x => new RestarCuposProvCorrDto { CUITProveedor = x.Key.CUITProveedor, CUITCorredor = x.Key.CUITCorredor, cantidadCupos = 0 }).ToList();
+            restarCuposProvCorr = contratosPorProveedorCorredor.Select(x => new RestarCuposProvCorrDto { CUITProveedor = x.Key.CUITProveedor, CUITCorredor = x.Key.CUITCorredor, CantidadCupos = 0 }).ToList();
             var centros = repositorio.Listar<Centro>().ToList();
             var materiales = repositorio.Listar<Material>().ToList();
             foreach (var contratoPorProvCorr in contratosPorProveedorCorredor)
@@ -2045,12 +2046,12 @@ namespace Molinos.DataAgro.Business.Managers
 
                     if (cantidadCartaDePorte >= kilosMinimosParaSugerencia)
                     {
-                        restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().cantidadCupos += (int)Math.Floor(cantidadCartaDePorte / 30000);
+                        restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().CantidadCupos += (int)Math.Floor(cantidadCartaDePorte / 30000);
                         var cantidadcuposCCPP = Convert.ToSingle(cantidadCartaDePorte) / 30000;
                         var excedente = (cantidadcuposCCPP - Math.Truncate(cantidadcuposCCPP)) * 100;
                         if (Convert.ToInt32(excedente) >= Convert.ToInt32(minimo))
                         {
-                            restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().cantidadCupos += 1;
+                            restarCuposProvCorr.Where(x => contratoPorProvCorr.First().CUITProveedor == x.CUITProveedor && contratoPorProvCorr.First().CUITCorredor == x.CUITCorredor).Single().CantidadCupos += 1;
                         }
                     }
 
@@ -2064,7 +2065,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             if (restarCuposProvCorr.Count() > 0)
             {
-                logger.Debug("Cupos a restar por Prov. y Corr.: " + restarCuposProvCorr.Where(x => x.cantidadCupos > 0).ToJson());
+                logger.Debug("Cupos a restar por Prov. y Corr.: " + restarCuposProvCorr.Where(x => x.CantidadCupos > 0).ToJson());
             }
 
             var contratosOrdenados = contratos.Where(x => x.CantidadDeCupos > 0).ToList()
@@ -2080,7 +2081,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var contratoOrdenado in contratosOrdenados)
             {
-                var cantidadCuposARestar = restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().cantidadCupos;
+                var cantidadCuposARestar = restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().CantidadCupos;
 
                 if (cantidadCuposARestar > 0)
                 {
@@ -2088,13 +2089,13 @@ namespace Molinos.DataAgro.Business.Managers
                     if (contratoOrdenado.CantidadDeCupos >= cantidadCuposARestar)
                     {
                         msje = "Por CP pendiente a aplicar, se restan " + cantidadCuposARestar + " cupos al negocio " + contratoOrdenado.ContratoSAP;
-                        restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().cantidadCupos = 0;
+                        restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().CantidadCupos = 0;
                         contratoOrdenado.CantidadDeCupos -= cantidadCuposARestar;
                     }
                     else
                     {
                         msje = "Por CP pendiente a aplicar, se restan " + contratoOrdenado.CantidadDeCupos + " cupos al negocio " + contratoOrdenado.ContratoSAP;
-                        restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().cantidadCupos -= contratoOrdenado.CantidadDeCupos;
+                        restarCuposProvCorr.Where(x => contratoOrdenado.CUITProveedor == x.CUITProveedor && contratoOrdenado.CUITCorredor == x.CUITCorredor).Single().CantidadCupos -= contratoOrdenado.CantidadDeCupos;
                         contratoOrdenado.CantidadDeCupos = 0;
                     }
                     contratos.Where(x => x.NegocioId == contratoOrdenado.NegocioId).Single().CantidadDeCupos = contratoOrdenado.CantidadDeCupos;
@@ -2987,8 +2988,10 @@ namespace Molinos.DataAgro.Business.Managers
                             var sugerenciasPendientes = sugerenciasPorComercial.Where(a => a.Fecha == fecha && a.MaterialId == material.MaterialId).Sum(a => a.Total);
                             //Cupos Libres
                             logger.Debug($"Cantidad Planta : {cupo.CantidadDisponibilidadPlanta}, sug Pendientes: {cupo.CantidadSugerenciaPendiente}, Cupos creados: {CantidadCuposGenerados}");
-                            //Cupos no tomados
+                            //Cupos no tomados (Disponibles)
                             cupo.CantidadCuposLibres = cupo.CantidadDisponibilidadPlanta - CantidadCuposGenerados;
+                            //Cupos Consumidos
+                            cupo.Consumidos = CantidadCuposGenerados;
                             lista.Add(cupo);
                         }
                     }
@@ -3146,10 +3149,103 @@ namespace Molinos.DataAgro.Business.Managers
             List<DisponibilidadCuposDto> resultado = disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde, fechaHasta, zonaId, centroId, materialId);
             List<DisponibilidadCuposDto> resultadoNoPropios = TraerCupoDisponibilidadNoPropios(fechaDesde, fechaHasta, zonaId, centroId, materialId);
 
-
-
             resultado.AddRange(resultadoNoPropios);
             return resultado;
+        }
+
+        public List<DisponibilidadCuposDto> TraerCupoDisponibilidadDescarga(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)
+        {
+            var centros = repositorio.Listar<Centro>();
+            List<int> centrosIds = new List<int>();
+            List<int> materialIds = new List<int>();
+
+            if (materialId == "")
+            {
+                materialIds = repositorio.Listar<Material>().ToList().Select(x => x.MaterialId).ToList();
+            }
+            else
+            {
+                materialIds = repositorio.Listar<Material>(x => x.Codigo == materialId).ToList().Select(x => x.MaterialId).ToList();
+            }
+
+            if (centroId == null || centroId.Count == 0)
+            {
+                centros = centros.Where(a => a.NoPropio == true).ToList();
+            }
+            else
+            {
+                centros = centros.Where(a => centroId.Contains(a.CodigoSap) && a.NoPropio != true).ToList();
+            }
+            centrosIds = centros.Select(a => a.Id).ToList();
+
+
+            var conf = repositorio.Listar<ConfiguracionCupo>(a => a.Centro.NoPropio != true &&
+                                                                  fechaDesde <= a.Fecha &&
+                                                                  fechaHasta >= a.Fecha &&
+                                                                  centrosIds.Contains(a.CentroId) &&
+                                                                  materialIds.Contains(a.MaterialId));
+
+            List<DisponibilidadCuposDto> result = new List<DisponibilidadCuposDto>();
+            foreach (var itemConf in conf)
+            {
+                if (!String.IsNullOrEmpty(zonaId))
+                {
+                    var zona = repositorio.Obtener<ZonaCupo>(x => x.CodigoSap == zonaId);
+                    var limiteCupoZona = itemConf.CantidadCupo.Where(x => x.ZonaCupo.CodigoSap == zonaId).FirstOrDefault();
+
+                    var CuposConsumidos = repositorio.Contar<Cupo>(x => x.FechaIngreso == itemConf.Fecha &&
+                                                                        x.CentroId == itemConf.CentroId &&
+                                                                        x.MaterialId == itemConf.MaterialId &&
+                                                                        x.ZonaCupoId == zona.Id &&
+                                                                        x.ConDescarga == true &&
+                                                                        x.NegocioId > 0);
+
+                    result.Add(new DisponibilidadCuposDto
+                    {
+                        CentroCodigo = itemConf.Centro.CodigoSap,
+                        CentroNombre = itemConf.Centro.Descripcion,
+                        Consumidos = CuposConsumidos,
+                        Disponibles = limiteCupoZona.CantidadCupoConDescarga - CuposConsumidos,
+                        Fecha = itemConf.Fecha,
+                        Limite = limiteCupoZona.CantidadCupoConDescarga,
+                        MaterialCodigo = itemConf.Material.Codigo,
+                        MaterialId = itemConf.MaterialId,
+                        MaterialNombre = itemConf.Material.Descripcion,
+                        ZonaId = zonaId,
+                        ZonaNombre = zona.Descripcion
+                    });
+                }
+                else
+                {
+                    foreach (var itemCupo in itemConf.CantidadCupo)
+                    {
+                        //if (itemCupo.CantidadCupoConDescarga > 0)
+                        //{
+                            var CuposConsumidosZona = repositorio.Contar<Cupo>(x => x.FechaIngreso == itemConf.Fecha &&
+                                                                                    x.CentroId == itemConf.CentroId &&
+                                                                                    x.MaterialId == itemConf.MaterialId &&
+                                                                                    x.ZonaCupoId == itemCupo.ZonaCupoId &&
+                                                                                    x.ConDescarga == true &&
+                                                                                    x.NegocioId > 0);
+                            result.Add(new DisponibilidadCuposDto
+                            {
+                                CentroCodigo = itemConf.Centro.CodigoSap,
+                                CentroNombre = itemConf.Centro.Descripcion,
+                                Consumidos = CuposConsumidosZona,
+                                Disponibles = itemCupo.CantidadCupoConDescarga - CuposConsumidosZona,
+                                Fecha = itemConf.Fecha,
+                                Limite = itemCupo.CantidadCupoConDescarga,
+                                MaterialCodigo = itemConf.Material.Codigo,
+                                MaterialId = itemConf.MaterialId,
+                                MaterialNombre = itemConf.Material.Descripcion,
+                                ZonaId = itemCupo.ZonaCupoId.ToString(),
+                                ZonaNombre = itemCupo.ZonaCupo.Descripcion
+                            });
+                        //}
+                    }
+                }
+            }
+            return result;
         }
 
         public List<DisponibilidadCuposDto> TraerCupoDisponibilidadNoPropios(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)

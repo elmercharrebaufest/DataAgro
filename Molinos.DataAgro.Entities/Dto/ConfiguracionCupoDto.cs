@@ -29,5 +29,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool NoPropio { get; set; }
         public bool? Sustentable { get; set; }
         public int LimiteDescarga { get; set; }
+        public int CuposDisponiblesConDescarga { get; set; }
+        public int CuposConsumidosConDescarga { get; set; }
     }
 }

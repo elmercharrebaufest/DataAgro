@@ -6,6 +6,7 @@ namespace Molinos.DataAgro.Entities.Dto
     {
         public string Status { get; set; }
         public long NumeroSio { get; set; }
+        public string ContratoSap { get; set; }
     }
 }
 

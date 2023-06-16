@@ -33,6 +33,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public int? CantidadDescarga { get; set; }
         public int ConsumidosConDescarga { get; set; }
         public int DisponibleConDescarga { get; set; }
+        public int Consumidos { get; set; }
     }
 }
 

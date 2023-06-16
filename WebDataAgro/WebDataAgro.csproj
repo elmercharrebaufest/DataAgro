@@ -18,7 +18,7 @@
     <AssemblyName>WebDataAgro</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
@@ -426,6 +426,7 @@
     <Content Include="Content\Images\logobaufest.png" />
     <Content Include="Content\Images\logomoa.png" />
     <Content Include="Content\Images\molinosCircular.PNG" />
+    <Content Include="Content\Images\qaimage.png" />
     <Content Include="Content\Images\storeCircular.PNG" />
     <Content Include="Content\logDataAgro.css" />
     <Content Include="Content\ReporteEvolucionFijacion.css" />
@@ -1024,6 +1025,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\App\AltaMasivaContratos.js" />
+    <Content Include="Scripts\App\CupoDisponibilidadDescarga.js" />
     <Content Include="Scripts\App\CupoNoPropio.js" />
     <Content Include="Scripts\App\DescargarBoleto.js" />
     <Content Include="Scripts\App\GenerarBoleto.js" />
@@ -2826,6 +2828,7 @@
     <Content Include="Views\FAQ\Index.cshtml" />
     <Content Include="Views\Hedge\_HedgeMargenMolienda.cshtml" />
     <Content Include="Views\CompraNet\_ModalCuposConDescarga.cshtml" />
+    <Content Include="Views\Cupo\DisponibilidadDescarga.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -54,10 +54,20 @@
     <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
 
 </head>
+@{
+    string ambientePruebas = System.Configuration.ConfigurationManager.AppSettings["AmbientePruebas"];
+    if (ambientePruebas == "1")
+    {
+        ambientePruebas = "body-background-QA";
+    }
+    else
+    {
+        ambientePruebas = "";
+    }
+}
+<body id="theBody" class="">
 
-<body id="theBody">
-
-    <div class="navbar navbar-inverse" id="navbarPrincipal">
+    <div class="navbar navbar-inverse" id="navbarPrincipal" @(ambientePruebas!=""? "style=background-color:steelblue;":"")>
         <div class="container-fluid">
             <div class="navbar-header ">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -80,7 +90,8 @@
 
             </div>
 
-            <div class="collapse navbar-collapse" id="myNavbar">
+            <div class="collapse navbar-collapse " id="myNavbar" @(ambientePruebas!=""? "style=background-color:steelblue;":"")>
+                <div class=""></div>
                 <ul class="nav navbar-nav left">
                     @if (!PermisosHelper.Is(PermisosDataAgro.IngresoExterno))
                     {
@@ -105,13 +116,13 @@
                             <a onclick="return false" id="reportes-a" class="dropdown-toggle nav-text1 nav-no-padding background-hover" data-toggle="dropdown" href="#">Mis Reportes <span class="caret"></span></a>
                             <ul class="dropdown-menu opacidad" id="reportes">
                                 @*@if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteDinamico))
-                                    {
-                                        <li>
-                                            <a href="/Cubproveedores" class="nav-link misreporteslink">
-                                                <i class="icon-bar-chart font-color"></i> Reporte Dinámico
-                                            </a>
-                                        </li>
-                                    }*@
+                        {
+                            <li>
+                                <a href="/Cubproveedores" class="nav-link misreporteslink">
+                                    <i class="icon-bar-chart font-color"></i> Reporte Dinámico
+                                </a>
+                            </li>
+                        }*@
                                 @if (PermisosHelper.Is(PermisosDataAgro.VisualizarReporteAgenda))
                                 {
                                     <li>
@@ -600,6 +611,14 @@
                                         </a>
                                     </li>
                                 }
+                                @if (PermisosHelper.Is(PermisosDataAgro.DisponibilidadDeCuposDescarga))
+                                {
+                                    <li>
+                                        <a href="~/Cupo/DisponibilidadDescarga" class="nav-link misreporteslink">
+                                            <i class="icon-bar-chart"></i> Disponibilidad de Cupos con Descarga
+                                        </a>
+                                    </li>
+                                }
                                 @if (PermisosHelper.Is(PermisosDataAgro.Visualizar_CupoNoPropio))
                                 {
                                     <li>
@@ -680,10 +699,10 @@
                         </li>
                     }
                     @*<li class="mis-contactos">
-                        <a href="~/FAQ" class="nav-no-padding background-hover">
-                            <span>Manuales Originación</span>
-                        </a>
-                    </li>*@
+                <a href="~/FAQ" class="nav-no-padding background-hover">
+                    <span>Manuales Originación</span>
+                </a>
+            </li>*@
                 </ul>
                 <ul id="segundo" class="nav navbar-nav navbar-right" style="float: right;">
                     @if (PermisosHelper.Is(PermisosDataAgro.VisualizarDatosProveedor))
@@ -736,6 +755,7 @@
         <div class="page-content-wrapper">
             <div class="page-content">
                 <div class="">
+                    <div class="@ambientePruebas"></div>
                     @RenderBody()
                 </div>
             </div>
@@ -815,9 +835,11 @@
         font-weight: bold;
         font-size: xx-large;
     }
+
     #aboutScreen p {
         margin-top: 0px
     }
+
     #aboutScreen .modal-header {
         background: lightgrey;
         padding: 8px;

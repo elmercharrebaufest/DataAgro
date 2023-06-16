@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Caching;
 using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
@@ -17,22 +19,24 @@ using Newtonsoft.Json.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
-    class ClientePrimariAPIAgent : IClientePrimariAPIAgent
+    class ClientePrimaryAPIAgent : IClientePrimaryAPIAgent
     {
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         private readonly ILogDataAgroManager logDataAgroManager;
+        private readonly ICache cache;
         readonly String urlBase = ConfigurationManager.AppSettings["UrlBasePrimary"];
         readonly String user = ConfigurationManager.AppSettings["UserPrimary"];
         readonly String pass = ConfigurationManager.AppSettings["PassPrimary"];
 
-        public ClientePrimariAPIAgent(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager)
+        public ClientePrimaryAPIAgent(ILogger logger, IRepositorio repositorio, ILogDataAgroManager logDataAgroManager, ICache cache)
         {
             this.logger = logger;
             this.repositorio = repositorio;
             this.logDataAgroManager = logDataAgroManager;
+            this.cache = cache;
         }
-        public TokenPrimary ObtenerToken()
+        private TokenPrimary ObtenerToken()
         {
             try
             {
@@ -60,30 +64,26 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Debug($"Error obtener token");
-                logger.Error(e.Message);
+                logger.Error("Error ObtenerToken: ", e.Message);
                 throw;
             }
         }
 
-        public List<AgenteCompra> ObtenerNegocios()
+        public List<AgenteCompra> ObtenerNegocios(DateTime dia)
         {
             try
             {
-                var hasta = DateTime.Now.ToString("yyyyMMdd");
-                var desde = DateTime.Now.AddMonths(-1).ToString("yyyyMMdd");
-                //pruebas
-                hasta = "20220720";
-                desde = "20220720";
-                var token = ObtenerToken();
+                var fecha = dia.ToString("yyyyMMdd");
+
+                var token = ReuseToken();
                 //List<MaterialDto> materiales = repositorio.Listar<Material, MaterialDto>(a => new MaterialDto { MaterialId = a.MaterialId, Descripcion = a.Descripcion, CampañaId = a.CampañaId }, null, 0, null, Entities.Helpers.DirOrden.Asc);
                 if (token.Code != "200")
                 {
                     throw new Exception(token.ErrorMessage + ", " + token.ErrorDescription);
                 }
-                // Create a new token
-                logger.Debug($"Obteniendo negocios...");
-                TradeCaptureReportResult result = GetTradeCaptureReport(token, desde, hasta);
+
+                logger.Debug($"Obteniendo negocios MAT...");
+                TradeCaptureReportResult result = GetTradeCaptureReport(token, fecha, fecha);
                 if (result.Code == "200")
                 {
                     List<string> CFICodes = result.Value.Select(a => a.Instrument.First().CFICode).Distinct().ToList();
@@ -103,34 +103,35 @@ namespace Molinos.DataAgro.Agent.Helpers
                     }
                     //}
                     List<AgenteCompra> lista = new List<AgenteCompra>();
-
+                    var operadores = repositorio.Listar<Operador>();
                     lista = result.Value.Where(a => a.TrdCapRptSideGrp.Any(b => b.Account == "97500") && a.TrdType == 61).Select(a => new AgenteCompra
                     {
-
                         TipoNegocioId = 5,
                         Cantidad = ObtenerCantidad(a),
                         Precio = a.LastPx ?? 0,
-                        FechaDesde = DateTime.ParseExact(a.TransactTime, "s", null).Date,
-                        FechaHasta = DateTime.ParseExact(a.TransactTime, "s", null).Date.AddMonths(1),
-                        FechaOperacion = DateTime.ParseExact(a.TransactTime, "s", null),
-                        MonedaId = a.Currency == "USD" ? "USDM " : "ARP  ",
                         Fecha = DateTime.ParseExact(a.TransactTime, "s", null),
+                        FechaOperacion = DateTime.ParseExact(a.TransactTime, "s", null).Date,
+                        MonedaId = a.Currency == "USD" ? "USDM " : "ARP  ",
                         EstadoId = a.TrdRptStatus == "3" ? 6 : 2,
                         DestinoId = 1,
-                        //tendriamos que tener un nuevo campo para guardar el nro de contrato del MAT
-                        Observacion = a.TradeID == null ? "" : a.TradeID.Value.ToString(),//codigo contrato MAT
+                        Observacion = "Código de contrato MAT: " + a.TradeID == null ? "" : a.TradeID.Value.ToString(),
                         MaterialId = ObtenerMaterial(instruments, a.Instrument[0]),
                         Posicion = ObtenerPosicion(instruments, a.Instrument[0]),
                         CampanaId = ObtenerCampania(instruments, a.Instrument[0]),
-                        //faltan
-                        OperadorId = 1,
-                        TipoAgenteCompraId = 1,
-                        ComercialId = 1,
-                        ComercialCreadorId = 1,
-
+                        Operador = ObtenerOperador(a.RootParties, operadores),
+                        TipoAgenteCompraId = 1, //MAT
+                        ComercialId = 44,
+                        ComercialCreadorId = 44, //Id DataAgro en prod
 
                     }).ToList();
-
+                    var materiales = repositorio.Listar<Material>();
+                    foreach (var item in lista)
+                    {
+                        item.Material = materiales.Where(x => x.MaterialId == item.MaterialId).SingleOrDefault();
+                        item.OperadorId = item.Operador.Id;
+                        item.FechaDesde = new DateTime(int.Parse(item.Posicion.Substring(3, 4)), int.Parse(item.Posicion.Substring(0, 2)), 1);
+                        item.FechaHasta = item.FechaDesde.AddMonths(1).AddDays(-1);
+                    }
                     return lista;
                 }
 
@@ -138,10 +139,15 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                logger.Debug($"Error obtener token");
-                logger.Error(e.Message);
+                logger.Error("Error ObtenerNegocios: ", e.Message);
                 throw;
             }
+        }
+
+        private Operador ObtenerOperador(List<TradeCaptureReportRootParties> rootParties, List<Operador> operadores)
+        {
+            var operadorPrimary = rootParties.Where(x => x.RootPartyRole == "14").SingleOrDefault();
+            return operadores.Where(x => x.CodigoPrimary == operadorPrimary.RootPartyID).SingleOrDefault();
         }
 
         private static double ObtenerCantidad(TradeCaptureReportValue a)
@@ -150,7 +156,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
             if (a.TrdCapRptSideGrp != null && a.TrdCapRptSideGrp.Count > 0)
             {
-                value = a.TrdCapRptSideGrp.First().Side != "1" ? 1 : -1;
+                value = a.TrdCapRptSideGrp.First().Side != "2" ? 1 : -1;
             }
 
             return value * decimal.ToDouble((a.LastQty ?? 0) * 1000);
@@ -251,7 +257,7 @@ namespace Molinos.DataAgro.Agent.Helpers
             try
             {
 
-                var token = ObtenerToken();
+                var token = ReuseToken();
                 //List<MaterialDto> materiales = repositorio.Listar<Material, MaterialDto>(a => new MaterialDto { MaterialId = a.MaterialId, Descripcion = a.Descripcion, CampañaId = a.CampañaId }, null, 0, null, Entities.Helpers.DirOrden.Asc);
                 if (token.Code != "200")
                 {
@@ -294,5 +300,20 @@ namespace Molinos.DataAgro.Agent.Helpers
             return result;
         }
 
+        public TokenPrimary ReuseToken()
+        {
+            var tokenPrimary = new TokenPrimary();
+            if (cache.Existe("TokenPrimary"))
+            {
+                tokenPrimary = cache.Obtener<TokenPrimary>("TokenPrimary");
+            }
+            else
+            {
+                tokenPrimary = Retry.Do(ObtenerToken, TimeSpan.FromSeconds(1), 4);
+                if (tokenPrimary.Status == HttpStatusCode.OK.ToString())
+                    cache.Agregar("TokenPrimary", tokenPrimary, DateTime.Now.AddHours(23.5));
+            }
+            return tokenPrimary;
+        }
     }
 }

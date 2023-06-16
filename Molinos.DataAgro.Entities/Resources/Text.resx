@@ -690,6 +690,9 @@
   <data name="Disponibilidad_De_Cupos" xml:space="preserve">
     <value>Disponibilidad de Cupos</value>
   </data>
+  <data name="Disponibilidad_De_Cupos_Descarga" xml:space="preserve">
+    <value>Disponibilidad de Cupos con Descarga</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="TerminosYCondiciones" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>TerminosYCondiciones.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
@@ -898,5 +901,8 @@
   </data>
   <data name="Mail_Pesificado" xml:space="preserve">
     <value>Recibir Mails de Negocios Pesificados</value>
+  </data>
+  <data name="Mail_MATPrimary" xml:space="preserve">
+    <value>Recibir Mail MAT</value>
   </data>
 </root>

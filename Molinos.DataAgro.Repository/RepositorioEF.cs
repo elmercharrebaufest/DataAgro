@@ -302,8 +302,8 @@ namespace Molinos.DataAgro.Repository
             context.Database.SqlQuery<int>(@"
                     begin 
                         DELETE FROM TokenAuth WHERE Cuit = @cuit or Vencimiento < @fecha
-		                select 1 
-		            end
+                        select 1 
+                    end
                 "
                 , new SqlParameter("@cuit", cuit)
                 , new SqlParameter("@fecha", DateTime.Now)).First();
@@ -356,8 +356,8 @@ namespace Molinos.DataAgro.Repository
             context.Database.SqlQuery<int>(@"
                     begin 
                         exec MigrarReporteCompraNetPosicionCompras
-		                select 1 
-		            end
+                        select 1 
+                    end
                 "
                 ).First();
         }

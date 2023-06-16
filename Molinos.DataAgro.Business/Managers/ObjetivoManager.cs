@@ -1,14 +1,10 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business
@@ -24,28 +20,26 @@ namespace Molinos.DataAgro.Business
             this.repositorio = repositorio;
         }
 
-        public ObjetivoHome TraerObjetivoHome(int idComercial, List<int> equipo)
+        public ObjetivoHome TraerObjetivoHome(int? idComercial, List<int> equipo, int? idZona, int? idComercialLogeado)
         {
-            var list = new ObjetivoHome();
-            var oComercial = repositorio.Obtener<Comercial>(x => x.ComercialId == idComercial);
-            List<MaterialObjetivo> lista = new List<MaterialObjetivo>();
-            if (oComercial.GrupoDeCompras.Corredor)
+            var hoy = DateTime.Now.Date;
+            var fechaCambio = new DateTime(hoy.Year, 04, 01);
+            var campaña = "";
+            if (hoy >= fechaCambio)
             {
-                lista = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
-                {
-                    Id = x.Id,
-                    Material = x.Material.Descripcion,
-                    MaterialId = x.MaterialId,
-                    Campana = x.Campana.Descripcion,
-                    Toneladas = x.ToneladasObjetivos,
-                    Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
-                    ComercialId = x.ComercialId,
-                    GrupoDeComprasId = x.GrupoDeComprasId
-                }, x => x.GrupoDeComprasId == oComercial.GrupoDeComprasId && x.Material.CampañaId <= x.CampanaId, 0, "ComercialId");
+                campaña = (hoy.Year - 1).ToString().Substring(2) + "-" + hoy.Year.ToString().Substring(2);
             }
             else
             {
-                lista = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
+                campaña = hoy.Year.ToString().Substring(2) + "-" + (hoy.Year + 1).ToString().Substring(2);
+            }
+            var campañaAñoFiscal = repositorio.Obtener<Campaña>(a => a.Descripcion == campaña);
+            var listResult = new ObjetivoHome();
+            var oComercial = repositorio.Obtener<Comercial>(x => x.ComercialId == idComercialLogeado);
+            List<MaterialObjetivo> listaObjetivos = new List<MaterialObjetivo>();
+            if (idComercialLogeado != null && oComercial.GrupoDeCompras.Corredor)
+            {
+                listaObjetivos = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
                 {
                     Id = x.Id,
                     Material = x.Material.Descripcion,
@@ -55,37 +49,49 @@ namespace Molinos.DataAgro.Business
                     Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
                     ComercialId = x.ComercialId,
                     GrupoDeComprasId = x.GrupoDeComprasId
-                }, x => equipo.Contains(x.ComercialId) && x.Material.CampañaId <= x.CampanaId, 0, "ComercialId");
+                }, x => x.Comercial.GrupoDeComprasId == oComercial.GrupoDeComprasId && campañaAñoFiscal.CampañaId == x.CampanaId, 0, "ComercialId");
             }
-            var listaPorMaterial = lista.GroupBy(x => x.Material);
-            foreach (var obj in listaPorMaterial)
+            else
             {
-                MaterialObjetivo agregarObjetivo = new MaterialObjetivo();
-                if (oComercial.GrupoDeCompras.Corredor)
+                listaObjetivos = repositorio.Listar<ObjetivoComercial, MaterialObjetivo>(x => new MaterialObjetivo
                 {
-                    agregarObjetivo = obj.OrderByDescending(x => x.Campana).Where(x => x.GrupoDeComprasId == oComercial.GrupoDeComprasId)
-                        .FirstOrDefault();
-                }
-                else
-                {
-                    agregarObjetivo = obj.OrderByDescending(x => x.Campana).Where(x => x.ComercialId == idComercial).FirstOrDefault();
-                }
-                if(agregarObjetivo != null)
-                list.Objetivos.Add(agregarObjetivo);
+                    Id = x.Id,
+                    Material = x.Material.Descripcion,
+                    MaterialId = x.MaterialId,
+                    Campana = x.Campana.Descripcion,
+                    Toneladas = x.ToneladasObjetivos,
+                    Comercial = x.Comercial.Nombres + " " + x.Comercial.Apellido,
+                    ComercialId = x.ComercialId,
+                    GrupoDeComprasId = x.GrupoDeComprasId
+                }, x => equipo.Contains(x.ComercialId)
+                && (idComercial == null || idComercial == x.ComercialId)
+                && campañaAñoFiscal.CampañaId == x.CampanaId);
+                //&& (zonaId == null || zonaId == x.Comercial.GrupoDeComprasId);
             }
-            var listaPorComercial = lista.GroupBy(x => new { x.ComercialId, x.Comercial});
-            foreach(var comercial in listaPorComercial)
-            {
-                var listaMaterial = comercial.OrderBy(x=>x.MaterialId).ThenByDescending(x => x.Campana);
-                list.Comerciales.Add(new DetalleObjetivo
-                {
-                    Comercial = comercial.Key.Comercial,
-                    ComercialId = comercial.Key.ComercialId,
-                    Objetivos = listaMaterial.ToList()                    
-                });
 
-            }
-            return list;
+
+
+            var listaPorMaterial = listaObjetivos.GroupBy(x => x.Material).Select(y => new MaterialObjetivo
+            {
+                Campana = y.First().Campana,
+                Comercial = y.First().Comercial,
+                ComercialId = y.First().ComercialId,
+                GrupoDeComprasId = y.First().GrupoDeComprasId,
+                Id = y.First().Id,
+                Material = y.First().Material,
+                MaterialId = y.First().MaterialId,
+                Toneladas = y.Sum(f => f.Toneladas)
+            }).ToList();
+
+            listResult.Objetivos = listaPorMaterial;
+            listResult.Comerciales = listaObjetivos.GroupBy(x => x.ComercialId).Select(y => new DetalleObjetivo
+            {
+                ComercialId = y.Key,
+                Comercial = y.First().Comercial,
+                Objetivos = listaObjetivos.Where(x => x.ComercialId == y.Key).ToList(),
+            }).ToList();
+
+            return listResult;
         }
         public Resultado GuardarObjetivo(ObjetivoComercial objetivo)
         {

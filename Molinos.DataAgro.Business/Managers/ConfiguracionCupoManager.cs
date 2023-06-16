@@ -3,11 +3,13 @@ using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -29,6 +31,9 @@ namespace Molinos.DataAgro.Business.Managers
 
         public Resultado GrabarConfiguracionCupo(ConfiguracionCupo configuracion, List<DiaCupo> dias)
         {
+            logger.Debug($"GrabarConfiguracionCupo"); 
+            logger.Debug($"configuracion: {configuracion.ToJson()}");
+            logger.Debug($"dias: {dias.ToJson()}");
             var oEntityErrors = Validar(configuracion, dias);
             if (oEntityErrors.HayError)
             {
@@ -176,6 +181,9 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public Resultado GrabarLimites(List<LimiteCupo> limite)
         {
+            logger.Debug($"GrabarLimites");
+            logger.Debug($"limite: {limite.ToJson()}");
+
             var oEntityErrors = ValidarLimite(limite);
             if (oEntityErrors.HayError)
             {
@@ -189,6 +197,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     item.LimiteAnterior = item.CantidadCupo;
                     item.CantidadCupo = limite.Where(a => a.ZonaCupoId == item.ZonaCupoId).First().CantidadCupo;
+                    item.CantidadCupoConDescarga = limite.Where(a => a.ZonaCupoId == item.ZonaCupoId).First().CantidadCupoConDescarga;
                 }
                 var materiales = repositorio.Listar<Material>();
                 var zonas = repositorio.Listar<ZonaCupo>();
@@ -215,7 +224,6 @@ namespace Molinos.DataAgro.Business.Managers
         }
         private Resultado EnviarConfiguracion(ConfiguracionCupo configuracion, bool? aceptar, int? limiteAnterior, List<Material> materiales, List<ZonaCupo> zonas, List<Centro> centros)
         {
-            logger.Debug("EnviarCabeceraConfiguracion");
             var errorSap = new Resultado();
             var result = "";
             var config = new ConfiguracionCupoDto
@@ -290,7 +298,8 @@ namespace Molinos.DataAgro.Business.Managers
             if (cupo.LimiteCupo == 0)
             {
                 errores.Error("Limite", "El límite de cupos no puede guardarse en cero.");
-            } else
+            }
+            else
             {
                 if (cupo.LimiteAlgoritmo > cupo.LimiteCupo)
                 {
@@ -358,6 +367,11 @@ namespace Molinos.DataAgro.Business.Managers
 
                     configuracion.CuposConsumidos = consumidos;
                     configuracion.CuposDisponibles = configuracion.LimiteCupo - consumidos;
+
+                    var consumidosConDescarga = ConsumidosConDescarga(configuracion.Fecha, configuracion.MaterialId, configuracion.CentroId);
+
+                    configuracion.CuposConsumidosConDescarga = consumidosConDescarga;
+                    configuracion.CuposDisponiblesConDescarga = configuracion.LimiteDescarga - consumidosConDescarga;
                 }
             }
             return configuraciones;
@@ -370,6 +384,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ZonaCupo = x.ZonaCupo.CodigoSap,
                 ZonaCupoId = x.ZonaCupoId,
                 CantidadCupo = x.CantidadCupo,
+                CantidadCupoConDescarga = x.CantidadCupoConDescarga,
             }, x => x.ConfiguracionCupoId == id);
 
             var configuracion = repositorio.Obtener<ConfiguracionCupo>(id);
@@ -398,15 +413,43 @@ namespace Molinos.DataAgro.Business.Managers
             var consumidos = repositorio.Listar<Cupo>(x =>
                                        x.CentroId == configuracion.CentroId && x.MaterialId == configuracion.MaterialId && x.FechaIngreso == configuracion.Fecha &&
                                        x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+
+            var consumidosDescarga = repositorio.Listar<Cupo>(x => x.CentroId == configuracion.CentroId && 
+                                                                   x.MaterialId == configuracion.MaterialId && 
+                                                                   x.FechaIngreso == configuracion.Fecha &&
+                                                                   x.ConDescarga == true &&
+                                                                   x.NegocioId != null &&
+                                                                   x.EstadoCupoId != 4 && 
+                                                                   x.EstadoCupoId != 9);
+
             foreach (var zona in zonas)
             {
                 var consumidosZona = consumidos.Where(a => a.ZonaCupoId == zona.ZonaCupoId).ToList().Count();
                 zona.Disponible = zona.CantidadCupo - consumidosZona;
                 zona.Consumidos = consumidosZona;
+                var consumidosZonaDescarga = consumidosDescarga.Where(a => a.ZonaCupoId == zona.ZonaCupoId).ToList().Count();
+                zona.DisponibleDescarga = zona.CantidadCupoConDescarga - consumidosZonaDescarga;
+                zona.ConsumidosDescarga = consumidosZonaDescarga;
             }
             //}
             return zonas;
         }
+
+        public int TraerLimiteMinimoCupoConDescarga(int id)
+        {
+            var configuracion = repositorio.Obtener<ConfiguracionCupo, ConfiguracionCupoDto>(x => x.Id == id, x => new ConfiguracionCupoDto
+            {
+                Id = x.Id,
+                Fecha = x.Fecha,
+                MaterialId = x.MaterialId,
+                CentroId = x.CentroId,
+            });
+
+            var consumidosConDescarga = ConsumidosConDescarga(configuracion.Fecha, configuracion.MaterialId, configuracion.CentroId);
+
+            return consumidosConDescarga;
+        }
+
         private Resultado ValidarLimite(List<LimiteCupo> limite)
         {
             var resultado = new Resultado();
@@ -422,6 +465,10 @@ namespace Molinos.DataAgro.Business.Managers
             if (limite.Sum(x => x.CantidadCupo) < config.LimiteCupo)
             {
                 resultado.Error("CantidadCupo", "La cantidad de cupos no alcanza el límite cargado.");
+            }
+            if (limite.Sum(x => x.CantidadCupoConDescarga) < config.LimiteDescarga)
+            {
+                resultado.Error("CantidadCupo", "La cantidad de Cupos con Descarga no alcanza el límite cargado.");
             }
             return resultado;
         }
@@ -458,11 +505,34 @@ namespace Molinos.DataAgro.Business.Managers
 
                 configuracion.CuposConsumidos = consumidos;
                 configuracion.CuposDisponibles = configuracion.LimiteCupo - consumidos;
+
+                var consumidosConDescarga = ConsumidosConDescarga(configuracion.Fecha, configuracion.MaterialId, configuracion.CentroId);
+
+                configuracion.CuposConsumidosConDescarga = consumidosConDescarga;
+                configuracion.CuposDisponiblesConDescarga = configuracion.LimiteDescarga - consumidosConDescarga;
             }
             return configuracion;
         }
+
+        private int ConsumidosConDescarga(DateTime fecha, int materialId, int centroId)
+        {
+            var consumidosConDescarga = repositorio.Contar<Cupo>(x =>
+                                        x.ConDescarga == true &&
+                                        x.NegocioId != null &&
+                                        x.FechaIngreso == fecha &&
+                                        x.MaterialId == materialId &&
+                                        x.CentroId == centroId &&
+                                        x.EstadoCupoId != 4 &&
+                                        x.EstadoCupoId != 9);
+
+            return consumidosConDescarga;
+        }
+
         public Resultado CambioMasivo(bool aceptar)
         {
+            logger.Debug($"CambioMasivo");
+            logger.Debug($"aceptar: {aceptar}");
+
             var errorSap = new Resultado();
             var materiales = repositorio.Listar<Material>();
             var zonas = repositorio.Listar<ZonaCupo>();
@@ -495,6 +565,12 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public Resultado GrabarLimitesMasivo(List<LimiteCupo> limite, List<int> configuracionesIds, int limiteAlgoritmo, int limiteDescarga)
         {
+            logger.Debug($"GrabarLimitesMasivo");
+            logger.Debug($"limite: {limite.ToJson()}");
+            logger.Debug($"configuracionesIds: {configuracionesIds.ToJson()}");
+            logger.Debug($"limiteAlgoritmo: {limiteAlgoritmo.ToJson()}");
+            logger.Debug($"limiteDescarga: {limiteDescarga.ToJson()}");
+
             var erroresSap = new Resultado();
             //var configuracionesCupo = repositorio.Listar<ConfiguracionCupo>(x => configuracionesIds.Contains(x.Id));
             var zonas = repositorio.Listar<ZonaCupo>();
@@ -509,6 +585,7 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     item.LimiteAnterior = item.CantidadCupo;
                     item.CantidadCupo = limite.Where(a => a.ZonaCupoId == item.ZonaCupoId).First().CantidadCupo;
+                    item.CantidadCupoConDescarga = limite.Where(a => a.ZonaCupoId == item.ZonaCupoId).First().CantidadCupoConDescarga;
                 }
                 configuracionCupo.LimiteAnterior = configuracionCupo.LimiteCupo;
                 configuracionCupo.LimiteCupo = limite.Sum(x => x.CantidadCupo);
@@ -564,6 +641,14 @@ namespace Molinos.DataAgro.Business.Managers
         }
         public Resultado ModificarConfiguracion(int? id, int? limite, int? algoritmo, int? descarga, bool? bloquear, bool? liberar)
         {
+            logger.Debug($"ModificarConfiguracion");
+            logger.Debug($"id: {id.ToJson()}");
+            logger.Debug($"limite: {limite.ToJson()}");
+            logger.Debug($"algoritmo: {algoritmo.ToJson()}");
+            logger.Debug($"descarga: {descarga.ToJson()}");
+            logger.Debug($"bloquear: {bloquear.ToJson()}");
+            logger.Debug($"liberar: {liberar.ToJson()}");
+
             var configuracionDto = repositorio.Obtener<ConfiguracionCupo, ConfiguracionCupoDto>(x => x.Id == id.Value,
                 x => new ConfiguracionCupoDto
                 {

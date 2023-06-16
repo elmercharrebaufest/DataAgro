@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Disponibilidad de Cupos con Descarga";
+}
+@section Scripts {
+    <script src="~/Scripts/App/KendoExtensions.js"></script>
+    <script src="~/Scripts/App/Filtros.js"></script>
+    <script src="~/Scripts/App/CupoDisponibilidadDescarga.js"></script>
+}
+@section Styles {
+    <link href="~/Content/ReporteContrato.css" rel="stylesheet" />
+}
+
+<div class="Titulo">
+    <h5>Disponibilidad de Cupos con Descarga</h5>
+    <br />
+</div>
+<div class="filtro-desplegable" data-toggle="collapse" data-target="#filtrar" onclick="mostrarocultar('#mostrar')">
+    <div class="k-button"><span class="filtro">Filtro</span> <strong><span id="mostrar" class="mostrar" style="font-size: 12px !important;">Mostrar</span></strong></div>
+</div>
+<br />
+<div id="filtrar" class="container collapse">
+    <div class="row">
+        <div class="col-md-2">
+            <label>Fecha Desde</label>
+        </div>
+        <div class="col-md-4">
+            <span id="fechaDeCarga">
+                <input id="FechaDesde" class="filtroFecha" name="FechaDesde" type="date" style="width: 100%" />
+            </span>
+        </div>
+        <div class="col-md-2">
+            <label>Fecha Hasta</label>
+        </div>
+        <div class="col-md-4">
+            <span id="fechaDeCarga">
+                <input id="FechaHasta" class="filtroFecha" name="FechaHasta" type="date" style="width: 100%" />
+            </span>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Material</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("MaterialId", new SelectList(ViewBag.Material, "Value", "Text"), "Seleccione el Material", new { @class = "form-control filtroBusquedaPorId", @id = "MaterialId" })
+        </div>
+        <div class="col-md-2">
+            <label>Zona</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("ZonaId", new SelectList(ViewBag.Zona, "Value", "Text", ViewBag.GrupoDeCompras), "Seleccione la Zona", new { @class = "form-control filtroBusquedaPorId", @id = "ZonaId" })
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-md-2">
+            <label>Centro</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownList("CentroId", new SelectList(ViewBag.Centro, "Value", "Text"), new { @class = "form-control filtroBusquedaPorId", @id = "CentroId" })
+        </div>
+        <div class="col-md-6" style="text-align:right">
+            <button type="button" id="filtrar" class="k-button k-button-icontext sideMargin-15 limpiar" style="width: 14%" onclick="Filtrar()">Buscar</button>
+        </div>
+    </div>
+</div>
+
+<br />
+<script type="text/x-kendo-template" id="templateToolbar">
+    <div class="">
+        <a role="button" class="k-button k-button-icontext k-grid-excel" href="\\#"><span class="k-icon k-i-file-excel"></span>Export to Excel</a>
+    </div>
+</script>
+<div class="resultado">
+    <div id="grid" class="tabla-result"></div>
+</div>

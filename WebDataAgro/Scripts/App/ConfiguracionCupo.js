@@ -39,7 +39,7 @@ function InicializarElementos() {
         format: "dd-MM-yyyy",
         parseFormats: ["dd-MM-yyyy", "dd/MM/yyyy"]
     });
-    $("#CantidadCupo").kendoNumericTextBox({
+    $("#CantidadCupo").kendoNumericTextBox({ // Límite Cupo (NO modal)
         culture: "es-AR",
         format: "n0",
         decimals: 0,
@@ -48,6 +48,23 @@ function InicializarElementos() {
         min: 0,
         value: 0
     });
+    $("#CantidadAlgoritmo").kendoNumericTextBox({ // Límite Algoritmo (NO modal)
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+    $("#CantidadDescarga").kendoNumericTextBox({ // Límite con Descarga (NO modal)
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0
+    });
+
     $("#totalId").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
@@ -78,22 +95,35 @@ function InicializarElementos() {
         value: 0
     });
 
-    $("#CantidadAlgoritmo").kendoNumericTextBox({
+
+    $("#totalIdDescarga").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
         decimals: 0,
         restrictDecimals: true,
         spinners: false,
-        min: 0
+        min: 0,
+        value: 0
     });
 
-    $("#CantidadDescarga").kendoNumericTextBox({
+    $("#totalConsumidosDescarga").kendoNumericTextBox({
         culture: "es-AR",
         format: "n0",
         decimals: 0,
         restrictDecimals: true,
         spinners: false,
-        min: 0
+        min: 0,
+        value: 0
+    });
+
+    $("#totalDisponiblesDescarga").kendoNumericTextBox({
+        culture: "es-AR",
+        format: "n0",
+        decimals: 0,
+        restrictDecimals: true,
+        spinners: false,
+        min: 0,
+        value: 0
     });
 
     $("#ModalLimiteCupo").on("hidden.bs.modal", function () {
@@ -287,7 +317,7 @@ function CargarGrillaConfig() {
                     // initialize a Kendo UI numeric text box and set max value
                     input.kendoNumericTextBox({
                         max: options.model.LimiteCupo,
-                        min: options.model.CuposConsumidos,
+                        min: options.model.CuposConsumidosConDescarga,
                         change: function () {
                             AceptarConfiguracion(options.model.Id)
                         },
@@ -458,10 +488,14 @@ function AbrirModal(id) {
     $("#tablaLimite").empty();
     var zonas = MSExecuteOnServer("/ConfiguracionCupo/TraerZonaCupo");
     $("#tablaLimite").append('<tr>' +
-        '¿<th colspan="2"  style="text-align: center;background: gray; color: white">Zona</th>' +
-        '<th  style="text-align: center; background: gray; color: white">Cupos</th>' +
-        '<th  style="text-align: center; background: gray; color: white">Consumidos</th>' +
-        '<th style="text-align: center; background: gray; color: white">Disponibles</th></tr > ');
+        '<th colspan="2" style="text-align: center;background: black; color: white">Zona</th>' +
+        '<th style="text-align: center; background: gray; color: white">Cupos</th>' +
+        '<th style="text-align: center; background: gray; color: white">Consumidos</th>' +
+        '<th style="text-align: center; background: gray; color: white">Disponibles</th>' +
+        '<th style="text-align: center; background: steelblue; color: white">Cupos c/Desc.</th>' +
+        '<th style="text-align: center; background: steelblue; color: white">Cons. c/Desc.</th>' +
+        '<th style="text-align: center; background: steelblue; color: white">Disp. c/Desc.</th>' +
+        '</tr>');
 
     if (zonas.ZonaCupo) {
         cantidadZonas = zonas.ZonaCupo.length;
@@ -470,9 +504,18 @@ function AbrirModal(id) {
                 '<tr>' +
                 '<td>' + zonas.ZonaCupo[i].CodigoSap + '<input id="zonaId' + i + '" value="' + zonas.ZonaCupo[i].Id + '" hidden><input id="limiteAnterior' + zonas.ZonaCupo[i].Id + '" class="number-input hidden" hidden /></td>' +
                 '<td>' + zonas.ZonaCupo[i].Descripcion + '</td>' +
-                '<td style="width: 15%;"><input min="0" onchange="CalcularTotal(' + id + ')" id="cantidad' + zonas.ZonaCupo[i].Id + '" class="number-input" /><input id="limiteCupoId' + zonas.ZonaCupo[i].Id + '" class="limite-cupo" hidden /></td>' +
+                '<td>' +
+                '<input min="0" onchange="CalcularTotal(' + id + ')" id="cantidad' + zonas.ZonaCupo[i].Id + '" class="number-input" />' +
+                '<input id="limiteCupoId' + zonas.ZonaCupo[i].Id + '" class="limite-cupo" hidden />' +
+                '</td>' +
                 '<td><span id="consumido' + zonas.ZonaCupo[i].Id + '"></span></td>' +
                 '<td><span id="disponible' + zonas.ZonaCupo[i].Id + '"></span></td>' +
+                '<td>' +
+                '<input min="0" onchange="CalcularTotalDescarga(' + id + ')" id="cantidadDescarga' + zonas.ZonaCupo[i].Id + '" class="number-input" />' +
+                '<input id="limiteCupoDescargaId' + zonas.ZonaCupo[i].Id + '" class="limite-cupo" hidden />' +
+                '</td>' +
+                '<td><span id="consumidoDescarga' + zonas.ZonaCupo[i].Id + '"></span></td>' +
+                '<td><span id="disponibleDescarga' + zonas.ZonaCupo[i].Id + '"></span></td>' +
                 '</tr>';
             $("#tablaLimite").append(fila);
         }
@@ -518,6 +561,7 @@ function AbrirModal(id) {
     $("#IdConfig").val(idConf);
     CargarConfiguracion(idConf, tieneId > 0);
     CalcularTotal(idConf);
+    CalcularTotalDescarga(idConf);
 }
 
 function EsMasivo() {
@@ -535,7 +579,9 @@ function CargarLimites(id) {
             $('#limiteCupoId' + limites[i].ZonaCupoId).val(limites[i].Id);
             $('#consumido' + limites[i].ZonaCupoId).text(limites[i].Consumidos);
             $('#disponible' + limites[i].ZonaCupoId).text(limites[i].Disponible);
-
+            $('#cantidadDescarga' + limites[i].ZonaCupoId).data("kendoNumericTextBox").value(limites[i].CantidadCupoConDescarga);
+            $('#consumidoDescarga' + limites[i].ZonaCupoId).text(limites[i].ConsumidosDescarga);
+            $('#disponibleDescarga' + limites[i].ZonaCupoId).text(limites[i].DisponibleDescarga);
         }
     }
 }
@@ -589,6 +635,8 @@ function CargarConfiguracion(id, mostrarFecha) {
     $('#limiteDescarga' + configuracion.Id).data("kendoNumericTextBox").value(configuracion.LimiteDescarga);
     $('#totalConsumidos').data("kendoNumericTextBox").value(configuracion.CuposConsumidos);
     $('#totalDisponibles').data("kendoNumericTextBox").value(configuracion.CuposDisponibles);
+    $('#totalConsumidosDescarga').data("kendoNumericTextBox").value(configuracion.CuposConsumidosConDescarga);
+    $('#totalDisponiblesDescarga').data("kendoNumericTextBox").value(configuracion.CuposDisponiblesConDescarga);
 }
 
 function EliminarTablaConfiguracion(idConfiguracion) {
@@ -608,7 +656,17 @@ function CalcularTotal(id) {
     }
     //}
     $('#totalId').data("kendoNumericTextBox").value(total);
+}
 
+function CalcularTotalDescarga(id) {
+    var total = 0;
+    id = id ? id : EsMasivo();
+
+    for (var i = 1; i < 11; i++) {
+        total += Number($('#cantidadDescarga' + i).val());
+    }
+
+    $('#totalIdDescarga').data("kendoNumericTextBox").value(total);
 }
 
 function GuardarLimiteCupo() {
@@ -616,6 +674,7 @@ function GuardarLimiteCupo() {
     var limites = [];
     var total = 0;
     var cantErr = 0;
+    var totalDescarga = 0;
 
     for (var i = 0; i < cantidadZonas; i++) {
         var zonaId = $('#zonaId' + i).val();
@@ -624,12 +683,14 @@ function GuardarLimiteCupo() {
             ZonaCupoId: zonaId,
             CantidadCupo: $("#cantidad" + zonaId).val(),
             ConfiguracionCupoId: $("#configuracionCupoId").val(),
-            LimiteAnterior: $("#limiteAnterior" + zonaId).val()
+            LimiteAnterior: $("#limiteAnterior" + zonaId).val(),
+            CantidadCupoConDescarga: $("#cantidadDescarga" + zonaId).val(),
         };
         limites.push(obj);
         total += parseInt($("#cantidad" + zonaId).val());
+        totalDescarga += parseInt($("#cantidadDescarga" + zonaId).val());
 
-        if ($("#cantidad" + zonaId).val() == "") {
+        if ($("#cantidad" + zonaId).val() == "" || $("#cantidadDescarga" + zonaId).val() == "") {
             cantErr += 1
         };
     }
@@ -648,9 +709,19 @@ function GuardarLimiteCupo() {
         $.unblockUI();
         return false;
     }
+    if (configuraciones.length > 0 && $("#limiteDescarga" + configuraciones[0].Id).val() == "") {
+        MensErr("Debe ingresar un valor para el Límite del Cupo con Descarga.");
+        $.unblockUI();
+        return false;
+    }
 
     if (configuraciones.length > 0 && total != Number($("#limiteCupo" + configuraciones[0].Id).val())) {
         MensErr("La cantidad ingresada es diferente al límite configurado.");
+        $.unblockUI();
+        return false;
+    }
+    if (configuraciones.length > 0 && totalDescarga != Number($("#limiteDescarga" + configuraciones[0].Id).val())) {
+        MensErr("La cantidad ingresada es diferente al límite de Cupo con Descarga configurado.");
         $.unblockUI();
         return false;
     }
@@ -659,11 +730,22 @@ function GuardarLimiteCupo() {
         configuracionesIds.push(configuraciones[i].id);
     }
     if ($("#configuracionCupoId").val() != "") {
+
+        var limiteMinimoCupoConDescarga = MSExecuteOnServer("/ConfiguracionCupo/TraerLimiteMinimoCupoConDescarga", { id: $("#configuracionCupoId").val() });
+        var limiteDescargaId = "#limiteDescarga" + $("#configuracionCupoId").val();
+        if (parseInt($(limiteDescargaId).val()) < limiteMinimoCupoConDescarga) {
+            MensErr("El Límite de Descarga ingresado es menor a los Cupos con Descarga ya existentes.");
+            $.unblockUI();
+            return false;
+        }
+
         var limitesSAP = MSExecuteOnServer("/ConfiguracionCupo/TraerLimitesCupo", { id: $("#configuracionCupoId").val() });
         for (var i = 0; i < 10; i++) {
             limiteSAP = limitesSAP[i];
             $('#consumido' + (i + 1)).text(limiteSAP.Consumidos);
             $('#disponible' + (i + 1)).text(limiteSAP.Disponible);
+            $('#consumidoDescarga' + (i + 1)).text(limiteSAP.ConsumidosDescarga);
+            $('#disponibleDescarga' + (i + 1)).text(limiteSAP.DisponibleDescarga);
         }
         for (var i = 0; i < 10; i++) {
             limiteSAP = limitesSAP[i];
@@ -673,13 +755,18 @@ function GuardarLimiteCupo() {
                 $.unblockUI();
                 return false;
             }
+            if (limite.CantidadCupoConDescarga < limiteSAP.ConsumidosDescarga) {
+                MensErr(`La cantidad ingresada en la zona ${limiteSAP.ZonaCupo} es menor a la cantidad de Cupos con Descarga consumidos.`);
+                $.unblockUI();
+                return false;
+            }
         }
     }
 
     var resultado;
     if (configuracionesIds.length == 0) { // Configurar zonas INDIVIDUAL
         var idConfiguracion = $("#configuracionCupoId").val()
-        if (ValidarZona(idConfiguracion)) {
+        if (ValidarZona(idConfiguracion) && ValidarZonaDescarga(idConfiguracion)) {
 
             if ($("#limiteCupo" + idConfiguracion).val() == "" || $("#limiteAlgoritmo" + idConfiguracion).val() == "" || $("#limiteDescarga" + idConfiguracion).val() == "") {
                 MensErr("Los límites de Cupo, Algoritmo y Descarga deben completarse.\n");
@@ -704,8 +791,12 @@ function GuardarLimiteCupo() {
             } else {
                 resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupo", { limites });
             }
-        } else {
+        } else if (!ValidarZona(idConfiguracion)) {
             MensErr("La cantidad configurada de las zonas(" + $('#totalId').data("kendoNumericTextBox").value() + ") excede el límite de cupos(" + $("#limiteCupo" + idConfiguracion).val() + ")")
+            $.unblockUI();
+            return false;
+        } else {
+            MensErr("La cantidad de Cupos con Descarga configurada en las zonas(" + $('#totalIdDescarga').data("kendoNumericTextBox").value() + ") excede el límite de cupos con Descarga(" + $("#limiteDescarga" + idConfiguracion).val() + ")")
             $.unblockUI();
             return false;
         }
@@ -723,8 +814,8 @@ function GuardarLimiteCupo() {
             MensErr("La suma del límite del Algoritmo y del límite con Descarga no debe superar el total de " + limiteCupo + " cupos disponibles.")
             $.unblockUI();
             return false;
-        } else resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo, limiteDescarga });
-        
+        } else
+            resultado = MSExecuteOnServer("/ConfiguracionCupo/GrabarLimitesCupoMasivo", { limites, configuracionesIds, limiteAlgoritmo, limiteDescarga });
     }
 
     if (resultado.HayError) {
@@ -746,6 +837,12 @@ function GuardarLimiteCupo() {
 
 function ValidarZona(idConfiguracion) {
     if ($("#limiteCupo" + idConfiguracion).val() > 0 && $("#limiteCupo" + idConfiguracion).val() < $('#totalId').data("kendoNumericTextBox").value()) {
+        return false;
+    }
+    return true;
+}
+function ValidarZonaDescarga(idConfiguracion) {
+    if ($("#limiteDescarga" + idConfiguracion).val() > 0 && $("#limiteDescarga" + idConfiguracion).val() < $('#totalIdDescarga').data("kendoNumericTextBox").value()) {
         return false;
     }
     return true;
@@ -895,9 +992,16 @@ function AceptarConfiguracion(idConfiguracion) {
     var configuracionSeleccionada = grid.filter(function (x) { return (x.Id == id) });
     var cantidadCupos = configuracionSeleccionada != null && configuracionSeleccionada.length > 0 && configuracionSeleccionada[0].LimiteCupo ? configuracionSeleccionada[0].LimiteCupo : null;
     var algoritmo = configuracionSeleccionada != null && configuracionSeleccionada.length > 0 && configuracionSeleccionada[0].LimiteAlgoritmo ? configuracionSeleccionada[0].LimiteAlgoritmo : null;
-    var descarga = configuracionSeleccionada != null && configuracionSeleccionada.length > 0 && configuracionSeleccionada[0].LimiteDescarga ? configuracionSeleccionada[0].LimiteDescarga : null;
+    var descarga = configuracionSeleccionada != null && configuracionSeleccionada.length > 0 && configuracionSeleccionada[0].LimiteDescarga ? configuracionSeleccionada[0].LimiteDescarga : configuracionSeleccionada[0].CuposConsumidosConDescarga;
     var bloquear = $("#BloquearCupera" + id).is(":checked") ?? null;
     var liberar = $("#LiberarCupera" + id).is(":checked") ?? null;
+
+    var limiteMinimoCupoConDescarga = MSExecuteOnServer("/ConfiguracionCupo/TraerLimiteMinimoCupoConDescarga", { id: id });
+    if (descarga < limiteMinimoCupoConDescarga) {
+        MensErr("El Límite de Descarga ingresado es menor a los Cupos con Descarga ya existentes.");
+        $.unblockUI();
+        return false;
+    }
 
     result = MSExecuteOnServer('/ConfiguracionCupo/ModificarConfiguracion', { id: id, limite: cantidadCupos, algoritmo: algoritmo, descarga: descarga, bloquear: bloquear, liberar: liberar });
 

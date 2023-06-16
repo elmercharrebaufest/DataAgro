@@ -14,5 +14,8 @@ namespace Molinos.DataAgro.Entities.Dto
         public int CantidadCupoAnterior { get; set; } = 0;
         public int Consumidos { get; set; }
         public int Disponible { get; set; }
+        public int CantidadCupoConDescarga { get; set; }
+        public int ConsumidosDescarga { get; set; }
+        public int DisponibleDescarga { get; set; }
     }
 }

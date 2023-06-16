@@ -19,7 +19,7 @@ namespace Molinos.DataAgro.Entities.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Text {
@@ -448,7 +448,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Condición Fijacion.
+        ///   Looks up a localized string similar to Condición Fijación.
         /// </summary>
         public static string CondicionFijacion {
             get {
@@ -466,7 +466,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Configuración Canal Operacion.
+        ///   Looks up a localized string similar to Configuración Canal Operación.
         /// </summary>
         public static string Configuracion_Canal_Operacion {
             get {
@@ -959,7 +959,18 @@ namespace Molinos.DataAgro.Entities.Resources {
                 return ResourceManager.GetString("Disponibilidad_De_Cupos", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Disponibilidad de Cupos con Descarga.
+        /// </summary>
+        public static string Disponibilidad_De_Cupos_Descarga
+        {
+            get
+            {
+                return ResourceManager.GetString("Disponibilidad_De_Cupos_Descarga", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Envio Mail Negocios Anula y Reemplaza.
         /// </summary>
@@ -1384,25 +1395,32 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recibir Mail Fin del Dia Hedge.
+        ///   Looks up a localized string similar to Recibir Mail Fin del Día Hedge.
         /// </summary>
         public static string Mail_Hedge {
             get {
                 return ResourceManager.GetString("Mail_Hedge", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recibir Mail MAT.
+        /// </summary>
+        public static string Mail_MATPrimary {
+            get {
+                return ResourceManager.GetString("Mail_MATPrimary", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Recibir Mails de Negocios Pesificados.
         /// </summary>
-        public static string Mail_Pesificado
-        {
-            get
-            {
+        public static string Mail_Pesificado {
+            get {
                 return ResourceManager.GetString("Mail_Pesificado", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Recibir Mail SIO.
         /// </summary>
@@ -1807,18 +1825,16 @@ namespace Molinos.DataAgro.Entities.Resources {
                 return ResourceManager.GetString("Operador", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Recibir Mails de Negocios OyT Norte.
         /// </summary>
-        public static string OyT_Norte
-        {
-            get
-            {
+        public static string OyT_Norte {
+            get {
                 return ResourceManager.GetString("OyT_Norte", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Pago.
         /// </summary>
@@ -1856,7 +1872,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PreAnular Fijacion.
+        ///   Looks up a localized string similar to PreAnular Fijación.
         /// </summary>
         public static string Pre_AnularFijacion {
             get {
@@ -1910,7 +1926,7 @@ namespace Molinos.DataAgro.Entities.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Razon Social.
+        ///   Looks up a localized string similar to Razón Social.
         /// </summary>
         public static string RazonSocial {
             get {

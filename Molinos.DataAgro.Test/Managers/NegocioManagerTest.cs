@@ -1,19 +1,14 @@
 ﻿using Autofac.Extras.NLog;
-using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Common.Enums;
-using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.Linq.Expressions;
 using System.Net.Mail;
 using System.Web;
@@ -29,7 +24,7 @@ namespace Molinos.DataAgro.Test.Managers
         private Mock<IRepositorio> repositorioMock;
         private Mock<ILogger> logger;
         private Mock<IMailManager> mailManagerMock;
-        private Mock<IClientePrimariAPIAgent> clientePrimariAPIAgentMock;
+        private Mock<IClientePrimaryAPIAgent> clientePrimaryAPIAgentMock;
         private JavaScriptSerializer serializer;
         private Mock<IHttpContextManager> contextoMock;
 
@@ -42,10 +37,10 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock = new Mock<IRepositorio>();
             mailManagerMock = new Mock<IMailManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            clientePrimariAPIAgentMock = new Mock<IClientePrimariAPIAgent>();
+            clientePrimaryAPIAgentMock = new Mock<IClientePrimaryAPIAgent>();
             contextoMock = new Mock<IHttpContextManager>();
 
-            target = new NegocioManager(logger.Object, repositorioMock.Object, mailManagerMock.Object, clientePrimariAPIAgentMock.Object, contextoMock.Object);
+            target = new NegocioManager(logger.Object, repositorioMock.Object, mailManagerMock.Object, clientePrimaryAPIAgentMock.Object, contextoMock.Object);
         }
 
         [Test]
@@ -180,6 +175,24 @@ namespace Molinos.DataAgro.Test.Managers
             mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null,null, null), Times.Once);
 
         }
-    }
 
+        [Test]
+        public void MigrarContratosPrimaryOk()
+        {
+            var negociosMAT = new List<AgenteCompra> { new AgenteCompra() { MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 } } };
+            var negociosDA = new AgenteCompra() { MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 } };
+            var listaMAT = negociosMAT;
+            var listaDA = negociosMAT;
+            
+            clientePrimaryAPIAgentMock.Setup(mock => mock.ObtenerNegocios(It.IsAny<DateTime>())).Returns(negociosMAT);
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<AgenteCompra> { negociosDA });
+            contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Comercial> { new Comercial() });
+
+            target.MigrarContratosPrimary(DateTime.Now);
+            repositorioMock.Verify(x => x.Agregar(It.IsAny<AgenteCompra>()), Times.AtLeastOnce);
+            repositorioMock.Verify(x => x.GuardarCambios(), Times.Once);
+            mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null, null, null), Times.Once);
+        }
+    }
 }

@@ -8,6 +8,7 @@ using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -217,9 +218,9 @@ namespace Molinos.DataAgro.Business.Managers
             return mobCampaña.TraerCampañaHome(idComercial, equipo);
         }
 
-        public ObjetivoHome TraerInfoObjetivo(int idComercial, List<int> equipo)
+        public ObjetivoHome TraerInfoObjetivo(int? idComercial, List<int> equipo, int? idZona, int? idComercialLogeado)
         {
-            return objetivoManager.TraerObjetivoHome(idComercial, equipo);
+            return objetivoManager.TraerObjetivoHome(idComercial, equipo, idZona, idComercialLogeado);
         }
 
         public int TraerIdComercial(string idActiveDirectory)
@@ -373,6 +374,8 @@ namespace Molinos.DataAgro.Business.Managers
 
                 exp.ActividadComercial = UltimaActividadComercial(equipo);
 
+                exp.ObjetivoCampania = ObjetivoCampania(equipo);
+
                 return exp;
             }
             else
@@ -464,7 +467,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             return resultadoFinal.OrderBy(x => x.Comercial).ThenBy(x => x.Proveedor).ToList();
         }
-
+        
         private static void AgregarAlResultadoActividad(List<ActividadComercial> resultadoFinal, List<ActividadComercial> lista)
         {
             foreach (var itemNuevo in lista)
@@ -484,7 +487,46 @@ namespace Molinos.DataAgro.Business.Managers
                 }
             }
         }
+        
+        private List<ObjetivoCampania> ObjetivoCampania(List<int> equipo)
+        {
+            var objetivoCampania = new List<ObjetivoCampania>();
+            var objetivosPorCom = TraerInfoObjetivo(null, equipo, null, null).Comerciales;
+            foreach (var comercial in objetivosPorCom)
+            {
+                var campaña = new CampañaHome();
+                var comprasDelComercial = TraerTodoCompraDetalle(equipo, comercial.ComercialId, null);
+                foreach (var compras in comprasDelComercial)
+                {
+                    campaña.Materiales.Add(
+                        new MaterialCampaña
+                        {
+                            Campaña = compras.Campana,
+                            Nombre = compras.Material,
+                            Toneladas = compras.TotalCompra
+                        });
+                }
+                foreach (var objetivo in comercial.Objetivos)
+                {
+                    var add = new ObjetivoCampania { Comercial = comercial.Comercial, Material = objetivo.Material, Campania = objetivo.Campana, ToneladasObjetivo = objetivo.Toneladas.ToString("#,##0.##", CultureInfo.CreateSpecificCulture("es-AR")) };
+                    var find = campaña.Materiales.Find(x => x.Nombre == objetivo.Material);
+                    if (find != null)
+                    {
+                        add.ToneladasCompradas = find.Toneladas.ToString("#,##0.##", CultureInfo.CreateSpecificCulture("es-AR")); //no muestra decimales en cero y muestra separación de miles 
+                        add.PorcentajeDeCumplimiento = (find.Toneladas * 100 / objetivo.Toneladas).ToString("#,##0.##", CultureInfo.CreateSpecificCulture("es-AR"));
+                    }
+                    else
+                    {
+                        add.ToneladasCompradas = "0";
+                        add.PorcentajeDeCumplimiento = "0";
+                    }
+                    objetivoCampania.Add(add);
+                }
+            }
 
+            return objetivoCampania;
+        }
+        
         public List<int> ListarTodosLosComercialesConMismaZona(int comercialId)
         {
             var grupoId = repositorio.Obtener<Comercial, int>(x => x.ComercialId == comercialId, x => x.GrupoDeComprasId.Value);
@@ -533,26 +575,22 @@ namespace Molinos.DataAgro.Business.Managers
                 var provid = proveedores.Where(x => x.CUIT == cuit).First().ProveedorId;
                 proveedorIds.Add(provid);
             }
+            int año = DateTime.Now.Year;
+
+            if (DateTime.Now.Date > new DateTime(DateTime.Now.Year, 4, 1))
+                año += 1;
+            var fechaDesde = new DateTime(año - 1, 04, 01);
+            var fechaHasta = new DateTime(año, 03, 31);
             foreach (var mat in material)
             {
-                
-                int año = DateTime.Now.Year;
-
-                if (DateTime.Now.Date > new DateTime(DateTime.Now.Year, 4, 1))
-                    año += 1;
-                var fechaDesde = new DateTime(año - 1, 03, 31);
-                var fechaHasta = new DateTime(año, 04, 01);
-                
                 var c = repositorio.Listar<CampanaMaterialDetallePorMes>(x => 1 == 1
-                //&& equipo.Contains(x.ComercialId.Value)
+                && equipo.Contains(x.ComercialId.Value)
                 && (proveedorIds.Contains(x.ProveedorId) || proveedorIds.Contains(x.CorredorId))
                 && mat.MaterialId == x.MaterialId
                 && (comercialId == null || comercialId == x.ComercialId)
                 && (zonaId == null || zonaId == x.Comercial.GrupoDeComprasId)
                 && x.FechaHasta <= fechaHasta && x.FechaHasta >= fechaDesde
                 );
-
-
 
                 año = int.Parse(DateTime.Now.Year.ToString().Substring(0, 2) + mat.Campaña.Descripcion.Substring(3, 2)) + 1;
                 var fechaCorteCampaña = new DateTime(año, 04, 01);

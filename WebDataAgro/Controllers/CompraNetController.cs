@@ -1449,9 +1449,9 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId) {
+        public ActionResult CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId, int comercialId) {
 
-            List<ConfiguracionCupoDto> configCupo = mobjContratoManager.CantidadDiasCuposConDescarga(fechaDesdeNegocio, fechaHastaNegocio, materialId, centroId);
+            List<ConfiguracionCupoDto> configCupo = mobjContratoManager.CantidadDiasCuposConDescarga(fechaDesdeNegocio, fechaHastaNegocio, materialId, centroId, comercialId);
 
             return new JsonResult()
             {

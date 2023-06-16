@@ -63,6 +63,7 @@ namespace WebDataAgro
                  .Where(t => t.Name.EndsWith("Clausulas"))
                  .AsImplementedInterfaces()
                  .InstancePerLifetimeScope();
+            builder.RegisterType<Cache>().As<ICache>().SingleInstance();
 
             var container = builder.Build();
 

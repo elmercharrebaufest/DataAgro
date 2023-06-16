@@ -13,8 +13,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
         }
         public override decimal Calcular(CriterioEsAgenteCompra criterio)
         {
-            return criterio.Dto.TipoNegocioId == 5 ? 1 : 0;
+            return criterio.Dto.TipoAgenteCompraId == null ? 0 : 1;
         }
-
     }
 }

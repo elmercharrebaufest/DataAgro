@@ -1721,7 +1721,8 @@ namespace Molinos.DataAgro.Business.Managers
                 }
 
                 // Validar disponibilidad según LIMITE CUPO CON DESCARGA
-                listCupoConDescargaFechas.ForEach(x => {
+                listCupoConDescargaFechas.ForEach(x =>
+                {
                     int sumaCuposPorFecha = x.CantidadCupo + x.CantidadFlete;
 
                     CupoResult cupoResult = cupoManager.ValidarDisponibilidadCuperaConDescarga(oContrato.MaterialId, (int)oContrato.DestinoId, x.Fecha, sumaCuposPorFecha);
@@ -2125,9 +2126,7 @@ namespace Molinos.DataAgro.Business.Managers
             repositorio.GuardarCambios();
             logDataAgroManager.LogCambiosDataAgro(TraerContrato(oContratoSave.Id), tipoDeLog, oContratoSave.GetType());
 
-            // ==== GSIAN: inicio CREAR CUPOS CON DESCARGA ====
-
-            //============== INI NUEVO ===============
+            #region CREAR CUPOS CON DESCARGA
             if (listCupoConDescargaFechas != null)
             {
                 cupoNuevo.NegocioId = oContratoSave.Id;
@@ -2166,51 +2165,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                 });
             }
-            //============== FIN NUEVO ===============
-
-            //List<DiaCupo> listDiaCupo = new List<DiaCupo>();
-            //List<DiaCupo> listDiaFlete = new List<DiaCupo>();
-            //if (error != null && !error.HayError)
-            //{
-            //    if (listCupoConDescargaFechas != null)
-            //    {
-            //        listCupoConDescargaFechas.ForEach(x =>
-            //        {
-            //            if (x.CantidadCupo > 0) listDiaCupo.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadCupo });
-            //            if (x.CantidadFlete > 0) listDiaFlete.Add(new DiaCupo { Fecha = x.Fecha, Cantidad = x.CantidadFlete });
-            //        });
-            //    }
-
-            //    // Cupos
-            //    if (listDiaCupo.Count() > 0)
-            //    {
-            //        cupoNuevo.FleteProcedencia = false;
-            //        var cupoGrabado = cupoManager.GrabarCupo(cupoNuevo, listDiaCupo);
-
-            //        oEntityErrors.Errores.AddRange(cupoGrabado.Errores);
-            //        oEntityErrors.ListaCupos.AddRange(cupoGrabado.ListaCupos);
-            //        oEntityErrors.ListaErrores.AddRange(cupoGrabado.ListaErrores);
-            //    }
-
-            //    // Fletes
-            //    if (listDiaFlete.Count() > 0)
-            //    {
-            //        cupoNuevo.FleteProcedencia = true;
-            //        var cupoGrabado2 = cupoManager.GrabarCupo(cupoNuevo, listDiaFlete);
-
-            //        //cupoGrabado2.ListaCupos.ForEach(x => x = '*' + x + '*');
-
-            //        CupoResult crTemp = new CupoResult();
-            //        crTemp.ListaCupos.AddRange(cupoGrabado2.ListaCupos.Select(a => "*" + a + "*"));
-            //        cupoGrabado2.ListaCupos = new List<string>();
-            //        cupoGrabado2.ListaCupos.AddRange(crTemp.ListaCupos);
-
-            //        oEntityErrors.Errores.AddRange(cupoGrabado2.Errores);
-            //        oEntityErrors.ListaCupos.AddRange(cupoGrabado2.ListaCupos);
-            //        oEntityErrors.ListaErrores.AddRange(cupoGrabado2.ListaErrores);
-            //    }
-            //}
-            // ==== GSIAN: fin CREAR CUPOS CON DESCARGA ====
+            #endregion
 
             if (oContratoSave.EstadoId == (int)EnumEstadoContrato.Confirmado)
             {
@@ -2250,7 +2205,7 @@ namespace Molinos.DataAgro.Business.Managers
                 FechaIngreso = contrato.FechaEntrega,
                 CentroId = contrato.DestinoId.Value,
                 FleteProcedencia = contrato.FleteACargo == "true" ? true : false,
-                Calidad = contrato.StandardDeCalidadId == 4 ? "Camara" : "Fabrica",
+                Calidad = contrato.MaterialId == 3 ? contrato.StandardDeCalidadId == 4 ? "Camara" : "Fabrica" : "",
                 Observaciones = contrato.Observacion,
                 Fason = contrato.EsFason,
                 Destinatario = "30715118773",
@@ -8691,10 +8646,12 @@ namespace Molinos.DataAgro.Business.Managers
             if (contratos != null && contratos.Count > 0)
             {
                 logger.Debug("Cambiar estado de contratos: Count" + contratos.Count() + " " + contratos.Select(x => x.ContratoSAP).ToJson());
+                var estados = status.ValidarEstados(contratos.Select(x => x.ContratoSAP).ToList());
                 foreach (var contrato in contratos)
                 {
-                    var res = status.ValidarEstado(contrato.ContratoSAP);
-                    contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
+                    var res = estados.FirstOrDefault(a => a.ContratoSap == contrato.ContratoSAP);
+                    if (res != null)
+                        contrato.ConfirmadoSAP = !string.IsNullOrEmpty(res.Status);
                 }
                 repositorio.GuardarCambios();
             }
@@ -9116,6 +9073,21 @@ namespace Molinos.DataAgro.Business.Managers
                 {
                     oErrorMessages.Error("FechaDesdeHasta", "Debe ingresar el proveedor.");
                 }
+
+                if (oParam.ComercialId == null)
+                {
+                    oErrorMessages.Error("Zona", "Debe seleccionar un comercial.");
+                }
+                else
+                {
+                    var grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == oParam.ComercialId).First().GrupoDeCompras.Descripcion;
+                    var zona = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
+                    if (zona == null)
+                    {
+                        oErrorMessages.Error("Zona", "El comercial seleccionado no tiene zona cupo asignada.");
+                    }
+                }
+
                 //var fechaMaxima = DateTime.Now.Date.AddDays(cantidadMaximaDiasNegocioConDescarga - 1);
                 //if (oParam.FechaHasta > fechaMaxima)
                 //{
@@ -9233,11 +9205,13 @@ namespace Molinos.DataAgro.Business.Managers
             return oEntityErrors;
         }
 
-        public List<ConfiguracionCupoDto> CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId)
+        public List<ConfiguracionCupoDto> CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId, int comercialId)
         {
             DateTime fechaDesde = DateTime.ParseExact(fechaDesdeNegocio ?? DateTime.Now.ToString("dd-MM-yyyy"), "dd-MM-yyyy", CultureInfo.InvariantCulture);
             DateTime fechaHasta = DateTime.ParseExact(fechaHastaNegocio ?? DateTime.Now.ToString("dd-MM-yyyy"), "dd-MM-yyyy", CultureInfo.InvariantCulture);
 
+            string grupoDeCompras = repositorio.Listar<Comercial>(x => x.ComercialId == comercialId).First().GrupoDeCompras.Descripcion;
+            ZonaCupo zonaComercial = repositorio.Listar<ZonaCupo>(x => x.Descripcion == grupoDeCompras).FirstOrDefault();
 
             var diasParametro = repositorio.Obtener<Configuracion>(1).CantidadMaximaDiasNegocioConDescarga;
             var hoy = DateTime.Now.Date;
@@ -9258,6 +9232,9 @@ namespace Molinos.DataAgro.Business.Managers
             List<ConfiguracionCupoDto> configCupo = new List<ConfiguracionCupoDto>();
             configuracionCupo.ForEach(x =>
             {
+                // tener en cuenta la zona del comercial asignado al negocio
+                int limiteDescargaZona = x.CantidadCupo.Where(z => z.ZonaCupoId == zonaComercial.Id).Select<LimiteCupo, int>(z => z.CantidadCupoConDescarga).SingleOrDefault();
+
                 // No tiene en cuenta anulados ni rechazados.
                 int cantidadCuposConsumidos = repositorio.Contar<Cupo>(y => y.ConDescarga == true &&
                                                                             y.NegocioId != null &&
@@ -9265,7 +9242,8 @@ namespace Molinos.DataAgro.Business.Managers
                                                                             y.MaterialId == materialId &&
                                                                             y.CentroId == centroId &&
                                                                             y.EstadoCupoId != 4 &&
-                                                                            y.EstadoCupoId != 9);
+                                                                            y.EstadoCupoId != 9 &&
+                                                                            y.ZonaCupoId == zonaComercial.Id);
 
                 ConfiguracionCupoDto cc = new ConfiguracionCupoDto();
 
@@ -9274,8 +9252,10 @@ namespace Molinos.DataAgro.Business.Managers
                 cc.LimiteDescarga = x.LimiteDescarga;
                 cc.MaterialId = x.MaterialId;
                 cc.CuposConsumidos = cantidadCuposConsumidos;
-                cc.CuposDisponibles = x.LimiteDescarga - cantidadCuposConsumidos;
-                cc.LimiteDescarga = x.LimiteDescarga;
+                //cc.CuposDisponibles = x.LimiteDescarga - cantidadCuposConsumidos;
+                cc.CuposDisponibles = limiteDescargaZona - cantidadCuposConsumidos;
+                //cc.LimiteDescarga = x.LimiteDescarga;
+                cc.LimiteDescarga = limiteDescargaZona;
 
                 configCupo.Add(cc);
             });

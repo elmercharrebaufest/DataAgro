@@ -501,7 +501,7 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         corredoresComerciales.Remove(item);
                     }
-                    
+
                     foreach (Comercial corredorComercialCopia in corredoresComerciales)
                     {
                         try
@@ -1244,7 +1244,7 @@ namespace Molinos.DataAgro.Business.Managers
                         SegmentacionId = x.SegmentacionId,
                         Descripcion = x.Descripcion,
                         Grupo = x.Grupo
-                    });
+                    }).OrderBy(y => y.Grupo).ToList();
             var DatosCombo = new DatosIniProveedor
             {
                 segm = ocultarCampos ? repositorio.Listar<Segmentacion, SegmentacionQry>(
@@ -1255,7 +1255,7 @@ namespace Molinos.DataAgro.Business.Managers
                         Grupo = x.Grupo
                     },
                     x => (!noFiltrarAdministrativo || x.Grupo == "Corredores")
-                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Canjeadores") : segmentacion,
+                    && x.Grupo != "Grandes Cuentas" && x.Grupo != "Canjeadores").OrderBy(y => y.Grupo).ToList() : segmentacion,
                 tiptel = repositorio.Listar<TipoTelefono, TipoTelefonoQry>(
                     x => new TipoTelefonoQry { TipoTelefonoId = x.TipoTelefonoId, Descripcion = x.Descripcion }),
                 prov = repositorio.Listar<Provincia, ProvinciaQry>(
@@ -4219,7 +4219,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             var subject = eliminar ? "Anulación " : "Nuevo " + "negocio Molinos Agro S.A. – " + (contrato.Corredor != null ? contrato.Corredor.RazonSocial : contrato.Proveedor.RazonSocial);
             lista.Add(ConfigurationManager.AppSettings["EmailAdministracionCanje"]);
-            
+
             var emailproveedor = repositorio.Listar<ContactoComercial, string>(x => x.Email1, x => x.ProveedorId == (contrato.CorredorId != null ? contrato.CorredorId : contrato.ProveedorId));
 
             if (contrato.Comercial.GrupoDeComprasId == 42)
@@ -4817,9 +4817,17 @@ namespace Molinos.DataAgro.Business.Managers
 
         }
 
-        public void ActualizarProveedoresHome()
+        public void ActualizarProveedoresHome(int ProveedorId)
         {
-            List<Proveedor> listProveedores = repositorio.Listar<Proveedor>();
+            List<Proveedor> listProveedores;
+            if (ProveedorId == null || ProveedorId==0)
+            {
+                listProveedores = repositorio.Listar<Proveedor>();
+            }
+            else
+            {
+                listProveedores = repositorio.Listar<Proveedor>().Where(x => x.ProveedorId == ProveedorId).ToList();
+            }
             List<EstadoHome> listEstadosHome = repositorio.Listar<EstadoHome>();
             List<FACACOP> listProveedorEnFacacop = repositorio.Listar<FACACOP>();
 
@@ -5212,7 +5220,8 @@ namespace Molinos.DataAgro.Business.Managers
                     proveedorCategoriasSISA.Mensaje = "La Segmentación seleccionada no corresponde a los datos de SISA para el CUIT.";
                     proveedorCategoriasSISA.Existe = 1;
                 }
-                else {
+                else
+                {
                     proveedorCategoriasSISA.Mensaje = "";
                     proveedorCategoriasSISA.Existe = 1;
                 }

@@ -8,11 +8,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -42,7 +38,7 @@ namespace Molinos.DataAgro.Test.Managers
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ObjetivoComercial, MaterialObjetivo>>>(), It.IsAny<Expression<Func<ObjetivoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()))
                 .Returns(new List<MaterialObjetivo>() { new MaterialObjetivo { Id = 1, Campana = "1", Comercial = "a", ComercialId = 1, Material = "a", MaterialId = 1, Toneladas = 1 } });
 
-            var resultado = target.TraerObjetivoHome(1, new List<int>());
+            var resultado = target.TraerObjetivoHome(1, new List<int>(), null,null);
 
             repositorioMock.Verify(y => y.Listar(It.IsAny<Expression<Func<ObjetivoComercial, MaterialObjetivo>>>(), It.IsAny<Expression<Func<ObjetivoComercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>()));
 

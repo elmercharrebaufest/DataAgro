@@ -95,9 +95,14 @@
     </div>
 </div>
 <script type="text/x-kendo-template" id="templateToolbar">
-    <div class="">
-        <a class="k-button k-button-icontext" onclick="customExport()" href="\\#"><span class="k-icon k-i-file-csv"></span> <b>Exportar CSV</b> </a>
+    <div>
+    @if (PermisosHelper.Is(PermisosDataAgro.DescargarInformeAdministrativo))
+     {
+       <a class="k-button k-button-icontext" onclick="customExport()" href="\\#"><span class="k-icon k-i-file-csv"></span> <b>Exportar CSV</b> </a>
 
-        <a class="k-button k-button-icontext" onclick="enviarCapProdSAP()" href="\\#"><span class="k-icon k-i-arrow-right"></span> <b>Enviar a SAP</b> </a>
+       <a class="k-button k-button-icontext" onclick="EnviarCapProdSAP()" href="\\#"><span class="k-icon k-i-arrow-right"></span> <b>Enviar a SAP</b> </a>
+     }
+
+    <a class="k-button k-button-icontext k-grid-excel" title="Descargue la grilla completa o las filas seleccionadas" href="\\#"><span class="k-icon k-i-file-excel"></span> <b>Exportar a Excel</b></a>
     </div>
 </script>

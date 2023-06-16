@@ -123,7 +123,7 @@ function InicializarDatos() {
             ArmarCabeceraContactos();
             ArmarContactos(conts);
             ArmarCamapaña(result.Campaña);
-            ArmarObjetivo(result.Objetivo.Objetivos);
+            ArmarObjetivo(result.Objetivo.Objetivos, result.Campaña);
             CargarModelObjetivosComerciales(result.Objetivo.Comerciales);
             CargarViewModel(result.Datos);
         }
@@ -409,11 +409,13 @@ function updateFiltro(estado) {
                 $(".lista-contactos-general").empty();
                 if (filtro.Comercial != null || filtro.Zona != null) {
                     $(".contenedor-principal-campanas-detalle").html("");
-                    ActualizarComprayDetalle(filtro.Comercial, filtro.Zona);
+                    $(".contenedor-principal-objetivo-detalle").html("");
+                    ActualizarCompraObjetivoDetalle(filtro.Comercial, filtro.Zona);
                     huboFiltro = true;
                 } else if (huboFiltro) {
                     $(".contenedor-principal-campanas-detalle").html("");
-                    ActualizarComprayDetalle(null, null);
+                    $(".contenedor-principal-objetivo-detalle").html("");
+                    ActualizarCompraObjetivoDetalle(null, null);
                     huboFiltro = false;
                 }
                 conts = result.Contactos.Contactos;
@@ -650,7 +652,6 @@ function TraerSiguiente() {
 }
 
 function ArmarCamapaña(campañas) {
-    //$(".contenedor-principal-campanas-titulo").html(campañas.Nombre);
     var html = "";
     for (var ii in campañas.Materiales) {
         (function (i) {
@@ -673,31 +674,31 @@ function ArmarCamapaña(campañas) {
                 + '<div class="contenedor-principal-campanas-cantidad">'
                 + ToneladasAux
                 + '</div>'
-                + '<div class="contenedor-principal-campanas-grano">'
-                + campañas.Materiales[i].Campaña
-                + '</div>'
                 + '</div>';
         })(ii);
     }
     $(".contenedor-principal-campanas-detalle").append(html);
 }
 
-function ArmarObjetivo(objetivos) {
+function ArmarObjetivo(objetivos, compras) {
     var html = "";
     for (var ii in objetivos) {
         (function (i) {
-            var ToneladasAux = FormatearNumeros(objetivos[i].Toneladas);
-            //ToneladasAux.join(",");
+            var compraEncontrada = compras.Materiales.find(function (compra) {
+                return compra.Nombre === objetivos[i].Material;
+            });
+            var progreso = 0;
+            var toneladasCompradas = 0;
+            if (compraEncontrada != undefined) {
+                toneladasCompradas = compraEncontrada.Toneladas;
+                var progreso = (toneladasCompradas * 100 / objetivos[i].Toneladas).toFixed(2);
+            }
+            var toneladasObjetivos = FormatearNumeros(objetivos[i].Toneladas);
 
-            html += '<div class="contenedor-principal-objetivo-detalle">'
-                + '<div class="contenedor-principal-objetivo-grano">'
-                + objetivos[i].Material
-                + '</div>'
-                + '<div class="contenedor-principal-objetivo-cantidad">'
-                + ToneladasAux
-                + '</div>'
-                + '<div class="contenedor-principal-objetivo-grano">'
-                + objetivos[i].Campana
+            html += '<div>'
+                + '<div class="contenedor-principal-objetivo-grano">' + objetivos[i].Material + '</div>'
+                + '<div class="contenedor-principal-objetivo-progreso progress" title="' + FormatearNumeros(toneladasCompradas) + ' TN compradas">'
+                + '<div class="progress-bar ' + objetivos[i].Material + '" role="progressbar" style="width: ' + (progreso > 100 ? 100 : progreso) + '%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">' + FormatearNumeros(toneladasCompradas) + "/" + toneladasObjetivos + '</div>'
                 + '</div>'
                 + '</div>';
         })(ii);
@@ -1101,9 +1102,14 @@ function AgregarObjetivo() {
 function Actualizar() {
     $(".contenedor-principal-objetivo-detalle").empty();
     $(".contenedor-principal-detalle").empty();
-    var obj = MSExecuteOnServer('/Home/TraerObjetivos');
+    var filtro = generarFiltro(null);
+    console.log(filtro);
+    let comercialId = filtro.Comercial;
+    let zonaId = filtro.Zona;
+    var obj = MSExecuteOnServer('/Home/TraerObjetivos', { comercialId: comercialId, zonaId: zonaId });
+    var compras = MSExecuteOnServer('/Home/TraerCompras', { comercialId: comercialId, zonaId: zonaId });
 
-    ArmarObjetivo(obj.Objetivo.Objetivos);
+    ArmarObjetivo(obj.Objetivo.Objetivos, compras.Campaña);
     CargarModelObjetivosComerciales(obj.Objetivo.Comerciales);
 }
 function AlertaObjetivoBorrar(e) {
@@ -1158,7 +1164,7 @@ function BorrarCookies() {
     window.location = '/home/borrarcookie';
 }
 
-function ActualizarComprayDetalle(comercial, zona) {
+function ActualizarCompraObjetivoDetalle(comercial, zona) {
     var result = MSExecuteOnServer('/Home/Inicializar', { comercialId: comercial, zonaId: zona });
     datosCompra = result.Detalle;
     var param = {
@@ -1223,4 +1229,5 @@ function ActualizarComprayDetalle(comercial, zona) {
     viewModel.set("Girasol", girasol);
 
     ArmarCamapaña(result.Campaña);
+    ArmarObjetivo(result.Objetivo.Objetivos, result.Campaña);
 }

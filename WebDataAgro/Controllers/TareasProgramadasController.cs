@@ -5,6 +5,7 @@ using static WebDataAgro.MvcApplication;
 using System;
 using WebDataAgro.Helpers.Excel;
 using Molinos.DataAgro.Interfaces.Managers;
+using System.Security.Cryptography;
 
 namespace WebDataAgro.Controllers
 {
@@ -163,11 +164,16 @@ namespace WebDataAgro.Controllers
 
         }
 
-        public ActionResult ConsultarContratosPrimary()
+        public ActionResult MigrarContratosPrimary(string fecha)
         {
-            logger.Info($"ConsultarContratosPrimary - inicio");
-            negocioManager.ConsultarContratosPrimary();
-            logger.Info($"ConsultarContratosPrimary - Finalizado");
+            DateTime dia = DateTime.Now;
+            logger.Info($"MigrarContratosPrimary - Inicio");
+            if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
+            {
+                dia = DateTime.ParseExact(fecha, "yyyyMMdd", null);
+            }
+            negocioManager.MigrarContratosPrimary(dia);
+            logger.Info($"MigrarContratosPrimary - Finalizado");
             return Content("ok");
         }
 

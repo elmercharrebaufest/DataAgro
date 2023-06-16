@@ -4061,7 +4061,7 @@ namespace Molinos.DataAgro.Test.Managers
                         Desde = 0,
                         Hasta = 15,
                         MonedaId = "USDM ",
-                        Modificado = false,                        
+                        Modificado = false,
                         ServicioValor = new ServicioValor()
                         {
                         Importe = 400,
@@ -4089,7 +4089,7 @@ namespace Molinos.DataAgro.Test.Managers
                         Centro = new Centro()
                         {
                             Id = 1
-                        }                       
+                        }
 
                         }
                      }
@@ -5756,7 +5756,7 @@ namespace Molinos.DataAgro.Test.Managers
 
             };
             repositorioMock.Setup(x => x.Listar(It.IsAny<Expression<Func<Contrato, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Contrato> { oContrato });
-            status.Setup(x => x.ValidarEstado(oContrato.ContratoSAP)).Returns(new EstadoSAPDto { NumeroSio = 0, Status = "" });
+            status.Setup(x => x.ValidarEstados(It.IsAny<List<string>>())).Returns(new List<EstadoSAPDto> { new EstadoSAPDto { NumeroSio = 0, Status = "", ContratoSap = "" } });
             target.ActualizarEstadoDeContratos();
         }
     }

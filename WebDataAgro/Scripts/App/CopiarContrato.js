@@ -237,24 +237,6 @@ function InicializarAutocompletar() {
     });
 
     $("#btnConDescarga").hide();
-
-    // GSIAN: ver porqué no funciona
-    //$("#fechaDesdeId").kendoDatePicker({
-    //    //min: kendo.parseDate($("#fechaDesdeId").val()),
-    //    change: function () {
-    //        if ($("#conDescargaId").is(":checked") == true) {
-    //            AbrirConDescarga();
-    //        }
-    //    }
-    //});
-    //$("#fechaHastaId").kendoDatePicker({
-    //    //min: kendo.parseDate($("#fechaHastaId").val()),
-    //    change: function () {
-    //        if ($("#conDescargaId").is(":checked") == true) {
-    //            AbrirConDescarga();
-    //        }
-    //    }
-    //});
 }
 
 function CargarCopiaContrato(contratoId, tipo) {
@@ -1180,7 +1162,7 @@ function comenzarCarga() {
     let time = startingMinutes * 60;
     const countdownEl = document.getElementById('countdown');
 
-    intervalId = setInterval(updateCountdown, 1000); // GSIAN: 50 para que vaya rápido
+    intervalId = setInterval(updateCountdown, 1000);
     intervalActivo = true;
     $("#mensaje-flotante").show();
 
@@ -1232,6 +1214,7 @@ function AbrirConDescarga() {
         fechaHastaNegocio: $("#fechaHastaId").val(),
         materialId: parseInt($("#material").val()),
         centroId: parseInt($("#destinoId").val()),
+        comercialId: $("#comercialId").val(),
     }
     var listDiasCuposConDescarga = MSExecuteOnServer('/CompraNet/CantidadDiasCuposConDescarga', objeto);
 
@@ -1376,7 +1359,7 @@ function guardarCuposConDescarga() {
     }
 
     if (superaCuposMaximoDia) {
-        MensErr("La cantidad de cupos/fletes para uno de los días supera la cantidad disponible.");
+        MensErr("La cantidad de cupos/fletes para uno de los días supera la cantidad disponible en su zona.");
         return;
     }
     var cantidadCuposFletesPermitidos = Math.ceil($("#cantidadId").val() / 30000);

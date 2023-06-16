@@ -703,3 +703,18 @@ li.mis-postit.postit-mobile {
 .blockUI {
     z-index: 100000 !important;
 }
+
+.body-background-QA {
+    background-repeat: repeat;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(images/qaimage.png);
+    background-attachment: fixed;
+    margin-top: 65px;
+    opacity: 0.05;
+    filter: alpha(opacity=40);
+    z-index: -1;
+}

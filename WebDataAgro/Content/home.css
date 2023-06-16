@@ -133,22 +133,21 @@
 .contenedor-principal-objetivo-detalle {
     margin-top: 10px;
     margin-bottom: 10px;
+    align-items: center;
 }
 
-.contenedor-principal-objetivo-cantidad {
+.contenedor-principal-objetivo-progreso {
     display: inline-block;
-    text-align: right;
-    font-size: 14px;
-    color: #757575;
-    margin-right: 5px;
-    width: 30%;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    width: 75%;
 }
 
 .contenedor-principal-objetivo-grano {
     display: inline-block;
     font-size: 14px;
     color: #757575;
-    width: 50%;
+    width: 20%;
 }
 
     .contenedor-principal-objetivo-grano:last-of-type {
@@ -1003,3 +1002,28 @@ span.glyphicon.glyphicon-chevron-right {
         color: #fcf8e3;
         cursor: pointer;
     }
+
+.Maiz {
+    background: rgb(255, 204, 153, 0.5) !important;
+    color: #424242;
+}
+
+.Soja {
+    background: rgb(153, 204, 0, 0.5) !important;
+    color: #424242;
+}
+
+.Girasol {
+    background: rgb(211, 96, 212, 0.5) !important;
+    color: #424242;
+}
+
+.Trigo {
+    background: rgb(106, 230, 190, 0.5) !important;
+    color: #424242;
+}
+
+.GirasolAO {
+    background: rgb(153, 153, 255, 0.5) !important;
+    color: #424242;
+}

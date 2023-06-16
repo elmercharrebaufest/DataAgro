@@ -9,24 +9,24 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
 {
     public class TraerComprasHome : IConsulta<MaterialCampaña>
     {
-        private readonly int proveedorId;
         private readonly int idComercial;
         private readonly List<int> equipo;
+        private readonly Campaña campañaAñoFiscal;
 
-        public TraerComprasHome(int idComercial, List<int> equipo)
+        public TraerComprasHome(int idComercial, List<int> equipo, Campaña campañaAñoFiscal)
         {
             this.idComercial = idComercial;
             this.equipo = equipo;
+            this.campañaAñoFiscal = campañaAñoFiscal;
         }
 
-        private static List<MaterialCampaña> Query(DbContext contexto, int comercialId, List<int> equipo)
+        private static List<MaterialCampaña> Query(DbContext contexto, int comercialId, List<int> equipo, Campaña campañaAñoFiscal)
         {
             ((System.Data.Entity.Infrastructure.IObjectContextAdapter)contexto).ObjectContext.CommandTimeout = 180;
 
             var resultado =
                 from x in contexto.Set<CampanaMaterialDetallePorMes>()
-                    //where equipo.Contains(x.Comercial.ComercialId) && x.CampañaMaterial.Material.CampañaId == x.CampañaMaterial.CampañaId
-                where equipo.Contains(x.Comercial.ComercialId) && x.Material.CampañaId == x.CampanaId
+                where equipo.Contains(x.Comercial.ComercialId) && x.Material.CampañaId == x.CampanaId && campañaAñoFiscal.CampañaId == x.CampanaId
                 group x by new { Material = x.Material.Descripcion, Campania = x.Campana.Descripcion } into g
                 select new MaterialCampaña
                 {
@@ -53,7 +53,7 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
         {
             using (new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
             {
-                return Query(contexto, idComercial, equipo);
+                return Query(contexto, idComercial, equipo, campañaAñoFiscal);
             }
         }
     }

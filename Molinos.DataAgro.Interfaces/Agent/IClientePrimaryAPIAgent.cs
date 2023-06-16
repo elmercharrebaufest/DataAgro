@@ -2,16 +2,13 @@
 using Molinos.DataAgro.Entities.Entities;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Interfaces
 {
-    public interface IClientePrimariAPIAgent
+    public interface IClientePrimaryAPIAgent
     {
-        TokenPrimary ObtenerToken();
-        List<AgenteCompra> ObtenerNegocios();
+        TokenPrimary ReuseToken();
+        List<AgenteCompra> ObtenerNegocios(DateTime fecha);
         MarketDataResult ObtenerCotizacion(DateTime fecha);
-
-
     }
 }

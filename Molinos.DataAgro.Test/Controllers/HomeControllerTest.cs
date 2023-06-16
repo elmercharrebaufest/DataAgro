@@ -244,7 +244,8 @@ namespace Molinos.DataAgro.Test.Controllers
                     CompraCampanaActual = new List<CompraCampanaActualDto>(),
                     Situacion = new List<CampanaMaterialDetallePorMeseExcelDto>(),
                     CapacidadProductiva = new List<CapacidadProductivaAll>(),
-                    ActividadComercial = new List<ActividadComercial>()
+                    ActividadComercial = new List<ActividadComercial>(),
+                    ObjetivoCampania = new List<ObjetivoCampania>()
                 });
 
             var result = target.ExportarAll(busqueda) as JsonResult;

@@ -1,5 +1,4 @@
 ﻿using DataDynamics.ActiveReports.Export.Pdf;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Seguridad;
@@ -9,7 +8,6 @@ using OfficeOpenXml;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Molinos.DataAgro.Report
 {
@@ -142,10 +140,6 @@ namespace Molinos.DataAgro.Report
             var workSheet = excel.Workbook.Worksheets.Add("Datos del Proveedor");
             workSheet.Cells[1, 1].LoadFromCollection(oColumnas, true);
 
-            var workSheet2 = excel.Workbook.Worksheets.Add("Objetivo");
-
-            workSheet2.Cells[1, 1].LoadFromCollection(oDatos.Objetivo, true);
-
             var workSheet3 = excel.Workbook.Worksheets.Add("Datos de Contacto");
 
             workSheet3.Cells[1, 1].LoadFromCollection(oDatos.ContactosPrincipales, true);
@@ -171,6 +165,14 @@ namespace Molinos.DataAgro.Report
 
             var workSheet15 = excel.Workbook.Worksheets.Add("Última Actividad Comercial");
             workSheet15.Cells[1, 1].LoadFromCollection(oDatos.ActividadComercial, true);
+
+            var workSheet2 = excel.Workbook.Worksheets.Add("Objetivos por Proveedor");
+
+            workSheet2.Cells[1, 1].LoadFromCollection(oDatos.Objetivo, true);
+
+            var workSheet16 = excel.Workbook.Worksheets.Add("Objetivos de esta Campaña");
+
+            workSheet16.Cells[1, 1].LoadFromCollection(oDatos.ObjetivoCampania, true);
 
             var oPropRow = oColumnas.GetType().GetProperties();
 
@@ -791,7 +793,26 @@ namespace Molinos.DataAgro.Report
                 workSheet15.Column(i).AutoFit();
                 if (i>3) workSheet15.Column(i).Style.Numberformat.Format = "DD/MM/YYYY";
             }
-            
+
+            j = 1;
+            while (workSheet16.Cells[1, j].Value != null)
+            {
+                workSheet16.Cells[1, j].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+
+                workSheet16.Cells[1, j].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightYellow);
+
+                workSheet16.Cells[1, j].Style.Font.Bold = true;
+
+                j++;
+            }
+            workSheet16.Cells[1, 3].Value = "Toneladas Objetivo";
+            workSheet16.Cells[1, 4].Value = "Toneladas Compradas";
+            workSheet16.Cells[1, 5].Value = "Porcentaje de Cumplimiento";
+            workSheet16.Cells[1, 6].Value = "Campaña";
+            for (int i = 1; i < 7; i++)
+            {
+                workSheet16.Column(i).AutoFit();
+            }
 
             var identif = Varios.GetIdentif();
 

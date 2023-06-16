@@ -95,7 +95,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             configuracionCupoManagerMock.Verify(x => x.TraerTodaConfiguracionCupo(It.IsAny<KendoGridMvcRequest>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false,\"CuposDisponibles\":0,\"NoPropio\":false,\"Sustentable\":null,\"LimiteDescarga\":0}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Groups\":null,\"Data\":[{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false,\"CuposDisponibles\":0,\"NoPropio\":false,\"Sustentable\":null,\"LimiteDescarga\":0,\"CuposDisponiblesConDescarga\":0,\"CuposConsumidosConDescarga\":0}],\"Aggregates\":null,\"Total\":20},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
         [Test]
@@ -137,7 +137,7 @@ namespace Molinos.DataAgro.Test.Controllers
             var a = serializer.Serialize(result);
             configuracionCupoManagerMock.Verify(x => x.TraerConfiguracionCupo(It.IsAny<int>()), Times.Once);
             Assert.AreEqual(
-               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false,\"CuposDisponibles\":0,\"NoPropio\":false,\"Sustentable\":null,\"LimiteDescarga\":0},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
+               "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"Id\":1,\"CentroId\":1,\"Centro\":null,\"MaterialId\":1,\"Material\":null,\"Fecha\":\"\\/Date(-62135586000000)\\/\",\"LimiteCupo\":1,\"LimiteAlgoritmo\":0,\"CierreCupera\":null,\"CantidadCupo\":null,\"BloquearCupera\":null,\"LimiteCupoAnterior\":0,\"ZonaCupo\":null,\"LiberarCupera\":false,\"LiberarCuperaDesc\":null,\"CuposConsumidos\":0,\"CentroCodigoSap\":null,\"MaterialCodigoSap\":null,\"Color\":null,\"Bloquear\":false,\"CuposDisponibles\":0,\"NoPropio\":false,\"Sustentable\":null,\"LimiteDescarga\":0,\"CuposDisponiblesConDescarga\":0,\"CuposConsumidosConDescarga\":0},\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
 

@@ -2,7 +2,6 @@
 using Molinos.DataAgro.Business.Managers;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -12,13 +11,9 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -153,8 +148,8 @@ namespace Molinos.DataAgro.Test.Managers
         public void TraerInfoObjetivoTest()
         {
 
-            objetivoMock.Setup(x => x.TraerObjetivoHome(It.IsAny<int>(), new List<int>())).Returns(new ObjetivoHome());
-            var resultado = target.TraerInfoObjetivo(It.IsAny<int>(), new List<int>());
+            objetivoMock.Setup(x => x.TraerObjetivoHome(It.IsAny<int>(), new List<int>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new ObjetivoHome());
+            var resultado = target.TraerInfoObjetivo(It.IsAny<int>(), new List<int>(), It.IsAny<int>(), It.IsAny<int>());
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
         }
         [Test]

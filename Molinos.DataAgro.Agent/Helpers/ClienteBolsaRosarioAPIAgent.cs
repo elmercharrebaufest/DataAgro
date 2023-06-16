@@ -31,6 +31,7 @@ namespace Molinos.DataAgro.Agent.Helpers
         {
             try
             {
+                logger.Debug($"Gestionando Token BCR...");
                 Configuracion datosConfiguracion = repositorio.Obtener<Configuracion>(1);
                 var client = new RestClient(urlBCR + "v" + versionClienteBCR + "/Login");
                 client.Timeout = -1;
@@ -42,12 +43,22 @@ namespace Molinos.DataAgro.Agent.Helpers
                 Console.WriteLine(response.Content);
                 var result = JsonConvert.DeserializeObject<TokenBCR>(response.Content);
                 var token = result.data.token;
+                logger.Debug($"Token obtenido: {token}");
 
                 List<DataBCR> listPrecios = new List<DataBCR>();
 
                 //int[] idMateriales = new int[4] { 1, 2, 20, 21 };
                 if (result != null)
                 {
+                    string nombresMateriales = "";
+                    List<Material> materiales = repositorio.Listar<Material>();
+                    for (int i = 0; i < arrIdMateriales.Length; i++) {
+                        int codMatBCR = arrIdMateriales[i];
+                        int codMatDA = codMatBCR == 1 ? 2 : codMatBCR == 2 ? 1 : codMatBCR == 21 ? 3 : 4;
+                        nombresMateriales += (nombresMateriales == "" ? "" : ", ") + materiales.Find( x => x.MaterialId == codMatDA).Descripcion;
+                    }
+
+                    logger.Debug($"Se traerán los precios pizarra del día {fecha.ToString("yyyy-MM-dd")} para los materiales {nombresMateriales}");
                     for (int i = 0; i < arrIdMateriales.Length; i++)
                     {
                         int idMaterial = arrIdMateriales[i];
@@ -76,7 +87,9 @@ namespace Molinos.DataAgro.Agent.Helpers
             }
             catch (Exception e)
             {
-                throw e;
+                logger.Debug($"Error al Consultar Precios Pizarra");
+                logger.Error(e.Message);
+                throw;
             }
         }
     }

@@ -782,30 +782,31 @@ namespace Molinos.DataAgro.Business
 
             var lista = repositorio.Listar<InformeComercialProduccion>(x => ids.Contains(x.InformeComercialId));
 
-            foreach (var item in enviar)
+            try
             {
-                try
+                var respuesta = enviarCapacidadProductivaSAPAgent.EnviarCapacidadProductivaSAP(enviar);
+                if (respuesta != "OK")
                 {
-
-                    var respuesta = enviarCapacidadProductivaSAPAgent.EnviarCapacidadProductivaSAP(item);
-                    if (respuesta != "OK")
+                    resultado.Error("EnviarCapacidadProductivaSAP", "Error al enviar informes a SAP: " + respuesta);
+                }
+                else
+                {
+                    foreach (var capProd in enviar)
                     {
-                        resultado.Error("Error SAP", "Error al enviar a SAP el informe número " + item.Id.ToString() + ", material " + item.MaterialDescripcion + "." + respuesta);
-                    }
-                    else
-                    {
-                        foreach (var informe in lista.Where(x => x.InformeComercialId == item.Id && x.Material.Codigo == item.Material))
+                        foreach (var informe in lista.Where(x => x.InformeComercialId == capProd.Id && x.Material.Codigo == capProd.Material))
                         {
                             informe.FechaDescarga = DateTime.Now;
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    resultado.Error("Error SAP", "Error al enviar a SAP el informe número " + item.Id.ToString() + ", material: " + item.MaterialDescripcion + "." + e.Message);
-                    logger.Error(e);
+
                 }
             }
+            catch (Exception e)
+            {
+                resultado.Error("EnviarCapacidadProductivaSAP", "Error al enviar informes a SAP: " + e.Message);
+                logger.Error(e);
+            }
+           
             repositorio.GuardarCambios();
             return resultado;
         }

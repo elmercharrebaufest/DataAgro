@@ -1,10 +1,6 @@
-﻿using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System;
 
 namespace Molinos.DataAgro.Interfaces
 {
@@ -12,7 +8,7 @@ namespace Molinos.DataAgro.Interfaces
     {
         Resultado OcultarEnTablero(Negocio negocio);
         void EnvioMailNegociosConDiaAnterior();
-        void ConsultarContratosPrimary();
+        void MigrarContratosPrimary(DateTime fecha);
         void EnvioMailNegociosAnulaYReemplaza();
         void EnviarMailErrorFinalizarNegocio(int contratoId);
     }

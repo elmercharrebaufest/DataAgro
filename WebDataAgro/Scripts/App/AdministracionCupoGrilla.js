@@ -756,6 +756,9 @@ function AceptarMasivo() {
 
                 }
                 if (errores.length > 0) {
+                    errores.forEach(function (e) {
+                        e.Message += '<br>';
+                    });
                     ShowErrorMessages(errores);
                 }
                 recargarGrilla();

@@ -67,7 +67,7 @@ namespace WebDataAgro.Controllers
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia) ? mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId) : GlobalVariables.Equipo;
             var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, equipo);
 
-            model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, equipo);
+            model.Objetivo = mobjHomeManager.TraerInfoObjetivo(comercialId, equipo, zonaId, GlobalVariables.ComercialId);
             model.Datos = mobjHomeManager.TraerInfoIniciales(equipo);
             model.Detalle = mobjHomeManager.TraerTodoCompraDetalle(equipo, comercialId, zonaId);
             //model.Campaña = mobjHomeManager.TraerInfoCampaña(GlobalVariables.ComercialId, equipo);
@@ -215,7 +215,6 @@ namespace WebDataAgro.Controllers
             try
             {
                 var datos = mobjHomeManager.ExportarAll(filtro, GlobalVariables.IdActiveDirectory, filtro.Equipo);
-                logger.Info("inicio export idnetif");
                 var oLstContacto = new LstContacto(reportesManager);
                 logger.Info("inicio export idnetif");
                 var identif = oLstContacto.GenerarExcelExportAll(datos);
@@ -294,18 +293,17 @@ namespace WebDataAgro.Controllers
             };
 
         }
-        public ActionResult TraerObjetivos()
+        public ActionResult TraerObjetivos(int? comercialId, int? zonaId)
         {
             var model = new ResultIniContactoModel();
             var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
-            model.Objetivo = mobjHomeManager.TraerInfoObjetivo(GlobalVariables.ComercialId, equipo);
+            model.Objetivo = mobjHomeManager.TraerInfoObjetivo(comercialId, equipo, zonaId, GlobalVariables.ComercialId);
 
             return new JsonResult()
             {
                 Data = model,
                 MaxJsonLength = Int32.MaxValue
             };
-
         }
 
         public ActionResult EliminarObjetivo(int id)
@@ -331,6 +329,31 @@ namespace WebDataAgro.Controllers
                 FederatedAuthentication.SessionAuthenticationModule.DeleteSessionTokenCookie();
             }
         }
-    }
 
+        public ActionResult TraerCompras(int? comercialId, int? zonaId)
+        {
+            var model = new ResultIniContactoModel();
+            var equipo = PermisosHelper.Is(PermisosDataAgro.VerTodos) ? GlobalVariables.EquipoReal : GlobalVariables.Equipo;
+            model.Detalle = mobjHomeManager.TraerTodoCompraDetalle(equipo, comercialId, zonaId);
+            model.Campaña = new CampañaHome();
+            if (model.Detalle != null)
+            {
+                foreach (var item in model.Detalle.GroupBy(a => a.Material))
+                {
+                    model.Campaña.Materiales.Add(
+                        new MaterialCampaña
+                        {
+                            Campaña = item.First().Campana,
+                            Nombre = item.First().Material,
+                            Toneladas = item.First().TotalCompra
+                        });
+                }
+            }
+            return new JsonResult()
+            {
+                Data = model,
+                MaxJsonLength = Int32.MaxValue
+            };
+        }
+    }
 }
