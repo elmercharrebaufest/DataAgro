@@ -1,7 +1,5 @@
-﻿using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Entities.Dto;
+﻿using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Newtonsoft.Json;
@@ -13,9 +11,6 @@ using WebDataAgro.Atributos;
 using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 using Kendo.DynamicLinq;
-using Filter = Kendo.DynamicLinq.Filter;
-using KendoGridBinder.Containers;
-using System.Collections;
 using System.Globalization;
 using System.Configuration;
 
@@ -157,17 +152,47 @@ namespace WebDataAgro.Controllers
                                  != null ? cupo.CantidadCupos : 0;
             var cupoNuevo = TransformarAEntidad(cupo);
             var error = cupoManager.Validar(cupoNuevo, cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
-            if (cupoNuevo.MaterialId == 3 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
-            {
-                if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                error.Errores.Add(new ErrorMessage("Los cupos de soja en centro San Lorenzo los deben gestionar en la pantalla de “Sugerencia de cupos”."));
 
-            }
-            if (cupoNuevo.MaterialId == 1 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoMaizPorSugerencias"] == "Si")
+            if (cupoNuevo.CentroId == 1)
             {
-                if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                error.Errores.Add(new ErrorMessage("Los cupos de maíz los deben gestionar en la pantalla de “Sugerencia de cupos”."));
-
+                switch (cupoNuevo.MaterialId)
+                {
+                    case 1:
+                        if (ConfigurationManager.AppSettings["CupoMaizPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de maíz para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 2:
+                        if (ConfigurationManager.AppSettings["CupoTrigoPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de trigo para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 3:
+                        if (ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de soja para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 4:
+                        if (ConfigurationManager.AppSettings["CupoGirasolPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de girasol para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 5:
+                        if (ConfigurationManager.AppSettings["CupoGirasolPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de girasol AO para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                }
             }
             if (error.HayError)
             {
@@ -263,17 +288,47 @@ namespace WebDataAgro.Controllers
             if (cargaMasiva) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
 
             var error = cupoManager.Validar(cupoNuevo, cargaMasiva ? sumaCuposCargaMasiva : cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
-            if (cupoNuevo.MaterialId == 3 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
+            
+            if (cupoNuevo.CentroId == 1)
             {
-                if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                error.Errores.Add(new ErrorMessage("Los cupos de soja no sustentable los deben gestionar en la pantalla de “Sugerencia de cupos”."));
-
-            }
-            if (cupoNuevo.MaterialId == 1 && cupoNuevo.CentroId == 1 && ConfigurationManager.AppSettings["CupoMaizPorSugerencias"] == "Si")
-            {
-                if (error.Errores == null) error.Errores = new List<ErrorMessage>();
-                error.Errores.Add(new ErrorMessage("Los cupos de maíz los deben gestionar en la pantalla de “Sugerencia de cupos”."));
-
+                switch (cupoNuevo.MaterialId)
+                {
+                    case 1:
+                        if (ConfigurationManager.AppSettings["CupoMaizPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de maíz para San Lorenzo deben gestionarse en la pantalla “Sugerencia de cupos”."));
+                        }
+                        break;
+                    case 2:
+                        if (ConfigurationManager.AppSettings["CupoTrigoPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de trigo para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 3:
+                        if (ConfigurationManager.AppSettings["CupoSojaNoSustPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de soja para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 4:
+                        if (ConfigurationManager.AppSettings["CupoGirasolPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de girasol para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                    case 5:
+                        if (ConfigurationManager.AppSettings["CupoGirasolPorSugerencias"] == "Si")
+                        {
+                            if (error.Errores == null) error.Errores = new List<ErrorMessage>();
+                            error.Errores.Add(new ErrorMessage("Los cupos de girasol AO para San Lorenzo deben gestionarse en la pantalla “Sugerencia de Cupos”."));
+                        }
+                        break;
+                }
             }
             if (!error.HayError)
             {
