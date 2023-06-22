@@ -84,6 +84,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                 logger.Debug($"Obteniendo negocios MAT...");
                 TradeCaptureReportResult result = GetTradeCaptureReport(token, fecha, fecha);
+                logger.Debug($"Resultado obtenido: {result.ToJson()}");
                 if (result.Code == "200")
                 {
                     List<string> CFICodes = result.Value.Select(a => a.Instrument.First().CFICode).Distinct().ToList();
@@ -132,6 +133,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         item.FechaDesde = new DateTime(int.Parse(item.Posicion.Substring(3, 4)), int.Parse(item.Posicion.Substring(0, 2)), 1);
                         item.FechaHasta = item.FechaDesde.AddMonths(1).AddDays(-1);
                     }
+                    logger.Debug($"Lista AgenteCompra: {lista.ToJson()}");
                     return lista;
                 }
 
