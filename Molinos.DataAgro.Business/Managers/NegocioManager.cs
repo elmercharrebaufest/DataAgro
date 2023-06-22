@@ -215,22 +215,21 @@ namespace Molinos.DataAgro.Business.Managers
                 List<string> errores = new List<string>();
                 foreach (var item in listaMAT)
                 {
-                    var algo = listaDA.Select(x => new { x.MaterialId, x.MonedaId, x.Posicion, x.OperadorId }).ToList();
                     var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
                     if (elem != null)
                     {
-                        var cantidadMAT = negociosMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && item.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
-                        var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && item.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                        var cantidadMAT = negociosMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                        var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
 
                         if (elem.PrecioPonderado != item.PrecioPonderado)
                         {
-                            errores.Add("Se encontró una diferencia de precios ponderados para negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
+                            errores.Add("Diferencia de precios ponderados para negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
                                 " para la posición " + elem.Posicion + " y operador " + elem.Operador.Descripcion + " - en Data Agro: " + elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR")) + " y en MAT: " + item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR")));
                         }
 
                         if (cantidadDA != cantidadMAT)
                         {
-                            errores.Add("Se encontró una diferencia en los kilos totales de negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
+                            errores.Add("Diferencia en los kilos totales de negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
                                 " para la posición " + elem.Posicion + " y operador " + elem.Operador.Descripcion + " - en Data Agro: " + cantidadDA.ToString("N", new CultureInfo("es-AR")) + " Kg. y en MAT: " + cantidadMAT.ToString("N", new CultureInfo("es-AR")) + " Kg.");
                         }
                     }
@@ -293,7 +292,7 @@ namespace Molinos.DataAgro.Business.Managers
             string htmlBody = "En el presente mail se detalla el resultado de la comparación automática entre los negocios registrados en Data Agro y los obtenidos del MAT.<br /><br />";
             foreach (var mensaje in cuerpo)
             {
-                htmlBody += mensaje + "<br />";
+                htmlBody += mensaje + "<br /><br />";
             }
             htmlBody += "<br /> <br />  Saludos Cordiales," +
                 " <br /> <br />   Molinos Agro S.A.  <br /> <br />" +
