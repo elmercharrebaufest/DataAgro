@@ -126,6 +126,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     }).ToList();
                     var materiales = repositorio.Listar<Material>();
+                    logger.Debug($"Primera lista AgenteCompra: {lista.ToJson()}");
                     foreach (var item in lista)
                     {
                         item.Material = materiales.Where(x => x.MaterialId == item.MaterialId).SingleOrDefault();
@@ -133,7 +134,7 @@ namespace Molinos.DataAgro.Agent.Helpers
                         item.FechaDesde = new DateTime(int.Parse(item.Posicion.Substring(3, 4)), int.Parse(item.Posicion.Substring(0, 2)), 1);
                         item.FechaHasta = item.FechaDesde.AddMonths(1).AddDays(-1);
                     }
-                    logger.Debug($"Lista AgenteCompra: {lista.ToJson()}");
+                    logger.Debug($"Lista final AgenteCompra: {lista.ToJson()}");
                     return lista;
                 }
 
