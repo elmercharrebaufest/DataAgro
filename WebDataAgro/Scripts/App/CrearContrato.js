@@ -6128,7 +6128,7 @@ function CalcularImporteDeOperacion(precio, cantidad) {
 }
 
 function ValidarProveedorSisa() {
-    if ($("#proveedorId").val() = "") return;
+    if ($("#proveedorId").val() == "") return;
 
     var mensaje = MSExecuteOnServer("/Compranet/ValidarProveedorSISA", {
         proveedorId: $("#proveedorId").val(),
