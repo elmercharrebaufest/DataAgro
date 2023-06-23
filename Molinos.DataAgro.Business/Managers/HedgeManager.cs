@@ -345,7 +345,8 @@ namespace Molinos.DataAgro.Business
 
             mailManager.EnviarMail(to, asunto, string.Empty, null,
                                AlternateView.CreateAlternateViewFromString(cuerpoMail, null, "text/html"),
-                               archivo,
+                               //archivo,
+                               null,
                                "Cierre del dia " + hoy.Day + "-" + hoy.Month + ".xls");
         }
         public Resultado ReabrirDia(int comercialId, double? diferencial)

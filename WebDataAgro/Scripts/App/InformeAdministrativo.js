@@ -125,7 +125,7 @@ function CreateGridInformeAdministrativo() {
                         { value: "Id", background: "#cdcbcb" },
                         { value: "CUIT", background: "#cdcbcb" },
                         { value: "Razón Social", background: "#cdcbcb" },
-                        { value: "Campaña", background: "#cdcbcb"  },
+                        { value: "Campaña", background: "#cdcbcb" },
                         { value: "Material", background: "#cdcbcb" },
                         { value: "Toneladas", background: "#cdcbcb" },
                         { value: "Comercial", background: "#cdcbcb" },
@@ -199,7 +199,7 @@ function CreateGridInformeAdministrativo() {
     });
 
     var grid = $("#grilla-informes").data("kendoGrid");
-    
+
     grid.table.on("click", ".row-checkbox", selectRow);
 
     $('#header-chb').change(function (ev) {
@@ -514,42 +514,52 @@ function EnviarCapProdSAP() {
     var grid = $("#grilla-informes").data("kendoGrid");
     var allData = grid.dataSource.data();
     var enviar = [];
+    var sinUsuarioSAP = "";
 
-    var ids = $("#grilla-informes").data("kendoGrid").selectedKeyNames();
+    var ids = grid.selectedKeyNames();
 
-    if (grid.selectedKeyNames().length > 0) {
-
-        for (let x in allData) {
-            let i = allData[x];
-            if (i.UsuarioSAP == '') {
-                MensErr(`El informe comercial de ${i.Comercial} para el CUIT ${i.Cuit}, campaña ${i.Campaña}, material ${i.Material}  no tiene usuario SAP.`);
-                return;
-            }
-            if (ids.find(element => element == i.InformeComerciaProduccionId.toString())) {
-                enviar.push({
-                    Id: i.InformeComercialId,
-                    Cuit: i.Cuit,
-                    Material: i.MaterialSAP,
-                    MaterialDescripcion: i.Material,
-                    Campania: i.Campaña,
-                    Cantidad: i.toneladas,
-                    UnidadMedida: "TON",
-                    Porcentaje: 30,
-                    UsuarioSAP: i.UsuarioSAP
-                });
-            }
-        }
-        
-
-        var result = MSExecuteOnServer('/InformeComercial/EnviarCapacidadProductivaSAP', enviar);
-        if (result != null) {
-            if (result.HayError) {
-                ShowErrorMessages(result.Errores);
-            } else {
-                MensInfo("Los datos se enviaron correctamente.");
+    if (ids.length > 0) {
+        for (let id of ids) {
+            let rowData = allData.find(data => data.InformeComerciaProduccionId == id);
+            if (rowData) {
+                if (rowData.UsuarioSAP === '') {
+                    sinUsuarioSAP += `El informe para ${rowData.RazonSocial} (CUIT ${rowData.Cuit}) de ${rowData.Material} campaña ${rowData.Campaña} no se envió porque ${rowData.Comercial} no tiene usuario SAP registrado en Data Agro.\n`;
+                } else {
+                    enviar.push({
+                        Id: rowData.InformeComercialId,
+                        Cuit: rowData.Cuit,
+                        Material: rowData.MaterialSAP,
+                        MaterialDescripcion: rowData.Material,
+                        Campania: rowData.Campaña,
+                        Cantidad: rowData.toneladas,
+                        UnidadMedida: "TON",
+                        Porcentaje: 30,
+                        UsuarioSAP: rowData.UsuarioSAP
+                    });
+                }
             }
         }
-        grid.dataSource.page(1);
-    } else
+        if (enviar.length > 0) {
+            var result = MSExecuteOnServer('/InformeComercial/EnviarCapacidadProductivaSAP', enviar);
+            if (result != null) {
+                if (result.HayError) {
+                    ShowErrorMessages(result.Errores);
+                } else {
+                    if (sinUsuarioSAP != "") {
+                        sinUsuarioSAP += "Los demás informes se enviaron correctamente.\n";
+                        MensAlerta(sinUsuarioSAP);
+                    } else
+                        MensInfo("Los datos se enviaron correctamente.");
+                }
+            }
+            grid.dataSource.page(1);
+        } else {
+            if (sinUsuarioSAP != "") {
+                MensErr(sinUsuarioSAP);
+            }
+        }
+
+    } else {
         MensAlerta("Debe seleccionar informes de la grilla para enviar a SAP.");
+    }
 }

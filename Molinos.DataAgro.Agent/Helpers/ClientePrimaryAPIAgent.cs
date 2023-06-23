@@ -126,7 +126,7 @@ namespace Molinos.DataAgro.Agent.Helpers
 
                     }).ToList();
                     var materiales = repositorio.Listar<Material>();
-                    logger.Debug($"Primera lista AgenteCompra: {lista.ToJson()}");
+                    //logger.Debug($"Primera lista AgenteCompra: {lista.ToJson()}");
                     foreach (var item in lista)
                     {
                         item.Material = materiales.Where(x => x.MaterialId == item.MaterialId).SingleOrDefault();

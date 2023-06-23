@@ -6168,12 +6168,14 @@ function esCondicional() {
 }
 
 function ValidarComisionEnCentro() {
-    var centro = MSExecuteOnServer("/Compranet/ValidarComisionEnCentro", {
-        Id: $("#destinoId").val()
-    });
+    if ($("#destinoId").val() != "") {
+        var centro = MSExecuteOnServer("/CompraNet/ValidarComisionEnCentro", {
+            id: $("#destinoId").val()
+        });
 
-    if (centro && centro.Comision && centro.Comision == 1) {
-        return true;
+        if (centro && centro.Comision && centro.Comision == 1) {
+            return true;
+        }
     }
     return false;
 }

@@ -215,12 +215,11 @@ namespace Molinos.DataAgro.Business.Managers
                 List<string> errores = new List<string>();
                 foreach (var item in listaMAT)
                 {
+                    var cantidadMAT = negociosMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
+                    var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
                     var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
                     if (elem != null)
                     {
-                        var cantidadMAT = negociosMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
-                        var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
-
                         if (elem.PrecioPonderado != item.PrecioPonderado)
                         {
                             errores.Add("Diferencia de precios ponderados para negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
@@ -235,15 +234,16 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        errores.Add("No se encontraron en Data Agro negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero sí en el MAT.");
+                        errores.Add("No se encontraron en Data Agro negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero figuran "+ cantidadMAT.ToString("N", new CultureInfo("es-AR")) + " Kg. en el MAT.");
                     }
                 }
                 foreach (var item in listaDA)
                 {
+                    var cantidadDA = negociosDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.Operador.Id == item.Operador.Id).Sum(x => x.Cantidad);
                     var elem = listaMAT.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
                     if (elem == null)
                     {
-                        errores.Add("No se encontraron en el MAT negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero sí en Data Agro.");
+                        errores.Add("No se encontraron en el MAT negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero figuran " + cantidadDA.ToString("N", new CultureInfo("es-AR")) + " Kg. en Data Agro.");
                     }
                 }
                 foreach (var negocio in negociosDA)
