@@ -531,7 +531,7 @@ function EnviarCapProdSAP() {
                         Material: rowData.MaterialSAP,
                         MaterialDescripcion: rowData.Material,
                         Campania: rowData.Campaña,
-                        Cantidad: rowData.toneladas,
+                        Cantidad: rowData.Toneladas,
                         UnidadMedida: "TON",
                         Porcentaje: 30,
                         UsuarioSAP: rowData.UsuarioSAP

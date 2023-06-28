@@ -1020,7 +1020,7 @@ namespace WebDataAgro.Services
         {
             try
             {
-                logger.Debug("ValidarProveedorComercial " + cuit);
+                //logger.Debug("ValidarProveedorComercial " + cuit);
                 ResultadoValidarProveedorComercial resultado = new ResultadoValidarProveedorComercial();
                 Proveedor proveedor = null;
                 if (corredor == true)
