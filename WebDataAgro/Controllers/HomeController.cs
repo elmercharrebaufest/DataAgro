@@ -2,6 +2,7 @@
 using Microsoft.Web.Mvc;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
+using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Report;
@@ -70,16 +71,16 @@ namespace WebDataAgro.Controllers
 
             logger.Debug($"Inicializar GlobalVariables.ComercialId:{GlobalVariables.ComercialId}, usuario: {GlobalVariables.IdActiveDirectoryCompleto}");
             logger.Debug($"PermisosHelper.Is(PermisosDataAgro.VerTodos): {verTodos}");
-            logger.Debug($"GlobalVariables.EquipoReal: {GlobalVariables.EquipoReal}");
-            logger.Debug($"GlobalVariables.Equipo: {GlobalVariables.Equipo}");
+            logger.Debug($"GlobalVariables.EquipoReal: {GlobalVariables.EquipoReal.ToJson()}");
+            logger.Debug($"GlobalVariables.Equipo: {GlobalVariables.Equipo.ToJson()}");
             logger.Debug($"PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia): {proveedorZonaPropia}");
-            logger.Debug($"ListarTodosLosComercialesConMismaZona: {comercialesConMismaZona}");
+            logger.Debug($"ListarTodosLosComercialesConMismaZona: {comercialesConMismaZona.ToJson()}");
 
             var equipo = verTodos ? GlobalVariables.EquipoReal : 
                 proveedorZonaPropia ? comercialesConMismaZona : 
                 GlobalVariables.Equipo;
 
-            logger.Debug($"Equipo final tomado según permisos: {equipo}");
+            logger.Debug($"Equipo final tomado según permisos: {equipo.ToJson()}");
 
             var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, equipo);
             model.Objetivo = mobjHomeManager.TraerInfoObjetivo(comercialId, equipo, zonaId, GlobalVariables.ComercialId);
