@@ -64,24 +64,24 @@ namespace WebDataAgro.Controllers
                 ComercialId = GlobalVariables.ComercialId,
                 Equipo = GlobalVariables.Equipo
             };
-            logger.Debug($"inicializar GlobalVariables.ComercialId:{GlobalVariables.ComercialId}, usuairo: {User.Identity.Name}");
-            logger.Debug($"PermisosHelper.Is(PermisosDataAgro.VerTodos): {PermisosHelper.Is(PermisosDataAgro.VerTodos)}");
-            logger.Debug($"GlobalVariables.EquipoReal: {GlobalVariables.EquipoReal}");
-            logger.Debug($"GlobalVariables.Equipol: {GlobalVariables.Equipo}");
-            logger.Debug($"PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia): {PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia)}");
-            logger.Debug($"ListarTodosLosComercialesConMismaZona: {mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId)}");
-
-
             var verTodos = PermisosHelper.Is(PermisosDataAgro.VerTodos);
             var proveedorZonaPropia = PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia);
             var comercialesConMismaZona = mobjHomeManager.ListarTodosLosComercialesConMismaZona(GlobalVariables.ComercialId);
+
+            logger.Debug($"Inicializar GlobalVariables.ComercialId:{GlobalVariables.ComercialId}, usuario: {GlobalVariables.IdActiveDirectoryCompleto}");
+            logger.Debug($"PermisosHelper.Is(PermisosDataAgro.VerTodos): {verTodos}");
+            logger.Debug($"GlobalVariables.EquipoReal: {GlobalVariables.EquipoReal}");
+            logger.Debug($"GlobalVariables.Equipo: {GlobalVariables.Equipo}");
+            logger.Debug($"PermisosHelper.Is(PermisosDataAgro.ProveedorZonaPropia): {proveedorZonaPropia}");
+            logger.Debug($"ListarTodosLosComercialesConMismaZona: {comercialesConMismaZona}");
 
             var equipo = verTodos ? GlobalVariables.EquipoReal : 
                 proveedorZonaPropia ? comercialesConMismaZona : 
                 GlobalVariables.Equipo;
 
-            var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, equipo);
+            logger.Debug($"Equipo final tomado según permisos: {equipo}");
 
+            var result = mobjHomeManager.TraerBusquedaContacto(filtro, 1, equipo);
             model.Objetivo = mobjHomeManager.TraerInfoObjetivo(comercialId, equipo, zonaId, GlobalVariables.ComercialId);
             model.Datos = mobjHomeManager.TraerInfoIniciales(equipo);
             model.Detalle = mobjHomeManager.TraerTodoCompraDetalle(equipo, comercialId, zonaId);
