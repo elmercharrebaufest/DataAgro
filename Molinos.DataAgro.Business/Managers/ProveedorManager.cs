@@ -4820,7 +4820,7 @@ namespace Molinos.DataAgro.Business.Managers
         public void ActualizarProveedoresHome(int ProveedorId)
         {
             List<Proveedor> listProveedores;
-            if (ProveedorId == null || ProveedorId==0)
+            if (ProveedorId == null || ProveedorId == 0)
             {
                 listProveedores = repositorio.Listar<Proveedor>();
             }
@@ -5188,31 +5188,36 @@ namespace Molinos.DataAgro.Business.Managers
 
                 List<CategoriasSISA> cat = new List<CategoriasSISA>();
 
-                if (cuitSegmentacion.Segmentacion == 2 || cuitSegmentacion.Segmentacion == 3 || cuitSegmentacion.Segmentacion == 4)
+                if (cuitSegmentacion.Segmentacion == 2 || cuitSegmentacion.Segmentacion == 3 || cuitSegmentacion.Segmentacion == 4) // Grupo Productores
                 {
                     cat = categoriasSISA.Where(x => x.CodCategoria == 1).ToList(); // PROD
                 }
-                else if (cuitSegmentacion.Segmentacion == 5 || cuitSegmentacion.Segmentacion == 7)
+                else if (cuitSegmentacion.Segmentacion == 5 || cuitSegmentacion.Segmentacion == 7) // Grupo Corredores
                 {
                     cat = categoriasSISA.Where(x => x.CodCategoria == 2).ToList(); // CORR
                 }
-                else if (cuitSegmentacion.Segmentacion == 9 || cuitSegmentacion.Segmentacion == 10 || cuitSegmentacion.Segmentacion == 11 || cuitSegmentacion.Segmentacion == 15)
+                else if (cuitSegmentacion.Segmentacion == 9 || cuitSegmentacion.Segmentacion == 10 || cuitSegmentacion.Segmentacion == 11 || cuitSegmentacion.Segmentacion == 15) // Grupo Acopiadores
                 {
                     cat = categoriasSISA.Where(x => x.CodCategoria == 6).ToList(); // ACOPIA
                 }
-                else if (cuitSegmentacion.Segmentacion == 13)
+                else if (cuitSegmentacion.Segmentacion == 13) // Grupo Exportadores
                 {
                     cat = categoriasSISA.Where(x => x.CodCategoria == 5 || x.CodCategoria == 15).ToList(); // EXPORT
                 }
-                else if (cuitSegmentacion.Segmentacion == 12)
+                else if (cuitSegmentacion.Segmentacion == 12) // Grupo Grandes Cuentas
                 {
                     // PROD + CORR + DER.GRANARIOS (Grandes Cuentas)
                     cat = categoriasSISA.Where(x => x.CodCategoria == 1 || x.CodCategoria == 6 || x.CodCategoria == 19).ToList();
                 }
-                else if (cuitSegmentacion.Segmentacion == 14)
+                else if (cuitSegmentacion.Segmentacion == 14) // Grupo Canjeadores
                 {
-                    // Prov Insumos + Otro + Comerciante
-                    cat = categoriasSISA.Where(x => x.CodCategoria == 10 || x.CodCategoria == 7 || x.CodCategoria == 13 || x.CodCategoria == 14).ToList();
+                    List<int> codigosCategoria = new List<int> { 6, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 19 }; // Acopiador + Otros
+                    cat = categoriasSISA.Where(x => codigosCategoria.Contains(x.CodCategoria)).ToList();
+                }
+                else if (cuitSegmentacion.Segmentacion == 18) // Grupo Otros
+                {
+                    List<int> codigosCategoria = new List<int> { 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 19 };
+                    cat = categoriasSISA.Where(x => codigosCategoria.Contains(x.CodCategoria)).ToList();
                 }
 
                 if (cat.Count == 0)
