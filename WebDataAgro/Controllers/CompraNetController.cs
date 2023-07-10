@@ -42,7 +42,7 @@ namespace WebDataAgro.Controllers
         private readonly IConfiguracionManager mobjConfiguracionManager;
         private readonly ITipoDeCambioAgent tipoDeCambioAgent;
         private readonly ICentroManager centroManager;
-
+        private readonly IDiasHabilesAgent diasHabilesAgent;
         //-----------------------------------------------------
         //  Constructor
         //-----------------------------------------------------
@@ -54,7 +54,7 @@ namespace WebDataAgro.Controllers
             ILogger oLogger, IFasonManager oFasonManager, IAgenteCompraManager oAgenteManager, IContratoAcuerdoManager oContratoAcuerdoManager,
             IConfiguracionInternaManager configuracionInternaManager, IConfiguracionManager configuracionManager,
             IOperadorManager oOperadorManager, INegocioManager oNegocioManager,
-            ITipoDeCambioAgent tipoDeCambioAgent, ICentroManager centroManager)
+            ITipoDeCambioAgent tipoDeCambioAgent, ICentroManager centroManager, IDiasHabilesAgent diasHabilesAgent)
         {
             mobjHomeManager = oHomeManager;
             mobjComercialManager = oComercialManager;
@@ -75,6 +75,7 @@ namespace WebDataAgro.Controllers
             this.configuracionInternaManager = configuracionInternaManager;
             this.tipoDeCambioAgent = tipoDeCambioAgent;
             this.centroManager = centroManager;
+            this.diasHabilesAgent = diasHabilesAgent;
         }
 
         //-----------------------------------------------------
@@ -898,7 +899,8 @@ namespace WebDataAgro.Controllers
         public JsonResult ObtenerContratosAcuerdoAlDia(string filtro)
         {
             var contratos = mobjContratoManager.TraerContratosAcuerdo(filtro);
-            contratos = contratos.Where(x=> Convert.ToDateTime(x.Fecha)>= DateTime.Now.Date.AddDays(-1)).ToList();
+            var ultimoDiaHabil = diasHabilesAgent.UltimoDiaHabil(null);
+            contratos = contratos.Where(x => Convert.ToDateTime(x.Fecha) >= ultimoDiaHabil).ToList();
             return Json(contratos, JsonRequestBehavior.AllowGet);
         }
 
@@ -1343,7 +1345,7 @@ namespace WebDataAgro.Controllers
 
                 if (fileSubido.ContentLength > 0)
                 {
-                    var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);
+                    var dsExcel = ExcelImport.LeerExcelDesdeHttpRequest(Request);                    
                     if (tipoAlta == "1")
                     {
                         var resultado = mobjContratoManager.AltaMasivaContratos(dsExcel, contratoAcuerdo, GlobalVariables.ComercialId);
@@ -1438,7 +1440,8 @@ namespace WebDataAgro.Controllers
             {
                 model = mobjContratoManager.ValidarPantallaEnUso(pantallaEnUso);
             }
-            else {
+            else
+            {
                 model = mobjContratoManager.LiberarPantalla(pantallaEnUso);
             }
 
@@ -1449,7 +1452,8 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId, int comercialId) {
+        public ActionResult CantidadDiasCuposConDescarga(string fechaDesdeNegocio, string fechaHastaNegocio, int materialId, int centroId, int comercialId)
+        {
 
             List<ConfiguracionCupoDto> configCupo = mobjContratoManager.CantidadDiasCuposConDescarga(fechaDesdeNegocio, fechaHastaNegocio, materialId, centroId, comercialId);
 
@@ -1460,7 +1464,7 @@ namespace WebDataAgro.Controllers
             };
         }
 
-        public ActionResult TraerCuposConDescarga (int contratoId)
+        public ActionResult TraerCuposConDescarga(int contratoId)
         {
             var cuposDelNegocio = mobjContratoManager.TraerCuposConDescarga(contratoId);
             return new JsonResult()

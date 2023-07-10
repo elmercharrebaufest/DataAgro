@@ -5990,6 +5990,7 @@ namespace Molinos.DataAgro.Business.Managers
                 if (item.FechaOperacion.Value.Date < DateTime.Now.Date)
                 {
                     contrato.MotivoOperacionAnterior = "Acuerdo " + item.ContratoAcuerdoId;
+                    contrato.DescripcionOperacionAnterior = "Acuerdo " + item.ContratoAcuerdoId;
                 }
                 contrato.FechaDesde = item.FechaDesde.Value;
                 contrato.FechaHasta = item.FechaHasta.Value;
@@ -7540,7 +7541,7 @@ namespace Molinos.DataAgro.Business.Managers
                         contratos.Add(contrato);
 
                     }
-
+                    contratos.ForEach(x=> x.MotivoOperacionAnterior = "Alta Masiva Acuerdo.");
                     validacionContratoFatal(contratos, acuerdo, resultValidation);
                     if (!resultValidation.IsValid)
                     {

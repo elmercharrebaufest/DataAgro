@@ -2367,9 +2367,9 @@ function InicializarElementos() {
 
 
     $("#CDId").click(function () {
-        //if ($(this).is(':checked') && viewModel.AperturaPrecio.some(importeNoVacio) && $("#tipoId").val() != "6") {
-        //    MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
-        //}
+        if ($(this).is(':checked') && viewModel.AperturaPrecio.some(importeNoVacio) && $("#tipoId").val() != "6") {
+            MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
+        }
         $("#WarrantId").prop("checked", false);
         $("#pagoDirectoId").prop("checked", false);
 
@@ -2379,9 +2379,9 @@ function InicializarElementos() {
     });
 
     $("#WarrantId").click(function () {
-        //if ($(this).is(':checked') && viewModel.AperturaPrecio.some(importeNoVacio) && $("#tipoId").val() != "6") {
-        //    MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
-        //}
+        if ($(this).is(':checked') && viewModel.AperturaPrecio.some(importeNoVacio) && $("#tipoId").val() != "6") {
+            MensInfo("Debe borrar datos de apertura de precio para completar datos de flete procedencia");
+        }
         $("#CDId").prop("checked", false);
         $("#pagoDirectoId").prop("checked", false);
         if ($(this).is(':checked') && $("#tipoId").val() == "2") {
@@ -2618,19 +2618,19 @@ function InicializarElementos() {
 
     $("#TarifaFleteId").change(function () {
         $("#precioTotalApertura").data("kendoNumericTextBox").value(CalcularPrecioTotalApertura());
-        //if ($(this).val() > 0) {
-        //    $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
-        //} else {
-        //    $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
-        //}
+        if ($(this).val() > 0) {
+            $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
+        } else {
+            $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        }
     });
-    //$("#NivelTarifaId").change(function () {
-    //    if ($(this).val() > 0) {
-    //        $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
-    //    } else {
-    //        $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
-    //    }
-    //});
+    $("#NivelTarifaId").change(function () {
+        if ($(this).val() > 0) {
+            $("#aperturaPrecioBtn").addClass("pointerEventDesabilitado");
+        } else {
+            $("#aperturaPrecioBtn").removeClass("pointerEventDesabilitado");
+        }
+    });
 
     $("#preciosPactadosBoton").click(function () {
         $("#apertura-precio").hide();
@@ -5071,13 +5071,13 @@ function InsertarAperturasViewModel(total) {
     $("#precioTotalApertura").data("kendoNumericTextBox").value(total);
     $("#precioTotalApertura").trigger("change");
 
-    //if (Financiero.Importe != 0 || Redespacho.Importe != 0 || Comisiones.Importe != 0 || Bonificaciones.Importe != 0 || Financiero.Porcentaje != 0 || Comisiones.Porcentaje != 0 || Bonificaciones.Porcentaje != 0) {
-    //    $("#NivelTarifaId").data("kendoDropDownList").enable(false);
-    //    $("#TarifaFleteId").data("kendoNumericTextBox").enable(false);
-    //} else {
-    //    $("#NivelTarifaId").data("kendoDropDownList").enable(true);
-    //    $("#TarifaFleteId").data("kendoNumericTextBox").enable(true);
-    //}
+    if (Financiero.Importe != 0 || Redespacho.Importe != 0 || Financiero.Importe != 0 || Comisiones.Importe != 0 || Bonificaciones.Importe != 0 || Comisiones.Porcentaje != 0 || Bonificaciones.Porcentaje != 0) {
+        $("#NivelTarifaId").data("kendoDropDownList").enable(false);
+        $("#TarifaFleteId").data("kendoNumericTextBox").enable(false);
+    } else {
+        $("#NivelTarifaId").data("kendoDropDownList").enable(true);
+        $("#TarifaFleteId").data("kendoNumericTextBox").enable(true);
+    }
 }
 
 function InicializarAperturaDePrecios() {

@@ -48,6 +48,7 @@ namespace Molinos.DataAgro.Test.Controllers
         private Mock<IConfiguracionManager> configuracionMock;
         private Mock<ITipoDeCambioAgent> tipoDeCambioAgentMock;
         private Mock<ICentroManager> centroManagerMock;
+        private Mock<IDiasHabilesAgent> diasHabilesAgentMock;
         private JavaScriptSerializer serializer;
 
         [SetUp]
@@ -72,13 +73,14 @@ namespace Molinos.DataAgro.Test.Controllers
             configuracionMock = new Mock<IConfiguracionManager>();
             tipoDeCambioAgentMock = new Mock<ITipoDeCambioAgent>();
             centroManagerMock = new Mock<ICentroManager>();
+            diasHabilesAgentMock = new Mock<IDiasHabilesAgent>();
             logger = new Mock<ILogger>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
             target = new CompraNetController(homeManagerMock.Object, localidadManagerMock.Object, proveedorManagerMock.Object,
                 materialManagerMock.Object, contratoManagerMock.Object, fijacionManagerMock.Object, compranetManagerMock.Object,
                 comercialManagerMock.Object, campanaManagerMock.Object, logger.Object, fasonManagerMock.Object, agenteManagerMock.Object,
                 acuerdoManagerMock.Object, configuracionInternaMock.Object, configuracionMock.Object, operadorManagerMock.Object,
-                negocioManagerMock.Object, tipoDeCambioAgentMock.Object, centroManagerMock.Object);
+                negocioManagerMock.Object, tipoDeCambioAgentMock.Object, centroManagerMock.Object, diasHabilesAgentMock.Object);
             HttpContext.Current.Session["comercialId"] = 1;
         }
 
