@@ -25,8 +25,12 @@
         pageable: false,
         toolbar: [{ template: kendo.template($("#templateLog").html()) }],
         columns: [
-            { field: "Fecha", title: "Fecha", format: "{0:dd/MM/yyyy}", width: "100px" },
-            { field: "Xml", title: "XML", width: "auto" },
+            { field: "Fecha", title: "Fecha", format: "{0:dd/MM/yyyy HH:mm}", width: "135px" },
+            {
+                field: "Xml", title: "XML", width: "auto", template: function (dataItem) {
+                    return '<span title="' + kendo.htmlEncode(dataItem.Xml) + '">' + kendo.htmlEncode(dataItem.Xml) + '</span>';
+                }
+            },
             {
                 title: "Copiar XML",
                 template: '<button class="k-button" onclick="copyXml(this)">Copiar</button>', width: "100px"
