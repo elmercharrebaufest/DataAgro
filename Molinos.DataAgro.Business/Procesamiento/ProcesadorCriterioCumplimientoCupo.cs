@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Repository;
+using System;
 
 namespace Molinos.DataAgro.Business.Procesamiento
 {
@@ -16,7 +17,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             if (criterio.Dto.ProveedorId.HasValue)
             {
                 var cumplidos = Repositorio.Contar<Cupo>(x => x.Cumplimiento == true && criterio.Dto.ProveedorId.Value == x.ProveedorId);
-                var todos = Repositorio.Contar<Cupo>(x => criterio.Dto.ProveedorId.Value == x.ProveedorId);
+                var todos = Repositorio.Contar<Cupo>(x => criterio.Dto.ProveedorId.Value == x.ProveedorId && x.FechaIngreso < DateTime.Today && x.Cumplimiento != null);
 
                 return cumplidos / 100 * todos;
             }

@@ -100,7 +100,7 @@ function InicializarMultiSelect(textField, valueField, url, columna, serverFilte
 }
 
 function InicializarCuposIndex() {
-
+    var Centros = JSON.parse(document.getElementById('Centros').getAttribute('data-value'));
     var estados = new Array();
        estados = [
             { EstadoCupo: "Sin CTG" },
@@ -259,40 +259,9 @@ function InicializarCuposIndex() {
                 field: "Centro", type: "string", title: "Destino", minResizableWidth: 100, width: 150, editable: function (dataItem) {
                     return false;
                 }, filterable: {
-                    multi: true, dataSource: [{
-                        Centro: "S. Lorenzo"
-                    },
-                        //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
-                    {
-                        Centro: "Rio del Valle (Planta Soto)"
-                    }, {
-                        Centro: "General Pinedo"
-                    }, {
-                        Centro: "Vicentin Virtual"
-                    }, {
-                        Centro: "Bahia Blanca"
-                    }, {
-                        Centro: "Pergamino"
-                    }, {
-                        Centro: "Bandera"
-                    },
-                    {
-                        Centro: "La Cautiva"
-                    },
-                    {
-                        Centro: "Lincoln"
-                    },
-                    {
-                        Centro: "Prest Dev. Buenos Aires"
-                    },
-                    {
-                        Centro: "Prest Dev. Santa Fe"
-                    },
-                    {
-                        Centro: "Chivilcoy"
-                    }, {
-                        Centro: "LE"
-                    }]
+                    multi: true, dataSource: Centros.map(function (centro) {
+                        return { Centro: centro };
+                    })
                 }, width: 130, template: "#=Centro#",
             },
             {

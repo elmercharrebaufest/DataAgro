@@ -26,6 +26,7 @@ $(document).ready(function () {
 
 });
 function CargarGrillaConfig() {
+    var Centros = JSON.parse(document.getElementById('Centros').getAttribute('data-value'));
     var ds = {
         transport: {
             read: {
@@ -178,40 +179,9 @@ function CargarGrillaConfig() {
                 field: "Centro", type: "string", title: "Destino", minResizableWidth: 100, width: 150, editable: function (dataItem) {
                     return false;
                 }, filterable: {
-                    multi: true, dataSource: [{
-                        Centro: "S. Lorenzo"
-                    },
-                        //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
-                    {
-                        Centro: "Rio del Valle (Planta Soto)"
-                    }, {
-                        Centro: "General Pinedo"
-                    }, {
-                        Centro: "Vicentin Virtual"
-                    }, {
-                        Centro: "Bahia Blanca"
-                    }, {
-                        Centro: "Pergamino"
-                    }, {
-                        Centro: "Bandera"
-                    },
-                    {
-                        Centro: "La Cautiva"
-                    },
-                    {
-                        Centro: "Lincoln"
-                    },
-                    {
-                        Centro: "Prest Dev. Buenos Aires"
-                    },
-                    {
-                        Centro: "Prest Dev. Santa Fe"
-                    },
-                    {
-                        Centro: "Chivilcoy"
-                    }, {
-                        Centro: "LE"
-                    }]
+                    multi: true, dataSource: Centros.map(function (centro) {
+                        return { Centro: centro };
+                    })
                 }, width: 130, template: "#=Centro#",
             },
             {
@@ -415,7 +385,8 @@ function CargarGrillaConfig() {
     }).data("kendoTooltip");
 
 
-    var fecha = new Date();
+    var fecha = new Date(); // Fecha actual
+    fecha.setDate(fecha.getDate() - 7);
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
     addOrRemoveFilter(grilla, "Fecha", "gte", fecha);
     var checkInputs = function (elements) {
@@ -442,7 +413,7 @@ function CargarGrillaConfig() {
     }
 
     function createMultiSelectProveedor(element) {
-        return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedor");
+        return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedorTodos");
     }
     function createMultiSelectComercial(element) {
         return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial", "ComercialId", false, "contains");

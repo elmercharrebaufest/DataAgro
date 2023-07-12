@@ -507,19 +507,22 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         if (PermisosHelper.ObtenerUsuario() != null && !PermisosHelper.Is(PermisosDataAgro.NuevoNegocioExterno))
                         {
-                            if (centro.ValidaRedespacho == true && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) /*&& oParam.Pizarra != true*/)
+                            if (!(oParam.ProveedorId == 3102 && oParam.EsFason == true)) //no valida redespacho cuando el proveedor es MOA y es a fijar con tilde fasón
                             {
-                                oErrorMessages.Error("Descuentos", "Se debe completar Redespacho en Acopios.");
-                            }
+                                if (centro.ValidaRedespacho == true && (oParam.AperturaPrecio == null || !oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho)) /*&& oParam.Pizarra != true*/)
+                                {
+                                    oErrorMessages.Error("Descuentos", "Se debe completar Redespacho en Acopios.");
+                                }
 
-                            //if (centro.ValidaRedespacho == true && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoDBId == 1 && x.TipoPeriodoDBId == 1)) && oParam.Pizarra == true)
-                            //{
-                            //    oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
-                            //}
+                                //if (centro.ValidaRedespacho == true && (oParam.Descuentos == null || !oParam.Descuentos.Any(x => x.Importe < 0 && x.TipoDBId == 1 && x.TipoPeriodoDBId == 1)) && oParam.Pizarra == true)
+                                //{
+                                //    oErrorMessages.Error("Descuentos", " Se debe completar Redespacho en Acopios.");
+                                //}
 
-                            if (centro.ValidaRedespacho == false && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho) /*&& oParam.Pizarra != true*/)
-                            {
-                                oErrorMessages.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
+                                if (centro.ValidaRedespacho == false && oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Redespacho) /*&& oParam.Pizarra != true*/)
+                                {
+                                    oErrorMessages.Error("Descuentos", "Solo se debe completar Redespacho en Acopios.");
+                                }
                             }
 
                             if (oParam.AperturaPrecio != null && oParam.AperturaPrecio.Any(x => x.Importe < 0 && x.ConceptoAperturaPrecioId == (int)EnumConceptoApertura.Financiero) /*&& oParam.Pizarra != true*/)

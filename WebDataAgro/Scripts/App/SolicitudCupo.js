@@ -44,6 +44,7 @@ $(document).ready(function () {
     });
 });
 function CargarGrilla() {
+    var Centros = JSON.parse(document.getElementById('Centros').getAttribute('data-value'));
     var ds = {
         transport: {
             read: {
@@ -188,21 +189,9 @@ function CargarGrilla() {
                 field: "Centro", type: "string", title: "Destino", editable: function (dataItem) {
                     return false;
                 }, attributes: { "class": "mobile-xs mobile-md" }, filterable: {
-                    multi: true, dataSource: [
-                        { Centro: "S. Lorenzo" },
-                        //{ Centro: "SAN LORENZO SUSTENTABLE / CALIDAD" },
-                        { Centro: "Rio del Valle (Planta Soto)" },
-                        { Centro: "General Pinedo" },
-                        { Centro: "Vicentin Virtual" },
-                        { Centro: "Bahia Blanca" },
-                        { Centro: "Pergamino" },
-                        { Centro: "Bandera" },
-                        { Centro: "La Cautiva" },
-                        { Centro: "Lincoln" },
-                        { Centro: "Prest Dev. Buenos Aires" },
-                        { Centro: "Prest Dev. Santa Fe" },
-                        { Centro: "Chivilcoy" },
-                        { Centro: "LE" }]
+                    multi: true, dataSource: Centros.map(function (centro) {
+                        return { Centro: centro };
+                    })
                 }, width: 130, template: "#=Centro#",
             },
             {
@@ -363,7 +352,8 @@ function CargarGrilla() {
         //,
         //filter: defaultFilter
     });
-    var fecha = new Date();
+    var fecha = new Date(); // Fecha actual
+    fecha.setDate(fecha.getDate() - 7);
     var grilla = $('#gridInformeCompraNet').data("kendoGrid");
     addOrRemoveFilter(grilla, "Fecha", "gte", fecha);
     var checkInputs = function (elements) {
@@ -374,67 +364,67 @@ function CargarGrilla() {
             input.prop("checked", element.hasClass("k-state-selected"));
         });
     };
-    function createMultiSelect(element, textField, valueField, url, columna) {
-        element.removeAttr("data-bind");
-        columna = columna == null ? valueField : columna;
-        console.log(columna);
-        element.kendoMultiSelect({
-            itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
-            dataBound: function () {
-                var items = this.ul.find("li");
-                setTimeout(function () {
-                    checkInputs(items);
-                });
-            },
-
-            dataTextField: textField,
-            dataValueField: valueField,
-            autoClose: false,
-            autoBind: false,
-            delay: 300,
-            dataSource: {
-                serverFiltering: true,
-                filter: [],
-                transport: {
-                    read: {
-                        url: url,
-                        data: function () {
-                            return {
-                                text: element.data("kendoMultiSelect").input.val()
-                            };
-                        },
-                        prefix: ""
-                    }
-                },
-            },
-            change: function (e) {
-                var items = this.ul.find("li");
+}
+function createMultiSelect(element, textField, valueField, url, columna) {
+    element.removeAttr("data-bind");
+    columna = columna == null ? valueField : columna;
+    console.log(columna);
+    element.kendoMultiSelect({
+        itemTemplate: "<input type='checkbox'/> #:data." + textField + "#",
+        dataBound: function () {
+            var items = this.ul.find("li");
+            setTimeout(function () {
                 checkInputs(items);
-                var grilla = $('#gridInformeCompraNet').data("kendoGrid");
-                var values = this.value();
-                $.each(values, function (i, v) {
-                    if (v !== '') {
-                        addOrRemoveFilter(grilla, columna, "eq", v);
-                    }
-                });
+            });
+        },
 
-                if (values.length === 0) {
-                    addOrRemoveFilter(grilla, columna, "eq", null);
+        dataTextField: textField,
+        dataValueField: valueField,
+        autoClose: false,
+        autoBind: false,
+        delay: 300,
+        dataSource: {
+            serverFiltering: true,
+            filter: [],
+            transport: {
+                read: {
+                    url: url,
+                    data: function () {
+                        return {
+                            text: element.data("kendoMultiSelect").input.val()
+                        };
+                    },
+                    prefix: ""
                 }
-            }
-        });
-        setTimeout(function () {
-            $(".k-multiselect").parent().children(".k-dropdown").remove();
-            $(".k-multiselect").parent().children("div").find('button').remove();
-        }, 200);
-    }
+            },
+        },
+        change: function (e) {
+            var items = this.ul.find("li");
+            checkInputs(items);
+            var grilla = $('#gridInformeCompraNet').data("kendoGrid");
+            var values = this.value();
+            $.each(values, function (i, v) {
+                if (v !== '') {
+                    addOrRemoveFilter(grilla, columna, "eq", v);
+                }
+            });
 
-    function createMultiSelectProveedor(element) {
-        return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedor");
-    }
-    function createMultiSelectComercial(element) {
-        return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial");
-    }
+            if (values.length === 0) {
+                addOrRemoveFilter(grilla, columna, "eq", null);
+            }
+        }
+    });
+    setTimeout(function () {
+        $(".k-multiselect").parent().children(".k-dropdown").remove();
+        $(".k-multiselect").parent().children("div").find('button').remove();
+    }, 200);
+}
+
+function createMultiSelectComercial(element) {
+    return createMultiSelect(element, "Comercial", "ComercialId", "/CompraNet/ListarComercial");
+}
+function createMultiSelectProveedor(element) {
+    return createMultiSelect(element, "Proveedor", "Proveedor", "/CompraNet/ListarProveedorTodos");
 }
 
 function addOrRemoveFilter(grid, field, operator, value) {

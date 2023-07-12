@@ -36,7 +36,7 @@ namespace Molinos.DataAgro.Interfaces
         List<DiaCupo> Panel();
         List<SugerenciaNoAceptada> SugerenciasNoAceptadas();
         void EnviarMailSinCtg();
-        List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
+        List<DisponibilidadCuposDto> TraerDisponibilidadCupo(DateTime? fechaDesde, DateTime? fechaHasta, List<string> centroId, string materialId);
         Resultado ActualizarCupoSAP(Cupo cupo);
         CupoResult RechazarCupo(Cupo cupo, string idActiveDirectory);
         CupoResult AceptarCupo(Cupo cupo);
@@ -68,7 +68,7 @@ namespace Molinos.DataAgro.Interfaces
         //void EjecutarAlgoritmoManual(int materialId, FormulaDto formula, ConfiguracionCupo configuracion = null, string path = "");
         List<RespuestaCupoNoPropioStop> ConsultarMisTurnosActivos();
         CupoResult ValidarDisponibilidadCupera(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
-        CupoResult DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver);
+        List<CupoResult> DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver);
         List<DisponibilidadCuposDto> TraerCupoDisponibilidadDescarga(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId);
         CupoResult ValidarDisponibilidadCuperaConDescarga(int materialId, int centroId, DateTime fechaSugerida, int cantidad);
     }

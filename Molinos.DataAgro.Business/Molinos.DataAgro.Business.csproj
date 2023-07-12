@@ -313,6 +313,7 @@
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintisiete.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintitres.cs" />
     <Compile Include="ProcesamientoClausulas\ProcesadorClausulaVeintiuno.cs" />
+    <Compile Include="Procesamiento\ProcesadorCriterioConDescarga.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsSojaSustentable.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsContratoAPrecio.cs" />
     <Compile Include="Procesamiento\ProcesadorCriterioEsEspacioDinamico.cs" />

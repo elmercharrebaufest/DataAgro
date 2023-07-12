@@ -11,7 +11,6 @@ using System.Linq;
 using WebDataAgro.Atributos;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces.Managers;
-using Molinos.DataAgro.Entities.Entities;
 
 namespace WebDataAgro.Controllers
 {
@@ -90,7 +89,9 @@ namespace WebDataAgro.Controllers
                 });
             }
             ViewBag.CenLista = new SelectList(listaCentro, "Value", "Text", centroId);
-            var primerCierre = cupoManager.DevolverTodoCierreCupera().FirstOrDefault();
+            ViewBag.CentrosTodos = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos).Select(x => x.Descripcion).OrderByDescending(x => x).ToList();
+            var primerCierre = materialId == null ? null : cupoManager.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialId).FirstOrDefault();
+
             ViewBag.Cierre = primerCierre != null ? primerCierre.Cierre : false;
 
             var equipo = GlobalVariables.EquipoReal;
@@ -227,7 +228,13 @@ namespace WebDataAgro.Controllers
 
         public JsonResult DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver)
         {
-            CupoResult resultado = cupoManager.DevolverSugerenciasMasivo(sugerenciasADevolver);
+            //List<CupoResult> resultados = new List<CupoResult>();
+            //CupoResult resultado = cupoManager.DevolverSugerenciasMasivo(sugerenciasADevolver);
+            //resultados.Add(resultado);
+            //return Json(resultados);
+
+            List<CupoResult> resultado = new List<CupoResult>();
+            resultado = cupoManager.DevolverSugerenciasMasivo(sugerenciasADevolver);
             return Json(resultado);
         }
 

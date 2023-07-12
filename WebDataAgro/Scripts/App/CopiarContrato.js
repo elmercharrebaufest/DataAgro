@@ -886,7 +886,7 @@ function ObtenerDatos(error) {
     obj.Anticipo = $("#Anticipo").val();
     obj.Cesion = $("#Cesion").val();
     obj.ClasificacionContrato = $("#ClasificacionContrato").val();
-    obj.Clasificacion = $("#ClasificacionContrato").val();
+    //obj.Clasificacion = $("#ClasificacionContrato").val();
     obj.ImporteAPrecioContrato = $("#ImporteAPrecioContrato").val();
     obj.PorcentajeAPrecioContrato = $("#PorcentajeAPrecioContrato").val();
     obj.MonedaAPrecioContrato = $("#MonedaAPrecioContrato").val();

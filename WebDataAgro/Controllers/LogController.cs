@@ -35,7 +35,13 @@ namespace WebDataAgro.Controllers
 
             });
         }
+        public ActionResult ListaLogGrilla(string fechaString)
+        {
+            DateTime fecha = DateTime.ParseExact(fechaString, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            var logs = oLogManager.TraerTodoLog(fecha);
 
+            return Json(logs, JsonRequestBehavior.AllowGet);
+        }
         public List<LogModel> TransformarAModel(List<LogDto> logDto)
         {
             var lista = new List<LogModel>();

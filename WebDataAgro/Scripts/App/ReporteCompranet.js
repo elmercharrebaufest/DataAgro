@@ -105,6 +105,7 @@ function AbrirModalIds(anio, materialNombre, mesNombre, negocioids, tiponegocioi
     }
     href = href + "/DetalleIdsModal?" /*+ "&tiponegocioids=" + tiponegocioids*/ + "&negocioids=" + negocioids + "&moneda=" + moneda;
 
+    $("#modalContentId").removeAttr("style");
     //$.get(href, function (data) { crearGrilladetallePosicion(data); });
     var list = negocioids.split(',');
     $.post(window.location.href + "/DetalleIdsModal", { negocioids: list, moneda: moneda, verDepositoTipoNegocio: verDepositoTipoNegocio }, function (data) {
@@ -838,9 +839,7 @@ function crearGrillaFijacionLargaCorta(href, grilla) {
 function crearGrillaSustentablePosicion(href) {
     var modal = document.getElementById("ModalDetallePosicion");
     modal.style.textAlign = "-webkit-center";
-    var modalContent = document.getElementById("modalContentId");
-    modalContent.style.maxWidth = "50%";
-    modalContent.style.textAlign = "-webkit-center";
+    $("#modalContentId").attr("style", "max-width: 500px;");
     $("#grilla").kendoGrid({
         culture: "es-AR",
         dataSource: {
@@ -850,10 +849,7 @@ function crearGrillaSustentablePosicion(href) {
                 data: "items",
                 total: "total"
             },
-            //pageSize: 20,
-
             aggregate: [
-                
             ]
         },
         dataBound: ShowModal,
@@ -862,7 +858,7 @@ function crearGrillaSustentablePosicion(href) {
         reorderable: false,
         groupable: false,
         resizable: true,
-        
+
         columnMenu: false,
         columns: [
             {
@@ -873,7 +869,7 @@ function crearGrillaSustentablePosicion(href) {
                     style: "background-color: #017940; text-align: center; color: white"
                 },
                 template: function (dataItem) {
-                    return dataItem.posicion;
+                    return '<span style="font-size: 13px;">' + dataItem.posicion + '</span>';
                 }
             }
             , {
@@ -883,14 +879,11 @@ function crearGrillaSustentablePosicion(href) {
                     style: "background-color: #017940; text-align: center; color: white"
                 },
                 template: function (dataItem) {
-                    return kendo.toString(dataItem.cantidad, "n1")
+                    return '<span style="font-size: 13px;">' + kendo.toString(dataItem.cantidad, "n1") + '</span>';
                 },
-                width: 100
+                width: 120
             }]
-
     });
-
-
 }
 
 function OcultarColumnasVacias(grid) {
@@ -1023,10 +1016,16 @@ function ShowModal(e) {
     $("#ModalDetallePosicion").on('shown.bs.modal', function () {
         $(document).off('focusin.modal');
     });
+    //$("#ModalDetallePosicion").on('hidden.bs.modal', function () {
+    //    $('#grilla').kendoGrid('destroy').empty();
+    //});
     $("#ModalDetallePosicion").on('hidden.bs.modal', function () {
-        //$("#grilla").kendoGrid().destroy;
-        $('#grilla').kendoGrid('destroy').empty();
+        if ($('#grilla').data('kendoGrid')) {
+            $('#grilla').data('kendoGrid').destroy();
+        }
+        $('#grilla').empty();
     });
+
     $("#ModalDetallePosicion").modal('show');
     OcultarColumnasVacias($("#grilla").data("kendoGrid"));
 }
@@ -1037,9 +1036,12 @@ function ShowModalFijacion(e) {
         $(document).off('focusin.modal');
     });
     $("#ModalDetalleFijacion").on('hidden.bs.modal', function () {
-        //$("#grilla").kendoGrid().destroy;
-        $('#grillaDetalle').kendoGrid('destroy').empty();
+        if ($('#grilla').data('kendoGrid')) {
+            $('#grilla').data('kendoGrid').destroy();
+        }
+        $('#grilla').empty();
     });
+
     $("#ModalDetalleFijacion").modal('show');
     OcultarColumnasVacias($("#grillaDetalle").data("kendoGrid"));
 
@@ -1052,9 +1054,12 @@ function ShowModalSojaSustentable(e) {
         $(document).off('focusin.modal');
     });
     $("#ModalDetalleSojaSustentable").on('hidden.bs.modal', function () {
-        //$("#grilla").kendoGrid().destroy;
-        $('#grillaSojaSustentable').kendoGrid('destroy').empty();
+        if ($('#grilla').data('kendoGrid')) {
+            $('#grilla').data('kendoGrid').destroy();
+        }
+        $('#grilla').empty();
     });
+
     $("#ModalDetalleSojaSustentable").modal('show');
     //OcultarColumnasVacias($("#grilla").data("kendoGrid"));
 }

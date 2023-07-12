@@ -12,9 +12,8 @@ function additionalData() {
     return {
         FechaDesde: $("#FechaDesde").val(),
         FechaHasta: $("#FechaHasta").val(),
-        MaterialId: $("#MaterialId").val(),
-        ZonaId: $("#ZonaId").val(),
         CentroId: $("#CentroId").data("kendoMultiSelect").value(),
+        MaterialId: $("#MaterialId").val()
     };
 }
 
@@ -30,7 +29,6 @@ function InicializarGrid() {
                 dataType: 'json',
                 contentType: "application/json",
                 url: '/Cupo/BuscaDatosTablaDisponibilidad'
-
             }
         },
 
@@ -43,11 +41,11 @@ function InicializarGrid() {
     };
 
     $("#grid").kendoGrid({
-        //toolbar: ["excel"],
-        //excel: {
-        //    fileName: "Reporte Disponibilidad.xlsx",
-        //    allPages: true
-        //},
+        toolbar: ["excel"],
+        excel: {
+            fileName: "Disponibilidad de Cupos.xlsx",
+            allPages: true
+        },
         dataSource: ds,
         dataBound: function () {
             var grid = $("#grid").data("kendoGrid");
@@ -64,8 +62,8 @@ function InicializarGrid() {
             { field: "CentroNombre", title: "Centro", type: "string" },
             { field: "Fecha", title: "Fecha", type: "date", format: "{0:dd/MM/yyyy}" },
             { field: "MaterialNombre", title: "Material", type: "string" },
-            { field: "ZonaNombre", title: "Zona", type: "string" },
-            { field: "Limite", title: "Limite", type: "string" },
+            //{ field: "ZonaNombre", title: "Zona", type: "string" },
+            { field: "Limite", title: "Cantidad Límite", type: "string" },
             { field: "Consumidos", title: "Consumidos", type: "string" },
             { field: "Disponibles", title: "Disponibles", type: "string" },
         ],
@@ -96,11 +94,9 @@ function InicializarGrid() {
     });
 }
 
-
 function Filtrar() {
     $('#grid').data('kendoGrid').dataSource.read();
 }
-
 
 function inicializarElementos() {
     $("#FechaDesde").kendoDatePicker({
@@ -127,8 +123,6 @@ function inicializarElementos() {
 
 }
 
-
-
 function mostrarocultar(element) {
     if ($(element).text() == "Mostrar") {
         $(element).text("Ocultar");
@@ -136,13 +130,3 @@ function mostrarocultar(element) {
         $(element).text("Mostrar");
     }
 }
-
-
-
-
-
-
-
-
-
-

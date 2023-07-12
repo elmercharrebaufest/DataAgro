@@ -1,7 +1,5 @@
 ﻿using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
 using System;
@@ -9,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebDataAgro.Atributos;
-using WebDataAgro.Models;
 using static WebDataAgro.MvcApplication;
 
 namespace WebDataAgro.Controllers
@@ -19,11 +16,13 @@ namespace WebDataAgro.Controllers
     {
         private readonly IAdministracionCupoManager administracionCupoManager;
         private readonly ICupoManager cupoManager;
+        private readonly ICentroManager centroManager;
 
-        public AdministracionCupoController(IAdministracionCupoManager administracionCupoManager, ICupoManager cupoManager)
+        public AdministracionCupoController(IAdministracionCupoManager administracionCupoManager, ICupoManager cupoManager, ICentroManager centroManager)
         {
             this.administracionCupoManager = administracionCupoManager;
             this.cupoManager = cupoManager;
+            this.centroManager = centroManager;
         }
         [Autorizacion(PermisosDataAgro.AdministracionCupos)]
         public ActionResult Index()
@@ -32,6 +31,7 @@ namespace WebDataAgro.Controllers
             ViewBag.Fechas = cupoManager.FechasComprendidas(null);
             ViewBag.SugerenciasNoAceptadas = cupoManager.SugerenciasNoAceptadas();
             ViewBag.comercialId = GlobalVariables.ComercialId;
+            ViewBag.CentrosTodos = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos).Select(x => x.Descripcion).OrderByDescending(x => x).ToList();
             return View();
         }
         public ActionResult DatosAdministracion(KendoGridMvcRequest request)

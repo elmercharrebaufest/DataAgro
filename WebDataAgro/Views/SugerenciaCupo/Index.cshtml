@@ -2,9 +2,7 @@
 @{
     ViewBag.Title = "Sugerencia de Cupos";
 }
-@section Styles {
-    @**@
-}
+
 <style>
     #GridID .k-grid-content {
         min-height: 100px;
@@ -35,9 +33,9 @@
         list-style-type: none;
     }
 
-    #menu > ul > li {
-        list-style: none;
-    }
+        #menu > ul > li {
+            list-style: none;
+        }
 
     #menu > li {
         list-style: none;
@@ -167,21 +165,21 @@
         width: 100%;
     }
 
-    #cargarDatosEstablecimiento2 td {
-        text-align: center;
-        border-top: none;
-        border: 1px solid #dddddd;
-    }
+        #cargarDatosEstablecimiento2 td {
+            text-align: center;
+            border-top: none;
+            border: 1px solid #dddddd;
+        }
 
-    #cargarDatosEstablecimiento2 th {
-        text-align: center;
-        border: 1px solid #dddddd;
-    }
+        #cargarDatosEstablecimiento2 th {
+            text-align: center;
+            border: 1px solid #dddddd;
+        }
 
-    #cargarDatosEstablecimiento2 th:first-of-type {
-        vertical-align: middle;
-        border: 1px solid #dddddd;
-    }
+            #cargarDatosEstablecimiento2 th:first-of-type {
+                vertical-align: middle;
+                border: 1px solid #dddddd;
+            }
 
     .sticky-thead {
         position: sticky;
@@ -194,12 +192,10 @@
         width: 13% !important;
     }
 </style>
-<script src="~/Scripts/KendoExtensions.js"></script>
-<script src="~/Scripts/kendo/messages/kendo.messages.es-AR.min.js"></script>
 
-<script src="~/Scripts/App/SugerenciaCupo.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<script src="~/Scripts/App/SolicitudCupo.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/SugerenciaCupo")
+}
 
 @{
     var cierre = ViewBag.Cierre;
@@ -233,10 +229,11 @@
                 </div>
             </div>*@
         <div class="tab-pane active" id="method">
-            <div class="alert alert-warning @(cierre ? "": "hide")">La cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente comunicarse con el administrador de la cupera.</div>
+            @*<div class="alert alert-warning @(cierre ? "": "hide")">La cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente comunicarse con el administrador de la cupera.</div>*@
 
             @*filtros*@
-            <div class="panelflotante @(cierre ? "hide": "")">
+            @*<div class="panelflotante @(cierre ? "hide": "")">*@
+            <div class="panelflotante">
                 <div class="row">
 
                     @*<div class="float-left margen-15">
@@ -301,15 +298,20 @@
 
                 </div>
             </div>
-            <div class="row @(cierre ? "hide": "")">
+            @*<div class="row @(cierre ? "hide": "")">*@
+            <div class="row">
                 <div class="col-xs-12" style="padding:0;">
                     @*<div id="gridSugerenciaCupo" class="table-responsive"> </div>*@
 
-                    @if (lista == null || lista.Where(a => a.MaterialId == materialId).Count() == 0)
+                    @if (lista == null || lista.Where(a => a.MaterialId == materialId).Count() == 0 || cierre)
                     {
                         if (materialId == null)
                         {
                             <label>Debe seleccionar un material para ver las sugerencias.</label>
+                        }
+                        else if (cierre)
+                        {
+                            <div class="alert alert-warning @(cierre ? "": "hide")">La cupera, para el material seleccionado, se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente comunicarse con el administrador de la cupera.</div>
                         }
                         else
                         {
@@ -719,6 +721,7 @@
         </div>
     </div>
 </div>
+<div id="Centros" data-value="@Json.Encode(ViewBag.CentrosTodos)" hidden></div>
 
 @Html.Partial("SolicitudExtraordinaria")
 

@@ -1,7 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.AltaTempranaNosisBolsaRuca;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -19,10 +18,11 @@ namespace Molinos.DataAgro.Agent
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
 
         public AltaTempranaNRCODto ObtenerAlta(string cuit, string tipoProv)
         {
@@ -69,7 +69,8 @@ namespace Molinos.DataAgro.Agent
                         new HistoricoFechaActualizacionLegajo() {
                             Cosecha = "",
                             Material = "",
-                            FechaAtualizacion = "" } }
+                            FechaAtualizacion = "" }
+                    }
                 };
             }
             else
@@ -79,26 +80,19 @@ namespace Molinos.DataAgro.Agent
                     var agent = new SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_COClient();
                     agent.ClientCredentials.UserName.UserName = UserSap;
                     agent.ClientCredentials.UserName.Password = PassSap;
-                    
+
                     var rq = new Z_MPRFC_ALTA_TEMPRANA_N_R_CO()
                     {
                         IM_CUIT = cuit,
                         IM_KTOKK = tipoProv,
                     };
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                    //logger.Debug(rq.ToXml());
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_ALTA_TEMPRANA_N_R_CO(rq);
-                    //logger.Debug(valor.ToXml());
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += valor.ToXml();
-                    repositorio.GuardarCambios();
+                    if (activarLogDebug)
+                    {
+                        logger.Debug(rq.ToXml());
+                        logger.Debug(valor.ToXml());
+                    }
 
                     var retorno = new AltaTempranaNRCODto
                     {

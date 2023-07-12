@@ -13,8 +13,8 @@
     @Scripts.Render("~/bundles/ConfiguracionCupo")
 }
 @*<script src="~/Scripts/KendoExtensions.js"></script>
-<script src="~/Scripts/App/ConfiguracionCupo.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
+    <script src="~/Scripts/App/ConfiguracionCupo.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
 
 <div class="container">
 
@@ -57,7 +57,7 @@
 
                 <div class="row">
                     @Html.HiddenFor(x => x.Id)
-                    <div class="col-xs-2">
+                    <div class="col-xs-2" id="Centros" data-value="@Json.Encode(ViewBag.CentrosTodos)">
                         <span>Centro</span>
                     </div>
                     <div class="col-sm-4">

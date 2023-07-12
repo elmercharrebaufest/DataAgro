@@ -1,14 +1,12 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.CumplimientoCupos;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
 namespace Molinos.DataAgro.Agent.Helpers
 {
@@ -19,8 +17,8 @@ namespace Molinos.DataAgro.Agent.Helpers
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        String UserSap = ConfigurationManager.AppSettings["SapUser"];
-        String PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly String UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly String PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
         public List<CumplimientoCupoDto> Ejecutar(List<string> cupos, DateTime? fecha)

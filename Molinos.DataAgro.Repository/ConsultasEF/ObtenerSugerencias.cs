@@ -1,7 +1,6 @@
 ﻿using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -57,8 +56,9 @@ namespace Molinos.DataAgro.Repository.ConsultasEF
                     PuntuacionTotal = sugerido.Puntuacion,
                     KgNegocio = sugerido.KgNegocio,
                     KgPendienteAplicar = sugerido.KgPendienteAplicar,
-                    Sustentable = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).Sustentable == true ? true : false,
-                    EPA = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).EPA == true ? true : false
+                    Sustentable = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).Sustentable == true,
+                    EPA = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).EPA == true,
+                    ConDescarga = sugerido.Negocio != null && sugerido.Negocio is Contrato && (sugerido.Negocio as Contrato).ConDescarga == true
                 }).ToList();
 
             //var solicitudes = contexto.Set<AdministracionCupo>()

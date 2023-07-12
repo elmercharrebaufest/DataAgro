@@ -1,23 +1,16 @@
 ﻿using Autofac.Extras.NLog;
-using KendoGridBinder;
-using Molinos.DataAgro.Business;
 using Molinos.DataAgro.Business.Managers;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
-using Molinos.DataAgro.Repository.ConsultasEF;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq.Expressions;
 using System.Web;
-using System.Web.Script.Serialization;
 
 namespace Molinos.DataAgro.Test.Managers
 {
@@ -149,7 +142,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new List<Cupo>() { new Cupo { Id = 1, ZonaCupoId = 1 } });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, string>>>(), It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
            Returns(new List<string>() { "CBA" });
-            cupoManager.Setup(x => x.TraerCupoDisponibilidad(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>());
+            cupoManager.Setup(x => x.TraerDisponibilidadCupo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<string>>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>());
             repositorioMock.Setup(x => x.Obtener<ConfiguracionCupo>(It.IsAny<int>())).Returns(cupo);
             repositorioMock.Setup(x => x.Obtener<Centro>(It.IsAny<int>())).Returns(centro);
             var resultado = target.TraerLimites(1);
@@ -203,7 +196,7 @@ namespace Molinos.DataAgro.Test.Managers
                 .Returns(new ConfiguracionCupoDto { Id = 1, LimiteCupo = 100 });
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<ZonaCupo, string>>>(), It.IsAny<Expression<Func<ZonaCupo, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Entities.Helpers.DirOrden>())).
             Returns(new List<string>() { "CBA" });
-            cupoManager.Setup(x => x.TraerCupoDisponibilidad(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>());
+            cupoManager.Setup(x => x.TraerDisponibilidadCupo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<string>>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>());
 
             var resultado = target.TraerConfiguracionCupo(1);
 
@@ -290,8 +283,5 @@ namespace Molinos.DataAgro.Test.Managers
 
             Assert.That(!resultado.HayError);
         }
-
-
-
     }
 }

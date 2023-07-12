@@ -1,8 +1,61 @@
 ﻿$(document).ready(function () {
     $('#menuproveedor').hide();
     InicializarDate();
+
+    $("#gridLog").kendoGrid({
+        dataSource: {
+            transport: {
+                read: {
+                    url: "/Log/ListaLogGrilla",
+                    data: { fechaString: getSelectedDate() },
+                    dataType: "json",
+                    type: "GET"
+                }
+            },
+            schema: {
+                model: {
+                    fields: {
+                        Fecha: { type: "date" },
+                        Xml: { type: "string" }
+                    }
+                }
+            },
+        },
+        sortable: true,
+        pageable: false,
+        toolbar: [{ template: kendo.template($("#templateLog").html()) }],
+        columns: [
+            { field: "Fecha", title: "Fecha", format: "{0:dd/MM/yyyy}", width: "100px" },
+            { field: "Xml", title: "XML", width: "auto" },
+            {
+                title: "Copiar XML",
+                template: '<button class="k-button" onclick="copyXml(this)">Copiar</button>', width: "100px"
+            },
+        ],
+        rowHeight: 50,
+    });
 });
 
+function getSelectedDate() {
+    return $("#fecha").val();
+}
+function Buscar() {
+    $("#gridLog").data("kendoGrid").dataSource.read({ fechaString: getSelectedDate() });
+}
+function copyXml(button) {
+    var dataItem = $("#gridLog").data("kendoGrid").dataItem($(button).closest("tr"));
+    var xml = dataItem.Xml;
+
+    // Create a temporary textarea element to copy the XML to the clipboard
+    var textarea = document.createElement("textarea");
+    textarea.value = xml;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+
+    // Remove the temporary textarea element
+    document.body.removeChild(textarea);
+}
 function copia_portapapeles(data) {
     var copy = function (e) {
         e.preventDefault();
@@ -29,7 +82,7 @@ function InicializarDate() {
     $("#fecha").kendoDatePicker({
         value: date,
         format: "dd-MM-yyyy",
-        parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]        
+        parseFormats: ["dd-MM-yyyy", "dd-MM-yyyy"]
     });
     fechaString = $("#fecha").val();
 }
@@ -47,4 +100,3 @@ function ObtenerFecha() {
     }
     return dia + '-' + mes + '-' + anio;
 }
-

@@ -28,16 +28,13 @@ namespace Molinos.DataAgro.Test.Procesamiento
         [Test]
         public void CalcularTest()
         {
-            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CampañaMaterial, bool>>>())).Returns(true);
-
+            repositorioMock.Setup(y => y.Existe(It.IsAny<Expression<Func<CampanaMaterialDetallePorMes, bool>>>())).Returns(true);
 
             var criterio = new CriterioEsPrimerNegocio { Dto = new SugerenciaCupoDto { ProveedorId = 1 } };
             var resultado = target.Calcular(criterio);
 
             Assert.That(resultado, Is.Not.Null);
             Assert.AreEqual(resultado, 0);
-
-
         }
 
         [Test]

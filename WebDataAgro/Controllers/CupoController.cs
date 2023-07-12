@@ -52,7 +52,7 @@ namespace WebDataAgro.Controllers
             ViewBag.TieneEmpleadosACargo = GlobalVariables.TieneEmpleadosACargo;
             ViewBag.comercialId = GlobalVariables.ComercialId;
             ViewBag.mostrarMaterial = habilitacionManager.HayMaterialDisponibleExterno(comercialManager.TraerZonaDelComercialAsociado());
-
+            ViewBag.CentrosTodos = centroManager.TraerTodoCentro().Centro.Where(x => x.CargaCupos).Select(x => x.Descripcion).OrderByDescending(x => x).ToList();
             return View();
         }
 
@@ -93,7 +93,9 @@ namespace WebDataAgro.Controllers
                     CuitId = cupo.Destinatario,
                     Siguientes = siguientes,
                     NegocioId = cupo.NegocioId,
-                    ConDescarga = cupo.ConDescarga
+                    ConDescarga = cupo.ConDescarga,
+                    Sustentable = cupo.Sustentable ?? false,
+                    EPA = cupo.EPA ?? false
                 };
                 ViewBag.Titulo = "Código Cupo " + cupo.CupoSap;
                 var centro = centroManager.TraerCentro(cupo.CentroId);
@@ -284,7 +286,7 @@ namespace WebDataAgro.Controllers
             var cupoNuevo = TransformarAEntidad(cupo);
 
             int sumaCuposCargaMasiva = 0;
-            bool cargaMasiva = cupo.Dias != null && cupo.Dias.Count() > 0;
+            bool cargaMasiva = cupo.Dias != null && cupo.Dias.Count() > 1;
             if (cargaMasiva) sumaCuposCargaMasiva = cupo.Dias.Sum(x => (int)x.Cantidad);
 
             var error = cupoManager.Validar(cupoNuevo, cargaMasiva ? sumaCuposCargaMasiva : cupo.CantidadCupos.Value, cupo.FechaHastaEntrega);
@@ -604,21 +606,21 @@ namespace WebDataAgro.Controllers
         }
 
         [HttpPost]
-        public ActionResult BuscaDatosTablaDisponibilidad(string FechaDesde, string FechaHasta, string ZonaId, List<string> CentroId, string MaterialId)
+        public ActionResult BuscaDatosTablaDisponibilidad(string FechaDesde, string FechaHasta, List<string> CentroId, string MaterialId)
         {
-            DateTime fechaDesde = DateTime.Now.Date;
+            DateTime fechaDesde = DateTime.Today;
             if (!String.IsNullOrEmpty(FechaDesde))
             {
                 DateTime.TryParseExact(FechaDesde, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaDesde);
 
             }
-            DateTime fechaHasta = DateTime.Now.Date;
+            DateTime fechaHasta = DateTime.Today;
             if (!String.IsNullOrEmpty(FechaHasta))
             {
                 DateTime.TryParseExact(FechaHasta, "dd-MM-yyyy", new CultureInfo("es-AR"), DateTimeStyles.AdjustToUniversal, out fechaHasta);
 
             }
-            List<DisponibilidadCuposDto> model = cupoManager.TraerCupoDisponibilidad(fechaDesde, fechaHasta, ZonaId, CentroId, MaterialId);
+            List<DisponibilidadCuposDto> model = cupoManager.TraerDisponibilidadCupo(fechaDesde, fechaHasta, CentroId, MaterialId);
 
             return new JsonResult() { Data = model, JsonRequestBehavior = JsonRequestBehavior.AllowGet, MaxJsonLength = Int32.MaxValue };
         }

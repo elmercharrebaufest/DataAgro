@@ -358,8 +358,8 @@ namespace Molinos.DataAgro.Test.Controllers
 
         [Test]
         public void BuscaDatosTablaDisponibilidadTest() {
-            cupoManagerMock.Setup(x => x.TraerCupoDisponibilidad(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>() { new DisponibilidadCuposDto { Consumidos = 1, Fecha = new DateTime(2020,4,28).Date, Disponibles = 9, Limite = 10, MaterialCodigo = "000000000019908017", MaterialId = 3, MaterialNombre = "Soja", ZonaId = "CBA" } } );
-            var result = target.BuscaDatosTablaDisponibilidad("","","",new List<string>(),"");
+            cupoManagerMock.Setup(x => x.TraerDisponibilidadCupo(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<List<string>>(), It.IsAny<string>())).Returns(new List<DisponibilidadCuposDto>() { new DisponibilidadCuposDto { Consumidos = 1, Fecha = new DateTime(2020,4,28).Date, Disponibles = 9, Limite = 10, MaterialCodigo = "000000000019908017", MaterialId = 3, MaterialNombre = "Soja", ZonaId = "CBA" } } );
+            var result = target.BuscaDatosTablaDisponibilidad("","",new List<string>(),"");
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);

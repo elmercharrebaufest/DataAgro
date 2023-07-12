@@ -245,7 +245,7 @@ namespace Molinos.DataAgro.Business.Managers
                     NegociosHasta = formulaDeBase.NegociosHasta,
                     MaterialId = formulaDeBase.MaterialId,
                     Material = formulaDeBase.Material == null ? "" : formulaDeBase.Material.Descripcion,
-                    Cierre = cupoManager.DevolverTodoCierreCupera().FirstOrDefault() != null ? cupoManager.DevolverTodoCierreCupera().FirstOrDefault().Cierre : false,
+                    Cierre = cupoManager.DevolverTodoCierreCupera().Where(x => x.MaterialId == MaterialId).FirstOrDefault() != null ? cupoManager.DevolverTodoCierreCupera().Where(x => x.MaterialId == MaterialId).FirstOrDefault().Cierre : false,
                 }
             };
         }
@@ -303,20 +303,21 @@ namespace Molinos.DataAgro.Business.Managers
 
             return oEntityErrors;
         }
+
         private void GrabarCierreCuperaAlgoritmo(FormulaIni formulaDias)
         {
-            var cierre = repositorio.Obtener<CierreCupera>(1);
+            var cierre = repositorio.Obtener<CierreCupera>(x => x.MaterialId == formulaDias.MaterialId);
             if (cierre != null)
             {
                 cierre.Cierre = formulaDias.Cierre;
-                cierre.MaterialId = 1; //cambiar cuando este la mejora,
+                //cierre.MaterialId = formulaDias.MaterialId; //cambiar cuando este la mejora,
             }
             else
             {
                 var nuevoCierre = new CierreCupera
                 {
-                    MaterialId = 1, //cambiar cuando este la mejora,
                     Cierre = formulaDias.Cierre,
+                    MaterialId = formulaDias.MaterialId, //cambiar cuando este la mejora,
                 };
                 repositorio.Agregar(nuevoCierre);
             }
@@ -330,6 +331,10 @@ namespace Molinos.DataAgro.Business.Managers
 
             foreach (var item in results)
             {
+
+                // el algoritmo no tiene en cuenta estos contratos
+                if (item.Name == "CriterioEsFason" || item.Name == "CriterioEsFijacionDePrecioContrato" || item.Name == "CriterioEsPrimerNegocio") continue;
+
                 if (item.Name != "Criterio" && item.Name != "CriterioRaiz")
                 {
                     CriterioIni criterioNuevo = new CriterioIni();

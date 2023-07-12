@@ -1,46 +1,25 @@
 ﻿using Autofac.Extras.NLog;
 using Kendo.DynamicLinq;
-using KendoGridBinder;
-using KendoGridBinder.ModelBinder.Mvc;
-using Molinos.DataAgro.Agent.Helpers;
-using Molinos.DataAgro.Entities;
-using Molinos.DataAgro.Entities.Common.Enums;
 using Molinos.DataAgro.Entities.Dto;
 using Molinos.DataAgro.Entities.Entities;
-using Molinos.DataAgro.Entities.Helpers;
-using Molinos.DataAgro.Entities.Seguridad;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Criterios;
 using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using OfficeOpenXml;
-using System.IO;
-using Molinos.DataAgro.Agent;
 
 namespace Molinos.DataAgro.Business.Managers
 {
     public class CupoNoPropioManager : ICupoNoPropioManager
     {
-        private IRepositorio repositorio;
+        private readonly IRepositorio repositorio;
         private readonly ILogger logger;
         private readonly IProveedorManager proveedorManager;
-        private IMailManager mailManager;
-        private IHttpContextManager httpContextManager;
-        private IConfiguracionCupoManager configuracionCupoManager;
-        private ICentroManager centroManager;
+        private readonly IMailManager mailManager;
+        private readonly IHttpContextManager httpContextManager;
+        private readonly IConfiguracionCupoManager configuracionCupoManager;
+        private readonly ICentroManager centroManager;
 
         public CupoNoPropioManager(IRepositorio repositorio, ILogger logger, IProveedorManager proveedorManager, IMailManager mailManager,
             IHttpContextManager httpContextManager, IConfiguracionCupoManager configuracionCupoManager, ICentroManager centroManager)
@@ -146,7 +125,7 @@ namespace Molinos.DataAgro.Business.Managers
 
             var configuracionSave = repositorio.Obtener<ConfiguracionCupo>(x => x.Fecha == cupo.FechaIngreso &&
             x.CentroId == cupo.CentroId && x.MaterialId == cupo.MaterialId);
-            var dias = new List<DiaCupo> { new DiaCupo { Fecha = cupo.FechaIngreso, CantidadAlgoritmo = 0, Cantidad = (configuracionSave == null ? cantidad : (configuracionSave.LimiteCupo + cantidad)) } };
+            var dias = new List<DiaCupo> { new DiaCupo { Fecha = cupo.FechaIngreso, CantidadDescarga = 0, CantidadAlgoritmo = 0, Cantidad = (configuracionSave == null ? cantidad : (configuracionSave.LimiteCupo + cantidad)) } };
 
             var configuracion = new ConfiguracionCupo
             {
@@ -154,7 +133,7 @@ namespace Molinos.DataAgro.Business.Managers
                 CentroId = cupo.CentroId,
                 MaterialId = cupo.MaterialId,
                 Fecha = cupo.FechaIngreso,
-                LimiteCupo = configuracionSave != null ? (configuracionSave.LimiteCupo + cantidad) : 0,
+                LimiteCupo = configuracionSave != null ? (configuracionSave.LimiteCupo + cantidad) : cantidad,
 
             };
             configuracionCupoManager.GrabarConfiguracionCupo(configuracion, dias);
@@ -211,6 +190,5 @@ namespace Molinos.DataAgro.Business.Managers
             }
             return resultado;
         }
-
     }
 }

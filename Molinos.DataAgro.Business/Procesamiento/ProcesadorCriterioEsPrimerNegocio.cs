@@ -20,7 +20,7 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 return 0;
             }
-            bool existeCompra = Repositorio.Existe<CampañaMaterial>(a => a.ProveedorId == criterio.Dto.ProveedorId);
+            bool existeCompra = Repositorio.Existe<CampanaMaterialDetallePorMes>(a => a.ProveedorId == criterio.Dto.ProveedorId);
             return existeCompra ? 0 : 1;
         }
 

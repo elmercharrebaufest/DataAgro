@@ -58,6 +58,7 @@ namespace Molinos.DataAgro.Entities.Dto
         public bool? CaratulaMAT { get; set; }
         public bool Sustentable { get; set; }
         public bool EPA { get; set; }
+        public bool ConDescarga { get; set; }
 
         public object Clone()
         {

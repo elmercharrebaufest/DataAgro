@@ -203,7 +203,7 @@ namespace WebDataAgro
                            "~/Scripts/App/Filtros.js",
                             "~/Scripts/jquery.mask.js",
                            "~/Scripts/App/reportePrecioMoaPizarra.js"));
-            //------------------------
+            
             bundles.Add(new ScriptBundle("~/bundles/Research").Include(
                                        "~/Scripts/KendoExtensions.js",
                                        "~/Scripts/App/Research.js"));
@@ -260,6 +260,17 @@ namespace WebDataAgro
             bundles.Add(new ScriptBundle("~/bundles/ConfiguracionCupo").Include(
                                     "~/Scripts/KendoExtensions.js",
                                     "~/Scripts/App/ConfiguracionCupo.js",
+                                    "~/Scripts/jquery.unobtrusive-ajax.js"));
+            bundles.Add(new ScriptBundle("~/bundles/AdministracionCupo").Include(
+                                    "~/Scripts/KendoExtensions.js",
+                                    "~/Scripts/App/AdministracionCupoGrilla.js",
+                                    "~/Scripts/jquery.unobtrusive-ajax.js",
+                                    "~/Scripts/bootstrap-toggle.min.js"));
+            bundles.Add(new ScriptBundle("~/bundles/SugerenciaCupo").Include(
+                                    "~/Scripts/KendoExtensions.js",
+                                    "~/Scripts/App/SugerenciaCupo.js",
+                                    "~/Scripts/App/SolicitudCupo.js",
+                                    "~/Scripts/kendo/messages/kendo.messages.es-AR.min.js",
                                     "~/Scripts/jquery.unobtrusive-ajax.js"));
             bundles.IgnoreList.Clear();
         }

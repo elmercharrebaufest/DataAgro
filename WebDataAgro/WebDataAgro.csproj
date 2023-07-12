@@ -2747,7 +2747,7 @@
     <Content Include="Views\SugerenciaCupo\TablaSugerenciaCupo.cshtml" />
     <Content Include="Views\SugerenciaCupo\PartialTabla.cshtml" />
     <Content Include="Views\AdministracionCupo\Index.cshtml" />
-    <Content Include="Views\Cupo\Disponibilidad.cshtml" />
+    <Content Include="Views\Cupo\DisponibilidadSAP.cshtml" />
     <Content Include="Views\CompraNet\ModalPreAnular.cshtml" />
     <Content Include="Views\CompraNet\ModalBorrarPreanulado.cshtml" />
     <Content Include="Views\CompraNet\ModalConfirmadoTildeFinalizado.cshtml" />
@@ -2829,6 +2829,7 @@
     <Content Include="Views\Hedge\_HedgeMargenMolienda.cshtml" />
     <Content Include="Views\CompraNet\_ModalCuposConDescarga.cshtml" />
     <Content Include="Views\Cupo\DisponibilidadDescarga.cshtml" />
+    <Content Include="Views\Cupo\Disponibilidad.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,7 +1,6 @@
 ﻿using Autofac.Extras.NLog;
 using Molinos.DataAgro.Agent.StatusContrato;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Entities.Helpers;
 using Molinos.DataAgro.Interfaces;
 using Molinos.DataAgro.Repository;
@@ -18,10 +17,11 @@ namespace Molinos.DataAgro.Agent
             this.logger = logger;
             this.repositorio = repositorio;
         }
-        string UserSap = ConfigurationManager.AppSettings["SapUser"];
-        string PassSap = ConfigurationManager.AppSettings["SapPass"];
+        readonly string UserSap = ConfigurationManager.AppSettings["SapUser"];
+        readonly string PassSap = ConfigurationManager.AppSettings["SapPass"];
         private readonly ILogger logger;
         private readonly IRepositorio repositorio;
+        readonly bool activarLogDebug = ConfigurationManager.AppSettings["ActivarLogDebug"] == "1";
 
         public EstadoSAPDto ValidarEstado(string contratoSap)
         {
@@ -41,20 +41,23 @@ namespace Molinos.DataAgro.Agent
                     {
                         IM_CONTRATO = new List<string> { contratoSap }.ToArray()
                     };
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                    logger.Debug(rq.ToXml());
+                    //var log = new Log
+                    //{
+                    //    Fecha = DateTime.Now,
+                    //    Xml = rq.ToXml()
+                    //};
+                    //var logId = repositorio.Agregar(log);
+                    //repositorio.GuardarCambios();
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO(rq);
-                    logger.Debug(valor.ToXml());
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += valor.ToXml();
-                    repositorio.GuardarCambios();
+                    if (activarLogDebug)
+                    {
+                        logger.Debug(rq.ToXml());
+                        logger.Debug(valor.ToXml());
+                    }
+                    //log = repositorio.Obtener<Log>(logId.Id);
+                    //log.Xml += valor.ToXml();
+                    //repositorio.GuardarCambios();
                     if (valor.EX_SALIDA == null || valor.EX_SALIDA.Length == 0)
                     {
                         return new EstadoSAPDto();
@@ -66,7 +69,7 @@ namespace Molinos.DataAgro.Agent
                     long numsio = 0;
                     long.TryParse(valor2.NUM_SIO, out numsio);
                     logger.Debug("valor.EX_STATUS: ." + valor2.STATUS + ".");
-                    logger.Debug("numsio: ." + numsio + ".");
+                    logger.Debug("NUM_SIO: ." + numsio + ".");
                     var estado = new EstadoSAPDto()
                     {
                         NumeroSio = numsio,
@@ -109,20 +112,14 @@ namespace Molinos.DataAgro.Agent
                     {
                         IM_CONTRATO = contratosSap.ToArray()
                     };
-                    var log = new Log
-                    {
-                        Fecha = DateTime.Now,
-                        Xml = rq.ToXml()
-                    };
-                    var logId = repositorio.Agregar(log);
-                    repositorio.GuardarCambios();
-                    logger.Debug(rq.ToXml());
 
                     var valor = agent.SI_ZMPWS_DATAAGRO_STATUS_DE_CONTRATO(rq);
-                    logger.Debug(valor.ToXml());
-                    log = repositorio.Obtener<Log>(logId.Id);
-                    log.Xml += valor.ToXml();
-                    repositorio.GuardarCambios();
+                    
+                    if (activarLogDebug)
+                    {
+                        logger.Debug(rq.ToXml());
+                        logger.Debug(valor.ToXml());
+                    }
 
                     var estados = new List<EstadoSAPDto>();
 
@@ -133,7 +130,7 @@ namespace Molinos.DataAgro.Agent
 
                             long numsio = 0;
                             long.TryParse(item.NUM_SIO, out numsio);
-                            logger.Debug($"contrato: .{item.CONTRATO}. EX_STATUS: .{item.STATUS}. numsio: .{numsio}.");
+                            logger.Debug($"Contrato: .{item.CONTRATO}. EX_STATUS: .{item.STATUS}. NUM_SIO: .{numsio}.");
                             var estado = new EstadoSAPDto()
                             {
                                 NumeroSio = numsio,

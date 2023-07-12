@@ -427,12 +427,12 @@ namespace Molinos.DataAgro.Business.Managers
                 error.Error("Cupera", $"Error en el envio de datos.");
                 return error;
             }
-            var cuposConDescargaCreados = repositorio.Contar<Cupo>(x => x.ConDescarga == true && 
-                                                                        x.NegocioId != null && 
-                                                                        x.FechaIngreso == fechaIngreso && 
-                                                                        x.MaterialId == materialId && 
-                                                                        x.CentroId == centroId && 
-                                                                        x.EstadoCupoId != 9 && 
+            var cuposConDescargaCreados = repositorio.Contar<Cupo>(x => x.ConDescarga == true &&
+                                                                        x.NegocioId != null &&
+                                                                        x.FechaIngreso == fechaIngreso &&
+                                                                        x.MaterialId == materialId &&
+                                                                        x.CentroId == centroId &&
+                                                                        x.EstadoCupoId != 9 &&
                                                                         x.EstadoCupoId != 4);
             fechaIngreso = fechaIngreso.Date;
             int limiteDescarga = repositorio.Obtener<ConfiguracionCupo, int>(x => x.MaterialId == materialId &&
@@ -440,7 +440,7 @@ namespace Molinos.DataAgro.Business.Managers
                                                                                   x.CentroId == centroId, x => x.LimiteDescarga);
 
             bool cierreCupera = repositorio.Obtener<ConfiguracionCupo, bool>(x => x.MaterialId == materialId &&
-                                                                                  x.Fecha == fechaIngreso && 
+                                                                                  x.Fecha == fechaIngreso &&
                                                                                   x.CentroId == centroId, x => x.CierreCupera);
             if (cierreCupera)
             {
@@ -820,7 +820,9 @@ namespace Molinos.DataAgro.Business.Managers
                 ZonaCupoSap = x.ZonaCupo.CodigoSap,
                 Acopio = x.Centro.Acopio,
                 NegocioId = x.NegocioId,
-                ConDescarga = x.ConDescarga
+                ConDescarga = x.ConDescarga,
+                Sustentable = x.Sustentable,
+                EPA = x.EPA
             });
         }
 
@@ -1103,6 +1105,11 @@ namespace Molinos.DataAgro.Business.Managers
             htmlBody += "<tr>" + th + "DESTINATARIO: </th>" + Td(ref linea) + (cupo.Destinatario.ToUpper() == "30715118773" ? "MOLINOS AGRO S.A.-30715118773" : cupo.Destinatario.ToUpper()) + "</td></tr>";
             htmlBody += "<tr>" + th + "DESTINO: </th>" + Td(ref linea) + "MOLINOS AGRO S.A.-30715118773" + "</td></tr>";
             htmlBody += "<tr>" + th + "GRANO: </th>" + Td(ref linea) + cupo.Material.Descripcion.ToUpper() + (cupo.Sustentable == true ? " (Sustentable)" : cupo.EPA == true ? " (EPA)" : "") + "</td></tr>";
+
+            if ((cupo.Sustentable ?? false)==false && (cupo.EPA ?? false)==false)
+            {
+                htmlBody += "<tr>" + Td(ref linea, 2) + "<b><label style='text-decoration:underline'>IMPORTANTE:</label></b> En el campo 'Observaciones' de la CP indicar el 'Nombre del establecimiento'" + "</td></tr>";
+            }
 
             if (((cupo.Sustentable ?? false) || (cupo.EPA ?? false)) && (cupo.MaterialId == 1 || cupo.MaterialId == 2 || cupo.MaterialId == 3) || cupo.Observaciones != null)
             {
@@ -1903,7 +1910,8 @@ namespace Molinos.DataAgro.Business.Managers
                     Sustentable = x.Sustentable ?? false,
                     Inhabilitado = "",
                     EPA = x.EPA ?? false,
-                    TipoAgenteCompraId = x.TipoAgenteCompraId
+                    TipoAgenteCompraId = x.TipoAgenteCompraId,
+                    ConDescarga = x.ConDescarga ?? false
                 },
                     x =>
                     //(formula.NegociosDesde >= x.FechaDesde && formula.NegociosHasta < x.FechaHasta) || (formula.NegociosHasta <= x.FechaHasta &&
@@ -2326,13 +2334,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<CupoResult> AceptarSugerenciaCupo(List<SugerenciaCupoDto> sugerenciasAceptadas)
         {
-            var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
-            var activeCreador = PermisosHelper.ObtenerUsuario();
-            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
             List<CupoResult> resultado = new List<CupoResult>();
-            var result = new CupoResult();
-            var result2 = new CupoResult();
+
+            int materialIdSugerencia = sugerenciasAceptadas.FirstOrDefault().MaterialId;
+            var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialIdSugerencia).FirstOrDefault();
+            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -2340,6 +2346,11 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Add(errorCupera);
                 return resultado;
             }
+
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
+            var result = new CupoResult();
+            var result2 = new CupoResult();
             var zonaCupo = repositorio.Listar<ZonaCupo>();
             var comerciales = repositorio.Listar<Comercial>();
             var proveedores = repositorio.Listar<Proveedor>();
@@ -2648,9 +2659,9 @@ namespace Molinos.DataAgro.Business.Managers
             var resultado = new CupoResult();
             try
             {
-                var activeCreador = PermisosHelper.ObtenerUsuario();
-                var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
-                var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
+                int idPrimeraSugerencia = ids.FirstOrDefault();
+                int materialId = repositorio.Obtener<SugerenciaCupo>(x => x.Id == idPrimeraSugerencia) != null ? repositorio.Obtener<SugerenciaCupo>(x => x.Id == idPrimeraSugerencia).MaterialId : 0;
+                var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialId).FirstOrDefault();
                 var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
                 if (validarSiHayCierre)
                 {
@@ -2658,11 +2669,11 @@ namespace Molinos.DataAgro.Business.Managers
                     return resultado;
                 }
 
+                var activeCreador = PermisosHelper.ObtenerUsuario();
+                var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
                 List<SugerenciaCupo> sugerencias = repositorio.Listar<SugerenciaCupo>(a => ids.Contains(a.Id) && a.Aceptado == null);
                 var comercialId = sugerencias.First().ComercialId;
-                var sugerenciasPorComercial = repositorio.Listar<SugerenciaPorComercial>(
-                           x => x.ComercialId == comercialId);
-
+                var sugerenciasPorComercial = repositorio.Listar<SugerenciaPorComercial>(x => x.ComercialId == comercialId);
 
                 List<AdministracionCupo> admCupos = new List<AdministracionCupo>();
                 foreach (var sugerencia in sugerencias)
@@ -3144,12 +3155,60 @@ namespace Molinos.DataAgro.Business.Managers
             return alternateView;
         }
 
-        public List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)
-        {
-            List<DisponibilidadCuposDto> resultado = disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde, fechaHasta, zonaId, centroId, materialId);
-            List<DisponibilidadCuposDto> resultadoNoPropios = TraerCupoDisponibilidadNoPropios(fechaDesde, fechaHasta, zonaId, centroId, materialId);
+        //public List<DisponibilidadCuposDto> TraerCupoDisponibilidad(DateTime? fechaDesde, DateTime? fechaHasta, string zonaId, List<string> centroId, string materialId)
+        //{ // Disponibilidad obtenida de SAP
+        //    List<DisponibilidadCuposDto> resultado = disponibilidadCuposAgent.TraerDisponibilidadCupos(fechaDesde, fechaHasta, zonaId, centroId, materialId);
+        //    List<DisponibilidadCuposDto> resultadoNoPropios = TraerCupoDisponibilidadNoPropios(fechaDesde, fechaHasta, zonaId, centroId, materialId);
 
-            resultado.AddRange(resultadoNoPropios);
+        //    resultado.AddRange(resultadoNoPropios);
+        //    return resultado;
+        //}
+
+        public List<DisponibilidadCuposDto> TraerDisponibilidadCupo(DateTime? fechaDesde, DateTime? fechaHasta, List<string> centroId, string materialId)
+        { // Disponibilidad obtenida de Data Agro
+            List<DisponibilidadCuposDto> resultado = new List<DisponibilidadCuposDto>();
+            List<int> centrosIds = new List<int>();
+            List<int> materialIds = new List<int>();
+
+            if (materialId == "")
+            {
+                materialIds = repositorio.Listar<Material>().Select(x => x.MaterialId).ToList();
+            }
+            else
+            {
+                materialIds = repositorio.Listar<Material>(x => x.Codigo == materialId).Select(x => x.MaterialId).ToList();
+            }
+
+            if (centroId == null || centroId.Count == 0)
+            {
+                centrosIds = repositorio.Listar<Centro>().Select(a => a.Id).ToList();
+            }
+            else
+            {
+                centrosIds = repositorio.Listar<Centro>(a => centroId.Contains(a.CodigoSap)).Select(a => a.Id).ToList();
+            }
+            var listaConfigCupo = repositorio.Listar<ConfiguracionCupo>(x => x.Fecha >= fechaDesde && x.Fecha <= fechaHasta && centrosIds.Contains(x.CentroId) && materialIds.Contains(x.MaterialId));
+            var cupos = repositorio.Listar<Cupo>(x => x.FechaIngreso >= fechaDesde && x.FechaIngreso <= fechaHasta && centrosIds.Contains(x.CentroId) && materialIds.Contains(x.MaterialId));
+            var cuposNoPropios = repositorio.Listar<CupoNoPropio>(x => x.FechaIngreso >= fechaDesde && x.FechaIngreso <= fechaHasta && centrosIds.Contains(x.CentroId) && materialIds.Contains(x.MaterialId));
+
+            foreach (var config in listaConfigCupo)
+            {
+                var cuposConsumidos = cupos.Count(x => x.FechaIngreso == config.Fecha && x.CentroId == config.CentroId && x.MaterialId == config.MaterialId && x.EstadoCupoId != 4 && x.EstadoCupoId != 9);
+                var disponiblesNoPropio = cuposNoPropios.Count(x => x.FechaIngreso == config.Fecha && x.CentroId == config.CentroId && x.MaterialId == config.MaterialId && x.Disponible);
+                resultado.Add(new DisponibilidadCuposDto
+                {
+                    CentroCodigo = config.Centro.CodigoSap,
+                    CentroNombre = config.Centro.Descripcion,
+                    Consumidos = cuposConsumidos,
+                    Disponibles = config.Centro.NoPropio == true ? disponiblesNoPropio - cuposConsumidos : config.LimiteCupo - cuposConsumidos,
+                    Fecha = config.Fecha,
+                    Limite = config.Centro.NoPropio == true ? disponiblesNoPropio : config.LimiteCupo,
+                    MaterialCodigo = config.Material.Codigo,
+                    MaterialId = config.MaterialId,
+                    MaterialNombre = config.Material.Descripcion
+                });
+            }
+
             return resultado;
         }
 
@@ -3221,26 +3280,26 @@ namespace Molinos.DataAgro.Business.Managers
                     {
                         //if (itemCupo.CantidadCupoConDescarga > 0)
                         //{
-                            var CuposConsumidosZona = repositorio.Contar<Cupo>(x => x.FechaIngreso == itemConf.Fecha &&
-                                                                                    x.CentroId == itemConf.CentroId &&
-                                                                                    x.MaterialId == itemConf.MaterialId &&
-                                                                                    x.ZonaCupoId == itemCupo.ZonaCupoId &&
-                                                                                    x.ConDescarga == true &&
-                                                                                    x.NegocioId > 0);
-                            result.Add(new DisponibilidadCuposDto
-                            {
-                                CentroCodigo = itemConf.Centro.CodigoSap,
-                                CentroNombre = itemConf.Centro.Descripcion,
-                                Consumidos = CuposConsumidosZona,
-                                Disponibles = itemCupo.CantidadCupoConDescarga - CuposConsumidosZona,
-                                Fecha = itemConf.Fecha,
-                                Limite = itemCupo.CantidadCupoConDescarga,
-                                MaterialCodigo = itemConf.Material.Codigo,
-                                MaterialId = itemConf.MaterialId,
-                                MaterialNombre = itemConf.Material.Descripcion,
-                                ZonaId = itemCupo.ZonaCupoId.ToString(),
-                                ZonaNombre = itemCupo.ZonaCupo.Descripcion
-                            });
+                        var CuposConsumidosZona = repositorio.Contar<Cupo>(x => x.FechaIngreso == itemConf.Fecha &&
+                                                                                x.CentroId == itemConf.CentroId &&
+                                                                                x.MaterialId == itemConf.MaterialId &&
+                                                                                x.ZonaCupoId == itemCupo.ZonaCupoId &&
+                                                                                x.ConDescarga == true &&
+                                                                                x.NegocioId > 0);
+                        result.Add(new DisponibilidadCuposDto
+                        {
+                            CentroCodigo = itemConf.Centro.CodigoSap,
+                            CentroNombre = itemConf.Centro.Descripcion,
+                            Consumidos = CuposConsumidosZona,
+                            Disponibles = itemCupo.CantidadCupoConDescarga - CuposConsumidosZona,
+                            Fecha = itemConf.Fecha,
+                            Limite = itemCupo.CantidadCupoConDescarga,
+                            MaterialCodigo = itemConf.Material.Codigo,
+                            MaterialId = itemConf.MaterialId,
+                            MaterialNombre = itemConf.Material.Descripcion,
+                            ZonaId = itemCupo.ZonaCupoId.ToString(),
+                            ZonaNombre = itemCupo.ZonaCupo.Descripcion
+                        });
                         //}
                     }
                 }
@@ -5040,24 +5099,7 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<CupoResult> AceptarSugerenciaCupo(int idSugerencia, int cupoNormalSolicitud, int fleteSolicitud, bool porProveedor = false)
         {
-            var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
-            var solicitudes = new List<string>();
-            var activeCreador = PermisosHelper.ObtenerUsuario();
-            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
             List<CupoResult> resultado = new List<CupoResult>();
-            var result = new CupoResult();
-            var result2 = new CupoResult();
-            if (validarSiHayCierre)
-            {
-                var errorCupera = new CupoResult();
-                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
-                resultado.Add(errorCupera);
-                return resultado;
-            }
-            var zonaCupo = repositorio.Listar<ZonaCupo>();
-            var comerciales = repositorio.Listar<Comercial>();
-            //var proveedores = repositorio.Listar<Proveedor>();
 
             SugerenciaCupo s = repositorio.Obtener<SugerenciaCupo>(a => idSugerencia == a.Id && a.Aceptado == null);
             if (s == null)
@@ -5068,7 +5110,15 @@ namespace Molinos.DataAgro.Business.Managers
                 return resultado;
             }
 
-            var cantidadIngresada = cupoNormalSolicitud + fleteSolicitud;
+            var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == s.MaterialId).FirstOrDefault();
+            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
+            if (validarSiHayCierre)
+            {
+                var errorCupera = new CupoResult();
+                errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
+                resultado.Add(errorCupera);
+                return resultado;
+            }
 
             var error = ValidarDisponibilidadCupera(s.MaterialId, s.CentroId, s.FechaSugerida, cupoNormalSolicitud + fleteSolicitud);
             if (error.HayError)
@@ -5076,6 +5126,16 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Add(error);
                 return resultado;
             }
+
+            var solicitudes = new List<string>();
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
+            var result = new CupoResult();
+            var result2 = new CupoResult();
+            var zonaCupo = repositorio.Listar<ZonaCupo>();
+            var comerciales = repositorio.Listar<Comercial>();
+            //var proveedores = repositorio.Listar<Proveedor>();
+            var cantidadIngresada = cupoNormalSolicitud + fleteSolicitud;
 
             var sugerenciaPorComercial = ObtenerSugerenciaPorComercial(s.FechaSugerida, s.ComercialId, s.MaterialId, s.Centro.CodigoSap);
             //Acepto o resto las sugerencias, en base a las sugerencias creo los cupos
@@ -5246,21 +5306,26 @@ namespace Molinos.DataAgro.Business.Managers
             return clon;
         }
 
-        public CupoResult DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver)
+        public List<CupoResult> DevolverSugerenciasMasivo(List<DevolucionSugerenciaCupoDto> sugerenciasADevolver)
         {
-            CupoResult resultado = new CupoResult();
+            List<CupoResult> resultado = new List<CupoResult>();
+
             try
             {
-                var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
+                int idPrimeraSugerencia = sugerenciasADevolver.FirstOrDefault().IdSugerencia;
+                int materialId = repositorio.Obtener<SugerenciaCupo>(x => x.Id == idPrimeraSugerencia) != null ? repositorio.Obtener<SugerenciaCupo>(x => x.Id == idPrimeraSugerencia).MaterialId : 0;
+                var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialId).FirstOrDefault();
                 var validarSiHayCierre = primerCierre != null && primerCierre.Cierre;
-                var activeCreador = PermisosHelper.ObtenerUsuario();
-                var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
                 if (validarSiHayCierre)
                 {
-                    resultado.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
+                    var errorCupera = new CupoResult();
+                    errorCupera.Error("CantidadCuposSAP", "La Cupera se encuentra momentáneamente bloqueada. Por cualquier duda o inconveniente, comunicarse con el Administrador de la Cupera.");
+                    resultado.Add(errorCupera);
                     return resultado;
                 }
 
+                var activeCreador = PermisosHelper.ObtenerUsuario();
+                var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
                 List<AdministracionCupo> admCupos = new List<AdministracionCupo>();
 
                 var ids = sugerenciasADevolver.Select(a => a.IdSugerencia).ToList();
@@ -5306,21 +5371,16 @@ namespace Molinos.DataAgro.Business.Managers
                 logger.Error(e);
                 var nuevoResultado = new CupoResult();
                 nuevoResultado.Error("Devolver sugerencias", e.Message);
-                return nuevoResultado;
+                resultado.Add(nuevoResultado);
+                return resultado;
             }
         }
 
         public List<CupoResult> AceptarSugerenciaCupoPorProveedor(int proveedorId, int materialId, DateTime fecha, int cupoNormalSolicitud, int fleteSolicitud, int comercialId, string centroCodigo)
         {
-
-
-            var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
-            var solicitudes = new List<string>();
             List<CupoResult> resultado = new List<CupoResult>();
-
-            var result = new CupoResult();
-            var result2 = new CupoResult();
+            var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialId).FirstOrDefault();
+            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -5328,6 +5388,10 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Add(errorCupera);
                 return resultado;
             }
+
+            var solicitudes = new List<string>();
+            var result = new CupoResult();
+            var result2 = new CupoResult();
             var zonaCupo = repositorio.Listar<ZonaCupo>();
             var comerciales = repositorio.Listar<Comercial>();
             var centroId = repositorio.Obtener<Centro, int>(a => a.CodigoSap == centroCodigo, a => a.Id);
@@ -5383,15 +5447,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<CupoResult> ModificarSugerenciaCupo(List<AceptarSugerenciaCupoDto> items)
         {
-
-            var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
-            var solicitudes = new List<string>();
             List<CupoResult> resultado = new List<CupoResult>();
-            var activeCreador = PermisosHelper.ObtenerUsuario();
-            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
-            var result = new CupoResult();
-            var result2 = new CupoResult();
+
+            int materialIdSugerencia = items.FirstOrDefault().materialId.GetValueOrDefault();
+            var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialIdSugerencia).FirstOrDefault();
+            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -5399,6 +5459,12 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Add(errorCupera);
                 return resultado;
             }
+
+            var solicitudes = new List<string>();
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
+            var result = new CupoResult();
+            var result2 = new CupoResult();
             var zonaCupo = repositorio.Listar<ZonaCupo>();
             var comerciales = repositorio.Listar<Comercial>();
             var proveedorId = items.First().proveedorId;
@@ -5589,17 +5655,11 @@ namespace Molinos.DataAgro.Business.Managers
 
         public List<CupoResult> ModificarSugerenciaCupoPorProveedor(List<AceptarSugerenciaCupoDto> sugerenciasAceptadasDesdeElFront)
         {
-
-            var primerCierre = this.DevolverTodoCierreCupera().FirstOrDefault();
-            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
-            var solicitudes = new List<string>();
-            var solicitudesDto = new List<AdministracionCupoDto>();
             List<CupoResult> resultado = new List<CupoResult>();
-            var activeCreador = PermisosHelper.ObtenerUsuario();
-            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
-            var resultNormales = new CupoResult();
-            var resultFletes = new CupoResult();
-            var resultFinal = new CupoResult();
+
+            int materialIdSugerencia = sugerenciasAceptadasDesdeElFront.FirstOrDefault().materialId.GetValueOrDefault();
+            var primerCierre = this.DevolverTodoCierreCupera().Where(x => x.MaterialId == materialIdSugerencia).FirstOrDefault();
+            var validarSiHayCierre = primerCierre != null ? primerCierre.Cierre : false;
             if (validarSiHayCierre)
             {
                 var errorCupera = new CupoResult();
@@ -5607,6 +5667,14 @@ namespace Molinos.DataAgro.Business.Managers
                 resultado.Add(errorCupera);
                 return resultado;
             }
+
+            var solicitudes = new List<string>();
+            var solicitudesDto = new List<AdministracionCupoDto>();
+            var activeCreador = PermisosHelper.ObtenerUsuario();
+            var comercialCreador = repositorio.Obtener<Comercial, int>(x => x.IdActiveDirectory == activeCreador, x => x.ComercialId);
+            var resultNormales = new CupoResult();
+            var resultFletes = new CupoResult();
+            var resultFinal = new CupoResult();
             var zonaCupo = repositorio.Listar<ZonaCupo>();
             var comerciales = repositorio.Listar<Comercial>();
             var proveedorId = sugerenciasAceptadasDesdeElFront.First().proveedorId;
@@ -6189,11 +6257,13 @@ namespace Molinos.DataAgro.Business.Managers
         //}
 
 
-        public void ActualizarCumplimientoCupos(DateTime fecha)
+        public void ActualizarCumplimientoCupos(DateTime ayer)
         {
-            var cuposSave = repositorio.Listar<Cupo>(x => x.FechaIngreso == fecha);
-            //var cupos = cuposSave.Select(x => x.CupoSap).ToList();
-            var resultado = cumplimientoCuposAgent.Ejecutar(new List<string>(),fecha);
+            var hoy = ayer.AddDays(1);
+            var mañana = ayer.AddDays(2);
+            var cuposSave = repositorio.Listar<Cupo>(x => x.FechaIngreso == ayer || x.FechaIngreso == hoy || x.FechaIngreso == mañana);
+
+            var resultado = cumplimientoCuposAgent.Ejecutar(new List<string>(), ayer);
 
             foreach (var item in resultado)
             {

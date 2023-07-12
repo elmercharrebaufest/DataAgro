@@ -122,15 +122,16 @@ namespace WebDataAgro.Controllers
                     }).OrderBy(x => x.Value);
             ViewBag.Material = materialesListItems;
             var centro = centroManager.TraerTodoCentro();
-            centro.Centro = centro.Centro.Where(x => x.NoPropio != true).ToList();
+            centro.Centro = centro.Centro.ToList();
             var centroListItems = centro.Centro.Select(
                     x => new SelectListItem
                     {
                         Text = x.Descripcion,
                         Value = x.Id.ToString(),
-                        Selected = x.CodigoSap == "1029" ? true : false
+                        Selected = x.CodigoSap == "1029"
                     }).OrderBy(x => x.Value);
             ViewBag.Centro = centroListItems;
+            ViewBag.CentrosTodos = centro.Centro.Where(x => x.CargaCupos).Select(x => x.Descripcion).OrderByDescending(x => x).ToList();
         }
         public ActionResult TraerZonaCupo()
         {

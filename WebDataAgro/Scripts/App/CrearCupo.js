@@ -148,6 +148,7 @@ function InicializarCargaCupos() {
         $("#fechaEntrega").data('kendoDatePicker').enable(false);
         $("#fechaHasta").data('kendoDatePicker').enable(false);
         $("#cantidad").data('kendoNumericTextBox').enable(false);
+        $("#cantidad").data('kendoNumericTextBox').value(1);
         $("#zona").attr('disabled', 'disabled');
         $("#flete").attr('disabled', 'disabled');
         if ($("#NoPropio").val() == "True") {

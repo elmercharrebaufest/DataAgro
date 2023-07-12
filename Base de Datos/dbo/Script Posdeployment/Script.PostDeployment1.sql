@@ -350,3 +350,7 @@ IF NOT EXISTS (select 1 from EstadoHome where Descripcion = 'No habilitado') BEG
 --TipoActividad
 IF NOT EXISTS (select 1 from TipoActividad where Descripcion = 'Visita') BEGIN insert into TipoActividad (Descripcion) values ('Visita'); END
 
+IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 MaterialId from Material where Descripcion ='Trigo')) BEGIN insert into CierreCupera (MaterialId, Cierre) values ((select top 1 MaterialId from Material where Descripcion ='Trigo'), 0); END
+IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 MaterialId from Material where Descripcion ='Soja')) BEGIN insert into CierreCupera (MaterialId, Cierre) values ((select top 1 MaterialId from Material where Descripcion ='Soja'), 0); END
+IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 MaterialId from Material where Descripcion ='Girasol')) BEGIN insert into CierreCupera (MaterialId, Cierre) values ((select top 1 MaterialId from Material where Descripcion ='Girasol'), 0); END
+IF NOT EXISTS (select 1 from CierreCupera where MaterialId = (select top 1 MaterialId from Material where Descripcion ='Girasol AO')) BEGIN insert into CierreCupera (MaterialId, Cierre) values ((select top 1 MaterialId from Material where Descripcion ='Girasol AO'), 0); END

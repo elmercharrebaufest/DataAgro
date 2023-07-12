@@ -1068,7 +1068,7 @@ function CreateGridInformeCompraNet() {
                     "class": "mobile-xs"
                 }, itemTemplate: function (e) {
                     return "<span><label><span>#= data.Material|| data.all #</span><input type='checkbox' name='" + e.field + "' value='#= data.Material#'/></label></span>";
-                }, template: "#=Material#"
+                }, template: "#=Material##if(Sustentable){#<br><br>##<i data-toggle='tooltip' title='Sustentable' class='fa fa-solid fa-leaf fa-2x'></i>#}##if(EPA){#<br><br>##<i data-toggle='tooltip' title='EPA' class='fa fa-pagelines fa-2x'></i>#}#"
             },
             {
                 field: "Cantidad", type: "number", width: 80, minResizableWidth: 80, format: "{0:n0}", attributes: {

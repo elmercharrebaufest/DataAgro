@@ -1,23 +1,15 @@
-﻿using Autofac.Extras.NLog;
-using KendoGridBinder;
+﻿using KendoGridBinder;
 using KendoGridBinder.ModelBinder.Mvc;
 using Molinos.DataAgro.Entities.Dto;
-using Molinos.DataAgro.Entities.Entities;
 using Molinos.DataAgro.Interfaces;
-using Molinos.DataAgro.Interfaces.Managers;
-using Molinos.DataAgro.Repository;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebDataAgro.Controllers;
-using WebDataAgro.Models;
 
 namespace Molinos.DataAgro.Test.Controllers
 {
@@ -27,6 +19,7 @@ namespace Molinos.DataAgro.Test.Controllers
     {
         private AdministracionCupoController target;
         private Mock<ICupoManager> cupoManagerMock;
+        private Mock<ICentroManager> centroManagerMock;
         private Mock<IAdministracionCupoManager> administracionManagerMock;
 
 
@@ -37,13 +30,13 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             this.serializer = new JavaScriptSerializer();
             cupoManagerMock = new Mock<ICupoManager>();
+            centroManagerMock = new Mock<ICentroManager>();
             administracionManagerMock = new Mock<IAdministracionCupoManager>();
             HttpContext.Current = Mock.FakeContext.FakeHttpContext();
-            target = new AdministracionCupoController(administracionManagerMock.Object, cupoManagerMock.Object);
+            target = new AdministracionCupoController(administracionManagerMock.Object, cupoManagerMock.Object, centroManagerMock.Object);
 
             HttpContext.Current.Session["perfil"] = 1;
             HttpContext.Current.Session["comercialId"] = 1;
-
         }
 
         [Test]
@@ -57,6 +50,9 @@ namespace Molinos.DataAgro.Test.Controllers
 
             cupoManagerMock.Setup(x => x.SugerenciasNoAceptadas())
                 .Returns(new List<SugerenciaNoAceptada>());
+
+            centroManagerMock.Setup(x => x.TraerTodoCentro())
+                .Returns(new ResultIniCentro() { Centro = new List<CentroIni>() { new CentroIni() { Descripcion = "S. Lorenzo" } } });
 
             var result = target.Index() as ViewResult;
             Assert.NotNull(result);
@@ -82,7 +78,7 @@ namespace Molinos.DataAgro.Test.Controllers
         public void AceptarTest()
         {
             administracionManagerMock.Setup(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new CupoResult());
-            var result = target.Aceptar(1, 1, 1,1,1, "");
+            var result = target.Aceptar(1, 1, 1, 1, 1, "");
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
             administracionManagerMock.Verify(x => x.AceptarCupoExcedente(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
@@ -186,7 +182,7 @@ namespace Molinos.DataAgro.Test.Controllers
         {
             administracionManagerMock.Setup(x => x.TraerTodaAdministracionCupo(It.IsAny<KendoGridMvcRequest>(), It.IsAny<int?>()))
               .Returns(new KendoGrid<AdministracionCupoDto>(new List<AdministracionCupoDto> { new AdministracionCupoDto { Id = 1, CentroId = 1, MaterialId = 1, ComercialId = 1, ProveedorId = 1 } }, 1));
-            var result = target.BuscarDatosSolicitudCupo(new KendoGridMvcRequest(),It.IsAny<int?>());
+            var result = target.BuscarDatosSolicitudCupo(new KendoGridMvcRequest(), It.IsAny<int?>());
 
             Assert.NotNull(result);
             var a = serializer.Serialize(result);
@@ -210,8 +206,5 @@ namespace Molinos.DataAgro.Test.Controllers
                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":\"Ok\",\"JsonRequestBehavior\":0,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                a);
         }
-
-
-
     }
 }

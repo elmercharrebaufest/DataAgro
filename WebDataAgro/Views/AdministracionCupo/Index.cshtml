@@ -13,16 +13,11 @@
     <link href="~/Content/bootstrap-toggle.min.css" rel="stylesheet" />
     <link href="~/Content/compraNet.css" rel="stylesheet" />
 }
-<style>
-    .tipoExtraordinario {
-        background-color: #bde6b5;
-    }
-</style>
 
-<script src="~/Scripts/KendoExtensions.js"></script>
-<script src="~/Scripts/App/AdministracionCupoGrilla.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-<script src="~/Scripts/bootstrap-toggle.min.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/AdministracionCupo")
+}
+
 <script>
     $(document).ready(function () {
         pantalla = true;
@@ -86,7 +81,7 @@
         </div>
     </div>
 </div>
-
+<div id="Centros" data-value="@Json.Encode(ViewBag.CentrosTodos)" hidden></div>
 
 <div class="modal fade" id="resultadoCupo" tabindex="-1" role="dialog" aria-labelledby="resultadoCupoLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -122,6 +117,10 @@
 @*Modal Rechazar Masivo*@
 @Html.Partial("ModalRechazarSolicitudMasivo")
 <style>
+    .tipoExtraordinario {
+        background-color: #bde6b5;
+    }
+
     #gridInformeCompraNet td {
         text-align: center !important;
     }
@@ -140,5 +139,3 @@
         width: 130px
     }
 </style>
-
-

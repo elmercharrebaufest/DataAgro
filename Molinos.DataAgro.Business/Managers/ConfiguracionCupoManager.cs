@@ -9,7 +9,6 @@ using Molinos.DataAgro.Repository;
 using Molinos.DataAgro.Repository.ConsultasEF;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace Molinos.DataAgro.Business.Managers
@@ -41,7 +40,7 @@ namespace Molinos.DataAgro.Business.Managers
             }
             try
             {
-                if (configuracion.LiberarCupera == true)
+                if (configuracion.LiberarCupera)
                 {
                     configuracion.LimiteAlgoritmo = 0;
                     configuracion.LimiteDescarga = 0;
@@ -74,10 +73,10 @@ namespace Molinos.DataAgro.Business.Managers
                             newConfiguracion.Fecha = d.Fecha.Date;
                             newConfiguracion.LimiteCupo = d.Cantidad.Value;
                             newConfiguracion.LimiteAlgoritmo = d.CantidadAlgoritmo.Value;
-                            newConfiguracion.LimiteDescarga = d.CantidadDescarga.Value;
+                            newConfiguracion.LimiteDescarga = d.CantidadDescarga ?? 0;
                             newConfiguracion.CantidadCupo = new List<LimiteCupo>();
                             GenerarLimiteZona(newConfiguracion, zonas);
-                            var centro = centros.Where(x => x.Id == newConfiguracion.CentroId).FirstOrDefault();
+                            var centro = centros.FirstOrDefault(x => x.Id == newConfiguracion.CentroId);
                             if (!centro.NoPropio)
                             {
                                 errorSap = EnviarConfiguracion(newConfiguracion, null, null, materiales, zonas, centros);
@@ -340,7 +339,6 @@ namespace Molinos.DataAgro.Business.Managers
         public KendoGrid<ConfiguracionCupoDto> TraerTodaConfiguracionCupo(KendoGridMvcRequest request)
         {
             var configuraciones = repositorio.ObtenerConsultaEscalar(new TraerConfiguracionesCupo(request));
-            //var listaConfiguraciones = configuraciones.Data.ToList();
 
             if (configuraciones.Data.Count() == 0)
                 return configuraciones;
@@ -348,7 +346,7 @@ namespace Molinos.DataAgro.Business.Managers
             var desde = configuraciones.Data.Min(a => a.Fecha);
             var hasta = configuraciones.Data.Max(a => a.Fecha);
             var centros = configuraciones.Data.Select(a => a.CentroCodigoSap).Distinct().ToList();
-            var disponibilidades = cupoManager.TraerCupoDisponibilidad(desde, hasta, "", centros, "");
+            //var disponibilidades = cupoManager.TraerDisponibilidadCupo(desde, hasta, centros, "");
 
             foreach (var configuracion in configuraciones.Data.ToList())
             {

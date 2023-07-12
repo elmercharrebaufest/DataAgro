@@ -334,6 +334,7 @@ function InicializarElementos() {
                 }
                 EsComisionista(compraNet);
                 ActivarBoletoXAgentedeCompras($("#AgenteCompraId").val());
+                CompletarCantidadDisponibleDeposito();
                 //$("#aperturaPrecioPorcentajeComisionesId").data("kendoNumericTextBox").value(compraNet.ComisionPorcentaje && !$("#buscadorCorredor").val() ? Number(compraNet.ComisionPorcentaje) : 0);
                 //InsertarAperturasViewModel(CalcularPrecioTotalApertura());
 
@@ -2311,6 +2312,11 @@ function InicializarElementos() {
             //    $("#pagosDiv").hide();
             //    $(".noAcuerdo").hide();
             //}
+            if ($("#mercsDepositoId").is(":checked")) {
+                $(".depositoDiv").show();
+            } else {
+                $(".depositoDiv").hide();
+            }
         }
         else if ($("#boton-ampliar").text() == "- OCULTAR") {
             $("#boton-ampliar").text("+ AMPLIAR");
@@ -3893,7 +3899,15 @@ function CargarDatosEditar(contrato, hijo) {
     LimpiarDescuentos();
     LimpiarCalidades();
     contrato.MercsDeposito == true ? $("#mercsDepositoId").prop("checked", true) : $("#mercsDepositoId").prop("checked", false);
-
+    if (contrato.MercsDeposito == true) {
+        HayMercaderia();
+        if ($("#boton-ampliar").text() != "+ AMPLIAR") {
+            $(".depositoDiv").show();
+        } else {
+            $(".depositoDiv").hide();
+        }
+        $("#cantidadDeposito").data("kendoNumericTextBox").value(contrato.CantidadDeposito);
+    }
     var descuentosDto = contrato.Descuentos;
     $.each(descuentosDto, function (key, descuento) {
         var descuentoKendo = {
@@ -5157,15 +5171,19 @@ function ConfirmarBolsaModal() {
 }
 
 function HayMercaderia() {
+    CompletarCantidadDisponibleDeposito();
     if ($("#mercsDepositoId").is(":checked")) {
         MostrarCcPpPendientesAplicar();
+        $(".depositoDiv").show();
+        $("#cantidadDeposito").data("kendoNumericTextBox").enable(false);
     } else {
         $(".fechaHastaSustentableDiv").hide();
         $("#fechaDesdeSustentableId").data("kendoDatePicker").value("");
         $("#fechaHastaSustentableId").data("kendoDatePicker").value("");
+        $(".depositoDiv").hide();
+        $("#cantidadDeposito").data("kendoNumericTextBox").value("");
     }
 }
-
 function HaySustentable() {
     if ($("#sustentableId").is(":checked")) {
         $(".sojaEpa").hide();
@@ -5746,6 +5764,50 @@ function MostrarServiciosYCalidades() {
         TraerServicio();
     }
     return validar;
+}
+
+function CompletarCantidadDisponibleDeposito() {
+    if ($("#mercsDepositoId").is(":checked")) {
+        var cuitProv = $("#buscadorProveedor").val().split('(');
+        if (cuitProv[1] != null) {
+            var cuitP = cuitProv[1].split(')');
+        }
+        else {
+            cuitP = cuitProv;
+        }
+        var cuitCorr = $("#buscadorCorredor").val().split('(');
+        if (cuitCorr[1] != null) {
+            var cuitC = cuitCorr[1].split(')');
+        }
+        else {
+            cuitC = cuitCorr;
+        }
+        Id = Id != "" ? Id : 0;
+        var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked") || $("#epaId").is(":checked"), tieneBoleto: $("#sinBoletoId").is(':checked') };
+        var disponible = MSExecuteOnServer('/CompraNet/ObtenerDatosMercaderiaEnDeposito', datos);
+        if (disponible != null && disponible.CantidadTotal != null) {
+            $("#cantidadDeposito").data("kendoNumericTextBox").value(disponible.CantidadTotal);
+            $("#cantidadTotal").text(disponible.CantidadDisponible.toLocaleString("es-AR", { minimumFractionDigits: 0 }) + " (Kg)");
+            $("#cantidadDepositoOriginal").val(disponible.CantidadTotal);
+            ValidarCantidad();
+        }
+    }
+}
+
+function ValidarCantidad() {
+    var cantidad = Number($("#cantidadId").val());
+    var cantidadOriginal = Number($("#cantidadDepositoOriginal").val());
+    if (cantidadOriginal > 0) {
+        if (cantidad > 0 && cantidad < $("#cantidadDepositoOriginal").val()) {
+            $("#cantidadDeposito").data("kendoNumericTextBox").value($("#cantidadId").val())
+        }
+        if (cantidad > cantidadOriginal) {
+            $("#cantidadDeposito").data("kendoNumericTextBox").value($("#cantidadDepositoOriginal").val())
+        }
+        if (cantidad <= 0) {
+            $("#cantidadDeposito").data("kendoNumericTextBox").value($("#cantidadDepositoOriginal").val());
+        }
+    }
 }
 
 function EPATipoDB() {

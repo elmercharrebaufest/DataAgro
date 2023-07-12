@@ -489,6 +489,22 @@ namespace Molinos.DataAgro.Test.Controllers
                 "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":{\"ProveedorId\":1,\"CUIT\":\"201\",\"RazonSocial\":\"A\",\"Localidad\":null,\"Provincia\":null,\"LocalidadId\":null,\"ProvinciaId\":null,\"Direccion\":null,\"CodigoPostal\":null,\"LocalidadCompraNetId\":null,\"ProvinciaCompraNetId\":null,\"LocalidadCompraNet\":null,\"ProvinciaCompraNet\":null,\"ClasificacionCompraNetId\":null,\"ClasificacionDescripcion\":null,\"ComisionPorcentaje\":null,\"Consignatario\":null,\"SegmentacionId\":0,\"Deshabilitado\":null,\"Alias\":null,\"ComisionistaId\":null,\"CuposConRiesgo\":null,\"Comisionista\":false,\"EstadoHomeId\":null,\"EstadoHomeMensaje\":null},\"JsonRequestBehavior\":1,\"MaxJsonLength\":2147483647,\"RecursionLimit\":null}",
                 a);
         }
+
+        [Test]
+        public void ListarProveedorTodosTest()
+        {
+            proveedorManagerMock.Setup(x => x.ListarProveedorTodos("A")).Returns(new List<ProveedorDto>() { new ProveedorDto { CUIT = "201", RazonSocial = "A", ProveedorId = 1 } });
+            operadorManagerMock.Setup(x => x.ListarOperador("A")).Returns(new List<OperadorIni>());
+            var result = target.ListarProveedorTodos("A");
+            Assert.NotNull(result);
+            var a = serializer.Serialize(result);
+
+            proveedorManagerMock.Verify(x => x.ListarProveedorTodos(It.IsAny<string>()), Times.Once);
+            Assert.AreEqual(
+                "{\"ContentEncoding\":null,\"ContentType\":null,\"Data\":[{\"ProveedorId\":1,\"Proveedor\":\"A\"}],\"JsonRequestBehavior\":0,\"MaxJsonLength\":null,\"RecursionLimit\":null}",
+                a);
+        }
+
         [Test]
         public void ListarProveedorTest()
         {
