@@ -472,7 +472,6 @@ function InicializarElementos() {
                 SeleccionAutomaticaBolsa();
                 ValidarCorredor(e.dataItem.Id);
                 $('#corredorId').val(e.dataItem.Id);
-                CompletarCantidadDisponibleDeposito();
             }
         },
         dataSource: {
@@ -6335,10 +6334,10 @@ function CompletarCantidadDisponibleDeposito() {
         Id = Id != "" ? Id : 0;
         var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked") || $("#epaId").is(":checked"), tieneBoleto: $("#sinBoletoId").is(':checked') };
         var disponible = MSExecuteOnServer('/CompraNet/ObtenerDatosMercaderiaEnDeposito', datos);
-        if (disponible != null && disponible.CantidadTotal != null) {
-            $("#cantidadDeposito").data("kendoNumericTextBox").value(disponible.CantidadTotal);
+        if (disponible != null && disponible.CantidadDisponible != null) {
+            $("#cantidadDeposito").data("kendoNumericTextBox").value(disponible.CantidadDisponible);
             $("#cantidadTotal").text(disponible.CantidadDisponible.toLocaleString("es-AR", { minimumFractionDigits: 0 }) + " (Kg)");
-            $("#cantidadDepositoOriginal").val(disponible.CantidadTotal);
+            $("#cantidadDepositoOriginal").val(disponible.CantidadDisponible);
             ValidarCantidad();
         }
     }

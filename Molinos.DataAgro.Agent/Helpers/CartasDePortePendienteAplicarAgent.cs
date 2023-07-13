@@ -41,7 +41,7 @@ namespace Molinos.DataAgro.Agent
                 return new List<CcPpPerndienteAplicarDto>() { new CcPpPerndienteAplicarDto() {
                     Contrato = "",
                     AgenteCompra = "Agente compra",
-                    Cantidad = 10,
+                    Cantidad = 500,
                     CartasPorte = "000585221852",
                     Centro = "centro",
                     Corredor = "corredor",

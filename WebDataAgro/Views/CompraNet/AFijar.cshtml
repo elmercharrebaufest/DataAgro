@@ -27,7 +27,6 @@
             $(document).ready(function () {
                 model = '@Html.Raw(Json.Encode(ViewBag.Obj))';
                 var negocioCargado = JSON.parse(model);
-                console.log(negocioCargado);
                 CargarDatosEditar(negocioCargado);
             });
         </script>
@@ -40,6 +39,7 @@
 
 <input type="hidden" id="comercialCreador" value="@ViewBag.ComercialId" />
 <input id="esBonificacion" class="campo-input-input" data-bind="" hidden type="checkbox" />
+<input id="cantidadDepositoOriginal" hidden />
 @Html.Hidden("crearContrato", Url.Action("CrearContrato", "CompraNet"))
 
 <div id="CrearContrato" class="container">

@@ -220,7 +220,7 @@ namespace Molinos.DataAgro.Business.Managers
                     var elem = listaDA.Where(x => x.MaterialId == item.MaterialId && x.MonedaId == item.MonedaId && x.Posicion == item.Posicion && x.OperadorId == item.OperadorId).SingleOrDefault();
                     if (elem != null)
                     {
-                        if (elem.PrecioPonderado != item.PrecioPonderado)
+                        if (Math.Round(elem.PrecioPonderado.Value, 2) != Math.Round(item.PrecioPonderado.Value, 2))
                         {
                             errores.Add("Diferencia de precios ponderados para negocios de " + elem.Material.Descripcion + " en " + elem.MonedaId +
                                 " para la posición " + elem.Posicion + " y operador " + elem.Operador.Descripcion + " - en Data Agro: " + elem.PrecioPonderado?.ToString("N", new CultureInfo("es-AR")) + " y en MAT: " + item.PrecioPonderado?.ToString("N", new CultureInfo("es-AR")));
@@ -234,7 +234,7 @@ namespace Molinos.DataAgro.Business.Managers
                     }
                     else
                     {
-                        errores.Add("No se encontraron en Data Agro negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero figuran "+ cantidadMAT.ToString("N", new CultureInfo("es-AR")) + " Kg. en el MAT.");
+                        errores.Add("No se encontraron en Data Agro negocios de " + item.Material.Descripcion + " en " + item.MonedaId + " para la posición " + item.Posicion + " y operador " + item.Operador.Descripcion + ", pero figuran " + cantidadMAT.ToString("N", new CultureInfo("es-AR")) + " Kg. en el MAT.");
                     }
                 }
                 foreach (var item in listaDA)
@@ -289,6 +289,7 @@ namespace Molinos.DataAgro.Business.Managers
                 ContentId = Guid.NewGuid().ToString()
             };
             var destinatarios = repositorio.Listar<Comercial>(x => x.RolesAsociados.Any(y => y.PermisosAsociados.Any(z => z.Permiso == PermisosDataAgro.MailMATPrimary))).Select(x => x.IdActiveDirectory).ToList();
+            List<string> copia = new List<string> { ConfigurationManager.AppSettings["EmailSoporte"] };
             string htmlBody = "En el presente mail se detalla el resultado de la comparación automática entre los negocios registrados en Data Agro y los obtenidos del MAT.<br /><br />";
             foreach (var mensaje in cuerpo)
             {
@@ -300,7 +301,7 @@ namespace Molinos.DataAgro.Business.Managers
                 "<br /> <br /> www.molinosagro.com.ar";
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(resource);
-            mailManager.EnviarMail(destinatarios, asunto, "", null, alternateView);
+            mailManager.EnviarMail(destinatarios, asunto, "", copia, alternateView);
         }
 
 

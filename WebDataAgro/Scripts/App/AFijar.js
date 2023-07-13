@@ -1064,6 +1064,7 @@ function InicializarElementos() {
                 var compraNet = MSExecuteOnServer('/CompraNet/ObtenerDatosCompraNet', { id: proveedorId });
                 CargarAutomaticamenteLaComision(compraNet);
             }
+            CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
         }
     });
@@ -1345,6 +1346,7 @@ function InicializarElementos() {
                 BorrarComisionSiEsAcopio();
             }
             ValidarSinBoleto();
+            CompletarCantidadDisponibleDeposito();
             MostrarServiciosYCalidades();
         }
     });
@@ -1565,6 +1567,7 @@ function InicializarElementos() {
                 $("#cantidadTooltip").tooltip('destroy');
             }
             CalcularMaximo();
+            ValidarCantidad();
         }
     });
 
@@ -5209,6 +5212,8 @@ function HaySustentable() {
         $("#tarifaAConvenirId").prop("checked", false);
         $("#divSustentableSinTarifa").hide();
     }
+
+    CompletarCantidadDisponibleDeposito();
     //var maniana = new Date();
     //if ($("#fechaDesdeId").data("kendoDatePicker").value() != null && $("#fechaDesdeId").data("kendoDatePicker").value() >= maniana || $("#sustentableId").is(":checked")) {
     //    $("#mercsDepositoDiv").hide();
@@ -5785,10 +5790,10 @@ function CompletarCantidadDisponibleDeposito() {
         Id = Id != "" ? Id : 0;
         var datos = { materialId: $('#material').data("kendoDropDownList").value(), id: Id, centro: $("#destinoId").data("kendoDropDownList").value(), corredorId: $("#corredorId").val(), proveedorId: $("#proveedorId").val(), tieneSustentable: $("#sustentableId").is(":checked") || $("#epaId").is(":checked"), tieneBoleto: $("#sinBoletoId").is(':checked') };
         var disponible = MSExecuteOnServer('/CompraNet/ObtenerDatosMercaderiaEnDeposito', datos);
-        if (disponible != null && disponible.CantidadTotal != null) {
-            $("#cantidadDeposito").data("kendoNumericTextBox").value(disponible.CantidadTotal);
+        if (disponible != null && disponible.CantidadDisponible != null) {
+            $("#cantidadDeposito").data("kendoNumericTextBox").value(disponible.CantidadDisponible);
             $("#cantidadTotal").text(disponible.CantidadDisponible.toLocaleString("es-AR", { minimumFractionDigits: 0 }) + " (Kg)");
-            $("#cantidadDepositoOriginal").val(disponible.CantidadTotal);
+            $("#cantidadDepositoOriginal").val(disponible.CantidadDisponible);
             ValidarCantidad();
         }
     }
