@@ -5962,10 +5962,17 @@ namespace Molinos.DataAgro.Business.Managers
                 a => new ProveedorDto { ProveedorId = a.ProveedorId, CUIT = a.CUIT, RazonSocial = a.RazonSocial },
                 a => cuitsProveedor.Contains(a.CUIT) && a.Segmentacion.Grupo != "Corredores").ToList();
 
+            var cantidadEnDA = repositorio.Listar<Contrato>(x => x.ContratoAcuerdoId == acuerdo.Id && x.EstadoId != 6 && x.EstadoId != 8).Sum(x => x.Cantidad);
+            var cantidadRecibida = contratos.Sum(x => x.Cantidad);
+            if (acuerdo.Cantidad < cantidadEnDA + cantidadRecibida)
+            {
+                var resultadoError = new GrabarContratoResult();
+                resultadoError.Error("ContratoAcuerdoMasivo", "La cantidad que se intentó cargar supera los kilos disponibles del acuerdo (" + cantidadEnDA.ToString("N2", CultureInfo.CreateSpecificCulture("es-AR")) + "Kg).");
+                results.Add(resultadoError);
+                return results;
+            }
             foreach (var item in contratos)
             {
-
-
                 var proveedorid = proveedores.Where(a => a.CUIT == item.Cuit).FirstOrDefault()?.ProveedorId;
                 if (proveedorid == 0 || proveedorid == null)
                 {
@@ -7544,7 +7551,7 @@ namespace Molinos.DataAgro.Business.Managers
                         contratos.Add(contrato);
 
                     }
-                    contratos.ForEach(x=> x.MotivoOperacionAnterior = "Alta Masiva Acuerdo.");
+                    contratos.ForEach(x => x.MotivoOperacionAnterior = "Alta Masiva Acuerdo.");
                     validacionContratoFatal(contratos, acuerdo, resultValidation);
                     if (!resultValidation.IsValid)
                     {
