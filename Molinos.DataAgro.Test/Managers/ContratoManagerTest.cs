@@ -5566,7 +5566,7 @@ namespace Molinos.DataAgro.Test.Managers
                     FechaFormateado = "0403030",
                     TipoNegocioId = 2,
                     MaterialId = 1,
-                    Cantidad = 1000,
+                    Cantidad = 50000,
                     Ampliaciones = 1,
                     Precio = 111,
                     PrecioNeto = 111,
