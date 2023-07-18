@@ -166,7 +166,7 @@ namespace WebDataAgro.Controllers
 
         public ActionResult MigrarContratosPrimary(string fecha)
         {
-            DateTime dia = DateTime.Now;
+            DateTime dia = DateTime.Now.Date;
             logger.Info($"MigrarContratosPrimary - Inicio");
             if (!string.IsNullOrEmpty(fecha) && fecha.Length == 8)
             {

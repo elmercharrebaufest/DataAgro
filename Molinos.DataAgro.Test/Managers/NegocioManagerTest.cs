@@ -172,22 +172,24 @@ namespace Molinos.DataAgro.Test.Managers
 
             target.EnviarMailErrorFinalizarNegocio(1);
             repositorioMock.Verify(x => x.GuardarCambios(), Times.Never);
-            mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null,null, null), Times.Once);
+            mailManagerMock.Verify(x => x.EnviarMail(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>(), It.IsAny<AlternateView>(), null, null, null), Times.Once);
 
         }
 
         [Test]
         public void MigrarContratosPrimaryOk()
         {
-            var negociosMAT = new List<AgenteCompra> { new AgenteCompra() { MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 } } };
-            var negociosDA = new AgenteCompra() { MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 } };
+            var negociosMAT = new List<AgenteCompra> { new AgenteCompra() { Id = 1, MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 } } };
+            var negociosDA = new AgenteCompra() { Id = 1, MaterialId = 3, OperadorId = 1, Posicion = "07.2023", Cantidad = 500, Precio = 1000, MonedaId = "USDM ", Operador = new Operador() { Id = 1 } };
             var listaMAT = negociosMAT;
             var listaDA = negociosMAT;
-            
+
             clientePrimaryAPIAgentMock.Setup(mock => mock.ObtenerNegocios(It.IsAny<DateTime>())).Returns(negociosMAT);
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<AgenteCompra, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<AgenteCompra> { negociosDA });
             contextoMock.Setup(x => x.ObtenerPathLogoMail()).Returns(TestContext.CurrentContext.TestDirectory + "\\Util\\MolinosAgro.png");
             repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Comercial, bool>>>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<DirOrden>())).Returns(new List<Comercial> { new Comercial() });
+            repositorioMock.Setup(y => y.Listar(It.IsAny<Expression<Func<Negocio, int>>>(), It.IsAny<Expression<Func<Negocio, bool>>>(), 0, null, Entities.Helpers.DirOrden.Asc))
+               .Returns(new List<int>() { 1 });
 
             target.MigrarContratosPrimary(DateTime.Now);
             repositorioMock.Verify(x => x.Agregar(It.IsAny<AgenteCompra>()), Times.AtLeastOnce);

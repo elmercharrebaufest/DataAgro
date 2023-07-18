@@ -179,10 +179,14 @@ namespace Molinos.DataAgro.Business.Managers
             try
             {
                 var negociosMAT = clientePrimaryAPI.ObtenerNegocios(fecha);
+                var negociosAgenteId = repositorio.Listar<Negocio, int>(x => x.Id, x => x.FechaOperacion == fecha && x.TipoNegocioId == 5 && (x.EstadoId == 2 || x.EstadoId == 5)).ToList();
+                logger.Debug("negociosAgenteId DA: " + negociosAgenteId.ToJson());
                 var negociosDA = repositorio.Listar<AgenteCompra>(x =>
-                    x.FechaOperacion == fecha && x.TipoNegocioId == 5 && (x.EstadoId == 2 || x.EstadoId == 5));
+                    negociosAgenteId.Contains(x.Id));
+                //x.FechaOperacion == fecha && x.TipoNegocioId == 5 && (x.EstadoId == 2 || x.EstadoId == 5));
+
                 var negociosDAJson = negociosDA.Select(a => new { a.Id, a.ComercialId, a.Fecha, a.EstadoId, a.Cantidad, a.Precio, a.MaterialId, a.TipoNegocioId, a.FechaOperacion, a.OperadorId }).ToList().ToJson();
-                logger.Debug("negocios DA: " + negociosDAJson);
+                logger.Debug("negociosDAJson DA: " + negociosDAJson);
                 var agrupadoMAT = negociosMAT.GroupBy(item => new { item.MaterialId, item.Posicion, item.OperadorId, item.MonedaId });
                 var agrupadoDA = negociosDA.GroupBy(item => new { item.MaterialId, item.Posicion, item.OperadorId, item.MonedaId });
                 var listaMAT = new List<AgenteCompra>();
