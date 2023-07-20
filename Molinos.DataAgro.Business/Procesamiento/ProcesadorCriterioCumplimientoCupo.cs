@@ -18,12 +18,11 @@ namespace Molinos.DataAgro.Business.Procesamiento
             {
                 var cumplidos = Repositorio.Contar<Cupo>(x => x.Cumplimiento == true && criterio.Dto.ProveedorId.Value == x.ProveedorId);
                 var todos = Repositorio.Contar<Cupo>(x => criterio.Dto.ProveedorId.Value == x.ProveedorId && x.FechaIngreso < DateTime.Today && x.Cumplimiento != null);
-
-                return cumplidos / 100 * todos;
+                decimal result = todos != 0 ? (cumplidos * 100.00m / todos) / 100.00m : 0.00m;
+                return Math.Round(result, 2);
             }
 
-            return 100;
+            return 1;
         }
-
     }
 }
