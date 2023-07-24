@@ -278,11 +278,11 @@ namespace Molinos.DataAgro.Agent
                     contratoParaFijacion.Sustentables = sustentables;
 
                     var existeConAnulaYReemplaza = false;
-                    var contDA = contratos.Where(x => x.ContratoSAP == contrato.CONTRATO).FirstOrDefault();
+                    var contDA = contratos.Where(x => x.ContratoSAP == contrato.CONTRATO && x.TipoNegocioId == (int)EnumTipoNegocio.A_FIJAR && x.EstadoId == (int)EnumEstadoContrato.Finalizado).FirstOrDefault();
                     logger.Debug("contrato.CONTRATO " + contrato.CONTRATO);
 
                     contratoParaFijacion.MercAplicada = contrato.KILOS_APLICADOS > 0;
-                    contratoParaFijacion.TarifaAConvenir = sustentables.Any(a=>a.Importe == -1);
+                    contratoParaFijacion.TarifaAConvenir = sustentables.Any(a => a.Importe == -1);
                     if (contDA != null)
                     {
                         contratoParaFijacion.MercsDeposito = contDA.MercsDeposito ?? false;
